@@ -17,6 +17,7 @@
     "react": "~0.12.2",
     "moreartyjs": "https://github.com/KindWizzard/moreartyjs.git#9416f32701cac66ba567a1299e98066afc11676c",
     "immutable": "~3.4.1",
-    "requirejs": "~2.1.15"
+    "requirejs": "~2.1.15",
+    "director": "~1.2.5"
   }
 }

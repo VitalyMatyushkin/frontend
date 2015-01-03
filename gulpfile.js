@@ -50,34 +50,37 @@ gulp.task('styles', function (callback) {
 });
 
 // AMD script files
-gulp.task('amd_scripts', function () {
-	var app_files = gulp.src(SOURCE + '/js/module/**/*.js');
-
-	app_files = app_files.pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
-	app_files = app_files.pipe(connect.reload());
-
-	return app_files;
+gulp.task('amd_scripts', function(){
+	return amd_scrtipts(SOURCE + '/js/module/**/*.js');
 });
 
-// Config and main script files
-gulp.task('main_scripts', function () {
-	var main_files = gulp.src(SOURCE + '/js/*.js');
+function amd_scrtipts(path){
+	var files = gulp.src(path);
 
-	main_files = main_files.pipe(concat('main.js'));
-	main_files = main_files.pipe(gulp.dest(BUILD + '/js'));
-	main_files = main_files.pipe(connect.reload());
-
-	return main_files;
-});
-
-gulp.task('common_js', function(){
-	var files = gulp.src(BUILD + '/js/module/**/*.js');
-
+	files = files.pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
 	files = files.pipe(requireConvert());
 	files = files.pipe(gulp.dest(BUILD + '/js/module'));
 
+	files = files.pipe(connect.reload());
+
 	return files;
+}
+
+// Config and main script files
+gulp.task('main_scripts', function (path) {
+	return main_scripts(SOURCE + '/js/*.js');
 });
+
+function main_scripts(path) {
+	var files = gulp.src(path);
+
+	files = files.pipe(concat('main.js'));
+	files = files.pipe(gulp.dest(BUILD + '/js'));
+	files = files.pipe(connect.reload());
+
+	return files;
+}
+
 
 // Clean build
 gulp.task('clean', function (callback) {
@@ -92,18 +95,24 @@ gulp.task('connect', function() {
 	});
 });
 
+gulp.task('test', function() {
+	console.log(arguments)
+});
+
+
 // Run build
 gulp.task('default', function (callback) {
-	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'amd_scripts', 'common_js', 'svg_symbols', callback);
+	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		gulp.run('styles');
 	});
 
-	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/*.js'], function(event) {
-		console.log('JS REBUILD');
-		gulp.src(BUILD + '/js', {read: false}).pipe(clean());
-		run('bower', 'main_scripts', 'amd_scripts', 'common_js', callback);
+	gulp.watch(SOURCE + '/js/*.js', function(event) {
+		main_scripts(event.path);
 	});
 
+	gulp.watch(SOURCE + '/js/module/**/*.js', function(event) {
+		amd_scrtipts(event.path);
+	});
 });
