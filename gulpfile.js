@@ -109,10 +109,12 @@ gulp.task('default', function (callback) {
 	});
 
 	gulp.watch(SOURCE + '/js/*.js', function(event) {
+		console.log('MAIN SCRIPTS RELOAD');
 		main_scripts(event.path);
 	});
 
-	gulp.watch(SOURCE + '/js/module/**/*.js', function(event) {
+	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {
+		console.log('AMD SCRIPTS RELOAD');
 		amd_scrtipts(event.path);
 	});
 });

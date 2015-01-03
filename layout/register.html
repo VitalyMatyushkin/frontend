@@ -9,7 +9,11 @@
 </head>
 
 
-<body>
+<body class="mShowPopup">
+
+<div class="bPopupBack" style="display: block"></div>
+
+
 
 <div class="bSiteWrap" id="jsMainWrap">
 
@@ -25,27 +29,32 @@
     <div class="bMainLayout mClearFix mUserPage" id="jsMainLayout">
         <div class="bPageIn">
 
-            <div class="bRegisterForm">
+            <div class="bPopup" style="width: 328px;height: 245px;margin-left: -100px;margin-top: -100px;display: block;">
+
+
+                <div class="bRegisterForm">
                 <div class="bPanel">
-                    <h2>Вход или регистрация</h2>
+                    <h2>Login or register</h2>
 
                     <div class="ePanel_fieldSet">
-                        <div class="ePanel_fieldName">Логин или почта:</div>
-                        <input type="text" />
+                        <div class="ePanel_fieldName">Login or email:</div>
+                        <input type="text" placeholder="" />
                     </div>
 
                     <div class="ePanel_fieldSet">
-                        <div class="ePanel_fieldName">Пароль:</div>
-                        <input type="text" />
+                        <div class="ePanel_fieldName">Password:</div>
+                        <input type="password" />
                     </div>
 
                     <div class="ePanel_fieldSet mButton">
-                        <div class="bButton mLogin">Вход →</div>
-                        <div class="bButton mRegister">Регистрация</div>
+                        <div class="bButton mLogin">Login →</div>
+                        <div class="bButton mRegister">Register</div>
                     </div>
 
                 </div>
             </div><!-- .bRegisterForm -->
+
+            </div>
 
 
         </div>
