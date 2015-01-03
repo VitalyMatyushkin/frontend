@@ -1,0 +1,17 @@
+.bRegisterForm{
+  text-align: center;
+  padding-top: 100px;
+}
+
+.bRegisterForm > .bPanel{
+  display: inline-block;
+  text-align: left;
+}
+
+.bRegisterForm .bButton.mLogin{
+  float: left;
+}
+
+.bRegisterForm .bButton.mRegister{
+  float: right;
+}

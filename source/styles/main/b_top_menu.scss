@@ -1,0 +1,74 @@
+.bTopMenu {
+  float: left;
+  min-height: 70px;
+  height: 1px;
+  font-size: 0px;
+  text-transform: uppercase;
+}
+
+.bTopMenu.mRight {
+  float: right;
+  text-align: right;
+}
+
+.eTopMenu_item {
+  display: inline-block;
+  padding: 0 20px;
+  height: 70px;
+  line-height: 70px;
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 0.7px;
+  -webkit-transition: background 0.2s;
+  -moz-transition: background 0.2s;
+  -o-transition: background 0.2s;
+  transition: background 0.2s;
+  color: white;
+  vertical-align: top;
+}
+
+.eTopMenu_item:hover,
+.eTopMenu_item.mActive{
+  background: darken($MAIN_COLOR, 10% );
+  color: white;
+}
+
+.eTopMenu_photo{
+  display: inline-block;
+  height: 70px;
+  width: 70px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+  position: relative;
+  color: white;
+}
+
+.eTopMenu_photo:hover{
+  color: white;
+}
+
+.eTopMenu_photo:hover:after,
+.eTopMenu_photo.mActive:after{
+  content: 'Я';
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 70px;
+  line-height: 70px;
+  font-size: 24px;
+  text-align: center;
+  background: rgba(0,0,0,0.2);
+}
+
+.eTopMenu_item .bIcon{
+  margin-right: 7px;
+  margin-top: -5px;
+  vertical-align: middle;
+}
+
+.bTopMenu.mRight .eTopMenu_item .bIcon{
+  margin-right: 0px;
+}

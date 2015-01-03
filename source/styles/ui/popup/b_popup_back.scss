@@ -1,0 +1,21 @@
+.bPopupBack {
+  background-color: #fff;
+  height: 100%;
+  left: 0;
+  opacity: .5;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  display: none;
+  cursor: pointer
+}
+
+body.mShowPopup {
+  overflow: hidden;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0
+}
