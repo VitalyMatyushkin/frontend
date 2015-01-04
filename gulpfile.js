@@ -12,7 +12,8 @@ var SOURCE = './source',
 	connect = require('gulp-connect'),
 	svgstore = require('gulp-svgstore'),
 	svgmin = require('gulp-svgmin'),
-	requireConvert = require('gulp-require-convert');
+	requireConvert = require('gulp-require-convert'),
+	del = require('del');
 
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
@@ -100,6 +101,10 @@ gulp.task('test', function() {
 });
 
 
+gulp.task('clean_amd', function (callback) {
+	del(BUILD + '/js/module', callback);
+});
+
 // Run build
 gulp.task('default', function (callback) {
 	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'amd_scripts', 'svg_symbols', callback);
@@ -115,6 +120,6 @@ gulp.task('default', function (callback) {
 
 	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {
 		console.log('AMD SCRIPTS RELOAD');
-		amd_scrtipts(event.path);
+		run('clean_amd', 'amd_scripts');
 	});
 });

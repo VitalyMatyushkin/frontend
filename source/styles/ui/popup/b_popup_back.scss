@@ -11,6 +11,10 @@
   cursor: pointer
 }
 
+.bPopupBack.mAcitve{
+  display: block;
+}
+
 body.mShowPopup {
   overflow: hidden;
   position: fixed;
