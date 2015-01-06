@@ -2,9 +2,13 @@ var Popup = require('module/ui/popup'),
 	RegisterModal;
 
 RegisterModal = React.createClass({
+	mixins: [Morearty.Mixin],
 	render: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
+
 		return (
-			<Popup isOpen={this.props.isOpen} onRequestClose={this.props.onRequestClose}>
+			<Popup binding={binding} isOpen={this.props.isOpen} onRequestClose={this.props.onRequestClose}>
 				<div className="bRegisterForm">
 					<div className="bPanel">
 						<h2>Login or register {this.props.isOpen}</h2>

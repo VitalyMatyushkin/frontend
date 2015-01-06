@@ -1,4 +1,5 @@
 var Popup = React.createClass({
+	mixins: [Morearty.Mixin],
 	propTypes: {
 		isOpen: React.PropTypes.bool.isRequired,
 		onRequestClose: React.PropTypes.func
@@ -13,8 +14,9 @@ var Popup = React.createClass({
 	},
 	render: function() {
 		var self = this,
-			popup_class_name = 'bPopup ' + (self.props.isOpen ? 'mAcitve' : ''),
-			popup_back_class_name = 'bPopupBack ' + (self.props.isOpen ? 'mAcitve' : '');
+			isOpen = self.getDefaultBinding().get('modalIsOpen'),
+			popup_class_name = 'bPopup ' + (isOpen ? 'mAcitve' : ''),
+			popup_back_class_name = 'bPopupBack ' + (isOpen ? 'mAcitve' : '');
 
 		return (
 			<div>

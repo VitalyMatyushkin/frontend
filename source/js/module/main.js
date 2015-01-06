@@ -1,51 +1,47 @@
-var default_state = require('module/states/default'),
-	RegisterModal = require('module/pages/register'),
+var RegisterModal = require('module/pages/register'),
+	RouterView = require('module/core/router'),
 	ApplicationView,
-	ApplicationCtx,
+	ApplicationWithCtx,
 	Ctx;
 
 Ctx = Morearty.createContext({
-	nowShowing: 'default'
+	nowShowing: 'default',
+	section1: {
+		modalIsOpen: false
+	},
+	routing: {
+		current_page: 'main'
+	}
 });
 
 ApplicationView = React.createClass({
-	//mixins: [Morearty.Mixin],
-	getInitialState: function() {
-		var self = this;
-
-		return { modalIsOpen: false };
-	},
+	mixins: [Morearty.Mixin],
 	toggleModal: function() {
-		var self = this;
+		var self = this,
+			binding = this.getDefaultBinding(),
+			section1 = binding.sub('section1');
 
-		self.setState({modalIsOpen: !this.state.modalIsOpen});
-	},    /*
-	componentDidMount: function() {
-		var binding = this.getDefaultBinding();
-
-		Router({
-			'/': binding.set.bind(binding, 'nowShowing', 'default'),
-			'/me': binding.set.bind(binding, 'nowShowing', 'me')
-		}).init();
-	},      */
+		section1.set('modalIsOpen', !section1.get('modalIsOpen'));
+	},
 	render: function() {
-		//var binding = this.getDefaultBinding();
+		var binding = this.getDefaultBinding();
 
 		return (
 			<div>
 				<button onClick={this.toggleModal}>Show register form</button>
-				<RegisterModal isOpen={this.state.modalIsOpen} onRequestClose={this.toggleModal}/>
+				<div><RouterView routes={ binding.sub('routing') } binding={binding} /></div>
+				<RegisterModal binding={ binding.sub('section1') } onRequestClose={this.toggleModal}/>
 			</div>
 		);
 	}
 });
 
+// isOpen={this.state.modalIsOpen}
+//var Bootstrap = ctx.bootstrap(App);
 
-
-
-ApplicationCtx = Ctx.bootstrap(ApplicationView);
+ApplicationWithCtx = Ctx.bootstrap(ApplicationView);
 
 React.render(
-	<ApplicationView />,
+	<ApplicationWithCtx />,
 	document.getElementById('jsMainLayout')
 );
