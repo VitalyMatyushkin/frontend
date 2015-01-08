@@ -1,22 +1,19 @@
 var Popup = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isOpen: React.PropTypes.bool.isRequired,
+		stateProperty: React.PropTypes.string.isRequired,
 		onRequestClose: React.PropTypes.func
 	},
 	getDefaultProps: function () {
 		return {
-			isOpen: false
+			isOpened: false
 		};
-	},
-	componentWillReceiveProps: function(new_props) {
-
 	},
 	render: function() {
 		var self = this,
-			isOpen = self.getDefaultBinding().get('modalIsOpen'),
-			popup_class_name = 'bPopup ' + (isOpen ? 'mAcitve' : ''),
-			popup_back_class_name = 'bPopupBack ' + (isOpen ? 'mAcitve' : '');
+			isOpened = self.getDefaultBinding().get(self.props.stateProperty),
+			popup_class_name = 'bPopup ' + (isOpened ? 'mAcitve' : ''),
+			popup_back_class_name = 'bPopupBack ' + (isOpened ? 'mAcitve' : '');
 
 		return (
 			<div>

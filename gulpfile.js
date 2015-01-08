@@ -13,7 +13,8 @@ var SOURCE = './source',
 	svgstore = require('gulp-svgstore'),
 	svgmin = require('gulp-svgmin'),
 	requireConvert = require('gulp-require-convert'),
-	del = require('del');
+	del = require('del'),
+	using = require('gulp-using');
 
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
@@ -58,7 +59,7 @@ gulp.task('amd_scripts', function(){
 function amd_scrtipts(path){
 	var files = gulp.src(path);
 
-	files = files.pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
+	files = files.pipe(using({})).pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
 	files = files.pipe(requireConvert());
 	files = files.pipe(gulp.dest(BUILD + '/js/module'));
 
