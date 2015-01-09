@@ -1,43 +1,20 @@
-var RouterView = require('module/core/router'),
-	HeadView = require('module/main/head'),
-	CenterView = require('module/main/center'),
-	ApplicationView,
-	ApplicationWithCtx,
-	Ctx;
+var ApplicationView = require('module/main/application'),
+	userDataClass = require('module/data/user_data'),
+	MoreartyContext;
 
-Ctx = Morearty.createContext({
-	userData: {
-		authorizationInfo: false,
-		registerModal: {
-			isOpened: false
-		}
-	},
+// Создание контекста Morearty
+MoreartyContext = Morearty.createContext({
+	userData: userDataClass.getDefaultState(),
 	routing: {
 		current_page: 'main'
 	}
 });
 
-ApplicationView = React.createClass({
-	mixins: [Morearty.Mixin],
-	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+// Передача связывания контекста в классы данных
+userDataClass.setBinding(MoreartyContext.getBinding().sub('userData'));
 
-		return (
-			<div>
-				<HeadView binding={binding} />
-				<CenterView binding={binding} />
-			</div>
-		);
-	}
-});
-
-// Routing v0.01
-//<div><RouterView routes={ binding.sub('routing') } binding={binding} /></div>
-
-ApplicationWithCtx = Ctx.bootstrap(ApplicationView);
-
+// Инициализация приложения
 React.render(
-	<ApplicationWithCtx />,
+	React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 	document.getElementById('jsMain')
 );

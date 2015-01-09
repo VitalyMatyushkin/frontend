@@ -2,7 +2,7 @@ var Popup = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		stateProperty: React.PropTypes.string.isRequired,
-		onRequestClose: React.PropTypes.func
+		onRequestClose: React.PropTypes.func.isRequired
 	},
 	getDefaultProps: function () {
 		return {

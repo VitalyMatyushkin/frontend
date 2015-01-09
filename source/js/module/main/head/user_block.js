@@ -6,9 +6,16 @@ UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	toggleRegisterModal: function(){
 		var self = this,
-			binding = this.getDefaultBinding().sub('registerModal');
+			binding = self.getDefaultBinding().sub('registerModal');
 
 		binding.set('isOpened', !binding.get('isOpened'));
+	},
+	loginUser: function(loginData) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('authorizationInfo', loginData);
+		binding.sub('registerModal').set('isOpened', false);
 	},
 	render: function() {
 		var self = this,
@@ -35,7 +42,7 @@ UserBlock = React.createClass({
 				{OptionsButton}
 				{UserButton}
 				{LoginButton}
-				<RegisterModal binding={ binding } onRequestClose={this.toggleRegisterModal}/>
+				<RegisterModal binding={ binding.sub('registerModal') } onLoginDone={self.loginUser} onRequestClose={self.toggleRegisterModal}/>
 			</div>
 		)
 	}

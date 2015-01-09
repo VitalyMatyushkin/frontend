@@ -53,10 +53,10 @@ gulp.task('styles', function (callback) {
 
 // AMD script files
 gulp.task('amd_scripts', function(){
-	return amd_scrtipts(SOURCE + '/js/module/**/*.js');
+	return amdScrtipts(SOURCE + '/js/module/**/*.js');
 });
 
-function amd_scrtipts(path){
+function amdScrtipts(path){
 	var files = gulp.src(path);
 
 	files = files.pipe(using({})).pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
@@ -70,13 +70,19 @@ function amd_scrtipts(path){
 
 // Config and main script files
 gulp.task('main_scripts', function (path) {
-	return main_scripts(SOURCE + '/js/*.js');
+	return notAmdScripts(SOURCE + '/js/*.js', 'main.js');
 });
 
-function main_scripts(path) {
-	var files = gulp.src(path);
+// Helpers files
+gulp.task('helpers_scripts', function (path) {
+	return notAmdScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
+});
 
-	files = files.pipe(concat('main.js'));
+function notAmdScripts(path, result) {
+	var result = result || 'main.js',
+		files = gulp.src(path);
+
+	files = files.pipe(concat(result));
 	files = files.pipe(gulp.dest(BUILD + '/js'));
 	files = files.pipe(connect.reload());
 
@@ -97,10 +103,6 @@ gulp.task('connect', function() {
 	});
 });
 
-gulp.task('test', function() {
-	console.log(arguments)
-});
-
 
 gulp.task('clean_amd', function (callback) {
 	del(BUILD + '/js/module', callback);
@@ -108,15 +110,16 @@ gulp.task('clean_amd', function (callback) {
 
 // Run build
 gulp.task('default', function (callback) {
-	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'amd_scripts', 'svg_symbols', callback);
+	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
+		console.log('STYLES RELOAD');
 		gulp.run('styles');
 	});
 
 	gulp.watch(SOURCE + '/js/*.js', function(event) {
 		console.log('MAIN SCRIPTS RELOAD');
-		main_scripts(event.path);
+		notAmdScripts(event.path, 'main.js');
 	});
 
 	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {

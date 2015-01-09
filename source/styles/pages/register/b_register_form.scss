@@ -1,17 +1,86 @@
-.bRegisterForm{
-  text-align: center;
+.bRegisterForm {
+  text-align: left;
   color: #000000;
 }
 
-.bRegisterForm > .bPanel{
-  display: inline-block;
+.bRegisterForm > .bPanel {
   text-align: left;
 }
 
-.bRegisterForm .bButton.mLogin{
+.bRegisterForm .bButton.mLeft {
   float: left;
 }
 
-.bRegisterForm .bButton.mRegister{
+.bRegisterForm .bButton.mRight {
   float: right;
+}
+
+.eRegisterForm_state.mMessage {
+  left: 0px;
+  top: 0px;
+  padding: 20px;
+  position: absolute;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  background: white;
+  text-align: center;
+}
+
+.eRegisterForm_messageWrap {
+  font-size: 14px;
+  vertical-align: middle;
+  text-align: center;
+  display: inline-block;
+}
+
+.eRegisterForm_state.mMessage:after{
+  content: '';
+  height: 100%;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.eRegisterForm_message {
+  margin-bottom: 20px;
+}
+
+
+
+/* Заблокированный режим */
+
+.bRegisterForm:after {
+  content: '';
+  background: url("/images/loader.gif") no-repeat center center white;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  display: none;
+}
+
+.bRegisterForm.mBlocked:after {
+  display: block;
+}
+
+/* Режим отображения логина */
+
+.bRegisterForm .eRegisterForm_state.mMessage {
+  display: none;
+}
+
+.bRegisterForm .eRegisterForm_state.mLogin {
+  display: block;
+}
+
+/* Режим отображения сообщения */
+
+.bRegisterForm.mMessage .eRegisterForm_state.mMessage {
+  display: block;
+}
+
+.bRegisterForm.mMessage .eRegisterForm_state.mLogin {
+  display: none;
 }

@@ -1,0 +1,15 @@
+.bPanel:after{
+  content: '';
+  background: url("/images/loader.gif") no-repeat center center white;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  top: 0;
+  display: none;
+}
+
+.bPanel.mBlocked:after{
+  display: block;
+}

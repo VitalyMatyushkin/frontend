@@ -9,22 +9,26 @@ Menu = React.createClass({
 				href: '/search',
 				icon: 'icon_search',
 				name: 'Search',
-				route: ''
+				route: '',
+				key: 'Search'
 			},{
 				href: '/chat',
 				icon: 'icon_bubbles',
 				name: 'Chat',
-				route: ''
+				route: '',
+				key: 'Chat'
 			},{
 				href: '/messages',
 				icon: 'icon_envelope',
 				name: 'Messages',
-				route: ''
+				route: '',
+				key: 'Messages'
 			},{
 				href: '/articles',
 				icon: 'icon_users',
 				name: 'Teams',
-				route: ''
+				route: '',
+				key: 'Teams'
 			}]
 		};
 	},
@@ -38,7 +42,7 @@ Menu = React.createClass({
 		if(userDataBiding.get('authorizationInfo')) {
 			MenuItemsViews = self.props.items.map(function (item) {
 				return (
-					<a href={item.href} className="eTopMenu_item"><SVG icon={item.icon} />{item.name}</a>
+					<a href={item.href} key={item.key} className="eTopMenu_item"><SVG icon={item.icon} />{item.name}</a>
 				);
 			});
 		}
