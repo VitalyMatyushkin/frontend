@@ -1,0 +1,77 @@
+.bUserPhoto{
+  position: relative;
+  max-height: 320px;
+  min-height: 260px;
+  width: 260px;
+  margin-bottom: 10px;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Режим квадртаных аватарок... */
+.bUserPhoto{
+  max-height: 260px;
+}
+
+.eUserPhoto_image{
+  width: 100%;
+  height: auto;
+}
+
+.eUserPhoto_menu{
+  position: absolute;
+  width: 100%;
+  bottom: -70px;
+  left: 0px;
+  background: rgba(255, 80, 63, 1);
+}
+
+.eUserPhoto_menuButton{
+  padding: 0 15px;
+  box-sizing: border-box;
+  height: 35px;
+  line-height: 35px;
+  cursor: pointer;
+}
+
+.eUserPhoto_menuButton:hover{
+  background: #ff6b46;
+}
+
+.bUserPhoto:hover .eUserPhoto_menu{
+  bottom: 0px;
+}
+
+.bUserPhoto.mIsMe{
+
+}
+
+
+.bUserPhoto.mBusy:hover  .eUserPhoto_menu{
+  bottom: -70px;
+}
+
+.bUserPhoto.mBusy:after{
+  position: absolute;
+  content: '';
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: progress;
+}
+
+.bUserPhoto.mBusy:before{
+  position: absolute;
+  content: 'Загрузка...';
+  text-align: center;
+  left: 0px;
+  top: 50%;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  margin-top: -25px;
+  cursor: progress;
+  color: white;
+}

@@ -1,5 +1,4 @@
-var RouterView = require('module/core/router'),
-	HeadView = require('module/main/head'),
+var HeadView = require('module/main/head'),
 	CenterView = require('module/main/center'),
 	ApplicationView;
 
@@ -18,7 +17,5 @@ ApplicationView = React.createClass({
 	}
 });
 
-// Routing v0.01
-//<div><RouterView routes={ binding.sub('routing') } binding={binding} /></div>
 
 module.exports = ApplicationView;

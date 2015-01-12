@@ -1,0 +1,42 @@
+.bAboutList{
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.eAboutList_item{
+  padding-left: 40px;
+  min-height: 40px;
+  position: relative;
+  font-size: 15px;
+  line-height: 40px;
+  color: rgb(219, 219, 219);
+}
+
+.eAboutList_item:before{
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  margin-top: -15px;
+  content: '';
+  display: block;
+  height: 30px;
+  width: 30px;
+}
+
+.eAboutList_item.mPosition:before{
+  //background: url(#{$IMAGE_DIR}moon30/PNG/location.png) no-repeat left center;
+  left: -3px;
+}
+
+.eAboutList_item.mOrientation:before{
+  //background: url(#{$IMAGE_DIR}moon22/PNG/magnet.png) no-repeat left center;
+}
+
+.eAboutList_item .bIcon{
+  position: absolute;
+  left: 0px;
+  top: 6px;
+
+  width: 23px;
+  height: 23px;
+}

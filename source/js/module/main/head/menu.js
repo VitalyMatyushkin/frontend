@@ -12,23 +12,23 @@ Menu = React.createClass({
 				route: '',
 				key: 'Search'
 			},{
-				href: '/chat',
-				icon: 'icon_bubbles',
-				name: 'Chat',
-				route: '',
-				key: 'Chat'
-			},{
-				href: '/messages',
-				icon: 'icon_envelope',
-				name: 'Messages',
-				route: '',
-				key: 'Messages'
-			},{
-				href: '/articles',
-				icon: 'icon_users',
+				href: '/teams',
+				icon: 'icon_teams',
 				name: 'Teams',
 				route: '',
 				key: 'Teams'
+			},{
+				href: '/events',
+				icon: 'icon_calendar',
+				name: 'Events',
+				route: '',
+				key: 'Events'
+			},{
+				href: '/players',
+				icon: 'icon_user',
+				name: 'Players',
+				route: '',
+				key: 'Players'
 			}]
 		};
 	},

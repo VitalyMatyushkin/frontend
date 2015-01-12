@@ -1,9 +1,22 @@
-var RouterView,
-	routes = require('module/core/routes');
+var RouterView;
 
 
 RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
+	getRoutes: function() {
+		var self = this,
+			routes = [];
+
+		self.props.children.forEach(function(route){
+			routes.push({
+				path: route.props.path,
+				component: route.props.component,
+				pageName: route.props.pageName
+			});
+		});
+
+		return routes;
+	},
 	/**
 	 * Добавление нового маршрута
 	 * @param route
@@ -17,12 +30,13 @@ RouterView = React.createClass({
 			window['require']([route.component], function (ComponentView) {
 				self.CurrentComponent = ComponentView;
 				self.forceUpdate();
-				self.RoutingBinding.set('current_page', route.page_name);
+				self.RoutingBinding.set('current_page', route.pageName);
 			});
 		}
 	},
 	componentWillMount: function() {
-		var self = this;
+		var self = this,
+			routes = self.getRoutes();
 
 		self.RoutingBinding = self.props.routes;
 		self.CurrentPage = undefined;

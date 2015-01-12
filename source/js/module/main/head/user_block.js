@@ -16,6 +16,8 @@ UserBlock = React.createClass({
 
 		binding.set('authorizationInfo', loginData);
 		binding.sub('registerModal').set('isOpened', false);
+
+		document.location.hash = 'me';
 	},
 	render: function() {
 		var self = this,
@@ -28,7 +30,7 @@ UserBlock = React.createClass({
 		if(binding.get('authorizationInfo')) {
 			// Кнопка перехода на страницу пользователя
 			userButtonStyle = { backgroundImage: 'url(https://pp.vk.me/c10133/v10133740/7d/Q4t3uQ3hBWQ.jpg)' };
-			UserButton = <a id="jsIsMe" href="/" className="eTopMenu_photo mActive" style={userButtonStyle}></a>;
+			UserButton = <a id="jsIsMe" href="/#me" className="eTopMenu_photo mActive" style={userButtonStyle}></a>;
 
 			// Кнопка перехода на страницу настрок
 			OptionsButton = <div className="eTopMenu_item"><SVG icon="icon_cog" /></div>;
