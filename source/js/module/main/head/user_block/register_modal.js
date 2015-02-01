@@ -16,6 +16,12 @@ RegisterModal = React.createClass({
 		}
 
 	},
+	goRegister: function() {
+		var self = this;
+
+		self.tryToClose();
+		document.location.hash = 'register';
+	},
 	tryToLogin: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -107,7 +113,7 @@ RegisterModal = React.createClass({
 
 							<div className="ePanel_fieldSet mButtons">
 								<div className="bButton mLeft" onClick={self.tryToLogin}>Login →</div>
-								<div className="bButton mRight">Register</div>
+								<div className="bButton mRight" onClick={self.goRegister}>Register</div>
 							</div>
 
 						</div>

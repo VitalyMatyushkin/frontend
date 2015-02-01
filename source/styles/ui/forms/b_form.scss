@@ -1,0 +1,64 @@
+.bForm {
+  max-width: 700px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.bForm input[type="text"],
+.bForm input[type="password"]{
+  width: 200px;
+}
+
+.eForm_fieldInput {
+  display: inline-block;
+  margin-right: 10px;
+  position: relative;
+}
+
+.eForm_fieldSmallHelp{
+  height: 12px;
+  line-height: 12px;
+  font-size: 12px;
+  position: absolute;
+  top: -20px;
+}
+
+.eForm_field {
+  margin-bottom: 20px;
+}
+
+.eForm_fieldName {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.eForm_savePanel{
+  margin-top: 30px;
+}
+
+.eForm_atCenter{
+  display: inline-block;
+  text-align: left;
+}
+
+$INVALID_COLOR: rgb(182, 0, 0);
+
+.eForm_fieldValidText{
+  display: none;
+  font-size: 12px;
+  color: $INVALID_COLOR;
+  margin-top: 7px;
+}
+
+.eForm_fieldSet.mInvalid .eForm_fieldValidText{
+  display: block;
+}
+
+.eForm_fieldSet.mInvalid{
+  color: $INVALID_COLOR;
+}
+
+.eForm_fieldSet.mInvalid input{
+  border: 1px solid $INVALID_COLOR;
+  color: $INVALID_COLOR;
+}

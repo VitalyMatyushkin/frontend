@@ -46,6 +46,17 @@ UserPageView = React.createClass({
 							<div className="bButton">Invite to the team</div>
 							<div className="bButton">Invite to an event</div>
 						</div>
+
+
+						<div className="bUserFullInfo">
+							<div className="eUserFullInfo_block">
+								<div className="eUserFullInfo_name">Проживание:</div>
+								<div className="eUserFullInfo_text">живу с родителями</div>
+							</div>
+						</div>
+
+
+
 					</div>
 				</div>
 			</div>

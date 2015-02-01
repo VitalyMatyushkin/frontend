@@ -6,15 +6,17 @@ Center = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			currentPage =  binding.sub('routing').get('current_page'),
+			mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
 
 		return (
-			<div className="bMainLayout mClearFix">
+			<div className={mainClass}>
 				<div className="bPageWrap">
 
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
 						<Route path="/me" component="module/pages/me" pageName="me"  />
-						<Route path="page2" component="module/pages/page2" pageName="page2"  />
+						<Route path="/register" component="module/pages/register/school" pageName="register"  />
 					</RouterView>
 
 				</div>
