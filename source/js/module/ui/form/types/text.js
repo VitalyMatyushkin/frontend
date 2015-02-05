@@ -1,68 +1,47 @@
 var TypeText,
-	ValidationMixin = require('module/ui/form/validation_mixin');
+	TypeMixin = require('module/ui/form/types/type_mixin');
 
 TypeText = React.createClass({
-	mixins: [Morearty.Mixin, ValidationMixin],
-	getInitialState: function () {
-		var self = this;
-
-		return {
-			value: self.props.value || '',
-			error: false
-		};
-	},
-	setValue: function(event) {
-		var self = this,
-			value = event.currentTarget.value;
-
-		self.showError(self.validate(value));
-
-		self.setState({
-			value: value
-		});
-	},
+	mixins: [Morearty.Mixin, TypeMixin],
 	setConfirmValue: function(event) {
 		var self = this,
-			value = event.currentTarget.value;
+			value = event.currentTarget.value,
+			binding = self.getDefaultBinding();
 
-		self.showError(self.state.value !== value ? 'Both passwords should be the same' : false );
-	},
-	showError: function(errorText) {
-		var self = this;
+		if (!binding.get('error')) {
 
-		if (errorText === undefined) {
-			errorText = false;
+			if (binding.get('value') !== value) {
+				self.showError('Both fields should be the same');
+			} else {
+				self.hideError();
+			}
+
 		}
 
-		self.setState({
-			error: errorText
-		});
 	},
 	render: function () {
 		var self = this,
-			binding = this.getDefaultBinding(),
+			binding = self.getDefaultBinding(),
 			fieldStyleClass,
 			baseView,
 			confirmView;
 
-		if (self.state.error) {
+		if (binding.get('showError')) {
 			fieldStyleClass = 'eForm_fieldSet mInvalid';
 		} else {
 			fieldStyleClass = 'eForm_fieldSet';
 		}
 
-
-		//
 		baseView =
 			<div className="eForm_fieldInput">
-				<input type="text" onChange={self.setValue} />
+				<input type="text" onBlur={self.setValue} onChange={self.changeValue} />
 			</div>;
 
 		if (self.validations.hasOwnProperty('confirm')) {
 			confirmView =
 				<div className="eForm_fieldInput">
 					<div className="eForm_fieldSmallHelp">confirm {self.props.name.toLowerCase()}</div>
-					<input type="text" onChange={self.setConfirmValue} />
+					<input type="text" onBlur={self.setConfirmValue} />
 				</div>;
 		}
 
@@ -71,7 +50,7 @@ TypeText = React.createClass({
 				{baseView}
 				{confirmView}
 
-				<div className="eForm_fieldValidText">{self.state.error}</div>
+				<div className="eForm_fieldValidText">{binding.get('error')}</div>
 			</div>
 		)
 	}

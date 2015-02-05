@@ -5,13 +5,15 @@ RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
 	getRoutes: function() {
 		var self = this,
-			routes = [];
+			routes = [],
+			binding = self.getDefaultBinding();
 
 		self.props.children.forEach(function(route){
 			routes.push({
 				path: route.props.path,
 				component: route.props.component,
-				pageName: route.props.pageName
+				pageName: route.props.pageName,
+				binding: route.props.binding || binding
 			});
 		});
 
@@ -24,11 +26,17 @@ RouterView = React.createClass({
 	addRoute: function(route){
 		var self = this;
 
-		self.site_routes[route.path] = function(){
+		self.siteRoutes[route.path] = function(){
 
 			// Загрузка компонента, соответствующего пути
 			window['require']([route.component], function (ComponentView) {
-				self.CurrentComponent = ComponentView;
+
+				self.siteComponents[route.path] = {
+					View: ComponentView,
+					binding: route.binding
+				};
+
+				self.currentPath = route.path;
 				self.forceUpdate();
 				self.RoutingBinding.set('current_page', route.pageName);
 			});
@@ -39,8 +47,10 @@ RouterView = React.createClass({
 			routes = self.getRoutes();
 
 		self.RoutingBinding = self.props.routes;
-		self.CurrentPage = undefined;
-		self.site_routes = {};
+		self.currentPath = undefined;
+
+		self.siteRoutes = {};
+		self.siteComponents = {};
 
 		// Добавление маршрутов сайта
 		routes && routes.forEach(function(route){
@@ -48,14 +58,14 @@ RouterView = React.createClass({
 		});
 
 		// Инициализации маршрутизатора
-		Router(self.site_routes).init();
+		Router(self.siteRoutes).init();
 	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			CurrentComponent = self.CurrentComponent;
+			siteComponent = self.siteComponents[self.currentPath];
 
-		return CurrentComponent ? React.createElement(CurrentComponent, {binding: binding}) : null;
+		return siteComponent ? React.createElement(siteComponent.View, {binding: siteComponent.binding}) : null;
 	}
 });
 

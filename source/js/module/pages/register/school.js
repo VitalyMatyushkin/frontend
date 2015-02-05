@@ -9,13 +9,14 @@ RegisterSchoolForm = React.createClass({
 
 		return (
 			<Form name="Register school">
-				<FormField type="text" validation="alphanumeric">Name</FormField>
-				<FormField type="text">School area</FormField>
+				<FormField type="text" field="name" validation="alphanumeric">Name</FormField>
+				<FormField type="area" field="zipCodeId">School area</FormField>
 				<FormField type="text" validation="confirm email">Email</FormField>
 				<FormField type="text" validation="confirm">Password</FormField>
 			</Form>
 		)
 	}
 });
+
 
 module.exports = RegisterSchoolForm;

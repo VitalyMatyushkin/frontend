@@ -16,7 +16,7 @@ Center = React.createClass({
 
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
 						<Route path="/me" component="module/pages/me" pageName="me"  />
-						<Route path="/register" component="module/pages/register/school" pageName="register"  />
+						<Route binding={binding.sub('form.register')} path="/register" component="module/pages/register/user" pageName="register"  />
 					</RouterView>
 
 				</div>
@@ -24,5 +24,7 @@ Center = React.createClass({
 		)
 	}
 });
+
+//<Route path="/register" component="module/pages/register/school" pageName="register"  />
 
 module.exports = Center;
