@@ -2,7 +2,6 @@ var InputTypeMixin,
 	validationsSet = require('module/ui/form/types/validations');
 
 
-
 /**
  * Общий класс для любых полей ввода на форме
  * @type {{componentWillMount: Function, fullValidate: Function, typingValidate: Function, getInitialState: Function, changeValue: Function, setValue: Function, showError: Function, hideError: Function}}
