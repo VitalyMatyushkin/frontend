@@ -3,12 +3,30 @@ var Form;
 Form = React.createClass({
 	mixins: [Morearty.Mixin],
 	statePath: 'fieldsState',
+	propTypes: {
+		onSuccess: React.PropTypes.func,
+		name: React.PropTypes.string,
+		service: React.PropTypes.string.isRequired
+	},
+	defaultButton: 'Continue →',
+	loadingButton: 'Loading...',
+	componentWillMount: function() {
+		var self = this;
+
+		self.getDefaultBinding().set('buttonText', self.defaultButton);
+		self.busy = false;
+	},
 	tryToSubmit: function() {
 		var self = this,
 			fields = self.getDefaultBinding().get(self.statePath).toJS(),
 			hereIsError = false,
 			dateToPost = {};
 
+		if (self.busy === true) {
+			return false;
+		}
+
+		// Проверка всех полей данных на валидацию
 		for (var field in fields) {
 
 			dateToPost[field] = fields[field].value;
@@ -23,7 +41,12 @@ Form = React.createClass({
 
 		//TODO: Заменить dateToPost на Merge данных из statePath
 
+		// Если ошибок нет, обращаемся с данными к сервису
 		if (hereIsError === false) {
+
+			self.busy = true;
+			self.getDefaultBinding().set('buttonText', self.loadingButton);
+
 			$.ajax({
 				url: 'http://api.squadintouch.com:80/v1/' + self.props.service,
 				type: 'POST',
@@ -33,9 +56,13 @@ Form = React.createClass({
 					debugger
 				},
 				success: function(data) {
-					var self = this;
+					self.busy = false;
+					self.buttonText = self.defaultButton;
 
 					debugger
+					if (self.props.onSuccess) {
+						self.props.onSuccess(data);
+					}
 				}
 			});
 		}
@@ -66,7 +93,7 @@ Form = React.createClass({
 					{self.props.children}
 
 					<div className="eForm_savePanel">
-						<div className="bButton mRight" onClick={self.tryToSubmit}>Continue →</div>
+						<div className="bButton mRight" onClick={self.tryToSubmit}>{self.getDefaultBinding().get('buttonText')}</div>
 					</div>
 				</div>
 			</div>

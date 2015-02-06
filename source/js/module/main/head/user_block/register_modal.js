@@ -97,12 +97,12 @@ RegisterModal = React.createClass({
 
 					<div className="eRegisterForm_state mLogin">
 						<div className="bPanel">
-							<h2>Login or register</h2>
+							<h2>Sing up or sing in</h2>
 
 							<div className="ePanel_blocked"></div>
 
 							<div className="ePanel_fieldSet">
-								<div className="ePanel_fieldName">Login or email:</div>
+								<div className="ePanel_fieldName">Username or email:</div>
 								<input type="text" ref="login" />
 							</div>
 
@@ -112,7 +112,7 @@ RegisterModal = React.createClass({
 							</div>
 
 							<div className="ePanel_fieldSet mButtons">
-								<div className="bButton mLeft" onClick={self.tryToLogin}>Login →</div>
+								<div className="bButton mLeft" onClick={self.tryToLogin}>Sing in →</div>
 								<div className="bButton mRight" onClick={self.goRegister}>Sing up</div>
 							</div>
 

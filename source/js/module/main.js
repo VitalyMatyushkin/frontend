@@ -2,11 +2,16 @@ var ApplicationView = require('module/main/application'),
 	userDataClass = require('module/data/user_data'),
 	MoreartyContext;
 
+// Общие каналы общения между модулями
+//window.SharedBindings = {};
+
 // Создание контекста Morearty
 MoreartyContext = Morearty.createContext({
-	userData: userDataClass.getDefaultState(),
-	routing: {
-		current_page: 'main'
+	initialState: {
+		userData: userDataClass.getDefaultState(),
+		routing: {
+			current_page: 'main'
+		}
 	}
 });
 
