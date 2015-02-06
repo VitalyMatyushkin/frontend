@@ -6,17 +6,13 @@ RegiseterUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.Map({
-			showForm: false
+			showForm: true
 		});
 	},
 	onSuccess: function() {
 		var self = this;
 
-		self.getDefaultBinding().set('showForm', true);
-	},
-	onSingin: function() {
-		var self = this;
-
+		self.getDefaultBinding().set('showForm', false);
 	},
 	render: function() {
 		var self = this,
@@ -25,7 +21,7 @@ RegiseterUserPage = React.createClass({
 		if (self.getDefaultBinding().get('showForm')) {
 			currrentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
 		} else {
-			currrentView = <RegisterDone onSigin={self.onSingin} />
+			currrentView = <RegisterDone />
 		}
 
 		return (

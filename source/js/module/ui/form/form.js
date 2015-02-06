@@ -5,6 +5,7 @@ Form = React.createClass({
 	statePath: 'fieldsState',
 	propTypes: {
 		onSuccess: React.PropTypes.func,
+		onError: React.PropTypes.func,
 		name: React.PropTypes.string,
 		service: React.PropTypes.string.isRequired
 	},
@@ -53,13 +54,14 @@ Form = React.createClass({
 				crossDomain: true,
 				data: dateToPost,
 				error: function(data) {
-					debugger
+					if (self.props.onError) {
+						self.props.onError(data);
+					}
 				},
 				success: function(data) {
 					self.busy = false;
 					self.buttonText = self.defaultButton;
 
-					debugger
 					if (self.props.onSuccess) {
 						self.props.onSuccess(data);
 					}
@@ -73,7 +75,7 @@ Form = React.createClass({
 			Title;
 
 		if (self.props.name !== undefined) {
-			Title = <h2>{self.props.name}</h2>;
+			Title = <h2 dangerouslySetInnerHTML={{__html: self.props.name}} />;
 		}
 
 		// Передаем детям привязку с биндингку текущей формы

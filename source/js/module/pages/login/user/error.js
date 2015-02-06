@@ -9,9 +9,9 @@ RegiseterUserDone = React.createClass({
 		var self = this;
 
 		return (
-			<div className="bPageMessage">
-				<h2>Registration successful</h2>
-				<div className="ePageMessage_text">Now you can <a href="/#login" className="bButton" onClick={self.props.onSingin}>Sing in →</a> </div>
+			<div>
+				<h2>User not found</h2>
+				<div className="ePageMessage_text">You can <div className="bButton" onClick={self.props.onSingin}>try again →</div> or <a href="/#register" className="bButton" >sing up</a> </div>
 			</div>
 		)
 	}

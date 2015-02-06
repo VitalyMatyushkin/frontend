@@ -13,11 +13,7 @@ UserDataClass.getDefaultState = function(){
 	authorizationInfo = Helpers.LocalStorage.get('UserData.authorizationInfo') || false;
 
 	defaultState = {
-		authorizationInfo: authorizationInfo,
-		registerModal: {
-			isOpened: false,
-			blocked: false
-		}
+		authorizationInfo: authorizationInfo
 	};
 
 	return defaultState;

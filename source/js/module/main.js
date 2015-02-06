@@ -2,9 +2,6 @@ var ApplicationView = require('module/main/application'),
 	userDataClass = require('module/data/user_data'),
 	MoreartyContext;
 
-// Общие каналы общения между модулями
-//window.SharedBindings = {};
-
 // Создание контекста Morearty
 MoreartyContext = Morearty.createContext({
 	initialState: {
@@ -14,6 +11,9 @@ MoreartyContext = Morearty.createContext({
 		}
 	}
 });
+
+// Общие каналы общения между модулями
+window.SharedBindings = {};
 
 // Передача связывания контекста в классы данных
 userDataClass.setBinding(MoreartyContext.getBinding().sub('userData'));

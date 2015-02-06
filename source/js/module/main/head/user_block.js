@@ -1,24 +1,8 @@
 var UserBlock,
-	SVG = require('module/ui/svg'),
-	RegisterModal = require('module/main/head/user_block/register_modal');
+	SVG = require('module/ui/svg');
 
 UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
-	toggleRegisterModal: function(){
-		var self = this,
-			binding = self.getDefaultBinding().sub('registerModal');
-
-		binding.set('isOpened', !binding.get('isOpened'));
-	},
-	loginUser: function(loginData) {
-		var self = this,
-			binding = self.getDefaultBinding();
-
-		binding.set('authorizationInfo', loginData);
-		binding.sub('registerModal').set('isOpened', false);
-
-		document.location.hash = 'me';
-	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -36,7 +20,7 @@ UserBlock = React.createClass({
 			OptionsButton = <div className="eTopMenu_item"><SVG icon="icon_cog" /></div>;
 		} else {
 			// Кнопка авторизации
-			LoginButton = <span onClick={this.toggleRegisterModal} className="eTopMenu_item mLogin"><SVG icon="icon_key" /></span>;
+			LoginButton = <a href="/#login" className="eTopMenu_item mLogin"><SVG icon="icon_key" /></a>;
 		}
 
 		return (
@@ -44,7 +28,6 @@ UserBlock = React.createClass({
 				{OptionsButton}
 				{UserButton}
 				{LoginButton}
-				<RegisterModal binding={ binding.sub('registerModal') } onLoginDone={self.loginUser} onRequestClose={self.toggleRegisterModal}/>
 			</div>
 		)
 	}

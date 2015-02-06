@@ -48,12 +48,13 @@ var validationsSet = {
 			type: 'POST',
 			crossDomain: true,
 			data: dataToCheck,
-			error: function(data) {
-				debugger
+			error: function(data, error, errorText) {
+				// Проверяем, актуально ли проверяемое значение поля
+				if (errorText === 'Conflict' && self.getDefaultBinding().get('value') === value) {
+					self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
+				}
 			},
 			success: function(data) {
-				var self = this;
-
 				// Проверяем, актуально ли проверяемое значение поля
 				if (data.unique === false && self.getDefaultBinding().get('value') === value) {
 					self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
