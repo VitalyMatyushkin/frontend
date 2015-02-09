@@ -19,8 +19,10 @@ Center = React.createClass({
 						<Route binding={binding.sub('form.register')} path="/register" component="module/pages/register/user" pageName="register"  />
 						<Route binding={binding.sub('userData')} path="/login" component="module/pages/login/user" pageName="login"  />
 
-						<Route binding={binding.sub('schools')} path="/schools" component="module/pages/schools/list" pageName="schools"  />
+						<Route binding={binding.sub('schools.list')} path="/schools" component="module/pages/schools/list" pageName="schools"  />
 						<Route binding={binding.sub('schools')} path="/schools/add" component="module/pages/schools/add" pageName="schoolsAdd"  />
+						<Route binding={binding.sub('school')} path="/school" component="module/pages/schools/view" pageName="schoolOpen"  />
+
 					</RouterView>
 
 				</div>

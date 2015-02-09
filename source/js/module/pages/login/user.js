@@ -28,6 +28,12 @@ LoginUserPage = React.createClass({
 
 		self.getDefaultBinding().set('showError', false);
 	},
+	onSingUp: function() {
+		var self = this;
+
+		document.location.hash = 'register';
+		self.hideError();
+	},
 	render: function() {
 		var self = this,
 			currrentView;
@@ -35,7 +41,7 @@ LoginUserPage = React.createClass({
 		if (!self.getDefaultBinding().get('showError')) {
 			currrentView = <LoginForm onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
 		} else {
-			currrentView = <LoginError onOk={self.hideError} />
+			currrentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />
 		}
 
 		return (

@@ -14,6 +14,11 @@ RegiseterUserPage = React.createClass({
 
 		self.getDefaultBinding().set('showForm', false);
 	},
+	onDone: function() {
+		var self = this;
+
+		self.getDefaultBinding().set('showForm', true);
+	},
 	render: function() {
 		var self = this,
 			currrentView;
@@ -21,7 +26,7 @@ RegiseterUserPage = React.createClass({
 		if (self.getDefaultBinding().get('showForm')) {
 			currrentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
 		} else {
-			currrentView = <RegisterDone />
+			currrentView = <RegisterDone onSingin={self.onDone} />
 		}
 
 		return (

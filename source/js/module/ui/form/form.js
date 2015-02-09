@@ -19,6 +19,7 @@ Form = React.createClass({
 	},
 	tryToSubmit: function() {
 		var self = this,
+			token = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId'),
 			fields = self.getDefaultBinding().get(self.statePath).toJS(),
 			hereIsError = false,
 			dateToPost = {};
@@ -41,7 +42,7 @@ Form = React.createClass({
 		}
 
 		//TODO: Заменить dateToPost на Merge данных из statePath
-
+		dateToPost.ownerId = token;
 		// Если ошибок нет, обращаемся с данными к сервису
 		if (hereIsError === false) {
 
