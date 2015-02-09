@@ -80,8 +80,9 @@ Form = React.createClass({
 
 		// Передаем детям привязку с биндингку текущей формы
 		self.props.children = React.Children.map(self.props.children, function (child) {
+
 			return React.addons.cloneWithProps(child, {
-				binding: self.getDefaultBinding().sub(self.statePath),
+				binding: self.getDefaultBinding().sub(self.statePath + '.' + child.props.field),
 				service: self.props.service
 			});
 		});

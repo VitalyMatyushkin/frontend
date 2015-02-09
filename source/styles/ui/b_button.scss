@@ -13,6 +13,10 @@
   border-radius: 4px;
 }
 
+.bButton:hover{
+  color: white;
+}
+
 .bButton:hover:before{
   content: '';
   position: absolute;

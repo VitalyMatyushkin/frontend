@@ -7,6 +7,9 @@ var InputTypeMixin,
  * @type {{componentWillMount: Function, fullValidate: Function, typingValidate: Function, getInitialState: Function, changeValue: Function, setValue: Function, showError: Function, hideError: Function}}
  */
 InputTypeMixin = {
+	propTypes: {
+		onSetValue: React.PropTypes.func
+	},
 	getDefaultState: function () {
 		return Immutable.Map({
 			value: '',
@@ -107,6 +110,7 @@ InputTypeMixin = {
 		}
 
 		self.getDefaultBinding().set('value', value);
+		self.props.onSetValue && self.props.onSetValue(value);
 	},
 	showError: function(text) {
 		var self = this,

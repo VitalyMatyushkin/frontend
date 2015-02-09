@@ -20,7 +20,7 @@ LoginUserPage = React.createClass({
 	},
 	showError: function() {
 		var self = this;
-		debugger
+
 		self.getDefaultBinding().set('showError', true);
 	},
 	hideError: function() {

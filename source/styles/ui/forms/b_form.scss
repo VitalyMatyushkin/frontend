@@ -66,3 +66,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
   border: 1px solid $INVALID_COLOR;
   color: $INVALID_COLOR;
 }
+
+.eForm_fieldSet.mAreaField input{
+  text-transform: uppercase;
+}

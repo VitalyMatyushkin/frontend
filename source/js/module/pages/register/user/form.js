@@ -20,8 +20,8 @@ RegiseterUserForm = React.createClass({
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
-				<FormField type="text" field="email" validation="required confirm email server">Email</FormField>
-				<FormField type="text" field="password" validation="required confirm">Password</FormField>
+				<FormField type="confirmText" field="email" validation="required email server">Email</FormField>
+				<FormField type="confirmText" field="password" validation="required">Password</FormField>
 			</Form>
 		)
 	}

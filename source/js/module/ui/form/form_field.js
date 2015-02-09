@@ -10,19 +10,28 @@ FormField = React.createClass({
 	render: function () {
 		var self = this,
 			binding = this.getDefaultBinding(),
-			inputField =  React.createElement(typeList[self.props.type], self.props);
+			inputField =  React.createElement(typeList[self.props.type], self.props),
+			fieldStyleClass = 'eForm_fieldSet';
 
 		inputField = React.addons.cloneWithProps(inputField, {
 			name: self.props.children,
 			service: self.props.service,
-			binding: self.getDefaultBinding().sub(self.props.field)
+			binding: self.getDefaultBinding()
 		});
+
+		if (binding.get('showError')) {
+			fieldStyleClass += ' mInvalid';
+		}
 
 		return (
 			<div className="eForm_field">
 				<div className="eForm_fieldName">{self.props.children}</div>
 
-				{inputField}
+				<div className={fieldStyleClass}>
+					{inputField}
+
+					<div className="eForm_fieldValidText">{binding.get('error')}</div>
+				</div>
 			</div>
 
 		)
