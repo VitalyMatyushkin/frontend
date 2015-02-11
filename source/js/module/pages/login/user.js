@@ -14,7 +14,10 @@ LoginUserPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		if(data.id) {
-			binding.set('authorizationInfo', data);
+			binding.update('authorizationInfo', function(){
+				return Immutable.Map(data);
+			});
+
 			document.location.hash = 'schools';
 		}
 	},

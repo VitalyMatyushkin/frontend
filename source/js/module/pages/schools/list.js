@@ -4,32 +4,23 @@ SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
-			token = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId');
+			userId = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId');
 
-		if (self.requset && self.requset.abort) {
-			self.requset.abort();
-		}
-
-		self.requset = $.ajax({
-			url: 'http://api.squadintouch.com/v1/schools?filter[where][ownerId]=' + token,
-			type: 'GET',
-			crossDomain: true,
-			error: function(data, error, errorText) {
-				debugger
-			},
-			success: function(data) {
-				self.getDefaultBinding().update(function(){
-					return  Immutable.List(data);
-				});
-			}
+		Server.ownerSchools.get(userId).then(function(data) {
+			self.getDefaultBinding().update(function(){
+				return Immutable.List(data);
+			});
 		});
+
 	},
 	render: function() {
 		var self = this,
 			schoolNodes,
-			schoolList,
 			binding = self.getDefaultBinding(),
 			schoolList = binding.get();
+
+
+
 
 		if (schoolList) {
 

@@ -8,6 +8,13 @@ SchoolListPage = React.createClass({
 		return (
 			<div className="bSchoolMaster">
 				<h1>School control panel</h1>
+
+				<div class="bDataList">
+					<div class="eDataList_panel"></div>
+					<div class="eDataList_list">
+
+					</div>
+				</div>
 			</div>
 		)
 	}
