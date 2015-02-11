@@ -4,7 +4,6 @@ var SOURCE = './source',
 	concat = require('gulp-concat'),
 	bower = require('main-bower-files'),
 	run = require('run-sequence'),
-	clean = require('gulp-clean'),
 	sass = require('gulp-sass'),
 	sourcemaps = require('gulp-sourcemaps'),
 	autoprefixer = require('gulp-autoprefixer'),
@@ -92,7 +91,7 @@ function notAmdScripts(path, result) {
 
 // Clean build
 gulp.task('clean', function (callback) {
-	return gulp.src(BUILD, {read: false}).pipe(clean());
+    del([BUILD], callback);
 });
 
 // Live reload
@@ -126,4 +125,8 @@ gulp.task('default', function (callback) {
 		console.log('AMD SCRIPTS RELOAD');
 		run('clean_amd', 'amd_scripts');
 	});
+});
+
+gulp.task('deploy', function (callback) {
+    run('clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 });

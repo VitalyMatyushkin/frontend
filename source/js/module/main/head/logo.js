@@ -6,7 +6,7 @@ Logo = React.createClass({
 		var self = this;
 
 		return (
-			<div className="bTopLogo">Squard in touch</div>
+			<div className="bTopLogo">SquadIntouch</div>
 		)
 	}
 });
