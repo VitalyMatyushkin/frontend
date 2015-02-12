@@ -3,6 +3,27 @@ var UserBlock,
 
 UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
+    initialState: function () {
+        return Immutable.fromJS({
+            userInfo: {
+                firstName: '',
+                lastName: '',
+                username: '',
+                email: '',
+                avatar: 'http://lorempixel.com/640/480/sports'
+            }
+        });
+    },
+    componentWillMount: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            userInfoBinding = binding.sub('userInfo'),
+            userId = binding.get('authorizationInfo.userId');
+
+        window.Server.me.get(userId).then(function (data) {
+            userInfoBinding.set(Immutable.fromJS(data));
+        });
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -13,7 +34,7 @@ UserBlock = React.createClass({
 
 		if(binding.get('authorizationInfo')) {
 			// Кнопка перехода на страницу пользователя
-			userButtonStyle = { backgroundImage: 'url(https://pp.vk.me/c10133/v10133740/7d/Q4t3uQ3hBWQ.jpg)' };
+			userButtonStyle = { backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')' };
 			UserButton = <a id="jsIsMe" href="/#me" className="eTopMenu_photo mActive" style={userButtonStyle}></a>;
 
 			// Кнопка перехода на страницу настрок

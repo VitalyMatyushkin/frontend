@@ -54,14 +54,11 @@ UserPageView = React.createClass({
 								<div className="eUserFullInfo_text">живу с родителями</div>
 							</div>
 						</div>
-
-
-
 					</div>
 				</div>
 			</div>
 		</div>
-			)
+        )
 	}
 });
 

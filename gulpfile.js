@@ -97,7 +97,7 @@ gulp.task('clean', function (callback) {
 // Live reload
 gulp.task('connect', function() {
 	connect.server({
-		root: '/',
+		root: './',
 		livereload: true
 	});
 });
