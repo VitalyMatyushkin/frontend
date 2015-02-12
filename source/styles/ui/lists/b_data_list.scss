@@ -1,0 +1,95 @@
+.bDataList{
+  margin-bottom: 40px;
+}
+
+.eDataList_title{
+  font-size: 18px;
+  margin-bottom: 6px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(204, 204, 204, 0.62);
+}
+
+.eDataList_title .bLinkLike{
+  float: right;
+}
+
+.eDataList_panel{
+  margin-bottom: 12px;
+}
+
+.eDataList_list{
+  position: relative;
+}
+
+.eDataList_listItem{
+  padding: 5px 20px;
+  font-size: 15px;
+  position: relative;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.eDataList_listItem:hover{
+  background: rgb(87, 142, 64);
+  color: white;
+}
+
+.eDataList_listItem.mHead{
+  cursor: default;
+  font-weight: bold;
+  position: relative;
+}
+
+.eDataList_listItem.mHead .eDataList_listItemCell{
+  padding-top: 5px;
+  padding-bottom: 20px;
+}
+
+.eDataList_listItem.mHead{
+  font-size: 15px;
+}
+
+.eDataList_listItem.mHead:hover{
+  background: #fff;
+  color: #000000;
+}
+
+.eDataList_list.mBlockView{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: stretch;
+}
+
+
+.eDataList_list.mTable{
+  display: table;
+  width: 100%;
+}
+
+.eDataList_list.mTable .eDataList_listItem{
+  display: table-row;
+}
+
+.eDataList_listItemCell{
+  display: table-cell;
+  padding: 10px 20px;
+}
+
+.eDataList_listItemCell .bLinkLike{
+  display: inline-block;
+  margin-left: 25px;
+}
+
+.eDataList_listItem:hover .bLinkLike {
+  color: white;
+}
+
+.eDataList_listItem:hover .bLinkLike:hover{
+  text-decoration: underline;
+}
+
+
+.eDataList_listItemCell.mActions{
+  width: 215px;
+  text-align: right;
+}
