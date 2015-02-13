@@ -7,6 +7,7 @@ serviceList = {
 	initialize: function(binding) {
         serviceList.me = new Service('/users/{ownerId}', binding);
 		serviceList.schools = new Service('/schools', binding);
+		serviceList.school = new Service('/schools/{id}', binding);
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
         serviceList.learners = new Service('/schools/{schoolId}/learners', binding);
         serviceList.houses = new Service('/schools/{schoolId}/houses', binding);

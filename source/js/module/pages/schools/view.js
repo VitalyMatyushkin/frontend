@@ -1,65 +1,69 @@
-var SchoolListPage;
+var List = require('module/ui/list/list'),
+	ListField = require('module/ui/list/list_field'),
+	Table = require('module/ui/list/table'),
+	TableField = require('module/ui/list/table_field'),
+	SchoolListPage;
 
 SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	getDefaultState: function () {
+		return Immutable.fromJS({
+			classes: [],
+			houses: [],
+			pupils: [],
+			schoolInfo: ''
+		});
+	},
+	componentWillMount: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding(),
+			routingData = globalBinding.sub('routing.parameters').toJS(),
+			schooldId = routingData.id;
+
+		if (schooldId) {
+			window.Server.classes.get(schooldId).then(function (data) {
+				binding.set('classes', Immutable.fromJS(data));
+			});
+
+			window.Server.houses.get(schooldId).then(function (data) {
+				binding.set('houses', Immutable.fromJS(data));
+			});
+
+			window.Server.learners.get(schooldId).then(function (data) {
+				binding.set('pupils', Immutable.fromJS(data));
+			});
+
+			window.Server.school.get(schooldId).then(function (data) {
+				binding.set('schoolInfo', Immutable.fromJS(data));
+			});
+		}
+	},
 	render: function() {
-		var self = this;
+		var self = this,
+			binding = self.getDefaultBinding(),
+			schoolInfo = binding.get('schoolInfo.name');
 
 		return (
 			<div className="bSchoolMaster">
-				<h1>School control panel</h1>
+				<h1><span className="eSchoolMaster_title">{schoolInfo}</span> control panel</h1>
 
-				<div className="bDataList">
-					<div className="eDataList_panel">
-						<div className="eDataList_title">Classes <div className="bLinkLike">Add new...</div></div>
+				<List title="Classes" binding={binding.sub('classes')}>
+					<ListField dataField="name" />
+				</List>
 
-					</div>
-					<div className="eDataList_list mBlockView">
-						<div className="eDataList_listItem">5B</div>
-						<div className="eDataList_listItem">5C</div>
-					</div>
-				</div>
+				<List title="Homes" binding={binding.sub('houses')}>
+					<ListField dataField="name" />
+				</List>
 
+				<Table title="Pupils" binding={binding.sub('pupils')}>
+					<TableField dataField="firstName">First name</TableField>
+					<TableField dataField="lastName">Last name</TableField>
+					<TableField dataField="age">Age</TableField>
+					<TableField dataField="phone">Phone</TableField>
+					<TableField dataField="classId">Class</TableField>
+				</Table>
 
-
-				<div className="bDataList">
-					<div className="eDataList_panel">
-						<div className="eDataList_title">Homes <div className="bLinkLike">Add new...</div></div>
-
-					</div>
-					<div className="eDataList_list mBlockView">
-						<div className="eDataList_listItem">The big tigers</div>
-						<div className="eDataList_listItem">Griffindor</div>
-						<div className="eDataList_listItem">Slizerin</div>
-					</div>
-				</div>
-
-
-
-
-				<div className="bDataList">
-					<div className="eDataList_panel">
-						<div className="eDataList_title">Pupils <div className="bLinkLike">Add new...</div></div>
-
-					</div>
-					<div className="eDataList_list mTable">
-						<div className="eDataList_listItem mHead">
-							<div className="eDataList_listItemCell">Name</div>
-							<div className="eDataList_listItemCell">Class</div>
-							<div className="eDataList_listItemCell mActions">Actions</div>
-						</div>
-						<div className="eDataList_listItem">
-							<div className="eDataList_listItemCell">Morozov Stas</div>
-							<div className="eDataList_listItemCell">5C</div>
-							<div className="eDataList_listItemCell mActions"> <span className="bLinkLike">Edit</span>  <span className="bLinkLike">View</span>  <span className="bLinkLike">Remove</span></div>
-						</div>
-						<div className="eDataList_listItem">
-							<div className="eDataList_listItemCell">Podgorniy Mikhail</div>
-							<div className="eDataList_listItemCell">5V</div>
-							<div className="eDataList_listItemCell mActions"> <span className="bLinkLike">Edit</span>  <span className="bLinkLike">View</span>  <span className="bLinkLike">Remove</span></div>
-						</div>
-					</div>
-				</div>
 			</div>
 		)
 	}

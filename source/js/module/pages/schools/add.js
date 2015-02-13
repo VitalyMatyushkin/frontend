@@ -21,7 +21,7 @@ AddSchoolForm = React.createClass({
 
 		return (
 			<Form name="Add new school" service="schools" binding={self.getDefaultBinding().sub('form')} onSuccess={self.onSuccess}>
-				<FormField type="area" field="zipCodeId" validation="required">Zip code</FormField>
+				<FormField type="area" field="zipCodeId" validation="required">Postcode</FormField>
 				<FormField type="text" field="name" validation="required">Name</FormField>
 			</Form>
 		)

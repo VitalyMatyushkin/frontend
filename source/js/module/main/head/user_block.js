@@ -3,7 +3,7 @@ var UserBlock,
 
 UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
-    initialState: function () {
+	getDefaultState: function () {
         return Immutable.fromJS({
             userInfo: {
                 firstName: '',
@@ -20,7 +20,7 @@ UserBlock = React.createClass({
             userInfoBinding = binding.sub('userInfo'),
             userId = binding.get('authorizationInfo.userId');
 
-        window.Server.me.get(userId).then(function (data) {
+		userId && window.Server.me.get(userId).then(function (data) {
             userInfoBinding.set(Immutable.fromJS(data));
         });
     },

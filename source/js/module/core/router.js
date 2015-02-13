@@ -42,6 +42,24 @@ RouterView = React.createClass({
 			});
 		}
 	},
+	updateUrlParametrs: function() {
+		var self = this,
+			urlHash = document.location.hash,
+			parametersIndex = urlHash.indexOf('?'),
+			parametersResult = {};
+
+		if (parametersIndex !== -1) {
+			urlHash = urlHash.substr(parametersIndex + 1);
+			urlHash.split('&').forEach(function(oneParameter) {
+				var parametrSplit = oneParameter.split('=');
+
+				parametersResult[parametrSplit[0]] = parametrSplit[1];
+			});
+		}
+
+		self.RoutingBinding.set('parameters', Immutable.fromJS(parametersResult));
+
+	},
 	componentWillMount: function() {
 		var self = this,
 			routes = self.getRoutes();
@@ -57,7 +75,10 @@ RouterView = React.createClass({
 			self.addRoute(route);
 		});
 
+		window.addEventListener('popstate', self.updateUrlParametrs.bind(self));
+
 		// Инициализации маршрутизатора
+		self.updateUrlParametrs();
 		Router(self.siteRoutes).init();
 	},
 	render: function() {

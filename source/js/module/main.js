@@ -8,8 +8,11 @@ MoreartyContext = Morearty.createContext({
 	initialState: {
 		userData: userDataClass.getDefaultState(),
 		routing: {
-			current_page: 'main'
-		}
+			current_page: 'main',
+			parameters: {}
+		},
+		school: {},
+		schools: {}
 	}
 });
 
