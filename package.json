@@ -23,7 +23,7 @@
     "run-sequence": "^1.0.2"
   },
   "scripts": {
-    "build": "deploy",
+    "build": "gulp deploy",
     "postinstall": "bower install"
   },
   "repository": {
