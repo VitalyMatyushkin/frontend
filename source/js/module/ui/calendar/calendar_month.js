@@ -30,7 +30,7 @@ CalendarMonthView = React.createClass({
 		var self = this,
 			binding = this.getDefaultBinding(),
 			date = binding.get('date'),
-			month = date.getMonth() - 1,
+			month = date.getMonth(),
 			year = date.getFullYear(),
 			daysInMonth = self.daysInMonth(month, year),
 			daysInPrevMonth = self.daysInMonth(month - 1, year),
@@ -41,9 +41,9 @@ CalendarMonthView = React.createClass({
 		// добиваем дни от начала
 		if (firstMonthDayOfWeek > 0) {
 			for (var i = 0; i <= firstMonthDayOfWeek; i += 1) {
-				days.push({
+				days.unshift({
 					day: daysInPrevMonth - i,
-					currentTime: new Date(month === 0 ? year - 1 : year, month -1, daysInPrevMonth - i)
+                    date: new Date(month === 0 ? year - 1 : year, month === 0 ? 11 : month -1, daysInPrevMonth - i)
 				});
 			}
 		}
@@ -52,16 +52,16 @@ CalendarMonthView = React.createClass({
 		for (var j = 1; j <= daysInMonth; j += 1) {
 			days.push({
 				day: j,
-				currentTime: new Date(year, month, j)
+                date: new Date(year, month, j)
 			});
 		}
 
 		// вливаем дни в конец
-		if (lastMonthDayOfWeek < 6) {
-			for (var t = 6; t < 6 - lastMonthDayOfWeek; t = lastMonthDayOfWeek -= 1) {
+		if (days.length % 7 > 0) {
+			for (var t = 0, len = (7 - (days.length % 7)); t < len; t += 1) {
 				days.push({
 					day: t + 1,
-					currentTime: new Date(year, month + 1, t + 1)
+                    date: new Date(year, month + 1, t + 1)
 				});
 			}
 		}
@@ -71,19 +71,22 @@ CalendarMonthView = React.createClass({
 	},
 	renderRow: function (row, days) {
 		var self = this,
-			binding = self.getDefaultBinding(),
+            binding = this.getDefaultBinding(),
+            date = binding.get('date'),
+            month = date.getMonth(),
+            year = date.getFullYear(),
 			hoverDay = binding.get('hoverDay'),
 			cx = React.addons.classSet,
 			now = new Date(),
 			today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
 		return <div className="eMonth_row">{days.map(function (day, i) {
-			var classes = cx({
+            var classes = cx({
 				eMonth_day: true,
-				mToday: self.equalDates(day.currentTime, today),
-				mPrev: Date.parse(day.currentTime) < +today,
+				mToday: self.equalDates(day.date, today),
+				mPrev: day.date.getTime() < new Date(year, month, 1).getTime(),
 				mFirst: i === 0,
-				mHover: hoverDay && self.equalDates(day.currentTime, hoverDay.currentTime)
+				mHover: hoverDay && self.equalDates(day.date, hoverDay.date)
 			});
 
 			return <span className={classes} onMouseLeave={self.onMouseLeaveDay} onMouseEnter={self.onMouseEnterDay.bind(null, day)}>{day.day}</span>;

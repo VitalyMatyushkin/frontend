@@ -4,14 +4,13 @@ SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
-			userId = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId');
+			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
 
 		userId && Server.ownerSchools.get(userId).then(function(data) {
 			self.getDefaultBinding().update(function(){
 				return Immutable.List(data);
 			});
 		});
-
 	},
 	render: function() {
 		var self = this,
@@ -19,11 +18,7 @@ SchoolListPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			schoolList = binding.get();
 
-
-
-
 		if (schoolList) {
-
 			schoolNodes = schoolList.toArray().map(function (school) {
 				var schoolLink = '#school?id=' + school.id;
 

@@ -1,6 +1,8 @@
 /* .bTopPanel */
+$HEADER_HEIGHT: 45px;
+
 .bTopPanel {
-  height: 70px;
+  height: $HEADER_HEIGHT;
   background: $MAIN_COLOR;
   color: white;
   font-size: 14px;
