@@ -12,7 +12,8 @@ MoreartyContext = Morearty.createContext({
 			parameters: {}
 		},
 		school: {},
-		schools: {}
+		schools: {},
+		events: {}
 	}
 });
 

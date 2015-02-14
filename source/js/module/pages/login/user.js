@@ -39,17 +39,17 @@ LoginUserPage = React.createClass({
 	},
 	render: function() {
 		var self = this,
-			currrentView;
+			currentView;
 
 		if (!self.getDefaultBinding().get('showError')) {
-			currrentView = <LoginForm onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
+			currentView = <LoginForm onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
 		} else {
-			currrentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />
+			currentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />
 		}
 
 		return (
 			<div className="bPageMessage">
-				{currrentView}
+				{currentView}
 			</div>
 		)
 	}

@@ -1,0 +1,45 @@
+$border-color: #eee;
+
+.bCalendar {
+  display: flex;
+  width: 450px;
+  margin: 10px;
+}
+
+.eCalendar_eMonth {
+  display: flex;
+  flex-flow: column wrap;
+}
+
+.eMonth_row {
+  display: flex;
+  border-bottom: 1px solid $border-color;
+}
+
+.eMonth_day {
+  display: flex;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  vertical-align: middle;
+  text-align: center;
+  justify-content: center;
+  cursor: pointer;
+  border-right: 1px solid $border-color;
+  &.mFirst {
+    border-left: 1px solid $border-color;
+  }
+  &.mWeekName {
+    border: 0;
+    font-weight: bold;
+    cursor: default;
+  }
+  &.mToday {
+    background-color: #428bca;
+    color: #fff;
+  }
+  &.mHover {
+    background-color: #5bc0de;
+    color: #fff;
+  }
+}

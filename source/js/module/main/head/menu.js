@@ -6,25 +6,25 @@ Menu = React.createClass({
 	getDefaultProps: function () {
 		return {
 			items: [{
-				href: '/search',
+				href: '/#search',
 				icon: 'icon_search',
 				name: 'Search',
 				route: '',
 				key: 'Search'
 			},{
-				href: '/teams',
+				href: '/#teams',
 				icon: 'icon_teams',
 				name: 'Teams',
 				route: '',
 				key: 'Teams'
 			},{
-				href: '/events',
+				href: '/#events',
 				icon: 'icon_calendar',
 				name: 'Events',
 				route: '',
 				key: 'Events'
 			},{
-				href: '/players',
+				href: '/#players',
 				icon: 'icon_user',
 				name: 'Players',
 				route: '',
