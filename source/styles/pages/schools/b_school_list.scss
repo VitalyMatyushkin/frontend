@@ -13,7 +13,7 @@
   font-size: 15px;
   line-height: 22px;
   padding: 20px;
-  background: #578E40;
+  background: $MAIN_COLOR;
   color: white;
   border: 2px solid white;
   position: relative;
@@ -23,8 +23,8 @@
 
 .eSchoolList_one:hover{
   background: white;
-  color: #578E40;
-  border: 2px solid #578E40;
+  color: $MAIN_COLOR;
+  border: 2px solid $MAIN_COLOR;
   z-index: 1;
 }
 

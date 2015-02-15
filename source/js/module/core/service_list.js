@@ -14,7 +14,7 @@ serviceList = {
         serviceList.classes = new Service('/schools/{schoolId}/classes', binding);
         serviceList.learner = new Service('/schools/{schoolId}/learners/{learnerId}', binding);
         serviceList.house = new Service('/schools/{schoolId}/houses/{houseId}', binding);
-        serviceList.classes = new Service('/schools/{schoolId}/classes/{classId}', binding);
+        serviceList.class = new Service('/schools/{schoolId}/classes/{classId}', binding);
 		//events
 		serviceList.events = new Service('/events', binding);
 	}
