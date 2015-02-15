@@ -46,8 +46,8 @@ Service = (function() {
 				type: type,
 				crossDomain: true,
 				data: data,
-				dataType: 'json',
-				contentType: 'application/json',
+				//dataType: 'json',
+				//contentType: 'application/json',
 				error: function(data) {
 					promise.reject(data);
 				},
@@ -99,8 +99,10 @@ Service = (function() {
 						self._showError();
 					} else {
 						sendOptions = {};
-						sendOptions[self.requredParams[0]] = arguments[0];
+						sendOptions[self.requredParams[0]] = options;
 					}
+				} else {
+					sendOptions = options;
 				}
 			} else {
 				data = options;

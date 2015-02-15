@@ -10,13 +10,6 @@ InputTypeMixin = {
 	propTypes: {
 		onSetValue: React.PropTypes.func
 	},
-	getDefaultState: function () {
-		return Immutable.Map({
-			value: '',
-			showError: false,
-			error: false
-		});
-	},
 	componentWillMount: function() {
 		var self = this;
 

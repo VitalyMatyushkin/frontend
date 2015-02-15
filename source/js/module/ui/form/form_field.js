@@ -2,6 +2,13 @@ var FormField,
 	typeList = require('module/ui/form/types/type_list');
 
 FormField = React.createClass({
+	getDefaultState: function () {
+		return Immutable.Map({
+			value: '',
+			showError: false,
+			error: false
+		});
+	},
 	propTypes: {
 		type: React.PropTypes.string.isRequired,
 		field: React.PropTypes.string.isRequired

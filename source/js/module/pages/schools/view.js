@@ -19,36 +19,49 @@ SchoolListPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
-			schooldId = routingData.id;
+			schoolId = routingData.id;
 
-		if (schooldId) {
-			window.Server.classes.get(schooldId).then(function (data) {
+		if (schoolId) {
+			window.Server.classes.get(schoolId).then(function (data) {
 				binding.set('classes', Immutable.fromJS(data));
 			});
 
-			window.Server.houses.get(schooldId).then(function (data) {
+			window.Server.houses.get(schoolId).then(function (data) {
 				binding.set('houses', Immutable.fromJS(data));
 			});
 
-			window.Server.learners.get(schooldId).then(function (data) {
+			window.Server.learners.get(schoolId).then(function (data) {
 				binding.set('pupils', Immutable.fromJS(data));
 			});
 
-			window.Server.school.get(schooldId).then(function (data) {
+			window.Server.school.get(schoolId).then(function (data) {
 				binding.set('schoolInfo', Immutable.fromJS(data));
 			});
+
+			self.schoolId = schoolId;
 		}
+	},
+	addNewClass: function() {
+		var self = this;
+
+		document.location.hash = 'class?mode=new&schoolId='+self.schoolId ;
+	},
+	editClass: function(classInfo) {
+		var self = this;
+
+		document.location.hash = 'class?mode=edit&schoolId='+classInfo.schoolId+'&id='+classInfo.id;
 	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			schoolInfo = binding.get('schoolInfo.name');
+			schoolInfo = binding.get('schoolInfo.name'),
+			classSerivce;
 
 		return (
 			<div className="bSchoolMaster">
 				<h1><span className="eSchoolMaster_title">{schoolInfo}</span> control panel</h1>
 
-				<List title="Classes" binding={binding.sub('classes')}>
+				<List title="Classes" binding={binding.sub('classes')} onItemEdit={self.editClass} onAddNew={self.addNewClass}>
 					<ListField dataField="name" />
 				</List>
 
@@ -61,7 +74,6 @@ SchoolListPage = React.createClass({
 					<TableField dataField="lastName">Last name</TableField>
 					<TableField dataField="age">Age</TableField>
 					<TableField dataField="phone">Phone</TableField>
-					<TableField dataField="classId">Class</TableField>
 				</Table>
 
 			</div>

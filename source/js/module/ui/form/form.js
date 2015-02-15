@@ -4,17 +4,33 @@ Form = React.createClass({
 	mixins: [Morearty.Mixin],
 	statePath: 'fieldsState',
 	propTypes: {
+		onSubmit: React.PropTypes.func,
 		onSuccess: React.PropTypes.func,
 		onError: React.PropTypes.func,
-		name: React.PropTypes.string,
-		service: React.PropTypes.string.isRequired
+		name: React.PropTypes.string
 	},
 	defaultButton: 'Continue →',
 	loadingButton: 'Loading...',
 	componentWillMount: function() {
-		var self = this;
+		var self = this,
+			binding = self.getDefaultBinding();
 
-		self.getDefaultBinding().set('buttonText', self.defaultButton);
+		binding.addListener('data', function() {
+			var dataSet = binding.get('data');
+
+			if (dataSet && (dataSet = dataSet.toJS())) {
+				for (var dataField in dataSet) {
+					if (dataSet.hasOwnProperty(dataField)) {
+						binding.merge(self.statePath + '.' + dataField, true, Immutable.Map({
+							value: dataSet[dataField],
+							defaultValue: dataSet[dataField]
+						}));
+					}
+				}
+			}
+		});
+
+		binding.set('buttonText', self.defaultButton);
 		self.busy = false;
 	},
 	tryToSubmit: function() {
@@ -49,30 +65,56 @@ Form = React.createClass({
 			self.busy = true;
 			self.getDefaultBinding().set('buttonText', self.loadingButton);
 
-			$.ajax({
-				url: 'http://api.squadintouch.com:80/v1/' + self.props.service,
-				type: 'POST',
-				crossDomain: true,
-				data: dateToPost,
-				error: function(data) {
-					if (self.props.onError) {
-						self.props.onError(data);
-					}
-				},
-				success: function(data) {
+			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
+			if (typeof self.props.onSubmit === 'function') {
+
+				self.props.onSubmit(dateToPost);
+
+				return false;
+			}
+
+
+			if (typeof self.props.service === 'function') {
+				self.props.service(dateToPost).then(function(data) {
 					self.busy = false;
 					self.buttonText = self.defaultButton;
 
 					if (self.props.onSuccess) {
 						self.props.onSuccess(data);
 					}
-				}
-			});
+				}, function (data) {
+					if (self.props.onError) {
+						self.props.onError(data);
+					}
+				});
+			} else {
+				$.ajax({
+					url: 'http://api.squadintouch.com:80/v1/' + self.props.service,
+					type: 'POST',
+					crossDomain: true,
+					data: dateToPost,
+					error: function(data) {
+						if (self.props.onError) {
+							self.props.onError(data);
+						}
+					},
+					success: function(data) {
+						self.busy = false;
+						self.buttonText = self.defaultButton;
+
+						if (self.props.onSuccess) {
+							self.props.onSuccess(data);
+						}
+					}
+				});
+			}
+
 		}
 
 	},
 	render: function() {
 		var self = this,
+			binding = self.getDefaultBinding(),
 			Title;
 
 		if (self.props.name !== undefined) {
@@ -83,7 +125,7 @@ Form = React.createClass({
 		self.props.children = React.Children.map(self.props.children, function (child) {
 
 			return React.addons.cloneWithProps(child, {
-				binding: self.getDefaultBinding().sub(self.statePath + '.' + child.props.field),
+				binding: binding.sub(self.statePath + '.' + child.props.field),
 				service: self.props.service
 			});
 		});
