@@ -9,14 +9,12 @@ EventsView = React.createClass({
 		var date = new Date();
 
 		return Immutable.fromJS({
-			events: {
-				models: [],
-				activeList: 'calendar',
-				_calendar: {
-					currentDate: date,
-					mode: 'months'
-				}
-			},
+            models: [],
+            activeList: 'calendar',
+            _calendar: {
+                currentDate: date,
+                mode: 'months'
+            },
 			invites: {
 				models: []
 			}
@@ -26,18 +24,18 @@ EventsView = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		//window.Server.events.get().then(function (data) {
-		//	binding.set('events.models', Immutable.fromJS(data));
-		//});
+		window.Server.events.get().then(function (data) {
+			binding.set('models', Immutable.fromJS(data));
+		});
 	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			activeList = binding.get('events.activeList'),
+			activeList = binding.get('activeList'),
 			currentView;
 
 		if (activeList === 'calendar') {
-			currentView =  <CalendarView binding={binding.sub('events._calendar')} />
+			currentView =  <CalendarView binding={binding.sub('_calendar')} />
 		} else if (activeList === 'challenges') {
 			currentView =  <EventsChallengesView binding={binding} />
 		} else if (activeList === 'invites') {
