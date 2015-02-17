@@ -50,6 +50,16 @@ SchoolListPage = React.createClass({
 			document.location.hash = page + '?mode=new&schoolId='+self.schoolId ;
 		}
 	},
+	_getViewFunction: function(page) {
+		var self = this;
+
+		return function(data) {
+			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
+
+			pageBinding.set('data', Immutable.fromJS(data));
+			document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
+		}
+	},
 	_getEditFunction: function(page) {
 		var self = this;
 
@@ -85,7 +95,7 @@ SchoolListPage = React.createClass({
 					<TableField dataField="name">House name</TableField>
 				</Table>
 
-				<Table title="Pupils" binding={binding.sub('leaners')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
+				<Table title="Pupils" binding={binding.sub('leaners')} onItemView={self._getViewFunction('leaner')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
 					<TableField dataField="firstName">First name</TableField>
 					<TableField dataField="lastName">Last name</TableField>
 					<TableField dataField="age">Age</TableField>

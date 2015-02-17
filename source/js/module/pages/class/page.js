@@ -1,7 +1,7 @@
-var HouseAddForm = require('module/pages/house/add'),
-	HomeViewPage;
+var ClassForm = require('module/pages/class/form'),
+	ClassViewPage;
 
-HomeViewPage = React.createClass({
+ClassViewPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
@@ -9,17 +9,18 @@ HomeViewPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
 			schoolId = routingData.schoolId,
-			houseId = routingData.id,
+			classId = routingData.id,
 			mode = routingData.mode;
 
 		self.schoolId = schoolId;
-		self.houseId = houseId;
+		self.classId = classId;
 		self.mode = mode || 'view';
 
 		// Костыль, пока не будет ясности с путями хранения данных
-		houseId && window.Server.house.get({
+
+		classId && window.Server.class.get({
 			schoolId: schoolId,
-			houseId: houseId
+			classId: classId
 		}).then(function (data) {
 			binding.set('data', Immutable.fromJS(data));
 		});
@@ -30,11 +31,11 @@ HomeViewPage = React.createClass({
 
 		return (
 			<div className="bTest">
-				<HouseAddForm mode={self.mode} houseId={self.houseId} schoolId={self.schoolId} binding={binding} />
+				<ClassForm mode={self.mode} classId={self.classId} schoolId={self.schoolId} binding={binding} />
 			</div>
 		)
 	}
 });
 
 
-module.exports = HomeViewPage;
+module.exports = ClassViewPage;
