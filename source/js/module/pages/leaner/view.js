@@ -1,7 +1,7 @@
-var ClassForm = require('module/pages/class/add'),
-	ClassViewPage;
+var LeanerAddForm = require('module/pages/leaner/add'),
+	LeanerViewPage;
 
-ClassViewPage = React.createClass({
+LeanerViewPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
@@ -9,18 +9,17 @@ ClassViewPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
 			schoolId = routingData.schoolId,
-			classId = routingData.id,
+			learnerId = routingData.id,
 			mode = routingData.mode;
 
 		self.schoolId = schoolId;
-		self.classId = classId;
+		self.learnerId = learnerId;
 		self.mode = mode || 'view';
 
 		// Костыль, пока не будет ясности с путями хранения данных
-
-		classId && window.Server.class.get({
+		learnerId && window.Server.learner.get({
 			schoolId: schoolId,
-			classId: classId
+			learnerId: learnerId
 		}).then(function (data) {
 			binding.set('data', Immutable.fromJS(data));
 		});
@@ -31,11 +30,11 @@ ClassViewPage = React.createClass({
 
 		return (
 			<div className="bTest">
-				<ClassForm mode={self.mode} classId={self.classId} schoolId={self.schoolId} binding={binding} />
+				<LeanerAddForm mode={self.mode} learnerId={self.learnerId} schoolId={self.schoolId} binding={binding} />
 			</div>
 		)
 	}
 });
 
 
-module.exports = ClassViewPage;
+module.exports = LeanerViewPage;

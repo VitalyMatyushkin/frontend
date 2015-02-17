@@ -24,6 +24,8 @@ Center = React.createClass({
 						<Route binding={binding.sub('school')} path="/school" component="module/pages/schools/view" pageName="schoolOpen"  />
 
 						<Route binding={binding.sub('class')} path="/class" component="module/pages/class/view" pageName="class"  />
+						<Route binding={binding.sub('house')} path="/house" component="module/pages/house/view" pageName="house"  />
+						<Route binding={binding.sub('leaner')} path="/leaner" component="module/pages/leaner/view" pageName="leaner"  />
 
 
 						<Route binding={binding.sub('events')} path="/events" component="module/pages/events/events_view" pageName="events"  />

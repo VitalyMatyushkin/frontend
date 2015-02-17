@@ -16,22 +16,34 @@ Form = React.createClass({
 			binding = self.getDefaultBinding();
 
 		binding.addListener('data', function() {
-			var dataSet = binding.get('data');
-
-			if (dataSet && (dataSet = dataSet.toJS())) {
-				for (var dataField in dataSet) {
-					if (dataSet.hasOwnProperty(dataField)) {
-						binding.merge(self.statePath + '.' + dataField, true, Immutable.Map({
-							value: dataSet[dataField],
-							defaultValue: dataSet[dataField]
-						}));
-					}
-				}
-			}
+			self._setDefaultValues();
 		});
 
+		self._setDefaultValues();
 		binding.set('buttonText', self.defaultButton);
 		self.busy = false;
+	},
+	/**
+	 * Метод переосит значение из заданного поля в поле со значением по умочанию
+	 * Такой подход необходим, т.к. данные могут прийти асинхронно, а значит поле value у node-элемента
+	 * привязать к модели напрямую нелья
+	 * @private
+	 */
+	_setDefaultValues: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			dataSet = binding.get('data');
+
+		if (dataSet && (dataSet = dataSet.toJS())) {
+			for (var dataField in dataSet) {
+				if (dataSet.hasOwnProperty(dataField)) {
+					binding.merge(self.statePath + '.' + dataField, false, Immutable.Map({
+						value: dataSet[dataField],
+						defaultValue: dataSet[dataField]
+					}));
+				}
+			}
+		}
 	},
 	tryToSubmit: function() {
 		var self = this,

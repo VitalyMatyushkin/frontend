@@ -31,7 +31,7 @@ SchoolListPage = React.createClass({
 			});
 
 			window.Server.learners.get(schoolId).then(function (data) {
-				binding.set('pupils', Immutable.fromJS(data));
+				binding.set('leaners', Immutable.fromJS(data));
 			});
 
 			window.Server.school.get(schoolId).then(function (data) {
@@ -41,15 +41,24 @@ SchoolListPage = React.createClass({
 			self.schoolId = schoolId;
 		}
 	},
-	addNewClass: function() {
+	_getAddFunction: function(page) {
 		var self = this;
 
-		document.location.hash = 'class?mode=new&schoolId='+self.schoolId ;
+		return function() {
+			var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
+
+			document.location.hash = page + '?mode=new&schoolId='+self.schoolId ;
+		}
 	},
-	editClass: function(classInfo) {
+	_getEditFunction: function(page) {
 		var self = this;
 
-		document.location.hash = 'class?mode=edit&schoolId='+classInfo.schoolId+'&id='+classInfo.id;
+		return function(data) {
+			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
+
+			pageBinding.set('data', Immutable.fromJS(data));
+			document.location.hash = page + '?mode=edit&schoolId='+data.schoolId+'&id='+data.id;
+		}
 	},
 	render: function() {
 		var self = this,
@@ -57,19 +66,26 @@ SchoolListPage = React.createClass({
 			schoolInfo = binding.get('schoolInfo.name'),
 			classSerivce;
 
+		/*
+		 <List title="Houses" binding={binding.sub('houses')} onItemEdit={self._getEditFunction('house')} onAddNew={self._getAddFunction('house')}>
+		 <ListField dataField="name" />
+		 </List>
+		 */
+
 		return (
 			<div className="bSchoolMaster">
 				<h1><span className="eSchoolMaster_title">{schoolInfo}</span> control panel</h1>
 
-				<List title="Classes" binding={binding.sub('classes')} onItemEdit={self.editClass} onAddNew={self.addNewClass}>
-					<ListField dataField="name" />
-				</List>
+				<Table title="Classes" binding={binding.sub('classes')} onItemEdit={self._getEditFunction('class')} onAddNew={self._getAddFunction('class')}>
+					<TableField dataField="name">First name</TableField>
+					<TableField dataField="age">Age</TableField>
+				</Table>
 
-				<List title="Homes" binding={binding.sub('houses')}>
-					<ListField dataField="name" />
-				</List>
+				<Table title="Houses" binding={binding.sub('houses')} onItemEdit={self._getEditFunction('houses')} onAddNew={self._getAddFunction('houses')}>
+					<TableField dataField="name">House name</TableField>
+				</Table>
 
-				<Table title="Pupils" binding={binding.sub('pupils')}>
+				<Table title="Pupils" binding={binding.sub('leaners')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
 					<TableField dataField="firstName">First name</TableField>
 					<TableField dataField="lastName">Last name</TableField>
 					<TableField dataField="age">Age</TableField>
