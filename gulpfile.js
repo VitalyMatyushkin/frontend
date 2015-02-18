@@ -26,6 +26,23 @@ gulp.task('svg_symbols', function () {
 	return files;
 });
 
+gulp.task('normalize', function (callback) {
+	var fs = require('fs'),
+		path = './source/js/bower/react/.bower.json',
+		json = require(path);
+
+	if (json.main !== 'react-with-addons.js') {
+		json.main = 'react-with-addons.js';
+		fs.writeFile(path, JSON.stringify(json, null, 4), function(err) {
+			if(err) {
+				console.log(err);
+			} else {
+				callback();
+			}
+		});
+	}
+});
+
 // Bower dependences
 gulp.task('bower', function() {
 	var files = gulp.src(bower({checkExistence: true}), { base: '/bower_components' });
@@ -109,7 +126,7 @@ gulp.task('clean_amd', function (callback) {
 
 // Run build
 gulp.task('default', function (callback) {
-	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+	run('connect', 'clean', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		console.log('STYLES RELOAD');
@@ -128,5 +145,5 @@ gulp.task('default', function (callback) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+    run('clean', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 });
