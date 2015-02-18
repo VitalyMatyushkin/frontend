@@ -3,7 +3,11 @@ var Table;
 Table = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string
+		title: React.PropTypes.string,
+		onAddNew: React.PropTypes.func,
+		onItemEdit: React.PropTypes.func,
+		onItemView: React.PropTypes.func,
+		onItemRemove: React.PropTypes.func
 	},
 	componentWillMount: function() {
 		var self = this;
@@ -23,8 +27,13 @@ Table = React.createClass({
 
 		if (dataList) {
 			itemsNodes = dataList.toJS().map(function (item) {
+				var itemCells,
+					getEditFunction = function() { return function() { self.props.onItemEdit(item);	} },
+					getViewFunction = function() { return function() { self.props.onItemView(item);	} },
+					getRemoveFunction = function() { return function() { self.props.onItemRemove(item);	} };
 
-				var itemCells = self.usedFields.map(function(field) {
+
+				itemCells = self.usedFields.map(function(field) {
 					return (
 						<div className="eDataList_listItemCell">{item[field]}</div>
 					);
@@ -33,7 +42,11 @@ Table = React.createClass({
 				return (
 					<div className="eDataList_listItem">
 						{itemCells}
-						<div className="eDataList_listItemCell mActions"> <span className="bLinkLike">Edit</span>  <span className="bLinkLike">View</span>  <span className="bLinkLike">Remove</span></div>
+						<div className="eDataList_listItemCell mActions">
+							<span onClick={getEditFunction()} className="bLinkLike">Edit</span>
+							<span onClick={getViewFunction()} className="bLinkLike">View</span>
+							<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>
+						</div>
 					</div>
 				);
 			});
@@ -42,7 +55,7 @@ Table = React.createClass({
 		return (
 		<div className="bDataList">
 			<div className="eDataList_panel">
-				<div className="eDataList_title">{self.props.title} <div className="bLinkLike">Add new...</div></div>
+				<div className="eDataList_title">{self.props.title} <div onClick={self.props.onAddNew} className="bLinkLike">Add new...</div></div>
 
 			</div>
 			<div className="eDataList_list mTable">

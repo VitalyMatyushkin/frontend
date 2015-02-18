@@ -28,7 +28,7 @@ List = React.createClass({
 					return function() {
 						self.props.onItemEdit(item);
 					}
-				}
+				};
 
 				return (
 					<div onClick={getClickFunction()} className="eDataList_listItem">

@@ -1,4 +1,4 @@
-var ClassForm = require('module/pages/class/add'),
+var ClassForm = require('module/pages/class/form'),
 	ClassViewPage;
 
 ClassViewPage = React.createClass({
@@ -17,7 +17,6 @@ ClassViewPage = React.createClass({
 		self.mode = mode || 'view';
 
 		// Костыль, пока не будет ясности с путями хранения данных
-		binding.clear();
 
 		classId && window.Server.class.get({
 			schoolId: schoolId,
