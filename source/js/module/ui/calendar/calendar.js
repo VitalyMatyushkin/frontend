@@ -1,5 +1,5 @@
-var CalendarMonthView = require('./calendar_month'),
-    CalendarEventsPanelView = require('./calendar_events_panel'),
+var CalendarYearView = require('./calendar_year'),
+    CalendarMonthView = require('./calendar_month'),
 	CalendarView;
 
 CalendarView = React.createClass({
@@ -8,8 +8,8 @@ CalendarView = React.createClass({
 		var date = new Date();
 
 		return Immutable.fromJS({
-			date: date,
-			mode: 'months',
+			currentDate: date,
+			mode: 'month',
 			hoverDay: null,
             monthNames: [ "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December" ]
@@ -18,19 +18,17 @@ CalendarView = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            eventsBinding = self.getMoreartyContext().getBinding().sub('events'),
 			currentMode = binding.get('mode'),
 			currentView;
 
-		if (currentMode === 'months') {
-			currentView = <CalendarMonthView binding={binding} />
+		if (currentMode === 'year') {
+			currentView = <CalendarYearView binding={binding} />
 		} else {
 			currentView = <CalendarMonthView binding={binding} />
 		}
 
 		return <div className="bCalendar">
 			{currentView}
-            <CalendarEventsPanelView binding={eventsBinding} />
 		</div>;
 	}
 });

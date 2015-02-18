@@ -10,14 +10,10 @@ EventsView = React.createClass({
 
 		return Immutable.fromJS({
             models: [],
-            activeList: 'calendar',
-            _calendar: {
+            calendar: {
                 currentDate: date,
                 mode: 'months'
-            },
-			invites: {
-				models: []
-			}
+            }
 		});
 	},
 	componentWillMount: function () {
@@ -35,7 +31,7 @@ EventsView = React.createClass({
 			currentView;
 
 		if (activeList === 'calendar') {
-			currentView =  <CalendarView binding={binding.sub('_calendar')} />
+			currentView =  <CalendarView binding={binding.sub('calendar')} />
 		} else if (activeList === 'challenges') {
 			currentView =  <EventsChallengesView binding={binding} />
 		} else if (activeList === 'invites') {
@@ -53,7 +49,7 @@ EventsView = React.createClass({
 				</div>
 				<div className="eTopInfoBlock mNewEvent">
 					<span className="eTopInfoBlock_count">243</span>
-					<span className="eTopInfoBlock_title">Chellenges</span>
+					<span className="eTopInfoBlock_title">Challenges</span>
 					<span className="eTopInfoBlock_action">overview</span>
 				</div>
 				<div className="eTopInfoBlock mMyInvite">

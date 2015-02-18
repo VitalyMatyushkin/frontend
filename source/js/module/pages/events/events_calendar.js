@@ -8,7 +8,7 @@ EventsCalendar = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return <div className="eEvents_pageContent mActiveEvents">
-			<CalendarView binding={binding} />
+			<CalendarView binding={binding.sub('calendar')} />
 		</div>;
 	}
 });

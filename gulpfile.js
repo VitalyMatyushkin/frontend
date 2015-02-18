@@ -36,6 +36,7 @@ gulp.task('normalize', function (callback) {
 		fs.writeFile(path, JSON.stringify(json, null, 4), function(err) {
 			if(err) {
 				console.log(err);
+                callback();
 			} else {
 				callback();
 			}
@@ -126,7 +127,7 @@ gulp.task('clean_amd', function (callback) {
 
 // Run build
 gulp.task('default', function (callback) {
-	run('connect', 'clean', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		console.log('STYLES RELOAD');

@@ -13,7 +13,13 @@ MoreartyContext = Morearty.createContext({
 		},
 		school: {},
 		schools: {},
-		events: {}
+		events: {
+            models: [],
+            calendar: {
+                currentDate: new Date(),
+                mode: 'month'
+            }
+        }
 	}
 });
 

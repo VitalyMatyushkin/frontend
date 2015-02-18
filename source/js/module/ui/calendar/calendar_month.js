@@ -40,7 +40,7 @@ CalendarMonthView = React.createClass({
 	getDays: function () {
 		var self = this,
 			binding = this.getDefaultBinding(),
-			date = binding.get('date'),
+			date = binding.get('currentDate'),
 			month = date.getMonth(),
 			year = date.getFullYear(),
 			daysInMonth = self.daysInMonth(month, year),
@@ -86,29 +86,29 @@ CalendarMonthView = React.createClass({
     onClickPrevButton: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            date = binding.get('date'),
+            date = binding.get('currentDate'),
             year = date.getFullYear(),
             month = date.getMonth(),
             prevYear = month === 0 ? year -1 : year,
             prevMonth = month === 0 ? 11 : month -1;
 
-        binding.set('date', new Date(prevYear, prevMonth, 1));
+        binding.set('currentDate', new Date(prevYear, prevMonth, 1));
     },
     onClickNextButton: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            date = binding.get('date'),
+            date = binding.get('currentDate'),
             year = date.getFullYear(),
             month = date.getMonth(),
             nextYear = month === 11 ? year + 1 : year,
             nextMonth = month === 11 ? 0 : month + 1;
 
-        binding.set('date', new Date(nextYear, nextMonth, 1));
+        binding.set('currentDate', new Date(nextYear, nextMonth, 1));
     },
 	renderRow: function (row, days) {
 		var self = this,
             binding = this.getDefaultBinding(),
-            date = binding.get('date'),
+            date = binding.get('currentDate'),
 			hoverDay = binding.get('hoverDay'),
 			cx = React.addons.classSet,
 			now = new Date(),
@@ -138,11 +138,11 @@ CalendarMonthView = React.createClass({
     renderNavBar: function () {
         var self = this,
             binding = this.getDefaultBinding(),
-            currentMonthName = binding.get('monthNames.' + binding.get('date').getMonth());
+            currentMonthName = binding.get('monthNames.' + binding.get('currentDate').getMonth());
 
             return <div className="eCalendar_navBar">
             <span className="eCalendar_item" onClick={self.onClickPrevButton}>prev</span>
-            <span className="eCalendar_item mNameMonth">{currentMonthName} - {binding.get('date').getFullYear()}</span>
+            <span className="eCalendar_item mNameMonth">{currentMonthName} - {binding.get('currentDate').getFullYear()}</span>
             <span className="eCalendar_item" onClick={self.onClickNextButton}>next</span>
         </div>;
     },
