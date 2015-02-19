@@ -35,11 +35,12 @@ Menu = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			userDataBiding = binding.sub('userData'),
+			authBinding = binding.sub('userData.authorizationInfo'),
+			authData = authBinding.toJS(),
 			MenuItemsViews = null;
 
 		// Если пользователь авторизован, добавляем в отображение пункты меню
-		if(userDataBiding.get('authorizationInfo')) {
+		if(authData && authData.id) {
 			MenuItemsViews = self.props.items.map(function (item) {
 				return (
 					<a href={item.href} key={item.key} className="eTopMenu_item"><SVG icon={item.icon} />{item.name}</a>

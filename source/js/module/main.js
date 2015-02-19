@@ -1,12 +1,14 @@
 var ApplicationView = require('module/main/application'),
-	userDataClass = require('module/data/user_data'),
+	userDataInstance = require('module/data/user_data'),
+	authController = require('module/core/auth_controller'),
 	serviceList = require('module/core/service_list'),
-	MoreartyContext;
+	MoreartyContext,
+	binding;
 
 // Создание контекста Morearty
 MoreartyContext = Morearty.createContext({
 	initialState: {
-		userData: userDataClass.getDefaultState(),
+		userData: userDataInstance.getDefaultState(),
 		routing: {
 			current_page: 'main',
 			parameters: {}
@@ -23,15 +25,20 @@ MoreartyContext = Morearty.createContext({
 	}
 });
 
+binding = MoreartyContext.getBinding();
+
 // Общие каналы общения между модулями
 window.SharedBindings = {};
 window.Server = serviceList;
 
 // Передача связывания контекста в классы данных
-userDataClass.setBinding(MoreartyContext.getBinding().sub('userData'));
+userDataInstance.setBinding(binding.sub('userData'));
 
 // Включение авторизации сервисов
-serviceList.initialize(MoreartyContext.getBinding().sub('userData.authorizationInfo'));
+serviceList.initialize(binding.sub('userData.authorizationInfo'));
+
+// Связывания контроллера, отвечающего за контроль за авторизацией с данными
+authController.initialize(binding.sub('userData'));
 
 // Инициализация приложения
 React.render(

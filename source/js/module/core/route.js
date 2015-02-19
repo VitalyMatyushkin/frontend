@@ -5,7 +5,8 @@ Route = React.createClass({
 	propTypes: {
 		path: React.PropTypes.string.isRequired,
 		component: React.PropTypes.string.isRequired,
-		pageName: React.PropTypes.string.isRequired
+		pageName: React.PropTypes.string.isRequired,
+		loginRoute: React.PropTypes.bool
 	},
 	render: function() {
 		var self = this;
