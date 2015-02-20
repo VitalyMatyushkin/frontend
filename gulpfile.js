@@ -26,7 +26,7 @@ gulp.task('svg_symbols', function () {
 	return files;
 });
 
-gulp.task('normalize', function (callback) {
+gulp.task('normalize', function () {
 	var fs = require('fs'),
 		path = './source/js/bower/react/.bower.json',
 		json = require(path);
