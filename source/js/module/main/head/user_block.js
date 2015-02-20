@@ -27,12 +27,14 @@ UserBlock = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
+			authBinding = binding.get('authorizationInfo'),
+			authData = authBinding.toJS(),
 			OptionsButton = null,
 			UserButton = null,
 			userButtonStyle = {},
 			LoginButton = null;
 
-		if(binding.get('authorizationInfo')) {
+		if(authData && authData.id) {
 			// Кнопка перехода на страницу пользователя
 			userButtonStyle = { backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')' };
 			UserButton = <a id="jsIsMe" href="/#me" className="eTopMenu_photo mActive" style={userButtonStyle}></a>;

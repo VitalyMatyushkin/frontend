@@ -5,29 +5,12 @@ var DataPrototype = require('module/data/data_prototype'),
  * Получение начального состояния данных UserData
  */
 UserDataClass.getDefaultState = function(){
-	var self = this,
-		defaultState,
-		authorizationInfo,
-		secondsToLive;
+	var self = this;
 
 	// Востановлении информации о состоянии авторизации
-	authorizationInfo = Helpers.LocalStorage.get('UserData.authorizationInfo') || false;
-
-	if (authorizationInfo) {
-		secondsToLive = Math.ceil((authorizationInfo.dieTime - Date.now()) / 1000);
-
-		if (secondsToLive > 0) {
-			setTimeout(secondsToLive);
-		} else {
-			authorizationInfo = false;
-		}
-	}
-
-	defaultState = {
-		authorizationInfo: authorizationInfo
+	return {
+		authorizationInfo: Helpers.LocalStorage.get('UserData.authorizationInfo') || {}
 	};
-
-	return defaultState;
 };
 
 /**
@@ -37,31 +20,12 @@ UserDataClass.initBind = function() {
 	var self = this,
 		bindObject = self.bindObject;
 
+	// Данные об авторизации мы храним
 	bindObject.addListener('authorizationInfo', function() {
 		var data = bindObject.get('authorizationInfo');
 
-		if(data && (data = data.toJS()) && data.id){
-			// Сохранение времени смерти сессии
-			data.dieTime = Date.now() + data.ttl;
-			self.startTTLTimer(data.ttl);
-
-			Helpers.LocalStorage.set('UserData.authorizationInfo', data);
-		}
+		Helpers.LocalStorage.set('UserData.authorizationInfo', data);
 	});
 };
-
-/**
- * Запуск таймера окончания сессии
- */
-UserDataClass.startTTLTimer = function(secondsToLive) {
-	var self = this;
-
-	setTimeout(function() {
-		self.bindObject.set('authorizationInfo', false);
-		Helpers.LocalStorage.remove('UserData.authorizationInfo');
-		document.location.hash = 'login';
-	}, secondsToLive * 1000);
-};
-
 
 module.exports = UserDataClass;
