@@ -33,14 +33,7 @@ gulp.task('normalize', function (callback) {
 
 	if (json.main !== 'react-with-addons.js') {
 		json.main = 'react-with-addons.js';
-		fs.writeFile(path, JSON.stringify(json, null, 4), function(err) {
-			if(err) {
-				console.log(err);
-                callback();
-			} else {
-				callback();
-			}
-		});
+		fs.writeFile(path, JSON.stringify(json, null, 4));
 	}
 });
 
