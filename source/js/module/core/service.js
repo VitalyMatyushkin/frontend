@@ -63,6 +63,10 @@ Service = (function() {
 				}
 			});
 
+			promise.abort = function() {
+				self.currentRequest.abort();
+			};
+
 			return promise;
 		},
 		_showError: function() {

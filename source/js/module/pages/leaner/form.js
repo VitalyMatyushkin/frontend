@@ -45,7 +45,7 @@ AddNewLeaner = React.createClass({
 				<FormColumn type="column">
 					<FormField type="text" field="phone" validation="">Phone</FormField>
 					<FormField type="text" field="email" validation="">E-mail</FormField>
-					<FormField type="text" field="classId" validation="required">classId (replace to dropdown)</FormField>
+					<FormField type="autocomplete" field="classId" validation="required">Class</FormField>
 					<FormField type="text" field="houseId" validation="required">houseId (replace to dropdown)</FormField>
 				</FormColumn>
 			</Form>
