@@ -1,5 +1,6 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
+	FormColumn = require('module/ui/form/form_column'),
 	AddNewLeaner;
 
 AddNewLeaner = React.createClass({
@@ -34,14 +35,19 @@ AddNewLeaner = React.createClass({
 
 		return (
 			<Form name={formTitle} onSubmit={self.submitForm} binding={self.getDefaultBinding()} >
-				<FormField type="text" field="firstName" validation="required">First name</FormField>
-				<FormField type="text" field="lastName" validation="required">Last name</FormField>
-				<FormField type="text" field="gender" validation="required">Gender</FormField>
-				<FormField type="text" field="age" validation="required">Age</FormField>
-				<FormField type="text" field="phone" validation="">Phone</FormField>
-				<FormField type="text" field="email" validation="">E-mail</FormField>
-				<FormField type="text" field="classId" validation="required">classId (replace to dropdown)</FormField>
-				<FormField type="text" field="houseId" validation="required">houseId (replace to dropdown)</FormField>
+				<FormColumn type="column">
+					<FormField type="text" field="firstName" validation="required">First name</FormField>
+					<FormField type="text" field="lastName" validation="required">Last name</FormField>
+					<FormField type="text" field="gender" validation="required">Gender</FormField>
+					<FormField type="text" field="age" validation="required">Age</FormField>
+				</FormColumn>
+
+				<FormColumn type="column">
+					<FormField type="text" field="phone" validation="">Phone</FormField>
+					<FormField type="text" field="email" validation="">E-mail</FormField>
+					<FormField type="text" field="classId" validation="required">classId (replace to dropdown)</FormField>
+					<FormField type="text" field="houseId" validation="required">houseId (replace to dropdown)</FormField>
+				</FormColumn>
 			</Form>
 		)
 	}

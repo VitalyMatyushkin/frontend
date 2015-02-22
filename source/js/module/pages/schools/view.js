@@ -86,6 +86,13 @@ SchoolListPage = React.createClass({
 			<div className="bSchoolMaster">
 				<h1><span className="eSchoolMaster_title">{schoolInfo}</span> control panel</h1>
 
+				<Table title="Pupils" binding={binding.sub('leaners')} onItemView={self._getViewFunction('leaner')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
+					<TableField dataField="firstName">First name</TableField>
+					<TableField dataField="lastName">Last name</TableField>
+					<TableField dataField="age">Age</TableField>
+					<TableField dataField="phone">Phone</TableField>
+				</Table>
+
 				<Table title="Classes" binding={binding.sub('classes')} onItemEdit={self._getEditFunction('class')} onAddNew={self._getAddFunction('class')}>
 					<TableField dataField="name">First name</TableField>
 					<TableField dataField="age">Age</TableField>
@@ -95,12 +102,6 @@ SchoolListPage = React.createClass({
 					<TableField dataField="name">House name</TableField>
 				</Table>
 
-				<Table title="Pupils" binding={binding.sub('leaners')} onItemView={self._getViewFunction('leaner')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
-					<TableField dataField="firstName">First name</TableField>
-					<TableField dataField="lastName">Last name</TableField>
-					<TableField dataField="age">Age</TableField>
-					<TableField dataField="phone">Phone</TableField>
-				</Table>
 
 			</div>
 		)

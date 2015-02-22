@@ -124,6 +124,23 @@ Form = React.createClass({
 		}
 
 	},
+	_createBindedClones: function(ownerInstance) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		ownerInstance.props.children = React.Children.map(ownerInstance.props.children, function (child) {
+			var subPath = child.props.field ? self.statePath + '.' + child.props.field : self.statePath;
+
+			if (child.props.type === 'column'){
+				self._createBindedClones(child);
+			}
+
+			return React.addons.cloneWithProps(child, {
+				binding: binding.sub(subPath),
+				service: self.props.service
+			});
+		});
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -134,13 +151,7 @@ Form = React.createClass({
 		}
 
 		// Передаем детям привязку с биндингку текущей формы
-		self.props.children = React.Children.map(self.props.children, function (child) {
-
-			return React.addons.cloneWithProps(child, {
-				binding: binding.sub(self.statePath + '.' + child.props.field),
-				service: self.props.service
-			});
-		});
+		self._createBindedClones(self);
 
 		return (
 			<div className="bForm">

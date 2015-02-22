@@ -70,3 +70,8 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .eForm_fieldSet.mAreaField input{
   text-transform: uppercase;
 }
+
+.eForm_fieldColumn{
+  display: inline-block;
+  margin-right: 60px;
+}
