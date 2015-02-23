@@ -29,6 +29,20 @@ AddNewLeaner = React.createClass({
 			window.Server.learners.post(self.props.schoolId, data).then(self.onSuccess.bind(self));
 		}
 	},
+	getClassService: function() {
+		var self = this;
+
+		return function() {
+			return window.Server.classes.get(self.props.schoolId);
+		}
+	},
+	getHouseService: function() {
+		var self = this;
+
+		return function() {
+			return window.Server.houses.get(self.props.schoolId);
+		}
+	},
 	render: function() {
 		var self = this,
 			formTitle = self.props.mode === 'edit' ? 'Edit pupil' : 'Add new pupil';
@@ -45,8 +59,8 @@ AddNewLeaner = React.createClass({
 				<FormColumn type="column">
 					<FormField type="text" field="phone" validation="">Phone</FormField>
 					<FormField type="text" field="email" validation="">E-mail</FormField>
-					<FormField type="autocomplete" field="classId" validation="required">Class</FormField>
-					<FormField type="text" field="houseId" validation="required">houseId (replace to dropdown)</FormField>
+					<FormField type="autocomplete" serviceFunction={self.getClassService()} field="classId" validation="required">Class</FormField>
+					<FormField type="autocomplete" serviceFunction={self.getHouseService()} field="houseId" houseId="required">Class</FormField>
 				</FormColumn>
 			</Form>
 		)

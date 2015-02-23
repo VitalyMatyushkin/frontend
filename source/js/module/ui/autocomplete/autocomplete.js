@@ -8,7 +8,7 @@ Autocomplete = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		serverField: React.PropTypes.string,
-		serviceFunction: React.PropTypes.func
+		serviceFunction: React.PropTypes.func.isRequired
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -17,8 +17,8 @@ Autocomplete = React.createClass({
 
 		return Immutable.fromJS({
 			response: undefined,
-			selectedId: 'a45a16ca-e02d-4d09-9613-fcd043a80f2c',
-			defaultId: 'a45a16ca-e02d-4d09-9613-fcd043a80f2c'
+			selectedId: null,
+			defaultId: null
 		});
 	},
 	setDefaultValue: function() {
@@ -30,6 +30,11 @@ Autocomplete = React.createClass({
 			self.handleInput(defaultId);
 			self.handleSelect(defaultId);
 
+			self.responseData.forEach(function(dataBlock) {
+				if(dataBlock.id === defaultId){
+
+				}
+			});
 		}
 	},
 	componentWillMount: function () {
@@ -73,9 +78,9 @@ Autocomplete = React.createClass({
 			binding = self.getDefaultBinding();
 
 		self.pendingRequest && self.pendingRequest.abort();
-		self.pendingRequest = window.Server.classes.get('056bef0f-494c-4f8a-9e07-27b842ce4045').then(function (data) {
+		self.pendingRequest = self.props.serviceFunction().then(function (data) {
 			self.responseData = data;
-			//binding.set('response', data);
+			//binding.set('response', data);  serviceFunction
 			self.setDefaultValue();
 		});
 	},
@@ -109,7 +114,7 @@ Autocomplete = React.createClass({
 		} else {
 			dropDownNodes = <div style={{padding: '8px'}} aria-live="polite">No matches</div>
 		}
-		console.log(selectedId)
+
 		return (
 			<div>
 				<Combobox onInput={self.handleInput} onSelect={self.handleSelect} value={selectedId}>

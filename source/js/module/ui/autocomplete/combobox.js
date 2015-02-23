@@ -78,6 +78,10 @@ module.exports = React.createClass({
 	},
 
 	componentWillMount: function () {
+		var self = this;
+
+		self.defaulInputLabel = self.props.value;
+
 		this.setState({menu: this.makeMenu()});
 	},
 
@@ -388,8 +392,27 @@ module.exports = React.createClass({
 		var index = this.state.focusedIndex;
 		this.refs.list.getDOMNode().childNodes[index].focus();
 	},
-
+	//mixins: [Morearty.Mixin],
 	render: function () {
+		var self = this,
+			childrenToCheck = self.props.children,
+			childrensCount = childrenToCheck.length,
+			defaultInputState = '';
+
+		// Костыль, позволяющий устанавливать начальное значение асинхронно, требуется из-за плохой совместимости с Morearty
+		if (!self.defaulInputLabel && self.props.value) {
+			if (childrenToCheck.length) {
+				childrenToCheck = childrenToCheck[0];
+			}
+
+			if (childrenToCheck.props && childrenToCheck.props.value) {
+				self.defaulInputLabel = self.props.value;
+				defaultInputState = self.findInputValue(self.props.value);
+				/*self.setState({
+					inputValue: self.findInputValue(self.props.value)
+				});  */
+			}
+		}
 
 		return (
 			<div className={this.getClassName()}>
@@ -397,7 +420,7 @@ module.exports = React.createClass({
 					ref="input"
 					className="rf-combobox-input"
 					defaultValue={this.props.value}
-					value={this.state.inputValue}
+					value={this.state.inputValue || defaultInputState}
 					onChange={this.handleInputChange}
 					onBlur={this.handleInputBlur}
 					onKeyDown={this.handleKeydown}
