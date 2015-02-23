@@ -45,17 +45,27 @@ LeanerView = React.createClass({
 							<div className="bUserFullInfo">
 								<div className="eUserFullInfo_block">
 									<div className="eUserFullInfo_name">Winnings:</div>
-									<div className="eUserFullInfo_text">value</div>
+									<div className="eUserFullInfo_text bLinkLike">Football match with Cannys House 5:2</div>
+									<div className="eUserFullInfo_text bLinkLike">Football match with Ladouys Winders House 10:9</div>
 								</div>
 							</div>
+
+							<div className="bUserFullInfo mDates">
+								<div className="eUserFullInfo_block">
+									<div className="eUserFullInfo_name bLinkLike">Events:</div>
+									<div className="eUserFullInfo_text bLinkLike"><div className="eUserFullInfo_date">23.03.2015</div> football match with Cannys House</div>
+									<div className="eUserFullInfo_text mImportant bLinkLike"><div className="eUserFullInfo_date">01.04.2015</div> football match with Cannys House</div>
+									<div className="eUserFullInfo_text bLinkLike"><div className="eUserFullInfo_date">17.03.2015</div> football match with Cannys House</div>
+								</div>
+							</div>
+
 
 							<div className="bUserFullInfo">
 								<div className="eUserFullInfo_block">
-									<div className="eUserFullInfo_name">Events:</div>
-									<div className="eUserFullInfo_text">value</div>
+									<div className="eUserFullInfo_name bLinkLike">Trener notes:</div>
+									<div className="eUserFullInfo_text">Be stronger!</div>
 								</div>
 							</div>
-
 
 						</div>
 					</div>

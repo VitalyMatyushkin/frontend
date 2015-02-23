@@ -1,0 +1,46 @@
+.bUserFullInfo{
+  margin: 50px 0 50px;
+  font-size: 16px;
+}
+
+.eUserFullInfo_name{
+  font-size: 17px;
+  margin-bottom: 15px;
+}
+
+.eUserFullInfo_text{
+  margin-bottom: 18px;
+  position: relative;
+}
+
+.eUserFullInfo_date{
+  display: inline-block;
+  background: $MAIN_COLOR;
+  vertical-align: top;
+  color: #ffffff;
+  padding: 3px 6px;
+  margin-top: -3px;
+  border-radius: 4px;
+}
+
+.eUserFullInfo_text.mImportant .eUserFullInfo_date,
+.bUserFullInfo.mDates .eUserFullInfo_text.mImportant:after{
+  background: #AF4C4C;
+}
+
+.bUserFullInfo.mDates .eUserFullInfo_text:after{
+  content: '';
+  display: block;
+  width: 1px;
+  position: absolute;
+  height: 111%;
+  top: 100%;
+  margin-top: -4px;
+  left: 40px;
+  background: $MAIN_COLOR;
+}
+
+.bUserFullInfo.mDates .eUserFullInfo_text:last-child:after {
+  display: none;
+}
+
