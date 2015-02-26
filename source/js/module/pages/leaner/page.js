@@ -30,7 +30,7 @@ LeanerPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			currentView = null;
 
-		if (self.mode === 'edit') {
+		if (self.mode === 'edit' || self.mode === 'new') {
 			currentView = <LeanerAddForm mode={self.mode} learnerId={self.learnerId} schoolId={self.schoolId} binding={binding} />
 		} else {
 			currentView = <LeanerView binding={binding.sub('data')}  />;

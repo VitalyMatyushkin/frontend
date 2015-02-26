@@ -46,10 +46,11 @@ SchoolListPage = React.createClass({
 	_getAddFunction: function(page) {
 		var self = this;
 
-		return function() {
+		return function(event) {
 			var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
-
+			 debugger
 			document.location.hash = page + '?mode=new&schoolId='+self.schoolId ;
+			event.stopPropagation();
 		}
 	},
 	_getViewFunction: function(page) {
@@ -78,12 +79,6 @@ SchoolListPage = React.createClass({
 			schoolInfo = binding.get('schoolInfo.name'),
 			classSerivce;
 
-		/*
-		 <List title="Houses" binding={binding.sub('houses')} onItemEdit={self._getEditFunction('house')} onAddNew={self._getAddFunction('house')}>
-		 <ListField dataField="name" />
-		 </List>
-		 */
-
 		return (
 			<div className="bSchoolMaster">
 				<h1><span className="eSchoolMaster_title">{schoolInfo}</span> control panel</h1>
@@ -100,7 +95,7 @@ SchoolListPage = React.createClass({
 					<TableField dataField="age">Age</TableField>
 				</Table>
 
-				<Table title="Houses" binding={binding.sub('houses')} onItemEdit={self._getEditFunction('houses')} onAddNew={self._getAddFunction('houses')}>
+				<Table title="Houses" binding={binding.sub('houses')} onItemEdit={self._getEditFunction('house')} onAddNew={self._getAddFunction('house')}>
 					<TableField dataField="name">House name</TableField>
 				</Table>
 

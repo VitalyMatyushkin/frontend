@@ -60,7 +60,7 @@ AddNewLeaner = React.createClass({
 					<FormField type="text" field="phone" validation="">Phone</FormField>
 					<FormField type="text" field="email" validation="">E-mail</FormField>
 					<FormField type="autocomplete" serviceFunction={self.getClassService()} field="classId" validation="required">Class</FormField>
-					<FormField type="autocomplete" serviceFunction={self.getHouseService()} field="houseId" houseId="required">Class</FormField>
+					<FormField type="autocomplete" serviceFunction={self.getHouseService()} field="houseId" houseId="required">House</FormField>
 				</FormColumn>
 			</Form>
 		)
