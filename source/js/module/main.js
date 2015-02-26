@@ -16,14 +16,11 @@ MoreartyContext = Morearty.createContext({
 		},
         activeSchoolId: activeSchoolId,
 		school: {},
-<<<<<<< HEAD
 		schools: [],
 		schoolsList: {},
-=======
 		schools: {
             list: []
         },
->>>>>>> FETCH_HEAD
 		events: {
             sync: false,
             models: [],
