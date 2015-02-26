@@ -17,6 +17,7 @@ MoreartyContext = Morearty.createContext({
         activeSchoolId: activeSchoolId,
 		school: {},
 		schools: [],
+		schoolsList: {},
 		events: {
             sync: false,
             models: [],

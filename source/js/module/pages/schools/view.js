@@ -48,7 +48,7 @@ SchoolListPage = React.createClass({
 
 		return function(event) {
 			var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
-			 debugger
+
 			document.location.hash = page + '?mode=new&schoolId='+self.schoolId ;
 			event.stopPropagation();
 		}

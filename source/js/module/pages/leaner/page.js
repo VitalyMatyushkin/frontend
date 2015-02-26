@@ -22,7 +22,7 @@ LeanerPage = React.createClass({
 			schoolId: schoolId,
 			learnerId: learnerId
 		}).then(function (data) {
-			binding.set('data', Immutable.fromJS(data));
+			binding.set('leaner', Immutable.fromJS(data));
 		});
 	},
 	render: function() {
