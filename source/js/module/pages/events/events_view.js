@@ -58,7 +58,7 @@ EventsView = React.createClass({
 
         if (schoolsBinding.get().count()) {
             return schoolsBinding.get().map(function (school) {
-                return <option value={school.get('id')}>{school.get('name')}</option>
+                return <option value={school.get('id')}>{school.get('name')}</option>;
             })
         } else {
             return null;

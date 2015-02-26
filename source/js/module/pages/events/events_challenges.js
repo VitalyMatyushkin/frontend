@@ -27,7 +27,7 @@ ChallengesView = React.createClass({
                 <span className="eChallenge_rivalsType">{event.get('rivalsType')}</span>
                 <span className="eChallenge_status">{event.get('status')}</span>
             </div>;
-        }) : null;
+        }).toArray() : null;
     },
     getDates: function () {
         var self = this,
@@ -59,7 +59,7 @@ ChallengesView = React.createClass({
                 </div>
                 <div className="eDate_list">{self.getEvents(date)}</div>
             </div>;
-        }) : null;
+        }).toArray() : null;
     },
 	render: function () {
         var self = this,

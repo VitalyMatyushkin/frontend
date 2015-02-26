@@ -23,12 +23,19 @@
 .eChallenge {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
+}
+
+.eChallenge_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .eChallenge_name {
   display: flex;
-  width: 150px;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
 .eChallenge_time {
