@@ -22,6 +22,8 @@ SchoolListPage = React.createClass({
 			schoolId = routingData.id;
 
 		if (schoolId) {
+            globalBinding.set('activeSchoolId', schoolId);
+            localStorage.setItem('activeSchoolId', schoolId);
 			window.Server.classes.get(schoolId).then(function (data) {
 				binding.set('classes', Immutable.fromJS(data));
 			});

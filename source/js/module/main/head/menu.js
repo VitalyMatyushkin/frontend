@@ -12,23 +12,17 @@ Menu = React.createClass({
 				route: '',
 				key: 'Search'
 			},{
-				href: '/#teams',
+				href: '/#schools',
 				icon: 'icon_teams',
-				name: 'Teams',
+				name: 'Schools',
 				route: '',
-				key: 'Teams'
+				key: 'Schools'
 			},{
 				href: '/#events',
 				icon: 'icon_calendar',
 				name: 'Events',
 				route: '',
 				key: 'Events'
-			},{
-				href: '/#players',
-				icon: 'icon_user',
-				name: 'Players',
-				route: '',
-				key: 'Players'
 			}]
 		};
 	},

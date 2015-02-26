@@ -31,8 +31,7 @@ Center = React.createClass({
                         <Route binding={binding.sub('events')} path="/events" component="module/pages/events/events_view" pageName="events_view"  />
                         <Route binding={binding.sub('events')} path="/events/calendar" component="module/pages/events/events_calendar" pageName="events_calendar"  />
                         <Route binding={binding.sub('events')} path="/events/challenges" component="module/pages/events/events_challenges" pageName="events_challenges"  />
-                        <Route binding={binding.sub('events')} path="/events/invites" component="module/pages/events/events_view" pageName="events_view"  />
-
+                        <Route binding={binding.sub('events')} path="/events/invites" component="module/pages/events/events_invites" pageName="events_invites"  />
 					</RouterView>
 
 				</div>

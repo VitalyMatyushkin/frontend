@@ -16,8 +16,10 @@ serviceList = {
         serviceList.house = new Service('/schools/{schoolId}/houses/{houseId}', binding);
         serviceList.class = new Service('/schools/{schoolId}/classes/{classId}', binding);
 		//events
-		serviceList.events = new Service('/events', binding);
-	}
+        serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
+        // invites
+        serviceList.invites = new Service('/invites?filter[where][or][0][inviterId]={schoolId}&filter[where][or][1][invitedId]={schoolId}', binding);
+    }
 };
 
 

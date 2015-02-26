@@ -7,7 +7,7 @@ SchoolListPage = React.createClass({
 			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
 
 		userId && Server.ownerSchools.get(userId).then(function(data) {
-			self.getDefaultBinding().update(function(){
+			self.getDefaultBinding().update(function() {
 				return Immutable.List(data);
 			});
 		});

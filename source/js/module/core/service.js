@@ -16,8 +16,10 @@ Service = (function() {
 		if (url.indexOf('{') !== -1) {
 			self.requredParams = [];
 
-			url.replace(/\{(.*?)\}/g, function(match, param){
-				self.requredParams.push(param);
+			url.replace(/\{(.*?)\}/g, function(match, param) {
+                if (self.requredParams.indexOf(param) === -1) {
+                    self.requredParams.push(param);
+                }
 			});
 		}
 

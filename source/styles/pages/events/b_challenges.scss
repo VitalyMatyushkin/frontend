@@ -1,0 +1,38 @@
+.bChallenges {
+  display: flex;
+  flex-direction: column;
+  width: 920px;
+  align-items: stretch;
+  margin: 10px auto;
+}
+
+.bChallenges_eDate {
+  display: flex;
+  flex-direction: column;
+}
+
+.eDate_header {
+  display: flex;
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #30759c;
+  color: #faf4e8;
+  justify-content: center;
+}
+
+.eChallenge {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.eChallenge_name {
+  display: flex;
+  width: 150px;
+}
+
+.eChallenge_time {
+  display: flex;
+  width: 300px;
+  justify-content: center;
+}

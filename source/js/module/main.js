@@ -3,7 +3,8 @@ var ApplicationView = require('module/main/application'),
 	authController = require('module/core/auth_controller'),
 	serviceList = require('module/core/service_list'),
 	MoreartyContext,
-	binding;
+	binding,
+    activeSchoolId = localStorage.getItem('activeSchoolId') || null;
 
 // Создание контекста Morearty
 MoreartyContext = Morearty.createContext({
@@ -13,14 +14,24 @@ MoreartyContext = Morearty.createContext({
 			current_page: 'main',
 			parameters: {}
 		},
+        activeSchoolId: activeSchoolId,
 		school: {},
-		schools: {},
+		schools: [],
 		events: {
+            sync: false,
             models: [],
             calendar: {
                 currentDate: new Date(),
                 mode: 'month'
             }
+        },
+        teams: {
+            sync: false,
+            models: []
+        },
+        invites: {
+            sync: false,
+            models: []
         }
 	}
 });
