@@ -21,21 +21,27 @@ EventsView = React.createClass({
 
         if (activeSchoolId && (!eventsBinding.get('sync') || !teamsBinding.get('sync'))) {
             window.Server.teamsBySchoolId.get(activeSchoolId).then(function (data) {
-                teamsBinding.update(function () {
-                    return Immutable.fromJS({
-                        sync: true,
-                        models: data
-                    });
-                });
+                teamsBinding.set(Immutable.fromJS({
+                    sync: true,
+                    models: data
+                }));
 
-                eventsBinding.update(function () {
-                    return Immutable.fromJS({
-                        models: data.map(function (team) {
-                            return team.events[0];
-                        }),
-                        sync: true
-                    });
-                });
+                eventsBinding.set(Immutable.fromJS({
+                    models: data.map(function (team) {
+                        return team.events[0];
+                    }).reduce(function (memo, val) {
+                        var filtered = memo.filter(function (mem) {
+                            return mem.id === val.id;
+                        });
+
+                        if (filtered.length === 0) {
+                            memo.push(val);
+                        }
+
+                        return memo;
+                    }, []),
+                    sync: true
+                }));
             });
         }
 
@@ -51,8 +57,7 @@ EventsView = React.createClass({
         }
 	},
     getSchools: function () {
-        var self = this,
-            rootBinding = this.getMoreartyContext().getBinding(),
+        var rootBinding = this.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('activeSchoolId'),
             schoolsBinding = rootBinding.sub('schools');
 

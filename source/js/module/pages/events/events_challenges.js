@@ -2,24 +2,25 @@ var ChallengesView;
 
 ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
-    equalDates: function (first, second) {
-        return first.getTime() == second.getTime();
+    sameDay: function (d1, d2) {
+        return d1.getUTCFullYear() === d2.getUTCFullYear() &&
+            d1.getUTCMonth() === d2.getUTCMonth() &&
+            d1.getUTCDate() === d2.getUTCDate();
     },
     getEvents: function (date) {
         var self = this,
             binding = this.getDefaultBinding(),
             eventsByDate = binding.get('models').filter(function (event) {
-                var eventDateTime = new Date(event.get('startTime'));
-                return self.equalDates(
-                    new Date(eventDateTime.getFullYear(), eventDateTime.getMonth(), eventDateTime.getDate()),
-                    date
+                return self.sameDay(
+                    new Date(event.get('startTime')),
+                    new Date(date)
                 );
             });
 
-        return eventsByDate.count() ? eventsByDate.map(function (event) {
+        return eventsByDate.map(function (event) {
             var eventDateTime = new Date(event.get('startTime'));
 
-            return <div className="eChallenge">
+            return <div className="eChallenge" id={'challenge-' + event.get('id')}>
                 <div className="eChallenge_name">
                     <span className="eChallenge_rivalName">{event.get('name').split('vs')[0]}</span>
                     <span className="eChallenge_time">{eventDateTime.getHours() + ':' + eventDateTime.getMinutes()}</span>
@@ -30,24 +31,23 @@ ChallengesView = React.createClass({
                     <span className="eChallenge_status">{'status: ' + event.get('status')}</span>
                 </div>
             </div>;
-        }).toArray() : null;
+        }).toArray();
     },
     getDates: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            dates = binding.get('models').reduce(function (memo, val, index) {
-                var date = new Date(val.get('startTime')),
-                    onlyDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            dates = binding.get('models').reduce(function (memo, val) {
+                var date = Date.parse(val.get('startTime'));
 
-                if (memo.indexOf(onlyDate.getTime()) === -1) {
-                    memo = memo.push(onlyDate.getTime());
+                if (memo.indexOf(date) === -1) {
+                    memo = memo.push(date);
                 }
 
                 return memo;
             }, Immutable.fromJS([]));
 
 
-        return dates.count() !== 0 ? dates.map(function (datetime) {
+        return dates.count() !== 0 ? dates.sort().map(function (datetime) {
             var date = new Date(datetime),
                 daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                 monthNames = [ "January", "February", "March", "April", "May", "June",
@@ -58,9 +58,10 @@ ChallengesView = React.createClass({
                 <div className="eDate_header">
                     {daysOfWeek[dayOfWeek] + ' ' +
                     date.getDate() + ' ' +
-                    monthNames[date.getMonth()]}
+                    monthNames[date.getMonth()] + ' ' +
+                        date.getFullYear()}
                 </div>
-                <div className="eDate_list">{self.getEvents(date)}</div>
+                <div className="eDate_list">{self.getEvents(datetime)}</div>
             </div>;
         }).toArray() : null;
     },
