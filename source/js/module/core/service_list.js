@@ -18,7 +18,7 @@ serviceList = {
 
 		// houses
         serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
-		serviceList.house = new Service('/schools/{schoolId}/houses/{houseId}', binding);
+		serviceList.house = new Service('/houses/{houseId}', binding);
 
 		// classes
 		serviceList.classes = new Service('/classes?filter[where][schoolId]={schoolId}', binding);

@@ -11,7 +11,8 @@ LeanerPage = React.createClass({
 			routingData = globalBinding.sub('routing.parameters').toJS(),
 			schoolId = routingData.schoolId,
 			learnerId = routingData.id,
-			mode = routingData.mode;
+			mode = routingData.mode,
+			leanerData = {};
 
 		self.schoolId = schoolId;
 		self.learnerId = learnerId;
@@ -22,7 +23,24 @@ LeanerPage = React.createClass({
 			schoolId: schoolId,
 			learnerId: learnerId
 		}).then(function (data) {
-			binding.set('leaner', Immutable.fromJS(data));
+			leanerData = data;
+
+			// Лютый костыль, пока не будет метода с полными данными
+			Server.class.get(data.classId).then(function(classData) {
+				leanerData.classData = classData;
+
+				Server.house.get(data.houseId).then(function(houseData) {
+					leanerData.houseData = houseData;
+
+					Server.school.get(data.schoolId).then(function(schoolData) {
+						leanerData.schoolData = schoolData;
+
+						binding.set('leaner', Immutable.fromJS(leanerData));
+					});
+				});
+
+			});
+
 		});
 	},
 	render: function() {
@@ -32,8 +50,8 @@ LeanerPage = React.createClass({
 
 		if (self.mode === 'edit' || self.mode === 'new') {
 			currentView = <LeanerAddForm mode={self.mode} learnerId={self.learnerId} schoolId={self.schoolId} binding={binding} />
-		} else {
-			currentView = <LeanerView binding={binding.sub('data')}  />;
+		} else if (binding.sub('leaner')) {
+			currentView = <LeanerView binding={binding.sub('leaner')}  />;
 		}
 
 		return (
