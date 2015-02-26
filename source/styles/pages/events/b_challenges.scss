@@ -20,16 +20,27 @@
   justify-content: center;
 }
 
+
 .eChallenge {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(204, 204, 204, .2);
+  }
+}
+
+
+.eDate_list .eChallenge:last-child {
+  border: none;
 }
 
 .eChallenge_header {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .eChallenge_name {
@@ -38,8 +49,24 @@
   justify-content: space-around;
 }
 
-.eChallenge_time {
+.eChallenge_time,
+.eChallenge_rivalName {
   display: flex;
   width: 300px;
   justify-content: center;
+  align-items: center;
+  line-height: 35px;
+}
+
+.eChallenge_info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: #a2a2a2;
+  font-size: 11px;
+}
+
+.eChallenge_rivalsType,
+.eChallenge_status {
+  margin: 0 2px;
 }

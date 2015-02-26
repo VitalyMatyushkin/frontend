@@ -17,15 +17,18 @@ ChallengesView = React.createClass({
             });
 
         return eventsByDate.count() ? eventsByDate.map(function (event) {
-            var eventDateTime = new Date(event.get('startTime')),
-                rivalFirst = <span clasName="eChallenge_rivalName">{event.get('name').split('vs')[0]}</span>,
-                rivalSecond = <span clasName="eChallenge_rivalName">{event.get('name').split('vs')[1]}</span>,
-                eventTime = <span className="eChallenge_time">{eventDateTime.getHours() + ':' + eventDateTime.getMinutes()}</span>;
+            var eventDateTime = new Date(event.get('startTime'));
 
             return <div className="eChallenge">
-                <span className="eChallenge_name">{rivalFirst} {eventTime} {rivalSecond}</span>
-                <span className="eChallenge_rivalsType">{event.get('rivalsType')}</span>
-                <span className="eChallenge_status">{event.get('status')}</span>
+                <div className="eChallenge_name">
+                    <span className="eChallenge_rivalName">{event.get('name').split('vs')[0]}</span>
+                    <span className="eChallenge_time">{eventDateTime.getHours() + ':' + eventDateTime.getMinutes()}</span>
+                    <span className="eChallenge_rivalName">{event.get('name').split('vs')[1]}</span>
+                </div>
+                <div className="eChallenge_info">
+                    <span className="eChallenge_rivalsType">{'rivals: ' + event.get('rivalsType') + ';'}</span>
+                    <span className="eChallenge_status">{'status: ' + event.get('status')}</span>
+                </div>
             </div>;
         }).toArray() : null;
     },

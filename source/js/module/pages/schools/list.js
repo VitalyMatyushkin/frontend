@@ -24,7 +24,7 @@ SchoolListPage = React.createClass({
 						{school.get('name')}
 					</a>
 				);
-			});
+			}).toArray();
 		}
 
 		return (
@@ -32,7 +32,7 @@ SchoolListPage = React.createClass({
 				<h2>My schools</h2>
 
 				<div className="eSchoolList_wrap">
-					{schoolNodes.toArray()}
+					{schoolNodes}
                     <a href="/#schools/add" className="eSchoolList_one mAddNew">
                         +
                     </a>
