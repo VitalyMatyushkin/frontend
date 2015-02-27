@@ -21,6 +21,7 @@ $green-color: #00e676;
   color: #fff;
   flex-direction: column;
   justify-content: space-between;
+  cursor: pointer;
   &.mMyEvent {
     background: $orange-color;
   }
@@ -30,6 +31,13 @@ $green-color: #00e676;
   &.mListEvent {
     background: $green-color;
   }
+}
+
+.eTopInfoBlock .bIcon {
+  align-self: flex-end;
+  height: 45px;
+  width: 45px;
+  margin: 0 10px;
 }
 
 .eTopInfoBlock_count,
@@ -50,10 +58,10 @@ $green-color: #00e676;
   height: 25px;
   background-color: rgba(0, 0, 0, .2);
   text-align: center;
-  cursor: pointer;
   transition: background-color .2s ease-out;
-  &:hover {
-    background-color: rgba(0, 0, 0, .3);
-  }
+}
+
+.eTopInfoBlock:hover .eTopInfoBlock_action {
+  background-color: rgba(0, 0, 0, .3);
 }
 

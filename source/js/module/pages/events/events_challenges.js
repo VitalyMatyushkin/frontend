@@ -7,6 +7,9 @@ ChallengesView = React.createClass({
             d1.getUTCMonth() === d2.getUTCMonth() &&
             d1.getUTCDate() === d2.getUTCDate();
     },
+	addZeroToFirst: function (num) {
+		return String(num).length === 1 && String(num).indexOf('0') !== 0 ? '0' + num : num;
+	},
     getEvents: function (date) {
         var self = this,
             binding = this.getDefaultBinding(),
@@ -18,12 +21,14 @@ ChallengesView = React.createClass({
             });
 
         return eventsByDate.map(function (event) {
-            var eventDateTime = new Date(event.get('startTime'));
+            var eventDateTime = new Date(event.get('startTime')),
+				hours = self.addZeroToFirst(eventDateTime.getHours()),
+				minutes = self.addZeroToFirst(eventDateTime.getMinutes());
 
             return <div className="eChallenge" id={'challenge-' + event.get('id')}>
                 <div className="eChallenge_name">
                     <span className="eChallenge_rivalName">{event.get('name').split('vs')[0]}</span>
-                    <span className="eChallenge_time">{eventDateTime.getHours() + ':' + eventDateTime.getMinutes()}</span>
+                    <span className="eChallenge_time">{hours + ':' + minutes}</span>
                     <span className="eChallenge_rivalName">{event.get('name').split('vs')[1]}</span>
                 </div>
                 <div className="eChallenge_info">

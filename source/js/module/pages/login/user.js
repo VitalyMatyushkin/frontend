@@ -15,7 +15,7 @@ LoginUserPage = React.createClass({
 
 		if(data.id) {
 			binding.update('authorizationInfo', function(){
-				return Immutable.Map(data);
+				return Immutable.fromJS(data);
 			});
 		}
 	},

@@ -1,7 +1,8 @@
 var CalendarView = require('./events_calendar'),
 	EventsChallengesView = require('./events_challenges'),
 	InvitesView = require('./events_invites'),
-	EventsView;
+	EventsView,
+	SVG = require('module/ui/svg');
 
 EventsView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -69,6 +70,11 @@ EventsView = React.createClass({
             return null;
         }
     },
+	setActiveList: function (list) {
+			var binding = this.getDefaultBinding();
+
+		binding.set('activeList', list);
+	},
 	render: function() {
 		var self = this,
             rootBinding = this.getMoreartyContext().getBinding(),
@@ -99,22 +105,23 @@ EventsView = React.createClass({
                 </select>
             </div>
 			<div className="eEvents_topPanel">
-				<div className="eTopInfoBlock mMyEvent">
+				<div className="eTopInfoBlock mMyEvent" onClick={self.setActiveList.bind(null, 'calendar')}>
 					<span className="eTopInfoBlock_count"></span>
+					<SVG icon="icon_calendar" />
 					<span className="eTopInfoBlock_title">Calendar</span>
-					<span className="eTopInfoBlock_action">overview</span>
+					<span className="eTopInfoBlock_action" >overview</span>
 				</div>
-				<div className="eTopInfoBlock mNewEvent">
+				<div className="eTopInfoBlock mNewEvent" onClick={self.setActiveList.bind(null, 'challenges')}>
 					<span className="eTopInfoBlock_count">{eventsCount}</span>
 					<span className="eTopInfoBlock_title">Challenges</span>
 					<span className="eTopInfoBlock_action">overview</span>
 				</div>
-				<div className="eTopInfoBlock mMyInvite">
+				<div className="eTopInfoBlock mMyInvite" onClick={self.setActiveList.bind(null, 'invites')}>
 					<span className="eTopInfoBlock_count">{invitesCount}</span>
 					<span className="eTopInfoBlock_title">Invites</span>
 					<span className="eTopInfoBlock_action">overview</span>
 				</div>
-				<div className="eTopInfoBlock mListEvent">
+				<div className="eTopInfoBlock mListEvent" onClick={self.setActiveList.bind(null, 'newChallenge')}>
 					<span className="eTopInfoBlock_count"></span>
 					<span className="eTopInfoBlock_title">New Challenge</span>
 					<span className="eTopInfoBlock_action">overview</span>
