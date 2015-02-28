@@ -8,6 +8,7 @@ InfoView = React.createClass({
             eventsBinding = rootBinding.sub('events'),
             invitesBinding = rootBinding.sub('invites'),
             teamsBinding = rootBinding.sub('teams'),
+            sportsBinding = rootBinding.sub('sports'),
             activeSchoolId = rootBinding.get('activeSchoolId');
 
         if (activeSchoolId && (!eventsBinding.get('sync') || !teamsBinding.get('sync'))) {
@@ -41,6 +42,17 @@ InfoView = React.createClass({
                 invitesBinding.update(function () {
                     return Immutable.fromJS({
                         sync: true,
+                        models: data
+                    });
+                });
+            });
+        }
+
+        if (activeSchoolId && !sportsBinding.get('sync')) {
+            window.Server.sports.get().then(function (data) {
+                sportsBinding.update(function () {
+                    return Immutable.fromJS({
+                        sync: false,
                         models: data
                     });
                 });

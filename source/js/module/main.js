@@ -35,6 +35,10 @@ MoreartyContext = Morearty.createContext({
         invites: {
             sync: false,
             models: []
+        },
+        sports: {
+            sync: false,
+            models: []
         }
 	}
 });
