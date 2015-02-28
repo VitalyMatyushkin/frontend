@@ -1,4 +1,5 @@
-var ChallengesView;
+var Panel = require('./panel'),
+    ChallengesView;
 
 ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -75,7 +76,10 @@ ChallengesView = React.createClass({
             binding = self.getDefaultBinding(),
             challenges = self.getDates();
 
-		return <div className="bChallenges">{challenges}</div>;
+		return <div className="bEvents">
+            <Panel binding={binding} />
+            <div className="bChallenges">{challenges}</div>
+        </div>;
 	}
 });
 

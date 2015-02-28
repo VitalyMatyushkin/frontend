@@ -4,19 +4,23 @@ $blue-color: #1de9b6;
 $green-color: #00e676;
 
 .bEvents {
-  margin: 40px auto;
+  margin: 10px auto;
+  width: 960px;
+  display: flex;
+  flex-flow: column wrap;
 }
 
 .eEvents_topPanel {
   display: flex;
   height: 120px;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .eTopInfoBlock {
   display: flex;
   background: $red-color;
-  margin: 0 15px;
+  margin-right: 20px;
   width: 24%;
   color: #fff;
   flex-direction: column;
@@ -30,6 +34,9 @@ $green-color: #00e676;
   }
   &.mListEvent {
     background: $green-color;
+  }
+  &:last-child {
+    margin: 0;
   }
 }
 
@@ -64,4 +71,5 @@ $green-color: #00e676;
 .eTopInfoBlock:hover .eTopInfoBlock_action {
   background-color: rgba(0, 0, 0, .3);
 }
+
 
