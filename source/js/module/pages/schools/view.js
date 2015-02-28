@@ -58,7 +58,7 @@ SchoolListPage = React.createClass({
 
 		return function(data) {
 			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-			debugger
+
 			pageBinding.set('data', Immutable.fromJS(data));
 			document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}

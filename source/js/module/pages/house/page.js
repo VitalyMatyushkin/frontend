@@ -22,7 +22,14 @@ HomeViewPage = React.createClass({
 			schoolId: schoolId,
 			houseId: houseId
 		}).then(function (data) {
-			binding.set('data', Immutable.fromJS(data));
+			var houseData = data;
+
+			// Лютый костыль, пока не будет метода с полными данными
+			Server.school.get(data.schoolId).then(function(schoolData) {
+				houseData.schoolData = schoolData;
+
+				binding.set('house', Immutable.fromJS(houseData));
+			});
 		});
 	},
 	render: function() {
