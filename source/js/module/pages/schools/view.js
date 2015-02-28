@@ -58,7 +58,7 @@ SchoolListPage = React.createClass({
 
 		return function(data) {
 			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-
+			debugger
 			pageBinding.set('data', Immutable.fromJS(data));
 			document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
@@ -90,12 +90,12 @@ SchoolListPage = React.createClass({
 					<TableField dataField="phone">Phone</TableField>
 				</Table>
 
-				<Table title="Classes" binding={binding.sub('classes')} onItemEdit={self._getEditFunction('class')} onAddNew={self._getAddFunction('class')}>
+				<Table title="Classes" binding={binding.sub('classes')} onItemView={self._getViewFunction('class')} onItemEdit={self._getEditFunction('class')} onAddNew={self._getAddFunction('class')}>
 					<TableField dataField="name">First name</TableField>
 					<TableField dataField="age">Age</TableField>
 				</Table>
 
-				<Table title="Houses" binding={binding.sub('houses')} onItemEdit={self._getEditFunction('house')} onAddNew={self._getAddFunction('house')}>
+				<Table title="Houses" binding={binding.sub('houses')} onItemView={self._getViewFunction('house')} onItemEdit={self._getEditFunction('house')} onAddNew={self._getAddFunction('house')}>
 					<TableField dataField="name">House name</TableField>
 				</Table>
 

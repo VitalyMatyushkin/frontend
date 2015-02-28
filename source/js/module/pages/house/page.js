@@ -1,4 +1,5 @@
 var HouseAddForm = require('module/pages/house/form'),
+	HouseView = require('module/pages/house/view'),
 	HomeViewPage;
 
 HomeViewPage = React.createClass({
@@ -26,11 +27,18 @@ HomeViewPage = React.createClass({
 	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			currentView = null;
+
+		if (self.mode === 'edit' || self.mode === 'new') {
+			currentView = <HouseAddForm mode={self.mode} houseId={self.houseId} schoolId={self.schoolId} binding={binding} />
+		} else if (binding.sub('leaner')) {
+			currentView = <HouseView binding={binding.sub('house')}  />;
+		}
 
 		return (
 			<div className="bTest">
-				<HouseAddForm mode={self.mode} houseId={self.houseId} schoolId={self.schoolId} binding={binding} />
+				{currentView}
 			</div>
 		)
 	}

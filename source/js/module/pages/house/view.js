@@ -20,7 +20,7 @@ LeanerView = React.createClass({
 
 					<div className="eUserColumnData">
 						<UserName binding={binding} />
-						<AboutMe title="About me" binding={binding} />
+						<AboutMe title="About house"  binding={binding} />
    					</div>
 				</div>
 

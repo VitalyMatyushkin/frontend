@@ -3,6 +3,9 @@ var SVG = require('module/ui/svg'),
 
 AboutMeBlock = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		title: React.PropTypes.string
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -10,7 +13,7 @@ AboutMeBlock = React.createClass({
 
 		return (
 			<div className="bAboutList">
-				<h6>About me</h6>
+				<h6>{self.props.title || 'About me'}</h6>
 
 				<div className="eAboutList_item"><SVG icon="icon_home" /> {binding.get('houseData.name')}</div>
 				<div className="eAboutList_item"><SVG icon="icon_user-tie" /> {binding.get('classData.name')}</div>

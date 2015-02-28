@@ -8,7 +8,7 @@ UserPhoto = React.createClass({
 
 		return (
 			<div className="bUserPhoto mIsMe">
-				<img src={binding.get('avatar')} className="eUserPhoto_image" />
+				<img src={binding.get('avatar') || '/images/user.jpg'} className="eUserPhoto_image" />
 			</div>
 		)
 	}
