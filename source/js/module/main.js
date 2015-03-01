@@ -40,7 +40,10 @@ MoreartyContext = Morearty.createContext({
             sync: false,
             models: []
         }
-	}
+	},
+    options: {
+        requestAnimationFrameEnabled: true
+    }
 });
 
 binding = MoreartyContext.getBinding();

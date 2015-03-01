@@ -1,44 +1,48 @@
 var Panel = require('./panel'),
-    Form = require('module/ui/form/form'),
-    FormField = require('module/ui/form/form_field'),
 	NewEvents,
-	SVG = require('module/ui/svg');
+	SVG = require('module/ui/svg'),
+    ChooseTypeView = require('./steps/choose_type');
 
 NewEvents = React.createClass({
-    componentWillMount: function () {
-        var self = this,
-            binding = this.getDefaultBinding();
-
-        binding.set('new_events', Immutable.Map());
-    },
-    componentWillUnmount: function () {
-        binding.remove('new_events');
-    },
-    submitForm: function () {
-        console.log(arguments);
-    },
-    getSports: function () {
-        var self = this;
-
-        return function() {
-            return window.Server.sports.get();
-        }
-    },
     mixins: [Morearty.Mixin],
+    getMergeStrategy: function () {
+        return Morearty.MergeStrategy.OVERWRITE;
+    },
+    getDefaultState: function () {
+        return Immutable.fromJS({
+            newEvent: {
+                model: {
+                    rivalsType: 'schools'
+                },
+                inviteModel: {},
+                step: 'chooseType'
+            }
+        });
+    },
+    nextStep: function () {
+        var self = this;
+    },
     render: function() {
 		var self = this,
-            formTitle = 'New Challenge',
-            binding = this.getDefaultBinding();
+            steps = ['chooseType', 'chooseDate', 'chooseSport', 'searchRivals', 'team'],
+            binding = self.getDefaultBinding(),
+            step = binding.get('newEvent.step'),
+            views = {
+                chooseType: {
+                    title: 'Step 1: Basic information',
+                    view: ChooseTypeView
+                }
+            },
+            title = views[step].title || '',
+            CurrentView = views[step].view;
 
 		return <div className="bEvents">
             <Panel binding={binding} />
-            <div className="bChallenges mNew">
-                <Form name={formTitle} onSubmit={self.submitForm} binding={binding.sub('new_events')} >
-                    <FormField type="text" field="name" validation="required">Events Name</FormField>
-                    <FormField type="area" field="description" validation="">Description</FormField>
-                    <FormField type="autocomplete" serviceFunction={self.getSports()} field="sportId" validation="required">Sport</FormField>
-                </Form>
+            <h2>{title}</h2>
+            <div className="eEvents_new">
+                <CurrentView binding={binding.sub('newEvent')} />
             </div>
+            <span className="bButton mRight mNext">Next</span>
         </div>
 	}
 });

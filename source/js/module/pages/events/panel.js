@@ -52,7 +52,7 @@ InfoView = React.createClass({
             window.Server.sports.get().then(function (data) {
                 sportsBinding.update(function () {
                     return Immutable.fromJS({
-                        sync: false,
+                        sync: true,
                         models: data
                     });
                 });
