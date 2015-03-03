@@ -8,7 +8,8 @@ Autocomplete = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		serverField: React.PropTypes.string,
-		serviceFunction: React.PropTypes.func.isRequired
+		serviceFullData: React.PropTypes.func,
+		serviceFilter: React.PropTypes.func
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -47,7 +48,13 @@ Autocomplete = React.createClass({
 			self.setDefaultValue();
 		});
 
-		self.updateFullData();
+		// Если передается сервис для получения полных данных, фильтруем на клиенте
+		if (self.props.serviceFullData) {
+			self.handleInput = self._filterOnClient;
+			self.updateFullData();
+		} else {
+			self.handleInput = self._filterOnServer;
+		}
 	},
 	handleSelect: function (newId) {
 		var self = this,
@@ -55,7 +62,25 @@ Autocomplete = React.createClass({
 
 		binding.atomically().set('selectedId', newId).set('response', self.responseData).commit();
 	},
-	handleInput: function (userInput) {
+	_filterOnServer: function (userInput) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('selectedId', null);
+
+		if (userInput === '') {
+			binding.set('response', []);
+		} else {
+			self.pendingRequest && self.pendingRequest.abort();
+			self.pendingRequest = self.props.serviceFilter(userInput).then(function (data) {
+				self.responseData = data;
+				binding.set('response', data);
+				//self.setDefaultValue();
+			});
+
+		}
+	},
+	_filterOnClient: function (userInput) {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			filter = new RegExp(userInput, 'i');
@@ -78,9 +103,8 @@ Autocomplete = React.createClass({
 			binding = self.getDefaultBinding();
 
 		self.pendingRequest && self.pendingRequest.abort();
-		self.pendingRequest = self.props.serviceFunction().then(function (data) {
+		self.pendingRequest = self.props.serviceFullData().then(function (data) {
 			self.responseData = data;
-			//binding.set('response', data);  serviceFunction
 			self.setDefaultValue();
 		});
 	},
@@ -114,6 +138,7 @@ Autocomplete = React.createClass({
 		} else {
 			dropDownNodes = <div style={{padding: '8px'}} aria-live="polite">No matches</div>
 		}
+
 
 		return (
 			<div>

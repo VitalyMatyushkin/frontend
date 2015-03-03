@@ -7,7 +7,6 @@ var addClass = require('./add-class');
 var ComboboxOption = require('./option');
 
 module.exports = React.createClass({
-
 	propTypes: {
 
 		/**
@@ -58,6 +57,7 @@ module.exports = React.createClass({
 	},
 
 	getInitialState: function () {
+
 		return {
 			value: this.props.value,
 			// the value displayed in the input

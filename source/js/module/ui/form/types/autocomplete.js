@@ -5,7 +5,7 @@ var TypeMixin = require('module/ui/form/types/input_mixin'),
 
 TypeAutocompleteMixin = {
 	propTypes: {
-		serviceFunction: React.PropTypes.func.isRequired
+		serviceFullData: React.PropTypes.func.isRequired
 	},
 	componentWillMount: function() {
 		var self = this,
@@ -56,7 +56,7 @@ TypeAutocompleteMixin = {
 		self.bindToAutcomplete();
 
 		return (
-			<Autocomplete serviceFunction={self.props.serviceFunction} serverField="name" binding={self.getDefaultBinding().sub('autocomplete')} />
+			<Autocomplete serviceFullData={self.props.serviceFullData} serverField="name" binding={self.getDefaultBinding().sub('autocomplete')} />
 		);
 	}
 };

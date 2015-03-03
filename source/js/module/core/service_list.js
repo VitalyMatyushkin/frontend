@@ -14,14 +14,17 @@ serviceList = {
 
 		// leaners
         serviceList.learners = new Service('/schools/{schoolId}/learners', binding);
-		serviceList.learner = new Service('/schools/{schoolId}/learners/{learnerId}', binding);
+		serviceList.learnersFilter = new Service('/learners?filter[where][or][0][lastName][like]={name}&filter[where][or][1][firstName][like]={name}&filter[limit]=10', binding);
+		serviceList.learner = new Service('/schools/{}/learners/{learnerId}', binding);
 
 		// houses
         serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
+		serviceList.housesFilter = new Service('/houses?filter[where][and][0][name][like]={name}&filter[where][and][1][schoolId]={schoolId}&filter[limit]=10', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
 
 		// classes
 		serviceList.classes = new Service('/classes?filter[where][schoolId]={schoolId}', binding);
+		serviceList.classesFilter = new Service('/classes?filter[where][and][0][name][like]={name}&filter[where][and][1][schoolId]={schoolId}&filter[limit]=10', binding);
 		serviceList.class = new Service('/classes/{classId}', binding);
 
 		//events
