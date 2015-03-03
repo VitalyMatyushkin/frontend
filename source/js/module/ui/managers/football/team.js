@@ -17,6 +17,7 @@ FootballManager = React.createClass({
 			<span className="ePlayer">John Smith</span>
 			<span className="ePlayer">John Smith</span>
 			<span className="ePlayer">John Smith</span>
+            <input type="text" class="ePlayerAdd" placeholder="learner" />
 		</div>
 	}
 });
