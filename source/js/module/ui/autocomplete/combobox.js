@@ -44,7 +44,12 @@ module.exports = React.createClass({
 		/**
 		 * The initial value of the component.
 		 */
-		value: React.PropTypes.any
+		value: React.PropTypes.any,
+
+		/**
+		 * Костыль для Morearty-совместимости
+		 */
+		binding: React.PropTypes.any
 	},
 
 	getDefaultProps: function () {
@@ -57,7 +62,7 @@ module.exports = React.createClass({
 	},
 
 	getInitialState: function () {
-
+		this.props.binding.set('inputValue', this.findInputValue());
 		return {
 			value: this.props.value,
 			// the value displayed in the input
@@ -83,6 +88,12 @@ module.exports = React.createClass({
 		self.defaulInputLabel = self.props.value;
 
 		this.setState({menu: this.makeMenu()});
+	},
+
+	componentWillUnmount: function() {
+		var self = this;
+
+		this.replaceState(this.getInitialState());
 	},
 
 	componentWillReceiveProps: function (newProps) {
@@ -147,6 +158,7 @@ module.exports = React.createClass({
 	 * to do with an existing or potential selection.
 	 */
 	clearSelectedState: function (cb) {
+		this.props.binding.set('inputValue', null);
 		this.setState({
 			focusedIndex: null,
 			inputValue: null,
@@ -163,6 +175,8 @@ module.exports = React.createClass({
 			this.setState({
 				inputValue: value
 			});
+			this.props.binding.set('inputValue', value);
+
 			this.props.onInput(value);
 			if (!this.state.isOpen) {
 				this.showList();
@@ -314,7 +328,7 @@ module.exports = React.createClass({
 
 	selectOption: function (child, options) {
 		options = options || {};
-
+		this.props.binding.set('inputValue', getLabel(child));
 		this.setState({
 			value: child.props.value,
 			inputValue: getLabel(child),
@@ -420,7 +434,7 @@ module.exports = React.createClass({
 					ref="input"
 					className="rf-combobox-input"
 					defaultValue={this.props.value}
-					value={this.state.inputValue || defaultInputState}
+					value={self.props.binding.get('inputValue') || defaultInputState}
 					onChange={this.handleInputChange}
 					onBlur={this.handleInputBlur}
 					onKeyDown={this.handleKeydown}

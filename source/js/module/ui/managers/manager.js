@@ -78,7 +78,25 @@ Manager = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			mangerBinding = {default: binding, data: self.getBinding('data')},
-			filterMode = binding.get('filterMode');
+			filterMode = binding.get('filterMode'),
+			currentAutocomplete;
+
+		if (filterMode === 'classes') {
+			currentAutocomplete =  <div>
+				Selected class id: <span>{self.getDefaultBinding().sub('autocompleteClass').get('selectedId')}</span>
+				<Autocomplete serviceFilter={self.serviceClassFilter} serverField="name" binding={self.getDefaultBinding().sub('autocompleteClass')} />
+			</div>
+		} else if (filterMode === 'leaners') {
+			currentAutocomplete = <div>
+				Selected leaner id: <span>{self.getDefaultBinding().sub('autocompleteLeaner').get('selectedId')}</span>
+				<Autocomplete serviceFilter={self.serviceLeanerFilter} serverField="fullName" binding={self.getDefaultBinding().sub('autocompleteLeaner')} />
+			</div>
+		} else {
+			currentAutocomplete = <div>
+				Selected house id: <span>{self.getDefaultBinding().sub('autocompleteHouse').get('selectedId')}</span>
+				<Autocomplete serviceFilter={self.serviceHouseFilter} serverField="name" binding={self.getDefaultBinding().sub('autocompleteHouse')} />
+			</div>
+		}
 
         if (!self.props.edit) {
             return <div className="bManager">
@@ -105,16 +123,12 @@ Manager = React.createClass({
                 </div>
                 <div className="eManager_gameResult">
                     <span className="eManager_rival">
-						<div>Filter mode: {filterMode}</div>
 
-						Selected class id: <span>{self.getDefaultBinding().sub('autocompleteClass').get('selectedId')}</span>
-						<Autocomplete serviceFilter={self.serviceClassFilter} serverField="name" binding={self.getDefaultBinding().sub('autocompleteClass')} />
+					{currentAutocomplete}
 
-						Selected leaner id: <span>{self.getDefaultBinding().sub('autocompleteLeaner').get('selectedId')}</span>
-						<Autocomplete serviceFilter={self.serviceLeanerFilter} serverField="fullName" binding={self.getDefaultBinding().sub('autocompleteLeaner')} />
 
-						Selected house id: <span>{self.getDefaultBinding().sub('autocompleteHouse').get('selectedId')}</span>
-						<Autocomplete serviceFilter={self.serviceHouseFilter} serverField="name" binding={self.getDefaultBinding().sub('autocompleteHouse')} />
+
+
                     </span>
                     <span className="eManager_rival">
                         <input class="eMangerDatePicker" type="text" placeholder="school/learner/class" />

@@ -54,6 +54,7 @@ Autocomplete = React.createClass({
 			self.updateFullData();
 		} else {
 			self.handleInput = self._filterOnServer;
+			self._originalService = self.props.serviceFilter;
 		}
 	},
 	handleSelect: function (newId) {
@@ -139,10 +140,9 @@ Autocomplete = React.createClass({
 			dropDownNodes = <div style={{padding: '8px'}} aria-live="polite">No matches</div>
 		}
 
-
 		return (
 			<div>
-				<Combobox onInput={self.handleInput} onSelect={self.handleSelect} value={selectedId}>
+				<Combobox binding={binding.sub('combobox')} onInput={self.handleInput} onSelect={self.handleSelect} value={selectedId}>
           		     {dropDownNodes}
 				</Combobox>
 			</div>
