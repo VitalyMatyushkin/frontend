@@ -1,0 +1,72 @@
+.bManager {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.eManager_gameDate {
+  color: #8c8c8c;
+  font-size: 12px;
+  padding: 2px 0;
+}
+
+.eManager_gameResult {
+  margin-bottom: 5px;
+}
+
+.eManager_rival {
+  font-size: 19px;
+  line-height: 30px;
+  vertical-align: middle;
+  margin: 0 40px;
+}
+
+.eManager_score {
+  font-size: 30px;
+  line-height: 30px;
+  vertical-align: middle
+}
+
+.eManagerGame {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.eManagerGame_team {
+  width: 200px;
+  min-height: 400px;
+  display: flex;
+  flex-flow: column wrap;
+  align-items: center;
+  &:first-child {
+    border-right: 1px solid #eee;
+
+  }
+  &:last-child {
+    border-left: 1px solid #eee;
+  }
+}
+
+.eManagerGame_field {
+  width: 500px;
+  background: green;
+  background: url(http://labs.tageswoche.ch/fussball-viz/public/img/fussballfeld.jpg) no-repeat;
+  background-size: contain;
+  padding: 2.9% 3%;
+}
+
+.eManagerGame_fieldLayer {
+  overflow: hidden;
+  position: relative;
+  left: -0.6875px;
+  top: -0.703125px
+}
+
+.eManagerGame_playerTitle {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  text-anchor: middle;
+  font-size: 13px;
+}

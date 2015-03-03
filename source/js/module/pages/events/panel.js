@@ -88,7 +88,7 @@ InfoView = React.createClass({
                 <span className="eTopInfoBlock_title">Invites</span>
                 <span className="eTopInfoBlock_action">overview</span>
             </div>
-            <div className="eTopInfoBlock mListEvent" onClick={self.setActiveList.bind(null, 'new')}>
+            <div className="eTopInfoBlock mListEvent" onClick={self.setActiveList.bind(null, 'manager')}>
                 <span className="eTopInfoBlock_count">0</span>
                 <span className="eTopInfoBlock_title">New Challenge</span>
                 <span className="eTopInfoBlock_action">overview</span>
