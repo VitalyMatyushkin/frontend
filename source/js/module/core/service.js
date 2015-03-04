@@ -40,7 +40,8 @@ Service = (function() {
 			}
 
 			if (options && options.filter) {
-				filter = options.filter;
+				filter = 'filter=' + JSON.stringify(options.filter);
+				filter = url.indexOf('?') !== -1 ? '&' + filter : '?' + filter;
 			}
 
 			self.currentRequest = $.ajax({
