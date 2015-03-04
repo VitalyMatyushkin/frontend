@@ -60,7 +60,6 @@ RouterView = React.createClass({
 			};
 
 			self.currentPath = route.path;
-			self.forceUpdate();
 			self.RoutingBinding.set('current_page', route.pageName);
 		});
 	},

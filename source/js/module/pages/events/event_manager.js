@@ -1,12 +1,10 @@
 var Panel = require('./panel'),
-	EventManager,
-	Manager = require('module/ui/managers/manager');
+    CalendarView = require('module/ui/calendar/calendar'),
+    EventManagerBase = require('./event_manager_base'),
+    EventManager;
 
 EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
-	getMergeStrategy: function () {
-		return Morearty.MergeStrategy.OVERWRITE;
-	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			newEvent: {
@@ -14,25 +12,38 @@ EventManager = React.createClass({
 					rivalsType: 'schools'
 				},
 				inviteModel: {},
-				step: 'chooseType'
+                step: 1
 			}
 		});
 	},
-	nextStep: function () {
-		var self = this;
-	},
+    onSelectDate: function (date) {
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('newEvent.model.startDate', date);
+        binding.set('newEvent.step', 2);
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			managerBinding = {
-				default: binding,
-				data: binding.get('newEvent')
-			};
+            rootBinding = self.getMoreartyContext().getBinding(),
+            step = binding.get('newEvent.step'),
+            activeSchoolId = rootBinding.get('activeSchoolId'),
+            titles = [
+                'Step 1: Choose Date',
+                'Step 2: Basic Info'
+            ];
 
 		return <div className="bEvents">
 			<Panel binding={binding} />
-			<Manager binding={managerBinding} game="football" />
-		</div>
+            {titles[step - 1]}
+            <div className="bManager">
+                {step === 1 ? <CalendarView
+                    binding={rootBinding.sub('events.calendar')}
+                    onSelect={self.onSelectDate} /> : null}
+                {step === 2 ? <EventManagerBase binding={binding} /> : null}
+            </div>
+		</div>;
 	}
 });
 

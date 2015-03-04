@@ -1,0 +1,33 @@
+.bManager {
+  display: flex;
+  flex-direction: column;
+  width: 600px;
+  margin: 0 auto;
+}
+
+.eManager_group {
+  width: auto;
+  display: flex;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eManager_select {
+  width: 100px;
+  align-self: flex-end;
+}
+
+.eManager_field {
+  width: 300px;
+  padding: 2px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.eManager_field.mTextArea {
+  height: 50px;
+}
+
+

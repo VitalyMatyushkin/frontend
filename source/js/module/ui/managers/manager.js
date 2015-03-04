@@ -7,16 +7,13 @@ Manager = React.createClass({
 	propTypes: {
 		game: React.PropTypes.oneOf(['football']).isRequired
 	},
-    getDefaultProps: function () {
-        return {
-            edit: true
-        }
-    },
 	getDefaultState: function () {
 		var self = this;
 
 		return Immutable.fromJS({
-			filterMode: 'leaners'
+			filterMode: 'schools',
+            autocompleteClass: {},
+            autocompleteHouse: {}
 		});
 	},
 	/**
@@ -24,26 +21,40 @@ Manager = React.createClass({
 	 * @param houseName
 	 * @returns {*}
 	 */
-	serviceHouseFilter: function(houseName) {
+	serviceHouseFilter: function(schoolId, houseName) {
 		var self = this;
 
-		return window.Server.housesFilter.get({
-			schoolId: '4a7ce40a-2348-4325-bd9d-75b5dd020209',
-			name: houseName
-		});
+        return window.Server.housesFilter.get({
+            filter: {
+                where: {
+                    schoolId: schoolId,
+                    name: {
+                        like: houseName,
+                        options: 'i'
+                    }
+                }
+            }
+        });
 	},
 	/**
 	 * Сервис фильтрации по классу
 	 * @param className
 	 * @returns {*}
 	 */
-	serviceClassFilter: function(className) {
+	serviceClassFilter: function(schoolId, className) {
 		var self = this;
 
 		return window.Server.classesFilter.get({
-			schoolId: '4a7ce40a-2348-4325-bd9d-75b5dd020209',
-			name: className
-		});
+            filter: {
+                where: {
+                    schoolId: schoolId,
+                    name: {
+                        like: className,
+                        options: 'i'
+                    }
+                }
+            }
+        });
 	},
 	/**
 	 * Сервис фильтрации по ученику
@@ -76,6 +87,8 @@ Manager = React.createClass({
 	},
 	render: function() {
 		var self = this,
+            rootBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = rootBinding.get('activeSchoolId'),
 			binding = self.getDefaultBinding(),
 			mangerBinding = {default: binding, data: self.getBinding('data')},
 			filterMode = binding.get('filterMode'),
@@ -84,59 +97,53 @@ Manager = React.createClass({
 		if (filterMode === 'classes') {
 			currentAutocomplete =  <div>
 				Selected class id: <span>{self.getDefaultBinding().sub('autocompleteClass').get('selectedId')}</span>
-				<Autocomplete serviceFilter={self.serviceClassFilter} serverField="name" binding={self.getDefaultBinding().sub('autocompleteClass')} />
+				<Autocomplete serviceFilter={self.serviceClassFilter.bind(self, activeSchoolId)} serverField="name" binding={self.getDefaultBinding().sub('autocompleteClass')} />
 			</div>
-		} else if (filterMode === 'leaners') {
-			currentAutocomplete = <div>
-				Selected leaner id: <span>{self.getDefaultBinding().sub('autocompleteLeaner').get('selectedId')}</span>
-				<Autocomplete serviceFilter={self.serviceLeanerFilter} serverField="fullName" binding={self.getDefaultBinding().sub('autocompleteLeaner')} />
-			</div>
-		} else {
+		} else if (filterMode === 'houses') {
 			currentAutocomplete = <div>
 				Selected house id: <span>{self.getDefaultBinding().sub('autocompleteHouse').get('selectedId')}</span>
-				<Autocomplete serviceFilter={self.serviceHouseFilter} serverField="name" binding={self.getDefaultBinding().sub('autocompleteHouse')} />
+				<Autocomplete serviceFilter={self.serviceHouseFilter.bind(self, activeSchoolId)} serverField="name" binding={self.getDefaultBinding().sub('autocompleteHouse')} />
 			</div>
-		}
-
-        if (!self.props.edit) {
-            return <div className="bManager">
-                <div className="eManager_gameDate">28.03.2015</div>
-                <div className="eManager_rivalType">schools</div>
-                <div className="eManager_gameResult">
-                    <span className="eManager_rival">FCB</span>
-                    <span className="eManager_score">1:0</span>
-                    <span className="eManager_rival">EBS</span>
-                </div>
-                <FootballManager binding={mangerBinding} edit={self.props.edit} />
+		} else {
+            currentAutocomplete = <div>
+                Selected school id: <span>{activeSchoolId}</span>
             </div>
-        } else {
+        }
+
+        //if (!self.props.edit) {
+        //    return <div className="bManager">
+        //        <div className="eManager_gameDate">28.03.2015</div>
+        //        <div className="eManager_rivalType">schools</div>
+        //        <div className="eManager_gameResult">
+        //            <span className="eManager_rival">FCB</span>
+        //            <span className="eManager_score">1:0</span>
+        //            <span className="eManager_rival">EBS</span>
+        //        </div>
+        //        <FootballManager binding={mangerBinding} edit={self.props.edit} />
+        //    </div>
+        //} else {
             return <div className="bManager mEdit">
                 <div className="eManager_gameDate">
                     <input class="eMangerDatePicker" type="text"/>
                 </div>
                 <div className="eManager_rivalType">
-                    <select className="eManager_selectRivalType" onChange={self.changeCompleteType}>
-                        <option selected="selected">leaners</option>
-                        <option>houses</option>
-                        <option>classes</option>
+                    <select className="eManager_selectRivalType" value={filterMode} onChange={self.changeCompleteType}>
+                        <Morearty.DOM.option value="schools" selected="selected">schools</Morearty.DOM.option>
+                        <Morearty.DOM.option value="houses">houses</Morearty.DOM.option>
+                        <Morearty.DOM.option value="classes">classes</Morearty.DOM.option>
                     </select>
                 </div>
                 <div className="eManager_gameResult">
                     <span className="eManager_rival">
-
 					{currentAutocomplete}
-
-
-
-
                     </span>
                     <span className="eManager_rival">
-                        <input class="eMangerDatePicker" type="text" placeholder="school/learner/class" />
+                        <input class="eMangerRival" type="text" placeholder={'Enter rivalname'} />
                     </span>
                 </div>
                 <FootballManager binding={mangerBinding} />
-            </div>
-        }
+            </div>;
+        //}
 
 	}
 });

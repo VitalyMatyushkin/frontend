@@ -4,6 +4,9 @@ var CalendarYearView = require('./calendar_year'),
 
 CalendarView = React.createClass({
 	mixins: [Morearty.Mixin],
+    propType: {
+        onSelect: React.PropTypes.func
+    },
 	getDefaultState: function () {
 		var date = new Date();
 
@@ -11,6 +14,7 @@ CalendarView = React.createClass({
 			currentDate: date,
 			mode: 'month',
 			hoverDay: null,
+            selectDay: null,
             monthNames: [ "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December" ]
 		});
@@ -24,7 +28,7 @@ CalendarView = React.createClass({
 		if (currentMode === 'year') {
 			currentView = <CalendarYearView binding={binding} />
 		} else {
-			currentView = <CalendarMonthView binding={binding} />
+			currentView = <CalendarMonthView binding={binding} onSelect={self.props.onSelect} />
 		}
 
 		return <div className="bCalendar">

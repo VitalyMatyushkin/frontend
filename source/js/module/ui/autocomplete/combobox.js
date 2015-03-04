@@ -90,12 +90,6 @@ module.exports = React.createClass({
 		this.setState({menu: this.makeMenu()});
 	},
 
-	componentWillUnmount: function() {
-		var self = this;
-
-		this.replaceState(this.getInitialState());
-	},
-
 	componentWillReceiveProps: function (newProps) {
 		this.setState({
 			menu: this.makeMenu(newProps.children)

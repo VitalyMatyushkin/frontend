@@ -2,6 +2,9 @@ var CalendarMonthView;
 
 CalendarMonthView = React.createClass({
 	mixins: [Morearty.Mixin],
+    propType: {
+        onSelect: React.PropTypes.func
+    },
 	range: function (end) {
 		var arr = [],
 			start = 0;
@@ -94,6 +97,16 @@ CalendarMonthView = React.createClass({
 
         binding.set('currentDate', new Date(prevYear, prevMonth, 1));
     },
+    onSelectDay: function (day) {
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('selectDay', day);
+
+        if (self.props.onSelect) {
+            self.props.onSelect(day.date);
+        }
+    },
     onClickNextButton: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -110,6 +123,7 @@ CalendarMonthView = React.createClass({
             binding = this.getDefaultBinding(),
             date = binding.get('currentDate'),
 			hoverDay = binding.get('hoverDay'),
+            selectDay = binding.get('selectDay'),
 			cx = React.addons.classSet,
 			now = new Date(),
 			today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -122,10 +136,15 @@ CalendarMonthView = React.createClass({
                 mNext: day.next || false,
 				mFirst: i === 0,
 				mHover: hoverDay && self.equalDates(day.date, hoverDay.date),
-                mActive: day.events && day.events.count() > 0
+                mActive: day.events && day.events.count() > 0,
+                mSelect: selectDay && self.equalDates(day.date, selectDay.date)
 			});
 
-			return <span className={classes} onMouseLeave={self.onMouseLeaveDay} onMouseEnter={self.onMouseEnterDay.bind(null, day)}>{day.day}</span>;
+			return <span
+                className={classes}
+                onClick={self.onSelectDay.bind(null, day)}
+                onMouseLeave={self.onMouseLeaveDay}
+                onMouseEnter={self.onMouseEnterDay.bind(null, day)}>{day.day}</span>;
 		})}</div>;
 	},
 	renderDaysOfWeek: function () {
