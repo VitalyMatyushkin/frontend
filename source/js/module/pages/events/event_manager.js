@@ -1,6 +1,7 @@
 var Panel = require('./panel'),
     CalendarView = require('module/ui/calendar/calendar'),
     EventManagerBase = require('./event_manager_base'),
+    Manager = require('module/ui/managers/manager'),
     EventManager;
 
 EventManager = React.createClass({
@@ -12,7 +13,8 @@ EventManager = React.createClass({
 					rivalsType: 'schools'
 				},
 				inviteModel: {},
-                step: 1
+                step: 1,
+                players: []
 			}
 		});
 	},
@@ -42,6 +44,7 @@ EventManager = React.createClass({
                     binding={rootBinding.sub('events.calendar')}
                     onSelect={self.onSelectDate} /> : null}
                 {step === 2 ? <EventManagerBase binding={binding} /> : null}
+                {step === 3 ? <Manager binding={binding} /> : null}
             </div>
 		</div>;
 	}

@@ -1,5 +1,3 @@
 {
-  "directory" : "source/js/bower",
-  "http-proxy": "http://proxy.ozon.ru:3128",
-  "https-proxy": "http://proxy.ozon.ru:3128"
+  "directory" : "source/js/bower"
 }

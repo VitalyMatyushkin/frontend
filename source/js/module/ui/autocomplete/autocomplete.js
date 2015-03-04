@@ -9,7 +9,8 @@ Autocomplete = React.createClass({
 	propTypes: {
 		serverField: React.PropTypes.string,
 		serviceFullData: React.PropTypes.func,
-		serviceFilter: React.PropTypes.func
+		serviceFilter: React.PropTypes.func,
+        onSelect: React.PropTypes.func
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -60,6 +61,10 @@ Autocomplete = React.createClass({
 	handleSelect: function (newId) {
 		var self = this,
 			binding = self.getDefaultBinding();
+
+        if (self.props.onSelect) {
+            self.props.onSelect(newId, self.responseData);
+        }
 
 		binding.atomically().set('selectedId', newId).set('response', self.responseData).commit();
 	},
