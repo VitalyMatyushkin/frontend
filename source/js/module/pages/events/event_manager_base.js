@@ -59,13 +59,18 @@ EventManagerBase = React.createClass({
      * @returns {*}
      */
     serviceSchoolFilter: function(schoolId, schoolName) {
-        var self = this;
+        var self = this,
+            rootBinding = self.getMoreartyContext().getBinding(),
+            userId = rootBinding.get('authorizationInfo.userId');
 
         return window.Server.schools.get({
             filter: {
                 where: {
                     id: {
                         neq: schoolId
+                    },
+                    ownerId: {
+                        neq: userId
                     },
                     name: {
                         like: schoolName,
