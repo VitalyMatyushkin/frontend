@@ -9,7 +9,7 @@
   width: 200px;
   display: flex;
   flex-flow: column wrap;
-  align-items: center;
+  align-items: flex-start;
   &:first-child {
     border-right: 1px solid #eee;
 
