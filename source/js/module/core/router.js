@@ -33,7 +33,8 @@ RouterView = React.createClass({
 				path: route.props.path,
 				component: route.props.component,
 				pageName: route.props.pageName,
-				binding: route.props.binding || binding
+				binding: route.props.binding || binding,
+				unauthorizedAccess: route.props.unauthorizedAccess ? route.props.unauthorizedAccess : false
 			};
 
 			routes.push(routeData);
@@ -73,7 +74,7 @@ RouterView = React.createClass({
 		self.siteRoutes[route.path] = function(){
 			// В случае отсутсвия авторизации принудительно перенаправляем на страницу логина
 			// при этом сохраняем последний намеченный роутинг
-			if (self.isAuthorized === false && self.loginRoute) {
+			if (self.isAuthorized === false && self.loginRoute && route.unauthorizedAccess !== true) {
 				self.setRoute(self.loginRoute);
 				self.nextRoute = route;
 			} else {
@@ -95,7 +96,7 @@ RouterView = React.createClass({
 				parametersResult[parametrSplit[0]] = parametrSplit[1];
 			});
 		}
-
+		console.log(parametersResult)
 		self.RoutingBinding.set('parameters', Immutable.fromJS(parametersResult));
 
 	},

@@ -7,14 +7,14 @@ SchoolListPage = React.createClass({
 			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
 
 		userId && Server.ownerSchools.get(userId).then(function(data) {
-			self.getDefaultBinding().set(Immutable.fromJS(data));
+			self.getDefaultBinding().set('list', Immutable.fromJS(data));
 		});
 	},
 	render: function() {
 		var self = this,
 			schoolNodes,
 			binding = self.getDefaultBinding(),
-			schoolList = binding.get();
+			schoolList = binding.sub('list').get();
 
 		if (schoolList) {
 			schoolNodes = schoolList.map(function (school) {
@@ -33,7 +33,7 @@ SchoolListPage = React.createClass({
 
 				<div className="eSchoolList_wrap">
 					{schoolNodes}
-                    <a href="/#schools/add" className="eSchoolList_one mAddNew">
+                    <a href="/#schools?mode=add" className="eSchoolList_one mAddNew">
                         +
                     </a>
 				</div>

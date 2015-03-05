@@ -4,14 +4,19 @@ var Form = require('module/ui/form/form'),
 
 AddSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
-	onSuccess: function(data) {
-		var self = this;
+	onSuccess: function(schoolData) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding();
 
 		// Добавление школы в списк
-		self.getDefaultBinding().update('list', function(ImmutableValue){
+		binding.update('list', function(ImmutableValue){
 			ImmutableValue = ImmutableValue || Immutable.List();
-			return ImmutableValue.push(data);
+			return ImmutableValue.push(schoolData);
 		});
+
+		// Добавляемая школа всегда становится школой "по умолчанию"
+		globalBinding.set('userRules.activeSchoolId', schoolData.id);
 
 		// Переход к списку школ
 		document.location.hash = 'schools';

@@ -7,7 +7,7 @@ Manager = React.createClass({
 	render: function() {
 		var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('activeSchoolId'),
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding();
 
             return <FootballManager binding={binding} />;

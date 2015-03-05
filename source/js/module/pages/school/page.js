@@ -2,9 +2,9 @@ var List = require('module/ui/list/list'),
 	ListField = require('module/ui/list/list_field'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
-	SchoolListPage;
+	OneSchoolPage;
 
-SchoolListPage = React.createClass({
+OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
@@ -106,4 +106,4 @@ SchoolListPage = React.createClass({
 });
 
 
-module.exports = SchoolListPage;
+module.exports = OneSchoolPage;

@@ -1,20 +1,22 @@
 var ApplicationView = require('module/main/application'),
 	userDataInstance = require('module/data/user_data'),
+	userRulesInstance = require('module/data/user_rules'),
 	authController = require('module/core/auth_controller'),
 	serviceList = require('module/core/service_list'),
 	MoreartyContext,
-	binding,
-    activeSchoolId = localStorage.getItem('activeSchoolId') || null;
+	binding;
+    //activeSchoolId = localStorage.getItem('activeSchoolId') || null;
 
 // Создание контекста Morearty
 MoreartyContext = Morearty.createContext({
 	initialState: {
 		userData: userDataInstance.getDefaultState(),
+		userRules: userRulesInstance.getDefaultState(),
 		routing: {
 			current_page: 'main',
 			parameters: {}
 		},
-        activeSchoolId: activeSchoolId,
+        //activeSchoolId: activeSchoolId,
 		school: {},
 		schoolsList: {},
 		schools: {
@@ -54,6 +56,7 @@ window.Server = serviceList;
 
 // Передача связывания контекста в классы данных
 userDataInstance.setBinding(binding.sub('userData'));
+userRulesInstance.setBinding(binding.sub('userRules'));
 
 // Включение авторизации сервисов
 serviceList.initialize(binding.sub('userData.authorizationInfo'));

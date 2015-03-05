@@ -51,7 +51,7 @@ EventManager = React.createClass({
 			binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             step = binding.get('newEvent.step'),
-            activeSchoolId = rootBinding.get('activeSchoolId'),
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
             titles = [
                 'Choose Date',
                 'Basic Info',

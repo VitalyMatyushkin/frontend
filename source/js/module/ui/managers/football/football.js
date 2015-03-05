@@ -7,7 +7,7 @@ FootballManager = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('activeSchoolId'),
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			rivalsType = binding.get('newEvent.model.rivalsType'),
 			multipleCommand = rivalsType === 'houses' || rivalsType === 'classes',
 			teamFirstBinding = {
