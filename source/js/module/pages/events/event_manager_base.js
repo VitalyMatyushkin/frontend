@@ -81,6 +81,20 @@ EventManagerBase = React.createClass({
         binding.set('autocomplete.selectedId', null);
         binding.set('newEvent.model.rivalsType', event.target.value);
     },
+	changeCompleteSport: function (event) {
+		var binding = this.getDefaultBinding();
+
+		binding.set('newEvent.model.sportId', event.target.value);
+	},
+	getDefaultSportsId: function () {
+		var self = this,
+			rootBinding = self.getMoreartyContext().getBinding(),
+			football = rootBinding.get('sports.models').filter(function (sport) {
+				return sport.get('name') === 'football';
+			});
+
+		return football.count() > 0 ? football.get('id') : null;
+	},
     getSports: function () {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
@@ -88,14 +102,11 @@ EventManagerBase = React.createClass({
 
         return sportsBinding.get('models').map(function (sport) {
             return <Morearty.DOM.option
+				selected={sport.get('name') === 'football'}
                 value={sport.get('id')}
-                selected="selected">{sport.get('name')}</Morearty.DOM.option>
-        }).toArray()
-    },
-    toNext: function () {
-        var self = this;
-
-        self.getDefaultBinding().set('newEvent.step', 3);
+				key={sport.get('id') + '-sport'}
+			>{sport.get('name')}</Morearty.DOM.option>
+        }).toArray();
     },
 	render: function() {
 		var self = this,
@@ -103,6 +114,7 @@ EventManagerBase = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('activeSchoolId'),
             rivalsType = binding.get('newEvent.model.rivalsType'),
+			sportId = binding.get('newEvent.model.sportId'),
             services = {
                 schools: self.serviceSchoolFilter.bind(self, activeSchoolId),
                 houses: self.serviceHouseFilter.bind(self, activeSchoolId),
@@ -111,31 +123,32 @@ EventManagerBase = React.createClass({
 
 		return <div className="eManager_base">
             <div className="eManager_group">
-                    {'What\'s name?'}
+                    {'What\'s Event title?'}
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
                     value={binding.get('newEvent.name')}
                     placeholder={'enter name'}
-                    onChange={binding.sub('newEvent.name')}
+                    onChange={Morearty.Callback.set(binding.sub('newEvent.name'))}
                 />
             </div>
             <div className="eManager_group">
-                    {'What\'s description?'}
+                    {'What\'s Event description?'}
                 <Morearty.DOM.textarea
                     className="eManager_field mTextArea"
                     type="text"
                     value={binding.get('newEvent.description')}
                     placeholder={'enter description'}
-                    onChange={binding.sub('newEvent.description')}
+                    onChange={Morearty.Callback.set(binding.sub('newEvent.description'))}
                 />
             </div>
             <div className="eManager_group">
                     {'What\'s the game?'}
                 <select
                     className="eManager_select"
-                    value={rivalsType}
-                    onChange={self.changeCompleteType}>
+					value={binding.get('newEvent.model.sportId')}
+					defaultValue={self.getDefaultSportsId()}
+                    onChange={self.changeCompleteSport}>
                         {self.getSports()}
                 </select>
             </div>
@@ -143,11 +156,12 @@ EventManagerBase = React.createClass({
                 Rivals will be
                 <select
                     className="eManager_select"
-                    value={binding.get('newEvent.model.sportId')}
+					defaultValue="schools"
+                    value={rivalsType}
                     onChange={self.changeCompleteType}>
-                    <Morearty.DOM.option value="schools" selected="selected">schools</Morearty.DOM.option>
-                    <Morearty.DOM.option value="houses">houses</Morearty.DOM.option>
-                    <Morearty.DOM.option value="classes">classes</Morearty.DOM.option>
+                    <Morearty.DOM.option key="schools-type" value="schools">schools</Morearty.DOM.option>
+                    <Morearty.DOM.option key="houses-type" value="houses">houses</Morearty.DOM.option>
+                    <Morearty.DOM.option key="classes-type" value="classes">classes</Morearty.DOM.option>
                 </select>
             </div>
             <div className="eManager_group">
@@ -164,9 +178,6 @@ EventManagerBase = React.createClass({
                             binding={binding.sub('autocomplete' + rivalsType + 'second')}
                         /> : null
                         }
-            </div>
-            <div className="eManager_group">
-                <span className="bButton" onClick={self.toNext}>Next</span>
             </div>
         </div>;
 	}

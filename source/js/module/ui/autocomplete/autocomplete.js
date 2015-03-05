@@ -60,13 +60,20 @@ Autocomplete = React.createClass({
 	},
 	handleSelect: function (newId) {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			model = self.responseData.filter(function (mod) {
+				return mod.id === newId;
+			});
 
         if (self.props.onSelect) {
-            self.props.onSelect(newId, self.responseData);
+            self.props.onSelect(newId, self.responseData, model.length > 0 ? model[0] : null);
         }
 
-		binding.atomically().set('selectedId', newId).set('response', self.responseData).commit();
+		binding.atomically()
+			.set('selectedId', newId)
+			.set('response', self.responseData)
+			.set('model', model.length > 0 ? model[0] : null)
+			.commit();
 	},
 	_filterOnServer: function (userInput) {
 		var self = this,

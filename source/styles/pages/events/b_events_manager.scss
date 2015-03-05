@@ -5,6 +5,12 @@
   margin: 0 auto;
 }
 
+.bManager.mTeamManager {
+  width: 960px;
+  flex-direction: row;
+  margin-top: 10px;
+}
+
 .eManager_group {
   width: auto;
   display: flex;

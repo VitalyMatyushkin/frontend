@@ -1,56 +1,26 @@
 var FootballManager,
-    Autocomplete = require('module/ui/autocomplete/autocomplete'),
 	Team = require('./team');
 
 FootballManager = React.createClass({
 	mixins: [Morearty.Mixin],
-    getDefaultState: function () {
-        return Immutable.fromJS({
-            autocompleteLeaners: {}
-        });
-    },
-    serviceLearnersFilter: function (schoolId, learnerName) {
-        return window.Server.learnersFilter.get({
-            filter: {
-                where: {
-                    schoolId: schoolId,
-                    or: [
-                        {
-                            firstName: {
-                                like: learnerName,
-                                options: 'i'
-                            }
-                        },
-                        {
-                            lastName: {
-                                like: learnerName,
-                                options: 'i'
-                            }
-                        }
-                    ]
-                }
-            }
-        }).then(function (data) {
-            data.map(function (player) {
-                var name = player.firstName + ' ' + player.lastName;
-                player.name = name;
-
-                return player.name;
-            });
-
-            return data;
-        });
-    },
-    onSelectLearner: function () {
-        console.log(arguments)
-    },
 	render: function() {
 		var self = this,
+			binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('activeSchoolId'),
-			binding = self.getDefaultBinding();
+			rivalsType = binding.get('newEvent.model.rivalsType'),
+			multipleCommand = rivalsType === 'houses' || rivalsType === 'classes',
+			teamFirstBinding = {
+				event: binding,
+				default: binding.sub('newEvent.teams.first')
+			},
+			teamSecondBinding = {
+				event: binding,
+				default: binding.sub('newEvent.teams.second')
+			};
 
 		return <div className="eManagerGame mFootball">
+			<Team binding={teamFirstBinding} />
 			<div className="eManagerGame_field">
 				<svg className="eManagerGame_fieldLayer" height="613.9539930555555" version="1.1" width="100%" xmlns="http://www.w3.org/2000/svg">
 					<circle cx="77.55208333333333" cy="245.98551432291666" r="11" fill="#ee402f" stroke="none" strokeWidth="1" strokeLinejoin="round" data-toggle="tooltip" title="" data-original-title="Luca Zuffi">
@@ -60,13 +30,7 @@ FootballManager = React.createClass({
 					</circle>
 				</svg>
 			</div>
-			<Team binding={binding} />
-            <Autocomplete
-                serviceFilter={self.serviceLearnersFilter.bind(null, activeSchoolId)}
-                serverField="name"
-                onSelect={self.onSelectLearner}
-                binding={binding.sub('autocompleteLeaners')}
-            />
+			{multipleCommand ? <Team binding={teamSecondBinding} /> : null}
 		</div>
 	}
 });

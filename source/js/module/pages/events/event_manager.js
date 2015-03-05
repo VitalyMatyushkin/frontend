@@ -14,7 +14,11 @@ EventManager = React.createClass({
 				},
 				inviteModel: {},
                 step: 1,
-                players: []
+                players: [],
+				teams: {
+					first: {},
+					second: {}
+				}
 			}
 		});
 	},
@@ -25,6 +29,23 @@ EventManager = React.createClass({
         binding.set('newEvent.model.startDate', date);
         binding.set('newEvent.step', 2);
     },
+	toNext: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			step = binding.get('newEvent.step');
+
+		self.getDefaultBinding().set('newEvent.step', step + 1);
+	},
+	toBack: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			step = binding.get('newEvent.step');
+
+		self.getDefaultBinding().set('newEvent.step', step - 1);
+	},
+	toFinish: function () {
+		console.log('finish')
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -32,20 +53,32 @@ EventManager = React.createClass({
             step = binding.get('newEvent.step'),
             activeSchoolId = rootBinding.get('activeSchoolId'),
             titles = [
-                'Step 1: Choose Date',
-                'Step 2: Basic Info'
-            ];
+                'Choose Date',
+                'Basic Info',
+				'Form teams'
+            ],
+			bManagerClasses = classNames({
+				bManager: true,
+				mDate: step === 1,
+				mBase: step === 2,
+				mTeamManager: step === 3
+			});
 
 		return <div className="bEvents">
 			<Panel binding={binding} />
-            {titles[step - 1]}
-            <div className="bManager">
+           	<h3>{'[' + step + '/' + titles.length + ']: ' + titles[step - 1]}</h3>
+            <div className={bManagerClasses}>
                 {step === 1 ? <CalendarView
                     binding={rootBinding.sub('events.calendar')}
                     onSelect={self.onSelectDate} /> : null}
                 {step === 2 ? <EventManagerBase binding={binding} /> : null}
                 {step === 3 ? <Manager binding={binding} /> : null}
             </div>
+			<div className="eEvents_buttons">
+				{step > 1 ? <span className="bButton eEvents_button" onClick={self.toBack}>Back</span> : null}
+				{step < titles.length ? <span className="bButton eEvents_button" onClick={self.toNext}>Next</span> : null}
+				{step === titles.length ? <span className="bButton eEvents_button mFinish" onClick={self.toFinish}>Finish</span> : null}
+			</div>
 		</div>;
 	}
 });

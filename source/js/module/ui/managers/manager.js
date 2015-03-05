@@ -10,9 +10,7 @@ Manager = React.createClass({
             activeSchoolId = rootBinding.get('activeSchoolId'),
 			binding = self.getDefaultBinding();
 
-            return <div className="bManager">
-                <FootballManager binding={binding} />
-            </div>;
+            return <FootballManager binding={binding} />;
 	}
 });
 
