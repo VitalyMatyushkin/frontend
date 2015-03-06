@@ -14,7 +14,7 @@ AddNewLeaner = React.createClass({
 		var self = this;
 
 		// Переход к списку школ
-		document.location.hash = 'school?id=' + self.props.schoolId;
+		document.location.hash = 'schools/view?id=' + self.props.schoolId;
 	},
 	submitForm: function(data) {
 		var self = this;

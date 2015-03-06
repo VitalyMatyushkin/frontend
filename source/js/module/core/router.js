@@ -32,7 +32,7 @@ RouterView = React.createClass({
 			var routeData = {
 				path: route.props.path,
 				component: route.props.component,
-				pageName: route.props.pageName,
+				pageName: route.props.pageName || '',
 				binding: route.props.binding || binding,
 				unauthorizedAccess: route.props.unauthorizedAccess ? route.props.unauthorizedAccess : false
 			};
@@ -61,7 +61,12 @@ RouterView = React.createClass({
 			};
 
 			self.currentPath = route.path;
-			self.RoutingBinding.set('current_page', route.pageName);
+
+			self.RoutingBinding.atomically()
+				.set('currentPath', self.currentPath)
+				.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
+				.set('currentPageName', route.pageName)
+				.commit();
 		});
 	},
 	/**
@@ -96,7 +101,7 @@ RouterView = React.createClass({
 				parametersResult[parametrSplit[0]] = parametrSplit[1];
 			});
 		}
-		console.log(parametersResult)
+
 		self.RoutingBinding.set('parameters', Immutable.fromJS(parametersResult));
 
 	},

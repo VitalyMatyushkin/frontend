@@ -5,7 +5,6 @@ var ApplicationView = require('module/main/application'),
 	serviceList = require('module/core/service_list'),
 	MoreartyContext,
 	binding;
-    //activeSchoolId = localStorage.getItem('activeSchoolId') || null;
 
 // Создание контекста Morearty
 MoreartyContext = Morearty.createContext({
@@ -13,10 +12,11 @@ MoreartyContext = Morearty.createContext({
 		userData: userDataInstance.getDefaultState(),
 		userRules: userRulesInstance.getDefaultState(),
 		routing: {
-			current_page: 'main',
+			currentPath: '',
+			currentPageName: '',
+			currentPathParts: [],
 			parameters: {}
 		},
-        //activeSchoolId: activeSchoolId,
 		school: {},
 		schoolsList: {},
 		schools: {

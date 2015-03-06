@@ -18,7 +18,7 @@ SchoolListPage = React.createClass({
 
 		if (schoolList) {
 			schoolNodes = schoolList.map(function (school) {
-				var schoolLink = '#school?id=' + school.get('id');
+				var schoolLink = '#schools/view?id=' + school.get('id');
 				return (
 					<a href={schoolLink} className="eSchoolList_one">
 						{school.get('name')}
