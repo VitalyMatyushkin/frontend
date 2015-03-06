@@ -7,7 +7,11 @@ var Panel = require('./panel'),
 EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
-		return Immutable.fromJS({
+        var self = this,
+            rootBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+
+        return Immutable.fromJS({
 			newEvent: {
 				model: {
 					name: '',
@@ -20,17 +24,14 @@ EventManager = React.createClass({
 				},
 				inviteModel: {},
                 step: 1,
-				rivals: {
-					schools: [],
-					classes: [],
-					houses: []
-				},
-				teams: []
+				rivals: [{id: activeSchoolId}]
 			}
 		});
 	},
 	componentWillMount: function () {
 		var self = this,
+            rootBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding();
 
 		binding.sub('newEvent.model.rivalsType').addListener(function (descriptor) {
@@ -39,11 +40,9 @@ EventManager = React.createClass({
 					type = rivalsType !== 'schools' ? 'internal' : 'external';
 
 				binding.set('newEvent.model.type', type);
-				binding.set('newEvent.rivals', Immutable.fromJS({
-					schools: [],
-					classes: [],
-					houses: []
-				}));
+                binding.update('newEvent.rivals', function () {
+                    return rivalsType === 'schools' ? Immutable.fromJS([{id: activeSchoolId}]) : Immutable.List();
+                });
 			}
 		});
 	},
@@ -58,17 +57,19 @@ EventManager = React.createClass({
     },
 	toNext: function () {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			step = binding.get('newEvent.step');
+			binding = self.getDefaultBinding();
 
-		self.getDefaultBinding().set('newEvent.step', step + 1);
+        binding.update('newEvent.step', function (step) {
+            return step + 1;
+        });
 	},
 	toBack: function () {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			step = binding.get('newEvent.step');
+			binding = self.getDefaultBinding();
 
-		self.getDefaultBinding().set('newEvent.step', step - 1);
+        binding.update('newEvent.step', function (step) {
+            return step - 1;
+        });
 	},
 	toFinish: function () {
 		var self = this,
@@ -76,8 +77,7 @@ EventManager = React.createClass({
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding(),
 			model = binding.toJS('newEvent.model'),
-			teams = binding.toJS('newEvent.teams'),
-			rivals = binding.toJS('newEvent.rivals.' + model.rivalsType);
+			rivals = binding.toJS('newEvent.rivals');
 
 		// add active school to rivals
 		if (model.rivalsType === 'schools') {
@@ -103,7 +103,7 @@ EventManager = React.createClass({
 				return events.push(Immutable.fromJS(event));
 			});
 
-			rivals.forEach(function (rival, index) {
+			rivals.forEach(function (rival) {
 				var rivalModel = {
 					sportId: event.sportId,
 					schoolId: event.rivalsType === 'schools' ? rival.id : rival.schoolId
@@ -120,8 +120,13 @@ EventManager = React.createClass({
 				}
 
 				window.Server.participants.post(event.id, rivalModel).then(function (res) {
-					teams[index].players.forEach(function (player) {
-						console.log(player);
+                    rival.players.forEach(function (player) {
+                        window.Server.playersRelation.put({
+                            teamId: res.id,
+                            learnerId: player.id
+                        }).then(function (res) {
+                            console.log(res);
+                        })
 					});
 				});
 			});

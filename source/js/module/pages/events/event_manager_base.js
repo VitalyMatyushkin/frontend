@@ -97,7 +97,7 @@ EventManagerBase = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		binding.update('newEvent.rivals.' + binding.get('newEvent.model.rivalsType'), function (rivals) {
+		binding.update('newEvent.rivals', function (rivals) {
 			var found = rivals.filter(function (rival) {
 				return rival.get('id') === id;
 			});
@@ -195,14 +195,14 @@ EventManagerBase = React.createClass({
 					onSelect={self.onSelectRival}
                     binding={binding.sub(['autocomplete', rivalsType, 0])}
                 />
-                    {rivalsType === 'houses' || rivalsType === 'classes' ?
-                        <Autocomplete
-                            serviceFilter={services[rivalsType]}
-                            serverField="name"
-							onSelect={self.onSelectRival}
-                            binding={binding.sub(['autocomplete', rivalsType, 1])}
-                        /> : null
-                        }
+                {rivalsType === 'houses' || rivalsType === 'classes' ?
+                    <Autocomplete
+                        serviceFilter={services[rivalsType]}
+                        serverField="name"
+                        onSelect={self.onSelectRival}
+                        binding={binding.sub(['autocomplete', rivalsType, 1])}
+                    /> : null
+                }
             </div>
         </div>;
 	}

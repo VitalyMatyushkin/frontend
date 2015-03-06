@@ -1,13 +1,10 @@
 var Manager,
-	FootballManager = require('./football/football'),
-	Autocomplete = require('module/ui/autocomplete/autocomplete');
+	FootballManager = require('./football/football');
 
 Manager = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding(),
 			rivalsType = binding.get('newEvent.model.rivalsType');
 

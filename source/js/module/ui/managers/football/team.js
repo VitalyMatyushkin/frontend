@@ -7,10 +7,10 @@ FootballManager = React.createClass({
 	getDefaultState: function () {
 		var self = this,
 			state = {
-				teams: []
+				rivals: []
 			};
 
-		state.teams[self.props.order] = {
+		state.rivals[self.props.order] = {
 			players: [],
 			autocomplete: {}
 		};
@@ -21,7 +21,7 @@ FootballManager = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
 
-		return binding.get('teams').toArray().reduce(function (memo, team) {
+		return binding.get('rivals').toArray().reduce(function (memo, team) {
 			var ids = [];
 
 			if (team.get('players')) {
@@ -88,7 +88,7 @@ FootballManager = React.createClass({
 	},
 	onSelectLearner: function (selectId, response, model) {
         var self = this,
-            players = self.getDefaultBinding().sub(['teams', self.props.order, 'players']);
+            players = self.getDefaultBinding().sub(['rivals', self.props.order, 'players']);
 
 		if (model) {
             players.update(function (data) {
@@ -109,7 +109,7 @@ FootballManager = React.createClass({
 	},
     _removePlayer: function (playerId) {
         var self = this,
-            players = self.getDefaultBinding().get(['teams', self.props.order, 'players']);
+            players = self.getDefaultBinding().get(['rivals', self.props.order, 'players']);
 
         players.update(function (data) {
            return data.filter(function (model) {
@@ -119,7 +119,7 @@ FootballManager = React.createClass({
     },
     getPlayers: function () {
         var self = this,
-            players = self.getDefaultBinding().get(['teams', self.props.order, 'players']);
+            players = self.getDefaultBinding().get(['rivals', self.props.order, 'players']);
 
         return players.map(function (player) {
             return <div className="bManager_ePlayer" key={player.get('id')}>
@@ -142,7 +142,7 @@ FootballManager = React.createClass({
 				serviceFilter={self.serviceLearnersFilter.bind(null, activeSchoolId)}
 				serverField="name"
 				onSelect={self.onSelectLearner}
-				binding={binding.sub(['teams', self.props.order, 'autocomplete'])}
+				binding={binding.sub(['rivals', self.props.order, 'autocomplete'])}
 			/>
 		</div>
 
