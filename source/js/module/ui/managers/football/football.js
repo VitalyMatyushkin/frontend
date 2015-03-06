@@ -7,20 +7,11 @@ FootballManager = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			rivalsType = binding.get('newEvent.model.rivalsType'),
-			multipleCommand = rivalsType === 'houses' || rivalsType === 'classes',
-			teamFirstBinding = {
-				event: binding,
-				default: binding.sub('newEvent.teams.first')
-			},
-			teamSecondBinding = {
-				event: binding,
-				default: binding.sub('newEvent.teams.second')
-			};
+			multipleTeams = rivalsType === 'houses' || rivalsType === 'classes';
 
 		return <div className="eManagerGame mFootball">
-			<Team binding={teamFirstBinding} />
+			<Team binding={binding.sub('newEvent')} order={0} />
 			<div className="eManagerGame_field">
 				<svg className="eManagerGame_fieldLayer" height="613.9539930555555" version="1.1" width="100%" xmlns="http://www.w3.org/2000/svg">
 					<circle cx="77.55208333333333" cy="245.98551432291666" r="11" fill="#ee402f" stroke="none" strokeWidth="1" strokeLinejoin="round" data-toggle="tooltip" title="" data-original-title="Luca Zuffi">
@@ -30,7 +21,7 @@ FootballManager = React.createClass({
 					</circle>
 				</svg>
 			</div>
-			{multipleCommand ? <Team binding={teamSecondBinding} /> : null}
+			{multipleTeams ? <Team binding={binding.sub('newEvent')} order={1} /> : null}
 		</div>
 	}
 });

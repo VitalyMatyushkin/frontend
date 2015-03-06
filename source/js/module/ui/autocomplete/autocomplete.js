@@ -85,10 +85,13 @@ Autocomplete = React.createClass({
 			binding.set('response', []);
 		} else {
 			self.pendingRequest && self.pendingRequest.abort();
+			binding.set('loading', true);
+			binding.set('response', null);
 			self.pendingRequest = self.props.serviceFilter(userInput).then(function (data) {
 				self.responseData = data;
 				binding.set('response', data);
-				//self.setDefaultValue();
+				binding.set('loading', false);
+				//self.setDefaultValue(); TODO: may be remove this line??
 			});
 
 		}
@@ -149,7 +152,7 @@ Autocomplete = React.createClass({
 		if (dataToView && dataToView.length) {
 			dropDownNodes = self.renderComboboxOptions();
 		} else {
-			dropDownNodes = <div style={{padding: '8px'}} aria-live="polite">No matches</div>
+			dropDownNodes = <div style={{padding: '8px'}} aria-live="polite">{!binding.get('loading') ? 'No matches' : 'Loading...'}</div>
 		}
 
 		return (

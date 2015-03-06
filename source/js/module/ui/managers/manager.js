@@ -8,9 +8,14 @@ Manager = React.createClass({
 		var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			rivalsType = binding.get('newEvent.model.rivalsType');
 
-            return <FootballManager binding={binding} />;
+            return <div className="eManagerContainer">
+				<h4 className="eManagerContainer_title">{'Rivals - ' + rivalsType.toUpperCase()}</h4>
+				<h4 className="eManagerContainer_title">{'Rivals - ' + rivalsType.toUpperCase()}</h4>
+				<FootballManager binding={binding} />;
+			</div>
 	}
 });
 

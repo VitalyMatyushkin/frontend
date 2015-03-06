@@ -5,23 +5,33 @@ var FootballManager,
 FootballManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
-		return Immutable.fromJS({
+		var self = this,
+			state = {
+				teams: []
+			};
+
+		state.teams[self.props.order] = {
 			players: [],
 			autocomplete: {}
-		});
+		};
+
+		return Immutable.fromJS(state);
 	},
     getIncludePlayersIds: function () {
         var self = this,
-            eventBinding = self.getBinding('event'),
-            rivalsType = eventBinding.get('newEvent.model.rivalsType'),
-            firstTeam = eventBinding.get('newEvent.teams.first.players').map(function (player) {
-                return player.get('id');
-            }),
-            secondTeam = rivalsType !== 'schools' ? eventBinding.get('newEvent.teams.second.players').map(function (player) {
-                return player.get('id');
-            }) : null;
+            binding = self.getDefaultBinding();
 
-        return secondTeam !== null ? firstTeam.toJS().concat(secondTeam.toJS()) : firstTeam;
+		return binding.get('teams').toArray().reduce(function (memo, team) {
+			var ids = [];
+
+			if (team.get('players')) {
+				ids = team.get('players').map(function (player) {
+					return player.get('id');
+				});
+			}
+
+			return memo.concat(ids);
+		}, Immutable.List());
     },
 	/**
 	 * Service for filtering learner
@@ -32,11 +42,12 @@ FootballManager = React.createClass({
 	serviceLearnersFilter: function (schoolId, learnerName) {
 		var self = this,
 			binding = self.getDefaultBinding(),
+			rivalsType = binding.get('newEvent.model.rivalsType'),
 			filter = {
 				where: {
 					schoolId: schoolId,
                     id: {
-                        nin: self.getIncludePlayersIds()
+                        nin: self.getIncludePlayersIds().toJS()
                     },
 					or: [
 						{
@@ -55,10 +66,11 @@ FootballManager = React.createClass({
 				}
 			};
 
-		if (binding.get('newEvent.model.rivalsType') === 'houses') {
-			filter.where.houseId = binding.get('autocompletehouses.selectedId');
-		} else if (binding.get('newEvent.model.rivalsType') === 'classes') {
-			filter.where.classId = binding.get('autocompleteclasses.selectedId');
+
+		if (rivalsType === 'houses') {
+			filter.where.houseId = binding.get(['autocomplete', rivalsType, self.props.order, 'selectedId']);
+		} else if (rivalsType === 'classes') {
+			filter.where.classId = binding.get(['autocomplete', rivalsType, self.props.order, 'selectedId']);
 		}
 
 		return window.Server.learnersFilter.get({
@@ -76,7 +88,7 @@ FootballManager = React.createClass({
 	},
 	onSelectLearner: function (selectId, response, model) {
         var self = this,
-            players = self.getDefaultBinding().sub('players');
+            players = self.getDefaultBinding().sub(['teams', self.props.order, 'players']);
 
 		if (model) {
             players.update(function (data) {
@@ -97,22 +109,21 @@ FootballManager = React.createClass({
 	},
     _removePlayer: function (playerId) {
         var self = this,
-            players = self.getDefaultBinding().get('players');
+            players = self.getDefaultBinding().get(['teams', self.props.order, 'players']);
 
         players.update(function (data) {
            return data.filter(function (model) {
                return model.get('id') !== playerId;
-           })
+           });
         });
     },
     getPlayers: function () {
         var self = this,
-            players = self.getDefaultBinding().get('players');
+            players = self.getDefaultBinding().get(['teams', self.props.order, 'players']);
 
         return players.map(function (player) {
-            return <div className="ePlayer" key={player.get('id')}>
-                <span className="ePlayer_number">{'#'}</span>
-                <span className="ePlayer_name">{player.get('name')}</span>
+            return <div className="bManager_ePlayer" key={player.get('id')}>
+                <span className="ePlayer_name"><span className="ePlayer_number">{'#'}</span>{player.get('name')}</span>
                 <span className="ePlayer_remove" onClick={self._removePlayer.bind(null, player.get('id'))}>
                     <SVG icon="icon_trash" />
                 </span>
@@ -131,7 +142,7 @@ FootballManager = React.createClass({
 				serviceFilter={self.serviceLearnersFilter.bind(null, activeSchoolId)}
 				serverField="name"
 				onSelect={self.onSelectLearner}
-				binding={binding.sub('teams.autocomplete')}
+				binding={binding.sub(['teams', self.props.order, 'autocomplete'])}
 			/>
 		</div>
 

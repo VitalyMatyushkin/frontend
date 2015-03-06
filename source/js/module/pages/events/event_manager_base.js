@@ -10,15 +10,16 @@ EventManagerBase = React.createClass({
      */
     serviceHouseFilter: function(schoolId, houseName) {
         var self = this,
-            selectedIdFirst = self.getDefaultBinding().get('autocompletehouses.selectedId'),
-            selectedIdSecond = self.getDefaultBinding().get('autocompletehousessecond.selectedId');
+            ids = self.getDefaultBinding().get('autocomplete.houses').toArray().map(function (house) {
+				return house.get('selectedId');
+			});
 
         return window.Server.housesFilter.get({
             filter: {
                 where: {
                     schoolId: schoolId,
                     id: {
-                        nin: [selectedIdFirst, selectedIdSecond]
+                        nin: ids
                     },
                     name: {
                         like: houseName,
@@ -35,15 +36,16 @@ EventManagerBase = React.createClass({
      */
     serviceClassFilter: function(schoolId, className) {
         var self = this,
-            selectedIdFirst = self.getDefaultBinding().get('autocompleteclasses.selectedId'),
-            selectedIdSecond = self.getDefaultBinding().get('autocompleteclassessecond.selectedId');
+			ids = self.getDefaultBinding().get('autocomplete.classes').toArray().map(function (_class) {
+				return _class.get('selectedId');
+			});
 
         return window.Server.classesFilter.get({
             filter: {
                 where: {
                     schoolId: schoolId,
                     id: {
-                      nin: [selectedIdFirst, selectedIdSecond]
+                      nin: ids
                     },
                     name: {
                         like: className,
@@ -90,6 +92,22 @@ EventManagerBase = React.createClass({
 		var binding = this.getDefaultBinding();
 
 		binding.set('newEvent.model.sportId', event.target.value);
+	},
+	onSelectRival: function (id, response, model) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.update('newEvent.rivals.' + binding.get('newEvent.model.rivalsType'), function (rivals) {
+			var found = rivals.filter(function (rival) {
+				return rival.get('id') === id;
+			});
+
+			if (found.count() === 0) {
+				return rivals.push(Immutable.fromJS(model));
+			} else {
+				return rivals;
+			}
+		});
 	},
 	getDefaultSportsId: function () {
 		var self = this,
@@ -174,13 +192,15 @@ EventManagerBase = React.createClass({
                 <Autocomplete
                     serviceFilter={services[rivalsType]}
                     serverField="name"
-                    binding={binding.sub('autocomplete' + rivalsType)}
+					onSelect={self.onSelectRival}
+                    binding={binding.sub(['autocomplete', rivalsType, 0])}
                 />
                     {rivalsType === 'houses' || rivalsType === 'classes' ?
                         <Autocomplete
                             serviceFilter={services[rivalsType]}
                             serverField="name"
-                            binding={binding.sub('autocomplete' + rivalsType + 'second')}
+							onSelect={self.onSelectRival}
+                            binding={binding.sub(['autocomplete', rivalsType, 1])}
                         /> : null
                         }
             </div>

@@ -9,7 +9,7 @@ InfoView = React.createClass({
             invitesBinding = rootBinding.sub('invites'),
             teamsBinding = rootBinding.sub('teams'),
             sportsBinding = rootBinding.sub('sports'),
-            activeSchoolId = rootBinding.get('activeSchoolId');
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
         if (activeSchoolId && (!eventsBinding.get('sync') || !teamsBinding.get('sync'))) {
             window.Server.teamsBySchoolId.get(activeSchoolId).then(function (data) {

@@ -28,7 +28,9 @@ serviceList = {
 		serviceList.class = new Service('/classes/{classId}', binding);
 
 		//events
-        serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
+		serviceList.events = new Service('/events', binding);
+		serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
+		serviceList.participants = new Service('/events/{eventId}/participants', binding);
 
         // sports
         serviceList.sports = new Service('/sports', binding);
