@@ -9,13 +9,25 @@ EventsCalendar = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-        return <div className="bEvents">
-            <Panel binding={binding} />
-            <div className="eEvents_calendar">
-                <CalendarView binding={binding.sub('calendar')} />
-                <ChallengesList binding={binding} />
-            </div>
-        </div>;
+        return (
+		    <div>
+				<div className="bSubMenu">
+					<a href="#" className="eSubMenu_item mActive">Calendar</a>
+					<a href="#" className="eSubMenu_item">Challenges</a>
+					<a href="#" className="eSubMenu_item">Invites</a>
+					<a href="#" className="eSubMenu_item">New Challenge...</a>
+				</div>
+
+				<div className="bEvents">
+					<Panel binding={binding} />
+					<div className="eEvents_calendar">
+						<CalendarView binding={binding.sub('calendar')} />
+						<ChallengesList binding={binding} />
+					</div>
+				</div>
+
+			</div>
+		);
 	}
 });
 
