@@ -1,8 +1,25 @@
 .bSchoolMaster{
   padding: 40px;
   box-sizing: border-box;
+  position: relative;
+}
+
+.eSchoolMaster_titleName{
+  color: $MAIN_COLOR;
 }
 
 .eSchoolMaster_title{
-  color: $MAIN_COLOR;
+  position: relative;
+}
+
+.eSchoolMaster_buttons{
+  background: white;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  margin-top: -15px;
+}
+
+.eSchoolMaster_buttons .bButton{
+  margin-left: 10px;
 }

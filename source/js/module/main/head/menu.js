@@ -3,31 +3,6 @@ var Menu,
 
 Menu = React.createClass({
 	mixins: [Morearty.Mixin],
-	/*componentWillMount: function() {
-		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-
-		// Если есть идентефикатор активной школы
-		if (activeSchoolId) {
-			self._redirectToSchoolId(activeSchoolId);
-		} else {
-
-			self._updateSchoolList().then(function(schoolsList) {
-
-				// Если есть хотя бы одна школа, делаем первую школой "по умолчанию"
-				if (schoolsList[0]) {
-					globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
-					self._redirectToSchoolId(schoolsList[0].id);
-				} else {
-					// В противном случае перенаправляем пользователя на страницу добавления школы
-					self._redirectToAddSchool();
-				}
-			});
-
-		};
-
-	},*/
 	getDefaultProps: function () {
 		return {
 			items: [{
@@ -47,7 +22,8 @@ Menu = React.createClass({
 				icon: 'icon_calendar',
 				name: 'Events',
 				route: '',
-				key: 'Events'
+				key: 'Events',
+				requiredData: 'userRules.activeSchoolId'
 			}]
 		};
 	},
@@ -63,6 +39,10 @@ Menu = React.createClass({
 			MenuItemsViews = self.props.items.map(function(item) {
 				var itemPath = item.href.replace('#', ''),
 					className = 'eTopMenu_item ' + (currentPath.indexOf(itemPath) !== -1 ? 'mActive' : '');
+
+				if (item.requiredData && !globalBinding.get(item.requiredData)) {
+					return null
+				}
 
 				return (
 					<a href={item.href} key={item.key} className={className}><SVG icon={item.icon} />{item.name}</a>

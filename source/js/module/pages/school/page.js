@@ -81,7 +81,15 @@ OneSchoolPage = React.createClass({
 
 		return (
 			<div className="bSchoolMaster">
-				<h1><span className="eSchoolMaster_title">{schoolInfo}</span> control panel</h1>
+				<h1 className="eSchoolMaster_title">
+					<span className="eSchoolMaster_titleName">{schoolInfo}</span> control panel
+
+					<div className="eSchoolMaster_buttons">
+						<div className="bButton">Set as default...</div>
+						<a href="/#schools/list" className="bButton">Open my schools</a>
+					</div>
+				</h1>
+
 
 				<Table title="Pupils" binding={binding.sub('leaners')} onItemView={self._getViewFunction('leaner')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
 					<TableField dataField="firstName">First name</TableField>
