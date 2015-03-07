@@ -126,7 +126,7 @@ EventManager = React.createClass({
                             learnerId: player.id
                         }).then(function (res) {
                             console.log(res);
-                        })
+                        });
 					});
 				});
 			});

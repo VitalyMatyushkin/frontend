@@ -4,6 +4,10 @@ var FootballManager,
 
 FootballManager = React.createClass({
 	mixins: [Morearty.Mixin],
+    propTypes: {
+        order: React.PropTypes.number.isRequired,
+        locked: React.PropTypes.bool
+    },
 	getDefaultState: function () {
 		var self = this,
 			state = {
@@ -138,12 +142,12 @@ FootballManager = React.createClass({
 
 		return <div className="eManagerGame_team">
             {self.getPlayers()}
-			<Autocomplete
+            {!self.props.locked ? <Autocomplete
 				serviceFilter={self.serviceLearnersFilter.bind(null, activeSchoolId)}
 				serverField="name"
 				onSelect={self.onSelectLearner}
 				binding={binding.sub(['rivals', self.props.order, 'autocomplete'])}
-			/>
+			/> : <span className="eManagerGame_message">Opponent form a team by itself</span>}
 		</div>
 
 	}
