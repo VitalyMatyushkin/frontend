@@ -19,7 +19,6 @@
     "moreartyjs": "https://github.com/KindWizzard/moreartyjs.git#5aab8e895ab111cd4fc663ce442d3523fc1c567f",
     "requirejs": "~2.1.15",
     "director": "~1.2.5",
-    "classnames": "~1.1.4",
-    "moment": "~2.9.0"
+    "classnames": "~1.1.4"
   }
 }
