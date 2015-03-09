@@ -79,13 +79,6 @@ EventManager = React.createClass({
 			model = binding.toJS('newEvent.model'),
 			rivals = binding.toJS('newEvent.rivals');
 
-		// add active school to rivals
-		if (model.rivalsType === 'schools') {
-			rivals.unshift({
-				id: activeSchoolId
-			});
-		}
-
 		if (!model.name) {
 			model.name = model.rivalsType + ' ' + model.startTime;
 		}
@@ -103,34 +96,45 @@ EventManager = React.createClass({
 				return events.push(Immutable.fromJS(event));
 			});
 
-			rivals.forEach(function (rival) {
-				var rivalModel = {
-					sportId: event.sportId,
-					schoolId: event.rivalsType === 'schools' ? rival.id : rival.schoolId
-				};
+			rivals.forEach(function (rival, index) {
 
-				if (event.rivalsType === 'houses') {
-					rivalModel.houseId = rival.id;
-					rivalModel.rivalType = 'house';
-				} else if (event.rivalsType === 'classes') {
-					rivalModel.classId = rival.id;
-					rivalModel.rivalType = 'class';
-				} else {
-					rivalModel.rivalType = 'school';
-				}
+                if (model.rivalsType === 'schools' && index === 1) {
+                    Server.invitesByEvent.post(event.id, {
+                        eventId: event.id,
+                        inviterId: rivals[0].id,
+                        invitedId: rival.id
+                    }).then(function (res) {
+                        document.location.hash = 'events/view?id=' + event.id;
+                    });
+                } else {
+                    var rivalModel = {
+                        sportId: event.sportId,
+                        schoolId: event.rivalsType === 'schools' ? rival.id : rival.schoolId
+                    };
 
-				window.Server.participants.post(event.id, rivalModel).then(function (res) {
-                    rival.players.forEach(function (player) {
-                        window.Server.playersRelation.put({
-                            teamId: res.id,
-                            learnerId: player.id
-                        }).then(function (res) {
-                            console.log(res);
+                    if (event.rivalsType === 'houses') {
+                        rivalModel.houseId = rival.id;
+                        rivalModel.rivalType = 'house';
+                    } else if (event.rivalsType === 'classes') {
+                        rivalModel.classId = rival.id;
+                        rivalModel.rivalType = 'class';
+                    } else {
+                        rivalModel.rivalType = 'school';
+                    }
+
+                    window.Server.participants.post(event.id, rivalModel).then(function (res) {
+                        rival.players.forEach(function (player) {
+                            window.Server.playersRelation.put({
+                                teamId: res.id,
+                                learnerId: player.id
+                            }).then(function (res) {
+                                console.log(res);
+                            });
                         });
-					});
 
-                    document.location.href = 'events/view?id=' + event.id;
-				});
+                        document.location.hash = 'events/view?id=' + event.id;
+                    });
+                }
 			});
 		});
 	},

@@ -7,9 +7,9 @@ AutocompleteTeam = React.createClass({
     displayName: 'AutocompleteTeam',
     componentWillMount: function () {
         var self = this,
-            rivalsBinding = self.getBinding('rivals').sub(self.props.order);
+            rivalBinding = self.getBinding('rival');
 
-        rivalsBinding
+        rivalBinding
             .meta()
             .atomically()
             .update('autocomplete', function () {
@@ -19,7 +19,7 @@ AutocompleteTeam = React.createClass({
     },
     getIncludePlayersIds: function () {
         var self = this,
-            rivalsBinding = self.getBinding('rivals');
+            rivalsBinding = self.getDefaultBinding().sub('rivals');
 
         return rivalsBinding.get().toArray().reduce(function (memo, team) {
             var ids = [];
@@ -87,11 +87,10 @@ AutocompleteTeam = React.createClass({
     },
     onSelectLearner: function (selectId, response, model) {
         var self = this,
-            rivalsBinding = self.getBinding('rivals').sub(self.props.order),
-            players = rivalsBinding.sub('players');
+            playersBinding = self.getBinding('rival').sub('players');
 
         if (model) {
-            players.update(function (data) {
+            playersBinding.update(function (data) {
                 var models,
                     found = data.some(function (m) {
                         return m.get('id') === model.id;
@@ -105,21 +104,13 @@ AutocompleteTeam = React.createClass({
 
                 return models;
             });
-
-            rivalsBinding
-                .meta()
-                .atomically()
-                .update('autocomplete', function () {
-                    return Immutable.Map();
-                })
-                .commit();
         }
     },
     render: function() {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-            binding = self.getDefaultBinding();
+            rivalBinding = self.getBinding('rival');
 
         return <div className="bTeamAutocomplete">
             <Autocomplete
@@ -127,7 +118,7 @@ AutocompleteTeam = React.createClass({
                 serverField="name"
                 placeholderText="enter learner name"
                 onSelect={self.onSelectLearner}
-                binding={binding.meta().sub('autocomplete')}
+                binding={rivalBinding.meta().sub('autocomplete')}
             />
         </div>
 

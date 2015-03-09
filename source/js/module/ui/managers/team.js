@@ -3,13 +3,17 @@ var Team,
 
 Team = React.createClass({
     mixins: [Morearty.Mixin],
-    propTypes: {
-        order: React.PropTypes.number
-    },
     displayName: 'Team',
+    getDefaultState: function () {
+        return {
+            rival: Immutable.fromJS({
+                players: []
+            })
+        };
+    },
     removePlayer: function (playerId) {
         var self = this,
-            players = self.getBinding('rivals').sub([self.props.order, 'players']);
+            players = self.getBinding('rival').get('players');
 
         players.update(function (data) {
             return data.filter(function (model) {
@@ -19,7 +23,7 @@ Team = React.createClass({
     },
     getPlayers: function () {
         var self = this,
-            players = self.getBinding('rivals').get([self.props.order, 'players']);
+            players = self.getBinding('rival').get('players');
 
         return players.map(function (player) {
             return <div className="bTeam_ePlayer" key={player.get('id')}>
@@ -31,9 +35,10 @@ Team = React.createClass({
         }).toArray();
     },
     render: function() {
-        var self = this;
+        var self = this,
+            rivalBinding = self.getBinding('rival');
 
-        return <div className="bTeam">
+        return <div className="bTeam" key={rivalBinding.get('id')}>
             {self.getPlayers()}
         </div>
 

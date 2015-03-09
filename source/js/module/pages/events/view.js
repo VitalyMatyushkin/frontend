@@ -7,11 +7,11 @@ EventView = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             routerParameters = rootBinding.toJS('routing.parameters'),
-            found = binding.get('models').filter(function (model) {
+            found = binding.get('models').find(function (model) {
                 return model.get('id') === routerParameters.id;
             });
 
-        if (found.count() === 0) {
+        if (!found) {
             window.Server.event.get(routerParameters.id, {
                 filter: {
                     include: ['sport', 'participants']
@@ -20,7 +20,7 @@ EventView = React.createClass({
                 binding.set('eventInfo', Immutable.fromJS(res));
             });
         } else {
-            binding.set('eventInfo', found[0]);
+            binding.set('eventInfo', found);
         }
     },
 	render: function() {

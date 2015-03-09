@@ -45,7 +45,7 @@ Manager = React.createClass({
             }),
             teamBinding = {
                 default: binding.sub('newEvent'),
-                rivals: binding.sub('newEvent.rivals')
+                rival: binding.sub('newEvent.rivals.' + rivalIndex)
             };
 
             return <div className="eManager_container">
@@ -54,11 +54,11 @@ Manager = React.createClass({
                         <span className="eChooser_title">Choose a team:</span>
                         {self.getRivals()}
                     </div>
-                    <AutocompleteTeam binding={teamBinding} order={rivalIndex} />
+                    <AutocompleteTeam binding={teamBinding} />
                 </div>
                 <div className="eManager_containerTeam">
                     <FootballManager binding={teamBinding} />
-                    <Team binding={teamBinding} order={rivalIndex} />
+                    <Team binding={teamBinding} />
                 </div>
 			</div>;
 	}

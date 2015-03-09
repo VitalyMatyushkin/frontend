@@ -38,7 +38,7 @@ InfoView = React.createClass({
         }
 
         if (activeSchoolId && !invitesBinding.get('sync')) {
-            window.Server.invites.get(activeSchoolId).then(function (data) {
+            window.Server.invitesFilter.get(activeSchoolId).then(function (data) {
                 invitesBinding.update(function () {
                     return Immutable.fromJS({
                         sync: true,

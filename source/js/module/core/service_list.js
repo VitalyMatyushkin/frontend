@@ -36,7 +36,8 @@ serviceList = {
         serviceList.sports = new Service('/sports', binding);
 
         // invites
-        serviceList.invites = new Service('/invites?filter[where][or][0][inviterId]={schoolId}&filter[where][or][1][invitedId]={schoolId}', binding);
+        serviceList.invitesFilter = new Service('/invites?filter[where][or][0][inviterId]={schoolId}&filter[where][or][1][invitedId]={schoolId}', binding);
+        serviceList.invitesByEvent = new Service('/events/{eventId}/invites');
 
         // teams
         serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
