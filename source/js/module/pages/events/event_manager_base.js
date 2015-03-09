@@ -97,6 +97,8 @@ EventManagerBase = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
+        model.players = [];
+
 		binding.update('newEvent.rivals', function (rivals) {
 			var found = rivals.filter(function (rival) {
 				return rival.get('id') === id;
@@ -188,7 +190,7 @@ EventManagerBase = React.createClass({
                 </select>
             </div>
             <div className="eManager_group">
-                    {rivalsType === 'houses' || rivalsType === 'classes' ? 'Who are Rivals?' : 'Who is your Rival?'}
+                {rivalsType === 'houses' || rivalsType === 'classes' ? 'Who are Rivals?' : 'Who is your Rival?'}
                 <Autocomplete
                     serviceFilter={services[rivalsType]}
                     serverField="name"

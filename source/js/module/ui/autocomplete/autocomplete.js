@@ -10,7 +10,8 @@ Autocomplete = React.createClass({
 		serverField: React.PropTypes.string,
 		serviceFullData: React.PropTypes.func,
 		serviceFilter: React.PropTypes.func,
-        onSelect: React.PropTypes.func
+        onSelect: React.PropTypes.func,
+        placeholderText: React.PropTypes.string
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -157,9 +158,12 @@ Autocomplete = React.createClass({
 
 		return (
 			<div>
-				<Combobox binding={binding.sub('combobox')} onInput={self.handleInput} onSelect={self.handleSelect} value={selectedId}>
-          		     {dropDownNodes}
-				</Combobox>
+				<Combobox
+                    binding={binding.sub('combobox')}
+                    onInput={self.handleInput}
+                    onSelect={self.handleSelect}
+                    placeholderText={self.props.placeholderText}
+                    value={selectedId}>{dropDownNodes}</Combobox>
 			</div>
 		);
 	}

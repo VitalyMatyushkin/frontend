@@ -434,6 +434,7 @@ module.exports = React.createClass({
 					onKeyDown={this.handleKeydown}
 					onKeyUp={this.handleInputKeyUp}
 					role="combobox"
+                    placeholder={self.props.placeholderText || ''}
 					aria-activedescendant={this.state.menu.activedescendant}
 					aria-autocomplete={this.props.autocomplete}
 					aria-owns={this.state.listId}

@@ -6,12 +6,9 @@ FootballManager = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-			rivalsType = binding.get('newEvent.model.rivalsType'),
-			multipleTeams = rivalsType === 'houses' || rivalsType === 'classes';
+			rivalsType = binding.get('newEvent.model.rivalsType');
 
 		return <div className="eManagerGame mFootball">
-			<Team binding={binding.sub('newEvent')} order={0} locked={false} />
 			<div className="eManagerGame_field">
 				<svg className="eManagerGame_fieldLayer" height="613.9539930555555" version="1.1" width="100%" xmlns="http://www.w3.org/2000/svg">
 					<circle cx="77.55208333333333" cy="245.98551432291666" r="11" fill="#ee402f" stroke="none" strokeWidth="1" strokeLinejoin="round" data-toggle="tooltip" title="" data-original-title="Luca Zuffi">
@@ -21,7 +18,6 @@ FootballManager = React.createClass({
 					</circle>
 				</svg>
 			</div>
-            <Team binding={binding.sub('newEvent')} order={1} locked={rivalsType === 'schools'} />
 		</div>
 	}
 });

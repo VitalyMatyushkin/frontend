@@ -23,7 +23,6 @@ OneSchoolPage = React.createClass({
 
 		if (schoolId) {
             globalBinding.set('activeSchoolId', schoolId);
-            localStorage.setItem('activeSchoolId', schoolId);
 			window.Server.classes.get(schoolId).then(function (data) {
 				binding.set('classes', Immutable.fromJS(data));
 			});

@@ -1,31 +1,65 @@
 var Manager,
-	FootballManager = require('./football/football');
+	FootballManager = require('./football/football'),
+    AutocompleteTeam = require('./autocompleteTeam'),
+    Team = require('./team');
 
 Manager = React.createClass({
 	mixins: [Morearty.Mixin],
-    getRivals: function () {
+    componentWillMount: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            selectedRivalId = binding.get('newEvent.rivals.0.id');
+
+        if (selectedRivalId) {
+            binding.set('newEvent.selectedRivalId', selectedRivalId);
+        }
+    },
+    onChooseRival: function (rivalId) {
         var self = this,
             binding = self.getDefaultBinding();
 
-        return binding.get('newEvent.rivals').reduce(function (memo, rival, index) {
-            var name = rival.get('name');
+        binding.set('newEvent.selectedRivalId', rivalId);
+    },
+    getRivals: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            selectedRivalId = binding.get('newEvent.selectedRivalId');
 
-            if (index !== 0) {
-                memo = memo.push(<span className="eManagerContainerVs">VS</span>)
-            }
+        return binding.get('newEvent.rivals').map(function (rival) {
+            var teamClasses = classNames({
+                mActive: selectedRivalId === rival.get('id'),
+                eChooser_item: true
+            });
 
-            return memo.push(<span className="eManagerContainer_rival">{name}</span>);
-        }, Immutable.List()).toArray();
+            return <span
+                className={teamClasses}
+                onClick={self.onChooseRival.bind(null, rival.get('id'))}>{rival.get('name')}</span>;
+        }).toArray();
     },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			rivalsType = binding.get('newEvent.model.rivalsType'),
-            rivals = binding.get('newEvent.rivals');
+            selectedRivalId = binding.get('newEvent.selectedRivalId'),
+            rivalIndex = binding.get('newEvent.rivals').findIndex(function (rival) {
+               return rival.get('id') === selectedRivalId;
+            }),
+            teamBinding = {
+                default: binding.sub('newEvent'),
+                rivals: binding.sub('newEvent.rivals')
+            };
 
-            return <div className="eManagerContainer">
-				<h4 className="eManagerContainer_title">{self.getRivals()}</h4>
-				<FootballManager binding={binding} />
+            return <div className="eManager_container">
+                <div className="eManager_chooser">
+                    <div className="bChooser">
+                        <span className="eChooser_title">Choose a team:</span>
+                        {self.getRivals()}
+                    </div>
+                    <AutocompleteTeam binding={teamBinding} order={rivalIndex} />
+                </div>
+                <div className="eManager_containerTeam">
+                    <FootballManager binding={teamBinding} />
+                    <Team binding={teamBinding} order={rivalIndex} />
+                </div>
 			</div>;
 	}
 });

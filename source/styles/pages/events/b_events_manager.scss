@@ -35,3 +35,23 @@
 .eManager_field.mTextArea {
   height: 50px;
 }
+
+.eManager_container {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.eManager_chooser {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eManager_containerTeam {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0;
+}

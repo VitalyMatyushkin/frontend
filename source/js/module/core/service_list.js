@@ -29,7 +29,8 @@ serviceList = {
 
 		//events
 		serviceList.events = new Service('/events', binding);
-		serviceList.participants = new Service('/events/{eventId}/participants', binding);
+        serviceList.event = new Service('/events/{eventId}', binding);
+        serviceList.participants = new Service('/events/{eventId}/participants', binding);
 
         // sports
         serviceList.sports = new Service('/sports', binding);

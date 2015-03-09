@@ -5,14 +5,14 @@ var FootballManager,
 FootballManager = React.createClass({
 	mixins: [Morearty.Mixin],
     propTypes: {
-        order: React.PropTypes.number.isRequired,
-        locked: React.PropTypes.bool
+        order: React.PropTypes.number.isRequired
     },
 	getDefaultState: function () {
 		var self = this,
 			state = {
 				rivals: []
 			};
+
 
 		state.rivals[self.props.order] = {
 			players: [],
@@ -111,7 +111,7 @@ FootballManager = React.createClass({
             });
         }
 	},
-    _removePlayer: function (playerId) {
+    removePlayer: function (playerId) {
         var self = this,
             players = self.getDefaultBinding().get(['rivals', self.props.order, 'players']);
 
@@ -128,7 +128,7 @@ FootballManager = React.createClass({
         return players.map(function (player) {
             return <div className="bManager_ePlayer" key={player.get('id')}>
                 <span className="ePlayer_name"><span className="ePlayer_number">{'#'}</span>{player.get('name')}</span>
-                <span className="ePlayer_remove" onClick={self._removePlayer.bind(null, player.get('id'))}>
+                <span className="ePlayer_remove" onClick={self.removePlayer.bind(null, player.get('id'))}>
                     <SVG icon="icon_trash" />
                 </span>
             </div>
@@ -142,12 +142,12 @@ FootballManager = React.createClass({
 
 		return <div className="eManagerGame_team">
             {self.getPlayers()}
-            {!self.props.locked ? <Autocomplete
+            <Autocomplete
 				serviceFilter={self.serviceLearnersFilter.bind(null, activeSchoolId)}
 				serverField="name"
 				onSelect={self.onSelectLearner}
 				binding={binding.sub(['rivals', self.props.order, 'autocomplete'])}
-			/> : <span className="eManagerGame_message">Opponent form a team by itself</span>}
+			/>
 		</div>
 
 	}
