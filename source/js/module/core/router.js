@@ -28,7 +28,7 @@ RouterView = React.createClass({
 			routes = [],
 			binding = self.getDefaultBinding();
 
-		self.props.children.forEach(function(route){
+		self.props.children && self.props.children.forEach(function(route){
 			var routeData = {
 				path: route.props.path,
 				component: route.props.component,
@@ -61,7 +61,7 @@ RouterView = React.createClass({
 			};
 
 			self.currentPath = route.path;
-
+			self.forceUpdate();
 			self.RoutingBinding.atomically()
 				.set('currentPath', self.currentPath)
 				.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
@@ -77,6 +77,11 @@ RouterView = React.createClass({
 		var self = this;
 
 		self.siteRoutes[route.path] = function(){
+			var pathParameters = Array.prototype.slice.call(arguments, 1);
+
+			// Обновление значений параметрезированных частей пути
+			pathParameters.length && self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));
+
 			// В случае отсутсвия авторизации принудительно перенаправляем на страницу логина
 			// при этом сохраняем последний намеченный роутинг
 			if (self.isAuthorized === false && self.loginRoute && route.unauthorizedAccess !== true) {
@@ -129,13 +134,16 @@ RouterView = React.createClass({
 
 		// Инициализации маршрутизатора
 		self.updateUrlParametrs();
+
+
 		self.routerInstance = Router(self.siteRoutes);
-		self.routerInstance .init();
+		self.routerInstance.init();
+
 	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			siteComponent = self.siteComponents[self.currentPath];
+			currentPath = self.currentPath,
+			siteComponent = self.siteComponents[currentPath];
 
 		return siteComponent ? React.createElement(siteComponent.View, {binding: siteComponent.binding}) : null;
 	}

@@ -12,10 +12,11 @@ MoreartyContext = Morearty.createContext({
 		userData: userDataInstance.getDefaultState(),
 		userRules: userRulesInstance.getDefaultState(),
 		routing: {
-			currentPath: '',
-			currentPageName: '',
-			currentPathParts: [],
-			parameters: {}
+			currentPath: '',		// текущий путь
+			currentPageName: '',	// имя текущей страницы, если есть
+			currentPathParts: [],	// части текущего путии
+			pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
+			parameters: {}			// GET-параметры текущего пути
 		},
 		school: {},
 		schoolsList: {},
