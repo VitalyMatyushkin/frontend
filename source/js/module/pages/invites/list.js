@@ -3,12 +3,29 @@ var SVG = require('module/ui/svg'),
 
 EventsView = React.createClass({
 	mixins: [Morearty.Mixin],
+    getDefaultState: function () {
+        return Immutable.fromJS({
+            selectInvitesType: 'inbox'
+        });
+    },
+    onSelectInviteType: function (type) {
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('selectInvitesType', type);
+    },
 	getInvites: function () {
 		var binding = this.getDefaultBinding(),
+            activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+            selectInvitesType = binding.get('selectInvitesType'),
 			inviteCount = binding.get('models').count();
 
 		if (inviteCount > 0) {
-			return binding.get('models').map(function (invite) {
+			return binding.get('models').filter(function (invite) {
+                return selectInvitesType === 'inbox' || selectInvitesType === undefined ?
+                    invite.get('invitedId') === activeSchoolId :
+                    invite.get('inviterId') === activeSchoolId;
+            }).map(function (invite) {
                 var date = new Date(invite.get('meta').get('created')),
                     dateTime = [date.getMonth(), date.getDate(), date.getFullYear()].join('/');
 
@@ -25,17 +42,26 @@ EventsView = React.createClass({
 				</div>;
 			}).toArray();
 		} else {
-			return <div className="eNotFound">You haven't invites.</div>
+			return null;
 		}
 	},
 	render: function() {
 		var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            selectInvitesType = binding.get('selectInvitesType'),
+            inboxClasses = classNames({
+                eChooser_item: true,
+                mActive: selectInvitesType === 'inbox' || selectInvitesType === undefined
+            }),
+            outboxClasses = classNames({
+                eChooser_item: true,
+                mActive: selectInvitesType === 'outbox'
+            });
 
         return <div className="bInvites">
             <div className="bChooser">
-                <span className="eChooser_item">Active</span>
-                <span className="eChooser_item">Close</span>
+                <span className={inboxClasses} onClick={self.onSelectInviteType.bind(null, 'inbox')}>Inbox</span>
+                <span className={outboxClasses} onClick={self.onSelectInviteType.bind(null, 'outbox')}>Outbox</span>
             </div>
             {self.getInvites()}
         </div>;
