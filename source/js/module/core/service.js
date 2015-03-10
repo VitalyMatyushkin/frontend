@@ -44,11 +44,12 @@ Service = (function() {
 				filter = url.indexOf('?') !== -1 ? '&' + filter : '?' + filter;
 			}
 
+
 			self.currentRequest = $.ajax({
 				url: baseUrl + url + filter,
 				type: type,
 				crossDomain: true,
-				data: JSON.stringify(data),
+				data: type === 'POST' || type === 'PUT' ? JSON.stringify(data) : null,
 				dataType: 'json',
 				contentType: 'application/json',
 				error: function(data) {
@@ -113,7 +114,7 @@ Service = (function() {
 				}
 			} else {
 				data = options;
-				sendOptions = undefined;
+				sendOptions = options;
 			}
 
 			return self._callService(method.toUpperCase(), sendOptions, data);

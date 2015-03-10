@@ -37,17 +37,18 @@ EventsView = React.createClass({
             binding = this.getDefaultBinding(),
             activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
             selectInvitesType = binding.get('selectInvitesType'),
-			inviteCount = binding.get('models').count();
+			inviteCount = binding.get('models').count(),
+            filtered = binding.get('models').filter(function (invite) {
+                return selectInvitesType === 'inbox' || selectInvitesType === undefined ?
+                invite.get('invitedId') === activeSchoolId :
+                invite.get('inviterId') === activeSchoolId;
+            });
 
 		if (inviteCount > 0) {
-			return binding.get('models').filter(function (invite) {
-                return selectInvitesType === 'inbox' || selectInvitesType === undefined ?
-                    invite.get('invitedId') === activeSchoolId :
-                    invite.get('inviterId') === activeSchoolId;
-            }).map(function (invite) {
+			return filtered.map(function (invite) {
                 var date = new Date(invite.get('meta').get('created')),
                     inbox = invite.get('invitedId') === activeSchoolId,
-                    acceptedText = invite.get('accepted') ? 'accepted' : 'declined'
+                    acceptedText = invite.get('accepted') ? 'accepted' : 'declined',
                     dateTime = [date.getMonth(), date.getDate(), date.getFullYear()].join('/');
 
 				return <div className="bInvite">
