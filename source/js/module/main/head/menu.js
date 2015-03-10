@@ -9,19 +9,17 @@ Menu = React.createClass({
 				href: '/#search',
 				icon: 'icon_search',
 				name: 'Search',
-				route: '',
 				key: 'Search'
 			},{
-				href: '/#school',
+				href: '/#schools',
 				icon: 'icon_teams',
 				name: 'School',
-				route: '',
-				key: 'School'
+				key: 'School',
+				routes: ['/school/:subPage']
 			},{
 				href: '/#events',
 				icon: 'icon_calendar',
 				name: 'Events',
-				route: '',
 				key: 'Events',
 				requiredData: 'userRules.activeSchoolId'
 			}]
@@ -38,7 +36,12 @@ Menu = React.createClass({
 		if(authorization) {
 			MenuItemsViews = self.props.items.map(function(item) {
 				var itemPath = item.href.replace('#', ''),
-					className = 'eTopMenu_item ' + (currentPath.indexOf(itemPath) !== -1 ? 'mActive' : '');
+					itemRoutes = item.routes || [],
+					className = 'eTopMenu_item ';
+
+				if (currentPath && (currentPath.indexOf(itemPath) !== -1 || itemRoutes.indexOf(currentPath) !== -1)) {
+					className += 'mActive';
+				}
 
 				if (item.requiredData && !globalBinding.get(item.requiredData)) {
 					return null
