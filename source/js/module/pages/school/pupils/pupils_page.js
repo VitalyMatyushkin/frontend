@@ -6,22 +6,17 @@ var List = require('module/ui/list/list'),
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentWillUnmount: function() {
-		var self = this;
-
-	},
 	componentWillMount: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			schoolId = '4bf6415a-568d-4815-91e4-7bf0c4575346';
+			globalBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		if (schoolId) {
-			window.Server.learners.get(schoolId).then(function (data) {
+		if (activeSchoolId) {
+			window.Server.learners.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 				self.isMounted() && self.forceUpdate();
 			});
-
-			self.schoolId = schoolId;
 		}
 	},
 	_getAddFunction: function(page) {

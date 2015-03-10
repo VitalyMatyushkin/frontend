@@ -9,7 +9,6 @@ SchoolSummary = React.createClass({
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
 		window.Server.school.get(activeSchoolId).then(function (data) {
-			console.log(data)
 			binding.set(Immutable.fromJS(data));
 			self.isMounted() && self.forceUpdate();
 		});
