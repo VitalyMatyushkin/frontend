@@ -7,3 +7,13 @@
   box-sizing: border-box;
   line-height: 19px;
 }
+
+.bInvite .eInvite_buttons {
+  width: 200px;
+  display: flex;
+  flex-direction: row;
+}
+
+.eInvite_buttons .bButton {
+  margin-right: 10px;
+}

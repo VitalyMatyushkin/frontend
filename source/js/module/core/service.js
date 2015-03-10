@@ -48,9 +48,9 @@ Service = (function() {
 				url: baseUrl + url + filter,
 				type: type,
 				crossDomain: true,
-				data: data,
-				//dataType: 'json',
-				//contentType: 'application/json',
+				data: JSON.stringify(data),
+				dataType: 'json',
+				contentType: 'application/json',
 				error: function(data) {
 					promise.reject(data);
 				},
