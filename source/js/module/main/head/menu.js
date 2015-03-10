@@ -11,11 +11,11 @@ Menu = React.createClass({
 				name: 'Search',
 				key: 'Search'
 			},{
-				href: '/#schools',
+				href: '/#school/summary',
 				icon: 'icon_teams',
 				name: 'School',
 				key: 'School',
-				routes: ['/school/:subPage']
+				routes: ['/school/:subPage', '/schools/add', '/schools/list']
 			},{
 				href: '/#events',
 				icon: 'icon_calendar',
