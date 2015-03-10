@@ -61,7 +61,7 @@ RouterView = React.createClass({
 			};
 
 			self.currentPath = route.path;
-			self.forceUpdate();
+			self.isMounted() && self.forceUpdate();
 			self.RoutingBinding.atomically()
 				.set('currentPath', self.currentPath)
 				.set('currentPathParts', self.currentPath.split('/').filter(Boolean))

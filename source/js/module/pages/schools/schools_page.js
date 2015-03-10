@@ -52,7 +52,7 @@ SchoolsPage = React.createClass({
 	_redirectToSchoolId: function(schoolId) {
 		var self = this;
 
-		document.location.hash = 'schools/view?id=' + schoolId;
+		document.location.hash = 'school/summary';
 	},
 	/**
 	 * Метод перенапраялет пользователя на страницу добавления школы

@@ -10,17 +10,29 @@ SchoolListPage = React.createClass({
 			self.getDefaultBinding().set('list', Immutable.fromJS(data));
 		});
 	},
+	setSchoolAsActive: function(newSchoolId) {
+		var self = this,
+			globalBinding = self.getMoreartyContext().getBinding();
+
+		globalBinding.set('userRules.activeSchoolId', newSchoolId);
+	},
 	render: function() {
 		var self = this,
 			schoolNodes,
+
 			binding = self.getDefaultBinding(),
 			schoolList = binding.sub('list').get();
 
 		if (schoolList) {
 			schoolNodes = schoolList.map(function (school) {
-				var schoolLink = '#schools/view?id=' + school.get('id');
+				var setSchoolFunction = function(newId) {
+					return function() {
+						self.setSchoolAsActive(newId)
+					}
+				};
+
 				return (
-					<a href={schoolLink} className="eSchoolList_one">
+					<a href='/#school/summary' className="eSchoolList_one" onClick={setSchoolFunction(school.get('id'))}>
 						{school.get('name')}
 					</a>
 				);

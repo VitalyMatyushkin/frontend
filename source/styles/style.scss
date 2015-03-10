@@ -5,6 +5,10 @@
   src: local('PT Sans'), local('PTSans-Regular'), url(#{$IMAGE_DIR}ptsanss.woff) format('woff');
 }
 
+body{
+  overflow-y: scroll;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -86,6 +90,11 @@ input[type='checkbox']{
 select{
   height: 23px;
   border-radius: 0;
+}
+
+p {
+  margin-bottom: 20px;
+  line-height: 22px;
 }
 
 

@@ -19,7 +19,11 @@ Center = React.createClass({
 						<Route path="/register"  binding={binding.sub('form.register')} component="module/pages/register/user" unauthorizedAccess={true}  />
 						<Route path="/login" binding={binding.sub('userData')} component="module/pages/login/user" loginRoute={true}  />
 
-						<Route path="/schools/:schoolId/:subPage" binding={binding.sub('school')} component="module/pages/school/page"  />
+						<Route path="/school/:subPage" binding={binding.sub('activeSchool')} component="module/pages/school/school_page"  />
+
+						<Route path="/schools" binding={binding.sub('schoolsList')} component="module/pages/schools/schools_page"  />
+						<Route path="/schools/add" binding={binding.sub('schoolsList')} component="module/pages/schools/add"  />
+						<Route path="/schools/list" binding={binding.sub('schoolsList')} component="module/pages/schools/list" />
 
 						<Route path="/class" binding={binding.sub('class')} component="module/pages/class/page"  />
 						<Route path="/house" binding={binding.sub('house')} component="module/pages/house/page"  />
@@ -41,8 +45,7 @@ Center = React.createClass({
 /*
 
  <Route path="/schools" binding={binding.sub('schoolsList')} component="module/pages/schools/page"  />
- <Route path="/schools/add" binding={binding.sub('schoolsList')} component="module/pages/schools/add"  />
- <Route path="/schools/list" binding={binding.sub('schoolsList')} component="module/pages/schools/list" />
+
 
  <Route path="/schools/view" binding={binding.sub('school')} component="module/pages/school/page"  />
 
