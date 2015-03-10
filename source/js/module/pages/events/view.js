@@ -6,23 +6,26 @@ EventView = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            routerParameters = rootBinding.toJS('routing.parameters'),
-            found = binding.get('models').find(function (model) {
-                return model.get('id') === routerParameters.id;
-            });
+			routerParameters = rootBinding.toJS('routing.parameters');
 
-        if (!found) {
-            window.Server.event.get(routerParameters.id, {
-                filter: {
-                    include: ['sport', 'participants']
-                }
-            }).then(function (res) {
-                binding.set('eventInfo', Immutable.fromJS(res));
-            });
-        } else {
-            binding.set('eventInfo', found);
-        }
+		window.Server.eventFindOne.get({
+			filter: {
+				where: {id: routerParameters.id},
+				include: ['sport', 'participants']
+			}
+		}).then(function (res) {
+			binding.set('eventInfo', Immutable.fromJS(res));
+		});
     },
+	getRival: function (order) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			rival = binding.sub('eventInfo.participants.' + order);
+
+		return <div className="eEvent_rival">
+			<span className="eEvent_rival">{rival.get('name')}</span>
+		</div>;
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -33,6 +36,13 @@ EventView = React.createClass({
 		return <div className="bEvents">
             <div className="bEvent">
                 <h2 className="eEvent_title">{eventInfo.get('name')}</h2>
+				<div className="eEvent_rivals">
+					{self.getRival(0)}
+					<div className="eEvent_result">
+						<span className="eEvent_score">0:0</span>
+					</div>
+					{self.getRival(1)}
+				</div>
                 <div className="eEvent_description">{eventInfo.get('description')}</div>
                 <div className="eEvent_type">Type: {eventInfo.get('type')}</div>
             </div>
