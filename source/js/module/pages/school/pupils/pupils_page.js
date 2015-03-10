@@ -13,11 +13,16 @@ OneSchoolPage = React.createClass({
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
 		if (activeSchoolId) {
-			window.Server.learners.get(activeSchoolId).then(function (data) {
+			self.request = window.Server.learners.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 				self.isMounted() && self.forceUpdate();
 			});
 		}
+	},
+	componentWillUnmount: function () {
+		var self = this;
+
+		self.request && self.request.abort();
 	},
 	_getAddFunction: function(page) {
 		var self = this;

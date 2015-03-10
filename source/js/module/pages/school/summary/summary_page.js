@@ -8,10 +8,15 @@ SchoolSummary = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		window.Server.school.get(activeSchoolId).then(function (data) {
+		self.request = window.Server.school.get(activeSchoolId).then(function (data) {
 			binding.set(Immutable.fromJS(data));
 			self.isMounted() && self.forceUpdate();
 		});
+	},
+	componentWillUnmount: function () {
+		var self = this;
+
+		self.request && self.request.abort();
 	},
 	render: function () {
 		var self = this,
