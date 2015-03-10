@@ -43,6 +43,7 @@ serviceList = {
         // teams
         serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
         serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{learnerId}', binding);
+        serviceList.playersByTeam = new Service('/teams/{teamId}/players', binding);
     }
 };
 
