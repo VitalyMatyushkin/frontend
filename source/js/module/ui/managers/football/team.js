@@ -84,7 +84,7 @@ FootballManager = React.createClass({
 				var name = player.firstName + ' ' + player.lastName;
 				player.name = name;
 
-				return player.name;
+				return player;
 			});
 
 			return data;
@@ -138,7 +138,7 @@ FootballManager = React.createClass({
 		var self = this,
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-			binding = self.getDefaultBinding();
+			rivalBinding = self.getBinding('rival');
 
 		return <div className="eManagerGame_team">
             {self.getPlayers()}
@@ -146,7 +146,7 @@ FootballManager = React.createClass({
 				serviceFilter={self.serviceLearnersFilter.bind(null, activeSchoolId)}
 				serverField="name"
 				onSelect={self.onSelectLearner}
-				binding={binding.sub(['rivals', self.props.order, 'autocomplete'])}
+				binding={rivalBinding}
 			/>
 		</div>
 

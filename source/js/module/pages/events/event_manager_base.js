@@ -97,19 +97,21 @@ EventManagerBase = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-        model.players = [];
+		if (model) {
+			model.players = [];
 
-		binding.update('newEvent.rivals', function (rivals) {
-			var found = rivals.filter(function (rival) {
-				return rival.get('id') === id;
+			binding.update('newEvent.rivals', function (rivals) {
+				var found = rivals.filter(function (rival) {
+					return rival.get('id') === id;
+				});
+
+				if (found.count() === 0) {
+					return rivals.push(Immutable.fromJS(model));
+				} else {
+					return rivals;
+				}
 			});
-
-			if (found.count() === 0) {
-				return rivals.push(Immutable.fromJS(model));
-			} else {
-				return rivals;
-			}
-		});
+		}
 	},
 	getDefaultSportsId: function () {
 		var self = this,

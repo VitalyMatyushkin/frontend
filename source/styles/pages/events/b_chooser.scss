@@ -15,6 +15,14 @@
   &.mActive {
     border-color: $MAIN_COLOR;
   }
+  &.mDisable {
+    opacity: 0.3;
+    cursor: default;
+    user-select: none;
+    &:hover {
+      border-color: #eee;
+    }
+  }
 }
 
 .eChooser_title {

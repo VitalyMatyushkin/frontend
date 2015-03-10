@@ -37,13 +37,38 @@ EventManager = React.createClass({
 		binding.sub('newEvent.model.rivalsType').addListener(function (descriptor) {
 			if (descriptor.isValueChanged()) {
 				var rivalsType = binding.get(descriptor.getPath()),
-					type = rivalsType !== 'schools' ? 'internal' : 'external';
+					type = rivalsType !== 'schools' ? 'internal' : 'external',
+					schoolInfo = rootBinding.get('schoolInfo');
 
 				binding.set('newEvent.model.type', type);
-                binding.update('newEvent.rivals', function () {
-                    return rivalsType === 'schools' ? Immutable.fromJS([{id: activeSchoolId}]) : Immutable.List();
-                });
+				binding.update('newEvent.rivals', function () {
+					var rivals = Immutable.List(),
+						schoolRivalData = rivalsType === 'schools' && schoolInfo ? Immutable.fromJS([schoolInfo.toJS()]) : Immutable.fromJS({id: activeSchoolId});
+
+					if (schoolRivalData = rivalsType === 'schools' && schoolInfo) {
+						rivals = Immutable.List(schoolInfo);
+					} else if (schoolRivalData = rivalsType === 'schools' && !schoolInfo) {
+						rivals = Immutable.List(Immutable.Map({id: activeSchoolId}));
+					}
+
+					return rivals;
+				});
 			}
+		});
+
+		rootBinding.sub('schoolInfo').addListener(function (descriptor) {
+			if (descriptor.isValueChanged()) {
+				var schoolInfo = rootBinding.get(descriptor.getPath()).get('schoolInfo'),
+					rivalsType = binding.get('newEvent.model.rivalsType');
+
+				if (rivalsType === 'schools') {
+					binding.merge('newEvent.rivals.0',schoolInfo);
+				}
+			}
+		});
+
+		window.Server.school.get(activeSchoolId).then(function (res) {
+			rootBinding.merge('schoolInfo', Immutable.fromJS(res));
 		});
 	},
     onSelectDate: function (date) {
@@ -98,11 +123,12 @@ EventManager = React.createClass({
 
 			rivals.forEach(function (rival, index) {
 
-                if (model.rivalsType === 'schools' && index === 1) {
-                    Server.invitesByEvent.post(event.id, {
+                if (model.rivalsType === 'schools' && rival.id !== activeSchoolId) {
+					window.Server.invitesByEvent.post({eventId: event.id}, {
                         eventId: event.id,
-                        inviterId: rivals[0].id,
-                        invitedId: rival.id
+                        inviterId: activeSchoolId,
+                        invitedId: rival.id,
+						message: 'message'
                     }).then(function (res) {
                         document.location.hash = 'events/view?id=' + event.id;
                     });
@@ -131,6 +157,7 @@ EventManager = React.createClass({
                                 console.log(res);
                             });
                         });
+
 
                         document.location.hash = 'events/view?id=' + event.id;
                     });

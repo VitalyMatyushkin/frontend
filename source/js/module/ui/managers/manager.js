@@ -23,17 +23,21 @@ Manager = React.createClass({
     getRivals: function () {
         var self = this,
             binding = self.getDefaultBinding(),
+			activeSchoolId = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+			rivalsType = binding.get('newEvent.model.rivalsType'),
             selectedRivalId = binding.get('newEvent.selectedRivalId');
 
         return binding.get('newEvent.rivals').map(function (rival) {
-            var teamClasses = classNames({
-                mActive: selectedRivalId === rival.get('id'),
-                eChooser_item: true
-            });
+            var disable = rivalsType === 'schools' && rival.get('id') !== activeSchoolId,
+				teamClasses = classNames({
+					mActive: selectedRivalId === rival.get('id'),
+					eChooser_item: true,
+					mDisable: disable
+				});
 
             return <span
                 className={teamClasses}
-                onClick={self.onChooseRival.bind(null, rival.get('id'))}>{rival.get('name')}</span>;
+                onClick={!disable ? self.onChooseRival.bind(null, rival.get('id')) : null}>{rival.get('name')}</span>;
         }).toArray();
     },
 	render: function() {
