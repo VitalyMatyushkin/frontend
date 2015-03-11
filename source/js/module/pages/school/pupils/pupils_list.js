@@ -18,7 +18,6 @@ OneSchoolPage = React.createClass({
 		if (activeSchoolId) {
 			self.request = window.Server.learners.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
-				//self.isMounted() && self.forceUpdate();
 			});
 		}
 	},
@@ -33,7 +32,7 @@ OneSchoolPage = React.createClass({
 		return function(event) {
 			var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
 
-			document.location.hash = 'school/pupils/edit' ;
+			document.location.hash = 'school/pupils/add' ;
 			event.stopPropagation();
 		}
 	},
@@ -51,7 +50,8 @@ OneSchoolPage = React.createClass({
 		var self = this;
 
 		return function(data) {
-			self.props.formBinding.set(Immutable.fromJS(data));
+			//self.props.formBinding.set(Immutable.fromJS(data));
+
 			document.location.hash = 'school/pupils/edit?id='+data.id;
 		}
 	},

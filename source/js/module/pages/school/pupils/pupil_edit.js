@@ -11,14 +11,14 @@ PupilEditPage = React.createClass({
 			routingData = globalBinding.sub('routing.parameters').toJS(),
 			learnerId = routingData.id;
 
-		binding.clear('data');
+		binding.clear();
 
 		if (activeSchoolId && learnerId) {
 			window.Server.learner.get({
 				schoolId: activeSchoolId,
 				learnerId: learnerId
 			}).then(function (data) {
-				self.isMounted() && binding.set('data', Immutable.fromJS(data));
+				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
 			self.activeSchoolId = activeSchoolId;

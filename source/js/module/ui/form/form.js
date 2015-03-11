@@ -2,7 +2,6 @@ var Form;
 
 Form = React.createClass({
 	mixins: [Morearty.Mixin],
-	statePath: 'fieldsState',
 	propTypes: {
 		onSubmit: React.PropTypes.func,
 		onSuccess: React.PropTypes.func,
@@ -15,12 +14,15 @@ Form = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		binding.addListener('data', function() {
-			self._setDefaultValues();
+		binding.addListener('', function(ChangesDescriptor) {
+			var data = binding.toJS();
+
+			data && ChangesDescriptor.isValueChanged() && self._setDefaultValues();
 		});
 
+		binding.meta().clear();
 		self._setDefaultValues();
-		binding.set('buttonText', self.defaultButton);
+		binding.meta().set('buttonText', self.defaultButton);
 		self.busy = false;
 	},
 	/**
@@ -32,14 +34,12 @@ Form = React.createClass({
 	_setDefaultValues: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			dataSet = binding.get('data');
+			dataSet = binding.toJS();
 
-		binding.meta().clear();
-
-		if (dataSet && (dataSet = dataSet.toJS())) {
+		if (dataSet) {
 			for (var dataField in dataSet) {
 				if (dataSet.hasOwnProperty(dataField)) {
-					binding.merge(self.statePath + '.' + dataField, false, Immutable.Map({
+					binding.meta().merge(dataField, false, Immutable.Map({
 						value: dataSet[dataField],
 						defaultValue: dataSet[dataField]
 					}));
@@ -77,7 +77,7 @@ Form = React.createClass({
 		if (hereIsError === false) {
 
 			self.busy = true;
-			self.getDefaultBinding().set('buttonText', self.loadingButton);
+			self.getDefaultBinding().meta().set('buttonText', self.loadingButton);
 
 			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
 			if (typeof self.props.onSubmit === 'function') {
@@ -150,6 +150,7 @@ Form = React.createClass({
 			Title = <h2 dangerouslySetInnerHTML={{__html: self.props.name}} />;
 		}
 
+
 		// Передаем детям привязку с биндингку текущей формы
 		self._createBindedClones(self);
 
@@ -162,7 +163,7 @@ Form = React.createClass({
 					{self.props.children}
 
 					<div className="eForm_savePanel">
-						<div className="bButton mRight" onClick={self.tryToSubmit}>{self.getDefaultBinding().get('buttonText')}</div>
+						<div className="bButton mRight" onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
 					</div>
 				</div>
 			</div>

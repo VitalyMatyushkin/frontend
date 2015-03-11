@@ -1,5 +1,5 @@
 var PupilForm = require('module/pages/school/pupils/pupil_form'),
-	PupilAddPage;
+	PupilEditPage;
 
 PupilEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -29,4 +29,4 @@ PupilEditPage = React.createClass({
 });
 
 
-module.exports = PupilAddPage;
+module.exports = PupilEditPage;

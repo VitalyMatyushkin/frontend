@@ -15,7 +15,6 @@ OneSchoolPage = React.createClass({
 		if (activeSchoolId) {
 			self.request = window.Server.houses.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
-				self.isMounted() && self.forceUpdate();
 			});
 		}
 	},
