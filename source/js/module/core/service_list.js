@@ -6,6 +6,7 @@ var Service = require('module/core/service'),
 serviceList = {
 	initialize: function(binding) {
         serviceList.me = new Service('/users/{ownerId}', binding);
+		serviceList.logout = new Service('/users/logout', binding);
 
 		// schools
 		serviceList.schools = new Service('/schools', binding);

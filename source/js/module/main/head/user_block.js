@@ -32,6 +32,7 @@ UserBlock = React.createClass({
 			OptionsButton = null,
 			UserButton = null,
 			userButtonStyle = {},
+			LogoutButton = null,
 			LoginButton = null;
 
 		if(authData && authData.id) {
@@ -41,6 +42,9 @@ UserBlock = React.createClass({
 
 			// Кнопка перехода на страницу настрок
 			OptionsButton = <div className="eTopMenu_item"><SVG icon="icon_cog" /></div>;
+
+			// Logout button
+			LogoutButton = <a href="/#logout" className="eTopMenu_item mLogin"><SVG icon="icon_logout" /></a>;
 		} else {
 			// Кнопка авторизации
 			LoginButton = <a href="/#login" className="eTopMenu_item mLogin"><SVG icon="icon_key" /></a>;
@@ -49,6 +53,7 @@ UserBlock = React.createClass({
 		return (
 			<div className="bTopMenu mRight">
 				{OptionsButton}
+				{LogoutButton}
 				{UserButton}
 				{LoginButton}
 			</div>
