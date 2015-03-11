@@ -3,7 +3,7 @@ LoginUserPage = React.createClass({
 	render: function() {
 		window.Server.logout.post().then(function (res) {
 			localStorage.clear();
-			document.location.hash = 'login';
+			document.location.href = '/#login';
 		});
 		return null;
 	}
