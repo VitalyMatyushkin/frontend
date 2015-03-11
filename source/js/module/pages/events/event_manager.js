@@ -42,12 +42,11 @@ EventManager = React.createClass({
 
 				binding.set('newEvent.model.type', type);
 				binding.update('newEvent.rivals', function () {
-					var rivals = Immutable.List(),
-						schoolRivalData = rivalsType === 'schools' && schoolInfo ? Immutable.fromJS([schoolInfo.toJS()]) : Immutable.fromJS({id: activeSchoolId});
+					var rivals = Immutable.List();
 
-					if (schoolRivalData = rivalsType === 'schools' && schoolInfo) {
+					if (rivalsType === 'schools' && schoolInfo) {
 						rivals = Immutable.List(schoolInfo);
-					} else if (schoolRivalData = rivalsType === 'schools' && !schoolInfo) {
+					} else if (rivalsType === 'schools' && !schoolInfo) {
 						rivals = Immutable.List(Immutable.Map({id: activeSchoolId}));
 					}
 

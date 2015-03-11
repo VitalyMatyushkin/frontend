@@ -48,14 +48,52 @@ InfoView = React.createClass({
                             {
                                 invitedId: activeSchoolId
                             }
-                        ]
+                        ],
+                        repaid: {
+                            neq: true
+                        }
                     }
                 }
             }).then(function (data) {
+                var uniqueIds = data.reduce(function (memo, invite) {
+                        if (memo.indexOf(invite.inviterId) === -1) {
+                            memo.push(invite.inviterId);
+                        }
+
+                    if (memo.indexOf(invite.invitedId) === -1) {
+                        memo.push(invite.invitedId);
+                    }
+
+                        return memo;
+                }, []);
+
                 invitesBinding.update(function () {
                     return Immutable.fromJS({
                         sync: true,
                         models: data
+                    });
+                });
+
+                window.Server.schools.get({
+                    filter: {
+                        inq: uniqueIds
+                    }
+                }).then(function (res) {
+                    invitesBinding.update('models', function (invites) {
+                       return invites.map(function (invite) {
+                           var _inviter = res.filter(function (inv) {
+                                   return inv.id === invite.get('inviterId')
+                               }),
+                               _invited = res.filter(function (inv) {
+                                   return inv.id === invite.get('invitedId')
+                               });
+
+                           invite
+                               .set('inviter', Immutable.fromJS(_inviter))
+                               .set('invited', Immutable.fromJS(_invited));
+
+                           return invite;
+                       });
                     });
                 });
             });

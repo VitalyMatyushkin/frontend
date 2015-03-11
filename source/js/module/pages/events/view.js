@@ -10,19 +10,28 @@ EventView = React.createClass({
 
 		window.Server.eventFindOne.get({
             filter: {
-                include: {
-                    participants: 'players'
-                },
+                include: [
+                    {
+                        participants: 'players'
+                    },
+                    'invites'
+                ],
                 where: {id: routerParameters.id}
             }
             //'filter[include][participants]=players&filter[where][id]=' + routerParameters.id
 		}).then(function (res) {
-			binding.set('eventInfo', Immutable.fromJS(res));
+            var participants = res.participants;
+            binding.set('eventInfo', Immutable.fromJS(res));
+
+            if (participants.length === 1 ) {
+                participants.push({
+                    schoolId: res.invites[0].invitedId
+                });
+            }
 
             res.participants.forEach(function (rival, index) {
                 var serviceUrl = window.Server.school,
                     id = rival.schoolId;
-
 
                 if (rival.rivalType === 'house') {
                     serviceUrl = window.Server.house;
@@ -81,7 +90,7 @@ EventView = React.createClass({
             players = rival.get('players');
 
         if (players) {
-            return players.map(function (player, index) {
+            return players.map(function (player) {
                 return <span className="bPlayer">
                     <img className="ePlayer_avatar" src={player.get('avatar')} />
                     <span className="ePlayer_name">{player.get('firstName')}</span>
