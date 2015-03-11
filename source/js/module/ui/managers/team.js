@@ -13,7 +13,7 @@ Team = React.createClass({
     },
     removePlayer: function (playerId) {
         var self = this,
-            players = self.getBinding('rival').get('players');
+            players = self.getBinding('rival').sub('players');
 
         players.update(function (data) {
             return data.filter(function (model) {
@@ -26,12 +26,14 @@ Team = React.createClass({
             players = self.getBinding('rival').get('players');
 
         return players.map(function (player) {
-            return <div className="bTeam_ePlayer" key={player.get('id')}>
-                <span className="ePlayer_name"><span className="ePlayer_number">{'#'}</span>{player.get('name')}</span>
-                <span className="ePlayer_remove" onClick={self.removePlayer.bind(null, player.get('id'))}>
-                    <SVG icon="icon_trash" />
-                </span>
-            </div>
+			return <div className="bPlayer mMini" key={player.get('id')}>
+				<img className="ePlayer_avatar" src={player.get('avatar')} />
+				<span className="ePlayer_name">{player.get('firstName')}</span>
+				<span className="ePlayer_lastName">{player.get('lastName')}</span>
+				<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, player.get('id'))}>
+					<SVG icon="icon_trash" />
+				</span>
+			</div>;
         }).toArray();
     },
     render: function() {

@@ -63,7 +63,7 @@ EventManagerBase = React.createClass({
     serviceSchoolFilter: function(schoolId, schoolName) {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
-            userId = rootBinding.get('authorizationInfo.userId');
+            userId = rootBinding.get('userData.authorizationInfo.userId');
 
         return window.Server.schools.get({
             filter: {

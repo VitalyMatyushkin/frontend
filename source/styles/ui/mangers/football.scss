@@ -55,22 +55,6 @@
   box-sizing: border-box;
   cursor: default;
   margin-bottom: 2px;
-  &:hover {
-    .ePlayer_remove {
-      display: flex;
-    }
-  }
-}
-
-.ePlayer_name {
-  display: flex;
-  align-self: flex-start;
-}
-
-.ePlayer_remove {
-  display: none;
-  align-self: flex-end;
-  cursor: pointer;
 }
 
 .ePlayer_remove .bIcon {
