@@ -20,7 +20,7 @@ Center = React.createClass({
 						<Route path="/login" binding={binding.sub('userData')} component="module/pages/login/user" loginRoute={true}  />
 						<Route path="/logout" binding={binding.sub('userData')} component="module/pages/logout/logout" unauthorizedAccess={true}  />
 
-						<Route path="/school/:subPage" binding={binding.sub('activeSchool')} component="module/pages/school/school_page"  />
+						<Route path="/school/:subPage /school/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/pages/school/school_page"  />
 
 						<Route path="/schools" binding={binding.sub('schoolsList')} component="module/pages/schools/schools_page"  />
 						<Route path="/schools/add" binding={binding.sub('schoolsList')} component="module/pages/schools/add"  />

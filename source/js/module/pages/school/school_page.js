@@ -43,7 +43,11 @@ OneSchoolPage = React.createClass({
 		return Immutable.fromJS({
 			classes: [],
 			houses: [],
-			pupils: [],
+			pupils: {
+				pupilsList: [],
+				pupilsRouting: {},
+				pupilForm: {}
+			},
 			schoolInfo: '',
 			schoolRouting: {}
 		});
@@ -60,7 +64,7 @@ OneSchoolPage = React.createClass({
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
 						<Route path="/school/summary" binding={binding.sub('summary')} component="module/pages/school/summary/summary_page"  />
-						<Route path="/school/pupils" binding={binding.sub('pupils')} component="module/pages/school/pupils/pupils_page"  />
+						<Route path="/school/pupils /school/pupils/:mode" binding={binding.sub('pupils')} component="module/pages/school/pupils/pupils_page"  />
 						<Route path="/school/classes" binding={binding.sub('classes')} component="module/pages/school/classes/classes_page"  />
 						<Route path="/school/houses" binding={binding.sub('houses')} component="module/pages/school/houses/houses_page"  />
 					</RouterView>

@@ -22,11 +22,11 @@ Table = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			dataList = binding.get(),
+			dataList = binding.toJS(),
 			itemsNodes;
 
 		if (dataList) {
-			itemsNodes = dataList.toJS().map(function (item) {
+			itemsNodes = dataList.map(function (item) {
 				var itemCells,
 					getEditFunction = function() { return function(event) { self.props.onItemEdit(item); event.stopPropagation();	} },
 					getViewFunction = function() { return function(event) { self.props.onItemView(item); event.stopPropagation();	} },

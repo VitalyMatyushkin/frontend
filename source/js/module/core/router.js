@@ -29,19 +29,25 @@ RouterView = React.createClass({
 			binding = self.getDefaultBinding();
 
 		self.props.children && self.props.children.forEach(function(route){
-			var routeData = {
-				path: route.props.path,
-				component: route.props.component,
-				pageName: route.props.pageName || '',
-				binding: route.props.binding || binding,
-				unauthorizedAccess: route.props.unauthorizedAccess ? route.props.unauthorizedAccess : false
-			};
+			var routePath = route.props.path.split(' ');
 
-			routes.push(routeData);
+			routePath.forEach(function(currentRoute) {
+				var routeData = {
+					path: currentRoute,
+					component: route.props.component,
+					pageName: route.props.pageName || '',
+					binding: route.props.binding || binding,
+					unauthorizedAccess: route.props.unauthorizedAccess ? route.props.unauthorizedAccess : false,
+					routeComponent: route
+				};
 
-			if (route.props.loginRoute) {
-				self.loginRoute = routeData;
-			}
+				routes.push(routeData);
+
+				if (route.props.loginRoute) {
+					self.loginRoute = routeData;
+				}
+
+			});
 		});
 
 		return routes;
@@ -57,6 +63,7 @@ RouterView = React.createClass({
 
 			self.siteComponents[route.path] = {
 				View: ComponentView,
+				routeComponent: route.routeComponent,
 				binding: route.binding
 			};
 
@@ -145,7 +152,7 @@ RouterView = React.createClass({
 			currentPath = self.currentPath,
 			siteComponent = self.siteComponents[currentPath];
 
-		return siteComponent ? React.createElement(siteComponent.View, {binding: siteComponent.binding}) : null;
+		return siteComponent ? React.createElement(siteComponent.View, siteComponent.routeComponent.props) : null;
 	}
 });
 

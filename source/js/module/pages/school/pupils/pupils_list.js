@@ -6,6 +6,9 @@ var List = require('module/ui/list/list'),
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		formBinding: React.PropTypes.any.isRequired
+	},
 	componentWillMount: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -13,7 +16,7 @@ OneSchoolPage = React.createClass({
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
 		if (activeSchoolId) {
-			self.request = window.Server.classes.get(activeSchoolId).then(function (data) {
+			self.request = window.Server.learners.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 				//self.isMounted() && self.forceUpdate();
 			});
@@ -30,7 +33,7 @@ OneSchoolPage = React.createClass({
 		return function(event) {
 			var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
 
-			document.location.hash = page + '?mode=new&schoolId='+self.schoolId ;
+			document.location.hash = 'school/pupils/edit' ;
 			event.stopPropagation();
 		}
 	},
@@ -48,10 +51,8 @@ OneSchoolPage = React.createClass({
 		var self = this;
 
 		return function(data) {
-			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-
-			pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = page + '?mode=edit&schoolId='+data.schoolId+'&id='+data.id;
+			self.props.formBinding.set(Immutable.fromJS(data));
+			document.location.hash = 'school/pupils/edit?id='+data.id;
 		}
 	},
 	render: function() {
@@ -60,13 +61,15 @@ OneSchoolPage = React.createClass({
 
 		return (
 			<div>
-				<h1 className="eSchoolMaster_title">Classes</h1>
+				<h1 className="eSchoolMaster_title">Pupils</h1>
 
-
-				<Table title="Classes" binding={binding} onItemView={self._getViewFunction('class')} onItemEdit={self._getEditFunction('class')} onAddNew={self._getAddFunction('class')}>
-					<TableField dataField="name">First name</TableField>
+				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction('leaner')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
+					<TableField dataField="firstName">First name</TableField>
+					<TableField dataField="lastName">Last name</TableField>
 					<TableField dataField="age">Age</TableField>
+					<TableField dataField="phone">Phone</TableField>
 				</Table>
+
 			</div>
 		)
 	}

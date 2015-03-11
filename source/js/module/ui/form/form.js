@@ -34,6 +34,8 @@ Form = React.createClass({
 			binding = self.getDefaultBinding(),
 			dataSet = binding.get('data');
 
+		binding.meta().clear();
+
 		if (dataSet && (dataSet = dataSet.toJS())) {
 			for (var dataField in dataSet) {
 				if (dataSet.hasOwnProperty(dataField)) {
@@ -48,7 +50,7 @@ Form = React.createClass({
 	tryToSubmit: function() {
 		var self = this,
 			token = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId'),
-			fields = self.getDefaultBinding().get(self.statePath).toJS(),
+			fields = self.getDefaultBinding().meta().toJS(),
 			hereIsError = false,
 			dateToPost = {};
 
@@ -62,7 +64,7 @@ Form = React.createClass({
 			dateToPost[field] = fields[field].value;
 
 			if (fields[field].error) {
-				self.getDefaultBinding().update(self.statePath + '.' + field, function(immutableValue) {
+				self.getDefaultBinding().meta().update(field, function(immutableValue) {
 					hereIsError = true;
 					return immutableValue.set('showError', true);
 				});
@@ -129,14 +131,12 @@ Form = React.createClass({
 			binding = self.getDefaultBinding();
 
 		ownerInstance.props.children = React.Children.map(ownerInstance.props.children, function (child) {
-			var subPath = child.props.field ? self.statePath + '.' + child.props.field : self.statePath;
-
 			if (child.props.type === 'column'){
 				self._createBindedClones(child);
 			}
 
 			return React.addons.cloneWithProps(child, {
-				binding: binding.sub(subPath),
+				binding: binding.meta(child.props.field),
 				service: self.props.service
 			});
 		});

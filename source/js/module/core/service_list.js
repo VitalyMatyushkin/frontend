@@ -16,7 +16,7 @@ serviceList = {
 		// leaners
         serviceList.learners = new Service('/schools/{schoolId}/learners', binding);
 		serviceList.learnersFilter = new Service('/learners', binding);
-		serviceList.learner = new Service('/schools/{}/learners/{learnerId}', binding);
+		serviceList.learner = new Service('/schools/{schoolId}/learners/{learnerId}', binding);
 
 		// houses
         serviceList.houses = new Service('/schools/{schoolId}/houses', binding);

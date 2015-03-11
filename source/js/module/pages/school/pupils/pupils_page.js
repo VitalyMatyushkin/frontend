@@ -1,78 +1,23 @@
-var List = require('module/ui/list/list'),
-	ListField = require('module/ui/list/list_field'),
-	Table = require('module/ui/list/table'),
-	TableField = require('module/ui/list/table_field'),
-	OneSchoolPage;
+var PupilPage,
+	RouterView = require('module/core/router'),
+	Route = require('module/core/route');
 
-OneSchoolPage = React.createClass({
+PupilPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-
-		if (activeSchoolId) {
-			self.request = window.Server.learners.get(activeSchoolId).then(function (data) {
-				binding.set(Immutable.fromJS(data));
-				self.isMounted() && self.forceUpdate();
-			});
-		}
-	},
-	componentWillUnmount: function () {
-		var self = this;
-
-		self.request && self.request.abort();
-	},
-	_getAddFunction: function(page) {
-		var self = this;
-
-		return function(event) {
-			var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
-
-			document.location.hash = page + '?mode=new&schoolId='+self.schoolId ;
-			event.stopPropagation();
-		}
-	},
-	_getViewFunction: function(page) {
-		var self = this;
-
-		return function(data) {
-			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-
-			pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
-		}
-	},
-	_getEditFunction: function(page) {
-		var self = this;
-
-		return function(data) {
-			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-
-			pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = page + '?mode=edit&schoolId='+data.schoolId+'&id='+data.id;
-		}
-	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding();
 
 		return (
-			<div>
-				<h1 className="eSchoolMaster_title">Pupils</h1>
-
-				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction('leaner')} onItemEdit={self._getEditFunction('leaner')} onAddNew={self._getAddFunction('leaner')}>
-					<TableField dataField="firstName">First name</TableField>
-					<TableField dataField="lastName">Last name</TableField>
-					<TableField dataField="age">Age</TableField>
-					<TableField dataField="phone">Phone</TableField>
-				</Table>
-
-			</div>
+			<RouterView routes={ binding.sub('pupilsRouting') } binding={globalBinding}>
+				<Route path="/school/pupils" binding={binding.sub('pupilsList')} formBinding={binding.sub('pupilForm')} component="module/pages/school/pupils/pupils_list"  />
+				<Route path="/school/pupils/add" binding={binding.sub('pupilForm')} component="module/pages/school/pupils/pupil_add"  />
+				<Route path="/school/pupils/edit" binding={binding.sub('pupilForm')} component="module/pages/school/pupils/pupil_edit"  />
+			</RouterView>
 		)
 	}
 });
 
 
-module.exports = OneSchoolPage;
+module.exports = PupilPage;
