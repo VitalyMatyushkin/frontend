@@ -8,27 +8,29 @@ Manager = React.createClass({
     componentWillMount: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            selectedRivalId = binding.get('newEvent.rivals.0.id');
+            selectedRivalId = binding.get('rivals.0.id');
 
         if (selectedRivalId) {
-            binding.set('newEvent.selectedRivalId', selectedRivalId);
+            binding.set('selectedRivalId', selectedRivalId);
         }
     },
     onChooseRival: function (rivalId) {
         var self = this,
             binding = self.getDefaultBinding();
 
-        binding.set('newEvent.selectedRivalId', rivalId);
+        binding.set('selectedRivalId', rivalId);
     },
     getRivals: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-			activeSchoolId = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-			rivalsType = binding.get('newEvent.model.rivalsType'),
-            selectedRivalId = binding.get('newEvent.selectedRivalId');
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+			userId = rootBinding.get('userData.authorizationInfo.userId'),
+			rivalsType = binding.get('model.rivalsType'),
+            selectedRivalId = binding.get('selectedRivalId');
 
-        return binding.get('newEvent.rivals').map(function (rival) {
-            var disable = rivalsType === 'schools' && rival.get('id') !== activeSchoolId,
+        return binding.get('rivals').map(function (rival) {
+            var disable = rivalsType === 'schools' && rival.get('id') !== activeSchoolId || rival.get('ownerId') !== userId,
 				teamClasses = classNames({
 					mActive: selectedRivalId === rival.get('id'),
 					eChooser_item: true,
@@ -43,13 +45,13 @@ Manager = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            selectedRivalId = binding.get('newEvent.selectedRivalId'),
-            rivalIndex = binding.get('newEvent.rivals').findIndex(function (rival) {
+            selectedRivalId = binding.get('selectedRivalId'),
+            rivalIndex = binding.get('rivals').findIndex(function (rival) {
                return rival.get('id') === selectedRivalId;
             }),
             teamBinding = {
-                default: binding.sub('newEvent'),
-                rival: binding.sub('newEvent.rivals.' + rivalIndex)
+                default: binding,
+                rival: binding.sub('rivals.' + rivalIndex)
             };
 
             return <div className="eManager_container">

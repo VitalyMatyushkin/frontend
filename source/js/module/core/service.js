@@ -113,7 +113,7 @@ Service = (function() {
 					sendOptions = options;
 				}
 			} else {
-				data = options;
+				data = data || options;
 				sendOptions = options;
 			}
 

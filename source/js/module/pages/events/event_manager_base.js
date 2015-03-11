@@ -196,6 +196,7 @@ EventManagerBase = React.createClass({
                 <Autocomplete
                     serviceFilter={services[rivalsType]}
                     serverField="name"
+					placeholder={'enter rival name'}
 					onSelect={self.onSelectRival}
                     binding={binding.sub(['autocomplete', rivalsType, 0])}
                 />

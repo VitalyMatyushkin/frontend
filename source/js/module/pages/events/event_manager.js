@@ -191,7 +191,7 @@ EventManager = React.createClass({
                     binding={rootBinding.sub('events.calendar')}
                     onSelect={self.onSelectDate} /> : null}
                 {step === 2 ? <EventManagerBase binding={binding} /> : null}
-                {step === 3 ? <Manager binding={binding} /> : null}
+                {step === 3 ? <Manager binding={binding.sub('newEvent')} /> : null}
             </div>
 			<div className="eEvents_buttons">
 				{step > 1 ? <span className="bButton eEvents_button" onClick={self.toBack}>Back</span> : null}
