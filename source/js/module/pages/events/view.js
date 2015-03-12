@@ -22,6 +22,10 @@ EventView = React.createClass({
 		}).then(function (res) {
             var participants = res.participants;
             binding.set('eventInfo', Immutable.fromJS(res));
+            binding
+                .sub('eventInfo')
+                .meta()
+                .set('editMode', false);
 
             if (participants.length === 1 ) {
                 participants.push({
