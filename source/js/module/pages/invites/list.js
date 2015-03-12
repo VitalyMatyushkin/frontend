@@ -159,7 +159,7 @@ EventsView = React.createClass({
 						<span className="eInvite_eventName">{inviter && inviter.get('name')} <span className="eInvite_vs">VS</span> {invited && invited.get('name')}</span>
 						<span className="eInvite_eventDate">{onlyDate + ' - ' + time}</span>
 					</div>
-                    <div className="eInvite_message">Message: {invite.get('message')}</div>
+					<div className="eInvite_message">{selectInvitesType !== 'inbox' ? invite.get('message') : 'Awaiting opponent...'}</div>
 					<div className="eInvite_buttons">
 						{inbox && !invite.get('repaid') ? <span className="bButton" onClick={self.onClickAccept.bind(null, invite)}>Accept</span> : null}
 						{inbox && !invite.get('repaid') ? <span className="bButton mRed" onClick={self.onClickDecline.bind(null, invite)}>Decline</span> : null}
