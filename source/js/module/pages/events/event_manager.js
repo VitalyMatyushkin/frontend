@@ -120,15 +120,16 @@ EventManager = React.createClass({
 				return events.push(Immutable.fromJS(event));
 			});
 
-			rivals.forEach(function (rival, index) {
+			rivals.forEach(function (rival) {
 
                 if (model.rivalsType === 'schools' && rival.id !== activeSchoolId) {
 					window.Server.invitesByEvent.post({eventId: event.id}, {
                         eventId: event.id,
                         inviterId: activeSchoolId,
                         invitedId: rival.id,
-						message: 'message'
-                    }).then(function (res) {
+						message: 'message',
+						invitedType: 'schools'
+                    }).then(function () {
                         document.location.hash = 'events/view?id=' + event.id;
                     });
                 } else {
@@ -159,6 +160,7 @@ EventManager = React.createClass({
 
 
                         document.location.hash = 'events/view?id=' + event.id;
+						binding.clear();
                     });
                 }
 			});

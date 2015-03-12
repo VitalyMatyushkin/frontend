@@ -3,10 +3,14 @@
   align-items: center;
 }
 
+.bChooser.mLong {
+  width: 100%;
+}
+
 .eChooser_item {
   padding: 5px;
   border: 2px solid #eee;
-  transition: all .3s ease-out;
+  transition: all .2s ease-out;
   cursor: pointer;
   margin: 5px 10px 5px 0;
   &:hover {
@@ -29,3 +33,25 @@
   margin-right: 10px;
 }
 
+/* mLong */
+.bChooser.mLong .eChooser_item {
+  padding: 10px 0;
+  margin: 5px 0;
+  width: 50%;
+  text-align: center;
+  color: #000;
+  background-color: rgba(238, 238, 238, .4);
+  font-size: 18px;
+  border: 1px solid transparent;
+  &:hover {
+    background-color: #eee;
+  }
+  &.mActive {
+    color: #fff;
+    background-color: $MAIN_COLOR;
+  }
+  &.mDisable {
+    border-color: #ddd;
+    background-color: #eee;
+  }
+}

@@ -61,6 +61,20 @@ EventsView = React.createClass({
 			});
 		});
     },
+	onClickRedeemed: function (invite) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			invitesBinding = binding.sub('models'),
+			findIndex = invitesBinding.get().findIndex(function (model) {
+				return model.get('id') === invite.get('id');
+			});
+
+		invitesBinding.set(findIndex + '.redeemed', true);
+
+		window.Server.invite.put({
+			inviteId: invite.get('id')
+		}, invitesBinding.toJS(findIndex));
+	},
     onClickDecline: function (invite) {
         window.Server.inviteRepay.post({
             inviteId: invite.get('id')
@@ -110,11 +124,14 @@ EventsView = React.createClass({
 			});
 		});
 	},
+	_zeroFill: function (i) {
+		return (i < 10 ? '0' : '') + i;
+	},
 	getInvites: function () {
 		var self = this,
             binding = this.getDefaultBinding(),
             activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-            selectInvitesType = binding.get('selectInvitesType'),
+            selectInvitesType = binding.get('selectInvitesType') || 'inbox',
 			inviteCount = binding.get('models').count(),
             filtered = binding.get('models').filter(function (invite) {
                 return selectInvitesType === 'inbox' || selectInvitesType === undefined ?
@@ -127,23 +144,28 @@ EventsView = React.createClass({
                 var date = new Date(invite.get('meta').get('created')),
                     inbox = invite.get('invitedId') === activeSchoolId,
                     acceptedText = invite.get('accepted') ? 'accepted' : 'declined',
-                    dateTime = [date.getMonth(), date.getDate(), date.getFullYear()].join('/');
+                    onlyDate = [self._zeroFill(date.getMonth()), self._zeroFill(date.getDate()), self._zeroFill(date.getFullYear())].join('/'),
+					time = [self._zeroFill(date.getHours()), self._zeroFill(date.getMinutes())].join(':'),
+					inviter = invite.get('inviter'),
+					invited = invite.get('invited'),
+					inviteClass = classNames({
+						bInvite: true,
+						mNotRedeemed: !invite.get('redeemed') && selectInvitesType === 'inbox',
+						mRepaid: invite.get('repaid')
+					});
 
-				return <div className="bInvite">
-                    <div className="eInvite_title">{dateTime}</div>
-                    <span className="eInvite_invited">Invited: {invite.get('invitedId')}</span>
-                    <span className="eInvite_inviter">Inviter: {invite.get('inviterId')}</span>
-                    <span className="eInvite_type">Type: {invite.get('invitedType')}</span>
-                    <div className="eInvite_messages">Message: {invite.get('message')}</div>
-                    <span className="eInvite_redeemed">redeemed: {invite.get('redeemed') ? 'redeemed' : 'not redeemed'}</span>
-                    <div className="eInvite_overlay">
-                        <SVG icon="icon_check" classes={invite.get('accepted') ? 'eInvite_accept mAccept' : 'eInvite_accept'} />
-                    </div>
-                      <div className="eInvite_buttons">
-                        {inbox && !invite.get('repaid') ? <span className="bButton" onClick={self.onClickAccept.bind(null, invite)}>Accept</span> : null}
-                        {inbox && !invite.get('repaid') ? <span className="bButton" onClick={self.onClickDecline.bind(null, invite)}>Decline</span> : null}
-                        {invite.get('repaid') ? <span className="bButton mDisable">{acceptedText.toUpperCase()}</span> : null}
-                      </div>
+				return <div className={inviteClass}>
+                    <div className="eInvite_header">
+						<span className="eInvite_eventName">{inviter && inviter.get('name')} <span className="eInvite_vs">VS</span> {invited && invited.get('name')}</span>
+						<span className="eInvite_eventDate">{onlyDate + ' - ' + time}</span>
+					</div>
+                    <div className="eInvite_message">Message: {invite.get('message')}</div>
+					<div className="eInvite_buttons">
+						{inbox && !invite.get('repaid') ? <span className="bButton" onClick={self.onClickAccept.bind(null, invite)}>Accept</span> : null}
+						{inbox && !invite.get('repaid') ? <span className="bButton mRed" onClick={self.onClickDecline.bind(null, invite)}>Decline</span> : null}
+						{invite.get('repaid') ? <span className="bButton mDisable">{acceptedText.toUpperCase()}</span> : null}
+					</div>
+					{selectInvitesType === 'inbox' ? <span className="eInvite_close" onClick={self.onClickRedeemed.bind(null, invite)}></span> : null}
 				</div>;
 			}).toArray();
 		} else {
@@ -174,7 +196,7 @@ EventsView = React.createClass({
 
         return <div className="bInvites">
             {!step ? <div>
-                <div className="bChooser">
+                <div className="bChooser mLong">
                     <span className={inboxClasses} onClick={self.onSelectInviteType.bind(null, 'inbox')}>Inbox</span>
                     <span className={outboxClasses} onClick={self.onSelectInviteType.bind(null, 'outbox')}>Outbox</span>
                 </div>

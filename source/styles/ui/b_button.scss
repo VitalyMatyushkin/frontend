@@ -51,6 +51,13 @@
   box-shadow: 0px -2px 0 0 darken(#eee, 10%);
   color: #555;
   &:hover:before {
-    display: none;
+    box-shadow: 0 2px 0 0 darken(#555, 10%);
+  }
+}
+
+.bButton.mRed {
+  background: #ff5252;
+  &:hover:before {
+    box-shadow: 0 2px 0 0 darken(#ff5252, 10%);
   }
 }

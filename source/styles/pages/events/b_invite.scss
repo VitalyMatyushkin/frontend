@@ -6,14 +6,61 @@
   border: 1px solid #eee;
   box-sizing: border-box;
   line-height: 19px;
+  margin-bottom: 5px;
+  position: relative;
 }
 
-.bInvite .eInvite_buttons {
+.eInvite_header {
+  padding: 5px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.eInvite_vs {
+  font-size: 11px;
+  margin: 0 10px;
+}
+
+.eInvite_eventName{
+  font-size: 19px;
+}
+
+.eInvite_eventDate {
+  font-size: 12px;
+  color: darken(#ddd, 20);
+}
+
+
+.eInvite_buttons {
   width: 200px;
   display: flex;
   flex-direction: row;
+  margin-top: 10px;
 }
 
 .eInvite_buttons .bButton {
   margin-right: 10px;
 }
+
+.eInvite_close {
+  color: #777;
+  font-size: 14px;
+  position: absolute;
+  right: 5px;
+  text-decoration: none;
+  text-shadow: 0 1px 0 #fff;
+  bottom: 5px;
+  cursor: pointer;
+  &:hover {
+    color: darken(#777, 20%);
+  }
+}
+
+.bInvite.mNotRedeemed {
+  border-color: darken(#eee, 20%);
+}
+
+.bInvite.mNotRedeemed .eInvite_close:after {
+  content: 'was read?';
+}
+

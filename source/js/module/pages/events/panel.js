@@ -88,11 +88,9 @@ InfoView = React.createClass({
                                    return inv.id === invite.get('invitedId')
                                });
 
-                           invite
-                               .set('inviter', Immutable.fromJS(_inviter))
-                               .set('invited', Immutable.fromJS(_invited));
-
-                           return invite;
+						   return invite
+                               .set('inviter', Immutable.fromJS(_inviter[0]))
+                               .set('invited', Immutable.fromJS(_invited[0]));
                        });
                     });
                 });
