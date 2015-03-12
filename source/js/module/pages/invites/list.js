@@ -36,17 +36,12 @@ EventsView = React.createClass({
 		}).then(function (res) {
 			var rivals = res.participants;
 
-			rivals.unshift({id: invite.get('invitedId')});
+			rivals.unshift({id: invite.get('invitedId'), players: []});
 
+			binding.set('inviteEvent', Immutable.fromJS(res));
 			binding
-				.set('inviteEvent', Immutable.fromJS(res));
-
-			binding.sub('inviteEvent')
-				.atomically()
-				.set('rivals', Immutable.fromJS(rivals))
-				.commit();
-
-			binding.set('stepInviteAccepted', 1);
+                .set('inviteEvent.rivals', Immutable.fromJS(rivals))
+                .set('stepInviteAccepted', 1);
 
 			window.Server.schools.get({
 				filter: {
@@ -57,7 +52,16 @@ EventsView = React.createClass({
 					}
 				}
 			}).then(function (res) {
-				binding.merge('inviteEvent.rivals', Immutable.fromJS(res));
+                var rivals = Immutable.fromJS(res).sort(function(rival) {
+                    return rival.get('id') === invite.get('invitedId') ? 1 : -1;
+                });
+
+				binding
+                    .atomically()
+                    .merge('inviteEvent.rivals', rivals)
+                    .set('inviteEvent.rivals.0.players', Immutable.List())
+                    .set('inviteEvent.rivals.1.players', Immutable.List())
+                    .commit();
 			});
 		});
     },
@@ -88,7 +92,7 @@ EventsView = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			eventBinding = binding.sub('inviteEvent'),
-			players = binding.get('inviteEvent.rivals.0.players'),
+			players = binding.get('inviteEvent.rivals.1.players'),
 			activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 
 		window.Server.participants.post({eventId: eventBinding.get('id')}, {
@@ -177,10 +181,11 @@ EventsView = React.createClass({
             binding = self.getDefaultBinding(),
             step = binding.get('stepInviteAccepted'),
             selectInvitesType = binding.get('selectInvitesType'),
-			players = binding.get('inviteEvent.rivals.0.players'),
+			players = binding.get('inviteEvent.rivals.1.players'),
+            countPlayers = players ? players.count() : 0,
 			disableAcceptButton = !players ||
-				players.count() < binding.get('inviteEvent.sport.players.min') ||
-				players.count() > binding.get('inviteEvent.sport.players.max'),
+                countPlayers < binding.get('inviteEvent.sport.players.min') ||
+                countPlayers > binding.get('inviteEvent.sport.players.max'),
             inboxClasses = classNames({
                 eChooser_item: true,
                 mActive: selectInvitesType === 'inbox' || selectInvitesType === undefined
@@ -193,6 +198,7 @@ EventsView = React.createClass({
 				bButton: true,
 				mDisable: disableAcceptButton
 			});
+
 
         return <div className="bInvites">
             {!step ? <div>
