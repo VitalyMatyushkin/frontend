@@ -6,7 +6,17 @@
 
 .eEvent_title {
   display: flex;
-  text-align: center;
+  justify-content: space-between;
+}
+
+.eEvent_edit {
+  color: darken(#ddd, 20);
+  font-size: 16px;
+  font-weight: normal;
+  cursor: pointer;
+  &:hover {
+    color: #000;
+  }
 }
 
 .eEvent_rivals {
@@ -74,39 +84,17 @@
   }
 }
 
-.bPlayer {
-  display: flex;
-  width: 100%;
-  height: 50px;
-  flex-direction: row;
-  margin: 5px 0;
-  &:hover {
-    .ePlayer_remove {
-      display: flex;
-    }
-  }
+/* mEdit */
+
+.bEvent.mEdit .eEvent_rivalPic {
+  height: 100px;
 }
 
-.ePlayer_avatar {
-  height: 100%;
+.bEvent.mEdit .eEvent_rival,
+.bEvent.mEdit .eEvent_rivalTitle {
+  font-size: 13px;
 }
 
-.ePlayer_remove {
-  display: none;
-  align-self: flex-end;
-  cursor: pointer;
-}
-
-.ePlayer_name,
-.ePlayer_lastName {
-  height: 100%;
-  display: flex;
-  margin: 0 2px 0 10px;
-  justify-content: center;
-  align-items: center;
-}
-
-.bPlayer.mMini {
-  height: 25px;
-  line-height: 25px;
+.bEvent.mEdit .eEvent_rival {
+  width: 150px;
 }

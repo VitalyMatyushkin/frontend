@@ -91,11 +91,16 @@ EventView = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             rival = binding.sub('eventInfo.participants.' + order),
-            players = rival.get('players');
+            players = rival.get('players'),
+			edit = binding.get('eventInfo.editMode'),
+			playersClasses = classNames({
+				bPlayer: true,
+				mMini: edit
+			});
 
         if (players) {
             return players.map(function (player) {
-                return <span className="bPlayer">
+                return <span className={playersClasses}>
                     <img className="ePlayer_avatar" src={player.get('avatar')} />
                     <span className="ePlayer_name">{player.get('firstName')}</span>
                     <span className="ePlayer_lastName">{player.get('lastName')}</span>
@@ -105,17 +110,31 @@ EventView = React.createClass({
             return null;
         }
     },
+	onClickEdit: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			edit = binding.get('eventInfo.editMode');
+
+		binding.set('eventInfo.editMode', !edit);
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
+			edit = binding.get('eventInfo.editMode'),
             rootBinding = self.getMoreartyContext().getBinding(),
             routerParameters = rootBinding.toJS('routing.parameters'),
             eventInfo = binding.sub('eventInfo'),
+			eventClass = classNames({
+				bEvent: true,
+				mEdit: edit
+			}),
             date = eventInfo.get('startTime') ? self.getDateTime(eventInfo.get('startTime')) : '';
 
 		return <div className="bEvents">
-            <div className="bEvent">
-                <h2 className="eEvent_title">{eventInfo.get('name')}</h2>
+            <div className={eventClass}>
+                <h2 className="eEvent_title">{eventInfo.get('name')}
+					<span className="eEvent_edit" onClick={self.onClickEdit}>edit</span>
+				</h2>
                 <h3 className="eEvent_date">Start: {date}</h3>
 				<div className="eEvent_rivals">
 					{self.getRival(0)}

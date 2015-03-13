@@ -121,7 +121,6 @@ EventManager = React.createClass({
 			});
 
 			rivals.forEach(function (rival) {
-
                 if (model.rivalsType === 'schools' && rival.id !== activeSchoolId) {
 					window.Server.invitesByEvent.post({eventId: event.id}, {
                         eventId: event.id,
