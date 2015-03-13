@@ -44,7 +44,7 @@ HousesListPage = React.createClass({
 				<h1 className="eSchoolMaster_title">Houses
 
 					<div className="eSchoolMaster_buttons">
-						<a href="/#school/houses/add" className="bButton">Add...</div>
+						<a href="/#school/houses/add" className="bButton">Add...</a>
 					</div>
 				</h1>
 
