@@ -48,7 +48,7 @@ HousesListPage = React.createClass({
 					</div>
 				</h1>
 
-				<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()} onAddNew={self._getAddFunction()}>
+				<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()}>
 					<TableField dataField="name">House name</TableField>
 					<TableField dataField="description">Description</TableField>
 				</Table>

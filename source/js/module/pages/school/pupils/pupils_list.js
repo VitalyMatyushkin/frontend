@@ -58,7 +58,7 @@ OneSchoolPage = React.createClass({
 					</div>
 				</h1>
 
-				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onAddNew={self._getAddFunction()}>
+				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()}>
 					<TableField dataField="firstName">First name</TableField>
 					<TableField dataField="lastName">Last name</TableField>
 					<TableField dataField="age">Age</TableField>
