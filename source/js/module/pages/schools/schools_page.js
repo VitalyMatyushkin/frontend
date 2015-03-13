@@ -1,6 +1,6 @@
-var SchoolListPage = require('module/pages/schools/list'),
-	SchoolAddPage = require('module/pages/schools/add'),
-	SchoolsPage;
+var SchoolsPage,
+	RouterView = require('module/core/router'),
+	Route = require('module/core/route');
 
 SchoolsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -9,25 +9,19 @@ SchoolsPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		// Если есть идентефикатор активной школы
-		if (activeSchoolId) {
-			self._redirectToSchoolId(activeSchoolId);
-		} else {
-
+		if (!activeSchoolId) {
 			self._updateSchoolList().then(function(schoolsList) {
 
 				// Если есть хотя бы одна школа, делаем первую школой "по умолчанию"
 				if (schoolsList[0]) {
 					globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
-					self._redirectToSchoolId(schoolsList[0].id);
+					document.location.hash = 'school/summary';
 				} else {
 					// В противном случае перенаправляем пользователя на страницу добавления школы
-					self._redirectToAddSchool();
+					document.location.hash = 'schools/add';
 				}
 			});
-
 		};
-
 	},
 	/**
 	 * Обновление списка школ пользователя
@@ -41,40 +35,19 @@ SchoolsPage = React.createClass({
 
 		// Получение и сохранение списка школ
 		return Server.ownerSchools.get(userId).then(function(data) {
-			self.getDefaultBinding().set('list', Immutable.fromJS(data));
+			self.getDefaultBinding().set(Immutable.fromJS(data));
 		});
 	},
-	/**
-	 * Метод перенаправляет пользователя на страницу заданной школы
-	 * @returns {boolean}
-	 * @private
-	 */
-	_redirectToSchoolId: function(schoolId) {
-		var self = this;
-
-		document.location.hash = 'school/summary';
-	},
-	/**
-	 * Метод перенапраялет пользователя на страницу добавления школы
-	 * @private
-	 */
-	_redirectToAddSchool: function() {
-		var self = this;
-
-		document.location.hash = 'schools/add';
-	},
-	/**
-	 * Метод перенапраялет пользователя на список школ
-	 * @private
-	 */
-	_redirectToSchoolList: function() {
-		var self = this;
-
-		document.location.hash = 'schools/list';
-	},
 	render: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding();
+
 		return (
-			null
+			<RouterView routes={ binding } binding={globalBinding}>
+				<Route path="/schools/add" binding={binding} component="module/pages/schools/schools_add"  />
+				<Route path="/schools" binding={binding} component="module/pages/schools/schools_list" />
+			</RouterView>
 		)
 	}
 });

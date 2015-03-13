@@ -1,12 +1,31 @@
 var authСontroller;
 
 authСontroller = {
-	afterAuthLocation: '#schools',
+	nextPage: '',
 	dieTimer: null,
+	/**
+	 * Метод обрабатывает появление данных авторизации
+	 */
+	getNextPage: function() {
+		var self = this,
+			binding = self.binding,
+			activeSchoolId = binding.get('userRules.activeSchoolId'),
+			nextSchoolPage = '';
+
+		// Если есть идентефикатор активной школы, показываем страницу школы
+		if (activeSchoolId) {
+			nextSchoolPage = 'school/summary';
+		} else {
+			// Если активная школа не задана, отправляем к спику школ
+			nextSchoolPage = 'schools';
+		}
+
+		return self.nextPage || nextSchoolPage;
+	},
 	updateAuth: function() {
 		var self = this,
 			binding = self.binding,
-			authBinding = binding.sub('authorizationInfo'),
+			authBinding = binding.sub('userData.authorizationInfo'),
 			data = authBinding.get();
 
 		// Если появились данные об авторизации
@@ -31,19 +50,20 @@ authСontroller = {
 			}
 
 			// Переводим человека на ожидаемую страницу
-			document.location.hash = self.afterAuthLocation;
+			document.location.hash = self.getNextPage();
 		}
 	},
 	initialize: function(binding) {
 		var self = this;
 
+		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
 		if (document.location.hash !== '#login') {
-			self.afterAuthLocation = document.location.hash || self.afterAuthLocation;
+			self.nextPage = document.location.hash;
 		}
 
 		self.binding = binding;
 		self.updateAuth();
-		binding.addListener('authorizationInfo', self.updateAuth.bind(self));
+		binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
 	},
 	startTTLTimer: function(secondsToLive) {
 		var self = this;
@@ -56,9 +76,9 @@ authСontroller = {
 	clearAuthorization: function() {
 		var self = this;
 
-		self.afterAuthLocation = document.location.hash;
+		self.nextPage = document.location.hash;
 		document.location.hash = '#login';
-		self.binding.clear('authorizationInfo');
+		self.binding.clear('userData.authorizationInfo');
 	}
 };
 

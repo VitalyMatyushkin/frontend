@@ -10,7 +10,7 @@ AddSchoolForm = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding();
 
 		// Добавление школы в списк
-		binding.update('list', function(ImmutableValue){
+		binding.update(function(ImmutableValue){
 			ImmutableValue = ImmutableValue || Immutable.List();
 			return ImmutableValue.push(schoolData);
 		});

@@ -29,10 +29,7 @@ MoreartyContext = Morearty.createContext({
 			summary: {},
 			schoolRouting: {}
 		},
-		schoolsList: {},
-		schools: {
-            list: []
-        },
+		schoolsList: [],
 		events: {
             sync: false,
             models: [],
@@ -61,8 +58,6 @@ MoreartyContext = Morearty.createContext({
 
 binding = MoreartyContext.getBinding();
 
-// Общие каналы общения между модулями
-window.SharedBindings = {};
 window.Server = serviceList;
 
 // Передача связывания контекста в классы данных
@@ -73,7 +68,7 @@ userRulesInstance.setBinding(binding.sub('userRules'));
 serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
 // Связывания контроллера, отвечающего за контроль за авторизацией с данными
-authController.initialize(binding.sub('userData'));
+authController.initialize(binding);
 
 // Инициализация приложения
 React.render(

@@ -50,7 +50,7 @@ OneSchoolPage = React.createClass({
 		var self = this;
 
 		return function(data) {
-			//self.props.formBinding.set(Immutable.fromJS(data));
+		//	self.props.formBinding.set(Immutable.fromJS(data));
 
 			document.location.hash = 'school/pupils/edit?id='+data.id;
 		}

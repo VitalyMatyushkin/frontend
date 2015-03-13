@@ -7,7 +7,7 @@ SchoolListPage = React.createClass({
 			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
 
 		userId && Server.ownerSchools.get(userId).then(function(data) {
-			self.getDefaultBinding().set('list', Immutable.fromJS(data));
+			self.getDefaultBinding().set(Immutable.fromJS(data));
 		});
 	},
 	setSchoolAsActive: function(newSchoolId) {
@@ -21,9 +21,9 @@ SchoolListPage = React.createClass({
 			schoolNodes,
 
 			binding = self.getDefaultBinding(),
-			schoolList = binding.sub('list').get();
+			schoolList = binding.toJS();
 
-		if (schoolList) {
+		if (schoolList && schoolList.length > 0) {
 			schoolNodes = schoolList.map(function (school) {
 				var setSchoolFunction = function(newId) {
 					return function() {
@@ -32,11 +32,11 @@ SchoolListPage = React.createClass({
 				};
 
 				return (
-					<a href='/#school/summary' className="eSchoolList_one" onClick={setSchoolFunction(school.get('id'))}>
-						{school.get('name')}
+					<a href='/#school/summary' className="eSchoolList_one" onClick={setSchoolFunction(school.id)}>
+						{school.name}
 					</a>
 				);
-			}).toArray();
+			});
 		}
 
 		return (
@@ -45,7 +45,7 @@ SchoolListPage = React.createClass({
 
 				<div className="eSchoolList_wrap">
 					{schoolNodes}
-                    <a href="/#schools?mode=add" className="eSchoolList_one mAddNew">
+                    <a href="/#schools/add" className="eSchoolList_one mAddNew">
                         +
                     </a>
 				</div>

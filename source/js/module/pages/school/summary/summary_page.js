@@ -27,7 +27,7 @@ SchoolSummary = React.createClass({
 				<h1 className="eSchoolMaster_title"> School {binding.get('name')} summary inforamtion
 
 					<div className="eSchoolMaster_buttons">
-						<a href="/#schools/list" className="bButton">Change active school...</a>
+						<a href="/#schools" className="bButton">Change active school...</a>
 					</div>
 				</h1>
 
