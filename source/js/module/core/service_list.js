@@ -23,9 +23,10 @@ serviceList = {
 		serviceList.housesFilter = new Service('/houses', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
 
-		// classes
-		serviceList.classes = new Service('/classes?filter[where][schoolId]={schoolId}', binding);
+		// classes  GET
+		serviceList.classes = new Service('/classes', binding);
 		serviceList.classesFilter = new Service('/classes', binding);
+		serviceList.schoolClasses = new Service('/classes?filter[where][schoolId]={schoolId}', binding);
 		serviceList.class = new Service('/classes/{classId}', binding);
 
 		//events

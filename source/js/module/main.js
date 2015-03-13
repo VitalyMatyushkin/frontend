@@ -19,8 +19,16 @@ MoreartyContext = Morearty.createContext({
 			parameters: {}			// GET-параметры текущего пути
 		},
 		activeSchool: {
-			classes: [],
-			houses: [],
+			classes: {
+				pupilsList: [],
+				pupilsRouting: {},
+				pupilForm: {}
+			},
+			houses: {
+				pupilsList: [],
+				pupilsRouting: {},
+				pupilForm: {}
+			},
 			pupils: {
 				pupilsList: [],
 				pupilsRouting: {},
