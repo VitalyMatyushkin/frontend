@@ -26,16 +26,6 @@ OneSchoolPage = React.createClass({
 
 		self.request && self.request.abort();
 	},
-	_getAddFunction: function() {
-		var self = this;
-
-		return function(event) {
-			//var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
-
-			document.location.hash = 'school/pupils/add' ;
-			event.stopPropagation();
-		}
-	},
 	_getViewFunction: function() {
 		var self = this;
 
@@ -61,7 +51,12 @@ OneSchoolPage = React.createClass({
 
 		return (
 			<div>
-				<h1 className="eSchoolMaster_title">Pupils</h1>
+				<h1 className="eSchoolMaster_title">Pupils
+
+					<div className="eSchoolMaster_buttons">
+						<a href="/#school/pupils/add" className="bButton">Add...</div>
+					</div>
+				</h1>
 
 				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onAddNew={self._getAddFunction()}>
 					<TableField dataField="firstName">First name</TableField>

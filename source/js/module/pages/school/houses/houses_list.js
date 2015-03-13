@@ -26,16 +26,6 @@ HousesListPage = React.createClass({
 
 		self.request && self.request.abort();
 	},
-	_getAddFunction: function() {
-		var self = this;
-
-		return function(event) {
-			//var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
-
-			document.location.hash = 'school/houses/add' ;
-			event.stopPropagation();
-		}
-	},
 	_getEditFunction: function() {
 		var self = this;
 
@@ -51,7 +41,12 @@ HousesListPage = React.createClass({
 
 		return (
 			<div>
-				<h1 className="eSchoolMaster_title">Houses</h1>
+				<h1 className="eSchoolMaster_title">Houses
+
+					<div className="eSchoolMaster_buttons">
+						<a href="/#school/houses/add" className="bButton">Add...</div>
+					</div>
+				</h1>
 
 				<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()} onAddNew={self._getAddFunction()}>
 					<TableField dataField="name">House name</TableField>

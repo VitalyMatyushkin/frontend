@@ -57,10 +57,6 @@ Table = React.createClass({
 
 		return (
 		<div className="bDataList">
-			<div className="eDataList_panel">
-				<div className="eDataList_title">{self.props.title} <div onClick={self.props.onAddNew} className="bLinkLike">Add new...</div></div>
-
-			</div>
 			<div className="eDataList_list mTable">
 				<div className="eDataList_listItem mHead">
 					{self.props.children}

@@ -1,12 +1,12 @@
 .bDataList{
   margin-bottom: 40px;
+  position: relative;
 }
 
 .eDataList_title{
   font-size: 18px;
   margin-bottom: 6px;
   padding-bottom: 5px;
-  border-bottom: 1px solid rgba(204, 204, 204, 0.62);
 }
 
 .eDataList_title .bLinkLike{
@@ -14,7 +14,8 @@
 }
 
 .eDataList_panel{
-  margin-bottom: 12px;
+  position: absolute;
+  top: 0px;
 }
 
 .eDataList_list{
@@ -46,7 +47,7 @@
 }
 
 .eDataList_listItem.mHead{
-  font-size: 15px;
+  font-size: 18px;
 }
 
 .eDataList_listItem.mHead:hover{
