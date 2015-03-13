@@ -15,7 +15,7 @@ Menu = React.createClass({
 				icon: 'icon_teams',
 				name: 'School',
 				key: 'School',
-				routes: ['/school/:subPage', '/schools/add', '/schools']
+				routes: ['/school/:subPage', '/school/:subPage/:mode', '/schools/add', '/schools']
 			},{
 				href: '/#events',
 				icon: 'icon_calendar',
