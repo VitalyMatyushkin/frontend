@@ -16,7 +16,7 @@ OneSchoolPage = React.createClass({
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
 		if (activeSchoolId) {
-			self.request = window.Server.learners.get(activeSchoolId).then(function (data) {
+			self.request = window.Server.schoolLearners.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 			});
 		}

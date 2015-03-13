@@ -14,6 +14,7 @@ PupilForm = React.createClass({
 		var self = this;
 
 		return function() {
+
 			return window.Server.schoolClasses.get(self.props.schoolId);
 		}
 	},

@@ -14,9 +14,10 @@ serviceList = {
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 
 		// leaners
-        serviceList.learners = new Service('/schools/{schoolId}/learners', binding);
+        serviceList.learners = new Service('/learners', binding);
+		serviceList.schoolLearners = new Service('/learners?filter[where][schoolId]={schoolId}', binding);
 		serviceList.learnersFilter = new Service('/learners', binding);
-		serviceList.learner = new Service('/schools/{schoolId}/learners/{learnerId}', binding);
+		serviceList.learner = new Service('/learners/{learnerId}', binding);
 
 		// houses
         serviceList.houses = new Service('/houses', binding);

@@ -14,10 +14,7 @@ PupilEditPage = React.createClass({
 		binding.clear();
 
 		if (activeSchoolId && learnerId) {
-			window.Server.learner.get({
-				schoolId: activeSchoolId,
-				learnerId: learnerId
-			}).then(function (data) {
+			window.Server.learner.get(learnerId).then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
@@ -28,10 +25,7 @@ PupilEditPage = React.createClass({
 	submitEdit: function(data) {
 		var self = this;
 
-		window.Server.learner.put({
-			learnerId: self.learnerId,
-			schoolId: self.activeSchoolId
-		}, data).then(function() {
+		window.Server.learner.put(self.learnerId, data).then(function() {
 			self.isMounted() && (document.location.hash = 'school/pupils');
 		});
 	},

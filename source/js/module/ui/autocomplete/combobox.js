@@ -8,7 +8,6 @@ var ComboboxOption = require('./option');
 
 module.exports = React.createClass({
 	propTypes: {
-
 		/**
 		 * Defaults to 'both'. 'inline' will autocomplete the first matched Option
 		 * into the input value, 'list' will display a list of choices, and of
@@ -53,6 +52,7 @@ module.exports = React.createClass({
 	},
 
 	getDefaultProps: function () {
+
 		return {
 			autocomplete: 'both',
 			onInput: k,
@@ -63,6 +63,7 @@ module.exports = React.createClass({
 
 	getInitialState: function () {
 		this.props.binding.set('inputValue', this.findInputValue());
+
 		return {
 			value: this.props.value,
 			// the value displayed in the input
@@ -104,6 +105,8 @@ module.exports = React.createClass({
 	makeMenu: function (children) {
 		var activedescendant;
 		var isEmpty = true;
+		var self = this;
+
 		children = children || this.props.children;
 		React.Children.forEach(children, function (child, index) {
 			if (child.type !== ComboboxOption.type)
@@ -115,7 +118,7 @@ module.exports = React.createClass({
 			// TODO: cloneWithProps and map instead of altering the children in-place
 			var props = child.props;
 
-			if (this.state.value === props.value) {
+			if ((this.state.value && this.state.value === props.value) || (!this.state.value && child.props.isSelected )) {
 				//inputValue = getLabel(child);
 				this.selectOption(child);
 				/*this.setProps({
@@ -153,6 +156,7 @@ module.exports = React.createClass({
 	 */
 	clearSelectedState: function (cb) {
 		this.props.binding.set('inputValue', null);
+
 		this.setState({
 			focusedIndex: null,
 			inputValue: null,
@@ -170,6 +174,7 @@ module.exports = React.createClass({
 				inputValue: value
 			});
 			this.props.binding.set('inputValue', value);
+
 
 			this.props.onInput(value);
 			if (!this.state.isOpen) {
@@ -323,6 +328,7 @@ module.exports = React.createClass({
 	selectOption: function (child, options) {
 		options = options || {};
 		this.props.binding.set('inputValue', getLabel(child));
+
 		this.setState({
 			value: child.props.value,
 			inputValue: getLabel(child),
@@ -421,6 +427,7 @@ module.exports = React.createClass({
 				});  */
 			}
 		}
+
 
 		return (
 			<div className={this.getClassName()}>

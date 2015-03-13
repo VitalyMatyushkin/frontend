@@ -133,13 +133,14 @@ Autocomplete = React.createClass({
 	renderComboboxOptions: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			dataToView = binding.get('response');
+			selectedId = binding.get('selectedId'),
+			dataToView = binding.sub('response').toJS();
 
 		return dataToView.map(function (dataBlock) {
 			var filterFiled = self.props.serverField || 'value';
 
 			return (
-				<ComboboxOption key={dataBlock.id} value={dataBlock.id}>{dataBlock[filterFiled]}</ComboboxOption>
+				<ComboboxOption isSelected={selectedId===dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock[filterFiled]}</ComboboxOption>
 			);
 		});
 	},
