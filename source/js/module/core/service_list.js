@@ -19,11 +19,12 @@ serviceList = {
 		serviceList.learner = new Service('/schools/{schoolId}/learners/{learnerId}', binding);
 
 		// houses
-        serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
+        serviceList.houses = new Service('/houses', binding);
 		serviceList.housesFilter = new Service('/houses', binding);
+		serviceList.schoolHouses = new Service('/houses?filter[where][schoolId]={schoolId}', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
 
-		// classes  GET
+		// classes
 		serviceList.classes = new Service('/classes', binding);
 		serviceList.classesFilter = new Service('/classes', binding);
 		serviceList.schoolClasses = new Service('/classes?filter[where][schoolId]={schoolId}', binding);

@@ -26,27 +26,17 @@ ClassListPage = React.createClass({
 
 		self.request && self.request.abort();
 	},
-	_getAddFunction: function(page) {
+	_getAddFunction: function() {
 		var self = this;
 
 		return function(event) {
-			var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
+			//var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
 
 			document.location.hash = 'school/classes/add' ;
 			event.stopPropagation();
 		}
 	},
-	_getViewFunction: function(page) {
-		var self = this;
-
-		return function(data) {
-			var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-
-			pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
-		}
-	},
-	_getEditFunction: function(page) {
+	_getEditFunction: function() {
 		var self = this;
 
 		return function(data) {
@@ -63,7 +53,7 @@ ClassListPage = React.createClass({
 			<div>
 				<h1 className="eSchoolMaster_title">Classes</h1>
 
-				<Table title="Classes" binding={binding} onItemView={self._getViewFunction('classes')} onItemEdit={self._getEditFunction('classes')} onAddNew={self._getAddFunction('classes')}>
+				<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()} onAddNew={self._getAddFunction()}>
 					<TableField dataField="name">First name</TableField>
 					<TableField dataField="age">Age</TableField>
 				</Table>

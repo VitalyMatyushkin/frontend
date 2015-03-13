@@ -13,7 +13,7 @@ OneSchoolPage = React.createClass({
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
 		if (activeSchoolId) {
-			self.request = window.Server.houses.get(activeSchoolId).then(function (data) {
+			self.request = window.Server.schoolHouses.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 			});
 		}

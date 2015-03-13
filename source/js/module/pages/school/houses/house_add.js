@@ -1,7 +1,7 @@
-var ClassForm = require('module/pages/school/classes/class_form'),
-	ClassAddPage;
+var HouseForm = require('module/pages/school/houses/house_form'),
+	HouseAddPage;
 
-ClassAddPage = React.createClass({
+HouseAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
@@ -15,8 +15,8 @@ ClassAddPage = React.createClass({
 
 		data.schoolId = self.activeSchoolId;
 
-		self.activeSchoolId && window.Server.classes.post(data).then(function() {
-			document.location.hash = 'school/classes';
+		self.activeSchoolId && window.Server.houses.post(data).then(function() {
+			document.location.hash = 'school/houses';
 		});
 	},
 	render: function() {
@@ -24,10 +24,10 @@ ClassAddPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<ClassForm title="Add new class..." onFormSubmit={self.submitAdd} binding={binding} />
+			<HouseForm title="Add new house..." onFormSubmit={self.submitAdd} binding={binding} />
 		)
 	}
 });
 
 
-module.exports = ClassAddPage;
+module.exports = HouseAddPage;

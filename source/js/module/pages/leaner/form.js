@@ -40,7 +40,7 @@ AddNewLeaner = React.createClass({
 		var self = this;
 
 		return function() {
-			return window.Server.houses.get(self.props.schoolId);
+			return window.Server.schoolHouses.get(self.props.schoolId);
 		}
 	},
 	render: function() {

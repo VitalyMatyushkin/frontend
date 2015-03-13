@@ -2,9 +2,9 @@ var List = require('module/ui/list/list'),
 	ListField = require('module/ui/list/list_field'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
-	OneSchoolPage;
+	HousesListPage;
 
-OneSchoolPage = React.createClass({
+HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired
@@ -16,7 +16,7 @@ OneSchoolPage = React.createClass({
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
 		if (activeSchoolId) {
-			self.request = window.Server.learners.get(activeSchoolId).then(function (data) {
+			self.request = window.Server.schoolHouses.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 			});
 		}
@@ -32,18 +32,8 @@ OneSchoolPage = React.createClass({
 		return function(event) {
 			//var pageBinding = self.getMoreartyContext().getBinding().sub(page).clear();
 
-			document.location.hash = 'school/pupils/add' ;
+			document.location.hash = 'school/houses/add' ;
 			event.stopPropagation();
-		}
-	},
-	_getViewFunction: function() {
-		var self = this;
-
-		return function(data) {
-			//var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-
-			//pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
 	},
 	_getEditFunction: function() {
@@ -52,7 +42,7 @@ OneSchoolPage = React.createClass({
 		return function(data) {
 		//	self.props.formBinding.set(Immutable.fromJS(data));
 
-			document.location.hash = 'school/pupils/edit?id='+data.id;
+			document.location.hash = 'school/houses/edit?id='+data.id;
 		}
 	},
 	render: function() {
@@ -61,13 +51,11 @@ OneSchoolPage = React.createClass({
 
 		return (
 			<div>
-				<h1 className="eSchoolMaster_title">Pupils</h1>
+				<h1 className="eSchoolMaster_title">Houses</h1>
 
-				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onAddNew={self._getAddFunction()}>
-					<TableField dataField="firstName">First name</TableField>
-					<TableField dataField="lastName">Last name</TableField>
-					<TableField dataField="age">Age</TableField>
-					<TableField dataField="phone">Phone</TableField>
+				<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()} onAddNew={self._getAddFunction()}>
+					<TableField dataField="name">House name</TableField>
+					<TableField dataField="description">Description</TableField>
 				</Table>
 
 			</div>
@@ -76,4 +64,4 @@ OneSchoolPage = React.createClass({
 });
 
 
-module.exports = OneSchoolPage;
+module.exports = HousesListPage;

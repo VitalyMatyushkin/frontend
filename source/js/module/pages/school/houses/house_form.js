@@ -14,8 +14,8 @@ ClassForm = React.createClass({
 
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
-				<FormField type="text" field="name" validation="required">Class name</FormField>
-				<FormField type="text" field="age" validation="">Age</FormField>
+				<FormField type="text" field="name" validation="required">House name</FormField>
+				<FormField type="text" field="description" validation="">Description</FormField>
 			</Form>
 		)
 	}

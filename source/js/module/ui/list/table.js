@@ -28,9 +28,14 @@ Table = React.createClass({
 		if (dataList) {
 			itemsNodes = dataList.map(function (item) {
 				var itemCells,
+					itemButtons = [],
 					getEditFunction = function() { return function(event) { self.props.onItemEdit(item); event.stopPropagation();	} },
 					getViewFunction = function() { return function(event) { self.props.onItemView(item); event.stopPropagation();	} },
 					getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();	} };
+
+				self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike">Edit</span>);
+				self.props.onItemView && itemButtons.push(<span onClick={getViewFunction()} className="bLinkLike">View</span>);
+				self.props.onItemRemove && itemButtons.push(<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
 
 
 				itemCells = self.usedFields.map(function(field) {
@@ -43,9 +48,7 @@ Table = React.createClass({
 					<div className="eDataList_listItem" onClick={getViewFunction()}>
 						{itemCells}
 						<div className="eDataList_listItemCell mActions">
-							<span onClick={getEditFunction()} className="bLinkLike">Edit</span>
-							<span onClick={getViewFunction()} className="bLinkLike">View</span>
-							<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>
+							{itemButtons}
 						</div>
 					</div>
 				);
