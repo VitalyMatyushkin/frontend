@@ -130,35 +130,37 @@ EventView = React.createClass({
 			}),
             date = eventInfo.get('startTime') ? self.getDateTime(eventInfo.get('startTime')) : '';
 
-		return <div className="bEvents">
-            <div className={eventClass}>
-                <h2 className="eEvent_title">{eventInfo.get('name')}
-					<span className="eEvent_edit" onClick={self.onClickEdit}>edit</span>
-				</h2>
-                <h3 className="eEvent_date">Start: {date}</h3>
-				<div className="eEvent_rivals">
-					{self.getRival(0)}
-					<div className="eEvent_info">
-                        <span className="eEvent_infoItem mScore">0 - 0</span>
-                        <span className="eEvent_infoItem">
-                            Type: <strong>{eventInfo.get('type')}</strong>
-                        </span>
-                        <span className="eEvent_infoItem">
-                            Rivals: <strong>{eventInfo.get('rivalsType')}</strong>
-                        </span>
-					</div>
-					{self.getRival(1)}
-				</div>
-                <div className="eEvent_teams">
-                    <div className="eEvent_team">
-                        {self.getPlayers(0)}
+		return <div>
+            <div className="bEvents">
+                <div className={eventClass}>
+                    <h2 className="eEvent_title">{eventInfo.get('name')}
+                        <span className="eEvent_edit" onClick={self.onClickEdit}>edit</span>
+                    </h2>
+                    <h3 className="eEvent_date">Start: {date}</h3>
+                    <div className="eEvent_rivals">
+                        {self.getRival(0)}
+                        <div className="eEvent_info">
+                            <span className="eEvent_infoItem mScore">0 - 0</span>
+                            <span className="eEvent_infoItem">
+                                Type: <strong>{eventInfo.get('type')}</strong>
+                            </span>
+                            <span className="eEvent_infoItem">
+                                Rivals: <strong>{eventInfo.get('rivalsType')}</strong>
+                            </span>
+                        </div>
+                        {self.getRival(1)}
                     </div>
-                    <div className="eEvent_team">
-                        {self.getPlayers(1)}
+                    <div className="eEvent_teams">
+                        <div className="eEvent_team">
+                            {self.getPlayers(0)}
+                        </div>
+                        <div className="eEvent_team">
+                            {self.getPlayers(1)}
+                        </div>
                     </div>
                 </div>
-            </div>
-		</div>;
+		    </div>
+        </div>;
 	}
 });
 

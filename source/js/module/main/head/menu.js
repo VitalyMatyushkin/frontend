@@ -17,10 +17,11 @@ Menu = React.createClass({
 				key: 'School',
 				routes: ['/school/:subPage', '/school/:subPage/:mode', '/schools/add', '/schools']
 			},{
-				href: '/#events',
+				href: '/#events/calendar',
 				icon: 'icon_calendar',
 				name: 'Events',
 				key: 'Events',
+                routes: ['/events/:subPage'],
 				requiredData: 'userRules.activeSchoolId'
 			}]
 		};

@@ -4,13 +4,6 @@ var SVG = require('module/ui/svg'),
 
 EventsView = React.createClass({
 	mixins: [Morearty.Mixin],
-    getDefaultState: function () {
-        return Immutable.fromJS({
-            selectInvitesType: 'inbox',
-            selectInviteAccepted: null,
-            stepInviteAccepted: 0
-        });
-    },
     onSelectInviteType: function (type) {
         var self = this,
             binding = self.getDefaultBinding();
@@ -134,7 +127,7 @@ EventsView = React.createClass({
 	getInvites: function () {
 		var self = this,
             binding = this.getDefaultBinding(),
-            activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+            activeSchoolId = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
             selectInvitesType = binding.get('selectInvitesType') || 'inbox',
 			inviteCount = binding.get('models').count(),
             filtered = binding.get('models').filter(function (invite) {
@@ -201,7 +194,7 @@ EventsView = React.createClass({
 
 
         return <div className="bInvites">
-            {!step ? <div>
+            {step === 0 ? <div>
                 <div className="bChooser mLong">
                     <span className={inboxClasses} onClick={self.onSelectInviteType.bind(null, 'inbox')}>Inbox</span>
                     <span className={outboxClasses} onClick={self.onSelectInviteType.bind(null, 'outbox')}>Outbox</span>

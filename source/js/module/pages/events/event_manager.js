@@ -1,11 +1,13 @@
-var Panel = require('./panel'),
-    CalendarView = require('module/ui/calendar/calendar'),
+var CalendarView = require('module/ui/calendar/calendar'),
     EventManagerBase = require('./event_manager_base'),
     Manager = require('module/ui/managers/manager'),
     EventManager;
 
 EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
+    getMergeStrategy: function () {
+        return Morearty.MergeStrategy.MERGE_REPLACE
+    },
 	getDefaultState: function () {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
@@ -183,8 +185,7 @@ EventManager = React.createClass({
 				mTeamManager: step === 3
 			});
 
-		return <div className="bEvents">
-			<Panel binding={binding} />
+		return <div>
            	<h3>{'[' + step + '/' + titles.length + ']: ' + titles[step - 1]}</h3>
             <div className={bManagerClasses}>
                 {step === 1 ? <CalendarView

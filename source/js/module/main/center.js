@@ -28,12 +28,7 @@ Center = React.createClass({
 						<Route path="/house" binding={binding.sub('house')} component="module/pages/house/page"  />
 						<Route path="/leaner" binding={binding.sub('leaner')} component="module/pages/leaner/page" />
 
-                        <Route path="/events" binding={binding.sub('events')} component="module/pages/events/events_calendar"  />
-                        <Route path="/events/manager" binding={binding.sub('events')} component="module/pages/events/event_manager"  />
-                        <Route path="/events/calendar"  binding={binding.sub('events')}component="module/pages/events/events_calendar"   />
-                        <Route path="/events/challenges" binding={binding.sub('events')} component="module/pages/events/events_challenges"  />
-                        <Route path="/events/invites" binding={binding.sub('invites')} component="module/pages/events/events_invites"  />
-                        <Route path="/events/view" binding={binding.sub('events')} component="module/pages/events/view"  />
+                        <Route path="/events /events/:subPage" binding={binding} component="module/pages/events/events"  />
                     </RouterView>
 
 				</div>

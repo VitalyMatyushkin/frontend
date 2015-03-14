@@ -10,68 +10,6 @@ $green-color: #00AE68;
   flex-flow: column wrap;
 }
 
-.eEvents_topPanel {
-  display: flex;
-  height: 120px;
-  justify-content: space-between;
-  margin-bottom: 10px;
-}
-
-.eTopInfoBlock {
-  display: flex;
-  background: $red-color;
-  margin-right: 20px;
-  width: 24%;
-  color: #fff;
-  flex-direction: column;
-  justify-content: space-between;
-  cursor: pointer;
-  &.mMyEvent {
-    background: $orange-color;
-  }
-  &.mMyInvite {
-    background: $blue-color;
-  }
-  &.mListEvent {
-    background: $green-color;
-  }
-  &:last-child {
-    margin: 0;
-  }
-}
-
-.eTopInfoBlock .bIcon {
-  align-self: flex-end;
-  height: 45px;
-  width: 45px;
-  margin: 0 10px;
-}
-
-.eTopInfoBlock_count,
-.eTopInfoBlock_title,
-.eTopInfoBlock_action {
-  padding: 4px 10px 0 10px;
-}
-
-.eTopInfoBlock_count {
-  font-size: 3em;
-}
-
-.eTopInfoBlock_title {
-  font-size: .9em;
-}
-
-.eTopInfoBlock_action {
-  height: 25px;
-  background-color: rgba(0, 0, 0, .2);
-  text-align: center;
-  transition: background-color .2s ease-out;
-}
-
-.eTopInfoBlock:hover .eTopInfoBlock_action {
-  background-color: rgba(0, 0, 0, .3);
-}
-
 .eEvents_buttons {
   width: 100%;
   display: flex;
