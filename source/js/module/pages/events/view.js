@@ -150,7 +150,7 @@ EventView = React.createClass({
                     {closeMode ? <span
                        className="ePlayer_addPoint"
                        onClick={self.removePoint.bind(null, playerBinding)}>
-                       -
+                       <SVG icon="icon_plus" />
                     </span> : null}
                     {closeMode ?
                         <span
@@ -233,16 +233,21 @@ EventView = React.createClass({
             binding.set('eventInfo.resultId', result.id);
             binding.set('eventInfo.type', binding.get('eventInfo.rivalsType') === 'scools' ? 'external' : 'internal');
 
-            window.Server.event.put({
+            window.Server.event.get({
                 eventId: binding.get('eventInfo.id')
-            }, binding.toJS('eventInfo')).then(function (res) {
+            }).then(function (res) {
+                res.resultId = result.id;
 
-                binding
-                    .atomically()
-                    .set('eventInfo.mode', 'normal')
-                    .set('eventInfo.result', Immutable.fromJS(result))
-                    .set('eventInfo.resultId', result.id)
-                    .commit();
+                window.Server.event.put({
+                    eventId: binding.get('eventInfo.id')
+                }, res).then(function (res) {
+                    binding
+                        .atomically()
+                        .set('eventInfo.mode', 'normal')
+                        .set('eventInfo.result', Immutable.fromJS(result))
+                        .set('eventInfo.resultId', result.id)
+                        .commit();
+                });
             })
         });
     },
