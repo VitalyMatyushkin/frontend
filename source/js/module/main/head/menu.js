@@ -6,12 +6,12 @@ Menu = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultProps: function () {
 		return {
-			items: [{
+			items: [/*{
 				href: '/#search',
 				icon: 'icon_search',
 				name: 'Search',
 				key: 'Search'
-			},{
+			},*/{
 				href: '/#school/summary',
 				icon: 'icon_teams',
 				name: 'School',
