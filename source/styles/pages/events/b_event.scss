@@ -9,7 +9,8 @@
   justify-content: space-between;
 }
 
-.eEvent_edit {
+.eEvent_edit,
+.eEvent_closed {
   color: darken(#ddd, 20);
   font-size: 16px;
   font-weight: normal;
@@ -17,6 +18,10 @@
   &:hover {
     color: #000;
   }
+}
+
+.eEvent_closed {
+  cursor: default;
 }
 
 .eEvent_rivals {
@@ -64,6 +69,8 @@
     align-items: center;
     font-size: 30px;
     margin-bottom: 20px;
+    width: 70px;
+    align-self: center;
   }
 }
 
@@ -85,16 +92,7 @@
 }
 
 /* mEdit */
-
-.bEvent.mEdit .eEvent_rivalPic {
-  height: 100px;
-}
-
-.bEvent.mEdit .eEvent_rival,
-.bEvent.mEdit .eEvent_rivalTitle {
-  font-size: 13px;
-}
-
-.bEvent.mEdit .eEvent_rival {
-  width: 150px;
+.bEvent.mEdit .eEvent_remove {
+  font-size: 1px;
+  display: flex;
 }

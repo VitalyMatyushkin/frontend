@@ -50,6 +50,12 @@ serviceList = {
         serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
         serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{learnerId}', binding);
         serviceList.playersByTeam = new Service('/teams/{teamId}/players', binding);
+
+        // result
+        serviceList.results = new Service('/results', binding);
+
+        // points
+        serviceList.points = new Service('/results/{resultId}/points', binding);
     }
 };
 

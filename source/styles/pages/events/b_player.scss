@@ -15,10 +15,21 @@
   height: 100%;
 }
 
-.ePlayer_remove {
+.ePlayer_remove,
+.ePlayer_addPoint {
   display: none;
-  align-self: flex-end;
+  align-self: center;
   cursor: pointer;
+}
+
+.ePlayer_addPoint {
+  display: flex;
+}
+
+.ePlayer_score {
+  font-size: 22px;
+  align-self: center;
+  padding-right: 5px;
 }
 
 .ePlayer_name,
@@ -38,4 +49,8 @@
 .bPlayer.mMini .ePlayer_name,
 .bPlayer.mMini .ePlayer_lastName {
   font-size: 13px;
+}
+
+.bPlayer.mShowRemoveButton .ePlayer_remove {
+  display: flex;
 }
