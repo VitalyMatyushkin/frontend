@@ -24,7 +24,15 @@ Menu = React.createClass({
 				key: 'Events',
                 routes: ['/events/:subPage'],
 				requiredData: 'userRules.activeSchoolId'
-			}]
+			},
+            {
+                href: '/#invites',
+                icon: 'icon_shot',
+                name: 'Invites',
+                key: 'Invites',
+                routes: ['/invites/:subPage', '/invites'],
+                requiredData: 'userRules.activeSchoolId'
+            }]
 		};
 	},
 	render: function() {

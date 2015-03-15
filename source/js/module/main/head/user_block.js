@@ -22,6 +22,8 @@ UserBlock = React.createClass({
 
 		userId && window.Server.me.get(userId).then(function (data) {
             userInfoBinding.set(Immutable.fromJS(data));
+        }, function () {
+            window.location.hash = 'logout';
         });
     },
 	render: function() {
