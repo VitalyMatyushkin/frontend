@@ -55,6 +55,7 @@ OneSchoolPage = React.createClass({
 				<h1 className="eSchoolMaster_title">Pupils
 
 					<div className="eSchoolMaster_buttons">
+						<div className="bButton">Filters</div>
 						<a href="/#school/pupils/add" className="bButton">Add...</a>
 					</div>
 				</h1>
