@@ -13,7 +13,7 @@ SecuritySettingaPage = React.createClass({
 
 		if (userId) {
 			window.Server.user.get(userId).then(function (data) {
-				self.isMounted() && binding.set(Immutable.fromJS(data));
+				self.isMounted() && binding.set('emailForm', Immutable.fromJS(data));
 			});
 
 			self.userId = userId;
@@ -32,10 +32,15 @@ SecuritySettingaPage = React.createClass({
 		var self = this;
 
 		return (
-			<Form name="Security settings" onSubmit={self.submitEdit} binding={self.getDefaultBinding()} defaultButton="Save" loadingButton="Saving..." >
-				<FormField type="confirmText" field="email" validation="required email">Email</FormField>
-				<FormField type="confirmText" field="password" validation="required">Password</FormField>
-			</Form>
+			<div>
+				<Form name="Change email" onSubmit={self.submitEdit} binding={self.getDefaultBinding().sub('emailForm')} defaultButton="Change" loadingButton="Saving..." >
+					<FormField type="confirmText" field="email" validation="required email">Email</FormField>
+				</Form>
+
+				<Form name="Change password" onSubmit={self.submitEdit} binding={self.getDefaultBinding().sub('passwordForm')} defaultButton="Change" loadingButton="Saving..." >
+					<FormField type="confirmText" field="password" validation="required">Password</FormField>
+				</Form>
+			</div>
 		)
 	}
 });
