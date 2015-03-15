@@ -33,7 +33,8 @@ OneSchoolPage = React.createClass({
 			//var pageBinding = self.getMoreartyContext().getBinding().sub(page);
 
 			//pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
+			document.location.hash = 'pupil?id='+data.id;
+			//document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
 	},
 	_getEditFunction: function() {

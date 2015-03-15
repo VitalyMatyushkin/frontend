@@ -8,8 +8,6 @@ UserButtons = React.createClass({
 
 		return (
 			<div className="bUserButtons">
-				<div className="bButton">Send message</div>
-				<div className="bButton">Invite to the house</div>
 				<div className="bButton">Invite to an event</div>
 			</div>
 		)

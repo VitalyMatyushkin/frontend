@@ -1,12 +1,41 @@
 var LeanerView,
 	SVG = require('module/ui/svg'),
-	AboutMe = require('module/pages/leaner/view/about_me'),
-	UserButtons = require('module/pages/leaner/view/user_buttons'),
-	UserName = require('module/pages/leaner/view/user_name'),
-	UserPhoto = require('module/pages/leaner/view/user_photo');
+	AboutMe = require('module/pages/pupil/view/about_me'),
+	UserButtons = require('module/pages/pupil/view/user_buttons'),
+	UserName = require('module/pages/pupil/view/user_name'),
+	UserPhoto = require('module/pages/pupil/view/user_photo');
 
 LeanerView = React.createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding(),
+			leanerId = globalBinding.get('routing.parameters.id'),
+			leanerData = {};
+
+		// Костыль, пока не будет ясности с путями хранения данных
+		leanerId && window.Server.learner.get(leanerId).then(function (data) {
+			leanerData = data;
+
+			// Лютый костыль, пока не будет метода с полными данными
+			Server.class.get(data.classId).then(function(classData) {
+				leanerData.classData = classData;
+
+				Server.house.get(data.houseId).then(function(houseData) {
+					leanerData.houseData = houseData;
+
+					Server.school.get(data.schoolId).then(function(schoolData) {
+						leanerData.schoolData = schoolData;
+
+						binding.set(Immutable.fromJS(leanerData));
+					});
+				});
+
+			});
+
+		});
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),

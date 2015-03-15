@@ -21,6 +21,8 @@ Center = React.createClass({
 						<Route path="/logout" binding={binding.sub('userData')} component="module/pages/logout/logout" unauthorizedAccess={true}  />
 						<Route path="/settings /settings/:subPage" binding={binding.sub('userData')} component="module/pages/settings/settings_page" />
 
+						<Route path="/pupil" binding={binding.sub('pupilPage')} component="module/pages/pupil/pupil_page" />
+
 						<Route path="/school/:subPage /school/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/pages/school/school_page"  />
 
 						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsList')} component="module/pages/schools/schools_page"  />
