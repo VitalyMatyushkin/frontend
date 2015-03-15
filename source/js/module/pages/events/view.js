@@ -255,10 +255,11 @@ EventView = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             resultBinding = binding.sub('eventInfo.result'),
+            closed = binding.get('eventInfo.resultId'),
             participant = binding.sub('eventInfo.participants.' + order);
 
         if (resultBinding.get()) {
-            return <span>{resultBinding.get(['summary', 'byTeams', participant.get('id')])}</span>;
+            return <span>{resultBinding.get(['summary', 'byTeams', participant.get('id')]) || '0'}</span>;
         } else {
             return <span>-</span>;
         }
