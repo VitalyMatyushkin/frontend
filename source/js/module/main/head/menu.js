@@ -1,6 +1,7 @@
 var Menu,
 	SVG = require('module/ui/svg');
 
+// TODO: привести компоненты Menu и SubMenu к одному виду
 Menu = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultProps: function () {

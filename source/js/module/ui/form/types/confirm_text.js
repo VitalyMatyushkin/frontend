@@ -5,6 +5,24 @@ var TypeConfirmText,
 TypeConfirmText = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	errorText: 'Both fields should be the same',
+	componentWillMount: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.addListener('defaultValue', function() {
+			var defaultValue = binding.get('defaultValue');
+
+			defaultValue && self._forceNewValue(defaultValue);
+		});
+	},
+	_forceNewValue: function(value) {
+		var self = this;
+
+		if (self.refs.confInput && value) {
+			self.refs.confInput.getDOMNode().value = value;
+			self.confirmValue = value;
+		}
+	},
 	onSetValue: function() {
 		var self = this;
 
@@ -37,7 +55,10 @@ TypeConfirmText = React.createClass({
 		}
 	},
 	render: function() {
-		var self = this;
+		var self = this,
+			defaultValue = self.getDefaultBinding().get('defaultValue');
+
+		self._forceNewValue(defaultValue);
 
 		return (
 			<div>
@@ -45,7 +66,7 @@ TypeConfirmText = React.createClass({
 
 				<div className="eForm_fieldInput">
 					<div className="eForm_fieldSmallHelp">confirm {self.props.name.toLowerCase()}</div>
-					<input type="text" onBlur={self.setConfirmValue} onChange={self.changeConfirmValue} />
+					<input ref="confInput" type="text" onBlur={self.setConfirmValue} onChange={self.changeConfirmValue} />
 				</div>
 			</div>
 

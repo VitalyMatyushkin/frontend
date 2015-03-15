@@ -8,6 +8,10 @@ serviceList = {
         serviceList.me = new Service('/users/{ownerId}', binding);
 		serviceList.logout = new Service('/users/logout', binding);
 
+		// users
+		serviceList.users = new Service('/users', binding);
+		serviceList.user = new Service('/users/{id}', binding);
+
 		// schools
 		serviceList.schools = new Service('/schools', binding);
 		serviceList.school = new Service('/schools/{id}', binding);
