@@ -33,15 +33,17 @@ UserBlock = React.createClass({
 			UserButton = null,
 			userButtonStyle = {},
 			LogoutButton = null,
-			LoginButton = null;
+			LoginButton = null,
+			isSettingsPage = document.location.hash.indexOf('settings') !== -1; // Временный костыль для подсветки пункта меню настроек
 
+		// TODO: Заменить данные кнопки на компонент типа Menu
 		if(authData && authData.id) {
 			// Кнопка перехода на страницу пользователя
 			userButtonStyle = { backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')' };
-			UserButton = <a id="jsIsMe" href="/#me" className="eTopMenu_photo mActive" style={userButtonStyle}></a>;
+			UserButton = <a id="jsIsMe" href="/#me" className="eTopMenu_photo" style={userButtonStyle}></a>;
 
 			// Кнопка перехода на страницу настрок
-			OptionsButton = <div className="eTopMenu_item"><SVG icon="icon_cog" /></div>;
+			OptionsButton = <a href="/#settings/general" className={'eTopMenu_item ' + (isSettingsPage ? 'mActive' : '')}><SVG icon="icon_cog" /></a>;
 
 			// Logout button
 			LogoutButton = <a href="/#logout" className="eTopMenu_item mLogin"><SVG icon="icon_logout" /></a>;

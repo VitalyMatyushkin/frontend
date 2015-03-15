@@ -19,14 +19,12 @@ Center = React.createClass({
 						<Route path="/register"  binding={binding.sub('form.register')} component="module/pages/register/user" unauthorizedAccess={true}  />
 						<Route path="/login" binding={binding.sub('userData')} component="module/pages/login/user" loginRoute={true}  />
 						<Route path="/logout" binding={binding.sub('userData')} component="module/pages/logout/logout" unauthorizedAccess={true}  />
+						<Route path="/settings /settings/:subPage" binding={binding.sub('userData')} component="module/pages/settings/settings_page" />
 
 						<Route path="/school/:subPage /school/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/pages/school/school_page"  />
 
 						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsList')} component="module/pages/schools/schools_page"  />
 
-						<Route path="/class" binding={binding.sub('class')} component="module/pages/class/page"  />
-						<Route path="/house" binding={binding.sub('house')} component="module/pages/house/page"  />
-						<Route path="/leaner" binding={binding.sub('leaner')} component="module/pages/leaner/page" />
 
                         <Route path="/events /events/:subPage" binding={binding} component="module/pages/events/events"  />
                     </RouterView>
@@ -36,7 +34,9 @@ Center = React.createClass({
 		)
 	}
 });
+
 /*
+ <Route path="/leaner" binding={binding.sub('leaner')} component="module/pages/leaner/page" />
 
  <Route path="/schools" binding={binding.sub('schoolsList')} component="module/pages/schools/page"  />
 

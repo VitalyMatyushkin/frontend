@@ -6,13 +6,16 @@ Form = React.createClass({
 		onSubmit: React.PropTypes.func,
 		onSuccess: React.PropTypes.func,
 		onError: React.PropTypes.func,
-		name: React.PropTypes.string
+		name: React.PropTypes.string,
+		defaultButton: React.PropTypes.string,
+		loadingButton: React.PropTypes.string
 	},
-	defaultButton: 'Continue →',
-	loadingButton: 'Loading...',
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
+
+		self.defaultButton = self.props.defaultButton || 'Continue →';
+		self.loadingButton = self.props.loadingButton || 'Loading...';
 
 		binding.addListener('', function(ChangesDescriptor) {
 			var data = binding.toJS();
