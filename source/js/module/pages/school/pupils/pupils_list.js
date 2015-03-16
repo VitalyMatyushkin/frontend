@@ -17,13 +17,9 @@ PupilsListPage = React.createClass({
 
 		self.activeSchoolId = activeSchoolId;
 
-		if (activeSchoolId) {
-			self.request = window.Server.schoolStudents.get(activeSchoolId).then(function (data) {
-				binding.set(Immutable.fromJS(data));
-			});
-		}
+		self.updateData();
 	},
-	updateFilter: function(newFilter) {
+	updateData: function(newFilter) {
 		var self = this,
 			requestFilter,
 			binding = self.getDefaultBinding();
@@ -40,16 +36,9 @@ PupilsListPage = React.createClass({
 		// Добавление фильтров по полям, если есть
 		if (newFilter && Object.keys(newFilter).length > 0) {
 			for (var filterName in newFilter) {
-				requestFilter.where[filterName] = {
-					like: newFilter[filterName],
-					options: 'i'
-				}
+				requestFilter.where[filterName] = newFilter[filterName];
 			}
 		}
-
-
-		console.log({ filter: requestFilter })
-
 
 		self.request = window.Server.students.get({ filter: requestFilter }).then(function (data) {
 			binding.set(Immutable.fromJS(data));
@@ -94,7 +83,7 @@ PupilsListPage = React.createClass({
 					</div>
 				</h1>
 
-				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateFilter}>
+				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 					<TableField dataField="firstName">First name</TableField>
 					<TableField dataField="lastName">Last name</TableField>
 					<TableField dataField="age" filterType="number">Age</TableField>

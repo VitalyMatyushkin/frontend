@@ -3,7 +3,7 @@ var List = require('module/ui/list/list'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
 	HousesListPage;
-
+//⇡ ⇣
 HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -11,15 +11,36 @@ HousesListPage = React.createClass({
 	},
 	componentWillMount: function () {
 		var self = this,
-			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		if (activeSchoolId) {
-			self.request = window.Server.schoolHouses.get(activeSchoolId).then(function (data) {
-				binding.set(Immutable.fromJS(data));
-			});
+		self.activeSchoolId = activeSchoolId;
+		self.updateData();
+	},
+	updateData: function(newFilter) {
+		var self = this,
+			requestFilter,
+			binding = self.getDefaultBinding();
+
+		self.request && self.request.abort();
+
+		// Фильтрация по школе
+		requestFilter = {
+			where: {
+				schoolId: self.activeSchoolId
+			}
+		};
+
+		// Добавление фильтров по полям, если есть
+		if (newFilter && Object.keys(newFilter).length > 0) {
+			for (var filterName in newFilter) {
+				requestFilter.where[filterName] = newFilter[filterName];
+			}
 		}
+
+		self.request = window.Server.houses.get({ filter: requestFilter }).then(function (data) {
+			binding.set(Immutable.fromJS(data));
+		})
 	},
 	componentWillUnmount: function () {
 		var self = this;
@@ -49,7 +70,7 @@ HousesListPage = React.createClass({
 					</div>
 				</h1>
 
-				<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()}>
+				<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 					<TableField dataField="name" width="180">House name</TableField>
 					<TableField dataField="description">Description</TableField>
 				</Table>

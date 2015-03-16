@@ -11,15 +11,36 @@ ClassListPage = React.createClass({
 	},
 	componentWillMount: function () {
 		var self = this,
-			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		if (activeSchoolId) {
-			self.request = window.Server.schoolClasses.get(activeSchoolId).then(function (data) {
-				binding.set(Immutable.fromJS(data));
-			});
+		self.activeSchoolId = activeSchoolId;
+		self.updateData();
+	},
+	updateData: function(newFilter) {
+		var self = this,
+			requestFilter,
+			binding = self.getDefaultBinding();
+
+		self.request && self.request.abort();
+
+		// Фильтрация по школе
+		requestFilter = {
+			where: {
+				schoolId: self.activeSchoolId
+			}
+		};
+
+		// Добавление фильтров по полям, если есть
+		if (newFilter && Object.keys(newFilter).length > 0) {
+			for (var filterName in newFilter) {
+				requestFilter.where[filterName] = newFilter[filterName];
+			}
 		}
+
+		self.request = window.Server.classes.get({ filter: requestFilter }).then(function (data) {
+			binding.set(Immutable.fromJS(data));
+		})
 	},
 	componentWillUnmount: function () {
 		var self = this;
@@ -49,9 +70,9 @@ ClassListPage = React.createClass({
 					</div>
 				</h1>
 
-				<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()}>
+				<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 					<TableField dataField="name">First name</TableField>
-					<TableField dataField="age">Age</TableField>
+					<TableField dataField="age" filterType="number">Age</TableField>
 				</Table>
 
 			</div>

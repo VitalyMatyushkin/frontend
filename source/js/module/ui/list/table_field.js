@@ -5,11 +5,19 @@ ListField = React.createClass({
 	propTypes: {
 		dataField: React.PropTypes.string.isRequired,
 		onChange: React.PropTypes.func.isRequired,
-		width: React.PropTypes.number
+		width: React.PropTypes.number,
+		filterType: React.PropTypes.string
 	},
 	onChange: function(event) {
 		var self = this,
 			value = event.currentTarget.value;
+
+		if (value && self.props.filterType !== 'number') {
+			value = {
+				like: value,
+				options: 'i'
+			}
+		}
 
 		self.props.onChange(self.props.dataField, value);
 	},
