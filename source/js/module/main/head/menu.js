@@ -30,7 +30,7 @@ Menu = React.createClass({
                 icon: 'icon_shot',
                 name: 'Invites',
                 key: 'Invites',
-                routes: ['/invites/:subPage', '/invites'],
+                routes: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
                 requiredData: 'userRules.activeSchoolId'
             }]
 		};
