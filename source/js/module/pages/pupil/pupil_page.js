@@ -11,11 +11,11 @@ LeanerView = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			leanerId = globalBinding.get('routing.parameters.id'),
+			studentId = globalBinding.get('routing.parameters.id'),
 			leanerData = {};
 
 		// Костыль, пока не будет ясности с путями хранения данных
-		leanerId && window.Server.learner.get(leanerId).then(function (data) {
+		studentId && window.Server.student.get(studentId).then(function (data) {
 			leanerData = data;
 
 			// Лютый костыль, пока не будет метода с полными данными

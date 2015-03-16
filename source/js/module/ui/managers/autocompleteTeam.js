@@ -73,7 +73,7 @@ AutocompleteTeam = React.createClass({
             filter.where.classId = binding.get('id');
         }
 
-        return window.Server.learnersFilter.get({
+        return window.Server.studentsFilter.get({
             filter: filter
         }).then(function (data) {
             data.map(function (player) {

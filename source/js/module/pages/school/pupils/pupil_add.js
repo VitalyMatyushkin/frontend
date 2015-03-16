@@ -16,7 +16,7 @@ PupilEditPage = React.createClass({
 
 		data.schoolId = self.activeSchoolId;
 
-		data.schoolId && window.Server.learners.post(data).then(function() {
+		data.schoolId && window.Server.students.post(data).then(function() {
 			document.location.hash = 'school/pupils';
 		});
 	},

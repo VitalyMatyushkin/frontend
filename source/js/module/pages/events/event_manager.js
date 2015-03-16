@@ -153,7 +153,7 @@ EventManager = React.createClass({
                         rival.players.forEach(function (player) {
                             window.Server.playersRelation.put({
                                 teamId: res.id,
-                                learnerId: player.id
+                                studentId: player.id
                             }).then(function (res) {
                                 console.log(res);
                             });

@@ -9,23 +9,23 @@ PupilEditPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
-			learnerId = routingData.id;
+			studentId = routingData.id;
 
 		binding.clear();
 
-		if (activeSchoolId && learnerId) {
-			window.Server.learner.get(learnerId).then(function (data) {
+		if (activeSchoolId && studentId) {
+			window.Server.student.get(studentId).then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
 			self.activeSchoolId = activeSchoolId;
-			self.learnerId = learnerId;
+			self.studentId = studentId;
 		}
 	},
 	submitEdit: function(data) {
 		var self = this;
 
-		window.Server.learner.put(self.learnerId, data).then(function() {
+		window.Server.student.put(self.studentId, data).then(function() {
 			self.isMounted() && (document.location.hash = 'school/pupils');
 		});
 	},

@@ -77,7 +77,7 @@ FootballManager = React.createClass({
 			filter.where.classId = binding.get(['autocomplete', rivalsType, self.props.order, 'selectedId']);
 		}
 
-		return window.Server.learnersFilter.get({
+		return window.Server.studentsFilter.get({
 			filter: filter
 		}).then(function (data) {
 			data.map(function (player) {

@@ -18,10 +18,10 @@ serviceList = {
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 
 		// leaners
-        serviceList.learners = new Service('/learners', binding);
-		serviceList.schoolLearners = new Service('/learners?filter[where][schoolId]={schoolId}', binding);
-		serviceList.learnersFilter = new Service('/learners', binding);
-		serviceList.learner = new Service('/learners/{learnerId}', binding);
+        serviceList.students = new Service('/students', binding);
+		serviceList.schoolStudents = new Service('/students?filter[where][schoolId]={schoolId}', binding);
+		serviceList.studentsFilter = new Service('/students', binding);
+		serviceList.student = new Service('/students/{studentId}', binding);
 
 		// houses
         serviceList.houses = new Service('/houses', binding);
@@ -52,7 +52,7 @@ serviceList = {
 
         // teams
         serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
-        serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{learnerId}', binding);
+        serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{studentId}', binding);
         serviceList.playersByTeam = new Service('/teams/{teamId}/players', binding);
 
         // result

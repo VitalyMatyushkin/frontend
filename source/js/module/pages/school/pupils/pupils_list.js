@@ -18,7 +18,7 @@ PupilsListPage = React.createClass({
 		self.activeSchoolId = activeSchoolId;
 
 		if (activeSchoolId) {
-			self.request = window.Server.schoolLearners.get(activeSchoolId).then(function (data) {
+			self.request = window.Server.schoolStudents.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 			});
 		}
@@ -51,7 +51,7 @@ PupilsListPage = React.createClass({
 		console.log({ filter: requestFilter })
 
 
-		self.request = window.Server.learners.get({ filter: requestFilter }).then(function (data) {
+		self.request = window.Server.students.get({ filter: requestFilter }).then(function (data) {
 			binding.set(Immutable.fromJS(data));
 		})
 	},

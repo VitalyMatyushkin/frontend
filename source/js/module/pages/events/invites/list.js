@@ -96,7 +96,7 @@ EventsView = React.createClass({
 			players.forEach(function (player) {
 				window.Server.playersRelation.put({
 					teamId: res.id,
-					learnerId: player.get('id')
+					studentId: player.get('id')
 				}).then(function (res) {
 					console.log(res);
 				});

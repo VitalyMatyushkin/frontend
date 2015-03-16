@@ -101,7 +101,7 @@ EventView = React.createClass({
 
         window.Server.playersRelation.delete({
             teamId: participant.get('id'),
-            learnerId: playerId
+            studentId: playerId
         }).then(function () {
             participant.update('players', function (players) {
                 return players.filter(function (player) {
@@ -114,7 +114,7 @@ EventView = React.createClass({
         player.update('scores', function (scores) {
             scores = scores || Immutable.List();
 
-            return scores.push(Immutable.fromJS({learnerId: player.get('id')}));
+            return scores.push(Immutable.fromJS({studentId: player.get('id')}));
         });
     },
     removePoint: function (player) {
@@ -220,7 +220,7 @@ EventView = React.createClass({
                     player.get('scores') ? player.get('scores').forEach(function (score, scoreIndex) {
                         window.Server.points.post({resultId: result.id}, {
                             sportId: binding.get('eventInfo.sportId'),
-                            learnerId: player.get('id'),
+                            studentId: player.get('id'),
                             participantId: participantBinding.get('id'),
                             eventId: binding.get('eventInfo.id'),
                             resultId: result.id,
