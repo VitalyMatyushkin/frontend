@@ -44,13 +44,13 @@ HousesListPage = React.createClass({
 				<h1 className="eSchoolMaster_title">Houses
 
 					<div className="eSchoolMaster_buttons">
-						<div className="bButton">Filters</div>
+						<div className="bButton">Filters ⇣</div>
 						<a href="/#school/houses/add" className="bButton">Add...</a>
 					</div>
 				</h1>
 
 				<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()}>
-					<TableField dataField="name">House name</TableField>
+					<TableField dataField="name" width="180">House name</TableField>
 					<TableField dataField="description">Description</TableField>
 				</Table>
 

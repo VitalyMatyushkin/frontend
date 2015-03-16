@@ -89,7 +89,7 @@ PupilsListPage = React.createClass({
 				<h1 className="eSchoolMaster_title">Pupils
 
 					<div className="eSchoolMaster_buttons">
-						<div className="bButton">Filters</div>
+						<div className="bButton">Filters ⇣</div>
 						<a href="/#school/pupils/add" className="bButton">Add...</a>
 					</div>
 				</h1>
@@ -97,7 +97,7 @@ PupilsListPage = React.createClass({
 				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateFilter}>
 					<TableField dataField="firstName">First name</TableField>
 					<TableField dataField="lastName">Last name</TableField>
-					<TableField dataField="age">Age</TableField>
+					<TableField dataField="age" filterType="number">Age</TableField>
 					<TableField dataField="phone">Phone</TableField>
 				</Table>
 
