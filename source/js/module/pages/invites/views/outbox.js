@@ -1,14 +1,14 @@
-var InboxView,
+var OutboxView,
     Invite = require('./invite'),
-    InvitesMixin = require('../mixins/invites_mixin');
+	InvitesMixin = require('../mixins/invites_mixin');
 
 OutboxView = React.createClass({
-    mixins: [Morearty.Mixin, InvitesMixin],
-    getInvites: function () {
-        var self = this,
+	mixins: [Morearty.Mixin, InvitesMixin],
+	getInvites: function () {
+		var self = this,
             activeSchoolId = self.getActiveSchoolId(),
-            binding = self.getDefaultBinding(),
-            invites = self.getFilteredInvites(activeSchoolId, 'inbox', 'ask', true);
+			binding = self.getDefaultBinding(),
+			invites = self.getFilteredInvites(activeSchoolId, 'outbox', 'ask', true);
 
         return invites.map(function (invite, index) {
             var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),
@@ -21,18 +21,18 @@ OutboxView = React.createClass({
 
             return <Invite binding={inviteBinding} />;
         }).toArray();
-    },
-    render: function() {
-        var self = this,
-            binding = self.getDefaultBinding();
+	},
+	render: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
 
-        return <div>
-            <h2>Inbox</h2>
-            <div className="eInvites_filterPanel"></div>
-            <div className="eInvites_list">{self.getInvites()}</div>
-        </div>;
-    }
+		return <div>
+			<h2>Outbox</h2>
+			<div className="eInvites_filterPanel"></div>
+			<div className="eInvites_list">{self.getInvites()}</div>
+		</div>;
+	}
 });
 
 
-module.exports = InboxView;
+module.exports = OutboxView;

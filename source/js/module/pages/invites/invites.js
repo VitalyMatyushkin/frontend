@@ -52,7 +52,11 @@ InvitesView = React.createClass({
 
 			window.Server.schools.get({
 				filter: {
-					inq: uniqueIds
+					where: {
+                        id: {
+                            inq: uniqueIds
+                        }
+                    }
 				}
 			}).then(function (participants) {
 				binding

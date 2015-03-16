@@ -5,8 +5,11 @@ InvitesMixin = {
 	getActiveSchoolId: function () {
 		var self = this;
 
-		return self.getMoreartyContext().getBinding().get('activeSchoolId');
+		return self.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 	},
+    getDateWithTime: function (invite) {
+        var date = new Date(invite.get('meta.updated'))
+    },
 	getFilteredInvites: function (filterId, direction, order, upperNew) {
 		direction = direction || 'inbox';
 		order = order || 'ask';
@@ -14,27 +17,31 @@ InvitesMixin = {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			modelsBinding = binding.sub('models'),
-			filtered = modelsBinding.get().filter(function (model) {
-				return direction === 'inbox' ? model.get('invitedId') === filterId :  model.get('inviterId') === filterId;
-			}),
-			result = filtered;
+            result = modelsBinding.get().filter(function (model) {
+				return direction === 'inbox' ?
+                model.get('invitedId') === filterId :
+                model.get('inviterId') === filterId;
+			});
 
-		result = filtered.sort(function (m1, m2) {
-			var firstModelDate = Date.parse(m1.get('meta.updated')),
-				secondModelDate = Date.parse(m2.get('meta.updated')),
-				compareResult = 0;
+		if (direction) {
+            result = result.sort(function (m1, m2) {
+                var firstModelDate = Date.parse(m1.get('meta.updated')),
+                    secondModelDate = Date.parse(m2.get('meta.updated')),
+                    compareResult = 0;
 
-			if (firstModelDate > secondModelDate) {
-				compareResult = order === 'ask' ? 1 : -1;
-			} else if (firstModelDate < secondModelDate) {
-				compareResult = order === 'ask' ? -1 : 1
-			}
+                if (firstModelDate > secondModelDate) {
+                    compareResult = order === 'ask' ? 1 : -1;
+                } else if (firstModelDate < secondModelDate) {
+                    compareResult = order === 'ask' ? -1 : 1
+                }
 
-			return compareResult;
-		});
+                return compareResult;
+            });
+        }
+
 
 		if (upperNew) {
-			result = filtered.sort(function (m1, m2) {
+			result = result.sort(function (m1, m2) {
 				var isRepaidM1 = m1.get('repaid'),
 					isRepaidM2 = m2.get('repaid'),
 					compareResult = 0;
@@ -50,7 +57,28 @@ InvitesMixin = {
 		}
 
 		return result;
-	}
+	},
+    findParticipant: function (id) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            participant = binding.get('participants').find(function (model) {
+                return model.get('id') === id;
+            });
+
+        return participant;
+    },
+    findIndexParticipant: function (id) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            participantIndex = binding.get('participants').findIndex(function (model) {
+                return model.get('id') === id;
+            });
+
+        return participantIndex;
+    },
+    zeroFill: function (i) {
+        return (i < 10 ? '0' : '') + i;
+    }
 };
 
 module.exports = InvitesMixin;

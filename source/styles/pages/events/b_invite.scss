@@ -45,7 +45,7 @@
   margin-right: 10px;
 }
 
-.eInvite_close {
+.eInvite_redeemed {
   color: #777;
   font-size: 14px;
   position: absolute;
@@ -63,7 +63,7 @@
   border-color: darken(#eee, 20%);
 }
 
-.bInvite.mNotRedeemed .eInvite_close:after {
+.bInvite.mNotRedeemed .eInvite_redeemed:after {
   content: 'was read?';
 }
 
