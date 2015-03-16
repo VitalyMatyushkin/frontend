@@ -7,11 +7,13 @@ Table = React.createClass({
 		onAddNew: React.PropTypes.func,
 		onItemEdit: React.PropTypes.func,
 		onItemView: React.PropTypes.func,
-		onItemRemove: React.PropTypes.func
+		onItemRemove: React.PropTypes.func,
+		onFilterChange: React.PropTypes.func
 	},
 	componentWillMount: function() {
 		var self = this;
 
+		self.filter = {};
 		self.usedFields = [];
 		React.Children.map(self.props.children, function (child) {
 			//TODO: Добавить поддержку сборки имени из нескольких полей
@@ -19,10 +21,22 @@ Table = React.createClass({
 		});
 
 	},
+	updateFilterState: function(field, value) {
+		var self = this;
+
+		if (value) {
+			self.filter[field] = value;
+		} else {
+			delete self.filter[field];
+		}
+
+		self.props.onFilterChange && self.props.onFilterChange(self.filter);
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			dataList = binding.toJS(),
+			tableHeadFields,
 			itemsNodes;
 
 		if (dataList) {
@@ -53,13 +67,19 @@ Table = React.createClass({
 					</div>
 				);
 			});
+
+			tableHeadFields = React.Children.map(this.props.children, function (child) {
+				return React.addons.cloneWithProps(child, {
+					onChange: self.updateFilterState
+				});
+			});
 		}
 
 		return (
 		<div className="bDataList">
 			<div className="eDataList_list mTable">
 				<div className="eDataList_listItem mHead">
-					{self.props.children}
+					{tableHeadFields}
 					<div className="eDataList_listItemCell mActions">Actions</div>
 				</div>
 				{itemsNodes}

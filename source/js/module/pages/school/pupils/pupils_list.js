@@ -2,9 +2,9 @@ var List = require('module/ui/list/list'),
 	ListField = require('module/ui/list/list_field'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
-	OneSchoolPage;
+	PupilsListPage;
 
-OneSchoolPage = React.createClass({
+PupilsListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired
@@ -15,11 +15,45 @@ OneSchoolPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
+		self.activeSchoolId = activeSchoolId;
+
 		if (activeSchoolId) {
 			self.request = window.Server.schoolLearners.get(activeSchoolId).then(function (data) {
 				binding.set(Immutable.fromJS(data));
 			});
 		}
+	},
+	updateFilter: function(newFilter) {
+		var self = this,
+			requestFilter,
+			binding = self.getDefaultBinding();
+
+		self.request && self.request.abort();
+
+		// Фильтрация по школе
+		requestFilter = {
+			where: {
+				schoolId: self.activeSchoolId
+			}
+		};
+
+		// Добавление фильтров по полям, если есть
+		if (newFilter && Object.keys(newFilter).length > 0) {
+			for (var filterName in newFilter) {
+				requestFilter.where[filterName] = {
+					like: newFilter[filterName],
+					options: 'i'
+				}
+			}
+		}
+
+
+		console.log({ filter: requestFilter })
+
+
+		self.request = window.Server.learners.get({ filter: requestFilter }).then(function (data) {
+			binding.set(Immutable.fromJS(data));
+		})
 	},
 	componentWillUnmount: function () {
 		var self = this;
@@ -60,7 +94,7 @@ OneSchoolPage = React.createClass({
 					</div>
 				</h1>
 
-				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()}>
+				<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateFilter}>
 					<TableField dataField="firstName">First name</TableField>
 					<TableField dataField="lastName">Last name</TableField>
 					<TableField dataField="age">Age</TableField>
@@ -73,4 +107,4 @@ OneSchoolPage = React.createClass({
 });
 
 
-module.exports = OneSchoolPage;
+module.exports = PupilsListPage;
