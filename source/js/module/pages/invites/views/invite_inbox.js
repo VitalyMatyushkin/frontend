@@ -15,16 +15,16 @@ InviteView = React.createClass({
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
-            metaBinding = binding.meta(),
             inviteClasses = classNames({
                 bInvite: true,
                 mNotRedeemed: binding.get('redeemed')
             }),
             inviter = self.getBinding('inviter'),
             invited = self.getBinding('invited'),
+            message = binding.get('message') || '',
             isRedeemed = binding.get('redeemed');
 
-        return <div className={inviteClasses}>
+        return <div key={binding.get('id')} className={inviteClasses}>
             <div className="eInvite_header">
                 <span className="eInvite_eventName">
                     {inviter.get('name')}
@@ -33,7 +33,7 @@ InviteView = React.createClass({
                 </span>
                 <span className="eInvite_eventDate"></span>
             </div>
-            <div className="eInvite_message">Awaiting opponent...</div>
+            <div className="eInvite_message">{message}</div>
             {!isRedeemed ? <span className="eInvite_redeemed" onClick={self.onClickRedeemed}></span> : null}
         </div>;
     }

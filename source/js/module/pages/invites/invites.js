@@ -76,7 +76,7 @@ InvitesView = React.createClass({
             classes = {
 				inbox: classNames({
                     eSubMenu_item: true,
-                    mActive: currentPath === '/invites/inbox' || '/invites'
+                    mActive: currentPath === '/invites/inbox' || currentPath === '/invites'
                 }),
 				outbox: classNames({
                     eSubMenu_item: true,

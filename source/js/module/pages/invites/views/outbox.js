@@ -1,5 +1,5 @@
 var OutboxView,
-    Invite = require('./invite'),
+    InviteOutbox = require('./invite_outbox'),
 	InvitesMixin = require('../mixins/invites_mixin');
 
 OutboxView = React.createClass({
@@ -19,17 +19,17 @@ OutboxView = React.createClass({
                     invited: binding.sub(['participants', invitedIndex])
                 };
 
-            return <Invite binding={inviteBinding} />;
+            return <InviteOutbox binding={inviteBinding} />;
         }).toArray();
 	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+            invites = self.getInvites();
 
-		return <div>
-			<h2>Outbox</h2>
-			<div className="eInvites_filterPanel"></div>
-			<div className="eInvites_list">{self.getInvites()}</div>
+		return <div key={'inbox-view'} class="eInvites_outboxContainer">
+			<h2 className="eInvites_titlePage">Outbox</h2>
+			<div className="eInvites_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
 		</div>;
 	}
 });
