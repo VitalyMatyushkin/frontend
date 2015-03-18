@@ -173,9 +173,9 @@ EventManagerBase = React.createClass({
                 <select
                     className="eManager_select"
 					value={sportId}
-					defaultValue={binding.get('sports.sync') ? self.getDefaultSportsId() : null}
+					defaultValue={self.getDefaultSportsId()}
                     onChange={self.changeCompleteSport}>
-                    {binding.get('sports.sync') ? self.getSports() : null}
+                    {self.getSports()}
                 </select>
             </div>
             <div className="eManager_group">

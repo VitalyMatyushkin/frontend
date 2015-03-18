@@ -102,7 +102,7 @@ EventManager = React.createClass({
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding(),
-			model = binding.toJS('newEvent.model'),
+            model = binding.toJS('newEvent.model'),
 			rivals = binding.toJS('newEvent.rivals');
 
 		if (!model.name) {
@@ -110,11 +110,11 @@ EventManager = React.createClass({
 		}
 
 		if (!model.sportId) {
-			var football = rootBinding.get('sports.models').filter(function (sport) {
+			var football = rootBinding.get('events.sports.models').find(function (sport) {
 				return sport.get('name') === 'football';
 			});
 
-			model.sportId = football.count() > 0 ? football.get(0).get('id') : null;
+			model.sportId = football ? football.get('id') : null;
 		}
 
 		window.Server.events.post(model).then(function (event) {
@@ -135,7 +135,7 @@ EventManager = React.createClass({
                     });
                 } else {
                     var rivalModel = {
-                        sportId: event.sportId,
+                        sportId: event.sportId || defaultSportId,
                         schoolId: event.rivalsType === 'schools' ? rival.id : rival.schoolId
                     };
 

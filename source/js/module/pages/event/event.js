@@ -21,7 +21,6 @@ EventView = React.createClass({
                 ],
                 where: {id: routerParameters.id}
             }
-            //'filter[include][participants]=players&filter[where][id]=' + routerParameters.id
 		}).then(function (res) {
             var participants = res.participants;
             binding.set('eventInfo', Immutable.fromJS(res));
@@ -231,7 +230,7 @@ EventView = React.createClass({
             });
 
             binding.set('eventInfo.resultId', result.id);
-            binding.set('eventInfo.type', binding.get('eventInfo.rivalsType') === 'scools' ? 'external' : 'internal');
+            binding.set('eventInfo.type', binding.get('eventInfo.rivalsType') === 'schools' ? 'external' : 'internal');
 
             window.Server.event.get({
                 eventId: binding.get('eventInfo.id')
