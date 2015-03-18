@@ -240,12 +240,15 @@ EventView = React.createClass({
                 window.Server.event.put({
                     eventId: binding.get('eventInfo.id')
                 }, res).then(function (res) {
-                    binding
-                        .atomically()
-                        .set('eventInfo.mode', 'normal')
-                        .set('eventInfo.result', Immutable.fromJS(result))
-                        .set('eventInfo.resultId', result.id)
-                        .commit();
+
+                    window.Server.result.get(res.resultId).then(function (resultModel) {
+                        binding
+                            .atomically()
+                            .set('eventInfo.mode', 'normal')
+                            .set('eventInfo.result', Immutable.fromJS(resultModel))
+                            .set('eventInfo.resultId', resultModel.id)
+                            .commit();
+                    });
                 });
             })
         });
