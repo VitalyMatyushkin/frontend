@@ -10,8 +10,6 @@ EventView = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			routerParameters = rootBinding.toJS('routing.parameters');
 
-        console.log(routerParameters);
-
 		window.Server.eventFindOne.get({
             filter: {
                 include: [

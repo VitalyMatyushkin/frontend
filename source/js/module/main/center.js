@@ -4,6 +4,9 @@ var RouterView = require('module/core/router'),
 
 Center = React.createClass({
 	mixins: [Morearty.Mixin],
+	getMergeStrategy: function () {
+		return Morearty.MergeStrategy.MERGE_REPLACE;
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),

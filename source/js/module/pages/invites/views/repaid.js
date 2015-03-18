@@ -1,6 +1,6 @@
 var OutboxView,
 	ProcessingView = require('./processing'),
-	Invite = require('./invite'),
+	InviteOutbox = require('./invite'),
 	InvitesMixin = require('../mixins/invites_mixin');
 
 OutboxView = React.createClass({
@@ -24,10 +24,15 @@ OutboxView = React.createClass({
 		window.Server.invites.get({
 			filter: {
 				where: {
-					inviterId: activeSchoolId,
-					repaid: {
-						neq: true
-					}
+					or: [
+						{
+							inviterId: activeSchoolId
+						},
+						{
+							invitedId: activeSchoolId
+						}
+					],
+					repaid: true
 				}
 			}
 		}).then(function (models) {
@@ -63,7 +68,7 @@ OutboxView = React.createClass({
 		var self = this,
 			activeSchoolId = self.getActiveSchoolId(),
 			binding = self.getDefaultBinding(),
-			invites = self.getFilteredInvites(activeSchoolId, 'outbox', 'ask', true);
+			invites = self.getFilteredInvites(activeSchoolId, 'inbox', 'ask', true);
 
 		return invites.map(function (invite, index) {
 			var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),
@@ -74,7 +79,7 @@ OutboxView = React.createClass({
 					invited: binding.sub(['participants', invitedIndex])
 				};
 
-			return <Invite type="outbox" binding={inviteBinding} />;
+			return <InviteOutbox binding={inviteBinding} />;
 		}).toArray();
 	},
 	render: function() {
@@ -82,11 +87,10 @@ OutboxView = React.createClass({
 			binding = self.getDefaultBinding(),
 			invites = self.getInvites();
 
-		return <div key="OutboxView" className="eInvites_OutboxContainer">
-			<h2 className="eInvites_titlePage">Outbox</h2>
+		return <div key={'inbox-view'} className="eInvites_OutboxContainer">
+			<h2 className="eInvites_titlePage">Repaid</h2>
 			<div className="eInvites_filterPanel"></div>
-			<div className="eInvites_list">{invites && invites.length ? invites : null}</div>
-			<ProcessingView binding={binding} />
+			<div className="eInvites_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
 		</div>;
 	}
 });

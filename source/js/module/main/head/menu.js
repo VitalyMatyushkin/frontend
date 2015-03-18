@@ -26,7 +26,7 @@ Menu = React.createClass({
 				requiredData: 'userRules.activeSchoolId'
 			},
             {
-                href: '/#invites',
+                href: '/#invites/inbox',
                 icon: 'icon_shot',
                 name: 'Invites',
                 key: 'Invites',

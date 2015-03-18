@@ -1,9 +1,64 @@
 var InboxView,
-    InviteInbox = require('./invite_inbox'),
+    Invite = require('./invite'),
+	ProcessingView = require('./processing'),
     InvitesMixin = require('../mixins/invites_mixin');
 
-OutboxView = React.createClass({
+InboxView = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
+	getMergeStrategy: function () {
+		return Morearty.MergeStrategy.MERGE_REPLACE;
+	},
+	getDefaultState: function () {
+		return Immutable.fromJS({
+			models: [],
+			participants: [],
+			sync: false
+		});
+	},
+	componentWillMount: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+
+		window.Server.invites.get({
+			filter: {
+				where: {
+					invitedId: activeSchoolId,
+					repaid: {
+						neq: true
+					}
+				}
+			}
+		}).then(function (models) {
+			var uniqueIds = models.reduce(function (memo, invite) {
+				if (memo.indexOf(invite.invitedId) === -1) {
+					memo.push(invite.invitedId);
+				}
+
+				return memo;
+			}, []);
+
+			if (uniqueIds.length > 0) {
+				window.Server.schools.get({
+					filter: {
+						where: {
+							id: {
+								inq: uniqueIds
+							}
+						}
+					}
+				}).then(function (participants) {
+					binding
+						.atomically()
+						.set('sync', true)
+						.set('models', Immutable.fromJS(models))
+						.set('participants', Immutable.fromJS(participants))
+						.commit();
+				});
+			}
+		});
+	},
     getInvites: function () {
         var self = this,
             activeSchoolId = self.getActiveSchoolId(),
@@ -19,7 +74,7 @@ OutboxView = React.createClass({
                     invited: binding.sub(['participants', invitedIndex])
                 };
 
-            return <InviteInbox binding={inviteBinding} />;
+            return <Invite type="inbox"  binding={inviteBinding} />;
         }).toArray();
     },
     render: function() {
@@ -27,10 +82,11 @@ OutboxView = React.createClass({
             binding = self.getDefaultBinding(),
             invites = self.getInvites();
 
-        return <div key={'inbox-view'} className="eInvites_inboxContainer">
+        return <div key="inboxView" className="eInvites_inboxContainer">
             <h2 className="eInvites_titlePage">Inbox</h2>
             <div className="eInvites_filterPanel"></div>
-            <div className="eInvites_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
+            <div className="eInvites_list">{invites && invites.length ? invites : null}</div>
+			<ProcessingView binding={binding} />
         </div>;
     }
 });
