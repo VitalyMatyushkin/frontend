@@ -5,7 +5,7 @@ ListField = React.createClass({
 	propTypes: {
 		dataField: React.PropTypes.string.isRequired,
 		onChange: React.PropTypes.func.isRequired,
-		width: React.PropTypes.number,
+		width: React.PropTypes.string,
 		filterType: React.PropTypes.string
 	},
 	onChange: function(event) {
@@ -26,7 +26,7 @@ ListField = React.createClass({
 			cellStyle = {};
 
 		if (self.props.width) {
-			cellStyle.width = self.props.width + 'px';
+			cellStyle.width = self.props.width;
 		}
 
 		return (
