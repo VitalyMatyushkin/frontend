@@ -57,9 +57,12 @@ serviceList = {
 
         // result
         serviceList.results = new Service('/results', binding);
+		serviceList.result = new Service('/results/{id}', binding);
 
         // points
-        serviceList.points = new Service('/results/{resultId}/points', binding);
+        serviceList.pointsInResult = new Service('/results/{resultId}/points', binding);
+		serviceList.studentPoints = new Service('/points?filter[where][studentId]={studentId}', binding);
+		serviceList.points = new Service('/points', binding);
     }
 };
 

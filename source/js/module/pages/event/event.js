@@ -218,7 +218,7 @@ EventView = React.createClass({
 
                 participantBinding.get('players').forEach(function (player, index) {
                     player.get('scores') ? player.get('scores').forEach(function (score, scoreIndex) {
-                        window.Server.points.post({resultId: result.id}, {
+                        window.Server.pointsInResult.post(result.id, {
                             sportId: binding.get('eventInfo.sportId'),
                             studentId: player.get('id'),
                             participantId: participantBinding.get('id'),

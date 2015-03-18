@@ -29,6 +29,11 @@ LeanerView = React.createClass({
 						leanerData.schoolData = schoolData;
 
 						binding.set(Immutable.fromJS(leanerData));
+
+
+						Server.studentPoints.get(studentId).then(function(pointsData) {
+							console.log(pointsData)
+						});
 					});
 				});
 
@@ -40,7 +45,6 @@ LeanerView = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			data = binding.toJS();
-		 console.log(data)
 
 		return (
 			<div>
