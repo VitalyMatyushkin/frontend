@@ -131,7 +131,7 @@ EventManager = React.createClass({
 						message: 'message',
 						invitedType: 'schools'
                     }).then(function () {
-                        document.location.hash = 'event/view?id=' + event.id;
+                        document.location.hash = 'events/view?id=' + event.id;
                     });
                 } else {
                     var rivalModel = {

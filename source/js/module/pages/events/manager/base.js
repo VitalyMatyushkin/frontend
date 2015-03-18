@@ -116,11 +116,11 @@ EventManagerBase = React.createClass({
 	getDefaultSportsId: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			football = binding.get('sports.models').filter(function (sport) {
+			football = binding.get('sports.models').find(function (sport) {
 				return sport.get('name') === 'football';
 			});
 
-		return football.count() > 0 ? football.get('id') : null;
+		return football ? football.get('id') : null;
 	},
     getSports: function () {
         var self = this,
@@ -172,10 +172,10 @@ EventManagerBase = React.createClass({
                     {'What\'s the game?'}
                 <select
                     className="eManager_select"
-					value={binding.get('newEvent.model.sportId')}
-					defaultValue={self.getDefaultSportsId()}
+					value={sportId}
+					defaultValue={binding.get('sports.sync') ? self.getDefaultSportsId() : null}
                     onChange={self.changeCompleteSport}>
-                        {self.getSports()}
+                    {binding.get('sports.sync') ? self.getSports() : null}
                 </select>
             </div>
             <div className="eManager_group">
