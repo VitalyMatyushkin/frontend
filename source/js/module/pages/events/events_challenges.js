@@ -52,7 +52,7 @@ ChallengesView = React.createClass({
 		return String(num).length === 1 && String(num).indexOf('0') !== 0 ? '0' + num : num;
 	},
     onClickChallenge: function (eventId) {
-        document.location.hash = 'events/view?id=' + eventId;
+        document.location.hash = 'event/view?id=' + eventId;
     },
     getEvents: function (date) {
         var self = this,

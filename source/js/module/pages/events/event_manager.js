@@ -160,7 +160,7 @@ EventManager = React.createClass({
                         });
 
 
-                        document.location.hash = 'events/view?id=' + event.id;
+                        document.location.hash = 'event/view?id=' + event.id;
 						binding.clear();
                     });
                 }
