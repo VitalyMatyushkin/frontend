@@ -1,4 +1,5 @@
 var EventView,
+    AutocompleteTeam = ('module/ui/managers/autocompleteTeam'),
     SVG = require('module/ui/svg');
 
 EventView = React.createClass({
