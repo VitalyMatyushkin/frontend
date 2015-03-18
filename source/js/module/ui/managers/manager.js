@@ -30,7 +30,8 @@ Manager = React.createClass({
             selectedRivalId = binding.get('selectedRivalId');
 
         return binding.get('rivals').map(function (rival) {
-            var disable = rivalsType === 'schools' && rival.get('id') !== activeSchoolId || rival.get('ownerId') !== userId,
+            var disable = rivalsType === 'schools' ?
+                rival.get('id') !== activeSchoolId || rival.get('ownerId') !== userId : false,
 				teamClasses = classNames({
 					mActive: selectedRivalId === rival.get('id'),
 					eChooser_item: true,

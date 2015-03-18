@@ -2,47 +2,6 @@ var ChallengesView;
 
 ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
-    componentWillMount: function () {
-        var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            sportsBinding = rootBinding.sub('sports'),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-            teamsBinding = rootBinding.sub('teams'),
-            eventsBinding = rootBinding.sub('events');
-
-        window.Server.teamsBySchoolId.get(activeSchoolId).then(function (data) {
-            teamsBinding.set(Immutable.fromJS({
-                sync: true,
-                models: data
-            }));
-
-            eventsBinding.merge(Immutable.fromJS({
-                models: data.map(function (team) {
-                    return team.events[0];
-                }).reduce(function (memo, val) {
-                    var filtered = memo.filter(function (mem) {
-                        return mem.id === val.id;
-                    });
-
-                    if (filtered.length === 0) {
-                        memo.push(val);
-                    }
-
-                    return memo;
-                }, []),
-                sync: true
-            }));
-        });
-
-        window.Server.sports.get().then(function (data) {
-            sportsBinding.update(function () {
-                return Immutable.fromJS({
-                    sync: true,
-                    models: data
-                });
-            });
-        });
-    },
     sameDay: function (d1, d2) {
         return d1.getUTCFullYear() === d2.getUTCFullYear() &&
             d1.getUTCMonth() === d2.getUTCMonth() &&

@@ -56,7 +56,12 @@ InboxView = React.createClass({
 						.set('participants', Immutable.fromJS(participants))
 						.commit();
 				});
-			}
+			} else {
+                binding
+                    .atomically()
+                    .set('sync', true)
+                    .commit();
+            }
 		});
 	},
     getInvites: function () {

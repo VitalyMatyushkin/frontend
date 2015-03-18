@@ -9,7 +9,7 @@ ProcessingView = React.createClass({
 			count = binding.get('models') && binding.get('models').count();
 
         return <div className='eInvites_processing'>
-			{!isSync ? <span>Loading...</span> : <span>{!count ? 'You don\' have invites' : null}</span>}
+			{!isSync ? <span>Loading...</span> : <span>{!count ? 'You don\'t have invites' : null}</span>}
 		</div>
     }
 });

@@ -1,12 +1,12 @@
 var CalendarView = require('module/ui/calendar/calendar'),
-    EventManagerBase = require('./event_manager_base'),
+    EventManagerBase = require('./manager/base'),
     Manager = require('module/ui/managers/manager'),
     EventManager;
 
 EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
     getMergeStrategy: function () {
-        return Morearty.MergeStrategy.MERGE_REPLACE
+        return Morearty.MergeStrategy.MERGE_REPLACE;
     },
 	getDefaultState: function () {
         var self = this,
@@ -131,7 +131,7 @@ EventManager = React.createClass({
 						message: 'message',
 						invitedType: 'schools'
                     }).then(function () {
-                        document.location.hash = 'events/view?id=' + event.id;
+                        document.location.hash = 'event/view?id=' + event.id;
                     });
                 } else {
                     var rivalModel = {

@@ -115,8 +115,8 @@ EventManagerBase = React.createClass({
 	},
 	getDefaultSportsId: function () {
 		var self = this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			football = rootBinding.get('sports.models').filter(function (sport) {
+			binding = self.getDefaultBinding(),
+			football = binding.get('sports.models').filter(function (sport) {
 				return sport.get('name') === 'football';
 			});
 
@@ -124,8 +124,7 @@ EventManagerBase = React.createClass({
 	},
     getSports: function () {
         var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            sportsBinding = rootBinding.sub('sports');
+            sportsBinding = self.getDefaultBinding().sub('sports');
 
         return sportsBinding.get('models').map(function (sport) {
             return <Morearty.DOM.option

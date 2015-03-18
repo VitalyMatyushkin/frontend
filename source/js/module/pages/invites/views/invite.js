@@ -32,7 +32,7 @@ InviteView = React.createClass({
             binding = self.getDefaultBinding(),
             inviteClasses = classNames({
                 bInvite: true,
-                mNotRedeemed: binding.get('redeemed')
+                mNotRedeemed: !binding.get('redeemed')
             }),
 			isInbox = self.props.type === 'inbox',
 			isOutBox = self.props.type === 'outbox',

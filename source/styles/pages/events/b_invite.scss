@@ -60,10 +60,6 @@
 }
 
 .bInvite.mNotRedeemed {
-  border-color: darken(#eee, 20%);
-}
-
-.bInvite.mNotRedeemed .eInvite_redeemed:after {
-  content: 'was read?';
+  border: 5px solid #eee;
 }
 
