@@ -1,5 +1,5 @@
 var EventView,
-    AutocompleteTeam = ('module/ui/managers/autocompleteTeam'),
+	AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
     SVG = require('module/ui/svg');
 
 EventView = React.createClass({
@@ -24,16 +24,19 @@ EventView = React.createClass({
             }
 		}).then(function (res) {
             var participants = res.participants;
-            binding.set('eventInfo', Immutable.fromJS(res));
             binding
-                .sub('eventInfo')
+				.set('model', Immutable.fromJS(res))
+				.set('rivals', Immutable.List());
+
+            binding
+                .sub('model')
                 .meta()
-                .set('rivals', Immutable.List())
                 .set('mode', 'normal');
 
             if (participants.length === 1 ) {
                 participants.push({
-                    schoolId: res.invites[0].invitedId
+                    schoolId: res.invites[0].invitedId,
+					players: []
                 });
             }
 
@@ -50,7 +53,8 @@ EventView = React.createClass({
                 }
 
                 serviceUrl.get(id).then(function (res) {
-                    binding.set('eventInfo.rivals.' + index, Immutable.fromJS(res));
+					res.players = participants[index].players || [];
+                    binding.set('rivals.' + index, Immutable.fromJS(res));
                 });
             });
 		});
@@ -85,17 +89,26 @@ EventView = React.createClass({
 	getRival: function (order) {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			rival = binding.sub('eventInfo.rivals.' + order);
+			rival = binding.sub('rivals.' + order),
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+			edit = binding.get('model.mode') === 'edit',
+			owner = activeSchoolId === rival.get('id'),
+			completeBinding = {
+				rival: binding.sub('model.participants.' + order),
+				default: binding
+			};
 
 		return <div className="eEvent_rival">
             <img className="eEvent_rivalPic" src={rival.get('pic')} title={rival.get('name')} alt={rival.get('name')} />
             <span className="eEvent_rivalTitle">{rival.get('name') || 'Unknown'}</span>
+			{edit && owner ? <AutocompleteTeam binding={completeBinding}/> : null}
         </div>;
 	},
     removePlayer: function (playerId, order) {
         var self = this,
             binding = self.getDefaultBinding(),
-            participant = binding.sub('eventInfo.participants.' + order);
+            participant = binding.sub('model.participants.' + order);
 
         window.Server.playersRelation.delete({
             teamId: participant.get('id'),
@@ -129,10 +142,10 @@ EventView = React.createClass({
     getPlayers: function (order) {
         var self = this,
             binding = self.getDefaultBinding(),
-            participant = binding.sub('eventInfo.participants.' + order),
+            participant = binding.sub('model.participants.' + order),
             players = participant.sub('players'),
-			edit = binding.get('eventInfo.mode') === 'edit',
-            closeMode = binding.get('eventInfo.mode') === 'close',
+			edit = binding.get('model.mode') === 'edit',
+            closeMode = binding.get('model.mode') === 'close',
 			playersClasses = classNames({
 				bPlayer: true,
                 mShowRemoveButton: edit
@@ -178,20 +191,20 @@ EventView = React.createClass({
 	onClickEdit: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			mode = binding.get('eventInfo.mode') === 'edit' ? 'normal' : 'edit';
+			mode = binding.get('model.mode') === 'edit' ? 'normal' : 'edit';
 
-		binding.set('eventInfo.mode', mode);
+		binding.set('model.mode', mode);
 	},
     onClickClose: function () {
         var self = this,
             binding = self.getDefaultBinding();
 
-        binding.set('eventInfo.mode', 'close');
+        binding.set('model.mode', 'close');
     },
     onClickCancel: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            participants = binding.sub('eventInfo.participants');
+            participants = binding.sub('model.participants');
 
         participants.get().forEach(function (participant, index) {
             participants.sub([index, 'players']).update(function (players) {
@@ -201,15 +214,15 @@ EventView = React.createClass({
             });
         });
 
-        binding.set('eventInfo.mode', 'normal');
+        binding.set('model.mode', 'normal');
     },
     onClickFinish: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            participants = binding.sub('eventInfo.participants'),
-            rivals = binding.sub('eventInfo.rivals');
+            participants = binding.sub('model.participants'),
+            rivals = binding.sub('rivals');
 
-        window.Server.results.post({eventId: binding.get('eventInfo.id')}).then(function (result) {
+        window.Server.results.post({eventId: binding.get('model.id')}).then(function (result) {
 
             participants.get().forEach(function (participant, index) {
                 var participantBinding = participants.sub(index);
@@ -217,10 +230,10 @@ EventView = React.createClass({
                 participantBinding.get('players').forEach(function (player, index) {
                     player.get('scores') ? player.get('scores').forEach(function (score, scoreIndex) {
                         window.Server.pointsInResult.post(result.id, {
-                            sportId: binding.get('eventInfo.sportId'),
+                            sportId: binding.get('model.sportId'),
                             studentId: player.get('id'),
                             participantId: participantBinding.get('id'),
-                            eventId: binding.get('eventInfo.id'),
+                            eventId: binding.get('model.id'),
                             resultId: result.id,
                             score: 1
                         }).then(function (res) {
@@ -230,24 +243,24 @@ EventView = React.createClass({
                 });
             });
 
-            binding.set('eventInfo.resultId', result.id);
-            binding.set('eventInfo.type', binding.get('eventInfo.rivalsType') === 'schools' ? 'external' : 'internal');
+            binding.set('model.resultId', result.id);
+            binding.set('model.type', binding.get('rivalsType') === 'schools' ? 'external' : 'internal');
 
             window.Server.event.get({
-                eventId: binding.get('eventInfo.id')
+                eventId: binding.get('model.id')
             }).then(function (res) {
                 res.resultId = result.id;
 
                 window.Server.event.put({
-                    eventId: binding.get('eventInfo.id')
+                    eventId: binding.get('model.id')
                 }, res).then(function (res) {
 
                     window.Server.result.get(res.resultId).then(function (resultModel) {
                         binding
                             .atomically()
-                            .set('eventInfo.mode', 'normal')
-                            .set('eventInfo.result', Immutable.fromJS(resultModel))
-                            .set('eventInfo.resultId', resultModel.id)
+                            .set('model.mode', 'normal')
+                            .set('model.result', Immutable.fromJS(resultModel))
+                            .set('model.resultId', resultModel.id)
                             .commit();
                     });
                 });
@@ -257,9 +270,9 @@ EventView = React.createClass({
     getScore: function (order) {
         var self = this,
             binding = self.getDefaultBinding(),
-            resultBinding = binding.sub('eventInfo.result'),
-            closed = binding.get('eventInfo.resultId'),
-            participant = binding.sub('eventInfo.participants.' + order);
+            resultBinding = binding.sub('model.result'),
+            closed = binding.get('model.resultId'),
+            participant = binding.sub('model.participants.' + order);
 
         if (resultBinding.get()) {
             return <span>{resultBinding.get(['summary', 'byTeams', participant.get('id')]) || '0'}</span>;
@@ -270,7 +283,7 @@ EventView = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            eventInfo = binding.sub('eventInfo'),
+            eventInfo = binding.sub('model'),
             closed = eventInfo.get('resultId'),
             edit = eventInfo.get('mode') === 'edit',
             closeMode = eventInfo.get('mode') === 'close',
@@ -285,7 +298,7 @@ EventView = React.createClass({
                 <div className={eventClass}>
                     <h2 className="eEvent_title">{eventInfo.get('name')}
                     {!closed && !closeMode ?
-                        <span className="eEvent_edit" onClick={self.onClickEdit}>{!edit ? 'edit' : 'cancel'}</span> : null}
+                        <span className="eEvent_edit" onClick={self.onClickEdit}>{!edit ? 'edit' : 'normal'}</span> : null}
                     {closed ? <span className="eEvent_closed">match closed</span> : null}
                     </h2>
                     <h3 className="eEvent_date">Start: {date}</h3>
@@ -320,7 +333,7 @@ EventView = React.createClass({
                     <div className="eEvent_teams">
                         <div className="eEvent_team">
                             {self.getPlayers(0)}
-                        </div>
+						</div>
                         <div className="eEvent_team">
                             {self.getPlayers(1)}
                         </div>
