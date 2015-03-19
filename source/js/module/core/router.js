@@ -84,7 +84,7 @@ RouterView = React.createClass({
 		var self = this;
 
 		self.siteRoutes[route.path] = function(){
-			var pathParameters = Array.prototype.slice.call(arguments, 1);
+			var pathParameters = Array.prototype.slice.call(arguments, 0);
 
 			// Обновление значений параметрезированных частей пути
 			pathParameters.length && self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));
