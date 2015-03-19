@@ -24,21 +24,41 @@ EventView = React.createClass({
             }
 		}).then(function (res) {
             var participants = res.participants;
-            binding
-				.set('model', Immutable.fromJS(res))
-				.set('rivals', Immutable.List());
 
-            binding
-                .sub('model')
-                .meta()
-                .set('mode', 'normal');
-
-            if (participants.length === 1 ) {
+            if (participants.length === 1) {
                 participants.push({
                     schoolId: res.invites[0].invitedId,
 					players: []
                 });
             }
+
+			binding
+				.set('model', Immutable.fromJS(res))
+				.set('rivals', Immutable.List());
+
+			binding
+				.sub('model')
+				.meta()
+				.set('mode', 'normal');
+
+			binding.addListener('model.participants', function (descriptor) {
+				var path = descriptor.getPath(),
+					previos = descriptor.getPreviousValue() ? descriptor.getPreviousValue().toJS() : null,
+					current;
+
+				if (path[1] === 'players' && previos) {
+					current = binding.toJS(['model', 'participants'].concat(path));
+
+					if (current.length > previos.length) {
+						window.Server.playersRelation.put({
+							teamId: binding.get(['model', 'participants', path[0], 'id']),
+							studentId: current.pop().id
+						}).then(function (res) {
+							console.log(res);
+						});
+					}
+				}
+			});
 
             res.participants.forEach(function (rival, index) {
                 var serviceUrl = window.Server.school,
