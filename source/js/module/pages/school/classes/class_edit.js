@@ -8,22 +8,22 @@ ClassEditPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
-			classId = routingData.id;
+			formId = routingData.id;
 
 		binding.clear();
 
-		if (classId) {
-			window.Server.class.get(classId).then(function (data) {
+		if (formId) {
+			window.Server.form.get(formId).then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
-			self.classId = classId;
+			self.formId = formId;
 		}
 	},
 	submitEdit: function(data) {
 		var self = this;
 
-		window.Server.class.put(self.classId, data).then(function() {
+		window.Server.form.put(self.formId, data).then(function() {
 			self.isMounted() && (document.location.hash = 'school/classes');
 		});
 	},

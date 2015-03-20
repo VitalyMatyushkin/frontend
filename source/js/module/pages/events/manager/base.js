@@ -40,7 +40,7 @@ EventManagerBase = React.createClass({
 				return _class.get('selectedId');
 			});
 
-        return window.Server.classesFilter.get({
+        return window.Server.formsFilter.get({
             filter: {
                 where: {
                     schoolId: schoolId,

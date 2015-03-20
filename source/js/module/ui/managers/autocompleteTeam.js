@@ -70,7 +70,7 @@ AutocompleteTeam = React.createClass({
         if (rivalsType === 'houses') {
             filter.where.houseId = binding.get('id');
         } else if (rivalsType === 'classes') {
-            filter.where.classId = binding.get('id');
+            filter.where.formId = binding.get('id');
         }
 
         return window.Server.studentsFilter.get({

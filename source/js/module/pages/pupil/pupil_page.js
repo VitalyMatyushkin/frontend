@@ -19,7 +19,7 @@ LeanerView = React.createClass({
 			leanerData = data;
 
 			// Лютый костыль, пока не будет метода с полными данными
-			Server.class.get(data.classId).then(function(classData) {
+			Server.form.get(data.formId).then(function(classData) {
 				leanerData.classData = classData;
 
 				Server.house.get(data.houseId).then(function(houseData) {

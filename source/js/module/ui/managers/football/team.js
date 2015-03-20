@@ -74,7 +74,7 @@ FootballManager = React.createClass({
 		if (rivalsType === 'houses') {
 			filter.where.houseId = binding.get(['autocomplete', rivalsType, self.props.order, 'selectedId']);
 		} else if (rivalsType === 'classes') {
-			filter.where.classId = binding.get(['autocomplete', rivalsType, self.props.order, 'selectedId']);
+			filter.where.formId = binding.get(['autocomplete', rivalsType, self.props.order, 'selectedId']);
 		}
 
 		return window.Server.studentsFilter.get({

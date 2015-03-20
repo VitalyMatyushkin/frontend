@@ -68,8 +68,8 @@ EventView = React.createClass({
                     serviceUrl = window.Server.house;
                     id = rival.houseId;
                 } else if (rival.rivalType === 'class') {
-                    serviceUrl = window.Server.class;
-                    id = rival.classId;
+                    serviceUrl = window.Server.form;
+                    id = rival.formId;
                 }
 
                 serviceUrl.get(id).then(function (res) {

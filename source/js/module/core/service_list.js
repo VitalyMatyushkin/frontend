@@ -29,11 +29,11 @@ serviceList = {
 		serviceList.schoolHouses = new Service('/houses?filter[where][schoolId]={schoolId}', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
 
-		// classes
-		serviceList.classes = new Service('/classes', binding);
-		serviceList.classesFilter = new Service('/classes', binding);
-		serviceList.schoolClasses = new Service('/classes?filter[where][schoolId]={schoolId}', binding);
-		serviceList.class = new Service('/classes/{classId}', binding);
+		// forms
+		serviceList.forms = new Service('/forms', binding);
+		serviceList.formsFilter = new Service('/forms', binding);
+		serviceList.schoolForms = new Service('/forms?filter[where][schoolId]={schoolId}', binding);
+		serviceList.form = new Service('/forms/{formId}', binding);
 
 		//events
 		serviceList.events = new Service('/events', binding);

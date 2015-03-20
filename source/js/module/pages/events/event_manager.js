@@ -143,7 +143,7 @@ EventManager = React.createClass({
                         rivalModel.houseId = rival.id;
                         rivalModel.rivalType = 'house';
                     } else if (event.rivalsType === 'classes') {
-                        rivalModel.classId = rival.id;
+                        rivalModel.formId = rival.id;
                         rivalModel.rivalType = 'class';
                     } else {
                         rivalModel.rivalType = 'school';
