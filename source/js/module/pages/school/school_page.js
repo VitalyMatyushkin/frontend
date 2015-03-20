@@ -29,9 +29,9 @@ OneSchoolPage = React.createClass({
 			name: 'Pupils',
 			key: 'Pupils'
 		},{
-			href: '/#school/classes',
-			name: 'Classes',
-			key: 'Classes'
+			href: '/#school/forms',
+			name: 'Forms',
+			key: 'Forms'
 		},{
 			href: '/#school/houses',
 			name: 'Houses',
@@ -73,7 +73,7 @@ OneSchoolPage = React.createClass({
 					<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
 						<Route path="/school/summary" binding={binding.sub('summary')} component="module/pages/school/summary/summary_page"  />
 						<Route path="/school/pupils /school/pupils/:mode" binding={binding.sub('pupils')} component="module/pages/school/pupils/pupils_page"  />
-						<Route path="/school/classes /school/classes/:mode" binding={binding.sub('classes')} component="module/pages/school/classes/classes_page"  />
+						<Route path="/school/forms /school/forms/:mode" binding={binding.sub('classes')} component="module/pages/school/classes/classes_page"  />
 						<Route path="/school/houses /school/houses/:mode" binding={binding.sub('houses')} component="module/pages/school/houses/houses_page"  />
 					</RouterView>
 				</div>
