@@ -24,7 +24,7 @@ ClassAddPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<ClassForm title="Add new class..." onFormSubmit={self.submitAdd} binding={binding} />
+			<ClassForm title="Add new form..." onFormSubmit={self.submitAdd} binding={binding} />
 		)
 	}
 });
