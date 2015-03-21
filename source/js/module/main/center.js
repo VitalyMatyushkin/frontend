@@ -19,24 +19,24 @@ Center = React.createClass({
 
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
 
-						<Route path="/register"  binding={binding.sub('form.register')} component="module/pages/register/user" unauthorizedAccess={true}  />
-						<Route path="/login" binding={binding.sub('userData')} component="module/pages/login/user" loginRoute={true}  />
-						<Route path="/logout" binding={binding.sub('userData')} component="module/pages/logout/logout" unauthorizedAccess={true}  />
-						<Route path="/settings /settings/:subPage" binding={binding.sub('userData')} component="module/pages/settings/settings_page" />
+						<Route path="/register"  binding={binding.sub('form.register')} component="module/manager_mode/register/user" unauthorizedAccess={true}  />
+						<Route path="/login" binding={binding.sub('userData')} component="module/manager_mode/login/user" loginRoute={true}  />
+						<Route path="/logout" binding={binding.sub('userData')} component="module/manager_mode/logout/logout" unauthorizedAccess={true}  />
+						<Route path="/settings /settings/:subPage" binding={binding.sub('userData')} component="module/manager_mode/settings/settings_page" />
 
-						<Route path="/pupil" binding={binding.sub('pupilPage')} component="module/pages/pupil/pupil_page" />
+						<Route path="/pupil" binding={binding.sub('pupilPage')} component="module/manager_mode/pupil/pupil_page" />
 
-						<Route path="/profile/:schoolID" binding={binding.sub('schoolProfile')} component="module/pages/school_profile/school_profile_page"  />
+						<Route path="/profile/:schoolID" binding={binding.sub('schoolProfile')} component="module/manager_mode/school_profile/school_profile_page"  />
 
-						<Route path="/school_admin/:subPage /school_admin/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/pages/school_admin/school_page"  />
+						<Route path="/school_admin/:subPage /school_admin/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/manager_mode/school_admin/school_page"  />
 
-						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsList')} component="module/pages/schools/schools_page"  />
+						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsList')} component="module/manager_mode/schools/schools_page"  />
 
 
-                        <Route path="/events /events/:subPage" binding={binding.sub('events')} component="module/pages/events/events"  />
-                        <Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')} component="module/pages/event/event"  />
+                        <Route path="/events /events/:subPage" binding={binding.sub('events')} component="module/manager_mode/events/events"  />
+                        <Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')} component="module/manager_mode/event/event"  />
 
-						<Route path="/invites /invites/:filter /invites/:inviteId/:mode" binding={binding.sub('invites')} component="module/pages/invites/invites"  />
+						<Route path="/invites /invites/:filter /invites/:inviteId/:mode" binding={binding.sub('invites')} component="module/manager_mode/invites/invites"  />
                     </RouterView>
 
 				</div>
@@ -46,16 +46,16 @@ Center = React.createClass({
 });
 
 /*
- <Route path="/leaner" binding={binding.sub('leaner')} component="module/pages/leaner/page" />
+ <Route path="/leaner" binding={binding.sub('leaner')} component="module/manager_mode/leaner/page" />
 
- <Route path="/schools" binding={binding.sub('schoolsList')} component="module/pages/schools/page"  />
+ <Route path="/schools" binding={binding.sub('schoolsList')} component="module/manager_mode/schools/page"  />
 
 
- <Route path="/schools/view" binding={binding.sub('school')} component="module/pages/school_admin/page"  />
+ <Route path="/schools/view" binding={binding.sub('school')} component="module/manager_mode/school_admin/page"  />
 
  */
-//<Route path="/register" component="module/pages/register/school" pageName="register"  />
-//<Route binding={binding.sub('schoolsList')} path="/schools/add" component="module/pages/schools/add" pageName="schoolsAdd"  />
-//<Route path="/me" component="module/pages/me/me" pageName="me"  />
+//<Route path="/register" component="module/manager_mode/register/school" pageName="register"  />
+//<Route binding={binding.sub('schoolsList')} path="/schools/add" component="module/manager_mode/schools/add" pageName="schoolsAdd"  />
+//<Route path="/me" component="module/manager_mode/me/me" pageName="me"  />
 
 module.exports = Center;

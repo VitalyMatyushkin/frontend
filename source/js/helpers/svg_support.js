@@ -1,4 +1,4 @@
-(function (doc) {
+;(function (doc) {
 	var scripts = doc.getElementsByTagName('script'),
 		script = scripts[scripts.length - 1],
 		xhr = new XMLHttpRequest();
