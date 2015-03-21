@@ -11,7 +11,7 @@ var SVG = require('module/ui/svg'),
 	getMenuNodes: function() {
 		var self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
-			currentPath = self.getDefaultBinding().get('currentPath'),
+			currentPath = self.getDefaultBinding().get('currentPath') || '/',
 			authorization = globalBinding.get('userData.authorizationInfo.id'),
 			MenuItemsViews = null;
 

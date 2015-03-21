@@ -152,6 +152,11 @@ RouterView = React.createClass({
 			currentPath = self.currentPath,
 			siteComponent = self.siteComponents[currentPath];
 
+		// Вынужденный костыль, надо сменить роутер :D
+		if (document.location.href.indexOf('#') === -1) {
+			document.location = '#';
+		}
+
 		return siteComponent ? React.createElement(siteComponent.View, siteComponent.routeComponent.props) : null;
 	}
 });

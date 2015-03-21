@@ -4,7 +4,6 @@ var OneSchoolPage,
 	SubMenu = require('module/ui/menu/sub_menu'),
 	SVG = require('module/ui/svg'),
 	SchoolInfo = require('module/as_user/pages/school/view/school_info'),
-	UserButtons = require('module/as_user/pages/school/view/user_buttons'),
 	SchoolName = require('module/as_user/pages/school/view/school_name'),
 	Map = require('module/as_user/pages/school/view/map');
 
@@ -30,17 +29,9 @@ OneSchoolPage = React.createClass({
 			name: 'Summary',
 			key: 'Summary'
 		},{
-			href: '/#profile/pupils',
-			name: 'Teams',
-			key: 'Teams'
-		},{
-			href: '/#profile/forms',
-			name: 'Forms',
-			key: 'Forms'
-		},{
-			href: '/#profile/houses',
-			name: 'Houses',
-			key: 'Houses'
+			href: '/#profile/news',
+			name: 'News',
+			key: 'News'
 		}];
 	},
 
@@ -87,7 +78,6 @@ OneSchoolPage = React.createClass({
 					<div className="eUserDataColumn_wrap" id="jsSubPage">
 
 
-						<UserButtons />
 
 
 

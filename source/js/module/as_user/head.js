@@ -13,7 +13,7 @@ Head = React.createClass({
 			icon: 'icon_home',
 			name: 'School',
 			key: 'School',
-			routes: ['/school']
+			routes: ['/school', '/']
 		},{
 			href: '/#teams/summary',
 			icon: 'icon_teams',
