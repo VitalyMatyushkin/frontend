@@ -1,4 +1,5 @@
 var Autocomplete = require('module/ui/autocomplete/autocomplete'),
+    If = require('module/ui/if/if'),
     EventManagerBase;
 
 EventManagerBase = React.createClass({
@@ -85,13 +86,18 @@ EventManagerBase = React.createClass({
     changeCompleteType: function (event) {
         var binding = this.getDefaultBinding();
 
+        binding.set('model.type', event.target.value);
         binding.set('autocomplete.selectedId', null);
-        binding.set('newEvent.model.rivalsType', event.target.value);
+    },
+    changeCompleteGender: function (event) {
+        var binding = this.getDefaultBinding();
+
+        binding.set('model.gender', event.target.value);
     },
 	changeCompleteSport: function (event) {
 		var binding = this.getDefaultBinding();
 
-		binding.set('newEvent.model.sportId', event.target.value);
+		binding.set('model.sportId', event.target.value);
 	},
 	onSelectRival: function (id, response, model) {
 		var self = this,
@@ -100,7 +106,7 @@ EventManagerBase = React.createClass({
 		if (model) {
 			model.players = [];
 
-			binding.update('newEvent.rivals', function (rivals) {
+			binding.update('rivals', function (rivals) {
 				var found = rivals.filter(function (rival) {
 					return rival.get('id') === id;
 				});
@@ -116,7 +122,7 @@ EventManagerBase = React.createClass({
 	getDefaultSportsId: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			football = binding.get('sports.models').find(function (sport) {
+			football = self.getBinding('sports').get('models').find(function (sport) {
 				return sport.get('name') === 'football';
 			});
 
@@ -124,7 +130,7 @@ EventManagerBase = React.createClass({
 	},
     getSports: function () {
         var self = this,
-            sportsBinding = self.getDefaultBinding().sub('sports');
+            sportsBinding = self.getBinding('sports');
 
         return sportsBinding.get('models').map(function (sport) {
             return <Morearty.DOM.option
@@ -134,18 +140,41 @@ EventManagerBase = React.createClass({
 			>{sport.get('name')}</Morearty.DOM.option>
         }).toArray();
     },
+    getGenders: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            sportId = binding.get('model.sportId'),
+            sportsBinding = self.getBinding('sports'),
+            sport = sportsBinding.get('models').find(function (sport) {
+                return sport.get('id') === sportId;
+            });
+
+        if (sport) {
+            return sport.toJS().limits.genders.map(function (gender) {
+                var names = {
+                    male: 'boys',
+                    female: 'girls'
+                };
+
+                return <Morearty.DOM.option key={gender + '-gender'} value={gender}>{names[gender]}</Morearty.DOM.option>;
+            });
+        } else {
+            return null;
+        }
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-            rivalsType = binding.get('newEvent.model.rivalsType'),
-			sportId = binding.get('newEvent.model.sportId'),
+			sportId = binding.get('model.sportId'),
             services = {
-                schools: self.serviceSchoolFilter.bind(self, activeSchoolId),
-                houses: self.serviceHouseFilter.bind(self, activeSchoolId),
-                classes: self.serviceClassFilter.bind(self, activeSchoolId)
-            };
+                'inter-schools': self.serviceSchoolFilter.bind(self, activeSchoolId),
+                'houses': self.serviceHouseFilter.bind(self, activeSchoolId),
+                'internal': self.serviceClassFilter.bind(self, activeSchoolId)
+            },
+            gender = binding.get('model.gender'),
+            type = binding.get('model.type');
 
 		return <div className="eManager_base">
             <div className="eManager_group">
@@ -153,60 +182,91 @@ EventManagerBase = React.createClass({
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
-                    value={binding.get('newEvent.name')}
+                    value={binding.get('model.name')}
                     placeholder={'enter name'}
-                    onChange={Morearty.Callback.set(binding.sub('newEvent.name'))}
+                    onChange={Morearty.Callback.set(binding.sub('model.name'))}
                 />
             </div>
-            <div className="eManager_group">
+            <If condition={!!binding.get('model.name')}>
+                <div className="eManager_group">
                     {'What\'s Event description?'}
-                <Morearty.DOM.textarea
-                    className="eManager_field mTextArea"
-                    type="text"
-                    value={binding.get('newEvent.description')}
-                    placeholder={'enter description'}
-                    onChange={Morearty.Callback.set(binding.sub('newEvent.description'))}
-                />
-            </div>
+                    <Morearty.DOM.textarea
+                        className="eManager_field mTextArea"
+                        type="text"
+                        value={binding.get('model.description')}
+                        placeholder={'enter description'}
+                        onChange={Morearty.Callback.set(binding.sub('model.description'))}
+                    />
+                </div>
+            </If>
+            <If condition={!!binding.get('model.name')}>
+                <div className="eManager_group">
+                        {'What\'s the game?'}
+                    <select
+                        className="eManager_select"
+                        value={sportId}
+                        onChange={self.changeCompleteSport}>
+                        <Morearty.DOM.option
+                            key="nullable-type"
+                            value={null}>not selected</Morearty.DOM.option>
+                        {self.getSports()}
+                    </select>
+                </div>
+            </If>
+            <If condition={!!binding.get('model.sportId')}>
+                <div className="eManager_group">
+                    {'Are players girl or boys?'}
+                    <select
+                        className="eManager_select"
+                        defaultValue="male"
+                        value={gender}
+                        onChange={self.changeCompleteGender}>
+                        {self.getGenders()}
+                    </select>
+                </div>
+            </If>
+            <If condition={!!binding.get('model.sportId')}>
+                <div className="eManager_group">
+                    {'What type of a game?'}
+                    <select
+                        className="eManager_select"
+                        defaultValue={null}
+                        value={type}
+                        onChange={self.changeCompleteType}>
+                        <Morearty.DOM.option key="nullable-type" value={null}>not selectable</Morearty.DOM.option>
+                        <Morearty.DOM.option key="inter-schools" value="inter-schools">inter-schools</Morearty.DOM.option>
+                        <Morearty.DOM.option key="houses-type" value="houses">houses</Morearty.DOM.option>
+                        <Morearty.DOM.option key="anyway-type" value="internal">internal</Morearty.DOM.option>
+                    </select>
+                </div>
+            </If>
             <div className="eManager_group">
-                    {'What\'s the game?'}
-                <select
-                    className="eManager_select"
-					value={sportId}
-					defaultValue={self.getDefaultSportsId()}
-                    onChange={self.changeCompleteSport}>
-                    {self.getSports()}
-                </select>
-            </div>
-            <div className="eManager_group">
-                Rivals will be
-                <select
-                    className="eManager_select"
-					defaultValue="schools"
-                    value={rivalsType}
-                    onChange={self.changeCompleteType}>
-                    <Morearty.DOM.option key="schools-type" value="schools">schools</Morearty.DOM.option>
-                    <Morearty.DOM.option key="houses-type" value="houses">houses</Morearty.DOM.option>
-                    <Morearty.DOM.option key="classes-type" value="classes">classes</Morearty.DOM.option>
-                </select>
-            </div>
-            <div className="eManager_group">
-                {rivalsType === 'houses' || rivalsType === 'classes' ? 'Who are Rivals?' : 'Who is your Rival?'}
-                <Autocomplete
-                    serviceFilter={services[rivalsType]}
-                    serverField="name"
-					placeholder={'enter rival name'}
-					onSelect={self.onSelectRival}
-                    binding={binding.sub(['autocomplete', rivalsType, 0])}
-                />
-                {rivalsType === 'houses' || rivalsType === 'classes' ?
+                {type === 'houses' || type === 'inter-schools' ? 'Who are rivals?' : 'Who is your Rival?'}
+                <If condition={type === 'inter-schools'}>
                     <Autocomplete
-                        serviceFilter={services[rivalsType]}
+                        serviceFilter={services[type]}
                         serverField="name"
+                        placeholder={'enter school name'}
                         onSelect={self.onSelectRival}
-                        binding={binding.sub(['autocomplete', rivalsType, 1])}
-                    /> : null
-                }
+                        binding={binding.sub(['autocomplete', type, 0])}
+                    />
+                </If>
+                <If condition={type === 'houses'}>
+                    <Autocomplete
+                        serviceFilter={services[type]}
+                        serverField="name"
+                        placeholder={'enter first house name'}
+                        onSelect={self.onSelectRival}
+                        binding={binding.sub(['autocomplete', type, 0])}
+                    />
+                    <Autocomplete
+                        serviceFilter={services[type]}
+                        serverField="name"
+                        placeholder={'enter second house name'}
+                        onSelect={self.onSelectRival}
+                        binding={binding.sub(['autocomplete', type, 1])}
+                    />
+                </If>
             </div>
         </div>;
 	}

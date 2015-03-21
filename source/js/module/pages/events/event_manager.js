@@ -14,20 +14,16 @@ EventManager = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
         return Immutable.fromJS({
-			newEvent: {
-				model: {
-					name: '',
-					startTime: '',
-					rivalsType: 'schools',
-					type: 'external',
-					minTeams: 2,
-					maxTeams: 2,
-					status: 'registration'
-				},
-				inviteModel: {},
-                step: 1,
-				rivals: [{id: activeSchoolId}]
-			}
+            model: {
+                name: '',
+                startTime: new Date(),
+                type: null,
+                sportId: null,
+                gender: null
+            },
+            inviteModel: {},
+            step: 1,
+            rivals: [{id: activeSchoolId}]
 		});
 	},
 	componentWillMount: function () {
@@ -36,14 +32,14 @@ EventManager = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding();
 
-		binding.sub('newEvent.model.rivalsType').addListener(function (descriptor) {
+		binding.sub('model.rivalsType').addListener(function (descriptor) {
 			if (descriptor.isValueChanged()) {
 				var rivalsType = binding.get(descriptor.getPath()),
 					type = rivalsType !== 'schools' ? 'internal' : 'external',
 					schoolInfo = rootBinding.get('schoolInfo');
 
-				binding.set('newEvent.model.type', type);
-				binding.update('newEvent.rivals', function () {
+				binding.set('model.type', type);
+				binding.update('rivals', function () {
 					var rivals = Immutable.List();
 
 					if (rivalsType === 'schools' && schoolInfo) {
@@ -60,10 +56,10 @@ EventManager = React.createClass({
 		rootBinding.sub('schoolInfo').addListener(function (descriptor) {
 			if (descriptor.isValueChanged()) {
 				var schoolInfo = rootBinding.get(descriptor.getPath()).get('schoolInfo'),
-					rivalsType = binding.get('newEvent.model.rivalsType');
+					rivalsType = binding.get('model.rivalsType');
 
 				if (rivalsType === 'schools') {
-					binding.merge('newEvent.rivals.0',schoolInfo);
+					binding.merge('rivals.0',schoolInfo);
 				}
 			}
 		});
@@ -76,16 +72,16 @@ EventManager = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
 
-        binding.set('newEvent.model.startTime', date.toISOString());
-		binding.set('newEvent.model.startRegistrationTime', date.toISOString());
-		binding.set('newEvent.model.endRegistrationTime', date.toISOString());
-        binding.set('newEvent.step', 2);
+        binding.set('model.startTime', date.toISOString());
+		binding.set('model.startRegistrationTime', date.toISOString());
+		binding.set('model.endRegistrationTime', date.toISOString());
+        binding.set('step', 2);
     },
 	toNext: function () {
 		var self = this,
 			binding = self.getDefaultBinding();
 
-        binding.update('newEvent.step', function (step) {
+        binding.update('step', function (step) {
             return step + 1;
         });
 	},
@@ -93,7 +89,7 @@ EventManager = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-        binding.update('newEvent.step', function (step) {
+        binding.update('step', function (step) {
             return step - 1;
         });
 	},
@@ -102,8 +98,8 @@ EventManager = React.createClass({
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding(),
-            model = binding.toJS('newEvent.model'),
-			rivals = binding.toJS('newEvent.rivals');
+            model = binding.toJS('model'),
+			rivals = binding.toJS('rivals');
 
 		if (!model.name) {
 			model.name = model.rivalsType + ' ' + model.startTime;
@@ -171,7 +167,7 @@ EventManager = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            step = binding.get('newEvent.step'),
+            step = binding.get('step'),
             titles = [
                 'Choose Date',
                 'Basic Info',
@@ -182,7 +178,12 @@ EventManager = React.createClass({
 				mDate: step === 1,
 				mBase: step === 2,
 				mTeamManager: step === 3
-			});
+			}),
+            binding = {
+                default: binding,
+                sports: self.getBinding('sports'),
+                calendar: self.getBinding('calendar')
+            };
 
 		return <div>
            	<h3>{'[' + step + '/' + titles.length + ']: ' + titles[step - 1]}</h3>
@@ -191,7 +192,7 @@ EventManager = React.createClass({
                     binding={rootBinding.sub('events.calendar')}
                     onSelect={self.onSelectDate} /> : null}
                 {step === 2 ? <EventManagerBase binding={binding} /> : null}
-                {step === 3 ? <Manager binding={binding.sub('newEvent')} /> : null}
+                {step === 3 ? <Manager binding={binding} /> : null}
             </div>
 			<div className="eEvents_buttons">
 				{step > 1 ? <span className="bButton eEvents_button" onClick={self.toBack}>Back</span> : null}

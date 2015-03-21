@@ -19,7 +19,8 @@ EventView = React.createClass({
                 sync: false
             },
             models: [],
-            sync: false
+            sync: false,
+            newEvent: {}
         });
     },
     componentWillMount: function () {
@@ -31,12 +32,11 @@ EventView = React.createClass({
             teamsBinding = binding.sub('teams');
 
         window.Server.sports.get().then(function (data) {
-            sportsBinding.update(function () {
-                return Immutable.fromJS({
-                    sync: true,
-                    models: data
-                });
-            });
+            sportsBinding
+                .atomically()
+                .set('sync', true)
+                .set('models', Immutable.fromJS(data))
+                .commit();
         });
 
         window.Server.eventsBySchoolId.get({
@@ -79,7 +79,10 @@ EventView = React.createClass({
             <div className='bEvents'>
                 <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
                     <Route path='/events/calendar'  binding={binding}component='module/pages/events/events_calendar'   />
-                    <Route path='/events/manager' binding={binding} component='module/pages/events/event_manager'  />
+                    <Route
+                        path='/events/manager'
+                        binding={{default: binding.sub('newEvent'), sports: binding.sub('sports'), calendar: binding.sub('calendar')}}
+                        component='module/pages/events/event_manager'  />
                     <Route path='/events/challenges' binding={binding} component='module/pages/events/events_challenges'  />
                     <Route path='/events/invites' binding={binding} component='module/pages/events/events_invites'  />
                 </RouterView>
