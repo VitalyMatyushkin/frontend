@@ -1,7 +1,7 @@
 var OneSchoolPage,
 	RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
-	SubMenu = require('module/ui/sub_menu'),
+	SubMenu = require('module/ui/menu/sub_menu'),
 	SVG = require('module/ui/svg'),
 	SchoolInfo = require('module/manager_mode/school_profile/view/school_info'),
 	UserButtons = require('module/manager_mode/school_profile/view/user_buttons'),

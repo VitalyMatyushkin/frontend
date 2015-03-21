@@ -1,7 +1,7 @@
 var OneSchoolPage,
 	RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
-	SubMenu = require('module/ui/sub_menu');
+	SubMenu = require('module/ui/menu/sub_menu');
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
