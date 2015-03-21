@@ -59,11 +59,17 @@ Service = (function() {
 					promise.resolve(data);
 				},
 				beforeSend: function (xhr) {
-					var authorizationInfo = authorization.toJS();
+					var authorizationInfo,
+						authorizationInfo;
 
-					if (authorizationInfo && authorizationInfo.id) {
-						xhr.setRequestHeader ('Authorization', authorizationInfo.id);
+					if (authorization) {
+						authorizationInfo = authorization.toJS();
+
+						if (authorizationInfo && authorizationInfo.id) {
+							xhr.setRequestHeader ('Authorization', authorizationInfo.id);
+						}
 					}
+
 				}
 			});
 

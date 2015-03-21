@@ -3,10 +3,10 @@ var OneSchoolPage,
 	Route = require('module/core/route'),
 	SubMenu = require('module/ui/menu/sub_menu'),
 	SVG = require('module/ui/svg'),
-	SchoolInfo = require('module/as_manager/pages/school_profile/view/school_info'),
-	UserButtons = require('module/as_manager/pages/school_profile/view/user_buttons'),
-	SchoolName = require('module/as_manager/pages/school_profile/view/school_name'),
-	Map = require('module/as_manager/pages/school_profile/view/map');
+	SchoolInfo = require('module/as_user/pages/school/view/school_info'),
+	UserButtons = require('module/as_user/pages/school/view/user_buttons'),
+	SchoolName = require('module/as_user/pages/school/view/school_name'),
+	Map = require('module/as_user/pages/school/view/map');
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -14,8 +14,7 @@ OneSchoolPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			routerParameters = globalBinding.toJS('routing.pathParameters'),
-			activeSchoolId = routerParameters[0];
+			activeSchoolId = globalBinding.get('activeSchoolId');
 
 		if (!activeSchoolId) {
 			document.location.hash = 'schools';

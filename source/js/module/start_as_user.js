@@ -1,7 +1,4 @@
-var ApplicationView = require('module/as_manager/application'),
-	userDataInstance = require('module/data/user_data'),
-	userRulesInstance = require('module/data/user_rules'),
-	authController = require('module/core/auth_controller'),
+var ApplicationView = require('module/as_user/application'),
 	serviceList = require('module/core/service_list'),
 	MoreartyContext,
 	binding;
@@ -10,8 +7,7 @@ function runMainMode() {
 // Создание контекста Morearty
 	MoreartyContext = Morearty.createContext({
 		initialState: {
-			userData: userDataInstance.getDefaultState(),
-			userRules: userRulesInstance.getDefaultState(),
+			activeSchoolId: '0f338934-0b0d-4336-ac63-34847789f8db',
 			routing: {
 				currentPath: '',		// текущий путь
 				currentPageName: '',	// имя текущей страницы, если есть
@@ -21,46 +17,6 @@ function runMainMode() {
 			},
 			schoolProfile: {
 				schoolProfileRouting: {}
-			},
-			activeSchool: {
-				classes: {
-					pupilsList: [],
-					pupilsRouting: {},
-					pupilForm: {}
-				},
-				houses: {
-					pupilsList: [],
-					pupilsRouting: {},
-					pupilForm: {}
-				},
-				pupils: {
-					pupilsList: [],
-					pupilsRouting: {},
-					pupilForm: {}
-				},
-				summary: {},
-				schoolRouting: {}
-			},
-			schoolsList: [],
-			events: {
-				sync: false,
-				models: [],
-				calendar: {
-					currentDate: new Date(),
-					mode: 'month'
-				}
-			},
-			teams: {
-				sync: false,
-				models: []
-			},
-			invites: {
-				sync: false,
-				models: []
-			},
-			sports: {
-				sync: false,
-				models: []
 			}
 		},
 		options: {
@@ -72,17 +28,10 @@ function runMainMode() {
 
 	window.Server = serviceList;
 
-// Передача связывания контекста в классы данных
-	userDataInstance.setBinding(binding.sub('userData'));
-	userRulesInstance.setBinding(binding.sub('userRules'));
-
-// Включение авторизации сервисов
+	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize(binding);
-
-// Инициализация приложения
+	// Инициализация приложения
 	React.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
