@@ -9,9 +9,11 @@ EventManagerBase = React.createClass({
      * @param houseName
      * @returns {*}
      */
-    serviceHouseFilter: function(schoolId, houseName) {
+    serviceHouseFilter: function(houseName) {
         var self = this,
-            ids = self.getDefaultBinding().get('autocomplete.houses').toArray().map(function (house) {
+            binding = self.getDefaultBinding(),
+            schoolId = binding.get('schoolInfo.id'),
+            ids = binding.get('autocomplete.houses').toArray().map(function (house) {
 				return house.get('selectedId');
 			});
 
@@ -35,9 +37,11 @@ EventManagerBase = React.createClass({
      * @param className
      * @returns {*}
      */
-    serviceClassFilter: function(schoolId, className) {
+    serviceClassFilter: function(className) {
         var self = this,
-			ids = self.getDefaultBinding().get('autocomplete.classes').toArray().map(function (_class) {
+            binding = self.getDefaultBinding(),
+            schoolId = binding.get('schoolInfo.id'),
+			ids = binding.get('autocomplete.classes').toArray().map(function (_class) {
 				return _class.get('selectedId');
 			});
 
@@ -61,19 +65,16 @@ EventManagerBase = React.createClass({
      * @param schoolName
      * @returns {*}
      */
-    serviceSchoolFilter: function(schoolId, schoolName) {
+    serviceSchoolFilter: function(schoolName) {
         var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            userId = rootBinding.get('userData.authorizationInfo.userId');
+            binding = self.getDefaultBinding(),
+            schoolId = binding.get('schoolInfo.id');
 
         return window.Server.schools.get({
             filter: {
                 where: {
                     id: {
                         neq: schoolId
-                    },
-                    ownerId: {
-                        neq: userId
                     },
                     name: {
                         like: schoolName,
@@ -87,18 +88,19 @@ EventManagerBase = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             type = event.target.value,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            schoolInfo = rootBinding.get('schoolInfo'),
+            schoolInfo = binding.get('schoolInfo'),
             rivals = Immutable.List();
 
         if (type === 'inter-schools') {
-            rivals = rivals.push(rootBinding.get('schoolInfo'));
+            rivals = rivals.push(binding.get('schoolInfo'));
         } else if (type === 'internal') {
             rivals = Immutable.fromJS([
                 {
+                    id: null,
                     name: ''
                 },
                 {
+                    id: null,
                     name: ''
                 }
             ]);
@@ -121,17 +123,29 @@ EventManagerBase = React.createClass({
 
 		binding.set('model.sportId', event.target.value);
 	},
+    changeCompleteAges: function (event) {
+        var binding = this.getDefaultBinding(),
+            agesBinding = binding.sub('model.ages');
+
+        agesBinding.update(function (ages) {
+            if (ages === null) {
+                ages = Immutable.List();
+            }
+
+            return ages.push(event.target.value);
+        });
+    },
 	onSelectRival: function (id, response, model) {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		if (model) {
 			binding.update('rivals', function (rivals) {
-				var found = rivals.filter(function (rival) {
+				var index = rivals.findIndex(function (rival) {
 					return rival.get('id') === id;
 				});
 
-				if (found.count() === 0) {
+				if (index === -1) {
 					return rivals.push(Immutable.fromJS(model));
 				} else {
 					return rivals;
@@ -173,17 +187,29 @@ EventManagerBase = React.createClass({
             return null;
         }
     },
+    getAges: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            ages = binding.toJS('model.ages'),
+            availableAges = binding.get('availableAges');
+
+        return availableAges.sort().filter(function (age) {
+            return ages === null || ages.indexOf(age) === -1;
+        }).map(function (age) {
+            return <Morearty.DOM.option
+                key={age + '-ages'}
+                value={age}>{age}</Morearty.DOM.option>;
+        });
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-            activeSchoolName = rootBinding.get('schoolInfo.name'),
+            activeSchoolName = binding.get('schoolInfo.name'),
 			sportId = binding.get('model.sportId'),
             services = {
-                'inter-schools': self.serviceSchoolFilter.bind(self, activeSchoolId),
-                'houses': self.serviceHouseFilter.bind(self, activeSchoolId),
-                'internal': self.serviceClassFilter.bind(self, activeSchoolId)
+                'inter-schools': self.serviceSchoolFilter,
+                'houses': self.serviceHouseFilter,
+                'internal': self.serviceClassFilter
             },
             gender = binding.get('model.gender'),
             type = binding.get('model.type');
@@ -239,6 +265,21 @@ EventManagerBase = React.createClass({
                 </div>
             </If>
             <If condition={!!binding.get('model.sportId')}>
+                <div className="eManager_group">
+                    {'Ages'}
+                    <span className="eManager_eField">{binding.get('model.ages') && binding.get('model.ages').join(',')}</span>
+                    <select
+                        className="eManager_select"
+                        value={gender}
+                        onChange={self.changeCompleteAges}>
+                        <Morearty.DOM.option
+                            key="nullable-ages"
+                            value={null}>not selected</Morearty.DOM.option>
+                        {self.getAges()}
+                    </select>
+                </div>
+            </If>
+            <If condition={!!binding.get('model.ages')}>
                 <div className="eManager_group">
                     {'Game Type'}
                     <select

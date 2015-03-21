@@ -19,8 +19,10 @@ EventManager = React.createClass({
                 startTime: new Date(),
                 type: null,
                 sportId: null,
-                gender: null
+                gender: null,
+                ages: null
             },
+            schoolInfo: {},
             inviteModel: {},
             step: 1,
             rivals: [{id: activeSchoolId}],
@@ -28,7 +30,8 @@ EventManager = React.createClass({
                 'inter-schools': [],
                 houses: [],
                 internal: []
-            }
+            },
+            players: []
 		});
 	},
 	componentWillMount: function () {
@@ -37,40 +40,28 @@ EventManager = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding();
 
-		binding.sub('model.rivalsType').addListener(function (descriptor) {
-			if (descriptor.isValueChanged()) {
-				var rivalsType = binding.get(descriptor.getPath()),
-					type = rivalsType !== 'schools' ? 'internal' : 'external',
-					schoolInfo = rootBinding.get('schoolInfo');
+		window.Server.schoolsFindOne.get({
+            filter: {
+                where: {
+                    id: activeSchoolId
+                },
+                include: 'forms'
+            }
+        }).then(function (res) {
+            res.forms = res.forms || [];
+            var ages = res.forms.reduce(function (memo, form) {
+                if (memo.indexOf(form.age) === -1) {
+                    memo.push(form.age);
+                }
 
-				binding.set('model.type', type);
-				binding.update('rivals', function () {
-					var rivals = Immutable.List();
+                return memo;
+            }, []);
 
-					if (rivalsType === 'schools' && schoolInfo) {
-						rivals = Immutable.List(schoolInfo);
-					} else if (rivalsType === 'schools' && !schoolInfo) {
-						rivals = Immutable.List(Immutable.Map({id: activeSchoolId}));
-					}
-
-					return rivals;
-				});
-			}
-		});
-
-		rootBinding.sub('schoolInfo').addListener(function (descriptor) {
-			if (descriptor.isValueChanged()) {
-				var schoolInfo = rootBinding.get(descriptor.getPath()).get('schoolInfo'),
-					rivalsType = binding.get('model.rivalsType');
-
-				if (rivalsType === 'schools') {
-					binding.merge('rivals.0',schoolInfo);
-				}
-			}
-		});
-
-		window.Server.school.get(activeSchoolId).then(function (res) {
-			rootBinding.merge('schoolInfo', Immutable.fromJS(res));
+            binding
+                .atomically()
+                .set('schoolInfo', Immutable.fromJS(res))
+                .set('availableAges', Immutable.fromJS(ages))
+                .commit();
 		});
 	},
     onSelectDate: function (date) {
@@ -184,10 +175,15 @@ EventManager = React.createClass({
 				mBase: step === 2,
 				mTeamManager: step === 3
 			}),
-            binding = {
+            commonBinding = {
                 default: binding,
                 sports: self.getBinding('sports'),
                 calendar: self.getBinding('calendar')
+            },
+            managerBinding = {
+                default: binding.sub('eventInfo'),
+                rivals: binding.sub('rivals'),
+                players: binding.sub('players')
             };
 
 		return <div>
@@ -196,8 +192,8 @@ EventManager = React.createClass({
                 {step === 1 ? <CalendarView
                     binding={rootBinding.sub('events.calendar')}
                     onSelect={self.onSelectDate} /> : null}
-                {step === 2 ? <EventManagerBase binding={binding} /> : null}
-                {step === 3 ? <Manager binding={binding} /> : null}
+                {step === 2 ? <EventManagerBase binding={commonBinding} /> : null}
+                {step === 3 ? <Manager binding={managerBinding} /> : null}
             </div>
 			<div className="eEvents_buttons">
 				{step > 1 ? <span className="bButton eEvents_button" onClick={self.toBack}>Back</span> : null}
