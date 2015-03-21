@@ -1,4 +1,4 @@
-var PupilForm = require('module/pages/school/pupils/pupil_form'),
+var PupilForm = require('module/pages/school_admin/pupils/pupil_form'),
 	PupilEditPage;
 
 PupilEditPage = React.createClass({
@@ -26,7 +26,7 @@ PupilEditPage = React.createClass({
 		var self = this;
 
 		window.Server.student.put(self.studentId, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school/pupils');
+			self.isMounted() && (document.location.hash = 'school_admin/pupils');
 		});
 	},
 	render: function() {

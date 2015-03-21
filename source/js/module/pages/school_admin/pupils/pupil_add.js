@@ -1,10 +1,11 @@
-var ClassForm = require('module/pages/school/classes/class_form'),
-	ClassAddPage;
+var PupilForm = require('module/pages/school_admin/pupils/pupil_form'),
+	PupilEditPage;
 
-ClassAddPage = React.createClass({
+PupilEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
+			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
@@ -15,8 +16,8 @@ ClassAddPage = React.createClass({
 
 		data.schoolId = self.activeSchoolId;
 
-		self.activeSchoolId && window.Server.forms.post(data).then(function() {
-			document.location.hash = 'school/classes';
+		data.schoolId && window.Server.students.post(data).then(function() {
+			document.location.hash = 'school_admin/pupils';
 		});
 	},
 	render: function() {
@@ -24,10 +25,10 @@ ClassAddPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<ClassForm title="Add new form..." onFormSubmit={self.submitAdd} binding={binding} />
+			<PupilForm title="Add new pupil..." onFormSubmit={self.submitAdd} schoolId={self.activeSchoolId} binding={binding} />
 		)
 	}
 });
 
 
-module.exports = ClassAddPage;
+module.exports = PupilEditPage;

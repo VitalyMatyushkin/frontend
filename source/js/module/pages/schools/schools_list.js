@@ -32,7 +32,7 @@ SchoolListPage = React.createClass({
 				};
 
 				return (
-					<a href='/#school/summary' className="eSchoolList_one" onClick={setSchoolFunction(school.id)}>
+					<a href='/#school_admin/summary' className="eSchoolList_one" onClick={setSchoolFunction(school.id)}>
 						{school.name}
 					</a>
 				);
