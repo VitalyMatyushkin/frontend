@@ -23,7 +23,12 @@ EventManager = React.createClass({
             },
             inviteModel: {},
             step: 1,
-            rivals: [{id: activeSchoolId}]
+            rivals: [{id: activeSchoolId}],
+            autocomplete: {
+                'inter-schools': [],
+                houses: [],
+                internal: []
+            }
 		});
 	},
 	componentWillMount: function () {

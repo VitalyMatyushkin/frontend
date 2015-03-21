@@ -28,8 +28,7 @@ EventView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
             binding = self.getDefaultBinding(),
-            sportsBinding = binding.sub('sports'),
-            teamsBinding = binding.sub('teams');
+            sportsBinding = binding.sub('sports');
 
         window.Server.sports.get().then(function (data) {
             sportsBinding
