@@ -32,7 +32,7 @@ ClassEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<ClassForm title="Edit class" onFormSubmit={self.submitEdit} binding={binding} />
+			<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding} />
 		)
 	}
 });
