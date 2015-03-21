@@ -1,4 +1,4 @@
-var ApplicationView = require('module/manager_mode/application'),
+var ApplicationView = require('module/as_manager/application'),
 	userDataInstance = require('module/data/user_data'),
 	userRulesInstance = require('module/data/user_rules'),
 	authController = require('module/core/auth_controller'),
