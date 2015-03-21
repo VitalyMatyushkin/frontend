@@ -15,7 +15,8 @@ serviceList = {
 		// schools
 		serviceList.schools = new Service('/schools', binding);
 		serviceList.school = new Service('/schools/{id}', binding);
-		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
+        serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
+        serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 
 		// leaners
         serviceList.students = new Service('/students', binding);

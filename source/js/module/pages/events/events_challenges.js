@@ -8,7 +8,7 @@ ChallengesView = React.createClass({
             d1.getUTCDate() === d2.getUTCDate();
     },
 	addZeroToFirst: function (num) {
-		return String(num).length === 1 && String(num).indexOf('0') !== 0 ? '0' + num : num;
+		return String(num).length === 1 ? '0' + num : num;
 	},
     onClickChallenge: function (eventId) {
         document.location.hash = 'event/view?id=' + eventId;
@@ -35,8 +35,7 @@ ChallengesView = React.createClass({
                     <span className="eChallenge_rivalName">{event.get('name').split('vs')[1]}</span>
                 </div>
                 <div className="eChallenge_info">
-                    <span className="eChallenge_rivalsType">{'rivals: ' + event.get('rivalsType') + ';'}</span>
-                    <span className="eChallenge_status">{'status: ' + event.get('status')}</span>
+                    <span className="eChallenge_rivalsType">{event.get('type')}</span>
                 </div>
             </div>;
         }).toArray();

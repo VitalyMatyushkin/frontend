@@ -9,7 +9,6 @@ ChallengesList = React.createClass({
             events = binding.get('models').filter(function (event) {
                 var eventDate = new Date(event.get('startTime'));
 
-
                 return eventDate.getMonth() === currentDate.getMonth() &&
                     eventDate.getFullYear() === currentDate.getFullYear();
             });

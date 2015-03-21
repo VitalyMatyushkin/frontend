@@ -39,29 +39,12 @@ EventView = React.createClass({
             });
         });
 
-        window.Server.teamsBySchoolId.get(activeSchoolId).then(function (data) {
-            var filteredEvents = data.map(function (team) {
-                return team.events[0];
-            }).reduce(function (memo, val) {
-                var filtered = memo.filter(function (mem) {
-                    return mem.id === val.id;
-                });
-
-                if (filtered.length === 0) {
-                    memo.push(val);
-                }
-
-                return memo;
-            }, []);
-
-            teamsBinding.set(Immutable.fromJS({
-                sync: true,
-                models: data
-            }));
-
+        window.Server.eventsBySchoolId.get({
+            schoolId: activeSchoolId
+        }).then(function (data) {
             binding
                 .atomically()
-                .set('models', Immutable.fromJS(filteredEvents))
+                .set('models', Immutable.fromJS(data))
                 .set('sync', true)
                 .commit();
         });
@@ -95,8 +78,8 @@ EventView = React.createClass({
             <SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems} />
             <div className='bEvents'>
                 <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
-                    <Route path='/events/manager' binding={binding} component='module/pages/events/event_manager'  />
                     <Route path='/events/calendar'  binding={binding}component='module/pages/events/events_calendar'   />
+                    <Route path='/events/manager' binding={binding} component='module/pages/events/event_manager'  />
                     <Route path='/events/challenges' binding={binding} component='module/pages/events/events_challenges'  />
                     <Route path='/events/invites' binding={binding} component='module/pages/events/events_invites'  />
                 </RouterView>
