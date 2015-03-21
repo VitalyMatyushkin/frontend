@@ -1,7 +1,12 @@
 var OneSchoolPage,
 	RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
-	SubMenu = require('module/ui/sub_menu');
+	SubMenu = require('module/ui/sub_menu'),
+	SVG = require('module/ui/svg'),
+	SchoolInfo = require('module/pages/school_profile/view/school_info'),
+	UserButtons = require('module/pages/school_profile/view/user_buttons'),
+	SchoolName = require('module/pages/school_profile/view/school_name'),
+	Map = require('module/pages/school_profile/view/map');
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -9,7 +14,8 @@ OneSchoolPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+			routerParameters = globalBinding.toJS('routing.pathParameters'),
+			activeSchoolId = routerParameters[0];
 
 		if (!activeSchoolId) {
 			document.location.hash = 'schools';
@@ -21,19 +27,19 @@ OneSchoolPage = React.createClass({
 
 		// Пункты подменю
 		self.menuItems = [{
-			href: '/#school/summary',
+			href: '/#profile/summary',
 			name: 'Summary',
 			key: 'Summary'
 		},{
-			href: '/#school/pupils',
-			name: 'Pupils',
-			key: 'Pupils'
+			href: '/#profile/pupils',
+			name: 'Teams',
+			key: 'Teams'
 		},{
-			href: '/#school/forms',
+			href: '/#profile/forms',
 			name: 'Forms',
 			key: 'Forms'
 		},{
-			href: '/#school/houses',
+			href: '/#profile/houses',
 			name: 'Houses',
 			key: 'Houses'
 		}];
@@ -67,18 +73,27 @@ OneSchoolPage = React.createClass({
 
 		return (
 			<div>
-				<SubMenu binding={binding.sub('schoolRouting')} items={self.menuItems} />
+				<div className="bUserColumn">
+					<Map binding={binding} />
 
-				<div className="bSchoolMaster">
-					<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
-						<Route path="/school/summary" binding={binding.sub('summary')} component="module/pages/school/summary/summary_page"  />
-						<Route path="/school/pupils /school/pupils/:mode" binding={binding.sub('pupils')} component="module/pages/school/pupils/pupils_page"  />
-						<Route path="/school/forms /school/forms/:mode" binding={binding.sub('classes')} component="module/pages/school/classes/classes_page"  />
-						<Route path="/school/houses /school/houses/:mode" binding={binding.sub('houses')} component="module/pages/school/houses/houses_page"  />
-					</RouterView>
+					<div className="eUserColumnData">
+						<SchoolName binding={binding} />
+						<SchoolInfo binding={binding} />
+					</div>
 				</div>
 
+				<div className="bUserDataColumn">
+					<SubMenu binding={binding.sub('schoolProfileRouting')} items={self.menuItems} />
 
+					<div className="eUserDataColumn_wrap" id="jsSubPage">
+
+
+						<UserButtons />
+
+
+
+					</div>
+				</div>
 			</div>
 		)
 	}

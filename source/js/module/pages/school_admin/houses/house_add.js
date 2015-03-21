@@ -1,4 +1,4 @@
-var HouseForm = require('module/pages/school/houses/house_form'),
+var HouseForm = require('module/pages/school_admin/houses/house_form'),
 	HouseAddPage;
 
 HouseAddPage = React.createClass({
@@ -16,7 +16,7 @@ HouseAddPage = React.createClass({
 		data.schoolId = self.activeSchoolId;
 
 		self.activeSchoolId && window.Server.houses.post(data).then(function() {
-			document.location.hash = 'school/houses';
+			document.location.hash = 'school_admin/houses';
 		});
 	},
 	render: function() {

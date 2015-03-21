@@ -26,7 +26,9 @@ Center = React.createClass({
 
 						<Route path="/pupil" binding={binding.sub('pupilPage')} component="module/pages/pupil/pupil_page" />
 
-						<Route path="/school/:subPage /school/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/pages/school/school_page"  />
+						<Route path="/profile/:schoolID" binding={binding.sub('schoolProfile')} component="module/pages/school_profile/school_profile_page"  />
+
+						<Route path="/school_admin/:subPage /school_admin/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/pages/school_admin/school_page"  />
 
 						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsList')} component="module/pages/schools/schools_page"  />
 
@@ -49,7 +51,7 @@ Center = React.createClass({
  <Route path="/schools" binding={binding.sub('schoolsList')} component="module/pages/schools/page"  />
 
 
- <Route path="/schools/view" binding={binding.sub('school')} component="module/pages/school/page"  />
+ <Route path="/schools/view" binding={binding.sub('school')} component="module/pages/school_admin/page"  />
 
  */
 //<Route path="/register" component="module/pages/register/school" pageName="register"  />

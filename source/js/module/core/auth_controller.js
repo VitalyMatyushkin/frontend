@@ -14,7 +14,7 @@ authСontroller = {
 
 		// Если есть идентефикатор активной школы, показываем страницу школы
 		if (activeSchoolId) {
-			nextSchoolPage = 'school/summary';
+			nextSchoolPage = 'school_admin/summary';
 		} else {
 			// Если активная школа не задана, отправляем к спику школ
 			nextSchoolPage = 'schools';

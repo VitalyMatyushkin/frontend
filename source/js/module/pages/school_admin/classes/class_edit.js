@@ -1,30 +1,30 @@
-var HouseForm = require('module/pages/school/houses/house_form'),
-	HouseEditPage;
+var ClassForm = require('module/pages/school_admin/classes/class_form'),
+	ClassEditPage;
 
-HouseEditPage = React.createClass({
+ClassEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
-			houseId = routingData.id;
+			formId = routingData.id;
 
 		binding.clear();
 
-		if (houseId) {
-			window.Server.house.get(houseId).then(function (data) {
+		if (formId) {
+			window.Server.form.get(formId).then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
-			self.houseId = houseId;
+			self.formId = formId;
 		}
 	},
 	submitEdit: function(data) {
 		var self = this;
 
-		window.Server.house.put(self.houseId, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school/houses');
+		window.Server.form.put(self.formId, data).then(function() {
+			self.isMounted() && (document.location.hash = 'school_admin/classes');
 		});
 	},
 	render: function() {
@@ -32,10 +32,10 @@ HouseEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<HouseForm title="Edit house" onFormSubmit={self.submitEdit} binding={binding} />
+			<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding} />
 		)
 	}
 });
 
 
-module.exports = HouseEditPage;
+module.exports = ClassEditPage;

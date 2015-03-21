@@ -2,7 +2,7 @@ var List = require('module/ui/list/list'),
 	ListField = require('module/ui/list/list_field'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
-	ListPageMixin = require('module/pages/school/list_page_mixin'),
+	ListPageMixin = require('module/pages/school_admin/list_page_mixin'),
 	ClassListPage;
 
 ClassListPage = React.createClass({

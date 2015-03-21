@@ -18,6 +18,9 @@ MoreartyContext = Morearty.createContext({
 			pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
 			parameters: {}			// GET-параметры текущего пути
 		},
+		schoolProfile: {
+			schoolProfileRouting: {}
+		},
 		activeSchool: {
 			classes: {
 				pupilsList: [],

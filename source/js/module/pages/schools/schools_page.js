@@ -15,7 +15,7 @@ SchoolsPage = React.createClass({
 				// Если есть хотя бы одна школа, делаем первую школой "по умолчанию"
 				if (schoolsList[0]) {
 					globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
-					document.location.hash = 'school/summary';
+					document.location.hash = 'school_admin/summary';
 				} else {
 					// В противном случае перенаправляем пользователя на страницу добавления школы
 					document.location.hash = 'schools/add';
