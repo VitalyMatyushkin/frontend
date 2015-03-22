@@ -24,7 +24,6 @@ Manager = React.createClass({
             rivalsBinding = self.getBinding('rivals');
 
         return rivalsBinding.get().map(function (rival, index) {
-            console.log(binding.toJS())
             var disable = rival.get('id') !== binding.get('schoolInfo.id')
                     && binding.get('model.type') === 'inter-schools',
 				teamClasses = classNames({

@@ -90,7 +90,7 @@ AutocompleteTeam = React.createClass({
             return data;
         });
     },
-    onSelectLearner: function (selectId, response, model) {
+    onSelectStudent: function (selectId, response, model) {
         var self = this,
             playersBinding = self.getBinding('players');
 
@@ -120,7 +120,7 @@ AutocompleteTeam = React.createClass({
                 serviceFilter={self.serviceLearnersFilter}
                 serverField="name"
                 placeholderText="enter student name"
-                onSelect={self.onSelectLearner}
+                onSelect={self.onSelectStudent}
                 binding={rivalBinding.meta().sub('autocomplete')}
             />
         </div>
