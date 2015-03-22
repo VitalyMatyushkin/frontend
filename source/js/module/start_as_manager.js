@@ -50,6 +50,9 @@ function runManagerMode() {
 					mode: 'month'
 				}
 			},
+            event: {
+                eventRouting: {}
+            },
 			teams: {
 				sync: false,
 				models: []

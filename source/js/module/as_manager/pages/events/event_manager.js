@@ -130,7 +130,7 @@ EventManager = React.createClass({
                             });
                         });
 
-                        document.location.hash = 'event/view?id=' + event.id;
+                        document.location.hash = 'event/' + event.id;
                     });
                 }
 			});
