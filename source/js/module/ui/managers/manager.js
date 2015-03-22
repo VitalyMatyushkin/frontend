@@ -7,52 +7,45 @@ Manager = React.createClass({
 	mixins: [Morearty.Mixin],
     componentWillMount: function () {
         var self = this,
-            binding = self.getDefaultBinding(),
-            selectedRivalId = binding.get('rivals.0.id');
+            binding = self.getDefaultBinding();
 
-        if (selectedRivalId) {
-            binding.set('selectedRivalId', selectedRivalId);
-        }
+        binding.set('selectedRivalIndex', 0);
     },
-    onChooseRival: function (rivalId) {
+    onChooseRival: function (index) {
         var self = this,
             binding = self.getDefaultBinding();
 
-        binding.set('selectedRivalId', rivalId);
+        binding.set('selectedRivalIndex', index);
     },
     getRivals: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-			userId = rootBinding.get('userData.authorizationInfo.userId'),
-			rivalsType = binding.get('model.rivalsType'),
-            selectedRivalId = binding.get('selectedRivalId');
+            selectedRivalIndex = binding.get('selectedRivalIndex'),
+            rivalsBinding = self.getBinding('rivals');
 
-        return binding.get('rivals').map(function (rival) {
-            var disable = rivalsType === 'schools' ?
-                rival.get('id') !== activeSchoolId || rival.get('ownerId') !== userId : false,
+        return rivalsBinding.get().map(function (rival, index) {
+            console.log(binding.toJS())
+            var disable = rival.get('id') !== binding.get('schoolInfo.id')
+                    && binding.get('model.type') === 'inter-schools',
 				teamClasses = classNames({
-					mActive: selectedRivalId === rival.get('id'),
+					mActive: selectedRivalIndex === index,
 					eChooser_item: true,
 					mDisable: disable
 				});
 
             return <span
                 className={teamClasses}
-                onClick={!disable ? self.onChooseRival.bind(null, rival.get('id')) : null}>{rival.get('name')}</span>;
+                onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{rival.get('name')}</span>;
         }).toArray();
     },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            selectedRivalId = binding.get('selectedRivalId'),
-            rivalIndex = binding.get('rivals').findIndex(function (rival) {
-               return rival.get('id') === selectedRivalId;
-            }),
+            selectedRivalIndex = binding.get('selectedRivalIndex'),
             teamBinding = {
                 default: binding,
-                rival: binding.sub('rivals.' + rivalIndex)
+                rival: binding.sub('rivals.' + selectedRivalIndex),
+                players: binding.sub('players.' + selectedRivalIndex)
             };
 
             return <div className="eManager_container">

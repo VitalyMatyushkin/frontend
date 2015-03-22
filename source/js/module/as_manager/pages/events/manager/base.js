@@ -33,34 +33,6 @@ EventManagerBase = React.createClass({
         });
     },
     /**
-     * Сервис фильтрации по классу
-     * @param className
-     * @returns {*}
-     */
-    serviceClassFilter: function(className) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            schoolId = binding.get('schoolInfo.id'),
-			ids = binding.get('autocomplete.classes').toArray().map(function (_class) {
-				return _class.get('selectedId');
-			});
-
-        return window.Server.formsFilter.get({
-            filter: {
-                where: {
-                    schoolId: schoolId,
-                    id: {
-                      nin: ids
-                    },
-                    name: {
-                        like: className,
-                        options: 'i'
-                    }
-                }
-            }
-        });
-    },
-    /**
      * Сервис фильтрации по школе
      * @param schoolName
      * @returns {*}

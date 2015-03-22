@@ -31,7 +31,8 @@ EventManager = React.createClass({
                 houses: [],
                 internal: []
             },
-            players: []
+            players: [[],[]],
+            availableAges: []
 		});
 	},
 	componentWillMount: function () {
@@ -91,69 +92,45 @@ EventManager = React.createClass({
 	},
 	toFinish: function () {
 		var self = this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding(),
+            rootBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = binding.get('schoolInfo.id'),
             model = binding.toJS('model'),
+            players = binding.toJS('players'),
 			rivals = binding.toJS('rivals');
-
-		if (!model.name) {
-			model.name = model.rivalsType + ' ' + model.startTime;
-		}
-
-		if (!model.sportId) {
-			var football = rootBinding.get('events.sports.models').find(function (sport) {
-				return sport.get('name') === 'football';
-			});
-
-			model.sportId = football ? football.get('id') : null;
-		}
 
 		window.Server.events.post(model).then(function (event) {
 			rootBinding.update('events.models', function (events) {
 				return events.push(Immutable.fromJS(event));
 			});
 
-			rivals.forEach(function (rival) {
-                if (model.rivalsType === 'schools' && rival.id !== activeSchoolId) {
+			rivals.forEach(function (rival, index) {
+                if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
 					window.Server.invitesByEvent.post({eventId: event.id}, {
                         eventId: event.id,
                         inviterId: activeSchoolId,
-                        invitedId: rival.id,
-						message: 'message',
-						invitedType: 'schools'
-                    }).then(function () {
-                        document.location.hash = 'events/view?id=' + event.id;
+                        guestId: rival.id,
+						message: 'message'
                     });
                 } else {
                     var rivalModel = {
-                        sportId: event.sportId || defaultSportId,
-                        schoolId: event.rivalsType === 'schools' ? rival.id : rival.schoolId
+                        sportId: event.sportId,
+                        schoolId: activeSchoolId
                     };
 
-                    if (event.rivalsType === 'houses') {
+                    if (event.type === 'houses') {
                         rivalModel.houseId = rival.id;
-                        rivalModel.rivalType = 'house';
-                    } else if (event.rivalsType === 'classes') {
-                        rivalModel.formId = rival.id;
-                        rivalModel.rivalType = 'class';
-                    } else {
-                        rivalModel.rivalType = 'school';
                     }
 
                     window.Server.participants.post(event.id, rivalModel).then(function (res) {
-                        rival.players.forEach(function (player) {
+                        players[index].forEach(function (player) {
                             window.Server.playersRelation.put({
                                 teamId: res.id,
                                 studentId: player.id
-                            }).then(function (res) {
-                                console.log(res);
                             });
                         });
 
-
                         document.location.hash = 'event/view?id=' + event.id;
-						binding.clear();
                     });
                 }
 			});
@@ -181,7 +158,7 @@ EventManager = React.createClass({
                 calendar: self.getBinding('calendar')
             },
             managerBinding = {
-                default: binding.sub('eventInfo'),
+                default: binding,
                 rivals: binding.sub('rivals'),
                 players: binding.sub('players')
             };

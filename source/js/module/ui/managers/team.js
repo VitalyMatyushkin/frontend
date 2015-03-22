@@ -4,16 +4,9 @@ var Team,
 Team = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'Team',
-    getDefaultState: function () {
-        return {
-            rival: Immutable.fromJS({
-                players: []
-            })
-        };
-    },
     removePlayer: function (playerId) {
         var self = this,
-            players = self.getBinding('rival').sub('players');
+            players = self.getBinding('players');
 
         players.update(function (data) {
             return data.filter(function (model) {
@@ -23,9 +16,9 @@ Team = React.createClass({
     },
     getPlayers: function () {
         var self = this,
-            players = self.getBinding('rival').get('players');
+            players = self.getBinding('players');
 
-        return players.map(function (player) {
+        return players.get().map(function (player) {
 			return <div className="bPlayer mMini" key={player.get('id')}>
 				<img className="ePlayer_avatar" src={player.get('avatar')} />
 				<span className="ePlayer_name">{player.get('firstName')}</span>
