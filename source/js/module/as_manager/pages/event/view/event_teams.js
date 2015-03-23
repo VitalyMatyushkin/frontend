@@ -36,7 +36,7 @@ EventTeams = React.createClass({
 					</span>
 				</If>
 			</div>;
-		}) : null;
+		}).toArray() : null;
 	},
 	getAutoComplete: function (order) {
 		var self = this,
