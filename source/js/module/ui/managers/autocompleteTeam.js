@@ -43,7 +43,7 @@ AutocompleteTeam = React.createClass({
             ages = binding.get('model.ages'),
             schoolId = binding.get('schoolInfo.id'),
             forms = binding.get('schoolInfo.forms').filter(function (form) {
-                return ages.indexOf(String(form.get('age'))) !== -1;
+                return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
             }),
             filter = {
                 where: {
@@ -56,6 +56,7 @@ AutocompleteTeam = React.createClass({
                             return form.get('id');
                         }).toJS()
                     },
+					gender: binding.get('model.gender') || 'male',
                     or: [
                         {
                             firstName: {

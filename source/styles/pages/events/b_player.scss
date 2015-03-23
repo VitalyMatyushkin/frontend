@@ -5,6 +5,7 @@
   flex-direction: row;
   margin: 5px 0;
   &:hover {
+    background: #eee;
     .ePlayer_remove {
       display: flex;
     }
@@ -39,6 +40,9 @@
   margin: 0 2px 0 10px;
   justify-content: center;
   align-items: center;
+  span:first-child {
+    margin-right: 5px;
+  }
 }
 
 .bPlayer.mMini {

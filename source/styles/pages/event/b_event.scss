@@ -1,0 +1,12 @@
+.bEventContainer {
+  padding: 40px;
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.bEvent {
+  display: flex;
+  flex-direction: row;
+}

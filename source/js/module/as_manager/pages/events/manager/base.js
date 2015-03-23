@@ -137,6 +137,21 @@ EventManagerBase = React.createClass({
 			>{sport.get('name')}</Morearty.DOM.option>
         }).toArray();
     },
+	getDefaultGender: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			sportId = binding.get('model.sportId'),
+			sportsBinding = self.getBinding('sports'),
+			sport = sportsBinding.get('models').find(function (sport) {
+				return sport.get('id') === sportId;
+			});
+
+		if (sport) {
+			return sport.toJS('limits.genders.0');
+		} else {
+			return null;
+		}
+	},
     getGenders: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -229,7 +244,7 @@ EventManagerBase = React.createClass({
                     {'Gender'}
                     <select
                         className="eManager_select"
-                        defaultValue="male"
+                        defaultValue={self.getDefaultGender()}
                         value={gender}
                         onChange={self.changeCompleteGender}>
                         {self.getGenders()}

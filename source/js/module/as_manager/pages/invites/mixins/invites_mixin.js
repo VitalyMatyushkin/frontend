@@ -78,7 +78,14 @@ InvitesMixin = {
     },
     zeroFill: function (i) {
         return (i < 10 ? '0' : '') + i;
-    }
+    },
+	formatDate: function (string) {
+		return new Date(string).toLocaleDateString('en-BG', {
+			year: 'numeric',
+			month: '2-digit',
+			day: '2-digit'
+		}).replace(/\./g, '/');
+	}
 };
 
 module.exports = InvitesMixin;

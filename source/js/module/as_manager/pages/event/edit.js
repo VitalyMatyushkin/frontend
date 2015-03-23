@@ -1,16 +1,20 @@
-var EventEditView;
+var EventHeader = require('./view/event_header'),
+	EventTeams = require('./view/event_teams'),
+	EventGeneralView;
 
-EventEditView = React.createClass({
+EventGeneralView = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-        var self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
+		var self = this,
+			binding = self.getDefaultBinding(),
+			rootBinding = self.getMoreartyContext().getBinding();
 
-		return <div>
-            edit
-        </div>;
+		return <div className="bEvent">
+			<EventHeader binding={binding} />
+			<EventTeams binding={binding} />
+		</div>;
 	}
 });
 
 
-module.exports = EventEditView;
+module.exports = EventGeneralView;
