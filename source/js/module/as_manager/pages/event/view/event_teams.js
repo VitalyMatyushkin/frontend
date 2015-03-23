@@ -17,6 +17,52 @@ EventTeams = React.createClass({
 			});
 		});
 	},
+    getPointsByStudent: function (playerId) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            points =  binding.sub('points'),
+            filtered = points.get().filter(function (point) {
+                return point.get('studentId') === playerId;
+            });
+
+        return filtered.count();
+    },
+    addPoint: function (order, playerId) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            type = binding.get('event.type'),
+            participant = binding.sub(['participants', order]),
+            pointsBinding =  binding.sub('points');
+
+        pointsBinding.update(function (points) {
+            return points.push(Immutable.fromJS({
+                studentId: playerId,
+                participantId: participant.get('id'),
+                sportId: binding.get('model.sportId'),
+                eventId: binding.get('model.id')
+            }));
+        });
+    },
+    removePoint: function (order, playerId) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            type = binding.get('event.type'),
+            pointsBinding =  binding.sub('points');
+
+        pointsBinding.update(function (points) {
+            var index = points.findLastIndex(function (point) {
+                return point.get('studentId') === playerId;
+            });
+
+            if (index !== -1) {
+                return points.filter(function (point, index) {
+                    return index !== index;
+                });
+            } else {
+                return points;
+            }
+        });
+    },
 	getPlayersByTeamOrder: function (order) {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -28,13 +74,28 @@ EventTeams = React.createClass({
 
 		return players ? players.map(function (player) {
 			return <div className="bPlayer mMini">
-				<img className="ePlayer_avatar" src={player.get('avatar')} alt={player.get('name')} title={player.get('name')} />
+                <If condition={binding.get('mode') !== 'finish' && isOwner}>
+                    <img className="ePlayer_avatar" src={player.get('avatar')} alt={player.get('name')} title={player.get('name')} />
+                </If>
+                <If condition={binding.get('mode') === 'finish' && isOwner}>
+                    <div>
+                        <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
+                            <SVG icon="icon_minus" />
+                        </span>
+                        <span className="ePlayer_score">{self.getPointsByStudent(player.get('id'))}</span>
+                    </div>
+                </If>
 				<span className="ePlayer_name"><span>{player.get('firstName')}</span> <span>{player.get('lastName')}</span></span>
 				<If condition={binding.get('mode') === 'edit' && isOwner}>
 					<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, order, player.get('id'))}>
 						<SVG icon="icon_trash" />
 					</span>
 				</If>
+                <If condition={binding.get('mode') === 'finish' && isOwner}>
+                    <span className="ePlayer_plus" onClick={self.addPoint.bind(null, order, player.get('id'))}>
+                        <SVG icon="icon_plus" />
+                    </span>
+                </If>
 			</div>;
 		}).toArray() : null;
 	},

@@ -13,7 +13,9 @@ EventView = React.createClass({
             model: {},
             participants: [],
             mode: null,
-            eventId: null
+            eventId: null,
+            players: [],
+            points: []
         });
     },
     componentWillMount: function () {
@@ -74,13 +76,20 @@ EventView = React.createClass({
                 },
                 include: [
 					{
-						participants: ['players', {
-							school: 'forms'
-						}, 'house']
+						participants: [
+                            'players',
+                            {
+							    school: 'forms'
+						    },
+                            'house'
+                        ]
 					},
 					{
 						invites: ['guest', 'inviter']
 					},
+                    {
+                        result: 'points'
+                    },
 					'sport'
                 ]
             }

@@ -58,3 +58,10 @@
 .bPlayer.mShowRemoveButton .ePlayer_remove {
   display: flex;
 }
+
+.ePlayer_minus,
+.ePlayer_plus {
+  margin: 0 5px;
+  cursor: pointer;
+  text-align: center;
+}
