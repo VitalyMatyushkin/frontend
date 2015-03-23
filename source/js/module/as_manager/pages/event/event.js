@@ -28,7 +28,7 @@ EventView = React.createClass({
 				previous = descriptor.getPreviousValue(),
 				current;
 
-			if (previous) {
+			if (previous && previous.get(path[0])   ) {
 				previous = previous.get(path[0]).toJS();
 				current = binding.toJS(['players', path[0]]);
 
@@ -36,8 +36,6 @@ EventView = React.createClass({
 					window.Server.playersRelation.put({
 						teamId: binding.get(['participants', path[0], 'id']),
 						studentId: current.pop().id
-					}).then(function (res) {
-						console.log(res);
 					});
 				} else if (current.length < previous.length) {
 					previous.filter(function (player) {
@@ -111,8 +109,12 @@ EventView = React.createClass({
 				]))
 				.set('schoolInfo', Immutable.fromJS(schoolInfo))
 				.set('eventId', eventId)
-				.set('mode', mode)
+                .set('mode', mode)
 				.commit();
+        });
+
+        rootBinding.addListener('routing.pathParameters', function () {
+            binding.set('mode', rootBinding.get('routing.pathParameters.1') || null)
         });
     },
 	render: function() {
