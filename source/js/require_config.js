@@ -3,7 +3,7 @@ requirejs.config({
 });
 
 window.onload = function() {
-	var managerMode = document.location.hostname === 'manager.squard.com',
+	var managerMode = document.location.hostname === 'manager.squard.com' || document.location.hostname === 'manager.squadintouch.com',
 		startPoint = 'module/' + (managerMode ? 'start_as_manager' : 'start_as_user');
 
 	window['require']([startPoint], function(startCallback) {
