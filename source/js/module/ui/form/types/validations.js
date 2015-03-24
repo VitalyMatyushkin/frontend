@@ -25,7 +25,8 @@ var validationsSet = {
 		return false;
 	},
 	required: function(value) {
-		var self = this;
+		var self = this,
+			value = value || '';
 
 		if (value.trim && value.trim() === '' ) {
 			return 'Please fill out this field';

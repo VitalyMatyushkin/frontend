@@ -39,7 +39,7 @@ ListPageMixin = {
 
 		self.request = window.Server[self.serviceName].get({ filter: requestFilter }).then(function (data) {
 			binding.set(Immutable.fromJS(data));
-		})
+		});
 	},
 	componentWillUnmount: function () {
 		var self = this;

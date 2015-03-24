@@ -11,6 +11,8 @@ Autocomplete = React.createClass({
 		serviceFullData: React.PropTypes.func,
 		serviceFilter: React.PropTypes.func,
         onSelect: React.PropTypes.func,
+		onBlue: React.PropTypes.func,
+		onInput: React.PropTypes.func,
         placeholderText: React.PropTypes.string
 	},
 	getDefaultState: function () {
@@ -81,7 +83,7 @@ Autocomplete = React.createClass({
 			binding = self.getDefaultBinding();
 
 		binding.set('selectedId', null);
-
+		self.props.onInput && self.props.onInput(userInput);
 		if (userInput === '') {
 			binding.set('response', []);
 		} else {
@@ -92,7 +94,7 @@ Autocomplete = React.createClass({
 				self.responseData = data;
 				binding.set('response', data);
 				binding.set('loading', false);
-				//self.setDefaultValue(); TODO: may be remove this line??
+				self.setDefaultValue();// TODO: may be remove this line??
 			});
 
 		}
@@ -103,7 +105,7 @@ Autocomplete = React.createClass({
 			filter = new RegExp(userInput, 'i');
 
 		binding.set('selectedId', null);
-
+		self.props.onInput && self.props.onInput(userInput);
 		if (userInput === '') {
 			binding.set('response', []);
 		} else {

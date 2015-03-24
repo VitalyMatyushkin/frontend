@@ -1,38 +1,13 @@
-var TypeMixin = require('module/ui/form/types/input_mixin'),
+var TypeMixin = require('module/ui/form/types/type_mixin'),
 	Autocomplete = require('module/ui/autocomplete/autocomplete'),
 	TypeAutocompleteMixin,
 	TypeAutocomplete;
 
 TypeAutocompleteMixin = {
 	propTypes: {
-		serviceFullData: React.PropTypes.func.isRequired
-	},
-	componentWillMount: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
-
-		binding.update('autocomplete', function() {
-			return Immutable.fromJS({
-				response: undefined,
-				selectedId: null,
-				defaultId: null
-			});
-		});
-	},
-	setValue: function(value) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			oldValue = binding.get('value');
-
-		if (oldValue === value) {
-			return false;
-		}
-
-		if (value) {
-			self.hideError();
-			binding.set('error', false);
-			binding.set('value', value);
-		}
+		serviceFullData: React.PropTypes.func,
+		serviceFilter: React.PropTypes.func,
+		serverField: React.PropTypes.string
 	},
 	bindToAutcomplete: function() {
 		var self = this,
@@ -41,6 +16,7 @@ TypeAutocompleteMixin = {
 
 		if (defaultValue) {
 			binding.sub('autocomplete').set('defaultId', defaultValue);
+			self.fullValidate(defaultValue);
 		}
 
 		binding.sub('autocomplete').addListener('selectedId', function() {
@@ -56,13 +32,13 @@ TypeAutocompleteMixin = {
 		self.bindToAutcomplete();
 
 		return (
-			<Autocomplete serviceFullData={self.props.serviceFullData} serverField="name" binding={self.getDefaultBinding().sub('autocomplete')} />
+			<Autocomplete onInput={self.changeValue} serviceFilter={self.props.serviceFilter} serviceFullData={self.props.serviceFullData} serverField={self.props.serverField || 'name'} binding={self.getDefaultBinding().sub('autocomplete')} />
 		);
 	}
 };
 
 TypeAutocomplete = React.createClass({
-	mixins: [Morearty.Mixin, $.extend({}, TypeMixin, TypeAutocompleteMixin)]
+	mixins: [Morearty.Mixin, TypeMixin, TypeAutocompleteMixin]
 });
 
 module.exports = TypeAutocomplete;

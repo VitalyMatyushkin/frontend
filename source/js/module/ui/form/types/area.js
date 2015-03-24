@@ -1,70 +1,41 @@
-var TextMixin = require('module/ui/form/types/text_mixin'),
-	TypeMixin = require('module/ui/form/types/input_mixin'),
+var TypeAutocomplete = require('module/ui/form/types/autocomplete'),
 	AreaMixin,
-	Area;
+	TypeArea;
 
-AreaMixin = {
-	cssClass: 'mAreaField',
-	changeValue: function(event) {
+TypeArea = React.createClass({
+	mixins: [Morearty.Mixin],
+	serviceFilter: function(value) {
 		var self = this,
-			value = event.currentTarget.value;
+			postCodeFilter = {where: {
+				zipCode: {
+					like: value,
+					options: 'i'
+				}
+			}};
 
-		self.hideError();
-
-		clearTimeout(self.checkTimer);
-		self.checkTimer = setTimeout(function() {
-			self.tryToSetNewArea(value);
-		}, 3000);
-	},
-	setValue: function(event) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			value = event.currentTarget.value,
-			oldValue = binding.get('value');
-
-		if (oldValue === value) {
-			return false;
-		}
-
-		self.tryToSetNewArea(value);
-	},
-	tryToSetNewArea: function(value) {
-		var self = this,
-			value = value.toUpperCase(),
-			binding = self.getDefaultBinding();
+		self.request && self.request.abort();
 
 		if (!value) {
-			return false;
+			return undefined;
 		}
 
-		if (self.requset && self.requset.abort) {
-			self.requset.abort();
-		}
-		//
-		self.requset = $.ajax({
-			url: 'http://api.squadintouch.com/v1/zipcodes/findOne?filter[where][zipCode]=' + value,
-			type: 'GET',
-			crossDomain: true,
-			error: function(data, error, errorText) {
-				// Проверяем, актуально ли проверяемое значение поля
-				if (errorText === 'Not Found') {
-					self.showError('Unknown zip code ' + value);
-				}
-			},
-			success: function(data) {
-				// Проверяем, актуально ли проверяемое значение поля
-				if (data.id) {
-					self.hideError();
-					binding.set('error', false);
-					binding.set('value', data.id);
-				}
-			}
+		self.request = window.Server.postCode.get({ filter: postCodeFilter });
+		return self.request;
+	},
+	render: function() {
+		var self = this,
+			AutocompleteElement = React.createElement(TypeAutocomplete, self.props),
+			AutocompleteProped;
+
+		AutocompleteProped = React.addons.cloneWithProps(AutocompleteElement, {
+			serviceFilter: self.serviceFilter,
+			serverField: 'zipCode'
 		});
-	}
-};
 
-Area = React.createClass({
-	mixins: [Morearty.Mixin, TextMixin, $.extend({}, TypeMixin, AreaMixin)]
+		return (
+			<div>{AutocompleteProped}</div>
+		);
+	}
 });
 
-module.exports = Area;
+module.exports = TypeArea;

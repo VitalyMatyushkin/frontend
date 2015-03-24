@@ -74,21 +74,21 @@ InputTypeMixin = {
 	/**
 	 * Метод вызывается по мере изменения значения поля, выполняется частичная валидация
 	 */
-	changeValue: function(event) {
+	changeValue: function(value) {
 		var self = this,
-			value = event.currentTarget.value;
+			value = '';
 
 		self.hideError();
 		self._checkOneValid(value, 'alphanumeric') && self.showError();
 	},
 	/**
 	 * Метод устаналивает значение поля (окончание ввода)
-	 * @param event
+	 * @param value
 	 */
-	setValue: function(event) {
+	setValue: function(value) {
 		var self = this,
+			value = value || '',
 			binding = self.getDefaultBinding(),
-			value = event.currentTarget.value,
 			oldValue = binding.get('value'),
 			validateResult = self.fullValidate(value);
 
@@ -104,6 +104,8 @@ InputTypeMixin = {
 
 		self.getDefaultBinding().set('value', value);
 		self.props.onSetValue && self.props.onSetValue(value);
+
+		console.log(binding.toJS())
 	},
 	showError: function(text) {
 		var self = this,

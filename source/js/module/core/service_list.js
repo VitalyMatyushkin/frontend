@@ -66,6 +66,11 @@ serviceList = {
         serviceList.pointsInResult = new Service('/results/{resultId}/points', binding);
 		serviceList.studentPoints = new Service('/points?filter[where][studentId]={studentId}', binding);
 		serviceList.points = new Service('/points', binding);
+
+		// postcode
+		serviceList.postCode = new Service('/zipcodes?filter[limit]=10', binding);
+		serviceList.findPostCode = new Service('/zipcodes/findOne?filter[where][zipCode]={postCode}', binding);
+
     }
 };
 

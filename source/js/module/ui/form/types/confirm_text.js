@@ -1,6 +1,6 @@
 var TypeConfirmText,
 	TypeText = require('module/ui/form/types/text'),
-	TypeMixin = require('module/ui/form/types/input_mixin');
+	TypeMixin = require('module/ui/form/types/type_mixin');
 
 TypeConfirmText = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
