@@ -185,7 +185,7 @@ EventManagerBase = React.createClass({
         }).map(function (age) {
             return <Morearty.DOM.option
                 key={age + '-ages'}
-                value={age}>{age}</Morearty.DOM.option>;
+                value={age}>{'U' + age}</Morearty.DOM.option>;
         });
     },
 	render: function() {
@@ -254,7 +254,7 @@ EventManagerBase = React.createClass({
             <If condition={!!binding.get('model.sportId')}>
                 <div className="eManager_group">
                     {'Ages'}
-                    <span className="eManager_eField">{binding.get('model.ages') && binding.get('model.ages').join(',')}</span>
+                    <span className="eManager_eField">{binding.get('model.ages') && 'U' + binding.get('model.ages').join(',U')}</span>
                     <select
                         className="eManager_select"
                         value={gender}

@@ -48,6 +48,7 @@ serviceList = {
 
         // invites
         serviceList.invites = new Service('/invites', binding);
+        serviceList.invitesFindOne = new Service('/invites/findOne', binding);
 		serviceList.invite = new Service('/invites/{inviteId}', binding);
         serviceList.invitesByEvent = new Service('/events/{eventId}/invites', binding);
         serviceList.inviteRepay = new Service('/invites/{inviteId}/repay', binding);
