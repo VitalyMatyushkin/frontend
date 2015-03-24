@@ -61,11 +61,6 @@ EventView = React.createClass({
             href: '/#events/manager',
             name: 'Manager',
             key: 'Manager'
-        },
-        {
-            href: '/#events/invites',
-            name: 'Invites',
-            key: 'Invites'
         }];
     },
 	render: function() {
