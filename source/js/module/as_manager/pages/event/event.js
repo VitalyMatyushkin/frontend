@@ -100,7 +100,9 @@ EventView = React.createClass({
 				activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 				sport = res.sport,
 				schoolInfo = event.participants[0].school.id === activeSchoolId ?
-					event.participants[0].school : event.participants[1].school;
+					event.participants[0].school : event.participants[1].school,
+                points = event.result.points;
+
 
 			delete event.participants;
 			delete event.invites;
@@ -112,6 +114,7 @@ EventView = React.createClass({
 				.set('model', Immutable.fromJS(event))
 				.set('invites', Immutable.fromJS(invites))
 				.set('participants', Immutable.fromJS(participants))
+                .set('points', Immutable.fromJS(points))
 				.set('players', Immutable.fromJS([
 					participants[0].players,
 					participants[1] ? participants[1].players : []
