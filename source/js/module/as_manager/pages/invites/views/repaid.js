@@ -29,10 +29,12 @@ OutboxView = React.createClass({
 							inviterId: activeSchoolId
 						},
 						{
-							invitedId: activeSchoolId
+							guestId: activeSchoolId
 						}
 					],
-					repaid: true
+					accepted: {
+                        inq: [true, false]
+                    }
 				}
 			}
 		}).then(function (models) {
@@ -72,7 +74,7 @@ OutboxView = React.createClass({
 
 		return invites.map(function (invite, index) {
 			var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),
-				invitedIndex = self.findIndexParticipant(invite.get('invitedId')),
+				invitedIndex = self.findIndexParticipant(invite.get('guestId')),
 				inviteBinding = {
 					default: binding.sub(['models', index]),
 					inviter: binding.sub(['participants', inviterIndex]),

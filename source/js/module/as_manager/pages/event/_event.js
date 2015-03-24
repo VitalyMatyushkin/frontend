@@ -27,7 +27,7 @@ EventView = React.createClass({
 
             if (participants.length === 1) {
                 participants.push({
-                    schoolId: res.invites[0].invitedId,
+                    schoolId: res.invites[0].guestId,
 					players: []
                 });
             }

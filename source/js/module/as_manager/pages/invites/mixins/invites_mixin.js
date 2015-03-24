@@ -19,7 +19,7 @@ InvitesMixin = {
 			modelsBinding = binding.sub('models'),
             result = modelsBinding.get().filter(function (model) {
 				return direction === 'inbox' ?
-                model.get('invitedId') === filterId && !model.get('repaid') :
+                model.get('guestId') === filterId && !model.get('repaid') :
                 model.get('inviterId') === filterId && !model.get('repaid');
 			});
 

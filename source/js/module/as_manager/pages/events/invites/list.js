@@ -29,7 +29,7 @@ EventsView = React.createClass({
 		}).then(function (res) {
 			var rivals = res.participants;
 
-			rivals.unshift({id: invite.get('invitedId'), players: []});
+			rivals.unshift({id: invite.get('guestId'), players: []});
 
 			binding.set('inviteEvent', Immutable.fromJS(res));
 			binding
@@ -40,13 +40,13 @@ EventsView = React.createClass({
 				filter: {
 					where: {
 						id: {
-							inq: [invite.get('invitedId'), invite.get('inviterId')]
+							inq: [invite.get('guestId'), invite.get('inviterId')]
 						}
 					}
 				}
 			}).then(function (res) {
                 var rivals = Immutable.fromJS(res).sort(function(rival) {
-                    return rival.get('id') === invite.get('invitedId') ? 1 : -1;
+                    return rival.get('id') === invite.get('guestId') ? 1 : -1;
                 });
 
 				binding
@@ -90,7 +90,7 @@ EventsView = React.createClass({
 
 		window.Server.participants.post({eventId: eventBinding.get('id')}, {
 			eventId: eventBinding.get('id'),
-			schoolId: binding.get('selectInviteAccepted.invitedId'),
+			schoolId: binding.get('selectInviteAccepted.guestId'),
 			rivalsType: 'school'
 		}).then(function (res) {
 			players.forEach(function (player) {
@@ -132,14 +132,14 @@ EventsView = React.createClass({
 			inviteCount = binding.get('models').count(),
             filtered = binding.get('models').filter(function (invite) {
                 return selectInvitesType === 'inbox' || selectInvitesType === undefined ?
-                invite.get('invitedId') === activeSchoolId :
+                invite.get('guestId') === activeSchoolId :
                 invite.get('inviterId') === activeSchoolId;
             });
 
 		if (inviteCount > 0) {
 			return filtered.map(function (invite) {
                 var date = new Date(invite.get('meta').get('created')),
-                    inbox = invite.get('invitedId') === activeSchoolId,
+                    inbox = invite.get('guestId') === activeSchoolId,
                     acceptedText = invite.get('accepted') ? 'accepted' : 'declined',
                     onlyDate = [self._zeroFill(date.getMonth()), self._zeroFill(date.getDate()), self._zeroFill(date.getFullYear())].join('/'),
 					time = [self._zeroFill(date.getHours()), self._zeroFill(date.getMinutes())].join(':'),

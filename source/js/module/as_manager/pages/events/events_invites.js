@@ -25,7 +25,7 @@ EventsView = React.createClass({
                             inviterId: activeSchoolId
                         },
                         {
-                            invitedId: activeSchoolId
+                            guestId: activeSchoolId
                         }
                     ],
                     repaid: {
@@ -48,8 +48,8 @@ EventsView = React.createClass({
                     memo.push(invite.inviterId);
                 }
 
-                if (memo.indexOf(invite.invitedId) === -1) {
-                    memo.push(invite.invitedId);
+                if (memo.indexOf(invite.guestId) === -1) {
+                    memo.push(invite.guestId);
                 }
 
                 return memo;
@@ -66,7 +66,7 @@ EventsView = React.createClass({
                                 return inv.id === invite.get('inviterId')
                             }),
                             _invited = res.filter(function (inv) {
-                                return inv.id === invite.get('invitedId')
+                                return inv.id === invite.get('guestId')
                             });
 
                         return invite

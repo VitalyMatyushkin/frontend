@@ -39,7 +39,8 @@ EventTeams = React.createClass({
                 studentId: playerId,
                 participantId: participant.get('id'),
                 sportId: binding.get('model.sportId'),
-                eventId: binding.get('model.id')
+                eventId: binding.get('model.id'),
+                score: 1
             }));
         });
     },
@@ -79,9 +80,9 @@ EventTeams = React.createClass({
                 </If>
                 <If condition={binding.get('mode') === 'finish' && isOwner}>
                     <div>
-                        <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
+                        {!binding.get('model.resultId') ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
                             <SVG icon="icon_minus" />
-                        </span>
+                        </span> : null}
                         <span className="ePlayer_score">{self.getPointsByStudent(player.get('id'))}</span>
                     </div>
                 </If>
@@ -91,7 +92,7 @@ EventTeams = React.createClass({
 						<SVG icon="icon_trash" />
 					</span>
 				</If>
-                <If condition={binding.get('mode') === 'finish' && isOwner}>
+                <If condition={binding.get('mode') === 'finish' && isOwner && !binding.get('model.resultId')}>
                     <span className="ePlayer_plus" onClick={self.addPoint.bind(null, order, player.get('id'))}>
                         <SVG icon="icon_plus" />
                     </span>
@@ -111,7 +112,8 @@ EventTeams = React.createClass({
 				players: binding.sub(['players', order])
 			};
 
-		return isOwner && binding.get('mode') === 'edit' ? <AutocompleteTeam binding={completeBinding} /> : null;
+		return isOwner && binding.get('mode') === 'edit' && !binding.get('model.resultId') ?
+            <AutocompleteTeam binding={completeBinding} /> : null;
 	},
 	render: function() {
         var self = this,

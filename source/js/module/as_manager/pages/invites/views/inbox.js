@@ -24,16 +24,17 @@ InboxView = React.createClass({
 		window.Server.invites.get({
 			filter: {
 				where: {
-					invitedId: activeSchoolId,
-					repaid: {
-						neq: true
-					}
+					guestId: activeSchoolId,
+					accepted: {
+                        neq: true,
+                        neq: false
+                    }
 				}
 			}
 		}).then(function (models) {
 			var uniqueIds = models.reduce(function (memo, invite) {
-				if (memo.indexOf(invite.invitedId) === -1) {
-					memo.push(invite.invitedId);
+				if (memo.indexOf(invite.guestId) === -1) {
+					memo.push(invite.guestId);
 				}
 
 				return memo;
@@ -72,7 +73,7 @@ InboxView = React.createClass({
 
         return invites.map(function (invite, index) {
             var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),
-                invitedIndex = self.findIndexParticipant(invite.get('invitedId')),
+                invitedIndex = self.findIndexParticipant(invite.get('guestId')),
                 inviteBinding = {
                     default: binding.sub(['models', index]),
                     inviter: binding.sub(['participants', inviterIndex]),
