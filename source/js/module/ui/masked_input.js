@@ -13,7 +13,6 @@ var MaskedInput = React.createClass({
 		this.mask = {
 			props: {
 				value: this.props.value,
-				onClick: this._onClick,
 				onChange: this._onChange,
 				onKeyDown: this._onKeyDown,
 				onFocus: this._onFocus,
@@ -161,13 +160,6 @@ var MaskedInput = React.createClass({
 		this._onChange(e)
 		if (this.props.onFocus) {
 			this.props.onFocus(e)
-		}
-	},
-
-	_onClick: function (e) {
-		this._onChange(e)
-		if (this.props.onClick) {
-			this.props.onClick(e)
 		}
 	},
 	render: function () {
