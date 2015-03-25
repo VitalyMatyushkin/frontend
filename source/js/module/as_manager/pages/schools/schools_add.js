@@ -1,10 +1,9 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
+var SchoolForm = require('module/as_manager/pages/schools/schools_form'),
 	AddSchoolForm;
 
 AddSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
-	onSuccess: function(schoolData) {
+	submitAdd: function(schoolData) {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
@@ -25,12 +24,6 @@ AddSchoolForm = React.createClass({
 		var self = this;
 
 		return (
-			<Form name="Add new school" service="schools" binding={self.getDefaultBinding().sub('form')} onSuccess={self.onSuccess}>
-				<FormField type="area" field="zipCodeId" validation="required">Postcode</FormField>
-				<FormField type="text" field="name" validation="required">Name</FormField>
-				<FormField type="text" field="description" validation="required">Description</FormField>
-				<FormField type="text" field="address" validation="required">Address</FormField>
-			</Form>
 		)
 	}
 });

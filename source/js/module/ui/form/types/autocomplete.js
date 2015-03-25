@@ -32,7 +32,7 @@ TypeAutocompleteMixin = {
 		self.bindToAutcomplete();
 
 		return (
-			<Autocomplete onInput={self.changeValue} serviceFilter={self.props.serviceFilter} serviceFullData={self.props.serviceFullData} serverField={self.props.serverField || 'name'} binding={self.getDefaultBinding().sub('autocomplete')} />
+			<Autocomplete serviceFilter={self.props.serviceFilter} serviceFullData={self.props.serviceFullData} serverField={self.props.serverField || 'name'} binding={self.getDefaultBinding().sub('autocomplete')} />
 		);
 	}
 };

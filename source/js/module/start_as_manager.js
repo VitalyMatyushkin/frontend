@@ -41,7 +41,11 @@ function runManagerMode() {
 				summary: {},
 				schoolRouting: {}
 			},
-			schoolsList: [],
+			schoolsPage: {
+				schoolsList: [],
+				schoolsRouting: {},
+				schoolsForm: {}
+			},
 			events: {
 				sync: false,
 				models: [],

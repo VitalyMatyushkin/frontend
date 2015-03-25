@@ -26,8 +26,8 @@ OneSchoolPage = React.createClass({
 			key: 'Summary'
 		},{
 			href: '/#school_admin/pupils',
-			name: 'Pupils',
-			key: 'Pupils'
+			name: 'Students',
+			key: 'Students'
 		},{
 			href: '/#school_admin/forms',
 			name: 'Forms',

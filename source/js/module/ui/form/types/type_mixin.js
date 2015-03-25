@@ -104,8 +104,6 @@ InputTypeMixin = {
 
 		self.getDefaultBinding().set('value', value);
 		self.props.onSetValue && self.props.onSetValue(value);
-
-		console.log(binding.toJS())
 	},
 	showError: function(text) {
 		var self = this,

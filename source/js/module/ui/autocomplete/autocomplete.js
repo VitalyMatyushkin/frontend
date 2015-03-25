@@ -90,11 +90,12 @@ Autocomplete = React.createClass({
 			self.pendingRequest && self.pendingRequest.abort();
 			binding.set('loading', true);
 			binding.set('response', null);
+
 			self.pendingRequest = self.props.serviceFilter(userInput).then(function (data) {
 				self.responseData = data;
 				binding.set('response', data);
 				binding.set('loading', false);
-				self.setDefaultValue();// TODO: may be remove this line??
+				//self.setDefaultValue();// TODO: may be remove this line??
 			});
 
 		}
