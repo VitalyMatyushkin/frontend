@@ -34,7 +34,7 @@ PupilForm = React.createClass({
 					<FormField type="text" field="firstName" validation="required">First name</FormField>
 					<FormField type="text" field="lastName" validation="required">Last name</FormField>
 					<FormField type="text" field="gender" validation="required">Gender</FormField>
-					<FormField type="text" field="age" validation="required">Age</FormField>
+					<FormField type="date" field="birthday" validation="required">Birthday</FormField>
 				</FormColumn>
 
 				<FormColumn type="column">
