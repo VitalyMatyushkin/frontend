@@ -68,7 +68,7 @@ serviceList = {
 		serviceList.points = new Service('/points', binding);
 
 		// postcode
-		serviceList.postCode = new Service('/zipcodes?filter[limit]=10', binding);
+		serviceList.postCode = new Service('/zipcodes', binding);
 		serviceList.findPostCode = new Service('/zipcodes/findOne?filter[where][zipCode]={postCode}', binding);
 
     }

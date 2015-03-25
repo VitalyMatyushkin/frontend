@@ -29,7 +29,6 @@ EditSchoolForm = React.createClass({
 			document.location.hash = 'school_admin/summary';
 		});
 
-
 	},
 	render: function() {
 		var self = this;

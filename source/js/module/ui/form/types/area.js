@@ -6,12 +6,15 @@ TypeArea = React.createClass({
 	mixins: [Morearty.Mixin],
 	serviceFilter: function(value) {
 		var self = this,
-			postCodeFilter = {where: {
-				zipCode: {
-					like: value,
-					options: 'i'
-				}
-			}};
+			postCodeFilter = {
+                where: {
+                    zipCode: {
+                        like: value,
+                        options: 'i'
+                    }
+                },
+                limit: 10
+            };
 
 		self.request && self.request.abort();
 
