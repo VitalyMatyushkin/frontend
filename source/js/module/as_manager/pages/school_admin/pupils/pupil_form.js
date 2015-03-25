@@ -40,7 +40,7 @@ PupilForm = React.createClass({
 				<FormColumn type="column">
 					<FormField type="text" field="phone" validation="">Phone</FormField>
 					<FormField type="text" field="email" validation="">E-mail</FormField>
-					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" validation="required">Class</FormField>
+					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" validation="required">Form</FormField>
 					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" houseId="required">House</FormField>
 				</FormColumn>
 			</Form>

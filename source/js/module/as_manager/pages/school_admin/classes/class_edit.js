@@ -24,7 +24,7 @@ ClassEditPage = React.createClass({
 		var self = this;
 
 		window.Server.form.put(self.formId, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school_admin/classes');
+			self.isMounted() && (document.location.hash = 'school_admin/forms');
 		});
 	},
 	render: function() {

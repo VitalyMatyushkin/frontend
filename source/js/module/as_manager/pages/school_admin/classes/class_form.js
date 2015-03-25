@@ -1,6 +1,7 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
+ 	PromiseClass = require('module/core/promise'),
 	ClassForm;
 
 ClassForm = React.createClass({
@@ -9,13 +10,33 @@ ClassForm = React.createClass({
 		title: React.PropTypes.string.isRequired,
 		onFormSubmit: React.PropTypes.func
 	},
+	getAllAges: function() {
+		var self = this,
+			allAgesArray = [],
+			promise = new PromiseClass();
+
+		for (var i = 8; i <= 13; i++) {
+			allAgesArray.push({
+				name: 'U' + i,
+				age: i,
+				id: i
+			});
+		}
+
+		promise.resolve(allAgesArray);
+
+		// Service Promise capability TODO: wtf
+		promise.abort = function(){};
+
+		return promise;
+	},
 	render: function() {
 		var self = this;
 
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" field="name" validation="required">Form name</FormField>
-				<FormField type="text" field="age" validation="">Age</FormField>
+				<FormField type="autocomplete" serviceFullData={self.getAllAges} field="age" validation="required">Age</FormField>
 			</Form>
 		)
 	}
