@@ -8,14 +8,16 @@ AddSchoolForm = React.createClass({
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
 
+		window.Server.schools.post(schoolData).then(function(data) {
+			// Добавляемая школа всегда становится школой "по умолчанию"
+			globalBinding.set('userRules.activeSchoolId', data.id);
+		});
+
 		// Добавление школы в списк
 		binding.update(function(ImmutableValue){
 			ImmutableValue = ImmutableValue || Immutable.List();
 			return ImmutableValue.push(schoolData);
 		});
-
-		// Добавляемая школа всегда становится школой "по умолчанию"
-		globalBinding.set('userRules.activeSchoolId', schoolData.id);
 
 		// Переход к списку школ
 		document.location.hash = 'schools';
@@ -24,6 +26,7 @@ AddSchoolForm = React.createClass({
 		var self = this;
 
 		return (
+			<SchoolForm title="Add new school..." onSubmit={self.submitAdd} binding={self.getDefaultBinding().sub('form')} />
 		)
 	}
 });
