@@ -124,12 +124,11 @@ CalendarMonthView = React.createClass({
             date = binding.get('currentDate'),
 			hoverDay = binding.get('hoverDay'),
             selectDay = binding.get('selectDay'),
-			cx = React.addons.classSet,
 			now = new Date(),
 			today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
 		return <div className="eMonth_row">{days.map(function (day, i) {
-            var classes = cx({
+            var classes = classNames({
 				eMonth_day: true,
 				mToday: self.equalDates(day.date, today),
 				mPrev: day.prev || false,

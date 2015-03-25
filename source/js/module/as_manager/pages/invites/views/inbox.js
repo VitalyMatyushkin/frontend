@@ -29,7 +29,8 @@ InboxView = React.createClass({
                         neq: true,
                         neq: false
                     }
-				}
+				},
+                include: ['inviter', 'guest']
 			}
 		}).then(function (models) {
 			var uniqueIds = models.reduce(function (memo, invite) {
@@ -76,8 +77,8 @@ InboxView = React.createClass({
                 invitedIndex = self.findIndexParticipant(invite.get('guestId')),
                 inviteBinding = {
                     default: binding.sub(['models', index]),
-                    inviter: binding.sub(['participants', inviterIndex]),
-                    invited: binding.sub(['participants', invitedIndex])
+                    inviter: binding.sub(['models', index, 'inviter']),
+                    invited: binding.sub(['models', index, 'guest'])
                 };
 
             return <Invite type="inbox"  binding={inviteBinding} />;

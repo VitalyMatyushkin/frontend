@@ -127,11 +127,12 @@ EventManagerBase = React.createClass({
 	},
     getSports: function () {
         var self = this,
+            binding = self.getDefaultBinding(),
             sportsBinding = self.getBinding('sports');
 
         return sportsBinding.get('models').map(function (sport) {
             return <Morearty.DOM.option
-				selected={sport.get('name') === 'football'}
+				selected={sport.get('id') === binding.get('model.sportId')}
                 value={sport.get('id')}
 				key={sport.get('id') + '-sport'}
 			>{sport.get('name')}</Morearty.DOM.option>
