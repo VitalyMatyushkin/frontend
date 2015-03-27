@@ -11,7 +11,7 @@ var MultiSelectItem = React.createClass({
     render: function() {
         return this.props.visible && <li
                 key={this.props.id + 'multiselectItem'}
-                className={this.props.selected ? 'eMultiSelect_item mSelected' : 'mDeselected'}
+                className={this.props.selected ? 'eMultiSelect_item mSelected' : 'eMultiSelect_item'}
                 onClick={this.props.onClick}
             >{this.props.text}</li>
     }

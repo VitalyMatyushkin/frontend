@@ -59,7 +59,7 @@ Manager = React.createClass({
                     <FootballManager binding={teamBinding} />
                     <MultiSelectTeam binding={teamBinding} />
                 </div>
-			</div>;
+            </div>;
 	}
 });
 
