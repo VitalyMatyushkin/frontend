@@ -1,7 +1,7 @@
-var PupilForm = require('module/as_manager/pages/school_admin/pupils/pupil_form'),
-	PupilEditPage;
+var StudentForm = require('module/as_manager/pages/school_admin/students/student_form'),
+	StudentEditPage;
 
-PupilEditPage = React.createClass({
+StudentEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
@@ -26,7 +26,7 @@ PupilEditPage = React.createClass({
 		var self = this;
 
 		window.Server.student.put(self.studentId, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school_admin/pupils');
+			self.isMounted() && (document.location.hash = 'school_admin/students');
 		});
 	},
 	render: function() {
@@ -34,10 +34,10 @@ PupilEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<PupilForm title="Edit pupil" onFormSubmit={self.submitEdit} schoolId={self.activeSchoolId} binding={binding} />
+			<StudentForm title="Edit student" onFormSubmit={self.submitEdit} schoolId={self.activeSchoolId} binding={binding} />
 		)
 	}
 });
 
 
-module.exports = PupilEditPage;
+module.exports = StudentEditPage;

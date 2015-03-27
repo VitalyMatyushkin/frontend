@@ -1,9 +1,9 @@
 var LeanerView,
 	SVG = require('module/ui/svg'),
-	AboutMe = require('module/as_manager/pages/pupil/view/about_me'),
-	UserButtons = require('module/as_manager/pages/pupil/view/user_buttons'),
-	UserName = require('module/as_manager/pages/pupil/view/user_name'),
-	UserPhoto = require('module/as_manager/pages/pupil/view/user_photo');
+	AboutMe = require('module/as_manager/pages/student/view/about_me'),
+	UserButtons = require('module/as_manager/pages/student/view/user_buttons'),
+	UserName = require('module/as_manager/pages/student/view/user_name'),
+	UserPhoto = require('module/as_manager/pages/student/view/user_photo');
 
 LeanerView = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -24,19 +24,19 @@ function runManagerMode() {
 			},
 			activeSchool: {
 				classes: {
-					pupilsList: [],
-					pupilsRouting: {},
-					pupilForm: {}
+					studentsList: [],
+					studentsRouting: {},
+					studentForm: {}
 				},
 				houses: {
-					pupilsList: [],
-					pupilsRouting: {},
-					pupilForm: {}
+					studentsList: [],
+					studentsRouting: {},
+					studentForm: {}
 				},
-				pupils: {
-					pupilsList: [],
-					pupilsRouting: {},
-					pupilForm: {}
+				students: {
+					studentsList: [],
+					studentsRouting: {},
+					studentForm: {}
 				},
 				summary: {},
 				schoolRouting: {}

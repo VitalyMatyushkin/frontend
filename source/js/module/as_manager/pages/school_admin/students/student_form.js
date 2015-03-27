@@ -1,9 +1,9 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
-	PupilForm;
+	StudentForm;
 
-PupilForm = React.createClass({
+StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		schoolId: React.PropTypes.string.isRequired,
@@ -49,4 +49,4 @@ PupilForm = React.createClass({
 });
 
 
-module.exports = PupilForm;
+module.exports = StudentForm;

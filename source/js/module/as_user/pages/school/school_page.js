@@ -47,10 +47,10 @@ OneSchoolPage = React.createClass({
 				housesRouting: {},
 				housesForm: {}
 			},
-			pupils: {
-				pupilsList: [],
-				pupilsRouting: {},
-				pupilForm: {}
+			students: {
+				studentsList: [],
+				studentsRouting: {},
+				studentForm: {}
 			},
 			schoolInfo: '',
 			schoolRouting: {}

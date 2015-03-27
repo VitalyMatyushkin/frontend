@@ -25,7 +25,7 @@ OneSchoolPage = React.createClass({
 			name: 'Summary',
 			key: 'Summary'
 		},{
-			href: '/#school_admin/pupils',
+			href: '/#school_admin/students',
 			name: 'Students',
 			key: 'Students'
 		},{
@@ -51,10 +51,10 @@ OneSchoolPage = React.createClass({
 				housesRouting: {},
 				housesForm: {}
 			},
-			pupils: {
-				pupilsList: [],
-				pupilsRouting: {},
-				pupilForm: {}
+			students: {
+				studentsList: [],
+				studentsRouting: {},
+				studentForm: {}
 			},
 			schoolInfo: '',
 			schoolRouting: {}
@@ -72,7 +72,7 @@ OneSchoolPage = React.createClass({
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
 						<Route path="/school_admin/summary" binding={binding.sub('summary')} component="module/as_manager/pages/school_admin/summary/summary_page"  />
-						<Route path="/school_admin/pupils /school_admin/pupils/:mode" binding={binding.sub('pupils')} component="module/as_manager/pages/school_admin/pupils/pupils_page"  />
+						<Route path="/school_admin/students /school_admin/students/:mode" binding={binding.sub('students')} component="module/as_manager/pages/school_admin/students/students_page"  />
 						<Route path="/school_admin/forms /school_admin/forms/:mode" binding={binding.sub('classes')} component="module/as_manager/pages/school_admin/classes/classes_page"  />
 						<Route path="/school_admin/houses /school_admin/houses/:mode" binding={binding.sub('houses')} component="module/as_manager/pages/school_admin/houses/houses_page"  />
 					</RouterView>

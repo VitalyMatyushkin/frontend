@@ -3,9 +3,9 @@ var List = require('module/ui/list/list'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-	PupilsListPage;
+	StudentsListPage;
 
-PupilsListPage = React.createClass({
+StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName: 'students',
 	_getViewFunction: function() {
@@ -15,7 +15,7 @@ PupilsListPage = React.createClass({
 			//var pageBinding = self.getMoreartyContext().getBinding().sub(page);
 
 			//pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = 'pupil?id='+data.id;
+			document.location.hash = 'student?id='+data.id;
 			//document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
 	},
@@ -24,7 +24,7 @@ PupilsListPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<Table title="Pupils" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
+			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 				<TableField width="20%" dataField="firstName">First name</TableField>
 				<TableField width="20%" dataField="lastName">Last name</TableField>
 				<TableField width="20%" dataField="age" filterType="number">Age</TableField>
@@ -35,4 +35,4 @@ PupilsListPage = React.createClass({
 });
 
 
-module.exports = PupilsListPage;
+module.exports = StudentsListPage;
