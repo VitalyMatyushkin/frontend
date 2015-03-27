@@ -4,6 +4,21 @@ var TypeAutocomplete = require('module/ui/form/types/autocomplete'),
 
 TypeArea = React.createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.addListener('defaultValue', function() {
+			var postCodeId = binding.get('defaultValue');
+
+			if (postCodeId) {
+				self.valueRequest && self.valueRequest.abort();
+				self.valueRequest = window.Server.findPostCodeById.get(postCodeId).then(function(result) {
+					binding.set('defaultLabel', result.zipCode);
+				});
+			}
+		});
+	},
 	serviceFilter: function(value) {
 		var self = this,
 			postCodeFilter = {

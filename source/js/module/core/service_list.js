@@ -70,7 +70,7 @@ serviceList = {
 		// postcode
 		serviceList.postCode = new Service('/zipcodes', binding);
 		serviceList.findPostCode = new Service('/zipcodes/findOne?filter[where][zipCode]={postCode}', binding);
-
+		serviceList.findPostCodeById = new Service('/zipcodes/findOne?filter[where][id]={postCode}', binding);
     }
 };
 

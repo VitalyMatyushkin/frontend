@@ -35,7 +35,7 @@ SchoolsPage = React.createClass({
 
 		// Получение и сохранение списка школ
 		return Server.ownerSchools.get(userId).then(function(data) {
-			self.getDefaultBinding().set(Immutable.fromJS(data));
+			self.getDefaultBinding().set('schoolsList', Immutable.fromJS(data));
 		});
 	},
 	render: function() {

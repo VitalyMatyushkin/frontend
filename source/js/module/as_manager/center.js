@@ -30,7 +30,7 @@ Center = React.createClass({
 
 						<Route path="/school_admin/:subPage /school_admin/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/as_manager/pages/school_admin/school_page"  />
 
-						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsList')} component="module/as_manager/pages/schools/schools_page"  />
+						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsPage')} component="module/as_manager/pages/schools/schools_page"  />
 
 
                         <Route path="/events /events/:subPage" binding={binding.sub('events')} component="module/as_manager/pages/events/events"  />

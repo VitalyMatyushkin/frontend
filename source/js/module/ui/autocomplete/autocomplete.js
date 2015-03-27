@@ -26,20 +26,29 @@ Autocomplete = React.createClass({
 			defaultId: null
 		});
 	},
-	setDefaultValue: function() {
+	setDefaultId: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			defaultId = binding.get('defaultId');
 
 		if (defaultId) {
-			self.handleInput(defaultId);
-			self.handleSelect(defaultId);
-
 			self.responseData.forEach(function(dataBlock) {
 				if(dataBlock.id === defaultId){
-
+					self.handleInput(dataBlock[self.props.serverField]);
+					self.handleSelect(defaultId);
 				}
 			});
+		}
+	},
+	setDefaultLabel: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			defaultLabel = binding.get('defaultLabel'),
+			defaultId = binding.get('defaultId');
+
+		if (defaultLabel && defaultId) {
+			self.handleInput(defaultLabel);
+			self.handleSelect(binding.get('defaultId'));
 		}
 	},
 	componentWillMount: function () {
@@ -49,8 +58,13 @@ Autocomplete = React.createClass({
 
 		// На случай, если форма заполняется асинхронно
 		binding.addListener('defaultId', function() {
-			self.setDefaultValue();
+			self.setDefaultId();
 		});
+
+		binding.addListener('defaultLabel', function() {
+			self.setDefaultLabel();
+		});
+
 
 		// Если передается сервис для получения полных данных, фильтруем на клиенте
 		if (self.props.serviceFullData) {
@@ -58,7 +72,6 @@ Autocomplete = React.createClass({
 			self.updateFullData();
 		} else {
 			self.handleInput = self._filterOnServer;
-			self._originalService = self.props.serviceFilter;
 		}
 	},
 	handleSelect: function (newId) {
@@ -125,7 +138,7 @@ Autocomplete = React.createClass({
 		self.pendingRequest && self.pendingRequest.abort();
 		self.pendingRequest = self.props.serviceFullData().then(function (data) {
 			self.responseData = data;
-			self.setDefaultValue();
+			self.setDefaultId();
 		});
 	},
 	componentWillUnmount: function () {
