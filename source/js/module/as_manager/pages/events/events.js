@@ -70,17 +70,19 @@ EventView = React.createClass({
 
 		return <div>
             <SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems} />
-            <div className='bEvents'>
-                <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
-                    <Route path='/events/calendar'  binding={binding}component='module/as_manager/pages/events/events_calendar'   />
-                    <Route
-                        path='/events/manager'
-                        binding={{default: binding.sub('newEvent'), sports: binding.sub('sports'), calendar: binding.sub('calendar')}}
-                        component='module/as_manager/pages/events/event_manager'  />
-                    <Route path='/events/challenges' binding={binding} component='module/as_manager/pages/events/events_challenges'  />
-                    <Route path='/events/invites' binding={binding} component='module/as_manager/pages/events/events_invites'  />
-                </RouterView>
-            </div>
+			<div className='bSchoolMaster'>
+				<div className='bEvents'>
+					<RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
+						<Route path='/events/calendar'  binding={binding}component='module/as_manager/pages/events/events_calendar'   />
+						<Route
+							path='/events/manager'
+							binding={{default: binding.sub('newEvent'), sports: binding.sub('sports'), calendar: binding.sub('calendar')}}
+							component='module/as_manager/pages/events/event_manager'  />
+						<Route path='/events/challenges' binding={binding} component='module/as_manager/pages/events/events_challenges'  />
+						<Route path='/events/invites' binding={binding} component='module/as_manager/pages/events/events_invites'  />
+					</RouterView>
+				</div>
+			</div>
         </div>;
 	}
 });

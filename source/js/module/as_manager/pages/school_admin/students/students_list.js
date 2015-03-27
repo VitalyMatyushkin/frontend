@@ -27,7 +27,7 @@ StudentsListPage = React.createClass({
 			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 				<TableField width="20%" dataField="firstName">First name</TableField>
 				<TableField width="20%" dataField="lastName">Last name</TableField>
-				<TableField width="20%" dataField="age" filterType="number">Age</TableField>
+				<TableField width="20%" dataField="gender">Gender</TableField>
 				<TableField width="20%" dataField="phone">Phone</TableField>
 			</Table>
 		)
