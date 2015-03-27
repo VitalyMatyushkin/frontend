@@ -13,11 +13,10 @@ MultiSelectTeam = React.createClass({
             ages = binding.get('model.ages'),
             schoolId = binding.get('schoolInfo.id'),
             forms = binding.get('schoolInfo.forms').filter(function (form) {
-                return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
+                return ages.indexOf(form.get('age')) !== -1;
             }),
             filter = {
                 where: {
-                    schoolId: schoolId,
                     id: {
                         nin: self.getIncludePlayersIds().toJS()
                     },
@@ -32,7 +31,7 @@ MultiSelectTeam = React.createClass({
 
 
         if (type === 'houses') {
-            filter.where.houseId = binding.get('id');
+            filter.where.houseId = self.getBinding('rival').get('id');
         }
 
         window.Server.studentsFilter.get({

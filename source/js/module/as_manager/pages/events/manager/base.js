@@ -114,7 +114,7 @@ EventManagerBase = React.createClass({
 
         binding.set('model.ages', Immutable.fromJS(selections));
     },
-	onSelectRival: function (id, response, model) {
+	onSelectRival: function (order, id, response, model) {
 		var self = this,
 			binding = self.getDefaultBinding();
 
@@ -125,7 +125,7 @@ EventManagerBase = React.createClass({
 				});
 
 				if (index === -1) {
-					return rivals.push(Immutable.fromJS(model));
+					return rivals.set(order, Immutable.fromJS(model));
 				} else {
 					return rivals;
 				}
@@ -305,7 +305,7 @@ EventManagerBase = React.createClass({
                                 serviceFilter={services[type]}
                                 serverField="name"
                                 placeholderText={'enter school name'}
-                                onSelect={self.onSelectRival}
+                                onSelect={self.onSelectRival.bind(null, 1)}
                                 binding={binding.sub('autocomplete.inter-schools.0')}
                             />
                         </div>
@@ -317,14 +317,14 @@ EventManagerBase = React.createClass({
                                 serviceFilter={services[type]}
                                 serverField="name"
                                 placeholderText={'enter the first house name'}
-                                onSelect={self.onSelectRival}
+                                onSelect={self.onSelectRival.bind(null, 0)}
                                 binding={binding.sub('autocomplete.houses.0')}
                             />
                             <Autocomplete
                                 serviceFilter={services[type]}
                                 serverField="name"
                                 placeholderText={'enter the second house name'}
-                                onSelect={self.onSelectRival}
+                                onSelect={self.onSelectRival.bind(null, 1)}
                                 binding={binding.sub('autocomplete.houses.1')}
                             />
                         </div>
