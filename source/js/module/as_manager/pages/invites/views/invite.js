@@ -45,9 +45,9 @@ InviteView = React.createClass({
         return <div key={binding.get('id')} className={inviteClasses}>
             <div className="eInvite_header">
                 <span className="eInvite_eventName">
-                    {inviter.get('name')}
+                    {binding.get('inviter').get('name')}
                     <span className="eInvite_vs">VS</span>
-                    {invited.get('name')}
+                    {binding.get('guest').get('name')}
                 </span>
                 <span className="eInvite_eventDate"></span>
             </div>

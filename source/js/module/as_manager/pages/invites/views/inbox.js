@@ -33,37 +33,31 @@ InboxView = React.createClass({
                 include: ['inviter', 'guest']
 			}
 		}).then(function (models) {
-			var uniqueIds = models.reduce(function (memo, invite) {
-				if (memo.indexOf(invite.guestId) === -1) {
-					memo.push(invite.guestId);
+			var participants = models.reduce(function (memo, invite) {
+                var foundInviter = memo.filter(function (model) {
+                        return invite.inviter.id === model.id;
+                    }),
+                    foundGuest = memo.filter(function (model) {
+                        return invite.guest.id === model.id;
+                    });
+
+				if (foundInviter.length === 0) {
+					memo.push(invite.inviter);
 				}
+
+                if (foundGuest.length === 0) {
+                    memo.push(invite.guest);
+                }
 
 				return memo;
 			}, []);
 
-			if (uniqueIds.length > 0) {
-				window.Server.schools.get({
-					filter: {
-						where: {
-							id: {
-								inq: uniqueIds
-							}
-						}
-					}
-				}).then(function (participants) {
-					binding
-						.atomically()
-						.set('sync', true)
-						.set('models', Immutable.fromJS(models))
-						.set('participants', Immutable.fromJS(participants))
-						.commit();
-				});
-			} else {
-                binding
-                    .atomically()
-                    .set('sync', true)
-                    .commit();
-            }
+            binding
+                .atomically()
+                .set('sync', true)
+                .set('models', Immutable.fromJS(models))
+                .set('participants', Immutable.fromJS(participants))
+                .commit();
 		});
 	},
     getInvites: function () {

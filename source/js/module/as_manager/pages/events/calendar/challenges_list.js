@@ -1,7 +1,8 @@
-var ChallengesList;
+var ChallengesList,
+    InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
 
 ChallengesList = React.createClass({
-    mixins: [Morearty.Mixin],
+    mixins: [Morearty.Mixin, InvitesMixin],
     getEvents: function () {
         var self = this,
             binding = this.getDefaultBinding(),
@@ -19,7 +20,7 @@ ChallengesList = React.createClass({
                 isHoverDay = hoverDay &&
                     hoverDay.getMonth() === eventDate.getMonth() &&
                     hoverDay.getDate() === eventDate.getDate(),
-                stringDate = (eventDate.getMonth() + 1) + '/' + eventDate.getDate() + '/' + eventDate.getFullYear();
+                stringDate = self.formatDate(event.get('startTime'));
 
             return <div className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'}>
                 <span className="eChallenge_date">{stringDate}</span>
