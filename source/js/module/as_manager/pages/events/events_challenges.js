@@ -20,7 +20,7 @@ ChallengesView = React.createClass({
                 return self.sameDay(
                     new Date(event.get('startTime')),
                     new Date(date)
-                );
+                ) && !event.get('resultId');
             });
 
         return eventsByDate.map(function (event) {
@@ -64,7 +64,7 @@ ChallengesView = React.createClass({
             dates = binding.get('models').reduce(function (memo, val) {
                 var date = Date.parse(val.get('startTime'));
 
-                if (memo.indexOf(date) === -1) {
+                if (memo.indexOf(date) === -1 && !val.get('resultId')) {
                     memo = memo.push(date);
                 }
 

@@ -1,9 +1,13 @@
 var Autocomplete = require('module/ui/autocomplete/autocomplete'),
     If = require('module/ui/if/if'),
+    Multiselect = require('module/ui/multiselect/multiselect'),
     EventManagerBase;
 
 EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
+    componentWillMount: function () {
+        console.log(self.getDefaultGender)
+    },
     /**
      * Сервис фильтрации по дому
      * @param houseName
@@ -95,17 +99,23 @@ EventManagerBase = React.createClass({
 
 		binding.set('model.sportId', event.target.value);
 	},
-    changeCompleteAges: function (event) {
-        var binding = this.getDefaultBinding(),
-            agesBinding = binding.sub('model.ages');
+    //changeCompleteAges: function (event) {
+    //    var binding = this.getDefaultBinding(),
+    //        agesBinding = binding.sub('model.ages');
+    //
+    //    agesBinding.update(function (ages) {
+    //        if (ages === null) {
+    //            ages = Immutable.List();
+    //        }
+    //
+    //        return ages.push(event.target.value);
+    //    });
+    //},
+    changeCompleteAges: function (selections) {
+        var self = this,
+            binding = self.getDefaultBinding();
 
-        agesBinding.update(function (ages) {
-            if (ages === null) {
-                ages = Immutable.List();
-            }
-
-            return ages.push(event.target.value);
-        });
+        binding.set('model.ages', Immutable.fromJS(selections));
     },
 	onSelectRival: function (id, response, model) {
 		var self = this,
@@ -255,19 +265,20 @@ EventManagerBase = React.createClass({
             <If condition={!!binding.get('model.sportId')}>
                 <div className="eManager_group">
                     {'Ages'}
-                    <span className="eManager_eField">{binding.get('model.ages') && 'U' + binding.get('model.ages').join(',U')}</span>
-                    <select
-                        className="eManager_select"
-                        value={gender}
-                        onChange={self.changeCompleteAges}>
-                        <Morearty.DOM.option
-                            key="nullable-ages"
-                            value={null}>not selected</Morearty.DOM.option>
-                        {self.getAges()}
-                    </select>
+                    <Multiselect
+                        binding={binding}
+                        items={binding.get('availableAges').map(function (age) {
+                            return {
+                                id: age,
+                                text: 'U' + age
+                            };
+                        }).toJS()}
+                        selections={binding.toJS('model.ages')}
+                        onChange={self.changeCompleteAges}
+                    />
                 </div>
             </If>
-            <If condition={!!binding.get('model.ages')}>
+            <If condition={!!binding.get('model.ages').count()}>
                 <div className="eManager_group">
                     {'Game Type'}
                     <select
