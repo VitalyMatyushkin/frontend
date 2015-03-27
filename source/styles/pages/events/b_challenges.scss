@@ -36,6 +36,14 @@
   }
 }
 
+.eChallenge.mNotFound {
+  border-bottom: transparent;
+
+  &:hover {
+    background-color: transparent;
+  }
+}
+
 
 .eDate_list .eChallenge:last-child {
   border: none;

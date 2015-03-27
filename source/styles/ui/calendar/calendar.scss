@@ -2,7 +2,6 @@ $border-color: #eee;
 
 .bCalendar {
   display: flex;
-  margin: 10px;
   flex-flow: column wrap;
   justify-content: center;
 }
@@ -11,7 +10,7 @@ $border-color: #eee;
   display: flex;
   align-content: space-between;
   justify-content: space-between;
-  padding: 0 10px;
+  margin-bottom: 10px;
 }
 
 .eCalendar_item {

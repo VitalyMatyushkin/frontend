@@ -159,9 +159,9 @@ CalendarMonthView = React.createClass({
             currentMonthName = binding.get('monthNames.' + binding.get('currentDate').getMonth());
 
             return <div className="eCalendar_navBar">
-            <span className="eCalendar_item" onClick={self.onClickPrevButton}>prev</span>
+            <span className="eCalendar_item" onClick={self.onClickPrevButton}>←</span>
             <span className="eCalendar_item mNameMonth">{currentMonthName} - {binding.get('currentDate').getFullYear()}</span>
-            <span className="eCalendar_item" onClick={self.onClickNextButton}>next</span>
+            <span className="eCalendar_item" onClick={self.onClickNextButton}>→</span>
         </div>;
     },
 	render: function() {
