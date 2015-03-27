@@ -290,64 +290,66 @@ EventManagerBase = React.createClass({
                     </select>
                 </div>
             </If>
-            <div className="eManager_group">
-                {type === 'inter-schools' ? 'Choose school' : null}
-                <If condition={type === 'inter-schools'} key={'if-choose-school'}>
-                    <div>
-                        <input
-                            key="firstSchool"
-                            disabled="disabled"
-                            value={activeSchoolName}
-                            type="text"
-                            className="eManager_eField" />
-                        <Autocomplete
-                            serviceFilter={services[type]}
-                            serverField="name"
-                            placeholderText={'enter school name'}
-                            onSelect={self.onSelectRival}
-                            binding={binding.sub('autocomplete.inter-schools.0')}
-                        />
-                    </div>
-                </If>
-                {type === 'houses' ? 'Choose houses' : null}
-                <If condition={type === 'houses'}>
-                    <div>
-                        <Autocomplete
-                            serviceFilter={services[type]}
-                            serverField="name"
-                            placeholderText={'enter the first house name'}
-                            onSelect={self.onSelectRival}
-                            binding={binding.sub('autocomplete.houses.0')}
-                        />
-                        <Autocomplete
-                            serviceFilter={services[type]}
-                            serverField="name"
-                            placeholderText={'enter the second house name'}
-                            onSelect={self.onSelectRival}
-                            binding={binding.sub('autocomplete.houses.1')}
-                        />
-                    </div>
-                </If>
-                {type === 'internal' ? 'Create a team' : null}
-                <If condition={type === 'internal'}>
-                    <div>
-                        <input
-                            key="firstTeam"
-                            type="text"
-                            placeholder="Enter the first team name"
-                            value={binding.get('rivals.0.name')}
-                            onChange={Morearty.Callback.set(binding.sub('rivals.0.name'))}
-                            className="eManager_eField" />
-                        <input
-                            key="secondTeam"
-                            type="text"
-                            placeholder="Enter the second team name"
-                            value={binding.get('rivals.1.name')}
-                            onChange={Morearty.Callback.set(binding.sub('rivals.1.name'))}
-                            className="eManager_eField" />
-                    </div>
-                </If>
-            </div>
+            <If condition={!!type}>
+                <div className="eManager_group">
+                    {type === 'inter-schools' ? 'Choose school' : null}
+                    <If condition={type === 'inter-schools'} key={'if-choose-school'}>
+                        <div>
+                            <input
+                                key="firstSchool"
+                                disabled="disabled"
+                                value={activeSchoolName}
+                                type="text"
+                                className="eManager_eField" />
+                            <Autocomplete
+                                serviceFilter={services[type]}
+                                serverField="name"
+                                placeholderText={'enter school name'}
+                                onSelect={self.onSelectRival}
+                                binding={binding.sub('autocomplete.inter-schools.0')}
+                            />
+                        </div>
+                    </If>
+                    {type === 'houses' ? 'Choose houses' : null}
+                    <If condition={type === 'houses'}>
+                        <div>
+                            <Autocomplete
+                                serviceFilter={services[type]}
+                                serverField="name"
+                                placeholderText={'enter the first house name'}
+                                onSelect={self.onSelectRival}
+                                binding={binding.sub('autocomplete.houses.0')}
+                            />
+                            <Autocomplete
+                                serviceFilter={services[type]}
+                                serverField="name"
+                                placeholderText={'enter the second house name'}
+                                onSelect={self.onSelectRival}
+                                binding={binding.sub('autocomplete.houses.1')}
+                            />
+                        </div>
+                    </If>
+                    {type === 'internal' ? 'Create a team' : null}
+                    <If condition={type === 'internal'}>
+                        <div>
+                            <input
+                                key="firstTeam"
+                                type="text"
+                                placeholder="Enter the first team name"
+                                value={binding.get('rivals.0.name')}
+                                onChange={Morearty.Callback.set(binding.sub('rivals.0.name'))}
+                                className="eManager_eField" />
+                            <input
+                                key="secondTeam"
+                                type="text"
+                                placeholder="Enter the second team name"
+                                value={binding.get('rivals.1.name')}
+                                onChange={Morearty.Callback.set(binding.sub('rivals.1.name'))}
+                                className="eManager_eField" />
+                        </div>
+                    </If>
+                </div>
+            </If>
         </div>;
 	}
 });
