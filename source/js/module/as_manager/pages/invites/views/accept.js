@@ -4,6 +4,7 @@ var InviteAcceptView,
 
 InviteAcceptView = React.createClass({
     mixins: [Morearty.Mixin],
+    display: 'InviteAccept',
     componentWillMount: function () {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
@@ -40,8 +41,6 @@ InviteAcceptView = React.createClass({
     onClickAccept: function () {
         var self = this,
             binding = self.getDefaultBinding();
-
-
 
         window.Server.participants.post({eventId: binding.get('model.id')}, {
             eventId: binding.get('model.id'),
@@ -81,7 +80,7 @@ InviteAcceptView = React.createClass({
             });
 
         return <div>
-            <If condition={binding.get('sync')}>
+            <If condition={!!binding.get('sync')}>
                 <Manager binding={managerBinding} />
             </If>
             <span className={buttonClasses} onClick={ready ? self.onClickAccept : null}>Accept</span>

@@ -5,9 +5,6 @@ var Autocomplete = require('module/ui/autocomplete/autocomplete'),
 
 EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
-    componentWillMount: function () {
-        console.log(self.getDefaultGender)
-    },
     /**
      * Сервис фильтрации по дому
      * @param houseName
@@ -278,7 +275,7 @@ EventManagerBase = React.createClass({
                     />
                 </div>
             </If>
-            <If condition={!!binding.get('model.ages').count()}>
+            <If condition={binding.get('model.ages').count() > 0}>
                 <div className="eManager_group">
                     {'Game Type'}
                     <select

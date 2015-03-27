@@ -30,6 +30,47 @@ AutocompleteTeam = React.createClass({
             return memo.concat(ids);
         }, Immutable.List());
     },
+    serviceStudentFullData: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            type = binding.get('model.type'),
+            ages = binding.get('model.ages'),
+            schoolId = binding.get('schoolInfo.id'),
+            forms = binding.get('schoolInfo.forms').filter(function (form) {
+                return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
+            }),
+            filter = {
+                where: {
+                    schoolId: schoolId,
+                    id: {
+                        nin: self.getIncludePlayersIds().toJS()
+                    },
+                    formId: {
+                        inq: forms.map(function (form) {
+                            return form.get('id');
+                        }).toJS()
+                    },
+                    gender: binding.get('model.gender') || 'male'
+                }
+            };
+
+
+        if (type === 'houses') {
+            filter.where.houseId = binding.get('id');
+        }
+
+        return window.Server.studentsFilter.get({
+            filter: filter
+        }).then(function (data) {
+            data.map(function (player) {
+                player.name = player.firstName + ' ' + player.lastName;
+
+                return player.name;
+            });
+
+            return data;
+        });
+    },
     /**
      * Service for filtering learner
      * @param schoolId
@@ -125,7 +166,6 @@ AutocompleteTeam = React.createClass({
                 binding={rivalBinding.meta().sub('autocomplete')}
             />
         </div>
-
     }
 });
 

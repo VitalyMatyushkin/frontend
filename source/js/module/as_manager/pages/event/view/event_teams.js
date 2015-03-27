@@ -76,7 +76,7 @@ EventTeams = React.createClass({
 		return players ? players.map(function (player) {
 			return <div className="bPlayer mMini">
                 <If condition={binding.get('mode') !== 'finish' && isOwner}>
-                    <img className="ePlayer_avatar" src={player.get('avatar')} alt={player.get('name')} title={player.get('name')} />
+                    <span className="ePlayer_gender">[{player.get('gender')[0].toUpperCase()}]</span>
                 </If>
                 <If condition={binding.get('mode') === 'finish' && isOwner}>
                     <div>
