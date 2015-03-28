@@ -40,7 +40,7 @@ TypeColors =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<ColorsSelect maxColors={2} binding={self.getDefaultBinding().sub('colorPicker')} />
+				<ColorsSelect {...self.props} binding={self.getDefaultBinding().sub('colorPicker')} />
 			</div>
 		)
 	}
