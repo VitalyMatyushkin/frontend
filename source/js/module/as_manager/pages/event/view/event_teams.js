@@ -51,13 +51,13 @@ EventTeams = React.createClass({
             pointsBinding =  binding.sub('points');
 
         pointsBinding.update(function (points) {
-            var index = points.findLastIndex(function (point) {
+            var firstIndex = points.findLastIndex(function (point) {
                 return point.get('studentId') === playerId;
             });
 
-            if (index !== -1) {
+            if (firstIndex !== -1) {
                 return points.filter(function (point, index) {
-                    return index !== index;
+                    return index !== firstIndex;
                 });
             } else {
                 return points;
