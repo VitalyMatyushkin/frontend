@@ -63,7 +63,7 @@ ChallengesView = React.createClass({
             dates = binding.get('models').reduce(function (memo, val) {
                 var date = Date.parse(val.get('startTime'));
 
-                if (memo.indexOf(date) === -1 && !val.get('resultId')) {
+                if (memo.indexOf(date) === -1) {
                     memo = memo.push(date);
                 }
 
