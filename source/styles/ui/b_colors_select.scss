@@ -1,0 +1,63 @@
+.bColorsSelect {
+  height: 23px;
+  position: relative;
+}
+
+.eColorsSelect_color {
+  display: inline-block;
+  height: 23px;
+  width: 23px;
+  vertical-align: top;
+  margin-right: 3px;
+  position: relative;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.eColorsSelect_color.mRemovable:hover:after,
+.eColorsSelect_addButton{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  line-height: 25px;
+  text-align: center;
+  font-size: 24px;
+}
+
+.eColorsSelect_color.mRemovable:hover:after{
+  font-size: 10px;
+  content: '╳';
+  background: white;
+}
+
+
+.eColorsSelect_picker {
+  width: 236px;
+  position: absolute;
+  left: 50%;
+  bottom: 33px;
+  z-index: 22;
+  background: white;
+  overflow: hidden;
+  padding: 5px;
+  box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.4);
+  margin-left: -118px;
+}
+
+.eColorsSelect_plate{
+  height: 200px;
+}
+
+.eColorsSelect_buttons{
+  padding-top: 5px;
+}
+
+.eColorsSelect_buttons .bButton{
+  font-size: 13px;
+  padding: 6px 12px;
+}
+
+.eColorsSelect_buttons .bButton.mRight{
+  float: right;
+}
