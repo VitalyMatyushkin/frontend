@@ -135,9 +135,7 @@ EventView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
 
 		return <div>
-            <If condition={!!binding.get('model.resultId')}>
-                <SubMenu binding={binding.sub('eventRouting')} items={self.menuItems} />
-            </If>
+            <SubMenu binding={binding.sub('eventRouting')} items={self.menuItems} />
             <div className="bEventContainer">
                 <RouterView routes={ binding.sub('eventRouting') } binding={rootBinding}>
                     <Route path='/event/:id' binding={binding} component='module/as_manager/pages/event/general'   />
