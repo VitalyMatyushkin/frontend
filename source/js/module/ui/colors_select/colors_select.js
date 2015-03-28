@@ -46,14 +46,18 @@ ColorsSelect =  React.createClass({
 
 		colorIndex > -1 && colors.splice(colorIndex, 1);
 		binding.set('colors', colors);
+
+		// WTF? Почему-то не рендрится после обновления значения colors
+		self.forceUpdate();
+
 	},
 	acceptColor: function() {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			colors = binding.toJS('colors');
 
-		binding.update('colors', function (immutableValue) {
-			return immutableValue.push(self.activeHex);
-		});
+		colors.push(self.activeHex);
+		binding.set('colors', colors);
 
 		self.hidePicker();
 		self.calculateColorsCount();
@@ -87,6 +91,11 @@ ColorsSelect =  React.createClass({
 			binding = self.getDefaultBinding(),
 			colors = binding.toJS('colors'),
 			colorNodes;
+
+		console.log('RENDER')
+		console.log(colors)
+
+		self.calculateColorsCount();
 
 		colorNodes = colors.map(function (color) {
 			var removeColor = function() {

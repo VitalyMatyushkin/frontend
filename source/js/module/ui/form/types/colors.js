@@ -3,40 +3,40 @@ var TypeMixin = require('module/ui/form/types/type_mixin'),
 	TypeColors;
 
 TypeColors =  React.createClass({
+	propTypes: {
+		maxColors: React.PropTypes.number
+	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		// На случай, если форма заполняется асинхронно
 		binding.addListener('defaultValue', function() {
-			self._forceNewValue(binding.get('defaultValue'));
+			self.setPickerColors(binding.get('defaultValue'));
+		});
+
+		binding.sub('colorPicker').addListener('colors', function() {
+			var newColors = binding.sub('colorPicker.colors').toJS() || [];
+
+			self.setValue(newColors);
 		});
 	},
-	_forceNewValue: function(value) {
+	componentDidMount: function() {
 		var self = this,
-			oldValue;
+			binding = self.getDefaultBinding(),
+			defaultValue = binding.get('defaultValue');
 
-		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.getDOMNode().value === '') {
-			self.refs.fieldInput.getDOMNode().value = value;
-			self.fullValidate(value);
-		}
+		defaultValue && self.setPickerColors(defaultValue);
 	},
-	handeBlur: function(event) {
-		var self = this;
+	setPickerColors: function(colorsArray) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			colorsArray = colorsArray || [];
 
-		self.setValue(self.refs.fieldInput.getDOMNode().value);
-	},
-	handleChange: function(event) {
-		var self = this;
-
-		self.changeValue(self.refs.fieldInput.getDOMNode().value);
+		binding.sub('colorPicker.colors').set(Immutable.fromJS(colorsArray));
 	},
 	render: function () {
-		var self = this,
-			defaultValue = self.getDefaultBinding().get('defaultValue');
-
-		self._forceNewValue(defaultValue);
+		var self = this;
 
 		return (
 			<div className="eForm_fieldInput">
