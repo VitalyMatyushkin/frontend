@@ -1,6 +1,7 @@
 var EventView,
     RouterView = require('module/core/router'),
     Route = require('module/core/route'),
+    If = require('module/ui/if/if'),
     SubMenu = require('module/ui/menu/sub_menu');
 
 EventView = React.createClass({
@@ -134,7 +135,9 @@ EventView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
 
 		return <div>
-            <SubMenu binding={binding.sub('eventRouting')} items={self.menuItems} />
+            <If condition={!!binding.get('model.resultId')}>
+                <SubMenu binding={binding.sub('eventRouting')} items={self.menuItems} />
+            </If>
             <div className="bEventContainer">
                 <RouterView routes={ binding.sub('eventRouting') } binding={rootBinding}>
                     <Route path='/event/:id' binding={binding} component='module/as_manager/pages/event/general'   />

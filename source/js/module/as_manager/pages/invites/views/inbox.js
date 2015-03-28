@@ -26,8 +26,7 @@ InboxView = React.createClass({
 				where: {
 					guestId: activeSchoolId,
 					accepted: {
-                        neq: true,
-                        neq: false
+                        neq: [true, false]
                     }
 				},
                 include: ['inviter', 'guest']

@@ -33,6 +33,7 @@ EventGeneralView = React.createClass({
                 eventId: event.id
             }, event).then(function (res) {
                 binding.set('model.resultId', result.id);
+                document.location.hash = 'event/' + binding.get('model.id');
             });
         });
     },
