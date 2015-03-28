@@ -26,8 +26,7 @@ OutboxView = React.createClass({
 				where: {
 					inviterId: activeSchoolId,
 					accepted: {
-						neq: true,
-                        neq: false
+						neq: [true, false]
 					}
 				},
                 include: ['inviter', 'guest']
