@@ -133,7 +133,7 @@ EventTeams = React.createClass({
 					</div>
 				</If>
 				<If condition={binding.get('participants').count() === 1}>
-					<div>opponent waiting...</div>
+					<div>awaiting opponent...</div>
 				</If>
 			</div>
         </div>;

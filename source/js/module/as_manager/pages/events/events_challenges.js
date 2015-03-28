@@ -13,7 +13,7 @@ ChallengesView = React.createClass({
     onClickChallenge: function (eventId) {
         document.location.hash = 'event/' + eventId;
     },
-    getEvents: function (date) {
+    getEvents: function () {
         var self = this,
             binding = this.getDefaultBinding(),
             eventsByDate = binding.get('models');
@@ -44,7 +44,7 @@ ChallengesView = React.createClass({
             return <div className="eChallenge" onClick={self.onClickChallenge.bind(null, event.get('id'))} id={'challenge-' + event.get('id')}>
                 <div className="eChallenge_name">
                     <span className="eChallenge_rivalName">{firstName}</span>
-                    <span className="eChallenge_time">{hours + ':' + minutes}</span>
+                    <span className="eChallenge_time">{event.get('resultId') ? 'played' : hours + ':' + minutes}</span>
                     <span className="eChallenge_rivalName">{secondName}</span>
                 </div>
                 <div className="eChallenge_info">
