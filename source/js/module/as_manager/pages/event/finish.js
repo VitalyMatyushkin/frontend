@@ -1,5 +1,6 @@
 var EventHeader = require('./view/event_header'),
 	EventTeams = require('./view/event_teams'),
+    EventRivals = require('./view/event_rivals'),
     If = require('module/ui/if/if'),
     EventGeneralView;
 
@@ -46,16 +47,16 @@ EventGeneralView = React.createClass({
     },
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding();
+			binding = self.getDefaultBinding();
 
 		return <div className="bEvent">
+            <EventRivals binding={binding} />
             <div className="eEventContainer_buttons">
                 <If condition={binding.get('participants').count() > 1 && !binding.get('model.resultId')}>
                     <span className="bButton" onClick={self.closeMatch}>close</span>
                 </If>
                 <If condition={binding.get('participants').count() < 2 && !binding.get('model.resultId')}>
-                    <span className="bButton mRed">oponnent waiting...</span>
+                    <span className="bButton mRed">awaiting oponnent...</span>
                 </If>
                 <If condition={binding.get('resultId')}>
                     <span className="bButton mDisable">closed</span>
