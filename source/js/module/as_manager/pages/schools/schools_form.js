@@ -17,14 +17,12 @@ SchoolForm = React.createClass({
 				<FormColumn type="column">
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="text" field="description" validation="required">Description</FormField>
-					<FormField type="colors" maxColors={1} field="colors">School color</FormField>
 				</FormColumn>
 
 				<FormColumn type="column">
 					<FormField type="area" field="zipCodeId" validation="required">Postcode</FormField>
 					<FormField type="text" field="address" validation="required">Address</FormField>
 				</FormColumn>
-
 			</Form>
 		)
 	}
