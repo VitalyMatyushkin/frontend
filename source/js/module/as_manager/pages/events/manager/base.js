@@ -193,7 +193,7 @@ EventManagerBase = React.createClass({
         }).map(function (age) {
             return <Morearty.DOM.option
                 key={age + '-ages'}
-                value={age}>{'U' + age}</Morearty.DOM.option>;
+                value={age}>{'Y' + age}</Morearty.DOM.option>;
         });
     },
 	render: function() {

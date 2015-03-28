@@ -16,12 +16,7 @@ ChallengesView = React.createClass({
     getEvents: function (date) {
         var self = this,
             binding = this.getDefaultBinding(),
-            eventsByDate = binding.get('models').filter(function (event) {
-                return self.sameDay(
-                    new Date(event.get('startTime')),
-                    new Date(date)
-                ) && !event.get('resultId');
-            });
+            eventsByDate = binding.get('models');
 
         return eventsByDate.map(function (event) {
             var eventDateTime = new Date(event.get('startTime')),
