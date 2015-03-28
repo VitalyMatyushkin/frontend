@@ -13,10 +13,14 @@ ChallengesView = React.createClass({
     onClickChallenge: function (eventId) {
         document.location.hash = 'event/' + eventId;
     },
-    getEvents: function () {
+    getEvents: function (date) {
         var self = this,
             binding = this.getDefaultBinding(),
-            eventsByDate = binding.get('models');
+            eventsByDate = binding.get('models').filter(function (event) {
+                return self.sameDay(
+                        new Date(event.get('startTime')),
+                        new Date(date));
+            });
 
         return eventsByDate.map(function (event) {
             var eventDateTime = new Date(event.get('startTime')),

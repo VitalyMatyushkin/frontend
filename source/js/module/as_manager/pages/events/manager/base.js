@@ -267,7 +267,7 @@ EventManagerBase = React.createClass({
                         items={binding.get('availableAges').map(function (age) {
                             return {
                                 id: age,
-                                text: 'U' + age
+                                text: 'Y' + age
                             };
                         }).toJS()}
                         selections={binding.toJS('model.ages')}
