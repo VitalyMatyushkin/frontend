@@ -15,9 +15,9 @@ ClassForm = React.createClass({
 			allAgesArray = [],
 			promise = new PromiseClass();
 
-		for (var i = 8; i <= 13; i++) {
+		for (var i = 3; i <= 8; i++) {
 			allAgesArray.push({
-				name: 'U' + i,
+				value: 'Y' + i,
 				age: i,
 				id: i
 			});
@@ -36,7 +36,7 @@ ClassForm = React.createClass({
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" field="name" validation="required">Form name</FormField>
-				<FormField type="autocomplete" serviceFullData={self.getAllAges} field="age" validation="required">Age</FormField>
+				<FormField type="select" sourcePromise={self.getAllAges} field="age" validation="required">Age group</FormField>
 			</Form>
 		)
 	}

@@ -21,7 +21,7 @@ module.exports = React.createClass({
     return {
       role: 'option',
       tabIndex: '-1',
-      className: 'rf-combobox-option',
+      className: 'eCombobox_option',
       isSelected: false
     };
   },
@@ -29,7 +29,7 @@ module.exports = React.createClass({
   render: function() {
     var props = this.props;
     if (props.isSelected)
-      props.className = addClass(props.className, 'rf-combobox-selected');
+      props.className = addClass(props.className, 'mSelected');
     return React.DOM.div(props);
   }
 

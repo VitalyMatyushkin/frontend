@@ -1,11 +1,11 @@
-.rf-combobox {
+.bCombobox {
   display: inline-block;
   position: relative;
   font-size: 16px;
   line-height: 16px;
 }
 
-.rf-combobox-list {
+.eCombobox_list {
   display: none;
   position: absolute;
   z-index: 1;
@@ -28,16 +28,16 @@
   }
 }
 
-.rf-combobox-is-open .rf-combobox-list {
+.bCombobox.mOpen .eCombobox_list {
   display: block;
 }
 
-.rf-combobox-option:focus {
+.eCombobox_option:focus {
   outline: 0;
   color: $MAIN_COLOR;
 }
 
-.rf-combobox-input {
+.eCombobox_input {
   padding-right: 20px;
   width: 100%;
   -moz-box-sizing: border-box;
@@ -45,7 +45,7 @@
   box-sizing: border-box;
 }
 
-.rf-combobox-button {
+.eCombobox_button {
   display: inline-block;
   position: absolute;
   cursor: default;
@@ -56,18 +56,19 @@
   cursor: default;
 }
 
-.rf-combobox-button:active {
+.eCombobox_button:active {
   color: $MAIN_COLOR;
 }
 
-.rf-combobox-option {
+.eCombobox_option {
   display: block;
   padding: 4px 9px;
   cursor: default;
 }
 
-.rf-combobox-selected {
+.eCombobox_option.mSelected{
   background: $MAIN_COLOR !important;
   color: #ffffff !important;
 }
+
 

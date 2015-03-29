@@ -4,6 +4,7 @@ var TypeText = require('module/ui/form/types/text'),
 	TypeConfirmText = require('module/ui/form/types/confirm_text'),
 	TypeDate =  require('module/ui/form/types/date'),
 	TypeColors =  require('module/ui/form/types/colors'),
+	TypeSelect =  require('module/ui/form/types/select'),
 	typeList = {};
 
 // Типы элементов ввода
@@ -13,5 +14,6 @@ typeList['area'] = TypeArea;
 typeList['autocomplete'] = TypeAutocomplete;
 typeList['date'] = TypeDate;
 typeList['colors'] = TypeColors;
+typeList['select'] = TypeSelect;
 
 module.exports = typeList;

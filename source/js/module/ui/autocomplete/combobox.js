@@ -74,7 +74,7 @@ module.exports = React.createClass({
 			// this prevents crazy jumpiness since we focus options on mouseenter
 			usingKeyboard: false,
 			activedescendant: null,
-			listId: 'rf-combobox-list-' + (++guid),
+			listId: 'eCombobox_list-' + (++guid),
 			menu: {
 				children: [],
 				activedescendant: null,
@@ -143,9 +143,9 @@ module.exports = React.createClass({
 	},
 
 	getClassName: function () {
-		var className = addClass(this.props.className, 'rf-combobox');
+		var className = addClass(this.props.className, 'bCombobox');
 		if (this.state.isOpen) {
-			className = addClass(className, 'rf-combobox-is-open');
+			className = addClass(className, 'mOpen');
 		}
 		return className;
 	},
@@ -433,7 +433,7 @@ module.exports = React.createClass({
 			<div className={this.getClassName()}>
 				<input
 					ref="input"
-					className="rf-combobox-input"
+					className="eCombobox_input"
 					defaultValue={this.props.value}
 					value={self.props.binding.get('inputValue') || defaultInputState}
 					onChange={this.handleInputChange}
@@ -448,13 +448,13 @@ module.exports = React.createClass({
 				/>
 				<span
 					aria-hidden="true"
-					className="rf-combobox-button"
+					className="eCombobox_button"
 					onClick={this.handleButtonClick}
 				>▾</span>
 				<div
 					id={this.state.listId}
 					ref="list"
-					className="rf-combobox-list"
+					className="eCombobox_list"
 					aria-expanded={this.state.isOpen + ''}
 					role="listbox"
 				>{this.state.menu.children}</div>
