@@ -8,8 +8,8 @@
 .bEventTeams_team {
   display: flex;
   flex-direction: column;
-  width: 50%;
-  &:first-child {
-    border-right: 1px solid #eee;
+  width: 300px;
+  &:last-child {
+    align-items: flex-end;
   }
 }

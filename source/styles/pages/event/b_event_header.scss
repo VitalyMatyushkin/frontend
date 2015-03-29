@@ -1,16 +1,28 @@
 .bEventHeader {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 40px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 0.0625rem dotted #767676;
   line-height: 40px;
   align-content: center;
   width: 100%;
 }
 
-.eEventHeader_name {
-  font-size: 22px;
+.eEventHeader_field {
+  font-size: 12px;
+  color: darken(#ddd, 30%);
+  width: 150px;
+  &:last-child {
+    text-align: right;
+  }
+}
+
+.eEventHeader_field.mName {
+  font-size: 18px;
   height: 40px;
   line-height: 40px;
+  color: $MAIN_COLOR;
+  font-weight: bold;
+  text-align: center;
 }

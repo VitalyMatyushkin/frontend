@@ -1,19 +1,13 @@
 .bEventRivals {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 10px 0;
   width: 100%;
-  border-bottom: 1px solid #eee;
-}
-
-.bEventRival {
-  display: flex;
-  flex-direction: column;
+  border-bottom: 0.0625rem dotted #767676;
 }
 
 .eEventRivals_rival {
-  width: 350px;
   display: flex;
   overflow: hidden;
   flex-direction: row;
@@ -24,11 +18,26 @@
 }
 
 .eEventRivals_pic {
-  width: 200px;
-  height: 150px;
+  width: 50px;
 }
 
 .eEventRivals_name {
   text-align: center;
+}
+
+/* .bEventRival */
+
+.bEventRival {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  justify-content: space-between;
+  &:last-child {
+    align-items: flex-end;
+  }
+}
+
+.eEventRival_name {
+  padding-top: 5px;
 }
 

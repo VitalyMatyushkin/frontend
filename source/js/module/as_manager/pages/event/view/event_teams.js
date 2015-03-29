@@ -74,9 +74,11 @@ EventTeams = React.createClass({
 			isOwner = type === 'inter-schools' ? participant.get('schoolId') === activeSchoolId : true;
 
 		return players ? players.map(function (player) {
-			return <div className="bPlayer mMini">
+            var isMale = player.get('gender') === 'male';
+
+            return <div className="bPlayer mMini">
                 <If condition={binding.get('mode') !== 'finish' && isOwner}>
-                    <span className="ePlayer_gender">[{player.get('gender')[0].toUpperCase()}]</span>
+                    <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>
                 <If condition={binding.get('mode') === 'finish' && isOwner}>
                     <div>

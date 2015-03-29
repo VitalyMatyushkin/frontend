@@ -1,7 +1,9 @@
-var EventRival;
+var EventRival,
+    If = require('module/ui/if/if'),
+    InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
 
 EventRival = React.createClass({
-	mixins: [Morearty.Mixin],
+	mixins: [Morearty.Mixin, InvitesMixin],
 	getPic: function (order) {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -40,14 +42,29 @@ EventRival = React.createClass({
 	render: function() {
         var self = this,
 			binding = self.getDefaultBinding(),
-			rivals = binding.get('rivals');
+			rivals = binding.get('rivals'),
+            time = new Date(binding.get('model.startTime')),
+            hours = self.zeroFill(time.getHours()),
+            minutes = self.zeroFill(time.getMinutes());
 
 		return <div className="bEventRivals">
 			<div className="bEventRival">
 				<div className="eEventRival_rival">{self.getPic(0)}</div>
 				<div className="eEventRival_name">{self.getName(0)}</div>
 			</div>
-			<div className="bEventResult">VS</div>
+			<div className="bEventResult">
+                <If condition={!binding.get('resultId')}>
+                    <div className="eEventResult_time">{[hours, minutes].join(':')}</div>
+                </If>
+                <If condition={!!binding.get('resultId')}>
+                    <div className="eEventResult_score">
+                        <span>10</span>
+                        <span>:</span>
+                        <span>10</span>
+                    </div>
+                </If>
+                <div className="eEventResult_scores">V</div>
+            </div>
 			<div className="bEventRival">
 				<div className="eEventRival_rival">{self.getPic(1)}</div>
 				<div className="eEventRival_name">{self.getName(1)}</div>

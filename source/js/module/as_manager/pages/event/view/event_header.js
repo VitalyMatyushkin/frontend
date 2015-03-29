@@ -9,9 +9,9 @@ EventHeader = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return <div className="bEventHeader">
-			<div className="eEventHeader_name">{binding.get('model.name')}</div>
-            <div className="eEventHeader_date">{self.formatDate(binding.get('model.startTime'))}</div>
-            <div className="eEventHeader_type">{binding.get('model.type')}</div>
+			<div className="eEventHeader_field mDate">{self.formatDate(binding.get('model.startTime'))}</div>
+            <div className="eEventHeader_field mName">{binding.get('model.name')}</div>
+            <div className="eEventHeader_field mSport">{binding.get('sport.name') + ' (' + binding.get('model.type') + ')'}</div>
         </div>;
 	}
 });

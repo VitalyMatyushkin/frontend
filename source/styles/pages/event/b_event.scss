@@ -1,9 +1,11 @@
 .bEventContainer {
-  padding: 40px;
+  padding: 10px 40px;
   position: relative;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
+  width: 70%;
+  margin: 0 auto;
 }
 
 .eEventContainer_buttons {
