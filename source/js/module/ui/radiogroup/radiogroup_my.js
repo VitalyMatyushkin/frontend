@@ -1,13 +1,11 @@
-var AutocompleteHelpers = require('module/ui/autocomplete/main'),
-	ComboboxOption = AutocompleteHelpers.Option,
-	Autocomplete;
+var RadioGroup;
 
 
-Autocomplete = React.createClass({
+RadioGroup = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		sourcePromise: React.PropTypes.func,
-        onSelect: React.PropTypes.func,
+		onSelect: React.PropTypes.func,
 		sourceArray: React.PropTypes.array
 	},
 	getDefaultState: function () {
@@ -21,13 +19,6 @@ Autocomplete = React.createClass({
 			defaultId: null,
 			showList: false
 		});
-	},
-	toggleList: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			showList = !(binding.get('showList') || false);
-
-		binding.set('showList', showList);
 	},
 	setDefaultId: function() {
 		var self = this,
@@ -67,51 +58,39 @@ Autocomplete = React.createClass({
 				return data.id === newId;
 			})[0];
 
-        if (self.props.onSelect) {
-            self.props.onSelect(newId, model.value);
-        }
+		if (self.props.onSelect) {
+			self.props.onSelect(newId, model.value);
+		}
 
 		binding.atomically()
 			.set('selectedId', newId)
 			.set('selectedValue', model.value)
 			.commit();
-
-		binding.set('showList', false);
 	},
-	renderComboboxOptions: function () {
+	renderRadioOptions: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			selectedId = binding.get('selectedId');
 
 		return self.responseData.map(function (dataBlock) {
-
 			return (
-				<ComboboxOption onClick={function () { self.handleSelect(dataBlock.id); }} isSelected={selectedId===dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock.value}</ComboboxOption>
+				<label onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
 			);
 		});
 	},
 	render: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			dropDownNodes = self.renderComboboxOptions(),
-			listStyle = {display: 'none'};
-
-		if (binding.get('showList')) {
-			listStyle.display = 'block';
-		}
+			radioNodes = self.renderRadioOptions();
 
 		return (
-			<div className="bCombobox">
-				<input value={binding.get('selectedValue')} onClick={self.toggleList} type="text" readOnly />
-				<span onClick={self.toggleList} className="eCombobox_button">▾</span>
-				<div className="eCombobox_list" style={listStyle}>
-					{dropDownNodes}
-				</div>
+			<div className="bRadioGroupMy">
+				{radioNodes}
 			</div>
 		);
 	}
 });
 
-module.exports = Autocomplete;
+module.exports = RadioGroup;
 
 

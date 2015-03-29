@@ -3,6 +3,7 @@
  */
 
 var RadioGroup = React.createClass({
+	mixins: [Morearty.Mixin],
     getInitialState: function() {
         // check the first block of comment in `setCheckedRadio`
         return {defaultValue: this.props.defaultValue};

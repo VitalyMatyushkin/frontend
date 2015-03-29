@@ -163,7 +163,7 @@ var MaskedInput = React.createClass({
 		}
 	},
 	render: function () {
-		return <input {...this.props} {...this.mask.props}/>
+		return <input type="text" {...this.props} {...this.mask.props}/>
 	}
 });
 
