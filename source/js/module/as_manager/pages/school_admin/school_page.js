@@ -13,11 +13,11 @@ OneSchoolPage = React.createClass({
 
 		if (!activeSchoolId) {
 			document.location.hash = 'schools';
+		} else {
+			window.Server.school.get(activeSchoolId).then(function (data) {
+				binding.set('schoolInfo', Immutable.fromJS(data));
+			});
 		}
-
-		window.Server.school.get(activeSchoolId).then(function (data) {
-			binding.set('schoolInfo', Immutable.fromJS(data));
-		});
 
 		// Пункты подменю
 		self.menuItems = [{
