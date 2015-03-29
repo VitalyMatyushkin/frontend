@@ -34,9 +34,11 @@ ChallengesView = React.createClass({
                 firstName,
                 secondName;
 
-            if (type === 'inter-schools') {
+            if (type === 'inter-schools' && !binding.get('model.resultId')) {
                 firstName = eventBinding.get('participants.0.school.name');
-                secondName = eventBinding.get('invites.0.guest.name');
+                secondName = !binding.get('model.resultId') ?
+                    eventBinding.get('invites.0.guest.name') :
+                    eventBinding.get('participants.1.school.name');
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');

@@ -18,7 +18,7 @@ MultiSelectTeam = React.createClass({
             filter = {
                 where: {
                     id: {
-                        nin: self.getIncludePlayersIds().toJS()
+                        nin: self.getExcludePlayersIds().toJS()
                     },
                     formId: {
                         inq: forms.map(function (form) {
@@ -29,10 +29,14 @@ MultiSelectTeam = React.createClass({
                 }
             };
 
-
         if (type === 'houses') {
-            filter.where.houseId = self.getBinding('rival').get('id');
-        }
+            filter.where.houseId = {
+                inq: binding.get('rivals').map(function (rival) {
+                    return rival.get('id')
+                }).toJS()
+            };
+        };
+
 
         window.Server.studentsFilter.get({
             filter: filter
@@ -43,10 +47,10 @@ MultiSelectTeam = React.createClass({
                 return player.name;
             });
 
-            binding.set('students', Immutable.fromJS(data));
+            self.getBinding('students').set(Immutable.fromJS(data));
         });
     },
-    getIncludePlayersIds: function () {
+    getExcludePlayersIds: function () {
         var self = this,
             binding = self.getDefaultBinding(),
             players = binding.sub('players');
@@ -61,30 +65,54 @@ MultiSelectTeam = React.createClass({
     },
     onSelectStudents: function (selected) {
         var self = this,
-            binding = self.getDefaultBinding(),
             playersBinding = self.getBinding('players');
 
         playersBinding.update(function () {
-            return binding.get('students').filter(function (student) {
+            return self.getBinding('students').get().filter(function (student) {
                 return selected.indexOf(student.get('id')) !== -1;
             });
         });
     },
     render: function() {
         var self = this,
-            binding = self.getDefaultBinding(),
-            rivalBinding = self.getBinding('rival'),
-            items = binding.get('students').map(function (student) {
+            binding  = self.getDefaultBinding(),
+            students = self.getBinding('students').get(),
+            items = students ? students.filter(function (student) {
+                var result = true,
+                    index;
+
+                if (binding.get('model.type') === 'houses') {
+                    result = self.getBinding('rival').get('id') === student.get('houseId');
+                } else if (binding.get('model.type') === 'internal') {
+                    index = self.getBinding('players').get().findIndex(function (player) {
+                        return player.get('id') === student.get('id');
+                    });
+                    result = index === -1;
+                }
+
+                return result;
+            }).map(function (student) {
                 return {
                     id: student.get('id'),
                     text: student.get('name')
                 }
-            });
+            }).toJS() : [],
+            binding = {
+                default: self.getDefaultBinding(),
+                students: self.getBinding('students'),
+                players: self.getBinding('players'),
+                rival: self.getBinding('rival')
+            },
+            selections = self.getBinding('players').get().map(function (player) {
+                return player.get('id');
+            }).toJS();
 
         return <div className="bTeamMultiSelect">
             <Multiselect
                 binding={binding}
-                items={items.toJS()}
+                key={'select-students-to-team-' + self.getBinding('rival').get('name').split(' ').join('-')}
+                items={items}
+                selections={selections}
                 onChange={self.onSelectStudents}
             />
         </div>

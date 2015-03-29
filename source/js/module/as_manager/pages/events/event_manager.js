@@ -20,7 +20,8 @@ EventManager = React.createClass({
                 type: null,
                 sportId: null,
                 gender: null,
-                ages: []
+                ages: [],
+                description: ''
             },
             schoolInfo: {},
             inviteModel: {},

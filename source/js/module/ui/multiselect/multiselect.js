@@ -2,6 +2,7 @@ var MultiSelectItem = require('./multiselect_item');
 
 var MultiSelect = React.createClass({
     mixins: [Morearty.Mixin],
+    displayName: 'MultiSelect',
     getDefaultProps: function() {
         return {
             items: [],
@@ -16,7 +17,8 @@ var MultiSelect = React.createClass({
 
         return {
             selections: self.props.selections || [],
-            filter: ''
+            filter: '',
+            count: 0
         }
     },
     handleItemClick: function(item) {
@@ -79,14 +81,16 @@ var MultiSelect = React.createClass({
         self.props.onChange(selections);
     },
     render: function() {
-        var count = this.state.selections.length;
+        var self = this,
+            count = self.props.selections.length;
+
         return (
-            <div className="bMultiSelect">
+            <div key={self.props.key} className="bMultiSelect">
                 <input onChange={this.handleFilterChange} value={this.state.filter} placeholder={this.props.placeholder} />
                 <ul>{this.props.items.map(this.createItem)}</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;
                 {count > 0 ?
-                    <button onClick={this.selectNone}>{'Unselect all(' + count + ')'}</button>
+                    <button key={self.props.key + '-unselect'} onClick={this.selectNone}>{'Unselect all(' + count + ')'}</button>
                 : null}
             </div>
         )

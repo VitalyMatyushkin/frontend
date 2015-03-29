@@ -9,8 +9,8 @@ Manager = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
 
-        binding.set('selectedRivalIndex', 0);
-        binding.set('students', Immutable.List())
+        binding.set('students', Immutable.List());
+        self.onChooseRival(0);
     },
     onChooseRival: function (index) {
         var self = this,
@@ -45,7 +45,8 @@ Manager = React.createClass({
             teamBinding = {
                 default: binding,
                 rival: binding.sub('rivals.' + selectedRivalIndex),
-                players: binding.sub('players.' + selectedRivalIndex)
+                players: binding.sub('players.' + selectedRivalIndex),
+                students: binding.sub('students')
             };
 
             return <div className="eManager_container">
