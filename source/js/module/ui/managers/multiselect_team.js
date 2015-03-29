@@ -26,7 +26,8 @@ MultiSelectTeam = React.createClass({
                         }).toJS()
                     },
                     gender: binding.get('model.gender') || 'male'
-                }
+                },
+                include: ['form', 'house']
             };
 
         if (type === 'houses') {
@@ -36,7 +37,6 @@ MultiSelectTeam = React.createClass({
                 }).toJS()
             };
         }
-
 
         window.Server.studentsFilter.get({
             filter: filter
@@ -67,6 +67,14 @@ MultiSelectTeam = React.createClass({
         var self = this,
             playersBinding = self.getBinding('players');
 
+        selected = selected.reduce(function (memo, studentId) {
+            if (memo.indexOf(studentId) === -1) {
+                memo.push(studentId);
+            }
+
+            return memo;
+        }, []);
+
         playersBinding.update(function () {
             return self.getBinding('students').get().filter(function (student) {
                 return selected.indexOf(student.get('id')) !== -1;
@@ -78,7 +86,7 @@ MultiSelectTeam = React.createClass({
             binding  = self.getDefaultBinding(),
             order = self.props.order === 0 ? 1 : 0,
             students = self.getBinding('students').get(),
-            items = students ? students.filter(function (student) {
+            items = students ? students.filter(function (student, index) {
                 var result = true,
                     index;
 
@@ -93,9 +101,12 @@ MultiSelectTeam = React.createClass({
 
                 return result;
             }).map(function (student) {
+                var formName = student.get('form').get('name'),
+                    houseName = student.get('house').get('name');
+
                 return {
                     id: student.get('id'),
-                    text: student.get('name')
+                    text: student.get('name') + ' [' + formName + '|' +  houseName + ']'
                 }
             }).toJS() : [],
             binding = {
