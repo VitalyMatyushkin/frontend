@@ -2,6 +2,9 @@ var TypeMixin = require('module/ui/form/types/type_mixin'),
 	TypeText;
 
 TypeText =  React.createClass({
+	propTypes: {
+		textType: React.PropTypes.string
+	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
 		var self = this,
@@ -39,7 +42,7 @@ TypeText =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<input ref="fieldInput" type="text" onBlur={self.handeBlur} onChange={self.handleChange} />
+				<input ref="fieldInput" type={self.props.textType || 'text'} onBlur={self.handeBlur} onChange={self.handleChange} />
 			</div>
 		)
 	}
