@@ -36,7 +36,7 @@ InviteView = React.createClass({
             }),
 			isInbox = self.props.type === 'inbox',
 			isOutBox = self.props.type === 'outbox',
-			isRepaid = typeof binding.get('accepted') === 'boolean',
+			isArchive = typeof binding.get('accepted') === 'boolean',
             inviter = self.getBinding('inviter'),
             invited = self.getBinding('invited'),
             message = binding.get('message') || '',
@@ -51,7 +51,7 @@ InviteView = React.createClass({
                 </span>
                 <span className="eInvite_eventDate"></span>
             </div>
-            <div className="eInvite_message">{isInbox || isRepaid ? message : 'Awaiting opponent...' }</div>
+            <div className="eInvite_message">{isInbox || isArchive ? message : 'Awaiting opponent...' }</div>
 			<div className="eInvite_buttons">
 				{isInbox ? <a href={'/#invites/' + binding.get('id') + '/accept'} className="bButton">Accept</a> : null}
 				{isInbox ? <a href={'/#invites/' + binding.get('id') + '/decline'} className="bButton mRed">Decline</a> : null}

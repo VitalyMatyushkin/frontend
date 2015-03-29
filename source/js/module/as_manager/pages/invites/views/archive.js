@@ -90,7 +90,7 @@ OutboxView = React.createClass({
 			invites = self.getInvites();
 
 		return <div key={'inbox-view'} className="eInvites_OutboxContainer">
-			<h2 className="eInvites_titlePage">Repaid</h2>
+			<h2 className="eInvites_titlePage">Archive</h2>
 			<div className="eInvites_filterPanel"></div>
 			<div className="eInvites_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
 		</div>;
