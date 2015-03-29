@@ -26,7 +26,7 @@ OutboxView = React.createClass({
 				where: {
 					inviterId: activeSchoolId,
 					accepted: {
-						neq: [true, false]
+                        nin: [true, false]
 					}
 				},
                 include: ['inviter', 'guest']
@@ -61,9 +61,8 @@ OutboxView = React.createClass({
 	},
 	getInvites: function () {
 		var self = this,
-			activeSchoolId = self.getActiveSchoolId(),
 			binding = self.getDefaultBinding(),
-			invites = self.getFilteredInvites(activeSchoolId, 'outbox', 'ask', true);
+			invites = binding.get('models');
 
 		return invites.map(function (invite, index) {
 			var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),

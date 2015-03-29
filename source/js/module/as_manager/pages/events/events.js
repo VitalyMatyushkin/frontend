@@ -54,13 +54,13 @@ EventView = React.createClass({
             key: 'Calendar'
         },{
             href: '/#events/challenges',
-            name: 'Challenges',
-            key: 'Challenges'
+            name: 'Fixtures',
+            key: 'Fixtures'
         },
         {
             href: '/#events/manager',
-            name: 'Manager',
-            key: 'Manager'
+            name: 'New',
+            key: 'New...'
         }];
     },
 	render: function() {

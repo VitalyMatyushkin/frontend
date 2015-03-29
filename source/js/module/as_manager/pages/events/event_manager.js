@@ -144,8 +144,8 @@ EventManager = React.createClass({
             step = binding.get('step'),
             titles = [
                 'Choose Date',
-                'Basic Info',
-				'Form teams'
+                'Fixture Details',
+				'Squad Members'
             ],
 			bManagerClasses = classNames({
 				bManager: true,

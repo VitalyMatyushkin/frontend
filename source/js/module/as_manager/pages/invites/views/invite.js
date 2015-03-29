@@ -11,7 +11,7 @@ InviteView = React.createClass({
 
 		binding
 			.set('redeemed', true)
-			.set('repaid', true);
+			.set('accepted', false);
 
 		window.Server.invite.put({
 			inviteId: binding.get('id')
@@ -36,7 +36,7 @@ InviteView = React.createClass({
             }),
 			isInbox = self.props.type === 'inbox',
 			isOutBox = self.props.type === 'outbox',
-			isRepaid = binding.get('repaid'),
+			isRepaid = typeof binding.get('accepted') === 'boolean',
             inviter = self.getBinding('inviter'),
             invited = self.getBinding('invited'),
             message = binding.get('message') || '',

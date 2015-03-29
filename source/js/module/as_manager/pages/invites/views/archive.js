@@ -35,7 +35,8 @@ OutboxView = React.createClass({
 					accepted: {
                         inq: [true, false]
                     }
-				}
+				},
+                include: ['inviter', 'guest']
 			}
 		}).then(function (models) {
 			var uniqueIds = models.reduce(function (memo, invite) {
@@ -68,9 +69,8 @@ OutboxView = React.createClass({
 	},
 	getInvites: function () {
 		var self = this,
-			activeSchoolId = self.getActiveSchoolId(),
 			binding = self.getDefaultBinding(),
-			invites = self.getFilteredInvites(activeSchoolId, 'inbox', 'ask', true);
+			invites = binding.get('models');
 
 		return invites.map(function (invite, index) {
 			var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),
