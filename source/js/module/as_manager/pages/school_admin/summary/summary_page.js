@@ -1,4 +1,5 @@
-var SchoolSummary;
+var SchoolSummary,
+	SVG = require('module/ui/svg');
 
 SchoolSummary = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -32,7 +33,7 @@ SchoolSummary = React.createClass({
 
 		return (
 			<div>
-				<h1 className="eSchoolMaster_title"> School {binding.get('name')} summary inforamtion
+				<h1 className="eSchoolMaster_title"><div className="eSchoolMaster_flag"><SVG icon="icon_bookmark" /></div> School {binding.get('name')} summary inforamtion
 
 					<div className="eSchoolMaster_buttons">
 
@@ -40,7 +41,8 @@ SchoolSummary = React.createClass({
 						<a href="/#schools" className="bButton">Change active school...</a>
 					</div>
 				</h1>
-                <p>PostCode: {binding.get('zipCode.zipCode')}</p>
+                <p>
+					PostCode: {binding.get('zipCode.zipCode')}</p>
 				<p>Address: {binding.get('address')}</p>
 				<p>Description: {binding.get('description')}</p>
 			</div>
