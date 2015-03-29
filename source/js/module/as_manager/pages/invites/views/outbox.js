@@ -84,7 +84,7 @@ OutboxView = React.createClass({
 		return <div key="OutboxView" className="eInvites_OutboxContainer">
 			<h2 className="eInvites_titlePage">Outbox</h2>
 			<div className="eInvites_filterPanel"></div>
-			<div className="eInvites_list">{invites && invites.length ? invites : null}</div>
+			<div className="eInvites_list" key="OutboxViewList">{invites && invites.length ? invites : null}</div>
 			<ProcessingView binding={binding} />
 		</div>;
 	}

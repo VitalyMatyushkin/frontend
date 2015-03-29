@@ -1,10 +1,11 @@
-var OutboxView,
+var ArchiveView,
 	ProcessingView = require('./processing'),
 	InviteOutbox = require('./invite'),
 	InvitesMixin = require('../mixins/invites_mixin');
 
-OutboxView = React.createClass({
+ArchiveView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+    displayName: 'ArchiveView',
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -89,13 +90,13 @@ OutboxView = React.createClass({
 			binding = self.getDefaultBinding(),
 			invites = self.getInvites();
 
-		return <div key={'inbox-view'} className="eInvites_OutboxContainer">
+		return <div key="ArchiveView" className="eInvites_OutboxContainer">
 			<h2 className="eInvites_titlePage">Archive</h2>
 			<div className="eInvites_filterPanel"></div>
-			<div className="eInvites_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
+			<div className="eInvites_list" key="ArchiveView_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
 		</div>;
 	}
 });
 
 
-module.exports = OutboxView;
+module.exports = ArchiveView;
