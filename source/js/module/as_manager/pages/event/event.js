@@ -2,10 +2,14 @@ var EventView,
     RouterView = require('module/core/router'),
     Route = require('module/core/route'),
     If = require('module/ui/if/if'),
-    SubMenu = require('module/ui/menu/sub_menu');
+    EventHeader = require('./view/event_header'),
+    EventRivals = require('./view/event_rivals'),
+    EventButtons = require('./view/event_buttons'),
+    EventTeams = require('./view/event_teams');
 
 EventView = React.createClass({
 	mixins: [Morearty.Mixin],
+    displayName: 'EventPage',
     getMergeStrategy: function () {
         return Morearty.MergeStrategy.MERGE_REPLACE;
     },
@@ -13,18 +17,21 @@ EventView = React.createClass({
         return Immutable.fromJS({
             model: {},
             participants: [],
-            mode: null,
             eventId: null,
             players: [],
-            points: []
+            points: [],
+            result: {
+                points: []
+            },
+            sync: false,
+            mode: 'general'
         });
     },
     componentWillMount: function () {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             binding = self.getDefaultBinding(),
-            eventId = rootBinding.get('routing.pathParameters.0'),
-            mode = rootBinding.get('routing.pathParameters.1');
+            eventId = rootBinding.get('routing.pathParameters.0');
 
 		binding.addListener('players', function (descriptor) {
 			var path = descriptor.getPath(),
@@ -121,7 +128,8 @@ EventView = React.createClass({
 				]))
 				.set('schoolInfo', Immutable.fromJS(schoolInfo))
 				.set('eventId', eventId)
-                .set('mode', mode)
+                .set('mode', 'general')
+                .set('sync', true)
 				.commit();
         });
 
@@ -131,18 +139,21 @@ EventView = React.createClass({
     },
 	render: function() {
         var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding();
+            binding = self.getDefaultBinding();
 
 		return <div>
-            <SubMenu binding={binding.sub('eventRouting')} items={self.menuItems} />
             <div className="bEventContainer">
-                <RouterView routes={ binding.sub('eventRouting') } binding={rootBinding}>
-                    <Route path='/event/:id' binding={binding} component='module/as_manager/pages/event/general'   />
-                    <Route path='/event/:id/general' binding={binding} component='module/as_manager/pages/event/general'   />
-                    <Route path='/event/:id/edit' binding={binding} component='module/as_manager/pages/event/edit'   />
-                    <Route path='/event/:id/finish' binding={binding} component='module/as_manager/pages/event/finish'   />
-                </RouterView>
+                <If condition={binding.get('sync')}>
+                    <div className="bEvent">
+                        <EventButtons binding={binding} />
+                        <EventHeader binding={binding} />
+                        <EventRivals binding={binding} />
+                        <EventTeams binding={binding} />
+                    </div>
+                </If>
+                <If condition={!binding.get('sync')}>
+                    <span>loading...</span>
+                </If>
             </div>
         </div>;
 	}

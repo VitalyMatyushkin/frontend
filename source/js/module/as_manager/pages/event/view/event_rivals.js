@@ -39,6 +39,16 @@ EventRival = React.createClass({
 
 		return name;
 	},
+    getCountPoint: function (order) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            pointsBinding = binding.get('model.resultId') ? binding.sub('model.result.points') : binding.sub('points'),
+            participantId = binding.get('participants.' + order + '.id');
+
+        return pointsBinding.get().filter(function (point) {
+            return point.get('participantId') === participantId;
+        }).count();
+    },
 	render: function() {
         var self = this,
 			binding = self.getDefaultBinding(),
@@ -53,17 +63,17 @@ EventRival = React.createClass({
 				<div className="eEventRival_name">{self.getName(0)}</div>
 			</div>
 			<div className="bEventResult">
-                <If condition={!binding.get('resultId')}>
+                <If condition={!binding.get('model.resultId') && binding.get('mode') !== 'closing'}>
                     <div className="eEventResult_time">{[hours, minutes].join(':')}</div>
                 </If>
-                <If condition={!!binding.get('resultId')}>
+                <If condition={!!binding.get('model.resultId') || binding.get('mode') === 'closing'}>
                     <div className="eEventResult_score">
-                        <span>10</span>
+                        <span>{self.getCountPoint(0)}</span>
                         <span>:</span>
-                        <span>10</span>
+                        <span>{self.getCountPoint(1)}</span>
                     </div>
                 </If>
-                <div className="eEventResult_scores">V</div>
+                <div className="eEventResult_vs">V</div>
             </div>
 			<div className="bEventRival">
 				<div className="eEventRival_rival">{self.getPic(1)}</div>

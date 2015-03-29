@@ -1,5 +1,6 @@
 var EventHeader = require('./view/event_header'),
 	EventRivals = require('./view/event_rivals'),
+    EventButtons = require('./view/event_buttons'),
 	EventTeams = require('./view/event_teams'),
 	EventGeneralView;
 
@@ -11,6 +12,7 @@ EventGeneralView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
 
 		return <div className="bEvent">
+            <EventButtons binding={binding} />
             <EventHeader binding={binding} />
 			<EventRivals binding={binding} />
 			<EventTeams binding={binding} />

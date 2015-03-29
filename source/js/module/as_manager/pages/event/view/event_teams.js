@@ -77,10 +77,10 @@ EventTeams = React.createClass({
             var isMale = player.get('gender') === 'male';
 
             return <div className="bPlayer mMini">
-                <If condition={binding.get('mode') !== 'finish' && isOwner}>
+                <If condition={binding.get('mode') !== 'closing' && isOwner}>
                     <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>
-                <If condition={binding.get('mode') === 'finish' && isOwner}>
+                <If condition={binding.get('mode') === 'closing' && isOwner}>
                     <div>
                         {!binding.get('model.resultId') ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
                             <SVG icon="icon_minus" />
@@ -89,12 +89,12 @@ EventTeams = React.createClass({
                     </div>
                 </If>
 				<span className="ePlayer_name"><span>{player.get('firstName')}</span> <span>{player.get('lastName')}</span></span>
-				<If condition={binding.get('mode') === 'edit' && isOwner}>
+				<If condition={binding.get('mode') === 'edit_squad' && isOwner}>
 					<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, order, player.get('id'))}>
 						<SVG icon="icon_trash" />
 					</span>
 				</If>
-                <If condition={binding.get('mode') === 'finish' && isOwner && !binding.get('model.resultId')}>
+                <If condition={binding.get('mode') === 'closing' && isOwner && !binding.get('model.resultId')}>
                     <span className="ePlayer_plus" onClick={self.addPoint.bind(null, order, player.get('id'))}>
                         <SVG icon="icon_plus" />
                     </span>
@@ -114,7 +114,7 @@ EventTeams = React.createClass({
 				players: binding.sub(['players', order])
 			};
 
-		return isOwner && binding.get('mode') === 'edit' && !binding.get('model.resultId') ?
+		return isOwner && binding.get('mode') === 'edit_squad' && !binding.get('model.resultId') ?
             <AutocompleteTeam binding={completeBinding} /> : null;
 	},
 	render: function() {
