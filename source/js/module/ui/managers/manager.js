@@ -58,7 +58,7 @@ Manager = React.createClass({
                 </div>
                 <div className="eManager_containerTeam">
                     <FootballManager binding={teamBinding} />
-                    <MultiSelectTeam binding={teamBinding} />
+                    <MultiSelectTeam binding={teamBinding} order={selectedRivalIndex}/>
                 </div>
             </div>;
 	}

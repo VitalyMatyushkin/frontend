@@ -35,7 +35,7 @@ MultiSelectTeam = React.createClass({
                     return rival.get('id')
                 }).toJS()
             };
-        };
+        }
 
 
         window.Server.studentsFilter.get({
@@ -76,6 +76,7 @@ MultiSelectTeam = React.createClass({
     render: function() {
         var self = this,
             binding  = self.getDefaultBinding(),
+            order = self.props.order === 0 ? 1 : 0,
             students = self.getBinding('students').get(),
             items = students ? students.filter(function (student) {
                 var result = true,
@@ -84,7 +85,7 @@ MultiSelectTeam = React.createClass({
                 if (binding.get('model.type') === 'houses') {
                     result = self.getBinding('rival').get('id') === student.get('houseId');
                 } else if (binding.get('model.type') === 'internal') {
-                    index = self.getBinding('players').get().findIndex(function (player) {
+                    index = binding.get('players.' + order).findIndex(function (player) {
                         return player.get('id') === student.get('id');
                     });
                     result = index === -1;
