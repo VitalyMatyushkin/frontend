@@ -5,6 +5,7 @@ ListField = React.createClass({
 	propTypes: {
 		dataField: React.PropTypes.string.isRequired,
 		parseFunction: React.PropTypes.func,
+		inputParseFunction: React.PropTypes.func,
 		onChange: React.PropTypes.func.isRequired,
 		width: React.PropTypes.string,
 		filterType: React.PropTypes.string
@@ -12,6 +13,10 @@ ListField = React.createClass({
 	onChange: function(event) {
 		var self = this,
 			value = event.currentTarget.value;
+
+		if (self.props.inputParseFunction) {
+			value = self.props.inputParseFunction(value);
+		}
 
 		if (value && self.props.filterType !== 'number') {
 			value = {
