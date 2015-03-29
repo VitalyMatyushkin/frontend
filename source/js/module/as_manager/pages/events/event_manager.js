@@ -119,6 +119,10 @@ EventManager = React.createClass({
                         schoolId: activeSchoolId
                     };
 
+                    if (event.type === 'internal') {
+                        rivalModel.name = rival.name;
+                    }
+
                     if (event.type === 'houses') {
                         rivalModel.houseId = rival.id;
                     }

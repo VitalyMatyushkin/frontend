@@ -17,10 +17,10 @@ EventRival = React.createClass({
 			pic = participant.get('house.pic');
 		}
 
-		return <img className="eEventRivals_pic"
+		return type !== 'internal'  ? <img className="eEventRivals_pic"
 			src={pic}
 			alt={participant.get('name')}
-			title={participant.get('name')} />;
+			title={participant.get('name')} /> : null;
 	},
 	getName: function (order) {
 		var self = this,
@@ -42,10 +42,10 @@ EventRival = React.createClass({
     getCountPoint: function (order) {
         var self = this,
             binding = self.getDefaultBinding(),
-            pointsBinding = binding.get('model.resultId') ? binding.sub('model.result.points') : binding.sub('points'),
+            pointsBinding = binding.get('model.result.points') || binding.get('points'),
             participantId = binding.get('participants.' + order + '.id');
 
-        return pointsBinding.get().filter(function (point) {
+        return pointsBinding.filter(function (point) {
             return point.get('participantId') === participantId;
         }).count();
     },
