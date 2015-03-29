@@ -29,18 +29,23 @@ ListField = React.createClass({
 	},
 	render: function() {
 		var self = this,
-			cellStyle = {};
+			cellStyle = {},
+			filterBlock;
 
 		if (self.props.width) {
 			cellStyle.width = self.props.width;
 		}
 
+		if (self.props.filterType !== 'colors') {
+			filterBlock =  <div className="eDataList_filter">
+				<input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by ' + self.props.children.toLowerCase() + '...'} />
+			</div>
+		}
+
 		return (
 			<div className="eDataList_listItemCell" style={cellStyle}>
 				{self.props.children}
-				<div className="eDataList_filter">
-					<input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by ' + self.props.children.toLowerCase() + '...'} />
-				</div>
+				{filterBlock}
 			</div>
 		)
 	}
