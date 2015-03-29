@@ -10,20 +10,14 @@ TypeSelect = React.createClass({
 	bindToAutcomplete: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			defaultValue = binding.get('defaultValue'),
-			defaultLabel = binding.get('defaultLabel');
+			defaultValue = binding.get('defaultValue');
 
 		if (defaultValue) {
-			binding.sub('autocomplete').set('defaultId', defaultValue);
+			binding.sub('select').set('defaultId', defaultValue);
 		}
 
-		if (defaultLabel) {
-			binding.sub('autocomplete').set('defaultLabel', defaultLabel);
-			self.fullValidate(defaultValue);
-		}
-
-		binding.sub('autocomplete').addListener('selectedId', function() {
-			var newSelectedId = binding.sub('autocomplete').get('selectedId');
+		binding.sub('select').addListener('selectedId', function() {
+			var newSelectedId = binding.get('select.selectedId');
 
 			self.setValue(newSelectedId);
 		});
