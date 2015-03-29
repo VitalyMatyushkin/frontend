@@ -13,6 +13,13 @@ ChallengesView = React.createClass({
     onClickChallenge: function (eventId) {
         document.location.hash = 'event/' + eventId;
     },
+    getCountPoint: function (points, participantId) {
+        var self = this;
+
+        return points.filter(function (point) {
+            return point.get('participantId') === participantId;
+        }).count();
+    },
     getEvents: function (date) {
         var self = this,
             binding = this.getDefaultBinding(),
@@ -32,7 +39,9 @@ ChallengesView = React.createClass({
 				minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.get('type'),
                 firstName,
-                secondName;
+                secondName,
+                firstPoint,
+                secondPoint;
 
             if (type === 'inter-schools' && !binding.get('model.resultId')) {
                 firstName = eventBinding.get('participants.0.school.name');
@@ -47,10 +56,15 @@ ChallengesView = React.createClass({
                 secondName = eventBinding.get('participants.1.name');
             }
 
+            if (event.get('resultId')) {
+                firstPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.0.id')) || 0;
+                secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
+            }
+
             return <div className="eChallenge" onClick={self.onClickChallenge.bind(null, event.get('id'))} id={'challenge-' + event.get('id')}>
                 <div className="eChallenge_name">
                     <span className="eChallenge_rivalName">{firstName}</span>
-                    <span className="eChallenge_time">{event.get('resultId') ? 'played' : hours + ':' + minutes}</span>
+                    <span className="eChallenge_time">{event.get('resultId') ? [firstPoint, secondPoint].join(':') : hours + ':' + minutes}</span>
                     <span className="eChallenge_rivalName">{secondName}</span>
                 </div>
                 <div className="eChallenge_info">
