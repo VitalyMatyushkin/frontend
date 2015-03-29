@@ -4,6 +4,7 @@ ListField = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		dataField: React.PropTypes.string.isRequired,
+		parseFunction: React.PropTypes.func,
 		onChange: React.PropTypes.func.isRequired,
 		width: React.PropTypes.string,
 		filterType: React.PropTypes.string

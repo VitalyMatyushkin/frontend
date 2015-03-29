@@ -15,7 +15,7 @@ ClassListPage = React.createClass({
 		return (
 			<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 				<TableField width="40%" dataField="name">Name</TableField>
-				<TableField width="40%" dataField="age" filterType="number">Age group</TableField>
+				<TableField width="40%" dataField="age" filterType="number" parseFunction={function(value) {return 'Y' + value;}}>Age group</TableField>
 			</Table>
 		)
 	}

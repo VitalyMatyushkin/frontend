@@ -15,11 +15,6 @@ Table = React.createClass({
 
 		self.filter = {};
 		self.usedFields = [];
-		React.Children.map(self.props.children, function (child) {
-			//TODO: Добавить поддержку сборки имени из нескольких полей
-			self.usedFields.push(child.props.dataField);
-		});
-
 	},
 	updateFilterState: function(field, value) {
 		var self = this;
@@ -51,10 +46,17 @@ Table = React.createClass({
 				self.props.onItemView && itemButtons.push(<span onClick={getViewFunction()} className="bLinkLike">View</span>);
 				self.props.onItemRemove && itemButtons.push(<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
 
+				itemCells = React.Children.map(self.props.children, function(child) {
+					var dataField = child.props.dataField,
+						value = item[dataField];
 
-				itemCells = self.usedFields.map(function(field) {
+					if (child.props.parseFunction) {
+						value = child.props.parseFunction(value);
+					}
+
+
 					return (
-						<div className="eDataList_listItemCell">{item[field]}</div>
+						<div className="eDataList_listItemCell">{value}</div>
 					);
 				});
 
