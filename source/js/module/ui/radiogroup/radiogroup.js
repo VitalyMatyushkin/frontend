@@ -1,79 +1,96 @@
-/**
- * @jsx React.DOM
- */
+var RadioGroup;
 
-var RadioGroup = React.createClass({
+RadioGroup = React.createClass({
 	mixins: [Morearty.Mixin],
-    getInitialState: function() {
-        // check the first block of comment in `setCheckedRadio`
-        return {defaultValue: this.props.defaultValue};
-    },
+    displayName: 'RadioGroup',
+	propTypes: {
+		sourcePromise: React.PropTypes.func,
+		onSelect: React.PropTypes.func,
+		sourceArray: React.PropTypes.array
+	},
+	getDefaultState: function () {
+		var self = this;
 
-    componentDidMount: function() {
-        this.setRadioNames();
-        this.setCheckedRadio();
-    },
+		self.responseData = [];
 
-    componentDidUpdate: function() {
-        this.setRadioNames();
-        this.setCheckedRadio();
-    },
+		return Immutable.fromJS({
+			selectedId: null,
+			selectedValue: null,
+			defaultId: null,
+			showList: false
+		});
+	},
+	setDefaultId: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			defaultId = binding.get('defaultId');
 
-    render: function() {
-        return this.transferPropsTo(
-            <div onChange={this.props.onChange}>
-        {this.props.children}
-            </div>
-        );
-    },
+		if (defaultId) {
+			self.responseData.forEach(function(dataBlock) {
+				dataBlock.id === defaultId && self.handleSelect(defaultId);
+			});
+		}
+	},
+	componentWillMount: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			defaultId = binding.get('defaultId');
 
-    setRadioNames: function() {
-        // stay DRY and don't put the same `name` on all radios manually. Put it on
-        // the tag and it'll be done here
-        var $radios = this.getRadios();
-        for (var i = 0, length = $radios.length; i < length; i++) {
-            $radios[i].setAttribute('name', this.props.name);
-        }
-    },
+		// На случай, если форма заполняется асинхронно
+		binding.addListener('defaultId', function() {
+			self.setDefaultId();
+		});
 
-    getRadios: function() {
-        return this.getDOMNode().querySelectorAll('input[type="radio"]');
-    },
+		if (self.props.sourcePromise) {
+			self.props.sourcePromise().then(function(dataArray) {
+				self.responseData = dataArray;
+				self.setDefaultId();
+			});
+		} else {
+			self.responseData = self.props.sourceArray;
+			self.setDefaultId();
+		}
+	},
+	handleSelect: function (newId) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			model = self.responseData.filter(function (data) {
+				return data.id === newId;
+			})[0];
 
-    setCheckedRadio: function() {
-        var $radios = this.getRadios();
-        // if `value` is passed from parent, always use that value. This is similar
-        // to React's controlled component. If `defaultValue` is used instead,
-        // subsequent updates to defaultValue are ignored. Note: when `defaultValue`
-        // and `value` are both passed, the latter takes precedence, just like in
-        // a controlled component
-        var destinationValue = this.props.value != null
-            ? this.props.value
-            : this.state.defaultValue;
+		if (self.props.onSelect) {
+			self.props.onSelect(newId, model.value);
+		}
 
-        for (var i = 0, length = $radios.length; i < length; i++) {
-            var $radio = $radios[i];
+		binding.atomically()
+			.set('selectedId', newId)
+			.set('selectedValue', model.value)
+			.commit();
+	},
+	renderRadioOptions: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			selectedId = binding.get('selectedId');
 
-            // intentionally use implicit conversion for those who accidentally used,
-            // say, `valueToChange` of 1 (integer) to compare it with `value` of "1"
-            // (auto conversion to valid html value from React)
-            if ($radio.value == destinationValue) {
-                $radio.checked = true;
-            }
-        }
-    },
+		return self.responseData.map(function (dataBlock) {
+			return (
+				<label onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
+			);
+		});
+	},
+	render: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			radioNodes = self.renderRadioOptions();
 
-    getCheckedValue: function() {
-        var $radios = this.getRadios();
-
-        for (var i = 0, length = $radios.length; i < length; i++) {
-            if ($radios[i].checked) {
-                return $radios[i].value;
-            }
-        }
-
-        return null;
-    }
+		return (
+			<div className="bRadioGroupMy">
+				{radioNodes}
+			</div>
+		);
+	}
 });
 
 module.exports = RadioGroup;
+
+

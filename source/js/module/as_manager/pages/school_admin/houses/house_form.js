@@ -15,7 +15,7 @@ ClassForm = React.createClass({
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" field="name" validation="required">House name</FormField>
-				<FormField type="text" field="description" validation="required">Description</FormField>
+				<FormField type="text" field="description">Description</FormField>
 				<FormField type="colors" maxColors={2} field="colors">House colors</FormField>
 			</Form>
 		)
