@@ -28,8 +28,6 @@ StudentsListPage = React.createClass({
 			age = Math.floor(diffDays / 365);
 
 		return age;
-
-		//birthDayString = ('0' + (date.getMonth()+1)).slice(-2) + '.' + ('0' + date.getDate()).slice(-2) + '.' + date.getFullYear();
 	},
 	getTableView: function() {
 		var self = this,
@@ -40,7 +38,7 @@ StudentsListPage = React.createClass({
 				<TableField width="20%" dataField="firstName">First name</TableField>
 				<TableField width="20%" dataField="lastName">Last name</TableField>
 				<TableField width="15%" dataField="gender">Gender</TableField>
-				<TableField width="10%" dataField="birthday" parseFunction={self.getAgeFromBirthday}>Age</TableField>
+				<TableField width="10%" dataField="birthday" filterType="range" parseFunction={self.getAgeFromBirthday}>Age</TableField>
 				<TableField width="15%" dataField="phone">Phone</TableField>
 			</Table>
 		)
