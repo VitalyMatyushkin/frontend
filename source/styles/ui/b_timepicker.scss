@@ -1,0 +1,31 @@
+.bTimePicker {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid #000;
+  align-self: center;
+  padding: 0 5px;
+}
+
+.eTimePicker_box {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.eTimePicker_box.mDelimiter {
+  padding: 10px 1px;
+  justify-content: center;
+  display: flex;
+}
+
+.eTimePicker_value {
+  padding: 7px 0;
+}
+
+.eTimePicker_arrow {
+  color: gray;
+  cursor: pointer;
+  &:hover {
+    color: $MAIN_COLOR;
+  }
+}

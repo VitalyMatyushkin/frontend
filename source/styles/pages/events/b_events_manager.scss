@@ -5,6 +5,11 @@
   margin: 0 auto;
 }
 
+.eManager_dateTimePicker {
+  display: flex;
+  flex-direction: row;
+}
+
 .bManager.mTeamManager {
   width: 960px;
   flex-direction: row;

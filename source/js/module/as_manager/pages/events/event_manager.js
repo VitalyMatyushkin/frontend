@@ -1,5 +1,7 @@
 var CalendarView = require('module/ui/calendar/calendar'),
     EventManagerBase = require('./manager/base'),
+    If = require('module/ui/if/if'),
+    TimePicker = require('module/ui/timepicker/timepicker'),
     Manager = require('module/ui/managers/manager'),
     EventManager;
 
@@ -171,15 +173,23 @@ EventManager = React.createClass({
 		return <div>
            	<h3>{'[' + step + '/' + titles.length + ']: ' + titles[step - 1]}</h3>
             <div className={bManagerClasses}>
-                {step === 1 ? <CalendarView
-                    binding={rootBinding.sub('events.calendar')}
-                    onSelect={self.onSelectDate} /> : null}
-                {step === 2 ? <EventManagerBase binding={commonBinding} /> : null}
-                {step === 3 ? <Manager binding={managerBinding} /> : null}
+                <If condition={step === 1}>
+                    <div className="eManager_dateTimePicker">
+                        <CalendarView
+                            binding={rootBinding.sub('events.calendar')}
+                            onSelect={self.onSelectDate} />
+                    </div>
+                </If>
+                <If condition={step === 2}>
+                    <EventManagerBase binding={commonBinding} />
+                </If>
+                <If condition={step === 3}>
+                    <Manager binding={managerBinding} />
+                </If>
             </div>
 			<div className="eEvents_buttons">
 				{step > 1 ? <span className="bButton eEvents_button" onClick={self.toBack}>Back</span> : null}
-				{step < titles.length && step > 1 ? <span className="bButton eEvents_button" onClick={self.toNext}>Next</span> : null}
+				{step < titles.length ? <span className="bButton eEvents_button" onClick={self.toNext}>Next</span> : null}
 				{step === titles.length ? <span className="bButton eEvents_button mFinish" onClick={self.toFinish}>Finish</span> : null}
 			</div>
 		</div>;
