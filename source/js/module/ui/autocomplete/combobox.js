@@ -40,6 +40,8 @@ module.exports = React.createClass({
 		 */
 		onSelect: React.PropTypes.func,
 
+
+		onFocus: React.PropTypes.func,
 		/**
 		 * The initial value of the component.
 		 */
@@ -165,7 +167,11 @@ module.exports = React.createClass({
 			activedescendant: null
 		}, cb);
 	},
+	handleFocus: function() {
+		var self = this;
 
+		self.props.onFocus && self.props.onFocus();
+	},
 	handleInputChange: function (event) {
 		var value = this.refs.input.getDOMNode().value;
 
@@ -438,6 +444,7 @@ module.exports = React.createClass({
 					value={self.props.binding.get('inputValue') || defaultInputState}
 					onChange={this.handleInputChange}
 					onBlur={this.handleInputBlur}
+					onFocus={this.handleFocus}
 					onKeyDown={this.handleKeydown}
 					onKeyUp={this.handleInputKeyUp}
 					role="combobox"

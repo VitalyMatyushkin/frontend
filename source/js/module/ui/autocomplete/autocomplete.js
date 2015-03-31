@@ -10,10 +10,10 @@ Autocomplete = React.createClass({
 		serverField: React.PropTypes.string,
 		serviceFullData: React.PropTypes.func,
 		serviceFilter: React.PropTypes.func,
-        onSelect: React.PropTypes.func,
+		onSelect: React.PropTypes.func,
 		onBlue: React.PropTypes.func,
 		onInput: React.PropTypes.func,
-        placeholderText: React.PropTypes.string
+		placeholderText: React.PropTypes.string
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -26,21 +26,21 @@ Autocomplete = React.createClass({
 			defaultId: null
 		});
 	},
-	setDefaultId: function() {
+	setDefaultId: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			defaultId = binding.get('defaultId');
 
 		if (defaultId) {
-			self.responseData.forEach(function(dataBlock) {
-				if(dataBlock.id === defaultId){
+			self.responseData.forEach(function (dataBlock) {
+				if (dataBlock.id === defaultId) {
 					self.handleInput(dataBlock[self.props.serverField]);
 					self.handleSelect(defaultId);
 				}
 			});
 		}
 	},
-	setDefaultLabel: function() {
+	setDefaultLabel: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			defaultLabel = binding.get('defaultLabel'),
@@ -57,22 +57,36 @@ Autocomplete = React.createClass({
 			defaultId = binding.get('defaultId');
 
 		// На случай, если форма заполняется асинхронно
-		binding.addListener('defaultId', function() {
+		binding.addListener('defaultId', function () {
 			self.setDefaultId();
 		});
 
-		binding.addListener('defaultLabel', function() {
+		binding.addListener('defaultLabel', function () {
 			self.setDefaultLabel();
 		});
 
 
 		// Если передается сервис для получения полных данных, фильтруем на клиенте
 		if (self.props.serviceFullData) {
-			self.handleInput = self._filterOnClient;
+			self.filterData = self._filterOnClient;
 			self.updateFullData();
 		} else {
-			self.handleInput = self._filterOnServer;
+			self.filterData = self._filterOnServer;
 		}
+	},
+	handleInput: function (userInput) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('selectedId', null);
+		self.props.onInput && self.props.onInput(userInput);
+
+		if (userInput === '') {
+			binding.set('response', []);
+			return false;
+		}
+
+		self.filterData && self.filterData(userInput);
 	},
 	handleSelect: function (newId) {
 		var self = this,
@@ -81,9 +95,9 @@ Autocomplete = React.createClass({
 				return mod.id === newId;
 			});
 
-        if (self.props.onSelect) {
-            self.props.onSelect(newId, self.responseData, model.length > 0 ? model[0] : null);
-        }
+		if (self.props.onSelect) {
+			self.props.onSelect(newId, self.responseData, model.length > 0 ? model[0] : null);
+		}
 
 		binding.atomically()
 			.set('selectedId', newId)
@@ -95,41 +109,32 @@ Autocomplete = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		binding.set('selectedId', null);
-		self.props.onInput && self.props.onInput(userInput);
-		if (userInput === '') {
-			binding.set('response', []);
-		} else {
-			self.pendingRequest && self.pendingRequest.abort();
-			binding.set('loading', true);
-			binding.set('response', null);
+		self.pendingRequest && self.pendingRequest.abort();
+		binding.set('loading', true);
+		binding.set('response', null);
 
-			self.pendingRequest = self.props.serviceFilter(userInput).then(function (data) {
-				self.responseData = data;
-				binding.set('response', data);
-				binding.set('loading', false);
-				//self.setDefaultValue();// TODO: may be remove this line??
-			});
-
-		}
+		self.pendingRequest = self.props.serviceFilter(userInput).then(function (data) {
+			self.responseData = data;
+			binding.set('response', data);
+			binding.set('loading', false);
+		});
 	},
 	_filterOnClient: function (userInput) {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			filter = new RegExp(userInput, 'i');
 
-		binding.set('selectedId', null);
-		self.props.onInput && self.props.onInput(userInput);
-		if (userInput === '') {
-			binding.set('response', []);
-		} else {
+		binding.set('response', self.responseData.filter(function (dataBlock) {
+			var filterFiled = self.props.serverField || 'value';
 
-			binding.set('response', self.responseData.filter(function (dataBlock) {
-				var filterFiled = self.props.serverField || 'value';
+			return filter.test(dataBlock[filterFiled]) || filter.test(dataBlock.id);
+		}));
+	},
+	handleFocus: function () {
+		var self = this,
+			inputValue = self.getDefaultBinding().get('combobox.inputValue');
 
-				return filter.test(dataBlock[filterFiled]) || filter.test(dataBlock.id);
-			}));
-		}
+		self.filterData(inputValue || '');
 	},
 	updateFullData: function () {
 		var self = this,
@@ -156,7 +161,7 @@ Autocomplete = React.createClass({
 			var filterFiled = self.props.serverField || 'value';
 
 			return (
-				<ComboboxOption isSelected={selectedId===dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock[filterFiled]}</ComboboxOption>
+				<ComboboxOption isSelected={selectedId === dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock[filterFiled]}</ComboboxOption>
 			);
 		});
 	},
@@ -176,11 +181,12 @@ Autocomplete = React.createClass({
 		return (
 			<div>
 				<Combobox
-                    binding={binding.sub('combobox')}
-                    onInput={self.handleInput}
-                    onSelect={self.handleSelect}
-                    placeholderText={self.props.placeholderText}
-                    value={selectedId}>{dropDownNodes}</Combobox>
+					binding={binding.sub('combobox')}
+					onInput={self.handleInput}
+					onSelect={self.handleSelect}
+					onFocus={self.handleFocus}
+					placeholderText={self.props.placeholderText}
+					value={selectedId}>{dropDownNodes}</Combobox>
 			</div>
 		);
 	}

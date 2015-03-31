@@ -33,7 +33,7 @@ SchoolSummary = React.createClass({
 
 		return (
 			<div>
-				<h1 className="eSchoolMaster_title"><div className="eSchoolMaster_flag"><SVG icon="icon_bookmark" /></div> School {binding.get('name')} summary inforamtion
+				<h1 className="eSchoolMaster_title"><div className="eSchoolMaster_flag"><SVG icon="icon_bookmark" /></div>{binding.get('name')}
 
 					<div className="eSchoolMaster_buttons">
 
