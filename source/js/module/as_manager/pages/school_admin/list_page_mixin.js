@@ -37,7 +37,7 @@ ListPageMixin = {
 			self.lastFiltersState = newFilter;
 		}
 
-		self.request = window.Server[self.serviceName].get({ filter: requestFilter }).then(function (data) {
+		self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
 			binding.set(Immutable.fromJS(data));
 		});
 	},

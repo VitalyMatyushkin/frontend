@@ -16,14 +16,14 @@ StudentForm = React.createClass({
 
 		return function() {
 
-			return window.Server.schoolForms.get(self.props.schoolId);
+			return window.Server.forms.get(self.props.schoolId);
 		}
 	},
 	getHouseService: function() {
 		var self = this;
 
 		return function() {
-			return window.Server.schoolHouses.get(self.props.schoolId);
+			return window.Server.houses.get(self.props.schoolId);
 		}
 	},
 	getGender: function() {

@@ -15,7 +15,7 @@ HouseAddPage = React.createClass({
 
 		data.schoolId = self.activeSchoolId;
 
-		self.activeSchoolId && window.Server.houses.post(data).then(function() {
+		self.activeSchoolId && window.Server.houses.post(self.activeSchoolId, data).then(function() {
 			document.location.hash = 'school_admin/houses';
 		});
 	},

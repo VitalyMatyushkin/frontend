@@ -19,22 +19,16 @@ serviceList = {
         serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
         serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 
-		// leaners
-        serviceList.students = new Service('/students', binding);
-		serviceList.schoolStudents = new Service('/students?filter[where][schoolId]={schoolId}', binding);
-		serviceList.studentsFilter = new Service('/students', binding);
+		// students
+        serviceList.students = new Service('/schools/{schoolId}/students', binding);
 		serviceList.student = new Service('/students/{studentId}', binding);
 
 		// houses
-        serviceList.houses = new Service('/houses', binding);
-		serviceList.housesFilter = new Service('/houses', binding);
-		serviceList.schoolHouses = new Service('/houses?filter[where][schoolId]={schoolId}', binding);
+        serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
 
 		// forms
-		serviceList.forms = new Service('/forms', binding);
-		serviceList.formsFilter = new Service('/forms', binding);
-		serviceList.schoolForms = new Service('/forms?filter[where][schoolId]={schoolId}', binding);
+		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
 		serviceList.form = new Service('/forms/{formId}', binding);
 
 		//events

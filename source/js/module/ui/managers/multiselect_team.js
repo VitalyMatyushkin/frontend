@@ -38,7 +38,7 @@ MultiSelectTeam = React.createClass({
             };
         }
 
-        window.Server.studentsFilter.get({
+        window.Server.students.get(schoolId, {
             filter: filter
         }).then(function (data) {
             data.map(function (player) {

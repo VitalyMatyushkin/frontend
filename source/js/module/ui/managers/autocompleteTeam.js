@@ -59,7 +59,7 @@ AutocompleteTeam = React.createClass({
             filter.where.houseId = binding.get('id');
         }
 
-        return window.Server.studentsFilter.get({
+        return window.Server.students.get(schoolId, {
             filter: filter
         }).then(function (data) {
             data.map(function (player) {
@@ -120,7 +120,7 @@ AutocompleteTeam = React.createClass({
             filter.where.houseId = binding.get('id');
         }
 
-        return window.Server.studentsFilter.get({
+        return window.Server.students.get(schoolId, {
             filter: filter
         }).then(function (data) {
             data.map(function (player) {
