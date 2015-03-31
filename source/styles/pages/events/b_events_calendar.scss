@@ -12,5 +12,22 @@
 .eEvents_challenges .eChallenge {
   display: flex;
   flex-direction: column;
-  padding: 5px 0;
+  padding: 2px 0;
+  font-size: 12px;
+}
+
+.eChallenge_rivals {
+  display: flex;
+  flex-direction: row;
+}
+
+.eChallenge_basic {
+  display: flex;
+  justify-content: space-between;
+  color: #808080;
+}
+
+.eChallenge_rivals {
+  height: 18px;
+  justify-content: space-between;
 }
