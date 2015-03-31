@@ -178,6 +178,7 @@ EventManager = React.createClass({
                         <CalendarView
                             binding={rootBinding.sub('events.calendar')}
                             onSelect={self.onSelectDate} />
+                        <TimePicker binding={binding.sub('model.startTime')} />
                     </div>
                 </If>
                 <If condition={step === 2}>
