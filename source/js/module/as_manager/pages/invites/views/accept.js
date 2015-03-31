@@ -24,7 +24,9 @@ InviteAcceptView = React.createClass({
                     {
                         event: 'sport'
                     },
-                    'inviter'
+                    {
+                        inviter: ['forms']
+                    }
                 ]
             }
         }).then(function (res) {
@@ -55,13 +57,19 @@ InviteAcceptView = React.createClass({
             });
 
             binding.get('players.0').forEach(function (player) {
+                var i = 0;
                 window.Server.playersRelation.put({
                     teamId: res.id,
                     studentId: player.get('id')
+                }).then(function () {
+                    i += 1;
+
+                    if (i === binding.get('players.0').count()) {
+                        document.location.hash = '#event/' + binding.get('model.id');
+
+                    }
                 });
             });
-
-            document.location.hash = '#event/' + binding.get('model.id');
         });
     },
     render: function() {

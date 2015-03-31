@@ -130,14 +130,20 @@ EventManager = React.createClass({
                     }
 
                     window.Server.participants.post(event.id, rivalModel).then(function (res) {
+                        var i = 0;
+
                         players[index].forEach(function (player) {
                             window.Server.playersRelation.put({
                                 teamId: res.id,
                                 studentId: player.id
+                            }).then(function (res) {
+                                i += 1;
+
+                                if (i === players.length) {
+                                    document.location.hash = 'event/' + event.id;
+                                }
                             });
                         });
-
-                        document.location.hash = 'event/' + event.id;
                     });
                 }
 			});
