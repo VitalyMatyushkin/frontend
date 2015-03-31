@@ -49,7 +49,7 @@ Service = (function() {
 				url: baseUrl + url + filter,
 				type: type,
 				crossDomain: true,
-				data: type === 'POST' || type === 'PUT' ? JSON.stringify(data) : null,
+				data: type === 'POST' || type === 'PUT' ? JSON.stringify(data) : data,
 				dataType: 'json',
 				contentType: 'application/json',
 				error: function(data) {
