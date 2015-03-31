@@ -1,6 +1,7 @@
 var Manager,
 	FootballManager = require('./football/football'),
     MultiSelectTeam = require('./multiselect_team'),
+    AutocompleteTeam = require('./autocompleteTeam'),
     Team = require('./team');
 
 Manager = React.createClass({
@@ -55,10 +56,11 @@ Manager = React.createClass({
                         <span className="eChooser_title">Choose a team:</span>
                         {self.getRivals()}
                     </div>
+                    <AutocompleteTeam binding={teamBinding} />
                 </div>
                 <div className="eManager_containerTeam">
                     <FootballManager binding={teamBinding} />
-                    <MultiSelectTeam binding={teamBinding} order={selectedRivalIndex}/>
+                    <Team binding={teamBinding} />
                 </div>
             </div>;
 	}
