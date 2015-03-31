@@ -18,7 +18,7 @@ EventManagerBase = React.createClass({
 				return house.get('selectedId');
 			});
 
-        return window.Server.house.get(schoolId, {
+        return window.Server.houses.get(schoolId, {
             filter: {
                 where: {
                     schoolId: schoolId,
