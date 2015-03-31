@@ -171,6 +171,7 @@ module.exports = React.createClass({
 		var self = this;
 
 		self.props.onFocus && self.props.onFocus();
+		self.handleButtonClick();
 	},
 	handleInputChange: function (event) {
 		var value = this.refs.input.getDOMNode().value;
@@ -190,6 +191,7 @@ module.exports = React.createClass({
 	},
 
 	handleInputBlur: function () {
+
 		var focusedAnOption = this.state.focusedIndex != null;
 		if (focusedAnOption) {
 			return;
