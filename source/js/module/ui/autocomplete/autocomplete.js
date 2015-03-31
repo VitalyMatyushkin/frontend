@@ -155,15 +155,21 @@ Autocomplete = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			selectedId = binding.get('selectedId'),
-			dataToView = binding.sub('response').toJS();
+			dataToView = binding.sub('response').toJS(),
+			viewCount = Math.min(dataToView.length, 8),
+			resultView = [];
 
-		return dataToView.map(function (dataBlock) {
-			var filterFiled = self.props.serverField || 'value';
+		for (var i = 0; i < viewCount; i++) {
+			(function(dataBlock) {
+				var filterFiled = self.props.serverField || 'value';
 
-			return (
-				<ComboboxOption isSelected={selectedId === dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock[filterFiled]}</ComboboxOption>
-			);
-		});
+				resultView.push(
+					<ComboboxOption isSelected={selectedId === dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock[filterFiled]}</ComboboxOption>
+				);
+			})(dataToView[i]);
+		}
+
+		return resultView;
 	},
 	render: function () {
 		var self = this,
