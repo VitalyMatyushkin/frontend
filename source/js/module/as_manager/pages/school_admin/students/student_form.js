@@ -56,12 +56,10 @@ StudentForm = React.createClass({
 					<FormField type="text" field="firstName" validation="required">First name</FormField>
 					<FormField type="text" field="lastName" validation="required">Last name</FormField>
 					<FormField type="radio" field="gender" sourcePromise={self.getGender} validation="required">Gender</FormField>
-					<FormField type="date" field="birthday" validation="required">Birthday</FormField>
 				</FormColumn>
 
 				<FormColumn type="column">
-					<FormField type="text" field="phone" validation="">Phone</FormField>
-					<FormField type="text" field="email" validation="">E-mail</FormField>
+					<FormField type="date" field="birthday" validation="required">Birthday</FormField>
 					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" validation="required">Form</FormField>
 					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" validation="required">House</FormField>
 				</FormColumn>
