@@ -14,7 +14,7 @@ RegiseterUserForm = React.createClass({
 		return (
 			<Form name="Sing in or <a class='mHover' href='/#register'>sing up for free</a>" service="users/login" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				<FormField type="text" field="username" validation="required">Username or email</FormField>
-				<FormField type="text" field="password" validation="required">Password</FormField>
+				<FormField type="text" textType="password" field="password" validation="required">Password</FormField>
 			</Form>
 		)
 	}
