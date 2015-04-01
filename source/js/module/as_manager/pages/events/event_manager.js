@@ -18,7 +18,7 @@ EventManager = React.createClass({
         return Immutable.fromJS({
             model: {
                 name: '',
-                startTime: new Date(),
+                startTime: null,
                 type: null,
                 sportId: null,
                 gender: null,
@@ -70,12 +70,15 @@ EventManager = React.createClass({
 	},
     onSelectDate: function (date) {
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            _date = new Date(date.toISOString());
 
-        binding.set('model.startTime', date.toISOString());
-		binding.set('model.startRegistrationTime', date.toISOString());
-		binding.set('model.endRegistrationTime', date.toISOString());
-        binding.set('step', 2);
+        _date.setMinutes(0);
+        _date.setHours(10);
+
+        binding.set('model.startTime', _date.toISOString());
+		binding.set('model.startRegistrationTime', _date.toISOString());
+		binding.set('model.endRegistrationTime', _date.toISOString());
     },
 	toNext: function () {
 		var self = this,
@@ -184,7 +187,7 @@ EventManager = React.createClass({
                         <CalendarView
                             binding={rootBinding.sub('events.calendar')}
                             onSelect={self.onSelectDate} />
-                        <TimePicker binding={binding.sub('model.startTime')} />
+                        {binding.get('model.startTime') ? <TimePicker binding={binding.sub('model.startTime')} /> : null}
                     </div>
                 </If>
                 <If condition={step === 2}>
@@ -196,7 +199,7 @@ EventManager = React.createClass({
             </div>
 			<div className="eEvents_buttons">
 				{step > 1 ? <span className="bButton eEvents_button" onClick={self.toBack}>Back</span> : null}
-				{step < titles.length && step > 1 ? <span className="bButton eEvents_button" onClick={self.toNext}>Next</span> : null}
+				{step < titles.length ? <span className="bButton eEvents_button" onClick={self.toNext}>Next</span> : null}
 				{step === titles.length ? <span className="bButton eEvents_button mFinish" onClick={self.toFinish}>Finish</span> : null}
 			</div>
 		</div>;

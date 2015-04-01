@@ -99,13 +99,18 @@ CalendarMonthView = React.createClass({
     },
     onSelectDay: function (day) {
         var self = this,
-            binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			currentDate = binding.get('currentDate'),
+			year = currentDate.getFullYear(),
+			month = currentDate.getMonth();
 
-        binding.set('selectDay', day);
+		if (year === day.date.getFullYear() && month === day.date.getMonth()) {
+			binding.set('selectDay', day);
 
-        if (self.props.onSelect) {
-            self.props.onSelect(day.date);
-        }
+			if (self.props.onSelect) {
+				self.props.onSelect(day.date);
+			}
+		}
     },
     onClickNextButton: function () {
         var self = this,

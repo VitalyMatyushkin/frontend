@@ -98,7 +98,9 @@ EventView = React.createClass({
                     {
                         result: 'points'
                     },
-					'sport'
+                    {
+                        sport: ''
+                    }
                 ]
             }
         }).then(function (res) {
