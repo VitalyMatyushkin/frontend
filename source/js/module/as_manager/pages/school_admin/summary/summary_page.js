@@ -29,11 +29,14 @@ SchoolSummary = React.createClass({
 	},
 	render: function () {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			schoolPicture = binding.get('pic');
 
 		return (
 			<div>
-				<h1 className="eSchoolMaster_title"><div className="eSchoolMaster_flag"><SVG icon="icon_bookmark" /></div>{binding.get('name')}
+				<h1 className="eSchoolMaster_title">
+					{schoolPicture ? <div className="eSchoolMaster_flag"><img src={schoolPicture}/> </div> : ''}
+					{binding.get('name')}
 
 					<div className="eSchoolMaster_buttons">
 
