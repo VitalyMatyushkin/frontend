@@ -169,10 +169,9 @@ module.exports = React.createClass({
 	},
 	handleClick: function() {
 		var self = this;
-		console.log('F')
-		//debugger
+
 		self.props.onFocus && self.props.onFocus();
-		self.handleButtonClick();
+		this.showList();
 	},
 	handleInputChange: function (event) {
 		var value = this.refs.input.getDOMNode().value;

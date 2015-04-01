@@ -178,7 +178,7 @@ Autocomplete = React.createClass({
 		} else {
 			dropDownNodes = <div style={{padding: '8px'}} aria-live="polite">{!binding.get('loading') ? 'No matches' : 'Loading...'}</div>
 		}
-		console.log('R')
+
 		return (
 			<div>
 				<Combobox
