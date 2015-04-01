@@ -13,7 +13,7 @@ ChallengesList = React.createClass({
             type = event.get('type'),
             played = !!event.get('resultId'),
             rivalName = null,
-            eventResult = event.get('result').toJS();
+            eventResult = played ? event.get('result').toJS() : null;
 
         if (type === 'internal') {
             rivalName = eventBinding.get(['participants', order, 'name']);
@@ -41,6 +41,7 @@ ChallengesList = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             currentDate = binding.get('calendar.currentDate'),
+			sync = binding.get('sync'),
             events = binding.get('models').filter(function (event) {
                 var eventDate = new Date(event.get('startTime'));
 
@@ -67,7 +68,7 @@ ChallengesList = React.createClass({
                     <span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
                 </div>
             </div>
-        }).toArray() : <div className="eChallenge mNotFound">You haven't events on this month.</div>;
+        }).toArray() : <div className="eChallenge mNotFound">{sync ? "You haven't events on this month." : "Loading..."}</div>;
     },
     render: function() {
         var self = this,
