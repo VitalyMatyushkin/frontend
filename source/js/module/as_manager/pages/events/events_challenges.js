@@ -64,7 +64,7 @@ ChallengesView = React.createClass({
             return <div className="eChallenge" onClick={self.onClickChallenge.bind(null, event.get('id'))} id={'challenge-' + event.get('id')}>
                 <div className="eChallenge_name">
                     <span className="eChallenge_rivalName">{firstName}</span>
-                    <span className="eChallenge_time">{event.get('resultId') ? [firstPoint, secondPoint].join(':') : hours + ':' + minutes}</span>
+                    <span className={'eChallenge_time' + (event.get('resultId') ? ' mIsResult' : '') }>{event.get('resultId') ? [firstPoint, secondPoint].join(':') : hours + ':' + minutes}</span>
                     <span className="eChallenge_rivalName">{secondName}</span>
                 </div>
                 <div className="eChallenge_info">
@@ -96,10 +96,12 @@ ChallengesView = React.createClass({
 
             return <div className="bChallenges_eDate">
                 <div className="eDate_header">
-                    {daysOfWeek[dayOfWeek] + ' ' +
-                    date.getDate() + ' ' +
-                    monthNames[date.getMonth()] + ' ' +
-                        date.getFullYear()}
+					<div className="eDate_headerDate">
+						{daysOfWeek[dayOfWeek] + ' ' +
+						date.getDate() + ' ' +
+						monthNames[date.getMonth()] + ' ' +
+							date.getFullYear()}
+					</div>
                 </div>
                 <div className="eDate_list">{self.getEvents(datetime)}</div>
             </div>;
