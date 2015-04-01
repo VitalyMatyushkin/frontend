@@ -29,7 +29,14 @@ InboxView = React.createClass({
                         nin: [true, false]
                     }
 				},
-                include: ['inviter', 'guest']
+                include: [
+                    {
+                        inviter: ['forms', 'houses']
+                    },
+                    {
+                        guest: ['forms', 'houses']
+                    }
+                ]
 			}
 		}).then(function (models) {
 			var participants = models.reduce(function (memo, invite) {
