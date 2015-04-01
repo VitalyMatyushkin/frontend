@@ -59,8 +59,7 @@ Service = (function() {
 					promise.resolve(data);
 				},
 				beforeSend: function (xhr) {
-					var authorizationInfo,
-						authorizationInfo;
+					var authorizationInfo;
 
 					if (authorization) {
 						authorizationInfo = authorization.toJS();
