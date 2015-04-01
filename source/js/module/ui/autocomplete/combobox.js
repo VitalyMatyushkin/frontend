@@ -167,9 +167,10 @@ module.exports = React.createClass({
 			activedescendant: null
 		}, cb);
 	},
-	handleFocus: function() {
+	handleClick: function() {
 		var self = this;
-
+		console.log('F')
+		//debugger
 		self.props.onFocus && self.props.onFocus();
 		self.handleButtonClick();
 	},
@@ -446,7 +447,7 @@ module.exports = React.createClass({
 					value={self.props.binding.get('inputValue') || defaultInputState}
 					onChange={this.handleInputChange}
 					onBlur={this.handleInputBlur}
-					onFocus={this.handleFocus}
+					onClick={this.handleClick}
 					onKeyDown={this.handleKeydown}
 					onKeyUp={this.handleInputKeyUp}
 					role="combobox"
