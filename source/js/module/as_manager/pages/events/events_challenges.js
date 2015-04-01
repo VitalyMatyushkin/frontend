@@ -81,7 +81,10 @@ ChallengesView = React.createClass({
 						<div className="eChallenge_info">{event.get('type')}</div>
 					</div>
 
-					<div className="eChallenge_rivalName">{secondName}</div>
+					<div className="eChallenge_rivalName">
+						{secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
+						{secondName}
+					</div>
                 </div>
             </div>;
         }).toArray();
