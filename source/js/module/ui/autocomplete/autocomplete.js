@@ -13,7 +13,8 @@ Autocomplete = React.createClass({
 		onSelect: React.PropTypes.func,
 		onBlue: React.PropTypes.func,
 		onInput: React.PropTypes.func,
-		placeholderText: React.PropTypes.string
+		placeholderText: React.PropTypes.string,
+		clearAfterSelect: React.PropTypes.bool
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -186,6 +187,7 @@ Autocomplete = React.createClass({
 					onInput={self.handleInput}
 					onSelect={self.handleSelect}
 					onFocus={self.handleFocus}
+					clearAfterSelect={self.props.clearAfterSelect}
 					placeholderText={self.props.placeholderText}
 					value={selectedId}>{dropDownNodes}</Combobox>
 			</div>

@@ -334,6 +334,7 @@ module.exports = React.createClass({
 	},
 
 	selectOption: function (child, options) {
+		var self = this;
 		options = options || {};
 		this.props.binding.set('inputValue', getLabel(child));
 
@@ -345,6 +346,11 @@ module.exports = React.createClass({
 			this.props.onSelect(child.props.value, child);
 			this.hideList();
 			if (options.focus !== false) {
+				this.selectInput();
+			}
+
+			if (self.props.clearAfterSelect) {
+				self.props.binding.set('inputValue', '');
 				this.selectInput();
 			}
 		}.bind(this));

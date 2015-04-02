@@ -161,6 +161,7 @@ AutocompleteTeam = React.createClass({
             <Autocomplete
                 serviceFilter={self.serviceLearnersFilter}
                 serverField="name"
+                clearAfterSelect={true}
                 placeholderText="enter student name"
                 onSelect={self.onSelectStudent}
                 binding={rivalBinding.meta().sub('autocomplete')}

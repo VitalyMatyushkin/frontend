@@ -15,7 +15,7 @@ EventManagerBase = React.createClass({
             binding = self.getDefaultBinding(),
             schoolId = binding.get('schoolInfo.id'),
             ids = binding.get('autocomplete.houses').toArray().map(function (house) {
-				return house.get('selectedId');
+				return house.get('selectedId') || !house.get('selectedId');
 			});
 
         return window.Server.houses.get(schoolId, {
@@ -53,7 +53,8 @@ EventManagerBase = React.createClass({
                         like: schoolName,
                         options: 'i'
                     }
-                }
+                },
+                limit: 10
             }
         });
     },

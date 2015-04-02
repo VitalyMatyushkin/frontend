@@ -29,7 +29,7 @@ Service = (function() {
 		_callService: function(type, options, data) {
 			var self = this,
 				url = self.url,
-				filter = '',
+				filter = options && options.filter || data && data.filter || '',
 				promise = new PromiseClass(),
 				authorization = self.binding.get();
 
@@ -39,9 +39,16 @@ Service = (function() {
 				});
 			}
 
-			if (options && options.filter) {
-				filter = 'filter=' + JSON.stringify(options.filter);
+			if (filter) {
+				filter = 'filter=' + JSON.stringify(filter);
 				filter = url.indexOf('?') !== -1 ? '&' + filter : '?' + filter;
+				if (typeof options === 'object') {
+					delete options.filter;
+				}
+
+				if (typeof data === 'object') {
+					delete data.filter;
+				}
 			}
 
 
