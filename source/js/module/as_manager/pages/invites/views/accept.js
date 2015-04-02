@@ -56,17 +56,19 @@ InviteAcceptView = React.createClass({
                 accepted: true
             });
 
-            binding.get('players.0').forEach(function (player) {
-                var i = 0;
+            binding.get('players.0').forEach(function (student, studentIndex) {
                 window.Server.playersRelation.put({
                     teamId: res.id,
-                    studentId: player.get('id')
+                    studentId: student.get('id')
                 }).then(function () {
-                    i += 1;
+                    binding.sub('players.0.' + studentIndex).meta().set('sync', true);
 
-                    if (i === binding.get('players.0').count()) {
+                    var allSynced = binding.get('players.0').every(function (model, modelIndex) {
+                        return binding.sub('players.0.' + modelIndex).meta().get('sync');
+                    });
+
+                    if (allSynced) {
                         document.location.hash = '#event/' + binding.get('model.id');
-
                     }
                 });
             });

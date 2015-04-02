@@ -11,6 +11,8 @@ AutocompleteTeam = React.createClass({
             binding = self.getDefaultBinding(),
             rivalBinding = self.getBinding('rival');
 
+        binding.set('_students', Immutable.List());
+
         rivalBinding
             .meta()
             .atomically()
