@@ -56,7 +56,7 @@ ColorsSelect =  React.createClass({
 			binding = self.getDefaultBinding(),
 			colors = binding.toJS('colors');
 
-		colors.push(self.activeHex);
+		colors.push(self.activeHex.replace('#', ''));
 		binding.set('colors', colors);
 
 		self.hidePicker();
@@ -103,7 +103,7 @@ ColorsSelect =  React.createClass({
 			};
 
 			return (
-				<div className="eColorsSelect_color mRemovable" style={{background: color}} onClick={removeColor}></div>
+				<div className="eColorsSelect_color mRemovable" style={{background: '#' + color}} onClick={removeColor}></div>
 			);
 		});
 
