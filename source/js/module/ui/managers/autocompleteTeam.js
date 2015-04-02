@@ -1,5 +1,6 @@
 var AutocompleteTeam,
     SVG = require('module/ui/svg'),
+    Promise = require('module/core/promise'),
     Autocomplete = require('module/ui/autocomplete/autocomplete');
 
 AutocompleteTeam = React.createClass({
@@ -7,6 +8,7 @@ AutocompleteTeam = React.createClass({
     displayName: 'AutocompleteTeam',
     componentWillMount: function () {
         var self = this,
+            binding = self.getDefaultBinding(),
             rivalBinding = self.getBinding('rival');
 
         rivalBinding
@@ -16,6 +18,9 @@ AutocompleteTeam = React.createClass({
                 return Immutable.Map();
             })
             .commit();
+
+        binding.set('_students', Immutable.List());
+        self.fetchFullData();
     },
     getIncludePlayersIds: function () {
         var self = this,
@@ -33,6 +38,18 @@ AutocompleteTeam = React.createClass({
     serviceStudentFullData: function () {
         var self = this,
             binding = self.getDefaultBinding(),
+            students = binding.toJS('_students'),
+            promise = new Promise();
+
+        promise.resolve(students.filter(function (student) {
+            return self.getIncludePlayersIds().toJS().indexOf(student.id) === -1;
+        }));
+
+        return promise;
+    },
+    fetchFullData: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
             type = binding.get('model.type'),
             ages = binding.get('model.ages'),
             schoolId = binding.get('schoolInfo.id'),
@@ -42,9 +59,6 @@ AutocompleteTeam = React.createClass({
             filter = {
                 where: {
                     schoolId: schoolId,
-                    id: {
-                        nin: self.getIncludePlayersIds().toJS()
-                    },
                     formId: {
                         inq: forms.map(function (form) {
                             return form.get('id');
@@ -59,7 +73,7 @@ AutocompleteTeam = React.createClass({
             filter.where.houseId = binding.get('id');
         }
 
-        return window.Server.students.get(schoolId, {
+        window.Server.students.get(schoolId, {
             filter: filter
         }).then(function (data) {
             data.map(function (player) {
@@ -68,7 +82,7 @@ AutocompleteTeam = React.createClass({
                 return player.name;
             });
 
-            return data;
+            binding.set('_students', Immutable.fromJS(data));
         });
     },
     /**
@@ -157,9 +171,9 @@ AutocompleteTeam = React.createClass({
         var self = this,
             rivalBinding = self.getBinding('rival');
 
-        return <div className="bTeamAutocomplete">
+        return <div className="bTeamAutocomplete" key={'teamautocomplete-' + rivalBinding.get('id')}>
             <Autocomplete
-                serviceFilter={self.serviceLearnersFilter}
+                serviceFilter={self.serviceStudentFullData}
                 serverField="name"
                 clearAfterSelect={true}
                 placeholderText="enter student name"

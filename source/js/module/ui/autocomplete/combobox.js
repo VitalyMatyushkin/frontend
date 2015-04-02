@@ -128,7 +128,7 @@ module.exports = React.createClass({
 				 }); */
 				// need an ID for WAI-ARIA
 				props.id = props.id || 'rf-combobox-selected-' + (++guid);
-				props.isSelected = true
+				props.isSelected = true;
 				activedescendant = props.id;
 			}
 			props.onBlur = this.handleOptionBlur;
