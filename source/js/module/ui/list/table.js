@@ -56,7 +56,7 @@ Table = React.createClass({
 
 					if (child.props.filterType === 'colors') {
 						value = value.map(function(useColor){
-							return <div className="eDataList_listItemColor" style={{background: useColor}}></div>
+							return <div className="eDataList_listItemColor" style={{background: '#' + useColor}}></div>
 						});
 					}
 
