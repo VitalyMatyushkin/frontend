@@ -81,11 +81,6 @@ Autocomplete = React.createClass({
 		binding.set('selectedId', null);
 		self.props.onInput && self.props.onInput(userInput);
 
-		if (userInput === '') {
-			binding.set('response', []);
-			return false;
-		}
-
 		self.filterData && self.filterData(userInput);
 	},
 	handleSelect: function (newId) {

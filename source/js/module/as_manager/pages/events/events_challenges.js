@@ -40,14 +40,19 @@ ChallengesView = React.createClass({
                 type = event.get('type'),
                 firstName,
                 secondName,
+				firstPic,
+				secondPic,
                 firstPoint,
                 secondPoint;
 
             if (type === 'inter-schools') {
+				//http://i.imgur.com/9br7NSU.jpg
                 firstName = eventBinding.get('participants.0.school.name');
-                secondName = !binding.get('model.resultId') ?
-                    eventBinding.get('invites.0.guest.name') :
-                    eventBinding.get('participants.1.school.name');
+                secondName = !binding.get('model.resultId') ? eventBinding.get('invites.0.guest.name') : eventBinding.get('participants.1.school.name');
+
+				firstPic = eventBinding.get('participants.0.school.pic');
+				secondPic = eventBinding.get('participants.1.school.pic') || eventBinding.get('invites.0.guest.pic');
+
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');
@@ -61,14 +66,25 @@ ChallengesView = React.createClass({
                 secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
             }
 
-            return <div className="eChallenge" onClick={self.onClickChallenge.bind(null, event.get('id'))} id={'challenge-' + event.get('id')}>
-                <div className="eChallenge_name">
-                    <span className="eChallenge_rivalName">{firstName}</span>
-                    <span className="eChallenge_time">{event.get('resultId') ? [firstPoint, secondPoint].join(':') : hours + ':' + minutes}</span>
-                    <span className="eChallenge_rivalName">{secondName}</span>
-                </div>
-                <div className="eChallenge_info">
-                    <span className="eChallenge_rivalsType">{event.get('type')}</span>
+            return <div className="bChallenge" onClick={self.onClickChallenge.bind(null, event.get('id'))} id={'challenge-' + event.get('id')}>
+                <div className="eChallenge_in">
+                    <div className="eChallenge_rivalName">
+					{firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : ''}
+					{firstName}
+					</div>
+
+					<div className="eChallenge_rivalInfo">
+						<div className="eChallenge_hours">{hours + ':' + minutes}</div>
+
+						<div className={'eChallenge_results' + (event.get('resultId') ? ' mDone' : '') }>{event.get('resultId') ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
+
+						<div className="eChallenge_info">{event.get('type')}</div>
+					</div>
+
+					<div className="eChallenge_rivalName">
+						{secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
+						{secondName}
+					</div>
                 </div>
             </div>;
         }).toArray();
@@ -94,14 +110,14 @@ ChallengesView = React.createClass({
                 "July", "August", "September", "October", "November", "December" ],
                 dayOfWeek = date.getDay();
 
-            return <div className="bChallenges_eDate">
-                <div className="eDate_header">
-                    {daysOfWeek[dayOfWeek] + ' ' +
-                    date.getDate() + ' ' +
-                    monthNames[date.getMonth()] + ' ' +
-                        date.getFullYear()}
+            return <div className="bChallengeDate">
+                <div className="eChallengeDate_date">
+						{daysOfWeek[dayOfWeek] + ' ' +
+						date.getDate() + ' ' +
+						monthNames[date.getMonth()] + ' ' +
+							date.getFullYear()}
                 </div>
-                <div className="eDate_list">{self.getEvents(datetime)}</div>
+                <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
             </div>;
         }).toArray() : null;
     },
