@@ -2,7 +2,8 @@ var ListPageMixin;
 
 ListPageMixin = {
 	propTypes: {
-		formBinding: React.PropTypes.any.isRequired
+		formBinding: React.PropTypes.any.isRequired,
+		filters: React.PropTypes.object
 	},
 	componentWillMount: function () {
 		var self = this,
@@ -27,6 +28,13 @@ ListPageMixin = {
 				schoolId: self.activeSchoolId
 			}
 		};
+
+		// add custom filter
+		if (typeof self.filters === 'object') {
+			Object.keys(self.filters).forEach(function (filter) {
+				requestFilter[filter] = self.filters[filter];
+			});
+		}
 
 		// Добавление фильтров по полям, если есть
 		if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {

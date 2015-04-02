@@ -2,12 +2,16 @@ var List = require('module/ui/list/list'),
 	ListField = require('module/ui/list/list_field'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
+	DateTimeMixin = require('module/mixins/datetime'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
 	StudentsListPage;
 
 StudentsListPage = React.createClass({
-	mixins: [Morearty.Mixin, ListPageMixin],
+	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'students',
+	filters: {
+		include: ['form']
+	},
 	_getViewFunction: function() {
 		var self = this;
 
@@ -19,15 +23,22 @@ StudentsListPage = React.createClass({
 			//document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
 	},
+	getForm: function (value) {
+		return value.name;
+	},
+	getGender: function (value) {
+		var self = this;
+
+		return value === 'male' ? 'boy' : 'girl';
+	},
 	getAgeFromBirthday: function(value) {
 		var self = this,
 			birthday = new Date(value),
-			today = new Date(),
-			timeDiff = Math.abs(today.getTime() - birthday.getTime()),
-			diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24)),
-			age = Math.floor(diffDays / 365);
+			date = self.zeroFill(birthday.getDate()),
+			month = birthday.getMonth(),
+			year = birthday.getFullYear();
 
-		return age;
+		return [date, self.getMonthName(month), year].join(' ');
 	},
 	getTableView: function() {
 		var self = this,
@@ -35,11 +46,11 @@ StudentsListPage = React.createClass({
 
 		return (
 			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
+				<TableField width="5%" dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
 				<TableField width="20%" dataField="firstName">First name</TableField>
 				<TableField width="20%" dataField="lastName">Last name</TableField>
-				<TableField width="15%" dataField="gender">Gender</TableField>
-				<TableField width="10%" dataField="birthday" filterType="range" parseFunction={self.getAgeFromBirthday}>Age</TableField>
-				<TableField width="15%" dataField="phone">Phone</TableField>
+				<TableField width="10%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
+				<TableField width="15%" dataField="birthday" filterType="range" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
 			</Table>
 		)
 	}

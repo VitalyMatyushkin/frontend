@@ -36,7 +36,7 @@ ListField = React.createClass({
 			cellStyle.width = self.props.width;
 		}
 
-		if (self.props.filterType !== 'colors' && self.props.filterType !== 'range') {
+		if (self.props.filterType !== 'colors' && self.props.filterType !== 'range' && self.props.filterType !== 'none') {
 			filterBlock =  <div className="eDataList_filter">
 				<input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by ' + self.props.children.toLowerCase() + '...'} />
 			</div>

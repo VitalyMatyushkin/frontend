@@ -145,6 +145,7 @@ EventManager = React.createClass({
                                 if (i === players.length -1) {
                                     document.location.hash = 'event/' + event.id;
                                     binding.clear();
+                                    binding.meta().clear();
                                 }
                             });
                         });
