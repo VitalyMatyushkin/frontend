@@ -31,11 +31,11 @@ StudentForm = React.createClass({
 			promise = new PromiseClass(),
 			gendersArray = [
 				{
-					value: 'male',
+					value: 'boy',
 					id: 'male'
 				},
 				{
-					value: 'female',
+					value: 'girl',
 					id: 'female'
 				}
 			];

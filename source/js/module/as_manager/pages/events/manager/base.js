@@ -93,9 +93,19 @@ EventManagerBase = React.createClass({
         binding.set('model.gender', event.target.value);
     },
 	changeCompleteSport: function (event) {
-		var binding = this.getDefaultBinding();
+		var self = this,
+            binding = self.getDefaultBinding(),
+            sportsBinding = self.getBinding('sports'),
+            sportId = event.target.value,
+            sportIndex = sportsBinding.get('models').findIndex(function(model) {
+                return model.get('id') === sportId;
+            });
 
-		binding.set('model.sportId', event.target.value);
+		binding
+            .atomically()
+            .set('model.sportId', event.target.value)
+            .set('model.gender', sportsBinding.get('models.' + sportIndex + '.gender.0'))
+            .commit();
 	},
     //changeCompleteAges: function (event) {
     //    var binding = this.getDefaultBinding(),
@@ -177,7 +187,11 @@ EventManagerBase = React.createClass({
                     female: 'girls'
                 };
 
-                return <Morearty.DOM.option key={gender + '-gender'} value={gender}>{names[gender]}</Morearty.DOM.option>;
+                return <Morearty.DOM.option
+                    key={gender + '-gender'}
+                    value={gender}
+                    selected={gender === binding.get('model.gender')}
+                    >{names[gender]}</Morearty.DOM.option>;
             });
         } else {
             return null;
@@ -253,14 +267,17 @@ EventManagerBase = React.createClass({
                     {'Gender'}
                     <select
                         className="eManager_select"
-                        defaultValue={self.getDefaultGender()}
+                        defaultValue={null}
                         value={gender}
                         onChange={self.changeCompleteGender}>
+                        <Morearty.DOM.option
+                            key="nullable-type"
+                            value={null}>not selected</Morearty.DOM.option>
                         {self.getGenders()}
                     </select>
                 </div>
             </If>
-            <If condition={!!binding.get('model.sportId')}>
+            <If condition={!!binding.get('model.sportId') && !!binding.get('model.gender')}>
                 <div className="eManager_group">
                     {'Ages'}
                     <Multiselect

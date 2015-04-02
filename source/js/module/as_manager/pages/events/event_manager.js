@@ -142,8 +142,9 @@ EventManager = React.createClass({
                             }).then(function (res) {
                                 i += 1;
 
-                                if (i === players.length) {
+                                if (i === players.length -1) {
                                     document.location.hash = 'event/' + event.id;
+                                    binding.clear();
                                 }
                             });
                         });
