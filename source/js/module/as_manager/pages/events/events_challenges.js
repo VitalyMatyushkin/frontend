@@ -3,6 +3,9 @@ var ChallengesView;
 ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
     sameDay: function (d1, d2) {
+        d1 = d1 instanceof Date ? d1 : new Date(d1);
+        d2 = d2 instanceof Date ? d2 : new Date(d2);
+
         return d1.getUTCFullYear() === d2.getUTCFullYear() &&
             d1.getUTCMonth() === d2.getUTCMonth() &&
             d1.getUTCDate() === d2.getUTCDate();
@@ -66,7 +69,10 @@ ChallengesView = React.createClass({
                 secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
             }
 
-            return <div className="bChallenge" onClick={self.onClickChallenge.bind(null, event.get('id'))} id={'challenge-' + event.get('id')}>
+            return <div className="bChallenge"
+                        onClick={self.onClickChallenge.bind(null, event.get('id'))}
+                        id={'challenge-' + event.get('id')}
+                >
                 <div className="eChallenge_in">
                     <div className="eChallenge_rivalName">
 					{firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : ''}
@@ -93,14 +99,17 @@ ChallengesView = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             dates = binding.get('models').reduce(function (memo, val) {
-                var date = Date.parse(val.get('startTime'));
+                var date = Date.parse(val.get('startTime')),
+                    any = memo.some(function (d) {
+                        return self.sameDay(date, d);
+                    });
 
-                if (memo.indexOf(date) === -1) {
+                if (!any) {
                     memo = memo.push(date);
                 }
 
                 return memo;
-            }, Immutable.fromJS([]));
+            }, Immutable.List());
 
 
         return dates.count() !== 0 ? dates.sort().map(function (datetime) {
