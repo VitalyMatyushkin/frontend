@@ -76,6 +76,16 @@ EventHeader = React.createClass({
             binding.set('mode', 'general');
         }
     },
+    onClickCancel: function () {
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding
+            .atomically()
+            .set('points', Immutable.List())
+            .set('mode', 'general')
+            .commit();
+    },
 	render: function() {
         var self = this,
 			binding = self.getDefaultBinding(),
@@ -108,7 +118,7 @@ EventHeader = React.createClass({
                 <If condition={binding.get('mode') === 'closing'}>
                     <div
                         className="bButton mRed"
-                        onClick={self.onClickOk}
+                        onClick={self.onClickCancel}
                     >Cancel</div>
                 </If>
             </div>

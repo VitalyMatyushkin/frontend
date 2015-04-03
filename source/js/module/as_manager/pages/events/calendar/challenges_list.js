@@ -13,24 +13,25 @@ ChallengesList = React.createClass({
             type = event.get('type'),
             played = !!event.get('resultId'),
             rivalName = null,
-            eventResult = played ? eventBinding.get('result.summary.byTeams').toList().toJS() : null;
+            participantBinding = eventBinding.sub(['participants', order]),
+            eventResult = played ? eventBinding.get('result.summary.byTeams').toJS() : null;
 
 
         if (type === 'internal') {
             rivalName = eventBinding.get(['participants', order, 'name']);
             if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[order] + ']';
+                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
             }
         } else if (type === 'houses') {
             rivalName = eventBinding.get(['participants', order, 'house', 'name']);
             if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[order] + ']';
+                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
             }
         } else {
             rivalName = eventBinding.get(['participants', order, 'school', 'name']);
 
             if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[order] + ']';
+                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
             } else if (!rivalName) {
                 rivalName = eventBinding.get(['invites', 0, 'guest', 'name']);
             }

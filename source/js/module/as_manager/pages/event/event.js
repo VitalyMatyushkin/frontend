@@ -133,6 +133,7 @@ EventView = React.createClass({
                 .set('mode', 'general')
                 .set('sync', true)
 				.commit();
+
         });
 
         rootBinding.addListener('routing.pathParameters', function () {
