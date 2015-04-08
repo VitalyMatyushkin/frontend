@@ -18,8 +18,8 @@ Center = React.createClass({
 				<div className="bPageWrap">
 
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
-						<Route path="/ /school" binding={binding.sub('schoolProfile')} component="module/as_user/pages/school/school_page"  />
-						<Route path="/test" binding={binding.sub('schoolProfile')} component="module/as_user/pages/school/school_page"  />
+						<Route path="/ /school" binding={binding.sub('schoolProfile')} component="module/as_parents/pages/school/school_page"  />
+						<Route path="/test" binding={binding.sub('schoolProfile')} component="module/as_parents/pages/school/school_page"  />
                     </RouterView>
 
 				</div>

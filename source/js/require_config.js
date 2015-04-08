@@ -3,10 +3,20 @@ requirejs.config({
 });
 
 window.onload = function() {
-	var managerMode = document.location.hostname === 'manager.squard.com' || document.location.hostname === 'manager.squadintouch.com',
-		startPoint = 'module/' + (managerMode ? 'start_as_manager' : 'start_as_user');
+	var defaultMode = 'main',
+		modes = {
+			'manager.squard.com': 'manager',
+			'manager.squadintouch.com': 'manager',
+			'squard.com': 'main',
+			'squadintouch.com': 'main',
+			'parents.squard.com': 'parents',
+			'parents.squadintouch.com': 'parents'
+		},
+		startModule = 'module/start_as_';
 
-	window['require']([startPoint], function(startCallback) {
+	startModule += modes[document.location.hostname] || defaultMode;
+
+	window['require']([startModule], function(startCallback) {
 		startCallback();
 	});
 };

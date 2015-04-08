@@ -2,9 +2,9 @@ var OneSchoolPage,
 	RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
 	SubMenu = require('module/ui/menu/sub_menu'),
-	SchoolInfo = require('module/as_user/pages/school/view/school_info'),
-	SchoolName = require('module/as_user/pages/school/view/school_name'),
-	Map = require('module/as_user/pages/school/view/map');
+	SchoolInfo = require('module/as_main/pages/school/view/school_info'),
+	SchoolName = require('module/as_main/pages/school/view/school_name'),
+	Map = require('module/as_main/pages/school/view/map');
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
