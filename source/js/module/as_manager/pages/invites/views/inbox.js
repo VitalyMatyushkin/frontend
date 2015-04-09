@@ -34,6 +34,9 @@ InboxView = React.createClass({
                         inviter: ['forms', 'houses']
                     },
                     {
+                        event: 'sport'
+                    },
+                    {
                         guest: ['forms', 'houses']
                     }
                 ]
