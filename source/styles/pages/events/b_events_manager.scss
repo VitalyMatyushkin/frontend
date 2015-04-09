@@ -25,6 +25,19 @@
   justify-content: space-between;
 }
 
+.eManager_radiogroup {
+  display: flex;
+  justify-content: space-between;
+}
+
+.eManager_radiogroup label {
+  margin-left: 15px;
+}
+
+.eManager_radiogroup input {
+  width: 15px;
+}
+
 .eManager_select {
   width: 100px;
   align-self: flex-end;

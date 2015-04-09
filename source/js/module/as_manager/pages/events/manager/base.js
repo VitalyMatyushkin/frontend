@@ -187,11 +187,15 @@ EventManagerBase = React.createClass({
                     female: 'girls'
                 };
 
-                return <Morearty.DOM.option
-                    key={gender + '-gender'}
-                    value={gender}
-                    selected={gender === binding.get('model.gender')}
-                    >{names[gender]}</Morearty.DOM.option>;
+                return <label onClick={self.changeCompleteGender}>
+                            <Morearty.DOM.input
+                                type="radio"
+                                key={gender + '-gender'}
+                                value={gender}
+                                checked={gender === binding.get('model.gender')}
+                            />
+                            {names[gender]}
+                        </label>;
             });
         } else {
             return null;
@@ -265,16 +269,9 @@ EventManagerBase = React.createClass({
             <If condition={!!binding.get('model.sportId')}>
                 <div className="eManager_group">
                     {'Gender'}
-                    <select
-                        className="eManager_select"
-                        defaultValue={null}
-                        value={gender}
-                        onChange={self.changeCompleteGender}>
-                        <Morearty.DOM.option
-                            key="nullable-type"
-                            value={null}>not selected</Morearty.DOM.option>
+                    <div className="eManager_radiogroup">
                         {self.getGenders()}
-                    </select>
+                    </div>
                 </div>
             </If>
             <If condition={!!binding.get('model.sportId') && !!binding.get('model.gender')}>
