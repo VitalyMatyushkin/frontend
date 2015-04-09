@@ -153,7 +153,7 @@ RouterView = React.createClass({
 			siteComponent = self.siteComponents[currentPath];
 
 		// Вынужденный костыль, надо сменить роутер :D
-		if (document.location.href.indexOf('#/') === -1) {
+		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
 			document.location = '#/';
 		}
 

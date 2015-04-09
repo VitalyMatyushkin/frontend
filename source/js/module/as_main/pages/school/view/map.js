@@ -2,7 +2,7 @@ var UserPhoto;
 
 UserPhoto = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentDidUpdate: function() {
+	componentDidMount: function() {
 		var self = this,
 			mapNode = self.refs.map.getDOMNode(),
 			mapeCenter = new google.maps.LatLng(51.512406, -0.129966),
