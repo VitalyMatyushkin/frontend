@@ -37,7 +37,9 @@ ArchiveView = React.createClass({
                         inq: [true, false]
                     }
 				},
-                include: ['inviter', 'guest']
+                include: ['inviter', 'guest', {
+                	event: 'sport'
+                }]
 			}
 		}).then(function (models) {
 			var uniqueIds = models.reduce(function (memo, invite) {
