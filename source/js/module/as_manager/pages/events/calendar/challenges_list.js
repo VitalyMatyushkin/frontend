@@ -14,7 +14,7 @@ ChallengesList = React.createClass({
             played = !!event.get('resultId'),
             rivalName = null,
             participantBinding = eventBinding.sub(['participants', order]),
-            eventResult = played ? eventBinding.get('result.summary.byTeams').toJS() : null;
+            eventResult = played ? eventBinding.toJS('result.summary.byTeams') : null;
 
 
         if (type === 'internal') {
