@@ -24,13 +24,22 @@ OneSchoolPage = React.createClass({
 
 		// Пункты подменю
 		self.menuItems = [{
-			href: '/#profile/summary',
-			name: 'Summary',
-			key: 'Summary'
+			href: '/#school/fixtures',
+			name: 'Fixtures',
+			key: 'Fixtures',
+			routes: ['/school', '/']
 		},{
-			href: '/#profile/news',
+			href: '/#school/results',
+			name: 'Results',
+			key: 'Results'
+		},{
+			href: '/#school/news',
 			name: 'News',
 			key: 'News'
+		},{
+			href: '/#school/contacts',
+			name: 'Contacts',
+			key: 'Contacts'
 		}];
 	},
 

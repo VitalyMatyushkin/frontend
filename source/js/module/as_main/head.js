@@ -9,25 +9,36 @@ Head = React.createClass({
 			menuItems;
 
 		self.menuItems = [{
-			href: '/#school/summary',
+			href: '/#school/fixtures',
 			icon: 'icon_home',
 			name: 'School',
 			key: 'School',
 			routes: ['/school', '/']
 		},{
-			href: '/#teams/summary',
-			icon: 'icon_teams',
-			name: 'Teams',
-			key: 'Teams',
-			routes: ['/teams']
-		},
-		{
 			href: '/#fixtures',
 			icon: 'icon_shot',
 			name: 'Fixtures',
 			key: 'Fixtures',
 			routes: ['/fixtures']
-		}];
+		},{
+			href: '/#calendar',
+			icon: 'icon_calendar',
+			name: 'Calendar',
+			key: 'Calendar',
+			routes: ['/calendar']
+		},{
+			href: '/#opponents/summary',
+			icon: 'icon_teams',
+			name: 'Opponents',
+			key: 'Opponents',
+			routes: ['/opponents']
+		}/*,{
+			href: '/#media',
+			icon: 'icon_teams',
+			name: 'Media',
+			key: 'Media',
+			routes: ['/media']
+		}*/];
 	},
 	render: function() {
 		var self = this,
