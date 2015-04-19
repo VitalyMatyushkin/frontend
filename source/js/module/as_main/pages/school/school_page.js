@@ -85,9 +85,10 @@ OneSchoolPage = React.createClass({
 
 					<div className="eUserDataColumn_wrap" id="jsSubPage">
 
-
-
-
+						<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
+							<Route path="/ /school /school/fixtures" binding={binding.sub('fixtures')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
+							<Route path="/school/fixtures2" binding={binding.sub('fixtures')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
+						</RouterView>
 
 					</div>
 				</div>

@@ -5,12 +5,8 @@
   margin-bottom: 25px;
   position: relative;
 
-  &:hover{
-    box-shadow: 0px 1px 2px 1px rgb(130, 184, 76);
-  }
-
   &:active{
-    box-shadow: 0px 0px 1px 1px rgba(130, 184, 76, 0.5);
+    box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.3);
     top: 2px;
   }
 
@@ -75,6 +71,14 @@
   margin-bottom: 5px;
 }
 
+.eChallenge_sportsName{
+  font-size: 14px;
+  padding: 7px 0;
+  letter-spacing: 1px;
+  font-family: Verdana, sans-serif;
+  line-height: 25px;
+  color: #9AB669;
+}
 
 
 
