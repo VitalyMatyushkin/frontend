@@ -81,13 +81,13 @@ OneSchoolPage = React.createClass({
 				</div>
 
 				<div className="bUserDataColumn">
-					<SubMenu binding={binding.sub('schoolProfileRouting')} items={self.menuItems} />
+					<SubMenu binding={binding.sub('schoolRouting')} items={self.menuItems} />
 
 					<div className="eUserDataColumn_wrap" id="jsSubPage">
 
 						<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
 							<Route path="/ /school /school/fixtures" binding={binding.sub('fixtures')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
-							<Route path="/school/fixtures2" binding={binding.sub('fixtures')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
+							<Route path="/school/results" binding={binding.sub('results')} component="module/as_main/pages/school/results/results_page"  />
 						</RouterView>
 
 					</div>
