@@ -1,4 +1,7 @@
 var ApplicationView = require('module/as_parents/application'),
+	userDataInstance = require('module/data/user_data'),
+	userRulesInstance = require('module/data/user_rules'),
+	authController = require('module/core/auth_controller'),
 	serviceList = require('module/core/service_list'),
 	MoreartyContext,
 	binding;
@@ -7,7 +10,8 @@ function runMainMode() {
 // Создание контекста Morearty
 	MoreartyContext = Morearty.createContext({
 		initialState: {
-			activeSchoolId: '0f338934-0b0d-4336-ac63-34847789f8db',
+			userData: userDataInstance.getDefaultState(),
+			userRules: userRulesInstance.getDefaultState(),
 			routing: {
 				currentPath: '',		// текущий путь
 				currentPageName: '',	// имя текущей страницы, если есть
