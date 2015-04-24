@@ -21,7 +21,7 @@ var SVG = require('module/ui/svg'),
 				className = self.itemClassName,
 				SvgIcon = item.icon ? <SVG icon={item.icon} /> : null;
 
-			if (currentPath && (currentPath.indexOf(itemPath) !== -1 || itemRoutes.indexOf(currentPath) !== -1)) {
+			if ((currentPath && (currentPath.indexOf(itemPath) !== -1 || itemRoutes.indexOf(currentPath) !== -1)) || '/' + document.location.hash === item.href) {
 				className += 'mActive';
 			}
 
