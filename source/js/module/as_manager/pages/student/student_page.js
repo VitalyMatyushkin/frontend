@@ -4,7 +4,9 @@ var LeanerView,
 	UserButtons = require('module/as_manager/pages/student/view/user_buttons'),
 	UserName = require('module/as_manager/pages/student/view/user_name'),
 	UserPhoto = require('module/as_manager/pages/student/view/user_photo'),
-    UserAchievements = require("module/as_manager/pages/student/view/user_achievements");
+    UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
+    UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
+    fixData;
 
 LeanerView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -57,14 +59,7 @@ LeanerView = React.createClass({
 								<div className="eUserFullInfo_name bLinkLike">Team Statistics:</div>
 							</div>
 						</div>
-						<div className="bUserFullInfo">
-							<div className="eUserFullInfo_block">
-								<div className="eUserFullInfo_name bLinkLike">Fixtures:</div>
-                                <div className="eUserFullInfo_text bLinkLike"><div className="eUserFullInfo_date">23.03.2015</div> football match with Cannys House</div>
-                                <div className="eUserFullInfo_text mImportant bLinkLike"><div className="eUserFullInfo_date">01.04.2015</div> football match with Cannys House</div>
-                                <div className="eUserFullInfo_text bLinkLike"><div className="eUserFullInfo_date">17.03.2015</div> football match with Cannys House</div>
-							</div>
-						</div>
+                        <UserFixtures  binding={binding} />
 					</div>
 				</div>
 			</div>
