@@ -21,13 +21,10 @@ AboutMeBlock = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			aboutListNodes = [];
-
 		aboutListNodes.push(self._getAboutNode('icon_home', 'houseData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_user-tie', 'classData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_trophy', 'winings'));
 		aboutListNodes.push(self._getAboutNode('icon_teams', 'schoolData.name'));
-
-
 		return (
 			<div className="bAboutList">
 				<h6>{self.props.title || 'About me'}</h6>
