@@ -27,8 +27,10 @@ UserFixtures = React.createClass({
                     {fixtureData[i].name} <div>Type: {fixtureData[i].gameType}</div></div>
                 );
             }
+            return tempAr;
         }
-        return tempAr;
+        return null;
+
     },
     render:function(){
         var self = this,
