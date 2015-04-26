@@ -1,0 +1,107 @@
+.bBigCalendar {
+  margin: 35px 0;
+}
+
+.eBigCalendar_head {
+  font-size: 30px;
+  padding: 10px 38px;
+  text-align: center;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.eBigCalendar_currentSelect {
+  position: relative;
+}
+
+.eBigCalendar_currentYear {
+  font-size: 14px;
+  position: absolute;
+  left: 100%;
+  top: 0;
+  padding-left: 10px;
+}
+
+.eBigCalendar_goPrev,
+.eBigCalendar_goNext {
+  font-size: 15px;
+}
+
+.bBigCalendar .bButton.mGoLeft {
+  float: left;
+}
+
+.bBigCalendar .bButton.mGoRight {
+  float: right;
+}
+
+.eBigCalendar_oneWeek {
+  font-size: 0;
+  border-bottom: 1px solid #cccccc;
+  overflow: hidden;
+}
+
+.eBigCalendar_oneWeek.mDayNames .eBigCalendar_oneDay {
+  font-size: 17px;
+  padding: 18px;
+  min-height: 0;
+  text-align: right;
+}
+
+.eBigCalendar_oneWeek.mDayNames .eBigCalendar_oneDay:after {
+  border-right: 0;
+}
+
+.eBigCalendar_oneDay {
+  vertical-align: top;
+  display: inline-block;
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 171px;
+  padding: 44px 18px 18px;
+  min-height: 67px;
+  position: relative;
+}
+
+.eBigCalendar_oneDay:after {
+  content: '';
+  display: block;
+  border-right: 1px solid #cccccc;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 500px;
+}
+
+.eBigCalendar_oneDay:last-child:after {
+  border-right: 0;
+}
+
+.eBigCalendar_oneDayDate {
+  position: absolute;
+  right: 15px;
+  top: 20px;
+}
+
+.eBigCalendar_oneEvent {
+  font-size: 12px;
+  line-height: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.eBigCalendar_oneEvent:hover{
+  color: #4caf50;
+}
+
+.eBigCalendar_eventTime {
+  margin-bottom: 2px;
+}
+
+.eBigCalendar_oneDay.mToday .eBigCalendar_oneDayDate{
+  background: #4caf50;
+  color: white;
+  padding: 3px;
+  margin-top: -3px;
+  margin-right: -3px;
+}

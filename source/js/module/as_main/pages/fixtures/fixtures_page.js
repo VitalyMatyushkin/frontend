@@ -44,7 +44,6 @@ FixturesPage = React.createClass({
 			key: 'cricket'
 		}];
 	},
-
 	getDefaultState: function () {
 		return Immutable.fromJS({
 
