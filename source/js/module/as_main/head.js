@@ -27,11 +27,11 @@ Head = React.createClass({
 			key: 'Calendar',
 			routes: ['/calendar']
 		},{
-			href: '/#opponents/summary',
+			href: '/#opponents/map',
 			icon: 'icon_teams',
 			name: 'Opponents',
 			key: 'Opponents',
-			routes: ['/opponents']
+			routes: ['/opponents', '/opponents/:subPage']
 		}/*,{
 			href: '/#media',
 			icon: 'icon_teams',
