@@ -3,8 +3,7 @@ var OneSchoolPage,
 	Route = require('module/core/route'),
 	SubMenu = require('module/ui/menu/sub_menu'),
 	SchoolInfo = require('module/as_main/pages/school/view/school_info'),
-	SchoolName = require('module/as_main/pages/school/view/school_name'),
-	Map = require('module/as_main/pages/school/view/map');
+	SchoolName = require('module/as_main/pages/school/view/school_name');
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -61,7 +60,9 @@ OneSchoolPage = React.createClass({
 		return (
 			<div>
 				<div className="bUserColumn">
-					<Map binding={binding} />
+					<div className="bUserPhoto" ref="map">
+						<img className="eUserPhoto_logoImage" src="http://i.imgur.com/9br7NSU.jpg" />
+					</div>
 
 					<div className="eUserColumnData">
 						<SchoolName binding={binding} />
