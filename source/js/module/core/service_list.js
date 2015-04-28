@@ -31,6 +31,10 @@ serviceList = {
 		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
 		serviceList.form = new Service('/forms/{formId}', binding);
 
+		// news
+		serviceList.news = new Service('/schools/{schoolId}/news', binding);
+		serviceList.oneNews = new Service('/news/{formId}', binding);
+
 		//events
 		serviceList.events = new Service('/events', binding);
 		serviceList.eventFindOne = new Service('/events/findOne', binding);
