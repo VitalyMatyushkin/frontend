@@ -9,15 +9,6 @@ var List = require('module/ui/list/list'),
 NewsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'news',
-	getDate: function(value) {
-		var self = this,
-			birthday = new Date(value),
-			date = self.zeroFill(birthday.getDate()),
-			month = birthday.getMonth(),
-			year = birthday.getFullYear();
-
-		return [date, self.getMonthName(month), year].join(' ');
-	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -26,7 +17,7 @@ NewsListPage = React.createClass({
 			<Table title="News" binding={binding} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 				<TableField dataField="title" width="30%">Title</TableField>
 				<TableField dataField="body" width="45%">Text</TableField>
-				<TableField dataField="date" width="190px" filterType="none" parseFunction={self.getDate}>Date</TableField>
+				<TableField dataField="date" width="190px" filterType="none" parseFunction={self.getDateFromIso}>Date</TableField>
 			</Table>
 		)
 	}

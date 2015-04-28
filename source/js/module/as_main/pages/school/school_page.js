@@ -45,21 +45,10 @@ OneSchoolPage = React.createClass({
 
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			classes: {
-				classesList: [],
-				classesRouting: {},
-				classesForm: {}
-			},
-			houses: {
-				housesList: [],
-				housesRouting: {},
-				housesForm: {}
-			},
-			students: {
-				studentsList: [],
-				studentsRouting: {},
-				studentForm: {}
-			},
+			news: [],
+			fixtures: {},
+			results: {},
+			contacts: {},
 			schoolInfo: '',
 			schoolRouting: {}
 		});

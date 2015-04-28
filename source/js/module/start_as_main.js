@@ -7,7 +7,7 @@ function runMainMode() {
 // Создание контекста Morearty
 	MoreartyContext = Morearty.createContext({
 		initialState: {
-			activeSchoolId: '0f338934-0b0d-4336-ac63-34847789f8db',
+			activeSchoolId: 'c5256514-ab60-4f4d-b25e-e150d9739926',
 			routing: {
 				currentPath: '',		// текущий путь
 				currentPageName: '',	// имя текущей страницы, если есть
@@ -16,7 +16,8 @@ function runMainMode() {
 				parameters: {}			// GET-параметры текущего пути
 			},
 			schoolProfile: {
-				schoolProfileRouting: {}
+				schoolProfileRouting: {},
+				news: []
 			}
 		},
 		options: {

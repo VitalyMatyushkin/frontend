@@ -1,14 +1,64 @@
 var FixturesPage,
-	SVG = require('module/ui/svg');
+	SVG = require('module/ui/svg'),
+	FixturesList = require('module/as_manager/pages/events/events_challenges');
 
 FixturesPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	getDefaultState: function () {
+		var self = this;
+
+		return Immutable.fromJS({
+			eventsRouting: {},
+			teams: [],
+			sports: {
+				models: [],
+				sync: false
+			},
+			models: [],
+			sync: false,
+			newEvent: {}
+		});
+	},
+	componentWillMount: function () {
+		var self = this,
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('activeSchoolId'),
+			binding = self.getDefaultBinding(),
+			sportsBinding = binding.sub('sports');
+
+		if (!activeSchoolId) {
+			console.error('School id is not set');
+
+			return false;
+		}
+
+		window.Server.sports.get().then(function (data) {
+			sportsBinding
+				.atomically()
+				.set('sync', true)
+				.set('models', Immutable.fromJS(data))
+				.commit();
+		});
+
+		window.Server.eventsBySchoolId.get({
+			schoolId: activeSchoolId
+		}).then(function (data) {
+			binding
+				.atomically()
+				.set('models', Immutable.fromJS(data))
+				.set('sync', true)
+				.commit();
+		});
+
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		return (
 			<div>
+
+				<FixturesList binding={binding} />
 
 				<div className="bChallengeDate">
 					<div className="eChallengeDate_date">Sa 17 April 2015</div>
