@@ -18,6 +18,8 @@ serviceList = {
 		serviceList.school = new Service('/schools/{id}', binding);
         serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
         serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
+		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
+
 
 		// students
         serviceList.students = new Service('/schools/{schoolId}/students', binding);
@@ -40,7 +42,6 @@ serviceList = {
 		serviceList.eventFindOne = new Service('/events/findOne', binding);
         serviceList.event = new Service('/events/{eventId}', binding);
         serviceList.participants = new Service('/events/{eventId}/participants', binding);
-
 
         // sports
         serviceList.sports = new Service('/sports', binding);

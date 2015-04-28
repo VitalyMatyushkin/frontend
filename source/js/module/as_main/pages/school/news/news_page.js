@@ -15,7 +15,6 @@ NewsPage = React.createClass({
 			binding.set(Immutable.fromJS(data));
 		});
 	},
-
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),

@@ -48,7 +48,7 @@ OneSchoolPage = React.createClass({
 			news: [],
 			fixtures: {},
 			results: {},
-			contacts: {},
+			contacts: [],
 			schoolInfo: '',
 			schoolRouting: {}
 		});

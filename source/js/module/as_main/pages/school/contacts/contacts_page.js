@@ -1,40 +1,45 @@
 var ContactsPage,
-	SVG = require('module/ui/svg');
+	SVG = require('module/ui/svg'),
+	Map = require('module/ui/map/map');
 
 ContactsPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		var self = this,
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('activeSchoolId'),
+			binding = self.getDefaultBinding();
+
+
+		window.Server.schoolCoaches.get(activeSchoolId).then(function(data) {
+			binding.set(Immutable.fromJS(data));
+		});
+	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			coachesList = binding.toJS(),
+			coachesNodes;
+
+		if (coachesList) {
+			coachesNodes = coachesList.map(function(coach) {
+				return (
+					<div className="eSchoolContacts_contact">
+						<div className="eSchoolContacts_sportName">{coach.realms}</div>
+						<div className="eSchoolContacts_userName">{coach.firstName} {coach.lastName}</div>
+						<div className="eSchoolContacts_userEmail">{coach.email}</div>
+						<div className="eSchoolContacts_userPhone">{coach.phone}</div>
+					</div>
+				);
+			});
+		}
 
 		return (
 			<div>
 				<div className="bSchoolContacts">
+					<Map />
 					<div className="eSchoolContacts_title">Sport contacts</div>
-
-					<div className="eSchoolContacts_contact">
-						<div className="eSchoolContacts_sportName">Hockey</div>
-						<div className="eSchoolContacts_userName">James Patrick</div>
-						<div className="eSchoolContacts_userPosition">senior school hockey</div>
-						<div className="eSchoolContacts_userEmail">james@school.com</div>
-						<div className="eSchoolContacts_userPhone">+7918921685</div>
-					</div>
-
-					<div className="eSchoolContacts_contact">
-						<div className="eSchoolContacts_sportName">Football</div>
-						<div className="eSchoolContacts_userName">Bob Strelons</div>
-						<div className="eSchoolContacts_userPosition">school fooball</div>
-						<div className="eSchoolContacts_userEmail">bob@school.com</div>
-						<div className="eSchoolContacts_userPhone">+20228921685</div>
-					</div>
-
-					<div className="eSchoolContacts_contact">
-						<div className="eSchoolContacts_sportName">Football</div>
-						<div className="eSchoolContacts_userName">Dan Lonhorn</div>
-						<div className="eSchoolContacts_userPosition">head of boys team</div>
-						<div className="eSchoolContacts_userEmail">dan@school.com</div>
-						<div className="eSchoolContacts_userPhone">+22223421685</div>
-					</div>
+					{coachesNodes}
 				</div>
 			</div>
 		)
