@@ -17,7 +17,7 @@ OneSchoolPage = React.createClass({
 			document.location.hash = 'schools';
 		}
 
-		window.Server.school.get(activeSchoolId).then(function (data) {
+		window.Server.schoolInfo.get(activeSchoolId).then(function (data) {
 			binding.set('schoolInfo', Immutable.fromJS(data));
 		});
 
