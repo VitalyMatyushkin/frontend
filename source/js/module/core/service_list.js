@@ -15,7 +15,8 @@ serviceList = {
 		// schools
 		serviceList.schools = new Service('/schools', binding);
         serviceList.schoolsFindOne = new Service('/schools/findOne', binding);
-		serviceList.school = new Service('/schools/{id}', binding);
+		serviceList.school = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=zipCode', binding);
+
         serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
         serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);

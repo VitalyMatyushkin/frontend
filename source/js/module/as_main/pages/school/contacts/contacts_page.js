@@ -1,6 +1,7 @@
 var ContactsPage,
 	SVG = require('module/ui/svg'),
-	Map = require('module/ui/map/map');
+	Map = require('module/ui/map/map'),
+	If = require('module/ui/if/if');
 
 ContactsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -12,13 +13,13 @@ ContactsPage = React.createClass({
 
 
 		window.Server.schoolCoaches.get(activeSchoolId).then(function(data) {
-			binding.set(Immutable.fromJS(data));
+			binding.set('coaches', Immutable.fromJS(data));
 		});
 	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			coachesList = binding.toJS(),
+			coachesList = binding.toJS('coaches'),
 			coachesNodes;
 
 		if (coachesList) {
@@ -37,7 +38,10 @@ ContactsPage = React.createClass({
 		return (
 			<div>
 				<div className="bSchoolContacts">
-					<Map />
+					<If condition={binding.get('schoolInfo.zipCode.geoPoint.lat')}>
+						<Map point={{lat: binding.get('schoolInfo.zipCode.geoPoint.lat'), lng: binding.get('schoolInfo.zipCode.geoPoint.lng')}} />
+					</If>
+
 					<div className="eSchoolContacts_title">Sport contacts</div>
 					{coachesNodes}
 				</div>

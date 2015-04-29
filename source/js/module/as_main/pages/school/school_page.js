@@ -47,7 +47,7 @@ OneSchoolPage = React.createClass({
 			news: [],
 			fixtures: {},
 			results: {},
-			contacts: [],
+			coaches: [],
 			schoolInfo: '',
 			schoolRouting: {}
 		});
@@ -79,7 +79,7 @@ OneSchoolPage = React.createClass({
 							<Route path="/ /school /school/fixtures" binding={binding.sub('fixtures')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
 							<Route path="/school/results" binding={binding.sub('results')} component="module/as_main/pages/school/results/results_page"  />
 							<Route path="/school/news" binding={binding.sub('news')} component="module/as_main/pages/school/news/news_page"  />
-							<Route path="/school/contacts" binding={binding.sub('contacts')} component="module/as_main/pages/school/contacts/contacts_page"  />
+							<Route path="/school/contacts" binding={binding} component="module/as_main/pages/school/contacts/contacts_page"  />
 						</RouterView>
 
 					</div>

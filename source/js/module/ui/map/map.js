@@ -3,12 +3,15 @@ var MapView;
 MapView = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-
+		point: React.PropTypes.shape({
+			lat: React.PropTypes.number,
+			lng: React.PropTypes.number
+		})
 	},
 	componentDidMount: function() {
 		var self = this,
 			mapNode = self.refs.map.getDOMNode(),
-			mapeCenter = new google.maps.LatLng(51.512406, -0.129966),
+			mapeCenter = new google.maps.LatLng(self.props.point.lat, self.props.point.lng),
 			mapOptions,
 			mapView,
 			marker;
