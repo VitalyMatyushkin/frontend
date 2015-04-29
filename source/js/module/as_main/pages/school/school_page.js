@@ -61,12 +61,12 @@ OneSchoolPage = React.createClass({
 			<div>
 				<div className="bUserColumn">
 					<div className="bUserPhoto" ref="map">
-						<img className="eUserPhoto_logoImage" src="http://i.imgur.com/9br7NSU.jpg" />
+						<img className="eUserPhoto_logoImage" src={binding.get('schoolInfo.pic')} />
 					</div>
 
 					<div className="eUserColumnData">
-						<SchoolName binding={binding} />
-						<SchoolInfo binding={binding} />
+						<SchoolName binding={binding.sub('schoolInfo')} />
+						<SchoolInfo binding={binding.sub('schoolInfo')} />
 					</div>
 				</div>
 

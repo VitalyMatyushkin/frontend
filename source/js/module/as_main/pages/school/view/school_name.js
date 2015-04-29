@@ -7,7 +7,7 @@ SchoolName = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<div className="bUserName">School Bernhard, Langosh and Torphy</div>
+			<div className="bUserName">{binding.get('name')}</div>
 		)
 	}
 });
