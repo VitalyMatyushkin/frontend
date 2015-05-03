@@ -1,4 +1,5 @@
 var SVG = require('module/ui/svg'),
+	If = require('module/ui/if/if'),
 	SchoolInfo;
 
 SchoolInfo = React.createClass({
@@ -14,11 +15,14 @@ SchoolInfo = React.createClass({
 			<div className="bAboutList">
 				<h6>Address</h6>
 
-				<div className="eAboutList_item"><SVG icon="icon_home" />51 Shaftesbury Avenue<br/>London W1D 6BA</div>
-				<div className="eAboutList_item"><SVG icon="icon_phone" />0844 4825138</div>
+				<div className="eAboutList_item"><SVG icon="icon_home" />{binding.get('address')}</div>
+				<If condition={binding.get('phone')}>
+					<div className="eAboutList_item"><SVG icon="icon_phone" />{binding.get('phone')}</div>
+				</If>
 			</div>
 		)
 	}
 });
 
+//<div className="eAboutList_item"><SVG icon="icon_phone" />0844 4825138</div>
 module.exports = SchoolInfo;

@@ -1,14 +1,20 @@
-var UserPhoto;
+var MapView;
 
-UserPhoto = React.createClass({
+MapView = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		point: React.PropTypes.shape({
+			lat: React.PropTypes.number,
+			lng: React.PropTypes.number
+		})
+	},
 	componentDidMount: function() {
 		var self = this,
 			mapNode = self.refs.map.getDOMNode(),
-			mapeCenter = new google.maps.LatLng(51.512406, -0.129966),
+			mapeCenter = new google.maps.LatLng(self.props.point.lat, self.props.point.lng),
 			mapOptions,
 			mapView,
-			schoolMarker;
+			marker;
 
 		mapOptions = {
 			center: mapeCenter,
@@ -18,7 +24,7 @@ UserPhoto = React.createClass({
 
 		mapView = new google.maps.Map(mapNode, mapOptions);
 
-		schoolMarker = new google.maps.Marker({
+		marker = new google.maps.Marker({
 			position: mapeCenter,
 			map: mapView
 		});
@@ -28,7 +34,7 @@ UserPhoto = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<div className="bUserPhoto" ref="map">
+			<div className="bMapView" ref="map">
 
 			</div>
 		)
@@ -36,4 +42,4 @@ UserPhoto = React.createClass({
 });
 
 
-module.exports = UserPhoto;
+module.exports = MapView;

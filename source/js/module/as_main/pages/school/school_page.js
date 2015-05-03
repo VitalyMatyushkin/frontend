@@ -3,8 +3,7 @@ var OneSchoolPage,
 	Route = require('module/core/route'),
 	SubMenu = require('module/ui/menu/sub_menu'),
 	SchoolInfo = require('module/as_main/pages/school/view/school_info'),
-	SchoolName = require('module/as_main/pages/school/view/school_name'),
-	Map = require('module/as_main/pages/school/view/map');
+	SchoolName = require('module/as_main/pages/school/view/school_name');
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -18,7 +17,7 @@ OneSchoolPage = React.createClass({
 			document.location.hash = 'schools';
 		}
 
-		window.Server.school.get(activeSchoolId).then(function (data) {
+		window.Server.schoolInfo.get(activeSchoolId).then(function (data) {
 			binding.set('schoolInfo', Immutable.fromJS(data));
 		});
 
@@ -45,21 +44,10 @@ OneSchoolPage = React.createClass({
 
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			classes: {
-				classesList: [],
-				classesRouting: {},
-				classesForm: {}
-			},
-			houses: {
-				housesList: [],
-				housesRouting: {},
-				housesForm: {}
-			},
-			students: {
-				studentsList: [],
-				studentsRouting: {},
-				studentForm: {}
-			},
+			news: [],
+			fixtures: {},
+			results: {},
+			coaches: [],
 			schoolInfo: '',
 			schoolRouting: {}
 		});
@@ -72,11 +60,13 @@ OneSchoolPage = React.createClass({
 		return (
 			<div>
 				<div className="bUserColumn">
-					<Map binding={binding} />
+					<div className="bUserPhoto" ref="map">
+						<img className="eUserPhoto_logoImage" src={binding.get('schoolInfo.pic')} />
+					</div>
 
 					<div className="eUserColumnData">
-						<SchoolName binding={binding} />
-						<SchoolInfo binding={binding} />
+						<SchoolName binding={binding.sub('schoolInfo')} />
+						<SchoolInfo binding={binding.sub('schoolInfo')} />
 					</div>
 				</div>
 
@@ -89,7 +79,7 @@ OneSchoolPage = React.createClass({
 							<Route path="/ /school /school/fixtures" binding={binding.sub('fixtures')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
 							<Route path="/school/results" binding={binding.sub('results')} component="module/as_main/pages/school/results/results_page"  />
 							<Route path="/school/news" binding={binding.sub('news')} component="module/as_main/pages/school/news/news_page"  />
-							<Route path="/school/contacts" binding={binding.sub('contacts')} component="module/as_main/pages/school/contacts/contacts_page"  />
+							<Route path="/school/contacts" binding={binding} component="module/as_main/pages/school/contacts/contacts_page"  />
 						</RouterView>
 
 					</div>
