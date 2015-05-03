@@ -26,9 +26,16 @@ LeanerView = React.createClass({
 					leanerData.houseData = houseData;
 					Server.school.get(data.schoolId).then(function(schoolData) {
 						leanerData.schoolData = schoolData;
-						binding.set(Immutable.fromJS(leanerData));
 						Server.studentPoints.get(studentId).then(function(pointsData) {
-							console.log(pointsData);
+							leanerData.pointsData = pointsData.length;
+							Server.results.get({id:studentId}).then(function(resultsData){
+								leanerData.resultsData = resultsData;
+                                Server.eventsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function(schoolEvent){
+                                    leanerData.schoolEvent = schoolEvent;
+                                    console.log(globalBinding.get('userRules.activeSchoolId'));
+                                    binding.set(Immutable.fromJS(leanerData));
+                                });
+							});
 						});
 					});
 				});
@@ -40,7 +47,7 @@ LeanerView = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			data = binding.toJS();
+			data = binding.toJS(); console.log(data);
 		return (
 			<div>
 				<div className="bUserColumn">
@@ -53,12 +60,13 @@ LeanerView = React.createClass({
 				<div className="bUserDataColumn">
 					<div className="eUserDataColumn_wrap" id="jsSubPage">
 						<UserButtons />
-                        <UserAchievements />
+                        <UserAchievements binding={binding} />
 						<div className="bUserFullInfo mDates">
 							<div className="eUserFullInfo_block">
 								<div className="eUserFullInfo_name bLinkLike">Team Statistics:</div>
 							</div>
 						</div>
+                        <div className="eUserFullInfo_name bLinkLike">Fixtures:</div>
                         <UserFixtures  binding={binding} />
 					</div>
 				</div>

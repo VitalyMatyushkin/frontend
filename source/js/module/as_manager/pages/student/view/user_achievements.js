@@ -4,9 +4,16 @@
 var UserAchievements;
 UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
+    getClosedFixtures:function(data){
+        if(data){
+            console.log(data.resultsData);
+        }
+    },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            data = binding.toJS();
+        self.getClosedFixtures(data);
         return (
             <div className="bUserFullInfo">
                 <div className="eUserFullInfo_block">

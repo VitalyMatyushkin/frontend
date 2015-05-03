@@ -1,5 +1,4 @@
 var ChallengesView;
-
 ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
     sameDay: function (d1, d2) {
@@ -31,7 +30,6 @@ ChallengesView = React.createClass({
                         new Date(event.get('startTime')),
                         new Date(date));
             });
-
         return eventsByDate.map(function (event) {
             var eventDateTime = new Date(event.get('startTime')),
                 eventIndex = binding.get('models').findIndex(function (evt) {
@@ -47,7 +45,6 @@ ChallengesView = React.createClass({
 				secondPic,
                 firstPoint,
                 secondPoint;
-
             if (type === 'inter-schools') {
 				//http://i.imgur.com/9br7NSU.jpg
                 firstName = eventBinding.get('participants.0.school.name');

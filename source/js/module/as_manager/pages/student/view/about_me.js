@@ -23,7 +23,7 @@ AboutMeBlock = React.createClass({
 			aboutListNodes = [];
 		aboutListNodes.push(self._getAboutNode('icon_home', 'houseData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_user-tie', 'classData.name'));
-		aboutListNodes.push(self._getAboutNode('icon_trophy', 'winings'));
+		aboutListNodes.push(self._getAboutNode('icon_trophy', 'pointsData'));
 		aboutListNodes.push(self._getAboutNode('icon_teams', 'schoolData.name'));
 		return (
 			<div className="bAboutList">
