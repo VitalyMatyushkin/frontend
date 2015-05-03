@@ -27,13 +27,17 @@ LeanerView = React.createClass({
 					Server.school.get(data.schoolId).then(function(schoolData) {
 						leanerData.schoolData = schoolData;
 						Server.studentPoints.get(studentId).then(function(pointsData) {
-							leanerData.pointsData = pointsData.length;
+							leanerData.scorePoints = pointsData.length;
+                            leanerData.pointsData = pointsData;
 							Server.results.get({id:studentId}).then(function(resultsData){
 								leanerData.resultsData = resultsData;
                                 Server.eventsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function(schoolEvent){
                                     leanerData.schoolEvent = schoolEvent;
                                     console.log(globalBinding.get('userRules.activeSchoolId'));
                                     binding.set(Immutable.fromJS(leanerData));
+                                    Server.teamsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function(teamsData){
+                                        console.log(teamsData);
+                                    })
                                 });
 							});
 						});
