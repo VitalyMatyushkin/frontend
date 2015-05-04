@@ -1,52 +1,49 @@
 var ResultsPage,
-	SVG = require('module/ui/svg');
+	SVG = require('module/ui/svg'),
+	FixturesList = require('module/ui/fixtures/fixtures_list');
 
 ResultsPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	getDefaultState: function () {
+		var self = this;
+
+		return Immutable.fromJS({
+			fixtures: {}
+		});
+	},
+	componentWillMount: function () {
+		var self = this,
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('activeSchoolId'),
+			binding = self.getDefaultBinding();
+
+		if (!activeSchoolId) {
+			console.error('School id is not set');
+
+			return false;
+		}
+
+		window.Server.fixturesBySchoolId.get(activeSchoolId, {
+			filter: {
+				include: 'sport',
+				limit: 10,
+				order: 'startTime asc',
+				where: {
+					status: 'closed'
+				}
+			}
+		}).then(function(data) {
+			binding.set('fixtures', Immutable.fromJS(data));
+		});
+
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		return (
 			<div>
-
-				<div className="bChallengeDate">
-					<div className="eChallengeDate_date">Sa 22 May 2015</div>
-					<div className="eChallengeDate_list">
-
-						<div className="bChallenge">
-							<div className="eChallenge_in">
-								<div className="eChallenge_rivalName">
-									<span>BOYS U14C</span></div>
-
-								<div className="eChallenge_rivalInfo">
-									<div className="eChallenge_hours">Hockey</div>
-									<div className="eChallenge_results mDone">3 : 7</div>
-									<div className="eChallenge_info">inter-schools</div>
-								</div>
-								<div className="eChallenge_rivalName">
-									<span>BOYS U14B</span></div>
-							</div>
-						</div>
-
-						<div className="bChallenge">
-							<div className="eChallenge_in">
-								<div className="eChallenge_rivalName">
-									<span>BOYS U2A</span></div>
-
-								<div className="eChallenge_rivalInfo">
-									<div className="eChallenge_hours">Cricket</div>
-									<div className="eChallenge_results mDone">5 : 7</div>
-									<div className="eChallenge_info">inter-schools</div>
-								</div>
-								<div className="eChallenge_rivalName">
-									<span>BOYS U4A</span></div>
-							</div>
-						</div>
-
-					</div>
-				</div>
-
+				<FixturesList binding={binding.sub('fixtures')} />
 			</div>
 		)
 	}

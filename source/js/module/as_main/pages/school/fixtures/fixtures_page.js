@@ -36,18 +36,6 @@ FixturesPage = React.createClass({
 			binding.set('fixtures', Immutable.fromJS(data));
 		});
 
-
-		 /*
-		window.Server.eventsBySchoolId.get({
-			schoolId: activeSchoolId
-		}).then(function (data) {
-			binding
-				.atomically()
-				.set('models', Immutable.fromJS(data))
-				.set('sync', true)
-				.commit();
-		});  */
-
 	},
 	render: function() {
 		var self = this,

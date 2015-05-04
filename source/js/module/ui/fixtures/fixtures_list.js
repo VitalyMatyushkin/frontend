@@ -4,6 +4,15 @@ var FixturesList,
 
 FixturesList = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
+	_getScore: function(fixture) {
+		var self = this,
+			firstId = fixture.participants[0].id,
+			secondId = fixture.participants[1].id;
+
+		if (!fixture.result) return null;
+
+		return fixture.result.summary.byTeams[firstId] + ' : ' + fixture.result.summary.byTeams[secondId];
+	},
 	_getRivelNode: function(participan) {
 		var self = this,
 			pictures = participan.house && participan.house.pic || participan.school && participan.school.pic,
@@ -14,7 +23,6 @@ FixturesList = React.createClass({
 			name = participan.name;
 			pictures = undefined;
 		}
-
 
 		return (
 			<div className="eChallenge_rivalName">
@@ -33,8 +41,21 @@ FixturesList = React.createClass({
 					{self._getRivelNode(fixture.participants[0])}
 
 					<div className="eChallenge_rivalInfo">
-						<div className="eChallenge_hours">{self.getTimeFromIso(fixture.startTime)}</div>
-						<div className="eChallenge_sportsName">{fixture.sport.name}</div>
+
+						<If condition={fixture.result === undefined}>
+							<span>
+								<div className="eChallenge_hours">{self.getTimeFromIso(fixture.startTime)}</div>
+								<div className="eChallenge_sportsName">{fixture.sport.name}</div>
+							</span>
+						</If>
+
+						<If condition={fixture.result !== undefined}>
+							<span>
+								<div className="eChallenge_hours">{fixture.sport.name}</div>
+								<div className="eChallenge_results mDone">{self._getScore(fixture)}</div>
+							</span>
+						</If>
+
 						<div className="eChallenge_info">{fixture.type}</div>
 					</div>
 
