@@ -20,6 +20,12 @@ var DateTimeMixin = {
 
 		return [date, self.getMonthName(month), year].join(' ');
 	},
+	getTimeFromIso: function(value) {
+		var self = this,
+			converDate = new Date(value);
+
+		return self.zeroFill(converDate.getHours()) + ':' + self.zeroFill(converDate.getMinutes());
+	}
 };
 
 module.exports = DateTimeMixin;
