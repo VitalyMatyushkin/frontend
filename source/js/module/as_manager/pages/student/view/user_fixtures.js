@@ -58,14 +58,12 @@ UserFixtures = React.createClass({
     getEvents: function (date,theData) {
         var self = this,
             binding = this.getDefaultBinding(),
-           // tempAr = [],
             eventsByDate = theData.schoolEvent.filter(function (event) {
                // tempAr.push(event);
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
             });
-        //console.log(tempAr);
         return eventsByDate.map(function(event,index){
             var eventDateTime = new Date(event.startTime),
                 hours = self.addZeroToFirst(eventDateTime.getHours()),
@@ -83,15 +81,15 @@ UserFixtures = React.createClass({
                 firstName = event.participants[0].school.name; //console.log(firstName);
                 secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name; //console.log(secondName);
                 firstPic = event.participants[0].school.pic;
-                secondPic = theData.schoolEvent[index].participants[1].school.pic || event.invites[0].guest.pic ;
+                secondPic = event.invites[0].guest.pic ;
             }else if (type === 'houses'){
-                firstName = theData.schoolEvent[index].participants[0].house.name; //console.log(firstName);
-                secondName = theData.schoolEvent[index].participants[1].house.name;// console.log(secondName);
+                firstName = event.participants[0].house.name; //console.log(firstName);
+                secondName = event.participants[1].house.name;// console.log(secondName);
                 firstPic = theData.schoolEvent[index].participants[0].school.pic;
                 secondPic = theData.schoolEvent[index].participants[1].school.pic;
             }else if(type === 'internal'){
-                firstName = theData.schoolEvent[index].participants[0].house.name;// console.log(firstName);
-                secondName = theData.schoolEvent[index].participants[1].house.name;// console.log(secondName);
+                firstName = event.participants[0].name;// console.log(firstName);
+                secondName = event.participants[1].name;// console.log(secondName);
             }
             if(event.resultId){
                 firstPoint = event.result.summary.byTeams[event.participants[0].id]|| 0;

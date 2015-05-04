@@ -8,8 +8,8 @@ UserAchievements = React.createClass({
         var tempAr = [],
             goalScored;
         if(data){
-            console.log(data.resultsData);
-           goalScored = data.pointsData.length; console.log(goalScored);
+           // console.log(data.resultsData);
+           goalScored = data.pointsData.length; //console.log(goalScored);
             for(var i = 0; i<data.resultsData.length; i++){
                 for(var x = 0; x < data.pointsData.length; x++){
                     if(data.resultsData[i].winner === data.pointsData[x].participantId){

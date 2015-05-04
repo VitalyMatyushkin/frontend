@@ -6,6 +6,7 @@ var LeanerView,
 	UserPhoto = require('module/as_manager/pages/student/view/user_photo'),
     UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
     UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
+    TeamStats = require('module/as_manager/pages/student/view/team_stats'),
     fixData;
 
 LeanerView = React.createClass({
@@ -33,10 +34,10 @@ LeanerView = React.createClass({
 								leanerData.resultsData = resultsData;
                                 Server.eventsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function(schoolEvent){
                                     leanerData.schoolEvent = schoolEvent;
-                                    console.log(globalBinding.get('userRules.activeSchoolId'));
+                                    //console.log(globalBinding.get('userRules.activeSchoolId'));
                                     binding.set(Immutable.fromJS(leanerData));
                                     Server.teamsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function(teamsData){
-                                        console.log(teamsData);
+                                        //console.log(teamsData);
                                     })
                                 });
 							});
@@ -51,7 +52,7 @@ LeanerView = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			data = binding.toJS(); console.log(data);
+			data = binding.toJS();
 		return (
 			<div>
 				<div className="bUserColumn">
@@ -67,7 +68,8 @@ LeanerView = React.createClass({
                         <UserAchievements binding={binding} />
 						<div className="bUserFullInfo mDates">
 							<div className="eUserFullInfo_block">
-								<div className="eUserFullInfo_name bLinkLike">Team Statistics:</div>
+								<div className="eUserFullInfo_name bLinkLike">Team Statistics(Wins):</div>
+								<TeamStats binding={binding} />
 							</div>
 						</div>
                         <div className="eUserFullInfo_name bLinkLike">Fixtures:</div>
