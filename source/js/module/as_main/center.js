@@ -19,7 +19,7 @@ Center = React.createClass({
 
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
 						<Route path="/ /school /school/:subPage" binding={binding.sub('schoolProfile')} component="module/as_main/pages/school/school_page"  />
-						<Route path="/fixtures" binding={binding.sub('schoolFixtures')} component="module/as_main/pages/fixtures/fixtures_page"  />
+						<Route path="/fixtures /fixtures/:sport" binding={binding.sub('schoolFixtures')} component="module/as_main/pages/fixtures/fixtures_page"  />
 						<Route path="/calendar" binding={binding.sub('schoolCalendar')} component="module/as_main/pages/calendar/calendar_page"  />
 						<Route path="/opponents/:subPage" binding={binding.sub('opponentsList')} component="module/as_main/pages/opponents/opponents_page"  />
                     </RouterView>
