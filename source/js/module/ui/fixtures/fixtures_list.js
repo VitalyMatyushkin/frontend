@@ -7,11 +7,16 @@ FixturesList = React.createClass({
 	_getScore: function(fixture) {
 		var self = this,
 			firstId = fixture.participants[0].id,
-			secondId = fixture.participants[1].id;
+			secondId = fixture.participants[1].id,
+			firstScore,
+			secondScore;
 
 		if (!fixture.result) return null;
 
-		return fixture.result.summary.byTeams[firstId] + ' : ' + fixture.result.summary.byTeams[secondId];
+		firstScore = fixture.result.summary.byTeams[firstId];
+		secondScore = fixture.result.summary.byTeams[secondId];
+
+		return (firstScore === undefined ? '?' : firstScore) + ' : ' + (secondScore === undefined ? '?' : secondScore);
 	},
 	_getRivelNode: function(participan) {
 		var self = this,
@@ -104,7 +109,6 @@ FixturesList = React.createClass({
 			data = binding.toJS();
 
 		if (data && data.length) {
-			console.log(data)
 			data = self.groupByDate(data);
 		}
 

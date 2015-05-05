@@ -1,7 +1,9 @@
 var FixturesPage,
 	SubMenu = require('module/ui/menu/sub_menu'),
 	If = require('module/ui/if/if'),
-	RadioGroup = require('module/ui/radiogroup/radiogroup');
+	RadioGroup = require('module/ui/radiogroup/radiogroup'),
+	FixturesList = require('module/ui/fixtures/fixtures_list'),
+	FixturesStatistics = require('module/ui/fixtures/fixture_statics');
 
 FixturesPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -18,7 +20,8 @@ FixturesPage = React.createClass({
 				list: [],
 				selectedId: undefined
 			},
-			menuItems: []
+			menuItems: [],
+			fixtures: []
 		});
 	},
 	componentWillMount: function() {
@@ -47,6 +50,8 @@ FixturesPage = React.createClass({
 		});
 
 		globalBinding.addListener('routing.parameters', self._setCurrentSportId.bind(self));
+		binding.addListener('gameSports.selectedId', self._getDateFromServer.bind(self));
+		binding.addListener('gameType.selectedId', self._getDateFromServer.bind(self));
 
 		self._locateToFirstSport();
 
@@ -63,6 +68,36 @@ FixturesPage = React.createClass({
 			id: 'inter-schools',
 			value: 'Inter-schools'
 		}];
+	},
+	_getDateFromServer: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = globalBinding.get('activeSchoolId'),
+			currentSportId = binding.get('gameSports.selectedId'),
+			currentGameType = binding.get('gameType.selectedId'),
+			whereFilter = {};
+
+		if (currentSportId) {
+			whereFilter = {
+				sportId: currentSportId
+			};
+
+			if (currentGameType && currentGameType !== 'all') {
+				whereFilter.type = currentGameType;
+			}
+
+			window.Server.fixturesBySchoolId.get(activeSchoolId, {
+				filter: {
+					include: 'sport',
+					limit: 30,
+					order: 'startTime asc',
+					where: whereFilter
+				}
+			}).then(function(data) {
+				binding.set('fixtures', Immutable.fromJS(data));
+			});
+		}
 	},
 	_setCurrentSportId: function() {
 		var self = this,
@@ -112,94 +147,9 @@ FixturesPage = React.createClass({
 
 						<RadioGroup name="Game types to show:" sourceArray={self.gameTypes} binding={binding.sub('gameType')} />
 
-						<div className="bFixturesStatics">
-							<div className="eFixturesStatics_number">
-								<div className="eFixturesStatics_value">71</div>
-								<div className="eFixturesStatics_name">played</div>
-							</div>
+						<FixturesStatistics binding={binding.sub('fixtures')} />
 
-							<div className="eFixturesStatics_number">
-								<div className="eFixturesStatics_value">22</div>
-								<div className="eFixturesStatics_name">won</div>
-							</div>
-
-							<div className="eFixturesStatics_number">
-								<div className="eFixturesStatics_value">3</div>
-								<div className="eFixturesStatics_name mTwoLines">average<br/>points</div>
-							</div>
-						</div>
-
-
-
-						<div className="bFixturesList">
-
-							<div className="bChallengeDate">
-								<div className="eChallengeDate_date">Fri 16 Apr 2015</div>
-								<div className="eChallengeDate_list">
-
-									<div className="bChallenge">
-										<div className="eChallenge_in">
-											<div className="eChallenge_rivalName">
-												<span>GIRLS U11AC</span></div>
-
-											<div className="eChallenge_rivalInfo">
-												<div className="eChallenge_hours">23:00</div>
-												<div className="eChallenge_results mDone">5 : 5</div>
-												<div className="eChallenge_info">internal</div>
-											</div>
-											<div className="eChallenge_rivalName">
-												<span>GIRLS U14A</span></div>
-										</div>
-									</div>
-
-
-								</div>
-							</div>
-
-
-
-							<div className="bChallengeDate">
-								<div className="eChallengeDate_date">Sa 22 May 2015</div>
-								<div className="eChallengeDate_list">
-
-									<div className="bChallenge">
-										<div className="eChallenge_in">
-											<div className="eChallenge_rivalName">
-												<span>BOYS U14C</span></div>
-
-											<div className="eChallenge_rivalInfo">
-												<div className="eChallenge_hours">7:00</div>
-												<div className="eChallenge_results">? : ?</div>
-												<div className="eChallenge_info">inter-schools</div>
-											</div>
-											<div className="eChallenge_rivalName">
-												<span>BOYS U14B</span></div>
-										</div>
-									</div>
-
-									<div className="bChallenge">
-										<div className="eChallenge_in">
-											<div className="eChallenge_rivalName">
-												<span>BOYS U2A</span></div>
-
-											<div className="eChallenge_rivalInfo">
-												<div className="eChallenge_hours">15:00</div>
-												<div className="eChallenge_results">? : ?</div>
-												<div className="eChallenge_info">inter-schools</div>
-											</div>
-											<div className="eChallenge_rivalName">
-												<span>BOYS U4A</span></div>
-										</div>
-									</div>
-
-								</div>
-							</div>
-
-
-						</div>
-
-
-
+						<FixturesList binding={binding.sub('fixtures')} />
 
 					</div>
 				</If>
