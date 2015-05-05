@@ -1,4 +1,5 @@
-var RadioGroup;
+var RadioGroup,
+	If = require('module/ui/if/if');
 
 RadioGroup = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -6,7 +7,8 @@ RadioGroup = React.createClass({
 	propTypes: {
 		sourcePromise: React.PropTypes.func,
 		onSelect: React.PropTypes.func,
-		sourceArray: React.PropTypes.array
+		sourceArray: React.PropTypes.array,
+		name: React.PropTypes.string
 	},
 	getDefaultState: function () {
 		var self = this;
@@ -85,6 +87,9 @@ RadioGroup = React.createClass({
 
 		return (
 			<div className="bRadioGroupMy">
+				<If condition={self.props.name}>
+					<label className="eRadioGroupMy_label">{self.props.name}</label>
+				</If>
 				{radioNodes}
 			</div>
 		);

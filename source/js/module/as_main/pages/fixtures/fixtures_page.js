@@ -1,6 +1,7 @@
 var FixturesPage,
 	SubMenu = require('module/ui/menu/sub_menu'),
-	If = require('module/ui/if/if');
+	If = require('module/ui/if/if'),
+	RadioGroup = require('module/ui/radiogroup/radiogroup');
 
 FixturesPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -8,7 +9,16 @@ FixturesPage = React.createClass({
 		var self = this;
 
 		return Immutable.fromJS({
-			sports: []
+			sports: [],
+			gameType: {
+				defaultId: 'all',
+				selectedId: undefined
+			},
+			gameSports: {
+				list: [],
+				selectedId: undefined
+			},
+			menuItems: []
 		});
 	},
 	componentWillMount: function() {
@@ -31,20 +41,34 @@ FixturesPage = React.createClass({
 				}
 			});
 
-			binding.meta().set('items', menuItems);
-			binding.set('sports', data);
+			binding.set('menuItems', menuItems);
+			binding.set('gameSports.list', data);
 			self._locateToFirstSport();
 		});
 
 		globalBinding.addListener('routing.parameters', self._setCurrentSportId.bind(self));
 
 		self._locateToFirstSport();
+
+		self.gameTypes = [{
+			id: 'all',
+			value: 'All types'
+		}, {
+			id: 'internal',
+			value: 'Internal'
+		}, {
+			id: 'houses',
+			value: 'Houses'
+		}, {
+			id: 'inter-schools',
+			value: 'Inter-schools'
+		}];
 	},
 	_setCurrentSportId: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			sports = binding.toJS('sports'),
+			sports = binding.toJS('gameSports.list'),
 			currentSportName = globalBinding.sub('routing.parameters').toJS().sport,
 			currentSportId;
 
@@ -55,14 +79,14 @@ FixturesPage = React.createClass({
 				}
 			}
 
-			binding.meta().set('currentSportId', currentSportId);
+			binding.set('gameSports.selectedId', currentSportId);
 		}
 	},
 	_locateToFirstSport: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			sports = binding.toJS('sports'),
+			sports = binding.toJS('gameSports.list'),
 			currentSportName = globalBinding.sub('routing.parameters').toJS().sport;
 
 		// Если в текущем адресе отсутствует id вида спорта, переходим на первый попавшийся
@@ -73,33 +97,20 @@ FixturesPage = React.createClass({
 
 		self._setCurrentSportId();
 	},
-	getDefaultState: function () {
-		return Immutable.fromJS({
-
-		});
-	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			currentSportId = binding.meta().get('currentSportId');
+			currentSportId = binding.get('gameSports.selectedId');
 
 		return (
 			<div>
-				<SubMenu binding={{ default: globalBinding.sub('routing'), itemsBinding: binding.meta().sub('items') }} />
-				{currentSportId}
+				<SubMenu binding={{ default: globalBinding.sub('routing'), itemsBinding: binding.sub('menuItems') }} />
+
 				<If condition={currentSportId}>
 					<div className="bSchoolMaster">
 
-
-						<div className="bRadioGroupMy">
-							<label className="eRadioGroupMy_label">Game types to show:</label>
-							<label className="eRadioGroupMy_label"><input checked type="radio" />All types</label>
-							<label className="eRadioGroupMy_label"><input type="radio" />Internal</label>
-							<label className="eRadioGroupMy_label"><input type="radio" />Houses</label>
-							<label className="eRadioGroupMy_label"><input type="radio" />Inter-schools</label>
-						</div>
-
+						<RadioGroup name="Game types to show:" sourceArray={self.gameTypes} binding={binding.sub('gameType')} />
 
 						<div className="bFixturesStatics">
 							<div className="eFixturesStatics_number">
