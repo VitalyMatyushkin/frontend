@@ -1,7 +1,7 @@
 var DateTimeMixin = {
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-	monthNames: ["January", "February", "March", "April", "May", "June",
-		"July", "August", "September", "October", "November", "December"],
+	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+	monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
 	getMonthName: function(month) {
 		return this.monthNames[month];
 	},
@@ -25,6 +25,9 @@ var DateTimeMixin = {
 			converDate = new Date(value);
 
 		return self.zeroFill(converDate.getHours()) + ':' + self.zeroFill(converDate.getMinutes());
+	},
+	daysInMonth: function(date) {
+		return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 	}
 };
 
