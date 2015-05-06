@@ -7,19 +7,42 @@ BigCalendar = React.createClass({
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
+			metaBinding = binding.meta(),
+			currentDate = metaBinding.get('currentDate');
 
+		if (!currentDate) {
+			metaBinding.set('currentDate', (new Date()).toISOString());
+		}
+
+	},
+	setPrevMonth: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			metaBinding = binding.meta(),
+			currentDate = metaBinding.get('currentDate'),
+			date = new Date(currentDate);
+
+		metaBinding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() - 1, 1)).toISOString());
+	},
+	setNextMonth: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			metaBinding = binding.meta(),
+			currentDate = metaBinding.get('currentDate'),
+			date = new Date(currentDate);
+
+		metaBinding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() + 1, 1)).toISOString());
 	},
 	getWeeks: function() {
 		var self = this,
 			data = {},
 			currentDay = 1,
-			date = new Date(),
+			binding = self.getDefaultBinding(),
+			metaBinding = binding.meta(),
+			date = new Date(metaBinding.get('currentDate')),
+			todayDate = new Date(),
 			showedMonth = date.getMonth(),
 			showedYear = date.getFullYear(),
-			selectedMonth = date.getMonth(),
-			selectedYear = date.getFullYear(),
-			selectedDate = date.getDate(),
 			monthDate = new Date(),
 			firstMonthDay,
 			daysInMonth,
@@ -48,7 +71,7 @@ BigCalendar = React.createClass({
 					data.weeks[i].push({});
 				} else {
 					data.weeks[i].push({
-						isToday: (selectedMonth === showedMonth && selectedYear === showedYear && selectedDate === currentDay),
+						isToday: (todayDate.getMonth() === showedMonth && todayDate.getFullYear() === showedYear && todayDate.getDate() === currentDay),
 						date: currentDay,
 						month: showedMonth,
 						year: showedYear
@@ -114,13 +137,13 @@ BigCalendar = React.createClass({
 		return (
 				<div className="bBigCalendar">
 					<div className="eBigCalendar_head">
-						<span className="bButton mGoLeft">←</span>
+						<span className="bButton mGoLeft" onClick={self.setPrevMonth}>←</span>
 						<span className="eBigCalendar_currentSelect">
 							<span className="eBigCalendar_currentMonth">{monthData.monthName}</span>
 							<span className="eBigCalendar_currentYear">{monthData.yearName}</span>
 						</span>
 
-						<span className="bButton mGoRight">→</span>
+						<span className="bButton mGoRight" onClick={self.setNextMonth}>→</span>
 					</div>
 
 					<div className="eBigCalendar_oneWeek mDayNames">

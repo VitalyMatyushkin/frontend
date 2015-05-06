@@ -49,7 +49,7 @@ CalendarPage = React.createClass({
 			<div>
 				<SubMenu binding={binding.sub('calendarRouting')} items={self.menuItems} />
 
-				<Calendar />
+				<Calendar binding={binding} />
 			</div>
 		)
 	}
