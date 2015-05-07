@@ -7,39 +7,35 @@ BigCalendar = React.createClass({
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			metaBinding = binding.meta(),
-			currentDate = metaBinding.get('currentDate');
+			currentDate = binding.get('currentDate');
 
 		if (!currentDate) {
-			metaBinding.set('currentDate', (new Date()).toISOString());
+			binding.set('currentDate', (new Date()).toISOString());
 		}
 
 	},
 	setPrevMonth: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			metaBinding = binding.meta(),
-			currentDate = metaBinding.get('currentDate'),
+			currentDate = binding.get('currentDate'),
 			date = new Date(currentDate);
 
-		metaBinding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() - 1, 1)).toISOString());
+		binding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() - 1, 1)).toISOString());
 	},
 	setNextMonth: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			metaBinding = binding.meta(),
-			currentDate = metaBinding.get('currentDate'),
+			currentDate = binding.get('currentDate'),
 			date = new Date(currentDate);
 
-		metaBinding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() + 1, 1)).toISOString());
+		binding.set('currentDate', (new Date(date.getFullYear(), date.getMonth() + 1, 1)).toISOString());
 	},
 	getWeeks: function() {
 		var self = this,
 			data = {},
 			currentDay = 1,
 			binding = self.getDefaultBinding(),
-			metaBinding = binding.meta(),
-			date = new Date(metaBinding.get('currentDate')),
+			date = new Date(binding.get('currentDate')),
 			todayDate = new Date(),
 			showedMonth = date.getMonth(),
 			showedYear = date.getFullYear(),
@@ -87,27 +83,57 @@ BigCalendar = React.createClass({
 
 		return data;
 	},
+	_getPlayerName: function(participan) {
+		var self = this,
+			name;
+
+		if (!participan) return '?';
+
+		name = participan.house && participan.house.name || participan.school && participan.school.name;
+
+		// Внутреннее событие
+		if (participan.name) {
+			name = participan.name;
+		}
+
+		return name;
+	},
+	_getFixturesNode: function(fixturesArray) {
+		var self = this;
+
+		return fixturesArray.map(function(fixture) {
+			var startTime = self.getTimeFromIso(fixture.startTime);
+
+			return (<div className="eBigCalendar_oneEvent">
+						<div className="eBigCalendar_eventTime">{startTime} {fixture.sport.name}</div>
+						{self._getPlayerName(fixture.participants[0])} vs {self._getPlayerName(fixture.participants[1])}
+					</div>);
+		});
+	},
 	getCalendarNode: function(weeksData) {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+			date = new Date(binding.get('currentDate')),
+			month = date.getMonth(),
+			year = date.getFullYear(),
+			monthFixtures = binding.toJS('fixtures.' + year + '.' + month);
 
 		return  weeksData.map(function(oneWeek) {
 			var weekDays = oneWeek.map(function(oneDay) {
+				var dayFixtures,
+					dayFixturesNodes;
+
+				if (monthFixtures && oneDay.date && (dayFixtures = monthFixtures[oneDay.date])){
+					dayFixturesNodes = self._getFixturesNode(dayFixtures);
+				}
+
 				return (
 					<div className={'eBigCalendar_oneDay' + (oneDay.isToday ? ' mToday' : '')}>
 						<div className="eBigCalendar_oneDayDate">{oneDay.date}</div>
 
 						<If condition={oneDay.date !== undefined}>
 							<div className="eBigCalendar_oneDayEvents">
-								<div className="eBigCalendar_oneEvent">
-									<div className="eBigCalendar_eventTime">13:00 Football</div>
-									Great Walstead School vs Shoreham College
-								</div>
-
-								<div className="eBigCalendar_oneEvent">
-									<div className="eBigCalendar_eventTime">17:00 Football</div>
-									BOYS B17C vs BOYS B15C
-								</div>
+								{dayFixturesNodes}
 							</div>
 						</If>
 

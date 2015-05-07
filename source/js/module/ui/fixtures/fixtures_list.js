@@ -6,12 +6,15 @@ FixturesList = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	_getScore: function(fixture) {
 		var self = this,
-			firstId = fixture.participants[0].id,
-			secondId = fixture.participants[1].id,
+			firstId,
+			secondId,
 			firstScore,
 			secondScore;
 
-		if (!fixture.result) return null;
+		if (!fixture || !fixture.result) return null;
+
+		firstId = fixture.participants[0].id;
+		secondId = fixture.participants[1].id;
 
 		firstScore = fixture.result.summary.byTeams[firstId];
 		secondScore = fixture.result.summary.byTeams[secondId];
@@ -20,8 +23,14 @@ FixturesList = React.createClass({
 	},
 	_getRivelNode: function(participan) {
 		var self = this,
-			pictures = participan.house && participan.house.pic || participan.school && participan.school.pic,
-			name = participan.house && participan.house.name || participan.school && participan.school.name;
+			pictures,
+			name;
+
+		if (!participan) return '?';
+
+		pictures = participan.house && participan.house.pic || participan.school && participan.school.pic;
+		name = participan.house && participan.house.name || participan.school && participan.school.name;
+
 
 		// Внутреннее событие
 		if (participan.name) {
