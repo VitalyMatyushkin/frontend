@@ -11,7 +11,7 @@ var If = React.createClass({
            return this.props.children;
         }
         else {
-            return false;
+            return null;
         }
     }
 });

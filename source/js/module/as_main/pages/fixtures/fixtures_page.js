@@ -1,8 +1,29 @@
 var FixturesPage,
-	SubMenu = require('module/ui/menu/sub_menu');
+	SubMenu = require('module/ui/menu/sub_menu'),
+	If = require('module/ui/if/if'),
+	RadioGroup = require('module/ui/radiogroup/radiogroup'),
+	FixturesList = require('module/ui/fixtures/fixtures_list'),
+	FixturesStatistics = require('module/ui/fixtures/fixture_statics');
 
 FixturesPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	getDefaultState: function () {
+		var self = this;
+
+		return Immutable.fromJS({
+			sports: [],
+			gameType: {
+				defaultId: 'all',
+				selectedId: undefined
+			},
+			gameSports: {
+				list: [],
+				selectedId: undefined
+			},
+			menuItems: [],
+			fixtures: []
+		});
+	},
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -13,156 +34,125 @@ FixturesPage = React.createClass({
 			document.location.hash = 'schools';
 		}
 
-		window.Server.school.get(activeSchoolId).then(function (data) {
-			binding.set('schoolInfo', Immutable.fromJS(data));
+
+		window.Server.sports.get().then(function(data) {
+			var menuItems = data.map(function(sport) {
+				return {
+					href: '/#fixtures?sport=' + sport.name,
+					name: sport.name,
+					key: sport.name
+				}
+			});
+
+			binding.set('menuItems', menuItems);
+			binding.set('gameSports.list', data);
+			self._locateToFirstSport();
 		});
 
-		// Пункты подменю
-		self.menuItems = [{
-			href: '/#fixtures?sport=netball',
-			name: 'Netball',
-			key: 'Netball'
-		},{
-			href: '/#fixtures?sport=hockey',
-			name: 'Hockey',
-			key: 'hockey'
-		},{
-			href: '/#fixtures?sport=rugby',
-			name: 'Rugby',
-			key: 'rugby'
-		},{
-			href: '/#fixtures?sport=rounders',
-			name: 'Rounders',
-			key: 'rounders'
-		},{
-			href: '/#fixtures?sport=football',
-			name: 'Football',
-			key: 'football'
-		},{
-			href: '/#fixtures?sport=cricket',
-			name: 'Cricket',
-			key: 'cricket'
+		globalBinding.addListener('routing.parameters', self._setCurrentSportId.bind(self));
+		binding.addListener('gameSports.selectedId', self._getDateFromServer.bind(self));
+		binding.addListener('gameType.selectedId', self._getDateFromServer.bind(self));
+
+		self._locateToFirstSport();
+
+		self.gameTypes = [{
+			id: 'all',
+			value: 'All types'
+		}, {
+			id: 'internal',
+			value: 'Internal'
+		}, {
+			id: 'houses',
+			value: 'Houses'
+		}, {
+			id: 'inter-schools',
+			value: 'Inter-schools'
 		}];
 	},
-	getDefaultState: function () {
-		return Immutable.fromJS({
+	_getDateFromServer: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = globalBinding.get('activeSchoolId'),
+			currentSportId = binding.get('gameSports.selectedId'),
+			currentGameType = binding.get('gameType.selectedId'),
+			whereFilter = {};
 
-		});
+		if (currentSportId) {
+			whereFilter = {
+				sportId: currentSportId
+			};
+
+			if (currentGameType && currentGameType !== 'all') {
+				whereFilter.type = currentGameType;
+			}
+
+			window.Server.fixturesBySchoolId.get(activeSchoolId, {
+				filter: {
+					include: 'sport',
+					limit: 30,
+					order: 'startTime asc',
+					where: whereFilter
+				}
+			}).then(function(data) {
+				binding.set('fixtures', Immutable.fromJS(data));
+			});
+		}
+	},
+	_setCurrentSportId: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding(),
+			sports = binding.toJS('gameSports.list'),
+			currentSportName = globalBinding.sub('routing.parameters').toJS().sport,
+			currentSportId;
+
+		if (sports) {
+			for (var i = 0; i < sports.length; i++) {
+				if (sports[i].name == currentSportName) {
+					currentSportId = sports[i].id;
+				}
+			}
+
+			binding.set('gameSports.selectedId', currentSportId);
+		}
+	},
+	_locateToFirstSport: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding(),
+			sports = binding.toJS('gameSports.list'),
+			currentSportName = globalBinding.sub('routing.parameters').toJS().sport;
+
+		// Если в текущем адресе отсутствует id вида спорта, переходим на первый попавшийся
+		if (!currentSportName && sports && sports[0]) {
+			currentSportName = sports[0].name;
+			document.location.hash = 'fixtures?sport=' + currentSportName;
+		}
+
+		self._setCurrentSportId();
 	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
-
-		// Temporary fun :D
-		document.location.hash = 'fixtures?sport=netball';
+			globalBinding = self.getMoreartyContext().getBinding(),
+			currentSportId = binding.get('gameSports.selectedId');
 
 		return (
 			<div>
-				<SubMenu binding={binding.sub('fixturesRouting')} items={self.menuItems} />
+				<SubMenu binding={{ default: globalBinding.sub('routing'), itemsBinding: binding.sub('menuItems') }} />
 
-				<div className="bSchoolMaster">
+				<If condition={currentSportId}>
+					<div className="bSchoolMaster">
 
+						<RadioGroup name="Game types to show:" sourceArray={self.gameTypes} binding={binding.sub('gameType')} />
 
-					<div className="bRadioGroupMy">
-						<label className="eRadioGroupMy_label">Game types to show:</label>
-						<label className="eRadioGroupMy_label"><input checked type="radio" />All types</label>
-						<label className="eRadioGroupMy_label"><input type="radio" />Internal</label>
-						<label className="eRadioGroupMy_label"><input type="radio" />Houses</label>
-						<label className="eRadioGroupMy_label"><input type="radio" />Inter-schools</label>
-					</div>
+						<FixturesStatistics binding={binding.sub('fixtures')} />
 
-
-					<div className="bFixturesStatics">
-						<div className="eFixturesStatics_number">
-							<div className="eFixturesStatics_value">71</div>
-							<div className="eFixturesStatics_name">played</div>
-						</div>
-
-						<div className="eFixturesStatics_number">
-							<div className="eFixturesStatics_value">22</div>
-							<div className="eFixturesStatics_name">won</div>
-						</div>
-
-						<div className="eFixturesStatics_number">
-							<div className="eFixturesStatics_value">3</div>
-							<div className="eFixturesStatics_name mTwoLines">average<br/>points</div>
-						</div>
-					</div>
-
-
-
-					<div className="bFixturesList">
-
-						<div className="bChallengeDate">
-							<div className="eChallengeDate_date">Fri 16 Apr 2015</div>
-							<div className="eChallengeDate_list">
-
-								<div className="bChallenge">
-									<div className="eChallenge_in">
-										<div className="eChallenge_rivalName">
-											<span>GIRLS U11AC</span></div>
-
-										<div className="eChallenge_rivalInfo">
-											<div className="eChallenge_hours">23:00</div>
-											<div className="eChallenge_results mDone">5 : 5</div>
-											<div className="eChallenge_info">internal</div>
-										</div>
-										<div className="eChallenge_rivalName">
-											<span>GIRLS U14A</span></div>
-									</div>
-								</div>
-
-
-							</div>
-						</div>
-
-
-
-						<div className="bChallengeDate">
-							<div className="eChallengeDate_date">Sa 22 May 2015</div>
-							<div className="eChallengeDate_list">
-
-								<div className="bChallenge">
-									<div className="eChallenge_in">
-										<div className="eChallenge_rivalName">
-											<span>BOYS U14C</span></div>
-
-										<div className="eChallenge_rivalInfo">
-											<div className="eChallenge_hours">7:00</div>
-											<div className="eChallenge_results">? : ?</div>
-											<div className="eChallenge_info">inter-schools</div>
-										</div>
-										<div className="eChallenge_rivalName">
-											<span>BOYS U14B</span></div>
-									</div>
-								</div>
-
-								<div className="bChallenge">
-									<div className="eChallenge_in">
-										<div className="eChallenge_rivalName">
-											<span>BOYS U2A</span></div>
-
-										<div className="eChallenge_rivalInfo">
-											<div className="eChallenge_hours">15:00</div>
-											<div className="eChallenge_results">? : ?</div>
-											<div className="eChallenge_info">inter-schools</div>
-										</div>
-										<div className="eChallenge_rivalName">
-											<span>BOYS U4A</span></div>
-									</div>
-								</div>
-
-							</div>
-						</div>
-
+						<FixturesList binding={binding.sub('fixtures')} />
 
 					</div>
-
-
-
-
-				</div>
+				</If>
 
 			</div>
 		)

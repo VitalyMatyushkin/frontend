@@ -7,6 +7,18 @@ var OneSchoolPage,
 
 OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	getDefaultState: function () {
+		return Immutable.fromJS({
+			news: [],
+			fixturesPage: {
+				fixtures: []
+			},
+			results: {},
+			coaches: [],
+			schoolInfo: '',
+			schoolRouting: {}
+		});
+	},
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -41,17 +53,6 @@ OneSchoolPage = React.createClass({
 			key: 'Contacts'
 		}];
 	},
-
-	getDefaultState: function () {
-		return Immutable.fromJS({
-			news: [],
-			fixtures: {},
-			results: {},
-			coaches: [],
-			schoolInfo: '',
-			schoolRouting: {}
-		});
-	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -76,7 +77,7 @@ OneSchoolPage = React.createClass({
 					<div className="eUserDataColumn_wrap" id="jsSubPage">
 
 						<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
-							<Route path="/ /school /school/fixtures" binding={binding.sub('fixtures')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
+							<Route path="/ /school /school/fixtures" binding={binding.sub('fixturesPage')} component="module/as_main/pages/school/fixtures/fixtures_page"  />
 							<Route path="/school/results" binding={binding.sub('results')} component="module/as_main/pages/school/results/results_page"  />
 							<Route path="/school/news" binding={binding.sub('news')} component="module/as_main/pages/school/news/news_page"  />
 							<Route path="/school/contacts" binding={binding} component="module/as_main/pages/school/contacts/contacts_page"  />

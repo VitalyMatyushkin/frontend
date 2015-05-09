@@ -14,10 +14,6 @@ function runMainMode() {
 				currentPathParts: [],	// части текущего путии
 				pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
 				parameters: {}			// GET-параметры текущего пути
-			},
-			schoolProfile: {
-				schoolProfileRouting: {},
-				news: []
 			}
 		},
 		options: {
