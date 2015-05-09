@@ -13,9 +13,9 @@ TeamStats = React.createClass({
             schoolResultsData;
         //console.log(globalBinding);
         Server.eventsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function (eventData) {
-            schoolEventsData = eventData;
+            schoolEventsData = eventData;console.log(eventData);
             Server.results.get().then(function(resultsData){
-                schoolResultsData = resultsData;
+                schoolResultsData = resultsData; console.log(resultsData);
                 comparedData = self.compareData(schoolEventsData,schoolResultsData);
                 comparedData = self.checkForWinner(comparedData,schoolResultsData);
             });

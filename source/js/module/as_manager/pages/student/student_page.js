@@ -68,7 +68,7 @@ LeanerView = React.createClass({
                         <UserAchievements binding={binding} />
 						<div className="bUserFullInfo mDates">
 							<div className="eUserFullInfo_block">
-								<div className="eUserFullInfo_name bLinkLike">Team Statistics(Wins):</div>
+								<div className="eUserFullInfo_name bLinkLike">Team Statistics:</div>
 								<TeamStats binding={binding} />
 							</div>
 						</div>
