@@ -27,6 +27,9 @@ serviceList = {
 		// students
         serviceList.students = new Service('/schools/{schoolId}/students', binding);
 		serviceList.student = new Service('/students/{studentId}', binding);
+		serviceList.studentGamesWon = new Service('/students/{id}/events/won',binding);
+		serviceList.studentGamesScored = new Service('/students/{id}/events/scored',binding);
+		serviceList.studentEvents = new Service('/students/{id}/events',binding);
 
 		// houses
         serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
@@ -64,6 +67,7 @@ serviceList = {
         // result
         serviceList.results = new Service('/results', binding);
 		serviceList.result = new Service('/results/{id}', binding);
+		serviceList.resultByEvent = new Service('/results/{id}/event',binding);
 
         // points
         serviceList.pointsInResult = new Service('/results/{resultId}/points', binding);
