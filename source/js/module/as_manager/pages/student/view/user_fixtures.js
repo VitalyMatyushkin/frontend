@@ -15,10 +15,6 @@ UserFixtures = React.createClass({
             binding = self.getDefaultBinding();
             fixtureBinding = self.getMoreartyContext().getBinding(),
             studentId = fixtureBinding.get('routing.parameters.id');
-        //console.log(fixtureBinding.get('userRules.activeSchoolId'));
-        Server.eventsBySchoolId.get({schoolId:fixtureBinding.get('userRules.activeSchoolId')}).then(function(schoolEvent){
-            //console.log(schoolEvent); fixData = schoolEvent;
-        });
     },
     _getFixtureData:function(fixtureData){
         var tempAr = [];

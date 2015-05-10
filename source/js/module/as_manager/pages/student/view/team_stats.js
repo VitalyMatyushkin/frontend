@@ -2,28 +2,25 @@
  * Created by bridark on 03/05/15.
  */
 var TeamStats,
-    comparedData;
+    schoolGamesData,
+    numOfGamesWon;
 TeamStats = React.createClass({
     mixins: [Morearty.Mixin],
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            schoolEventsData,
-            schoolResultsData;
-        //console.log(globalBinding);
-        Server.eventsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function (eventData) {
-            schoolEventsData = eventData;
-            Server.results.get().then(function(resultsData){
-                schoolResultsData = resultsData;
-                comparedData = self.compareData(schoolEventsData,schoolResultsData);
-                comparedData = self.checkForWinner(comparedData,schoolResultsData);
-            });
+            globalBinding = self.getMoreartyContext().getBinding();
+        Server.studentGamesWon.get({id:globalBinding.get('routing.parameters.id')}).then(function (eventData) {
+            schoolGamesData = eventData;
+            numOfGamesWon = eventData.length;
         });
 
     },
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
+    },
+    onClickChallenge: function (eventId) {
+        document.location.hash = 'event/' + eventId;
     },
     sameDay: function (d1, d2) {
         d1 = d1 instanceof Date ? d1 : new Date(d1);
@@ -37,6 +34,7 @@ TeamStats = React.createClass({
         var tempAr = [];
         for(var i=0; i<data1.length;i++){
             for(var x= 0; x < data2.length; x++){
+                console.log(data1[i]);
                 if(data1[i].resultId){
                     if(data1[i].resultId === data2[x].id){
                         tempAr.push(data1[i]);
@@ -50,63 +48,36 @@ TeamStats = React.createClass({
     getEvents: function (date,theData) {
         var self = this,
             binding = this.getDefaultBinding(),
-        // tempAr = [],
             eventsByDate = theData.filter(function (event) {
-                // tempAr.push(event);
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
             });
-        //console.log(tempAr);
         return eventsByDate.map(function(event,index){
             var eventDateTime = new Date(event.startTime),
                 hours = self.addZeroToFirst(eventDateTime.getHours()),
                 minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.type,
-                firstName,
-                secondName,
-                firstPic,
-                secondPic,
-                firstPoint,
-                secondPoint;
-            //console.log(tmp.name);
-            //console.log(type);
-            if(type === 'inter-schools'){
-                firstName = event.participants[0].school.name; //console.log(firstName);
-                secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name; //console.log(secondName);
-                firstPic = event.participants[0].school.pic;
-                secondPic = event.participants[1].school.pic || event.invites[0].guest.pic ;
-            }else if (type === 'houses'){
-                firstName = event.participants[0].house.name; //console.log(firstName);
-                secondName = event.participants[1].house.name;// console.log(secondName);
-                firstPic = event.participants[0].school.pic;
-                secondPic = event.participants[1].school.pic;
-            }else if(type === 'internal'){
-                firstName = event.participants[0].name;// console.log(firstName);
-                secondName = event.participants[1].name;// console.log(secondName);
-            }
-            if(event.resultId){
-                firstPoint = event.result.summary.byTeams[event.participants[0].id]|| 0;
-                secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
-            }
-            return <div className="bChallenge">
+                gameType = event.gameType,
+                gameName = event.name,
+                gameDescription = event.description;
+
+            return(<div className = "bChallenge"  onClick={self.onClickChallenge.bind(null, event.id)}
+                        id={'challenge-' + event.id}>
                 <div className="eChallenge_in">
                     <div className="eChallenge_rivalName">
-                        {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : ''}
-                        {firstName}
+                       Fixture Name:<br/> {gameName}
                     </div>
                     <div className="eChallenge_rivalInfo">
-                        <div className="eChallenge_hours">{hours + ':' + minutes}</div>
-                        <div className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
-                        <div className="eChallenge_info">{event.type}</div>
+                        <div className="eChallenge_hours">{gameType}</div>
+                            <div className="eChallenge_results">{}</div>
+                            <div className="eChallenge_info">{type}</div>
                     </div>
                     <div className="eChallenge_rivalName">
-                        {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
-                        {secondName}
+                       Fixture Description:<br/> {gameDescription}
                     </div>
                 </div>
-            </div>;
-
+            </div>);
         });
     },
     getDates: function (dataFrom) {
@@ -140,7 +111,7 @@ TeamStats = React.createClass({
                     </div>
                     <div className="eChallengeDate_list">{self.getEvents(datetime,dataFrom)}</div>
                 </div>;
-            }).toArray() : null;
+            }).toArray() : (<div>Looks like the team is having a bad run</div>);
         }
     },
     checkForWinner:function(data1,data2){
@@ -158,7 +129,7 @@ TeamStats = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            teamStats = self.getDates(comparedData);
+            teamStats = self.getDates(schoolGamesData);
         return (<div>{teamStats}</div>)
     }
 });

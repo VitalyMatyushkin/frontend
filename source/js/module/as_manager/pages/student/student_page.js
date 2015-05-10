@@ -32,12 +32,18 @@ LeanerView = React.createClass({
                             leanerData.pointsData = pointsData;
 							Server.results.get({id:studentId}).then(function(resultsData){
 								leanerData.resultsData = resultsData;
-                                Server.eventsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function(schoolEvent){
+                                Server.studentEvents.get({id:studentId}).then(function(schoolEvent){
                                     leanerData.schoolEvent = schoolEvent;
-                                    //console.log(globalBinding.get('userRules.activeSchoolId'));
-                                    binding.set(Immutable.fromJS(leanerData));
-                                    Server.teamsBySchoolId.get({schoolId:globalBinding.get('userRules.activeSchoolId')}).then(function(teamsData){
-                                        //console.log(teamsData);
+                                    Server.studentGamesWon.get({id:studentId}).then(function(gamesWonData){
+                                        leanerData.gamesWon = gamesWonData.length;
+										Server.studentGamesScored.get({id:studentId}).then(function(gamesScoredIn){
+											leanerData.gamesScoredIn = gamesScoredIn;
+											leanerData.numOfGamesScoredIn = gamesScoredIn.length;
+											Server.studentEvents.get({id:studentId}).then(function(gamesPlayed){
+												leanerData.gamesPlayed = gamesPlayed.length;
+												binding.set(Immutable.fromJS(leanerData));
+											});
+										});
                                     })
                                 });
 							});
@@ -65,14 +71,19 @@ LeanerView = React.createClass({
 				<div className="bUserDataColumn">
 					<div className="eUserDataColumn_wrap" id="jsSubPage">
 						<UserButtons />
-                        <UserAchievements binding={binding} />
 						<div className="bUserFullInfo mDates">
 							<div className="eUserFullInfo_block">
-								<div className="eUserFullInfo_name bLinkLike">Team Statistics(Wins):</div>
+								<h1>Personal Achievements:</h1>
+								<UserAchievements binding={binding} />
+							</div>
+						</div>
+						<div className="bUserFullInfo mDates">
+							<div className="eUserFullInfo_block">
+								<h1>Team Statistics(Games Won):</h1>
 								<TeamStats binding={binding} />
 							</div>
 						</div>
-                        <div className="eUserFullInfo_name bLinkLike">Fixtures:</div>
+                        <h1>All Fixtures:</h1>
                         <UserFixtures  binding={binding} />
 					</div>
 				</div>
