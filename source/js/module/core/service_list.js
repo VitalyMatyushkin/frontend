@@ -1,48 +1,51 @@
 var Service = require('module/core/service'),
-	serviceList,
-	binding;
+    serviceList,
+    binding;
 
 
 serviceList = {
-	initialize: function(binding) {
+    initialize: function (binding) {
         serviceList.me = new Service('/users/{ownerId}', binding);
-		serviceList.logout = new Service('/users/logout', binding);
+        serviceList.logout = new Service('/users/logout', binding);
 
-		// users
-		serviceList.users = new Service('/users', binding);
-		serviceList.user = new Service('/users/{id}', binding);
+        // users
+        serviceList.users = new Service('/users', binding);
+        serviceList.user = new Service('/users/{id}', binding);
+        serviceList.userChildren = new Service('/users/{id}/children', binding);
 
-		// schools
-		serviceList.schools = new Service('/schools', binding);
+        // schools
+        serviceList.schools = new Service('/schools', binding);
         serviceList.schoolsFindOne = new Service('/schools/findOne', binding);
-		serviceList.school = new Service('/schools/{id}', binding);
-		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=zipCode', binding);
+        serviceList.school = new Service('/schools/{id}', binding);
+        serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=zipCode', binding);
 
-		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
+        serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
         serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
         serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
-		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
+        serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
 
-
-		// students
+        // students
         serviceList.students = new Service('/schools/{schoolId}/students', binding);
-		serviceList.student = new Service('/students/{studentId}', binding);
+        serviceList.student = new Service('/students/{studentId}', binding);
+        serviceList.eventsByStudentId = new Service('/students/{studentId}/events', binding);
+        serviceList.eventsScoredByStudentId = new Service('/students/{studentId}/events/scored?filter[include]=result', binding);
+        serviceList.eventsWonByStudentId = new Service('/students/{studentId}/events/won?filter[include]=result', binding);
 
-		// houses
+        // houses
         serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
-		serviceList.house = new Service('/houses/{houseId}', binding);
+        serviceList.house = new Service('/houses/{houseId}', binding);
 
-		// forms
-		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
-		serviceList.form = new Service('/forms/{formId}', binding);
+        // forms
+        serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
+        serviceList.form = new Service('/forms/{formId}', binding);
 
-		// news
-		serviceList.news = new Service('/schools/{schoolId}/news', binding);
-		serviceList.oneNews = new Service('/news/{formId}', binding);
+        // news
+        serviceList.news = new Service('/schools/{schoolId}/news', binding);
+        serviceList.oneNews = new Service('/news/{formId}', binding);
 
-		//events
-		serviceList.events = new Service('/events', binding);
-		serviceList.eventFindOne = new Service('/events/findOne', binding);
+        //events
+        serviceList.events = new Service('/events', binding);
+        serviceList.eventFindOne = new Service('/events/findOne', binding);
         serviceList.event = new Service('/events/{eventId}', binding);
         serviceList.participants = new Service('/events/{eventId}/participants', binding);
 
@@ -52,7 +55,7 @@ serviceList = {
         // invites
         serviceList.invites = new Service('/invites', binding);
         serviceList.invitesFindOne = new Service('/invites/findOne', binding);
-		serviceList.invite = new Service('/invites/{inviteId}', binding);
+        serviceList.invite = new Service('/invites/{inviteId}', binding);
         serviceList.invitesByEvent = new Service('/events/{eventId}/invites', binding);
         serviceList.inviteRepay = new Service('/invites/{inviteId}/repay', binding);
 
@@ -63,21 +66,19 @@ serviceList = {
 
         // result
         serviceList.results = new Service('/results', binding);
-		serviceList.result = new Service('/results/{id}', binding);
+        serviceList.result = new Service('/results/{id}', binding);
 
         // points
         serviceList.pointsInResult = new Service('/results/{resultId}/points', binding);
-		serviceList.studentPoints = new Service('/points?filter[where][studentId]={studentId}', binding);
-		serviceList.points = new Service('/points', binding);
+        serviceList.studentPoints = new Service('/points?filter[where][studentId]={studentId}', binding);
+        serviceList.points = new Service('/points', binding);
 
-		// postcode
-		serviceList.postCode = new Service('/zipcodes', binding);
-		serviceList.findPostCode = new Service('/zipcodes/findOne?filter[where][zipCode]={postCode}', binding);
-		serviceList.findPostCodeById = new Service('/zipcodes/findOne?filter[where][id]={postCode}', binding);
+        // postcode
+        serviceList.postCode = new Service('/zipcodes', binding);
+        serviceList.findPostCode = new Service('/zipcodes/findOne?filter[where][zipCode]={postCode}', binding);
+        serviceList.findPostCodeById = new Service('/zipcodes/findOne?filter[where][id]={postCode}', binding);
     }
 };
-
-
 
 
 module.exports = serviceList;

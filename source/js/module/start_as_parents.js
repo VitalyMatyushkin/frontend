@@ -1,45 +1,58 @@
 var ApplicationView = require('module/as_parents/application'),
-	userDataInstance = require('module/data/user_data'),
-	userRulesInstance = require('module/data/user_rules'),
-	authController = require('module/core/auth_controller'),
-	serviceList = require('module/core/service_list'),
-	MoreartyContext,
-	binding;
+    userDataInstance = require('module/data/user_data'),
+    userRulesInstance = require('module/data/user_rules'),
+    authController = require('module/core/auth_controller'),
+    serviceList = require('module/core/service_list'),
+    MoreartyContext,
+    binding;
 
-function runMainMode() {
-// Создание контекста Morearty
-	MoreartyContext = Morearty.createContext({
-		initialState: {
-			userData: userDataInstance.getDefaultState(),
-			userRules: userRulesInstance.getDefaultState(),
-			routing: {
-				currentPath: '',		// текущий путь
-				currentPageName: '',	// имя текущей страницы, если есть
-				currentPathParts: [],	// части текущего путии
-				pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
-				parameters: {}			// GET-параметры текущего пути
-			},
-			schoolProfile: {
-				schoolProfileRouting: {}
-			}
-		},
-		options: {
-			requestAnimationFrameEnabled: true
-		}
-	});
+function runParentMode() {
+    MoreartyContext = Morearty.createContext({
+        initialState: {
+            userData: userDataInstance.getDefaultState(),
+            userRules: userRulesInstance.getDefaultState(),
+            routing: {
+                currentPath: '',
+                currentPageName: '',
+                currentPathParts: [],
+                pathParameters: [],
+                parameters: {}
+            },
+            schoolProfile: {
+                schoolProfileRouting: {}
+            },
+            events: {
+                sync: false,
+                models: [],
+                calendar: {
+                    currentDate: new Date(),
+                    mode: 'month'
+                }
+            },
+            event: {
+                eventRouting: {}
+            }
+        },
+        options: {
+            requestAnimationFrameEnabled: true
+        }
+    });
 
-	binding = MoreartyContext.getBinding();
+    binding = MoreartyContext.getBinding();
 
-	window.Server = serviceList;
+    window.Server = serviceList;
 
-	// Включение авторизации сервисов
-	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+    userDataInstance.setBinding(binding.sub('userData'));
+    userRulesInstance.setBinding(binding.sub('userRules'));
 
-	// Инициализация приложения
-	React.render(
-		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
-		document.getElementById('jsMain')
-	);
+    serviceList.initialize(binding.sub('userData.authorizationInfo'));
+
+    authController.initialize(binding);
+
+    React.render(
+        React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
+        document.getElementById('jsMain')
+    );
 }
 
-module.exports = runMainMode;
+module.exports = runParentMode;
