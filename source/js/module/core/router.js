@@ -110,7 +110,7 @@ RouterView = React.createClass({
 			urlHash.split('&').forEach(function(oneParameter) {
 				var parametrSplit = oneParameter.split('=');
 
-				parametersResult[parametrSplit[0]] = parametrSplit[1];
+				parametersResult[parametrSplit[0]] = decodeURIComponent(parametrSplit[1]);
 			});
 		}
 
