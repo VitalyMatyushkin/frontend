@@ -34,7 +34,7 @@ CalendarPage = React.createClass({
 		window.Server.sports.get().then(function(data) {
 			var menuItems = data.map(function(sport) {
 				return {
-					href: '/#calendar?sport=' + sport.name,
+					href: '/#calendar?sport=' + encodeURIComponent(sport.name),
 					name: sport.name,
 					key: sport.name
 				}

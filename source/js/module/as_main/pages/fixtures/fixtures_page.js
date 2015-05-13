@@ -38,7 +38,7 @@ FixturesPage = React.createClass({
 		window.Server.sports.get().then(function(data) {
 			var menuItems = data.map(function(sport) {
 				return {
-					href: '/#fixtures?sport=' + sport.name,
+					href: '/#fixtures?sport=' + encodeURIComponent(sport.name),
 					name: sport.name,
 					key: sport.name
 				}
@@ -127,7 +127,7 @@ FixturesPage = React.createClass({
 		// Если в текущем адресе отсутствует id вида спорта, переходим на первый попавшийся
 		if (!currentSportName && sports && sports[0]) {
 			currentSportName = sports[0].name;
-			document.location.hash = 'fixtures?sport=' + currentSportName;
+			document.location.hash = 'fixtures?sport=' + encodeURIComponent(currentSportName);
 		}
 
 		self._setCurrentSportId();
