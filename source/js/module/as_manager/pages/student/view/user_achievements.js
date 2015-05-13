@@ -50,22 +50,46 @@ UserAchievements = React.createClass({
                 gameName = event.name,
                 gameDescription = event.description;
 
-            return(<div className = "bChallenge"  onClick={self.onClickChallenge.bind(null, event.id)}
-                        id={'challenge-' + event.id}>
+            if(type === 'inter-schools'){
+                firstName = event.participants[0].school.name; //console.log(firstName);
+                secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name; //console.log(secondName);
+                firstPic = event.participants[0].school.pic;
+                secondPic = event.invites[0].guest.pic ;
+            }else if (type === 'houses'){
+                firstName = event.participants[0].house.name; //console.log(firstName);
+                secondName = event.participants[1].house.name;// console.log(secondName);
+                firstPic = theData.schoolEvent[index].participants[0].school.pic;
+                secondPic = theData.schoolEvent[index].participants[1].school.pic;
+            }else if(type === 'internal'){
+                firstName = event.participants[0].name;// console.log(firstName);
+                secondName = event.participants[1].name;// console.log(secondName);
+            }
+            if(event.resultId){
+                firstPoint = event.result.summary.byTeams[event.participants[0].id]|| 0;
+                secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
+            }
+            //console.log(index+"  index");
+            return <div className="bChallenge"
+                        onClick={self.onClickChallenge.bind(null, event.id)}
+                        id={'challenge-' + event.id}
+                >
                 <div className="eChallenge_in">
                     <div className="eChallenge_rivalName">
-                        {gameName}
+                        {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : ''}
+                        {firstName}
                     </div>
                     <div className="eChallenge_rivalInfo">
-                        <div className="eChallenge_hours">{gameType}</div>
-                        <div className="eChallenge_results">{}</div>
-                        <div className="eChallenge_info">{type}</div>
+                        <div className="eChallenge_hours">{hours + ':' + minutes}</div>
+                        <div className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
+                        <div className="eChallenge_info">{event.type}</div>
                     </div>
                     <div className="eChallenge_rivalName">
-                        {gameDescription}
+                        {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
+                        {secondName}
                     </div>
                 </div>
-            </div>);
+            </div>;
+
         });
     },
     getDates: function (dataFrom) {

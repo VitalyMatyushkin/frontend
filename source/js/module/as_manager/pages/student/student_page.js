@@ -34,9 +34,10 @@ LeanerView = React.createClass({
 								leanerData.resultsData = resultsData;
                                 Server.studentEvents.get({id:studentId}).then(function(schoolEvent){
                                     leanerData.schoolEvent = schoolEvent;
-                                    Server.studentGamesWon.get({id:studentId}).then(function(gamesWonData){
-                                        leanerData.gamesWon = gamesWonData.length;
-										Server.studentGamesScored.get({id:studentId}).then(function(gamesScoredIn){
+                                    Server.studentGamesWon.get({id:studentId, include: JSON.stringify([{"invites":["inviter","guest"]},{"participants":["players","house","school"]},{"result":"points"}])}).then(function(gamesWon){
+										leanerData.gamesWon = gamesWon;
+                                        leanerData.numOfGamesWon = gamesWon.length;
+										Server.studentGamesScored.get({id:studentId, include: JSON.stringify([{"invites":["inviter","guest"]},{"participants":["players","house","school"]},{"result":"points"}])}).then(function(gamesScoredIn){
 											leanerData.gamesScoredIn = gamesScoredIn;
 											leanerData.numOfGamesScoredIn = gamesScoredIn.length;
 											Server.studentEvents.get({id:studentId}).then(function(gamesPlayed){
