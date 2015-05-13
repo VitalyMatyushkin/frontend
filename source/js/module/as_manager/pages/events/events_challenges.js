@@ -56,9 +56,13 @@ ChallengesView = React.createClass({
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');
+                firstPic = eventBinding.get('participants.0.school.pic');
+                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'internal') {
                 firstName = eventBinding.get('participants.0.name');
                 secondName = eventBinding.get('participants.1.name');
+                firstPic = eventBinding.get('participants.0.school.pic');
+                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
             }
 
             if (event.get('resultId')) {
