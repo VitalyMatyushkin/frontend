@@ -69,8 +69,6 @@ LeanerView = React.createClass({
                 </div>
                 <div className="bUserDataColumn">
                     <div className="eUserDataColumn_wrap" id="jsSubPage">
-                        <UserButtons />
-
                         <div className="bUserFullInfo mDates">
                             <div className="eUserFullInfo_block">
                                 <h1>Personal Achievements: {self.numOfGamesScoredIn}</h1>
