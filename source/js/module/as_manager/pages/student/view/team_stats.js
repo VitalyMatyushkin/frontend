@@ -56,18 +56,20 @@ TeamStats = React.createClass({
                 gameDescription = event.description;
 
             if(type === 'inter-schools'){
-                firstName = event.participants[0].school.name; //console.log(firstName);
-                secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name; //console.log(secondName);
+                firstName = event.participants[0].school.name;
+                secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
                 firstPic = event.participants[0].school.pic;
-                secondPic = event.invites[0].guest.pic ;
+                secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
             }else if (type === 'houses'){
-                firstName = event.participants[0].house.name; //console.log(firstName);
-                secondName = event.participants[1].house.name;// console.log(secondName);
+                firstName = event.participants[0].house.name;
+                secondName = event.participants[1].house.name;
                 firstPic = theData.schoolEvent[index].participants[0].school.pic;
                 secondPic = theData.schoolEvent[index].participants[1].school.pic;
             }else if(type === 'internal'){
-                firstName = event.participants[0].name;// console.log(firstName);
-                secondName = event.participants[1].name;// console.log(secondName);
+                firstName = event.participants[0].name;
+                secondName = event.participants[1].name;
+                firstPic = event.participants[0].school.pic;
+                secondPic = event.participants[1].school.pic;
             }
             if(event.resultId){
                 firstPoint = event.result.summary.byTeams[event.participants[0].id]|| 0;
