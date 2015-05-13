@@ -63,8 +63,8 @@ TeamStats = React.createClass({
             }else if (type === 'houses'){
                 firstName = event.participants[0].house.name;
                 secondName = event.participants[1].house.name;
-                firstPic = theData.schoolEvent[index].participants[0].school.pic;
-                secondPic = theData.schoolEvent[index].participants[1].school.pic;
+                firstPic = event.participants[0].school.pic;
+                secondPic = event.participants[1].school.pic;
             }else if(type === 'internal'){
                 firstName = event.participants[0].name;
                 secondName = event.participants[1].name;
