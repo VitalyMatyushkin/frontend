@@ -51,9 +51,12 @@ TeamStats = React.createClass({
                 hours = self.addZeroToFirst(eventDateTime.getHours()),
                 minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.type,
-                gameType = event.gameType,
-                gameName = event.name,
-                gameDescription = event.description;
+                firstName,
+                secondName,
+                firstPic,
+                secondPic,
+                firstPoint,
+                secondPoint;
 
             if(type === 'inter-schools'){
                 firstName = event.participants[0].school.name;

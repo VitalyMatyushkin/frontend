@@ -69,8 +69,6 @@ UserFixtures = React.createClass({
                 secondName,
                 firstPic,
                 secondPic,
-                firstBackground,
-                secondBackground,
                 firstPoint,
                 secondPoint;
             //console.log(tmp.name);
