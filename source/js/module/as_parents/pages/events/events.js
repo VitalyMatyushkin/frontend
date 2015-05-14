@@ -42,29 +42,50 @@ EventView = React.createClass({
             id: userId
         }).then(function (userChildren) {
             console.log(userChildren);
-            var allChildrenReturn;
-            var allChildrenResults = function (userChildren, allChildrenReturn) {
+            var allChildrenReturn = [];
+            var allChildrenResults = function (userChildren, allChildrenEvents) {
                 console.log(userChildren);
-                console.log(allChildrenReturn);
-                if (data.length < 1) {
+                console.log(allChildrenEvents);
+                if (userChildren.length < 1) {
+                    var allChildrenEventsNoDuplicates = allChildrenEvents.map(function(events){
+                        var eventList = [];
+                        for(var i = 0; i < events.length; i++) eventList.push(events[i]);
+                        return eventList;
+                    });
+                    allChildrenEvents = arrayUnique(allChildrenEventsNoDuplicates)[0];
                     binding
                         .atomically()
-                        .set('models', Immutable.fromJS(allChildrenReturn))
+                        .set('models', Immutable.fromJS(allChildrenEvents))
                         .set('sync', true)
                         .commit();
-                    return allChildrenReturn;
+                    console.log(allChildrenEvents);
+                    return allChildrenEvents;
                 }
-                window.Server.eventsByStudentId.get({
-                    studentId: userChildren[0].id
+                window.Server.studentEvents.get({
+                    id: userChildren[0].id
                 }).then(function (childResults) {
-                    allChildrenReturn.push(childResults);
+                    allChildrenEvents.push(childResults);
                     userChildren.shift();
-                    return arguments.callee(userChildren, allChildrenReturn);
+                    console.log(userChildren);
+                    console.log(allChildrenEvents);
+                    return allChildrenResults(userChildren, allChildrenEvents);
                 })
             };
-
+            allChildrenResults(userChildren, allChildrenReturn);
 
         });
+
+        function arrayUnique(array) {
+            var a = array.concat();
+            for(var i=0; i<a.length; ++i) {
+                for(var j=i+1; j<a.length; ++j) {
+                    if(a[i].id === a[j].id)
+                        a.splice(j--, 1);
+                }
+            }
+
+            return a;
+        };
 
         self.menuItems = [{
             href: '/#events/calendar',

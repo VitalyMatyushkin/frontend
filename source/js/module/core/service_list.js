@@ -12,6 +12,7 @@ serviceList = {
 		serviceList.users = new Service('/users', binding);
 		serviceList.user = new Service('/users/{id}', binding);
 		serviceList.userChildren = new Service('/users/{id}/children', binding);
+		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 
 		// schools
 		serviceList.schools = new Service('/schools', binding);
