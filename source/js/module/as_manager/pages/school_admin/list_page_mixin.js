@@ -3,7 +3,8 @@ var ListPageMixin;
 ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired,
-		filters: React.PropTypes.object
+		filters: React.PropTypes.object,
+		addSchoolToFilter: React.PropTypes.bool
 	},
 	componentWillMount: function () {
 		var self = this,
@@ -16,18 +17,16 @@ ListPageMixin = {
 	},
 	updateData: function(newFilter) {
 		var self = this,
-			requestFilter,
+			requestFilter = { where: {} },
 			binding = self.getDefaultBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
 
 		self.request && self.request.abort();
 
 		// Фильтрация по школе
-		requestFilter = {
-			where: {
-				schoolId: self.activeSchoolId
-			}
-		};
+		if (self.props.addSchoolToFilter !== false) {
+			requestFilter.where.schoolId = self.activeSchoolId;
+		}
 
 		// add custom filter
 		if (typeof self.filters === 'object') {

@@ -23,7 +23,6 @@ serviceList = {
 		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
 		serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
-		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
 		serviceList.schoolOpponents = new Service('/schools/{id}/public/opponents', binding);
 
 
@@ -41,6 +40,10 @@ serviceList = {
 		// forms
 		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
 		serviceList.form = new Service('/forms/{formId}', binding);
+
+		// coaches
+		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
+		serviceList.oneSchoolCoache = new Service('/schools/{schoolId}/coaches/{id}', binding);
 
 		// news
 		serviceList.news = new Service('/schools/{schoolId}/news', binding);
