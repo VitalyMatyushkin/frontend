@@ -38,8 +38,8 @@ ContactsPage = React.createClass({
 		return (
 			<div>
 				<div className="bSchoolContacts">
-					<If condition={binding.get('schoolInfo.zipCode.geoPoint.lat')}>
-						<Map point={{lat: binding.get('schoolInfo.zipCode.geoPoint.lat'), lng: binding.get('schoolInfo.zipCode.geoPoint.lng')}} />
+					<If condition={binding.get('schoolInfo.postcode.point.lat')}>
+						<Map point={{lat: binding.get('schoolInfo.postcode.point.lat'), lng: binding.get('schoolInfo.postcode.point.lng')}} />
 					</If>
 
 					<div className="eSchoolContacts_title">Sport contacts</div>

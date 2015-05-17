@@ -13,9 +13,7 @@ TypeArea = React.createClass({
 
 			if (postCodeId) {
 				self.valueRequest && self.valueRequest.abort();
-				self.valueRequest = window.Server.findPostCodeById.get(postCodeId).then(function(result) {
-					binding.set('defaultLabel', result.zipCode);
-				});
+				binding.set('defaultLabel', postCodeId);
 			}
 		});
 	},
@@ -23,7 +21,7 @@ TypeArea = React.createClass({
 		var self = this,
 			postCodeFilter = {
                 where: {
-                    zipCode: {
+                    id: {
                         like: value,
                         options: 'i'
                     }
@@ -47,7 +45,7 @@ TypeArea = React.createClass({
 
 		AutocompleteProped = React.addons.cloneWithProps(AutocompleteElement, {
 			serviceFilter: self.serviceFilter,
-			serverField: 'zipCode'
+			serverField: 'id'
 		});
 
 		return (

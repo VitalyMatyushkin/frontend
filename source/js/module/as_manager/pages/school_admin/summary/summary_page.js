@@ -14,8 +14,7 @@ SchoolSummary = React.createClass({
             filter: {
                 where: {
                     id: activeSchoolId
-                },
-                include: ['zipCode']
+                }
             }
         }).then(function (data) {
 			binding.set(Immutable.fromJS(data));
@@ -44,8 +43,7 @@ SchoolSummary = React.createClass({
 						<a href="/#schools" className="bButton">Change active school...</a>
 					</div>
 				</h1>
-                <p>
-					PostCode: {binding.get('zipCode.zipCode')}</p>
+                <p>PostCode: {binding.get('postcodeId')}</p>
 				<p>Address: {binding.get('address')}</p>
 				<p>Description: {binding.get('description')}</p>
 			</div>

@@ -18,7 +18,7 @@ serviceList = {
 		serviceList.schools = new Service('/schools', binding);
 		serviceList.schoolsFindOne = new Service('/schools/findOne', binding);
 		serviceList.school = new Service('/schools/{id}', binding);
-		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=zipCode', binding);
+		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 
 		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
 		serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
@@ -78,9 +78,8 @@ serviceList = {
 		serviceList.points = new Service('/points', binding);
 
 		// postcode
-		serviceList.postCode = new Service('/zipcodes', binding);
-		serviceList.findPostCode = new Service('/zipcodes/findOne?filter[where][zipCode]={postCode}', binding);
-		serviceList.findPostCodeById = new Service('/zipcodes/findOne?filter[where][id]={postCode}', binding);
+		serviceList.postCode = new Service('/postcodes', binding);
+		serviceList.findPostCodeById = new Service('/postcodes/findOne?filter[where][id]={postCode}', binding);
 	}
 };
 

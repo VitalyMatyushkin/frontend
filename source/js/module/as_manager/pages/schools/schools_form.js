@@ -21,7 +21,7 @@ SchoolForm = React.createClass({
 				</FormColumn>
 
 				<FormColumn type="column">
-					<FormField type="area" field="zipCodeId" validation="required">Postcode</FormField>
+					<FormField type="area" field="postcodeId" validation="required">Postcode</FormField>
 					<FormField type="text" field="address" validation="required">Address</FormField>
 				</FormColumn>
 			</Form>
