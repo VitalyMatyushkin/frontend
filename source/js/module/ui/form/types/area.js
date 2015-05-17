@@ -15,7 +15,7 @@ TypeArea = React.createClass({
 				self.valueRequest && self.valueRequest.abort();
 				binding.set('defaultLabel', postCodeId);
 			}
-		});
+		}); 
 	},
 	serviceFilter: function(value) {
 		var self = this,
