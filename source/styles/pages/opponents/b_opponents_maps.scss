@@ -1,7 +1,9 @@
 .bOpponentsMap{
   width: 100%;
   min-height: 500px;
-  position: relative;
+  position: absolute;
+  top: 60px;
+  bottom: 0px;
 }
 
 .bOpponentsMap .bMapView{

@@ -50,7 +50,8 @@ MapView = React.createClass({
 
 				self.points[postcode.id] = new google.maps.Marker({
 					position: mapDot,
-					map: self.mapView
+					map: self.mapView,
+					icon: '/images/beachflag.png'
 				});
 
 			}
