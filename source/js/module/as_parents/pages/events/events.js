@@ -52,14 +52,14 @@ EventView = React.createClass({
                         for(var i = 0; i < events.length; i++) eventList.push(events[i]);
                         return eventList;
                     });
-                    allChildrenEvents = arrayUnique(allChildrenEventsNoDuplicates)[0];
+                    allChildrenEventsNoDuplicates = arrayUnique(allChildrenEventsNoDuplicates)[0];
                     binding
                         .atomically()
-                        .set('models', Immutable.fromJS(allChildrenEvents))
+                        .set('models', Immutable.fromJS(allChildrenEventsNoDuplicates))
                         .set('sync', true)
                         .commit();
-                    console.log(allChildrenEvents);
-                    return allChildrenEvents;
+                    console.log(allChildrenEventsNoDuplicates);
+                    return allChildrenEventsNoDuplicates;
                 }
                 window.Server.studentEvents.get({
                     id: userChildren[0].id
@@ -110,14 +110,9 @@ EventView = React.createClass({
                     <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
                         <Route path='/events/calendar' binding={binding}
                                component='module/as_parents/pages/events/events_calendar'/>
-                        <Route
-                            path='/events/manager'
-                            binding={{default: binding.sub('newEvent'), sports: binding.sub('sports'), calendar: binding.sub('calendar')}}
-                            component='module/as_parents/pages/events/event_manager'/>
                         <Route path='/events/challenges' binding={binding}
                                component='module/as_parents/pages/events/events_challenges'/>
-                        <Route path='/events/invites' binding={binding}
-                               component='module/as_parents/pages/events/events_invites'/>
+
                     </RouterView>
                 </div>
             </div>
