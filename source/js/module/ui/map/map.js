@@ -23,12 +23,13 @@ MapView = React.createClass({
 		};
 
 		self.mapView = new google.maps.Map(mapNode, mapOptions);
+		self.mapBounds = new google.maps.LatLngBounds();
+		self.mapBounds.extend(mapeCenter);
 
-		new google.maps.Marker({
+		self.points['school'] = new google.maps.Marker({
 			position: mapeCenter,
 			map: self.mapView
 		});
-
 
 		binding && binding.addListener('list', self.addPointsToMap.bind(self));
 		binding && self.addPointsToMap();
@@ -39,18 +40,24 @@ MapView = React.createClass({
 			pointsData = binding.toJS('list');
 
 		pointsData && pointsData.forEach(function(data) {
-			var postcode = data.postcode;
+			var postcode = data.postcode,
+				mapDot;
 
 			if (!self.points[postcode.id]) {
 
+				mapDot = new google.maps.LatLng(postcode.point.lat, postcode.point.lng);
+				self.mapBounds.extend(mapDot);
+
 				self.points[postcode.id] = new google.maps.Marker({
-					position: new google.maps.LatLng(postcode.point.lat, postcode.point.lng),
+					position: mapDot,
 					map: self.mapView
 				});
 
 			}
 		});
 
+
+		self.mapView.fitBounds(self.mapBounds);
 	},
 	render: function() {
 		var self = this,
