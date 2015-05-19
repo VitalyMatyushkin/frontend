@@ -4,6 +4,7 @@ var Service = require('module/core/service'),
 
 
 serviceList = {
+	// Сервисы, требующие авторизацию
 	initialize: function(binding) {
 		serviceList.me = new Service('/users/{ownerId}', binding);
 		serviceList.logout = new Service('/users/logout', binding);
@@ -16,7 +17,6 @@ serviceList = {
 
 		// schools
 		serviceList.schools = new Service('/schools', binding);
-		serviceList.schoolsFindOne = new Service('/schools/findOne', binding);
 		serviceList.school = new Service('/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 
@@ -83,8 +83,15 @@ serviceList = {
 		// postcode
 		serviceList.postCode = new Service('/postcodes', binding);
 		serviceList.findPostCodeById = new Service('/postcodes/findOne?filter[where][id]={postCode}', binding);
+	},
+	// Сервисы, не требующие авторизации
+	initializeOpenServices: function() {
+		// schools
+		serviceList.schoolsFindOne = new Service('/schools/findOne');
 	}
 };
+
+serviceList.initializeOpenServices();
 
 
 module.exports = serviceList;

@@ -13,10 +13,10 @@ OpponentsListPage = React.createClass({
 			binding = self.getDefaultBinding();
 		//schoolOpponents
 		return (
-			<Table title="Opponents list" binding={binding} onFilterChange={self.updateData}>
-				<TableField width="30%" dataField="firstName">School name</TableField>
-				<TableField width="25%" dataField="firstName">Adress</TableField>
-				<TableField width="20%" dataField="firstName">Phone</TableField>
+			<Table hideActions={true} binding={binding} onFilterChange={self.updateData}>
+				<TableField filterType="none" width="20%" dataField="name">School name</TableField>
+				<TableField filterType="none" width="55%" dataField="address">Adress</TableField>
+				<TableField filterType="none" width="20%" dataField="phone">Phone</TableField>
 			</Table>
 		)
 	}

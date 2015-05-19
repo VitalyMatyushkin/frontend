@@ -3,11 +3,11 @@ var ApplicationView = require('module/as_main/application'),
 	MoreartyContext,
 	binding;
 
-function runMainMode() {
-// Создание контекста Morearty
+function initMainView(schoolId) {
+	// Создание контекста Morearty
 	MoreartyContext = Morearty.createContext({
 		initialState: {
-			activeSchoolId: '09a23505-dd43-4d03-8515-604631f6f5f0',
+			activeSchoolId: schoolId,
 			routing: {
 				currentPath: '',		// текущий путь
 				currentPageName: '',	// имя текущей страницы, если есть
@@ -33,6 +33,33 @@ function runMainMode() {
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);
+}
+
+function init404View() {
+	// Заменить на React
+	document.body.innerHTML = '<h1 class="b404">404</h1>';
+}
+
+function runMainMode() {
+	var schoolId = Helpers.LocalStorage.get('schoolId');
+
+	if (schoolId) {
+		initMainView(schoolId);
+	} else {
+		serviceList.schoolsFindOne.get({
+			filter: {
+				where: {
+					domain: document.location.host.split('.')[0]
+				}
+			}
+		}).then(function(data) {
+			var schoolId = data.id;
+
+			Helpers.LocalStorage.set('schoolId', schoolId);
+			initMainView(schoolId);
+		}, init404View);
+	}
+
 }
 
 module.exports = runMainMode;

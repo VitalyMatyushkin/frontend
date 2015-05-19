@@ -73,11 +73,7 @@ ListPageMixin = {
 		return (
 			<div className="bSchoolMaster">
 				<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
-					<h1 className="eSchoolMaster_title">Test
-
-						<div className="eSchoolMaster_buttons">
-							<div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
-						</div>
+					<h1 className="eSchoolMaster_title">Opponents list
 					</h1>
 
 					{self.getTableView()}
