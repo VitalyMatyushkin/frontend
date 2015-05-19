@@ -1,5 +1,7 @@
 var SchoolSummary,
-    SVG = require('module/ui/svg');
+    SVG = require('module/ui/svg'),
+    Map = require('module/ui/map/map'),
+    If = require('module/ui/if/if');
 
 SchoolSummary = React.createClass({
     mixins: [Morearty.Mixin],
@@ -14,7 +16,8 @@ SchoolSummary = React.createClass({
             filter: {
                 where: {
                     id: activeSchoolId
-                }
+                },
+                include: 'postcode'
             }
         }).then(function(data) {
             binding.set(Immutable.fromJS(data));
@@ -30,7 +33,9 @@ SchoolSummary = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             schoolPicture = binding.get('pic'),
-            siteLink = binding.get('domain') + '.squadintouch.com';
+            siteLink = binding.get('domain') + '.squadintouch.com',
+            geoPoint = binding.toJS('postcode.point');
+
 
         return (
             <div>
@@ -51,6 +56,10 @@ SchoolSummary = React.createClass({
                 <p>Description: {binding.get('description')}</p>
 
                 <p>Site: <a href={'//' + siteLink} target="blank" title="binding.get('name') homepage">http://{siteLink}</a></p>
+
+                <If condition={geoPoint}>
+                    <Map binding={binding} point={binding.toJS('postcode.point')}/>
+                </If>
             </div>
         )
     }
