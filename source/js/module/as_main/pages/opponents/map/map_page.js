@@ -1,26 +1,21 @@
-var OpponentsMapPage;
+var OpponentsMapPage,
+	If = require('module/ui/if/if'),
+	Map = require('module/ui/map/map');
 
 OpponentsMapPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentDidMount: function() {
+	componentWillMount: function () {
 		var self = this,
-			mapNode = self.refs.map.getDOMNode(),
-			mapeCenter = new google.maps.LatLng(51.512406, -0.129966),
-			mapOptions,
-			mapView,
-			schoolMarker;
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('activeSchoolId'),
+			binding = self.getDefaultBinding();
 
-		mapOptions = {
-			center: mapeCenter,
-			zoom: 14,
-			disableDefaultUI: true
-		};
+		window.Server.schoolInfo.get(activeSchoolId).then(function (data) {
+			binding.set('schoolInfo', Immutable.fromJS(data));
+		});
 
-		mapView = new google.maps.Map(mapNode, mapOptions);
-
-		schoolMarker = new google.maps.Marker({
-			position: mapeCenter,
-			map: mapView
+		window.Server.schoolOpponents.get(activeSchoolId).then(function (data) {
+			binding.set('list', Immutable.fromJS(data));
 		});
 	},
 	render: function() {
@@ -29,7 +24,9 @@ OpponentsMapPage = React.createClass({
 
 		return (
 			<div className="bOpponentsMap" ref="map">
-
+				<If condition={binding.get('schoolInfo.postcode.point.lat')}>
+					<Map binding={self.getDefaultBinding()} point={{lat: binding.get('schoolInfo.postcode.point.lat'), lng: binding.get('schoolInfo.postcode.point.lng')}} />
+				</If>
 			</div>
 		)
 	}

@@ -8,13 +8,13 @@ MapView = React.createClass({
 			lng: React.PropTypes.number
 		})
 	},
+	points: {},
 	componentDidMount: function() {
 		var self = this,
 			mapNode = self.refs.map.getDOMNode(),
 			mapeCenter = new google.maps.LatLng(self.props.point.lat, self.props.point.lng),
-			mapOptions,
-			mapView,
-			marker;
+			binding = self.getDefaultBinding(),
+			mapOptions;
 
 		mapOptions = {
 			center: mapeCenter,
@@ -22,12 +22,35 @@ MapView = React.createClass({
 			disableDefaultUI: true
 		};
 
-		mapView = new google.maps.Map(mapNode, mapOptions);
+		self.mapView = new google.maps.Map(mapNode, mapOptions);
 
-		marker = new google.maps.Marker({
+		new google.maps.Marker({
 			position: mapeCenter,
-			map: mapView
+			map: self.mapView
 		});
+
+
+		binding && binding.addListener('list', self.addPointsToMap.bind(self));
+		binding && self.addPointsToMap();
+	},
+	addPointsToMap: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			pointsData = binding.toJS('list');
+
+		pointsData && pointsData.forEach(function(data) {
+			var postcode = data.postcode;
+
+			if (!self.points[postcode.id]) {
+
+				self.points[postcode.id] = new google.maps.Marker({
+					position: new google.maps.LatLng(postcode.point.lat, postcode.point.lng),
+					map: self.mapView
+				});
+
+			}
+		});
+
 	},
 	render: function() {
 		var self = this,

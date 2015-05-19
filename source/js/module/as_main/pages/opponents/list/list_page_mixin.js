@@ -44,7 +44,7 @@ ListPageMixin = {
 		}
 
 		self.request = window.Server.schoolOpponents.get(self.activeSchoolId).then(function (data) {
-			binding.set(Immutable.fromJS(data));
+			binding.set('list', Immutable.fromJS(data));
 		});
 	},
 	componentWillUnmount: function () {

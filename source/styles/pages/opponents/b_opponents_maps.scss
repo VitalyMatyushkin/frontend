@@ -1,4 +1,16 @@
 .bOpponentsMap{
   width: 100%;
   height: 900px;
+  position: relative;
 }
+
+.bOpponentsMap .bMapView{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
