@@ -54,6 +54,10 @@ MapView = React.createClass({
 					icon: '/images/beachflag.png'
 				});
 
+				google.maps.event.addListener(self.points[postcode.id], 'click', function() {
+					document.location.hash = 'fixtures?opponentId=' + data.id;
+				});
+
 			}
 		});
 
