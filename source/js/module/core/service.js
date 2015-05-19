@@ -31,7 +31,7 @@ Service = (function() {
 				url = self.url,
 				filter = options && options.filter || data && data.filter || '',
 				promise = new PromiseClass(),
-				authorization = self.binding.get();
+				authorization = self.binding ? self.binding.get() : undefined;
 
 			if (self.requredParams) {
 				url = url.replace(/\{(.*?)\}/g, function(match, param) {
