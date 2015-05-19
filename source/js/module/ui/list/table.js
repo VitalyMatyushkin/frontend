@@ -73,9 +73,12 @@ Table = React.createClass({
 				return (
 					<div className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
 						{itemCells}
-						<div className="eDataList_listItemCell mActions">
-							{itemButtons}
-						</div>
+
+						<If condition={self.props.hideActions !== true}>
+							<div className="eDataList_listItemCell mActions">
+								{itemButtons}
+							</div>
+						</If>
 					</div>
 				);
 			});

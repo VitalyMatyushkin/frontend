@@ -21,14 +21,16 @@ FixturesPage = React.createClass({
 				selectedId: undefined
 			},
 			menuItems: [],
-			fixtures: []
+			fixtures: [],
+			opponentInfo: {}
 		});
 	},
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('activeSchoolId');
+			activeSchoolId = globalBinding.get('activeSchoolId'),
+			opponentId = globalBinding.sub('routing.parameters').toJS().opponentId;
 
 		if (!activeSchoolId) {
 			document.location.hash = 'schools';
@@ -38,7 +40,7 @@ FixturesPage = React.createClass({
 		window.Server.sports.get().then(function(data) {
 			var menuItems = data.map(function(sport) {
 				return {
-					href: '/#fixtures?sport=' + encodeURIComponent(sport.name),
+					href: '/#fixtures?sport=' + encodeURIComponent(sport.name) + (opponentId ? '&opponentId=' + encodeURIComponent(opponentId) : ''),
 					name: sport.name,
 					key: sport.name
 				}
@@ -47,6 +49,11 @@ FixturesPage = React.createClass({
 			binding.set('menuItems', menuItems);
 			binding.set('gameSports.list', data);
 			self._locateToFirstSport();
+		});
+
+		opponentId && window.Server.schoolInfo.get(opponentId).then(function (data) {
+			binding.set('opponentInfo', Immutable.fromJS(data));
+			console.log(data)
 		});
 
 		globalBinding.addListener('routing.parameters', self._setCurrentSportId.bind(self));
@@ -76,6 +83,7 @@ FixturesPage = React.createClass({
 			activeSchoolId = globalBinding.get('activeSchoolId'),
 			currentSportId = binding.get('gameSports.selectedId'),
 			currentGameType = binding.get('gameType.selectedId'),
+			opponentId = globalBinding.sub('routing.parameters').toJS().opponentId,
 			whereFilter = {};
 
 		if (currentSportId) {
@@ -87,7 +95,11 @@ FixturesPage = React.createClass({
 				whereFilter.type = currentGameType;
 			}
 
-			window.Server.fixturesBySchoolId.get(activeSchoolId, {
+
+			window.Server[opponentId ? 'fixturesVsOtherSchool' : 'fixturesBySchoolId'].get({
+				schoolId: activeSchoolId,
+				opponentId: opponentId
+			}, {
 				filter: {
 					include: 'sport',
 					limit: 30,
@@ -122,12 +134,21 @@ FixturesPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			sports = binding.toJS('gameSports.list'),
-			currentSportName = globalBinding.sub('routing.parameters').toJS().sport;
+			parametrs = globalBinding.sub('routing.parameters').toJS(),
+			currentSportName = parametrs.sport,
+			opponentId = parametrs.opponentId,
+			newUrl = 'fixtures?';
 
 		// Если в текущем адресе отсутствует id вида спорта, переходим на первый попавшийся
 		if (!currentSportName && sports && sports[0]) {
 			currentSportName = sports[0].name;
-			document.location.hash = 'fixtures?sport=' + encodeURIComponent(currentSportName);
+			newUrl = 'fixtures?sport=' + encodeURIComponent(currentSportName);
+
+			if (opponentId) {
+				newUrl += '&opponentId=' + encodeURIComponent(opponentId);
+			}
+
+			document.location.hash = newUrl;
 		}
 
 		self._setCurrentSportId();
@@ -136,7 +157,8 @@ FixturesPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
-			currentSportId = binding.get('gameSports.selectedId');
+			currentSportId = binding.get('gameSports.selectedId'),
+			opponentId = globalBinding.sub('routing.parameters').toJS().opponentId;
 
 		return (
 			<div>
@@ -145,7 +167,13 @@ FixturesPage = React.createClass({
 				<If condition={currentSportId}>
 					<div className="bSchoolMaster">
 
-						<RadioGroup name="Game types to show:" sourceArray={self.gameTypes} binding={binding.sub('gameType')} />
+						<If condition={!opponentId}>
+							<RadioGroup name="Game types to show:" sourceArray={self.gameTypes} binding={binding.sub('gameType')} />
+						</If>
+
+						<If condition={binding.get('opponentInfo.name')}>
+							<div>Fixtures vs {binding.get('opponentInfo.name')}</div>
+						</If>
 
 						<FixturesStatistics binding={binding.sub('fixtures')} />
 

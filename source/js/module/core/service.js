@@ -124,6 +124,7 @@ Service = (function() {
 				} else {
 					sendOptions = options;
 				}
+
 			} else {
 				data = data || options;
 				sendOptions = options;
