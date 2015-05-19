@@ -20,7 +20,7 @@ serviceList = {
 		serviceList.school = new Service('/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 
-		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/public/opponents/{opponentId}/events', binding);
+		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);
 		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
 
 		serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
