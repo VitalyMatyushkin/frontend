@@ -30,8 +30,8 @@ OpponentsPage = React.createClass({
 				<SubMenu binding={binding.sub('opponentRouting')} items={self.menuItems} />
 
 				<RouterView routes={ binding.sub('opponentRouting') } binding={globalBinding}>
-					<Route path="/opponents/map" binding={binding.sub('list')} component="module/as_main/pages/opponents/map/map_page"  />
-					<Route path="/opponents/list" binding={binding.sub('list')} component="module/as_main/pages/opponents/list/list_page"  />
+					<Route path="/opponents/map" binding={binding} component="module/as_main/pages/opponents/map/map_page"  />
+					<Route path="/opponents/list" binding={binding} component="module/as_main/pages/opponents/list/list_page"  />
 				</RouterView>
 
 			</div>

@@ -8,7 +8,6 @@ MapView = React.createClass({
 			lng: React.PropTypes.number
 		})
 	},
-	points: {},
 	componentDidMount: function() {
 		var self = this,
 			mapNode = self.refs.map.getDOMNode(),
@@ -26,6 +25,7 @@ MapView = React.createClass({
 		self.mapBounds = new google.maps.LatLngBounds();
 		self.mapBounds.extend(mapeCenter);
 
+		self.points = {};
 		self.points['school'] = new google.maps.Marker({
 			position: mapeCenter,
 			map: self.mapView
