@@ -53,7 +53,6 @@ FixturesPage = React.createClass({
 
 		opponentId && window.Server.schoolInfo.get(opponentId).then(function (data) {
 			binding.set('opponentInfo', Immutable.fromJS(data));
-			console.log(data)
 		});
 
 		globalBinding.addListener('routing.parameters', self._setCurrentSportId.bind(self));
