@@ -191,8 +191,8 @@ module.exports = React.createClass({
 	},
 
 	handleInputBlur: function () {
-
 		var focusedAnOption = this.state.focusedIndex != null;
+
 		if (focusedAnOption) {
 			return;
 		}
@@ -418,7 +418,10 @@ module.exports = React.createClass({
 
 	focusOption: function () {
 		var index = this.state.focusedIndex;
-		this.refs.list.getDOMNode().childNodes[index].focus();
+
+		if (this.refs.list.getDOMNode().childNodes[index]) {
+			this.refs.list.getDOMNode().childNodes[index].focus();
+		}
 	},
 	//mixins: [Morearty.Mixin],
 	render: function () {

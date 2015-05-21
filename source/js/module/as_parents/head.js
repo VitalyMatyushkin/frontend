@@ -6,21 +6,27 @@ var Logo = require('module/as_parents/head/logo'),
 
 Head = React.createClass({
     mixins: [Morearty.Mixin],
-    serviceSchoolFilter: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            userId = rootBinding.get('userData.authorizationInfo.userId');
+    getDefaultState: function() {
+        return Immutable.fromJS({
+            autocomplete: {}
+        });
+    },
+    serviceChildrenFilter: function (userId) {
+        var self = this;
 
-        return window.Server.userChildren.get({id: userId});
+        return window.Server.userChildren.get(userId).then(function (data) {
+            data.map(function (player) {
+                var name = player.firstName + ' ' + player.lastName;
+                player.name = name;
+
+                return player;
+            });
+
+            return data;
+        });
     },
     componentWillMount: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            menuItems;
-
-        self.userId = rootBinding.get('userData.authorizationInfo.userId');
+        var self = this;
 
         self.menuItems = [{
             href: '/#events/calendar',
@@ -31,9 +37,14 @@ Head = React.createClass({
             authorization: true
         }];
     },
+    onSelectAutocomplete: function() {
+        console.log(arguments);
+    },
     render: function () {
         var self = this,
-            binding = this.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            rootBinding = self.getMoreartyContext().getBinding(),
+            userId = rootBinding.get('userData.authorizationInfo.userId');
 
         return (
             <div className="bTopPanel">
@@ -41,11 +52,11 @@ Head = React.createClass({
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
                 <div>
                     <Autocomplete
-                        serviceFullData = {function(){return window.Server.userChildren.get({id: self.userId});}}
-                        serverField="firstName"
-                        placeholderText={'enter the first house name'}
-                        onSelect={console.log('on select')}
-                        //binding={binding.sub('autocomplete')}
+                        serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
+                        serverField="name"
+                        placeholderText={'enter the children name'}
+                        onSelect={self.onSelectAutocomplete.bind(self)}
+                        binding={binding.sub('autocomplete')}
                         />
                     </div>
                 <UserBlock binding={binding.sub('userData')}/>
