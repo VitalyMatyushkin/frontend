@@ -24,7 +24,7 @@ var SVG = require('module/ui/svg'),
 		}
 
 		MenuItemsViews = menuItems.map(function(item) {
-			var itemPath = item.href.replace('#', ''),
+			var itemPath = item.href && item.href.replace('#', ''),
 				itemRoutes = item.routes || [],
 				className = self.itemClassName,
 				SvgIcon = item.icon ? <SVG icon={item.icon} /> : null,

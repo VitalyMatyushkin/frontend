@@ -27,7 +27,6 @@ EventPage = React.createClass({
 		});
 
 		self.menuItems = [{
-			href: '# ←',
 			key: 'goback',
 			name: '← Go back'
 		}];
