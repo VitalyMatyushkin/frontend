@@ -37,6 +37,7 @@ EventPage = React.createClass({
 							},
 							'house'
 						]
+
 					},
 					{
 						invites: ['guest', 'inviter']
@@ -46,11 +47,14 @@ EventPage = React.createClass({
 					},
 					{
 						sport: ''
+					},
+					{
+						albums: 'photos'
 					}
 				]
 			}
 		}).then(function(data) {
-			binding.set('eventInfo', Immutable.fromJS(data));
+			binding.atomically().set('eventInfo', Immutable.fromJS(data)).set('eventInfo.album', Immutable.fromJS(data.albums[0])).commit();
 		});
 
 		self.menuItems = [{

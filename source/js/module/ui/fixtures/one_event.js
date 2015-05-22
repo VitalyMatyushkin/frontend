@@ -1,6 +1,7 @@
 var OneEvent,
 	DateTimeMixin = require('module/mixins/datetime'),
-	If = require('module/ui/if/if');
+	If = require('module/ui/if/if'),
+	EventAlbums = require('module/as_manager/pages/albums/view/photo_list');
 
 OneEvent = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
@@ -72,6 +73,13 @@ OneEvent = React.createClass({
 						{self._getRivelNode(fixture.participants[1])}
 					</div>
 				</div>
+
+				<If condition={fixture.album}>
+					<div>
+						<div className="eOneEvent_name">Event album</div>
+						<EventAlbums binding={binding} />
+					</div>
+				</If>
 
 			</div>
 		)
