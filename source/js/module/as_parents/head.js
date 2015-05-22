@@ -1,4 +1,4 @@
-var Logo = require('module/as_parents/head/logo'),
+var Logo = require('module/as_manager/head/logo'),
     TopMenu = require('module/ui/menu/top_menu'),
     UserBlock = require('module/as_manager/head/user_block'),
     Autocomplete = require('module/ui/autocomplete/autocomplete'),
@@ -37,8 +37,16 @@ Head = React.createClass({
             authorization: true
         }];
     },
-    onSelectAutocomplete: function() {
-        console.log(arguments);
+    setActiveChild: function() {
+        var self = this,
+            globalBinding = self.getMoreartyContext().getBinding();
+
+        globalBinding
+            .atomically()
+            .set('userRules.activeChildId', arguments[0])
+            .commit();
+        console.log(arguments[0]);
+        document.location.href = '/#events/calendar';
     },
     render: function () {
         var self = this,
@@ -55,7 +63,7 @@ Head = React.createClass({
                         serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
                         serverField="name"
                         placeholderText={'enter the children name'}
-                        onSelect={self.onSelectAutocomplete.bind(self)}
+                        onSelect={self.setActiveChild.bind(self)}
                         binding={binding.sub('autocomplete')}
                         />
                     </div>

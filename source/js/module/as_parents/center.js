@@ -37,6 +37,9 @@ Center = React.createClass({
                         <Route path="/events /events/:subPage" binding={binding.sub('events')}
                                component="module/as_parents/pages/events/events"/>
 
+                        <Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')}
+                               component="module/as_manager/pages/event/event"/>
+
                     </RouterView>
 
                 </div>
