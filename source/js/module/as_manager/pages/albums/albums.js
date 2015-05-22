@@ -82,12 +82,13 @@ AlbumView = React.createClass({
 				<If condition={binding.get('sync')}>
 					<div className="bAlbum">
 						<h1 className="eAlbum_title">{binding.get('album.name')}</h1>
-						<If condition={binding.get('album.photos').count() > 0}>
+
 							<div className="eAlbum_listContainer">
-								{self.getPhoto()}
+								<If condition={binding.get('album.photos').count() > 0}>
+									{self.getPhoto()}
+								</If>
 								<PhotoList binding={binding.sub('album')}/>
 							</div>
-						</If>
 					</div>
 				</If>
 				<If condition={!binding.get('sync')}>

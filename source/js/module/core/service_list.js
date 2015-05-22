@@ -86,6 +86,7 @@ serviceList = {
 		serviceList.findPostCodeById = new Service('/postcodes/findOne?filter[where][id]={postCode}', binding);
 
 		// albums
+		serviceList.albumsByEvent = new Service('/events/{id}/albums');
 		serviceList.albums = new Service('/albums', binding);
 		serviceList.albumsFindOne = new Service('/albums/findOne', binding);
 

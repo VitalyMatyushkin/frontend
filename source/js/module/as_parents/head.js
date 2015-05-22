@@ -45,8 +45,6 @@ Head = React.createClass({
             .atomically()
             .set('userRules.activeChildId', arguments[0])
             .commit();
-        console.log(arguments[0]);
-        document.location.href = '/#events/calendar';
     },
     render: function () {
         var self = this,
