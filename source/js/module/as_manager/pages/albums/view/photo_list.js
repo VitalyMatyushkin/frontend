@@ -6,7 +6,7 @@ PhotoList = React.createClass({
 	renderPhoto: function(photo, index) {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			currentPhotoId = binding.get('currentPhotoId'),
+			currentPhotoId = binding.get('currentPhotoId') || binding.get('photos.0.id'),
 			classes = classNames({
 				mActive: currentPhotoId === photo.get('id'),
 				'eAlbums_photo': true
@@ -26,15 +26,28 @@ PhotoList = React.createClass({
 			binding = self.getDefaultBinding(),
 			file = e.target.files[0],
 			formData = new FormData(),
-			fileName = Math.random().toString(36).substring(7) + file.name;
+			uri = '//api.squadintouch.com/v1/storage/' + binding.get('storageId'),
+			fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
 
 		formData.append('file', file, fileName);
 
 		$.ajax({
-			url: '//api.squadintouch.com/v1/storage/' + binding.get('album.storageId') + '/upload',
+			url: uri + '/upload',
 			type: 'POST',
-			success: function() {
-				console.log(arguments)
+			success: function(res) {
+				var uploadedFile = res.result.files.file[0],
+					model = {
+						name: uploadedFile.name,
+						albumId: binding.get('id'),
+						description: uploadedFile.name,
+						authorId: binding.get('ownerId'),
+						pic: URL.createObjectURL(file)
+					};
+
+				Server.photos.post(binding.get('id'), model);
+				binding.sub('photos').update(function(photos) {
+					return photos.push(Immutable.fromJS(model));
+				});
 			},
 			// Form data
 			data: formData,
@@ -47,16 +60,15 @@ PhotoList = React.createClass({
 	render: function() {
         var self = this,
 			binding = self.getDefaultBinding(),
-			styles = {display: 'none'},
 			rootBinding = self.getMoreartyContext().getBinding(),
 			userId = rootBinding.get('userData.authorizationInfo.userId'),
-			isOwner = userId !== binding.get('album.ownerId');
+			isOwner = userId !== binding.get('ownerId');
 
 		return <div className="bAlbums_list">
 			<If condition={isOwner}>
-				<div className="eAlbums_photo mUpload">+<input onChange={this.handleFile} type="file" className="eAlbums_input" /></div>
+				<div className="eAlbums_photo mUpload">+<input onChange={self.handleFile} type="file" className="eAlbums_input" /></div>
 			</If>
-			{binding.get('album.photos').map(self.renderPhoto.bind(self))}
+			{binding.get('photos').map(self.renderPhoto.bind(self))}
 		</div>;
 	}
 });

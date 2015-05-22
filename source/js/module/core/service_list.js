@@ -88,6 +88,9 @@ serviceList = {
 		// albums
 		serviceList.albums = new Service('/albums', binding);
 		serviceList.albumsFindOne = new Service('/albums/findOne', binding);
+
+		// photos
+		serviceList.photos = new Service('/albums/{albumId}/photos', binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {
