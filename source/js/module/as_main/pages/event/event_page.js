@@ -1,5 +1,6 @@
 var EventPage,
 	SubMenu = require('module/ui/menu/sub_menu'),
+	OneEvent = require('module/ui/fixtures/one_event'),
 	If = require('module/ui/if/if');
 
 EventPage = React.createClass({
@@ -22,8 +23,34 @@ EventPage = React.createClass({
 			document.location.hash = 'schools';
 		}
 
-		window.Server.event.get(eventId).then(function(data) {
-			binding.set('opponentInfo', Immutable.fromJS(data));
+		Server.eventFindOne.get({
+			filter: {
+				where: {
+					id: eventId
+				},
+				include: [
+					{
+						participants: [
+							'players',
+							{
+								school: 'forms'
+							},
+							'house'
+						]
+					},
+					{
+						invites: ['guest', 'inviter']
+					},
+					{
+						result: 'points'
+					},
+					{
+						sport: ''
+					}
+				]
+			}
+		}).then(function(data) {
+			binding.set('eventInfo', Immutable.fromJS(data));
 		});
 
 		self.menuItems = [{
@@ -41,7 +68,7 @@ EventPage = React.createClass({
 				<SubMenu items={self.menuItems} binding={globalBinding.sub('routing')}/>
 
 				<div className="bSchoolMaster">
-					hello world
+					<OneEvent binding={binding.sub('eventInfo')}/>
 				</div>
 			</div>
 		)
