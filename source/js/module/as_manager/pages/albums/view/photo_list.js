@@ -48,6 +48,7 @@ PhotoList = React.createClass({
                 Server.photos.post(binding.get('id'), model);
 
                 model.pic = URL.createObjectURL(file);
+
                 binding.sub('photos').update(function(photos) {
                     return photos.push(Immutable.fromJS(model));
                 });
