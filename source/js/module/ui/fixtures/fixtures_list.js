@@ -50,7 +50,7 @@ FixturesList = React.createClass({
 		var self = this;
 
 		return (
-			<div className="bChallenge">
+			<a className="bChallenge" href={'/#event?id=' + fixture.id}>
 				<div className="eChallenge_in">
 					{self._getRivelNode(fixture.participants[0])}
 
@@ -75,7 +75,7 @@ FixturesList = React.createClass({
 
 					{self._getRivelNode(fixture.participants[1])}
 				</div>
-			</div>
+			</a>
 		);
 
 	},

@@ -104,10 +104,10 @@ BigCalendar = React.createClass({
 		return fixturesArray.map(function(fixture) {
 			var startTime = self.getTimeFromIso(fixture.startTime);
 
-			return (<div className="eBigCalendar_oneEvent">
+			return (<a className="eBigCalendar_oneEvent" href={'/#event?id=' + fixture.id}>
 						<div className="eBigCalendar_eventTime">{startTime} {fixture.sport.name}</div>
 						{self._getPlayerName(fixture.participants[0])} vs {self._getPlayerName(fixture.participants[1])}
-					</div>);
+					</a>);
 		});
 	},
 	getCalendarNode: function(weeksData) {
