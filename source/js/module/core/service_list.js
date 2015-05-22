@@ -84,6 +84,10 @@ serviceList = {
 		// postcode
 		serviceList.postCode = new Service('/postcodes', binding);
 		serviceList.findPostCodeById = new Service('/postcodes/findOne?filter[where][id]={postCode}', binding);
+
+		// albums
+		serviceList.albums = new Service('/albums', binding);
+		serviceList.albumsFindOne = new Service('/albums/findOne', binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {

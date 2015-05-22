@@ -5,7 +5,8 @@ var EventView,
     EventHeader = require('./view/event_header'),
     EventRivals = require('./view/event_rivals'),
     EventButtons = require('./view/event_buttons'),
-    EventTeams = require('./view/event_teams');
+    EventTeams = require('./view/event_teams'),
+    EventAlbums = require('./view/event_albums');
 
 EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -100,6 +101,9 @@ EventView = React.createClass({
                     },
                     {
                         sport: ''
+                    },
+                    {
+                        albums: 'photos'
                     }
                 ]
             }
@@ -109,6 +113,7 @@ EventView = React.createClass({
 				invites = res.invites,
 				activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 				sport = res.sport,
+                albums = res.albums,
 				schoolInfo = event.participants[0].school.id === activeSchoolId ?
 					event.participants[0].school : event.participants[1].school,
                 points = event.result ? event.result.points : [];
@@ -124,6 +129,7 @@ EventView = React.createClass({
 				.set('invites', Immutable.fromJS(invites))
 				.set('participants', Immutable.fromJS(participants))
                 .set('points', Immutable.fromJS(points))
+                .set('albums', Immutable.fromJS(albums))
 				.set('players', Immutable.fromJS([
 					participants[0].players,
 					participants[1] ? participants[1].players : []
@@ -151,6 +157,7 @@ EventView = React.createClass({
                         <EventButtons binding={binding} />
                         <EventHeader binding={binding} />
                         <EventRivals binding={binding} />
+                        <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />
                     </div>
                 </If>

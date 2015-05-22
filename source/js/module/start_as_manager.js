@@ -68,6 +68,9 @@ function runManagerMode() {
 			sports: {
 				sync: false,
 				models: []
+			},
+			albums: {
+				sync: false
 			}
 		},
 		options: {
