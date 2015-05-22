@@ -27,7 +27,8 @@ var SVG = require('module/ui/svg'),
 			var itemPath = item.href.replace('#', ''),
 				itemRoutes = item.routes || [],
 				className = self.itemClassName,
-				SvgIcon = item.icon ? <SVG icon={item.icon} /> : null;
+				SvgIcon = item.icon ? <SVG icon={item.icon} /> : null,
+				resultNode;
 
 			if ((currentPath && (currentPath.indexOf(itemPath) !== -1 || itemRoutes.indexOf(currentPath) !== -1)) || '/' + document.location.hash == item.href) {
 				className += 'mActive';
@@ -37,9 +38,13 @@ var SVG = require('module/ui/svg'),
 				return null
 			}
 
-			return (
-				<a href={item.href} key={item.key} className={className}>{SvgIcon} {item.name}</a>
-			);
+			if (item.key === 'goback') {
+				resultNode = <span onClick={function(){window.history.back();}} key={item.key} className={className}>{SvgIcon} {item.name}</span>;
+			} else {
+				resultNode = <a href={item.href} key={item.key} className={className}>{SvgIcon} {item.name}</a>;
+			}
+
+			return resultNode;
 		});
 
 		return MenuItemsViews;

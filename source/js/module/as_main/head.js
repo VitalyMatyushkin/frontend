@@ -19,7 +19,7 @@ Head = React.createClass({
 			icon: 'icon_shot',
 			name: 'Fixtures',
 			key: 'Fixtures',
-			routes: ['/fixtures']
+			routes: ['/fixtures', '/event']
 		},{
 			href: '/#calendar?sport=all',
 			icon: 'icon_calendar',
