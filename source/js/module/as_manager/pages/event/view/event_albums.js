@@ -10,8 +10,8 @@ EventHeader = React.createClass({
 			cover = binding.get('albums.' + index + '.photos.0.pic'),
 			styles = {backgroundImage: 'url(' + cover + ')'};
 
-		return <div onClick={self.onClickAlbum.bind(null, album)} key={'album-' + index} className="eEventAlbums_album" style={styles}>
-			<span className="eEventAlbums_albumTitle">{album.get('name')}</span>
+		return <div onClick={self.onClickAlbum.bind(null, album)} key={'album-' + index} className='eEventAlbums_album' style={styles}>
+			<span className='eEventAlbums_albumTitle'>{album.get('name')}</span>
 		</div>;
 	},
 	onClickAlbum: function(album) {
@@ -19,12 +19,29 @@ EventHeader = React.createClass({
 
 		self.isMounted() && (document.location.hash = 'albums/' + album.get('id'));
 	},
+	onClickCreateAlbum: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		window.Server.albumsByEvent.post(binding.get('model.id'), {
+			name: binding.get('model.name') + ' - ' + binding.get('sport.name'),
+			description: binding.get('model.name'),
+			eventId: binding.get('model.id')
+		}).then(function(res) {
+			self.isMounted() && (document.location.hash = 'albums/' + res.id);
+		});
+	},
 	render: function() {
         var self = this,
 			binding = self.getDefaultBinding();
 
 
-		return <div className="bEventAlbums">{binding.get('albums').map(self.renderAlbum.bind(self))}</div>;
+		return <div className='bEventAlbums'>
+			{binding.get('albums').map(self.renderAlbum.bind(self))}
+			<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate'>
+				<span className='eEventAlbums_albumTitle'>Add...</span>
+			</div>
+		</div>;
 	}
 });
 

@@ -15,6 +15,7 @@
   flex-flow: row wrap;
   padding: 5px 0;
   width: 100%;
+  justify-content: space-between;
 }
 
 .eAlbum_listContainer {
@@ -25,7 +26,8 @@
 
 .eAlbum_currentPhoto {
   display: flex;
-  height: 400px;
+  height: 740px;
+  width: 400px;
   flex-flow: row wrap;
   justify-content: center;
   margin-bottom: 15px;
@@ -37,7 +39,9 @@
   width: 100px;
   box-sizing: border-box;
   cursor: pointer;
-  margin-right: 5px;
+  margin-bottom: 10px;
+  background-size: cover;
+  background-repeat: no-repeat;
   &:hover,
   &.mActive {
     border: 2px solid $MAIN_COLOR;

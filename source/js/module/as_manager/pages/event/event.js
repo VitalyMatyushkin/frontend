@@ -156,6 +156,18 @@ EventView = React.createClass({
                     <div className="bEvent">
                         <EventButtons binding={binding} />
                         <EventHeader binding={binding} />
+                        <div className="eEvent_commentBox">
+                            <If condition={binding.get('mode') === 'closing'}>
+                                <Morearty.DOM.textarea
+                                    className="eEvent_comment"
+                                    onChange={Morearty.Callback.set(binding, 'model.comment')}
+                                    value={binding.get('model.comment')}
+                                    />
+                            </If>
+                            <If condition={binding.get('mode') === 'general' && binding.get('model.comment')}>
+                                <span className="eEvent_commentText">{binding.get('model.comment')}</span>
+                            </If>
+                        </div>
                         <EventRivals binding={binding} />
                         <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />

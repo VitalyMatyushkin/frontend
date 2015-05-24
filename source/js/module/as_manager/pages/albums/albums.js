@@ -44,10 +44,11 @@ AlbumView = React.createClass({
 				]
 			}
 		}).then(function(res) {
+			res.currentPhotoId = res.photos.length > 0 ? res.photos[0].id : null;
+
 			binding
 				.atomically()
 				.set('album', Immutable.fromJS(res))
-				.set('currentPhotoId', res.photos.length > 0 ? res.photos[0].id : null)
 				.set('sync', true)
 				.commit();
 		});
@@ -55,7 +56,7 @@ AlbumView = React.createClass({
 	getPhoto: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			currentPhotoId = binding.get('currentPhotoId'),
+			currentPhotoId = binding.get('album.currentPhotoId'),
 			image = binding.get('album.photos').find(function(photo) {
 				return photo.get('id') === currentPhotoId;
 			});
@@ -76,17 +77,18 @@ AlbumView = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return <div>
-			<SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems} />
+			<SubMenu binding={binding.sub('albumsRouting')} items={self.menuItems} />
 			<div>
 				<If condition={binding.get('sync')}>
 					<div className="bAlbum">
 						<h1 className="eAlbum_title">{binding.get('album.name')}</h1>
-						<If condition={binding.get('album.photos').count() > 0}>
+
 							<div className="eAlbum_listContainer">
-								{self.getPhoto()}
-								<PhotoList binding={binding}/>
+								<If condition={binding.get('album.photos').count() > 0}>
+									{self.getPhoto()}
+								</If>
+								<PhotoList binding={binding.sub('album')}/>
 							</div>
-						</If>
 					</div>
 				</If>
 				<If condition={!binding.get('sync')}>
