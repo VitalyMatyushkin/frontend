@@ -17,6 +17,9 @@ LeanerView = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding(),
             studentId = globalBinding.get('routing.parameters.id'),
             leanerData = {};
+    console.log(studentId);
+        studentId = studentId ? studentId : binding.get('activeChildId');
+        console.log(binding.get('activeChildId'));
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
             Server.form.get(data.formId).then(function (classData) {

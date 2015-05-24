@@ -39,14 +39,21 @@ Head = React.createClass({
     },
     setActiveChild: function() {
         var self = this,
-            globalBinding = self.getMoreartyContext().getBinding();
-
-        globalBinding
+            binding = self.getDefaultBinding();
+        binding
             .atomically()
-            .set('userRules.activeChildId', arguments[0])
+            .set('studentPage.activeChildId', Immutable.fromJS(arguments[0]))
+            .set('sync', true)
             .commit();
-        console.log(arguments[0]);
-        document.location.href = '/#events/calendar';
+        window.Server.studentEvents.get({id: arguments[0]}).then(function (data) {
+            binding
+                .atomically()
+                .set('events.activeChildId', Immutable.fromJS(arguments[0]))
+                .set('events.models', Immutable.fromJS(data))
+                .set('sync', true)
+                .commit();
+        });
+        document.location.hash = 'events/calendar';
     },
     render: function () {
         var self = this,
