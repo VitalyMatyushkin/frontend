@@ -46,6 +46,15 @@ Head = React.createClass({
             .set('events.activeChildId', Immutable.fromJS(arguments[0]))
             .set('sync', true)
             .commit();
+
+        window.Server.studentEvents.get({id: arguments[0]}).then(function (data) {
+            binding
+                .atomically()
+                .set('events.models', Immutable.fromJS(data))
+                .set('sync', true)
+                .commit();
+        });
+
         document.location.hash = 'events/calendar';
     },
     render: function () {
@@ -59,7 +68,7 @@ Head = React.createClass({
                 <Logo />
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
                 <If condition={rootBinding.get('userData.authorizationInfo.userId')}>
-                    <div>
+                    <div className="bDropdown">
                         <Autocomplete
                             serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
                             serverField="name"

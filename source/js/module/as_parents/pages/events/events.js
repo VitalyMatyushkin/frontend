@@ -50,7 +50,7 @@ EventView = React.createClass({
                             .commit();
                     });
                 }
-            })
+            });
 
         binding.get('activeChildId') && window.Server.studentEvents.get({id: binding.get('activeChildId')}).then(function (data) {
             binding
