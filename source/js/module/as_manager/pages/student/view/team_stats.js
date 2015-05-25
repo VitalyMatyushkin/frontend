@@ -41,72 +41,76 @@ TeamStats = React.createClass({
     getEvents: function (date,theData) {
         var self = this,
             binding = this.getDefaultBinding(),
+            eventsByDate;
+        if (theData && theData.gamesWon) {
             eventsByDate = theData.gamesWon.filter(function (event) {
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
             });
-        return eventsByDate.map(function(event,index){
-            var eventDateTime = new Date(event.startTime),
-                hours = self.addZeroToFirst(eventDateTime.getHours()),
-                minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
-                type = event.type,
-                firstName,
-                secondName,
-                firstPic,
-                secondPic,
-                firstPoint,
-                secondPoint;
+            return eventsByDate.map(function (event, index) {
+                var eventDateTime = new Date(event.startTime),
+                    hours = self.addZeroToFirst(eventDateTime.getHours()),
+                    minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
+                    type = event.type,
+                    firstName,
+                    secondName,
+                    firstPic,
+                    secondPic,
+                    firstPoint,
+                    secondPoint;
 
-            if(type === 'inter-schools'){
-                firstName = event.participants[0].school.name;
-                secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
-                firstPic = event.participants[0].school.pic;
-                secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
-            }else if (type === 'houses'){
-                firstName = event.participants[0].house.name;
-                secondName = event.participants[1].house.name;
-                firstPic = event.participants[0].school.pic;
-                secondPic = event.participants[1].school.pic;
-            }else if(type === 'internal'){
-                firstName = event.participants[0].name;
-                secondName = event.participants[1].name;
-                firstPic = event.participants[0].school.pic;
-                secondPic = event.participants[1].school.pic;
-            }
-            if(event.resultId){
-                firstPoint = event.result.summary.byTeams[event.participants[0].id]|| 0;
-                secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
-            }
-            //console.log(index+"  index");
-            return <div className="bChallenge"
-                        onClick={self.onClickChallenge.bind(null, event.id)}
-                        id={'challenge-' + event.id}
-                >
-                <div className="eChallenge_in">
-                    <div className="eChallenge_rivalName">
-                        {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : ''}
-                        {firstName}
+                if (type === 'inter-schools') {
+                    firstName = event.participants[0].school.name;
+                    secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
+                } else if (type === 'houses') {
+                    firstName = event.participants[0].house.name;
+                    secondName = event.participants[1].house.name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic;
+                } else if (type === 'internal') {
+                    firstName = event.participants[0].name;
+                    secondName = event.participants[1].name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic;
+                }
+                if (event.resultId && event.result.summary) {
+                    firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
+                    secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
+                }
+                //console.log(index+"  index");
+                return <div className="bChallenge"
+                            onClick={self.onClickChallenge.bind(null, event.id)}
+                            id={'challenge-' + event.id}
+                    >
+                    <div className="eChallenge_in">
+                        <div className="eChallenge_rivalName">
+                            {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
+                            {firstName}
+                        </div>
+                        <div className="eChallenge_rivalInfo">
+                            <div className="eChallenge_hours">{hours + ':' + minutes}</div>
+                            <div
+                                className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
+                            <div className="eChallenge_info">{event.type}</div>
+                        </div>
+                        <div className="eChallenge_rivalName">
+                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
+                            {secondName}
+                        </div>
                     </div>
-                    <div className="eChallenge_rivalInfo">
-                        <div className="eChallenge_hours">{hours + ':' + minutes}</div>
-                        <div className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
-                        <div className="eChallenge_info">{event.type}</div>
-                    </div>
-                    <div className="eChallenge_rivalName">
-                        {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
-                        {secondName}
-                    </div>
-                </div>
-            </div>;
+                </div>;
 
-        });
+            });
+        }
     },
     getDates: function (dataFrom) {
         var self = this,
             binding = self.getDefaultBinding(),
             dates;
-        if(dataFrom){
+        if(dataFrom && dataFrom.gamesWon){
             dates = dataFrom.gamesWon.reduce(function(memo,val){
                 var date = Date.parse(val.startTime),
                     any = memo.some(function(d){

@@ -20,6 +20,7 @@ LeanerView = React.createClass({
     console.log(studentId);
         studentId = studentId ? studentId : binding.get('activeChildId');
         console.log(binding.get('activeChildId'));
+        if(!studentId) document.location.hash = 'events/calendar';
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
             Server.form.get(data.formId).then(function (classData) {
@@ -46,16 +47,14 @@ LeanerView = React.createClass({
                                     leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                     self.numberOfGamesPlayed = gamesPlayed.length;
                                     leanerData.schoolEvent = gamesPlayed;
+                                    console.log(leanerData);
                                     binding.set(Immutable.fromJS(leanerData));
                                 });
                             });
                         })
                     });
                 });
-
-
             });
-
         });
     },
     render: function () {
