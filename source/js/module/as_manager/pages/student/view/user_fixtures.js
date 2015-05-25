@@ -91,7 +91,6 @@ UserFixtures = React.createClass({
                     firstPic = event.participants[0].school.pic;
                     secondPic = event.participants[1].school.pic;
                 }
-                console.log(event);
                 if (event.resultId && event.result.summary) {
                     firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
