@@ -2,6 +2,7 @@ var Logo = require('module/as_manager/head/logo'),
     TopMenu = require('module/ui/menu/top_menu'),
     UserBlock = require('module/as_manager/head/user_block'),
     Autocomplete = require('module/ui/autocomplete/autocomplete'),
+    If = require('module/ui/if/if'),
     Head;
 
 Head = React.createClass({
@@ -65,15 +66,17 @@ Head = React.createClass({
             <div className="bTopPanel">
                 <Logo />
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
-                <div>
-                    <Autocomplete
-                        serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
-                        serverField="name"
-                        placeholderText={'enter the children name'}
-                        onSelect={self.setActiveChild.bind(self)}
-                        binding={binding.sub('autocomplete')}
-                        />
+                <If condition={rootBinding.get('userData.authorizationInfo.userId')}>
+                    <div>
+                        <Autocomplete
+                            serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
+                            serverField="name"
+                            placeholderText={'enter the children name'}
+                            onSelect={self.setActiveChild.bind(self)}
+                            binding={binding.sub('autocomplete')}
+                            />
                     </div>
+                </If>
                 <UserBlock binding={binding.sub('userData')}/>
             </div>
         )
