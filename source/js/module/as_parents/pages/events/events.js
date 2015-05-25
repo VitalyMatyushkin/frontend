@@ -37,25 +37,20 @@ EventView = React.createClass({
                 .commit();
         });
 
-        window.Server.userChildren.get({
-            id: userId
-        }).then(function (userChildren) {
-            if(userChildren.length > 0) {
-                binding
-                    .atomically()
-                    .set('studentPage.activeChildId', Immutable.fromJS(userChildren[0].id))
-                    .set('sync', true)
-                    .commit();
-                self.request = window.Server.studentEvents.get({id: userChildren[0].id}).then(function (data) {
-                    binding
-                        .atomically()
-                        .set('activeChildId', Immutable.fromJS(userChildren[0].id))
-                        .set('models', Immutable.fromJS(data))
-                        .set('sync', true)
-                        .commit();
-                });
-            }
-        })
+        !binding.get('activeChildId') && window.Server.userChildren.get({
+                id: userId
+            }).then(function (userChildren) {
+                if (userChildren.length > 0) {
+                    self.request = window.Server.studentEvents.get({id: userChildren[0].id}).then(function (data) {
+                        binding
+                            .atomically()
+                            .set('activeChildId', Immutable.fromJS(userChildren[0].id))
+                            .set('models', Immutable.fromJS(data))
+                            .set('sync', true)
+                            .commit();
+                    });
+                }
+            })
 
         self.menuItems = [{
             href: '/#events/calendar',
@@ -86,7 +81,7 @@ EventView = React.createClass({
                                component='module/as_manager/pages/events/events_calendar'/>
                         <Route path='/events/challenges' binding={binding}
                                component='module/as_manager/pages/events/events_challenges'/>
-                        <Route path="/student" binding={binding.sub('studentPage')}
+                        <Route path="/student" binding={binding}
                                component="module/as_manager/pages/student/student_page"/>
                     </RouterView>
                 </div>

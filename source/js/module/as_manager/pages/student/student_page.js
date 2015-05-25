@@ -17,9 +17,9 @@ LeanerView = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding(),
             studentId = globalBinding.get('routing.parameters.id'),
             leanerData = {};
-    console.log(studentId);
+        //console.log(studentId);
         studentId = studentId ? studentId : binding.get('activeChildId');
-        console.log(binding.get('activeChildId'));
+        //console.log(binding.get('activeChildId'));
         if(!studentId) document.location.hash = 'events/calendar';
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
@@ -47,8 +47,8 @@ LeanerView = React.createClass({
                                     leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                     self.numberOfGamesPlayed = gamesPlayed.length;
                                     leanerData.schoolEvent = gamesPlayed;
-                                    console.log(leanerData);
-                                    binding.set(Immutable.fromJS(leanerData));
+                                    //console.log(leanerData);
+                                    binding.set('achievements', Immutable.fromJS(leanerData));
                                 });
                             });
                         })
@@ -59,14 +59,13 @@ LeanerView = React.createClass({
     },
     render: function () {
         var self = this,
-            binding = self.getDefaultBinding(),
-            data = binding.toJS();
+            binding = self.getDefaultBinding();
         return (
             <div>
                 <div className="bUserColumn">
                     <div className="eUserColumnData">
-                        <UserName binding={binding}/>
-                        <AboutMe title="About me" binding={binding}/>
+                        <UserName binding={binding.sub('achievements')}/>
+                        <AboutMe title="About me" binding={binding.sub('achievements')}/>
                     </div>
                 </div>
                 <div className="bUserDataColumn">
@@ -74,17 +73,17 @@ LeanerView = React.createClass({
                         <div className="bUserFullInfo mDates">
                             <div className="eUserFullInfo_block">
                                 <h1>Personal Achievements: {self.numOfGamesScoredIn}</h1>
-                                <UserAchievements binding={binding}/>
+                                <UserAchievements binding={binding.sub('achievements')}/>
                             </div>
                         </div>
                         <div className="bUserFullInfo mDates">
                             <div className="eUserFullInfo_block">
                                 <h1>Team Statistics(Games Won): {self.numOfGamesWon}</h1>
-                                <TeamStats binding={binding}/>
+                                <TeamStats binding={binding.sub('achievements')}/>
                             </div>
                         </div>
                         <h1>All Fixtures: {self.numberOfGamesPlayed}</h1>
-                        <UserFixtures binding={binding}/>
+                        <UserFixtures binding={binding.sub('achievements')}/>
                     </div>
                 </div>
             </div>
