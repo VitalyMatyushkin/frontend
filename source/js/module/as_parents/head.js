@@ -46,13 +46,6 @@ Head = React.createClass({
             .set('events.activeChildId', Immutable.fromJS(arguments[0]))
             .set('sync', true)
             .commit();
-        window.Server.studentEvents.get({id: arguments[0]}).then(function (data) {
-            binding
-                .atomically()
-                .set('events.models', Immutable.fromJS(data))
-                .set('sync', true)
-                .commit();
-        });
         document.location.hash = 'events/calendar';
     },
     render: function () {

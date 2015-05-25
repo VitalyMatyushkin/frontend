@@ -52,6 +52,14 @@ EventView = React.createClass({
                 }
             })
 
+        binding.get('activeChildId') && window.Server.studentEvents.get({id: binding.get('activeChildId')}).then(function (data) {
+            binding
+                .atomically()
+                .set('models', Immutable.fromJS(data))
+                .set('sync', true)
+                .commit();
+        });
+
         self.menuItems = [{
             href: '/#events/calendar',
             name: 'Calendar',
