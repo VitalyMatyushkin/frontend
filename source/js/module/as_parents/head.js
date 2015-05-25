@@ -54,7 +54,7 @@ Head = React.createClass({
                 .set('sync', true)
                 .commit();
         });
-        document.location.hash = 'events/calendar';
+        //document.location.hash = 'events/calendar';
     },
     render: function () {
         var self = this,
