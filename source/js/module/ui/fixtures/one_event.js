@@ -1,7 +1,7 @@
 var OneEvent,
 	DateTimeMixin = require('module/mixins/datetime'),
 	If = require('module/ui/if/if'),
-	EventAlbums = require('module/as_manager/pages/albums/view/photo_list');
+	EventAlbums = require('module/as_manager/pages/event/view/event_albums');
 
 OneEvent = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
@@ -32,7 +32,7 @@ OneEvent = React.createClass({
 		name = participan.house && participan.house.name || participan.school && participan.school.name;
 
 
-		// Внутреннее событие
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		if (participan.name) {
 			name = participan.name;
 			pictures = undefined;

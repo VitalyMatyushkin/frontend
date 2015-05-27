@@ -26,6 +26,7 @@ FixturesList = React.createClass({
 	_getRivelNode: function(participan) {
 		var self = this,
 			pictures,
+			color,
 			name;
 
 		if (!participan) return '?';
@@ -37,12 +38,19 @@ FixturesList = React.createClass({
 		// Внутреннее событие
 		if (participan.name) {
 			name = participan.name;
-			pictures = undefined;
+		}
+
+		if (participan.house) {
+			pictures = participan.house.pic;
+
+			if (participan.house.colors && participan.house.colors[0]) {
+				color = participan.house.colors[0];
+			}
 		}
 
 		return (
 			<div className="eChallenge_rivalName">
-				<span className="eChallenge_rivalPic"><If condition={pictures}><img src={pictures}/></If></span>
+				<span className="eChallenge_rivalPic"><If condition={pictures}><img src={pictures}/></If><If condition={color}><div className="eChallenge_rivalColor" style={{backgroundColor: color}}></div></If></span>
 				<span>{name}</span>
 			</div>
 		);

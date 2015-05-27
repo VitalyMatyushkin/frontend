@@ -64,6 +64,7 @@
   display: block;
   width: 100%;
   text-align: center;
+  position: relative;
 }
 
 .eChallenge_rivalPic img{
@@ -79,6 +80,17 @@
   font-family: Verdana, sans-serif;
   line-height: 27px;
   color: #9AB669;
+}
+
+.eChallenge_rivalColor {
+  height: 5px;
+  width: 68px;
+  margin-bottom: 5px;
+  position: absolute;
+  left: 50%;
+  margin-left: -34px;
+  margin-top: -8px;
+  opacity: 0.8;
 }
 
 
