@@ -22,6 +22,7 @@ OneEvent = React.createClass({
 	_getRivelNode: function(participan) {
 		var self = this,
 			pictures,
+			color,
 			name;
 
 		if (!participan) {
@@ -32,10 +33,17 @@ OneEvent = React.createClass({
 		name = participan.house && participan.house.name || participan.school && participan.school.name;
 
 
-		// ���������� �������
+		// Внутреннее событие
 		if (participan.name) {
 			name = participan.name;
-			pictures = undefined;
+		}
+
+		if (participan.house) {
+			pictures = participan.house.pic;
+
+			if (participan.house.colors && participan.house.colors[0]) {
+				color = participan.house.colors[0];
+			}
 		}
 
 		return (
