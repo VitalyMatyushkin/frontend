@@ -28,7 +28,7 @@ AlbumView = React.createClass({
 
 		self.menuItems = [{
 			key: 'goback',
-			name: 'Back',
+			name: '← GO BACK',
 			href: '#'
 		}];
 
