@@ -50,7 +50,7 @@ OneEvent = React.createClass({
 
 		return (
 			<div className="eOneEvent_playerData">
-				<div className="eOneEvent_playerPic"><If condition={pictures}><img src={pictures}/></If></div>
+				<div className="eOneEvent_playerPic"><If condition={pictures}><img src={pictures}/></If><If condition={color && !pictures}><div className="eOneEvent_playerColor" style={{backgroundColor: color}}></div></If></div>
 				<div className="eOneEvent_playerName">{name}</div>
 				<div className="eOneEvent_result">{self._getScore(participan.id)}</div>
 			</div>
