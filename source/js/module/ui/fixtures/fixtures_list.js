@@ -16,8 +16,10 @@ FixturesList = React.createClass({
 		firstId = fixture.participants[0].id;
 		secondId = fixture.participants[1].id;
 
-		firstScore = fixture.result.summary.byTeams[firstId];
-		secondScore = fixture.result.summary.byTeams[secondId];
+		if (fixture.result.summary && fixture.result.summary.byTeams) {
+			firstScore = fixture.result.summary.byTeams[firstId];
+			secondScore = fixture.result.summary.byTeams[secondId];
+		}
 
 		return (firstScore === undefined ? '?' : firstScore) + ' : ' + (secondScore === undefined ? '?' : secondScore);
 	},
