@@ -83,11 +83,12 @@ AlbumView = React.createClass({
 					<div className="bAlbum">
 						<h1 className="eAlbum_title">{binding.get('album.name')}</h1>
 
+						<PhotoList binding={binding.sub('album')}/>
+
 							<div className="eAlbum_listContainer">
 								<If condition={binding.get('album.photos').count() > 0}>
 									{self.getPhoto()}
 								</If>
-								<PhotoList binding={binding.sub('album')}/>
 							</div>
 					</div>
 				</If>

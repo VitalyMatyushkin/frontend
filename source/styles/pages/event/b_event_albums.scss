@@ -41,12 +41,13 @@
 .eEventAlbums_albumTitle {
   display: flex;
   padding: 5px 10px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   width: 100%;
   text-align: center;
   justify-content: center;
   margin-top: 5px;
   color: #fff;
+  font-size: 12px;
 }
 
 .eEventAlbums_album {

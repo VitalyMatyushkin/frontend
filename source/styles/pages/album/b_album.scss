@@ -10,12 +10,13 @@
   align-items: center;
 }
 
+.eAlbum_title{
+  margin-top: 20px;
+}
+
 .bAlbums_list {
-  display: flex;
-  flex-flow: row wrap;
   padding: 5px 0;
   width: 100%;
-  justify-content: space-between;
 }
 
 .eAlbum_listContainer {
@@ -25,26 +26,30 @@
 }
 
 .eAlbum_currentPhoto {
-  display: flex;
   height: 740px;
-  width: 400px;
-  flex-flow: row wrap;
-  justify-content: center;
+  text-align: center;
   margin-bottom: 15px;
 }
 
+.eAlbum_currentImg{
+  max-width: 100%;
+}
+
 .eAlbums_photo {
+  vertical-align: top;
   height: 50px;
-  display: flex;
   width: 100px;
+  display: inline-block;
   box-sizing: border-box;
   cursor: pointer;
   margin-bottom: 10px;
   background-size: cover;
   background-repeat: no-repeat;
+  outline: 1px solid #fff;
+  margin-right: 3px;
   &:hover,
   &.mActive {
-    border: 2px solid $MAIN_COLOR;
+    outline: 1px solid #4caf50;
   }
   &.mActive {
     cursor: default;
