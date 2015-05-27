@@ -15,9 +15,11 @@ OneEvent = React.createClass({
 			return null;
 		}
 
-		score = fixture.result.summary.byTeams[participantId];
+		if (fixture.result && fixture.result.summary && fixture.result.summary.byTeams) {
+			score = fixture.result.summary.byTeams[participantId];
+		}
 
-		return (score === undefined ? '?' : score);
+		return (score === undefined ? '0' : score);
 	},
 	_getRivelNode: function(participan) {
 		var self = this,
