@@ -21,7 +21,7 @@ FixturesList = React.createClass({
 			secondScore = fixture.result.summary.byTeams[secondId];
 		}
 
-		return (firstScore === undefined ? '?' : firstScore) + ' : ' + (secondScore === undefined ? '?' : secondScore);
+		return (firstScore === undefined ? '0' : firstScore) + ' : ' + (secondScore === undefined ? '0' : secondScore);
 	},
 	_getRivelNode: function(participan) {
 		var self = this,
