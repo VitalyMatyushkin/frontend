@@ -28,7 +28,7 @@ NewsPage = React.createClass({
 						<img style={{display: 'none'}} className="eSchoolNews_image" src="https://meduza.io/image/attachment_overrides/images/000/000/070/ov/OcNOeC1vqd2ehz5Qv7T1wQ.jpg" />
 						<div className="eSchoolNews_date">{self.getDateFromIso(news.date)}</div>
 						<div className="eSchoolNews_title">{news.title}</div>
-						<div className="eSchoolNews_text">{news.body}</div>
+						<div className="eSchoolNews_text" dangerouslySetInnerHTML={{__html: news.body}}></div>
 					</div>
 				);
 			});
