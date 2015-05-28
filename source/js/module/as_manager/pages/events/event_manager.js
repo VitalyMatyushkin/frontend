@@ -71,10 +71,17 @@ EventManager = React.createClass({
     onSelectDate: function (date) {
         var self = this,
             binding = self.getDefaultBinding(),
+            time, minute = 0, hours = 10,
             _date = new Date(date.toISOString());
 
-        _date.setMinutes(0);
-        _date.setHours(10);
+        if (binding.get('model.startTime')) {
+            time = new Date(binding.get('model.startTime'));
+            minute = time.getMinutes();
+            hours = time.getHours();
+        }
+
+        _date.setMinutes(minute);
+        _date.setHours(hours);
 
         binding.set('model.startTime', _date.toISOString());
 		binding.set('model.startRegistrationTime', _date.toISOString());
