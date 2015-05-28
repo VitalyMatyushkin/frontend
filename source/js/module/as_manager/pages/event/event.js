@@ -116,7 +116,7 @@ EventView = React.createClass({
                 albums = res.albums,
 				schoolInfo = event.participants[0].school.id === activeSchoolId ?
 					event.participants[0].school : event.participants[1].school,
-                points = event.result ? event.result.points : [];
+                points = event.result && event.result.points ? event.result.points : [];
 
 			delete event.participants;
 			delete event.invites;
