@@ -18,6 +18,12 @@ authСontroller = {
 		} else {
 			// Если активная школа не задана, отправляем к спику школ
 			nextSchoolPage = 'schools';
+
+			var subDomain = window.location.host.split('.')[0];
+			if (subDomain == 'parents'){
+				nextSchoolPage = 'events/calendar';
+			}
+
 		}
 
 		return self.nextPage || nextSchoolPage;
