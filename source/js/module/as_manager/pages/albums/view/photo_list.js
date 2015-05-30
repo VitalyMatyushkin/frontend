@@ -11,7 +11,8 @@ PhotoList = React.createClass({
                 mActive: currentPhotoId === photo.get('id'),
                 'eAlbums_photo': true
             }),
-            styles = {backgroundImage: 'url(' + photo.get('pic') + ')'};
+            pic = photo.get('pic') + '/contain?height=50&width=100',
+            styles = {backgroundImage: 'url(' + pic + ')'};
 
         return <div onClick={self.onClickPhoto.bind(null, photo)} key={'photo-' + index} className={classes}
                     style={styles}></div>;
@@ -42,20 +43,20 @@ PhotoList = React.createClass({
                         albumId: binding.get('id'),
                         description: uploadedFile.name,
                         authorId: binding.get('ownerId'),
-                        pic: uri + '/download/' + uploadedFile.name
+                        pic: uri + '/files/' + uploadedFile.name
                     };
 
                 Server.photos.post(binding.get('id'), model);
 
-                model.pic = URL.createObjectURL(file);
+                setTimeout(function() {
+                    binding.sub('photos').update(function(photos) {
+                        return photos.push(Immutable.fromJS(model));
+                    });
 
-                binding.sub('photos').update(function(photos) {
-                    return photos.push(Immutable.fromJS(model));
-                });
-
-                if (!binding.get('currentPhotoId')) {
-                    binding.set('currentPhotoId', binding.get('photos.0.id'));
-                }
+                    if (!binding.get('currentPhotoId')) {
+                        binding.set('currentPhotoId', binding.get('photos.0.id'));
+                    }
+                }, 1000);
             },
             // Form data
             data: formData,

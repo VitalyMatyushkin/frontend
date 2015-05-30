@@ -66,7 +66,7 @@ AlbumView = React.createClass({
 		} else {
 			return (
 				<div className="eAlbum_currentPhoto">
-					<img className="eAlbum_currentImg" src={image.get('pic')} alt={image.get('name')} title={image.get('name')} />
+					<img className="eAlbum_currentImg" src={image.get('pic') + '/contain?height=800'} alt={image.get('name')} title={image.get('name')} />
 				</div>
 			);
 		}

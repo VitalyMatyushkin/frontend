@@ -7,7 +7,7 @@ EventHeader = React.createClass({
 	renderAlbum: function(album, index) {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			cover = binding.get('albums.' + index + '.photos.0.pic'),
+			cover = binding.get('albums.' + index + '.photos.0.pic') + '/contain?height=100',
 			styles = {backgroundImage: 'url(' + cover + ')'};
 
 		return <div onClick={self.onClickAlbum.bind(null, album)} key={'album-' + index} className='eEventAlbums_album' style={styles}>
