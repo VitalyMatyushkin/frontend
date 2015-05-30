@@ -10,8 +10,7 @@
     <build-runners>
       <runner id="RUNNER_1" name="Resolve dependencies" type="jonnyzzz.npm">
         <parameters>
-          <param name="npm_commands"><![CDATA[install
-test]]></param>
+          <param name="npm_commands" value="install" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
       </runner>
