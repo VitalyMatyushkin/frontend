@@ -35,12 +35,6 @@
         </parameters>
       </build-trigger>
     </build-triggers>
-    <artifact-dependencies>
-      <dependency sourceBuildTypeId="StFrontend_Build" cleanDestination="true">
-        <revisionRule name="lastSuccessful" revision="latest.lastSuccessful" />
-        <artifact sourcePath="**.* =&gt; /usr/share/nginx/squadintouch&#xD;&#xA;" />
-      </dependency>
-    </artifact-dependencies>
     <cleanup />
   </settings>
 </build-type>
