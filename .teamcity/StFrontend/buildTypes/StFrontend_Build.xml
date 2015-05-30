@@ -17,7 +17,7 @@
       </runner>
       <runner id="RUNNER_2" name="Build" type="jonnyzzz.gulp">
         <parameters>
-          <param name="jonnyzzz.gulp.mode" value="npm" />
+          <param name="jonnyzzz.gulp.mode" value="global" />
           <param name="jonnyzzz.gulp.tasks" value="deploy" />
           <param name="teamcity.step.mode" value="default" />
         </parameters>
