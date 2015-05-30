@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="79298548-bcfd-4204-afc8-e0837d83bd4b" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>Build</name>
+  <description />
+  <settings>
+    <options>
+      <option name="artifactRules" value="build =&gt; build&#xA;images =&gt; images&#xA;source =&gt; source&#xA;favicon.ico&#xA;index.html" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_1" name="Resolved dependencies" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="npm install ; bower install --allow-root" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_2" name="Build" type="jonnyzzz.gulp">
+        <parameters>
+          <param name="jonnyzzz.gulp.mode" value="npm" />
+          <param name="jonnyzzz.gulp.tasks" value="deploy" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="StFrontend_HttpsGithubComSquadInTouchFrontendRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="perCheckinTriggering" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <cleanup />
+  </settings>
+</build-type>
+

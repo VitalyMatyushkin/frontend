@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="3594853c-f43d-4ee9-828d-9bccab3059d9" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>ST-Frontend</name>
+  <parameters>
+    <param name="env.NODE_ENV" value="production" />
+  </parameters>
+  <cleanup />
+</project>
+
