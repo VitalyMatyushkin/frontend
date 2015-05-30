@@ -38,7 +38,7 @@
     <artifact-dependencies>
       <dependency sourceBuildTypeId="StFrontend_Build" cleanDestination="true">
         <revisionRule name="lastSuccessful" revision="latest.lastSuccessful" />
-        <artifact sourcePath="./ =&gt; /usr/share/nginx/squaditouch" />
+        <artifact sourcePath="./ =&gt; /usr/share/nginx/squadintouch" />
       </dependency>
     </artifact-dependencies>
     <cleanup />
