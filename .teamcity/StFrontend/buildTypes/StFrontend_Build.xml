@@ -8,11 +8,11 @@
     </options>
     <parameters />
     <build-runners>
-      <runner id="RUNNER_1" name="Resolve dependencies" type="simpleRunner">
+      <runner id="RUNNER_1" name="Resolve dependencies" type="jonnyzzz.npm">
         <parameters>
-          <param name="script.content" value="npm install ; bower install --allow-root" />
+          <param name="npm_commands"><![CDATA[install
+test]]></param>
           <param name="teamcity.step.mode" value="default" />
-          <param name="use.custom.script" value="true" />
         </parameters>
       </runner>
       <runner id="RUNNER_2" name="Build project" type="jonnyzzz.gulp">
