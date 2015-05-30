@@ -4,7 +4,7 @@
   <description />
   <settings>
     <options>
-      <option name="artifactRules" value="build =&gt; build&#xA;images =&gt; images&#xA;source =&gt; source&#xA;favicon.ico&#xA;index.html" />
+      <option name="artifactRules" value="images =&gt; images&#xA;layout =&gt; layout&#xA;node_modules =&gt; node_modules&#xA;source =&gt; source&#xA;.bowerrc&#xA;.gitignore&#xA;bower.json&#xA;favicon.ico&#xA;gulpfile.js&#xA;index.html&#xA;package.json" />
     </options>
     <parameters />
     <build-runners>
