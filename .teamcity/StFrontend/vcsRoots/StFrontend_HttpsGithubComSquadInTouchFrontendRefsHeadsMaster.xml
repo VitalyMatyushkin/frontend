@@ -8,7 +8,6 @@
   <param name="ignoreKnownHosts" value="true" />
   <param name="secure:password" value="zxx02667b48f9e4cb62775d03cbe80d301b" />
   <param name="submoduleCheckout" value="CHECKOUT" />
-  <param name="teamcity:branchSpec" value="master" />
   <param name="url" value="https://github.com/SquadInTouch/frontend" />
   <param name="useAlternates" value="true" />
   <param name="username" value="r3b-fish" />
