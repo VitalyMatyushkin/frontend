@@ -106,7 +106,7 @@ Form = React.createClass({
 				});
 			} else {
 				$.ajax({
-					url: 'http://api.squadintouch.com:80/v1/' + self.props.service,
+					url: window.apiBase + '/' + self.props.service,
 					type: 'POST',
 					crossDomain: true,
 					data: dateToPost,

@@ -28,7 +28,7 @@ PhotoList = React.createClass({
             binding = self.getDefaultBinding(),
             file = e.target.files[0],
             formData = new FormData(),
-            uri = '//api.squadintouch.com/v1/storage/' + binding.get('storageId'),
+            uri = window.apiBase + '/storage/' + binding.get('storageId'),
             fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
 
         formData.append('file', file, fileName);
