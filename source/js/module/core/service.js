@@ -1,5 +1,5 @@
 var PromiseClass = require('module/core/promise'),
-	baseUrl = 'http://api.squadintouch.com/v1',
+	baseUrl = window.apiBase,
 	Service;
 
 

@@ -4,17 +4,21 @@ requirejs.config({
 
 window.onload = function() {
 	var defaultMode = 'main',
-		modes = {
-			'manager.squard.com': 'manager',
-			'manager.squadintouch.com': 'manager',
-			'squard.com': 'main',
-			'squadintouch.com': 'main',
-			'parents.squard.com': 'parents',
-			'parents.squadintouch.com': 'parents'
-		},
-		startModule = 'module/start_as_';
+		// http://manager.squard.com -> ["manager.squard.com", "manager", undefined|stage, "squard"]
+		external = document.location.hostname.match(/([A-z0-9-]+)+(?:.(stage))?.(squadintouch|squard)\.com/),
+		specialModels = ['parents', 'manager'],
+		startModule = 'module/start_as_',
+		apiBase = 'api.stage.squadintouch.com',
+		version = 1;
 
-	startModule += modes[document.location.hostname] || defaultMode;
+
+	if (external[3] === 'squadintouch' && external[2] === undefined) {
+		window.apiBase = 'api.squadintouch.com';
+	}
+
+	window.apiBase = '//' + apiBase + '/v' + version;
+
+	startModule += specialModels.indexOf(external[1]) !== -1 ? external[1] : defaultMode;
 
 	window['require']([startModule], function(startCallback) {
 		startCallback();
