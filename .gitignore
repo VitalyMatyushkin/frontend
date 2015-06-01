@@ -29,6 +29,9 @@ node_modules
 #IDE
 .idea
 
+#CI
+.teamcity
+
 #Bower
 source/js/bower
 source/js/module/test
