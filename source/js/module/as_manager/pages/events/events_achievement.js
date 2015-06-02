@@ -20,10 +20,11 @@ ParentChildAchievement = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding(),
             studentId = globalBinding.get('routing.parameters.id'),
             leanerData = {};
-        //console.log(studentId);
+        //console.log(localStorage.getItem('myActive'));
         studentId = studentId ? studentId : binding.get('activeChildId');
-        //console.log(binding.get('activeChildId'));
-        if(!studentId) document.location.hash = 'events/calendar';
+        //console.log(binding.get('customActive'));
+        //if(!studentId)document.location.hash = 'events/calendar';
+        if(!studentId)studentId = localStorage.getItem('myActive');
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
             Server.form.get(data.formId).then(function (classData) {
