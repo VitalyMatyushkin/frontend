@@ -46,13 +46,10 @@ ChallengesView = React.createClass({
                 firstPoint,
                 secondPoint;
             if (type === 'inter-schools') {
-				//http://i.imgur.com/9br7NSU.jpg
-                firstName = eventBinding.get('participants.0.school.name');
-                secondName = !binding.get('model.resultId') ? eventBinding.get('invites.0.guest.name') : eventBinding.get('participants.1.school.name');
-
-				firstPic = eventBinding.get('participants.0.school.pic');
-				secondPic = eventBinding.get('participants.1.school.pic') || eventBinding.get('invites.0.guest.pic');
-
+                firstName = eventBinding.get('invites.0.guest.name');
+                firstPic = eventBinding.get('invites.0.guest.pic');
+                secondName = eventBinding.get('invites.0.inviter.name');
+                secondPic = eventBinding.get('invites.0.inviter.pic');
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');
