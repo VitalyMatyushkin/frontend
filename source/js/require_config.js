@@ -13,7 +13,7 @@ window.onload = function() {
 
 
 	if (external[3] === 'squadintouch' && external[2] === undefined) {
-		window.apiBase = 'api.squadintouch.com';
+		apiBase = 'api.squadintouch.com';
 	}
 
 	window.apiBase = '//' + apiBase + '/v' + version;
