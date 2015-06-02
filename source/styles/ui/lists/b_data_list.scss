@@ -115,3 +115,15 @@
   position: relative;
   border: 1px solid #ccc;
 }
+
+.eDataList_parent {
+  line-height: 1;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.eDataList_parentName,
+.eDataList_parentGender {
+  display: inline-block;
+  vertical-align: middle;
+}
