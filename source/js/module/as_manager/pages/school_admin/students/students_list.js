@@ -3,6 +3,7 @@ var List = require('module/ui/list/list'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
 	DateTimeMixin = require('module/mixins/datetime'),
+	SVG = require('module/ui/svg'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
 	StudentsListPage;
 
@@ -10,7 +11,7 @@ StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'students',
 	filters: {
-		include: ['form']
+		include: ['form', 'parents']
 	},
 	_getViewFunction: function() {
 		var self = this;
@@ -27,9 +28,10 @@ StudentsListPage = React.createClass({
 		return value.name;
 	},
 	getGender: function (value) {
-		var self = this;
+		var self = this,
+			icon = value === 'male' ? 'icon_man': 'icon_woman';
 
-		return value === 'male' ? 'boy' : 'girl';
+		return <SVG icon={icon} />;
 	},
 	getAgeFromBirthday: function(value) {
 		var self = this,
@@ -40,17 +42,30 @@ StudentsListPage = React.createClass({
 
 		return [date, self.getMonthName(month), year].join(' ');
 	},
+	getParents: function(parents) {
+		var self = this;
+
+		return parents ? parents.map(function(parent) {
+			var iconGender = parent.gender === 'male' ? 'icon_man': 'icon_woman';
+
+			return (<div className="eDataList_parent">
+				<span className="eDataList_parentGender"><SVG icon={iconGender} /></span>
+				<span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
+			</div>);
+		}) : null;
+	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		return (
 			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
-				<TableField width="5%" dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="20%" dataField="firstName">First name</TableField>
-				<TableField width="20%" dataField="lastName">Last name</TableField>
-				<TableField width="10%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
+				<TableField width="3%" dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
+				<TableField width="15%" dataField="firstName">First name</TableField>
+				<TableField width="15%" dataField="lastName">Last name</TableField>
+				<TableField width="5%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
 				<TableField width="15%" dataField="birthday" filterType="range" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
+				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
 		)
 	}
