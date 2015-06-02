@@ -14,6 +14,14 @@
   flex-direction: column;
   padding: 2px 0;
   font-size: 12px;
+  cursor: pointer;
+  &:hover {
+    background: lighten($MAIN_COLOR, 25%);
+  }
+  &.mActive {
+    color: #fff;
+    background: lighten($MAIN_COLOR, 10%);
+  }
 }
 
 .eChallenge_rivals {
@@ -24,7 +32,6 @@
 .eChallenge_basic {
   display: flex;
   justify-content: space-between;
-  color: #808080;
 }
 
 .eChallenge_rivals {
