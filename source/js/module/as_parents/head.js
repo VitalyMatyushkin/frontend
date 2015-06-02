@@ -72,7 +72,7 @@ Head = React.createClass({
                         <Autocomplete
                             serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
                             serverField="name"
-                            placeholderText={'enter the children name'}
+                            placeholderText={'Enter child name'}
                             onSelect={self.setActiveChild.bind(self)}
                             binding={binding.sub('autocomplete')}
                             />
