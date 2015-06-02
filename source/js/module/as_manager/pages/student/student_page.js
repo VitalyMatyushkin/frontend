@@ -47,8 +47,15 @@ LeanerView = React.createClass({
                                     leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                     self.numberOfGamesPlayed = gamesPlayed.length;
                                     leanerData.schoolEvent = gamesPlayed;
-                                    //console.log(leanerData);
-                                    binding.set('achievements', Immutable.fromJS(leanerData));
+                                    Server.studentParent.get({id:studentId}).then(function(returnedUser){
+                                        //Checks whether the object returned is empty
+                                        //TODO: May need refactoring
+                                        if(returnedUser.length != 0){
+                                            leanerData.parentOne = returnedUser[0].firstName+' '+returnedUser[0].lastName; console.log(leanerData);
+                                            leanerData.parentTwo = returnedUser[1].firstName+' '+returnedUser[1].lastName;
+                                        }
+                                        binding.set('achievements', Immutable.fromJS(leanerData));
+                                    });
                                 });
                             });
                         })
