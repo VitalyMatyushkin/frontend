@@ -39,6 +39,9 @@ ChallengesList = React.createClass({
 
         return rivalName;
     },
+    onClickEvent: function(eventId) {
+        document.location.hash = 'event/' + eventId;
+    },
     getEvents: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -59,7 +62,7 @@ ChallengesList = React.createClass({
                     hoverDay.getDate() === eventDate.getDate(),
                 stringDate = self.formatDate(event.get('startTime'));
 
-            return <div className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'}>
+            return <div key={'event-' + event.get('id')} className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
                 <div className="eChallenge_basic">
                     <span className="eChallenge_date">{stringDate}</span>
                     <span className="eChallenge_type">{event.get('type')}</span>
