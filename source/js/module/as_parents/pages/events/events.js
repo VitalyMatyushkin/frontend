@@ -69,7 +69,7 @@ EventView = React.createClass({
             name: 'Fixtures',
             key: 'Fixtures'
         }, {
-            href: '/#student',
+            href: '/#events/achievement',
             name: 'Achievements',
             key: 'Achievements'
         }];
@@ -89,8 +89,8 @@ EventView = React.createClass({
                                component='module/as_manager/pages/events/events_calendar'/>
                         <Route path='/events/challenges' binding={binding}
                                component='module/as_manager/pages/events/events_challenges'/>
-                        <Route path="/student" binding={binding}
-                               component="module/as_manager/pages/student/student_page"/>
+                        <Route path="/events/achievement" binding={binding}
+                               component="module/as_manager/pages/events/events_achievement"/>
                     </RouterView>
                 </div>
             </div>

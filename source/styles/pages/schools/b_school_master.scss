@@ -3,7 +3,9 @@
   box-sizing: border-box;
   position: relative;
 }
-
+.parentChildView{
+  padding: 0;
+}
 .eSchoolMaster_titleName{
   color: $MAIN_COLOR;
 }
