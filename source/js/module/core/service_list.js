@@ -33,6 +33,7 @@ serviceList = {
 		serviceList.studentGamesWon = new Service('/students/{id}/events/won?include={include}', binding);
 		serviceList.studentGamesScored = new Service('/students/{id}/events/scored?include={include}', binding);
 		serviceList.studentEvents = new Service('/students/{id}/events', binding);
+		serviceList.studentParent = new Service('/students/{id}/parents',binding);
 
 		// houses
 		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
