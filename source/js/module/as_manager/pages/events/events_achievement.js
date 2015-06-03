@@ -10,17 +10,18 @@ var ParentChildAchievement,
     UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
     UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
     TeamStats = require('module/as_manager/pages/student/view/team_stats'),
-    fixData;
+    IndicatorView = require('module/ui/progress_indicator/loading_prompt'),
+    progressValue;
 
 ParentChildAchievement = React.createClass({
     mixins: [Morearty.Mixin],
     _updateViewOnActiveChildIdChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
             studentId,
             leanerData = {};
         studentId = studentId ? studentId : binding.get('activeChildId');
+        progressValue = studentId;
         if(!studentId)document.location.hash = 'events/calendar';
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
@@ -71,6 +72,9 @@ ParentChildAchievement = React.createClass({
                 </div>
                 <div className="bUserDataColumn bParentView">
                     <div className="eUserDataColumn_wrap" id="jsSubPage">
+                        <div id="progressBarDiv" className="bUserFullInfo mDates">
+                            <IndicatorView currentChildId={progressValue} binding={binding.sub('achievements')}></IndicatorView>
+                        </div>
                         <div className="bUserFullInfo mDates">
                             <div className="eUserFullInfo_block">
                                 <h1>Personal Achievements: {self.numOfGamesScoredIn}</h1>
