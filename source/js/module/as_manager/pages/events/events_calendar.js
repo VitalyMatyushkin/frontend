@@ -10,7 +10,6 @@ EventsCalendar = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
-
         return (
             <div className="eEvents_calendar">
                 <CalendarView binding={binding.sub('calendar')} />

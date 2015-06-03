@@ -14,17 +14,14 @@ var ParentChildAchievement,
 
 ParentChildAchievement = React.createClass({
     mixins: [Morearty.Mixin],
-    componentWillMount: function () {
+    _updateViewOnActiveChildIdChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            studentId = globalBinding.get('routing.parameters.id'),
+            studentId,
             leanerData = {};
-        //console.log(localStorage.getItem('myActive'));
         studentId = studentId ? studentId : binding.get('activeChildId');
-        //console.log(binding.get('customActive'));
-        //if(!studentId)document.location.hash = 'events/calendar';
-        if(!studentId)studentId = localStorage.getItem('myActive');
+        if(!studentId)document.location.hash = 'events/calendar';
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
             Server.form.get(data.formId).then(function (classData) {
@@ -51,7 +48,6 @@ ParentChildAchievement = React.createClass({
                                     leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                     self.numberOfGamesPlayed = gamesPlayed.length;
                                     leanerData.schoolEvent = gamesPlayed;
-                                    //console.log(leanerData);
                                     binding.set('achievements', Immutable.fromJS(leanerData));
                                 });
                             });
@@ -61,9 +57,16 @@ ParentChildAchievement = React.createClass({
             });
         });
     },
+    justLogToConsole:function(){
+      console.log('bright');
+    },
+    onChange:function(e){
+      console.log('change');
+    },
     render: function () {
         var self = this,
             binding = self.getDefaultBinding();
+        self._updateViewOnActiveChildIdChange();
         return (
             <div>
                 <div className="bUserColumn bParentViewColumn">
