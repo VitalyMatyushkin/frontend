@@ -154,7 +154,7 @@ RouterView = React.createClass({
 
 		// Вынужденный костыль, надо сменить роутер :D
 		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
-			document.location = '#/';
+			document.location = '#/login';
 		}
 
 		return siteComponent ? React.createElement(siteComponent.View, siteComponent.routeComponent.props) : null;
