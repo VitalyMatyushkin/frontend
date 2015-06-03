@@ -17,12 +17,12 @@ EventTeams = React.createClass({
 			});
 		});
 	},
-    getPointsByStudent: function (playerId) {
+    getPointsByStudent: function (playerId, participantId) {
         var self = this,
             binding = self.getDefaultBinding(),
             points =  binding.sub('points'),
             filtered = points.get().filter(function (point) {
-                return point.get('studentId') === playerId;
+                return point.get('studentId') === playerId && point.get('participantId') === participantId;
             });
 
         return filtered.count();
@@ -75,7 +75,7 @@ EventTeams = React.createClass({
 
 		return players ? players.map(function (player) {
             var isMale = player.get('gender') === 'male',
-				points = self.getPointsByStudent(player.get('id')) || 0;
+				points = self.getPointsByStudent(player.get('id'), participant.get('id')) || 0;
 
             return <div className="bPlayer mMini">
                 <If condition={binding.get('mode') !== 'closing' && isOwner}>
