@@ -54,8 +54,14 @@ Head = React.createClass({
                 .set('sync', true)
                 .commit();
         });
-
-        document.location.hash = 'events/calendar';
+        //document.location.hash = 'events/calendar';
+        var locString = document.location.href;
+        locString = locString.split('#');
+        if(locString[1] === 'events/achievement'){
+            binding.set('customActive',binding.get('events.activeChildId'));
+            localStorage.setItem('myActive',binding.get('events.activeChildId'));
+            document.location.reload();
+        }
     },
     render: function () {
         var self = this,
