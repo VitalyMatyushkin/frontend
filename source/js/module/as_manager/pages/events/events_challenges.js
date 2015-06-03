@@ -126,13 +126,12 @@ ChallengesView = React.createClass({
                 </div>
                 <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
             </div>;
-        }).toArray() : null;
+        }).toArray() : <div className="eUserFullInfo_block">No fixtures to report on this child</div>;
     },
 	render: function () {
         var self = this,
             binding = self.getDefaultBinding(),
             challenges = self.getDates();
-
 		return <div>
             <div className="bChallenges">{challenges}</div>
         </div>;
