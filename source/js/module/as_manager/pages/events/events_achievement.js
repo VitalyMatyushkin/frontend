@@ -57,12 +57,6 @@ ParentChildAchievement = React.createClass({
             });
         });
     },
-    justLogToConsole:function(){
-      console.log('bright');
-    },
-    onChange:function(e){
-      console.log('change');
-    },
     render: function () {
         var self = this,
             binding = self.getDefaultBinding();
