@@ -31,6 +31,7 @@ ChallengesView = React.createClass({
                         new Date(date));
             });
         return eventsByDate.map(function (event) {
+            console.log(event.toJS());
             var eventDateTime = new Date(event.get('startTime')),
                 eventIndex = binding.get('models').findIndex(function (evt) {
                     return evt.get('id') === event.get('id');
@@ -44,7 +45,13 @@ ChallengesView = React.createClass({
 				firstPic,
 				secondPic,
                 firstPoint,
-                secondPoint;
+                secondPoint,
+                comment;
+            if(eventBinding.get('result') && eventBinding.get('result.comment')){
+                comment = eventBinding.get('result.comment');
+            }else{
+                comment = "There are no comments on this fixture";
+            }
             if (type === 'inter-schools') {
                 firstName = eventBinding.get('invites.0.guest.name');
                 firstPic = eventBinding.get('invites.0.guest.pic');
@@ -90,6 +97,11 @@ ChallengesView = React.createClass({
 						{secondName}
 					</div>
                 </div>
+                <div className="eChallenge_com_container">
+                    <div className="eChallenge_comments">
+                        {comment}
+                    </div>
+                </div>
             </div>;
         }).toArray();
     },
@@ -126,13 +138,12 @@ ChallengesView = React.createClass({
                 </div>
                 <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
             </div>;
-        }).toArray() : null;
+        }).toArray() : <div className="eUserFullInfo_block">No fixtures to report on this child</div>;
     },
 	render: function () {
         var self = this,
             binding = self.getDefaultBinding(),
             challenges = self.getDates();
-
 		return <div>
             <div className="bChallenges">{challenges}</div>
         </div>;

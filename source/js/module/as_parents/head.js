@@ -54,14 +54,6 @@ Head = React.createClass({
                 .set('sync', true)
                 .commit();
         });
-        //document.location.hash = 'events/calendar';
-        var locString = document.location.href;
-        locString = locString.split('#');
-        if(locString[1] === 'events/achievement'){
-            binding.set('customActive',binding.get('events.activeChildId'));
-            localStorage.setItem('myActive',binding.get('events.activeChildId'));
-            document.location.reload();
-        }
     },
     render: function () {
         var self = this,
@@ -79,7 +71,7 @@ Head = React.createClass({
                             serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
                             serverField="name"
                             placeholderText={'Enter child name'}
-                            onSelect={self.setActiveChild.bind(self)}
+                            onSelect={self.setActiveChild}
                             binding={binding.sub('autocomplete')}
                             />
                     </div>

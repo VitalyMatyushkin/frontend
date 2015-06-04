@@ -57,7 +57,6 @@ UserFixtures = React.createClass({
             eventsByDate;
         if(theData && theData.schoolEvent) {
             eventsByDate = theData.schoolEvent.filter(function (event) {
-                // tempAr.push(event);
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
@@ -72,9 +71,13 @@ UserFixtures = React.createClass({
                     firstPic,
                     secondPic,
                     firstPoint,
+                    comment,
                     secondPoint;
-                //console.log(tmp.name);
-                //console.log(type);
+                if(event.result && event.result.comment){
+                    comment = event.result.comment;
+                }else{
+                    comment = "There are no comments on this fixture";
+                }
                 if (type === 'inter-schools') {
                     firstName = event.participants[0].school.name;
                     secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
@@ -95,7 +98,6 @@ UserFixtures = React.createClass({
                     firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
                 }
-                //console.log(index+"  index");
                 return <div className="bChallenge"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
@@ -116,6 +118,11 @@ UserFixtures = React.createClass({
                             {secondName}
                         </div>
                     </div>
+                    <div className="eChallenge_com_container">
+                        <div className="eChallenge_comments">
+                            {comment}
+                        </div>
+                    </div>
                 </div>;
 
             });
@@ -127,7 +134,6 @@ UserFixtures = React.createClass({
             dates;
         if(dataFrom && dataFrom.schoolEvent){
             dates = dataFrom.schoolEvent.reduce(function(memo,val){
-                //console.log(typeof memo);
                 var date = Date.parse(val.startTime),
                     any = memo.some(function(d){
                         return self.sameDay(date,d);
