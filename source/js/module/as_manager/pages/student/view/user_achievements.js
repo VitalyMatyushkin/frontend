@@ -54,8 +54,13 @@ UserAchievements = React.createClass({
                     firstPic,
                     secondPic,
                     firstPoint,
+                    comment,
                     secondPoint;
-
+                if(event.result && event.result.comment){
+                    comment = event.result.comment;
+                }else{
+                    comment = "There are no comments on this fixture";
+                }
                 if (type === 'inter-schools') {
                     firstName = event.participants[0].school.name;
                     secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
@@ -95,6 +100,11 @@ UserAchievements = React.createClass({
                         <div className="eChallenge_rivalName">
                             {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
                             {secondName}
+                        </div>
+                    </div>
+                    <div className="eChallenge_com_container">
+                        <div className="eChallenge_comments">
+                            {comment}
                         </div>
                     </div>
                 </div>;

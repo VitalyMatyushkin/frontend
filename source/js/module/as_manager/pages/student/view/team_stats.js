@@ -58,7 +58,13 @@ TeamStats = React.createClass({
                     firstPic,
                     secondPic,
                     firstPoint,
+                    comment,
                     secondPoint;
+                if(event.result && event.result.comment){
+                    comment = event.result.comment;
+                }else{
+                    comment = "There are no comments on this fixture";
+                }
 
                 if (type === 'inter-schools') {
                     firstName = event.participants[0].school.name;
@@ -80,7 +86,6 @@ TeamStats = React.createClass({
                     firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
                 }
-                //console.log(index+"  index");
                 return <div className="bChallenge"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
@@ -99,6 +104,11 @@ TeamStats = React.createClass({
                         <div className="eChallenge_rivalName">
                             {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
                             {secondName}
+                        </div>
+                    </div>
+                    <div className="eChallenge_com_container">
+                        <div className="eChallenge_comments">
+                            {comment}
                         </div>
                     </div>
                 </div>;
