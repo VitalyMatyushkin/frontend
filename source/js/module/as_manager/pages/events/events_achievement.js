@@ -10,21 +10,19 @@ var ParentChildAchievement,
     UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
     UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
     TeamStats = require('module/as_manager/pages/student/view/team_stats'),
-    fixData;
+    IndicatorView = require('module/ui/progress_indicator/loading_prompt'),
+    progressValue;
 
 ParentChildAchievement = React.createClass({
     mixins: [Morearty.Mixin],
-    componentWillMount: function () {
+    _updateViewOnActiveChildIdChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            studentId = globalBinding.get('routing.parameters.id'),
+            studentId,
             leanerData = {};
-        //console.log(localStorage.getItem('myActive'));
         studentId = studentId ? studentId : binding.get('activeChildId');
-        //console.log(binding.get('customActive'));
-        //if(!studentId)document.location.hash = 'events/calendar';
-        if(!studentId)studentId = localStorage.getItem('myActive');
+        progressValue = studentId;
+        if(!studentId)document.location.hash = 'events/calendar';
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
             Server.form.get(data.formId).then(function (classData) {
@@ -51,7 +49,6 @@ ParentChildAchievement = React.createClass({
                                     leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                     self.numberOfGamesPlayed = gamesPlayed.length;
                                     leanerData.schoolEvent = gamesPlayed;
-                                    //console.log(leanerData);
                                     binding.set('achievements', Immutable.fromJS(leanerData));
                                 });
                             });
@@ -64,6 +61,7 @@ ParentChildAchievement = React.createClass({
     render: function () {
         var self = this,
             binding = self.getDefaultBinding();
+        self._updateViewOnActiveChildIdChange();
         return (
             <div>
                 <div className="bUserColumn bParentViewColumn">
@@ -74,6 +72,9 @@ ParentChildAchievement = React.createClass({
                 </div>
                 <div className="bUserDataColumn bParentView">
                     <div className="eUserDataColumn_wrap" id="jsSubPage">
+                        <div id="progressBarDiv" className="bUserFullInfo mDates">
+                            <IndicatorView currentChildId={progressValue} binding={binding.sub('achievements')}></IndicatorView>
+                        </div>
                         <div className="bUserFullInfo mDates">
                             <div className="eUserFullInfo_block">
                                 <h1>Personal Achievements: {self.numOfGamesScoredIn}</h1>
