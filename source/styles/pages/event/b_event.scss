@@ -28,3 +28,25 @@
   color: $MAIN_COLOR;
   font-size: 25px;
 }
+
+.eEvent_commentText {
+  padding: 6px 0;
+  box-sizing: border-box;
+  background: #eee;
+  transition: height .3s ease-out;
+  &.mHide {
+    height: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+}
+
+.eEvent_commentHeader {
+  background: #ccc;
+  padding: 6px;
+  text-align: center;
+  &:hover {
+    background: #ccc;
+    cursor: pointer;
+  }
+}
