@@ -16,6 +16,15 @@
 .eChallenge_in{
   display: table;
 }
+.eChallenge_com_container{
+  display: block;
+}
+.eChallenge_comments{
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid rgba(130, 184, 76, 0.3);
+  background:#EAF9D0;
+}
 
 .eChallenge_rivalName,
 .eChallenge_rivalInfo{

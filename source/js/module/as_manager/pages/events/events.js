@@ -47,7 +47,6 @@ EventView = React.createClass({
                 .set('sync', true)
                 .commit();
         });
-
         self.menuItems = [
         {
             key: 'goback',

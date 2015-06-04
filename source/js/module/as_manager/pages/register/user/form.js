@@ -16,7 +16,7 @@ RegiseterUserForm = React.createClass({
 		var self = this;
 
 		return (
-			<Form name="Sing up" service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
+			<Form name="Sign up" service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
