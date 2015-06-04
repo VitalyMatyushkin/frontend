@@ -31,6 +31,7 @@ ChallengesView = React.createClass({
                         new Date(date));
             });
         return eventsByDate.map(function (event) {
+            console.log(event.toJS());
             var eventDateTime = new Date(event.get('startTime')),
                 eventIndex = binding.get('models').findIndex(function (evt) {
                     return evt.get('id') === event.get('id');
@@ -44,7 +45,13 @@ ChallengesView = React.createClass({
 				firstPic,
 				secondPic,
                 firstPoint,
-                secondPoint;
+                secondPoint,
+                comment;
+            if(eventBinding.get('result') && eventBinding.get('result.comment')){
+                comment = eventBinding.get('result.comment');
+            }else{
+                comment = "There are no comments on this fixture";
+            }
             if (type === 'inter-schools') {
                 firstName = eventBinding.get('invites.0.guest.name');
                 firstPic = eventBinding.get('invites.0.guest.pic');
@@ -89,6 +96,11 @@ ChallengesView = React.createClass({
 						{secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
 						{secondName}
 					</div>
+                </div>
+                <div className="eChallenge_com_container">
+                    <div className="eChallenge_comments">
+                        {comment}
+                    </div>
                 </div>
             </div>;
         }).toArray();
