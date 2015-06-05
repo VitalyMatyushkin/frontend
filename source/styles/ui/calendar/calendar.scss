@@ -4,6 +4,7 @@ $border-color: #eee;
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
+  align-self: flex-start;
 }
 
 .eCalendar_navBar {
