@@ -40,7 +40,12 @@
     padding: 0;
   }
 }
-
+.eEvent_shadowCommentText{
+  padding: 6px 0;
+  background:#eee;
+  transition: height .3s ease-out;
+  box-sizing: border-box;
+}
 .eEvent_commentHeader {
   background: #ccc;
   padding: 6px;
