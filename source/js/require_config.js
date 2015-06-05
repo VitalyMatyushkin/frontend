@@ -6,7 +6,7 @@ window.onload = function() {
 	var defaultMode = 'main',
 		// http://manager.squard.com -> ["manager.squard.com", "manager", undefined|stage, "squard"]
 		external = document.location.hostname.match(/([A-z0-9-]+)+(?:.(stage))?.(squadintouch|squard)\.com/),
-		specialModels = ['parents', 'manager'],
+		specialModels = ['parents', 'manager', 'admin'],
 		startModule = 'module/start_as_',
 		apiBase = 'api.stage.squadintouch.com',
 		version = 1;

@@ -25,7 +25,8 @@ EventView = React.createClass({
                 points: []
             },
             sync: false,
-            mode: 'general'
+            mode: 'general',
+            showingComment: false
         });
     },
     componentWillMount: function () {
@@ -146,9 +147,20 @@ EventView = React.createClass({
             binding.set('mode', rootBinding.get('routing.pathParameters.1') || null)
         });
     },
-	render: function() {
+    onToggleShowComment: function() {
         var self = this,
             binding = self.getDefaultBinding();
+
+        binding.set('showingComment', !binding.get('showingComment'));
+    },
+	render: function() {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            showingComment = binding.get('showingComment'),
+            commentTextClasses = classNames({
+                'eEvent_commentText': true,
+                mHide: !showingComment
+            });
 
 		return <div>
             <div className="bEventContainer">
@@ -164,8 +176,11 @@ EventView = React.createClass({
                                     value={binding.get('model.comment')}
                                     />
                             </If>
-                            <If condition={binding.get('mode') === 'general' && binding.get('model.comment')}>
-                                <span className="eEvent_commentText">{binding.get('model.comment')}</span>
+                            <If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')}>
+                                <div>
+                                    <div className="eEvent_commentHeader" onClick={self.onToggleShowComment}>{binding.get('showingComment') ? 'hide' : 'show comment'}</div>
+                                    <div className={commentTextClasses}>{binding.get('model.result.comment')}</div>
+                                </div>
                             </If>
                         </div>
                         <EventRivals binding={binding} />
