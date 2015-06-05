@@ -153,6 +153,17 @@ EventView = React.createClass({
 
         binding.set('showingComment', !binding.get('showingComment'));
     },
+    //A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
+    //This avoids the manager having to reload the screen to see what they just entered.
+    onChange:function(){
+        var self = this,
+            comment = document.getElementById('commentTextArea');
+        if(comment){
+            self.commentContent = comment.value;
+        }else{
+            self.commentContent = '0';
+        }
+    },
 	render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -160,7 +171,7 @@ EventView = React.createClass({
             commentTextClasses = classNames({
                 'eEvent_commentText': true,
                 mHide: !showingComment
-            });
+            });  self.onChange();
 
 		return <div>
             <div className="bEventContainer">
@@ -173,7 +184,7 @@ EventView = React.createClass({
                                 <Morearty.DOM.textarea
                                     className="eEvent_comment"
                                     onChange={Morearty.Callback.set(binding, 'model.comment')}
-                                    value={binding.get('model.comment')}
+                                    value={binding.get('model.comment')} id="commentTextArea"
                                     />
                             </If>
                             <If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')}>
@@ -184,6 +195,9 @@ EventView = React.createClass({
                             </If>
                         </div>
                         <EventRivals binding={binding} />
+                        <If condition={binding.get('mode') === 'general' && self.commentContent !='0' }>
+                            <div className="eEvent_shadowCommentText">{self.commentContent}</div>
+                        </If>
                         <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />
                     </div>
