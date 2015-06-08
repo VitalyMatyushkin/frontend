@@ -43,7 +43,7 @@ BlazonUpload = React.createClass({
         //self._updatePhotoUpload();
             file = e.target.files[0],
             formData = new FormData(),
-            uri = window.apiBase + '/storage/' + albumDetails.storageId,
+            uri = window.apiBase + '/storage/sqt_album_1433792142221_a340185653dd693a37c8a502_staging',
             fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
         formData.append('file', file, fileName);
         console.log(uri); console.log(fileName);
