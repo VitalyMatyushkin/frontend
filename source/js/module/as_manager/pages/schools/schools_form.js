@@ -1,6 +1,7 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
+	BlazonUpload = require('module/as_manager/pages/albums/view/upload_blazon'),
 	SchoolForm;
 
 SchoolForm = React.createClass({
@@ -19,10 +20,14 @@ SchoolForm = React.createClass({
 					<FormField type="text" field="description" validation="required">Description</FormField>
 					<FormField type="text" field="phone" validation="required">Phone</FormField>
 				</FormColumn>
-
 				<FormColumn type="column">
 					<FormField type="area" field="postcodeId" validation="required">Postcode</FormField>
 					<FormField type="text" field="address" validation="required">Address</FormField>
+					<FormField type="text" field="domain" validation="required">Domain</FormField>
+				</FormColumn>
+				<FormColumn type="column">
+					<FormField type="hidden" field="pic" validation="required">pic</FormField>
+					<BlazonUpload binding={self.getDefaultBinding().sub('album')}></BlazonUpload>
 				</FormColumn>
 			</Form>
 		)
