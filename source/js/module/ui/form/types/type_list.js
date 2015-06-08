@@ -1,4 +1,5 @@
 var TypeText = require('module/ui/form/types/text'),
+	TypeHidden = require('module/ui/form/types/hidden'),
 	TypeArea = require('module/ui/form/types/area'),
 	TypeAutocomplete = require('module/ui/form/types/autocomplete'),
 	TypeConfirmText = require('module/ui/form/types/confirm_text'),
@@ -17,5 +18,6 @@ typeList['date'] = TypeDate;
 typeList['colors'] = TypeColors;
 typeList['select'] = TypeSelect;
 typeList['radio'] = TypeRadio;
+typeList['hidden'] = TypeHidden;
 
 module.exports = typeList;
