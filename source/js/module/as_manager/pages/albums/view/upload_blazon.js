@@ -21,7 +21,7 @@ BlazonUpload = React.createClass({
             description: 'blazon_'+rootBinding.get('userRules.activeSchoolId')+'_staging',
             eventId: rootBinding.get('userRules.activeSchoolId')
         }).then(function(res){
-            albumDetails=res; console.log(albumDetails.storageId); console.log(albumDetails);
+            albumDetails=res;
         });
     },
     renderPhoto: function(photo, index) {
@@ -46,7 +46,6 @@ BlazonUpload = React.createClass({
             uri = window.apiBase + '/storage/sqt_album_1433792142221_a340185653dd693a37c8a502_staging',
             fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
         formData.append('file', file, fileName);
-        console.log(uri); console.log(fileName);
         $.ajax({
             url: uri + '/upload',
             type: 'POST',
@@ -59,24 +58,11 @@ BlazonUpload = React.createClass({
                         authorId:albumDetails.ownerId,
                         pic: uri + '/files/' + uploadedFile.name
                     };
-                console.log(albumDetails.id);
                 Server.photos.post(albumDetails.id, model).then(function(data){
-                    console.log(data);
                     urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=50&width=100';
                     var profilePicStr = document.getElementById('blazonInput');
                     profilePicStr.value =urlStr;
                 });
-
-                //setTimeout(function() {
-                //    binding.sub('photos').update(function(photos) {
-                //        return photos.push(Immutable.fromJS(model));
-                //    });
-                //
-                //    if (!binding.get('currentPhotoId')) {
-                //        binding.set('currentPhotoId', binding.get('photos.0.id'));
-                //    }
-                //}, 1000);
-
             },
             // Form data
             data: formData,
