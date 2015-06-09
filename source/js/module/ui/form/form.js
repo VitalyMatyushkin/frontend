@@ -60,7 +60,6 @@ Form = React.createClass({
 		if (self.busy === true) {
 			return false;
 		}
-		console.log(fields);
 		// Проверка всех полей данных на валидацию
 		for (var field in fields) {
 			dateToPost[field] = fields[field].value;

@@ -26,7 +26,7 @@ SchoolForm = React.createClass({
 					<FormField type="text" field="domain" validation="required">Domain</FormField>
 				</FormColumn>
 				<FormColumn type="column">
-					<FormField type="hidden" field="pic" validation="required">pic</FormField>
+					<FormField type="hidden" validation="required" field="pic">Upload blazon by clicking on the + button below</FormField>
 					<BlazonUpload binding={self.getDefaultBinding().sub('album')}></BlazonUpload>
 				</FormColumn>
 			</Form>
