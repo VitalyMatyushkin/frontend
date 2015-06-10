@@ -13,7 +13,7 @@ SchoolDetail = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('routing.parameters.id'); console.log(activeSchoolId);
+            activeSchoolId = globalBinding.get('routing.parameters.id');
 
         self.activeSchoolId = activeSchoolId;
         self.request = window.Server.schoolsFindOne.get({
@@ -59,10 +59,14 @@ SchoolDetail = React.createClass({
         managerList = listData.map(function(manager){
             return(
                 <div className="eDataList_listItem">
-                    <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={manager.gender}/></span></div>
+                    <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={manager.avatar}/></span></div>
+                    <div className="eDataList_listItemCell">{manager.username}</div>
                     <div className="eDataList_listItemCell">{manager.firstName}</div>
                     <div className="eDataList_listItemCell">{manager.lastName}</div>
-                    <div className="eDataList_listItemCell">{manager.status}</div>
+                    <div className="eDataList_listItemCell">{manager.gender}</div>
+                    <div className="eDataList_listItemCell">{manager.email}</div>
+                    <div className="eDataList_listItemCell">{manager.phone}</div>
+                    <div className="eDataList_listItemCell">{typeof manager.status === 'undefined'? 'N/A':manager.status}</div>
                     <div className="eDataList_listItemCell mActions">
                         <span  onClick={deleteManager(manager.id)} className="bLinkLike">Delete</span>
                     </div>
@@ -99,20 +103,27 @@ SchoolDetail = React.createClass({
                     <Map binding={binding} point={binding.toJS('postcode.point')}/>
                 </If>
                 <div style={{marginTop:10+"px"}}>
-                    <h1 className="eSchoolMaster_title">Managers</h1>
+                    <h1 className="eSchoolMaster_title"><span>Managers</span>
+                        <div className="eSchoolMaster_buttons">
+                            <div className="eDataList_listItemCell">
+                                <div className="eDataList_filter">
+                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name'} />
+                                </div>
+                            </div>
+                        </div>
+                    </h1>
                     <div className="bDataList">
                         <div className="eDataList_list mTable">
                             <div className="eDataList_listItem mHead">
-                                <div className="eDataList_listItemCell" style={{width:3+'%'}}>Gender</div>
-                                <div className="eDataList_listItemCell" style={{width:20+'%'}}>
-                                    First Name
-                                    <div className="eDataList_filter">
-                                        <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter'} />
-                                    </div>
-                                </div>
+                                <div className="eDataList_listItemCell" style={{width:3+'%'}}>Avatar</div>
+                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Username</div>
+                                <div className="eDataList_listItemCell" style={{width:15+'%'}}>First Name</div>
                                 <div className="eDataList_listItemCell" style={{width:15+'%'}}>Last Name</div>
-                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Status</div>
-                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Actions</div>
+                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Gender</div>
+                                <div className="eDataList_listItemCell" style={{width:20+'%'}}>Email</div>
+                                <div className="eDataList_listItemCell" style={{width:17+'%'}}>Telephone</div>
+                                <div className="eDataList_listItemCell" style={{width:8+'%'}}>Status</div>
+                                <div className="eDataList_listItemCell" style={{width:2+'%'}}>Actions</div>
                             </div>
                             {managerList}
                         </div>

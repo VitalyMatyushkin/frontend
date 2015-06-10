@@ -44,7 +44,7 @@ SchoolListPage = React.createClass({
                     <div className="eDataList_listItemCell">{school.phone}</div>
                     <div className="eDataList_listItemCell">{school.address}</div>
                     <div className="eDataList_listItemCell">{school.domain}</div>
-                    <div className="eDataList_listItemCell">{'NAN'}</div>
+                    <div className="eDataList_listItemCell">{typeof school.domain === 'undefined'?'N/A':school.status}</div>
                     <div className="eDataList_listItemCell mActions">
                         <span  onClick={deleteSchool(school.id)} className="bLinkLike">Delete</span>
                     </div>
@@ -79,9 +79,13 @@ SchoolListPage = React.createClass({
         return (
            <div>
                <h1 className="eSchoolMaster_title">
-                   <span>Schools</span>
+                   <span>List of Schools on SquadInTouch</span>
                    <div className="eSchoolMaster_buttons">
-                       <div className="bButton"><span>.....</span></div>
+                       <div className="eDataList_listItemCell">
+                           <div className="eDataList_filter">
+                               <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by school name'} />
+                           </div>
+                       </div>
                    </div>
                </h1>
                <div className="bDataList">
@@ -90,9 +94,6 @@ SchoolListPage = React.createClass({
                            <div className="eDataList_listItemCell" style={{width:3+'%'}}>Logo</div>
                            <div className="eDataList_listItemCell" style={{width:20+'%'}}>
                                Name
-                               <div className="eDataList_filter">
-                                   <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter'} />
-                               </div>
                            </div>
                            <div className="eDataList_listItemCell" style={{width:15+'%'}}>Telephone</div>
                            <div className="eDataList_listItemCell" style={{width:37+'%'}}>Address</div>

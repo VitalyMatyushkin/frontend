@@ -9,49 +9,17 @@ OneSchoolPage = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-        document.location.hash = 'admin_schools/admin_views/list';
-        //if (!activeSchoolId) {
-        //    document.location.hash = 'schools';
-        //} else {
-        //    window.Server.school.get(activeSchoolId).then(function (data) {
-        //        binding.set('schoolInfo', Immutable.fromJS(data));
-        //    });
-        //}
-
-        // Пункты подменю
-        //self.menuItems = [{
-        //    href: '/#admin_schools/list',
-        //    name: 'List of Schools',
-        //    key: 'List of Schools'
-        //},{
-        //    href: '/#admin_schools/students',
-        //    name: 'Students',
-        //    key: 'Students'
-        //},{
-        //    href: '/#school_admin/forms',
-        //    name: 'Forms',
-        //    key: 'Forms'
-        //},{
-        //    href: '/#school_admin/houses',
-        //    name: 'Houses',
-        //    key: 'Houses'
-        //},{
-        //    href: '/#school_admin/news',
-        //    name: 'News',
-        //    key: 'News'
-        //},{
-        //    href: '/#school_admin/coaches',
-        //    name: 'Coaches',
-        //    key: 'Coaches'
-        //}];
+            activeSchoolId = globalBinding.get('routing.parameters.id');
+       // document.location.hash = 'admin_schools/admin_views/list';
+        if (!activeSchoolId) {
+            document.location.hash = 'admin_schools/admin_views/list';
+        }
         self.menuItems = [{
             href: '/#admin_schools/admin_views/list',
             name: 'schools',
             key: 'schools'
         }]
     },
-
     getDefaultState: function () {
         return Immutable.fromJS({
             admin_views: {
