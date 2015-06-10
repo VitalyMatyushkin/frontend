@@ -9,7 +9,7 @@ UserDataClass.getDefaultState = function(){
 
 	// Востановлении информации о состоянии авторизации
 	return {
-		authorizationInfo: Helpers.LocalStorage.get('UserData.authorizationInfo') || {}
+		authorizationInfo: Helpers.cookie.get('authorizationInfo') || {}
 	};
 };
 
@@ -24,7 +24,7 @@ UserDataClass.initBind = function() {
 	bindObject.addListener('authorizationInfo', function() {
 		var data = bindObject.get('authorizationInfo');
 
-		Helpers.LocalStorage.set('UserData.authorizationInfo', data);
+		Helpers.LocalStorage.set('authorizationInfo', data);
 	});
 };
 
