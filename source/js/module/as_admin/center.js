@@ -28,6 +28,9 @@ Center = React.createClass({
 
                         <Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
                         <Route path="/login" binding={binding.sub('userData')} component="module/as_admin/pages/admin_login/admin_login" loginRoute={true}  />
+                        <Route path="/logout" binding={binding.sub('userData')} component="module/as_admin/pages/logout/logout" unauthorizedAccess={true}  />
+                        <Route path="/admin_schools /:subPage /admin_schools/:subPage/:mode" binding={binding.sub('adminSchoolList')} component="module/as_admin/pages/admin_schools/admin_dashboard"/>
+                        <Route path="/admin_views /admin_views/:subPage" binding={binding.sub('schoolsDetail')} component="module/as_admin/pages/admin_schools/admin_dashboard"  />
                     </RouterView>
                 </div>
             </div>

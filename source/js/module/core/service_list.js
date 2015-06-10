@@ -47,6 +47,9 @@ serviceList = {
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
 		serviceList.oneSchoolCoache = new Service('/schools/{schoolId}/coaches/{id}', binding);
 
+		//Admins
+		serviceList.schoolAdmins = new Service('/schools/{id}/admins',binding);
+
 		// news
 		serviceList.news = new Service('/schools/{schoolId}/news', binding);
 		serviceList.oneNews = new Service('/news/{formId}', binding);

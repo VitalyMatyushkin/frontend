@@ -22,6 +22,8 @@ authСontroller = {
 			var subDomain = window.location.host.split('.')[0];
 			if (subDomain == 'parents'){
 				nextSchoolPage = 'events/calendar';
+			}else if(subDomain =='admin'){
+				nextSchoolPage = 'admin_schools';
 			}
 
 		}

@@ -12,9 +12,9 @@ BlazonUpload = React.createClass({
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding();
-        window.Server.school.get(rootBinding.get('userRules.activeSchoolId')).then(function(school){
-            console.log(school);
+            rootBinding = self.getMoreartyContext().getBinding(),
+            currentSchoolId = typeof rootBinding.get('routing.parameters.id') !== 'undefined' ? rootBinding.get('routing.parameters.id') : rootBinding.get('userRules.activeSchoolId');
+        window.Server.school.get(currentSchoolId).then(function(school){
             preview = self.renderPhoto(school.pic);
         });
     },

@@ -3,6 +3,7 @@
  */
 var Logo = require('module/as_admin/head/logo'),
     TopMenu = require('module/ui/menu/top_menu'),
+    UserBlock = require('module/as_manager/head/user_block'),
     Head;
 
 Head = React.createClass({
@@ -51,6 +52,7 @@ Head = React.createClass({
             <div className="bTopPanel">
                 <Logo />
                 <TopMenu binding={binding.sub('routing')} />
+                <UserBlock binding={binding.sub('userData')} />
             </div>
         )
     }
