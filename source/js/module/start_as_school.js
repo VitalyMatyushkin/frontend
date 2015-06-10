@@ -1,4 +1,4 @@
-var ApplicationView = require('module/as_main/application'),
+var ApplicationView = require('module/as_school/application'),
 	serviceList = require('module/core/service_list'),
 	MoreartyContext,
 	binding;

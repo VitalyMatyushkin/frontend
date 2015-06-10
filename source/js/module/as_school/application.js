@@ -1,5 +1,5 @@
-var HeadView = require('module/as_main/head'),
-	CenterView = require('module/as_main/center'),
+var HeadView = require('module/as_school/head'),
+	CenterView = require('module/as_school/center'),
 	ApplicationView;
 
 ApplicationView = React.createClass({
