@@ -11,7 +11,7 @@ ApplicationView = React.createClass({
 		return (
 			<div>
 				<HeadView binding={binding} />
-				<div>Hello world</div>
+				<CenterView binding={binding} />
 			</div>
 		);
 	}

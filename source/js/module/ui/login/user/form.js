@@ -12,7 +12,7 @@ RegiseterUserForm = React.createClass({
 		var self = this;
 
 		return (
-			<Form name="Sign in or <a class='mHover' href='/#register'>sign up for free</a>" service="users/login" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
+			<Form name="Sign in or <a class='mHover' href='/#register'>join us for free</a>" service="users/login" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				<FormField type="text" field="username" validation="required">Username or email</FormField>
 				<FormField type="text" textType="password" field="password" validation="required">Password</FormField>
 			</Form>
