@@ -25,14 +25,26 @@ SchoolDetail = React.createClass({
             }
         }).then(function(data) {
             binding.set(Immutable.fromJS(data));
-            window.Server.schoolAdmins.get({id:activeSchoolId}).then(function(admins){
-                binding.set('schoolAdmins',Immutable.fromJS(admins));
-                window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
-                    binding.set('schoolCoaches',Immutable.fromJS(coaches));
-                    self.isMounted() && self.forceUpdate(); console.log(binding.get('schoolAdmins').toJS()); console.log(binding.get('schoolCoaches').toJS());
+            window.Server.users.get({
+                filter:{
+                    where:{
+                        id:binding.get('ownerId')
+                    }
+                }
+            }).then(
+                function(managers){
+                    binding.set('schoolAdmins',Immutable.fromJS(managers));
                     self._updateManagerListData(binding.get('schoolAdmins').toJS());
-                });
-            });
+                }
+            );
+            //window.Server.schoolAdmins.get({id:activeSchoolId}).then(function(admins){
+            //    binding.set('schoolAdmins',Immutable.fromJS(admins));
+            //    window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
+            //        binding.set('schoolCoaches',Immutable.fromJS(coaches));
+            //        self.isMounted() && self.forceUpdate(); console.log(binding.get('schoolAdmins').toJS()); console.log(binding.get('schoolCoaches').toJS());
+            //        self._updateManagerListData(binding.get('schoolAdmins').toJS());
+            //    });
+            //});
         });
     },
     componentWillUnmount: function() {
@@ -107,7 +119,7 @@ SchoolDetail = React.createClass({
                         <div className="eSchoolMaster_buttons">
                             <div className="eDataList_listItemCell">
                                 <div className="eDataList_filter">
-                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name'} />
+
                                 </div>
                             </div>
                         </div>
