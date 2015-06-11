@@ -44,7 +44,7 @@ SchoolListPage = React.createClass({
                     <div className="eDataList_listItemCell">{school.phone}</div>
                     <div className="eDataList_listItemCell">{school.address}</div>
                     <div className="eDataList_listItemCell">{school.domain}</div>
-                    <div className="eDataList_listItemCell">{typeof school.domain === 'undefined'?'N/A':school.status}</div>
+                    <div className="eDataList_listItemCell">{typeof school.status === 'undefined'? 'N/A': school.status}</div>
                     <div className="eDataList_listItemCell mActions">
                         <span  onClick={deleteSchool(school.id)} className="bLinkLike">Delete</span>
                     </div>

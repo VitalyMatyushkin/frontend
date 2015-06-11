@@ -67,6 +67,23 @@ SchoolDetail = React.createClass({
                     console.log('delete');
                     event.stopPropagation();
                 }
+            },
+            addRole = function(value){
+                return function(event){
+                    alert('Adds a new role to this user');
+                    event.stopPropagation();
+                }
+            },
+            removeRole = function(value){
+                return function(event){
+                    alert("removes a role from this user");
+                    event.stopPropagation();
+                }
+            },
+            editRole = function(value){
+                return function(event){
+                    alert('This will allow us to swap a role instead of removing or adding');
+                }
             };
         managerList = listData.map(function(manager){
             return(
@@ -76,11 +93,11 @@ SchoolDetail = React.createClass({
                     <div className="eDataList_listItemCell">{manager.firstName}</div>
                     <div className="eDataList_listItemCell">{manager.lastName}</div>
                     <div className="eDataList_listItemCell">{manager.gender}</div>
-                    <div className="eDataList_listItemCell">{manager.email}</div>
-                    <div className="eDataList_listItemCell">{manager.phone}</div>
-                    <div className="eDataList_listItemCell">{typeof manager.status === 'undefined'? 'N/A':manager.status}</div>
-                    <div className="eDataList_listItemCell mActions">
-                        <span  onClick={deleteManager(manager.id)} className="bLinkLike">Delete</span>
+                    <div className="eDataList_listItemCell">{typeof manager.status === 'undefined'? 'N/A': manager.status }</div>
+                    <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
+                        <span  onClick={addRole(manager.id)} className="bLinkLike">Add</span>
+                        <span  onClick={removeRole(manager.id)} className="bLinkLike">Remove</span>
+                        <span  onClick={editRole(manager.id)} className="bLinkLike">Edit</span>
                     </div>
                 </div>
             )
@@ -119,7 +136,7 @@ SchoolDetail = React.createClass({
                         <div className="eSchoolMaster_buttons">
                             <div className="eDataList_listItemCell">
                                 <div className="eDataList_filter">
-
+                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name'} />
                                 </div>
                             </div>
                         </div>
@@ -127,15 +144,13 @@ SchoolDetail = React.createClass({
                     <div className="bDataList">
                         <div className="eDataList_list mTable">
                             <div className="eDataList_listItem mHead">
-                                <div className="eDataList_listItemCell" style={{width:3+'%'}}>Avatar</div>
-                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Username</div>
+                                <div className="eDataList_listItemCell" style={{width:5+'%'}}>Avatar</div>
+                                <div className="eDataList_listItemCell" style={{width:12+'%'}}>Username</div>
                                 <div className="eDataList_listItemCell" style={{width:15+'%'}}>First Name</div>
                                 <div className="eDataList_listItemCell" style={{width:15+'%'}}>Last Name</div>
                                 <div className="eDataList_listItemCell" style={{width:10+'%'}}>Gender</div>
-                                <div className="eDataList_listItemCell" style={{width:20+'%'}}>Email</div>
-                                <div className="eDataList_listItemCell" style={{width:17+'%'}}>Telephone</div>
-                                <div className="eDataList_listItemCell" style={{width:8+'%'}}>Status</div>
-                                <div className="eDataList_listItemCell" style={{width:2+'%'}}>Actions</div>
+                                <div className="eDataList_listItemCell" style={{width:20+'%'}}>Status</div>
+                                <div className="eDataList_listItemCell" style={{width:23+'%'}}>Role Actions</div>
                             </div>
                             {managerList}
                         </div>
