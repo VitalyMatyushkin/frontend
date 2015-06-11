@@ -70,19 +70,19 @@ SchoolDetail = React.createClass({
             },
             addRole = function(value){
                 return function(event){
-                    alert('Adds a new role to this user');
+                    alert('Grant user some permission');
                     event.stopPropagation();
                 }
             },
             removeRole = function(value){
                 return function(event){
-                    alert("removes a role from this user");
+                    alert("Revoke permissions");
                     event.stopPropagation();
                 }
             },
             editRole = function(value){
                 return function(event){
-                    alert('This will allow us to swap a role instead of removing or adding');
+                    alert('Really  :)');
                 }
             };
         managerList = listData.map(function(manager){
@@ -95,8 +95,8 @@ SchoolDetail = React.createClass({
                     <div className="eDataList_listItemCell">{manager.gender}</div>
                     <div className="eDataList_listItemCell">{typeof manager.status === 'undefined'? 'N/A': manager.status }</div>
                     <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
-                        <span  onClick={addRole(manager.id)} className="bLinkLike">Add</span>
-                        <span  onClick={removeRole(manager.id)} className="bLinkLike">Remove</span>
+                        <span  onClick={addRole(manager.id)} className="bLinkLike">Grant</span>
+                        <span  onClick={removeRole(manager.id)} className="bLinkLike">Revoke</span>
                         <span  onClick={editRole(manager.id)} className="bLinkLike">Edit</span>
                     </div>
                 </div>
@@ -136,7 +136,7 @@ SchoolDetail = React.createClass({
                         <div className="eSchoolMaster_buttons">
                             <div className="eDataList_listItemCell">
                                 <div className="eDataList_filter">
-                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name'} />
+                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name: not implemented'} />
                                 </div>
                             </div>
                         </div>

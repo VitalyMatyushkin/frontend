@@ -45,13 +45,13 @@ userListPage = React.createClass({
             },
             removeRole = function(value){
                 return function(event){
-                    alert("removes a role from this user");
+                    alert("Deletes this user");
                     event.stopPropagation();
                 }
             },
             editRole = function(value){
                 return function(event){
-                    alert('This will allow us to swap a role instead of removing or adding');
+                    alert('edit user info');
                 }
             };
         theList = listData.map(function(user){
@@ -65,7 +65,6 @@ userListPage = React.createClass({
                     <div className="eDataList_listItemCell">{typeof user.role ==='undefined'? 'N/A' : user.role}</div>
                     <div className="eDataList_listItemCell">{typeof user.status === 'undefined'? 'N/A': user.status }</div>
                     <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
-                        <span  onClick={addRole(user.id)} className="bLinkLike">Add</span>
                         <span  onClick={removeRole(user.id)} className="bLinkLike">Remove</span>
                         <span  onClick={editRole(user.id)} className="bLinkLike">Edit</span>
                     </div>
@@ -90,6 +89,9 @@ userListPage = React.createClass({
             self._updateListData(binding.get('schoolUsers').toJS());
         });
     },
+    _addNewButtonClick:function(){
+       alert('This will add a new user');
+    },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
@@ -98,10 +100,11 @@ userListPage = React.createClass({
                 <h1 className="eSchoolMaster_title">
                     <span>List of Users on SquadInTouch</span>
                     <div className="eSchoolMaster_buttons">
-                        <div className="eDataList_listItemCell">
-                            <div className="eDataList_filter">
-                                <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by last name'} />
-                            </div>
+                        <div onClick={self._addNewButtonClick.bind(null,self)} className="bButton">Add New</div>
+                    </div>
+                    <div className="eDataList_listItemCell">
+                        <div className="eDataList_filter">
+                            <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by last name'} />
                         </div>
                     </div>
                 </h1>
@@ -115,7 +118,7 @@ userListPage = React.createClass({
                             <div className="eDataList_listItemCell" style={{width:10+'%'}}>School</div>
                             <div className="eDataList_listItemCell" style={{width:10+'%'}}>Role</div>
                             <div className="eDataList_listItemCell" style={{width:10+'%'}}>Status</div>
-                            <div className="eDataList_listItemCell" style={{width:23+'%'}}>Role Actions</div>
+                            <div className="eDataList_listItemCell" style={{width:23+'%'}}>Actions</div>
                         </div>
                         {theList}
                     </div>
