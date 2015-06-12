@@ -9,6 +9,9 @@ var List = require('module/ui/list/list'),
     SVG = require('module/ui/svg'),
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
     userListPage,
+    dialogState,
+    Popup = require('module/ui/popup'),
+    RegisterUser = require('module/as_admin/pages/admin_add/user'),
     theList;
 
 userListPage = React.createClass({
@@ -19,6 +22,7 @@ userListPage = React.createClass({
         window.Server.users.get().then(function(data){
             binding.set('schoolUsers',Immutable.fromJS(data));
             self._updateListData(binding.get('schoolUsers').toJS());
+            binding.set('modalState',false);
         });
     },
     _updateListData:function(listData){
@@ -56,7 +60,7 @@ userListPage = React.createClass({
             };
         theList = listData.map(function(user){
             return(
-                <div className="eDataList_listItem">
+                <div className="eDataList_listItem" onClick={self.onUserClick.bind(null,user.id)}>
                     <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={user.avatar}/></span></div>
                     <div className="eDataList_listItemCell">{user.username}</div>
                     <div className="eDataList_listItemCell">{user.firstName}</div>
@@ -66,11 +70,14 @@ userListPage = React.createClass({
                     <div className="eDataList_listItemCell">{typeof user.status === 'undefined'? 'N/A': user.status }</div>
                     <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
                         <span  onClick={removeRole(user.id)} className="bLinkLike">Remove</span>
-                        <span  onClick={editRole(user.id)} className="bLinkLike">Edit</span>
                     </div>
                 </div>
             )
         });
+    },
+    onUserClick:function(value){
+        console.log('click'+value);
+        document.location.hash = '/admin_schools/admin_views/user?id='+value
     },
     onChange:function(event){
         var self = this,
@@ -89,12 +96,23 @@ userListPage = React.createClass({
             self._updateListData(binding.get('schoolUsers').toJS());
         });
     },
-    _addNewButtonClick:function(){
-       alert('This will add a new user');
+    _addNewButtonClick:function() {
+        //alert('This will add a new user');
+        var self = this,
+            binding = self.getDefaultBinding();
+       var tmpState = binding.get('modalState') == true ? false : true;
+        binding.set('modalState',tmpState);
+        console.log(binding.get('modalState'));
+    },
+    _requestedClose:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+            binding.set('modalState',false); console.log(binding.get('modalState'));
     },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
+        var modState = binding.get('modalState');
         return (
             <div>
                 <h1 className="eSchoolMaster_title">
@@ -106,6 +124,9 @@ userListPage = React.createClass({
                         <div className="eDataList_filter">
                             <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by last name'} />
                         </div>
+                        <Popup binding={binding} otherClass="bPopupAdmin" stateProperty={'modalState'} onRequestClose={self._requestedClose.bind(null,self)}>
+                            <RegisterUser binding={binding}></RegisterUser>
+                        </Popup>
                     </div>
                 </h1>
                 <div className="bDataList">

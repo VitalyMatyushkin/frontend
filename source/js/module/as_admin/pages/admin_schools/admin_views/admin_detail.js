@@ -1,10 +1,13 @@
 /**
  * Created by bridark on 09/06/15.
  */
+    //TODO: Refactoring
 var SchoolDetail,
     SVG = require('module/ui/svg'),
     Map = require('module/ui/map/map'),
     If = require('module/ui/if/if'),
+    Popup = require('module/ui/popup'),
+    popupChildren,
     managerList;
 
 SchoolDetail = React.createClass({
@@ -14,6 +17,7 @@ SchoolDetail = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = globalBinding.get('routing.parameters.id');
+        binding.set('modalState',false);
 
         self.activeSchoolId = activeSchoolId;
         self.request = window.Server.schoolsFindOne.get({
@@ -37,14 +41,15 @@ SchoolDetail = React.createClass({
                     self._updateManagerListData(binding.get('schoolAdmins').toJS());
                 }
             );
-            //window.Server.schoolAdmins.get({id:activeSchoolId}).then(function(admins){
-            //    binding.set('schoolAdmins',Immutable.fromJS(admins));
-            //    window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
-            //        binding.set('schoolCoaches',Immutable.fromJS(coaches));
-            //        self.isMounted() && self.forceUpdate(); console.log(binding.get('schoolAdmins').toJS()); console.log(binding.get('schoolCoaches').toJS());
-            //        self._updateManagerListData(binding.get('schoolAdmins').toJS());
-            //    });
-            //});
+            window.Server.schoolManager.get({id:activeSchoolId}).then(function(admins){
+                console.log(admins);
+                //binding.set('schoolAdmins',Immutable.fromJS(admins));
+                //window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
+                //    binding.set('schoolCoaches',Immutable.fromJS(coaches));
+                //    self.isMounted() && self.forceUpdate(); console.log(binding.get('schoolAdmins').toJS()); console.log(binding.get('schoolCoaches').toJS());
+                //    self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                //});
+            });
         });
     },
     componentWillUnmount: function() {
@@ -68,21 +73,22 @@ SchoolDetail = React.createClass({
                     event.stopPropagation();
                 }
             },
-            addRole = function(value){
+            addRole = function(str,value){
                 return function(event){
-                    alert('Grant user some permission');
+                    self._initiateModal(str, value);
                     event.stopPropagation();
                 }
             },
-            removeRole = function(value){
+            removeRole = function(str,value){
                 return function(event){
-                    alert("Revoke permissions");
+                    self._initiateModal(str, value);
                     event.stopPropagation();
                 }
             },
-            editRole = function(value){
+            editRole = function(str,value){
                 return function(event){
-                    alert('Really  :)');
+                    self._initiateModal(str, value);
+                    event.stopPropagation();
                 }
             };
         managerList = listData.map(function(manager){
@@ -95,13 +101,68 @@ SchoolDetail = React.createClass({
                     <div className="eDataList_listItemCell">{manager.gender}</div>
                     <div className="eDataList_listItemCell">{typeof manager.status === 'undefined'? 'N/A': manager.status }</div>
                     <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
-                        <span  onClick={addRole(manager.id)} className="bLinkLike">Grant</span>
-                        <span  onClick={removeRole(manager.id)} className="bLinkLike">Revoke</span>
-                        <span  onClick={editRole(manager.id)} className="bLinkLike">Edit</span>
+                        <span  onClick={addRole('Grant',manager.id)} className="bLinkLike">Grant</span>
+                        <span  onClick={removeRole('Revoke',manager.id)} className="bLinkLike">Revoke</span>
+                        <span  onClick={editRole('Edit',manager.id)} className="bLinkLike">Edit</span>
                     </div>
                 </div>
             )
         });
+    },
+    _requestedClose:function(){
+    var self = this,
+        binding = self.getDefaultBinding();
+        binding.set('modalState',false); console.log(binding.get('modalState'));
+    },
+    _initiateModal:function(action,value) {
+        //alert('This will add a new user');
+        var self = this,
+            binding = self.getDefaultBinding();
+        if(action === 'Grant'){
+            var doAction = function(val){
+                var sel = document.getElementById(val),
+                    baseUrlExt = sel.options[sel.selectedIndex].value;
+                window.Server[baseUrlExt].put({id:self.activeSchoolId,fk:value},{userId:value,schoolId:self.activeSchoolId}).then(function(data){console.log(data)});
+                console.log(sel.options[sel.selectedIndex].value);
+            };
+            popupChildren = (<div>
+                <h5>Grant Permissions</h5>
+                <select id="grant">
+                    <option value="manager">Manager</option>
+                    <option value="addCoach">Coach</option>
+                    <option value="addTeacher">PE Teacher</option>
+                    <option value="administrator">Admin</option>
+                </select>
+                <div className="eSchoolMaster_buttons" style={{right:19+'px',top:70+'%'}}>
+                    <span className ="bButton" onClick={doAction.bind(null,'grant')}>Submit</span>
+                </div>
+            </div>);
+        }else if(action === 'Revoke'){
+            var doAction = function(val){
+                var sel = document.getElementById(val),
+                    baseUrlExt = sel.options[sel.selectedIndex].value;
+                window.Server[baseUrlExt].delete({id:value,fk:self.activeSchoolId}).then(function(data){console.log(data)});
+                console.log(sel.options[sel.selectedIndex].value);
+            };
+            popupChildren = (<div>
+                <h5>Revoke Permissions</h5>
+                <select id="revoke">
+                    <option value="manager">Manager</option>
+                    <option value="addCoach">Coach</option>
+                    <option value="addTeacher">PE Teacher</option>
+                    <option value="administrator">Admin</option>
+                </select>
+                <div className="eSchoolMaster_buttons" style={{right:19+'px',top:70+'%'}}>
+                    <span className ="bButton" onClick={doAction.bind(null,'revoke')}>Submit</span>
+                </div>
+            </div>);
+        }else{
+            popupChildren = <div>Edit</div>
+        }
+        var tmpState = binding.get('modalState') == true ? false : true;
+        binding.set('modalState',tmpState);
+        console.log(binding.get('modalState'));
+        console.log('modal initiated');
     },
     render: function() {
         var self = this,
@@ -136,11 +197,14 @@ SchoolDetail = React.createClass({
                         <div className="eSchoolMaster_buttons">
                             <div className="eDataList_listItemCell">
                                 <div className="eDataList_filter">
-                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name: not implemented'} />
+                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name'} />
                                 </div>
                             </div>
                         </div>
                     </h1>
+                    <Popup binding={binding}  stateProperty={'modalState'} onRequestClose={self._requestedClose.bind(null,self)}>
+                        {popupChildren}
+                    </Popup>
                     <div className="bDataList">
                         <div className="eDataList_list mTable">
                             <div className="eDataList_listItem mHead">
