@@ -15,10 +15,15 @@ serviceList = {
 		serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 
+
 		// schools
 		serviceList.schools = new Service('/schools', binding);
 		serviceList.school = new Service('/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
+		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
+		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
+		serviceList.addCoach = new Service('/schools/{id}/coaches/rel/{fk}',binding);
+		serviceList.addTeacher = new Service('/schools/{id}/teachers/rel/{fk}',binding);
 
 		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);
 		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
@@ -49,6 +54,7 @@ serviceList = {
 
 		//Admins
 		serviceList.schoolAdmins = new Service('/schools/{id}/admins',binding);
+		serviceList.schoolManager = new Service('/schools/{id}/managers',binding);
 
 		// news
 		serviceList.news = new Service('/schools/{schoolId}/news', binding);

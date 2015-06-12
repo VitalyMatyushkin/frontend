@@ -60,12 +60,20 @@ UserDetail= React.createClass({
                         <a href={'/#admin_schools/admin_views/modify?id=' + self.selectedUserId} className="bButton">Edit...</a>
                     </div>
                 </h1>
-                <div>
-                    {name}
+                <div className = "bChallenge">
+                    <div style={{padding:10+'px'}}>
+                       Name: {name}
+                    </div>
+                    <div style={{padding:10+'px'}}>
+                       Gender: {gender}
+                    </div>
+                    <div style={{padding:10+'px'}}>
+                       Email: {email}
+                    </div>
+                    <div style={{padding:10+'px'}}>
+                       Phone: {phone}
+                    </div>
                 </div>
-                <div>{gender}</div>
-                <div>{email}</div>
-                <div>{phone}</div>
             </div>
         )
     }

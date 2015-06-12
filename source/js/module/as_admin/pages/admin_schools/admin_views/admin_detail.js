@@ -41,14 +41,15 @@ SchoolDetail = React.createClass({
                     self._updateManagerListData(binding.get('schoolAdmins').toJS());
                 }
             );
-            //window.Server.schoolAdmins.get({id:activeSchoolId}).then(function(admins){
-            //    binding.set('schoolAdmins',Immutable.fromJS(admins));
-            //    window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
-            //        binding.set('schoolCoaches',Immutable.fromJS(coaches));
-            //        self.isMounted() && self.forceUpdate(); console.log(binding.get('schoolAdmins').toJS()); console.log(binding.get('schoolCoaches').toJS());
-            //        self._updateManagerListData(binding.get('schoolAdmins').toJS());
-            //    });
-            //});
+            window.Server.schoolManager.get({id:activeSchoolId}).then(function(admins){
+                console.log(admins);
+                //binding.set('schoolAdmins',Immutable.fromJS(admins));
+                //window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
+                //    binding.set('schoolCoaches',Immutable.fromJS(coaches));
+                //    self.isMounted() && self.forceUpdate(); console.log(binding.get('schoolAdmins').toJS()); console.log(binding.get('schoolCoaches').toJS());
+                //    self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                //});
+            });
         });
     },
     componentWillUnmount: function() {
@@ -74,19 +75,19 @@ SchoolDetail = React.createClass({
             },
             addRole = function(str,value){
                 return function(event){
-                    self._initiateModal(str);
+                    self._initiateModal(str, value);
                     event.stopPropagation();
                 }
             },
             removeRole = function(str,value){
                 return function(event){
-                    self._initiateModal(str);
+                    self._initiateModal(str, value);
                     event.stopPropagation();
                 }
             },
             editRole = function(str,value){
                 return function(event){
-                    self._initiateModal(str);
+                    self._initiateModal(str, value);
                     event.stopPropagation();
                 }
             };
@@ -113,34 +114,46 @@ SchoolDetail = React.createClass({
         binding = self.getDefaultBinding();
         binding.set('modalState',false); console.log(binding.get('modalState'));
     },
-    _initiateModal:function(action) {
+    _initiateModal:function(action,value) {
         //alert('This will add a new user');
         var self = this,
             binding = self.getDefaultBinding();
         if(action === 'Grant'){
+            var doAction = function(val){
+                var sel = document.getElementById(val),
+                    baseUrlExt = sel.options[sel.selectedIndex].value;
+                window.Server[baseUrlExt].put({id:self.activeSchoolId,fk:value},{userId:value,schoolId:self.activeSchoolId}).then(function(data){console.log(data)});
+                console.log(sel.options[sel.selectedIndex].value);
+            };
             popupChildren = (<div>
                 <h5>Grant Permissions</h5>
-                <select>
+                <select id="grant">
                     <option value="manager">Manager</option>
-                    <option value="coach">Coach</option>
-                    <option value="teacher">PE Teacher</option>
-                    <option value="admin">Admin</option>
+                    <option value="addCoach">Coach</option>
+                    <option value="addTeacher">PE Teacher</option>
+                    <option value="administrator">Admin</option>
                 </select>
                 <div className="eSchoolMaster_buttons" style={{right:19+'px',top:70+'%'}}>
-                    <span className = "bButton">Submit</span>
+                    <span className ="bButton" onClick={doAction.bind(null,'grant')}>Submit</span>
                 </div>
             </div>);
         }else if(action === 'Revoke'){
+            var doAction = function(val){
+                var sel = document.getElementById(val),
+                    baseUrlExt = sel.options[sel.selectedIndex].value;
+                window.Server[baseUrlExt].delete({id:value,fk:self.activeSchoolId}).then(function(data){console.log(data)});
+                console.log(sel.options[sel.selectedIndex].value);
+            };
             popupChildren = (<div>
                 <h5>Revoke Permissions</h5>
-                <select>
+                <select id="revoke">
                     <option value="manager">Manager</option>
-                    <option value="coach">Coach</option>
-                    <option value="teacher">PE Teacher</option>
-                    <option value="admin">Admin</option>
+                    <option value="addCoach">Coach</option>
+                    <option value="addTeacher">PE Teacher</option>
+                    <option value="administrator">Admin</option>
                 </select>
                 <div className="eSchoolMaster_buttons" style={{right:19+'px',top:70+'%'}}>
-                    <span className = "bButton">Submit</span>
+                    <span className ="bButton" onClick={doAction.bind(null,'revoke')}>Submit</span>
                 </div>
             </div>);
         }else{
