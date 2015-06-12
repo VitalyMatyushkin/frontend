@@ -29,7 +29,7 @@ EditSchoolForm = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding();
 
         window.Server.school.put(self.schoolId, schoolData).then(function() {
-            document.location.hash = 'school_admin/summary';
+            document.location.hash = 'admin_schools/admin_dashboard';
         });
 
     },

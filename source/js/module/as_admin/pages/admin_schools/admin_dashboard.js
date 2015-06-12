@@ -10,7 +10,9 @@ OneSchoolPage = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = globalBinding.get('routing.parameters.id');
-        if (!activeSchoolId) {
+        console.log(document.location.href.split('/')[document.location.href.split('/').length-1]);
+        var subPage = document.location.href.split('/')[document.location.href.split('/').length-1];
+        if (!activeSchoolId && subPage!=='users') {
             document.location.hash = 'admin_schools/admin_views/list';
         }
         self.menuItems = [{
@@ -51,6 +53,8 @@ OneSchoolPage = React.createClass({
                         <Route path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode" binding={binding.sub('addSchoolPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_add"/>
                         <Route path="/admin_schools/admin_views/users /admin_schools/admin_views/users:mode" binding={binding.sub('userList')} component="module/as_admin/pages/admin_schools/admin_views/admin_users"/>
                         <Route path="/admin_schools/admin_views/edit /admin_schools/admin_views/edit:mode" binding={binding.sub('editSchoolPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_edit"/>
+                        <Route path="/admin_schools/admin_views/user /admin_schools/admin_views/user:mode" binding={binding.sub('userDetailPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_user"/>
+                        <Route path="/admin_schools/admin_views/modify /admin_schools/admin_views/modify:mode" binding={binding.sub('userEditPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_modify"/>
                     </RouterView>
                 </div>
             </div>
