@@ -107,6 +107,9 @@ serviceList = {
 		//Storage
 		serviceList.storage = new Service('/storage',binding);
 		serviceList.addToStorageFiles = new Service('/storage/{container}/files',binding);
+
+		// login service
+		serviceList.login = new Service('/users/login?include=user',binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {
