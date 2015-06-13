@@ -1,5 +1,5 @@
-var LoginForm = require('module/as_manager/pages/login/user/form'),
-	LoginError = require('module/as_manager/pages/login/user/error'),
+var LoginForm = require('module/ui/login/user/form'),
+	LoginError = require('module/ui/login/user/error'),
 	LoginUserPage;
 
 LoginUserPage = React.createClass({

@@ -1,4 +1,4 @@
-var Logo = require('module/as_main/head/logo'),
+var Logo = require('module/as_school/head/logo'),
 	TopMenu = require('module/ui/menu/top_menu'),
 	Head;
 

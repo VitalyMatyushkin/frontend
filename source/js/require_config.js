@@ -1,12 +1,17 @@
+// This redirect should be provided by served side (squard.com → www.squard.com)
+if ((document.location.hostname.match(/\./g) || []).length === 1) {
+	document.location = document.location.protocol + '//www.' + document.location.hostname;
+}
+
 requirejs.config({
 	baseUrl: '/build/js'
 });
 
 window.onload = function() {
-	var defaultMode = 'main',
-		// http://manager.squard.com -> ["manager.squard.com", "manager", undefined|stage, "squard"]
+	var defaultMode = 'school',
+		// http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
 		external = document.location.hostname.match(/([A-z0-9-]+)+(?:.(stage))?.(squadintouch|squard)\.com/),
-		specialModels = ['parents', 'manager', 'admin'],
+		specialModels = ['parents', 'manager', 'admin', 'site', 'www'],
 		startModule = 'module/start_as_',
 		apiBase = 'api.stage.squadintouch.com',
 		version = 1;

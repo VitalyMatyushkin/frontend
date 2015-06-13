@@ -76,3 +76,24 @@ $INVALID_COLOR: rgb(182, 0, 0);
   margin-right: 60px;
   vertical-align: top;
 }
+
+.eForm_fieldSelection{
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+}
+
+.eForm_fieldMicroHelp{
+  display: inline-block;
+  font-size: 14px;
+  width: 300px;
+  line-height: 20px;
+  color: rgb(115, 115, 115);
+}
+
+.bForm.mRegisterSteps .bButton{
+  width: 82px;
+  text-align: center;
+  height: 25px;
+  line-height: 25px;
+}

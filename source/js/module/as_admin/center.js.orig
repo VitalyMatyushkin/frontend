@@ -20,6 +20,8 @@ Center = React.createClass({
             <div className={mainClass}>
                 <div className="bPageWrap">
                     <RouterView routes={ binding.sub('routing') } binding={binding}>
+<<<<<<< HEAD
+=======
                         <Route path="/ /school /school/:subPage" binding={binding.sub('schoolProfile')} component="module/as_school/pages/school/school_page"  />
                         <Route path="/fixtures" binding={binding.sub('schoolFixtures')} component="module/as_school/pages/fixtures/fixtures_page"  />
                         <Route path="/event" binding={binding.sub('schoolEvent')} component="module/as_school/pages/event/event_page"  />
@@ -27,6 +29,7 @@ Center = React.createClass({
                         <Route path="/opponents/:subPage" binding={binding.sub('opponentsList')} component="module/as_school/pages/opponents/opponents_page"  />
 
                         <Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
+>>>>>>> feature/69_feature
                         <Route path="/login" binding={binding.sub('userData')} component="module/as_admin/pages/admin_login/admin_login" loginRoute={true}  />
                         <Route path="/logout" binding={binding.sub('userData')} component="module/as_admin/pages/logout/logout" unauthorizedAccess={true}  />
                         <Route path="/admin_schools /:subPage /admin_schools/:subPage/:mode" binding={binding.sub('adminSchoolList')} component="module/as_admin/pages/admin_schools/admin_dashboard"/>
