@@ -1,8 +1,8 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
-	RegiseterUserForm;
+	LoginUserForm;
 
-RegiseterUserForm = React.createClass({
+LoginUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onSuccess: React.PropTypes.func,
@@ -22,4 +22,4 @@ RegiseterUserForm = React.createClass({
 });
 
 
-module.exports = RegiseterUserForm;
+module.exports = LoginUserForm;

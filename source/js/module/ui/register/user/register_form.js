@@ -1,5 +1,6 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
+	FormColumn = require('module/ui/form/form_column'),
 	RegiseterUserForm;
 
 RegiseterUserForm = React.createClass({
@@ -8,10 +9,11 @@ RegiseterUserForm = React.createClass({
 		onSuccess: React.PropTypes.func
 	},
 	render: function() {
-		var self = this;
+		var self = this,
+			binding = self.getDefaultBinding();
 
 		return (
-			<Form name="Joins us as official" service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
+			<Form name={"Joins us as " + binding.get('registerType')} service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 
 				<FormColumn type="column">
@@ -26,11 +28,11 @@ RegiseterUserForm = React.createClass({
 				<FormField type="confirmText" textType="password" field="password" validation="required">Password</FormField>
 
 				<FormColumn type="column">
-					<FormField type="text" field="phone" validation="required alphanumeric">Mobile phone</FormField>
+					<FormField type="phone" field="phone" validation="required phone">Mobile phone</FormField>
 				</FormColumn>
 
 				<FormColumn type="column">
-					<FormField type="text" field="address" validation="required alphanumeric">Address</FormField>
+					<FormField type="text" field="address" validation="alphanumeric">Address</FormField>
 				</FormColumn>
 			</Form>
 		)
