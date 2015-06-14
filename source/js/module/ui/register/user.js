@@ -9,18 +9,18 @@ RegisterUserPage = React.createClass({
 	getDefaultState: function () {
 		return Immutable.Map({
 			registerType: '',
-			registerStep: 'type'
+			registerStep: 'done'
 		});
 	},
-	onSuccess: function() {
+	onRegisterSuccess: function() {
 		var self = this;
 
-		self.getDefaultBinding().set('registerStep', 'type');
+		self.getDefaultBinding().set('registerStep', 'done');
 	},
 	onDone: function() {
 		var self = this;
 
-		self.getDefaultBinding().set('registerStep', 'done');
+
 	},
 	render: function() {
 		var self = this,
@@ -32,10 +32,10 @@ RegisterUserPage = React.createClass({
 				currentView = <ChooseTypeForm binding={self.getDefaultBinding()} />;
 				break;
 			case 'form':
-				currentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
+				currentView = <RegisterForm onSuccess={self.onRegisterSuccess} binding={self.getDefaultBinding()} />;
 				break;
 			case 'done':
-				currentView = <RegisterDone onSingin={self.onDone} />;
+				currentView = <RegisterDone />;
 				break;
 		}
 
