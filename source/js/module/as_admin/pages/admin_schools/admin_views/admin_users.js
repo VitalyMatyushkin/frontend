@@ -49,13 +49,26 @@ userListPage = React.createClass({
             },
             removeRole = function(value){
                 return function(event){
-                    alert("Deletes this user");
+                    var wantToDelete = confirm("Do you want to delete this user?");
+                    if(wantToDelete == true){
+                        window.Server.user.delete({id:value}).then(function(result){
+                                console.log(result);
+                            }
+                        );
+                    }
                     event.stopPropagation();
                 }
             },
-            editRole = function(value){
+            resetPassword = function(value){
                 return function(event){
-                    alert('edit user info');
+                    var wantToResetPwd = confirm("Do you want to reset password ?");
+                    if(wantToResetPwd == true){
+                        window.Server.userPasswordReset.post({email:value}).then(function(res){
+                            console.log(res);
+                            }
+                        );
+                    }
+                    event.stopPropagation();
                 }
             };
         theList = listData.map(function(user){
@@ -70,6 +83,7 @@ userListPage = React.createClass({
                     <div className="eDataList_listItemCell">{typeof user.status === 'undefined'? 'N/A': user.status }</div>
                     <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
                         <span  onClick={removeRole(user.id)} className="bLinkLike">Remove</span>
+                        <span onClick={resetPassword(user.email)} className="bLinkLike">Reset Password</span>
                     </div>
                 </div>
             )

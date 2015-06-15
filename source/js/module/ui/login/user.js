@@ -8,7 +8,7 @@ LoginUserPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			domain = window.location.host.split('.')[0];
-		self.formName = domain === 'admin' ? 'Administrator Login' : 'default'; console.log(self.formName);
+		self.formName = domain === 'admin' ? 'Administrator Login' : 'default'; //Injects custom headings for login forms
 	},
 	getDefaultState: function () {
 		return Immutable.Map({

@@ -1,5 +1,6 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
+	FormColumn = require('module/ui/form/form_column'),
 	RegiseterUserForm;
 
 RegiseterUserForm = React.createClass({
@@ -11,7 +12,7 @@ RegiseterUserForm = React.createClass({
 		var self = this;
 
 		return (
-			<Form name="Joins us as official" service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
+			<Form name="Joins as a parent" service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 
 				<FormColumn type="column">

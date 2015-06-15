@@ -14,6 +14,11 @@ serviceList = {
 		serviceList.user = new Service('/users/{id}', binding);
 		serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
+		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
+		serviceList.userManager = new Service('/users/{id}/managers',binding);
+		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
+		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
+		serviceList.userPasswordReset = new Service('/users/reset',binding);
 
 
 		// schools

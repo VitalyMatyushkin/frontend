@@ -8,7 +8,8 @@ Form = React.createClass({
 		onError: React.PropTypes.func,
 		name: React.PropTypes.string,
 		defaultButton: React.PropTypes.string,
-		loadingButton: React.PropTypes.string
+		loadingButton: React.PropTypes.string,
+		serviceType: React.PropTypes.string
 	},
 	componentWillMount: function() {
 		var self = this,
@@ -27,6 +28,7 @@ Form = React.createClass({
 		self._setDefaultValues();
 		binding.meta().set('buttonText', self.defaultButton);
 		self.busy = false;
+		console.log(self.props.serviceType);
 	},
 	/**
 	 * Метод переосит значение из заданного поля в поле со значением по умочанию
@@ -119,6 +121,19 @@ Form = React.createClass({
 
 						if (self.props.onSuccess) {
 							self.props.onSuccess(data);
+							//This checks what the option user selected to register as eg coach or manager etc.
+							//Subsequently adds the user to that table in the db
+							switch (self.props.serviceType){
+								case "coaches":
+									window.Server.userCoach.post({id:data.id},data).then(function(res){console.log(res);});
+									break;
+								case "managers":
+									break;
+								case "parent":
+									break;
+								default :
+									break;
+							}
 						}
 					}
 				});

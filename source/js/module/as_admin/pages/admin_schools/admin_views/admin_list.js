@@ -26,13 +26,16 @@ SchoolListPage = React.createClass({
             binding = self.getDefaultBinding(),
             deleteSchool = function(value){
                 return function (event){
-                    window.Server.school.delete({id:value}).then(function(result){
-                            window.Server.schools.get().then(function(data){
-                                binding.set('schoolList',Immutable.fromJS(data));
-                                self._updateListData(binding.get('schoolList').toJS());
-                            });
-                        }
-                    );
+                    var confirmDelete = confirm("Do you want to delete school ?");
+                    if(confirmDelete){
+                        window.Server.school.delete({id:value}).then(function(result){
+                                window.Server.schools.get().then(function(data){
+                                    binding.set('schoolList',Immutable.fromJS(data));
+                                    self._updateListData(binding.get('schoolList').toJS());
+                                });
+                            }
+                        );
+                    }
                     event.stopPropagation();
                 }
             };
