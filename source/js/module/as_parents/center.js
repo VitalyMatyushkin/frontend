@@ -20,9 +20,9 @@ Center = React.createClass({
                     <RouterView routes={ binding.sub('routing') } binding={binding}>
 
                         <Route path="/register" binding={binding.sub('form.register')}
-                               component="module/as_manager/pages/register/user" unauthorizedAccess={true}/>
+                               component="module/ui/register/user" unauthorizedAccess={true}/>
                         <Route path="/login" binding={binding.sub('userData')}
-                               component="module/as_manager/pages/login/user" loginRoute={true}/>
+                               component="module/ui/login/user" loginRoute={true}/>
                         <Route path="/logout" binding={binding.sub('userData')}
                                component="module/as_manager/pages/logout/logout" unauthorizedAccess={true}/>
                         <Route path="/settings /settings/:subPage" binding={binding.sub('userData')}
