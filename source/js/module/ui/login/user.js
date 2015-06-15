@@ -4,6 +4,12 @@ var LoginForm = require('module/ui/login/user/form'),
 
 LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	componentWillMount:function(){
+		var self = this,
+			binding = self.getDefaultBinding(),
+			domain = window.location.host.split('.')[0];
+		self.formName = domain === 'admin' ? 'Administrator Login' : 'default'; console.log(self.formName);
+	},
 	getDefaultState: function () {
 		return Immutable.Map({
 			showError: false
@@ -40,7 +46,7 @@ LoginUserPage = React.createClass({
 			currentView;
 
 		if (!self.getDefaultBinding().get('showError')) {
-			currentView = <LoginForm customName="Administrator Login" onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
+			currentView = <LoginForm customName={self.formName} onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
 		} else {
 			currentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />
 		}
