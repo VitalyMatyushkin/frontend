@@ -41,9 +41,12 @@ userListPage = React.createClass({
                     event.stopPropagation();
                 }
             },
-            addRole = function(value){
+            blockUser = function(value){
                 return function(event){
-                    alert('Adds a new role to this user');
+                    var blockConfirm = confirm("Do you want to block user ?");
+                    if(blockConfirm){
+                        //Perform block action
+                    }
                     event.stopPropagation();
                 }
             },
@@ -65,6 +68,7 @@ userListPage = React.createClass({
                     if(wantToResetPwd == true){
                         window.Server.userPasswordReset.post({email:value}).then(function(res){
                             console.log(res);
+                                //Do whatever for password reset
                             }
                         );
                     }
@@ -78,12 +82,12 @@ userListPage = React.createClass({
                     <div className="eDataList_listItemCell">{user.username}</div>
                     <div className="eDataList_listItemCell">{user.firstName}</div>
                     <div className="eDataList_listItemCell">{user.lastName}</div>
-                    <div className="eDataList_listItemCell">{typeof user.school === 'undefined'? 'N/A' : user.school}</div>
-                    <div className="eDataList_listItemCell">{typeof user.role ==='undefined'? 'N/A' : user.role}</div>
+                    <div className="eDataList_listItemCell">{typeof user.registrationType ==='undefined'? 'N/A' : user.role}</div>
                     <div className="eDataList_listItemCell">{typeof user.status === 'undefined'? 'N/A': user.status }</div>
                     <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
                         <span  onClick={removeRole(user.id)} className="bLinkLike">Remove</span>
                         <span onClick={resetPassword(user.email)} className="bLinkLike">Reset Password</span>
+                        <span onClick={blockUser(user.id)} className="bLinkLike">Block</span>
                     </div>
                 </div>
             )
@@ -150,10 +154,9 @@ userListPage = React.createClass({
                             <div className="eDataList_listItemCell" style={{width:12+'%'}}>Username</div>
                             <div className="eDataList_listItemCell" style={{width:15+'%'}}>First Name</div>
                             <div className="eDataList_listItemCell" style={{width:15+'%'}}>Last Name</div>
-                            <div className="eDataList_listItemCell" style={{width:10+'%'}}>School</div>
                             <div className="eDataList_listItemCell" style={{width:10+'%'}}>Role</div>
-                            <div className="eDataList_listItemCell" style={{width:10+'%'}}>Status</div>
-                            <div className="eDataList_listItemCell" style={{width:23+'%'}}>Actions</div>
+                            <div className="eDataList_listItemCell" style={{width:15+'%'}}>Status</div>
+                            <div className="eDataList_listItemCell" style={{width:28+'%'}}>Actions</div>
                         </div>
                         {theList}
                     </div>

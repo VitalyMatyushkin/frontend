@@ -12,7 +12,7 @@ RegiseterUserForm = React.createClass({
 		var self = this;
 
 		return (
-			<Form name="Joins us as official" service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
+			<Form name="Joins us as official" service="users" serviceType="managers" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 
 				<FormColumn type="column">
@@ -32,6 +32,9 @@ RegiseterUserForm = React.createClass({
 
 				<FormColumn type="column">
 					<FormField type="text" field="address" validation="required alphanumeric">Address</FormField>
+				</FormColumn>
+				<FormColumn type="column">
+					<FormField defaultValueString="Official" type="text" field="registrationType" validation="required">Registration Type</FormField>
 				</FormColumn>
 			</Form>
 		)

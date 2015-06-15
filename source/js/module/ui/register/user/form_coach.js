@@ -8,6 +8,9 @@ RegiseterUserForm = React.createClass({
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
+	componentWillMount:function(){
+		console.log(document.getElementsByTagName('form'));
+	},
 	render: function() {
 		var self = this;
 
@@ -32,6 +35,9 @@ RegiseterUserForm = React.createClass({
 
 				<FormColumn type="column">
 					<FormField type="text" field="address" validation="required alphanumeric">Address</FormField>
+				</FormColumn>
+				<FormColumn type="column">
+					<FormField defaultValueString="Coach" type="text" field="registrationType" validation="required">Registration Type</FormField>
 				</FormColumn>
 			</Form>
 		)

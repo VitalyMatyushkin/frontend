@@ -28,7 +28,6 @@ Form = React.createClass({
 		self._setDefaultValues();
 		binding.meta().set('buttonText', self.defaultButton);
 		self.busy = false;
-		console.log(self.props.serviceType);
 	},
 	/**
 	 * Метод переосит значение из заданного поля в поле со значением по умочанию

@@ -8,7 +8,11 @@ var SchoolDetail,
     If = require('module/ui/if/if'),
     Popup = require('module/ui/popup'),
     popupChildren,
-    managerList;
+    managerList,
+    schoolOfficial,
+    adminsList,
+    teachersList,
+    coachesList;
 
 SchoolDetail = React.createClass({
     mixins: [Morearty.Mixin],
@@ -36,26 +40,40 @@ SchoolDetail = React.createClass({
                     }
                 }
             }).then(
-                function(managers){
-                    binding.set('schoolAdmins',Immutable.fromJS(managers));
-                    self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                function(owner){
+                    binding.set('schoolOwner',Immutable.fromJS(owner));
+                    window.Server.schoolAdmins.get({id:activeSchoolId}).then(function(admins){
+                        binding.set('schoolAdmins',Immutable.fromJS(admins));
+                        window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
+                            console.log(coaches);
+                            binding.set('schoolCoaches',Immutable.fromJS(coaches));
+                            window.Server.schoolManager.get({id:activeSchoolId}).then(function(managers){
+                                console.log(managers);
+                                binding.set('schoolManagers',Immutable.fromJS(managers));
+                                window.Server.schoolTeacher.get({id:activeSchoolId}).then(function(teachers){
+                                    console.log(teachers);
+                                    binding.set('schoolTeachers',Immutable.fromJS(teachers));
+                                    schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
+                                    managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
+                                    adminsList = self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                                    coachesList = self._updateManagerListData(binding.get('schoolCoaches').toJS());
+                                    teachersList = self._updateManagerListData(binding.get('schoolTeachers').toJS());
+                                });
+                            });
+                        });
+                    });
                 }
             );
-            window.Server.schoolManager.get({id:activeSchoolId}).then(function(admins){
-                console.log(admins);
-                //binding.set('schoolAdmins',Immutable.fromJS(admins));
-                //window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
-                //    binding.set('schoolCoaches',Immutable.fromJS(coaches));
-                //    self.isMounted() && self.forceUpdate(); console.log(binding.get('schoolAdmins').toJS()); console.log(binding.get('schoolCoaches').toJS());
-                //    self._updateManagerListData(binding.get('schoolAdmins').toJS());
-                //});
-            });
         });
     },
     componentWillUnmount: function() {
         var self = this;
 
         self.request && self.request.abort();
+    },
+    onUserClick:function(value){
+        console.log('click'+value);
+        document.location.hash = '/admin_schools/admin_views/user?id='+value;
     },
     _updateManagerListData:function(listData){
         var self = this,
@@ -91,29 +109,38 @@ SchoolDetail = React.createClass({
                     event.stopPropagation();
                 }
             };
-        managerList = listData.map(function(manager){
-            return(
-                <div className="eDataList_listItem">
-                    <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={manager.avatar}/></span></div>
-                    <div className="eDataList_listItemCell">{manager.username}</div>
-                    <div className="eDataList_listItemCell">{manager.firstName}</div>
-                    <div className="eDataList_listItemCell">{manager.lastName}</div>
-                    <div className="eDataList_listItemCell">{manager.gender}</div>
-                    <div className="eDataList_listItemCell">{typeof manager.status === 'undefined'? 'N/A': manager.status }</div>
-                    <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
-                        <span  onClick={addRole('Grant',manager.id)} className="bLinkLike">Grant</span>
-                        <span  onClick={removeRole('Revoke',manager.id)} className="bLinkLike">Revoke</span>
-                        <span  onClick={editRole('Edit',manager.id)} className="bLinkLike">Edit</span>
+        var tmpList;
+        if(listData.length > 0){
+            tmpList = listData.map(function(manager){
+                return(
+                    <div className="eDataList_listItem" onClick={self.onUserClick.bind(null,manager.id)}>
+                        <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={manager.avatar}/></span></div>
+                        <div className="eDataList_listItemCell">{manager.username}</div>
+                        <div className="eDataList_listItemCell">{manager.firstName}</div>
+                        <div className="eDataList_listItemCell">{manager.lastName}</div>
+                        <div className="eDataList_listItemCell">{manager.gender}</div>
+                        <div className="eDataList_listItemCell">{typeof manager.status === 'undefined'? 'N/A': manager.status }</div>
+                        <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
+                            <span  onClick={addRole('Grant',manager.id)} className="bLinkLike">Grant</span>
+                            <span  onClick={removeRole('Revoke',manager.id)} className="bLinkLike">Revoke</span>
+                            <span  onClick={editRole('Edit',manager.id)} className="bLinkLike">Edit</span>
+                        </div>
                     </div>
-                </div>
-            )
-        });
+                )
+            });
+        }else{
+            tmpList = <div className="eDataList_listItem">
+                <div className="eDataList_listItemCell">No Data!</div>
+            </div>;
+        }
+        return tmpList;
     },
     _requestedClose:function(){
     var self = this,
         binding = self.getDefaultBinding();
         binding.set('modalState',false); console.log(binding.get('modalState'));
     },
+    //TODO:refactor repetition of server requests for update of list
     _initiateModal:function(action,value) {
         //alert('This will add a new user');
         var self = this,
@@ -122,8 +149,32 @@ SchoolDetail = React.createClass({
             var doAction = function(val){
                 var sel = document.getElementById(val),
                     baseUrlExt = sel.options[sel.selectedIndex].value;
-                window.Server[baseUrlExt].put({id:self.activeSchoolId,fk:value},{userId:value,schoolId:self.activeSchoolId}).then(function(data){console.log(data)});
-                console.log(sel.options[sel.selectedIndex].value);
+                window.Server[baseUrlExt].put({id:self.activeSchoolId,fk:value},{userId:value,schoolId:self.activeSchoolId}).then(function(data){
+                        console.log(data);
+                        alert('Role Granted');
+                        self._requestedClose();
+                        window.Server.schoolAdmins.get({id:self.activeSchoolId}).then(function(admins){
+                            binding.set('schoolAdmins',Immutable.fromJS(admins));
+                            window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
+                                console.log(coaches);
+                                binding.set('schoolCoaches',Immutable.fromJS(coaches));
+                                window.Server.schoolManager.get({id:self.activeSchoolId}).then(function(managers){
+                                    console.log(managers);
+                                    binding.set('schoolManagers',Immutable.fromJS(managers));
+                                    window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
+                                        console.log(teachers);
+                                        binding.set('schoolTeachers',Immutable.fromJS(teachers));
+                                        schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
+                                        managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
+                                        adminsList = self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                                        coachesList = self._updateManagerListData(binding.get('schoolCoaches').toJS());
+                                        teachersList = self._updateManagerListData(binding.get('schoolTeachers').toJS());
+                                    });
+                                });
+                            });
+                        });
+                    }
+                );
             };
             popupChildren = (<div>
                 <h5>Grant Permissions</h5>
@@ -141,8 +192,32 @@ SchoolDetail = React.createClass({
             var doAction = function(val){
                 var sel = document.getElementById(val),
                     baseUrlExt = sel.options[sel.selectedIndex].value;
-                window.Server[baseUrlExt].delete({id:value,fk:self.activeSchoolId}).then(function(data){console.log(data)});
-                console.log(sel.options[sel.selectedIndex].value);
+                window.Server[baseUrlExt].delete({id:self.activeSchoolId,fk:value})
+                    .then(function(data){
+                        alert('Role Revoked');
+                        self._requestedClose();
+                        window.Server.schoolAdmins.get({id:self.activeSchoolId}).then(function(admins){
+                            binding.set('schoolAdmins',Immutable.fromJS(admins));
+                            window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
+                                console.log(coaches);
+                                binding.set('schoolCoaches',Immutable.fromJS(coaches));
+                                window.Server.schoolManager.get({id:self.activeSchoolId}).then(function(managers){
+                                    console.log(managers);
+                                    binding.set('schoolManagers',Immutable.fromJS(managers));
+                                    window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
+                                        console.log(teachers);
+                                        binding.set('schoolTeachers',Immutable.fromJS(teachers));
+                                        schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
+                                        managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
+                                        adminsList = self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                                        coachesList = self._updateManagerListData(binding.get('schoolCoaches').toJS());
+                                        teachersList = self._updateManagerListData(binding.get('schoolTeachers').toJS());
+                                    });
+                                });
+                            });
+                        });
+                    }
+                );
             };
             popupChildren = (<div>
                 <h5>Revoke Permissions</h5>
@@ -161,8 +236,6 @@ SchoolDetail = React.createClass({
         }
         var tmpState = binding.get('modalState') == true ? false : true;
         binding.set('modalState',tmpState);
-        console.log(binding.get('modalState'));
-        console.log('modal initiated');
     },
     render: function() {
         var self = this,
@@ -193,13 +266,8 @@ SchoolDetail = React.createClass({
                     <Map binding={binding} point={binding.toJS('postcode.point')}/>
                 </If>
                 <div style={{marginTop:10+"px"}}>
-                    <h1 className="eSchoolMaster_title"><span>Managers</span>
+                    <h1 className="eSchoolMaster_title"><span>{binding.get('name')} Official</span>
                         <div className="eSchoolMaster_buttons">
-                            <div className="eDataList_listItemCell">
-                                <div className="eDataList_filter">
-                                    <input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by name'} />
-                                </div>
-                            </div>
                         </div>
                     </h1>
                     <Popup binding={binding}  stateProperty={'modalState'} onRequestClose={self._requestedClose.bind(null,self)}>
@@ -208,15 +276,33 @@ SchoolDetail = React.createClass({
                     <div className="bDataList">
                         <div className="eDataList_list mTable">
                             <div className="eDataList_listItem mHead">
-                                <div className="eDataList_listItemCell" style={{width:5+'%'}}>Avatar</div>
-                                <div className="eDataList_listItemCell" style={{width:12+'%'}}>Username</div>
+                                <div className="eDataList_listItemCell" style={{width:11+'%'}}>Avatar</div>
+                                <div className="eDataList_listItemCell" style={{width:15+'%'}}>Username</div>
                                 <div className="eDataList_listItemCell" style={{width:15+'%'}}>First Name</div>
-                                <div className="eDataList_listItemCell" style={{width:15+'%'}}>Last Name</div>
+                                <div className="eDataList_listItemCell" style={{width:17+'%'}}>Last Name</div>
                                 <div className="eDataList_listItemCell" style={{width:10+'%'}}>Gender</div>
-                                <div className="eDataList_listItemCell" style={{width:20+'%'}}>Status</div>
-                                <div className="eDataList_listItemCell" style={{width:23+'%'}}>Role Actions</div>
+                                <div className="eDataList_listItemCell" style={{width:12+'%'}}>Status</div>
+                                <div className="eDataList_listItemCell" style={{width:24+'%'}}>Role Actions</div>
                             </div>
+                        </div>
+                        <div className="eDataList_list mTable">
+                            {schoolOfficial}
+                        </div>
+                        <h2>Managers</h2>
+                        <div className="eDataList_list mTable">
                             {managerList}
+                        </div>
+                        <h2>Coaches</h2>
+                        <div className="eDataList_list mTable">
+                            {coachesList}
+                        </div>
+                        <h2>Admins</h2>
+                        <div className="eDataList_list mTable">
+                            {adminsList}
+                        </div>
+                        <h2>Teachers</h2>
+                        <div className="eDataList_list mTable">
+                            {teachersList}
                         </div>
                     </div>
                 </div>

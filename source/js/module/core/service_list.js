@@ -60,6 +60,7 @@ serviceList = {
 		//Admins
 		serviceList.schoolAdmins = new Service('/schools/{id}/admins',binding);
 		serviceList.schoolManager = new Service('/schools/{id}/managers',binding);
+		serviceList.schoolTeacher = new Service('/schools/{id}/teachers',binding);
 
 		// news
 		serviceList.news = new Service('/schools/{schoolId}/news', binding);

@@ -3,7 +3,7 @@ var TypeMixin = require('module/ui/form/types/type_mixin'),
 
 TypeText =  React.createClass({
 	propTypes: {
-		textType: React.PropTypes.string
+		textType: React.PropTypes.string,
 	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
@@ -37,9 +37,11 @@ TypeText =  React.createClass({
 	render: function () {
 		var self = this,
 			defaultValue = self.getDefaultBinding().get('defaultValue');
-
-		self._forceNewValue(defaultValue);
-
+		if(typeof self.props.defaultValueString === 'undefined'){
+			self._forceNewValue(defaultValue);
+		}else{
+			self._forceNewValue(self.props.defaultValueString);
+		}
 		return (
 			<div className="eForm_fieldInput">
 				<input ref="fieldInput" type={self.props.textType || 'text'} onBlur={self.handeBlur} onChange={self.handleChange} />

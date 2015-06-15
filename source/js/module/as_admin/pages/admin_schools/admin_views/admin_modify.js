@@ -12,12 +12,11 @@ ModifyUser = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            userId = globalBinding.get('routing.parameters.id'); console.log(userId);
+            userId = globalBinding.get('routing.parameters.id');
 
         if (userId) {
             window.Server.user.get(userId).then(function (data) {
                 self.isMounted() && binding.set(Immutable.fromJS(data));
-                console.log(data.firstName + " "+data.lastName);
             });
 
             self.userId = userId;
@@ -29,7 +28,7 @@ ModifyUser = React.createClass({
         data.id = self.userId;
 
         self.userId && window.Server.user.put(self.userId, data).then(function() {
-
+            alert('user updated');
         });
     },
     render: function() {
