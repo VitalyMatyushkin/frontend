@@ -45,13 +45,10 @@ SchoolDetail = React.createClass({
                     window.Server.schoolAdmins.get({id:activeSchoolId}).then(function(admins){
                         binding.set('schoolAdmins',Immutable.fromJS(admins));
                         window.Server.schoolCoaches.get({id:activeSchoolId}).then(function(coaches){
-                            console.log(coaches);
                             binding.set('schoolCoaches',Immutable.fromJS(coaches));
                             window.Server.schoolManager.get({id:activeSchoolId}).then(function(managers){
-                                console.log(managers);
                                 binding.set('schoolManagers',Immutable.fromJS(managers));
                                 window.Server.schoolTeacher.get({id:activeSchoolId}).then(function(teachers){
-                                    console.log(teachers);
                                     binding.set('schoolTeachers',Immutable.fromJS(teachers));
                                     schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
                                     managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
@@ -72,7 +69,6 @@ SchoolDetail = React.createClass({
         self.request && self.request.abort();
     },
     onUserClick:function(value){
-        console.log('click'+value);
         document.location.hash = '/admin_schools/admin_views/user?id='+value;
     },
     _updateManagerListData:function(listData){
@@ -87,7 +83,6 @@ SchoolDetail = React.createClass({
                     //        });
                     //    }
                     //);
-                    console.log('delete');
                     event.stopPropagation();
                 }
             },
@@ -138,7 +133,7 @@ SchoolDetail = React.createClass({
     _requestedClose:function(){
     var self = this,
         binding = self.getDefaultBinding();
-        binding.set('modalState',false); console.log(binding.get('modalState'));
+        binding.set('modalState',false);
     },
     //TODO:refactor repetition of server requests for update of list
     _initiateModal:function(action,value) {
@@ -150,19 +145,15 @@ SchoolDetail = React.createClass({
                 var sel = document.getElementById(val),
                     baseUrlExt = sel.options[sel.selectedIndex].value;
                 window.Server[baseUrlExt].put({id:self.activeSchoolId,fk:value},{userId:value,schoolId:self.activeSchoolId}).then(function(data){
-                        console.log(data);
                         alert('Role Granted');
                         self._requestedClose();
                         window.Server.schoolAdmins.get({id:self.activeSchoolId}).then(function(admins){
                             binding.set('schoolAdmins',Immutable.fromJS(admins));
                             window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
-                                console.log(coaches);
                                 binding.set('schoolCoaches',Immutable.fromJS(coaches));
                                 window.Server.schoolManager.get({id:self.activeSchoolId}).then(function(managers){
-                                    console.log(managers);
                                     binding.set('schoolManagers',Immutable.fromJS(managers));
                                     window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
-                                        console.log(teachers);
                                         binding.set('schoolTeachers',Immutable.fromJS(teachers));
                                         schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
                                         managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
@@ -199,13 +190,10 @@ SchoolDetail = React.createClass({
                         window.Server.schoolAdmins.get({id:self.activeSchoolId}).then(function(admins){
                             binding.set('schoolAdmins',Immutable.fromJS(admins));
                             window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
-                                console.log(coaches);
                                 binding.set('schoolCoaches',Immutable.fromJS(coaches));
                                 window.Server.schoolManager.get({id:self.activeSchoolId}).then(function(managers){
-                                    console.log(managers);
                                     binding.set('schoolManagers',Immutable.fromJS(managers));
                                     window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
-                                        console.log(teachers);
                                         binding.set('schoolTeachers',Immutable.fromJS(teachers));
                                         schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
                                         managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());

@@ -25,11 +25,9 @@ UserDetail= React.createClass({
                 }
             }
         }).then(function(data) {
-            console.log(data.avatar);
             binding.set('selectedUser',Immutable.fromJS(data));
             window.Server.userCoach.get({id:selectedUserId})
                 .then(function(asCoach){
-                    console.log(asCoach);
                     binding.set('asCoach',Immutable.fromJS(asCoach));
                     relatedSchools.push(self._getRelatedSchool(binding.get('asCoach').toJS(),"Coach"));
                    window.Server.userManager.get({id:selectedUserId})
@@ -56,7 +54,6 @@ UserDetail= React.createClass({
         relatedSchools.length = 0;
     },
     onSchoolClick:function(value){
-        console.log('click'+value);
         document.location.hash = '/admin_schools/admin_views/detail?id='+value;
     },
     _getRelatedSchool:function(returnedData,theRole){
