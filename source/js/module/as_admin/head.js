@@ -16,7 +16,8 @@ Head = React.createClass({
             href: '/#admin_schools/admin_views/list',
             icon: 'icon_home',
             name: 'Dashboard',
-            key: 'Dashboard'
+            key: 'Dashboard',
+            authorization:true
         }];
     },
     render: function() {

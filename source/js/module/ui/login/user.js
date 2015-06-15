@@ -40,7 +40,7 @@ LoginUserPage = React.createClass({
 			currentView;
 
 		if (!self.getDefaultBinding().get('showError')) {
-			currentView = <LoginForm onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
+			currentView = <LoginForm customName="Administrator Login" onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
 		} else {
 			currentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />
 		}

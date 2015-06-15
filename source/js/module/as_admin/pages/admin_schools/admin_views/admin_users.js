@@ -11,7 +11,7 @@ var List = require('module/ui/list/list'),
     userListPage,
     dialogState,
     Popup = require('module/ui/popup'),
-    RegisterUser = require('module/as_admin/pages/admin_add/user'),
+    RegisterUser = require('module/ui/register/user'),
     theList;
 
 userListPage = React.createClass({
