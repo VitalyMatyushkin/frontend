@@ -14,6 +14,27 @@ TypePhone =  React.createClass({
 			self._forceNewValue(binding.get('defaultValue'));
 		});
 	},
+	_forceNewValue: function(value) {
+		var self = this,
+			oldValue;
+
+		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.getDOMNode().value === '(___)___-____') {
+			self.refs.fieldInput.getDOMNode().value = value;
+			self.fullValidate(value);
+		}
+	},
+	handleBlur: function() {
+		var self = this,
+			inputValue = self.refs.fieldInput.getDOMNode().value;
+
+		self.setValue(inputValue);
+	},
+	handleChange: function() {
+		var self = this,
+			inputValue = self.refs.fieldInput.getDOMNode().value;
+
+		self.changeValue(inputValue);
+	},
 	render: function () {
 		var self = this,
 			defaultValue = self.getDefaultBinding().get('defaultValue');
@@ -22,7 +43,7 @@ TypePhone =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<MaskedInput ref="fieldInput" mask="(999)999-9999" />
+				<MaskedInput ref="fieldInput" onBlur={self.handleBlur} onChange={self.handleChange} mask="(999)999-9999" />
 			</div>
 		)
 	}

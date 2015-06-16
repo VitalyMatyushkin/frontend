@@ -8,34 +8,31 @@ RegisterUserPage = React.createClass({
 	// TODO: вынести значение поля step в мета-данные
 	getDefaultState: function () {
 		return Immutable.Map({
-			registerType: '',
-			registerStep: 'done'
+			registerStep: 'type'
 		});
 	},
-	onRegisterSuccess: function() {
+	setStepFunction: function(step) {
 		var self = this;
 
-		self.getDefaultBinding().set('registerStep', 'done');
-	},
-	onDone: function() {
-		var self = this;
-
-
+		return function(){
+			self.getDefaultBinding().set('registerStep', step);
+		};
 	},
 	render: function() {
 		var self = this,
 			currentView,
-			currentStep = self.getDefaultBinding().get('registerStep');
+			binding = self.getDefaultBinding(),
+			currentStep = binding.get('registerStep');
 
 		switch(currentStep) {
 			case 'type':
-				currentView = <ChooseTypeForm binding={self.getDefaultBinding()} />;
+				currentView = <ChooseTypeForm onSuccess={self.setStepFunction('form')} binding={binding.sub('formFields')} />;
 				break;
 			case 'form':
-				currentView = <RegisterForm onSuccess={self.onRegisterSuccess} binding={self.getDefaultBinding()} />;
+				currentView = <RegisterForm onSuccess={self.setStepFunction('done')} binding={binding.sub('formFields')} />;
 				break;
 			case 'done':
-				currentView = <RegisterDone />;
+				currentView = <RegisterDone binding={binding.sub('formFields')} />;
 				break;
 		}
 

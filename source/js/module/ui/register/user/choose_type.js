@@ -4,12 +4,15 @@ var Form = require('module/ui/form/form'),
 
 ChooseRegisterTypeForm = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		onSuccess: React.PropTypes.func
+	},
 	getClickFunction: function(registerType) {
 		var self = this;
 
 		return function() {
 			self.getDefaultBinding().set('registerType', registerType);
-			self.getDefaultBinding().set('registerStep', 'form');
+			self.props.onSuccess();
 		}
 	},
 	render: function() {

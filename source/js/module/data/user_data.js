@@ -22,9 +22,10 @@ UserDataClass.initBind = function() {
 
 	// Данные об авторизации мы храним
 	bindObject.addListener('authorizationInfo', function() {
-		var data = bindObject.get('authorizationInfo');
+		var data = bindObject.get('authorizationInfo'),
+			authorizationInfo = data ? data.toJS() : {};
 
-		Helpers.LocalStorage.set('authorizationInfo', data);
+		data && Helpers.cookie.set('authorizationInfo', authorizationInfo);
 	});
 };
 

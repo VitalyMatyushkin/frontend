@@ -26,8 +26,12 @@ function runWwwMode() {
 
 	window.Server = serviceList;
 
+	// Передача связывания контекста в классы данных
+	userDataInstance.setBinding(binding.sub('userData'));
+
 	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+
 
 	// Инициализация приложения
 	React.render(

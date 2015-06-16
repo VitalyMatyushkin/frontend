@@ -8,7 +8,8 @@ Form = React.createClass({
 		onError: React.PropTypes.func,
 		name: React.PropTypes.string,
 		defaultButton: React.PropTypes.string,
-		loadingButton: React.PropTypes.string
+		loadingButton: React.PropTypes.string,
+		updateBinding: React.PropTypes.bool
 	},
 	componentWillMount: function() {
 		var self = this,
@@ -90,6 +91,8 @@ Form = React.createClass({
 			}
 
 
+			self.postedData = dateToPost;
+
 			// TODO: Зарефакторить эту кашицу
 			if (['object', 'function'].indexOf(typeOfService) !== -1) {
 				userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
@@ -114,6 +117,10 @@ Form = React.createClass({
 
 		self.busy = false;
 		self.buttonText = self.defaultButton;
+
+		if (self.props.updateBinding === true) {
+			self.getDefaultBinding().set(self.postedData);
+		}
 
 		if (self.props.onSuccess) {
 			self.props.onSuccess(data);

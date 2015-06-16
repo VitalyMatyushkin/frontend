@@ -44,7 +44,7 @@ TypeHidden =  React.createClass({
         self._forceNewValue(defaultValue);
 
         return (
-            <div className="eForm_fieldInput">
+            <div className="eForm_fieldInput mHidden">
                 <input id="blazonInput" ref="fieldInput" type={self.props.textType || 'text'} onBlur={self.handeBlur} onChange={self.handleChange} />
             </div>
         )

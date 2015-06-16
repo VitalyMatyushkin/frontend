@@ -13,7 +13,7 @@ RegiseterUserForm = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<Form name={"Joins us as " + binding.get('registerType')} service="users" binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess}>
+			<Form name={"Joins us as " + binding.get('registerType')} updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 
 				<FormColumn type="column">
@@ -28,12 +28,14 @@ RegiseterUserForm = React.createClass({
 				<FormField type="confirmText" textType="password" field="password" validation="required">Password</FormField>
 
 				<FormColumn type="column">
-					<FormField type="phone" field="phone" validation="required phone">Mobile phone</FormField>
+					<FormField type="phone" field="phone" validation="phone">Mobile phone</FormField>
 				</FormColumn>
 
 				<FormColumn type="column">
 					<FormField type="text" field="address" validation="alphanumeric">Address</FormField>
 				</FormColumn>
+
+				<FormField type="hidden" field="registerType" validation="alphanumeric"></FormField>
 			</Form>
 		)
 	}
