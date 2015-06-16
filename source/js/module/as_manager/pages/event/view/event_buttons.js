@@ -19,7 +19,7 @@ EventHeader = React.createClass({
                 point.resultId = result.id;
 
                 window.Server.pointsInResult.post({resultId: result.id}, point).then(function (res) {
-                    console.log(res);
+                    //console.log(res);
                 });
             });
 

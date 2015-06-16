@@ -6,7 +6,8 @@ var EventView,
     EventRivals = require('./view/event_rivals'),
     EventButtons = require('./view/event_buttons'),
     EventTeams = require('./view/event_teams'),
-    EventAlbums = require('./view/event_albums');
+    EventAlbums = require('./view/event_albums'),
+    Comments = require('./view/event_blog');
 
 EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -200,6 +201,9 @@ EventView = React.createClass({
                         </If>
                         <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />
+                        <If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')}>
+                            <Comments binding={binding}></Comments>
+                        </If>
                     </div>
                 </If>
                 <If condition={!binding.get('sync')}>

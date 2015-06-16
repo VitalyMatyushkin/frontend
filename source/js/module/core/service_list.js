@@ -113,6 +113,10 @@ serviceList = {
 		//Storage
 		serviceList.storage = new Service('/storage',binding);
 		serviceList.addToStorageFiles = new Service('/storage/{container}/files',binding);
+
+		//Blog
+		serviceList.addToBlog = new Service('/events/{id}/comments',binding);
+		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {
