@@ -45,7 +45,10 @@ userListPage = React.createClass({
                 return function(event){
                     var blockConfirm = confirm("Do you want to block user ?");
                     if(blockConfirm){
-                        //Perform block action
+                        window.Server.user.put({id:value},{blocked:true})
+                            .then(function(res){
+                                alert('User has been blocked');
+                            });
                     }
                     event.stopPropagation();
                 }
@@ -82,7 +85,7 @@ userListPage = React.createClass({
                     <div className="eDataList_listItemCell">{user.username}</div>
                     <div className="eDataList_listItemCell">{user.firstName}</div>
                     <div className="eDataList_listItemCell">{user.lastName}</div>
-                    <div className="eDataList_listItemCell">{typeof user.registrationType ==='undefined'? 'N/A' : user.role}</div>
+                    <div className="eDataList_listItemCell">{typeof user.registerType ==='undefined'? 'N/A' : user.registerType}</div>
                     <div className="eDataList_listItemCell">{typeof user.status === 'undefined'? 'N/A': user.status }</div>
                     <div className="eDataList_listItemCell mActions" style={{textAlign:'left', paddingLeft:0+'px'}}>
                         <span  onClick={removeRole(user.id)} className="bLinkLike">Remove</span>
@@ -125,7 +128,7 @@ userListPage = React.createClass({
     _requestedClose:function(){
         var self = this,
             binding = self.getDefaultBinding();
-            binding.set('modalState',false); console.log(binding.get('modalState'));
+            binding.set('modalState',false);
     },
     render:function(){
         var self = this,
