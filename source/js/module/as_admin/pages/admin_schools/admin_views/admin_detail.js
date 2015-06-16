@@ -147,23 +147,35 @@ SchoolDetail = React.createClass({
                 window.Server[baseUrlExt].put({id:self.activeSchoolId,fk:value},{userId:value,schoolId:self.activeSchoolId}).then(function(data){
                         alert('Role Granted');
                         self._requestedClose();
-                        window.Server.schoolAdmins.get({id:self.activeSchoolId}).then(function(admins){
-                            binding.set('schoolAdmins',Immutable.fromJS(admins));
-                            window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
-                                binding.set('schoolCoaches',Immutable.fromJS(coaches));
-                                window.Server.schoolManager.get({id:self.activeSchoolId}).then(function(managers){
+                        switch (baseUrlExt){
+                            case "manager":
+                                window.Server.schoolManager.get({id:self.activeSchoolId}).then(function (managers) {
                                     binding.set('schoolManagers',Immutable.fromJS(managers));
-                                    window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
-                                        binding.set('schoolTeachers',Immutable.fromJS(teachers));
-                                        schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
-                                        managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
-                                        adminsList = self._updateManagerListData(binding.get('schoolAdmins').toJS());
-                                        coachesList = self._updateManagerListData(binding.get('schoolCoaches').toJS());
-                                        teachersList = self._updateManagerListData(binding.get('schoolTeachers').toJS());
-                                    });
+                                    managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
                                 });
-                            });
-                        });
+                                break;
+                            case "addCoach":
+                                window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
+                                    binding.set('schoolCoaches',Immutable.fromJS(coaches));
+                                    coachesList = self._updateManagerListData(binding.get('schoolCoaches').toJS());
+                                });
+                                break;
+                            case "addTeacher":
+                                window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
+                                    binding.set('schoolTeachers',Immutable.fromJS(teachers));
+                                    teachersList = self._updateManagerListData(binding.get('schoolTeachers').toJS());
+                                });
+                                break;
+                            case "administrator":
+                                window.Server.schoolAdmins.get({id:self.activeSchoolId})
+                                    .then(function(admins){
+                                        binding.set('schoolAdmins',Immutable.fromJS(admins));
+                                        adminsList = self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                                    });
+                                break;
+                            default :
+                                break;
+                        }
                     }
                 );
             };
@@ -187,23 +199,35 @@ SchoolDetail = React.createClass({
                     .then(function(data){
                         alert('Role Revoked');
                         self._requestedClose();
-                        window.Server.schoolAdmins.get({id:self.activeSchoolId}).then(function(admins){
-                            binding.set('schoolAdmins',Immutable.fromJS(admins));
-                            window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
-                                binding.set('schoolCoaches',Immutable.fromJS(coaches));
-                                window.Server.schoolManager.get({id:self.activeSchoolId}).then(function(managers){
+                        switch (baseUrlExt){
+                            case "manager":
+                                window.Server.schoolManager.get({id:self.activeSchoolId}).then(function (managers) {
                                     binding.set('schoolManagers',Immutable.fromJS(managers));
-                                    window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
-                                        binding.set('schoolTeachers',Immutable.fromJS(teachers));
-                                        schoolOfficial = self._updateManagerListData(binding.get('schoolOwner').toJS());
-                                        managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
-                                        adminsList = self._updateManagerListData(binding.get('schoolAdmins').toJS());
-                                        coachesList = self._updateManagerListData(binding.get('schoolCoaches').toJS());
-                                        teachersList = self._updateManagerListData(binding.get('schoolTeachers').toJS());
-                                    });
+                                    managerList = self._updateManagerListData(binding.get('schoolManagers').toJS());
                                 });
-                            });
-                        });
+                                break;
+                            case "addCoach":
+                                window.Server.schoolCoaches.get({id:self.activeSchoolId}).then(function(coaches){
+                                    binding.set('schoolCoaches',Immutable.fromJS(coaches));
+                                    coachesList = self._updateManagerListData(binding.get('schoolCoaches').toJS());
+                                });
+                                break;
+                            case "addTeacher":
+                                window.Server.schoolTeacher.get({id:self.activeSchoolId}).then(function(teachers){
+                                    binding.set('schoolTeachers',Immutable.fromJS(teachers));
+                                    teachersList = self._updateManagerListData(binding.get('schoolTeachers').toJS());
+                                });
+                                break;
+                            case "administrator":
+                                window.Server.schoolAdmins.get({id:self.activeSchoolId})
+                                    .then(function(admins){
+                                        binding.set('schoolAdmins',Immutable.fromJS(admins));
+                                        adminsList = self._updateManagerListData(binding.get('schoolAdmins').toJS());
+                                    });
+                                break;
+                            default :
+                                break;
+                        }
                     }
                 );
             };
