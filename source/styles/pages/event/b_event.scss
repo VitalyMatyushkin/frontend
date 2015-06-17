@@ -57,12 +57,37 @@
 }
 .bBlog_box{
   width: 100%;
-  height:150px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 10px;
+  height:auto;
+  float:left;
+}
+.bBlog_parent_comment{
+  position:relative;
+  height: auto;
+  float:left;
+}
+.bBlog_box_reply{
+  width: 80%;
+  margin-left: 60px;
+  margin-bottom: 10px;
+  position:relative;
+  height: auto;
+  float:left;
 }
 .bBlog_picBox{
   width:64px;
   height:100px;
   float:left;
+}
+.bBlog_picBox_reply{
+  width:64px;
+  height:100px;
+  float:left;
+}
+.bBlog_picBox_reply img{
+  width:inherit;
+  height: 64px;
 }
 .bBlog_pic{
   width:64px;
@@ -77,12 +102,23 @@
   width: 688px;
   float:left;
 }
+.bBlog_messageBox_reply{
+  height: auto;
+  float: left;
+}
 .bBlog_username,.bBlog_message,.bBlog_replyButton{
   display: block;
   padding-left: 10px;
   padding-bottom: 10px;
 }
-.bBlog_replyButton{
+.bBlog_username_reply, .bBlog_message_reply,.bBlog_replyButton_reply{
+  display: block;
+  padding: 0 0 10px 10px;
+}
+.bBlog_username, .bBlog_username_reply{
+  color: #4caf50;
+}
+.bBlog_replyButton, .bBlog_replyButton_reply{
   color: #919191;
 }
 .eEvent_commentBlog{
@@ -95,4 +131,13 @@
 .bReplyButton{
   display: block !important;
   width: 40px !important;
+}
+.eEvent_blog{
+  background: #FFFFFF;
+  position: relative;
+}
+.bBlog_timestamp{
+  color: #919191;
+  font-size: 11px;
+
 }

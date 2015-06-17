@@ -10,19 +10,35 @@ Blog = React.createClass({
     },
     componentWillMount:function(){
         var self = this,
+            binding = self.getDefaultBinding();
+        self._fetchCommentsData();
+    },
+    _fetchCommentsData:function(){
+        var self = this,
             binding = self.getDefaultBinding(),
             eventId = binding.get('eventId');
-        window.Server.addToBlog.get({id:eventId})
+        window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:1}}})
             .then(function(res){
-               var blogData = [];
-               res.forEach(function(blogItem, index){
-                   window.Server.user.get({id:blogItem.ownerId})
-                       .then(function(user){
-                           blogItem.commentor = user; blogData.push(blogItem);
-                           binding.set('blogs',blogData);
-                       }
-                   );
-               })
+                var blogData = [];
+                res.forEach(function(blogItem, index){
+                    window.Server.user.get({id:blogItem.ownerId})
+                        .then(function(user){
+                            blogItem.commentor = user;
+                            //Get blogs that have same parentId as current blog id
+                            window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:blogItem.id}}})
+                                .then(function(children){
+                                    children.forEach(function(childBlog){
+                                        window.Server.user.get({id:childBlog.ownerId})
+                                            .then(function(childUser){
+                                                childBlog.commentor = childUser;
+                                            })
+                                    });
+                                    blogItem.replies = children; blogData.push(blogItem); console.log(blogData);
+                                    binding.set('blogs',blogData);
+                                });
+                        }
+                    );
+                })
             });
     },
     componentDidMount:function(){
@@ -52,6 +68,7 @@ Blog = React.createClass({
             {
                 eventId:eventId,
                 ownerId:bloggerId,
+                parentId:1,
                 message:comments,
                 hidden:false
             })
@@ -78,29 +95,100 @@ Blog = React.createClass({
     _updateCommentsArea:function(data){
         var self = this,
             binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            parentEl,
             replyButtonClick = function(blogVal){
                 //console.log('clicked '+blogVal);
+                parentEl = document.getElementById(blogVal),
                 console.log(document.getElementById(blogVal).children[0]);
-                var parentEl = document.getElementById(blogVal);
                 if(parentEl.style.display === 'block'){
                     parentEl.style.display = 'none';
                 }else{
                     parentEl.style.display = 'block';
                 }
             },
+            replyToButtonClick = function(blogVal){
+                var  eventId = binding.get('eventId'),
+                    reply = document.getElementById(blogVal).children[0].value,
+                    bloggerId = globalBinding.get('userData.authorizationInfo.userId');
+                window.Server.addToBlog.post({id:eventId},
+                    {
+                        eventId:eventId,
+                        ownerId:bloggerId,
+                        message:reply,
+                        parentId: blogVal,
+                        hidden:false
+                    })
+                    .then(function(result){
+                        console.log(result);
+                        document.getElementById(blogVal).children[0].value = "";
+                        document.getElementById(blogVal).style.display = "none";
+                        self._fetchCommentsData();
+                    });
+            },
+            replyToReplyButtonClick=function(blogVal, parentBlogVal){
+                var  eventId = binding.get('eventId'),
+                    reply = document.getElementById(blogVal).children[0].value,
+                    bloggerId = globalBinding.get('userData.authorizationInfo.userId');
+                window.Server.addToBlog.post({id:eventId},
+                    {
+                        eventId:eventId,
+                        ownerId:bloggerId,
+                        message:reply,
+                        parentId: parentBlogVal,
+                        hidden:false
+                    })
+                    .then(function(result){
+                        console.log(result);
+                        document.getElementById(blogVal).children[0].value = "";
+                        document.getElementById(blogVal).style.display = "none";
+                        self._fetchCommentsData();
+                    });
+            },
             mappedData;
         if(typeof data !== 'undefined'){
-            mappedData = data.map(function(blog){
+            mappedData = data.map(function(blog,index){
+                var replies;
+                if(blog.replies.length >=1){
+                    replies = blog.replies.map(function(reply){
+                        return (
+                            <div className="bBlog_box_reply">
+                                <div className="bBlog_picBox_reply">
+                            <span className="bBlog_pic_reply">
+                                <img src={reply.commentor.avatar}/>
+                            </span>
+                                </div>
+                                <div className="bBlog_messageBox_reply">
+                            <span className="bBlog_username_reply">
+                                {reply.commentor.username}
+                            </span>
+                            <span className="bBlog_message_reply">
+                                {reply.message}
+                            </span>
+                            <span onClick={replyButtonClick.bind(null,reply.id)} className="bLinkLike bBlog_replyButton_reply">
+                                Reply
+                            </span>
+                                    <div id={reply.id} style={{display:'none'}}>
+                                        <Morearty.DOM.textarea  className="eEvent_comment eEvent_commentBlog eBlog_replyTextArea"/>
+                                        <span onClick={replyToReplyButtonClick.bind(null,reply.id, blog.id)} className="bButton bReplyButton">Reply</span>
+                                    </div>
+                                </div>
+                            </div>
+                        )
+                    });
+                }
                 return(
                     <div className="bBlog_box">
-                        <div className="bBlog_picBox">
+                        <div className="bBlog_parent_comment">
+                            <div className="bBlog_picBox">
                             <span className="bBlog_pic">
                                 <img src={blog.commentor.avatar}/>
                             </span>
-                        </div>
-                        <div className="bBlog_messageBox">
+                            </div>
+                            <div className="bBlog_messageBox">
                             <span className="bBlog_username">
                                 {blog.commentor.username}
+                                <span className="bBlog_timestamp">1 month ago</span>
                             </span>
                             <span className="bBlog_message">
                                 {blog.message}
@@ -108,11 +196,13 @@ Blog = React.createClass({
                             <span onClick={replyButtonClick.bind(null,blog.id)} className="bLinkLike bBlog_replyButton">
                                 Reply
                             </span>
-                            <div id={blog.id} style={{display:'none'}}>
-                                <Morearty.DOM.textarea  className="eEvent_comment eEvent_commentBlog eBlog_replyTextArea"/>
-                                <span className="bButton bReplyButton">Reply</span>
+                                <div id={blog.id} style={{display:'none', marginBottom:20+'px'}}>
+                                    <Morearty.DOM.textarea  className="eEvent_comment eEvent_commentBlog eBlog_replyTextArea"/>
+                                    <span onClick={replyToButtonClick.bind(null,blog.id)} className="bButton bReplyButton">Reply</span>
+                                </div>
                             </div>
                         </div>
+                        {replies}
                     </div>
                 )
             });
@@ -123,13 +213,13 @@ Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         return(
-            <div>
+            <div style={{position:'relative'}}>
                 <div className="bEventHeader">
                     <div className="eEventHeader_field mDate">Comments</div>
                     <div className="eEventHeader_field mName">Comments / Blog Section</div>
                     <div className="eEventHeader_field mSport">{binding.get('sport.name') + ' (' + binding.get('model.type') + ')'}</div>
                 </div>
-                <div className="eEvent_commentText">
+                <div className="eEvent_commentText eEvent_blog">
                     {self.state.blogUpdate}
                 </div>
                 <div>
