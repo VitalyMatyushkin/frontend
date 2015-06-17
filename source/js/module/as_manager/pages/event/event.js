@@ -201,7 +201,7 @@ EventView = React.createClass({
                         </If>
                         <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />
-                        <If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')}>
+                        <If condition={binding.get('mode') === 'general' && binding.get('model.resultId')}>
                             <Comments binding={binding}></Comments>
                         </If>
                     </div>

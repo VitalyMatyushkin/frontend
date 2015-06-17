@@ -44,11 +44,14 @@ Blog = React.createClass({
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        self.timerId = setInterval(self.populateBlog,1000);
+        //self.timerId = setInterval(self.populateBlog,1000);
+        setTimeout(self.populateBlog,10000);
     },
     componentWillUnmount:function(){
-        var self = this;
+        var self = this,
+            binding = self.getDefaultBinding();
         clearInterval(self.timerId);
+        binding.clear('blogs');
     },
     populateBlog: function () {
         var self = this,
@@ -98,14 +101,17 @@ Blog = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding(),
             parentEl,
             replyButtonClick = function(blogVal){
-                //console.log('clicked '+blogVal);
-                parentEl = document.getElementById(blogVal),
-                console.log(document.getElementById(blogVal).children[0]);
-                if(parentEl.style.display === 'block'){
-                    parentEl.style.display = 'none';
-                }else{
-                    parentEl.style.display = 'block';
-                }
+                //parentEl = document.getElementById(blogVal);
+                //if(parentEl.style.display === 'block'){
+                //    parentEl.style.display = 'none';
+                //}else{
+                //    parentEl.style.display = 'block';
+                //}
+                cancel(blogVal);
+            },
+            cancel = function(elId){
+                var el = document.getElementById(elId);
+                el.style.display === "block" ? el.style.display = "none": el.style.display = "block";
             },
             replyToButtonClick = function(blogVal){
                 var  eventId = binding.get('eventId'),
@@ -146,24 +152,24 @@ Blog = React.createClass({
                     });
             },
             mappedData;
-        if(typeof data !== 'undefined'){
+        if(typeof data !== 'undefined' && data != null){
             mappedData = data.map(function(blog,index){
                 var replies;
-                if(blog.replies.length >=1){
+                if(typeof blog.replies !== 'undefined' && blog.replies.length >=1){
                     replies = blog.replies.map(function(reply){
                         return (
                             <div className="bBlog_box_reply">
                                 <div className="bBlog_picBox_reply">
                             <span className="bBlog_pic_reply">
-                                <img src={reply.commentor.avatar}/>
+                                <img src={typeof reply.commentor !== 'undefined'? reply.commentor.avatar : 'http://placehold.it/400x400'}/>
                             </span>
                                 </div>
                                 <div className="bBlog_messageBox_reply">
                             <span className="bBlog_username_reply">
-                                {reply.commentor.username}
+                                {typeof reply.commentor !== 'undefined'? reply.commentor.username:""}
                             </span>
                             <span className="bBlog_message_reply">
-                                {reply.message}
+                                {typeof reply.commentor !== 'undefined'? reply.message:""}
                             </span>
                             <span onClick={replyButtonClick.bind(null,reply.id)} className="bLinkLike bBlog_replyButton_reply">
                                 Reply
@@ -171,6 +177,7 @@ Blog = React.createClass({
                                     <div id={reply.id} style={{display:'none'}}>
                                         <Morearty.DOM.textarea  className="eEvent_comment eEvent_commentBlog eBlog_replyTextArea"/>
                                         <span onClick={replyToReplyButtonClick.bind(null,reply.id, blog.id)} className="bButton bReplyButton">Reply</span>
+                                        <span onClick={cancel.bind(null,reply.id)} className="bButton bReplyButton cancel">Cancel</span>
                                     </div>
                                 </div>
                             </div>
@@ -196,9 +203,10 @@ Blog = React.createClass({
                             <span onClick={replyButtonClick.bind(null,blog.id)} className="bLinkLike bBlog_replyButton">
                                 Reply
                             </span>
-                                <div id={blog.id} style={{display:'none', marginBottom:20+'px'}}>
+                                <div id={blog.id} className="bBlog_textArea_container">
                                     <Morearty.DOM.textarea  className="eEvent_comment eEvent_commentBlog eBlog_replyTextArea"/>
                                     <span onClick={replyToButtonClick.bind(null,blog.id)} className="bButton bReplyButton">Reply</span>
+                                    <span onClick={cancel.bind(null,blog.id)} className="bButton bReplyButton cancel">Cancel</span>
                                 </div>
                             </div>
                         </div>
