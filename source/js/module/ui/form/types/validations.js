@@ -53,7 +53,7 @@ var validationsSet = {
 		dataToCheck[self.props.field] = value;
 
 		$.ajax({
-			url: 'http://api.squadintouch.com:80/v1/' + self.props.service + '/check',
+			url: 'http:' + window.apiBase + '/' + self.props.service + '/check',
 			type: 'POST',
 			crossDomain: true,
 			data: dataToCheck,
