@@ -7,14 +7,16 @@ Route = React.createClass({
 		component: React.PropTypes.string.isRequired,
 		pageName: React.PropTypes.string,
 		loginRoute: React.PropTypes.bool,
+		verifyRoute: React.PropTypes.bool,
 		unauthorizedAccess: React.PropTypes.bool
 	},
 	render: function() {
 		var self = this;
 
-		return null
+		null
 	}
 });
 
 module.exports = Route;
+
 

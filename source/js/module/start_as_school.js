@@ -1,6 +1,7 @@
 var ApplicationView = require('module/as_school/application'),
 	serviceList = require('module/core/service_list'),
 	userDataInstance = require('module/data/user_data'),
+	authController = require('module/core/auth_controller'),
 	MoreartyContext,
 	binding;
 
@@ -29,6 +30,12 @@ function initMainView(schoolId) {
 
 	// Передача связывания контекста в классы данных
 	userDataInstance.setBinding(binding.sub('userData'));
+
+	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
+	authController.initialize({
+		binding: binding,
+		defaultPath: 'school_admin/summary'
+	});
 
 	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));

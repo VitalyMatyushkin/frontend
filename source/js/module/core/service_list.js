@@ -6,7 +6,6 @@ var Service = require('module/core/service'),
 serviceList = {
 	// Сервисы, требующие авторизацию
 	initialize: function(binding) {
-		serviceList.me = new Service('/users/{ownerId}', binding);
 		serviceList.logout = new Service('/users/logout', binding);
 
 		// users

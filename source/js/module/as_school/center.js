@@ -1,5 +1,9 @@
 var RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
+	LoginRoute = require('module/core/routes/login_route'),
+	LogoutRoute = require('module/core/routes/logout_route'),
+	RegisterRoute = require('module/core/routes/register_route'),
+	VerifyRoute = require('module/core/routes/verify_route'),
 	Center;
 
 Center = React.createClass({
@@ -25,6 +29,11 @@ Center = React.createClass({
 						<Route path="/opponents/:subPage" binding={binding.sub('opponentsList')} component="module/as_school/pages/opponents/opponents_page"  />
 
 						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
+
+						<RegisterRoute binding={binding.sub('form.register')}  />
+						<LoginRoute binding={binding.sub('userData')}  />
+						<LogoutRoute binding={binding.sub('userData')}  />
+						<VerifyRoute binding={binding.sub('userData')} />
                     </RouterView>
 
 				</div>
