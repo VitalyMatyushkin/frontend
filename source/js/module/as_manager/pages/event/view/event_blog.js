@@ -41,11 +41,17 @@ Blog = React.createClass({
                 })
             });
     },
+    _fetchCommentsReplyData:function(parentComment, childComment){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            eventId = binding.get('eventId');
+        //window.Server.addToBlog.get({id:eventId})
+    },
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        //self.timerId = setInterval(self.populateBlog,1000);
-        setTimeout(self.populateBlog,10000);
+        self.timerId = setInterval(self.populateBlog,1000);
+        //setTimeout(self.populateBlog,10000);
     },
     componentWillUnmount:function(){
         var self = this,
@@ -78,15 +84,16 @@ Blog = React.createClass({
             .then(function(result){
                 window.Server.addToBlog.get({id:eventId})
                     .then(function(res){
-                        var blogData = [];
-                        res.forEach(function(blogItem, index){
-                            window.Server.user.get({id:blogItem.ownerId})
-                                .then(function(user){
-                                    blogItem.commentor = user; blogData.push(blogItem);
-                                    binding.set('blogs',blogData);
-                                }
-                            );
-                        })
+                        self._fetchCommentsData();
+                        //var blogData = [];
+                        //res.forEach(function(blogItem, index){
+                        //    window.Server.user.get({id:blogItem.ownerId})
+                        //        .then(function(user){
+                        //            blogItem.commentor = user; blogData.push(blogItem);
+                        //            binding.set('blogs',blogData);
+                        //        }
+                        //    );
+                        //})
                     });
             });
         React.findDOMNode(self.refs.commentBox).value="";
@@ -101,12 +108,6 @@ Blog = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding(),
             parentEl,
             replyButtonClick = function(blogVal){
-                //parentEl = document.getElementById(blogVal);
-                //if(parentEl.style.display === 'block'){
-                //    parentEl.style.display = 'none';
-                //}else{
-                //    parentEl.style.display = 'block';
-                //}
                 cancel(blogVal);
             },
             cancel = function(elId){
