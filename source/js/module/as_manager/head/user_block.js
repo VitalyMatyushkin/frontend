@@ -20,7 +20,7 @@ UserBlock = React.createClass({
             userInfoBinding = binding.sub('userInfo'),
             userId = binding.get('authorizationInfo.userId');
 
-		userId && window.Server.me.get(userId).then(function (data) {
+		userId && window.Server.user.get(userId).then(function (data) {
             userInfoBinding.set(Immutable.fromJS(data));
         }, function () {
             window.location.hash = 'logout';

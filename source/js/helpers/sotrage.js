@@ -68,8 +68,7 @@
 		 * Запись Cookies
 		 * */
 		set: function (key, value, options) {
-			var key = this.prefix + key,
-				savePath = (options && options.path ? options.path : '/'),
+			var savePath = (options && options.path ? options.path : '/'),
 				expires = (options && options.expires ? options.expires : this.expires),
 				value = $.type(value) === 'string' ? String(value) : JSON.stringify(value),
 				cookieString = '',
@@ -96,8 +95,7 @@
 		 * Чтение из Cookies
 		 * */
 		get: function (key) {
-			var key = this.prefix + key,
-				currentParts,
+			var currentParts,
 				currentCookie;
 
 			this._updateCookies();

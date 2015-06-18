@@ -1,5 +1,9 @@
 var RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
+	LoginRoute = require('module/core/routes/login_route'),
+	LogoutRoute = require('module/core/routes/logout_route'),
+	RegisterRoute = require('module/core/routes/register_route'),
+	VerifyRoute = require('module/core/routes/verify_route'),
 	Center;
 
 Center = React.createClass({
@@ -18,9 +22,10 @@ Center = React.createClass({
 				<div className="bPageWrap">
 
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
-						<Route path="/register"  binding={binding.sub('form.register')} component="module/ui/register/user" unauthorizedAccess={true}  />
-						<Route path="/login" binding={binding.sub('userData')} component="module/ui/login/user" loginRoute={true}  />
-						<Route path="/logout" binding={binding.sub('userData')} component="module/ui/logout/logout" unauthorizedAccess={true}  />
+						<RegisterRoute binding={binding.sub('form.register')}  />
+						<LoginRoute binding={binding.sub('userData')}  />
+						<LogoutRoute binding={binding.sub('userData')}  />
+						<VerifyRoute binding={binding.sub('userData')} />
 					</RouterView>
 
 				</div>

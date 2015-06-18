@@ -1,6 +1,7 @@
 var ApplicationView = require('module/as_www/application'),
 	serviceList = require('module/core/service_list'),
 	userDataInstance = require('module/data/user_data'),
+	authController = require('module/core/auth_controller'),
 	MoreartyContext,
 	binding;
 
@@ -26,8 +27,12 @@ function runWwwMode() {
 
 	window.Server = serviceList;
 
+	// Передача связывания контекста в классы данных
+	userDataInstance.setBinding(binding.sub('userData'));
+
 	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+
 
 	// Инициализация приложения
 	React.render(

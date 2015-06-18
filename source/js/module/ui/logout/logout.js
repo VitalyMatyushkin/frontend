@@ -3,11 +3,11 @@ LoginUserPage = React.createClass({
 	render: function() {
 		var binding = this.getDefaultBinding();
 
-		localStorage.clear();
+		window.Server.logout.post();
+		Helpers.cookie.remove('authorizationInfo');
 		binding.sub('authorizationInfo').clear();
 		document.location.href = '/';
 
-		window.Server.logout.post();
 		return null;
 	}
 });

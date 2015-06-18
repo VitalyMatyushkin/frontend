@@ -90,7 +90,10 @@ function runAdminMode() {
     serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
 // Связывания контроллера, отвечающего за контроль за авторизацией с данными
-    authController.initialize(binding);
+    authController.initialize({
+        binding: binding,
+        defaultPath: 'admin_schools'
+    });
 
 // Инициализация приложения
     React.render(

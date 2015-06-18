@@ -20,8 +20,18 @@ LoginUserPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		if(data.id) {
+			binding.update('userInfo', function(){
+				return Immutable.fromJS(data.user);
+			});
+
+			// TODO: попросить Стаса отдавать нормальные данные
 			binding.update('authorizationInfo', function(){
-				return Immutable.fromJS(data);
+				return Immutable.fromJS({
+					id: data.id,
+					ttl: data.ttl,
+					userId: data.userId,
+					verified: data.user.verified
+				});
 			});
 		}
 	},

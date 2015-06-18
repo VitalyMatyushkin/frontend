@@ -1,0 +1,55 @@
+.bVerifyRegister {
+
+}
+
+.eVerifyRegister_text {
+  font-size: 16px;
+  margin-bottom: 46px;
+}
+
+.eVerifyRegister_field {
+  margin-bottom: 40px;
+}
+
+.eVerifyRegister_fieldText {
+  font-size: 14px;
+  line-height: 19px;
+  margin-bottom: 8px;
+}
+
+.eVerifyRegister_field .bIcon {
+  color: #B2B2B2;
+  height: 30px;
+  width: 30px;
+  float: left;
+  margin-right: 7px;
+  position: relative;
+}
+
+.eVerifyRegister_field.mEmail .bIcon{
+  top: -3px;
+}
+
+.eVerifyRegister_field.mPhone .bIcon{
+  height: 25px;
+}
+
+.eVerifyRegister_fieldInput {
+  display: inline-block;
+  width: 74px;
+  height: 25px;
+  line-height: 25px;
+  margin-right: 10px;
+  margin-left: 36px;
+  vertical-align: middle;
+}
+
+.eVerifyRegister_field .bButton{
+  padding: 5px 12px;
+  vertical-align: middle;
+}
+
+
+
+
+

@@ -54,9 +54,9 @@ function runManagerMode() {
 					mode: 'month'
 				}
 			},
-            event: {
-                eventRouting: {}
-            },
+			event: {
+				eventRouting: {}
+			},
 			teams: {
 				sync: false,
 				models: []
@@ -82,17 +82,20 @@ function runManagerMode() {
 
 	window.Server = serviceList;
 
-// Передача связывания контекста в классы данных
+	// Передача связывания контекста в классы данных
 	userDataInstance.setBinding(binding.sub('userData'));
 	userRulesInstance.setBinding(binding.sub('userRules'));
 
-// Включение авторизации сервисов
+	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize(binding);
+	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
+	authController.initialize({
+		binding: binding,
+		defaultPath: 'schools'
+	});
 
-// Инициализация приложения
+	// Инициализация приложения
 	React.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')

@@ -1,48 +1,38 @@
-var RegisterCoach = require('module/ui/register/user/form_coach'),
-	RegisterOfficial = require('module/ui/register/user/form_official'),
-	RegisterParent = require('module/ui/register/user/form_parent'),
-	RegisterDone = require('module/ui/register/user/done'),
-	FormStep = require('module/ui/register/user/form_step'),
-	RegiseterUserPage;
+var ChooseTypeForm = require('module/ui/register/user/choose_type'),
+	RegisterForm = require('module/ui/register/user/register_form'),
+	RegisterDone = require('module/ui/register/user/register_done'),
+	RegisterUserPage;
 
-RegiseterUserPage = React.createClass({
+RegisterUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	// TODO: вынести значение поля step в мета-данные
 	getDefaultState: function () {
 		return Immutable.Map({
-			step: 'choose_type'
+			registerStep: 'type'
 		});
 	},
-	onSuccess: function() {
+	setStepFunction: function(step) {
 		var self = this;
 
-		self.getDefaultBinding().set('step', 'choose_type');
-	},
-	onDone: function() {
-		var self = this;
-
-		self.getDefaultBinding().set('step', 'done');
+		return function(){
+			self.getDefaultBinding().set('registerStep', step);
+		};
 	},
 	render: function() {
 		var self = this,
 			currentView,
-			currentStep = self.getDefaultBinding().get('step');
+			binding = self.getDefaultBinding(),
+			currentStep = binding.get('registerStep');
 
 		switch(currentStep) {
-			case 'choose_type':
-				currentView = <FormStep binding={self.getDefaultBinding()} />;
+			case 'type':
+				currentView = <ChooseTypeForm onSuccess={self.setStepFunction('form')} binding={binding.sub('formFields')} />;
 				break;
-			case 'as_parent':
-				currentView = <RegisterParent onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
-				break;
-			case 'as_coach':
-				currentView = <RegisterCoach onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
-				break;
-			case 'as_official':
-				currentView = <RegisterOfficial onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
+			case 'form':
+				currentView = <RegisterForm onSuccess={self.setStepFunction('done')} binding={binding.sub('formFields')} />;
 				break;
 			case 'done':
-				currentView = <RegisterDone onSingin={self.onDone} />;
+				currentView = <RegisterDone binding={binding.sub('formFields')} />;
 				break;
 		}
 
@@ -55,4 +45,4 @@ RegiseterUserPage = React.createClass({
 });
 
 
-module.exports = RegiseterUserPage;
+module.exports = RegisterUserPage;

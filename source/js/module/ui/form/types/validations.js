@@ -3,6 +3,14 @@
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
 var validationsSet = {
+	phone: function(value) {
+
+		if (!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))) {
+			return 'Should contain phone number';
+		} else {
+			return false;
+		}
+	},
 	email: function(value) {
 		var self = this;
 
