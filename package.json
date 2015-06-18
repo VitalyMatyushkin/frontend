@@ -20,6 +20,9 @@
     "gulp-svgmin": "^1.0.0",
     "gulp-svgstore": "^3.0.0",
     "gulp-using": "0.0.1",
+    "jscs": "^1.13.1",
+    "jshint": "~2.7.0",
+    "jshint-stylish": "^1.0.1",
     "main-bower-files": "^2.4.1",
     "run-sequence": "^1.0.2"
   },
