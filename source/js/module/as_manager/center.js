@@ -16,6 +16,7 @@ Center = React.createClass({
 			binding = self.getDefaultBinding(),
 			currentPage =  binding.get('routing.currentPageName') || '',
 			mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
+		//<VerifyRoute binding={binding.sub('userData')} />
 
 		return (
 			<div className={mainClass}>
@@ -26,7 +27,7 @@ Center = React.createClass({
 						<RegisterRoute binding={binding.sub('form.register')}  />
 						<LoginRoute binding={binding.sub('userData')}  />
 						<LogoutRoute binding={binding.sub('userData')}  />
-						<VerifyRoute binding={binding.sub('userData')} />
+
 
 
 

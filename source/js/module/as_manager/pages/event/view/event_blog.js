@@ -12,7 +12,45 @@ Blog = React.createClass({
     },
     componentWillMount:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            loggedUser = globalBinding.get('userData.authorizationInfo.userId'); console.log(loggedUser);
+        self.hasChild = false;
+        //For permissions
+        self.userPermission = {
+            "preset": "",
+            "principalId": "be636efc-7d5a-4094-8c9e-4f8bceae0d18",
+            "principalType": "manager",
+            "objectId": "",
+            "objectType": "",
+            "comment": "",
+            "accepts": false,
+            "id": "",
+            "meta": {
+                "created": "2015-06-01T15:37:45.951Z",
+                "updated": "2015-06-01T15:37:46.566Z"
+            },
+            "userId": "be636efc-7d5a-4094-8c9e-4f8bceae0d18",
+            "schoolId": "211403ed-8234-4d1e-906b-f191595f739f"
+        }
+        window.Server.userChildren.get({id:loggedUser}).then(function(children){
+                var participants = binding.get('players').toJS();
+            if(typeof participants !== 'undefined' && participants.length >=1){
+                var childrenId = children.map(function(child){
+                    return child.id;
+                });
+                participants.forEach(function(part){
+                    if(typeof part !== 'undefined'){
+                        for(var i=0; i<part.length; i++){
+                            for(var x=0; x <childrenId.length; x++){
+                                if(part[i].id === childrenId[x]){console.log('yes'); self.hasChild = true; break;}
+                            }
+                        }
+                    };
+                });
+            }
+        });
+        //End of
         self._fetchCommentsData();
     },
     _fetchCommentsData:function(){
@@ -40,35 +78,6 @@ Blog = React.createClass({
                         });
                 });
             });
-        //window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:1}}})
-        //    .then(function(res){
-        //        var blogData = [];
-        //        res.forEach(function(blogItem, index){
-        //            window.Server.user.get({id:blogItem.ownerId})
-        //                .then(function(user){
-        //                    blogItem.commentor = user;
-        //                    //Get blogs that have same parentId as current blog id
-        //                    window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:blogItem.id}}})
-        //                        .then(function(children){
-        //                            children.forEach(function(childBlog){
-        //                                window.Server.user.get({id:childBlog.ownerId})
-        //                                    .then(function(childUser){
-        //                                        childBlog.commentor = childUser;
-        //                                    })
-        //                            });
-        //                            blogItem.replies = children; blogData.push(blogItem); console.log(blogData);
-        //                            binding.set('blogs',blogData);
-        //                        });
-        //                }
-        //            );
-        //        })
-        //    });
-    },
-    _fetchCommentsReplyData:function(parentComment, childComment){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            eventId = binding.get('eventId');
-        //window.Server.addToBlog.get({id:eventId})
     },
     componentDidMount:function(){
         var self = this,
@@ -81,7 +90,9 @@ Blog = React.createClass({
             binding = self.getDefaultBinding();
         //clearInterval(self.timerId);
         clearTimeout(self.timerId);
-        binding.clear('blogs');
+        binding.remove('blogs');
+        filteredBag.length = 0;
+        filteredChild.length = 0;
     },
     populateBlog: function () {
         var self = this,
@@ -97,25 +108,29 @@ Blog = React.createClass({
             eventId = binding.get('eventId'),
             comments = React.findDOMNode(self.refs.commentBox).value,
             bloggerId = globalBinding.get('userData.authorizationInfo.userId');
-        window.Server.addToBlog.post({id:eventId},
-            {
-                eventId:eventId,
-                ownerId:bloggerId,
-                parentId:1,
-                message:comments,
-                hidden:false
-            })
-            .then(function(result){
-                window.Server.user.get({id:result.ownerId})
-                    .then(function(author){
-                        result.commentor = author;
-                        filteredBag.push(result);
-                        binding.set('blogs',filteredBag);
-                        var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
-                        self.setState({blogUpdate:tmpBlog});
-                    });
-            });
-        React.findDOMNode(self.refs.commentBox).value="";
+        if(self.hasChild || self.userPermission.userId === bloggerId){
+            window.Server.addToBlog.post({id:eventId},
+                {
+                    eventId:eventId,
+                    ownerId:bloggerId,
+                    parentId:1,
+                    message:comments,
+                    hidden:false
+                })
+                .then(function(result){
+                    window.Server.user.get({id:result.ownerId})
+                        .then(function(author){
+                            result.commentor = author;
+                            filteredBag.push(result);
+                            binding.set('blogs',filteredBag);
+                            var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
+                            self.setState({blogUpdate:tmpBlog});
+                        });
+                });
+            React.findDOMNode(self.refs.commentBox).value="";
+        }else{
+            alert("You cannot comment on this forum");
+        }
     },
     _textAreaChange:function(){
         var self = this;
@@ -131,71 +146,81 @@ Blog = React.createClass({
             },
             cancel = function(elId){
                 var el = document.getElementById(elId);
+                el.children[0].value = "";
                 el.style.display === "block" ? el.style.display = "none": el.style.display = "block";
             },
             replyToButtonClick = function(blogVal){
                 var  eventId = binding.get('eventId'),
                     reply = document.getElementById(blogVal).children[0].value,
                     bloggerId = globalBinding.get('userData.authorizationInfo.userId');
-                window.Server.addToBlog.post({id:eventId},
-                    {
-                        eventId:eventId,
-                        ownerId:bloggerId,
-                        message:reply,
-                        parentId: blogVal,
-                        hidden:false
-                    })
-                    .then(function(result){
-                        console.log(result);
-                        document.getElementById(blogVal).children[0].value = "";
-                        document.getElementById(blogVal).style.display = "none";
-                        window.Server.user.get({id:result.ownerId})
-                            .then(function(author){
-                                result.commentor = author;
-                                filteredChild.push(result);
-                                filteredBag.forEach(function(par,index){
-                                    par.replies = filteredChild.filter(function(child){
-                                        return child.parentId === par.id;
+                if(self.hasChild || self.userPermission.userId === bloggerId){
+                    window.Server.addToBlog.post({id:eventId},
+                        {
+                            eventId:eventId,
+                            ownerId:bloggerId,
+                            message:reply,
+                            parentId: blogVal,
+                            hidden:false
+                        })
+                        .then(function(result){
+                            console.log(result);
+                            document.getElementById(blogVal).children[0].value = "";
+                            document.getElementById(blogVal).style.display = "none";
+                            window.Server.user.get({id:result.ownerId})
+                                .then(function(author){
+                                    result.commentor = author;
+                                    filteredChild.push(result);
+                                    filteredBag.forEach(function(par,index){
+                                        par.replies = filteredChild.filter(function(child){
+                                            return child.parentId === par.id;
+                                        });
+                                        filteredBag[index]=par;
                                     });
-                                    filteredBag[index]=par;
+                                    binding.set('blogs',filteredBag);
+                                    var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
+                                    self.setState({blogUpdate:tmpBlog});
                                 });
-                                binding.set('blogs',filteredBag);
-                                var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
-                                self.setState({blogUpdate:tmpBlog});
-                            });
-                    });
+                        });
+                }
+                else{
+                    alert("You don't have permission to post here please sign up or sign in");
+                }
             },
             replyToReplyButtonClick=function(blogVal, parentBlogVal){
                 var  eventId = binding.get('eventId'),
                     reply = document.getElementById(blogVal).children[0].value,
                     bloggerId = globalBinding.get('userData.authorizationInfo.userId');
-                window.Server.addToBlog.post({id:eventId},
-                    {
-                        eventId:eventId,
-                        ownerId:bloggerId,
-                        message:reply,
-                        parentId: parentBlogVal,
-                        hidden:false
-                    })
-                    .then(function(result){
-                        console.log(result);
-                        document.getElementById(blogVal).children[0].value = "";
-                        document.getElementById(blogVal).style.display = "none";
-                        window.Server.user.get({id:result.ownerId})
-                            .then(function(author){
-                                result.commentor = author;
-                                filteredChild.push(result);
-                                filteredBag.forEach(function(par,index){
-                                    par.replies = filteredChild.filter(function(child){
-                                        return child.parentId === par.id;
+                if(self.hasChild || self.userPermission.userId === bloggerId){
+                    window.Server.addToBlog.post({id:eventId},
+                        {
+                            eventId:eventId,
+                            ownerId:bloggerId,
+                            message:reply,
+                            parentId: parentBlogVal,
+                            hidden:false
+                        })
+                        .then(function(result){
+                            console.log(result);
+                            document.getElementById(blogVal).children[0].value = "";
+                            document.getElementById(blogVal).style.display = "none";
+                            window.Server.user.get({id:result.ownerId})
+                                .then(function(author){
+                                    result.commentor = author;
+                                    filteredChild.push(result);
+                                    filteredBag.forEach(function(par,index){
+                                        par.replies = filteredChild.filter(function(child){
+                                            return child.parentId === par.id;
+                                        });
+                                        filteredBag[index]=par;
                                     });
-                                    filteredBag[index]=par;
+                                    binding.set('blogs',filteredBag);
+                                    var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
+                                    self.setState({blogUpdate:tmpBlog});
                                 });
-                                binding.set('blogs',filteredBag);
-                                var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
-                                self.setState({blogUpdate:tmpBlog});
-                            });
-                    });
+                        });
+                }else{
+                    alert("You don't have permission to post here please sign up or sign in");
+                }
             },
             mappedData;
         if(typeof data !== 'undefined' && data != null){

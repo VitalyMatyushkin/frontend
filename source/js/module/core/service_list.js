@@ -118,6 +118,8 @@ serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		// login service
 		serviceList.login = new Service('/users/login?include=user',binding);
+		//Permissions
+		serviceList.createPermission = new Service('/permissions',binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {
