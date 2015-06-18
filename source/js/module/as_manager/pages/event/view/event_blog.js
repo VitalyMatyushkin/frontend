@@ -2,6 +2,8 @@
  * Created by bridark on 16/06/15.
  */
 var If = require('module/ui/if/if'),
+    filteredBag = [],
+    filteredChild = [],
     Blog;
 Blog = React.createClass({
     mixins:[Morearty.Mixin],
@@ -16,30 +18,51 @@ Blog = React.createClass({
     _fetchCommentsData:function(){
         var self = this,
             binding = self.getDefaultBinding(),
+            commentsBag = [],
             eventId = binding.get('eventId');
-        window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:1}}})
-            .then(function(res){
-                var blogData = [];
-                res.forEach(function(blogItem, index){
-                    window.Server.user.get({id:blogItem.ownerId})
-                        .then(function(user){
-                            blogItem.commentor = user;
-                            //Get blogs that have same parentId as current blog id
-                            window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:blogItem.id}}})
-                                .then(function(children){
-                                    children.forEach(function(childBlog){
-                                        window.Server.user.get({id:childBlog.ownerId})
-                                            .then(function(childUser){
-                                                childBlog.commentor = childUser;
-                                            })
+        window.Server.addToBlog.get({id:eventId})
+            .then(function(comments){
+                comments.forEach(function(comment){
+                    window.Server.user.get({id:comment.ownerId})
+                        .then(function(author){
+                            comment.commentor = author;
+                            commentsBag.push(comment);
+                            if(comment.parentId == 1){filteredBag.push(comment)}else{filteredChild.push(comment)}
+                            filteredBag.forEach(function(par,index){
+                                if(typeof filteredChild !== 'undefined'){
+                                    par.replies = filteredChild.filter(function(child){
+                                        return child.parentId === par.id;
                                     });
-                                    blogItem.replies = children; blogData.push(blogItem); console.log(blogData);
-                                    binding.set('blogs',blogData);
-                                });
-                        }
-                    );
-                })
+                                    if(par.replies.length >=1)filteredBag[index] = par;
+                                    binding.set('blogs',filteredBag);
+                                }
+                            })
+                        });
+                });
             });
+        //window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:1}}})
+        //    .then(function(res){
+        //        var blogData = [];
+        //        res.forEach(function(blogItem, index){
+        //            window.Server.user.get({id:blogItem.ownerId})
+        //                .then(function(user){
+        //                    blogItem.commentor = user;
+        //                    //Get blogs that have same parentId as current blog id
+        //                    window.Server.addToBlog.get({id:eventId, filter:{where:{parentId:blogItem.id}}})
+        //                        .then(function(children){
+        //                            children.forEach(function(childBlog){
+        //                                window.Server.user.get({id:childBlog.ownerId})
+        //                                    .then(function(childUser){
+        //                                        childBlog.commentor = childUser;
+        //                                    })
+        //                            });
+        //                            blogItem.replies = children; blogData.push(blogItem); console.log(blogData);
+        //                            binding.set('blogs',blogData);
+        //                        });
+        //                }
+        //            );
+        //        })
+        //    });
     },
     _fetchCommentsReplyData:function(parentComment, childComment){
         var self = this,
@@ -50,13 +73,14 @@ Blog = React.createClass({
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        self.timerId = setInterval(self.populateBlog,1000);
-        //setTimeout(self.populateBlog,10000);
+        //self.timerId = setInterval(self.populateBlog(),1000);
+        self.timerId = setTimeout(self.populateBlog,3000);
     },
     componentWillUnmount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        clearInterval(self.timerId);
+        //clearInterval(self.timerId);
+        clearTimeout(self.timerId);
         binding.clear('blogs');
     },
     populateBlog: function () {
@@ -82,18 +106,13 @@ Blog = React.createClass({
                 hidden:false
             })
             .then(function(result){
-                window.Server.addToBlog.get({id:eventId})
-                    .then(function(res){
-                        self._fetchCommentsData();
-                        //var blogData = [];
-                        //res.forEach(function(blogItem, index){
-                        //    window.Server.user.get({id:blogItem.ownerId})
-                        //        .then(function(user){
-                        //            blogItem.commentor = user; blogData.push(blogItem);
-                        //            binding.set('blogs',blogData);
-                        //        }
-                        //    );
-                        //})
+                window.Server.user.get({id:result.ownerId})
+                    .then(function(author){
+                        result.commentor = author;
+                        filteredBag.push(result);
+                        binding.set('blogs',filteredBag);
+                        var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
+                        self.setState({blogUpdate:tmpBlog});
                     });
             });
         React.findDOMNode(self.refs.commentBox).value="";
@@ -130,7 +149,20 @@ Blog = React.createClass({
                         console.log(result);
                         document.getElementById(blogVal).children[0].value = "";
                         document.getElementById(blogVal).style.display = "none";
-                        self._fetchCommentsData();
+                        window.Server.user.get({id:result.ownerId})
+                            .then(function(author){
+                                result.commentor = author;
+                                filteredChild.push(result);
+                                filteredBag.forEach(function(par,index){
+                                    par.replies = filteredChild.filter(function(child){
+                                        return child.parentId === par.id;
+                                    });
+                                    filteredBag[index]=par;
+                                });
+                                binding.set('blogs',filteredBag);
+                                var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
+                                self.setState({blogUpdate:tmpBlog});
+                            });
                     });
             },
             replyToReplyButtonClick=function(blogVal, parentBlogVal){
@@ -149,7 +181,20 @@ Blog = React.createClass({
                         console.log(result);
                         document.getElementById(blogVal).children[0].value = "";
                         document.getElementById(blogVal).style.display = "none";
-                        self._fetchCommentsData();
+                        window.Server.user.get({id:result.ownerId})
+                            .then(function(author){
+                                result.commentor = author;
+                                filteredChild.push(result);
+                                filteredBag.forEach(function(par,index){
+                                    par.replies = filteredChild.filter(function(child){
+                                        return child.parentId === par.id;
+                                    });
+                                    filteredBag[index]=par;
+                                });
+                                binding.set('blogs',filteredBag);
+                                var tmpBlog = self._updateCommentsArea(binding.get('blogs'));
+                                self.setState({blogUpdate:tmpBlog});
+                            });
                     });
             },
             mappedData;
@@ -196,7 +241,7 @@ Blog = React.createClass({
                             <div className="bBlog_messageBox">
                             <span className="bBlog_username">
                                 {blog.commentor.username}
-                                <span className="bBlog_timestamp">1 month ago</span>
+                                <span className="bBlog_timestamp"></span>
                             </span>
                             <span className="bBlog_message">
                                 {blog.message}
