@@ -18,6 +18,7 @@ serviceList = {
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
+		serviceList.confirmUser = new Service('/users/confirm',binding);
 
 
 		// schools
