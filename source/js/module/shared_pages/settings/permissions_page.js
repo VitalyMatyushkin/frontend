@@ -23,19 +23,19 @@ GeneralSettingsPage = React.createClass({
 		var self = this;
 
 		data.id = self.userId;
-
+		console.log(data)
+		     /*
 		self.userId && window.Server.user.put(self.userId, data).then(function() {
 
-		});
+		});*/
 	},
 	render: function() {
 		var self = this;
 
 		return (
-			<Form name="General settings" onSubmit={self.submitEdit} binding={self.getDefaultBinding()} defaultButton="Save" loadingButton="Saving..." >
-				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
-				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
-			</Form>
+			<div>
+				<h1 className="eSchoolMaster_title">My permissions</h1>
+			</div>
 		)
 	}
 });

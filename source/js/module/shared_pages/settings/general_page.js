@@ -32,7 +32,7 @@ GeneralSettingsPage = React.createClass({
 		var self = this;
 
 		return (
-			<Form name="General settings" onSubmit={self.submitEdit} binding={self.getDefaultBinding()} defaultButton="Save" loadingButton="Saving..." >
+			<Form formStyleClass="bSettingsForm" name="General settings" onSubmit={self.submitEdit} binding={self.getDefaultBinding()} defaultButton="Save" loadingButton="Saving..." >
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
 			</Form>

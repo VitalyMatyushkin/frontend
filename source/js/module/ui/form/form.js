@@ -9,7 +9,8 @@ Form = React.createClass({
 		name: React.PropTypes.string,
 		defaultButton: React.PropTypes.string,
 		loadingButton: React.PropTypes.string,
-		updateBinding: React.PropTypes.bool
+		updateBinding: React.PropTypes.bool,
+		formStyleClass: React.PropTypes.string
 	},
 	componentWillMount: function() {
 		var self = this,
@@ -171,7 +172,7 @@ Form = React.createClass({
 		self._createBindedClones(self);
 
 		return (
-			<div className="bForm" onKeyDown={self._keyPress}>
+			<div className={self.props.formStyleClass ? self.props.formStyleClass : 'bForm'} onKeyDown={self._keyPress}>
 				<div className="eForm_atCenter">
 
 					{Title}

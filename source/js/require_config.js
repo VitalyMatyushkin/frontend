@@ -11,7 +11,7 @@ window.onload = function() {
 	var defaultMode = 'school',
 		// http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
 		external = document.location.hostname.match(/([A-z0-9-]+)+(?:.(stage))?.(squadintouch|squard)\.com/),
-		specialModels = ['parents', 'manager', 'admin', 'site', 'www'],
+		specialModels = ['parents', 'manager', 'admin', 'site', 'www', 'stage'],
 		startModule = 'module/start_as_',
 		apiBase = 'api.stage.squadintouch.com',
 		version = 1;
@@ -24,6 +24,12 @@ window.onload = function() {
 	window.apiBase = '//' + apiBase + '/v' + version;
 
 	startModule += specialModels.indexOf(external[1]) !== -1 ? external[1] : defaultMode;
+
+	// TEST SERVER TEMPORARY SOLUTION
+	if (startModule === 'module/start_as_stage') {
+		startModule = 'module/start_as_www';
+	}
+
 
 	window['require']([startModule], function(startCallback) {
 		startCallback();

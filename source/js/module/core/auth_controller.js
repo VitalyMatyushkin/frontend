@@ -53,7 +53,7 @@ authСontroller = {
 		}
 
 		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
-		if (document.location.hash.indexOf('login') !== -1) {
+		if (document.location.hash.indexOf('login') === -1) {
 			self.nextPage = document.location.hash;
 		} else {
 			self.nextPage = options.defaultPath || '#/';

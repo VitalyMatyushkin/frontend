@@ -33,11 +33,11 @@ SecuritySettingaPage = React.createClass({
 
 		return (
 			<div>
-				<Form name="Change email" onSubmit={self.submitEdit} binding={self.getDefaultBinding().sub('emailForm')} defaultButton="Change" loadingButton="Saving..." >
+				<Form formStyleClass="bSettingsForm" name="Change email" onSubmit={self.submitEdit} binding={self.getDefaultBinding().sub('emailForm')} defaultButton="Change" loadingButton="Saving..." >
 					<FormField type="confirmText" field="email" validation="required email">Email</FormField>
 				</Form>
 
-				<Form name="Change password" onSubmit={self.submitEdit} binding={self.getDefaultBinding().sub('passwordForm')} defaultButton="Change" loadingButton="Saving..." >
+				<Form formStyleClass="bSettingsForm" name="Change password" onSubmit={self.submitEdit} binding={self.getDefaultBinding().sub('passwordForm')} defaultButton="Change" loadingButton="Saving..." >
 					<FormField type="confirmText" field="password" validation="required">Password</FormField>
 				</Form>
 			</div>
