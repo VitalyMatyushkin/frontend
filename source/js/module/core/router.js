@@ -133,18 +133,15 @@ RouterView = React.createClass({
 			} else {
 				if (self.isAuthorized === false && self.loginRoute) {
 					self.setRoute(self.loginRoute);
+					self.nextRoute = route;
+				} else if (self.isVerified === false && self.verifyRoute) {
+					self.setRoute(self.verifyRoute);
+					self.nextRoute = route;
+				} else {
+					self.setRoute(route);
 				}
 
-				if (self.isAuthorized === true && self.isVerified === false) {
-					// TODO: временное решение для удобства отладки, если нет пути верификации, исключаем ее
-					if (self.verifyRoute) {
-						self.setRoute(self.verifyRoute);
-					} else {
-						self.setRoute(route);
-					}
-				}
 
-				self.nextRoute = route;
 			}
 		}
 	},

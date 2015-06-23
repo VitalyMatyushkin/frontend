@@ -27,7 +27,7 @@ Center = React.createClass({
 						<RegisterRoute binding={binding.sub('form.register')}  />
 						<LoginRoute binding={binding.sub('userData')}  />
 						<LogoutRoute binding={binding.sub('userData')}  />
-
+						<VerifyRoute binding={binding.sub('userData')} />
 
 
 
