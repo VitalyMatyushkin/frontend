@@ -33,6 +33,14 @@ Head = React.createClass({
 				routes: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
 				requiredData: 'userRules.activeSchoolId',
 				authorization: true
+			},{
+				href:'/#school_console/school_console',
+				icon:'',
+				name:'Console',
+				key:'Console',
+				routes:['/school_console/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
+				requiredData:'userRules.activeSchoolId',
+				authorization:true
 			}];
 	},
 	render: function() {

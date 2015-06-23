@@ -47,6 +47,7 @@ Center = React.createClass({
 						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
 
 						<Route path="/invites /invites/:filter /invites/:inviteId/:mode" binding={binding.sub('invites')} component="module/as_manager/pages/invites/invites"  />
+						<Route path="/school_console /school_console/:filter /school_console/:inviteId/:mode" binding={binding.sub('invites')} component="module/as_manager/pages/school_console/school_console"  />
                     </RouterView>
 
 				</div>

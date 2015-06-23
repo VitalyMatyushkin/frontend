@@ -19,7 +19,7 @@ Blog = React.createClass({
         //For permissions
         self.userPermission = {
             "preset": "",
-            "principalId": "be636efc-7d5a-4094-8c9e-4f8bceae0d18",
+            "principalId": "ab3effb9-724d-4123-b615-8c374a6142ff",
             "principalType": "manager",
             "objectId": "",
             "objectType": "",
@@ -30,7 +30,7 @@ Blog = React.createClass({
                 "created": "2015-06-01T15:37:45.951Z",
                 "updated": "2015-06-01T15:37:46.566Z"
             },
-            "userId": "be636efc-7d5a-4094-8c9e-4f8bceae0d18",
+            "userId": "ab3effb9-724d-4123-b615-8c374a6142ff",
             "schoolId": "211403ed-8234-4d1e-906b-f191595f739f"
         }
         window.Server.userChildren.get({id:loggedUser}).then(function(children){
