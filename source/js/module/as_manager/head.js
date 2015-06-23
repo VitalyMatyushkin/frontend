@@ -34,7 +34,7 @@ Head = React.createClass({
 				requiredData: 'userRules.activeSchoolId',
 				authorization: true
 			},{
-				href:'/#school_console/school_console',
+				href:'/#school_console/permissions',
 				icon:'',
 				name:'Console',
 				key:'Console',

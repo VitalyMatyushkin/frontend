@@ -96,7 +96,7 @@ Blog = React.createClass({
     },
     populateBlog: function () {
         var self = this,
-            tmpBlog;
+            tmpBlog,
             binding = self.getDefaultBinding();
          tmpBlog = self._updateCommentsArea(binding.get('blogs'));
         self.setState({blogUpdate:tmpBlog});
