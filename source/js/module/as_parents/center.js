@@ -4,6 +4,7 @@ var RouterView = require('module/core/router'),
 	LogoutRoute = require('module/core/routes/logout_route'),
 	RegisterRoute = require('module/core/routes/register_route'),
 	VerifyRoute = require('module/core/routes/verify_route'),
+	SettingsRoute = require('module/core/routes/settings_route'),
 	Center;
 
 Center = React.createClass({
@@ -27,11 +28,8 @@ Center = React.createClass({
 						<LoginRoute binding={binding.sub('userData')}  />
 						<LogoutRoute binding={binding.sub('userData')}  />
 						<VerifyRoute binding={binding.sub('userData')} />
+						<SettingsRoute binding={binding.sub('userData')} />
 
-
-                        <Route path="/settings /settings/:subPage" binding={binding.sub('userData')}
-                               component="module/as_manager/pages/settings/settings_page"/>
-                      
 
 						<Route path="/student" binding={binding.sub('events')}
 							   component="module/as_manager/pages/student/student_page"/>

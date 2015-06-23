@@ -33,6 +33,12 @@ function runWwwMode() {
 	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
+	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
+	authController.initialize({
+		binding: binding,
+		defaultPath: '/'
+	});
+
 
 	// Инициализация приложения
 	React.render(

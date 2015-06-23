@@ -19,11 +19,11 @@ SettingsPage = React.createClass({
 			href: '/#settings/security',
 			name: 'Security',
 			key: 'Security'
-		}/*,{
-			href: '/#settings/privacy',
-			name: 'Privacy',
-			key: 'Privacy'
-		}*/];
+		},{
+			href: '/#settings/permissions',
+			name: 'Permissions',
+			key: 'Permissions'
+		}];
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
@@ -33,8 +33,8 @@ SettingsPage = React.createClass({
 			security: {
 				securityRouting: {}
 			},
-			privacy: {
-				privacyRouting: {}
+			permissions: {
+				permissionsRouting: {}
 			},
 			settingsRouting: {}
 		});
@@ -48,10 +48,11 @@ SettingsPage = React.createClass({
 			<div>
 				<SubMenu binding={binding.sub('settingsRouting')} items={self.menuItems} />
 
-				<div className="bSettingsPage">
+				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('settingsRouting') } binding={globalBinding}>
-						<Route path="/settings/general" binding={binding.sub('userInfo')} component="module/as_manager/pages/settings/general_page"  />
-						<Route path="/settings/security" binding={binding.sub('security')} component="module/as_manager/pages/settings/security_page"  />
+						<Route path="/settings/general" binding={binding.sub('userInfo')} component="module/shared_pages/settings/general_page"  />
+						<Route path="/settings/security" binding={binding.sub('security')} component="module/shared_pages/settings/security_page"  />
+						<Route path="/settings/permissions" binding={binding.sub('permissions')} component="module/shared_pages/settings/permissions_page"  />
 					</RouterView>
 				</div>
 
