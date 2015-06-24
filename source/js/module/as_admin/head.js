@@ -13,10 +13,11 @@ Head = React.createClass({
             menuItems;
 
         self.menuItems = [{
-            href: '/#admin_schools/admin_views/list',
+            href: '/#admin_schools',
             icon: 'icon_home',
             name: 'Dashboard',
             key: 'Dashboard',
+            routes:['/admin_schools/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
             authorization:true
         }];
     },

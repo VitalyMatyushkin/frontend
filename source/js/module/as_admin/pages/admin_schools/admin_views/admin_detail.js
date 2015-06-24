@@ -297,6 +297,7 @@ SchoolDetail = React.createClass({
                                 <div className="eDataList_listItemCell" style={{width:24+'%'}}>Role Actions</div>
                             </div>
                         </div>
+                        <h2>School Official - Owner</h2>
                         <div className="eDataList_list mTable">
                             {schoolOfficial}
                         </div>

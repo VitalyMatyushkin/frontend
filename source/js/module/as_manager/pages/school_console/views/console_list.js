@@ -57,6 +57,7 @@ ConsoleList = React.createClass({
                             .then(function (res) {
                                console.log(res);
                                 alert('User Deleted Successfully');
+                                document.location.hash = 'school_console/permissions';
                             });
                     }
                 };
