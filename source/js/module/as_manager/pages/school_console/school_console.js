@@ -4,8 +4,8 @@
 var SchoolConsole,
     RouterView = require('module/core/router'),
     Route = require('module/core/route'),
-    SubMenu = require('module/ui/menu/sub_menu');
-
+    SubMenu = require('module/ui/menu/sub_menu'),
+    liveRequestCount;
 SchoolConsole = React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultState: function () {
@@ -26,7 +26,9 @@ SchoolConsole = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('userRules.activeSchoolId');
-
+        //Get the total number of permissions (Notification badge) in submenu
+        //TODO: filter this query down to active school and where accepted is equal to false
+        window.Server.PermissionCount.get().then(function(count){binding.atomically().set('count', Immutable.fromJS(count)).commit();});
         self.menuItems = [{
             href: '/#school_console/permissions',
             name: 'Permissions',
@@ -45,7 +47,14 @@ SchoolConsole = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-
+        var badge = document.querySelectorAll('.eSubMenu_item')[1];
+        if(typeof  badge !== 'undefined'){
+           var c;
+            if(typeof binding.toJS('count') !== 'undefined'){
+                c = binding.toJS('count').count;
+                badge.innerText = "Live Requests ( "+c+" )";
+            }
+        }
         return <div>
             <SubMenu binding={binding.sub('consoleRouting')} items={self.menuItems} />
             <div className='bSchoolMaster'>
@@ -54,9 +63,6 @@ SchoolConsole = React.createClass({
                     <Route path='/school_console/permissions' binding={binding.sub('permissions')} component='module/as_manager/pages/school_console/views/permissions'  />
                     <Route path='/school_console/requests' binding={binding.sub('requests')} component='module/as_manager/pages/school_console/views/requests'  />
                     <Route path='/school_console/archive' binding={binding.sub('archives')} component='module/as_manager/pages/school_console/views/request_archive'  />
-                    <Route path='/invites/:inviteId/accept' binding={binding.sub('accept')} component='module/as_manager/pages/invites/views/accept'  />
-                    <Route path='/invites/:inviteId/decline' binding={binding.sub('decline')} component='module/as_manager/pages/invites/views/answer'  />
-                    <Route path='/invites/:inviteId/cancel' binding={binding.sub('cancel')} component='module/as_manager/pages/invites/views/answer'  />
                 </RouterView>
             </div>
         </div>;

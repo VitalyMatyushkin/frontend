@@ -123,6 +123,7 @@ serviceList = {
 		serviceList.Permissions = new Service('/permissions',binding);
         serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
         serviceList.Permission = new Service('/permissions/{id}', binding);
+        serviceList.PermissionCount = new Service('/permissions/count', binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {
