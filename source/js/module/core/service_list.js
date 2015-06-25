@@ -120,7 +120,9 @@ serviceList = {
 		// login service
 		serviceList.login = new Service('/users/login?include=user',binding);
 		//Permissions
-		serviceList.createPermission = new Service('/permissions',binding);
+		serviceList.Permissions = new Service('/permissions',binding);
+        serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
+        serviceList.Permission = new Service('/permissions/{id}', binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {

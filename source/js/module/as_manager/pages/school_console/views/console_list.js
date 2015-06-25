@@ -26,8 +26,8 @@ ConsoleList = React.createClass({
         });
         nonDupes.push(allPermissions[0]);
         //Find roles
-        if(typeof nonDupes !== 'undefined' && nonDupes.length >=1 && nonDupes[0] !== 'undefined'){
-            var modes = nonDupes.map(function(n){
+        if(typeof nonDupes !== 'undefined' && nonDupes.length >=1 && nonDupes[0] !== undefined){
+            nonDupes = nonDupes.map(function(n){
                 n.role = [];
                 var coachCount = data.coaches.filter(function(c){
                         return c.id === n.id;
@@ -47,42 +47,42 @@ ConsoleList = React.createClass({
                 if(managerCount.length >=1){n.role.push('Manager')}
                 return n;
             });
-        }
-        return nonDupes.map(function(data){
-            var roles,
-                deleteEntry = function (entryId, entryName) {
-                    var del = confirm("Do you want to delete "+entryName+" ?");
-                    if(del){
-                        window.Server.user.delete({id:entryId})
-                            .then(function (res) {
-                               console.log(res);
-                                alert('User Deleted Successfully');
-                                document.location.hash = 'school_console/permissions';
-                            });
+            return nonDupes.map(function(data){
+                var roles,
+                    deleteEntry = function (entryId, entryName) {
+                        var del = confirm("Do you want to delete "+entryName+" ?");
+                        if(del){
+                            window.Server.user.delete({id:entryId})
+                                .then(function (res) {
+                                    console.log(res);
+                                    alert('User Deleted Successfully');
+                                    document.location.hash = 'school_console/permissions';
+                                });
+                        }
+                    };
+                if(typeof data.role !== 'undefined' && data.role !== null){
+                    if(data.role.length >=1){
+                        roles = data.role.map(function(r){
+                            return(
+                                <div style={{paddingTop: 10+'px'}}>{r}</div>
+                            )
+                        });
                     }
-                };
-            if(typeof data.role !== 'undefined' && data.role !== null){
-                if(data.role.length >=1){
-                    roles = data.role.map(function(r){
-                        return(
-                            <div style={{paddingTop: 10+'px'}}>{r}</div>
-                        )
-                    });
                 }
-            }
-            return (
-                <div className="eDataList_listItem">
-                    <div className="eDataList_listItemCell">{data.firstName+" "+data.lastName}</div>
-                    <div className="eDataList_listItemCell">{data.email}</div>
-                    <div className="eDataList_listItemCell">{data.phone}</div>
-                    <div className="eDataList_listItemCell">{roles}</div>
-                    <div className="eDataList_listItemCell">{"No connection to child from user yet"}</div>
-                    <div className="eDataList_listItemCell mActions">
-                        <span onClick={deleteEntry.bind(null,data.id, data.lastName)} className="bLinkLike"><SVG classes="bIcon-mod" icon="icon_trash" /></span>
+                return (
+                    <div className="eDataList_listItem">
+                        <div className="eDataList_listItemCell">{data.firstName+" "+data.lastName}</div>
+                        <div className="eDataList_listItemCell">{data.email}</div>
+                        <div className="eDataList_listItemCell">{data.phone}</div>
+                        <div className="eDataList_listItemCell">{roles}</div>
+                        <div className="eDataList_listItemCell">{"No connection to child from user yet"}</div>
+                        <div className="eDataList_listItemCell mActions">
+                            <span onClick={deleteEntry.bind(null,data.id, data.lastName)} className="bLinkLike"><SVG classes="bIcon-mod" icon="icon_trash" /></span>
+                        </div>
                     </div>
-                </div>
-            )
-        });
+                )
+            });
+        }
     },
     render:function(){
         var self = this,
