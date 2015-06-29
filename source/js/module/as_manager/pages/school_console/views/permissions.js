@@ -71,11 +71,13 @@ PermissionView = React.createClass({
                                 window.Server.schoolManager.get({id:activeSchoolId, filter:{where:{lastName:{like:val, options:'i'}}}})
                                     .then(function (managers) {
                                         permissionData.managers = managers;
-                                        binding.set('permissionData',permissionData); self.forceUpdate();
+                                        binding.set('permissionData',permissionData);
+                                        self.forceUpdate();
                                     });
                             });
                     });
             });
+        self.forceUpdate();
     },
     render: function () {
         var self = this,

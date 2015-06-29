@@ -108,3 +108,30 @@
   margin-left: -400px;
   margin-top: -250px;
 }
+.bPopupGrant{
+  width: 300px;
+  height: 500px;
+  margin-left: -186px;
+  margin-top: -250px;
+}
+.bGrantButton{
+  width:100px;
+  height: 36px;
+  float:right;
+}
+.bGrantContainer{
+  padding: 10px;
+}
+.bGrantContainer h2,
+.bGrantContainer h4,
+.bGrantContainer div{
+  margin-bottom: 10px;
+}
+.customAutoComplete{
+  border: 1px solid #888888;
+}
+.customAutoComplete li{
+  border: 1px solid #e0e0e0;
+  padding: 4px;
+  cursor: pointer;
+}

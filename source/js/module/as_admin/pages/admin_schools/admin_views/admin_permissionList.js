@@ -5,7 +5,7 @@ var AdminPermissionView,
     activeUserInfo,
     ConsoleList = require('./admin_consoleList'),
     AdminPermissionData = [],
-    filteredData =[],
+    filteredData =[];
 AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
@@ -48,9 +48,9 @@ AdminPermissionView = React.createClass({
                                                                                 AdminPermissionData[currentUserIndex].role.parent[currentChildIndex] = currentChild;
                                                                                 //AdminPermissionData[currentUserIndex].role.parent.push(currentChild);
                                                                                 binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
-                                                                            })
-                                                                    })
-                                                            })
+                                                                            });
+                                                                    });
+                                                            });
                                                             AdminPermissionData.push(currentUser);
                                                             //binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
                                                         });
@@ -60,6 +60,9 @@ AdminPermissionView = React.createClass({
                         });
                 });
             });
+    },
+    componentWillUnmount:function(){
+        AdminPermissionData.length = 0;
     },
     _filterButtonClick:function(){
         var self = this,
@@ -118,11 +121,10 @@ AdminPermissionView = React.createClass({
                 <div className="eDataList_list mTable">
                     <div className="eDataList_listItem mHead">
                         <div className="eDataList_listItemCell" style={{width:20+'%'}}>Name</div>
-                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>email</div>
-                        <div className="eDataList_listItemCell" style={{width:15+'%'}}>Phone</div>
-                        <div className="eDataList_listItemCell" style={{width:15+'%'}}>School</div>
-                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>Roles</div>
-                        <div className="eDataList_listItemCell" style={{width:30+'%'}}>Additional Settings</div>
+                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>Email</div>
+                        <div className="eDataList_listItemCell" style={{width:12+'%'}}>Status</div>
+                        <div className="eDataList_listItemCell" style={{width:30+'%'}}>School</div>
+                        <div className="eDataList_listItemCell" style={{width:8+'%'}}>Roles</div>
                         <div className="eDataList_listItemCell" style={{width:20+'%'}}>Actions</div>
                     </div>
                     <ConsoleList binding={binding} />

@@ -244,7 +244,7 @@ EventManagerBase = React.createClass({
                 'internal': self.serviceClassFilter
             },
             gender = binding.get('model.gender'),
-            type = binding.get('model.type');
+            type = binding.get('model.type'); console.log(type);
 
 		return <div className="eManager_base">
             <div className="eManager_group">
