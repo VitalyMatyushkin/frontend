@@ -2,26 +2,13 @@
  * Created by bridark on 29/06/15.
  */
 var StudentAutoComplete,
+    Popup = require('module/ui/popup'),
     list;
 StudentAutoComplete = React.createClass({
     mixins:[Morearty.Mixin],
-    serviceStudent:function(studentName){
+    componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        window.Server.students.get({
-            schoolId:binding.get('selectedSchoolId'),
-            filter:{
-                where:{
-                    lastName:{
-                        like:studentName,
-                        options:'i'
-                    }
-                },
-                limit:10
-            }
-        }).then(function (studentResults) {
-            binding.set('studentResults',Immutable.fromJS(studentResults));
-        });
     },
     onStudentSelect:function(id, response, model){
         console.log(model);
@@ -67,6 +54,19 @@ StudentAutoComplete = React.createClass({
     handleClick:function(){
         //console.log('clicked')
     },
+    closeConfirmation:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+    },
+    continueButtonClick:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            confirmation = confirm("Are you sure you want to grant access?");
+        if(confirmation == true){
+            binding.set('popup', false);
+            alert('All done!');
+        }
+    },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
@@ -82,7 +82,7 @@ StudentAutoComplete = React.createClass({
                     </div>
                 </div>
                 <div>
-                    <input type="button" className="bButton bGrantButton" value="Continue"/>
+                    <input type="button" onClick={function(){self.continueButtonClick()}} className="bButton bGrantButton" value="Continue"/>
                 </div>
             </div>
         )
