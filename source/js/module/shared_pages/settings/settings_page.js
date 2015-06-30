@@ -50,9 +50,9 @@ SettingsPage = React.createClass({
 
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('settingsRouting') } binding={globalBinding}>
-						<Route path="/settings/general" binding={binding.sub('userInfo')} component="module/shared_pages/settings/general_page"  />
-						<Route path="/settings/security" binding={binding.sub('security')} component="module/shared_pages/settings/security_page"  />
-						<Route path="/settings/permissions" binding={binding.sub('permissions')} component="module/shared_pages/settings/permissions_page"  />
+						<Route path="/settings/general" binding={binding.sub('userInfo')} component="module/shared_pages/settings/general/general_page"  />
+						<Route path="/settings/security" binding={binding.sub('security')} component="module/shared_pages/settings/security/security_page"  />
+						<Route path="/settings/permissions /settings/permissions/:subPage" binding={binding.sub('permissions')} component="module/shared_pages/settings/permissions/permissions_page"  />
 					</RouterView>
 				</div>
 

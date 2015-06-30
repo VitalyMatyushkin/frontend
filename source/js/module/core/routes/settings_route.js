@@ -4,7 +4,7 @@ var SettingsRoute,
 SettingsRoute = React.createClass({
 	getDefaultProps: function() {
 		return {
-			path: '/settings /settings/:subPage',
+			path: '/settings /settings/:subPage /settings/:subPage/:actionPage',
 			component: 'module/shared_pages/settings/settings_page',
 			unauthorizedAccess: false
 		};
