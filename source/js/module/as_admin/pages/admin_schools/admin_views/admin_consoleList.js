@@ -8,6 +8,7 @@ var ConsoleList,
     currentAction,
     RevokeAccess = require('../admin_comps/revoke_role'),
     EditUser = require('../admin_comps/edit_user'),
+    selectedUserProp,
     SVG = require('module/ui/svg');
 ConsoleList = React.createClass({
     mixins:[Morearty.Mixin],
@@ -15,6 +16,7 @@ ConsoleList = React.createClass({
         var self = this,
             binding  = self.getDefaultBinding();
         binding.set('popup', false);
+        selectedUserProp = " ";
     },
     _allowPopup:function(){
 
@@ -63,9 +65,11 @@ ConsoleList = React.createClass({
                         evt.stopPropagation();
                     }
                 },
-                editUser = function(userId, userName){
+                editUser = function(userId, userRole){
                     return function(evt){
                         binding.set('currentAction','edit');
+                        binding.set('selectedUser',{userId:userId, role:userRole});
+                        selectedUserProp = userId;
                         binding.set('popup', true);
                         evt.stopPropagation();
                     }
@@ -129,7 +133,7 @@ ConsoleList = React.createClass({
                         <div className="eDataList_listItemCell mActions">
                             <span title="Add" onClick={addNewRole(data.id, data.firstName, data.lastName)}><SVG classes="bIcon-mod" icon="icon_plus"/></span>
                             <span title="View"><SVG classes="bIcon-mod" icon="icon_eye"/></span>
-                            <span title="Edit" onClick={editUser(data.id,data.lastName)}><SVG classes="bIcon-mod" icon="icon_pencil"/></span>
+                            <span title="Edit" onClick={editUser(data.id,data.role)}><SVG classes="bIcon-mod" icon="icon_pencil"/></span>
                             <span title="Delete" onClick={revokeRole(data.id, data.lastName)}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
                             <span title="Block" onClick={deleteEntry(data.id, data.lastName)}><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
                         </div>
@@ -156,12 +160,12 @@ ConsoleList = React.createClass({
                     </Popup>
                 </If>
                 <If condition={binding.get('currentAction') === 'revoke'}>
-                    <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}}>
+                    <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}} otherClass="bPopupRevoke">
                         <RevokeAccess binding={binding} />
                     </Popup>
                 </If>
                 <If condition={binding.get('currentAction') === 'edit'}>
-                    <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}}>
+                    <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}} otherClass="bPopupEdit">
                         <EditUser binding={binding} />
                     </Popup>
                 </If>

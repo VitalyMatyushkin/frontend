@@ -64,7 +64,7 @@ StudentAutoComplete = React.createClass({
             confirmation = confirm("Are you sure you want to grant access?");
         if(confirmation == true){
             binding.set('popup', false);
-            alert('All done!');
+            alert('API not implemented!');
         }
     },
     render:function(){
