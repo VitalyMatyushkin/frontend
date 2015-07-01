@@ -16,50 +16,16 @@ AdminPermissionView = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
             activeUserInfo = globalBinding.get('userData.userInfo').toJS();
-        //Get all users
-        window.Server.users.get()
-            .then(function (allUsers) {
-                allUsers.forEach(function(currentUser, currentUserIndex){
-                    currentUser.role={coach:[],admin:[],teacher:[],manager:[],parent:[]};
-                    window.Server.userCoach.get({id:currentUser.id})
-                        .then(function(coach){
-                            currentUser.role.coach = coach;
-                            window.Server.userAdmin.get({id:currentUser.id})
-                                .then(function (admin) {
-                                    currentUser.role.admin = admin;
-                                    window.Server.userTeacher.get({id:currentUser.id})
-                                        .then(function(teacher){
-                                            currentUser.role.teacher = teacher;
-                                            window.Server.userManager.get({id:currentUser.id})
-                                                .then(function (manager) {
-                                                    currentUser.role.manager = manager;
-                                                    window.Server.userChildren.get({id:currentUser.id})
-                                                        .then(function (children) {
-                                                            currentUser.role.parent = children;
-                                                            children.forEach(function(currentChild, currentChildIndex){
-                                                                currentChild.school={details:{},form:{}};
-                                                                window.Server.school.get({id:currentChild.schoolId})
-                                                                    .then(function (childSchool) {
-                                                                        currentChild.school.details = childSchool;
-                                                                        window.Server.form.get({formId:currentChild.formId})
-                                                                            .then(function(form){
-                                                                                currentChild.school.form = form;
-                                                                                //currentUser.role.parent = children;
-                                                                                AdminPermissionData[currentUserIndex].role.parent[currentChildIndex] = currentChild;
-                                                                                //AdminPermissionData[currentUserIndex].role.parent.push(currentChild);
-                                                                                binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
-                                                                            });
-                                                                    });
-                                                            });
-                                                            AdminPermissionData.push(currentUser);
-                                                            //binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
-                                                        });
-                                                });
-                                        });
-                                });
-                        });
-                });
-            });
+        //Get all Users
+        window.Server.users.get({
+            filter:{
+                include:{permissions:['school','student']}
+            }
+        }).then(function(users){
+                console.log(users);
+                binding.set('allUsers',Immutable.fromJS(users));
+            }
+        );
     },
     componentWillUnmount:function(){
         AdminPermissionData.length = 0;
@@ -85,21 +51,22 @@ AdminPermissionView = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         var val = event.currentTarget.value;
-        console.log(AdminPermissionData);
-        if(val.length >=1){
-            window.Server.users.get({filter:{where:{lastName:{like:val, options:'i'}}}})
-                .then(function (allUsers) {
-                    allUsers.forEach(function(currentUser, currentUserIndex){
-                        binding.set('allUsers',Immutable.fromJS(
-                            AdminPermissionData.filter(function(persistentData){
-                                return persistentData.id === currentUser.id;
-                            })
-                        ))
-                    });
-                });
-        }else{
-            binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
-        }
+        window.Server.users.get({
+            filter:{
+                where:{
+                    lastName:{
+                        like:val,
+                        options:'i'
+                    }
+                },
+                include:{permissions:['school','student']}
+            }
+        }).then(function(users){
+                console.log(users);
+                binding.set('allUsers',Immutable.fromJS(users));
+            }
+        );
+
     },
     render: function () {
         var self = this,

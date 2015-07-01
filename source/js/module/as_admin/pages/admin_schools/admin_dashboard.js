@@ -10,20 +10,15 @@ OneSchoolPage = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = globalBinding.get('routing.parameters.id');
-        //console.log(document.location.href.split('/')[document.location.href.split('/').length-1]);
-        //var subPage = document.location.href.split('/')[document.location.href.split('/').length-1];
-        //if (!activeSchoolId && subPage!=='users') {
-        //    document.location.hash = 'admin_schools/admin_views/list';
-        //}
         self.menuItems = [
             {
                 href:'/#admin_schools/admin_views/permissions',
-                name:'Permissions',
+                name:'Users & Permissions',
                 key:'Permissions'
             },
             {
                 href:'/#admin_schools/admin_views/requests',
-                name:'Live Requests',
+                name:'New Requests',
                 key:'requests'
             },
             {

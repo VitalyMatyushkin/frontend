@@ -18,11 +18,18 @@ EditUser = React.createClass({
             userId = binding.get('selectedUser').userId;
         window.Server.user.get(userId).then(function (data) {
             binding.set('form',Immutable.fromJS(data));
+            self.getUserData();
         });
     },
     getUserData:function(){
         var self = this,
             binding = self.getDefaultBinding(),
+            userNameCheck = function(){
+                console.log(document.getElementById('nameCheck').checked);
+                if(document.getElementById('nameCheck').checked === true){
+                    document.getElementById('username').value = document.getElementById('firstName').value+document.getElementById('lastName').value;
+                }
+            },
             userId = binding.get('selectedUser').userId;
         window.Server.user.get(userId).then(function (data) {
             binding.set('form',Immutable.fromJS(data));
@@ -38,10 +45,10 @@ EditUser = React.createClass({
                         </div>
                     </div>
                     <div className="bPopupEdit_row"><div className="bPopupEdit_field"><div>First Name</div></div>
-                        <div className="bPopupEdit_fieldSet"><input placeholder="First name" value={binding.get('form').toJS().firstName} /></div>
+                        <div className="bPopupEdit_fieldSet"><input id="firstName" placeholder="First name" value={binding.get('form').toJS().firstName} /></div>
                     </div>
                     <div className="bPopupEdit_row"><div className="bPopupEdit_field"><div>Surname</div></div>
-                        <div className="bPopupEdit_fieldSet"><input placeholder="Surname" value={binding.get('form').toJS().lastName} />
+                        <div className="bPopupEdit_fieldSet"><input id="lastName" placeholder="Surname" value={binding.get('form').toJS().lastName} />
                         </div>
                     </div>
                     <div className="bPopupEdit_row">
@@ -49,9 +56,9 @@ EditUser = React.createClass({
                             <div>Nickname</div>
                         </div>
                         <div className="bPopupEdit_fieldSet">
-                            <input placeholder="nickname" value={binding.get('form').toJS().username}/>
+                            <input id="username" placeholder="nickname" value={binding.get('form').toJS().username}/>
                             <div>
-                                <input type="checkbox" /> <span>Use the real name</span>
+                                <input id="nameCheck" onClick={function(){userNameCheck();}} type="checkbox" /> <span>Use the real name</span>
                             </div>
                         </div>
                     </div>
@@ -60,7 +67,7 @@ EditUser = React.createClass({
                             <div>Email</div>
                         </div>
                         <div className="bPopupEdit_fieldSet_verified">
-                            <input placeholder="email" value={binding.get('form').toJS().email}/>
+                            <input id="email" placeholder="email" value={binding.get('form').toJS().email}/>
                         </div>
                         <div className="bPopupEdit_notify">
                             <span>v</span>
@@ -71,7 +78,7 @@ EditUser = React.createClass({
                             <div>Phone</div>
                         </div>
                         <div className="bPopupEdit_fieldSet_verified">
-                            <input placeholder="phone" value={binding.get('form').toJS().phone}/>
+                            <input id="phone" placeholder="phone" value={binding.get('form').toJS().phone}/>
                         </div>
                         <div className="bPopupEdit_notify">
                             <span>?</span>
@@ -82,9 +89,9 @@ EditUser = React.createClass({
                             <div>Status</div>
                         </div>
                         <div className="bPopupEdit_fieldSet">
-                            <select>
-                                <option value="registered">Registered</option>
-                                <option value="unverified">Unverified</option>
+                            <select id="statusSelector">
+                                <option value={binding.get('form').toJS().blocked}>{binding.get('form').toJS().blocked === false ? 'Active' :'Blocked'}</option>
+                                <option value={!binding.get('form').toJS().blocked}>{!binding.get('form').toJS().blocked === true ? 'Blocked' :'Active'}</option>
                             </select>
                         </div>
                     </div>
@@ -111,9 +118,24 @@ EditUser = React.createClass({
         console.log(active);
     },
     _saveButtonClick:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-
+        var self, binding, userModel;
+        self = this;
+        binding = self.getDefaultBinding();
+        userModel = {
+            firstName: document.getElementById('firstName').value,
+            lastName: document.getElementById('lastName').value,
+            username: document.getElementById('username').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            blocked: document.getElementById('statusSelector').options[document.getElementById('statusSelector').selectedIndex].value !== 'false'
+        };
+        console.log(userModel);
+        var confirmChanges = confirm('Are you sure you want to make these changes?');
+        if(confirmChanges === true){
+            window.Server.user.put({id:binding.get('selectedUser').userId},userModel).then(function(){
+                alert("Changes successfully made");
+            });
+        }
     },
     _cancelButtonClick:function(){
         var self = this,
@@ -123,9 +145,9 @@ EditUser = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        if(typeof binding.get('form') !== 'undefined'){
-            if(binding.get('popup') === true)self.getUserData();
-        }
+        //if(typeof binding.get('form') !== 'undefined'){
+        //    if(binding.get('popup') === true)self.getUserData();
+        //}
         return (
             <div className="bPopupEdit_container">
                 <div className="bPopupEdit_row">

@@ -59,11 +59,11 @@ GrantRole = React.createClass({
                         <h4>Role </h4>
                         <div>
                             <select onChange={function(){self.onRoleSelectorChange()}} id="roleSelector">
-                                <option value="Admin">School Admin</option>
-                                <option value="Manager">School Manager</option>
-                                <option value="Teacher">Teacher</option>
-                                <option value="Coach">Coach</option>
-                                <option value="Parent">Parent</option>
+                                <option value="admin">School Admin</option>
+                                <option value="manager">School Manager</option>
+                                <option value="teacher">Teacher</option>
+                                <option value="coach">Coach</option>
+                                <option value="parent">Parent</option>
                             </select>
                         </div>
                         <StudentAutoComplete binding = {binding}/>

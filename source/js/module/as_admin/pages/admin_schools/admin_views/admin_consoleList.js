@@ -32,17 +32,24 @@ ConsoleList = React.createClass({
             var roles = [],
                 atSchool = [],
                 childAtSch = [],
-                deleteEntry = function (entryId, entryName) {
+                deleteEntry = function (entryId, entryName, state) {
                     return function(event){
-                        var del = confirm("Are you sure you want to block" + " "+entryName+" ?");
+                        var act = state === false? 'block':'unblock';
+                        var del = confirm("Are you sure you want to "+act+ " "+entryName+" ?");
                         if(del == true){
-                            alert('No API implemented yet');
-                            //window.Server.user.delete({id:entryId})
-                            //    .then(function (res) {
-                            //        console.log(res);
-                            //        alert('User Deleted Successfully');
-                            //        document.location.hash = 'admin_schools/admin_views/permissions';
-                            //    });
+                            window.Server.user.put({id:entryId},{blocked:!state})
+                                .then(function(res){
+                                    console.log(res);
+                                    window.Server.users.get({
+                                        filter:{
+                                            include:{permissions:['school','student']}
+                                        }
+                                    }).then(function(users){
+                                            console.log(users);
+                                            binding.set('allUsers',Immutable.fromJS(users));
+                                        }
+                                    );
+                                });
                         }
                         event.stopPropagation();
                     }
@@ -75,59 +82,23 @@ ConsoleList = React.createClass({
                     }
                 };
             if(typeof data !== 'undefined'){
-                if(typeof data.role !== 'undefined' && data.role !== null){
-                    if(data.role.admin.length >=1){
-                        roles.push('Admin');
-                        atSchool.push(data.role.admin[0].name);
-                    }
-                    if(data.role.coach.length >=1){
-                        roles.push('Coach');
-                        atSchool.push(data.role.coach[0].name);
-                    }
-                    if(data.role.manager.length >=1){
-                        roles.push('Manager');
-                        atSchool.push(data.role.manager[0].name);
-                    }
-                    if(data.role.parent.length >=1){
-                        roles.push('Parent');
-                        for(var i= 0; i<data.role.parent.length; i++){
-                            var childName = data.role.parent[i].firstName+" "+data.role.parent[i].lastName,
-                                formName = data.role.parent[i].school.form.name,
-                                schoolName = data.role.parent[i].school.details.name;
-                            atSchool.push(schoolName);
-                            childName += "("+formName+")";
-                            childAtSch.push(childName);
-                        }
-                    }
-                    if(data.role.teacher.length >=1){
-                        roles.push('Teacher');
-                        atSchool.push(data.role.teacher[0].name);
-                    }
-                    if(roles.length >=1){
-                        roles = roles.map(function(r){
-                            return(
-                                <div style={{paddingTop: 10+'px'}}>{r}</div>
-                            )
-                        });
-                        atSchool = atSchool.map(function(s){
-                            return(
-                                <div style={{paddingTop: 10+'px'}}>{s}</div>
-                            )
-                        });
-                        if(childAtSch.length >=1){
-                            childAtSch = childAtSch.map(function(c){
-                                return(
-                                    <div style={{paddingTop: 10+'px'}}>{c}</div>
-                                )
-                            });
-                        }
-                    }
+                if(typeof data.permissions !== 'undefined' && data.permissions.length >=1){
+                    atSchool = data.permissions.map(function(p){
+                        return(
+                            <div style={{padding:2+'px'}}>{p.school.name}</div>
+                        );
+                    });
+                    roles = data.permissions.map(function(per){
+                        return(
+                            <div style={{padding:2+'px'}}>{per.preset}</div>
+                        )
+                    });
                 }
                 return (
                     <div className="eDataList_listItem" onClick={function(){gotoUser(data.id)}} key={data.id}>
                         <div className="eDataList_listItemCell">{data.firstName+" "+data.lastName}</div>
                         <div className="eDataList_listItemCell">{data.email}</div>
-                        <div className="eDataList_listItemCell">{"Status"}</div>
+                        <div className="eDataList_listItemCell">{data.blocked === false ?'Active':'Blocked'}</div>
                         <div className="eDataList_listItemCell">{atSchool}</div>
                         <div className="eDataList_listItemCell">{roles}</div>
                         <div className="eDataList_listItemCell mActions">
@@ -135,7 +106,7 @@ ConsoleList = React.createClass({
                             <span title="View"><SVG classes="bIcon-mod" icon="icon_eye"/></span>
                             <span title="Edit" onClick={editUser(data.id,data.role)}><SVG classes="bIcon-mod" icon="icon_pencil"/></span>
                             <span title="Delete" onClick={revokeRole(data.id, data.lastName)}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
-                            <span title="Block" onClick={deleteEntry(data.id, data.lastName)}><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
+                            <span title="Block" onClick={deleteEntry(data.id, data.lastName, data.blocked)}><SVG classes="bIcon-mod" icon={data.blocked === true? "icon_user-minus":"icon_user-check"}/></span>
                         </div>
                     </div>
                 )

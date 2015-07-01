@@ -61,10 +61,17 @@ StudentAutoComplete = React.createClass({
     continueButtonClick:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            confirmation = confirm("Are you sure you want to grant access?");
+            confirmation = confirm("Are you sure you want to grant access?"),
+            role = document.getElementById('roleSelector');
         if(confirmation == true){
-            binding.set('popup', false);
-            alert('API not implemented!');
+            var schoolId = binding.get('selectedSchoolId'),
+                userId = binding.get('selectedUser').userId,
+                model = {preset:role.options[role.selectedIndex].value,schoolId:schoolId, principalId:userId};
+            window.Server.schoolPermissions.post({id:schoolId},model)
+                .then(function(result){
+                    console.log(result);
+                    binding.set('popup', false);
+                });
         }
     },
     render:function(){

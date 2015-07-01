@@ -8,6 +8,7 @@ var RouterView = require('module/core/router'),
     RegisterRoute = require('module/core/routes/register_route'),
     VerifyRoute = require('module/core/routes/verify_route'),
     SettingsRoute = require('module/core/routes/settings_route'),
+    AuthRoutes = require('module/core/routes/auth_routes'),
     Center;
 
 Center = React.createClass({
@@ -21,6 +22,10 @@ Center = React.createClass({
             currentPage =  binding.get('routing.currentPageName') || '',
             mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
         //<VerifyRoute binding={binding.sub('userData')} />
+        //<RegisterRoute binding={binding.sub('form.register')}  />
+        //<SettingsRoute binding={binding.sub('userData')} />
+        //<LoginRoute binding={binding.sub('userData')}  />
+        //
         return (
             <div className={mainClass}>
                 <div className="bPageWrap">
@@ -35,10 +40,9 @@ Center = React.createClass({
                         <Route path="/admin_schools admin_schools/:subPage /admin_schools/:subPage/:mode" binding={binding.sub('adminSchoolList')} component="module/as_admin/pages/admin_schools/admin_dashboard"/>
                         <Route path="/admin_views /admin_views/:subPage" binding={binding.sub('schoolsDetail')} component="module/as_admin/pages/admin_schools/admin_dashboard"  />
 
-                        <RegisterRoute binding={binding.sub('form.register')}  />
-                        <LoginRoute binding={binding.sub('userData')}  />
                         <LogoutRoute binding={binding.sub('userData')}  />
                         <SettingsRoute binding={binding.sub('userData')} />
+                        <RegisterRoute binding={binding.sub('form.register')}  />
 
                     </RouterView>
                 </div>

@@ -29,6 +29,7 @@ serviceList = {
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
 		serviceList.addCoach = new Service('/schools/{id}/coaches/rel/{fk}',binding);
 		serviceList.addTeacher = new Service('/schools/{id}/teachers/rel/{fk}',binding);
+        serviceList.schoolPermissions = new Service('/schools/{id}/permissions',binding);
 
 		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);
 		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
