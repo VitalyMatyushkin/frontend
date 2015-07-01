@@ -69,8 +69,8 @@ StudentAutoComplete = React.createClass({
                 model = {preset:role.options[role.selectedIndex].value,schoolId:schoolId, principalId:userId};
             window.Server.schoolPermissions.post({id:schoolId},model)
                 .then(function(result){
-                    console.log(result);
                     binding.set('popup', false);
+                    alert('Successfully Granted');
                 });
         }
     },

@@ -7,7 +7,13 @@ AdminRequest = React.createClass({
     componentWillMount:function(){
         var self = this,binding;
         binding = self.getDefaultBinding();
-        window.Server.Permissions.get().then(function(permissions){console.log(permissions)});
+        window.Server.schools.get({
+            filter:{
+                include:{
+                    relation:'permissions'
+                }
+            }
+        }).then(function(results){console.log(results)});
     },
     render:function(){
         return <div>Live requests</div>;
