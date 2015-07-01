@@ -43,7 +43,7 @@ Center = React.createClass({
                         <LogoutRoute binding={binding.sub('userData')}  />
                         <SettingsRoute binding={binding.sub('userData')} />
                         <RegisterRoute binding={binding.sub('form.register')}  />
-
+                        <LoginRoute binding={binding.sub('userData')}  />
                     </RouterView>
                 </div>
             </div>
