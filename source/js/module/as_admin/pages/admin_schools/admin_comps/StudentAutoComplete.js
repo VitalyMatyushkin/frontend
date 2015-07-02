@@ -11,15 +11,12 @@ StudentAutoComplete = React.createClass({
             binding = self.getDefaultBinding();
     },
     onStudentSelect:function(id, response, model){
-        console.log(model);
     },
     handleChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             listItemClick = function(listItemId){
-                console.log(document.getElementById(listItemId).innerText);
                 document.getElementById('studentInput').value = document.getElementById(listItemId).innerText;
-                console.log(listItemId);
                 binding.set('selectedStudentId', listItemId);
                 document.getElementById('autoComplete').style.display = 'none';
             },
@@ -54,7 +51,6 @@ StudentAutoComplete = React.createClass({
        //}
     },
     handleClick:function(){
-        //console.log('clicked')
     },
     closeConfirmation:function(){
         var self = this,
@@ -92,7 +88,6 @@ StudentAutoComplete = React.createClass({
                     alert('Successfully Granted');
                 });
         }
-        console.log(model);
     },
     revokeButtonClick:function(){
         var self = this,
@@ -127,7 +122,6 @@ StudentAutoComplete = React.createClass({
             //    });
             alert('No API method yet!');
         }
-        console.log(model);
     },
     render:function(){
         var self = this,

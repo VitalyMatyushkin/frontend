@@ -14,7 +14,6 @@ AdminRequest = React.createClass({
                 }
             }
         }).then(function(results){
-            console.log(results);
             binding
                 .atomically()
                 .set('permissionRequests', Immutable.fromJS(results))
@@ -31,19 +30,16 @@ AdminRequest = React.createClass({
             return requestData.map(function(request){
                 var acceptReq = function(schId,perId,preset,stdId){
                     return function(event){
-                        console.log('accept');
                         var confirmAcpt = confirm("Are you sure you want to accept this permission?");
                         if(confirmAcpt === true){
                             if(preset === 'parent'){
                                 window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:true,data:{studentId:stdId}})
                                     .then(function(res) {
-                                        console.log(res);
                                         alert('Permission accepted!');
                                     });
                             }else{
                                 window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:true})
                                     .then(function(res) {
-                                        console.log(res);
                                         alert('Permission accepted!');
                                     });
                             }
@@ -59,13 +55,11 @@ AdminRequest = React.createClass({
                             if(preset === 'parent'){
                                 window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:false,data:{studentId:stdId}})
                                     .then(function(res) {
-                                        console.log(res);
                                         alert('Permission accepted!');
                                     });
                             }else{
                                 window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:false})
                                     .then(function(res) {
-                                        console.log(res);
                                         alert('Permission accepted!');
                                     });
                             }

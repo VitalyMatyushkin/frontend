@@ -39,13 +39,11 @@ ConsoleList = React.createClass({
                         if(del == true){
                             window.Server.user.put({id:entryId},{blocked:!state})
                                 .then(function(res){
-                                    console.log(res);
                                     window.Server.users.get({
                                         filter:{
                                             include:{permissions:['school','student']}
                                         }
                                     }).then(function(users){
-                                            console.log(users);
                                             binding.set('allUsers',Immutable.fromJS(users));
                                         }
                                     );
@@ -121,7 +119,7 @@ ConsoleList = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            permList; //console.log(binding.toJS('permissionData'));
+            permList;
         if(typeof binding.toJS('allUsers') !== 'undefined'){permList = self._renderListData(binding.toJS('allUsers'));}
         return (
             <div className="eDataList_console">

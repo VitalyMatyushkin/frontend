@@ -25,7 +25,6 @@ EditUser = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             userNameCheck = function(){
-                console.log(document.getElementById('nameCheck').checked);
                 if(document.getElementById('nameCheck').checked === true){
                     document.getElementById('username').value = document.getElementById('firstName').value+document.getElementById('lastName').value;
                 }
@@ -108,14 +107,12 @@ EditUser = React.createClass({
     },
     componentWillUnmount:function(){
         var self = this;
-        console.log('unmounted');
     },
     editTabClick:function(active){
         var self = this;
         if(active !== self.state.tabState){
             self.setState({tabState:active});
         }
-        console.log(active);
     },
     _saveButtonClick:function(){
         var self, binding, userModel;
@@ -129,7 +126,6 @@ EditUser = React.createClass({
             phone: document.getElementById('phone').value,
             blocked: document.getElementById('statusSelector').options[document.getElementById('statusSelector').selectedIndex].value !== 'false'
         };
-        console.log(userModel);
         var confirmChanges = confirm('Are you sure you want to make these changes?');
         if(confirmChanges === true){
             window.Server.user.put({id:binding.get('selectedUser').userId},userModel).then(function(){

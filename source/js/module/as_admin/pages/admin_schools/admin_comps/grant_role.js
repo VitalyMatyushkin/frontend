@@ -8,7 +8,7 @@ GrantRole = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
         var self = this,
-            binding = self.getDefaultBinding(); console.log(binding);
+            binding = self.getDefaultBinding();
     },
     serviceSchoolFilter: function(schoolName) {
         var self = this,
@@ -37,7 +37,7 @@ GrantRole = React.createClass({
     onRoleSelectorChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            selEl = document.getElementById('roleSelector'); console.log('selected');
+            selEl = document.getElementById('roleSelector');
         if(selEl.options[selEl.selectedIndex].value === 'parent'){
             document.getElementById('studentRow').style.display = 'block';
         }else{

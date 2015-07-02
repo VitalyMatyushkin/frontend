@@ -22,7 +22,6 @@ AdminPermissionView = React.createClass({
                 include:{permissions:['school','student']}
             }
         }).then(function(users){
-                console.log(users);
                 binding.set('allUsers',Immutable.fromJS(users));
             }
         );
@@ -62,7 +61,6 @@ AdminPermissionView = React.createClass({
                 include:{permissions:['school','student']}
             }
         }).then(function(users){
-                console.log(users);
                 binding.set('allUsers',Immutable.fromJS(users));
             }
         );
