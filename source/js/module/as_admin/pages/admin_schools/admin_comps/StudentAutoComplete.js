@@ -14,16 +14,18 @@ StudentAutoComplete = React.createClass({
         console.log(model);
     },
     handleChange:function(){
-        console.log('changed');
         var self = this,
             binding = self.getDefaultBinding(),
             listItemClick = function(listItemId){
                 console.log(document.getElementById(listItemId).innerText);
                 document.getElementById('studentInput').value = document.getElementById(listItemId).innerText;
                 console.log(listItemId);
+                binding.set('selectedStudentId', listItemId);
+                document.getElementById('autoComplete').style.display = 'none';
             },
             query = document.getElementById('studentInput').value;
         if(query.length >=1){
+            document.getElementById('autoComplete').style.display = 'block';
             window.Server.students.get({
                 schoolId:binding.get('selectedSchoolId'),
                 filter:{
@@ -63,16 +65,34 @@ StudentAutoComplete = React.createClass({
             binding = self.getDefaultBinding(),
             confirmation = confirm("Are you sure you want to grant access?"),
             role = document.getElementById('roleSelector');
+        var schoolId = binding.get('selectedSchoolId'),
+            userId = binding.get('selectedUser').userId,
+            model = {};
+        if(role.options[role.selectedIndex].value === 'parent'){
+            model = {
+                preset:role.options[role.selectedIndex].value,
+                schoolId:schoolId,
+                principalId:userId,
+                studentId:binding.get('selectedStudentId'),
+                comment:document.getElementById('studentInput').value,
+                accepted:false
+            }
+        }else{
+            model = {
+                preset:role.options[role.selectedIndex].value,
+                schoolId:schoolId,
+                principalId:userId,
+                accepted:false
+            }
+        }
         if(confirmation == true){
-            var schoolId = binding.get('selectedSchoolId'),
-                userId = binding.get('selectedUser').userId,
-                model = {preset:role.options[role.selectedIndex].value,schoolId:schoolId, principalId:userId};
             window.Server.schoolPermissions.post({id:schoolId},model)
                 .then(function(result){
                     binding.set('popup', false);
                     alert('Successfully Granted');
                 });
         }
+        console.log(model);
     },
     render:function(){
         var self = this,
@@ -83,7 +103,7 @@ StudentAutoComplete = React.createClass({
                     <h4>Student</h4>
                     <input  id="studentInput" placeholder={"Enter last name"} onChange={self.handleChange} onBlur={self.handleBlur} onClick={self.handleClick} />
                     <div>
-                        <ul className="customAutoComplete">
+                        <ul id="autoComplete" className="customAutoComplete">
                             {list}
                         </ul>
                     </div>

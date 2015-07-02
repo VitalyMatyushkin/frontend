@@ -8,8 +8,21 @@ OneSchoolPage = React.createClass({
     componentWillMount: function() {
         var self = this,
             binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('routing.parameters.id');
+            globalBinding = self.getMoreartyContext().getBinding();
+        //TODO: Test purpose get the number of new requests - refactoring needed
+        window.Server.schools.get({
+            filter:{
+                include:{
+                    relation:'permissions'
+                }
+            }
+        }).then(function(results){
+            binding
+                .atomically()
+                .set('permissionRequestCount', Immutable.fromJS(results))
+                .set('sync',true)
+                .commit();
+        });
         self.menuItems = [
             {
                 href:'/#admin_schools/admin_views/permissions',
@@ -49,11 +62,32 @@ OneSchoolPage = React.createClass({
             schoolRouting: {}
         });
     },
+    _countLiveRequests:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            num = 0,
+            reqs = binding.toJS('permissionRequestCount');
+        if(typeof reqs !== 'undefined'){
+            reqs.forEach(function(req){
+                if(req.permissions.length >=1){
+                    for(var i=0; i < req.permissions.length; i++){
+                        if(typeof req.permissions[i].accepted === 'undefined'){
+                            num +=1;
+                        }
+                    }
+                }
+            });
+        }
+        return num;
+    },
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-
+        var badge = document.querySelectorAll('.eSubMenu_item')[1];
+        if(typeof  badge !== 'undefined'){
+            badge.innerText = "New Requests ( "+self._countLiveRequests()+" )";
+        }
         return (
             <div>
                 <SubMenu binding={binding.sub('schoolRouting')} items={self.menuItems} />

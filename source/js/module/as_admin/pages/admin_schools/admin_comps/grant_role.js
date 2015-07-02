@@ -37,8 +37,8 @@ GrantRole = React.createClass({
     onRoleSelectorChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            selEl = document.getElementById('roleSelector');
-        if(selEl.options[selEl.selectedIndex].value === 'Parent'){
+            selEl = document.getElementById('roleSelector'); console.log('selected');
+        if(selEl.options[selEl.selectedIndex].value === 'parent'){
             document.getElementById('studentRow').style.display = 'block';
         }else{
             document.getElementById('studentRow').style.display = 'none';
