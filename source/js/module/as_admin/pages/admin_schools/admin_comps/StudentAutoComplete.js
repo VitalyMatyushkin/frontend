@@ -48,10 +48,10 @@ StudentAutoComplete = React.createClass({
         }
     },
     handleBlur:function(){
-       document.getElementById('studentInput').onblur = function (evt) {
-           var el = this;
-           setTimeout(function(){el.focus()},10);
-       }
+       //document.getElementById('studentInput').onblur = function (evt) {
+       //    var el = this;
+       //    setTimeout(function(){el.focus()},10);
+       //}
     },
     handleClick:function(){
         //console.log('clicked')
@@ -94,6 +94,41 @@ StudentAutoComplete = React.createClass({
         }
         console.log(model);
     },
+    revokeButtonClick:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            confirmation = confirm("Are you sure you want to grant access?"),
+            role = document.getElementById('roleSelector');
+        var schoolId = binding.get('selectedSchoolId'),
+            userId = binding.get('selectedUser').userId,
+            model = {};
+        if(role.options[role.selectedIndex].value === 'parent'){
+            model = {
+                preset:role.options[role.selectedIndex].value,
+                schoolId:schoolId,
+                principalId:userId,
+                studentId:binding.get('selectedStudentId'),
+                comment:document.getElementById('studentInput').value,
+                accepted:false
+            }
+        }else{
+            model = {
+                preset:role.options[role.selectedIndex].value,
+                schoolId:schoolId,
+                principalId:userId,
+                accepted:false
+            }
+        }
+        if(confirmation == true){
+            //window.Server.schoolPermissions.post({id:schoolId},model)
+            //    .then(function(result){
+            //        binding.set('popup', false);
+            //        alert('Successfully Granted');
+            //    });
+            alert('No API method yet!');
+        }
+        console.log(model);
+    },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
@@ -109,7 +144,8 @@ StudentAutoComplete = React.createClass({
                     </div>
                 </div>
                 <div>
-                    <input type="button" onClick={function(){self.continueButtonClick()}} className="bButton bGrantButton" value="Continue"/>
+                    <input type="button" onClick={function(){self.continueButtonClick()}} className="bButton bGrantButton" value="Grant"/>
+                    <input type="button" onClick={function(){self.revokeButtonClick()}} className="bButton bGrantButton" value="Revoke"/>
                 </div>
             </div>
         )

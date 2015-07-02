@@ -50,7 +50,7 @@ AdminPermissionView = React.createClass({
     _filterInputOnChange:function(event){
         var self = this,
             binding = self.getDefaultBinding();
-        var val = event.currentTarget.value;
+        var val = React.findDOMNode(self.refs.filterInput).value;
         window.Server.users.get({
             filter:{
                 where:{
@@ -81,7 +81,7 @@ AdminPermissionView = React.createClass({
             </h1>
             <div id="filterDiv" className="eDataList_listItemCell" style={{display:'none'}}>
                 <div className="eDataList_filter">
-                    <input className="eDataList_filterInput" onChange={self._filterInputOnChange.bind(null)} placeholder={'filter by last name'} />
+                    <input ref="filterInput" className="eDataList_filterInput" onChange={self._filterInputOnChange.bind(null,this)} placeholder={'filter by last name'} />
                 </div>
             </div>
             <div className="bDataList">

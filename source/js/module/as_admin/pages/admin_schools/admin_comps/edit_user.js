@@ -145,9 +145,9 @@ EditUser = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        //if(typeof binding.get('form') !== 'undefined'){
-        //    if(binding.get('popup') === true)self.getUserData();
-        //}
+        if(typeof binding.get('form') !== 'undefined'){
+            if(binding.get('popup') === true)self.getUserData();
+        }
         return (
             <div className="bPopupEdit_container">
                 <div className="bPopupEdit_row">
@@ -162,7 +162,7 @@ EditUser = React.createClass({
                     <div>
                         {userDetails}
                         <div className="bPopupEdit_row">
-                            <span className="bPopupEdit_link">Create an email link for changing password</span>
+                            <span onClick={function(){alert('Not yet implemented')}} className="bPopupEdit_link">Create an email link for changing password</span>
                         </div>
                         <div className="bPopupEdit_row">
                             <input type="button" onClick={function(){self._saveButtonClick()}} className="bButton bGrantButton" value="Save"/>
