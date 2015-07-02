@@ -2,6 +2,7 @@
   max-width: 700px;
   margin: 40px auto;
   text-align: center;
+  position: relative;
 }
 
 .bForm h2{
@@ -47,6 +48,7 @@
 .eForm_atCenter{
   display: inline-block;
   text-align: left;
+  position: relative;
 }
 
 $INVALID_COLOR: rgb(182, 0, 0);
