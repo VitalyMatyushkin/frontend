@@ -86,6 +86,7 @@ StudentAutoComplete = React.createClass({
                 .then(function(result){
                     binding.set('popup', false);
                     alert('Successfully Granted');
+                    location.reload(true);
                 });
         }
     },

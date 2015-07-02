@@ -6,6 +6,7 @@ var EditUser,
     UserRole = require('./user_roles'),
     Roles,
     persistentId,
+    AvatarUpload = require('module/as_manager/pages/albums/view/upload_blazon'),
     If = require('module/ui/if/if');
 EditUser = React.createClass({
     mixins:[Morearty.Mixin],
@@ -27,6 +28,8 @@ EditUser = React.createClass({
             userNameCheck = function(){
                 if(document.getElementById('nameCheck').checked === true){
                     document.getElementById('username').value = document.getElementById('firstName').value+document.getElementById('lastName').value;
+                }else{
+                    document.getElementById('username').value = binding.get('form').toJS().username;
                 }
             },
             userId = binding.get('selectedUser').userId;
@@ -130,6 +133,8 @@ EditUser = React.createClass({
         if(confirmChanges === true){
             window.Server.user.put({id:binding.get('selectedUser').userId},userModel).then(function(){
                 alert("Changes successfully made");
+                //TODO: reloading page to affect re-fetching data to match selected user
+                location.reload(true);
             });
         }
     },
@@ -137,13 +142,15 @@ EditUser = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         binding.set('popup',false);
+        //TODO: reloading page to affect re-fetching data to match selected user
+        location.reload(true);
     },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        if(typeof binding.get('form') !== 'undefined'){
-            if(binding.get('popup') === true)self.getUserData();
-        }
+        //if(typeof binding.get('form') !== 'undefined'){
+        //    if(binding.get('popup') === true)self.getUserData();
+        //}
         return (
             <div className="bPopupEdit_container">
                 <div className="bPopupEdit_row">
