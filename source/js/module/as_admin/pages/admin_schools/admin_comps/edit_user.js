@@ -70,7 +70,7 @@ EditUser = React.createClass({
                             <input id="email" placeholder="email" value={binding.get('form').toJS().email}/>
                         </div>
                         <div className="bPopupEdit_notify">
-                            <span>v</span>
+                            <span className={binding.get('form').toJS().verified.email === true? 'bPopup_verified':'bPopup_unverified'}>{binding.get('form').toJS().verified.email === true? 'v':'?'}</span>
                         </div>
                     </div>
                     <div className="bPopupEdit_row">
@@ -81,7 +81,7 @@ EditUser = React.createClass({
                             <input id="phone" placeholder="phone" value={binding.get('form').toJS().phone}/>
                         </div>
                         <div className="bPopupEdit_notify">
-                            <span>?</span>
+                            <span className={binding.get('form').toJS().verified.phone === true? 'bPopup_verified':'bPopup_unverified'}>{binding.get('form').toJS().verified.phone === true? 'v':'?'}</span>
                         </div>
                     </div>
                     <div className="bPopupEdit_row">

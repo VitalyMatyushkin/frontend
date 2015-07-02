@@ -79,6 +79,11 @@ AdminRequest = React.createClass({
                         return (
                             <div className="eDataList_listItem">
                                 <div className="eDataList_listItemCell">{request.name}</div>
+                                <div className="eDataList_listItemCell">
+                                    <span className="eChallenge_rivalPic">
+                                        <img src={request.pic}/>
+                                    </span>
+                                </div>
                                 <div className="eDataList_listItemCell">{role.preset}</div>
                                 <div className="eDataList_listItemCell">{typeof role.comment !== 'undefined'? role.comment : ''}</div>
                                 <div className="eDataList_listItemCell mActions">
@@ -100,7 +105,8 @@ AdminRequest = React.createClass({
                     <div className="bDataList">
                         <div className="eDataList_list mTable">
                             <div className="eDataList_listItem mHead">
-                                <div className="eDataList_listItemCell" style={{width:30+'%'}}>School</div>
+                                <div className="eDataList_listItemCell" style={{width:32+'%'}}>School</div>
+                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Emblem</div>
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>Permission</div>
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>For</div>
                                 <div className="eDataList_listItemCell" style={{width:30+'%'}}>Actions</div>
