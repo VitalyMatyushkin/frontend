@@ -9,12 +9,28 @@ CoachPermissionForm = React.createClass({
 		title: React.PropTypes.string.isRequired,
 		onFormSubmit: React.PropTypes.func
 	},
+	schoolListService: function (schoolName) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		return window.Server.schools.get({
+			filter: {
+				where: {
+					name: {
+						like: schoolName,
+						options: 'i'
+					}
+				},
+				limit: 10
+			}
+		});
+	},
 	render: function() {
 		var self = this;
 
 		return (
 			<Form name="Ask for permission as coach..." onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
-				<FormField type="text" field="comment" validation="required">Children name</FormField>
+				<FormField type="autocomplete" serviceFilter={self.schoolListService} field="schoolId" validation="required">School</FormField>
 			</Form>
 		)
 	}

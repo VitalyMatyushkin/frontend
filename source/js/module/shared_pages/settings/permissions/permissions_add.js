@@ -11,10 +11,33 @@ PermissionsForm = React.createClass({
 			permissionType: 'select'
 		});
 	},
-	submitForm: function() {
-		var self = this;
+	componentWillMount: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
 
-		debugger
+		binding.set('permissionType', 'select');
+	},
+	submitForm: function(data) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			preset = binding.toJS('permissionType');
+
+		binding.set('permissionType', 'done');
+
+		window.Server.Permissions.post({
+			schoolId: data.schoolId,
+			principalId: data.ownerId,
+			comment: data.comment || '',
+			preset: preset
+		}).then(function() {
+			document.location = '/#settings/permissions';
+			binding.set('permissionType', 'select');
+			// go to list
+			// reset
+		});
+
+
+
 	},
 	render: function() {
 		var self = this,
@@ -35,12 +58,13 @@ PermissionsForm = React.createClass({
 			case 'official':
 				currentView = <OfficialForm onFormSubmit={self.submitForm} binding={binding.sub('formFields')} />;
 				break;
+			case 'done':
+				currentView = <div className="bForm"><div className="eForm_atCenter">Loading...</div></div>;
+				break;
 			default:
 				currentView = <ChooseType binding={binding} />;
 				break;
 		}
-
-		console.log(permissionType)
 
 		return (
 			<div>
