@@ -30,7 +30,8 @@ LoginUserPage = React.createClass({
 					id: data.id,
 					ttl: data.ttl,
 					userId: data.userId,
-					verified: data.user.verified
+					verified: data.user.verified,
+					registerType: data.user.registerType
 				});
 			});
 		}
