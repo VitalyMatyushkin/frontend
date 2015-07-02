@@ -76,7 +76,7 @@ AdminPermissionView = React.createClass({
             <h1 className="eSchoolMaster_title">
                 <span>Permissions{' ( '+activeUserInfo.firstName+ ' '+activeUserInfo.lastName+" - "}</span><span>{" System Admin )"}</span>
                 <div className="eSchoolMaster_buttons">
-                    <div className="bButton" onClick={self._filterButtonClick.bind(null)}><span>Filter </span><span id="filterBtn">{'⇣'}</span></div>
+                    <div className="bButton" onClick={function(){self._filterButtonClick()}}><span>Filter </span><span id="filterBtn">{'⇣'}</span></div>
                 </div>
             </h1>
             <div id="filterDiv" className="eDataList_listItemCell" style={{display:'none'}}>
