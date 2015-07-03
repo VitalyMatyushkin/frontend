@@ -38,6 +38,7 @@ EditUser = React.createClass({
     getUserData:function(){
         var self = this,
             binding = self.getDefaultBinding(),
+            rootBinding = self.getMoreartyContext().getBinding(),
             userNameCheck = function(){
                 if(document.getElementById('nameCheck').checked === true){
                     document.getElementById('username').value = document.getElementById('firstName').value+document.getElementById('lastName').value;
@@ -78,6 +79,54 @@ EditUser = React.createClass({
                     evt.stopPropagation();
                 }
             },
+            uploadImage = function(){
+                return function(evt){
+                    console.log('changed');
+                    console.log(evt.target.files[0]);
+                    var file = evt.target.files[0],
+                        uri,
+                        fileName,
+                        formData;
+                    window.Server.addAlbum.post(
+                        {name:binding.get('form').toJS().lastName,
+                            ownerId:binding.get('selectedUser').userId,
+                            description:'avatar',
+                            eventId:binding.get('selectedUser').userId
+                        }).then(function(album) {
+                            console.log(album);
+                            uri = window.apiBase +'/storage/'+album.storageId;
+                            formData = new FormData();
+                            fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
+                            formData.append('file', file, fileName);
+                            $.ajax({
+                                url: uri + '/upload',
+                                type: 'POST',
+                                success: function(res) {
+                                    var uploadedFile = res.result.files.file[0],
+                                        model = {
+                                            name: uploadedFile.name,
+                                            albumId: album.id,
+                                            description: uploadedFile.name,
+                                            authorId:album.ownerId,
+                                            pic: uri + '/files/' + uploadedFile.name
+                                        };
+                                    Server.photos.post(album.id, model).then(function(data){
+                                        console.log(data);
+                                        document.getElementById('pic').value = 'http:'+uri+'/files/'+fileName;
+                                        document.getElementById('editAvatar').src = 'http:'+uri+'/files/'+fileName;
+                                    });
+                                },
+                                // Form data
+                                data: formData,
+                                //Options to tell jQuery not to process data or worry about content-type.
+                                cache: false,
+                                contentType: false,
+                                processData: false
+                            });
+                    });
+                    evt.stopPropagation();
+                }
+            },
             userId = binding.get('selectedUser').userId;
         window.Server.user.get(userId).then(function (data) {
             binding.set('form',Immutable.fromJS(data));
@@ -88,10 +137,12 @@ EditUser = React.createClass({
                         </div>
                         <div className="bPopupEdit_fieldSet">
                             <div className="bPopupEdit_avatar">
-                                <img style={{width:128+'px', height: 128+'px'}} src={binding.get('form').toJS().avatar} />
+                                <img id="editAvatar" style={{width:128+'px', height: 128+'px'}} src={binding.get('form').toJS().avatar} />
                             </div>
                             <div>
-                                <span style={{background:'#ccc',padding:4+'px'}}>...Upload Image</span>
+                                <span>
+                                    <input type="file" onChange={uploadImage()}  />
+                                </span>
                                 <input type="hidden" id="pic" />
                             </div>
                         </div>
@@ -174,6 +225,7 @@ EditUser = React.createClass({
         verifiedMail = typeof self.verifiedEmail !=='undefined'? self.verifiedEmail:false;
         verifiedPhone = typeof self.verifiedPhone !=='undefined'? self.verifiedPhone:false;
         userModel = {
+            avatar:document.getElementById('editAvatar').src,
             firstName: document.getElementById('firstName').value,
             lastName: document.getElementById('lastName').value,
             username: document.getElementById('username').value,
@@ -209,7 +261,7 @@ EditUser = React.createClass({
         //}
         return (
             <div className="bPopupEdit_container">
-                <div className="bPopupEdit_row">
+                <div className="bPopupEdit_row eTab">
                     <span onClick={function(){self.editTabClick('detail')}} className={self.state.tabState === 'detail'? 'bPopupEdit_tab bPopupEdit_active' :'bPopupEdit_tab'}>
                         User Details
                     </span>

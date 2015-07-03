@@ -163,12 +163,29 @@
 .bPopupEdit_tab{
   display:inline-block;
   padding:20px;
-  border: 2px solid black;
+  border-top: 1px solid #888888;
+  border-right:1px solid #888888;
+  border-left: 1px solid #888888;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
   margin-right: 10px;
   cursor:pointer;
 }
+.eTab{
+  border-bottom: 1px solid #888888;
+  padding: 0;
+}
 .bPopupEdit_active{
   background: #cccccc;
+}
+.bPopupEdit_active:after{
+  content:'';
+  position:absolute;
+  height: 1px;
+  width:123px;
+  background:white;
+  top:61px;
+  left: 0;
 }
 .bPopupEdit_field{
   float:left;

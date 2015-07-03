@@ -70,22 +70,24 @@ AdminRequest = React.createClass({
                 };
                 if(request.permissions.length >=1){
                     return request.permissions.map(function(role){
-                        return (
-                            <div className="eDataList_listItem">
-                                <div className="eDataList_listItemCell">{request.name}</div>
-                                <div className="eDataList_listItemCell">
+                        if(role.accepted == undefined){
+                            return (
+                                <div className="eDataList_listItem">
+                                    <div className="eDataList_listItemCell">{request.name}</div>
+                                    <div className="eDataList_listItemCell">
                                     <span className="eChallenge_rivalPic">
                                         <img src={request.pic}/>
                                     </span>
+                                    </div>
+                                    <div className="eDataList_listItemCell">{role.preset}</div>
+                                    <div className="eDataList_listItemCell">{typeof role.comment !== 'undefined'? role.comment : ''}</div>
+                                    <div className="eDataList_listItemCell mActions">
+                                        <span onClick={acceptReq(request.id,role.id,role.preset,role.studentId)} className="bButton bButton_req">Accept</span>
+                                        <span onClick={declineReq(request.id,role.id,role.preset,role.studentId)} className="bButton mRed bButton_req">Decline</span>
+                                    </div>
                                 </div>
-                                <div className="eDataList_listItemCell">{role.preset}</div>
-                                <div className="eDataList_listItemCell">{typeof role.comment !== 'undefined'? role.comment : ''}</div>
-                                <div className="eDataList_listItemCell mActions">
-                                    <span onClick={acceptReq(request.id,role.id,role.preset,role.studentId)} className="bButton bButton_req">Accept</span>
-                                    <span onClick={declineReq(request.id,role.id,role.preset,role.studentId)} className="bButton mRed bButton_req">Decline</span>
-                                </div>
-                            </div>
-                        );
+                            );
+                        }
                     });
                 }
             });

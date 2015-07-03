@@ -28,7 +28,7 @@ AdminPermissionView = React.createClass({
                             user.role = role;
                             AdminPermissionData.push(user);
                             binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
-                            console.log(binding.toJS('allUsers'));
+                            ///console.log(binding.toJS('allUsers'));
                         });
                 });
             }
