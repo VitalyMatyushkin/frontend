@@ -19,8 +19,7 @@ serviceList = {
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
 		serviceList.confirmUser = new Service('/users/confirm',binding);
-serviceList.userPermission = new Service('/users/{id}/permissions', binding);
- serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
+        serviceList.userPermission = new Service('/users/{userId}/permissions', binding);
 
 
 		// schools
