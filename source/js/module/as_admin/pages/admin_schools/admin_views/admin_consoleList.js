@@ -104,7 +104,11 @@ ConsoleList = React.createClass({
                             <span title="Add" onClick={addNewRole(data.id, data.firstName, data.lastName)}><SVG classes="bIcon-mod" icon="icon_plus"/></span>
                             <span title="View"><SVG classes="bIcon-mod" icon="icon_eye"/></span>
                             <span title="Edit" onClick={editUser(data.id,data.role)}><SVG classes="bIcon-mod" icon="icon_pencil"/></span>
-                            <span title="Delete" onClick={revokeRole(data.id, data.firstName, data.lastName)}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
+                            <If condition={roles.length >= 1}>
+                                <span title="Delete" onClick={revokeRole(data.id, data.firstName, data.lastName)}>
+                                    <SVG classes="bIcon-mod" icon="icon_trash" />
+                                </span>
+                            </If>
                             <span title="Block" onClick={deleteEntry(data.id, data.lastName, data.blocked)}><SVG classes="bIcon-mod" icon={data.blocked === true? "icon_user-minus":"icon_user-check"}/></span>
                         </div>
                     </div>
