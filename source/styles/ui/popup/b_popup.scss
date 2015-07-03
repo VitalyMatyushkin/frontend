@@ -227,3 +227,12 @@
 .bPopup_unverified{
   color:orangered;
 }
+.bPopup_verified, .bPopup_unverified{
+  cursor:pointer;
+}
+.bPopupRevoke{
+  width: 800px;
+  height: auto;
+  margin-left: -387px;
+  margin-top: -250px;
+}

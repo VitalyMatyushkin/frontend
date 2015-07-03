@@ -84,9 +84,13 @@ StudentAutoComplete = React.createClass({
         if(confirmation == true){
             window.Server.schoolPermissions.post({id:schoolId},model)
                 .then(function(result){
-                    binding.set('popup', false);
-                    alert('Successfully Granted');
-                    location.reload(true);
+                    window.Server.setPermissions.post({id:result.id},{accepted:true})
+                        .then(function(acpt){
+                            //console.log(acpt);
+                            binding.set('popup', false);
+                            alert('Successfully Granted');
+                            location.reload(true);
+                        });
                 });
         }
     },
@@ -140,7 +144,6 @@ StudentAutoComplete = React.createClass({
                 </div>
                 <div>
                     <input type="button" onClick={function(){self.continueButtonClick()}} className="bButton bGrantButton" value="Grant"/>
-                    <input type="button" onClick={function(){self.revokeButtonClick()}} className="bButton bGrantButton" value="Revoke"/>
                 </div>
             </div>
         )

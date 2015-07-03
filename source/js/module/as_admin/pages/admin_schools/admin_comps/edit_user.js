@@ -22,6 +22,19 @@ EditUser = React.createClass({
             self.getUserData();
         });
     },
+    componentDidMount:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            registered;
+        setTimeout(function(){
+            registered = document.getElementById('statusSelector');
+            if(binding.get('form').toJS().verified.email === false && binding.get('form').toJS().verified.phone === false){
+                var option = document.createElement('option');
+                option.text = "Registered";
+                registered.add(option,registered[0]); registered.selectedIndex = 0;
+            }
+        },500);
+    },
     getUserData:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -30,6 +43,39 @@ EditUser = React.createClass({
                     document.getElementById('username').value = document.getElementById('firstName').value+document.getElementById('lastName').value;
                 }else{
                     document.getElementById('username').value = binding.get('form').toJS().username;
+                }
+            },
+            verificationCheck = function(field){
+                var toCheck,
+                    checkConfirm;
+                toCheck = binding.get('form').toJS().verified.email;
+                return function(evt){
+                    checkConfirm = confirm("This will change user verification status, you sure you want to proceed?");
+                    if(checkConfirm === true){
+                        if(field === 'email'){
+                            if(toCheck === false){
+                                self.verifiedEmail = true; console.log(document.getElementById('emNotify'));
+                                document.getElementById('emNotify').innerText = 'v';
+                                document.getElementById('emNotify').style.color = 'Green';
+                            }else{
+                                self.verifiedEmail = false;
+                                document.getElementById('emNotify').innerText = '?';
+                                document.getElementById('emNotify').style.color = 'orangered';
+                            }
+                        }else{
+                            toCheck = binding.get('form').toJS().verified.email;
+                            if(toCheck === false){
+                                self.verifiedPhone = true;
+                                document.getElementById('phNotify').innerText = 'v';
+                                document.getElementById('phNotify').style.color = 'Green';
+                            }else{
+                                self.verifiedPhone = false;
+                                document.getElementById('phNotify').innerText = '?';
+                                document.getElementById('phNotify').style.color = 'orangered';
+                            }
+                        }
+                    }
+                    evt.stopPropagation();
                 }
             },
             userId = binding.get('selectedUser').userId;
@@ -43,6 +89,10 @@ EditUser = React.createClass({
                         <div className="bPopupEdit_fieldSet">
                             <div className="bPopupEdit_avatar">
                                 <img style={{width:128+'px', height: 128+'px'}} src={binding.get('form').toJS().avatar} />
+                            </div>
+                            <div>
+                                <span style={{background:'#ccc',padding:4+'px'}}>...Upload Image</span>
+                                <input type="hidden" id="pic" />
                             </div>
                         </div>
                     </div>
@@ -72,7 +122,7 @@ EditUser = React.createClass({
                             <input id="email" placeholder="email" value={binding.get('form').toJS().email}/>
                         </div>
                         <div className="bPopupEdit_notify">
-                            <span className={binding.get('form').toJS().verified.email === true? 'bPopup_verified':'bPopup_unverified'}>{binding.get('form').toJS().verified.email === true? 'v':'?'}</span>
+                            <span id="emNotify" onClick={verificationCheck('email')} className={binding.get('form').toJS().verified.email === true? 'bPopup_verified':'bPopup_unverified'}>{binding.get('form').toJS().verified.email === true? 'v':'?'}</span>
                         </div>
                     </div>
                     <div className="bPopupEdit_row">
@@ -83,7 +133,7 @@ EditUser = React.createClass({
                             <input id="phone" placeholder="phone" value={binding.get('form').toJS().phone}/>
                         </div>
                         <div className="bPopupEdit_notify">
-                            <span className={binding.get('form').toJS().verified.phone === true? 'bPopup_verified':'bPopup_unverified'}>{binding.get('form').toJS().verified.phone === true? 'v':'?'}</span>
+                            <span id="phNotify" onClick={verificationCheck('phone')} className={binding.get('form').toJS().verified.phone === true? 'bPopup_verified':'bPopup_unverified'}>{binding.get('form').toJS().verified.phone === true? 'v':'?'}</span>
                         </div>
                     </div>
                     <div className="bPopupEdit_row">
@@ -118,16 +168,22 @@ EditUser = React.createClass({
         }
     },
     _saveButtonClick:function(){
-        var self, binding, userModel;
+        var self, binding, userModel,verifiedMail, verifiedPhone;
         self = this;
         binding = self.getDefaultBinding();
+        verifiedMail = typeof self.verifiedEmail !=='undefined'? self.verifiedEmail:false;
+        verifiedPhone = typeof self.verifiedPhone !=='undefined'? self.verifiedPhone:false;
         userModel = {
             firstName: document.getElementById('firstName').value,
             lastName: document.getElementById('lastName').value,
             username: document.getElementById('username').value,
             email: document.getElementById('email').value,
             phone: document.getElementById('phone').value,
-            blocked: document.getElementById('statusSelector').options[document.getElementById('statusSelector').selectedIndex].value !== 'false'
+            blocked: document.getElementById('statusSelector').options[document.getElementById('statusSelector').selectedIndex].value !== 'false',
+            verified:{
+                email:verifiedMail,
+                phone:verifiedPhone
+            }
         };
         var confirmChanges = confirm('Are you sure you want to make these changes?');
         if(confirmChanges === true){

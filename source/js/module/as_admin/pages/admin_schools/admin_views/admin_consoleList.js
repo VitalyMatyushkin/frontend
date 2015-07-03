@@ -63,9 +63,10 @@ ConsoleList = React.createClass({
                         evt.stopPropagation();
                     }
                 },
-                revokeRole = function(userId, userName){
+                revokeRole = function(userId, firstName,lastName){
                     return function(evt){
                         binding.set('currentAction','revoke');
+                        binding.set('selectedUser', {userId:userId,userName:firstName+" "+lastName});
                         binding.set('popup',true);
                         evt.stopPropagation();
                     }
@@ -80,13 +81,13 @@ ConsoleList = React.createClass({
                     }
                 };
             if(typeof data !== 'undefined'){
-                if(typeof data.permissions !== 'undefined' && data.permissions.length >=1){
-                    atSchool = data.permissions.map(function(p){
+                if(typeof data.role !== 'undefined' && data.role.length >=1){
+                    atSchool = data.role.map(function(p){
                         return(
                             <div style={{padding:2+'px'}}>{p.school.name}</div>
                         );
                     });
-                    roles = data.permissions.map(function(per){
+                    roles = data.role.map(function(per){
                         return(
                             <div style={{padding:2+'px'}}>{per.preset}</div>
                         )
@@ -96,14 +97,14 @@ ConsoleList = React.createClass({
                     <div className="eDataList_listItem" onClick={function(){gotoUser(data.id)}} key={data.id}>
                         <div className="eDataList_listItemCell">{data.firstName+" "+data.lastName}</div>
                         <div className="eDataList_listItemCell">{data.email}</div>
-                        <div className="eDataList_listItemCell">{data.blocked === false ?'Active':'Blocked'}</div>
+                        <div className="eDataList_listItemCell">{data.verified.email === false && data.verified.phone === false ?'Registered':'Active'}</div>
                         <div className="eDataList_listItemCell">{atSchool}</div>
                         <div className="eDataList_listItemCell">{roles}</div>
                         <div className="eDataList_listItemCell mActions">
                             <span title="Add" onClick={addNewRole(data.id, data.firstName, data.lastName)}><SVG classes="bIcon-mod" icon="icon_plus"/></span>
                             <span title="View"><SVG classes="bIcon-mod" icon="icon_eye"/></span>
                             <span title="Edit" onClick={editUser(data.id,data.role)}><SVG classes="bIcon-mod" icon="icon_pencil"/></span>
-                            <span title="Delete" onClick={revokeRole(data.id, data.lastName)}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
+                            <span title="Delete" onClick={revokeRole(data.id, data.firstName, data.lastName)}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
                             <span title="Block" onClick={deleteEntry(data.id, data.lastName, data.blocked)}><SVG classes="bIcon-mod" icon={data.blocked === true? "icon_user-minus":"icon_user-check"}/></span>
                         </div>
                     </div>

@@ -25,7 +25,7 @@ OneSchoolPage = React.createClass({
         });
         self.menuItems = [
             {
-                href:'/#admin_schools/admin_views/permissions',
+                href:'/#admin_schools/permissions',
                 name:'Users & Permissions',
                 key:'Permissions'
             },
@@ -43,11 +43,6 @@ OneSchoolPage = React.createClass({
                 href: '/#admin_schools/admin_views/list',
                 name: 'schools',
                 key: 'schools'
-            },
-            {
-                href:'/#admin_schools/admin_views/users',
-                name:'users',
-                key:'users'
             }]
     },
     getDefaultState: function () {
@@ -101,7 +96,7 @@ OneSchoolPage = React.createClass({
                         <Route path="/admin_schools/admin_views/edit /admin_schools/admin_views/edit:mode" binding={binding.sub('editSchoolPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_edit"/>
                         <Route path="/admin_schools/admin_views/user /admin_schools/admin_views/user:mode" binding={binding.sub('userDetailPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_user"/>
                         <Route path="/admin_schools/admin_views/modify /admin_schools/admin_views/modify:mode" binding={binding.sub('userEditPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_modify"/>
-                        <Route path="/admin_schools/admin_views/permissions" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"/>
+                        <Route path="/admin_schools/permissions" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"/>
                         <Route path="/admin_schools/admin_views/requests" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_requests"/>
                         <Route path="/admin_schools/admin_views/archive" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_archive"/>
                     </RouterView>

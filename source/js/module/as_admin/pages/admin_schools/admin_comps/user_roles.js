@@ -7,76 +7,38 @@ var UserRole,
 UserRole = React.createClass({
     mixins:[Morearty.Mixin],
     getRoleData:function(){
-        var self, revoke, binding;
+        var self, binding;
         self = this;
-        revoke = function () {
-            var cf = confirm("Are you sure you want to revoke this permission?");
-            if(cf === true){
-                alert('No API implementation yet');
+        var revoke = function (roleId) {
+            return function(event){
+                var cf = confirm("Are you sure you want to revoke this permission?");
+                if(cf === true){
+                    window.Server.Permission.delete({id:roleId})
+                        .then(function(res){
+                            console.log(res);
+                            alert('Role successfully revoked');
+                        });
+                }
+                event.stopPropagation();
             }
         };
         binding = self.getDefaultBinding();
         userRoles = binding.get('selectedUser').role;
-        var tempArray = [];
+        var tempArray;
         if(typeof userRoles !== 'undefined'){
-            if(userRoles.admin.length >=1){
-                tempArray.push(
+            tempArray = userRoles.map(function(role){
+                return(
                     <div className="bPopupEdit_row bRole">
-                        <div className="bPopupEdit_role">{userRoles.admin[0].name}</div>
-                        <div className="bPopupEdit_role">{'Admin'}</div>
-                        <div className="bPopupEdit_role">{'Admin'}</div>
-                        <span onClick={revoke}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
+                        <div className="bPopupEdit_role" style={{width:240+'px'}}>{role.school.name}</div>
+                        <div className="bPopupEdit_role" style={{width:180+'px'}}>{role.preset}</div>
+                        <div className="bPopupEdit_role">{typeof role.student !== 'undefined'?role.student.lastName+" "+role.student.lastName:''}</div>
                         <span><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
+                        <span onClick={revoke(role.id)}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
                     </div>
-                );
-            }
-            if(userRoles.manager.length >=1){
-                tempArray.push(
-                    <div className="bPopupEdit_row bRole">
-                        <div className="bPopupEdit_role">{userRoles.manager[0].name}</div>
-                        <div className="bPopupEdit_role">{'Manager'}</div>
-                        <div className="bPopupEdit_role">{'Manager'}</div>
-                        <span><SVG classes="bIcon-mod" icon="icon_trash" /></span>
-                        <span><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
-                    </div>
-                );
-            }
-            if(userRoles.teacher.length >=1){
-                tempArray.push(
-                    <div className="bPopupEdit_row bRole">
-                        <div className="bPopupEdit_role">{userRoles.teacher[0].name}</div>
-                        <div className="bPopupEdit_role">{'Teacher'}</div>
-                        <div className="bPopupEdit_role">{'Teacher'}</div>
-                        <span><SVG classes="bIcon-mod" icon="icon_trash" /></span>
-                        <span><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
-                    </div>
-                );
-            }
-            if(userRoles.coach.length >=1){
-                tempArray.push(
-                    <div className="bPopupEdit_row bRole">
-                        <div className="bPopupEdit_role">{userRoles.coach[0].name}</div>
-                        <div className="bPopupEdit_role">{'Coach'}</div>
-                        <div className="bPopupEdit_role">{'Coach'}</div>
-                        <span><SVG classes="bIcon-mod" icon="icon_trash" /></span>
-                        <span><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
-                    </div>
-                );
-            }
-            if(userRoles.parent.length >=1){
-                for(var i =0; i<userRoles.parent.length; i++){
-                    tempArray.push(
-                        <div className="bPopupEdit_row bRole">
-                            <div className="bPopupEdit_role">{userRoles.parent[i].school.details.name}</div>
-                            <div className="bPopupEdit_role">{'Parent'}</div>
-                            <div className="bPopupEdit_role">{userRoles.parent[i].firstName+" "+userRoles.parent[i].lastName}</div>
-                            <span><SVG classes="bIcon-mod" icon="icon_trash" /></span>
-                            <span><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
-                        </div>)
-                }
-            }
+                )
+            });
+            return userRoles = tempArray;
         }
-        userRoles = tempArray;
     },
     render:function(){
         var self  = this,
@@ -86,10 +48,10 @@ UserRole = React.createClass({
         }
         return <div>
                     <div className="bPopupEdit_row" style={{marginTop:20+'px', borderTop: 2+'px solid black',borderBottom: 2+'px solid black'}}>
-                        <div className="bPopupEdit_roleHead">School</div>
-                        <div className="bPopupEdit_roleHead">Role</div>
+                        <div className="bPopupEdit_roleHead" style={{width:240+'px'}}>School</div>
+                        <div className="bPopupEdit_roleHead" style={{width:180+'px'}}>Role</div>
                         <div className="bPopupEdit_roleHead">Details</div>
-                        <div className="bPopupEdit_roleHead">Actions</div>
+                        <div className="bPopupEdit_roleHead" style={{width:30+'px'}}>Actions</div>
                     </div>
                 {userRoles}
             </div>;

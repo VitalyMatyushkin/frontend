@@ -17,12 +17,20 @@ AdminPermissionView = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding();
             activeUserInfo = globalBinding.get('userData.userInfo').toJS();
         //Get all Users
-        window.Server.users.get({
-            filter:{
-                include:{permissions:['school','student']}
-            }
-        }).then(function(users){
-                binding.set('allUsers',Immutable.fromJS(users));
+        window.Server.users.get({filter:{include:['permissions','children']}})
+            .then(function(users){
+                //binding.set('allUsers',Immutable.fromJS(users));
+                //console.log(users);
+                users.forEach(function(user){
+                    user.role = {};
+                    window.Server.Permissions.get({filter:{where:{principalId:user.id},include:['school','student']}})
+                        .then(function(role){
+                            user.role = role;
+                            AdminPermissionData.push(user);
+                            binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
+                            console.log(binding.toJS('allUsers'));
+                        });
+                });
             }
         );
     },
@@ -46,25 +54,25 @@ AdminPermissionView = React.createClass({
             filterBtn.innerHTML = '⇣';
         }
     },
-    _filterInputOnChange:function(event){
+    _filterInputOnChange:function(){
         var self = this,
             binding = self.getDefaultBinding();
         var val = React.findDOMNode(self.refs.filterInput).value;
-        window.Server.users.get({
-            filter:{
-                where:{
-                    lastName:{
-                        like:val,
-                        options:'i'
-                    }
-                },
-                include:{permissions:['school','student']}
-            }
-        }).then(function(users){
-                binding.set('allUsers',Immutable.fromJS(users));
-            }
-        );
-
+        if(val.length >=1){
+            window.Server.users.get({filter:{where:{lastName:{like:val,options:'i'}}}}).then(function(users){
+                    //binding.set('allUsers',Immutable.fromJS(users));
+                    users.forEach(function(user){
+                        binding.set('allUsers',Immutable.fromJS(
+                            AdminPermissionData.filter(function(filtered){
+                                return filtered.id === user.id;
+                            })
+                        ))
+                    });
+                }
+            );
+        }else{
+            binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
+        }
     },
     render: function () {
         var self = this,
