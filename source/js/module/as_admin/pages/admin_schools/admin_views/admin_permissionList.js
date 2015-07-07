@@ -9,7 +9,7 @@ var AdminPermissionView,
 AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
-        return {listUpdate:[]};
+        return {listUpdate:false};
     },
     componentWillMount:function(){
         var self = this,
@@ -23,7 +23,7 @@ AdminPermissionView = React.createClass({
                 //console.log(users);
                 users.forEach(function(user){
                     user.role = {};
-                    window.Server.Permissions.get({filter:{where:{principalId:user.id},include:['school','student']}})
+                    window.Server.Permissions.get({filter:{where:{principalId:user.id, accepted:true},include:['school','student']}})
                         .then(function(role){
                             user.role = role;
                             AdminPermissionData.push(user);
@@ -36,6 +36,33 @@ AdminPermissionView = React.createClass({
     },
     componentWillUnmount:function(){
         AdminPermissionData.length = 0;
+        clearInterval(self.intervalId);
+    },
+    componentDidMount:function(){
+        var self, binding;
+        self = this;
+        binding = self.getDefaultBinding();
+        binding.set('shouldUpdateList',false);
+        self.intervalId = setInterval(function(){
+            //console.log(binding.get('shouldUpdateList'));
+            if(binding.get('shouldUpdateList') === true){
+                AdminPermissionData.length = 0;
+                window.Server.users.get().then(function(users){
+                        users.forEach(function(user){
+                            user.role = {};
+                            window.Server.Permissions.get({filter:{where:{principalId:user.id, accepted:true},include:['school','student']}})
+                                .then(function(role){
+                                    user.role = role;
+                                    AdminPermissionData.push(user);
+                                    binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
+                                    //console.log(binding.get('allUsers'));
+                                });
+                        });
+                    }
+                );
+                binding.set('shouldUpdateList',false);
+            }
+        },1000);
     },
     _filterButtonClick:function(){
         var self = this,

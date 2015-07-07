@@ -12,6 +12,9 @@ var ConsoleList,
     SVG = require('module/ui/svg');
 ConsoleList = React.createClass({
     mixins:[Morearty.Mixin],
+    getInitialState:function(){
+        return{alertPopup:false,confirmPopup:false}
+    },
     componentWillMount:function(){
         var self = this,
             binding  = self.getDefaultBinding();
@@ -39,20 +42,15 @@ ConsoleList = React.createClass({
                         if(del == true){
                             window.Server.user.put({id:entryId},{blocked:!state})
                                 .then(function(res){
-                                    window.Server.users.get({
-                                        filter:{
-                                            include:{permissions:['school','student']}
-                                        }
-                                    }).then(function(users){
-                                            binding.set('allUsers',Immutable.fromJS(users));
-                                        }
-                                    );
+                                    console.log(res);
+                                    binding.set('shouldUpdateList',true);
                                 });
                         }
                         event.stopPropagation();
                     }
                 },
                 gotoUser = function(userId){
+                    binding.set('selectedUser', {userId:userId});
                     document.location.hash = '/admin_schools/admin_views/user?id='+userId;
                 },
                 addNewRole = function(userId,firstName,lastName){

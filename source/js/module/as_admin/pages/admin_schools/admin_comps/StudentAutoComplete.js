@@ -89,43 +89,10 @@ StudentAutoComplete = React.createClass({
                             //console.log(acpt);
                             binding.set('popup', false);
                             alert('Successfully Granted');
-                            location.reload(true);
+                            //location.reload(true);
+                            binding.set('shouldUpdateList',true);
                         });
                 });
-        }
-    },
-    revokeButtonClick:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            confirmation = confirm("Are you sure you want to grant access?"),
-            role = document.getElementById('roleSelector');
-        var schoolId = binding.get('selectedSchoolId'),
-            userId = binding.get('selectedUser').userId,
-            model = {};
-        if(role.options[role.selectedIndex].value === 'parent'){
-            model = {
-                preset:role.options[role.selectedIndex].value,
-                schoolId:schoolId,
-                principalId:userId,
-                studentId:binding.get('selectedStudentId'),
-                comment:document.getElementById('studentInput').value,
-                accepted:false
-            }
-        }else{
-            model = {
-                preset:role.options[role.selectedIndex].value,
-                schoolId:schoolId,
-                principalId:userId,
-                accepted:false
-            }
-        }
-        if(confirmation == true){
-            //window.Server.schoolPermissions.post({id:schoolId},model)
-            //    .then(function(result){
-            //        binding.set('popup', false);
-            //        alert('Successfully Granted');
-            //    });
-            alert('No API method yet!');
         }
     },
     render:function(){
