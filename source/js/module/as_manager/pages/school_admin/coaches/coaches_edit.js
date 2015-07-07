@@ -1,4 +1,4 @@
-var CoachesForm = require('module/as_manager/pages/school_admin/coaches/coaches_form'),
+var CoachesForm = require('module/as_manager/pages/school_admin/permissions/permissions_form'),
 	NewsEditPage;
 
 NewsEditPage = React.createClass({
