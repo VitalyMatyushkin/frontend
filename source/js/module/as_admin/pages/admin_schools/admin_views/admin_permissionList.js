@@ -17,8 +17,8 @@ AdminPermissionView = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding();
             activeUserInfo = globalBinding.get('userData.userInfo').toJS();
         //Get all Users
-        window.Server.users.get({filter:{include:['permissions','children']}})
-            .then(function(users){
+        //TODO: A better API method to get these data instead of doing it from client
+        window.Server.users.get().then(function(users){
                 //binding.set('allUsers',Immutable.fromJS(users));
                 //console.log(users);
                 users.forEach(function(user){
@@ -28,7 +28,7 @@ AdminPermissionView = React.createClass({
                             user.role = role;
                             AdminPermissionData.push(user);
                             binding.set('allUsers',Immutable.fromJS(AdminPermissionData));
-                            ///console.log(binding.toJS('allUsers'));
+                            //console.log(binding.toJS('allUsers'));
                         });
                 });
             }

@@ -31,7 +31,7 @@ UserRole = React.createClass({
                     <div className="bPopupEdit_row bRole">
                         <div className="bPopupEdit_role" style={{width:240+'px'}}>{role.school.name}</div>
                         <div className="bPopupEdit_role" style={{width:180+'px'}}>{role.preset}</div>
-                        <div className="bPopupEdit_role">{typeof role.student !== 'undefined'?role.student.lastName+" "+role.student.lastName:''}</div>
+                        <div className="bPopupEdit_role">{typeof role.student !== 'undefined'?role.student.firstName+" "+role.student.lastName:''}</div>
                         <span><SVG classes="bIcon-mod" icon="icon_blocked"/></span>
                         <span onClick={revoke(role.id)}><SVG classes="bIcon-mod" icon="icon_trash" /></span>
                     </div>
