@@ -81,8 +81,8 @@ EditUser = React.createClass({
             },
             uploadImage = function(){
                 return function(evt){
-                    console.log('changed');
-                    console.log(evt.target.files[0]);
+                   // console.log('changed');
+                    //console.log(evt.target.files[0]);
                     var file = evt.target.files[0],
                         uri,
                         fileName,
@@ -93,7 +93,7 @@ EditUser = React.createClass({
                             description:'avatar',
                             eventId:binding.get('selectedUser').userId
                         }).then(function(album) {
-                            console.log(album);
+                            //console.log(album);
                             uri = window.apiBase +'/storage/'+album.storageId;
                             formData = new FormData();
                             fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
