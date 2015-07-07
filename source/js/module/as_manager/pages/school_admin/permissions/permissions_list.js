@@ -11,7 +11,7 @@ PermissionsListPage = React.createClass({
     serviceName: 'schoolPermissions',
     filters: {include: ['principal', {student: ['form', 'house']}, 'school']},
     getPrincipal: function(principal) {
-        return [principal.firstName, principal.lastName].join(' ') + '[' + principal.email + ']';
+        return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
     },
     getDate: function(meta) {
         var self = this;
