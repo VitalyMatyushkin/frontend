@@ -130,23 +130,26 @@ EventManagerBase = React.createClass({
 	onSelectRival: function (order, id, response, model) {
 		var self = this,
 			binding = self.getDefaultBinding();
-        if(typeof oldSelectedId === 'undefined' || oldSelectedId === ''){
-            oldSelectedId = id;
-        }else{
-            if(oldSelectedId === id && order >=1){
-                if(typeof alertPopUP === 'undefined' || alertPopUP == false){
-                    alert('Duplicate houses selected please select different houses');
-                    alertPopUP = true;
-                    var inputEls = document.getElementsByClassName('eCombobox_input');
-                    //inputEls.forEach(function(el,i,ar){console.log(el.children.value)});
-                    self.timeOutId = setTimeout(function(){inputEls[1].value = ''},200);
-                    oldSelectedId = '';
-                }
-            }else{
-                alertPopUP = false;
-                if(self.timeOutId)clearTimeout(self.timeOutId);
-            }
-        }
+
+        // TODO: check code!
+        //if(typeof oldSelectedId === 'undefined' || oldSelectedId === ''){
+        //    oldSelectedId = id;
+        //}else{
+        //    if(oldSelectedId === id && order >=1){
+        //        if(typeof alertPopUP === 'undefined' || alertPopUP == false){
+        //            alert('Duplicate houses selected please select different houses');
+        //            alertPopUP = true;
+        //            var inputEls = document.getElementsByClassName('eCombobox_input');
+        //            //inputEls.forEach(function(el,i,ar){console.log(el.children.value)});
+        //            self.timeOutId = setTimeout(function(){inputEls[1].value = ''},200);
+        //            oldSelectedId = '';
+        //        }
+        //    }else{
+        //        alertPopUP = false;
+        //        if(self.timeOutId)clearTimeout(self.timeOutId);
+        //    }
+        //}
+
         //console.log(oldSelectedId + ' - '+ id + ' - '+order);
 		if (model) {
 			binding.update('rivals', function (rivals) {
@@ -244,7 +247,7 @@ EventManagerBase = React.createClass({
                 'internal': self.serviceClassFilter
             },
             gender = binding.get('model.gender'),
-            type = binding.get('model.type'); console.log(type);
+            type = binding.get('model.type');
 
 		return <div className="eManager_base">
             <div className="eManager_group">
