@@ -50,7 +50,7 @@ GrantRole = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding(),
             services = {'school':self.serviceSchoolFilter};
         return (<div className="bGrantContainer">
-                    <h2>New role for <span style={{color:'red'}}>{binding.get('selectedUser').userName}</span></h2>
+                    <h2>New role for <span style={{color:'red'}}>{binding.get('selectedUser')!== undefined ? binding.get('selectedUser').userName :''}</span></h2>
                     <div>
                         <h4>School</h4>
                         <div>

@@ -1,6 +1,6 @@
 var UserBlock,
+    UserTray = require('./user_tray'),
 	SVG = require('module/ui/svg');
-
 UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
@@ -19,12 +19,17 @@ UserBlock = React.createClass({
             binding = self.getDefaultBinding(),
             userInfoBinding = binding.sub('userInfo'),
             userId = binding.get('authorizationInfo.userId');
-
 		userId && window.Server.user.get(userId).then(function (data) {
             userInfoBinding.set(Immutable.fromJS(data));
         }, function () {
             window.location.hash = 'logout';
         });
+        binding.set('menuTrayOpen',false);
+    },
+    _accountButtonClick:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        binding.get('menuTrayOpen') === false ? binding.set('menuTrayOpen', true) : binding.set('menuTrayOpen',false);
     },
 	render: function() {
 		var self = this,
@@ -46,9 +51,6 @@ UserBlock = React.createClass({
 
 			// Кнопка перехода на страницу настрок
 			OptionsButton = <a href="/#settings/general" className={'eTopMenu_item ' + (isSettingsPage ? 'mActive' : '')}><SVG icon="icon_cog" /></a>;
-
-			// Logout button
-			LogoutButton = <a href="/#logout" className="eTopMenu_item mLogin"><SVG icon="icon_logout" /></a>;
 		} else {
 			// Кнопка авторизации
 			LoginButton = <a href="/#login" className="eTopMenu_item mLogin"><SVG icon="icon_key" /></a>;
@@ -57,7 +59,7 @@ UserBlock = React.createClass({
 		return (
 			<div className="bTopMenu mRight">
 				{OptionsButton}
-				{LogoutButton}
+				<UserTray binding={binding} openProperty={'menuTrayOpen'} onRequestDrop={self._accountButtonClick} />
 				{UserButton}
 				{LoginButton}
 			</div>

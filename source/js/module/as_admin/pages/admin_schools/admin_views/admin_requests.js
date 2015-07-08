@@ -7,10 +7,10 @@ AdminRequest = React.createClass({
     componentWillMount:function(){
         var self = this,binding;
         binding = self.getDefaultBinding();
-        window.Server.schools.get({
+        window.Server.Permissions.get({
             filter:{
                 include:{
-                    relation:'permissions'
+                    relation:'school'
                 }
             }
         }).then(function(results){
@@ -26,19 +26,19 @@ AdminRequest = React.createClass({
         self = this;
         binding = self.getDefaultBinding();
         requestData = binding.toJS('permissionRequests');
-        if(typeof requestData !== 'undefined'){
+        if(requestData !== undefined){
             return requestData.map(function(request){
-                var acceptReq = function(schId,perId,preset,stdId){
+                var acceptReq = function(permissionId,principalId,preset,schoolId,studentId){
                     return function(event){
                         var confirmAcpt = confirm("Are you sure you want to accept this permission?");
                         if(confirmAcpt === true){
                             if(preset === 'parent'){
-                                window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:true,data:{studentId:stdId}})
+                                window.Server.updateUserPermission({id:principalId,fk:permissionId},{accepted:true,data:{studentId:studentId}})
                                     .then(function(res) {
                                         alert('Permission accepted!');
                                     });
                             }else{
-                                window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:true})
+                                window.Server.updateUserPermission.put({id:principalId,fk:permissionId},{accepted:true})
                                     .then(function(res) {
                                         alert('Permission accepted!');
                                     });
@@ -48,17 +48,17 @@ AdminRequest = React.createClass({
                         event.stopPropagation();
                     }
                 };
-                var declineReq = function(schId,perId,preset,stdId){
+                var declineReq = function(permissionId,principalId,preset,schoolId,studentId){
                     return function(event){
                         var confirmAcpt = confirm("Are you sure you want to decline this permission?");
                         if(confirmAcpt === true){
                             if(preset === 'parent'){
-                                window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:false,data:{studentId:stdId}})
+                                window.Server.updateUserPermission({id:principalId,fk:permissionId},{accepted:false,data:{studentId:studentId}})
                                     .then(function(res) {
                                         alert('Permission accepted!');
                                     });
                             }else{
-                                window.Server.schoolPermission.post({id:schId,permissionId:perId},{accepted:false})
+                                window.Server.updateUserPermission({id:principalId,fk:permissionId},{accepted:false})
                                     .then(function(res) {
                                         alert('Permission accepted!');
                                     });
@@ -68,27 +68,23 @@ AdminRequest = React.createClass({
                         event.stopPropagation();
                     }
                 };
-                if(request.permissions.length >=1){
-                    return request.permissions.map(function(role){
-                        if(role.accepted == undefined){
-                            return (
-                                <div className="eDataList_listItem">
-                                    <div className="eDataList_listItemCell">{request.name}</div>
-                                    <div className="eDataList_listItemCell">
+                if(request.accepted == undefined){
+                    return (
+                        <div className="eDataList_listItem">
+                            <div className="eDataList_listItemCell">{request.school.name}</div>
+                            <div className="eDataList_listItemCell">
                                     <span className="eChallenge_rivalPic">
-                                        <img src={request.pic}/>
+                                        <img src={request.school.pic}/>
                                     </span>
-                                    </div>
-                                    <div className="eDataList_listItemCell">{role.preset}</div>
-                                    <div className="eDataList_listItemCell">{typeof role.comment !== 'undefined'? role.comment : ''}</div>
-                                    <div className="eDataList_listItemCell mActions">
-                                        <span onClick={acceptReq(request.id,role.id,role.preset,role.studentId)} className="bButton bButton_req">Accept</span>
-                                        <span onClick={declineReq(request.id,role.id,role.preset,role.studentId)} className="bButton mRed bButton_req">Decline</span>
-                                    </div>
-                                </div>
-                            );
-                        }
-                    });
+                            </div>
+                            <div className="eDataList_listItemCell">{request.preset}</div>
+                            <div className="eDataList_listItemCell">{request.comment !== undefined ? request.comment : ''}</div>
+                            <div className="eDataList_listItemCell mActions">
+                                <span onClick={acceptReq(request.id,request.principalId,request.preset,request.schoolId,request.studentId)} className="bButton bButton_req">Accept</span>
+                                <span onClick={declineReq(request.id,request.principalId,request.preset,request.schoolId,request.studentId)} className="bButton mRed bButton_req">Decline</span>
+                            </div>
+                        </div>
+                    );
                 }
             });
         }

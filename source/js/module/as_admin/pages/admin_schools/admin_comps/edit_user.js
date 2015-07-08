@@ -51,7 +51,7 @@ EditUser = React.createClass({
                     checkConfirm;
                 toCheck = binding.get('form').toJS().verified.email;
                 return function(evt){
-                    checkConfirm = confirm("This will change user verification status, you sure you want to proceed?");
+                    checkConfirm = window.confirm("This will change user verification status, you sure you want to proceed?");
                     if(checkConfirm === true){
                         if(field === 'email'){
                             if(toCheck === false){

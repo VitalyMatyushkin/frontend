@@ -59,7 +59,7 @@ StudentAutoComplete = React.createClass({
     continueButtonClick:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            confirmation = confirm("Are you sure you want to grant access?"),
+            confirmation = window.confirm("Are you sure you want to grant access?"),
             role = document.getElementById('roleSelector');
         var schoolId = binding.get('selectedSchoolId'),
             userId = binding.get('selectedUser').userId,
@@ -70,7 +70,7 @@ StudentAutoComplete = React.createClass({
                 schoolId:schoolId,
                 principalId:userId,
                 studentId:binding.get('selectedStudentId'),
-                comment:document.getElementById('studentInput').value,
+                comment:React.findDOMNode(self.refs.commentArea).value,
                 accepted:false
             }
         }else{
@@ -78,21 +78,29 @@ StudentAutoComplete = React.createClass({
                 preset:role.options[role.selectedIndex].value,
                 schoolId:schoolId,
                 principalId:userId,
+                comment:React.findDOMNode(self.refs.commentArea).value,
                 accepted:false
             }
         }
         if(confirmation == true){
-            window.Server.schoolPermissions.post({id:schoolId},model)
-                .then(function(result){
-                    window.Server.setPermissions.post({id:result.id},{accepted:true})
-                        .then(function(acpt){
-                            //console.log(acpt);
-                            binding.set('popup', false);
-                            alert('Successfully Granted');
-                            //location.reload(true);
-                            binding.set('shouldUpdateList',true);
-                        });
-                });
+            if(document.location.hash.indexOf('settings') === -1){
+                window.Server.schoolPermissions.post({id:schoolId},model)
+                    .then(function(result){
+                        window.Server.setPermissions.post({id:result.id},{accepted:true})
+                            .then(function(acpt){
+                                //console.log(acpt);
+                                binding.set('popup', false);
+                                //location.reload(true);
+                                binding.set('shouldUpdateList',true);
+                            });
+                    });
+            }else{
+                window.Server.schoolPermissions.post({id:schoolId},model)
+                    .then(function(result){
+                        binding.set('popup', false);
+                        window.location.reload(true);
+                    });
+            }
         }
     },
     render:function(){
@@ -108,6 +116,10 @@ StudentAutoComplete = React.createClass({
                             {list}
                         </ul>
                     </div>
+                </div>
+                <div>
+                    <h4>Comment:</h4>
+                    <textarea ref="commentArea"></textarea>
                 </div>
                 <div>
                     <input type="button" onClick={function(){self.continueButtonClick()}} className="bButton bGrantButton" value="Grant"/>

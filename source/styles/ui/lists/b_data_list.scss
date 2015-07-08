@@ -130,3 +130,44 @@
 .eDataList_console{
   display: table-row-group;
 }
+.eDataList_accountRole{
+  width: 40%;
+}
+.eDataList_accountRoleName{
+  width: 20%
+}
+.eSchoolMaster_plus{
+  color:green;
+  margin-right: 10px;
+  cursor:pointer;
+}
+.hideElement{
+  display:none;
+}
+.showElement{
+  display:table-cell !important;
+}
+.roleAccepted{
+  color:green;
+}
+.roleDeclined{
+  color:red;
+}
+.rolePending{
+  color:orangered;
+}
+.eDataList_accountReqSchool{
+  width: 30%;
+}
+.eDataList_accountReqRoles{
+  width: 10%;
+}
+.eDataList_accountReqDetails{
+  width: 30%
+}
+.eDataList_accountReqDate{
+  width: 15%;
+}
+.eDataList_accountReqStatus{
+  width: 15%;
+}

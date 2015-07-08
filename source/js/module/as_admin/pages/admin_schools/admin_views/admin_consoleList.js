@@ -123,7 +123,7 @@ ConsoleList = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             permList;
-        if(typeof binding.toJS('allUsers') !== 'undefined'){permList = self._renderListData(binding.toJS('allUsers'));}
+        if(binding.toJS('allUsers') !== undefined){permList = self._renderListData(binding.toJS('allUsers'));}else{permList = <span>{'Loading....'}</span>}
         return (
             <div className="eDataList_console">
                 <If condition={binding.get('currentAction') === 'grant'}>

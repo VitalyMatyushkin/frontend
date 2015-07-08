@@ -28,7 +28,7 @@ Center = React.createClass({
 						<RegisterRoute binding={binding.sub('form.register')}  />
 						<LoginRoute binding={binding.sub('userData')}  />
 						<LogoutRoute binding={binding.sub('userData')}  />
-
+                        <VerifyRoute binding={binding.sub('userData')} />
 						<SettingsRoute binding={binding.sub('userData')} />
 
 						<Route path="/student" binding={binding.sub('studentPage')} component="module/as_manager/pages/student/student_page" />

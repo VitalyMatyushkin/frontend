@@ -15,15 +15,23 @@ SettingsPage = React.createClass({
 			href: '/#settings/general',
 			name: 'General',
 			key: 'General'
-		},{
-			href: '/#settings/security',
-			name: 'Security',
-			key: 'Security'
-		},{
-			href: '/#settings/permissions',
-			name: 'Permissions',
-			key: 'Permissions'
-		}];
+		},
+            //{
+			//href: '/#settings/security',
+			//name: 'Security',
+			//key: 'Security'},{
+			//href: '/#settings/permissions',
+			//name: 'Permissions',
+			//key: 'Permissions'},
+            {
+            href:'/#settings/roles',
+            name:'Roles',
+            key:'Roles'
+        },{
+            href:'/#settings/requests',
+            name:'Requests',
+            key:'Requests'
+        }];
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
@@ -52,6 +60,8 @@ SettingsPage = React.createClass({
 					<RouterView routes={ binding.sub('settingsRouting') } binding={globalBinding}>
 						<Route path="/settings/general" binding={binding.sub('userInfo')} component="module/shared_pages/settings/general/general_page"  />
 						<Route path="/settings/security" binding={binding.sub('security')} component="module/shared_pages/settings/security/security_page"  />
+                        <Route path="/settings/roles" binding={binding.sub('roles')} component="module/shared_pages/settings/account/account_roles"  />
+                        <Route path="/settings/requests /settings/requests/:subPage"  binding={binding.sub('requests')} component="module/shared_pages/settings/account/account_requests"  />
 						<Route path="/settings/permissions /settings/permissions/:subPage" binding={binding.sub('permissions')} component="module/shared_pages/settings/permissions/permissions_page"  />
 					</RouterView>
 				</div>

@@ -1,6 +1,7 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
+    SVG = require('module/ui/svg'),
 	GeneralSettingsPage;
 
 GeneralSettingsPage = React.createClass({
@@ -35,6 +36,9 @@ GeneralSettingsPage = React.createClass({
 			<Form formStyleClass="bSettingsForm" name="General settings" onSubmit={self.submitEdit} binding={self.getDefaultBinding()} defaultButton="Save" loadingButton="Saving..." >
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
+                <FormField type="text" field="email" validation="required email">Email</FormField>
+                <FormField type="text" field="phone" validation="phone">Phone number</FormField>
+                <FormField type="text" field="password" validation="required alphanumeric">Password</FormField>
 			</Form>
 		)
 	}
