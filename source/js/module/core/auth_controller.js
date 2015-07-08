@@ -41,16 +41,7 @@ authСontroller = {
 				self.clearAuthorization();
 			}
 			// Переводим человека на ожидаемую страницу
-            //Checks if the user is verified on client side. True directs to relevant page; False directs to settings page
-            if(typeof userData !== 'undefined'){
-                if(userData.verified.email === false && userData.verified.phone === false){
-                    document.location.hash = 'settings/general';
-                }else{
-                    document.location.hash = self.nextPage;
-                }
-            }else{
-                document.location.hash = self.nextPage;
-            }
+            document.location.hash = self.nextPage;
 		}
 	},
 	initialize: function(options) {
