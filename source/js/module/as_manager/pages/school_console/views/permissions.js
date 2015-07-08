@@ -18,23 +18,12 @@ PermissionView = React.createClass({
         self.activeSchoolName = globalBinding.toJS().activeSchool.summary.name;
         activeUserInfo = globalBinding.get('userData.userInfo').toJS();
         //Get all permissions related to the active school
-        window.Server.schoolCoaches.get({id:activeSchoolId})
-            .then(function (coaches) {
-                permissionData.coaches = coaches;
-                window.Server.schoolAdmins.get({id:activeSchoolId})
-                    .then(function (admins) {
-                        permissionData.admins = admins;
-                        window.Server.schoolTeacher.get({id:activeSchoolId})
-                            .then(function (teachers) {
-                                permissionData.teachers = teachers;
-                                window.Server.schoolManager.get({id:activeSchoolId})
-                                    .then(function (managers) {
-                                        permissionData.managers = managers;
-                                        binding.set('permissionData',permissionData);
-                                    });
-                            });
-                    });
-            });
+        window.Server.schoolPermissions.get({id:activeSchoolId,filter:{
+            include:['principal', {student: ['form', 'house']}, 'school']
+        }}).then(function(schoolPermissions){
+            //console.log(schoolPermissions);
+            binding.set('permissionData',Immutable.fromJS(schoolPermissions));
+        });
     },
     _filterButtonClick:function(){
         var self = this,
@@ -99,10 +88,10 @@ PermissionView = React.createClass({
                 <div className="eDataList_list mTable">
                     <div className="eDataList_listItem mHead">
                         <div className="eDataList_listItemCell" style={{width:20+'%'}}>Name</div>
-                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>email</div>
-                        <div className="eDataList_listItemCell" style={{width:15+'%'}}>Phone</div>
-                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>Roles</div>
-                        <div className="eDataList_listItemCell" style={{width:30+'%'}}>Additional Settings</div>
+                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>Email</div>
+                        <div className="eDataList_listItemCell" style={{width:12+'%'}}>Status</div>
+                        <div className="eDataList_listItemCell" style={{width:30+'%'}}>School</div>
+                        <div className="eDataList_listItemCell" style={{width:8+'%'}}>Roles</div>
                         <div className="eDataList_listItemCell" style={{width:20+'%'}}>Actions</div>
                     </div>
                    <ConsoleList binding={binding} />

@@ -3,110 +3,137 @@
  */
 var SchoolRequest;
 SchoolRequest = React.createClass({
-    mixins:[Morearty.Mixin],
-    getMergeStrategy: function () {
-        return Morearty.MergeStrategy.MERGE_REPLACE;
-    },
-    getDefaultState: function () {
-        return Immutable.fromJS({
-            PermissionModels: [],
-            participants: [],
-            sync: false
+    mixins: [Morearty.Mixin],
+    componentWillMount: function () {
+        var self = this, binding;
+        binding = self.getDefaultBinding();
+        var globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+        window.Server.schoolPermissions.get({id:activeSchoolId,
+            filter: {
+                include: ['principal', 'school']
+            }
+        }).then(function (results) {
+            binding
+                .atomically()
+                .set('permissionRequests', Immutable.fromJS(results))
+                .set('sync', true)
+                .commit();
         });
     },
-    componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId');
-        //TODO: filter this request down to active school and where accepts = false; instead of getting all permissions
-        //Get all permissions for now
-        window.Server.Permissions.get()
-            .then(function(allPermissions){
-                var locArray = [];
-                //Now using the principalId fetch some details on the permission from users
-                allPermissions.forEach(function (entry) {
-                    entry.detail = {};
-                    window.Server.user.get({id:entry.principalId})
-                        .then(function(detail){
-                            entry.detail = detail;
-                            locArray.push(entry);
-                            binding
-                                .atomically()
-                                .set('PermissionModels', Immutable.fromJS(locArray))
-                                .set('sync', true)
-                                .commit();
-                        });
-                });
-            });
-    },
-    componentDidMount:function(){
-        var self =this,
-            binding = self.getDefaultBinding();
-        //setTimeout(function () {
-        //    console.log(binding.toJS('PermissionModels'));
-        //},2000);
-    },
-    _acceptPermission:function(id){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            confirmAcpt = confirm("Are you sure you want to accept?");
-        if(confirmAcpt){
-            //Perform acceptance logic here
-            alert("No API method for this");
-        }
-    },
-    _declinePermission:function(id){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            confirmDec = confirm("Are you sure you want to decline?");
-        if(confirmDec){
-            //Perform decline logic
-            alert("No API method");
-        }
-    },
-    getLiveRequest:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            models = binding.toJS('PermissionModels');
-        return models.map(function(entry){
-            return (
-                    <div className="eDataList_listItem">
-                        <div className="eDataList_listItemCell">{entry.detail.firstName+" "+entry.detail.lastName}</div>
-                        <div className="eDataList_listItemCell">{entry.detail.email}</div>
-                        <div className="eDataList_listItemCell">{entry.detail.phone}</div>
-                        <div className="eDataList_listItemCell">{entry.preset}</div>
-                        <div className="eDataList_listItemCell">{entry.objectType}</div>
-                        <div className="eDataList_listItemCell">{entry.comment}</div>
-                        <div className="eDataList_listItemCell mActions">
-                            <span onClick={self._acceptPermission.bind(null,entry.id)} className="bButton bButton_req">Accept</span>
-                            <span onClick={self._declinePermission.bind(null, entry.id)} className="bButton mRed bButton_req">Decline</span>
+    _getPermissionRequests: function () {
+        var self, binding, requestData;
+        self = this;
+        binding = self.getDefaultBinding();
+        requestData = binding.toJS('permissionRequests');
+        if (requestData !== undefined) {
+            return requestData.map(function (request) {
+                var acceptReq = function (permissionId, principalId, preset, schoolId, studentId) {
+                    return function (event) {
+                        var confirmAcpt = confirm("Are you sure you want to accept this permission?");
+                        if (confirmAcpt === true) {
+                            if (preset === 'parent') {
+                                window.Server.updateUserPermission.put({
+                                    id: principalId,
+                                    fk: permissionId
+                                }, {accepted: true, data: {studentId: studentId}})
+                                    .then(function (res) {
+                                        // alert('Permission accepted!');
+                                        window.location.reload(true);
+                                    });
+                            } else {
+                                window.Server.updateUserPermission.put({
+                                    id: principalId,
+                                    fk: permissionId
+                                }, {accepted: true})
+                                    .then(function (res) {
+                                        //alert('Permission accepted!');
+                                        window.location.reload(true);
+                                    });
+                            }
+
+                        }
+                        event.stopPropagation();
+                    }
+                };
+                var declineReq = function (permissionId, principalId, preset, schoolId, studentId) {
+                    return function (event) {
+                        var confirmAcpt = confirm("Are you sure you want to decline this permission?");
+                        if (confirmAcpt === true) {
+                            if (preset === 'parent') {
+                                window.Server.updateUserPermission({
+                                    id: principalId,
+                                    fk: permissionId
+                                }, {accepted: false, data: {studentId: studentId}})
+                                    .then(function (res) {
+                                        alert('Permission accepted!');
+                                    });
+                            } else {
+                                window.Server.updateUserPermission({
+                                    id: principalId,
+                                    fk: permissionId
+                                }, {accepted: false})
+                                    .then(function (res) {
+                                        alert('Permission accepted!');
+                                    });
+                            }
+
+                        }
+                        event.stopPropagation();
+                    }
+                };
+                var rowClick = function (principalId) {
+                    return function (e) {
+                        document.location.hash = '/admin_schools/admin_views/user?id=' + principalId;
+                        e.stopPropagation();
+                    }
+                };
+                if (request.accepted == undefined) {
+                    return (
+                        <div className="eDataList_listItem" onClick={rowClick(request.principalId)}>
+                            <div className="eDataList_listItemCell">{request.school.name}</div>
+                            <div className="eDataList_listItemCell">
+                                    <span className="eChallenge_rivalPic">
+                                        <img src={request.school.pic}/>
+                                    </span>
+                            </div>
+                            <div className="eDataList_listItemCell">{request.principal.email}</div>
+                            <div className="eDataList_listItemCell">{request.preset}</div>
+                            <div
+                                className="eDataList_listItemCell">{request.comment !== undefined ? request.comment : ''}</div>
+                            <div className="eDataList_listItemCell mActions">
+                                <span
+                                    onClick={acceptReq(request.id,request.principalId,request.preset,request.schoolId,request.studentId)}
+                                    className="bButton bButton_req">Accept</span>
+                                <span
+                                    onClick={declineReq(request.id,request.principalId,request.preset,request.schoolId,request.studentId)}
+                                    className="bButton mRed bButton_req">Decline</span>
+                            </div>
                         </div>
-                    </div>
-                );
-        });
+                    );
+                }
+            });
+        }
     },
-    render:function(){
+    render: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            permissions = self.getLiveRequest();
-        return(
-            <div><div className="bDataList">
+            permissionList = self._getPermissionRequests();
+        return <div>
+            <div className="bDataList">
                 <div className="eDataList_list mTable">
                     <div className="eDataList_listItem mHead">
-                        <div className="eDataList_listItemCell" style={{width:25+'%'}}>Name</div>
-                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>email</div>
-                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>Phone</div>
-                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>Roles</div>
-                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>For</div>
-                        <div className="eDataList_listItemCell" style={{width:30+'%'}}>Comment</div>
+                        <div className="eDataList_listItemCell" style={{width:32+'%'}}>School</div>
+                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>Emblem</div>
+                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>Email</div>
+                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>Permission</div>
+                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>For</div>
                         <div className="eDataList_listItemCell" style={{width:20+'%'}}>Actions</div>
                     </div>
-                    {permissions}
+                    {permissionList}
                 </div>
             </div>
-            </div>
-        )
+        </div>;
     }
 });
 module.exports = SchoolRequest;

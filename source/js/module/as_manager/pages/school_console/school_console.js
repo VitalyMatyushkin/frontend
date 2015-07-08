@@ -28,7 +28,7 @@ SchoolConsole = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId');
         //Get the total number of permissions (Notification badge) in submenu
         //TODO: filter this query down to active school and where accepted is equal to false
-        window.Server.PermissionCount.get().then(function(count){binding.atomically().set('count', Immutable.fromJS(count)).commit();});
+        window.Server.schoolPermissions.get({id:activeSchoolId}).then(function(count){binding.atomically().set('count', Immutable.fromJS(count)).commit();});
         self.menuItems = [{
             href: '/#school_console/permissions',
             name: 'Permissions',
@@ -49,9 +49,13 @@ SchoolConsole = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding();
         var badge = document.querySelectorAll('.eSubMenu_item')[1];
         if(typeof  badge !== 'undefined'){
-           var c;
+           var c = 0;
             if(typeof binding.toJS('count') !== 'undefined'){
-                c = binding.toJS('count').count;
+                for(var i=0; i<binding.toJS('count').length; i++){
+                    if(binding.toJS('count')[i].accepted === undefined){
+                        c += 1;
+                    }
+                }
                 badge.innerText = "Live Requests ( "+c+" )";
             }
         }

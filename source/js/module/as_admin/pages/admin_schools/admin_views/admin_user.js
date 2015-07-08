@@ -23,7 +23,8 @@ UserDetail= React.createClass({
                 window.Server.Permissions.get({
                         filter: {
                             where: {
-                                principalId: user.id
+                                principalId: user.id,
+                                accepted: true
                             },
                             include:['school','student']
                         }

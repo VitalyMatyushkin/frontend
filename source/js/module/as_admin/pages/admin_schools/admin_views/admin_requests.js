@@ -9,9 +9,7 @@ AdminRequest = React.createClass({
         binding = self.getDefaultBinding();
         window.Server.Permissions.get({
             filter:{
-                include:{
-                    relation:'school'
-                }
+                include:['principal','school']
             }
         }).then(function(results){
             binding
@@ -33,14 +31,16 @@ AdminRequest = React.createClass({
                         var confirmAcpt = confirm("Are you sure you want to accept this permission?");
                         if(confirmAcpt === true){
                             if(preset === 'parent'){
-                                window.Server.updateUserPermission({id:principalId,fk:permissionId},{accepted:true,data:{studentId:studentId}})
+                                window.Server.updateUserPermission.put({id:principalId,fk:permissionId},{accepted:true,data:{studentId:studentId}})
                                     .then(function(res) {
-                                        alert('Permission accepted!');
+                                       // alert('Permission accepted!');
+                                        window.location.reload(true);
                                     });
                             }else{
                                 window.Server.updateUserPermission.put({id:principalId,fk:permissionId},{accepted:true})
                                     .then(function(res) {
-                                        alert('Permission accepted!');
+                                        //alert('Permission accepted!');
+                                        window.location.reload(true);
                                     });
                             }
 
@@ -68,15 +68,22 @@ AdminRequest = React.createClass({
                         event.stopPropagation();
                     }
                 };
+                var rowClick = function(principalId){
+                    return function(e){
+                        document.location.hash = '/admin_schools/admin_views/user?id='+principalId;
+                        e.stopPropagation();
+                    }
+                };
                 if(request.accepted == undefined){
                     return (
-                        <div className="eDataList_listItem">
+                        <div className="eDataList_listItem" onClick={rowClick(request.principalId)}>
                             <div className="eDataList_listItemCell">{request.school.name}</div>
                             <div className="eDataList_listItemCell">
                                     <span className="eChallenge_rivalPic">
                                         <img src={request.school.pic}/>
                                     </span>
                             </div>
+                            <div className="eDataList_listItemCell">{request.principal.email}</div>
                             <div className="eDataList_listItemCell">{request.preset}</div>
                             <div className="eDataList_listItemCell">{request.comment !== undefined ? request.comment : ''}</div>
                             <div className="eDataList_listItemCell mActions">
@@ -99,9 +106,10 @@ AdminRequest = React.createClass({
                             <div className="eDataList_listItem mHead">
                                 <div className="eDataList_listItemCell" style={{width:32+'%'}}>School</div>
                                 <div className="eDataList_listItemCell" style={{width:10+'%'}}>Emblem</div>
+                                <div className="eDataList_listItemCell" style={{width:10+'%'}}>Email</div>
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>Permission</div>
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>For</div>
-                                <div className="eDataList_listItemCell" style={{width:30+'%'}}>Actions</div>
+                                <div className="eDataList_listItemCell" style={{width:20+'%'}}>Actions</div>
                             </div>
                             {permissionList}
                         </div>

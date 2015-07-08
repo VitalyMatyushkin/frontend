@@ -103,3 +103,22 @@ $INVALID_COLOR: rgb(182, 0, 0);
   height: 25px;
   line-height: 25px;
 }
+.bSettingEmailVerify{
+  display: inline-block;
+  position:absolute;
+  left: 260px;
+  bottom: 199px;
+  width: 100px;
+  cursor: pointer;
+}
+.bSettingPhoneVerify{
+  display: inline-block;
+  position:absolute;
+  left: 260px;
+  bottom: 130px;
+  width: 100px;
+  cursor: pointer;
+}
+.bSettingEmailVerify:hover, .bSettingPhoneVerify:hover{
+  color: green;
+}

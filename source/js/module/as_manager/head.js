@@ -1,6 +1,7 @@
 var Logo = require('module/as_manager/head/logo'),
 	TopMenu = require('module/ui/menu/top_menu'),
 	UserBlock = require('module/as_manager/head/user_block'),
+    If = require('module/ui/if/if'),
 	Head;
 
 Head = React.createClass({
@@ -51,7 +52,9 @@ Head = React.createClass({
 			<div className="bTopPanel">
 				<Logo />
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')} />
-				<UserBlock binding={binding.sub('userData')} />
+                <If condition={document.location.hash.indexOf('login') === -1}>
+                    <UserBlock binding={binding.sub('userData')} />
+                </If>
 			</div>
 		)
 	}

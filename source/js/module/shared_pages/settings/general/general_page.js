@@ -30,13 +30,15 @@ GeneralSettingsPage = React.createClass({
 		});
 	},
 	render: function() {
-		var self = this;
-
+		var self = this,
+            binding = self.getDefaultBinding();
 		return (
 			<Form formStyleClass="bSettingsForm" name="General settings" onSubmit={self.submitEdit} binding={self.getDefaultBinding()} defaultButton="Save" loadingButton="Saving..." >
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
+                <span className="bSettingEmailVerify">{binding.toJS('verified.email') !== undefined && binding.toJS('verified.email') === true ? <span className="bPopup_verified">v</span> : <span onClick={function(){console.log('click')}}>verify email</span>}</span>
                 <FormField type="text" field="email" validation="required email">Email</FormField>
+                <span className="bSettingPhoneVerify">{binding.toJS('verified.phone') !== undefined && binding.toJS('verified.phone') === true ? <span className="bPopup_verified">v</span> : <span>verify phone</span>}</span>
                 <FormField type="text" field="phone" validation="phone">Phone number</FormField>
                 <FormField type="text" field="password" validation="required alphanumeric">Password</FormField>
 			</Form>
