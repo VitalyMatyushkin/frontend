@@ -1,4 +1,4 @@
-var CoachesForm = require('module/as_manager/pages/school_admin/coaches/coaches_form'),
+var CoachesForm = require('module/as_manager/pages/school_admin/permissions/permissions_form'),
 	CoachesAddPage;
 
 CoachesAddPage = React.createClass({
@@ -18,7 +18,7 @@ CoachesAddPage = React.createClass({
             .then(function (user) {
                 //This creates a relation between the user entity and the school using {id} and/rel/  {fk}
                 self.activeSchoolId && window.Server.addCoach.put({id:self.activeSchoolId,fk:user.id}, user).then(function() {
-                    document.location.hash = 'school_admin/coaches';
+                    document.location.hash = 'school_admin/permissions';
                 });
             })
 	},

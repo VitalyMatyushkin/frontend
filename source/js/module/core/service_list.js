@@ -33,6 +33,7 @@ serviceList = {
 		serviceList.addCoach = new Service('/schools/{id}/coaches/rel/{fk}',binding);
 		serviceList.addTeacher = new Service('/schools/{id}/teachers/rel/{fk}',binding);
         serviceList.schoolPermissions = new Service('/schools/{id}/permissions',binding);
+		serviceList.schoolModelPermission = new Service('/schools/{id}/permission/{permissionId}',binding);
         serviceList.schoolPermission = new Service('/schools/{id}/permissions/{permissionId}/set',binding);
 
 		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);
