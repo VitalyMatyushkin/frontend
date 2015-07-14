@@ -29,6 +29,15 @@ var validationsSet = {
 			return false;
 		}
 	},
+	text: function(value) {
+		var self = this;
+
+		if (/[^a-zA-Z\-\/]/.test(value)) {
+			return 'Should contain only alphanumeric characters';
+		} else {
+			return false;
+		}
+	},
 	any: function() {
 		return false;
 	},

@@ -15,6 +15,7 @@ var SVG = require('module/ui/svg'),
 			itemBinding = self.getBinding('itemsBinding'),
 			currentPath = binding.get('currentPath') || '/',
 			authorization = globalBinding.get('userData.authorizationInfo.id'),
+			authorizationInfo = globalBinding.toJS('userData.authorizationInfo'),
 			menuItems = self.props.items,
 			MenuItemsViews = null;
 
@@ -37,6 +38,10 @@ var SVG = require('module/ui/svg'),
 			if ((item.requiredData && !globalBinding.get(item.requiredData) || (item.authorization && !authorization))) {
 				return null
 			}
+
+			//if (item.verified && item.authorization) {
+			//	console.log(globalBinding.get('userData.authorizationInfo'));
+			//}
 
 			if (item.key === 'goback') {
 				resultNode = <span onClick={function(){window.history.back();}} key={item.key} className={className}>{SvgIcon} {item.name}</span>;

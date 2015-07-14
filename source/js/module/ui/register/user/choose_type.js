@@ -30,7 +30,7 @@ ChooseRegisterTypeForm = React.createClass({
 
 					<div className="eForm_field">
 						<div className="eForm_fieldSelection"><div className="bButton" onClick={self.getClickFunction('coach')}>as coach</div></div>
-						<div className="eForm_fieldMicroHelp">I’m a coacher and I coach a team of a school registered in SquadInTouch</div>
+						<div className="eForm_fieldMicroHelp">I’m a coach and I coach a team of a school registered in SquadInTouch</div>
 					</div>
 
 					<div className="eForm_field">
