@@ -40,8 +40,10 @@ authСontroller = {
 			} else {
 				self.clearAuthorization();
 			}
-			// Переводим человека на ожидаемую страницу
-            document.location.hash = self.nextPage;
+			// Переводим человека на ожидаемую страницу если человек не проходит регистрацию в данный момент
+			if (self.binding.get('form.register.formFields') === undefined) {
+				document.location.hash = self.nextPage;
+			}
 		}
 	},
 	initialize: function(options) {

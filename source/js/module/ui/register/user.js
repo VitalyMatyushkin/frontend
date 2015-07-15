@@ -12,7 +12,7 @@ RegisterUserPage = React.createClass({
 	// TODO: вынести значение поля step в мета-данные
 	getDefaultState: function() {
 		return Immutable.Map({
-			registerStep: 'verification'
+			registerStep: 'account'
 		});
 	},
 	componentWillMount: function() {
@@ -36,19 +36,32 @@ RegisterUserPage = React.createClass({
 				title: 'Permissions Setup'
 			},
 			{
-				name: 'social',
-				title: 'Social Profiles'
-			},
-			{
-				name: 'summarize',
-				title: 'Summarize'
+				name: 'finish',
+				title: 'Finish'
 			}
 		];
 	},
-	setStepFunction: function(step) {
-		var self = this;
+	setStepFunction: function(step, data) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			globalBinding = self.getMoreartyContext().getBinding(),
+			password = binding.get('formFields').password,
+			username = binding.get('formFields').username;
+
+		if (binding.get('registerStep') === 'account') {
+
+			window.Server.login.post({
+				username: username,
+				password: password
+			}).then(function(data) {
+				globalBinding.set('userData.authorizationInfo', Immutable.fromJS(data));
+			});
+		}
 
 		self.getDefaultBinding().set('registerStep', step);
+	},
+	finish: function() {
+		console.log('finish');
 	},
 	renderSteps: function() {
 		var self = this,
@@ -76,7 +89,7 @@ RegisterUserPage = React.createClass({
 
 		if (currentStep === 'account') {
 			currentView = <AccountForm
-				onSuccess={self.setStepFunction.bind(null, 'personal')}
+				onSuccess={self.setStepFunction.bind(null, 'verification')}
 				binding={binding.sub('formFields')}
 				/>
 		} else if (currentStep === 'verification') {
@@ -94,11 +107,16 @@ RegisterUserPage = React.createClass({
 				/>
 		} else if (currentStep === 'permissions') {
 			currentView = <PermissionsList
-				onSuccess={self.setStepFunction.bind(null, 'social')}
+				onSuccess={self.setStepFunction.bind(null, 'finish')}
 				binding={{
 					formFields: binding.sub('formFields'),
 					default: binding.sub('permissionsFields')
 				}}
+				/>
+		} else if (currentStep === 'finish') {
+			currentView = <RegisterDone
+				onSuccess={self.finish}
+				binding={binding.sub('formFields')}
 				/>
 		}
 

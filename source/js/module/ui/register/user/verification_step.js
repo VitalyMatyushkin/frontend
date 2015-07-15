@@ -18,7 +18,7 @@ VerificationStep = React.createClass({
 			binding = self.getDefaultBinding(),
 			formFieldsBinding = self.getBinding('formFields');
 
-		Server.confirmUser.get({}, {
+		Server.confirmUser.get({
 			uid: formFieldsBinding.get('id'),
 			token: binding.get('emailCode')
 		}).then(function() {
@@ -30,7 +30,7 @@ VerificationStep = React.createClass({
 			binding = self.getDefaultBinding(),
 			formFieldsBinding = self.getBinding('formFields');
 
-		Server.confirmUser.get({}, {
+		Server.confirmUser.get({
 			uid: formFieldsBinding.get('id'),
 			token: binding.get('phoneCode')
 		}).then(function() {
@@ -61,6 +61,8 @@ VerificationStep = React.createClass({
 						onChange={ Morearty.Callback.set(binding, 'phoneCode') } />
 					<button className="bButton" onClick={self.confirmPhone}>check</button>
 				</label>
+
+				<button className="bButton" onClick={self.props.onSuccess}>Continue...</button>
 			</div>
 		);
 	}
