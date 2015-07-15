@@ -21,15 +21,17 @@ AccountRoles = React.createClass({
             });
     },
     _renderUserAccountRoleList:function(data){
-        return data.map(function(dt){
-            return(
-                <div key={dt.id} className="eDataList_listItem">
-                    <div className="eDataList_listItemCell">{dt.school.name}</div>
-                    <div className="eDataList_listItemCell">{dt.preset}</div>
-                    <div className="eDataList_listItemCell">{dt.comment !== undefined ? dt.comment:''}</div>
-                </div>
-            )
-        });
+        if(data !== undefined){
+            return data.map(function(dt){
+                return(
+                    <div key={dt.id} className="eDataList_listItem">
+                        <div className="eDataList_listItemCell">{dt.school !== undefined ?dt.school.name : ''}</div>
+                        <div className="eDataList_listItemCell">{dt.preset}</div>
+                        <div className="eDataList_listItemCell">{dt.comment !== undefined ? dt.comment:''}</div>
+                    </div>
+                )
+            });
+        }
     },
     render:function(){
         var self = this,

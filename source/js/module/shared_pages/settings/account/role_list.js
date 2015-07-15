@@ -19,21 +19,23 @@ RoleList = React.createClass({
     _renderRoleList:function(roleData){
         var self = this,
             binding = self.getDefaultBinding();
-        return roleData.map(function(role){
-            var roleStatus = self._checkRequestStatus(role.accepted);
-            return(
-                <div key={role.id} className="eDataList_listItem">
-                    <div className="eDataList_listItemCell">{role.school.name}</div>
-                    <div className="eDataList_listItemCell">{role.preset}</div>
-                    <div className="eDataList_listItemCell">{role.comment !== undefined ? role.comment:''}</div>
-                    <div className="eDataList_listItemCell">{self.getDateFromIso(role.meta.created)}</div>
-                    <div className="eDataList_listItemCell">{roleStatus}</div>
-                    <div className="eDataList_listItemCell mActions">
-                        <span title="View"><SVG classes="bIcon-mod" icon="icon_eye"/></span>
+        if(roleData !== undefined){
+            return roleData.map(function(role){
+                var roleStatus = self._checkRequestStatus(role.accepted);
+                return(
+                    <div key={role.id} className="eDataList_listItem">
+                        <div className="eDataList_listItemCell">{role.school !== undefined ? role.school.name: ''}</div>
+                        <div className="eDataList_listItemCell">{role.preset}</div>
+                        <div className="eDataList_listItemCell">{role.comment !== undefined ? role.comment:''}</div>
+                        <div className="eDataList_listItemCell">{self.getDateFromIso(role.meta.created)}</div>
+                        <div className="eDataList_listItemCell">{roleStatus}</div>
+                        <div className="eDataList_listItemCell mActions">
+                            <span title="View"><SVG classes="bIcon-mod" icon="icon_eye"/></span>
+                        </div>
                     </div>
-                </div>
-            )
-        })
+                )
+            })
+        }
     },
     render:function(){
         var self = this,
