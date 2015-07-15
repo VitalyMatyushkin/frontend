@@ -6,7 +6,8 @@ var CommentBox,
 CommentBox = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        blogData: React.PropTypes.array
+        blogData: React.PropTypes.array,
+        currentUserHasChild: React.PropTypes.bool
     },
     _renderBlogComments:function(blogData){
         var self = this,
@@ -30,7 +31,7 @@ CommentBox = React.createClass({
                                     <span className="bBlog_message_reply">
                                         {reply.commentor !== undefined ? reply.message:""}
                                     </span>
-                                    <BlogReplyBox binding={binding} replyParentId={blog.id}  />
+                                    <BlogReplyBox parentCheckBool={self.props.currentUserHasChild} binding={binding} replyParentId={blog.id}  />
                                 </div>
                             </div>
                         );
@@ -52,7 +53,7 @@ CommentBox = React.createClass({
                                 <span className="bBlog_message">
                                     {blog.message}
                                 </span>
-                                <BlogReplyBox binding={binding} replyParentId={blog.id} />
+                                <BlogReplyBox parentCheckBool={self.props.currentUserHasChild} binding={binding} replyParentId={blog.id} />
                             </div>
                         </div>
                         {replies}

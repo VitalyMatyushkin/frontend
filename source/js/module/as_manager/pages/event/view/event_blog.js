@@ -116,7 +116,7 @@ Blog = React.createClass({
                     <div className="eEventHeader_field mName">Comments / Blog Section</div>
                     <div className="eEventHeader_field mSport">{binding.get('sport.name') + ' (' + binding.get('model.type') + ')'}</div>
                 </div>
-                <CommentBox blogData={dataBlog} binding={binding} />
+                <CommentBox currentUserHasChild={self.hasChild} blogData={dataBlog} binding={binding} />
                 <div>
                     <Morearty.DOM.textarea ref="commentBox" className="eEvent_comment eEvent_commentBlog"/>
                 </div>

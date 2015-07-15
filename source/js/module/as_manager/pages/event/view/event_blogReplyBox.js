@@ -6,8 +6,7 @@ var BlogReplyBox,
 BlogReplyBox = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        onRequestCancel: React.PropTypes.func,
-        onRequestClick: React.PropTypes.func,
+        parentCheckBool: React.PropTypes.bool,
         replyParentId: React.PropTypes.string.isRequired
     },
     getInitialState:function(){
@@ -35,22 +34,27 @@ BlogReplyBox = React.createClass({
                 parentId:self.props.replyParentId,
                 hidden:false
             };
-        window.Server.addToBlog.post({id:binding.get('eventId')},blogModel).then(function (blog) {
-            var filteredBag = binding.get('blogs').toJS(),
-                filteredChild = binding.get('filteredChild').toJS();
-            window.Server.user.get({id:blog.ownerId}).then(function (blogger) {
-                blog.commentor = blogger;
-                filteredChild.push(blog);
-                filteredBag.forEach(function(par,index){
-                    par.replies = filteredChild.filter(function(child){
-                        return child.parentId === par.id;
+        if(globalBinding.get('userData.authorizationInfo.userId') !== undefined || self.props.parentCheckBool === true){
+            window.Server.addToBlog.post({id:binding.get('eventId')},blogModel).then(function (blog) {
+                var filteredBag = binding.get('blogs').toJS(),
+                    filteredChild = binding.get('filteredChild').toJS();
+                window.Server.user.get({id:blog.ownerId}).then(function (blogger) {
+                    blog.commentor = blogger;
+                    filteredChild.push(blog);
+                    filteredBag.forEach(function(par,index){
+                        par.replies = filteredChild.filter(function(child){
+                            return child.parentId === par.id;
+                        });
+                        filteredBag[index]=par;
                     });
-                    filteredBag[index]=par;
+                    binding.set('blogs',Immutable.fromJS(filteredBag));
+                    self._toggleReplyBox();
                 });
-                binding.set('blogs',Immutable.fromJS(filteredBag));
-                self._toggleReplyBox();
             });
-        });
+        }else{
+            alert("You cannot comment on this forum");
+        }
+
     },
     render:function(){
         var self = this,
