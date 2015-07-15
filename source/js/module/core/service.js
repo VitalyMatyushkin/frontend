@@ -72,7 +72,7 @@ Service = (function() {
 						authorizationInfo = authorization.toJS();
 
 						if (authorizationInfo && authorizationInfo.id) {
-							xhr.setRequestHeader ('Authorization', authorizationInfo.id);
+							xhr.setRequestHeader('Authorization', authorizationInfo.id);
 						}
 					}
 
