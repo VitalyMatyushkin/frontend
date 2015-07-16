@@ -61,9 +61,9 @@ RegiseterUserDone = React.createClass({
 		var self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
 			binding = self.getDefaultBinding(),
-			isAuthorized = !!globalBinding.get('userData.authorizationInfo.userId'),
-			verifiedMail = globalBinding.toJS('userData.authorizationInfo.verified.email'),
-			verifiedPhone = globalBinding.toJS('userData.authorizationInfo.verified.phone');
+			isAuthorized = Boolean(globalBinding.get('userData.authorizationInfo.userId')),
+			verifiedMail = binding.get('verified.email'),
+			verifiedPhone = binding.get('verified.phone');
 
 		return (
 			<div className="bPageMessage">

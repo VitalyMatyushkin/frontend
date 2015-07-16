@@ -18,7 +18,9 @@ PermissionsStep = React.createClass({
 			type: null,
 			schoolId: null,
 			formId: null,
-			houseId: null
+			houseId: null,
+			firstName: null,
+			lastName: null
 		});
 	},
 	componentWillMount: function() {
@@ -169,7 +171,16 @@ PermissionsStep = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			currentType = binding.get('type');
+			currentType = binding.get('type'),
+			isShowFinishButton = false;
+
+		if (currentType === 'parent' && binding.get('firstName') !== null && binding.get('lastName') !== null) {
+			isShowFinishButton = true;
+		}
+
+		if (currentType !== 'parent' && binding.get('schoolId') !== null) {
+			isShowFinishButton = true;
+		}
 
 		return <div className="eRegistration_permissions">
 			<div className="eRegistration_annotation">Join as:</div>
@@ -221,6 +232,9 @@ PermissionsStep = React.createClass({
 							/>
 					</div>
 				</If>
+				<If condition={isShowFinishButton}>
+					<div className="bButton" onClick={self.onSuccess}>as official</div>
+				</If>w
 			</div>
 		</div>
 	}

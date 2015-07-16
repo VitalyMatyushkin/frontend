@@ -18,8 +18,8 @@ serviceList = {
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
-		serviceList.confirmUser = new Service('/users/confirm',binding);
-		serviceList.confirmUserPhone = new Service('/users/confirmPhone',binding);
+		serviceList.confirmUser = new Service('/users/confirm?uid={uid}&token={token}',binding);
+		serviceList.confirmUserPhone = new Service('/users/confirmPhone?uid={uid}&token={token}',binding);
         serviceList.userPermission = new Service('/users/{id}/permissions', binding);
         serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
         serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
