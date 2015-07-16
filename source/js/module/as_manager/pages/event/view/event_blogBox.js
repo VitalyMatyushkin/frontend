@@ -18,7 +18,7 @@ CommentBox = React.createClass({
                 if(blog.replies !== undefined && blog.replies.length >=1){
                     replies = blog.replies.map(function(reply){
                         return (
-                            <div className="bBlog_box_reply">
+                            <div key={reply.id} className="bBlog_box_reply">
                                 <div className="bBlog_picBox_reply">
                                     <span className="bBlog_pic_reply">
                                         <img src={reply.commentor !== undefined ? reply.commentor.avatar : 'http://placehold.it/400x400'}/>
@@ -26,12 +26,13 @@ CommentBox = React.createClass({
                                 </div>
                                 <div className="bBlog_messageBox_reply">
                                     <span className="bBlog_username_reply">
-                                        {reply.commentor !== undefined ? reply.commentor.username:""}
+                                        {reply.commentor !== undefined ? reply.commentor.username + (reply.message.split('/')[1] !== undefined ?' @'+reply.message.split('/')[1]: '@ no one' ) :" "}
                                     </span>
                                     <span className="bBlog_message_reply">
-                                        {reply.commentor !== undefined ? reply.message:""}
+                                        {reply.commentor !== undefined ? reply.message.split('/')[0]:" "}
                                     </span>
-                                    <BlogReplyBox parentCheckBool={self.props.currentUserHasChild} binding={binding} replyParentId={blog.id}  />
+                                    <BlogReplyBox parentCheckBool={self.props.currentUserHasChild} binding={binding}
+                                                  replyParentId={blog.id} replyParentName={reply.commentor !== undefined ? reply.commentor.username:""} />
                                 </div>
                             </div>
                         );
@@ -53,7 +54,8 @@ CommentBox = React.createClass({
                                 <span className="bBlog_message">
                                     {blog.message}
                                 </span>
-                                <BlogReplyBox parentCheckBool={self.props.currentUserHasChild} binding={binding} replyParentId={blog.id} />
+                                <BlogReplyBox parentCheckBool={self.props.currentUserHasChild} binding={binding} replyParentId={blog.id}
+                                    replyParentName = {blog.commentor.username}/>
                             </div>
                         </div>
                         {replies}

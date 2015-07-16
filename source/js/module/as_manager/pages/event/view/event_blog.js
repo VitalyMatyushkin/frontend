@@ -38,10 +38,10 @@ Blog = React.createClass({
         //End of
         self._fetchCommentsData();
     },
+    //
     _fetchCommentsData:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            commentsBag = [],
             eventId = binding.get('eventId');
         window.Server.addToBlog.get({id:eventId})
             .then(function(comments){
@@ -49,7 +49,6 @@ Blog = React.createClass({
                     window.Server.user.get({id:comment.ownerId})
                         .then(function(author){
                             comment.commentor = author;
-                            commentsBag.push(comment);
                             if(comment.parentId == 1){filteredBag.push(comment)}else{filteredChild.push(comment)}
                             filteredBag.forEach(function(par,index){
                                 if(filteredChild !== undefined){

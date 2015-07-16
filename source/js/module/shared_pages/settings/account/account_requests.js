@@ -62,7 +62,7 @@ AccountRequests = React.createClass({
                 </h1>
                 <div className={filterDivClasses} ref="filterInputDiv">
                     <div className="eDataList_filter">
-                        <input ref="filterInput" className="eDataList_filterInput" placeholder={'filter by last name'} />
+                        <input ref="filterInput" className="eDataList_filterInput" placeholder={'filter by role'} />
                     </div>
                 </div>
                 <div className="bDataList">

@@ -7,7 +7,8 @@ BlogReplyBox = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         parentCheckBool: React.PropTypes.bool,
-        replyParentId: React.PropTypes.string.isRequired
+        replyParentId: React.PropTypes.string.isRequired,
+        replyParentName: React.PropTypes.string
     },
     getInitialState:function(){
         return{showReplyBox:false};
@@ -30,26 +31,47 @@ BlogReplyBox = React.createClass({
             blogModel = {
                 eventId:binding.get('eventId'),
                 ownerId:globalBinding.get('userData.authorizationInfo.userId'),
-                message:React.findDOMNode(self.refs.replyTextArea).value,
+                message:React.findDOMNode(self.refs.replyTextArea).value + '/'+self.props.replyParentName, //TODO: Ideally we want a field in database for reply username reference
                 parentId:self.props.replyParentId,
                 hidden:false
             };
         if(globalBinding.get('userData.authorizationInfo.userId') !== undefined || self.props.parentCheckBool === true){
             window.Server.addToBlog.post({id:binding.get('eventId')},blogModel).then(function (blog) {
-                var filteredBag = binding.get('blogs').toJS(),
-                    filteredChild = binding.get('filteredChild').toJS();
-                window.Server.user.get({id:blog.ownerId}).then(function (blogger) {
-                    blog.commentor = blogger;
-                    filteredChild.push(blog);
-                    filteredBag.forEach(function(par,index){
-                        par.replies = filteredChild.filter(function(child){
-                            return child.parentId === par.id;
+                var filteredBag = [],
+                    filteredChild =[];
+                //window.Server.user.get({id:blog.ownerId}).then(function (blogger) {
+                //    blog.commentor = blogger;
+                //    filteredChild.push(blog);
+                //    filteredBag.forEach(function(par,index){
+                //        par.replies = filteredChild.filter(function(child){
+                //            return child.parentId === par.id;
+                //        });
+                //        filteredBag[index]=par;
+                //    });
+                //    binding.set('blogs',Immutable.fromJS(filteredBag));
+                //    self._toggleReplyBox();
+                //});
+                window.Server.addToBlog.get({id:binding.get('eventId')})
+                    .then(function(comments){
+                        comments.forEach(function(comment){
+                            window.Server.user.get({id:comment.ownerId})
+                                .then(function(author){
+                                    comment.commentor = author;
+                                    //commentsBag.push(comment);
+                                    if(comment.parentId == 1){filteredBag.push(comment)}else{filteredChild.push(comment)}
+                                    filteredBag.forEach(function(par,index){
+                                        if(filteredChild !== undefined){
+                                            par.replies = filteredChild.filter(function(child){
+                                                return child.parentId === par.id;
+                                            });
+                                            if(par.replies.length >=1)filteredBag[index] = par;
+                                            binding.set('blogs',Immutable.fromJS(filteredBag));
+                                        }
+                                    });
+                                });
                         });
-                        filteredBag[index]=par;
+                        self._toggleReplyBox();
                     });
-                    binding.set('blogs',Immutable.fromJS(filteredBag));
-                    self._toggleReplyBox();
-                });
             });
         }else{
             alert("You cannot comment on this forum");
