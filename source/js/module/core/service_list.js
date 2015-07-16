@@ -125,6 +125,7 @@ serviceList = {
 		//Blog
 		serviceList.addToBlog = new Service('/events/{id}/comments',binding);
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
+        serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		// login service
 		serviceList.login = new Service('/users/login?include=user',binding);
 		//Permissions

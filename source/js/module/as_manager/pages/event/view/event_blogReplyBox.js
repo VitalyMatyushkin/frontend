@@ -25,12 +25,14 @@ BlogReplyBox = React.createClass({
         }
     },
     _replyToSubmit:function(){
+        console.log('called even');
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
             blogModel = {
                 eventId:binding.get('eventId'),
                 ownerId:globalBinding.get('userData.authorizationInfo.userId'),
+                postId:binding.get('blogCount')+1,
                 message:React.findDOMNode(self.refs.replyTextArea).value + '/'+self.props.replyParentName, //TODO: Ideally we want a field in database for reply username reference
                 parentId:self.props.replyParentId,
                 hidden:false
@@ -39,19 +41,7 @@ BlogReplyBox = React.createClass({
             window.Server.addToBlog.post({id:binding.get('eventId')},blogModel).then(function (blog) {
                 var filteredBag = [],
                     filteredChild =[];
-                //window.Server.user.get({id:blog.ownerId}).then(function (blogger) {
-                //    blog.commentor = blogger;
-                //    filteredChild.push(blog);
-                //    filteredBag.forEach(function(par,index){
-                //        par.replies = filteredChild.filter(function(child){
-                //            return child.parentId === par.id;
-                //        });
-                //        filteredBag[index]=par;
-                //    });
-                //    binding.set('blogs',Immutable.fromJS(filteredBag));
-                //    self._toggleReplyBox();
-                //});
-                window.Server.addToBlog.get({id:binding.get('eventId')})
+                window.Server.addToBlog.get({id:binding.get('eventId'),filter:{order:'postId ASC'}})
                     .then(function(comments){
                         comments.forEach(function(comment){
                             window.Server.user.get({id:comment.ownerId})
@@ -64,7 +54,7 @@ BlogReplyBox = React.createClass({
                                             par.replies = filteredChild.filter(function(child){
                                                 return child.parentId === par.id;
                                             });
-                                            if(par.replies.length >=1)filteredBag[index] = par;
+                                            if(par.replies.length >=1){par.replies.reverse();filteredBag[index] = par}
                                             binding.set('blogs',Immutable.fromJS(filteredBag));
                                         }
                                     });
@@ -72,11 +62,13 @@ BlogReplyBox = React.createClass({
                         });
                         self._toggleReplyBox();
                     });
+                window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+                    binding.set('blogCount', res.count);
+                });
             });
         }else{
             alert("You cannot comment on this forum");
         }
-
     },
     render:function(){
         var self = this,

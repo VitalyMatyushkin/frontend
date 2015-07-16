@@ -15,7 +15,7 @@ Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            loggedUser = globalBinding.get('userData.authorizationInfo.userId');
+            loggedUser = globalBinding.get('userData.authorizationInfo.userId'); console.log(globalBinding.toJS());
         self.hasChild = false;
         //For permissions
         window.Server.userChildren.get({id:loggedUser}).then(function(children){
@@ -43,7 +43,7 @@ Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             eventId = binding.get('eventId');
-        window.Server.addToBlog.get({id:eventId})
+        window.Server.addToBlog.get({id:eventId,filter:{order:'postId ASC'}})
             .then(function(comments){
                 comments.forEach(function(comment){
                     window.Server.user.get({id:comment.ownerId})
@@ -55,12 +55,15 @@ Blog = React.createClass({
                                     par.replies = filteredChild.filter(function(child){
                                         return child.parentId === par.id;
                                     });
-                                    if(par.replies.length >=1)filteredBag[index] = par;
+                                    if(par.replies.length >=1){par.replies.reverse();filteredBag[index] = par}
                                     binding.set('blogs',Immutable.fromJS(filteredBag));
                                     binding.set('filteredChild',Immutable.fromJS(filteredChild));
                                 }
                             })
                         });
+                });
+                window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+                    binding.set('blogCount', res.count);
                 });
             });
     },
@@ -88,16 +91,20 @@ Blog = React.createClass({
                     eventId:eventId,
                     ownerId:bloggerId,
                     parentId:1,
+                    postId:binding.get('blogCount')+1,
                     message:comments,
                     hidden:false
                 })
                 .then(function(result){
-                    window.Server.user.get({id:result.ownerId})
-                        .then(function(author){
-                            result.commentor = author;
-                            filteredBag.push(result);
-                            binding.set('blogs',Immutable.fromJS(filteredBag));
-                        });
+                    filteredBag.length = 0;
+                    filteredChild.length = 0;
+                    self._fetchCommentsData();
+                    //window.Server.user.get({id:result.ownerId,filter:{order:'postId ASC'}})
+                    //    .then(function(author){
+                    //        result.commentor = author;
+                    //        filteredBag.push(result);
+                    //        binding.set('blogs',Immutable.fromJS(filteredBag));
+                    //    });
                 });
             React.findDOMNode(self.refs.commentBox).value="";
         }else{

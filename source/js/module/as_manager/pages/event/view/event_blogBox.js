@@ -13,6 +13,7 @@ CommentBox = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         if(blogData !== undefined && blogData.length >=1){
+            console.log(blogData);
             return blogData.map(function(blog){
                 var replies;
                 if(blog.replies !== undefined && blog.replies.length >=1){
