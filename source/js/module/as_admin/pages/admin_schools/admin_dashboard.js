@@ -43,6 +43,10 @@ OneSchoolPage = React.createClass({
                 href: '/#admin_schools/admin_views/list',
                 name: 'schools',
                 key: 'schools'
+            },{
+                href:'/#admin_schools/admin_views/logs',
+                name:'Activity Log',
+                key:'Log'
             }]
     },
     getDefaultState: function () {
@@ -99,6 +103,7 @@ OneSchoolPage = React.createClass({
                         <Route path="/admin_schools/permissions" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"/>
                         <Route path="/admin_schools/admin_views/requests" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_requests"/>
                         <Route path="/admin_schools/admin_views/archive" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_archive"/>
+                        <Route path="/admin_schools/admin_views/logs" binding={binding.sub('logs')} component="module/as_admin/pages/admin_schools/admin_views/admin_activityLogs"/>
                     </RouterView>
                 </div>
             </div>

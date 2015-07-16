@@ -82,7 +82,7 @@ ConsoleList = React.createClass({
                 if(typeof data.role !== 'undefined' && data.role.length >=1){
                     atSchool = data.role.map(function(p){
                         return(
-                            <div style={{padding:2+'px'}}>{p.school.name}</div>
+                            <div style={{padding:2+'px'}}>{p.school !== undefined ? p.school.name: ''}</div>
                         );
                     });
                     roles = data.role.map(function(per){

@@ -171,3 +171,74 @@
 .eDataList_accountReqStatus{
   width: 15%;
 }
+.eLogDataList{
+  width: 100%;
+  height: auto;
+}
+.eLogDataList table{
+  margin-top: 20px;
+}
+.eLogDataList table, .eLogDataList td{
+  border: 1px solid #cccccc;
+  border-collapse: collapse;
+}
+.eLogDataList td{
+  text-align: center;
+  padding: 4px;
+}
+.eLogDataList table tr th{
+  border-collapse: collapse;
+  border:1px solid black;
+  padding: 10px;
+  background: #c8cdd0;
+  width: 17%;
+}
+.eLogDateTime{
+  width: 25% !important;
+}
+.eLogDataList_header{
+  background: $MAIN_COLOR;
+  padding:10px 0 10px 0;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+  width: 100%;
+}
+.eLogDataList_header span{
+  padding-left: 10px;
+}
+.ePagination_container{
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  height: auto;
+  position:relative;
+  float:left;
+}
+.ePage_num{
+  display: inline-block;
+  padding: 2px;
+  width: 89%;
+  height: auto;
+  float:left;
+}
+.ePage_num span{
+  margin: 2px;
+  cursor: pointer;
+}
+.ePage_num span:hover{
+  text-decoration: underline;
+  color: $MAIN_COLOR;
+}
+.perActive{
+  text-decoration: underline;
+  color: $MAIN_COLOR;
+}
+.perInActive{
+  text-decoration: none;
+}
+.ePage_limit{
+  display: inline-block;
+  width:10%;
+  height: auto;
+  float:left;
+}
