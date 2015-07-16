@@ -61,7 +61,7 @@ SchoolRequest = React.createClass({
                         var confirmAcpt = confirm("Are you sure you want to decline this permission?");
                         if (confirmAcpt === true) {
                             if (preset === 'parent') {
-                                window.Server.updateUserPermission({
+                                window.Server.updateUserPermission.put({
                                     id: principalId,
                                     fk: permissionId
                                 }, {accepted: false, data: {studentId: studentId}})
@@ -69,7 +69,7 @@ SchoolRequest = React.createClass({
                                         alert('Permission accepted!');
                                     });
                             } else {
-                                window.Server.updateUserPermission({
+                                window.Server.updateUserPermission.put({
                                     id: principalId,
                                     fk: permissionId
                                 }, {accepted: false})
@@ -90,7 +90,7 @@ SchoolRequest = React.createClass({
                 };
                 if (request.accepted == undefined) {
                     return (
-                        <div className="eDataList_listItem" onClick={rowClick(request.principalId)}>
+                        <div key={request.id} className="eDataList_listItem" onClick={rowClick(request.principalId)}>
                             <div className="eDataList_listItemCell">{request.school.name}</div>
                             <div className="eDataList_listItemCell">
                                     <span className="eChallenge_rivalPic">

@@ -8,7 +8,7 @@ var PermissionView,
 PermissionView = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
-        return {listUpdate:[]};
+        return {filterButtonUp:false};
     },
     componentWillMount:function(){
         var self = this,
@@ -21,25 +21,17 @@ PermissionView = React.createClass({
         window.Server.schoolPermissions.get({id:activeSchoolId,filter:{
             include:['principal', {student: ['form', 'house']}, 'school']
         }}).then(function(schoolPermissions){
-            //console.log(schoolPermissions);
             binding.set('permissionData',Immutable.fromJS(schoolPermissions));
         });
     },
     _filterButtonClick:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            filterDiv,
-            filterBtn;
-        filterDiv = document.getElementById('filterDiv');
-        filterBtn = document.getElementById('filterBtn');
-        if(self._filterButtonState === false){
-            self._filterButtonState = true;
-            filterDiv.style.display = 'table-cell';
-            filterBtn.innerHTML = '⇡';
+            currentButtonState = self.state.filterButtonUp;
+        if(currentButtonState === false){
+            self.setState({filterButtonUp:true});
         }else{
-            self._filterButtonState = false;
-            filterDiv.style.display = 'none';
-            filterBtn.innerHTML = '⇣';
+            self.setState({filterButtonUp:false});
         }
     },
     _filterInputOnChange:function(event){
@@ -47,41 +39,35 @@ PermissionView = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-        var val = event.currentTarget.value;
-        window.Server.schoolCoaches.get({id:activeSchoolId, filter:{where:{lastName:{like:val, options:'i'}}}})
-            .then(function (coaches) {
-                permissionData.coaches = coaches;
-                window.Server.schoolAdmins.get({id:activeSchoolId, filter:{where:{lastName:{like:val, options:'i'}}}})
-                    .then(function (admins) {
-                        permissionData.admins = admins;
-                        window.Server.schoolTeacher.get({id:activeSchoolId, filter:{where:{lastName:{like:val, options:'i'}}}})
-                            .then(function (teachers) {
-                                permissionData.teachers = teachers;
-                                window.Server.schoolManager.get({id:activeSchoolId, filter:{where:{lastName:{like:val, options:'i'}}}})
-                                    .then(function (managers) {
-                                        permissionData.managers = managers;
-                                        binding.set('permissionData',permissionData);
-                                        self.forceUpdate();
-                                    });
-                            });
-                    });
-            });
+        var val = React.findDOMNode(self.refs.filterInputRef).value;
+        window.Server.schoolPermissions.get({id:activeSchoolId,filter:{
+            include:['principal', {student: ['form', 'house']}, 'school'],
+            where:{
+                preset:{
+                    like:val
+                }
+            }
+        }}).then(function(schoolPermissions){
+            //console.log(schoolPermissions);
+            binding.set('permissionData',Immutable.fromJS(schoolPermissions));
+        });
         self.forceUpdate();
     },
     render: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding();
+            filterButtonState = self.state.filterButtonUp,
+            filterDivClass = filterButtonState === true ? 'eDataList_listItemCell filterInputActive' : 'eDataList_listItemCell filterInputInActive';
         return <div>
             <h1 className="eSchoolMaster_title">
                 <span>Permissions{' ( '+activeUserInfo.firstName+ ' '+activeUserInfo.lastName+" - "}</span><span style={{color:'red'}}>{self.activeSchoolName}</span><span>{" - "+" Admin )"}</span>
                 <div className="eSchoolMaster_buttons">
-                    <div className="bButton" onClick={self._filterButtonClick.bind(null)}><span>Filter </span><span id="filterBtn">{'⇣'}</span></div>
+                    <div className="bButton" onClick={self._filterButtonClick.bind(null,this)}><span>Filter </span><span>{filterButtonState === false ? '⇣' : '⇡'}</span></div>
                 </div>
             </h1>
-            <div id="filterDiv" className="eDataList_listItemCell" style={{display:'none'}}>
+            <div ref="filterDiv" className={filterDivClass}>
                 <div className="eDataList_filter">
-                    <input className="eDataList_filterInput" onChange={self._filterInputOnChange.bind(null)} placeholder={'filter by last name'} />
+                    <input ref="filterInputRef" className="eDataList_filterInput" onChange={self._filterInputOnChange.bind(null,this)} placeholder={'filter by role'} />
                 </div>
             </div>
             <div className="bDataList">

@@ -15,7 +15,7 @@ Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            loggedUser = globalBinding.get('userData.authorizationInfo.userId'); console.log(globalBinding.toJS());
+            loggedUser = globalBinding.get('userData.authorizationInfo.userId');
         self.hasChild = false;
         //For permissions
         window.Server.userChildren.get({id:loggedUser}).then(function(children){
