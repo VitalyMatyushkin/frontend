@@ -25,7 +25,6 @@ BlogReplyBox = React.createClass({
         }
     },
     _replyToSubmit:function(){
-        console.log('called even');
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
@@ -39,33 +38,25 @@ BlogReplyBox = React.createClass({
             };
         if(globalBinding.get('userData.authorizationInfo.userId') !== undefined || self.props.parentCheckBool === true){
             window.Server.addToBlog.post({id:binding.get('eventId')},blogModel).then(function (blog) {
-                var filteredBag = [],
-                    filteredChild =[];
-                window.Server.addToBlog.get({id:binding.get('eventId'),filter:{order:'postId ASC'}})
-                    .then(function(comments){
-                        comments.forEach(function(comment){
-                            window.Server.user.get({id:comment.ownerId})
-                                .then(function(author){
-                                    comment.commentor = author;
-                                    //commentsBag.push(comment);
-                                    if(comment.parentId == 1){filteredBag.push(comment)}else{filteredChild.push(comment)}
-                                    filteredBag.forEach(function(par,index){
-                                        if(filteredChild !== undefined){
-                                            par.replies = filteredChild.filter(function(child){
-                                                return child.parentId === par.id;
-                                            });
-                                            if(par.replies.length >=1){par.replies.reverse();filteredBag[index] = par}
-                                            binding.set('blogs',Immutable.fromJS(filteredBag));
-                                        }
-                                    });
-                                });
+                var filteredBag = binding.get('blogs').toJS(),
+                    filteredChild = binding.get('filteredChild').toJS();
+                window.Server.user.get({id:blog.ownerId}).then(function (blogger) {
+                    blog.commentor = blogger;
+                    filteredChild.push(blog);
+                    filteredBag.forEach(function(par,index){
+                        par.replies = filteredChild.filter(function(child){
+                            return child.parentId === par.id;
                         });
-                        self._toggleReplyBox();
+                        filteredBag[index]=par;
                     });
+                    binding.set('blogs',Immutable.fromJS(filteredBag));
+                });
                 window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
                     binding.set('blogCount', res.count);
                 });
+                self._toggleReplyBox();
             });
+
         }else{
             alert("You cannot comment on this forum");
         }

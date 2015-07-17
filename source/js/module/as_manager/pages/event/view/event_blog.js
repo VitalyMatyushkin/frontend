@@ -11,11 +11,18 @@ Blog = React.createClass({
     getInitialState:function(){
         return {blogUpdate:{}}
     },
+    _setBlogCount:function(){
+        var self = this,
+          binding = self.getDefaultBinding();
+        window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+            binding.set('blogCount', res.count);
+        });
+    },
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            loggedUser = globalBinding.get('userData.authorizationInfo.userId'); console.log(globalBinding.toJS());
+            loggedUser = globalBinding.get('userData.authorizationInfo.userId');
         self.hasChild = false;
         //For permissions
         window.Server.userChildren.get({id:loggedUser}).then(function(children){
@@ -55,21 +62,46 @@ Blog = React.createClass({
                                     par.replies = filteredChild.filter(function(child){
                                         return child.parentId === par.id;
                                     });
-                                    if(par.replies.length >=1){par.replies.reverse();filteredBag[index] = par}
+                                    if(par.replies.length >=1){
+                                        par.replies.sort(function (a,b) {
+                                            return a.postId - b.postId;
+                                        });
+                                        filteredBag[index] = par;
+                                    }
+                                    filteredBag.sort(function(a,b){return a.postId - b.postId});
                                     binding.set('blogs',Immutable.fromJS(filteredBag));
                                     binding.set('filteredChild',Immutable.fromJS(filteredChild));
+                                    React.findDOMNode(self.refs.newComment).style.display = 'none';
                                 }
                             })
                         });
                 });
-                window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
-                    binding.set('blogCount', res.count);
-                });
+                self._setBlogCount();
             });
     },
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
+        self._tickerForNewComments();
+    },
+    _tickerForNewComments:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        self.intervalId = setInterval(function () {
+            window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+                var oldCount = binding.get('blogCount');
+                if(oldCount !== undefined){
+                    if(oldCount !== res.count){
+                        React.findDOMNode(self.refs.newComment).style.display = 'block';
+                        binding.set('blogCount',res.count);
+                        filteredBag.length = 0;
+                        filteredChild.length = 0;
+                        self._fetchCommentsData();
+                    }
+                }
+                //clearInterval(self.intervalId);
+            });
+        },1000);
     },
     componentWillUnmount:function(){
         var self = this,
@@ -96,15 +128,13 @@ Blog = React.createClass({
                     hidden:false
                 })
                 .then(function(result){
-                    filteredBag.length = 0;
-                    filteredChild.length = 0;
-                    self._fetchCommentsData();
-                    //window.Server.user.get({id:result.ownerId,filter:{order:'postId ASC'}})
-                    //    .then(function(author){
-                    //        result.commentor = author;
-                    //        filteredBag.push(result);
-                    //        binding.set('blogs',Immutable.fromJS(filteredBag));
-                    //    });
+                    window.Server.user.get({id:result.ownerId})
+                        .then(function(author){
+                            result.commentor = author;
+                            filteredBag.push(result);
+                            binding.set('blogs',Immutable.fromJS(filteredBag));
+                        });
+                    self._setBlogCount();
                 });
             React.findDOMNode(self.refs.commentBox).value="";
         }else{
@@ -121,6 +151,9 @@ Blog = React.createClass({
                     <div className="eEventHeader_field mDate">Comments</div>
                     <div className="eEventHeader_field mName">Comments / Blog Section</div>
                     <div className="eEventHeader_field mSport">{binding.get('sport.name') + ' (' + binding.get('model.type') + ')'}</div>
+                </div>
+                <div ref="newComment" className="eComment_notification">
+                    New Comment added
                 </div>
                 <CommentBox currentUserHasChild={self.hasChild} blogData={dataBlog} binding={binding} />
                 <div>

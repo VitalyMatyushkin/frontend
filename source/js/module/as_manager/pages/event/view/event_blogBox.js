@@ -2,18 +2,37 @@
  * Created by bridark on 14/07/15.
  */
 var CommentBox,
-    BlogReplyBox = require('./event_blogReplyBox');
+    BlogReplyBox = require('./event_blogReplyBox'),
+    If = require('module/ui/if/if');
 CommentBox = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         blogData: React.PropTypes.array,
         currentUserHasChild: React.PropTypes.bool
     },
+    getInitialState:function(){
+        return {collapse:false};
+    },
     _renderBlogComments:function(blogData){
         var self = this,
             binding = self.getDefaultBinding();
+        var collapseButtonClick,
+            collapseState = self.state.collapse;
+        collapseButtonClick = function (ref, ref2) {
+            return function (evt) {
+                if(collapseState === false){
+                    React.findDOMNode(self.refs[ref]).style.display = 'none';
+                    React.findDOMNode(self.refs[ref2]).innerText = 'Show Replies ⇣';
+                    self.setState({collapse:true});
+                }else{
+                    React.findDOMNode(self.refs[ref]).style.display = 'block';
+                    React.findDOMNode(self.refs[ref2]).innerText = 'Hide Replies ⇡';
+                    self.setState({collapse:false});
+                }
+                evt.stopPropagation();
+            }
+        };
         if(blogData !== undefined && blogData.length >=1){
-            console.log(blogData);
             return blogData.map(function(blog){
                 var replies;
                 if(blog.replies !== undefined && blog.replies.length >=1){
@@ -59,7 +78,14 @@ CommentBox = React.createClass({
                                     replyParentName = {blog.commentor.username}/>
                             </div>
                         </div>
-                        {replies}
+                        <If condition={replies !== undefined}>
+                            <div  onClick={collapseButtonClick(blog.id, blog.postId)} className="bButton cCollapse">
+                                <span ref={blog.postId}>{'Hide Replies '+'⇡'}</span>
+                            </div>
+                        </If>
+                        <div ref={blog.id} className="bBlog_replyContainer">
+                            {replies}
+                        </div>
                     </div>
                 )
             });

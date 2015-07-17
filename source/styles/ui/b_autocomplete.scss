@@ -72,5 +72,9 @@
   background: $MAIN_COLOR !important;
   color: #ffffff !important;
 }
-
-
+.studentRowActive{
+  display:block;
+}
+.studentRowInActive{
+  display:none;
+}

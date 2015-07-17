@@ -9,8 +9,12 @@ StudentAutoComplete = React.createClass({
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
+        binding.set('isParent',false);
     },
     onStudentSelect:function(id, response, model){
+    },
+    getInitialState:function(){
+      return {isParent:false};
     },
     handleChange:function(){
         var self = this,
@@ -60,7 +64,8 @@ StudentAutoComplete = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             confirmation = window.confirm("Are you sure you want to grant access?"),
-            role = document.getElementById('roleSelector');
+            role = document.getElementById('roleSelector'),
+            globalBinding = self.getMoreartyContext().getBinding();
         var schoolId = binding.get('selectedSchoolId'),
             userId = binding.get('selectedUser').userId,
             model = {};
@@ -98,17 +103,24 @@ StudentAutoComplete = React.createClass({
                 window.Server.schoolPermissions.post({id:schoolId},model)
                     .then(function(result){
                         binding.set('popup', false);
-                        window.location.reload(true);
+                        window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
+                            .then(function(userPermissions){
+                                binding
+                                    .atomically()
+                                    .set('userAccountRoles',Immutable.fromJS(userPermissions))
+                                    .commit();
+                            });
                     });
             }
         }
     },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            studentRowClass = binding.get('isParent') === true ? 'studentRowActive':'studentRowInActive';
         return (
             <div>
-                <div id="studentRow" style={{display:'none'}}>
+                <div ref="studentRow" className={studentRowClass}>
                     <h4>Student</h4>
                     <input  id="studentInput" placeholder={"Enter last name"} onChange={self.handleChange} onBlur={self.handleBlur} onClick={self.handleClick} />
                     <div>

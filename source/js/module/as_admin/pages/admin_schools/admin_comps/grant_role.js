@@ -37,11 +37,11 @@ GrantRole = React.createClass({
     onRoleSelectorChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            selEl = document.getElementById('roleSelector');
+            selEl = React.findDOMNode(self.refs.roleSelector);
         if(selEl.options[selEl.selectedIndex].value === 'parent'){
-            document.getElementById('studentRow').style.display = 'block';
+            binding.set('isParent', true);
         }else{
-            document.getElementById('studentRow').style.display = 'none';
+            binding.set('isParent',false);
         }
     },
     render:function(){
@@ -58,7 +58,7 @@ GrantRole = React.createClass({
                         </div>
                         <h4>Role </h4>
                         <div>
-                            <select onChange={function(){self.onRoleSelectorChange()}} id="roleSelector">
+                            <select onChange={function(){self.onRoleSelectorChange()}} ref="roleSelector" id="roleSelector">
                                 <option value="admin">School Admin</option>
                                 <option value="manager">School Manager</option>
                                 <option value="teacher">Teacher</option>

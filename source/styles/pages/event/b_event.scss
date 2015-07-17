@@ -192,3 +192,26 @@
 .bBlogMain{
   position:relative;
 }
+.eComment_notification{
+  background: #c8cdd0;
+  padding: 2px;
+  text-align: center;
+  display: none;
+}
+.cCollapse{
+  width: 100%;
+  height: auto;
+  float: left;
+  text-align: center;
+  margin-bottom: 10px;
+}
+.bBlog_replyContainer{
+  width: 100%;
+  height: auto;
+  float:left;
+  -webkit-transition: height 3s;
+  -moz-transition: height 3s;
+  -ms-transition: height 3s;
+  -o-transition: height 3s;
+  transition: height 3s;
+}

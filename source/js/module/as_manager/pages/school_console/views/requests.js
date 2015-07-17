@@ -127,7 +127,7 @@ SchoolRequest = React.createClass({
                         <div className="eDataList_listItemCell" style={{width:10+'%'}}>Emblem</div>
                         <div className="eDataList_listItemCell" style={{width:10+'%'}}>Email</div>
                         <div className="eDataList_listItemCell" style={{width:20+'%'}}>Permission</div>
-                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>For</div>
+                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>Details</div>
                         <div className="eDataList_listItemCell" style={{width:20+'%'}}>Actions</div>
                     </div>
                     {permissionList}
