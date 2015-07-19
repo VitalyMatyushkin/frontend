@@ -2,7 +2,6 @@ var EventView,
     RouterView = require('module/core/router'),
     Route = require('module/core/route'),
     If = require('module/ui/if/if'),
-    EventAlbums = require('./view/event_album'),
     EventHeader = require('./view/event_header'),
     EventRivals = require('./view/event_rivals'),
     EventButtons = require('./view/event_buttons'),
@@ -101,9 +100,6 @@ EventView = React.createClass({
                     },
                     {
                         sport: ''
-                    },
-                    {
-                        albums: ''
                     }
                 ]
             }
@@ -113,7 +109,6 @@ EventView = React.createClass({
 				invites = res.invites,
 				activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 				sport = res.sport,
-                albums = res.albums,
 				schoolInfo = event.participants[0].school.id === activeSchoolId ?
 					event.participants[0].school : event.participants[1].school,
                 points = event.result ? event.result.points : [];
@@ -135,7 +130,6 @@ EventView = React.createClass({
 				]))
 				.set('schoolInfo', Immutable.fromJS(schoolInfo))
 				.set('eventId', eventId)
-                .set('albums', Immutable.fromJS(albums))
                 .set('mode', 'general')
                 .set('sync', true)
 				.commit();
@@ -157,7 +151,6 @@ EventView = React.createClass({
                         <EventButtons binding={binding} />
                         <EventHeader binding={binding} />
                         <EventRivals binding={binding} />
-                        <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />
                     </div>
                 </If>
