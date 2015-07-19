@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<build-type xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" uuid="79298548-bcfd-4204-afc8-e0837d83bd4b" xsi:noNamespaceSchemaLocation="http://www.jetbrains.com/teamcity/schemas/9.0/project-config.xsd">
+  <name>Build</name>
+  <description />
+  <settings>
+    <options>
+      <option name="artifactRules" value="images =&gt; images&#xA;layout =&gt; layout&#xA;source =&gt; source&#xA;favicon.ico&#xA;index.html" />
+    </options>
+    <parameters />
+    <build-runners>
+      <runner id="RUNNER_1" name="Resolve dependencies" type="simpleRunner">
+        <parameters>
+          <param name="script.content" value="npm install &amp;&amp; bower install --allow-root" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use.custom.script" value="true" />
+        </parameters>
+      </runner>
+      <runner id="RUNNER_2" name="Build project" type="jonnyzzz.gulp">
+        <parameters>
+          <param name="jonnyzzz.gulp.mode" value="npm" />
+          <param name="jonnyzzz.gulp.tasks" value="deploy" />
+          <param name="teamcity.step.mode" value="default" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <vcs-settings>
+      <vcs-entry-ref root-id="StFrontend_HttpsGithubComSquadInTouchFrontendRefsHeadsMaster" />
+    </vcs-settings>
+    <requirements />
+    <build-triggers>
+      <build-trigger id="vcsTrigger" type="vcsTrigger">
+        <parameters>
+          <param name="perCheckinTriggering" value="true" />
+          <param name="quietPeriodMode" value="DO_NOT_USE" />
+        </parameters>
+      </build-trigger>
+    </build-triggers>
+    <build-extensions>
+      <extension id="BUILD_EXT_1" type="AutoMergeFeature">
+        <parameters>
+          <param name="teamcity.automerge.buildStatusCondition" value="successful" />
+          <param name="teamcity.automerge.dstBranch" value="master" />
+          <param name="teamcity.automerge.message" value="Merge branch '%teamcity.build.branch%'" />
+          <param name="teamcity.automerge.srcBranchFilter" value="master" />
+          <param name="teamcity.merge.policy" value="alwaysCreateMergeCommit" />
+        </parameters>
+      </extension>
+    </build-extensions>
+    <artifact-dependencies>
+      <dependency sourceBuildTypeId="StFrontend_Build" cleanDestination="true">
+        <revisionRule name="lastSuccessful" revision="latest.lastSuccessful" />
+        <artifact sourcePath="** /usr/share/nginx/squadintouch" />
+      </dependency>
+    </artifact-dependencies>
+    <cleanup />
+  </settings>
+</build-type>
+

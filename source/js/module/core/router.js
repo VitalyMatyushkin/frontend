@@ -3,51 +3,88 @@ var RouterView;
 
 RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
+	isAuthorized: false,
+	isVerified: false,
 	bindToAuthorization: function() {
 		var self = this,
-			binding = self.getDefaultBinding().sub('userData');
+			authBinding = self.getDefaultBinding().sub('userData.authorizationInfo');
 
 		function updateAuth() {
-			var data = binding.get('authorizationInfo');
+			var data = authBinding.toJS();
 
-			if(data && (data = data.toJS()) && data.id){
-				// В случае возобновления авторизиаця перенаправяем пользователя на ожидаему страницу
+			// TODO: упросить проверку, добавит права?
+			if (data && data.id && data.verified) {
 				self.isAuthorized = true;
-				self.nextRoute && self.setRoute(self.nextRoute);
-				self.nextRoute = false;
+
+				// Перенаправление на страницу верификации
+				if (!data.verified.email ||  !data.verified.phone) {
+					self.isVerified = false;
+				} else {
+					self.isVerified = true;
+					// В случае возобновления авторизиаця перенаправяем пользователя на ожидаему страницу
+					self.nextRoute && self.setRoute(self.nextRoute);
+					self.nextRoute = false;
+				}
 			} else {
 				self.isAuthorized = false;
+				self.isVerified = false;
 			}
 		}
 
-		binding.addListener('authorizationInfo', updateAuth);
+		authBinding.addListener(updateAuth);
 		updateAuth();
 	},
-	getRoutes: function() {
+	/**
+	 * Получение данных из компонента роутинга
+	 * @param routeComponent
+	 * @returns {Array}
+	 * @private
+	 */
+	_getRouteFromComponent: function(routeComponent) {
 		var self = this,
-			routes = [],
-			binding = self.getDefaultBinding();
+			routePath = routeComponent.props.path.split(' '),
+			routes = [];
 
-		self.props.children && self.props.children.forEach(function(route){
-			var routePath = route.props.path.split(' ');
+		routePath.forEach(function(currentRoute) {
+			var routeData = {
+				path: currentRoute,
+				component: routeComponent.props.component,
+				pageName: routeComponent.props.pageName || '',
+				binding: routeComponent.props.binding || binding,
+				unauthorizedAccess: routeComponent.props.unauthorizedAccess ? routeComponent.props.unauthorizedAccess : false,
+				routeComponent: routeComponent
+			};
 
-			routePath.forEach(function(currentRoute) {
-				var routeData = {
-					path: currentRoute,
-					component: route.props.component,
-					pageName: route.props.pageName || '',
-					binding: route.props.binding || binding,
-					unauthorizedAccess: route.props.unauthorizedAccess ? route.props.unauthorizedAccess : false,
-					routeComponent: route
-				};
+			routes.push(routeData);
 
-				routes.push(routeData);
+			if (routeComponent.props.loginRoute) {
+				self.loginRoute = routeData;
+			}
 
-				if (route.props.loginRoute) {
-					self.loginRoute = routeData;
-				}
+			if (routeComponent.props.verifyRoute) {
+				self.verifyRoute = routeData;
+			}
+		});
 
-			});
+		return routes;
+	},
+	/**
+	 * Обработка родительский компонентов
+	 * @param children
+	 * @returns {Array}
+	 */
+	getRouteFromChildren: function(children) {
+		var self = this,
+			routes = [];
+
+		children && children.forEach(function(route){
+			// Обработка вложенных маршрутов
+			if (route.props.children) {
+				routes = routes.concat(self.getRouteFromChildren(route.props.children));
+			} else {
+				routes = routes.concat(self._getRouteFromComponent(route));
+			}
+
 		});
 
 		return routes;
@@ -91,11 +128,20 @@ RouterView = React.createClass({
 
 			// В случае отсутсвия авторизации принудительно перенаправляем на страницу логина
 			// при этом сохраняем последний намеченный роутинг
-			if (self.isAuthorized === false && self.loginRoute && route.unauthorizedAccess !== true) {
-				self.setRoute(self.loginRoute);
-				self.nextRoute = route;
-			} else {
+			if (route.unauthorizedAccess === true) {
 				self.setRoute(route);
+			} else {
+				if (self.isAuthorized === false && self.loginRoute) {
+					self.setRoute(self.loginRoute);
+					self.nextRoute = route;
+				} else if (self.isVerified === false && self.verifyRoute) {
+					self.setRoute(self.verifyRoute);
+					self.nextRoute = route;
+				} else {
+					self.setRoute(route);
+				}
+
+
 			}
 		}
 	},
@@ -110,7 +156,7 @@ RouterView = React.createClass({
 			urlHash.split('&').forEach(function(oneParameter) {
 				var parametrSplit = oneParameter.split('=');
 
-				parametersResult[parametrSplit[0]] = parametrSplit[1];
+				parametersResult[parametrSplit[0]] = decodeURIComponent(parametrSplit[1]);
 			});
 		}
 
@@ -119,7 +165,7 @@ RouterView = React.createClass({
 	},
 	componentWillMount: function() {
 		var self = this,
-			routes = self.getRoutes();
+			routes = self.getRouteFromChildren(self.props.children);
 
 		self.isAuthorized = false;
 		self.RoutingBinding = self.props.routes;
@@ -154,7 +200,7 @@ RouterView = React.createClass({
 
 		// Вынужденный костыль, надо сменить роутер :D
 		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
-			document.location = '#/';
+			document.location = '#/login';
 		}
 
 		return siteComponent ? React.createElement(siteComponent.View, siteComponent.routeComponent.props) : null;

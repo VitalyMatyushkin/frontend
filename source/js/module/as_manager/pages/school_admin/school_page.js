@@ -40,6 +40,10 @@ OneSchoolPage = React.createClass({
 			href: '/#school_admin/news',
 			name: 'News',
 			key: 'News'
+		},{
+			href: '/#school_admin/permissions',
+			name: 'Permissions',
+			key: 'Permissions'
 		}];
 	},
 
@@ -65,6 +69,11 @@ OneSchoolPage = React.createClass({
 				newsRouting: {},
 				newsForm: {}
 			},
+			permissions: {
+				permissionsList: [],
+				permissionsRouting: {},
+				permissionsForm: {}
+			},
 			schoolInfo: '',
 			schoolRouting: {}
 		});
@@ -85,6 +94,7 @@ OneSchoolPage = React.createClass({
 						<Route path="/school_admin/forms /school_admin/forms/:mode" binding={binding.sub('classes')} component="module/as_manager/pages/school_admin/classes/classes_page"  />
 						<Route path="/school_admin/houses /school_admin/houses/:mode" binding={binding.sub('houses')} component="module/as_manager/pages/school_admin/houses/houses_page"  />
 						<Route path="/school_admin/news /school_admin/news/:mode" binding={binding.sub('news')} component="module/as_manager/pages/school_admin/news/news_page"  />
+						<Route path="/school_admin/permissions /school_admin/permissions/:mode" binding={binding.sub('permissions')} component="module/as_manager/pages/school_admin/permissions/permissions_page"  />
 					</RouterView>
 				</div>
 

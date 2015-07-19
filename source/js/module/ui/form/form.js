@@ -8,7 +8,9 @@ Form = React.createClass({
 		onError: React.PropTypes.func,
 		name: React.PropTypes.string,
 		defaultButton: React.PropTypes.string,
-		loadingButton: React.PropTypes.string
+		loadingButton: React.PropTypes.string,
+		updateBinding: React.PropTypes.bool,
+		formStyleClass: React.PropTypes.string
 	},
 	componentWillMount: function() {
 		var self = this,
@@ -55,15 +57,15 @@ Form = React.createClass({
 			token = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId'),
 			fields = self.getDefaultBinding().meta().toJS(),
 			hereIsError = false,
-			dateToPost = {};
+			dateToPost = {},
+			typeOfService = typeof self.props.service,
+			userService;
 
 		if (self.busy === true) {
 			return false;
 		}
-
 		// Проверка всех полей данных на валидацию
 		for (var field in fields) {
-
 			dateToPost[field] = fields[field].value;
 
 			if (fields[field].error) {
@@ -84,50 +86,53 @@ Form = React.createClass({
 
 			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
 			if (typeof self.props.onSubmit === 'function') {
-
 				self.props.onSubmit(dateToPost);
 
 				return false;
 			}
 
 
-			if (typeof self.props.service === 'function') {
-				self.props.service(dateToPost).then(function(data) {
-					self.busy = false;
-					self.buttonText = self.defaultButton;
+			self.postedData = dateToPost;
 
-					if (self.props.onSuccess) {
-						self.props.onSuccess(data);
-					}
-				}, function (data) {
-					if (self.props.onError) {
-						self.props.onError(data);
-					}
-				});
+			// TODO: Зарефакторить эту кашицу
+			if (['object', 'function'].indexOf(typeOfService) !== -1) {
+				userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
+
+				userService(dateToPost).then(self._onServiceSucces.bind(self), self._onServiceError.bind(self));
+
 			} else {
 				$.ajax({
-					url: 'http://api.squadintouch.com:80/v1/' + self.props.service,
+					url: window.apiBase + '/' + self.props.service,
 					type: 'POST',
 					crossDomain: true,
 					data: dateToPost,
-					error: function(data) {
-						if (self.props.onError) {
-							self.props.onError(data);
-						}
-					},
-					success: function(data) {
-						self.busy = false;
-						self.buttonText = self.defaultButton;
-
-						if (self.props.onSuccess) {
-							self.props.onSuccess(data);
-						}
-					}
+					error: self._onServiceError.bind(self),
+					success: self._onServiceSucces.bind(self)
 				});
 			}
 
 		}
+	},
+	_onServiceSucces: function(data) {
+		var self = this;
 
+		self.busy = false;
+		self.buttonText = self.defaultButton;
+
+		if (self.props.updateBinding === true) {
+			self.getDefaultBinding().set(self.postedData);
+		}
+
+		if (self.props.onSuccess) {
+			self.props.onSuccess(data);
+		}
+	},
+	_onServiceError: function(data) {
+		var self = this;
+
+		if (self.props.onError) {
+			self.props.onError(data);
+		}
 	},
 	_createBindedClones: function(ownerInstance) {
 		var self = this,
@@ -144,6 +149,15 @@ Form = React.createClass({
 			});
 		});
 	},
+	_keyPress: function(event) {
+		var self = this,
+			keyCode = event.keyCode;
+
+		if (keyCode === 13) {
+			self.refs.submitButton.getDOMNode().focus();
+			self.tryToSubmit();
+		}
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -158,7 +172,7 @@ Form = React.createClass({
 		self._createBindedClones(self);
 
 		return (
-			<div className="bForm">
+			<div className={self.props.formStyleClass ? self.props.formStyleClass : 'bForm'} onKeyDown={self._keyPress}>
 				<div className="eForm_atCenter">
 
 					{Title}
@@ -166,7 +180,7 @@ Form = React.createClass({
 					{self.props.children}
 
 					<div className="eForm_savePanel">
-						<div className="bButton mRight" onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
+						<div className="bButton mRight" tabIndex="-1" ref="submitButton" onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
 					</div>
 				</div>
 			</div>

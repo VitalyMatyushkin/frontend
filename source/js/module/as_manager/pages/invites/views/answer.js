@@ -4,19 +4,31 @@ AnswerView = React.createClass({
     mixins: [Morearty.Mixin],
 	onClickYes: function () {
 		var self = this,
+			rootBinding = self.getMoreartyContext().getBinding(),
 			binding = self.getDefaultBinding(),
-			isDecline = binding.get('type') === 'decline',
-			rootBinding = self.getMoreartyContext().getBinding().toJS();
+			inviteId = rootBinding.get('routing.pathParameters.0'),
+			type = binding.get('type');
 
-		console.log(rootBinding);
+		if (type === 'cancel' || type === 'decline') {
+			window.Server.inviteRepay.post(inviteId, {accepted: false}).then(function() {
+				if (type === 'cancel') {
+					document.location.href = '#invites/outbox';
+				} else if (type === 'decline') {
+					document.location.href = '#invites/inbox';
+				}
+			});
+		}
 	},
 	onClickNo: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			isDecline = binding.get('type') === 'decline',
-			rootBinding = self.getMoreartyContext().getBinding().toJS();
+			type = binding.get('type');
 
-		console.log(rootBinding);
+		if (type === 'cancel') {
+			document.location.href = '#invites/outbox';
+		} else if (type === 'decline') {
+			document.location.href = '#invites/inbox';
+		}
 	},
     render: function() {
         var self = this,

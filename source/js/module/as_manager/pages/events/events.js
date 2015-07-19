@@ -47,8 +47,13 @@ EventView = React.createClass({
                 .set('sync', true)
                 .commit();
         });
-
-        self.menuItems = [{
+        self.menuItems = [
+        {
+            key: 'goback',
+            name: '? Cancel',
+            hash: '#'
+        },
+        {
             href: '/#events/calendar',
             name: 'Calendar',
             key: 'Calendar'

@@ -11,13 +11,14 @@ FormField = React.createClass({
 	},
 	propTypes: {
 		type: React.PropTypes.string.isRequired,
-		field: React.PropTypes.string.isRequired
+		field: React.PropTypes.string.isRequired,
+		defaultValueString:React.PropTypes.string,
 	},
 	mixins: [Morearty.Mixin],
 	render: function () {
 		var self = this,
 			binding = this.getDefaultBinding(),
-			inputField =  React.createElement(typeList[self.props.type], self.props),
+			inputField = React.createElement(typeList[self.props.type], self.props),
 			fieldStyleClass = 'eForm_fieldSet';
 
 		inputField = React.addons.cloneWithProps(inputField, {

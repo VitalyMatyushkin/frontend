@@ -125,7 +125,7 @@ var MaskedInput = React.createClass({
 			var value = this.mask.props.value
 
 			if (!this.mask.empty) {
-				this.mask.props.value = value.substr(0, cursor)
+				//this.mask.props.value = value.substr(0, cursor) //wtf?
 			} else {
 				this.mask.props.value = ''
 			}

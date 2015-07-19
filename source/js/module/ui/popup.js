@@ -2,7 +2,8 @@ var Popup = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		stateProperty: React.PropTypes.string.isRequired,
-		onRequestClose: React.PropTypes.func.isRequired
+		onRequestClose: React.PropTypes.func.isRequired,
+		otherClass: React.PropTypes.string
 	},
 	getDefaultProps: function () {
 		return {
@@ -12,16 +13,16 @@ var Popup = React.createClass({
 	render: function() {
 		var self = this,
 			isOpened = self.getDefaultBinding().get(self.props.stateProperty),
-			popup_class_name = 'bPopup ' + (isOpened ? 'mAcitve' : ''),
+			popup_class_name = 'bPopup ' + (isOpened ? 'mAcitve' : '')+' '+(typeof self.props.otherClass !== 'undefined'? self.props.otherClass:''),
 			popup_back_class_name = 'bPopupBack ' + (isOpened ? 'mAcitve' : '');
-
+        //Bind onClick event listener to div with popup_back class if you want to dismiss modal on clicking outside boundary
 		return (
 			<div>
 				<div className={popup_class_name}>
 					<div className="ePopup_Close" onClick={this.props.onRequestClose}></div>
 					{self.props.children}
 				</div>
-				<div className={popup_back_class_name} onClick={this.props.onRequestClose}></div>
+				<div className={popup_back_class_name}></div>
 			</div>
 		)
 	}

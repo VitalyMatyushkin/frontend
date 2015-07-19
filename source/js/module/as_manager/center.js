@@ -1,5 +1,10 @@
 var RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
+	LoginRoute = require('module/core/routes/login_route'),
+	LogoutRoute = require('module/core/routes/logout_route'),
+	RegisterRoute = require('module/core/routes/register_route'),
+	VerifyRoute = require('module/core/routes/verify_route'),
+	SettingsRoute = require('module/core/routes/settings_route'),
 	Center;
 
 Center = React.createClass({
@@ -12,6 +17,7 @@ Center = React.createClass({
 			binding = self.getDefaultBinding(),
 			currentPage =  binding.get('routing.currentPageName') || '',
 			mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
+		//<VerifyRoute binding={binding.sub('userData')} />
 
 		return (
 			<div className={mainClass}>
@@ -19,10 +25,11 @@ Center = React.createClass({
 
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
 
-						<Route path="/register"  binding={binding.sub('form.register')} component="module/as_manager/pages/register/user" unauthorizedAccess={true}  />
-						<Route path="/login" binding={binding.sub('userData')} component="module/as_manager/pages/login/user" loginRoute={true}  />
-						<Route path="/logout" binding={binding.sub('userData')} component="module/as_manager/pages/logout/logout" unauthorizedAccess={true}  />
-						<Route path="/settings /settings/:subPage" binding={binding.sub('userData')} component="module/as_manager/pages/settings/settings_page" />
+						<RegisterRoute binding={binding.sub('form.register')}  />
+						<LoginRoute binding={binding.sub('userData')}  />
+						<LogoutRoute binding={binding.sub('userData')}  />
+
+						<SettingsRoute binding={binding.sub('userData')} />
 
 						<Route path="/student" binding={binding.sub('studentPage')} component="module/as_manager/pages/student/student_page" />
 
@@ -35,8 +42,10 @@ Center = React.createClass({
 
                         <Route path="/events /events/:subPage" binding={binding.sub('events')} component="module/as_manager/pages/events/events"  />
                         <Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')} component="module/as_manager/pages/event/event"  />
+						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
 
 						<Route path="/invites /invites/:filter /invites/:inviteId/:mode" binding={binding.sub('invites')} component="module/as_manager/pages/invites/invites"  />
+						<Route path="/school_console /school_console/:filter /school_console/:inviteId/:mode" binding={binding.sub('permissions')} component="module/as_manager/pages/school_console/school_console"  />
                     </RouterView>
 
 				</div>

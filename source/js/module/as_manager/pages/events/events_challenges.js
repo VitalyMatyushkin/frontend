@@ -44,21 +44,28 @@ ChallengesView = React.createClass({
 				firstPic,
 				secondPic,
                 firstPoint,
-                secondPoint;
+                secondPoint,
+                comment;
+            if(eventBinding.get('result') && eventBinding.get('result.comment')){
+                comment = eventBinding.get('result.comment');
+            }else{
+                comment = "There are no comments on this fixture";
+            }
             if (type === 'inter-schools') {
-				//http://i.imgur.com/9br7NSU.jpg
-                firstName = eventBinding.get('participants.0.school.name');
-                secondName = !binding.get('model.resultId') ? eventBinding.get('invites.0.guest.name') : eventBinding.get('participants.1.school.name');
-
-				firstPic = eventBinding.get('participants.0.school.pic');
-				secondPic = eventBinding.get('participants.1.school.pic') || eventBinding.get('invites.0.guest.pic');
-
+                firstName = eventBinding.get('invites.0.guest.name');
+                firstPic = eventBinding.get('invites.0.guest.pic');
+                secondName = eventBinding.get('invites.0.inviter.name');
+                secondPic = eventBinding.get('invites.0.inviter.pic');
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');
+                firstPic = eventBinding.get('participants.0.school.pic');
+                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'internal') {
                 firstName = eventBinding.get('participants.0.name');
                 secondName = eventBinding.get('participants.1.name');
+                firstPic = eventBinding.get('participants.0.school.pic');
+                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
             }
 
             if (event.get('resultId')) {
@@ -88,6 +95,11 @@ ChallengesView = React.createClass({
 						{secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
 						{secondName}
 					</div>
+                </div>
+                <div className="eChallenge_com_container">
+                    <div className="eChallenge_comments">
+                        {comment}
+                    </div>
                 </div>
             </div>;
         }).toArray();
@@ -125,13 +137,12 @@ ChallengesView = React.createClass({
                 </div>
                 <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
             </div>;
-        }).toArray() : null;
+        }).toArray() : <div className="eUserFullInfo_block">No fixtures to report on this child</div>;
     },
 	render: function () {
         var self = this,
             binding = self.getDefaultBinding(),
             challenges = self.getDates();
-
 		return <div>
             <div className="bChallenges">{challenges}</div>
         </div>;

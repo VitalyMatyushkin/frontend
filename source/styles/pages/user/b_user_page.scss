@@ -11,12 +11,22 @@
   box-sizing: border-box;
 }
 
+.bParentViewColumn{
+  margin-top: -40px;
+  margin-left: -40px;
+  padding-top: 0;
+}
+
 .bUserDataColumn{
   background: white;
   float: right;
   width: 940px;
   height: 100%;
   padding-bottom: 30px;
+}
+.bParentView{
+  width: 856px;
+  margin-top:-40px;
 }
 
 .bUserDataColumn .eSubMenu_item{

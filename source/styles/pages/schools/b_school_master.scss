@@ -3,7 +3,9 @@
   box-sizing: border-box;
   position: relative;
 }
-
+.parentChildView{
+  padding: 0;
+}
 .eSchoolMaster_titleName{
   color: $MAIN_COLOR;
 }
@@ -35,4 +37,10 @@
 .eSchoolMaster_flag img{
   max-width: 60px;
   max-height: 60px;
+}
+
+
+.bSchoolMaster .bMapView {
+  height: 250px;
+  width: 250px;
 }

@@ -17,12 +17,12 @@ EventTeams = React.createClass({
 			});
 		});
 	},
-    getPointsByStudent: function (playerId) {
+    getPointsByStudent: function (playerId, participantId) {
         var self = this,
             binding = self.getDefaultBinding(),
             points =  binding.sub('points'),
             filtered = points.get().filter(function (point) {
-                return point.get('studentId') === playerId;
+                return point.get('studentId') === playerId && point.get('participantId') === participantId;
             });
 
         return filtered.count();
@@ -74,20 +74,21 @@ EventTeams = React.createClass({
 			isOwner = type === 'inter-schools' ? participant.get('schoolId') === activeSchoolId : true;
 
 		return players ? players.map(function (player) {
-            var isMale = player.get('gender') === 'male';
+            var isMale = player.get('gender') === 'male',
+				points = self.getPointsByStudent(player.get('id'), participant.get('id')) || 0;
 
             return <div className="bPlayer mMini">
                 <If condition={binding.get('mode') !== 'closing' && isOwner}>
                     <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>
-                <If condition={binding.get('mode') === 'closing' && isOwner}>
-                    <div>
-                        {!binding.get('model.resultId') ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
+				<div>
+					{!binding.get('model.resultId') && binding.get('mode') === 'closing' ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
                             <SVG icon="icon_minus" />
                         </span> : null}
-                        <span className="ePlayer_score">{self.getPointsByStudent(player.get('id'))}</span>
-                    </div>
-                </If>
+					<If condition={binding.get('model.resultId') || binding.get('mode') === 'closing'}>
+						<span className="ePlayer_score">{points}</span>
+					</If>
+				</div>
 				<span className="ePlayer_name"><span>{player.get('firstName')}</span> <span>{player.get('lastName')}</span></span>
 				<If condition={binding.get('mode') === 'edit_squad' && isOwner}>
 					<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, order, player.get('id'))}>

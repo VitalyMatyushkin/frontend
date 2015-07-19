@@ -11,7 +11,7 @@ SchoolListPage = React.createClass({
                 where: {
                     ownerId: userId
                 },
-                include: ['zipCode']
+                include: ['postcode']
             }
         }).then(function(data) {
 			self.getDefaultBinding().set(Immutable.fromJS(data));

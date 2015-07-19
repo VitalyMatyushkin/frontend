@@ -11,7 +11,7 @@ Autocomplete = React.createClass({
 		serviceFullData: React.PropTypes.func,
 		serviceFilter: React.PropTypes.func,
 		onSelect: React.PropTypes.func,
-		onBlue: React.PropTypes.func,
+		onBlur: React.PropTypes.func,
 		onInput: React.PropTypes.func,
 		placeholderText: React.PropTypes.string,
 		clearAfterSelect: React.PropTypes.bool

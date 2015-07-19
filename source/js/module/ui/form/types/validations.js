@@ -3,6 +3,14 @@
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
 var validationsSet = {
+	phone: function(value) {
+
+		if (!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))) {
+			return 'Should contain phone number';
+		} else {
+			return false;
+		}
+	},
 	email: function(value) {
 		var self = this;
 
@@ -16,6 +24,15 @@ var validationsSet = {
 		var self = this;
 
 		if (/[^a-zA-Z0-9\-\/]/.test(value)) {
+			return 'Should contain only alphanumeric characters';
+		} else {
+			return false;
+		}
+	},
+	text: function(value) {
+		var self = this;
+
+		if (/[^a-zA-Z\-\/]/.test(value)) {
 			return 'Should contain only alphanumeric characters';
 		} else {
 			return false;
@@ -45,7 +62,7 @@ var validationsSet = {
 		dataToCheck[self.props.field] = value;
 
 		$.ajax({
-			url: 'http://api.squadintouch.com:80/v1/' + self.props.service + '/check',
+			url: 'http:' + window.apiBase + '/' + self.props.service + '/check',
 			type: 'POST',
 			crossDomain: true,
 			data: dataToCheck,

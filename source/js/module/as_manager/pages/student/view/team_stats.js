@@ -1,20 +1,13 @@
 /**
  * Created by bridark on 03/05/15.
  */
-var TeamStats,
-    schoolGamesData,
-    numOfGamesWon;
+var TeamStats;
 TeamStats = React.createClass({
     mixins: [Morearty.Mixin],
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-        Server.studentGamesWon.get({id:globalBinding.get('routing.parameters.id')}).then(function (eventData) {
-            schoolGamesData = eventData;
-            numOfGamesWon = eventData.length;
-        });
-
     },
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
@@ -34,7 +27,7 @@ TeamStats = React.createClass({
         var tempAr = [];
         for(var i=0; i<data1.length;i++){
             for(var x= 0; x < data2.length; x++){
-                console.log(data1[i]);
+                //console.log(data1[i]);
                 if(data1[i].resultId){
                     if(data1[i].resultId === data2[x].id){
                         tempAr.push(data1[i]);
@@ -48,44 +41,87 @@ TeamStats = React.createClass({
     getEvents: function (date,theData) {
         var self = this,
             binding = this.getDefaultBinding(),
-            eventsByDate = theData.filter(function (event) {
+            eventsByDate;
+        if (theData && theData.gamesWon) {
+            eventsByDate = theData.gamesWon.filter(function (event) {
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
             });
-        return eventsByDate.map(function(event,index){
-            var eventDateTime = new Date(event.startTime),
-                hours = self.addZeroToFirst(eventDateTime.getHours()),
-                minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
-                type = event.type,
-                gameType = event.gameType,
-                gameName = event.name,
-                gameDescription = event.description;
+            return eventsByDate.map(function (event, index) {
+                var eventDateTime = new Date(event.startTime),
+                    hours = self.addZeroToFirst(eventDateTime.getHours()),
+                    minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
+                    type = event.type,
+                    firstName,
+                    secondName,
+                    firstPic,
+                    secondPic,
+                    firstPoint,
+                    comment,
+                    secondPoint;
+                if(event.result && event.result.comment){
+                    comment = event.result.comment;
+                }else{
+                    comment = "There are no comments on this fixture";
+                }
 
-            return(<div className = "bChallenge"  onClick={self.onClickChallenge.bind(null, event.id)}
-                        id={'challenge-' + event.id}>
-                <div className="eChallenge_in">
-                    <div className="eChallenge_rivalName">
-                       Fixture Name:<br/> {gameName}
+                if (type === 'inter-schools') {
+                    firstName = event.participants[0].school.name;
+                    secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
+                } else if (type === 'houses') {
+                    firstName = event.participants[0].house.name;
+                    secondName = event.participants[1].house.name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic;
+                } else if (type === 'internal') {
+                    firstName = event.participants[0].name;
+                    secondName = event.participants[1].name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic;
+                }
+                if (event.resultId && event.result.summary) {
+                    firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
+                    secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
+                }
+                return <div className="bChallenge"
+                            onClick={self.onClickChallenge.bind(null, event.id)}
+                            id={'challenge-' + event.id}
+                    >
+                    <div className="eChallenge_in">
+                        <div className="eChallenge_rivalName">
+                            {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
+                            {firstName}
+                        </div>
+                        <div className="eChallenge_rivalInfo">
+                            <div className="eChallenge_hours">{hours + ':' + minutes}</div>
+                            <div
+                                className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
+                            <div className="eChallenge_info">{event.type}</div>
+                        </div>
+                        <div className="eChallenge_rivalName">
+                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
+                            {secondName}
+                        </div>
                     </div>
-                    <div className="eChallenge_rivalInfo">
-                        <div className="eChallenge_hours">{gameType}</div>
-                            <div className="eChallenge_results">{}</div>
-                            <div className="eChallenge_info">{type}</div>
+                    <div className="eChallenge_com_container">
+                        <div className="eChallenge_comments">
+                            {comment}
+                        </div>
                     </div>
-                    <div className="eChallenge_rivalName">
-                       Fixture Description:<br/> {gameDescription}
-                    </div>
-                </div>
-            </div>);
-        });
+                </div>;
+
+            });
+        }
     },
     getDates: function (dataFrom) {
         var self = this,
             binding = self.getDefaultBinding(),
             dates;
-        if(dataFrom){
-            dates = dataFrom.reduce(function(memo,val){
+        if(dataFrom && dataFrom.gamesWon){
+            dates = dataFrom.gamesWon.reduce(function(memo,val){
                 var date = Date.parse(val.startTime),
                     any = memo.some(function(d){
                         return self.sameDay(date,d);
@@ -129,7 +165,8 @@ TeamStats = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            teamStats = self.getDates(schoolGamesData);
+            data = binding.toJS(),
+            teamStats = self.getDates(data);
         return (<div>{teamStats}</div>)
     }
 });

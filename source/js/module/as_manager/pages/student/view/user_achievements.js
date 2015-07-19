@@ -22,7 +22,7 @@ UserAchievements = React.createClass({
         var tempAr = [];
         for(var i=0; i<data1.length;i++){
             for(var x= 0; x < data2.length; x++){
-                console.log(data1[i]);
+                //console.log(data1[i]);
                 if(data1[i].resultId){
                     if(data1[i].resultId === data2[x].id){
                         tempAr.push(data1[i]);
@@ -33,46 +33,90 @@ UserAchievements = React.createClass({
         }
         return tempAr;
     },
-    getEvents: function (date,theData) {
+    getEvents: function (date, theData) {
         var self = this,
             binding = this.getDefaultBinding(),
+            eventsByDate;
+
+        if (theData && theData.gamesScoredIn) {
             eventsByDate = theData.gamesScoredIn.filter(function (event) {
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
             });
-        return eventsByDate.map(function(event,index){
-            var eventDateTime = new Date(event.startTime),
-                hours = self.addZeroToFirst(eventDateTime.getHours()),
-                minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
-                type = event.type,
-                gameType = event.gameType,
-                gameName = event.name,
-                gameDescription = event.description;
-
-            return(<div className = "bChallenge"  onClick={self.onClickChallenge.bind(null, event.id)}
-                        id={'challenge-' + event.id}>
-                <div className="eChallenge_in">
-                    <div className="eChallenge_rivalName">
-                        {gameName}
+            return eventsByDate.map(function (event, index) {
+                var eventDateTime = new Date(event.startTime),
+                    hours = self.addZeroToFirst(eventDateTime.getHours()),
+                    minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
+                    type = event.type,
+                    firstName,
+                    secondName,
+                    firstPic,
+                    secondPic,
+                    firstPoint,
+                    comment,
+                    secondPoint;
+                if(event.result && event.result.comment){
+                    comment = event.result.comment;
+                }else{
+                    comment = "There are no comments on this fixture";
+                }
+                if (type === 'inter-schools') {
+                    firstName = event.participants[0].school.name;
+                    secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
+                } else if (type === 'houses') {
+                    firstName = event.participants[0].house.name;
+                    secondName = event.participants[1].house.name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic;
+                } else if (type === 'internal') {
+                    firstName = event.participants[0].name;
+                    secondName = event.participants[1].name;
+                    firstPic = event.participants[0].school.pic;
+                    secondPic = event.participants[1].school.pic;
+                }
+                if (event.resultId && event.result.summary) {
+                    firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
+                    secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
+                }
+                //console.log(index+"  index");
+                return <div className="bChallenge"
+                            onClick={self.onClickChallenge.bind(null, event.id)}
+                            id={'challenge-' + event.id}
+                    >
+                    <div className="eChallenge_in">
+                        <div className="eChallenge_rivalName">
+                            {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
+                            {firstName}
+                        </div>
+                        <div className="eChallenge_rivalInfo">
+                            <div className="eChallenge_hours">{hours + ':' + minutes}</div>
+                            <div
+                                className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
+                            <div className="eChallenge_info">{event.type}</div>
+                        </div>
+                        <div className="eChallenge_rivalName">
+                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
+                            {secondName}
+                        </div>
                     </div>
-                    <div className="eChallenge_rivalInfo">
-                        <div className="eChallenge_hours">{gameType}</div>
-                        <div className="eChallenge_results">{}</div>
-                        <div className="eChallenge_info">{type}</div>
+                    <div className="eChallenge_com_container">
+                        <div className="eChallenge_comments">
+                            {comment}
+                        </div>
                     </div>
-                    <div className="eChallenge_rivalName">
-                        {gameDescription}
-                    </div>
-                </div>
-            </div>);
-        });
+                </div>;
+            });
+        }
     },
     getDates: function (dataFrom) {
+        //console.log(dataFrom);
         var self = this,
             binding = self.getDefaultBinding(),
             dates;
-        if(dataFrom){
+        if(dataFrom && dataFrom.gamesScoredIn){
             dates = dataFrom.gamesScoredIn.reduce(function(memo,val){
                 var date = Date.parse(val.startTime),
                     any = memo.some(function(d){

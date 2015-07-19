@@ -12,13 +12,14 @@ EventHeader = React.createClass({
             event = binding.toJS('model');
 
         window.Server.results.post({
-            eventId: event.id
+            eventId: event.id,
+            comment: binding.get('model.comment')
         }).then(function (result) {
             points.forEach(function (point) {
                 point.resultId = result.id;
 
                 window.Server.pointsInResult.post({resultId: result.id}, point).then(function (res) {
-                    console.log(res);
+                    //console.log(res);
                 });
             });
 

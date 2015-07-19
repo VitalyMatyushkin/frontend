@@ -1,94 +1,100 @@
 var LeanerView,
-	SVG = require('module/ui/svg'),
-	AboutMe = require('module/as_manager/pages/student/view/about_me'),
-	UserButtons = require('module/as_manager/pages/student/view/user_buttons'),
-	UserName = require('module/as_manager/pages/student/view/user_name'),
-	UserPhoto = require('module/as_manager/pages/student/view/user_photo'),
+    SVG = require('module/ui/svg'),
+    AboutMe = require('module/as_manager/pages/student/view/about_me'),
+    UserButtons = require('module/as_manager/pages/student/view/user_buttons'),
+    UserName = require('module/as_manager/pages/student/view/user_name'),
+    UserPhoto = require('module/as_manager/pages/student/view/user_photo'),
     UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
     UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
     TeamStats = require('module/as_manager/pages/student/view/team_stats'),
     fixData;
 
 LeanerView = React.createClass({
-	mixins: [Morearty.Mixin],
-	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
-			studentId = globalBinding.get('routing.parameters.id'),
-			leanerData = {};
-		// Костыль, пока не будет ясности с путями хранения данных
-		studentId && window.Server.student.get(studentId).then(function (data) {
-			leanerData = data;
-			// Лютый костыль, пока не будет метода с полными данными
-			Server.form.get(data.formId).then(function(classData) {
-				leanerData.classData = classData;
-				Server.house.get(data.houseId).then(function(houseData) {
-					leanerData.houseData = houseData;
-					Server.school.get(data.schoolId).then(function(schoolData) {
-						leanerData.schoolData = schoolData;
-						Server.studentPoints.get(studentId).then(function(pointsData) {
-							leanerData.scorePoints = pointsData.length;
-                            leanerData.pointsData = pointsData;
-							Server.results.get({id:studentId}).then(function(resultsData){
-								leanerData.resultsData = resultsData;
-                                Server.studentEvents.get({id:studentId}).then(function(schoolEvent){
-                                    leanerData.schoolEvent = schoolEvent;
-                                    Server.studentGamesWon.get({id:studentId}).then(function(gamesWonData){
-                                        leanerData.gamesWon = gamesWonData.length;
-										Server.studentGamesScored.get({id:studentId}).then(function(gamesScoredIn){
-											leanerData.gamesScoredIn = gamesScoredIn;
-											leanerData.numOfGamesScoredIn = gamesScoredIn.length;
-											Server.studentEvents.get({id:studentId}).then(function(gamesPlayed){
-												leanerData.gamesPlayed = gamesPlayed.length;
-												binding.set(Immutable.fromJS(leanerData));
-											});
-										});
-                                    })
+    mixins: [Morearty.Mixin],
+    componentWillMount: function () {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            studentId = globalBinding.get('routing.parameters.id'),
+            leanerData = {};
+        //console.log(studentId);
+        studentId = studentId ? studentId : binding.get('activeChildId');
+        //console.log(binding.get('activeChildId'));
+        if(!studentId) document.location.hash = 'events/calendar';
+        studentId && window.Server.student.get(studentId).then(function (data) {
+            leanerData = data;
+            Server.form.get(data.formId).then(function (classData) {
+                leanerData.classData = classData;
+                Server.house.get(data.houseId).then(function (houseData) {
+                    leanerData.houseData = houseData;
+                    Server.school.get(data.schoolId).then(function (schoolData) {
+                        leanerData.schoolData = schoolData;
+                        Server.studentGamesWon.get({
+                            id: studentId,
+                            include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
+                        }).then(function (gamesWon) {
+                            leanerData.gamesWon = gamesWon;
+                            self.numOfGamesWon = gamesWon.length;
+                            leanerData.numOfGamesWon = gamesWon.length;
+                            Server.studentGamesScored.get({
+                                id: studentId,
+                                include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
+                            }).then(function (gamesScoredIn) {
+                                leanerData.gamesScoredIn = gamesScoredIn;
+                                self.numOfGamesScoredIn = gamesScoredIn.length;
+                                leanerData.numOfGamesScoredIn = gamesScoredIn.length;
+                                Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
+                                    leanerData.numberOfGamesPlayed = gamesPlayed.length;
+                                    self.numberOfGamesPlayed = gamesPlayed.length;
+                                    leanerData.schoolEvent = gamesPlayed;
+                                    Server.studentParent.get({id:studentId}).then(function(returnedUser){
+                                        //Checks whether the object returned is empty
+                                        //TODO: May need refactoring
+                                        if(returnedUser.length != 0){
+                                            leanerData.parentOne = returnedUser[0].firstName+' '+returnedUser[0].lastName;
+                                            leanerData.parentTwo = returnedUser[1].firstName+' '+returnedUser[1].lastName;
+                                        }
+                                        binding.set('achievements', Immutable.fromJS(leanerData));
+                                    });
                                 });
-							});
-						});
-					});
-				});
-
-			});
-
-		});
-	},
-	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			data = binding.toJS();
-		return (
-			<div>
-				<div className="bUserColumn">
-					<UserPhoto binding={binding} />
-					<div className="eUserColumnData">
-						<UserName binding={binding} />
-						<AboutMe title="About me" binding={binding} />
-   					</div>
-				</div>
-				<div className="bUserDataColumn">
-					<div className="eUserDataColumn_wrap" id="jsSubPage">
-						<UserButtons />
-						<div className="bUserFullInfo mDates">
-							<div className="eUserFullInfo_block">
-								<h1>Personal Achievements:</h1>
-								<UserAchievements binding={binding} />
-							</div>
-						</div>
-						<div className="bUserFullInfo mDates">
-							<div className="eUserFullInfo_block">
-								<h1>Team Statistics(Games Won):</h1>
-								<TeamStats binding={binding} />
-							</div>
-						</div>
-                        <h1>All Fixtures:</h1>
-                        <UserFixtures  binding={binding} />
-					</div>
-				</div>
-			</div>
-		)
-	}
+                            });
+                        })
+                    });
+                });
+            });
+        });
+    },
+    render: function () {
+        var self = this,
+            binding = self.getDefaultBinding();
+        return (
+            <div>
+                <div className="bUserColumn">
+                    <div className="eUserColumnData">
+                        <UserName binding={binding.sub('achievements')}/>
+                        <AboutMe title="About me" binding={binding.sub('achievements')}/>
+                    </div>
+                </div>
+                <div className="bUserDataColumn">
+                    <div className="eUserDataColumn_wrap" id="jsSubPage">
+                        <div className="bUserFullInfo mDates">
+                            <div className="eUserFullInfo_block">
+                                <h1>Personal Achievements: {self.numOfGamesScoredIn}</h1>
+                                <UserAchievements binding={binding.sub('achievements')}/>
+                            </div>
+                        </div>
+                        <div className="bUserFullInfo mDates">
+                            <div className="eUserFullInfo_block">
+                                <h1>Team Statistics(Games Won): {self.numOfGamesWon}</h1>
+                                <TeamStats binding={binding.sub('achievements')}/>
+                            </div>
+                        </div>
+                        <h1>All Fixtures: {self.numberOfGamesPlayed}</h1>
+                        <UserFixtures binding={binding.sub('achievements')}/>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 });
 module.exports = LeanerView;

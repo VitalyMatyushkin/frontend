@@ -1,5 +1,5 @@
 var PromiseClass = require('module/core/promise'),
-	baseUrl = 'http://api.squadintouch.com/v1',
+	baseUrl = window.apiBase,
 	Service;
 
 
@@ -31,7 +31,7 @@ Service = (function() {
 				url = self.url,
 				filter = options && options.filter || data && data.filter || '',
 				promise = new PromiseClass(),
-				authorization = self.binding.get();
+				authorization = self.binding ? self.binding.get() : undefined;
 
 			if (self.requredParams) {
 				url = url.replace(/\{(.*?)\}/g, function(match, param) {
@@ -72,7 +72,7 @@ Service = (function() {
 						authorizationInfo = authorization.toJS();
 
 						if (authorizationInfo && authorizationInfo.id) {
-							xhr.setRequestHeader ('Authorization', authorizationInfo.id);
+							xhr.setRequestHeader('Authorization', authorizationInfo.id);
 						}
 					}
 
@@ -124,6 +124,7 @@ Service = (function() {
 				} else {
 					sendOptions = options;
 				}
+
 			} else {
 				data = data || options;
 				sendOptions = options;

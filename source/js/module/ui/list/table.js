@@ -1,4 +1,5 @@
-var Table;
+var Table,
+	If = require('module/ui/if/if');
 
 Table = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -8,7 +9,8 @@ Table = React.createClass({
 		onItemEdit: React.PropTypes.func,
 		onItemView: React.PropTypes.func,
 		onItemRemove: React.PropTypes.func,
-		onFilterChange: React.PropTypes.func
+		onFilterChange: React.PropTypes.func,
+		hideActions: React.PropTypes.bool
 	},
 	componentWillMount: function() {
 		var self = this;
@@ -71,9 +73,12 @@ Table = React.createClass({
 				return (
 					<div className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
 						{itemCells}
-						<div className="eDataList_listItemCell mActions">
-							{itemButtons}
-						</div>
+
+						<If condition={self.props.hideActions !== true}>
+							<div className="eDataList_listItemCell mActions">
+								{itemButtons}
+							</div>
+						</If>
 					</div>
 				);
 			});
@@ -90,7 +95,9 @@ Table = React.createClass({
 			<div className="eDataList_list mTable">
 				<div className="eDataList_listItem mHead">
 					{tableHeadFields}
-					<div className="eDataList_listItemCell mActions">Actions</div>
+					<If condition={self.props.hideActions !== true}>
+						<div className="eDataList_listItemCell mActions">Actions</div>
+					</If>
 				</div>
 				{itemsNodes}
 			</div>

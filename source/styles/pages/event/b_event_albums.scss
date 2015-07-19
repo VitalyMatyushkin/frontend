@@ -1,0 +1,60 @@
+.bEventAlbums {
+  display: flex;
+  width: 100%;
+  padding: 5px 0;
+  flex-flow: row;
+}
+
+.eEventAlbums_album {
+  display: flex;
+  margin-right: 5px;
+  height: 100px;
+  background-size: auto 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  align-items: flex-end;
+  cursor: pointer;
+  &.mCreate {
+    width: 125px;
+    &:before {
+      content: '+';
+      font-size: 55px;
+      color: rgba(76, 175, 80, 0.5);
+      position: absolute;
+      width: 125px;
+      text-align: center;
+      height: 100px;
+      line-height: 100px;
+      vertical-align: middle;
+      margin-top: -5px;
+    }
+    &:hover {
+      &:before {
+        color: $MAIN_COLOR;
+      }
+    }
+  }
+}
+
+.eEventAlbums_albumTitle {
+  display: flex;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  margin-top: 5px;
+  color: #fff;
+  font-size: 12px;
+}
+
+.eEventAlbums_album {
+  &:hover {
+    border-color: $MAIN_COLOR;
+    .eEventAlbums_albumTitle {
+      background: rgba(76, 175, 80, 0.5);
+    }
+  }
+}

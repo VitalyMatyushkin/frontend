@@ -3,33 +3,16 @@ var authСontroller;
 authСontroller = {
 	nextPage: '',
 	dieTimer: null,
-	/**
-	 * Метод обрабатывает появление данных авторизации
-	 */
-	getNextPage: function() {
-		var self = this,
-			binding = self.binding,
-			activeSchoolId = binding.get('userRules.activeSchoolId'),
-			nextSchoolPage = '';
-
-		// Если есть идентефикатор активной школы, показываем страницу школы
-		if (activeSchoolId) {
-			nextSchoolPage = 'school_admin/summary';
-		} else {
-			// Если активная школа не задана, отправляем к спику школ
-			nextSchoolPage = 'schools';
-		}
-
-		return self.nextPage || nextSchoolPage;
-	},
 	updateAuth: function() {
 		var self = this,
 			binding = self.binding,
 			authBinding = binding.sub('userData.authorizationInfo'),
-			data = authBinding.get();
+			userInfoBinding = binding.sub('userData.userInfo'),
+			data = binding.toJS('userData.authorizationInfo'),
+			userData = binding.toJS('userData.userInfo');
 
 		// Если появились данные об авторизации
-		if(data && (data = data.toJS()) && data.id) {
+		if (data && data.id) {
 			var ttl;
 
 			// Если данные о времени окончании сессии уже присутсвуют
@@ -41,29 +24,47 @@ authСontroller = {
 				authBinding.set('dieTime', Date.now() + ttl * 1000);
 			}
 
-
 			// Запуск таймера окончания жизни сессия
 			if (ttl > 0) {
 				self.startTTLTimer(ttl);
+
+				// Получение данных о верификации аккаунта
+				/*
+				if (!userData || !userData.user || !userData.user.verified) {
+					window.Server.user.get(data.userId).then(function (data) {
+						userInfoBinding.merge(true, Immutable.fromJS(data));
+					});
+				}
+				*/
+
 			} else {
 				self.clearAuthorization();
 			}
-
-			// Переводим человека на ожидаемую страницу
-			document.location.hash = self.getNextPage();
+			// Переводим человека на ожидаемую страницу если человек не проходит регистрацию в данный момент
+			if (self.binding.get('form.register.formFields') === undefined) {
+				document.location.hash = self.nextPage;
+			}
 		}
 	},
-	initialize: function(binding) {
+	initialize: function(options) {
 		var self = this;
 
-		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
-		if (document.location.hash !== '#login') {
-			self.nextPage = document.location.hash;
+		if (!options || !options.binding) {
+			console.error('Error while initializing the authorization controller');
 		}
 
-		self.binding = binding;
+		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
+		if (document.location.hash && document.location.hash.indexOf('login') === -1) {
+			self.nextPage = document.location.hash;
+		} else {
+			self.defaultPath = options.defaultPath || '#/';
+			self.nextPage = self.defaultPath;
+		}
+
+		self.binding = options.binding;
+
 		self.updateAuth();
-		binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
+		self.binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
 	},
 	startTTLTimer: function(secondsToLive) {
 		var self = this;

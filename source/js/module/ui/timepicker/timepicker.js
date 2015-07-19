@@ -7,12 +7,16 @@ TimePicker = React.createClass({
     componentWillMount: function () {
         var self = this,
             binding = self.getDefaultBinding(),
+            time = binding.get(),
+            date;
+
+        if (!time) {
             date = new Date(binding.get());
+            date.setMinutes(0);
+            date.setHours(10);
 
-        date.setMinutes(0);
-        date.setHours(10);
-
-        binding.set(date.toISOString());
+            binding.set(date.toISOString());
+        }
     },
     setMinutes: function (min) {
         var self = this,

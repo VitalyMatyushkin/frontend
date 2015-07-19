@@ -6,21 +6,31 @@ var ApplicationView = require('module/as_parents/application'),
 	MoreartyContext,
 	binding;
 
-function runMainMode() {
-// Создание контекста Morearty
+function runParentMode() {
 	MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			userRules: userRulesInstance.getDefaultState(),
 			routing: {
-				currentPath: '',		// текущий путь
-				currentPageName: '',	// имя текущей страницы, если есть
-				currentPathParts: [],	// части текущего путии
-				pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
-				parameters: {}			// GET-параметры текущего пути
+				currentPath: '',
+				currentPageName: '',
+				currentPathParts: [],
+				pathParameters: [],
+				parameters: {}
 			},
 			schoolProfile: {
 				schoolProfileRouting: {}
+			},
+			events: {
+				sync: false,
+				models: [],
+				calendar: {
+					currentDate: new Date(),
+					mode: 'month'
+				}
+			},
+			event: {
+				eventRouting: {}
 			}
 		},
 		options: {
@@ -32,14 +42,20 @@ function runMainMode() {
 
 	window.Server = serviceList;
 
-	// Включение авторизации сервисов
+	userDataInstance.setBinding(binding.sub('userData'));
+	userRulesInstance.setBinding(binding.sub('userRules'));
+
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-	// Инициализация приложения
+	authController.initialize({
+		binding: binding,
+		defaultPath: 'events/calendar'
+	});
+
 	React.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);
 }
 
-module.exports = runMainMode;
+module.exports = runParentMode;

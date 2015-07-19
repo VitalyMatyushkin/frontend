@@ -2,6 +2,7 @@
   max-width: 700px;
   margin: 40px auto;
   text-align: center;
+  position: relative;
 }
 
 .bForm h2{
@@ -17,6 +18,10 @@
   display: inline-block;
   margin-right: 10px;
   position: relative;
+}
+
+.eForm_fieldInput.mHidden {
+  display: none;
 }
 
 .eForm_fieldSmallHelp{
@@ -43,6 +48,7 @@
 .eForm_atCenter{
   display: inline-block;
   text-align: left;
+  position: relative;
 }
 
 $INVALID_COLOR: rgb(182, 0, 0);
@@ -75,4 +81,44 @@ $INVALID_COLOR: rgb(182, 0, 0);
   display: inline-block;
   margin-right: 60px;
   vertical-align: top;
+}
+
+.eForm_fieldSelection{
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+}
+
+.eForm_fieldMicroHelp{
+  display: inline-block;
+  font-size: 14px;
+  width: 300px;
+  line-height: 20px;
+  color: rgb(115, 115, 115);
+}
+
+.bForm.mRegisterSteps .bButton{
+  width: 82px;
+  text-align: center;
+  height: 25px;
+  line-height: 25px;
+}
+.bSettingEmailVerify{
+  display: inline-block;
+  position:absolute;
+  left: 260px;
+  bottom: 199px;
+  width: 100px;
+  cursor: pointer;
+}
+.bSettingPhoneVerify{
+  display: inline-block;
+  position:absolute;
+  left: 260px;
+  bottom: 130px;
+  width: 100px;
+  cursor: pointer;
+}
+.bSettingEmailVerify:hover, .bSettingPhoneVerify:hover{
+  color: green;
 }
