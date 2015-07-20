@@ -39,7 +39,7 @@ BlogReplyBox = React.createClass({
         if(globalBinding.get('userData.authorizationInfo.userId') !== undefined || self.props.parentCheckBool === true){
             window.Server.addToBlog.post({id:binding.get('eventId')},blogModel).then(function (blog) {
                 var filteredBag = binding.get('blogs').toJS(),
-                    filteredChild = binding.get('filteredChild').toJS();
+                    filteredChild = binding.get('filteredChild').toJS() !== undefined ? binding.get('filteredChild'): [];
                 window.Server.user.get({id:blog.ownerId}).then(function (blogger) {
                     blog.commentor = blogger;
                     filteredChild.push(blog);
