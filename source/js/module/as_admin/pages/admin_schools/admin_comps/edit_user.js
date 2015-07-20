@@ -28,10 +28,12 @@ EditUser = React.createClass({
             registered;
         setTimeout(function(){
             registered = document.getElementById('statusSelector');
-            if(binding.get('form').toJS().verified.email === false && binding.get('form').toJS().verified.phone === false){
-                var option = document.createElement('option');
-                option.text = "Registered";
-                registered.add(option,registered[0]); registered.selectedIndex = 0;
+            if(binding.get('form') !== undefined){
+                if(binding.get('form').toJS().verified.email === false && binding.get('form').toJS().verified.phone === false){
+                    var option = document.createElement('option');
+                    option.text = "Registered";
+                    registered.add(option,registered[0]); registered.selectedIndex = 0;
+                }
             }
         },500);
     },

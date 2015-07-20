@@ -9,7 +9,10 @@ AdminRequest = React.createClass({
         binding = self.getDefaultBinding();
         window.Server.Permissions.get({
             filter:{
-                include:['principal','school']
+                include:['principal','school'],
+                where:{
+                    and:[{accepted:undefined}]
+                }
             }
         }).then(function(results){
             binding
@@ -53,14 +56,16 @@ AdminRequest = React.createClass({
                         var confirmAcpt = confirm("Are you sure you want to decline this permission?");
                         if(confirmAcpt === true){
                             if(preset === 'parent'){
-                                window.Server.updateUserPermission({id:principalId,fk:permissionId},{accepted:false,data:{studentId:studentId}})
+                                window.Server.updateUserPermission.put({id:principalId,fk:permissionId},{accepted:false,data:{studentId:studentId}})
                                     .then(function(res) {
-                                        alert('Permission accepted!');
+                                        //alert('Permission accepted!');
+                                        window.location.reload(true);
                                     });
                             }else{
-                                window.Server.updateUserPermission({id:principalId,fk:permissionId},{accepted:false})
+                                window.Server.updateUserPermission.put({id:principalId,fk:permissionId},{accepted:false})
                                     .then(function(res) {
-                                        alert('Permission accepted!');
+                                        //alert('Permission accepted!');
+                                        window.location.reload(true);
                                     });
                             }
 
