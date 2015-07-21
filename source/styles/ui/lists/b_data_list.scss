@@ -186,6 +186,10 @@
   text-align: center;
   padding: 4px;
 }
+.eLogDataList tr:hover{
+  background: $MAIN_COLOR;
+  cursor: pointer;
+}
 .eLogDataList table tr th{
   border-collapse: collapse;
   border:1px solid black;
@@ -205,6 +209,17 @@
 }
 .eLogDataList_header span{
   padding-left: 10px;
+}
+.eLogDataList_filtering{
+  padding-top: 10px;
+}
+.eLogDataList_filtering span{
+  margin-left: 4px;
+  cursor: pointer;
+}
+.eLogDataList_filtering span:hover{
+  text-decoration: underline;
+  color:$MAIN_COLOR;
 }
 .ePagination_container{
   margin-top: 20px;

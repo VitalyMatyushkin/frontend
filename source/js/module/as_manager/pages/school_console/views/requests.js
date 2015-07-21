@@ -11,7 +11,10 @@ SchoolRequest = React.createClass({
             activeSchoolId = globalBinding.get('userRules.activeSchoolId');
         window.Server.schoolPermissions.get({id:activeSchoolId,
             filter: {
-                include: ['principal', 'school']
+                include: ['principal', 'school'],
+                where:{
+                    and:[{accepted:undefined}]
+                }
             }
         }).then(function (results) {
             binding

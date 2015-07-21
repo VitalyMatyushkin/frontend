@@ -5,6 +5,10 @@
 var LogPagination;
 LogPagination = React.createClass({
     mixins:[Morearty.Mixin],
+    propTypes:{
+        filterActive: React.PropTypes.bool.isRequired,
+        filterMode: React.PropTypes.string.isRequired
+    },
     getInitialState:function(){
         return {perPage:''};
     },
@@ -28,15 +32,27 @@ LogPagination = React.createClass({
     _setNumOfLogsPerPage:function(limit){
         var self = this,
             binding = self.getDefaultBinding();
-        window.Server.activityLogs.get({filter:{limit:limit}}).then(function (res) {
-            binding
-                .atomically()
-                .set('logs',Immutable.fromJS(res))
-                .commit();
-            self._setPageCount(limit);
-            self._populateSelectOptions();
-            self.setState({perPage:limit});
-        });
+        if(self.props.filterActive === false){
+            window.Server.activityLogs.get({filter:{limit:limit}}).then(function (res) {
+                binding
+                    .atomically()
+                    .set('logs',Immutable.fromJS(res))
+                    .commit();
+                self._setPageCount(limit);
+                self._populateSelectOptions();
+                self.setState({perPage:limit});
+            });
+        }else{
+            window.Server.activityLogs.get({filter:{order:self.props.filterMode,limit:limit}}).then(function (res) {
+                binding
+                    .atomically()
+                    .set('logs',Immutable.fromJS(res))
+                    .commit();
+                self._setPageCount(limit);
+                self._populateSelectOptions();
+                self.setState({perPage:limit});
+            });
+        }
     },
     _populateSelectOptions:function(){
         var self = this,
@@ -58,18 +74,34 @@ LogPagination = React.createClass({
             el = React.findDOMNode(self.refs.pageSelect),
             optVal = el.options[el.selectedIndex].value,
             skipLimit = optVal >= 2 ? (optVal - 1) * self.requestLimit  : 0;
-        window.Server.activityLogs.get({
-            filter:{
-                limit:amt,
-                skip: skipLimit
-            }
-        }).then(function (res) {
-            binding
-                .atomically()
-                .set('logs',Immutable.fromJS(res))
-                .commit();
-            //self._setPageCount(skipLimit);
-        });
+        if(self.props.filterActive === false){
+            window.Server.activityLogs.get({
+                filter:{
+                    limit:amt,
+                    skip: skipLimit
+                }
+            }).then(function (res) {
+                binding
+                    .atomically()
+                    .set('logs',Immutable.fromJS(res))
+                    .commit();
+                //self._setPageCount(skipLimit);
+            });
+        }else{
+            window.Server.activityLogs.get({
+                filter:{
+                    order:self.props.filterMode,
+                    limit:amt,
+                    skip: skipLimit
+                }
+            }).then(function (res) {
+                binding
+                    .atomically()
+                    .set('logs',Immutable.fromJS(res))
+                    .commit();
+                //self._setPageCount(skipLimit);
+            });
+        }
     },
     render:function(){
         var self = this,
