@@ -1,18 +1,18 @@
 var If = require('module/ui/if/if'),
-	InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-	EventHeader;
+		InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		EventHeader;
 
 EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	renderAlbum: function(album, index) {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			cover = binding.get('albums.' + index + '.photos.0.pic') + '/contain?height=100',
-			styles = {backgroundImage: 'url(' + cover + ')'};
+				binding = self.getDefaultBinding(),
+				cover = binding.get('albums.' + index + '.photos.0.pic') + '/contain?height=100',
+				styles = {backgroundImage: 'url(' + cover + ')'};
 
 		return <div onClick={self.onClickAlbum.bind(null, album)} key={'album-' + index} className='eEventAlbums_album' style={styles}>
-			<span className='eEventAlbums_albumTitle'>{album.get('name')}</span>
-		</div>;
+						<span className='eEventAlbums_albumTitle'>{album.get('name')}</span>
+					</div>;
 	},
 	onClickAlbum: function(album) {
 		var self = this;
@@ -32,16 +32,18 @@ EventHeader = React.createClass({
 		});
 	},
 	render: function() {
-        var self = this,
-			binding = self.getDefaultBinding();
+		var self = this,
+				binding = self.getDefaultBinding(),
+				styles = {'background-color': 'red', width: '100px', height: '20px'};
 
 
 		return <div className='bEventAlbums'>
-			{binding.get('albums').map(self.renderAlbum.bind(self))}
-			<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate'>
-				<span className='eEventAlbums_albumTitle'>Add...</span>
-			</div>
-		</div>;
+						<div style={styles}></div>
+						{binding.get('albums').map(self.renderAlbum.bind(self))}
+						<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate'>
+							<span className='eEventAlbums_albumTitle'>Add...</span>
+						</div>
+					</div>;
 	}
 });
 
