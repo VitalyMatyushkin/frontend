@@ -30,6 +30,12 @@ window.onload = function() {
 		startModule = 'module/start_as_www';
 	}
 
+	// ajax global
+	$.ajaxSetup({
+		dataType: 'json',
+		crossDomain: true
+	});
+
 
 	window['require']([startModule], function(startCallback) {
 		startCallback();
