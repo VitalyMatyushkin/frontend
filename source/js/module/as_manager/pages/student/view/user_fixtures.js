@@ -129,6 +129,7 @@ UserFixtures = React.createClass({
         }
     },
     getDates: function (dataFrom) {
+        console.log(dataFrom);
         var self = this,
             binding = self.getDefaultBinding(),
             dates;

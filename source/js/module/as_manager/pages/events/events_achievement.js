@@ -35,56 +35,37 @@ ParentChildAchievement = React.createClass({
             }
         }).then(function (data) {
             leanerData = data;
-            window.Server.studentWon.get({id:studentId}).then(function(gamesWon){
-                leanerData.gamesWon = gamesWon;
-                leanerData.numOfGamesWon = gamesWon.length;
-                window.Server.studentScored.get({id:studentId}).then(function(gamesScored){
-                    leanerData.gamesScoredIn = gamesScored;
-                    leanerData.numOfGamesScoredIn = gamesScored.length;
-                    window.Server.studentEvents.get({id:studentId}).then(function(studentEvents){
-                        leanerData.gamesPlayed = studentEvents;
-                        leanerData.numberOfGamesPlayed = studentEvents.length;
-                        self.numberOfGamesPlayed = studentEvents.length;
-                        binding.set('achievements',Immutable.fromJS(leanerData));
+            Server.form.get(data.formId).then(function (classData) {
+                leanerData.classData = classData;
+                Server.house.get(data.houseId).then(function (houseData) {
+                    leanerData.houseData = houseData;
+                    Server.school.get(data.schoolId).then(function (schoolData) {
+                        leanerData.schoolData = schoolData;
+                        Server.studentGamesWon.get({
+                            id: studentId,
+                            include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
+                        }).then(function (gamesWon) {
+                            leanerData.gamesWon = gamesWon;
+                            self.numOfGamesWon = gamesWon.length;
+                            leanerData.numOfGamesWon = gamesWon.length;
+                            Server.studentGamesScored.get({
+                                id: studentId,
+                                include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
+                            }).then(function (gamesScoredIn) {
+                                leanerData.gamesScoredIn = gamesScoredIn;
+                                self.numOfGamesScoredIn = gamesScoredIn.length;
+                                leanerData.numOfGamesScoredIn = gamesScoredIn.length;
+                                Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
+                                    leanerData.numberOfGamesPlayed = gamesPlayed.length;
+                                    self.numberOfGamesPlayed = gamesPlayed.length;
+                                    leanerData.schoolEvent = gamesPlayed;
+                                    binding.set('achievements', Immutable.fromJS(leanerData));
+                                });
+                            });
+                        })
                     });
                 });
             });
-            /*
-            * Requirements: house, form, school, games won, games scored in, events.
-            *
-            * */
-            //leanerData = data;
-            //Server.form.get(data.formId).then(function (classData) {
-            //    leanerData.classData = classData;
-            //    Server.house.get(data.houseId).then(function (houseData) {
-            //        leanerData.houseData = houseData;
-            //        Server.school.get(data.schoolId).then(function (schoolData) {
-            //            leanerData.schoolData = schoolData;
-            //            Server.studentGamesWon.get({
-            //                id: studentId,
-            //                include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
-            //            }).then(function (gamesWon) {
-            //                leanerData.gamesWon = gamesWon;
-            //                self.numOfGamesWon = gamesWon.length;
-            //                leanerData.numOfGamesWon = gamesWon.length;
-            //                Server.studentGamesScored.get({
-            //                    id: studentId,
-            //                    include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
-            //                }).then(function (gamesScoredIn) {
-            //                    leanerData.gamesScoredIn = gamesScoredIn;
-            //                    self.numOfGamesScoredIn = gamesScoredIn.length;
-            //                    leanerData.numOfGamesScoredIn = gamesScoredIn.length;
-            //                    Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
-            //                        leanerData.numberOfGamesPlayed = gamesPlayed.length;
-            //                        self.numberOfGamesPlayed = gamesPlayed.length;
-            //                        leanerData.schoolEvent = gamesPlayed;
-            //                        binding.set('achievements', Immutable.fromJS(leanerData));
-            //                    });
-            //                });
-            //            })
-            //        });
-            //    });
-            //});
         });
     },
     render: function () {
@@ -110,7 +91,7 @@ ParentChildAchievement = React.createClass({
                         </div>
                         <div className="bUserFullInfo mDates">
                             <div className="eUserFullInfo_block">
-                                <h1>Personal Achievements: {binding.get('achievements.numberOfGamesPlayed')}</h1>
+                                <h1>Personal Achievements: {binding.get('achievements.numOfGamesScoredIn')}</h1>
                                 <UserAchievements binding={binding.sub('achievements')}/>
                             </div>
                         </div>
