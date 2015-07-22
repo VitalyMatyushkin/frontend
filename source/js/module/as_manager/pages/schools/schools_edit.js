@@ -24,8 +24,8 @@ EditSchoolForm = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
-
-		window.Server.school.put(self.schoolId, schoolData).then(function() {
+        schoolData.pic = globalBinding.toJS().picUrl;
+		window.Server.school.put(self.schoolId, schoolData).then(function(res) {
 			document.location.hash = 'school_admin/summary';
 		});
 

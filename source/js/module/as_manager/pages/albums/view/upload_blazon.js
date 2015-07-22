@@ -19,7 +19,8 @@ BlazonUpload = React.createClass({
         currentAction = currentAction[currentAction.length-1];
         if(currentAction !== 'add'){
             window.Server.school.get(currentSchoolId).then(function(school){
-                preview = self.renderPhoto(school.pic);
+                //preview = self.renderPhoto(school.pic);
+                React.findDOMNode(self.refs.prevImage).src = school.pic;
             });
         }
     },
@@ -49,6 +50,7 @@ BlazonUpload = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding();
         var file = e.target.files[0];
+        React.findDOMNode(self.refs.imageChanged).innerText = 'Processing...';
         if(currentAction === 'add'){
             window.Server.addAlbum.post(rootBinding.get('userData.authorizationInfo.userId'), {
                 name: 'blazon_'+rootBinding.get('userData.authorizationInfo.userId')+'_staging',
@@ -74,8 +76,9 @@ BlazonUpload = React.createClass({
                             };
                         Server.photos.post(albumDetails.id, model).then(function(data){
                             urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=60&width=60';
-                            var profilePicStr = document.getElementById('blazonInput');
-                            profilePicStr.value =urlStr;
+                            rootBinding.set('picUrl',urlStr);
+                            //React.findDOMNode(self.refs.prevImage).src = data.pic+'/contain?height=60&width=60';
+                            React.findDOMNode(self.refs.imageChanged).innerText = 'Image changed - Please submit to effect changes';
                         });
                     },
                     // Form data
@@ -111,8 +114,9 @@ BlazonUpload = React.createClass({
                             };
                         Server.photos.post(albumDetails.id, model).then(function(data){
                             urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=60&width=60';
-                            var profilePicStr = document.getElementById('blazonInput');
-                            profilePicStr.value =urlStr;
+                            rootBinding.set('picUrl',urlStr);
+                            //React.findDOMNode(self.refs.prevImage).src = data.pic+'/contain?height=60&width=60';
+                            React.findDOMNode(self.refs.imageChanged).innerText = 'Image changed - Please submit to effect changes';
                         });
                     },
                     // Form data
@@ -134,11 +138,14 @@ BlazonUpload = React.createClass({
 
         return <div className="bAlbums_list">
             <If condition={isOwner}>
-                <div className="eAlbums_photo mUpload">+
+                <div className="eAlbums_photo mUpload mUpload_ext">+
                     <input onChange={self.handleFile} type="file" className="eAlbums_input eBlazon_input"/>
                 </div>
             </If>
-            <div>{preview}</div>
+            <div>
+                <img ref="prevImage"/>
+            </div>
+            <div><span className="eBlazon_notify" ref="imageChanged"></span></div>
         </div>;
     }
 });

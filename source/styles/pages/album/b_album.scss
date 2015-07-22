@@ -65,7 +65,6 @@
     font-size: 3em;
   }
 }
-
 .eAlbums_input {
   position: absolute;
   opacity: 0;
@@ -78,9 +77,16 @@
   cursor: pointer;
 }
 .eBlazon_input{
-  left: 250px;
+  left: 0;
+  top:0;
 }
 .eAlbum_ext{
    height: 60px;
   width:60px;
+}
+.mUpload_ext{
+  position:relative;
+}
+.eBlazon_notify{
+  color:orangered;
 }
