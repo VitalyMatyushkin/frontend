@@ -15,6 +15,12 @@ var ParentChildAchievement,
 
 ParentChildAchievement = React.createClass({
     mixins: [Morearty.Mixin],
+    componentWillMount:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        self.activeChildId = binding.get('activeChildId');
+        self._updateViewOnActiveChildIdChange();
+    },
     _updateViewOnActiveChildIdChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -23,45 +29,72 @@ ParentChildAchievement = React.createClass({
         studentId = studentId ? studentId : binding.get('activeChildId');
         progressValue = studentId;
         if(!studentId)document.location.hash = 'events/calendar';
-        studentId && window.Server.student.get(studentId).then(function (data) {
+        studentId && window.Server.student.get({studentId:studentId,
+            filter:{
+                include:['form','house','school','parents']
+            }
+        }).then(function (data) {
             leanerData = data;
-            Server.form.get(data.formId).then(function (classData) {
-                leanerData.classData = classData;
-                Server.house.get(data.houseId).then(function (houseData) {
-                    leanerData.houseData = houseData;
-                    Server.school.get(data.schoolId).then(function (schoolData) {
-                        leanerData.schoolData = schoolData;
-                        Server.studentGamesWon.get({
-                            id: studentId,
-                            include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
-                        }).then(function (gamesWon) {
-                            leanerData.gamesWon = gamesWon;
-                            self.numOfGamesWon = gamesWon.length;
-                            leanerData.numOfGamesWon = gamesWon.length;
-                            Server.studentGamesScored.get({
-                                id: studentId,
-                                include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
-                            }).then(function (gamesScoredIn) {
-                                leanerData.gamesScoredIn = gamesScoredIn;
-                                self.numOfGamesScoredIn = gamesScoredIn.length;
-                                leanerData.numOfGamesScoredIn = gamesScoredIn.length;
-                                Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
-                                    leanerData.numberOfGamesPlayed = gamesPlayed.length;
-                                    self.numberOfGamesPlayed = gamesPlayed.length;
-                                    leanerData.schoolEvent = gamesPlayed;
-                                    binding.set('achievements', Immutable.fromJS(leanerData));
-                                });
-                            });
-                        })
+            window.Server.studentWon.get({id:studentId}).then(function(gamesWon){
+                leanerData.gamesWon = gamesWon;
+                leanerData.numOfGamesWon = gamesWon.length;
+                window.Server.studentScored.get({id:studentId}).then(function(gamesScored){
+                    leanerData.gamesScoredIn = gamesScored;
+                    leanerData.numOfGamesScoredIn = gamesScored.length;
+                    window.Server.studentEvents.get({id:studentId}).then(function(studentEvents){
+                        leanerData.gamesPlayed = studentEvents;
+                        leanerData.numberOfGamesPlayed = studentEvents.length;
+                        self.numberOfGamesPlayed = studentEvents.length;
+                        binding.set('achievements',Immutable.fromJS(leanerData));
                     });
                 });
             });
+            /*
+            * Requirements: house, form, school, games won, games scored in, events.
+            *
+            * */
+            //leanerData = data;
+            //Server.form.get(data.formId).then(function (classData) {
+            //    leanerData.classData = classData;
+            //    Server.house.get(data.houseId).then(function (houseData) {
+            //        leanerData.houseData = houseData;
+            //        Server.school.get(data.schoolId).then(function (schoolData) {
+            //            leanerData.schoolData = schoolData;
+            //            Server.studentGamesWon.get({
+            //                id: studentId,
+            //                include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
+            //            }).then(function (gamesWon) {
+            //                leanerData.gamesWon = gamesWon;
+            //                self.numOfGamesWon = gamesWon.length;
+            //                leanerData.numOfGamesWon = gamesWon.length;
+            //                Server.studentGamesScored.get({
+            //                    id: studentId,
+            //                    include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
+            //                }).then(function (gamesScoredIn) {
+            //                    leanerData.gamesScoredIn = gamesScoredIn;
+            //                    self.numOfGamesScoredIn = gamesScoredIn.length;
+            //                    leanerData.numOfGamesScoredIn = gamesScoredIn.length;
+            //                    Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
+            //                        leanerData.numberOfGamesPlayed = gamesPlayed.length;
+            //                        self.numberOfGamesPlayed = gamesPlayed.length;
+            //                        leanerData.schoolEvent = gamesPlayed;
+            //                        binding.set('achievements', Immutable.fromJS(leanerData));
+            //                    });
+            //                });
+            //            })
+            //        });
+            //    });
+            //});
         });
     },
     render: function () {
         var self = this,
             binding = self.getDefaultBinding();
-        self._updateViewOnActiveChildIdChange();
+        if(self.activeChildId !== binding.get('activeChildId')){
+            self.reRender = true;
+            self._updateViewOnActiveChildIdChange();
+            self.activeChildId = binding.get('activeChildId');
+        }
         return (
             <div>
                 <div className="bUserColumn bParentViewColumn">
@@ -73,11 +106,11 @@ ParentChildAchievement = React.createClass({
                 <div className="bUserDataColumn bParentView">
                     <div className="eUserDataColumn_wrap" id="jsSubPage">
                         <div id="progressBarDiv" className="bUserFullInfo mDates">
-                            <IndicatorView currentChildId={progressValue} binding={binding.sub('achievements')}></IndicatorView>
+                            <IndicatorView reDraw={self.reRender} binding={binding.sub('achievements')}></IndicatorView>
                         </div>
                         <div className="bUserFullInfo mDates">
                             <div className="eUserFullInfo_block">
-                                <h1>Personal Achievements: {self.numOfGamesScoredIn}</h1>
+                                <h1>Personal Achievements: {binding.get('achievements.numberOfGamesPlayed')}</h1>
                                 <UserAchievements binding={binding.sub('achievements')}/>
                             </div>
                         </div>

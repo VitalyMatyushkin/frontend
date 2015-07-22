@@ -53,6 +53,7 @@ Head = React.createClass({
                 .set('events.models', Immutable.fromJS(data))
                 .set('sync', true)
                 .commit();
+
         });
     },
     render: function () {

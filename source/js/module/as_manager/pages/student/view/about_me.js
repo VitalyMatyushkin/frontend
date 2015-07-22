@@ -32,14 +32,14 @@ AboutMeBlock = React.createClass({
 			binding = self.getDefaultBinding(),
 			aboutListNodes = [],
 			parentListNodes = [];
-		aboutListNodes.push(self._getAboutNode('icon_home', 'houseData.name'));
-		aboutListNodes.push(self._getAboutNode('icon_user-tie', 'classData.name'));
+		aboutListNodes.push(self._getAboutNode('icon_home', 'house.name'));
+		aboutListNodes.push(self._getAboutNode('icon_user-tie', 'form.name'));
 		aboutListNodes.push(self._getAboutNode('icon_shot','numOfGamesScoredIn'));
 		aboutListNodes.push(self._getAboutNode('icon_trophy', 'numOfGamesWon'));
 		aboutListNodes.push(self._getAboutNode('icon_user','numberOfGamesPlayed'));
-		aboutListNodes.push(self._getAboutNode('icon_teams', 'schoolData.name'));
-		parentListNodes.push(self._getAboutParentNode('icon_user-tie','parentTwo'));
-		parentListNodes.push(self._getAboutParentNode('icon_user','parentOne'));
+		aboutListNodes.push(self._getAboutNode('icon_teams', 'school.name'));
+		parentListNodes.push(self._getAboutParentNode('icon_user-tie','parents.0.firstName'));
+		parentListNodes.push(self._getAboutParentNode('icon_user','parents.1.firstName'));
 		return (
 			<div className="bAboutList">
 				<h6>{self.props.title || 'About me'}</h6>

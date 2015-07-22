@@ -52,6 +52,8 @@ serviceList = {
 		serviceList.studentEvents = new Service('/students/{id}/events', binding);
 		serviceList.studentParent = new Service('/students/{id}/parents',binding);
         serviceList.getAllStudents = new Service('/students', binding);
+        serviceList.studentScored = new Service('/students/{id}/events/scored',binding);
+        serviceList.studentWon = new Service('/students/{id}/events/won',binding);
 
 		// houses
 		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
