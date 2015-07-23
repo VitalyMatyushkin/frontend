@@ -21,6 +21,7 @@ EditSchoolForm = React.createClass({
 		}
 	},
 	submitEdit: function(schoolData) {
+        console.log(schoolData);
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();

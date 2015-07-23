@@ -8,6 +8,7 @@ var TypeText = require('module/ui/form/types/text'),
 	TypeSelect =  require('module/ui/form/types/select'),
 	TypeRadio =  require('module/ui/form/types/radio'),
 	TypePhone =  require('module/ui/form/types/phone'),
+    TypeDrop = require('module/ui/form/types/dropdown'),
 	typeList = {};
 
 // Типы элементов ввода
@@ -21,5 +22,6 @@ typeList['select'] = TypeSelect;
 typeList['radio'] = TypeRadio;
 typeList['hidden'] = TypeHidden;
 typeList['phone'] = TypePhone;
+typeList['dropdown'] = TypeDrop;
 
 module.exports = typeList;

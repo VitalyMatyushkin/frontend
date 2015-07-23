@@ -95,9 +95,9 @@ BlazonUpload = React.createClass({
                 description: 'blazon_'+rootBinding.get('userRules.activeSchoolId')+'_staging',
                 eventId: rootBinding.get('userRules.activeSchoolId')
             }).then(function(res){
-                albumDetails=res;
+                albumDetails=res;console.log(albumDetails);
                 var formData = new FormData(),
-                    uri = window.apiBase + '/storage/sqt_album_1433792142221_a340185653dd693a37c8a502_staging',
+                    uri = window.apiBase + '/storage/'+albumDetails.storageId,
                     fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
                 formData.append('file', file, fileName);
                 $.ajax({
@@ -143,7 +143,7 @@ BlazonUpload = React.createClass({
                 </div>
             </If>
             <div>
-                <img ref="prevImage"/>
+                <img className="eBlazon_prev" ref="prevImage"/>
             </div>
             <div><span className="eBlazon_notify" ref="imageChanged"></span></div>
         </div>;
