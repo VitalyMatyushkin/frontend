@@ -1,4 +1,5 @@
-var ListPageMixin;
+var ListPageMixin,
+    If = require('module/ui/if/if');
 
 ListPageMixin = {
 	propTypes: {
@@ -90,14 +91,16 @@ ListPageMixin = {
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			isFiltersActive = binding.meta().get('isFiltersActive');
-
+			isFiltersActive = binding.meta().get('isFiltersActive'),
+            currentPage = window.location.href.split('/');
 		return (
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
 				<h1 className="eSchoolMaster_title">{self.serviceName[0].toUpperCase() + self.serviceName.slice(1)}
 					<div className="eSchoolMaster_buttons">
 						<div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
-						<a href={document.location.hash + '/add'} className="bButton">Add...</a>
+                        <If condition={currentPage[currentPage.length-1] !== 'logs'}>
+                            <a href={document.location.hash + '/add'} className="bButton">Add...</a>
+                        </If>
 					</div>
 				</h1>
 
