@@ -18,6 +18,7 @@ ListPageMixin = {
 	updateData: function(newFilter) {
 		var self = this,
 			requestFilter = { where: {} },
+            defaultRequestFilter ={where:{}},
 			binding = self.getDefaultBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
 
@@ -32,6 +33,7 @@ ListPageMixin = {
 		if (typeof self.filters === 'object') {
 			Object.keys(self.filters).forEach(function (filter) {
 				requestFilter[filter] = self.filters[filter];
+                defaultRequestFilter[filter] = self.filters[filter];
 			});
 		}
 
@@ -39,14 +41,24 @@ ListPageMixin = {
 		if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
 			for (var filterName in newFilter) {
 				requestFilter.where[filterName] = newFilter[filterName];
+                if('limit' in (newFilter[filterName])){
+                    defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                }else{
+                    defaultRequestFilter.where[filterName] = newFilter[filterName];
+                }
 			}
-
 			self.lastFiltersState = newFilter;
 		}
-
-		self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
-			binding.set(Immutable.fromJS(data));
-		});
+        //Added this condition to test for other service requests without ids
+        if(self.activeSchoolId !== null){
+            self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
+                binding.set(Immutable.fromJS(data));
+            });
+        }else{
+            self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
+                binding.set(Immutable.fromJS(data));
+            });
+        }
 	},
 	componentWillUnmount: function () {
 		var self = this;
@@ -83,7 +95,6 @@ ListPageMixin = {
 		return (
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
 				<h1 className="eSchoolMaster_title">{self.serviceName[0].toUpperCase() + self.serviceName.slice(1)}
-
 					<div className="eSchoolMaster_buttons">
 						<div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
 						<a href={document.location.hash + '/add'} className="bButton">Add...</a>

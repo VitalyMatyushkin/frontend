@@ -2,86 +2,51 @@
  * Created by bridark on 15/07/15.
  */
 var ActivityLogPage,
-    SVG = require('module/ui/svg'),
-    UserLogs = require('../admin_comps/user_logs'),
-    LogPagination = require('../admin_comps/log_pagination'),
-    DateTimeMixin = require('module/mixins/datetime');
+    List = require('module/ui/list/list'),
+    ListField = require('module/ui/list/list_field'),
+    Table = require('module/ui/list/table'),
+    TableField = require('module/ui/list/table_field'),
+    DateTimeMixin = require('module/mixins/datetime'),
+    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
 ActivityLogPage = React.createClass({
-    mixins:[Morearty.Mixin,DateTimeMixin],
-    getDefaultState: function () {
-        return Immutable.fromJS({
-            logs:[]
-        });
+    mixins:[Morearty.Mixin,ListPageMixin, DateTimeMixin],
+    serviceName:'activityLogs',
+    filters: {limit:40},
+    getPrincipal: function(principal) {
+        return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
     },
-    componentWillMount:function(){
+    getDate: function(meta) {
+        var self = this;
+        return self.getTimeFromIso(meta.created)+'\r\n['+self.getDateFromIso(meta.created)+']';
+    },
+    getStatus: function(accepted) {
+        var self = this,
+            status = 'accepted';
+
+        if (accepted === false) {
+            status = 'declined';
+        } else if (accepted === undefined) {
+            status = 'waiting';
+        }
+
+        return status;
+    },
+    getTableView: function() {
         var self = this,
             binding = self.getDefaultBinding();
-        window.Server.activityLogs.get({filter:{limit:40}}).then(function (res) {
-            binding
-                .atomically()
-                .set('logs',Immutable.fromJS(res))
-                .commit();
-            binding.set('filterMode','').set('filterActive',false);
-        });
-    },
-    _handleFiltering:function(filter){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            orderString = '';
-        switch (filter){
-            case 1:
-                orderString = 'meta.created DESC';
-                binding.set('filterMode',orderString).set('filterActive',true);
-                break;
-            case 2:
-                orderString = 'meta.created ASC';
-                binding.set('filterMode',orderString).set('filterActive',true);
-                break;
-            default :
-                //orderString = 'meta.created ASC';
-                //binding.set('filterMode',orderString).set('filterActive',true);
-                orderString = '';
-                break;
-        }
-        window.Server.activityLogs.get({
-            filter:{
-                order:orderString,
-                limit:40
-            }
-        }).then(function(res){
-            binding
-                .atomically()
-                .set('logs',Immutable.fromJS(res))
-                .commit();
-        });
-    },
-    render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            logData = binding.get('logs').toJS();
+
         return (
-            <div className="eLogDataList">
-                <div className="eLogDataList_header">
-                    <span><SVG icon="icon_stats-dots"/> ACTIVITY LOGS</span>
-                </div>
-                <div className="eLogDataList_filtering">
-                    <em>Filter by :</em>
-                    <span className={binding.get('filterMode') === 'meta.created DESC'? 'perActive':'perInActive'} onClick={function(){self._handleFiltering(1)}}>Latest</span>
-                    <span> | </span>
-                    <span className={binding.get('filterMode') === 'meta.created ASC'? 'perActive':'perInActive'} onClick={function(){self._handleFiltering(2)}}>Oldest</span>
-                </div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th className="eLogDateTime">Time</th><th>Method</th><th>Response Time</th><th>Status Code</th>
-                            <th>IP</th><th>Referrer</th><th>Scope</th><th>Device</th>
-                        </tr>
-                    </thead>
-                    <UserLogs logData={logData} binding={binding} />
-                </table>
-                <LogPagination filterActive={binding.get('filterActive')} filterMode={binding.get('filterMode')} binding={binding} />
-            </div>
-        );
+            <Table title="Activity Logs" binding={binding} onFilterChange={self.updateData} hideActions={true}>
+                <TableField dataField="meta" width="35%" filterType="none" parseFunction={self.getDate}>Date</TableField>
+                <TableField dataField="method" width="10%">Method</TableField>
+                <TableField dataField="responseTime" width="15%">Duration</TableField>
+                <TableField dataField="statusCode" width="5%">Code</TableField>
+                <TableField dataField="ip" width="20%" >IP</TableField>
+                <TableField dataField="referer" width="20%" >Referrer</TableField>
+                <TableField dataField="scope" width="20%" >Scope</TableField>
+                <TableField dataFied="limit">Limit</TableField>
+            </Table>
+        )
     }
 });
 module.exports = ActivityLogPage;

@@ -19,12 +19,17 @@ ListField = React.createClass({
 		}
 
 		if (value && self.props.filterType !== 'number') {
-			value = {
-				like: value,
-				options: 'i'
-			}
+            if(self.props.children.toLowerCase()==='limit'){
+                value = {
+                    limit: value
+                }
+            }else{
+                value = {
+                    like: value,
+                    options: 'i'
+                }
+            }
 		}
-
 		self.props.onChange(self.props.dataField, value);
 	},
 	render: function() {

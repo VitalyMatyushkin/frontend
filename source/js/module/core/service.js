@@ -38,11 +38,12 @@ Service = (function() {
 					return options[param];
 				});
 			}
-
+            //Added condition to test for executions where there are no schoolId or other ids set for request
+            //Tests for options being equal to null
 			if (filter) {
 				filter = 'filter=' + JSON.stringify(filter);
 				filter = url.indexOf('?') !== -1 ? '&' + filter : '?' + filter;
-				if (typeof options === 'object') {
+				if (typeof options === 'object' && options !== null) {
 					delete options.filter;
 				}
 

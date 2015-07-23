@@ -14,8 +14,12 @@ UserLogs = React.createClass({
             return data.map(function(log){
                 return <tr key={log.id}>
                     <td>{self.getTimeFromIso(log.meta.created) + ' \r\n[ '+self.getDateFromIso(log.meta.created)+']' }</td>
-                    <td>{log.method}</td><td>{log.responseTime}</td><td>{log.statusCode}</td><td>{log.ip}</td><td>{log.referer}</td>
-                    <td>{log.scope}</td><td>{log.message.split(' ')[8]}</td>
+                    <td>{log.method}</td>
+                    <td>{log.responseTime}</td>
+                    <td>{log.statusCode}</td><td>{log.ip}</td>
+                    <td>{log.referer}</td>
+                    <td>{log.scope}</td><
+                    td>{log.message.split(' ')[8]}</td>
                 </tr>
             });
         }
