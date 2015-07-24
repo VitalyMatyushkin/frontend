@@ -6,8 +6,8 @@ var LogPagination;
 LogPagination = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        filterActive: React.PropTypes.bool.isRequired,
-        filterMode: React.PropTypes.string.isRequired
+        filterActive: React.PropTypes.bool,
+        filterMode: React.PropTypes.string
     },
     getInitialState:function(){
         return {perPage:''};
@@ -15,11 +15,11 @@ LogPagination = React.createClass({
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        window.Server.logCount.get().then(function (count) {
-           binding.set('logCount',count);
-            self._setPageCount();
-            self._populateSelectOptions();
-        });
+        //window.Server.logCount.get().then(function (count) {
+        //   binding.set('logCount',count);
+        //    self._setPageCount();
+        //    self._populateSelectOptions();
+        //});
     },
     _setPageCount:function(per){
         var self = this,
@@ -119,7 +119,7 @@ LogPagination = React.createClass({
                     <span>Page</span>
                     <select ref="pageSelect" onChange={self._handleSelectChange.bind(null,this)}>
                     </select>
-                    <span>out of {binding.get('numPages') !== undefined ? binding.get('numPages') : ''}</span>
+                    <span>out of {}</span>
                 </div>
             </div>
         );

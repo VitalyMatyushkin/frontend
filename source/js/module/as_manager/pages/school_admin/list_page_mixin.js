@@ -1,6 +1,6 @@
 var ListPageMixin,
-    If = require('module/ui/if/if');
-
+    If = require('module/ui/if/if'),
+    LogPagination = require('module/as_admin/pages/admin_schools/admin_comps/log_pagination');
 ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired,
@@ -105,7 +105,6 @@ ListPageMixin = {
 				</h1>
 
 				{self.getTableView()}
-
 			</div>
 		)
 	}
