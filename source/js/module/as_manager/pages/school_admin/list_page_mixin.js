@@ -116,6 +116,7 @@ ListPageMixin = {
             currentPage = window.location.href.split('/'),
             groupActionList = self.getActionGroupList(),
             excludeAddButton = ['logs','permissions'], //Add page name to this array if you don't want to display add button
+            includeGroupAction = ['permissions','students'],
             listPageTitle;
         if(currentPage[currentPage.length-1] === 'permissions'){
             listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '+globalBinding.get('userData.userInfo.lastName')+' - System Admin)';
@@ -126,7 +127,7 @@ ListPageMixin = {
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
 				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                 <div className="eSchoolMaster_groupAction">
-                    <If condition={currentPage[currentPage.length-1] === 'permissions'}>
+                    <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
                         <div className="groupAction">
                             <div className="groupAction_item"><input type="checkbox"/> Check All</div>
                             <div className="groupAction_item">
@@ -148,7 +149,7 @@ ListPageMixin = {
                     </div>
                 </div>
 				{self.getTableView()}
-                <If condition={currentPage[currentPage.length-1] === 'permissions'}>
+                <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
                             <div className="groupAction_item"><input type="checkbox"/> Check All</div>
