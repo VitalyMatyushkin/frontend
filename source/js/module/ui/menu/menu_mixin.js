@@ -45,6 +45,8 @@ var SVG = require('module/ui/svg'),
 
 			if (item.key === 'goback') {
 				resultNode = <span onClick={function(){window.history.back();}} key={item.key} className={className}>{SvgIcon} {item.name}</span>;
+			} else if (item.key === 'file') {
+				resultNode = <span key={item.key} className={className}>{item.name}<input onChange={item.onChange} type='file' /></span>;
 			} else {
 				resultNode = <a href={item.href} key={item.key} className={className}>{SvgIcon} {item.name}</a>;
 			}

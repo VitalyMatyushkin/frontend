@@ -33,17 +33,22 @@ EventHeader = React.createClass({
 	},
 	render: function() {
 		var self = this,
-				binding = self.getDefaultBinding(),
-				styles = {'background-color': 'red', width: '100px', height: '20px'};
+				binding = self.getDefaultBinding();
 
-
-		return <div className='bEventAlbums'>
-						<div style={styles}></div>
-						{binding.get('albums').map(self.renderAlbum.bind(self))}
-						<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate'>
-							<span className='eEventAlbums_albumTitle'>Add...</span>
-						</div>
-					</div>;
+		return (
+			<div>
+				<div className='bEventAlbums_header'>
+					<label className='title'>Albums</label>
+					<label className='action'>Add album</label>
+				</div>
+				<div className='bEventAlbums'>
+					{binding.get('albums').map(self.renderAlbum.bind(self))}
+					<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate'>
+						<span className='eEventAlbums_albumTitle'>Add...</span>
+					</div>
+				</div>
+			</div>
+		);
 	}
 });
 

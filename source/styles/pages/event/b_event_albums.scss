@@ -5,6 +5,27 @@
   flex-flow: row;
 }
 
+.bEventAlbums_header {
+  width: auto;
+  height: 25px;
+  margin-top: 5px;
+  background-color: $MAIN_COLOR;
+  border-radius: 4px;
+
+  label {
+    line-height: 25px;
+    margin-left: 10px;
+    color: white;
+    float: left;
+  }
+
+  label.action {
+    float: right;
+    margin-right: 10px;
+    font-size: 10pt;
+  }
+}
+
 .eEventAlbums_album {
   display: flex;
   margin-right: 5px;

@@ -1,0 +1,36 @@
+.bAlbumFullscreenList {
+	top: 0px;
+	left: 0px;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.5);
+	z-index: 1001;
+
+	.Cross {
+		position: absolute;
+		top: 150px;
+		right: 10px;
+		cursor: pointer;
+		width: 50px;
+		height: 50px;
+		background-color: tomato;
+	}
+
+	.bAlbumFullscreenWrapper {
+		width: 100%;
+		height: 100%;
+
+		.Container {
+
+		}
+
+	}
+
+	.bAlbumFullscreenPhoto {
+		width: 100%;
+    margin: auto;
+    box-sizing: border-box;
+	}
+
+}
