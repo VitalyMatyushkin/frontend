@@ -12,6 +12,7 @@ AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'users',
     filters:{include:[{permissions:['school','student']}]},
+    groupActionList:['Add Role','Revoke All Roles','Unblock/Block'],
     getFullName:function(lastName){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -37,7 +38,6 @@ AdminPermissionView = React.createClass({
     },
     getRoles:function(permissions){
         return permissions.map(function(role){
-            console.log(role);
             return (
                 <div>{role.preset}</div>
             );

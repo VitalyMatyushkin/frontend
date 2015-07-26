@@ -57,7 +57,7 @@ ListPageMixin = {
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
-                console.log(data);
+                //console.log(data);
                 binding.set(Immutable.fromJS(data));
             });
         }
@@ -89,12 +89,32 @@ ListPageMixin = {
 			self.updateData(self.lastFiltersState);
 		}
 	},
+    getActionGroupList:function(){
+        var self = this;
+        if(self.groupActionList){
+            return self.groupActionList.map(function(actionItem){
+                return(
+                    <div>{actionItem}</div>
+                );
+            });
+        }
+    },
+    toggleGroupActionBox:function(groupBox){
+        var self = this,
+            el = React.findDOMNode(self.refs[groupBox]);
+        if(el.style.display === 'none'){
+            el.style.display = 'block';
+        }else{
+            el.style.display = 'none';
+        }
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
+            groupActionList = self.getActionGroupList(),
             excludeAddButton = ['logs','permissions'], //Add page name to this array if you don't want to display add button
             listPageTitle;
         if(currentPage[currentPage.length-1] === 'permissions'){
@@ -109,7 +129,14 @@ ListPageMixin = {
                     <If condition={currentPage[currentPage.length-1] === 'permissions'}>
                         <div className="groupAction">
                             <div className="groupAction_item"><input type="checkbox"/> Check All</div>
-                            <div className="groupAction_item"><span className="groupMenu"><span className="caret"></span></span></div>
+                            <div className="groupAction_item">
+                                <span className="groupMenu">
+                                    <span className="caret" onClick={function(){self.toggleGroupActionBox('topGroup')}}></span>
+                                    <div ref="topGroup" className="groupActionList">
+                                        {groupActionList}
+                                    </div>
+                                </span>
+                            </div>
                             <div className="groupAction_item"><span className="applyAction">Apply</span></div>
                         </div>
                     </If>
@@ -125,7 +152,14 @@ ListPageMixin = {
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
                             <div className="groupAction_item"><input type="checkbox"/> Check All</div>
-                            <div className="groupAction_item"><span className="groupMenu"><span className="caret"></span></span></div>
+                            <div className="groupAction_item">
+                                <span className="groupMenu">
+                                    <span className="caret" onClick={function(){self.toggleGroupActionBox('btmGroup')}}></span>
+                                    <div ref="btmGroup" className="groupActionList">
+                                        {groupActionList}
+                                    </div>
+                                </span>
+                            </div>
                             <div className="groupAction_item"><span className="applyAction">Apply</span></div>
                         </div>
                     </div>

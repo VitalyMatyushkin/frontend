@@ -40,9 +40,28 @@
   -moz-border-radius: 15px;
   border-radius: 15px;
   padding-left: 80px;
-  padding-right: 30px;
+  padding-right: 25px;
   position: relative;
   margin: 0 20px 0 20px;
+  cursor: pointer;
+}
+.groupActionList{
+  position: absolute;
+  width: 125px;
+  height: auto;
+  border: 1px solid #c8cdd0;
+  z-index: 999;
+  background: darkseagreen;
+  top: 19px;
+  left: 0;
+  display: none;
+}
+.groupActionList div{
+  padding: 4px;
+  cursor:pointer;
+}
+.groupActionList div:hover{
+  text-decoration: underline;
 }
 .applyAction{
   border:1px solid #cccccc;
@@ -64,7 +83,7 @@
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 8px 10px 0 8px;
+  border-width: 12px 8px 0 8px;
   border-color: #000000 transparent transparent transparent;
   cursor: pointer;
 }
@@ -82,7 +101,6 @@
 .edit_btn .caret_down{
   border-color: #000000 transparent transparent transparent;
   margin-left: 4px;
-  margin-top: 2px;
 }
 .caret_up{
   position:absolute;
@@ -125,8 +143,6 @@
   max-width: 60px;
   max-height: 60px;
 }
-
-
 .bSchoolMaster .bMapView {
   height: 250px;
   width: 250px;
