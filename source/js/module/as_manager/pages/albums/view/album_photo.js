@@ -31,7 +31,7 @@ var AlbumPhoto = React.createClass({
 		if (binding.get('loaded')) {
 			imgClasses = imgClasses + ' bAlbumPhotoLoaded';
 		}
-		var src = binding.get('pic') + '/contain?height=200&width=200';
+		var src = binding.get('pic') + '/contain?height=200';
 		return (
 			<img src={src} className={imgClasses} onLoad={self.onImageLoad} onClick={self.onImageClick} />
 		);
