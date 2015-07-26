@@ -44,7 +44,7 @@ Table = React.createClass({
 					getViewFunction = function() { return function(event) { self.props.onItemView(item); event.stopPropagation();	} },
 					getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();	} };
 
-				self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike">Edit</span>);
+				self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike edit_btn">Edit <span className="caret caret_down"></span></span>);
 				self.props.onItemView && itemButtons.push(<span onClick={getViewFunction()} className="bLinkLike">View</span>);
 				self.props.onItemRemove && itemButtons.push(<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
 
@@ -61,10 +61,10 @@ Table = React.createClass({
 							return <div className="eDataList_listItemColor" style={{background: useColor}}></div>
 						});
 					}
-
-
-
-
+                    //For checkboxes
+                    if(dataField ==='checkBox'){
+                        return (<div className="eDataList_listItemCell"><input type="checkbox"/></div>);
+                    }
 					return (
 						<div className="eDataList_listItemCell">{value}</div>
 					);
@@ -72,8 +72,8 @@ Table = React.createClass({
 
 				return (
 					<div className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
-						{itemCells}
 
+						{itemCells}
 						<If condition={self.props.hideActions !== true}>
 							<div className="eDataList_listItemCell mActions">
 								{itemButtons}
