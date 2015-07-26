@@ -57,6 +57,7 @@ ListPageMixin = {
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
+                //console.log(data);
                 binding.set(Immutable.fromJS(data));
             });
         }
@@ -88,23 +89,82 @@ ListPageMixin = {
 			self.updateData(self.lastFiltersState);
 		}
 	},
+    getActionGroupList:function(){
+        var self = this;
+        if(self.groupActionList){
+            return self.groupActionList.map(function(actionItem){
+                return(
+                    <div>{actionItem}</div>
+                );
+            });
+        }
+    },
+    toggleGroupActionBox:function(groupBox){
+        var self = this,
+            el = React.findDOMNode(self.refs[groupBox]);
+        if(el.style.display === 'none'){
+            el.style.display = 'block';
+        }else{
+            el.style.display = 'none';
+        }
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
-            currentPage = window.location.href.split('/');
+            currentPage = window.location.href.split('/'),
+            groupActionList = self.getActionGroupList(),
+            excludeAddButton = ['logs','permissions'], //Add page name to this array if you don't want to display add button
+            includeGroupAction = ['permissions','students'],
+            listPageTitle;
+        if(currentPage[currentPage.length-1] === 'permissions'){
+            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '+globalBinding.get('userData.userInfo.lastName')+' - System Admin)';
+        }else{
+            listPageTitle = self.serviceName[0].toUpperCase() + self.serviceName.slice(1);
+        }
 		return (
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
-				<h1 className="eSchoolMaster_title">{self.serviceName[0].toUpperCase() + self.serviceName.slice(1)}
-					<div className="eSchoolMaster_buttons">
-						<div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
-                        <If condition={currentPage[currentPage.length-1] !== 'logs'}>
+				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
+                <div className="eSchoolMaster_groupAction">
+                    <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
+                        <div className="groupAction">
+                            <div className="groupAction_item"><input type="checkbox"/> Check All</div>
+                            <div className="groupAction_item">
+                                <span className="groupMenu">
+                                    <span className="caret" onClick={function(){self.toggleGroupActionBox('topGroup')}}></span>
+                                    <div ref="topGroup" className="groupActionList">
+                                        {groupActionList}
+                                    </div>
+                                </span>
+                            </div>
+                            <div className="groupAction_item"><span className="applyAction">Apply</span></div>
+                        </div>
+                    </If>
+                    <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
+                        <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
+                        <If condition={excludeAddButton.indexOf(currentPage[currentPage.length-1]) === -1}>
                             <a href={document.location.hash + '/add'} className="bButton">Add...</a>
                         </If>
-					</div>
-				</h1>
-
+                    </div>
+                </div>
 				{self.getTableView()}
+                <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
+                    <div className="eSchoolMaster_groupAction">
+                        <div className="groupAction bottom_action">
+                            <div className="groupAction_item"><input type="checkbox"/> Check All</div>
+                            <div className="groupAction_item">
+                                <span className="groupMenu">
+                                    <span className="caret" onClick={function(){self.toggleGroupActionBox('btmGroup')}}></span>
+                                    <div ref="btmGroup" className="groupActionList">
+                                        {groupActionList}
+                                    </div>
+                                </span>
+                            </div>
+                            <div className="groupAction_item"><span className="applyAction">Apply</span></div>
+                        </div>
+                    </div>
+                </If>
 			</div>
 		)
 	}

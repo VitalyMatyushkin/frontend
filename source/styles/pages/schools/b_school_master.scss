@@ -12,8 +12,105 @@
 
 .eSchoolMaster_title{
   position: relative;
+  border-bottom: 2px solid #c8cdd0;
+  padding-bottom: 10px;
 }
-
+.eSchoolMaster_groupAction{
+  position: relative;
+  padding-bottom: 20px;
+}
+.groupAction{
+  position:absolute;
+  top:-31px;
+  left:0;
+  width: 600px;
+  margin-left: 20px;
+}
+.bottom_action{
+  top: 20px;
+}
+.groupAction_item{
+  display:inline-block;
+}
+.groupMenu{
+  border:1px solid #cccccc;
+  width: 80px;
+  height: auto;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  padding-left: 80px;
+  padding-right: 25px;
+  position: relative;
+  margin: 0 20px 0 20px;
+  cursor: pointer;
+}
+.groupActionList{
+  position: absolute;
+  width: 125px;
+  height: auto;
+  border: 1px solid #c8cdd0;
+  z-index: 999;
+  background: darkseagreen;
+  top: 19px;
+  left: 0;
+  display: none;
+}
+.groupActionList div{
+  padding: 4px;
+  cursor:pointer;
+}
+.groupActionList div:hover{
+  text-decoration: underline;
+}
+.applyAction{
+  border:1px solid #cccccc;
+  width: 80px;
+  height: auto;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+}
+.applyAction:hover{
+  background: $MAIN_COLOR;
+}
+.caret{
+  position: absolute;
+  top:3px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 12px 8px 0 8px;
+  border-color: #000000 transparent transparent transparent;
+  cursor: pointer;
+}
+.caret_down{
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px 8px 0 8px;
+  border-color: #c8cdd0 transparent transparent transparent;
+}
+.edit_btn{
+  position:relative;
+}
+.edit_btn .caret_down{
+  border-color: #000000 transparent transparent transparent;
+  margin-left: 4px;
+}
+.caret_up{
+  position:absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 10px 8px;
+  border-color: transparent transparent #c8cdd0 transparent;
+  left:12px;
+}
 .eSchoolMaster_buttons{
   background: white;
   position: absolute;
@@ -21,13 +118,21 @@
   top: 50%;
   margin-top: -15px;
 }
-
+.eSchoolMaster_buttons_admin{
+  margin-top:-35px;
+}
 .eSchoolMaster_buttons .bButton{
   margin-left: 10px;
   font-size: 16px;
   letter-spacing: 1px;
 }
-
+.sortGroup{
+  position:relative;
+  display:inline-block;
+  height: auto;
+  top: -14px;
+  margin-left: 10px;
+}
 .eSchoolMaster_flag{
   display: inline-block;
   vertical-align: top;
@@ -38,8 +143,6 @@
   max-width: 60px;
   max-height: 60px;
 }
-
-
 .bSchoolMaster .bMapView {
   height: 250px;
   width: 250px;

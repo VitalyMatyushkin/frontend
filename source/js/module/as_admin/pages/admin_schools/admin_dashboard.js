@@ -84,7 +84,7 @@ OneSchoolPage = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
         var badge = document.querySelectorAll('.eSubMenu_item')[1];
-        if(typeof  badge !== 'undefined'){
+        if(badge !== undefined){
             badge.innerText = "New Requests ( "+self._countLiveRequests()+" )";
         }
         return (

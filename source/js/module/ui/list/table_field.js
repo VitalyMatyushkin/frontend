@@ -1,4 +1,5 @@
-var ListField;
+var ListField,
+    If = require('module/ui/if/if');
 
 ListField = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -49,7 +50,13 @@ ListField = React.createClass({
 
 		return (
 			<div className="eDataList_listItemCell" style={cellStyle}>
-				{self.props.children}
+                {self.props.children}
+                <If condition={self.props.children !== undefined}>
+                    <div className="sortGroup">
+                        <span className="caret caret_down"></span>
+                        <span className="caret caret_up"></span>
+                    </div>
+                </If>
 				{filterBlock}
 			</div>
 		)
