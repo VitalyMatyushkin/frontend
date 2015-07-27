@@ -63,7 +63,10 @@ Table = React.createClass({
 					}
                     //For checkboxes
                     if(dataField ==='checkBox'){
-                        return (<div className="eDataList_listItemCell"><input type="checkbox"/></div>);
+                        return (
+                            <div className="eDataList_listItemCell">
+                                <input onChange={function(evt){console.log(evt.currentTarget.checked)}} type="checkbox"/>
+                            </div>);
                     }
 					return (
 						<div className="eDataList_listItemCell">{value}</div>
