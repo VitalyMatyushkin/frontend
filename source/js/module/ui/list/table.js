@@ -44,7 +44,7 @@ Table = React.createClass({
 					getViewFunction = function() { return function(event) { self.props.onItemView(item); event.stopPropagation();	} },
 					getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();	} };
 
-				self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike edit_btn">Edit <span className="caret caret_down"></span></span>);
+				self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike edit_btn">Edit</span>);
 				self.props.onItemView && itemButtons.push(<span onClick={getViewFunction()} className="bLinkLike">View</span>);
 				self.props.onItemRemove && itemButtons.push(<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
 
@@ -65,7 +65,7 @@ Table = React.createClass({
                     if(dataField ==='checkBox'){
                         return (
                             <div className="eDataList_listItemCell">
-                                <input onChange={function(evt){console.log(evt.currentTarget.checked)}} type="checkbox"/>
+                                <input data-id={item.id} className="tickBoxGroup" onChange={function(evt){console.log(evt.currentTarget.checked)}} type="checkbox"/>
                             </div>);
                     }
 					return (
@@ -88,7 +88,8 @@ Table = React.createClass({
 
 			tableHeadFields = React.Children.map(this.props.children, function (child) {
 				return React.addons.cloneWithProps(child, {
-					onChange: self.updateFilterState
+					onChange: self.updateFilterState,
+                    onSort:self.updateFilterState
 				});
 			});
 		}

@@ -12,12 +12,11 @@ AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'users',
     filters:{include:[{permissions:['school','student']}]},
-    groupActionList:['Add Role','Revoke All Roles','Unblock/Block'],
+    groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
     getFullName:function(lastName){
         var self = this,
             binding = self.getDefaultBinding(),
             userObj = binding.get().find(function(model){
-                console.log(model);
                 return lastName === model.lastName;
             });
         if(userObj !== undefined){

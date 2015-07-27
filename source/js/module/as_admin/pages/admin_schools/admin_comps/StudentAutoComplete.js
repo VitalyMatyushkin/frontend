@@ -20,13 +20,13 @@ StudentAutoComplete = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             listItemClick = function(listItemId){
-                document.getElementById('studentInput').value = document.getElementById(listItemId).innerText;
+                React.findDOMNode(self.refs.studentInput).value = React.findDOMNode(self.refs[listItemId]).innerText;
                 binding.set('selectedStudentId', listItemId);
-                document.getElementById('autoComplete').style.display = 'none';
+                React.findDOMNode(self.refs.autoComplete).style.display = 'none';
             },
-            query = document.getElementById('studentInput').value;
+            query = React.findDOMNode(self.refs.studentInput).value;
         if(query.length >=1){
-            document.getElementById('autoComplete').style.display = 'block';
+            React.findDOMNode(self.refs.autoComplete).style.display = 'block';
             window.Server.students.get({
                 schoolId:binding.get('selectedSchoolId'),
                 filter:{
@@ -42,7 +42,7 @@ StudentAutoComplete = React.createClass({
                 binding.set('studentResults',Immutable.fromJS(studentResults));
                 list = studentResults.map(function(student){
                     return(
-                        <li id={student.id} onClick={function(){listItemClick(student.id)}}>{student.firstName + " "+student.lastName}</li>
+                        <li ref={student.id} onClick={function(){listItemClick(student.id)}}>{student.firstName + " "+student.lastName}</li>
                     )
                 });
             });
@@ -67,7 +67,7 @@ StudentAutoComplete = React.createClass({
             role = document.getElementById('roleSelector'),
             globalBinding = self.getMoreartyContext().getBinding();
         var schoolId = binding.get('selectedSchoolId'),
-            userId = binding.get('selectedUser').userId,
+            userId = binding.get('groupIds')=== undefined ? binding.get('selectedUser').userId :'',
             model = {};
         if(role.options[role.selectedIndex].value === 'parent'){
             model = {
@@ -89,16 +89,27 @@ StudentAutoComplete = React.createClass({
         }
         if(confirmation == true){
             if(document.location.hash.indexOf('settings') === -1){
-                window.Server.schoolPermissions.post({id:schoolId},model)
-                    .then(function(result){
-                        window.Server.setPermissions.post({id:result.id},{accepted:true})
-                            .then(function(acpt){
-                                //console.log(acpt);
-                                binding.set('popup', false);
-                                //location.reload(true);
-                                binding.set('shouldUpdateList',true);
+                if(binding.get('groupIds') !== undefined){
+                    binding.get('groupIds').forEach(function(currentId){
+                        model.principalId = currentId;
+                        window.Server.schoolPermissions.post({id:schoolId},model)
+                            .then(function(result){
+                                window.Server.setPermissions.post({id:result.id},{accepted:true})
+                                    .then(function(acpt){
+                                    });
                             });
                     });
+                    binding.set('popup', false);
+                    window.location.reload(true);
+                }else{
+                    window.Server.schoolPermissions.post({id:schoolId},model)
+                        .then(function(result){
+                            window.Server.setPermissions.post({id:result.id},{accepted:true})
+                                .then(function(acpt){
+                                    binding.set('popup', false);
+                                });
+                        });
+                }
             }else{
                 window.Server.schoolPermissions.post({id:schoolId},model)
                     .then(function(result){
@@ -122,9 +133,9 @@ StudentAutoComplete = React.createClass({
             <div>
                 <div ref="studentRow" className={studentRowClass}>
                     <h4>Student</h4>
-                    <input  id="studentInput" placeholder={"Enter last name"} onChange={self.handleChange} onBlur={self.handleBlur} onClick={self.handleClick} />
+                    <input ref="studentInput" placeholder={"Enter last name"} onChange={self.handleChange} onBlur={self.handleBlur} onClick={self.handleClick} />
                     <div>
-                        <ul id="autoComplete" className="customAutoComplete">
+                        <ul ref="autoComplete" className="customAutoComplete">
                             {list}
                         </ul>
                     </div>

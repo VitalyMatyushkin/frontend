@@ -1,6 +1,6 @@
 var ListField,
-    If = require('module/ui/if/if');
-
+    If = require('module/ui/if/if'),
+    SortColumn = require('module/ui/list/sort_column');
 ListField = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -33,6 +33,25 @@ ListField = React.createClass({
 		}
 		self.props.onChange(self.props.dataField, value);
 	},
+    onSort:function(event,order){
+        var self = this,
+            value,
+            el  = event.currentTarget;
+        if(el.classList.contains('caret_up')){
+            $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
+            el.classList.add('caret_active_up');
+            value ={
+                order:self.props.dataField+' ASC'
+            }
+        }else{
+            $('.caret').removeClass('caret_active_dwn').removeClass('caret_active_up');
+            el.classList.add('caret_active_dwn');
+            value ={
+                order:self.props.dataField+' DESC'
+            }
+        }
+        self.props.onChange(self.props.dataField, value);
+    },
 	render: function() {
 		var self = this,
 			cellStyle = {},
@@ -52,10 +71,7 @@ ListField = React.createClass({
 			<div className="eDataList_listItemCell" style={cellStyle}>
                 {self.props.children}
                 <If condition={self.props.children !== undefined}>
-                    <div className="sortGroup">
-                        <span className="caret caret_down"></span>
-                        <span className="caret caret_up"></span>
-                    </div>
+                    <SortColumn orderSort={self.props.children} onSort={self.onSort}/>
                 </If>
 				{filterBlock}
 			</div>

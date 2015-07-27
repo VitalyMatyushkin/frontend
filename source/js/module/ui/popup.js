@@ -3,7 +3,8 @@ var Popup = React.createClass({
 	propTypes: {
 		stateProperty: React.PropTypes.string.isRequired,
 		onRequestClose: React.PropTypes.func.isRequired,
-		otherClass: React.PropTypes.string
+		otherClass: React.PropTypes.string,
+        initState:React.PropTypes.bool
 	},
 	getDefaultProps: function () {
 		return {
@@ -12,8 +13,8 @@ var Popup = React.createClass({
 	},
 	render: function() {
 		var self = this,
-			isOpened = self.getDefaultBinding().get(self.props.stateProperty),
-			popup_class_name = 'bPopup ' + (isOpened ? 'mAcitve' : '')+' '+(typeof self.props.otherClass !== 'undefined'? self.props.otherClass:''),
+			isOpened = self.props.initState !== undefined ? self.props.initState : self.getDefaultBinding().get(self.props.stateProperty),
+			popup_class_name = 'bPopup ' + (isOpened ? 'mAcitve' : '')+' '+(self.props.otherClass !== undefined ? self.props.otherClass:''),
 			popup_back_class_name = 'bPopupBack ' + (isOpened ? 'mAcitve' : '');
         //Bind onClick event listener to div with popup_back class if you want to dismiss modal on clicking outside boundary
 		return (

@@ -27,7 +27,7 @@
   margin-left: 20px;
 }
 .bottom_action{
-  top: 20px;
+  top: 48px;
 }
 .groupAction_item{
   display:inline-block;
@@ -39,7 +39,7 @@
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  padding-left: 80px;
+  padding-left: 30px;
   padding-right: 25px;
   position: relative;
   margin: 0 20px 0 20px;
@@ -54,7 +54,6 @@
   background: darkseagreen;
   top: 19px;
   left: 0;
-  display: none;
 }
 .groupActionList div{
   padding: 4px;
@@ -86,6 +85,12 @@
   border-width: 12px 8px 0 8px;
   border-color: #000000 transparent transparent transparent;
   cursor: pointer;
+}
+.caret_active_up{
+  border-color: transparent transparent $MAIN_COLOR transparent !important;
+}
+.caret_active_dwn{
+  border-color: $MAIN_COLOR transparent transparent transparent !important;
 }
 .caret_down{
   position: absolute;
@@ -146,4 +151,13 @@
 .bSchoolMaster .bMapView {
   height: 250px;
   width: 250px;
+}
+.groupActionList_show{
+  display: block;
+}
+.groupActionList_hide{
+  display: none;
+}
+.eSchoolMaster_loading{
+  height: 40px !important;
 }

@@ -1,6 +1,7 @@
 var ListPageMixin,
     If = require('module/ui/if/if'),
-    LogPagination = require('module/as_admin/pages/admin_schools/admin_comps/log_pagination');
+    GroupAction = require('module/ui/list/group_action'),
+    Popup = require('module/ui/popup');
 ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired,
@@ -14,6 +15,7 @@ ListPageMixin = {
 
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
+        self.popUpState = false;
 		self.updateData();
 	},
 	updateData: function(newFilter) {
@@ -22,7 +24,7 @@ ListPageMixin = {
             defaultRequestFilter ={where:{}},
 			binding = self.getDefaultBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
-
+        self.popUpState = true;
 		self.request && self.request.abort();
 
 		// Фильтрация по школе
@@ -44,7 +46,10 @@ ListPageMixin = {
 				requestFilter.where[filterName] = newFilter[filterName];
                 if('limit' in (newFilter[filterName])){
                     defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
-                }else{
+                }else if('order' in (newFilter[filterName])){
+                    defaultRequestFilter.order = newFilter[filterName].order;
+                }
+                else{
                     defaultRequestFilter.where[filterName] = newFilter[filterName];
                 }
 			}
@@ -53,11 +58,12 @@ ListPageMixin = {
         //Added this condition to test for other service requests without ids
         if(self.activeSchoolId !== null){
             self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
+                self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
-                //console.log(data);
+                self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
             });
         }
@@ -89,34 +95,14 @@ ListPageMixin = {
 			self.updateData(self.lastFiltersState);
 		}
 	},
-    getActionGroupList:function(){
-        var self = this;
-        if(self.groupActionList){
-            return self.groupActionList.map(function(actionItem){
-                return(
-                    <div>{actionItem}</div>
-                );
-            });
-        }
-    },
-    toggleGroupActionBox:function(groupBox){
-        var self = this,
-            el = React.findDOMNode(self.refs[groupBox]);
-        if(el.style.display === 'none'){
-            el.style.display = 'block';
-        }else{
-            el.style.display = 'none';
-        }
-    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
-            groupActionList = self.getActionGroupList(),
             excludeAddButton = ['logs','permissions'], //Add page name to this array if you don't want to display add button
-            includeGroupAction = ['permissions','students'],
+            includeGroupAction = ['permissions'],
             listPageTitle;
         if(currentPage[currentPage.length-1] === 'permissions'){
             listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '+globalBinding.get('userData.userInfo.lastName')+' - System Admin)';
@@ -128,18 +114,7 @@ ListPageMixin = {
 				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
-                        <div className="groupAction">
-                            <div className="groupAction_item"><input type="checkbox"/> Check All</div>
-                            <div className="groupAction_item">
-                                <span className="groupMenu">
-                                    <span className="caret" onClick={function(){self.toggleGroupActionBox('topGroup')}}></span>
-                                    <div ref="topGroup" className="groupActionList">
-                                        {groupActionList}
-                                    </div>
-                                </span>
-                            </div>
-                            <div className="groupAction_item"><span className="applyAction">Apply</span></div>
-                        </div>
+                        <GroupAction binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
@@ -152,19 +127,13 @@ ListPageMixin = {
                 <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
-                            <div className="groupAction_item"><input type="checkbox"/> Check All</div>
-                            <div className="groupAction_item">
-                                <span className="groupMenu">
-                                    <span className="caret" onClick={function(){self.toggleGroupActionBox('btmGroup')}}></span>
-                                    <div ref="btmGroup" className="groupActionList">
-                                        {groupActionList}
-                                    </div>
-                                </span>
-                            </div>
-                            <div className="groupAction_item"><span className="applyAction">Apply</span></div>
+                            <GroupAction serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                         </div>
                     </div>
                 </If>
+                <Popup binding={binding} statePropert={'popup'} initState={self.popUpState} otherClass="eSchoolMaster_loading">
+                    Loading....
+                </Popup>
 			</div>
 		)
 	}
