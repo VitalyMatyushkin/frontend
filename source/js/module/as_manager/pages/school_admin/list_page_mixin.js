@@ -55,6 +55,19 @@ ListPageMixin = {
 			}
 			self.lastFiltersState = newFilter;
 		}
+        //Column sorting without filters engaged
+        if(newFilter && Object.keys(newFilter).length > 0){
+            for(var filterName in newFilter){
+                if('limit' in (newFilter[filterName])){
+                    defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                }else if('order' in (newFilter[filterName])){
+                    defaultRequestFilter.order = newFilter[filterName].order;
+                }
+                else{
+                    defaultRequestFilter.where[filterName] = newFilter[filterName];
+                }
+            }
+        }
         //Added this condition to test for other service requests without ids
         if(self.activeSchoolId !== null){
             self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
@@ -102,9 +115,9 @@ ListPageMixin = {
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
             excludeAddButton = ['logs','permissions'], //Add page name to this array if you don't want to display add button
-            includeGroupAction = ['permissions'],
+            includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
-        if(currentPage[currentPage.length-1] === 'permissions'){
+        if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
             listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '+globalBinding.get('userData.userInfo.lastName')+' - System Admin)';
         }else{
             listPageTitle = self.serviceName[0].toUpperCase() + self.serviceName.slice(1);
@@ -114,7 +127,7 @@ ListPageMixin = {
 				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
-                        <GroupAction binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                        <GroupAction serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
@@ -131,7 +144,7 @@ ListPageMixin = {
                         </div>
                     </div>
                 </If>
-                <Popup binding={binding} statePropert={'popup'} initState={self.popUpState} otherClass="eSchoolMaster_loading">
+                <Popup binding={binding} stateProperty={'popup'} initState={self.popUpState} otherClass="eSchoolMaster_loading">
                     Loading....
                 </Popup>
 			</div>

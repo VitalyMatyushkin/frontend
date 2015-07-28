@@ -70,7 +70,7 @@ ListField = React.createClass({
 		return (
 			<div className="eDataList_listItemCell" style={cellStyle}>
                 {self.props.children}
-                <If condition={self.props.children !== undefined}>
+                <If condition={self.props.filterType !== 'none'}>
                     <SortColumn orderSort={self.props.children} onSort={self.onSort}/>
                 </If>
 				{filterBlock}

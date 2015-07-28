@@ -49,15 +49,25 @@ AdminPermissionView = React.createClass({
             );
         });
     },
-    _getRemoveFunction:function(){
-
+    _getQuickEditFunction:function(model,event){
+        var self = this,
+            target = event.currentTarget.childNodes[2];
+        if(target.classList.contains('groupActionList_show')){
+            target.classList.remove('groupActionList_show');
+        }else{
+            target.classList.add('groupActionList_show');
+        }
+    },
+    _getItemViewFunction:function(model){
+        window.location.hash = '/admin_schools/admin_views/user?id='+model.id;
     },
     getTableView:function(){
         var self = this,
             binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" binding={binding} onItemEdit={self._getRemoveFunction} onFilterChange={self.updateData}>
+                <Table title="Permissions" onItemView={self._getItemViewFunction} displayActionText = {false}
+                       quickEditActions={self.groupActionList} binding={binding} onItemQuickEdit={self._getQuickEditFunction} onFilterChange={self.updateData}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="firstName" width="10%">Firstname</TableField>
                     <TableField dataField="lastName" width="10%">Surname</TableField>

@@ -39,7 +39,7 @@
   -webkit-border-radius: 15px;
   -moz-border-radius: 15px;
   border-radius: 15px;
-  padding-left: 30px;
+  padding-left: 10px;
   padding-right: 25px;
   position: relative;
   margin: 0 20px 0 20px;
@@ -153,11 +153,30 @@
   width: 250px;
 }
 .groupActionList_show{
-  display: block;
+  display: block !important;
 }
 .groupActionList_hide{
-  display: none;
+  display: none !important;
 }
 .eSchoolMaster_loading{
   height: 40px !important;
+}
+.eQuickAction_list{
+  display: none;
+  border: 1px solid black;
+  width: 150px;
+  position: absolute;
+  left: -72px;
+  top: 16px;
+  height: auto;
+  background:#c0c0c0;
+  z-index: 9999;
+}
+.eQuickAction_item{
+  padding:4px;
+  text-align: center;
+  cursor: pointer;
+}
+.eQuickAction_item:hover{
+  text-decoration: underline;
 }

@@ -107,7 +107,6 @@ GroupAction = React.createClass({
                         });
                 });
             });
-            binding.set('popup',false);
         }
     },
     _accessRestriction:function(ids,action){
@@ -153,13 +152,13 @@ GroupAction = React.createClass({
                 <div className="groupAction_item">
                     <input onClick={self.toggleCheckBoxes.bind(null,this)} type="checkbox"/> Check All</div>
                 <div className="groupAction_item">
-                                <span className="groupMenu">
-                                    <span ref="selectedAction"></span>
-                                    <span className="caret" onClick={self.toggleActionList.bind(null, this)}></span>
-                                    <div className={groupListClasses}>
-                                        {groupActionList}
-                                    </div>
-                                </span>
+                    <span className="groupMenu">
+                        <span ref="selectedAction"></span>
+                        <span className="caret" onClick={self.toggleActionList.bind(null, this)}></span>
+                        <div className={groupListClasses}>
+                            {groupActionList}
+                        </div>
+                    </span>
                 </div>
                 <div className="groupAction_item">
                     <span className="applyAction" onClick={self.handleApplyActionClick.bind(null,this)}>Apply</span>

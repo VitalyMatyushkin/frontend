@@ -64,14 +64,13 @@ StudentAutoComplete = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             confirmation = window.confirm("Are you sure you want to grant access?"),
-            role = document.getElementById('roleSelector'),
             globalBinding = self.getMoreartyContext().getBinding();
         var schoolId = binding.get('selectedSchoolId'),
             userId = binding.get('groupIds')=== undefined ? binding.get('selectedUser').userId :'',
             model = {};
-        if(role.options[role.selectedIndex].value === 'parent'){
+        if(binding.get('roleName') === 'parent'){
             model = {
-                preset:role.options[role.selectedIndex].value,
+                preset:binding.get('roleName') ,
                 schoolId:schoolId,
                 principalId:userId,
                 studentId:binding.get('selectedStudentId'),
@@ -80,7 +79,7 @@ StudentAutoComplete = React.createClass({
             }
         }else{
             model = {
-                preset:role.options[role.selectedIndex].value,
+                preset:binding.get('roleName') ,
                 schoolId:schoolId,
                 principalId:userId,
                 comment:React.findDOMNode(self.refs.commentArea).value,
@@ -96,6 +95,7 @@ StudentAutoComplete = React.createClass({
                             .then(function(result){
                                 window.Server.setPermissions.post({id:result.id},{accepted:true})
                                     .then(function(acpt){
+                                        //console.log(acpt);
                                     });
                             });
                     });
