@@ -100,8 +100,8 @@ GroupAction = React.createClass({
                 window.Server.Permissions.get({filter:{where:{principalId:id}}})
                     .then(function (res) {
                         res.forEach(function(p){
-                            window.Server.Permission.delete({id:p.id}).then(function(response){
-                                console.log(response);
+                            window.Server.Permission.delete({id:p.id}).then(function(){
+                                //console.log(response);
                                 window.location.reload(true);
                             });
                         });

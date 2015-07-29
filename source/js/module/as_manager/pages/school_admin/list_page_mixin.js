@@ -24,7 +24,7 @@ ListPageMixin = {
             defaultRequestFilter ={where:{}},
 			binding = self.getDefaultBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
-        self.popUpState = true;
+        //self.popUpState = true;
 		self.request && self.request.abort();
 
 		// Фильтрация по школе
@@ -68,7 +68,7 @@ ListPageMixin = {
                 }
             }
         }
-        //Added this condition to test for other service requests without ids
+        //Condition to test for other service requests without ids
         if(self.activeSchoolId !== null){
             self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                 self.popUpState = false;
@@ -76,8 +76,9 @@ ListPageMixin = {
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
-                self.popUpState = false;
+                //self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
+                console.log(data);
             });
         }
 	},
