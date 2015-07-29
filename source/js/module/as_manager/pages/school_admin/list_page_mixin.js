@@ -78,7 +78,7 @@ ListPageMixin = {
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
                 //self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
-                console.log(data);
+                //console.log(data);
             });
         }
 	},
