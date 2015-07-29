@@ -24,7 +24,7 @@ ListPageMixin = {
             defaultRequestFilter ={where:{}},
 			binding = self.getDefaultBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
-        //self.popUpState = true;
+        self.popUpState = true;
 		self.request && self.request.abort();
 
 		// Фильтрация по школе
@@ -76,7 +76,7 @@ ListPageMixin = {
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
-                //self.popUpState = false;
+                self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
                 //console.log(data);
             });
