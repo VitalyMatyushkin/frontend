@@ -14,7 +14,7 @@ AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'users',
     filters:{include:[{permissions:['school','student']}]},
-    groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
+    groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     getFullName:function(lastName){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -56,7 +56,11 @@ AdminPermissionView = React.createClass({
         });
     },
     _getItemViewFunction:function(model){
-        window.location.hash = '/admin_schools/admin_views/user?id='+model.id;
+        if(model.length === 1){
+            window.location.hash = '/admin_schools/admin_views/user?id='+model[0];
+        }else{
+            alert("You can only perform this action on one Item");
+        }
     },
     _getQuickEditActionsFactory:function(evt){
         var self = this,
@@ -79,6 +83,9 @@ AdminPermissionView = React.createClass({
                 break;
             case 'Block':
                 self._accessRestriction(idAutoComplete,1);
+                break;
+            case 'View':
+                self._getItemViewFunction(idAutoComplete);
                 break;
             default :
                 break;
@@ -111,6 +118,9 @@ AdminPermissionView = React.createClass({
                 case 'Block':
                     self._accessRestriction(ticked,1);
                     break;
+                case 'View':
+                    self._getItemViewFunction(ticked);
+                    break;
                 default :
                     break;
             }
@@ -119,42 +129,49 @@ AdminPermissionView = React.createClass({
         }
     },
     _revokeAllRoles:function(ids){
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self, binding, confirmAction;
+        self = this;
+        binding = self.getDefaultBinding();
+        confirmAction = window.confirm("Are you sure you want revoke all roles?");
         if(ids !== undefined && ids.length >=1 ){
-            ids.forEach(function(id){
-                window.Server.Permissions.get({filter:{where:{principalId:id}}})
-                    .then(function(permission){
-                        permission.forEach(function(p){
-                            window.Server.Permission.delete({id:p.id}).then(function(){
-                                self.updateData();
+            if(confirmAction === true){
+                ids.forEach(function(id){
+                    window.Server.Permissions.get({filter:{where:{principalId:id}}})
+                        .then(function(permission){
+                            permission.forEach(function(p){
+                                window.Server.Permission.delete({id:p.id}).then(function(){
+                                    self.updateData();
+                                });
                             });
                         });
-                    });
-            });
+                });
+            }
         }
     },
     _accessRestriction:function(ids,action){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            confirmAction= window.confirm("Are you sure you want block user?");
         if(ids !== undefined && ids.length >=1){
-            switch(action){
-                case 0:
-                    ids.forEach(function(id){
-                        window.Server.user.put({id:id},{blocked:false}).then(function(){
-                            self.updateData();
+            if(confirmAction === true){
+                switch(action){
+                    case 0:
+                        ids.forEach(function(id){
+                            window.Server.user.put({id:id},{blocked:false}).then(function(){
+                                self.updateData();
+                            });
                         });
-                    });
-                    break;
-                case 1:
-                    ids.forEach(function(id){
-                        window.Server.user.put({id:ids},{blocked:true}).then(function(){
-                            self.updateData();
+                        break;
+                    case 1:
+                        ids.forEach(function(id){
+                            window.Server.user.put({id:ids},{blocked:true}).then(function(){
+                                self.updateData();
+                            });
                         });
-                    });
-                    break;
-                default :
-                    break;
+                        break;
+                    default :
+                        break;
+                }
             }
         }else{
             alert('Please select at least 1 row');
@@ -175,8 +192,7 @@ AdminPermissionView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" onItemView={self._getItemViewFunction} displayActionText = {false} quickEditActionsFactory={self._getQuickEditActionsFactory}
-                       quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
+                <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory} quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="lastName" width="10%">Surname</TableField>
                     <TableField dataField="email" width="14%">Email</TableField>
