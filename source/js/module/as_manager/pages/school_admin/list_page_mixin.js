@@ -23,6 +23,7 @@ ListPageMixin = {
 			requestFilter = { where: {} },
             defaultRequestFilter ={where:{}},
 			binding = self.getDefaultBinding(),
+            page = window.location.href.split('/'),
 			isFiltersActive = binding.meta().get('isFiltersActive');
         self.popUpState = true;
 		self.request && self.request.abort();
@@ -75,9 +76,18 @@ ListPageMixin = {
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
+                if(page[page.length-1] === 'requests'){
+                    var notAccepted = [];
+                    data.forEach(function(d){
+                        if(d.accepted === 'undefined' || d.accepted === undefined){
+                            notAccepted.push(d);
+                        }
+                    });
+                    binding.set(Immutable.fromJS(notAccepted));
+                }else{
+                    binding.set(Immutable.fromJS(data));
+                }
                 self.popUpState = false;
-                binding.set(Immutable.fromJS(data));
-                //console.log(data);
             });
         }
 	},
@@ -114,7 +124,7 @@ ListPageMixin = {
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
-            excludeAddButton = ['logs','permissions'], //Add page name to this array if you don't want to display add button
+            excludeAddButton = ['logs','permissions','archive'], //Add page name to this array if you don't want to display add button
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
         if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){

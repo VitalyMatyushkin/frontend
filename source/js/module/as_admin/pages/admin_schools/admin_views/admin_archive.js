@@ -2,65 +2,59 @@
  * Created by bridark on 24/06/15.
  */
 var AdminArchive,
-    DateTimeMixin = require('module/mixins/datetime');
+    List = require('module/ui/list/list'),
+    ListField = require('module/ui/list/list_field'),
+    Table = require('module/ui/list/table'),
+    TableField = require('module/ui/list/table_field'),
+    DateTimeMixin = require('module/mixins/datetime'),
+    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
 AdminArchive = React.createClass({
-    mixins:[Morearty.Mixin,DateTimeMixin],
-    componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-        window.Server.Permissions.get({
-            filter:{
-                include:['principal','school'],
-                where:{
-                    or:[
-                        {accepted:true},{accepted:false}
-                    ]
-                },
-                order:'meta.created ASC'
-            }
-        }).then(function(results){
-            binding
-                .atomically()
-                .set('requestsArchive', Immutable.fromJS(results))
-                .set('sync',true)
-                .commit();
-            console.log(binding.get('requestsArchive').toJS());
-        });
+    mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
+    serviceName:'Permissions',
+    filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created ASC'},
+    getRequestDate:function(meta){
+        var self = this;
+        return self.getDateFromIso(meta.created);
     },
-    _renderArchiveList:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            archives = binding.get('requestsArchive');
-        if(archives !== undefined){
-            return archives.toJS().map(function(archItem){
-                var response = archItem.accepted === true ? 'Accepted' :'Declined';
-                return(
-                    <div className="eDataList_listItem">
-                        <div className="eDataList_listItemCell">{self.getDateFromIso(archItem.meta.created)}</div>
-                        <div className="eDataList_listItemCell">{archItem.preset}</div>
-                        <div className="eDataList_listItemCell">{archItem.principal.email}</div>
-                        <div className="eDataList_listItemCell">{archItem.school.name}</div>
-                        <div className="eDataList_listItemCell">{response}</div>
-                    </div>
-                )
-            });
+    getRequestPrincipalName:function(principal){
+        if(principal !==undefined){
+            return principal.firstName+' '+principal.lastName;
         }
     },
-    render:function(){
+    getRequestSchoolName:function(school){
+        if(school !== undefined){
+            return school.name;
+        }
+    },
+    getRequestStudentName:function(student){
+        if(student !== undefined){
+            return student.firstName+' '+student.lastName;
+        }else{
+            return 'n/a';
+        }
+    },
+    getRequestResponse:function(accepted){
+        return accepted === true ? 'Accepted' :'Declined';
+    },
+    getRequestEmail:function(principal){
+        if(principal !== undefined){
+            return principal.email;
+        }
+    },
+    getTableView:function(){
         var self = this,
-            archiveList = self._renderArchiveList();
-        return(
-            <div className="bDataList">
-                <div className="eDataList_list mTable">
-                    <div className="eDataList_listItem mHead">
-                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>Date</div>
-                        <div className="eDataList_listItemCell" style={{width:10+'%'}}>Request</div>
-                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>From</div>
-                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>For</div>
-                        <div className="eDataList_listItemCell" style={{width:20+'%'}}>Response</div>
-                    </div>
-                    {archiveList}
-                </div>
+            binding = self.getDefaultBinding();
+        return (
+            <div className="eTable_view">
+                <Table title="Permissions" binding={binding}  onFilterChange={self.updateData} hideActions={true}>
+                    <TableField dataField="meta" filterType="none" parseFunction={self.getRequestDate} width="17%">Date</TableField>
+                    <TableField dataField="preset" filterType="none" width="10%">Request</TableField>
+                    <TableField dataField="principal" filterType="none" parseFunction={self.getRequestPrincipalName} width="20%">From</TableField>
+                    <TableField dataField="principal" filterType="none" parseFunction={self.getRequestEmail} width="15%">Email</TableField>
+                    <TableField dataField="school" filterType="none"parseFunction={self.getRequestSchoolName} width="35%">School</TableField>
+                    <TableField dataField="student" filterType="none" parseFunction={self.getRequestStudentName} width="30%">Student</TableField>
+                    <TableField dataField="accepted" filterType="none" parseFunction={self.getRequestResponse} width="14%">Response</TableField>
+                </Table>
             </div>
         );
     }

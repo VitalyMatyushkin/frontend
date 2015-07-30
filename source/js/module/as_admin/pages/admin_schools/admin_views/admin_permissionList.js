@@ -28,32 +28,36 @@ AdminPermissionView = React.createClass({
     getStatus: function(verified) {
         var self = this,
             status = 'Registered';
-
-        if (verified.email === true && verified.phone === true) {
-            status = 'Active';
-        } else if (verified.email === false || verified.phone === false) {
-            status = 'Registered';
+        if(verified !== undefined){
+            if (verified.email === true && verified.phone === true) {
+                status = 'Active';
+            } else if (verified.email === false || verified.phone === false) {
+                status = 'Registered';
+            }
         }
-
         return status;
     },
     getRoles:function(permissions){
-        return permissions.map(function(role){
-            return (
-                <div>{role.preset}</div>
-            );
-        });
+        if(permissions !== undefined){
+            return permissions.map(function(role){
+                return (
+                    <div>{role.preset}</div>
+                );
+            });
+        }
     },
     getSchool:function(permissions){
-        return permissions.map(function(role){
-            if(role.school !== undefined){
-                return(
-                    <div>{role.school.name}</div>
-                );
-            }else{
-                return null;
-            }
-        });
+        if(permissions !== undefined){
+            return permissions.map(function(role){
+                if(role.school !== undefined){
+                    return(
+                        <div>{role.school.name}</div>
+                    );
+                }else{
+                    return null;
+                }
+            });
+        }
     },
     _getItemViewFunction:function(model){
         if(model.length === 1){
