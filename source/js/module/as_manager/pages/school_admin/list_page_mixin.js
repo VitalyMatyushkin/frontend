@@ -124,7 +124,7 @@ ListPageMixin = {
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
-            excludeAddButton = ['logs','permissions','archive'], //Add page name to this array if you don't want to display add button
+            excludeAddButton = ['logs','permissions','archive','#admin_schools'], //Add page name to this array if you don't want to display add button
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
         if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
