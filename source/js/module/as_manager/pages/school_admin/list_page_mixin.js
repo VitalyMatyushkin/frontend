@@ -26,7 +26,6 @@ ListPageMixin = {
 			isFiltersActive = binding.meta().get('isFiltersActive');
         self.popUpState = true;
 		self.request && self.request.abort();
-
 		// Фильтрация по школе
 		if (self.props.addSchoolToFilter !== false) {
 			requestFilter.where.schoolId = self.activeSchoolId;
@@ -128,7 +127,7 @@ ListPageMixin = {
 				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
-                        <GroupAction serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                        <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
@@ -141,7 +140,7 @@ ListPageMixin = {
                 <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
-                            <GroupAction serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                            <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                         </div>
                     </div>
                 </If>

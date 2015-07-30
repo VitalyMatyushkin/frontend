@@ -13,7 +13,7 @@ var AdminPermissionView,
 AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'users',
-    filters:{include:[{permissions:['school','student'],where:{accepted:true}}]},
+    filters:{include:[{permissions:['school','student']}]},
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
     getFullName:function(lastName){
         var self = this,
@@ -72,73 +72,92 @@ AdminPermissionView = React.createClass({
                 self.forceUpdate();
                 break;
             case 'Revoke All Roles':
-                self._revokeAllRoles(userId);
+                self._revokeAllRoles(idAutoComplete);
                 break;
             case 'Unblock':
-                self._accessRestriction(userId,0);
+                self._accessRestriction(idAutoComplete,0);
                 break;
             case 'Block':
-                self._accessRestriction(userId,1);
+                self._accessRestriction(idAutoComplete,1);
                 break;
             default :
                 break;
         }
     },
+    _getGroupActionsFactory:function(el,chk){
+        var actionStr = el.innerText,
+            selections = chk,
+            self = this,
+            rootBinding = self.getMoreartyContext().getBinding();
+        if(actionStr !== ''){
+            var ticked = [];
+            for(var i=0; i<selections.length; i++)if(selections.item(i).checked===true)ticked.push(selections.item(i).dataset.id);
+            switch (el.innerText){
+                case 'Add Role':
+                    if(ticked.length >=1){
+                        rootBinding.set('popup',true);
+                        rootBinding.set('groupIds',ticked);
+                        self.forceUpdate();
+                    }else{
+                        alert("Please Select at least 1 row");
+                    }
+                    break;
+                case 'Revoke All Roles':
+                    self._revokeAllRoles(ticked);
+                    break;
+                case 'Unblock':
+                    self._accessRestriction(ticked,0);
+                    break;
+                case 'Block':
+                    self._accessRestriction(ticked,1);
+                    break;
+                default :
+                    break;
+            }
+        }else{
+            alert("Please select an action to apply");
+        }
+    },
     _revokeAllRoles:function(ids){
         var self = this,
             binding = self.getDefaultBinding();
-        if(ids !== undefined){
-            window.Server.Permissions.get({filter:{where:{principalId:ids}}})
-                .then(function(permission){
-                    permission.forEach(function(p){
-                        window.Server.Permission.put({id:p.id},{accepted:false}).then(function(){
-                            //binding.update(function(result) {
-                            //    return result.filter(function(res) {
-                            //        return res.get('id') !== ids;
-                            //    });
-                            //});
-                            self.updateData();
+        if(ids !== undefined && ids.length >=1 ){
+            ids.forEach(function(id){
+                window.Server.Permissions.get({filter:{where:{principalId:id}}})
+                    .then(function(permission){
+                        permission.forEach(function(p){
+                            window.Server.Permission.delete({id:p.id}).then(function(){
+                                self.updateData();
+                            });
                         });
                     });
-                });
+            });
         }
     },
     _accessRestriction:function(ids,action){
         var self = this,
             binding = self.getDefaultBinding();
-        if(ids !== undefined){
+        if(ids !== undefined && ids.length >=1){
             switch(action){
                 case 0:
-                    window.Server.user.put({id:ids},{blocked:false}).then(function(){
-                        //binding.update(function(result) {
-                        //    return result.map(function(res) {
-                        //        if(res.get('id')===ids){
-                        //            res['blocked'] = false;
-                        //        }
-                        //        console.log(res.toJS());
-                        //        return res;
-                        //    });
-                        //});
-                        self.updateData();
+                    ids.forEach(function(id){
+                        window.Server.user.put({id:id},{blocked:false}).then(function(){
+                            self.updateData();
+                        });
                     });
                     break;
                 case 1:
-                    window.Server.user.put({id:ids},{blocked:true}).then(function(){
-                        self.updateData();
-                        //binding.update(function(result) {
-                        //    return result.map(function(res) {
-                        //        if(res.get('id')===ids){
-                        //            res['blocked'] = true;
-                        //        }
-                        //        console.log(res.toJS());
-                        //        return res;
-                        //    });
-                        //});
+                    ids.forEach(function(id){
+                        window.Server.user.put({id:ids},{blocked:true}).then(function(){
+                            self.updateData();
+                        });
                     });
                     break;
                 default :
                     break;
             }
+        }else{
+            alert('Please select at least 1 row');
         }
     },
     _closePopup:function(){
@@ -159,13 +178,12 @@ AdminPermissionView = React.createClass({
                 <Table title="Permissions" onItemView={self._getItemViewFunction} displayActionText = {false} quickEditActionsFactory={self._getQuickEditActionsFactory}
                        quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="firstName" width="10%">Firstname</TableField>
                     <TableField dataField="lastName" width="10%">Surname</TableField>
                     <TableField dataField="email" width="14%">Email</TableField>
                     <TableField dataField="verified" width="10%" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="permissions" width="35%" parseFunction={self.getSchool}>School</TableField>
-                    <TableField dataField="permissions" width="15%" parseFunction={self.getRoles}>Role</TableField>
-                    <TableField dataField="blocked" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
+                    <TableField dataField="permissions" width="40%" parseFunction={self.getSchool}>School</TableField>
+                    <TableField dataField="permissions" width="10%" parseFunction={self.getRoles}>Role</TableField>
+                    <TableField dataField="blocked" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={rootBinding}/>
