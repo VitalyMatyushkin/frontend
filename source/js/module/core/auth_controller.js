@@ -14,7 +14,6 @@ authСontroller = {
 		// Если появились данные об авторизации
 		if (data && data.id) {
 			var ttl;
-
 			// Если данные о времени окончании сессии уже присутсвуют
 			if (data.dieTime) {
 				ttl = Math.ceil((data.dieTime - Date.now()) / 1000);
@@ -44,7 +43,9 @@ authСontroller = {
 			if (self.binding.get('form.register.formFields') === undefined) {
 				document.location.hash = self.nextPage;
 			}
-		}
+		}else if(self.nextPage ==='home'){
+            document.location.hash = self.nextPage;  //Bypass authentication
+        }
 	},
 	initialize: function(options) {
 		var self = this;
@@ -56,10 +57,14 @@ authСontroller = {
 		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
 		if (document.location.hash && document.location.hash.indexOf('login') === -1) {
 			self.nextPage = document.location.hash;
-		} else {
+		}else {
 			self.defaultPath = options.defaultPath || '#/';
 			self.nextPage = self.defaultPath;
 		}
+        //By pass authentication for public home page for school
+        if(options.asSchool === true){
+            self.nextPage = options.defaultPath;
+        }
 
 		self.binding = options.binding;
 

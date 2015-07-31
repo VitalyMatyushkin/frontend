@@ -7,12 +7,65 @@
   font-size: 0px;
   text-transform: uppercase;
 }
-
+.bPublicMenu{
+  min-height: 70px;
+  height: 70px;
+  line-height: 50px;
+  font-size: 24px;
+  text-transform: uppercase;
+  padding: 10px;
+  position: relative;
+}
+.bPublicMenu span{
+  margin-right: 20px;
+}
+.bPublicMenu span.hBurgerIcon{
+  cursor: pointer;
+}
 .bTopMenu.mRight {
   float: right;
   text-align: right;
 }
-
+.bPublicMenu_icon{
+  width: 40px !important;
+  height: 20px !important;
+  color: #FFFFFF !important;
+}
+.bPublicMenu_tray{
+  background: rgba(76,175,80,0.5);
+  height: auto;
+  padding: 0;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 0;
+  -webkit-transition: width 0.5s, padding 0.5s;
+  -moz-transition: width 0.5s, padding 0.5s;
+  -ms-transition: width 0.5s, padding 0.5s;
+  -o-transition: width 0.5s, padding 0.5s;
+  transition: width 0.5s, padding 0.5s;
+  z-index: 9999;
+}
+.bPublicMenu_show{
+  width: 160px;
+  padding: 20px;
+  display: block;
+}
+.bPublicMenu_hide{
+  width: 0;
+  padding: 0;
+  display: none;
+}
+.bPublicMenu_item{
+  text-transform: uppercase;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  width:inherit;
+}
+.bPublicMenu_item:hover{
+  text-decoration: underline;
+}
 .eTopMenu_item {
   display: inline-block;
   padding: 0 20px;
