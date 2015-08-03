@@ -6,7 +6,7 @@ var SchoolHomePage,
     HomeFixture = require('./home_fixtures'),
     HomeNews = require('./home_news'),
     HomeCalender = require('./home_calendar'),
-    HomeBlog = require('./home_blog');
+    HomeBlog = require('./home_carousel');
 SchoolHomePage = React.createClass({
     mixins:[Morearty.Mixin],
     render:function(){

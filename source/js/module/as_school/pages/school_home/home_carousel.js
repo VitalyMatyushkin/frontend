@@ -2,7 +2,7 @@
  * Created by bridark on 03/08/15.
  */
 var HomeBlog,
-    BlogCarousel = require('./blog_carousel');
+    SVG = require('module/ui/svg');
 HomeBlog = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
@@ -13,13 +13,13 @@ HomeBlog = React.createClass({
         var self = this,
             carousel = React.findDOMNode(self.refs.carousel),
             target = React.findDOMNode(self.refs[targetStr]),
-            carouselItemWidth = 958;
-        if(targetStr === 'panLeft' && self.itemWidth < 1916){
-            self.itemWidth +=958;
+            carouselItemWidth = 959;
+        if(targetStr === 'panLeft' && self.itemWidth < 1918){
+            self.itemWidth +=959;
             carousel.style.marginLeft = -self.itemWidth+'px';
         }else if(targetStr ==='panRight'){
-            if(self.itemWidth >= 1916){
-                self.itemWidth = 958;
+            if(self.itemWidth >= 1918){
+                self.itemWidth = 959;
                 carousel.style.marginLeft = -self.itemWidth+'px';
             }else{
                 self.itemWidth = 0;
@@ -37,8 +37,12 @@ HomeBlog = React.createClass({
                     <div className="testChildren">2</div>
                     <div className="testChildren">3</div>
                 </div>
-                <span onClick={function(){self.handleChevronClick('panLeft')}} ref="panLeft" className="carouselChevron chevLeft">Prev</span>
-                <span onClick={function(){self.handleChevronClick('panRight')}} ref="panRight" className="carouselChevron chevRight">Next</span>
+                <span onClick={function(){self.handleChevronClick('panLeft')}} ref="panLeft" className="carouselChevron chevLeft">
+                   <SVG icon="icon_chevron-left" classes="chevronMod"></SVG>
+                </span>
+                <span onClick={function(){self.handleChevronClick('panRight')}} ref="panRight" className="carouselChevron chevRight">
+                    <SVG icon="icon_chevron-right" classes="chevronMod"></SVG>
+                </span>
             </div>
         );
     }

@@ -370,26 +370,35 @@
   background: #FFFFFF;
   overflow-x:scroll;
   position:relative;
+  -webkit-transition: margin 2s;
+  -moz-transition: margin 2s;
+  -ms-transition: margin 2s;
+  -o-transition: margin 2s;
+  transition: margin 2s;
 }
 .testChildren{
-  height: 250px;
+  height: 248px;
   width: 958px;
   border: 1px solid black;
   display:inline-block;
   text-align: center;
+  position:relative;
 }
 .carouselChevron{
   position:absolute;
-  top: 0;
+  top: 88px;
   left: 0;
-  width: 20px;
-  height: 100%;
-  background: red;
+  width: 64px;
+  height: 64px;
   color:#FFFFFF;
 }
 .chevRight, .chevLeft{
   cursor: pointer;
 }
 .chevRight{
-  left: 938px;
+  left: 922px;
+}
+.chevronMod{
+  width: 40px !important;
+  height: 64px !important;
 }
