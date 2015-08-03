@@ -32,12 +32,14 @@ CalendarMonthView = React.createClass({
     countEventInDay: function (date) {
         var self = this,
             binding = this.getMoreartyContext().getBinding().sub('events'),
+            filteredModels;
+        if(binding.get('models') !== undefined){
             filteredModels = binding.get('models').filter(function (model) {
                 var parsedDate = new Date(model.get('startTime')),
                     startDate = new Date(parsedDate.getFullYear(), parsedDate.getMonth(), parsedDate.getDate());
                 return startDate.getTime() === date.getTime();
             });
-
+        }
         return filteredModels;
     },
 	getDays: function () {
