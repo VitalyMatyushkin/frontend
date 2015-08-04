@@ -27,13 +27,30 @@ HomeBlog = React.createClass({
             }
         }
     },
+    renderCarouselItems:function(){
+        return(
+            <div className="testChildren">
+                <div className="blogAuthorPicCarousel">
+                    <div className="authorPic">
+                        <img src="http://footballnews.ge/wp-content/uploads/2014/10/Enrique.jpg"/>
+                    </div>
+                </div>
+                <div className="blogCommentCarousel">
+                    <blockquote>&quot;The sporting program encourages active participation, fitness and fun over a comprehensive range of summer and winter sports&hellip; &quot;</blockquote>
+                    <span>Jeremy McKay</span>
+                    <span>Coach</span>
+                </div>
+            </div>
+        )
+    },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            oneOfItems = self.renderCarouselItems();
         return (
             <div className="eSchoolBlog">
                 <div ref="carousel" className="carouselContainer">
-                    <div className="testChildren">1</div>
+                    {oneOfItems}
                     <div className="testChildren">2</div>
                     <div className="testChildren">3</div>
                 </div>

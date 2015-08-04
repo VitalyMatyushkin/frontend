@@ -21,6 +21,9 @@ SchoolHomePage = React.createClass({
                     <HomeCalender binding={binding} />
                     <HomeBlog  />
                 </div>
+                <div className="eSchoolHomeFooter">
+                    &copy;All Rights Reserved, SquadInTouch.com  SquadInTouch.com &trade;
+                </div>
             </div>
         );
     }

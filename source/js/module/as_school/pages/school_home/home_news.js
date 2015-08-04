@@ -43,13 +43,13 @@ HomeNews = React.createClass({
                     imgSrc = "";
                 if( i === 0){
                     classes = "eSchoolNewsItemLatest";
-                    imgSrc = "http://placehold.it/940x400";
+                    imgSrc = "http://i2.cdn.turner.com/cnnnext/dam/assets/130418171917-indian-football-1-horizontal-large-gallery.jpg";
 
                 }else if(i===1){
                     classes ="eSchoolNewsItemLeft";
-                    imgSrc = "http://placehold.it/460x300";
+                    imgSrc = "http://i.telegraph.co.uk/multimedia/archive/02828/mf-rugbyschools0_2828544b.jpg";
                 }
-                else{classes = "eSchoolNewsItemRight";imgSrc = "http://placehold.it/460x300";}
+                else{classes = "eSchoolNewsItemRight";imgSrc = "http://www.education.vic.gov.au/PublishingImages/about/awards/schoolsport.jpg";}
                 return(
                     <div className={classes}>
                         <span className="eSchoolNewsImage">

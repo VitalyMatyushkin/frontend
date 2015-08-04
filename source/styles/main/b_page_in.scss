@@ -222,6 +222,10 @@
   width: 940px;
   height: 400px;
 }
+.eSchoolNewsItemLatest span.eSchoolNewsImage img{
+  width: 940px;
+  height: 400px;
+}
 .eSchoolNewsItemLeft{
   width: 48%;
   float: left;
@@ -235,6 +239,10 @@
   width: 460px;
   height: 300px;
 }
+.eSchoolNewsItemLeft span.eSchoolNewsImage img{
+  width: 460px;
+  height: 300px;
+}
 .eSchoolNewsItemRight{
   width: 48%;
   float: left;
@@ -245,6 +253,10 @@
   display: block;
 }
 .eSchoolNewsItemRight span.eSchoolNewsImage{
+  width: 460px;
+  height: 300px;
+}
+.eSchoolNewsItemRight span.eSchoolNewsImage img{
   width: 460px;
   height: 300px;
 }
@@ -281,6 +293,9 @@
   font-style: italic;
   color: #FFFFFF;
   font-weight: 900;
+}
+.newsItemExcerpt{
+  color:#FFFFFF;
 }
 .eSchoolNewsItemLeft .newsItemTitle{
   padding: 5px 10px 10px 10px;
@@ -335,6 +350,7 @@
   width: 45%;
   float:left;
   border-right: 2px solid #c8cdd0;
+  margin-bottom: 20px;
 }
 .eSchoolCalenderFixtureList{
   width: 50%;
@@ -379,10 +395,11 @@
 .testChildren{
   height: 248px;
   width: 958px;
-  border: 1px solid black;
+  //border: 1px solid black;
   display:inline-block;
   text-align: center;
   position:relative;
+  float:left;
 }
 .carouselChevron{
   position:absolute;
@@ -401,4 +418,57 @@
 .chevronMod{
   width: 40px !important;
   height: 64px !important;
+}
+.blogAuthorPicCarousel{
+  width:300px;
+  height:248px;
+  float:left;
+  position: relative;
+  //border:1px solid red;
+}
+.authorPic{
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  border:1px solid #c8cdd0;
+  border-radius: 50%;
+  margin: 20px 20px 20px 55px;
+  overflow: hidden;
+}
+.authorPic img{
+  width: 206px;
+  height: 206px;
+}
+.blogCommentCarousel{
+  width: 624px;
+  height:248px;
+  float:left;
+  font-style: italic;
+  color:#8e908c;
+  font-size: 16px;
+  font-weight:500;
+  //border:1px solid blue;
+}
+.blogCommentCarousel blockquote{
+  margin-top: 80px;
+}
+.blogCommentCarousel span{
+  display: block;
+  margin: 5px 5px 5px 120px;
+  font-style: italic;
+  color:#8e908c;
+  font-weight:200;
+}
+.eSchoolHomeFooter{
+  background:$MAIN_COLOR;
+  height: 100px;
+  width: 100%;
+  padding-top: 20px;
+  line-height: 100px;
+  float:left;
+  position: relative;
+  text-align: center;
+  color:#FFFFFF;
 }
