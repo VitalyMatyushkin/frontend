@@ -1,7 +1,7 @@
 var Logo = require('module/as_school/head/logo'),
 	TopMenu = require('module/ui/menu/public_menu'),
+    PublicLogin = require('module/ui/menu/public_login'),
 	Head;
-
 Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
@@ -48,6 +48,7 @@ Head = React.createClass({
 			<div className="bTopPanel">
                 <TopMenu menuItems={['school','fixtures','cricket','rounders','rugby','netball','football','hockey']}></TopMenu>
 				<Logo />
+                <PublicLogin binding={binding} />
 			</div>
 		)
 	}

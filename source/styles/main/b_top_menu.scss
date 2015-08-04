@@ -15,6 +15,8 @@
   text-transform: uppercase;
   padding: 10px;
   position: relative;
+  width:150px;
+  float:left;
 }
 .bPublicMenu span{
   margin-right: 20px;
@@ -147,4 +149,65 @@
 }
 .eTopMenu_trayActive{
   display:block;
+}
+.bPublicMenu_login{
+  width: 226px;
+  height: 70px;
+  line-height: 70px;
+  float:left;
+}
+.loginUserIcon{
+  display:inline-block;
+}
+.bPublicMenu_login_txt{
+  display: inline-block;
+  margin: 0 10px 0 10px;
+}
+.loginChevronDwn{
+  display: inline-block;
+}
+.bPublicMenu_login_holder{
+  position:relative;
+  cursor: pointer;
+  padding-left: 50px;
+  margin-left: 32px;
+}
+.bPublicMenu_login_tray{
+  position: absolute;
+  top:70px;
+  left: 0;
+  width:1200px;
+  height: 300px;
+  background: rgba(76,175,80,0.5);
+  display: none;
+}
+.bPublicMenu_login_active{
+  background:#3d8b40;
+}
+.bPublicMenu_login .eForm_field{
+  height:48px;
+}
+.bPublicMenu_login .eForm_fieldName{
+  height:20px;
+}
+.bPublicMenu_login .mRight{
+  height:25px;
+  line-height: 25px;
+  margin-top: 10px;
+}
+.bPublicMenu_login .bForm h2{
+  margin-bottom: -30px;
+}
+.signInActive{
+  display: block;
+}
+.forgottenLink{
+  margin-top: -59px;
+  position: absolute;
+  color: #fff;
+  left: 726px;
+  top: 290px;
+}
+.forgottenLink:hover{
+  text-decoration: underline;
 }
