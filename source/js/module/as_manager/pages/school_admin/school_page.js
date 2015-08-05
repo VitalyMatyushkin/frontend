@@ -86,7 +86,6 @@ OneSchoolPage = React.createClass({
 		return (
 			<div>
 				<SubMenu binding={binding.sub('schoolRouting')} items={self.menuItems} />
-
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
 						<Route path="/school_admin/summary" binding={binding.sub('summary')} component="module/as_manager/pages/school_admin/summary/summary_page"  />
@@ -97,12 +96,9 @@ OneSchoolPage = React.createClass({
 						<Route path="/school_admin/permissions /school_admin/permissions/:mode" binding={binding.sub('permissions')} component="module/as_manager/pages/school_admin/permissions/permissions_page"  />
 					</RouterView>
 				</div>
-
-
 			</div>
 		)
 	}
 });
-
 
 module.exports = OneSchoolPage;

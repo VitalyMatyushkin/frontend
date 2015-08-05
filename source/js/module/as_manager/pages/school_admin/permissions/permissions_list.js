@@ -75,8 +75,7 @@ PermissionsListPage = React.createClass({
 			<Table title="Permissions" binding={binding} onItemRemove={self._getRemoveFunction}
 				   onFilterChange={self.updateData}>
 				<TableField dataField="preset" width="20%">Preset</TableField>
-				<TableField dataField="meta" width="15%" filterType="none"
-							parseFunction={self.getDate}>Date</TableField>
+				<TableField dataField="meta" width="15%" filterType="none" parseFunction={self.getDate}>Date</TableField>
 				<TableField dataField="principal" parseFunction={self.getPrincipal} width="35%">Principal</TableField>
 				<TableField dataField="id" parseFunction={self.getObject} width="25%">Object</TableField>
 				<TableField dataField="accepted" width="20%" parseFunction={self.getStatus}>Status</TableField>

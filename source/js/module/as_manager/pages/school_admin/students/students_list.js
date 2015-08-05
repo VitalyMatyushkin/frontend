@@ -11,7 +11,7 @@ StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'students',
 	filters: {
-		include: ['form', 'parents']
+		include: ['user','form', 'parents']
 	},
 	_getViewFunction: function() {
 		var self = this;
@@ -27,11 +27,16 @@ StudentsListPage = React.createClass({
 	getForm: function (value) {
 		return value.name;
 	},
-	getGender: function (value) {
+	getGender: function (user) {
 		var self = this,
-			icon = value === 'male' ? 'icon_man': 'icon_woman';
+			icon = user.gender === 'male' ? 'icon_man': 'icon_woman';
 
 		return <SVG icon={icon} />;
+	},
+	getBirthday: function(user) {
+		var self = this;
+
+		return self.getAgeFromBirthday(user.birthday);
 	},
 	getAgeFromBirthday: function(value) {
 		var self = this,
@@ -54,17 +59,22 @@ StudentsListPage = React.createClass({
 			</div>);
 		}) : null;
 	},
+	getFirstName: function(user) {
+		return user.firstName;
+	},
+	getLastName: function(user) {
+		return user.lastName;
+	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		return (
 			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
-				<TableField width="3%" dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="firstName">First name</TableField>
-				<TableField width="15%" dataField="lastName">Last name</TableField>
+				<TableField width="3%" dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
+				<TableField width="15%" dataField="user" parseFunction={self.getFirstName}>First name</TableField>
+				<TableField width="15%" dataField="user" parseFunction={self.getLastName}>Last name</TableField>
 				<TableField width="5%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
-				<TableField width="15%" dataField="birthday" filterType="range" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
+				<TableField width="15%" dataField="user" filterType="range" parseFunction={self.getBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
 		)

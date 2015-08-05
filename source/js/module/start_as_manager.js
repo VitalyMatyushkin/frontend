@@ -7,17 +7,17 @@ var ApplicationView = require('module/as_manager/application'),
 	binding;
 
 function runManagerMode() {
-// Создание контекста Morearty
+// Create Morearty context
 	MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			userRules: userRulesInstance.getDefaultState(),
 			routing: {
-				currentPath: '',		// текущий путь
-				currentPageName: '',	// имя текущей страницы, если есть
-				currentPathParts: [],	// части текущего путии
-				pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
-				parameters: {}			// GET-параметры текущего пути
+				currentPath: '',
+				currentPageName: '',	// current page name, if exist
+				currentPathParts: [],
+				pathParameters: [],
+				parameters: {}			// GET-params of current path
 			},
 			schoolProfile: {
 				schoolProfileRouting: {}
@@ -86,7 +86,7 @@ function runManagerMode() {
 	userDataInstance.setBinding(binding.sub('userData'));
 	userRulesInstance.setBinding(binding.sub('userRules'));
 
-	// Включение авторизации сервисов
+	// Enable servises
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными

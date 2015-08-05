@@ -18,5 +18,3 @@ Route = React.createClass({
 });
 
 module.exports = Route;
-
-
