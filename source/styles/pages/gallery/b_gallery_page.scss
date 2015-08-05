@@ -1,0 +1,52 @@
+.bGalleryAlbumListContainer{
+  position:relative;
+  width:100%;
+  height:auto;
+  float:left;
+}
+.bGalleryAlbums{
+  position: relative;
+  width: 100%;
+  height: auto;
+  float: left;
+}
+.bGalleryAlbums_album{
+  width: 366px;
+  height: 366px;
+  float:left;
+}
+.bGalleryAlbums_photos{
+  width: 140px;
+  height: 100px;
+  float:left;
+}
+.bGalleryPromptLabel{
+  margin: 10px 0 10px 0;
+}
+.bGalleryPromptInput{
+  margin: 10px 0 10px 0;
+}
+.bGalleryPromptButton{
+  float:right;
+}
+.bGalleryPhotoGrid{
+  padding: 20px !important;
+}
+.photoUploadInput{
+  padding: 10px;
+  margin: 50px 10px 10px 0;
+}
+.bGalleryPhotoExpanded{
+  width: 800px !important;
+  height: 600px !important;
+  margin-left: -400px !important;
+  margin-top: -200px !important;
+}
+.expandContainer{
+  height: auto;
+  width: 100%;
+}
+.expandContainer img{
+  width: 760px;
+  height: 490px;
+}

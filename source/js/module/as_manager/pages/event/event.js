@@ -172,7 +172,7 @@ EventView = React.createClass({
             commentTextClasses = classNames({
                 'eEvent_commentText': true,
                 mHide: !showingComment
-            });  self.onChange();
+            });  self.onChange(); console.log(binding.toJS());
 
 		return <div>
             <div className="bEventContainer">
