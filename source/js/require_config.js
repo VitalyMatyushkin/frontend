@@ -37,6 +37,7 @@ window.onload = function() {
 		crossDomain: true
 	});
 
+    console.log(startModule);
 
 	window['require']([startModule], function(startCallback) {
 		startCallback();

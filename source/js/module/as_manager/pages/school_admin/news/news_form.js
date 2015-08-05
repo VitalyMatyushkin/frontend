@@ -16,8 +16,9 @@ NewsForm = React.createClass({
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" field="title" validation="required">Title</FormField>
-				<FormField type="text" field="body" validation="required">Text</FormField>
+				<FormField type="textarea" field="body" validation="required">Text</FormField>
 				<FormField type="date" field="date" validation="required">Date</FormField>
+                <input type="file" />
 			</Form>
 		)
 	}

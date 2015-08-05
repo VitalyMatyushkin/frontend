@@ -9,7 +9,8 @@ GroupAction = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         actionList:React.PropTypes.array.isRequired,
-        serviceName:React.PropTypes.string.isRequired
+        serviceName:React.PropTypes.string.isRequired,
+        groupActionFactory:React.PropTypes.func
     },
     getInitialState:function(){
         return{
@@ -43,9 +44,9 @@ GroupAction = React.createClass({
     renderGroupActionListItems:function(listArray){
         var self = this;
         if(listArray !== undefined){
-            return listArray.map(function(item){
+            return listArray.map(function(item,i){
                 return (
-                    <div onClick={function(){self.handleActionItemClick(item)}}>{item}</div>
+                    <div key={i} onClick={function(){self.handleActionItemClick(item)}}>{item}</div>
                 );
             });
         }
@@ -60,87 +61,12 @@ GroupAction = React.createClass({
         var self = this;
         for(var i=0; i<self.checkBoxCollections.length; i++)self.checkBoxCollections.item(i).checked = self.checkBoxCollections.item(i).checked === false;
     },
-    handleApplyActionClick:function(){
+    _renderApplyButton:function(){
         var self = this,
-            binding = self.getDefaultBinding(),
-            el = React.findDOMNode(self.refs.selectedAction);
-        if(el.innerText !== ''){
-            var selectedBoxesId = [];
-            for(var x=0; x<self.checkBoxCollections.length; x++)if(self.checkBoxCollections.item(x).checked===true)selectedBoxesId.push(self.checkBoxCollections.item(x).dataset.id);
-            switch (el.innerText){
-                case 'Add Role':
-                    if(selectedBoxesId.length >=1){
-                        binding.set('popup',true);
-                        binding.set('groupIds',selectedBoxesId);
-                        self.forceUpdate();
-                    }else{
-                        alert("Please Select at least 1 row");
-                    }
-                    break;
-                case 'Revoke All Roles':
-                    self._revokeAllRoles(selectedBoxesId);
-                    break;
-                case 'Unblock':
-                    self._accessRestriction(selectedBoxesId,0);
-                    break;
-                case 'Block':
-                    self._accessRestriction(selectedBoxesId,1);
-                    break;
-                default :
-                    break;
-            }
-        }else{
-            alert('Please select an action to Apply');
-        }
-    },
-    _revokeAllRoles:function(ids){
-        var self = this;
-        if(ids !== undefined && ids.length >= 1){
-            ids.forEach(function(id){
-                window.Server.Permissions.get({filter:{where:{principalId:id}}})
-                    .then(function (res) {
-                        res.forEach(function(p){
-                            window.Server.Permission.delete({id:p.id}).then(function(response){
-                                console.log(response);
-                                window.location.reload(true);
-                            });
-                        });
-                });
-            });
-        }
-    },
-    _accessRestriction:function(ids,action){
-        var self = this;
-        if(ids !== undefined && ids.length >= 1){
-            switch(action){
-                case 0:
-                    ids.forEach(function(id){
-                        window.Server.user.put({id:id},{blocked:false}).then(function(res){
-                            //console.log(res);
-                            window.location.reload(true);
-                        });
-                    });
-                    break;
-                case 1:
-                    ids.forEach(function(id){
-                        window.Server.user.put({id:id},{blocked:true}).then(function(res){
-                            //console.log(res);
-                            window.location.reload(true);
-                        });
-                    });
-                    break;
-                default :
-                    break;
-            }
-        }else{
-            alert('Please select a row');
-        }
-    },
-    _closePopup:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-        binding.set('popup',false);
-        self.forceUpdate();
+            handleApplyClick = function(){return function(evt){self.props.groupActionFactory(React.findDOMNode(self.refs.selectedAction),self.checkBoxCollections); evt.stopPropagation();}};
+        return (
+            <span className="applyAction" onClick={handleApplyClick()}>Apply</span>
+        )
     },
     render:function(){
         var self = this,
@@ -161,11 +87,8 @@ GroupAction = React.createClass({
                     </span>
                 </div>
                 <div className="groupAction_item">
-                    <span className="applyAction" onClick={self.handleApplyActionClick.bind(null,this)}>Apply</span>
+                    {self._renderApplyButton()}
                 </div>
-                <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}} otherClass="bPopupGrant">
-                    <GrantRole  binding={binding} />
-                </Popup>
             </div>
         );
     }

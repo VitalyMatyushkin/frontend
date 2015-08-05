@@ -7,12 +7,67 @@
   font-size: 0px;
   text-transform: uppercase;
 }
-
+.bPublicMenu{
+  min-height: 70px;
+  height: 70px;
+  line-height: 50px;
+  font-size: 24px;
+  text-transform: uppercase;
+  padding: 10px;
+  position: relative;
+  width:150px;
+  float:left;
+}
+.bPublicMenu span{
+  margin-right: 20px;
+}
+.bPublicMenu span.hBurgerIcon{
+  cursor: pointer;
+}
 .bTopMenu.mRight {
   float: right;
   text-align: right;
 }
-
+.bPublicMenu_icon{
+  width: 40px !important;
+  height: 20px !important;
+  color: #FFFFFF !important;
+}
+.bPublicMenu_tray{
+  background: rgba(76,175,80,0.5);
+  height: auto;
+  padding: 0;
+  position: absolute;
+  top: 70px;
+  left: 0;
+  width: 0;
+  -webkit-transition: width 0.5s, padding 0.5s;
+  -moz-transition: width 0.5s, padding 0.5s;
+  -ms-transition: width 0.5s, padding 0.5s;
+  -o-transition: width 0.5s, padding 0.5s;
+  transition: width 0.5s, padding 0.5s;
+  z-index: 9999;
+}
+.bPublicMenu_show{
+  width: 160px;
+  padding: 20px;
+  display: block;
+}
+.bPublicMenu_hide{
+  width: 0;
+  padding: 0;
+  display: none;
+}
+.bPublicMenu_item{
+  text-transform: uppercase;
+  font-size: 20px;
+  color: #ffffff;
+  cursor: pointer;
+  width:inherit;
+}
+.bPublicMenu_item:hover{
+  text-decoration: underline;
+}
 .eTopMenu_item {
   display: inline-block;
   padding: 0 20px;
@@ -94,4 +149,65 @@
 }
 .eTopMenu_trayActive{
   display:block;
+}
+.bPublicMenu_login{
+  width: 226px;
+  height: 70px;
+  line-height: 70px;
+  float:left;
+}
+.loginUserIcon{
+  display:inline-block;
+}
+.bPublicMenu_login_txt{
+  display: inline-block;
+  margin: 0 10px 0 10px;
+}
+.loginChevronDwn{
+  display: inline-block;
+}
+.bPublicMenu_login_holder{
+  position:relative;
+  cursor: pointer;
+  padding-left: 50px;
+  margin-left: 32px;
+}
+.bPublicMenu_login_tray{
+  position: absolute;
+  top:70px;
+  left: 0;
+  width:1200px;
+  height: 300px;
+  background: rgba(76,175,80,0.5);
+  display: none;
+}
+.bPublicMenu_login_active{
+  background:#3d8b40;
+}
+.bPublicMenu_login .eForm_field{
+  height:48px;
+}
+.bPublicMenu_login .eForm_fieldName{
+  height:20px;
+}
+.bPublicMenu_login .mRight{
+  height:25px;
+  line-height: 25px;
+  margin-top: 10px;
+}
+.bPublicMenu_login .bForm h2{
+  margin-bottom: -30px;
+}
+.signInActive{
+  display: block;
+}
+.forgottenLink{
+  margin-top: -59px;
+  position: absolute;
+  color: #fff;
+  left: 726px;
+  top: 290px;
+}
+.forgottenLink:hover{
+  text-decoration: underline;
 }

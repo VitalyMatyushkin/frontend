@@ -30,11 +30,11 @@ function initMainView(schoolId) {
 
 	// Передача связывания контекста в классы данных
 	userDataInstance.setBinding(binding.sub('userData'));
-
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
 		binding: binding,
-		defaultPath: 'school_admin/summary'
+		defaultPath: 'home',
+        asSchool:true //Flag for public school page
 	});
 
 	// Включение авторизации сервисов

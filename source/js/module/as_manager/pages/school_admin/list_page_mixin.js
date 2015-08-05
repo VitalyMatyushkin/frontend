@@ -23,10 +23,10 @@ ListPageMixin = {
 			requestFilter = { where: {} },
             defaultRequestFilter ={where:{}},
 			binding = self.getDefaultBinding(),
+            page = window.location.href.split('/'),
 			isFiltersActive = binding.meta().get('isFiltersActive');
         self.popUpState = true;
 		self.request && self.request.abort();
-
 		// Фильтрация по школе
 		if (self.props.addSchoolToFilter !== false) {
 			requestFilter.where.schoolId = self.activeSchoolId;
@@ -68,7 +68,7 @@ ListPageMixin = {
                 }
             }
         }
-        //Added this condition to test for other service requests without ids
+        //Condition to test for other service requests without ids
         if(self.activeSchoolId !== null){
             self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                 self.popUpState = false;
@@ -76,8 +76,18 @@ ListPageMixin = {
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
+                if(page[page.length-1] === 'requests'){
+                    var notAccepted = [];
+                    data.forEach(function(d){
+                        if(d.accepted === 'undefined' || d.accepted === undefined){
+                            notAccepted.push(d);
+                        }
+                    });
+                    binding.set(Immutable.fromJS(notAccepted));
+                }else{
+                    binding.set(Immutable.fromJS(data));
+                }
                 self.popUpState = false;
-                binding.set(Immutable.fromJS(data));
             });
         }
 	},
@@ -114,7 +124,7 @@ ListPageMixin = {
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
-            excludeAddButton = ['logs','permissions'], //Add page name to this array if you don't want to display add button
+            excludeAddButton = ['logs','permissions','archive','#admin_schools'], //Add page name to this array if you don't want to display add button
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
         if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
@@ -127,7 +137,7 @@ ListPageMixin = {
 				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
-                        <GroupAction serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                        <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
@@ -140,7 +150,7 @@ ListPageMixin = {
                 <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
-                            <GroupAction serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                            <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                         </div>
                     </div>
                 </If>

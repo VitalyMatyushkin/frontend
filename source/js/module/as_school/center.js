@@ -16,7 +16,10 @@ Center = React.createClass({
 			binding = self.getDefaultBinding(),
 			currentPage =  binding.get('routing.currentPageName') || '',
 			mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
-
+//        <RegisterRoute binding={binding.sub('form.register')}  />
+//        <LoginRoute binding={binding.sub('userData')}  />
+//<LogoutRoute binding={binding.sub('userData')}  />
+//<VerifyRoute binding={binding.sub('userData')} />
 		return (
 			<div className={mainClass}>
 				<div className="bPageWrap">
@@ -29,11 +32,7 @@ Center = React.createClass({
 						<Route path="/opponents/:subPage" binding={binding.sub('opponentsList')} component="module/as_school/pages/opponents/opponents_page"  />
 
 						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
-
-						<RegisterRoute binding={binding.sub('form.register')}  />
-						<LoginRoute binding={binding.sub('userData')}  />
-						<LogoutRoute binding={binding.sub('userData')}  />
-						<VerifyRoute binding={binding.sub('userData')} />
+                        <Route path="/ /home" binding={binding.sub('schoolHomePage')} component="module/as_school/pages/school_home/home"  />
                     </RouterView>
 
 				</div>

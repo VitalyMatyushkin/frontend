@@ -54,13 +54,13 @@ UserDetail= React.createClass({
     },
     _getRelatedSchool:function(data){
         var self = this;
-        if(typeof data !== 'undefined'){
+        if(data !== undefined){
             return data.map(function(role){
                 return(
                     <div className="eDataList_listItem">
-                        <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={role.school.pic}/></span></div>
-                        <div className="eDataList_listItemCell">{role.school.name}</div>
-                        <div className="eDataList_listItemCell">{typeof role.student !== 'undefined'? role.student.firstName+" "+role.student.lastName : ''}</div>
+                        <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={role.school !== undefined ? role.school.pic:'http://placehold.it/400x400'}/></span></div>
+                        <div className="eDataList_listItemCell">{role.school !== undefined ? role.school.name: 'n/a'}</div>
+                        <div className="eDataList_listItemCell">{role.student !== undefined? role.student.firstName+" "+role.student.lastName : ''}</div>
                         <div className="eDataList_listItemCell">{role.preset}</div>
                     </div>
                 )

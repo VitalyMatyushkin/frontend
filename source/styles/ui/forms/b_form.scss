@@ -19,7 +19,11 @@
   margin-right: 10px;
   position: relative;
 }
-
+.eForm_fieldInput textarea{
+  resize: none;
+  height: 400px;
+  width: 800px;
+}
 .eForm_fieldInput.mHidden {
   display: none;
 }
