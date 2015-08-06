@@ -35,7 +35,7 @@ HomeCalender = React.createClass({
                 var team1 = self.getTeams(fixture.participants[0]),
                     team2 = self.getTeams(fixture.participants[1]);
                 return (
-                    <div className="eSchoolFixtureListItem">
+                    <div key={fixture.id} className="eSchoolFixtureListItem">
                         <h5>{self.getDateFromIso(fixture.startTime)+ ':'}</h5>
                         <span>{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
                         <span>{fixture.sport.name+ ' '+fixture.type+'; '+team1+'; '+team2}</span>

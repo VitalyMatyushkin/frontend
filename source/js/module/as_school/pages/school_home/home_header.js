@@ -11,14 +11,14 @@ HomeHeader = React.createClass({
             activeSchoolId = rootBinding.get('activeSchoolId');
         window.Server.school.get({id:activeSchoolId}).then(function(school){
             binding.set('school',Immutable.fromJS(school));
-            console.log(school);
+            //console.log(school);
         });
     },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             schoolName = binding.get('school.name') !== undefined ? binding.get('school.name'):'The peoples School',
-            schoolMotto = binding.get('school.motto') !== undefined ? binding.get('school.motto') :'Mens Sana in corpore sano - Healthy mind in a healthy body',
+            schoolMotto = binding.get('school.description') !== undefined ? binding.get('school.description') :'Mens Sana in corpore sano - Healthy mind in a healthy body',
             schoolBlazon = binding.get('school.pic') !== undefined ? binding.get('school.pic'):'http://placehold.it/400x400',
             backgroundImageUrl = binding.get('school.home') !== undefined ? binding.get('school.home') :'http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG';
         return(

@@ -12,6 +12,7 @@ SchoolHomePage = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
+        //console.log(binding.toJS());
         return (
             <div className="eSchoolHomePage">
                 <HomeHeader binding={binding}/>
@@ -19,7 +20,7 @@ SchoolHomePage = React.createClass({
                     <HomeFixture binding={binding} />
                     <HomeNews binding={binding}/>
                     <HomeCalender binding={binding} />
-                    <HomeBlog  />
+                    <HomeBlog binding={binding}  />
                 </div>
                 <div className="eSchoolHomeFooter">
                     &copy;All Rights Reserved, SquadInTouch.com  SquadInTouch.com &trade;

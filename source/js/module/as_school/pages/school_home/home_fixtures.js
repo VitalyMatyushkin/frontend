@@ -11,9 +11,9 @@ HomeFixtures = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('activeSchoolId');
-        window.Server.eventsBySchoolId.get({schoolId:activeSchoolId}).then(function(events){
+        window.Server.fixturesBySchoolId.get({schoolId:activeSchoolId, filter:{order:'startTime ASC'}}).then(function(events){
             binding.set('fixtures',Immutable.fromJS(events));
-            console.log(events);
+            //console.log(events);
         });
     },
     getFixtureDate:function(startTime, type){
@@ -84,7 +84,7 @@ HomeFixtures = React.createClass({
         if(events !== undefined){
             return events.map(function(event){
                 return (
-                    <div className="bFixtureContainer">
+                    <div key={event.id} className="bFixtureContainer">
                         <div className="bFixtureIcon bFixture_item">{self.getSportIcon(event.sport)}</div>
                         <div className="bFixtureDate bFixture_item">{self.getFixtureDate(event.startTime,event.type)}</div>
                         <div className="bFixtureOpponent bFixture_item no-margin">{self.getParticipantEmblem(event.participants[0])}</div>
