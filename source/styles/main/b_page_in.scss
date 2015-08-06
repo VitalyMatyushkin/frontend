@@ -17,6 +17,7 @@
   left: 0;
   width: 100%;
   height: auto;
+  z-index: 200;
 }
 .eSchoolSalute{
   font-size: 86px;
@@ -513,4 +514,24 @@
   top:  230px;
   left: 130px;
   color:#8e908c;
+}
+.eSchoolMainSlideOutBanner{
+  position: absolute;
+  top: 0;
+  left:0;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  background:transparent;
+}
+.eSchoolMainSlideOutBanner img{
+  width: 100%;
+  height: 100%;
+}
+.transitionImage{
+  -webkit-transition: all 0.5s ease-in-out, background 0.5s linear;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
 }
