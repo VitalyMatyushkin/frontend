@@ -3,6 +3,30 @@ var authСontroller;
 authСontroller = {
 	nextPage: '',
 	dieTimer: null,
+	initialize: function(options) {
+		var self = this;
+
+		if (!options || !options.binding) {
+			console.error('Error while initializing the authorization controller');
+		}
+
+		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
+		if (document.location.hash && document.location.hash.indexOf('login') === -1) {
+			self.nextPage = document.location.hash;
+		}else {
+			self.defaultPath = options.defaultPath || '#/';
+			self.nextPage = self.defaultPath;
+		}
+		//By pass authentication for public home page for school
+		if(options.asSchool === true){
+			self.nextPage = options.defaultPath;
+		}
+
+		self.binding = options.binding;
+
+		self.updateAuth();
+		self.binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
+	},
 	updateAuth: function() {
 		var self = this,
 			binding = self.binding,
@@ -46,30 +70,6 @@ authСontroller = {
 		}else if(self.nextPage ==='home'){
             document.location.hash = self.nextPage;  //Bypass authentication
         }
-	},
-	initialize: function(options) {
-		var self = this;
-
-		if (!options || !options.binding) {
-			console.error('Error while initializing the authorization controller');
-		}
-
-		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
-		if (document.location.hash && document.location.hash.indexOf('login') === -1) {
-			self.nextPage = document.location.hash;
-		}else {
-			self.defaultPath = options.defaultPath || '#/';
-			self.nextPage = self.defaultPath;
-		}
-        //By pass authentication for public home page for school
-        if(options.asSchool === true){
-            self.nextPage = options.defaultPath;
-        }
-
-		self.binding = options.binding;
-
-		self.updateAuth();
-		self.binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
 	},
 	startTTLTimer: function(secondsToLive) {
 		var self = this;

@@ -33,8 +33,16 @@ PermissionsStep = React.createClass({
 				icon: 'users'
 			},
 			{
-				name: 'official',
+				name: 'admin',
 				icon: 'user-tie'
+			},
+			{
+				name: 'manager',
+				icon: 'user-tie'
+			},
+			{
+				name: 'teacher',
+				icon: 'user'
 			},
 			{
 				name: 'coach',
@@ -70,20 +78,9 @@ PermissionsStep = React.createClass({
 	 * @returns {*}
 	 */
 	serviceSchoolFilter: function(schoolName) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		var self = this;
 
-		return window.Server.schools.get({
-			filter: {
-				where: {
-					name: {
-						like: schoolName,
-						options: 'i'
-					}
-				},
-				limit: 10
-			}
-		});
+		return window.Server.getAllSchools.get();
 	},
 	/**
 	 * house filter by houseName
@@ -168,18 +165,47 @@ PermissionsStep = React.createClass({
 			})}
 		</div>
 	},
+	onSuccess: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			currentType = binding.get('type'),
+			schoolId = binding.get('schoolId'),
+			dataToPost;
+
+		if(currentType === 'parent') {
+
+		} else {
+			dataToPost = {
+				preset: currentType,
+				schoolId: schoolId
+			};
+		}
+
+		window.Server.Permissions
+			.post(dataToPost)
+			.then(function(permissionData) {
+				self.props.onSuccess();
+			})
+			.catch(function(err) {
+
+			});
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			currentType = binding.get('type'),
 			isShowFinishButton = false;
 
-		if (currentType === 'parent' && binding.get('firstName') !== null && binding.get('lastName') !== null) {
+		if (currentType === 'admin' && binding.get('schoolId') !== null) {
 			isShowFinishButton = true;
-		}
+		} else if (currentType === 'manager' && binding.get('schoolId') !== null) {
+			isShowFinishButton = true;
+		} else if(currentType === 'teacher' && binding.get('schoolId') !== null) {
+			isShowFinishButton = true;
+		} else if(currentType === 'coach' && binding.get('schoolId') !== null) {
+			isShowFinishButton = true;
+		} else if(currentType === 'parent' && binding.get('schoolId') !== null) {
 
-		if (currentType !== 'parent' && binding.get('schoolId') !== null) {
-			isShowFinishButton = true;
 		}
 
 		return <div className="eRegistration_permissions">
@@ -233,12 +259,11 @@ PermissionsStep = React.createClass({
 					</div>
 				</If>
 				<If condition={isShowFinishButton}>
-					<div className="bButton" onClick={self.onSuccess}>as official</div>
+					<div className="bButton" onClick={self.onSuccess}>Continue</div>
 				</If>
 			</div>
 		</div>
 	}
 });
-
 
 module.exports = PermissionsStep;

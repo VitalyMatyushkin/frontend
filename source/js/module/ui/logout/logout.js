@@ -12,5 +12,4 @@ LoginUserPage = React.createClass({
 	}
 });
 
-
 module.exports = LoginUserPage;

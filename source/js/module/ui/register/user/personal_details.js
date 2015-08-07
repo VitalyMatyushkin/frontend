@@ -9,16 +9,23 @@ RegiseterUserForm = React.createClass({
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
+	onPreSubmit: function(data) {
+		var data = {
+			id: data.id,
+			firstName: data.firstName,
+			lastName: data.lastName
+		};
+
+		return data;
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		return (
 			<Form name="Account Setup" updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="firstName" validation="alphanumeric">First Name</FormField>
 				<FormField type="text" field="lastName" validation="alphanumeric">Last name</FormField>
-				<FormField type="phone" field="phone" validation="phone">Mobile phone</FormField>
-				<FormField type="text" field="address" validation="text">Address</FormField>
+				<FormField type="text" field="address" validation="alphanumeric">Address</FormField>
 			</Form>
 		)
 	}

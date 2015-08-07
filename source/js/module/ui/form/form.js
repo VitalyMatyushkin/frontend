@@ -57,16 +57,17 @@ Form = React.createClass({
             token = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId'),
             fields = self.getDefaultBinding().meta().toJS(),
             hereIsError = false,
-            dateToPost = {},
+            dataToPost = {},
             typeOfService = typeof self.props.service,
             userService;
 
         if (self.busy === true) {
             return false;
         }
+
         // Проверка всех полей данных на валидацию
         for (var field in fields) {
-            dateToPost[field] = fields[field].value;
+            dataToPost[field] = fields[field].value;
 
             if (fields[field].error) {
                 self.getDefaultBinding().meta().update(field, function (immutableValue) {
@@ -76,8 +77,15 @@ Form = React.createClass({
             }
         }
 
-        //TODO: Заменить dateToPost на Merge данных из statePath
-        dateToPost.ownerId = token;
+        React.Children.forEach(this.props.children, function (child) {
+            if(child.props.onPrePost !== undefined) {
+                dataToPost[child.props.field] = child.props.onPrePost(dataToPost[child.props.field]);
+            }
+        }.bind(self));
+
+        //TODO: Заменить dataToPost на Merge данных из statePath
+        //TODO: WTF??
+        dataToPost.ownerId = token;
         // Если ошибок нет, обращаемся с данными к сервису
         if (hereIsError === false) {
 
@@ -86,26 +94,34 @@ Form = React.createClass({
 
             // TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
             if (typeof self.props.onSubmit === 'function') {
-                self.props.onSubmit(dateToPost);
+                self.props.onSubmit(dataToPost);
 
                 return false;
             }
 
-            self.postedData = dateToPost;
+            if (typeof self.props.onPreSubmit === 'function') {
+                dataToPost = self.props.onPreSubmit(dataToPost);
+            }
+
+            self.postedData = dataToPost;
 
             // TODO: Зарефакторить эту кашицу
             if (['object', 'function'].indexOf(typeOfService) !== -1) {
                 userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
 
-                userService(dateToPost).then(self._onServiceSucces.bind(self), self._onServiceError.bind(self));
+                userService(dataToPost).then(self._onServiceSucces.bind(self), self._onServiceError.bind(self));
 
             } else {
+                var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
+                var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :
+                    (window.apiBase + '/' + self.props.service);
+
                 $.ajax({
-                    url: window.apiBase + '/' + self.props.service,
-                    type: typeof dateToPost.id === 'string' ? 'PUT' : 'POST',
+                    url: url,
+                    type: type,
                     crossDomain: true,
                     dataType: 'json',
-                    data: dateToPost,
+                    data: type === 'PUT' ? JSON.stringify(dataToPost) : dataToPost,
                     error: self._onServiceError.bind(self),
                     success: self._onServiceSucces.bind(self)
                 });

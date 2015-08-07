@@ -68,7 +68,12 @@ RegisterUserPage = React.createClass({
         }
     },
     finish: function () {
-        console.log('finish');
+		var binding = this.getDefaultBinding();
+
+		window.Server.logout.post();
+		Helpers.cookie.remove('authorizationInfo');
+		binding.sub('authorizationInfo').clear();
+		document.location.href = '/';
     },
     renderSteps: function () {
         var self = this,
@@ -91,8 +96,6 @@ RegisterUserPage = React.createClass({
             currentView = null,
             binding = self.getDefaultBinding(),
             currentStep = binding.get('registerStep');
-
-        //r3btutu
 
         if (currentStep === 'account') {
             currentView = <AccountForm
