@@ -18,7 +18,7 @@ HomeHeader = React.createClass({
                     include:'photos',
                     limit:6
                 }}).then(function(albumForSchool){
-                console.log(albumForSchool);
+                //console.log(albumForSchool);
                 albumForSchool.forEach(function(album){
                     album.photos.forEach(function(photo){
                         //localArrayOfPhotos.push(photo.pic);
@@ -45,6 +45,7 @@ HomeHeader = React.createClass({
         },5000);
     },
     componentWillUnmount:function(){
+        var self = this;
       clearInterval(self.intervalId);
     },
     render:function(){

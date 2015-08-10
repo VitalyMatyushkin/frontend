@@ -386,12 +386,15 @@
   width: 2880px;
   background: #FFFFFF;
   overflow-x:scroll;
+  overflow-y: hidden;
   position:relative;
   -webkit-transition: margin 1s;
   -moz-transition: margin 1s;
   -ms-transition: margin 1s;
   -o-transition: margin 1s;
   transition: margin 1s;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
 }
 .testChildren{
   height: 248px;
@@ -410,11 +413,19 @@
   height: 64px;
   color:#FFFFFF;
 }
-.chevRight, .chevLeft{
+.chevRight, .chevLeft, .chevUp, .chevDown{
   cursor: pointer;
 }
 .chevRight{
   left: 922px;
+}
+.chevUp{
+  top: 0;
+  left: 450px;
+}
+.chevDown{
+  top: 230px;
+  left: 450px;
 }
 .chevronMod{
   width: 40px !important;
@@ -498,8 +509,13 @@
   color:#FFFFFF;
 }
 .carouselUpScroll{
-  overflow: hidden;
+  //overflow: hidden;
+  //overflow-y: hidden;
   overflow-y: scroll;
+  //height: 1200px;
+  //border: 2px solid red;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
 }
 .versusText{
   font-size: 64px;
@@ -534,4 +550,7 @@
   -ms-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
+}
+::-webkit-scrollbar {
+  display: none;
 }

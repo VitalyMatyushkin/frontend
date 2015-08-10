@@ -1,20 +1,25 @@
 /**
  * Created by bridark on 03/08/15.
  */
-var BlogCarousel;
+var BlogCarousel,
+    SVG = require('module/ui/svg');
 BlogCarousel = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
     },
+    getInitialState:function(){
+        return{updateBlogContents:false}
+    },
     componentWillMount:function(){
         var self  = this,
             binding = self.getDefaultBinding();
+        self.itemHeight = 0;
     },
     componentDidMount:function(){
         var self = this;
         setTimeout(function(){
             self._getAuthorForComments();
-        },1000);
+        },2000);
     },
     _getAuthorForComments:function(){
         var self = this,
@@ -23,8 +28,7 @@ BlogCarousel = React.createClass({
             blogArray = [];
         if(fixtures !== undefined){
             //console.log(fixtures[2].id);
-            window.Server.addToBlog.get({id:fixtures[2].id, filter:{order:'meta.created DESC',limit:4}}).then(function(fix){
-                //console.log(fix);
+            window.Server.addToBlog.get({id:fixtures[2].id, filter:{order:'meta.created DESC',limit:3}}).then(function(fix){
                 fix.forEach(function(fixture){
                     window.Server.user.get({id:fixture.ownerId}).then(function(author){
                         fixture.author = author;
@@ -32,11 +36,12 @@ BlogCarousel = React.createClass({
                         binding.set('commentsWithAuthor',Immutable.fromJS(blogArray));
                     });
                 });
-
             });
         }
     },
     _renderCommentsWithAuthors:function(contents){
+        var self = this,
+            binding = self.getDefaultBinding();
         if(contents !== undefined){
             return contents.map(function(content){
                 return(
@@ -54,16 +59,42 @@ BlogCarousel = React.createClass({
                     </div>
                 )
             });
+        }else{
+            return (
+                <div>{'no contents'}</div>
+            )
+        }
+    },
+    handleChevronClick:function(param){
+        var self = this,
+            carousel = React.findDOMNode(self.refs.blogScroll),
+            carouselItemHeight = 248;
+        if(param === 'panUp' && self.itemHeight < 744){
+            self.itemHeight +=248;
+            carousel.style.marginTop = -self.itemHeight+'px';
+        }else if(param ==='panDown'){
+            if(self.itemHeight >= 744){
+                self.itemHeight = 248;
+                carousel.style.marginTop = -self.itemHeight+'px';
+            }else{
+                self.itemHeight = 0;
+                carousel.style.marginTop = self.itemHeight+'px';
+            }
         }
     },
     render:function(){
         var self  = this,
             binding = self.getDefaultBinding(),
             contentForCarousel = self._renderCommentsWithAuthors(binding.toJS('commentsWithAuthor'));
-        //console.log(contentForCarousel);
         return (
-            <div className="testChildren carouselUpScroll">
+            <div ref="blogScroll" className="testChildren carouselUpScroll">
                 {contentForCarousel}
+                <span  ref="panUp" className="carouselChevron chevUp">
+                   <SVG icon="icon_chevron-up" classes="chevronMod-1"></SVG>
+                </span>
+                <span  ref="panDown" className="carouselChevron chevDown">
+                    <SVG icon="icon_chevron-down" classes="chevronMod-2"></SVG>
+                </span>
             </div>
         );
     }
