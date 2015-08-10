@@ -39,7 +39,7 @@ AdminRequest = React.createClass({
             case 'Accept':
                 confirmMsg = window.confirm("Are you sure you want to accept ?");
                 if(confirmMsg === true){
-                    window.Server.Permission.put({id:id},{accepted:true}).then(function(){
+                    window.Server.setPermissions.post({id:id},{accepted:true}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== id;
@@ -51,7 +51,7 @@ AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.Permission.put({id:id},{accepted:false}).then(function(){
+                    window.Server.Permission.setPermissions.post({id:id},{accepted:false}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== id;
