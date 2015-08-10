@@ -94,13 +94,8 @@ PermissionsStep = React.createClass({
 		return window.Server.houses.get(binding.get('schoolId'), {
 			filter: {
 				where: {
-					schoolId: binding.get('schoolId'),
-					name: {
-						like: houseName,
-						options: 'i'
-					}
-				},
-				limit: 10
+					schoolId: binding.get('schoolId')
+				}
 			}
 		});
 	},
@@ -116,13 +111,8 @@ PermissionsStep = React.createClass({
 		return window.Server.forms.get(binding.get('schoolId'), {
 			filter: {
 				where: {
-					schoolId: binding.get('schoolId'),
-					name: {
-						like: formName,
-						options: 'i'
-					}
-				},
-				limit: 10
+					schoolId: binding.get('schoolId')
+				}
 			}
 		});
 	},
@@ -147,6 +137,18 @@ PermissionsStep = React.createClass({
 
 		binding.set('formId', formId);
 	},
+	onChangeFirstName: function(event) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('firstName', event.currentTarget.value);
+	},
+	onChangeLastName: function(event) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('lastName', event.currentTarget.value);
+	},
 	renderChooser: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -169,26 +171,43 @@ PermissionsStep = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			currentType = binding.get('type'),
-			schoolId = binding.get('schoolId'),
 			dataToPost;
 
 		if(currentType === 'parent') {
+			dataToPost = {
+				userId: binding.get('account').toJS().userId
+			};
 
+			window.Server.parentRequests
+				.post(dataToPost)
+				.then(function(parentRequest) {
+					window.Server.childRequests
+						.post(
+							parentRequest.id,
+							{
+								"schoolId": binding.get('schoolId'),
+								"formId": binding.get('formId'),
+								"houseId": binding.get('houseId'),
+								"firtsName": binding.get('firstName'),
+								"lastName": binding.get('lastName')
+							}
+						)
+						.then(function() {
+							self.props.onSuccess();
+						});
+				});
 		} else {
 			dataToPost = {
-				preset: currentType,
-				schoolId: schoolId
+				preset: binding.get('type'),
+				schoolId: binding.get('schoolId')
 			};
+
+			window.Server.Permissions
+				.post(dataToPost)
+				.then(function() {
+					self.props.onSuccess();
+				});
 		}
-
-		window.Server.Permissions
-			.post(dataToPost)
-			.then(function(permissionData) {
-				self.props.onSuccess();
-			})
-			.catch(function(err) {
-
-			});
 	},
 	render: function() {
 		var self = this,
@@ -196,16 +215,24 @@ PermissionsStep = React.createClass({
 			currentType = binding.get('type'),
 			isShowFinishButton = false;
 
-		if (currentType === 'admin' && binding.get('schoolId') !== null) {
-			isShowFinishButton = true;
-		} else if (currentType === 'manager' && binding.get('schoolId') !== null) {
-			isShowFinishButton = true;
-		} else if(currentType === 'teacher' && binding.get('schoolId') !== null) {
-			isShowFinishButton = true;
-		} else if(currentType === 'coach' && binding.get('schoolId') !== null) {
-			isShowFinishButton = true;
-		} else if(currentType === 'parent' && binding.get('schoolId') !== null) {
+		var isFormFilled = function(currentType) {
 
+			return	(
+						(
+							currentType === 'admin' || currentType === 'manager' ||
+							currentType === 'teacher' || currentType === 'coach'
+						) && binding.get('schoolId') !== null
+					) ||
+					(
+							currentType === 'parent' &&
+							binding.get('schoolId') !== null && binding.get('houseId') !== null &&
+							binding.get('formId') !== null && binding.get('firstName') !== null &&
+							binding.get('lastName') !== null
+					);
+		};
+
+		if(isFormFilled(currentType)) {
+			isShowFinishButton = true;
 		}
 
 		return <div className="eRegistration_permissions">
@@ -242,20 +269,12 @@ PermissionsStep = React.createClass({
 				</If>
 				<If condition={binding.get('formId') !== null && currentType === 'parent'}>
 					<div>
-						<Morearty.DOM.input
-							type="text"
-							className="eRegistration_input"
-							placeholder="Firstname"
-							ref="firstNameField"
-							onChange={ Morearty.Callback.set(binding, 'firstName') }
-							/>
-						<Morearty.DOM.input
-							type="text"
-							className="eRegistration_input"
-							placeholder="Lastname"
-							ref="lastNameField"
-							onChange={ Morearty.Callback.set(binding, 'lastName') }
-							/>
+						<div className="eRegistration_input">
+							<input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
+						</div>
+						<div className="eRegistration_input">
+							<input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
+						</div>
 					</div>
 				</If>
 				<If condition={isShowFinishButton}>

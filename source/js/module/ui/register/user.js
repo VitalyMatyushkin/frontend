@@ -98,9 +98,10 @@ RegisterUserPage = React.createClass({
             currentStep = binding.get('registerStep');
 
         if (currentStep === 'account') {
-            currentView = <AccountForm
-                onSuccess={self.setStepFunction.bind(null, 'verification')}
-                binding={binding.sub('formFields')}
+            currentView =
+				<AccountForm
+                	onSuccess={self.setStepFunction.bind(null, 'verification')}
+                	binding={binding.sub('formFields')}
                 />
         } else if (currentStep === 'verification') {
             currentView = <VerificationStep
@@ -112,22 +113,26 @@ RegisterUserPage = React.createClass({
 				}}
                 />
         } else if (currentStep === 'personal') {
-            currentView = <PersonalForm
-                onSuccess={self.setStepFunction.bind(null, 'permissions')}
-                binding={binding.sub('formFields')}
+            currentView =
+				<PersonalForm
+                	onSuccess={self.setStepFunction.bind(null, 'permissions')}
+                	binding={binding.sub('formFields')}
                 />
         } else if (currentStep === 'permissions') {
-            currentView = <PermissionsList
-                onSuccess={self.setStepFunction.bind(null, 'finish')}
-                binding={{
-					formFields: binding.sub('formFields'),
-					default: binding.sub('permissionsFields')
-				}}
+            currentView =
+				<PermissionsList
+                	onSuccess={self.setStepFunction.bind(null, 'finish')}
+                	binding={{
+						//account: binding.sub('account'),
+						//formFields: binding.sub('formFields'),
+						default: binding
+					}}
                 />
         } else if (currentStep === 'finish') {
-            currentView = <RegisterDone
-                onSuccess={self.finish}
-                binding={binding.sub('formFields')}
+            currentView =
+				<RegisterDone
+                	onSuccess={self.finish}
+                	binding={binding.sub('formFields')}
                 />
         }
 

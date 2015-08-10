@@ -9,15 +9,6 @@ RegiseterUserForm = React.createClass({
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
-	onPreSubmit: function(data) {
-		var data = {
-			id: data.id,
-			firstName: data.firstName,
-			lastName: data.lastName
-		};
-
-		return data;
-	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();

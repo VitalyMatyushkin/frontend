@@ -138,6 +138,10 @@ serviceList = {
 		//Activity Logs
 		serviceList.activityLogs = new Service('/logs',binding);
 		serviceList.logCount = new Service('/logs/count',binding);
+
+		serviceList.parentRequests = new Service('/parentRequests', binding);
+		serviceList.parentRequest = new Service('/parentRequests/{id}', binding);
+		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {
