@@ -38,13 +38,14 @@ Center = React.createClass({
 						<Route path="/schools /schools/:subPage" binding={binding.sub('schoolsPage')} component="module/as_manager/pages/schools/schools_page"	/>
 
 
-						<Route path="/events /events/:subPage" binding={binding.sub('events')} component="module/as_manager/pages/events/events"	/>
-						<Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')} component="module/as_manager/pages/event/event"	/>
-						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"	/>
+                        <Route path="/events /events/:subPage" binding={binding.sub('events')} component="module/as_manager/pages/events/events"  />
+                        <Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')} component="module/as_manager/pages/event/event"  />
+						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
+                        <Route path="/photos /photos/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/school_admin/gallery/gallery_add"  />
+						<Route path="/invites /invites/:filter /invites/:inviteId/:mode" binding={binding.sub('invites')} component="module/as_manager/pages/invites/invites"  />
+						<Route path="/school_console /school_console/:filter /school_console/:inviteId/:mode" binding={binding.sub('permissions')} component="module/as_manager/pages/school_console/school_console"  />
+                    </RouterView>
 
-						<Route path="/invites /invites/:filter /invites/:inviteId/:mode" binding={binding.sub('invites')} component="module/as_manager/pages/invites/invites"	/>
-						<Route path="/school_console /school_console/:filter /school_console/:inviteId/:mode" binding={binding.sub('permissions')} component="module/as_manager/pages/school_console/school_console"	/>
-					</RouterView>
 				</div>
 			</div>
 		)

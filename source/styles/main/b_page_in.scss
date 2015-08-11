@@ -17,6 +17,7 @@
   left: 0;
   width: 100%;
   height: auto;
+  //z-index: 200;
 }
 .eSchoolSalute{
   font-size: 86px;
@@ -385,12 +386,15 @@
   width: 2880px;
   background: #FFFFFF;
   overflow-x:scroll;
+  overflow-y: hidden;
   position:relative;
-  -webkit-transition: margin 2s;
-  -moz-transition: margin 2s;
-  -ms-transition: margin 2s;
-  -o-transition: margin 2s;
-  transition: margin 2s;
+  -webkit-transition: margin 1s;
+  -moz-transition: margin 1s;
+  -ms-transition: margin 1s;
+  -o-transition: margin 1s;
+  transition: margin 1s;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
 }
 .testChildren{
   height: 248px;
@@ -409,11 +413,19 @@
   height: 64px;
   color:#FFFFFF;
 }
-.chevRight, .chevLeft{
+.chevRight, .chevLeft, .chevUp, .chevDown{
   cursor: pointer;
 }
 .chevRight{
   left: 922px;
+}
+.chevUp{
+  top: 0;
+  left: 450px;
+}
+.chevDown{
+  top: 230px;
+  left: 450px;
 }
 .chevronMod{
   width: 40px !important;
@@ -436,6 +448,30 @@
   border-radius: 50%;
   margin: 20px 20px 20px 55px;
   overflow: hidden;
+}
+.fixtureCarouselSchoolPic{
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  border:1px solid #c8cdd0;
+  border-radius: 50%;
+  margin: 20px 20px 20px 55px;
+  overflow: hidden;
+}
+.fixtureCarouselSchoolPic img{
+  width: 140px;
+  height: 184px;
+}
+.fixtureCarouselSchoolComment{
+  width: 300px;
+  height:248px;
+  float:left;
+  font-style: italic;
+  color:#8e908c;
+  font-size: 16px;
+  font-weight:500;
 }
 .authorPic img{
   width: 206px;
@@ -471,4 +507,50 @@
   position: relative;
   text-align: center;
   color:#FFFFFF;
+}
+.carouselUpScroll{
+  //overflow: hidden;
+  //overflow-y: hidden;
+  overflow-y: scroll;
+  //height: 1200px;
+  //border: 2px solid red;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+}
+.versusText{
+  font-size: 64px;
+  margin-top: 72px;
+}
+.carouselFixtureComment{
+  font-size: 24px;
+  margin-top:10px;
+}
+.fixtureCarouselParticipantName{
+  position: absolute;
+  top:  230px;
+  left: 130px;
+  color:#8e908c;
+}
+.eSchoolMainSlideOutBanner{
+  position: absolute;
+  top: 0;
+  left:0;
+  //z-index: 1;
+  width: 100%;
+  height: 100%;
+  background:transparent;
+}
+.eSchoolMainSlideOutBanner img{
+  width: 100%;
+  height: 100%;
+}
+.transitionImage{
+  -webkit-transition: all 0.5s ease-in-out, background 0.5s linear;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+::-webkit-scrollbar {
+  display: none;
 }

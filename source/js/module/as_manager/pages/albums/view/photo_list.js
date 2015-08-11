@@ -71,7 +71,7 @@ PhotoList = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             userId = rootBinding.get('userData.authorizationInfo.userId'),
-            isOwner = userId !== binding.get('ownerId');
+            isOwner = userId !== binding.get('ownerId'); console.log(binding.toJS());
 
         return <div className="bAlbums_list">
             <If condition={isOwner}>

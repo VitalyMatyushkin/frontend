@@ -9,10 +9,10 @@ HomeNews = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('activeSchoolId'); console.log(activeSchoolId);
+            activeSchoolId = rootBinding.get('activeSchoolId'); //console.log(activeSchoolId);
         window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:3}}).then(function(schoolNews){
             binding.set('schoolNews',Immutable.fromJS(schoolNews));
-            console.log(schoolNews);
+            //console.log(schoolNews);
         });
     },
     //Temporarily remove img from news body
@@ -51,7 +51,7 @@ HomeNews = React.createClass({
                 }
                 else{classes = "eSchoolNewsItemRight";imgSrc = "http://www.education.vic.gov.au/PublishingImages/about/awards/schoolsport.jpg";}
                 return(
-                    <div className={classes}>
+                    <div key={newsItem.id} className={classes}>
                         <span className="eSchoolNewsImage">
                                 <img src={imgSrc}/>
                         </span>
@@ -73,7 +73,7 @@ HomeNews = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             news = self.renderNewsItems();
-        console.log(binding.toJS());
+        //console.log(binding.toJS());
         //self.renderNewsItems();
         return (
             <div className="eSchoolNewsContainer">
