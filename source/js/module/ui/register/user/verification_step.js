@@ -19,7 +19,7 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-        Server.confirmUser.get({
+		Server.confirmUser.get({
             uid: accountBinding.get('userId'),
             token: binding.get('emailCode')
         }).then(function () {
@@ -37,7 +37,7 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-        Server.confirmUserPhone.get({
+		Server.confirmUserPhone.get({
             uid: accountBinding.get('userId'),
             token: binding.get('phoneCode')
         }).then(function () {

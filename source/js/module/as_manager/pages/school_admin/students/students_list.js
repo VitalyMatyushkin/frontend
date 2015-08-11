@@ -11,7 +11,7 @@ StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'students',
 	filters: {
-		include: ['user','form', 'parents']
+		include: ['user','form','parents']
 	},
 	_getViewFunction: function() {
 		var self = this;
