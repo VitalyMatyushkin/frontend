@@ -13,8 +13,7 @@ window.onload = function() {
 		external = document.location.hostname.match(/([A-z0-9-]+)+(?:.(stage))?.(squadintouch|squard)\.com/),
 		specialModels = ['parents', 'manager', 'admin', 'site', 'www', 'stage'],
 		startModule = 'module/start_as_',
-		//apiBase = 'api.stage.squadintouch.com',
-		apiBase = 'localhost:3000',
+		apiBase = 'api.stage.squadintouch.com',
 		version = 1;
 
 
