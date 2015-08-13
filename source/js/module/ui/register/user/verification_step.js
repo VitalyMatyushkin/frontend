@@ -23,7 +23,12 @@ VerificationStep = React.createClass({
             uid: accountBinding.get('userId'),
             token: binding.get('emailCode')
         }).then(function () {
-            formFieldsBinding.set('verified.email', true);
+
+			//TODO teplorary
+			formFieldsBinding.set('verified.phone', true);
+			accountBinding.set('account.user.verified.phone', true);
+
+			formFieldsBinding.set('verified.email', true);
             accountBinding.set('account.user.verified.email', true);
 
             if (formFieldsBinding.get('verified.phone')) {
