@@ -21,7 +21,7 @@ VerificationStep = React.createClass({
 
 		formFieldsBinding.set('verified.email', true);
 		accountBinding.set('account.user.verified.email', true);
-
+		self.props.onSuccess();
 		//Server.confirmUser.get({
         //    uid: accountBinding.get('userId'),
         //    token: binding.get('emailCode')
@@ -43,6 +43,7 @@ VerificationStep = React.createClass({
 
 		formFieldsBinding.set('verified.phone', true);
 		accountBinding.set('account.user.verified.phone', true);
+		self.props.onSuccess();
 
 		//Server.confirmUserPhone.get({
         //    uid: accountBinding.get('userId'),
