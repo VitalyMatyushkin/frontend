@@ -45,7 +45,7 @@ BlogCarousel = React.createClass({
         if(contents !== undefined){
             return contents.map(function(content){
                 return(
-                    <div key={content.id}>
+                    <div key={content.id} style={{position:'relative', width:100+'%', height:248+'px', float:'left'}}>
                         <div className="blogAuthorPicCarousel">
                             <div className="authorPic">
                                 <img src={content.author.avatar}/>
@@ -67,32 +67,40 @@ BlogCarousel = React.createClass({
     },
     handleChevronClick:function(param){
         var self = this,
-            carousel = React.findDOMNode(self.refs.blogScroll),
-            carouselItemHeight = 248;
+            carousel = React.findDOMNode(self.refs.blogScroll);
+        console.log(param);
+        console.log(carousel);
         if(param === 'panUp' && self.itemHeight < 744){
-            self.itemHeight +=248;
-            carousel.style.marginTop = -self.itemHeight+'px';
-        }else if(param ==='panDown'){
-            if(self.itemHeight >= 744){
-                self.itemHeight = 248;
-                carousel.style.marginTop = -self.itemHeight+'px';
-            }else{
-                self.itemHeight = 0;
-                carousel.style.marginTop = self.itemHeight+'px';
-            }
+            self.itemHeight += 248;
+            carousel.style.marginTop = self.itemHeight+'px';
         }
+        //    carouselItemHeight = 248;
+        //if(param === 'panUp' && self.itemHeight < 744){
+        //    self.itemHeight +=248;
+        //    carousel.style.marginTop = -self.itemHeight+'px';
+        //}else if(param ==='panDown'){
+        //    if(self.itemHeight >= 744){
+        //        self.itemHeight = 248;
+        //        carousel.style.marginTop = -self.itemHeight+'px';
+        //    }else{
+        //        self.itemHeight = 0;
+        //        carousel.style.marginTop = self.itemHeight+'px';
+        //    }
+        //}
     },
     render:function(){
         var self  = this,
             binding = self.getDefaultBinding(),
             contentForCarousel = self._renderCommentsWithAuthors(binding.toJS('commentsWithAuthor'));
         return (
-            <div ref="blogScroll" className="testChildren carouselUpScroll">
-                {contentForCarousel}
-                <span  ref="panUp" className="carouselChevron chevUp">
+            <div className="testChildren carouselUpScroll">
+                <div ref="blogScroll" style={{position:'relative', width:100+'%', height:248+'px', float:'left', overflow:'scroll'}}>
+                    {contentForCarousel}
+                </div>
+                <span ref="panUp" onClick={function(){self.handleChevronClick('panUp')}} className="carouselChevron chevUp">
                    <SVG icon="icon_chevron-up" classes="chevronMod-1"></SVG>
                 </span>
-                <span  ref="panDown" className="carouselChevron chevDown">
+                <span ref="panDown" onClick={function(){self.handleChevronClick('panDown')}} className="carouselChevron chevDown">
                     <SVG icon="icon_chevron-down" classes="chevronMod-2"></SVG>
                 </span>
             </div>

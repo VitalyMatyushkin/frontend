@@ -511,11 +511,11 @@
 .carouselUpScroll{
   //overflow: hidden;
   //overflow-y: hidden;
-  overflow-y: scroll;
+  overflow: hidden;
   //height: 1200px;
   //border: 2px solid red;
-  overflow: -moz-scrollbars-none;
-  -ms-overflow-style: none;
+  //overflow: -moz-scrollbars-none;
+  //-ms-overflow-style: none;
 }
 .versusText{
   font-size: 64px;
