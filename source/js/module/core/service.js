@@ -2,7 +2,7 @@ var PromiseClass = require('module/core/promise'),
 	baseUrl = window.apiBase,
 	Service;
 
-
+//TODO Service in Service, WTF??
 Service = (function() {
 	var Service;
 
@@ -17,15 +17,16 @@ Service = (function() {
 			self.requredParams = [];
 
 			url.replace(/\{(.*?)\}/g, function(match, param) {
-                if (self.requredParams.indexOf(param) === -1) {
-                    self.requredParams.push(param);
-                }
+								if (self.requredParams.indexOf(param) === -1) {
+										self.requredParams.push(param);
+								}
 			});
 		}
 
 	};
 
 	Service.prototype = {
+
 		_callService: function(type, options, data) {
 			var self = this,
 				url = self.url,
@@ -38,8 +39,8 @@ Service = (function() {
 					return options[param];
 				});
 			}
-            //Added condition to test for executions where there are no schoolId or other ids set for request
-            //Tests for options being equal to null
+			//Added condition to test for executions where there are no schoolId or other ids set for request
+			//Tests for options being equal to null
 			if (filter) {
 				filter = 'filter=' + JSON.stringify(filter);
 				filter = url.indexOf('?') !== -1 ? '&' + filter : '?' + filter;
@@ -86,11 +87,13 @@ Service = (function() {
 
 			return promise;
 		},
+
 		_showError: function() {
 			var self = this;
 
 			console.error('Сервис ' + self.url +' ожидает параметры: ' + self.requredParams);
 		},
+
 		abort: function() {
 			var self = this;
 
@@ -114,7 +117,7 @@ Service = (function() {
 					return false;
 				}
 
-				if (typeof  options !== 'object') {
+				if (typeof	options !== 'object') {
 					// Если в параметры передается не объект, но ожидается несколько параметров
 					if (self.requredParams.length > 1) {
 						self._showError();
@@ -137,13 +140,5 @@ Service = (function() {
 
 	return Service;
 })();
-
-
-
-
-
-
-
-
 
 module.exports = Service;

@@ -33,8 +33,16 @@ PermissionsStep = React.createClass({
 				icon: 'users'
 			},
 			{
-				name: 'official',
+				name: 'admin',
 				icon: 'user-tie'
+			},
+			{
+				name: 'manager',
+				icon: 'user-tie'
+			},
+			{
+				name: 'teacher',
+				icon: 'user'
 			},
 			{
 				name: 'coach',
@@ -70,20 +78,9 @@ PermissionsStep = React.createClass({
 	 * @returns {*}
 	 */
 	serviceSchoolFilter: function(schoolName) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		var self = this;
 
-		return window.Server.schools.get({
-			filter: {
-				where: {
-					name: {
-						like: schoolName,
-						options: 'i'
-					}
-				},
-				limit: 10
-			}
-		});
+		return window.Server.getAllSchools.get();
 	},
 	/**
 	 * house filter by houseName
@@ -97,13 +94,8 @@ PermissionsStep = React.createClass({
 		return window.Server.houses.get(binding.get('schoolId'), {
 			filter: {
 				where: {
-					schoolId: binding.get('schoolId'),
-					name: {
-						like: houseName,
-						options: 'i'
-					}
-				},
-				limit: 10
+					schoolId: binding.get('schoolId')
+				}
 			}
 		});
 	},
@@ -119,13 +111,8 @@ PermissionsStep = React.createClass({
 		return window.Server.forms.get(binding.get('schoolId'), {
 			filter: {
 				where: {
-					schoolId: binding.get('schoolId'),
-					name: {
-						like: formName,
-						options: 'i'
-					}
-				},
-				limit: 10
+					schoolId: binding.get('schoolId')
+				}
 			}
 		});
 	},
@@ -150,6 +137,18 @@ PermissionsStep = React.createClass({
 
 		binding.set('formId', formId);
 	},
+	onChangeFirstName: function(event) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('firstName', event.currentTarget.value);
+	},
+	onChangeLastName: function(event) {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('lastName', event.currentTarget.value);
+	},
 	renderChooser: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -168,17 +167,71 @@ PermissionsStep = React.createClass({
 			})}
 		</div>
 	},
+	onSuccess: function() {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			currentType = binding.get('type'),
+			dataToPost;
+
+		if(currentType === 'parent') {
+			dataToPost = {
+				userId: binding.get('account').toJS().userId
+			};
+
+			window.Server.parentRequests
+				.post(dataToPost)
+				.then(function(parentRequest) {
+					window.Server.childRequests
+						.post(
+							parentRequest.id,
+							{
+								"schoolId": binding.get('schoolId'),
+								"formId": binding.get('formId'),
+								"houseId": binding.get('houseId'),
+								"firtsName": binding.get('firstName'),
+								"lastName": binding.get('lastName')
+							}
+						)
+						.then(function() {
+							self.props.onSuccess();
+						});
+				});
+		} else {
+			dataToPost = {
+				preset: binding.get('type'),
+				schoolId: binding.get('schoolId')
+			};
+
+			window.Server.Permissions
+				.post(dataToPost)
+				.then(function() {
+					self.props.onSuccess();
+				});
+		}
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			currentType = binding.get('type'),
 			isShowFinishButton = false;
 
-		if (currentType === 'parent' && binding.get('firstName') !== null && binding.get('lastName') !== null) {
-			isShowFinishButton = true;
-		}
+		var isFormFilled = function(currentType) {
 
-		if (currentType !== 'parent' && binding.get('schoolId') !== null) {
+			return	(
+						(
+							currentType === 'admin' || currentType === 'manager' ||
+							currentType === 'teacher' || currentType === 'coach'
+						) && binding.get('schoolId') !== null
+					) ||
+					(
+							currentType === 'parent' &&
+							binding.get('schoolId') !== null && binding.get('houseId') !== null &&
+							binding.get('formId') !== null && binding.get('firstName') !== null &&
+							binding.get('lastName') !== null
+					);
+		};
+
+		if(isFormFilled(currentType)) {
 			isShowFinishButton = true;
 		}
 
@@ -216,29 +269,20 @@ PermissionsStep = React.createClass({
 				</If>
 				<If condition={binding.get('formId') !== null && currentType === 'parent'}>
 					<div>
-						<Morearty.DOM.input
-							type="text"
-							className="eRegistration_input"
-							placeholder="Firstname"
-							ref="firstNameField"
-							onChange={ Morearty.Callback.set(binding, 'firstName') }
-							/>
-						<Morearty.DOM.input
-							type="text"
-							className="eRegistration_input"
-							placeholder="Lastname"
-							ref="lastNameField"
-							onChange={ Morearty.Callback.set(binding, 'lastName') }
-							/>
+						<div className="eRegistration_input">
+							<input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
+						</div>
+						<div className="eRegistration_input">
+							<input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
+						</div>
 					</div>
 				</If>
 				<If condition={isShowFinishButton}>
-					<div className="bButton" onClick={self.onSuccess}>as official</div>
+					<div className="bButton" onClick={self.onSuccess}>Continue</div>
 				</If>
 			</div>
 		</div>
 	}
 });
-
 
 module.exports = PermissionsStep;

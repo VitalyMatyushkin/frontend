@@ -4,6 +4,7 @@
   "description": "SQUAD FOOTBALL MANAGER",
   "main": "index.js",
   "dependencies": {
+    "async": "^1.4.0",
     "bower": "^1.3.12",
     "esprima-fb": "^15001.1.0-dev-harmony-fb",
     "gulp": "^3.8.11"

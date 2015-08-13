@@ -19,11 +19,12 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-        Server.confirmUser.get({
+		Server.confirmUser.get({
             uid: accountBinding.get('userId'),
             token: binding.get('emailCode')
         }).then(function () {
             formFieldsBinding.set('verified.email', true);
+            accountBinding.set('account.user.verified.email', true);
 
             if (formFieldsBinding.get('verified.phone')) {
                 self.props.onSuccess();
@@ -36,11 +37,12 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-        Server.confirmUserPhone.get({
+		Server.confirmUserPhone.get({
             uid: accountBinding.get('userId'),
             token: binding.get('phoneCode')
         }).then(function () {
             formFieldsBinding.set('verified.phone', true);
+            accountBinding.set('account.user.verified.phone', true);
 
             if (formFieldsBinding.get('verified.email')) {
                 self.props.onSuccess();
@@ -71,8 +73,6 @@ VerificationStep = React.createClass({
                                         onChange={ Morearty.Callback.set(binding, 'phoneCode') }/>
                     <button className="bButton" onClick={self.confirmPhone}>check</button>
                 </label>
-
-                <button className="bButton" onClick={self.props.onSuccess}>Continue...</button>
             </div>
         );
     }

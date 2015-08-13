@@ -20,10 +20,9 @@ serviceList = {
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
 		serviceList.confirmUser = new Service('/users/confirm?uid={uid}&token={token}',binding);
 		serviceList.confirmUserPhone = new Service('/users/confirmPhone?uid={uid}&token={token}',binding);
-        serviceList.userPermission = new Service('/users/{id}/permissions', binding);
-        serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
-        serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
-
+		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
+		serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
+		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
 
 		// schools
 		serviceList.schools = new Service('/schools', binding);
@@ -33,9 +32,9 @@ serviceList = {
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
 		serviceList.addCoach = new Service('/schools/{id}/coaches/rel/{fk}',binding);
 		serviceList.addTeacher = new Service('/schools/{id}/teachers/rel/{fk}',binding);
-        serviceList.schoolPermissions = new Service('/schools/{id}/permissions',binding);
+		serviceList.schoolPermissions = new Service('/schools/{id}/permissions',binding);
 		serviceList.schoolModelPermission = new Service('/schools/{id}/permissions/{permissionId}',binding);
-        serviceList.schoolPermission = new Service('/schools/{id}/permissions/{permissionId}/set',binding);
+		serviceList.schoolPermission = new Service('/schools/{id}/permissions/{permissionId}/set',binding);
 
 		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);
 		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
@@ -43,6 +42,7 @@ serviceList = {
 		serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 		serviceList.schoolOpponents = new Service('/schools/{id}/public/opponents', binding);
+		serviceList.getAllSchools = new Service('/schools/getAllSchools', binding);
 
 		// students
 		serviceList.students = new Service('/schools/{schoolId}/students', binding);
@@ -51,9 +51,9 @@ serviceList = {
 		serviceList.studentGamesScored = new Service('/students/{id}/events/scored?include={include}', binding);
 		serviceList.studentEvents = new Service('/students/{id}/events', binding);
 		serviceList.studentParent = new Service('/students/{id}/parents',binding);
-        serviceList.getAllStudents = new Service('/students', binding);
-        serviceList.studentScored = new Service('/students/{id}/events/scored',binding);
-        serviceList.studentWon = new Service('/students/{id}/events/won',binding);
+		serviceList.getAllStudents = new Service('/students', binding);
+		serviceList.studentScored = new Service('/students/{id}/events/scored',binding);
+		serviceList.studentWon = new Service('/students/{id}/events/won',binding);
 
 		// houses
 		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
@@ -127,17 +127,21 @@ serviceList = {
 		//Blog
 		serviceList.addToBlog = new Service('/events/{id}/comments',binding);
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
-        serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
+		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		// login service
 		serviceList.login = new Service('/users/login?include=user',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
-        serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
-        serviceList.Permission = new Service('/permissions/{id}', binding);
-        serviceList.PermissionCount = new Service('/permissions/count', binding);
-        //Activity Logs
-        serviceList.activityLogs = new Service('/logs',binding);
-        serviceList.logCount = new Service('/logs/count',binding);
+		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
+		serviceList.Permission = new Service('/permissions/{id}', binding);
+		serviceList.PermissionCount = new Service('/permissions/count', binding);
+		//Activity Logs
+		serviceList.activityLogs = new Service('/logs',binding);
+		serviceList.logCount = new Service('/logs/count',binding);
+
+		serviceList.parentRequests = new Service('/parentRequests', binding);
+		serviceList.parentRequest = new Service('/parentRequests/{id}', binding);
+		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
 	},
 	// Сервисы, не требующие авторизации
 	initializeOpenServices: function() {

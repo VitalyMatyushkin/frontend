@@ -1,13 +1,10 @@
 var LeanerView,
-    SVG = require('module/ui/svg'),
-    AboutMe = require('module/as_manager/pages/student/view/about_me'),
-    UserButtons = require('module/as_manager/pages/student/view/user_buttons'),
-    UserName = require('module/as_manager/pages/student/view/user_name'),
-    UserPhoto = require('module/as_manager/pages/student/view/user_photo'),
-    UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
-    UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
-    TeamStats = require('module/as_manager/pages/student/view/team_stats'),
-    fixData;
+		SVG = require('module/ui/svg'),
+		AboutMe = require('module/as_manager/pages/student/view/about_me'),
+		UserName = require('module/as_manager/pages/student/view/user_name'),
+		UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
+		UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
+		TeamStats = require('module/as_manager/pages/student/view/team_stats');
 
 LeanerView = React.createClass({
     mixins: [Morearty.Mixin],
