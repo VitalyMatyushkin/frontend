@@ -25,7 +25,7 @@ ListPageMixin = {
 			binding = self.getDefaultBinding(),
             page = window.location.href.split('/'),
 			isFiltersActive = binding.meta().get('isFiltersActive');
-        self.popUpState = true;
+        //self.popUpState = true;
 		self.request && self.request.abort();
 		// Фильтрация по школе
 		if (self.props.addSchoolToFilter !== false) {
