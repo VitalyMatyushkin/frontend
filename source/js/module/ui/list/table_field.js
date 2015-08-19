@@ -24,7 +24,8 @@ ListField = React.createClass({
                 value = {
                     limit: value
                 }
-            }else{
+            }
+            else{
                 value = {
                     like: value,
                     options: 'i'
@@ -36,21 +37,22 @@ ListField = React.createClass({
     onSort:function(event,order){
         var self = this,
             value,
-            el  = event.currentTarget;
+            el  = event.currentTarget,
+            fieldToSort = (order === 'School' || order === 'Preset')?order.toLowerCase() : self.props.dataField;
         if(el.classList.contains('caret_up')){
             $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
             el.classList.add('caret_active_up');
             value ={
-                order:self.props.dataField+' ASC'
+                order:fieldToSort+' ASC'
             }
         }else{
             $('.caret').removeClass('caret_active_dwn').removeClass('caret_active_up');
             el.classList.add('caret_active_dwn');
             value ={
-                order:self.props.dataField+' DESC'
+                order:fieldToSort+' DESC'
             }
         }
-        self.props.onChange(self.props.dataField, value);
+        self.props.onChange(fieldToSort, value);
     },
 	render: function() {
 		var self = this,

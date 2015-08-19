@@ -23,6 +23,7 @@ serviceList = {
 		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
 		serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
+        serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
 		// schools
 		serviceList.schools = new Service('/schools', binding);
@@ -132,6 +133,7 @@ serviceList = {
 		serviceList.login = new Service('/users/login?include=user',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
+        serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);
 		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);

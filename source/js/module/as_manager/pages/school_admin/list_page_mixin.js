@@ -12,12 +12,59 @@ ListPageMixin = {
 		var self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
+        //Request for total number of models - for pagination
+        if(self.serviceCount){
+            window.Server[self.serviceCount].get().then(function(totalCount){
+                //console.log(totalCount);
+                globalBinding.set('totalCount',totalCount.count);
+            });
+        }
 		self.updateData();
 	},
+    componentDidMount:function(){
+        var self = this;
+        self.timeoutId = setTimeout(function(){
+            //Pagination method
+            self._getTotalCountAndRenderPagination();
+        },2000);
+    },
+    _getTotalCountAndRenderPagination:function(customCount){
+        var self = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            pageNumberNode = React.findDOMNode(self.refs.pageNumber),
+            selectNode = React.findDOMNode(self.refs.pageSelect);
+        if(globalBinding.get('totalCount') !== undefined && self.filters.limit !== undefined){
+            customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
+            self.numberOfPages = customCount !== undefined ? Math.floor(customCount/self.filters.limit) : 0;
+            if(selectNode !== null){
+                selectNode.options.length = 0;
+                for(var i=1; i<self.numberOfPages; i++){
+                    var option = document.createElement('option');
+                    option.text = i;
+                    option.value = i;
+                    selectNode.add(option);
+                }
+            }
+            if(pageNumberNode !== null){
+                pageNumberNode.innerText = 'out of '+self.numberOfPages;
+            }
+        }
+    },
+    _handlePageSelectChange:function(){
+        var self = this,
+            selectNode = React.findDOMNode(self.refs.pageSelect),
+            optVal = selectNode.options[selectNode.selectedIndex].value,
+            skipLimit = optVal >= 2 ? (optVal - 1) * self.filters.limit  : 0,
+            filterValue = {
+                limit:{limit:self.filters.limit},
+                skip:{skip:skipLimit}
+            };
+        //console.log(filterValue);
+        self.updateData(filterValue);
+    },
 	updateData: function(newFilter) {
 		var self = this,
 			requestFilter = { where: {} },
@@ -25,7 +72,19 @@ ListPageMixin = {
 			binding = self.getDefaultBinding(),
             page = window.location.href.split('/'),
 			isFiltersActive = binding.meta().get('isFiltersActive');
-        //self.popUpState = true;
+
+        //console.log(newFilter);
+
+        //Exempt current admin from user and permissions list
+        if('where' in self.filters){
+            if(self.filters.where.id.neq !== undefined){
+                self.filters.where.id.neq = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+            }
+        }
+        //Test when to show loading prompt
+        if(isFiltersActive === undefined && newFilter === undefined){
+            self.popUpState = true;
+        }
 		self.request && self.request.abort();
 		// Фильтрация по школе
 		if (self.props.addSchoolToFilter !== false) {
@@ -62,6 +121,8 @@ ListPageMixin = {
                     defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
                 }else if('order' in (newFilter[filterName])){
                     defaultRequestFilter.order = newFilter[filterName].order;
+                }else if('skip' in (newFilter[filterName])){
+                    defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
                 }
                 else{
                     defaultRequestFilter.where[filterName] = newFilter[filterName];
@@ -83,18 +144,36 @@ ListPageMixin = {
                             notAccepted.push(d);
                         }
                     });
+                    self.popUpState = false;
                     binding.set(Immutable.fromJS(notAccepted));
                 }else{
-                    binding.set(Immutable.fromJS(data));
+                    //Patch to solve users and permissions load issue
+                    //Get the permissions separately if the current page is admin console/permissions
+                    if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
+                        window.Server.usersAndPermissions.get({filter:defaultRequestFilter}).then(function(roles){
+                            var userPermissionJoinArray = [];
+                            data.forEach(function(user){
+                                user.permissions = roles.filter(function(role){
+                                    return role.principalId === user.id;
+                                });
+                                userPermissionJoinArray.push(user);
+                            });
+                            binding.set(Immutable.fromJS(userPermissionJoinArray));
+                            //console.log(binding.toJS());
+                            self.popUpState = false;
+                        });
+                    }else{
+                        binding.set(Immutable.fromJS(data));
+                        self.popUpState = false;
+                    }
                 }
-                self.popUpState = false;
             });
         }
 	},
 	componentWillUnmount: function () {
 		var self = this;
-
 		self.request && self.request.abort();
+        clearTimeout(self.timeoutId);
 	},
 	_getEditFunction: function() {
 		var self = this;
@@ -151,6 +230,11 @@ ListPageMixin = {
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
                             <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                        </div>
+                        <div className="eSchoolMaster_pagination">
+                            <div ref="pageNumber" className="leftPagination"></div>
+                            <select ref="pageSelect" onChange={self._handlePageSelectChange.bind(null,this)} className="pagination_select"></select>
+                            <div className="rightPagination">Page</div>
                         </div>
                     </div>
                 </If>
