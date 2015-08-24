@@ -76,9 +76,11 @@ ListPageMixin = {
         //console.log(newFilter);
 
         //Exempt current admin from user and permissions list
-        if('where' in self.filters){
-            if(self.filters.where.id.neq !== undefined){
-                self.filters.where.id.neq = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+        if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
+            if('where' in self.filters){
+                if(self.filters.where.id.neq !== undefined){
+                    self.filters.where.id.neq = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+                }
             }
         }
         //Test when to show loading prompt
