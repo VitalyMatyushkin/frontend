@@ -16,7 +16,7 @@ ListPageMixin = {
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
         //Request for total number of models - for pagination
-        if(self.serviceCount){
+        if(self.isPaginated === true){
             window.Server[self.serviceCount].get().then(function(totalCount){
                 //console.log(totalCount);
                 globalBinding.set('totalCount',totalCount.count);
@@ -36,7 +36,8 @@ ListPageMixin = {
             globalBinding = self.getMoreartyContext().getBinding(),
             pageNumberNode = React.findDOMNode(self.refs.pageNumber),
             selectNode = React.findDOMNode(self.refs.pageSelect);
-        if(globalBinding.get('totalCount') !== undefined && self.filters.limit !== undefined){
+
+        if(self.isPaginated && self.filters.limit !== undefined){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
             self.numberOfPages = customCount !== undefined ? Math.floor(customCount/self.filters.limit) : 0;
             if(selectNode !== null){
@@ -142,6 +143,7 @@ ListPageMixin = {
                 if(page[page.length-1] === 'requests'){
                     var notAccepted = [];
                     data.forEach(function(d){
+                        //console.log(d.accepted);
                         if(d.accepted === 'undefined' || d.accepted === undefined){
                             notAccepted.push(d);
                         }
@@ -151,7 +153,7 @@ ListPageMixin = {
                 }else{
                     //Patch to solve users and permissions load issue
                     //Get the permissions separately if the current page is admin console/permissions
-                    if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
+                    if(page[page.length-1] ==='#admin_schools'|| page[page.length-1] ==='permissions'){
                         window.Server.usersAndPermissions.get({filter:defaultRequestFilter}).then(function(roles){
                             var userPermissionJoinArray = [];
                             data.forEach(function(user){
@@ -168,6 +170,9 @@ ListPageMixin = {
                         binding.set(Immutable.fromJS(data));
                         self.popUpState = false;
                     }
+                    //binding.set(Immutable.fromJS(data));
+                    //console.log(binding.toJS());
+                    //self.popUpState = false;
                 }
             });
         }

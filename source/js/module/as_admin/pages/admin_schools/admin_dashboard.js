@@ -17,6 +17,7 @@ OneSchoolPage = React.createClass({
                 }
             }
         }).then(function(results){
+            //console.log(results);
             binding
                 .atomically()
                 .set('permissionRequestCount', Immutable.fromJS(results))
@@ -66,14 +67,18 @@ OneSchoolPage = React.createClass({
             binding = self.getDefaultBinding(),
             num = 0,
             reqs = binding.toJS('permissionRequestCount');
-        if(typeof reqs !== 'undefined'){
+
+        if(reqs !== undefined){
+            var permissionRequests = [];
             reqs.forEach(function(req){
-                if(req.permissions.length >=1){
-                    for(var i=0; i < req.permissions.length; i++){
-                        if(typeof req.permissions[i].accepted === 'undefined'){
-                            num +=1;
-                        }
-                    }
+                //console.log(req.permissions);
+                permissionRequests = permissionRequests.concat(req.permissions);
+            });
+            //console.log(permissionRequests);
+            permissionRequests.forEach(function(perReq){
+                //console.log(perReq.accepted);
+                if(perReq.accepted === undefined){
+                    num +=1;
                 }
             });
         }
