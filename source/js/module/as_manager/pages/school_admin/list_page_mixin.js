@@ -153,26 +153,26 @@ ListPageMixin = {
                 }else{
                     //Patch to solve users and permissions load issue
                     //Get the permissions separately if the current page is admin console/permissions
-                    if(page[page.length-1] ==='#admin_schools'|| page[page.length-1] ==='permissions'){
-                        window.Server.usersAndPermissions.get({filter:defaultRequestFilter}).then(function(roles){
-                            var userPermissionJoinArray = [];
-                            data.forEach(function(user){
-                                user.permissions = roles.filter(function(role){
-                                    return role.principalId === user.id;
-                                });
-                                userPermissionJoinArray.push(user);
-                            });
-                            binding.set(Immutable.fromJS(userPermissionJoinArray));
-                            //console.log(binding.toJS());
-                            self.popUpState = false;
-                        });
-                    }else{
-                        binding.set(Immutable.fromJS(data));
-                        self.popUpState = false;
-                    }
-                    //binding.set(Immutable.fromJS(data));
+                    //if(page[page.length-1] ==='#admin_schools'|| page[page.length-1] ==='permissions'){
+                    //    window.Server.usersAndPermissions.get({filter:defaultRequestFilter}).then(function(roles){
+                    //        var userPermissionJoinArray = [];
+                    //        data.forEach(function(user){
+                    //            user.permissions = roles.filter(function(role){
+                    //                return role.principalId === user.id;
+                    //            });
+                    //            userPermissionJoinArray.push(user);
+                    //        });
+                    //        binding.set(Immutable.fromJS(userPermissionJoinArray));
+                    //        //console.log(binding.toJS());
+                    //        self.popUpState = false;
+                    //    });
+                    //}else{
+                    //    binding.set(Immutable.fromJS(data));
+                    //    self.popUpState = false;
+                    //}
+                    binding.set(Immutable.fromJS(data));
                     //console.log(binding.toJS());
-                    //self.popUpState = false;
+                    self.popUpState = false;
                 }
             });
         }

@@ -14,8 +14,17 @@ AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'users',
     serviceCount:'getTotalNumberOfUserModels', //Service to get total count for pagination
-    //filters:{include:[{permissions:['school','student']}],where:{id:{neq:''}},limit:20},
-    filters:{where:{id:{neq:''}},limit:20},
+    //filters:{include:{
+    //    relation:'permissions',
+    //    scope:{
+    //        include:'school',
+    //        where:{
+    //            preset:{neq:"student"}
+    //        }
+    //    }
+    //},where:{id:{neq:''}},limit:20},
+    //filters:{where:{id:{neq:''}},limit:20},
+    filters:{include:[{permissions:['school','student']}], where:{id:{neq:''}},limit:20},
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     isPaginated: true,
     getFullName:function(lastName){
@@ -203,9 +212,9 @@ AdminPermissionView = React.createClass({
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="lastName" width="10%">Surname</TableField>
                     <TableField dataField="email" width="14%">Email</TableField>
-                    <TableField dataField="verified" width="10%" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="permissions" width="40%"  parseFunction={self.getSchool}>School</TableField>
-                    <TableField dataField="permissions" width="10%"  parseFunction={self.getRoles}>Role</TableField>
+                    <TableField dataField="verified" width="10%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
+                    <TableField dataField="permissions" width="40%" filterType="none"  parseFunction={self.getSchool}>School</TableField>
+                    <TableField dataField="permissions" width="10%" filterType="none" parseFunction={self.getRoles}>Role</TableField>
                     <TableField dataField="blocked" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
