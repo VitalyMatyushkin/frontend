@@ -115,6 +115,7 @@ Autocomplete = React.createClass({
 			self.responseData = data;
 			binding.set('response', data);
 			binding.set('loading', false);
+			self.forceUpdate();
 		});
 	},
 	_filterOnClient: function (userInput) {
@@ -144,6 +145,7 @@ Autocomplete = React.createClass({
 		self.pendingRequest = self.props.serviceFullData().then(function (data) {
 			self.responseData = data;
 			self.setDefaultId();
+			self.forceUpdate();
 		});
 	},
 	componentWillUnmount: function () {

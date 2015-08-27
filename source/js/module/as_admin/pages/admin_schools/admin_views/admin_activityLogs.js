@@ -12,6 +12,8 @@ ActivityLogPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin, DateTimeMixin],
     serviceName:'activityLogs',
     filters: {limit:40},
+    serviceCount:'logCount',
+    isPaginated: true,
     getPrincipal: function(principal) {
         return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
     },

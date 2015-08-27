@@ -41,9 +41,11 @@ GrantRole = React.createClass({
         if(selEl.options[selEl.selectedIndex].value === 'parent'){
             binding.set('isParent', true);
             binding.set('roleName',selEl.options[selEl.selectedIndex].value);
+            self.forceUpdate();
         }else{
             binding.set('isParent',false);
             binding.set('roleName',selEl.options[selEl.selectedIndex].value);
+            self.forceUpdate();
         }
     },
     render:function(){

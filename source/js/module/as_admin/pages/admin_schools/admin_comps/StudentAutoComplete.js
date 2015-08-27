@@ -95,14 +95,11 @@ StudentAutoComplete = React.createClass({
                             .then(function(result){
                                 window.Server.setPermissions.post({id:result.id},{accepted:true})
                                     .then(function(acpt){
-                                        console.log(acpt);
                                         binding.set('popup', false);
                                         window.location.reload(true);
                                     });
                             });
                     });
-                    //binding.set('popup', false);
-                    //window.location.reload(true);
                 }else{
                     window.Server.schoolPermissions.post({id:schoolId},model)
                         .then(function(result){
