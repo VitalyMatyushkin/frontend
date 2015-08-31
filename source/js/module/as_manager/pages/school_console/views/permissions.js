@@ -19,7 +19,8 @@ PermissionView = React.createClass({
         activeUserInfo = globalBinding.get('userData.userInfo').toJS();
         //Get all permissions related to the active school
         window.Server.schoolPermissions.get({id:activeSchoolId,filter:{
-            include:['principal', {student: ['form', 'house']}, 'school']
+            where:{accepted:true},
+			include:['principal', {student: ['form', 'house']}, 'school']
         }}).then(function(schoolPermissions){
             binding.set('permissionData',Immutable.fromJS(schoolPermissions));
         });
@@ -43,7 +44,8 @@ PermissionView = React.createClass({
         window.Server.schoolPermissions.get({id:activeSchoolId,filter:{
             include:['principal', {student: ['form', 'house']}, 'school'],
             where:{
-                preset:{
+                accepted:true,
+				preset:{
                     like:val
                 }
             }
