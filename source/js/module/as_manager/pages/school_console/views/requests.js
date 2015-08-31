@@ -31,56 +31,30 @@ SchoolRequest = React.createClass({
         requestData = binding.toJS('permissionRequests');
         if (requestData !== undefined) {
             return requestData.map(function (request) {
-                var acceptReq = function (permissionId, principalId, preset, schoolId, studentId) {
+                var acceptReq = function (permissionId) {
                     return function (event) {
                         var confirmAcpt = confirm("Are you sure you want to accept this permission?");
                         if (confirmAcpt === true) {
-                            if (preset === 'parent') {
-                                window.Server.updateUserPermission.put({
-                                    id: principalId,
-                                    fk: permissionId
-                                }, {accepted: true, data: {studentId: studentId}})
-                                    .then(function (res) {
-                                        // alert('Permission accepted!');
-                                        window.location.reload(true);
-                                    });
-                            } else {
-                                window.Server.updateUserPermission.put({
-                                    id: principalId,
-                                    fk: permissionId
-                                }, {accepted: true})
-                                    .then(function (res) {
-                                        //alert('Permission accepted!');
-                                        window.location.reload(true);
-                                    });
-                            }
-
+							window.Server.setPermissions
+								.post({id:permissionId},{accepted:true})
+								.then(function (res) {
+									//alert('Permission accepted!');
+									window.location.reload(true);
+								});
                         }
                         event.stopPropagation();
                     }
                 };
-                var declineReq = function (permissionId, principalId, preset, schoolId, studentId) {
+                var declineReq = function (permissionId) {
                     return function (event) {
                         var confirmAcpt = confirm("Are you sure you want to decline this permission?");
                         if (confirmAcpt === true) {
-                            if (preset === 'parent') {
-                                window.Server.updateUserPermission.put({
-                                    id: principalId,
-                                    fk: permissionId
-                                }, {accepted: false, data: {studentId: studentId}})
-                                    .then(function (res) {
-                                        alert('Permission accepted!');
-                                    });
-                            } else {
-                                window.Server.updateUserPermission.put({
-                                    id: principalId,
-                                    fk: permissionId
-                                }, {accepted: false})
-                                    .then(function (res) {
-                                        alert('Permission accepted!');
-                                    });
-                            }
-
+							window.Server.setPermissions
+								.post({id:permissionId},{accepted:false})
+								.then(function (res) {
+									//alert('Permission accepted!');
+									window.location.reload(true);
+								});
                         }
                         event.stopPropagation();
                     }
@@ -106,10 +80,10 @@ SchoolRequest = React.createClass({
                                 className="eDataList_listItemCell">{request.comment !== undefined ? request.comment : ''}</div>
                             <div className="eDataList_listItemCell mActions">
                                 <span
-                                    onClick={acceptReq(request.id,request.principalId,request.preset,request.schoolId,request.studentId)}
+                                    onClick={acceptReq(request.id)}
                                     className="bButton bButton_req">Accept</span>
                                 <span
-                                    onClick={declineReq(request.id,request.principalId,request.preset,request.schoolId,request.studentId)}
+                                    onClick={declineReq(request.id)}
                                     className="bButton mRed bButton_req">Decline</span>
                             </div>
                         </div>
