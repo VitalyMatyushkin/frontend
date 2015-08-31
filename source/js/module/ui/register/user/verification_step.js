@@ -19,21 +19,18 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-		formFieldsBinding.set('verified.email', true);
-		accountBinding.set('account.user.verified.email', true);
-		self.props.onSuccess();
-		//Server.confirmUser.get({
-        //    uid: accountBinding.get('userId'),
-        //    token: binding.get('emailCode')
-        //}).then(function () {
-		//
-			//formFieldsBinding.set('verified.email', true);
-        //    accountBinding.set('account.user.verified.email', true);
-		//
-        //    if (formFieldsBinding.get('verified.phone')) {
-        //        self.props.onSuccess();
-        //    }
-        //});
+		Server.confirmUser.get({
+            uid: accountBinding.get('userId'),
+            token: binding.get('emailCode')
+        }).then(function () {
+
+			formFieldsBinding.set('verified.email', true);
+            accountBinding.set('account.user.verified.email', true);
+
+            if (formFieldsBinding.get('verified.phone')) {
+                self.props.onSuccess();
+            }
+        });
     },
     confirmPhone: function () {
         var self = this,
@@ -41,21 +38,17 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-		formFieldsBinding.set('verified.phone', true);
-		accountBinding.set('account.user.verified.phone', true);
-		self.props.onSuccess();
+		Server.confirmUserPhone.get({
+            uid: accountBinding.get('userId'),
+            token: binding.get('phoneCode')
+        }).then(function () {
+            formFieldsBinding.set('verified.phone', true);
+            accountBinding.set('account.user.verified.phone', true);
 
-		//Server.confirmUserPhone.get({
-        //    uid: accountBinding.get('userId'),
-        //    token: binding.get('phoneCode')
-        //}).then(function () {
-        //    formFieldsBinding.set('verified.phone', true);
-        //    accountBinding.set('account.user.verified.phone', true);
-		//
-        //    if (formFieldsBinding.get('verified.email')) {
-        //        self.props.onSuccess();
-        //    }
-        //});
+            if (formFieldsBinding.get('verified.email')) {
+                self.props.onSuccess();
+            }
+        });
     },
     render: function () {
         var self = this,
