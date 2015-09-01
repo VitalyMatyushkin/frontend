@@ -35,22 +35,34 @@ ListPageMixin = {
         var self = this,
             globalBinding = self.getMoreartyContext().getBinding(),
             pageNumberNode = React.findDOMNode(self.refs.pageNumber),
+            isOdd = false,
             selectNode = React.findDOMNode(self.refs.pageSelect);
 
         if(self.isPaginated && self.filters.limit !== undefined){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
-            self.numberOfPages = customCount !== undefined ? Math.floor(customCount/self.filters.limit) : 0;
+            self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0;
+            //Check if count is an odd number
+            if(customCount%2 !== 0){
+                self.numberOfPages += 1;
+                self.extraPages = customCount % self.filters.limit;
+                isOdd = true;
+            }
             if(selectNode !== null){
                 selectNode.options.length = 0;
-                for(var i=1; i<self.numberOfPages; i++){
-                    var option = document.createElement('option');
-                    option.text = i;
-                    option.value = i;
-                    selectNode.add(option);
+                if(customCount >= self.filters.limit){
+                    for(var i=1; i<self.numberOfPages; i++){
+                        var option = document.createElement('option');
+                        option.text = isOdd === true ? i : (i >1 ? i-1:i);
+                        option.value = isOdd === true ? i : (i >1 ? i-1:i);
+                        selectNode.add(option);
+                    }
                 }
             }
             if(pageNumberNode !== null){
-                pageNumberNode.innerText = 'out of '+self.numberOfPages;
+                if(isOdd){
+                    pageNumberNode.innerText = 'out of '+(self.numberOfPages-1);
+                }else{pageNumberNode.innerText = 'out of '+(self.numberOfPages);}
+
             }
         }
     },
@@ -59,11 +71,16 @@ ListPageMixin = {
             selectNode = React.findDOMNode(self.refs.pageSelect),
             optVal = selectNode.options[selectNode.selectedIndex].value,
             skipLimit = optVal >= 2 ? (optVal - 1) * self.filters.limit  : 0,
+            binding = self.getDefaultBinding(),
+            metaBinding = binding.meta(),
             filterValue = {
                 limit:{limit:self.filters.limit},
                 skip:{skip:skipLimit}
             };
         //console.log(filterValue);
+        if(metaBinding.get('isFiltersActive') === true){
+            metaBinding.set('isFiltersActive',false);
+        }
         self.updateData(filterValue);
     },
 	updateData: function(newFilter) {
@@ -110,6 +127,8 @@ ListPageMixin = {
                     defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
                 }else if('order' in (newFilter[filterName])){
                     defaultRequestFilter.order = newFilter[filterName].order;
+                }else if('skip' in (newFilter[filterName])){
+                    defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
                 }
                 else{
                     defaultRequestFilter.where[filterName] = newFilter[filterName];
@@ -151,25 +170,6 @@ ListPageMixin = {
                     self.popUpState = false;
                     binding.set(Immutable.fromJS(notAccepted));
                 }else{
-                    //Patch to solve users and permissions load issue
-                    //Get the permissions separately if the current page is admin console/permissions
-                    //if(page[page.length-1] ==='#admin_schools'|| page[page.length-1] ==='permissions'){
-                    //    window.Server.usersAndPermissions.get({filter:defaultRequestFilter}).then(function(roles){
-                    //        var userPermissionJoinArray = [];
-                    //        data.forEach(function(user){
-                    //            user.permissions = roles.filter(function(role){
-                    //                return role.principalId === user.id;
-                    //            });
-                    //            userPermissionJoinArray.push(user);
-                    //        });
-                    //        binding.set(Immutable.fromJS(userPermissionJoinArray));
-                    //        //console.log(binding.toJS());
-                    //        self.popUpState = false;
-                    //    });
-                    //}else{
-                    //    binding.set(Immutable.fromJS(data));
-                    //    self.popUpState = false;
-                    //}
                     binding.set(Immutable.fromJS(data));
                     //console.log(binding.toJS());
                     self.popUpState = false;

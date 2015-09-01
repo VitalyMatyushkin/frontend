@@ -47,9 +47,6 @@ SchoolListPage = React.createClass({
 
 				<div className="eSchoolList_wrap">
 					{schoolNodes}
-                    <a href="/#schools/add" className="eSchoolList_one mAddNew">
-                        +
-                    </a>
 				</div>
 			</div>
 		)
@@ -58,3 +55,8 @@ SchoolListPage = React.createClass({
 
 
 module.exports = SchoolListPage;
+
+/*
+*                     <a href="/#schools/add" className="eSchoolList_one mAddNew">
+ +
+ </a>*/
