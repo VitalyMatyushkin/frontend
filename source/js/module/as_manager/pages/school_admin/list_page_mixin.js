@@ -35,30 +35,34 @@ ListPageMixin = {
         var self = this,
             globalBinding = self.getMoreartyContext().getBinding(),
             pageNumberNode = React.findDOMNode(self.refs.pageNumber),
-            //isOdd = false,
+            isOdd = false,
             selectNode = React.findDOMNode(self.refs.pageSelect);
 
         if(self.isPaginated && self.filters.limit !== undefined){
-            customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount; //console.log(customCount);
-            self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0;
+            customCount = customCount === undefined ? 100 : customCount; console.log(customCount);
+            self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0; console.log(self.numberOfPages);
             //Check if count is an odd number
             if(customCount%2 !== 0){
                 self.numberOfPages += 1;
                 self.extraPages = customCount % self.filters.limit;
+                isOdd = true;
             }
             if(selectNode !== null){
                 selectNode.options.length = 0;
                 if(customCount >= self.filters.limit){
-                    for(var i=1; i<self.numberOfPages; i++){
+                    for(var i=0; i<self.numberOfPages; i++){
                         var option = document.createElement('option');
-                        option.text = i;
-                        option.value = i;
+                        option.text = isOdd === true ? i : i+1;
+                        option.value = isOdd === true ? i : i+1;
                         selectNode.add(option);
                     }
                 }
             }
             if(pageNumberNode !== null){
-                pageNumberNode.innerText = 'out of '+(self.numberOfPages-1);
+                if(isOdd){
+                    pageNumberNode.innerText = 'out of '+(self.numberOfPages-1);
+                }else{pageNumberNode.innerText = 'out of '+(self.numberOfPages);}
+
             }
         }
     },
