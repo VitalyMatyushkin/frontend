@@ -39,8 +39,8 @@ ListPageMixin = {
             selectNode = React.findDOMNode(self.refs.pageSelect);
 
         if(self.isPaginated && self.filters.limit !== undefined){
-            customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount; console.log(customCount);
-            self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0; console.log(self.numberOfPages);
+            customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
+            self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0;
             //Check if count is an odd number
             if(customCount%2 !== 0){
                 self.numberOfPages += 1;
@@ -50,10 +50,10 @@ ListPageMixin = {
             if(selectNode !== null){
                 selectNode.options.length = 0;
                 if(customCount >= self.filters.limit){
-                    for(var i=0; i<self.numberOfPages; i++){
+                    for(var i=1; i<self.numberOfPages; i++){
                         var option = document.createElement('option');
-                        option.text = isOdd === true ? i : i+1;
-                        option.value = isOdd === true ? i : i+1;
+                        option.text = isOdd === true ? i : (i >1 ? i-1:i);
+                        option.value = isOdd === true ? i : (i >1 ? i-1:i);
                         selectNode.add(option);
                     }
                 }
