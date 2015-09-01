@@ -39,7 +39,7 @@ ListPageMixin = {
             selectNode = React.findDOMNode(self.refs.pageSelect);
 
         if(self.isPaginated && self.filters.limit !== undefined){
-            customCount = customCount === undefined ? 100 : customCount; console.log(customCount);
+            customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount; console.log(customCount);
             self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0; console.log(self.numberOfPages);
             //Check if count is an odd number
             if(customCount%2 !== 0){
