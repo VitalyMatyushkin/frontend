@@ -26,10 +26,18 @@ ListField = React.createClass({
                 }
             }
             else{
-                value = {
-                    like: value,
-                    options: 'i'
+                if(value.length >1){
+                    value = {
+                        like: value,
+                        options: 'i'
+                    }
+                }else{
+                    value={
+                        regexp: "[\s\S]*",
+                        options: 'i'
+                    }
                 }
+
             }
 		}
 		self.props.onChange(self.props.dataField, value);
