@@ -31,7 +31,11 @@ SettingsPage = React.createClass({
             href:'/#settings/requests',
             name:'Requests',
             key:'Requests'
-        }];
+        },{
+                key: 'goback',
+                name: '← GO BACK',
+                href: '#'}
+        ];
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({

@@ -52,11 +52,14 @@ Head = React.createClass({
 	render: function() {
 		var self = this,
 			binding = this.getDefaultBinding();
-
 		return (
 			<div className="bTopPanel">
 				<Logo />
-				<TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
+                <If condition={document.location.hash.indexOf('general')!== 10}>
+                    <If condition={document.location.hash.indexOf('lounge') === -1}>
+                        <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
+                    </If>
+                </If>
 				<If condition={document.location.hash.indexOf('login') === -1}>
 					<UserBlock binding={binding.sub('userData')}/>
 				</If>

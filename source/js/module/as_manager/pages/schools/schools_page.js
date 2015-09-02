@@ -17,12 +17,12 @@ SchoolsPage = React.createClass({
 					globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
 					document.location.hash = 'school_admin/summary';
 				} else {
-					// В противном случае перенаправляем пользователя на страницу добавления школы
-					document.location.hash = 'schools/add';
+                    //Else direct unverified user to the waiting area
+                    document.location.hash = 'schools/lounge';
 				}
 			});
-		};
-	},
+        }
+    },
 	/**
 	 * Обновление списка школ пользователя
 	 * @returns PromiseClass
@@ -48,6 +48,7 @@ SchoolsPage = React.createClass({
 				<Route path="/schools/edit" binding={ binding.sub('schoolsForm')} component="module/as_manager/pages/schools/schools_edit"  />
 				<Route path="/schools/add" binding={ binding.sub('schoolsList')} component="module/as_manager/pages/schools/schools_add"  />
 				<Route path="/schools" binding={ binding.sub('schoolsList')} component="module/as_manager/pages/schools/schools_list" />
+                <Route path="/schools/lounge" binding={ binding.sub('schoolsList')} component="module/as_manager/pages/schools/schools_lounge" />
 			</RouterView>
 		)
 	}
