@@ -6,16 +6,11 @@ SchoolListPage = React.createClass({
 		var self = this,
 			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
 
-		userId && Server.schools.get({
-            filter: {
-                where: {
-                    ownerId: userId
-                },
-                include: ['postcode']
-            }
-        }).then(function(data) {
-			self.getDefaultBinding().set(Immutable.fromJS(data));
-		});
+		if(userId !== null && userId !== undefined) {
+			window.Server.getMaSchools.get({presets:["owner","admin","manager","teacher","coach"]}).then(function(data){
+				self.getDefaultBinding().set(Immutable.fromJS(data));
+			});
+		}
 	},
 	setSchoolAsActive: function(school) {
 		var self = this,

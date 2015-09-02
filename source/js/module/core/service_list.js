@@ -44,6 +44,7 @@ serviceList = {
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 		serviceList.schoolOpponents = new Service('/schools/{id}/public/opponents', binding);
 		serviceList.getAllSchools = new Service('/schools/getAllSchools', binding);
+		serviceList.getMaSchools = new Service('/schools/getMaSchools', binding);
 
 		// students
 		serviceList.students = new Service('/schools/{schoolId}/students', binding);

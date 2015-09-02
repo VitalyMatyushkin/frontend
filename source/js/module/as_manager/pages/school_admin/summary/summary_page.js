@@ -12,14 +12,13 @@ SchoolSummary = React.createClass({
             activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
         self.activeSchoolId = activeSchoolId;
-        self.request = window.Server.schoolsFindOne.get({
-            filter: {
-                where: {
-                    id: activeSchoolId
-                },
-                include: 'postcode'
-            }
-        }).then(function(data) {
+
+		window.Server.school.get(
+			{
+				id: activeSchoolId,
+				filter: {include: 'postcode'}
+			}
+        ).then(function(data) {
             binding.set(Immutable.fromJS(data));
             self.isMounted() && self.forceUpdate();
         });
