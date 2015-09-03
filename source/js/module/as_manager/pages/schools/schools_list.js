@@ -7,7 +7,14 @@ SchoolListPage = React.createClass({
 			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
 
 		if(userId !== null && userId !== undefined) {
-			window.Server.getMaSchools.get({presets:["owner","admin","manager","teacher","coach"]}).then(function(data){
+			window.Server.getMaSchools.get(
+				{
+					filter: {
+						presets:["owner","admin","manager","teacher","coach"],
+						include: "postcode"
+					}
+				}
+			).then(function(data){
 				self.getDefaultBinding().set(Immutable.fromJS(data));
 			});
 		}
