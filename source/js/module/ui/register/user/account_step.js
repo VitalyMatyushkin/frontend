@@ -7,7 +7,8 @@ RegiseterUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	displayName: 'AccountForm',
 	propTypes: {
-		onSuccess: React.PropTypes.func
+		onSuccess: React.PropTypes.func,
+        onError: React.PropTypes.func
 	},
 	getPhone(phone) {
 		return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
@@ -17,7 +18,7 @@ RegiseterUserForm = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<Form name="Account Setup" updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}>
+			<Form name="Account Setup" updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 				<FormField type="text" field="email" validation="required email server">Email</FormField>
 				<FormField type="phone" field="phone" validation="phone" onPrePost={self.getPhone}>Mobile phone</FormField>

@@ -67,6 +67,23 @@ RegisterUserPage = React.createClass({
             binding.set('registerStep', step);
         }
     },
+    catchStepFunctionError:function(step, data){
+        //Temporary solution to for the 422 error
+        //Notify user of the error and allow to try again
+        var message,
+            responseObj = data.responseJSON.error;
+        switch (responseObj.status){
+            case 422:
+                message = responseObj.details.messages.phone[0];
+                alert(message+' - so please try again!');
+                break;
+            default:
+                message = responseObj.message;
+                alert(message);
+                break;
+        }
+        $('.bButton').text('Continue →');
+    },
     finish: function () {
 		var binding = this.getDefaultBinding();
 
@@ -101,6 +118,7 @@ RegisterUserPage = React.createClass({
             currentView =
 				<AccountForm
                 	onSuccess={self.setStepFunction.bind(null, 'verification')}
+                    onError = {self.catchStepFunctionError.bind(null,'verification')}
                 	binding={binding.sub('formFields')}
                 />
         } else if (currentStep === 'verification') {

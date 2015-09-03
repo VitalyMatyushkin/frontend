@@ -110,7 +110,6 @@ Form = React.createClass({
                 userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
 
                 userService(dataToPost).then(self._onServiceSucces.bind(self), self._onServiceError.bind(self));
-
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
                 var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :
@@ -145,7 +144,8 @@ Form = React.createClass({
     },
     _onServiceError: function (data) {
         var self = this;
-
+        self.busy = false;
+        self.buttonText = self.defaultButton;
         if (self.props.onError) {
             self.props.onError(data);
         }
