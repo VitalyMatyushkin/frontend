@@ -53,14 +53,16 @@ var validationsSet = {
 	},
 	server: function(value) {
 		var self = this,
+            oldPhoneCheckVal,
 			dataToCheck = {};
-
 		if (value === '') {
 			return false;
 		}
-
+        if(self.props.onPrePost !== undefined){
+            oldPhoneCheckVal = value;
+            value = self.props.onPrePost(value);
+        }
 		dataToCheck[self.props.field] = value;
-
 		$.ajax({
 			url: 'http:' + window.apiBase + '/' + self.props.service + '/check',
 			type: 'POST',
@@ -76,7 +78,11 @@ var validationsSet = {
 				// Проверяем, актуально ли проверяемое значение поля
 				if (data.unique === false && self.getDefaultBinding().get('value') === value) {
 					self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
-				}
+				}else{
+                    if(data.unique === false && self.getDefaultBinding().get('value') === oldPhoneCheckVal){
+                        self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
+                    }
+                }
 			}
 		});
 	}
