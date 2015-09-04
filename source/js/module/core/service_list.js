@@ -34,6 +34,7 @@ serviceList = {
 		serviceList.addCoach = new Service('/schools/{id}/coaches/rel/{fk}',binding);
 		serviceList.addTeacher = new Service('/schools/{id}/teachers/rel/{fk}',binding);
 		serviceList.schoolPermissions = new Service('/schools/{id}/permissions',binding);
+        serviceList.schoolPermissionsCount = new Service('/schools/{id}/permissions/count',binding);
 		serviceList.schoolModelPermission = new Service('/schools/{id}/permissions/{permissionId}',binding);
 		serviceList.schoolPermission = new Service('/schools/{id}/permissions/{permissionId}/set',binding);
 
