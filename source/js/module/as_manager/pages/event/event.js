@@ -88,10 +88,12 @@ EventView = React.createClass({
                 include: [
 					{
 						participants: [
-                            'players',
-                            {
+							{
+								players: 'user',
+							},
+							{
 							    school: 'forms'
-						    },
+							},
                             'house'
                         ]
 					},

@@ -11,8 +11,6 @@ AutocompleteTeam = React.createClass({
             binding = self.getDefaultBinding(),
             rivalBinding = self.getBinding('rival');
 
-        binding.set('_students', Immutable.List());
-
         rivalBinding
             .meta()
             .atomically()
@@ -65,26 +63,29 @@ AutocompleteTeam = React.createClass({
                         inq: forms.map(function (form) {
                             return form.get('id');
                         }).toJS()
-                    },
-                    gender: binding.get('model.gender') || 'male'
-                }
+                    }
+                },
+				include: "user"
             };
-
 
         if (type === 'houses') {
             filter.where.houseId = binding.get('id');
         }
 
-        window.Server.students.get(schoolId, {
-            filter: filter
+        window.Server.getAllStudents.get({
+			filter: filter
         }).then(function (data) {
-            data.map(function (player) {
-                player.name = player.firstName + ' ' + player.lastName;
+            var gender = binding.get('model.gender') || 'male';
+			var players = [];
+			data.forEach(function(player) {
+				//filter by gender
+				if(player.user.gender === gender) {
+					player.name = player.user.firstName + ' ' + player.user.lastName;
+					players.push(player);
+				}
+			});
 
-                return player.name;
-            });
-
-            binding.set('_students', Immutable.fromJS(data));
+            binding.set('_students', Immutable.fromJS(players));
         });
     },
     /**

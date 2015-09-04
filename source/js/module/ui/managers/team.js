@@ -20,8 +20,8 @@ Team = React.createClass({
 
         return players.get().map(function (player) {
 			return <div className="bPlayer mMini" key={player.get('id')}>
-				<span className="ePlayer_gender">{player.get('gender').toUpperCase()}</span>
-				<span className="ePlayer_name">{player.get('firstName')} {player.get('lastName')}</span>
+				<span className="ePlayer_gender">{player.get('user').get('gender').toUpperCase()}</span>
+				<span className="ePlayer_name">{player.get('user').get('firstName')} {player.get('user').get('lastName')}</span>
 				<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, player.get('id'))}>
 					<SVG icon="icon_trash" />
 				</span>
