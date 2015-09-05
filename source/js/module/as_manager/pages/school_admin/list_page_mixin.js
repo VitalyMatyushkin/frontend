@@ -17,10 +17,17 @@ ListPageMixin = {
         self.popUpState = false;
         //Request for total number of models - for pagination
         if(self.isPaginated === true){
-            window.Server[self.serviceCount].get().then(function(totalCount){
-                //console.log(totalCount);
-                globalBinding.set('totalCount',totalCount.count);
-            });
+            if(activeSchoolId !== null){
+                window.Server[self.serviceCount].get({id:activeSchoolId}).then(function(totalCount){
+                    //console.log(totalCount);
+                    globalBinding.set('totalCount',totalCount.count);
+                });
+            }else{
+                window.Server[self.serviceCount].get().then(function(totalCount){
+                    //console.log(totalCount);
+                    globalBinding.set('totalCount',totalCount.count);
+                });
+            }
         }
 		self.updateData();
 	},
@@ -42,27 +49,24 @@ ListPageMixin = {
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
             self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0;
             //Check if count is an odd number
-            if(customCount%2 !== 0){
-                self.numberOfPages += 1;
-                self.extraPages = customCount % self.filters.limit;
-                isOdd = true;
-            }
+            //if(customCount%2 !== 0){
+            //    //self.numberOfPages += 1;
+            //    self.extraPages = customCount % self.filters.limit;
+            //    isOdd = true;
+            //}
             if(selectNode !== null){
                 selectNode.options.length = 0;
                 if(customCount >= self.filters.limit){
-                    for(var i=1; i<self.numberOfPages; i++){
+                    for(var i=0; i<self.numberOfPages; i++){
                         var option = document.createElement('option');
-                        option.text = isOdd === true ? i : (i >1 ? i-1:i);
-                        option.value = isOdd === true ? i : (i >1 ? i-1:i);
+                        option.text =(i < self.numberOfPages ? i+1 : i-1);
+                        option.value =  (i < self.numberOfPages ? i+1 : i-1);
                         selectNode.add(option);
                     }
                 }
             }
             if(pageNumberNode !== null){
-                if(isOdd){
-                    pageNumberNode.innerText = 'out of '+(self.numberOfPages-1);
-                }else{pageNumberNode.innerText = 'out of '+(self.numberOfPages);}
-
+                pageNumberNode.innerText = 'out of '+(self.numberOfPages);
             }
         }
     },
@@ -95,9 +99,19 @@ ListPageMixin = {
 
         //Exempt current admin from user and permissions list
         if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
-            if('where' in self.filters){
-                if(self.filters.where.id.neq !== undefined){
-                    self.filters.where.id.neq = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+            if(typeof self.filters === 'object'){
+                if('where' in self.filters){
+                    if(self.filters.where.id !== undefined){
+                        if(self.filters.where.id.neq !== undefined){
+                            self.filters.where.id.neq = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+                        }
+                    }else{
+                        if(self.filters.where.principalId !== undefined){
+                            if(self.filters.where.principalId.neq !== undefined){
+                                self.filters.where.principalId.neq = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -125,10 +139,13 @@ ListPageMixin = {
 				requestFilter.where[filterName] = newFilter[filterName];
                 if('limit' in (newFilter[filterName])){
                     defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                    requestFilter.limit = parseInt(newFilter[filterName].limit);
                 }else if('order' in (newFilter[filterName])){
                     defaultRequestFilter.order = newFilter[filterName].order;
+                    requestFilter.order = newFilter[filterName].order;
                 }else if('skip' in (newFilter[filterName])){
                     defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
+                    requestFilter.skip = parseInt(newFilter[filterName].skip);
                 }
                 else{
                     defaultRequestFilter.where[filterName] = newFilter[filterName];
@@ -141,10 +158,13 @@ ListPageMixin = {
             for(var filterName in newFilter){
                 if('limit' in (newFilter[filterName])){
                     defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                    requestFilter.limit = parseInt(newFilter[filterName].limit);
                 }else if('order' in (newFilter[filterName])){
                     defaultRequestFilter.order = newFilter[filterName].order;
+                    requestFilter.order = newFilter[filterName].order;
                 }else if('skip' in (newFilter[filterName])){
                     defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
+                    requestFilter.skip = parseInt(newFilter[filterName].skip);
                 }
                 else{
                     defaultRequestFilter.where[filterName] = newFilter[filterName];
@@ -156,6 +176,7 @@ ListPageMixin = {
             self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                 self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
+                //console.log(binding.toJS());
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
@@ -214,7 +235,7 @@ ListPageMixin = {
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
         if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
-            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '+globalBinding.get('userData.userInfo.lastName')+' - System Admin)';
+            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '+globalBinding.get('userData.userInfo.lastName')+' - '+(self.setPageTitle !== undefined ? self.setPageTitle+' )' : 'System Admin )');
         }else{
             listPageTitle = self.serviceName[0].toUpperCase() + self.serviceName.slice(1);
         }
