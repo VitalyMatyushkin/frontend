@@ -74,7 +74,7 @@ EventTeams = React.createClass({
 			isOwner = type === 'inter-schools' ? participant.get('schoolId') === activeSchoolId : true;
 
 		return players ? players.map(function (player) {
-            var isMale = player.get('gender') === 'male',
+            var isMale = player.get('user').get('gender') === 'male',
 				points = self.getPointsByStudent(player.get('id'), participant.get('id')) || 0;
 
             return <div className="bPlayer mMini">
@@ -89,7 +89,7 @@ EventTeams = React.createClass({
 						<span className="ePlayer_score">{points}</span>
 					</If>
 				</div>
-				<span className="ePlayer_name"><span>{player.get('firstName')}</span> <span>{player.get('lastName')}</span></span>
+				<span className="ePlayer_name"><span>{player.get('user').get('firstName')}</span> <span>{player.get('user').get('lastName')}</span></span>
 				<If condition={binding.get('mode') === 'edit_squad' && isOwner}>
 					<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, order, player.get('id'))}>
 						<SVG icon="icon_trash" />
