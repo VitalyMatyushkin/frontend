@@ -22,8 +22,8 @@ var validationsSet = {
 	},
 	alphanumeric: function(value) {
 		var self = this;
-
-		if (/[^a-zA-Z0-9\-\/]/.test(value)) {
+        //old RegExp /[^a-zA-Z0-9\-\/]/
+		if (/[^a-zA-Z0-9\-\/]+$/.test(value)) {
 			return 'Should contain only alphanumeric characters';
 		} else {
 			return false;
@@ -33,7 +33,7 @@ var validationsSet = {
 		var self = this;
 
 		if (/[^a-zA-Z\-\/]/.test(value)) {
-			return 'Should contain only alphanumeric characters';
+			return 'Should contain only text characters';
 		} else {
 			return false;
 		}
