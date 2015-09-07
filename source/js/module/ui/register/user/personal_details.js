@@ -14,8 +14,8 @@ RegiseterUserForm = React.createClass({
 			binding = self.getDefaultBinding();
 		return (
 			<Form name="Account Setup" updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}>
-				<FormField type="text" field="firstName" validation="alphanumeric">First Name</FormField>
-				<FormField type="text" field="lastName" validation="alphanumeric">Last name</FormField>
+				<FormField type="text" field="firstName" validation="text">First Name</FormField>
+				<FormField type="text" field="lastName" validation="text">Last name</FormField>
 				<FormField type="text" field="address" validation="alphanumeric">Address</FormField>
 			</Form>
 		)
