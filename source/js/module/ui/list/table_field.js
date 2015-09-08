@@ -13,12 +13,16 @@ ListField = React.createClass({
 	},
 	onChange: function(event) {
 		var self = this,
-			value = event.currentTarget.value;
-
+			value = event.currentTarget.value,
+            dataField;
 		if (self.props.inputParseFunction) {
 			value = self.props.inputParseFunction(value);
 		}
-
+        if(self.props.children === 'Role'){
+            dataField = 'preset';
+        }else{
+            dataField = self.props.dataField;
+        }
 		if (value && self.props.filterType !== 'number') {
             if(self.props.children.toLowerCase()==='limit'){
                 value = {
@@ -28,8 +32,7 @@ ListField = React.createClass({
             else{
                 if(value.length >1){
                     value = {
-                        like: value,
-                        options: 'i'
+                        like: value
                     }
                 }else{
                     value={
@@ -40,7 +43,8 @@ ListField = React.createClass({
 
             }
 		}
-		self.props.onChange(self.props.dataField, value);
+        console.log(value);
+		self.props.onChange(dataField, value);
 	},
     onSort:function(event,order){
         var self = this,

@@ -12,66 +12,53 @@ var AdminPermissionView,
     Popup = require('module/ui/popup');
 AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
-    serviceName:'users',
-    serviceCount:'getTotalNumberOfUserModels', //Service to get total count for pagination
-    //filters:{include:{
-    //    relation:'permissions',
-    //    scope:{
-    //        include:'school',
-    //        where:{
-    //            preset:{neq:"student"}
-    //        }
-    //    }
-    //},where:{id:{neq:''}},limit:20},
-    //filters:{where:{id:{neq:''}},limit:20},
-    filters:{include:[{permissions:['school','student']}], where:{id:{neq:''}},limit:20},
-    groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
-    isPaginated: true,
-    getFullName:function(lastName){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            userObj = binding.get().find(function(model){
-                return lastName === model.lastName;
-            });
-        if(userObj !== undefined){
-            return userObj.get('firstName')+' '+userObj.get('lastName');
+    serviceName:'Permissions',
+    serviceCount:'getTotalNumberOfUserModels',
+    pageLimit: 20,
+    //filters:{
+    //    include:[
+    //        {permissions:['school','student']}
+    //    ],
+    //    where:{and:[{id:{neq:''}},{username:{neq:null}}]}
+    //},
+    filters:{
+      include:['principal','school']
+        ,where:{
+            principalId:{neq:''}
+            //and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
         }
     },
-    getStatus: function(verified) {
+    groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
+    isPaginated: true,
+    getFullName:function(principal){
+        if(principal !== undefined){
+            return principal.firstName+' '+principal.lastName;
+        }
+    },
+    getStatus: function(principal) {
         var self = this,
             status = 'Registered';
-        if(verified !== undefined){
-            if (verified.email === true && verified.phone === true) {
+        if(principal !== undefined){
+            if (principal.verified.email === true && principal.verified.phone === true) {
                 status = 'Active';
-            } else if (verified.email === false || verified.phone === false) {
+            } else if (principal.verified.email === false || principal.verified.phone === false) {
                 status = 'Registered';
             }
         }
         return status;
     },
-    getRoles:function(permissions){
-        if(permissions !== undefined){
-            return permissions.map(function(role){
-                return (
-                    <div>{role.preset}</div>
-                );
-            });
-        }
+    getRoles:function(principal){
+
     },
-    getSchool:function(permissions){
-        if(permissions !== undefined){
-            return permissions.map(function(role){
-                if(role.school !== undefined){
-                    return(
-                        <div>{role.school.name}</div>
-                    );
-                }else{
-                    return null;
-                }
-            });
+    getSchool:function(school){
+        if(school !== undefined){
+            return school.name;
         }
     },
     _getItemViewFunction:function(model){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            selectedModel;
         if(model.length === 1){
             window.location.hash = '/admin_schools/admin_views/user?id='+model[0];
         }else{
@@ -81,9 +68,13 @@ AdminPermissionView = React.createClass({
     _getQuickEditActionsFactory:function(evt){
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
+            binding = self.getDefaultBinding(),
             idAutoComplete = [],
             userId = evt.currentTarget.parentNode.dataset.userobj;
-        idAutoComplete.push(userId);
+        userId = binding.get().find(function(id){
+            return userId === id.get('id');
+        });
+        idAutoComplete.push(userId.get('principalId'));
         evt.currentTarget.parentNode.classList.remove('groupActionList_show');
         switch (evt.currentTarget.innerText){
             case 'Add Role':
@@ -111,10 +102,21 @@ AdminPermissionView = React.createClass({
         var actionStr = el.innerText,
             selections = chk,
             self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
+            rootBinding = self.getMoreartyContext().getBinding(),
+            binding = self.getDefaultBinding();
         if(actionStr !== ''){
-            var ticked = [];
+            var ticked = [],filterTick=[];
             for(var i=0; i<selections.length; i++)if(selections.item(i).checked===true)ticked.push(selections.item(i).dataset.id);
+            ticked.forEach(function(t,i){
+                filterTick.push(
+                    binding.get().find(function(dt){
+                        return t === dt.get('id');
+                    })
+                );
+                console.log(t+' / '+filterTick[i].get('principalId'));
+                ticked[i] = filterTick[i].get('principalId');
+                console.log(ticked[i]);
+            });
             switch (el.innerText){
                 case 'Add Role':
                     if(ticked.length >=1){
@@ -199,8 +201,13 @@ AdminPermissionView = React.createClass({
         rootBinding.set('popup',false);
         self.forceUpdate();
     },
-    getObjectVisibility:function(blocked){
-        if(blocked === true){return 'Blocked';}else{return 'Active';}
+    getObjectVisibility:function(principal){
+        if(principal.blocked === true){return 'Blocked';}else{return 'Active';}
+    },
+    getEmail:function(principal){
+        if(principal !== undefined){
+            return principal.email;
+        }
     },
     getTableView:function(){
         var self = this,
@@ -210,12 +217,12 @@ AdminPermissionView = React.createClass({
             <div className="eTable_view">
                 <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory} quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="lastName" width="10%">Surname</TableField>
-                    <TableField dataField="email" width="14%">Email</TableField>
-                    <TableField dataField="verified" width="10%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="permissions" width="40%" filterType="none"  parseFunction={self.getSchool}>School</TableField>
-                    <TableField dataField="permissions" width="10%" filterType="none" parseFunction={self.getRoles}>Role</TableField>
-                    <TableField dataField="blocked" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
+                    <TableField dataField="principal" width="20%" filterType="none" parseFunction={self.getFullName}>Name</TableField>
+                    <TableField dataField="principal" width="14%" filterType="none"  parseFunction={self.getEmail}>Email</TableField>
+                    <TableField dataField="principal" width="5%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
+                    <TableField dataField="school" width="40%" filterType="none"  parseFunction={self.getSchool}>School</TableField>
+                    <TableField dataField="preset" width="5%">Role</TableField>
+                    <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={rootBinding}/>

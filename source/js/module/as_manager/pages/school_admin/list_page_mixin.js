@@ -18,16 +18,32 @@ ListPageMixin = {
         //Request for total number of models - for pagination
         if(self.isPaginated === true){
             if(activeSchoolId !== null){
-                window.Server[self.serviceCount].get({id:activeSchoolId}).then(function(totalCount){
-                    //console.log(totalCount);
-                    globalBinding.set('totalCount',totalCount.count);
-                });
+                if(self.serviceCount !== undefined){
+                    window.Server[self.serviceCount].get({id:activeSchoolId}).then(function(totalCount){
+                        //console.log(totalCount);
+                        globalBinding.set('totalCount',totalCount.count);
+                    });
+                }else{
+                    window.Server[self.serviceName].get(activeSchoolId,{filter:self.filters}).then(function(data){
+                        globalBinding.set('totalCount',data.length);
+                        console.log(data.length);
+                    });
+                }
             }else{
-                window.Server[self.serviceCount].get().then(function(totalCount){
-                    //console.log(totalCount);
-                    globalBinding.set('totalCount',totalCount.count);
-                });
+                if(self.serviceCount !== undefined){
+                    window.Server[self.serviceCount].get().then(function(totalCount){
+                        //console.log(totalCount);
+                        globalBinding.set('totalCount',totalCount.count);
+                    });
+                }else{
+                    window.Server[self.serviceName].get({filter:self.filters}).then(function(data){
+                        globalBinding.set('totalCount',data.length);
+                        console.log(data.length);
+                        console.log(globalBinding.get('totalCount') );
+                    });
+                }
             }
+            self.filters.limit = self.pageLimit;
         }
 		self.updateData();
 	},
@@ -36,7 +52,7 @@ ListPageMixin = {
         self.timeoutId = setTimeout(function(){
             //Pagination method
             self._getTotalCountAndRenderPagination();
-        },2000);
+        },4000);
     },
     _getTotalCountAndRenderPagination:function(customCount){
         var self = this,
@@ -44,16 +60,16 @@ ListPageMixin = {
             pageNumberNode = React.findDOMNode(self.refs.pageNumber),
             isOdd = false,
             selectNode = React.findDOMNode(self.refs.pageSelect);
-
         if(self.isPaginated && self.filters.limit !== undefined){
+            console.log(globalBinding.get('totalCount') );
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
-            self.numberOfPages = customCount !== undefined ? Math.round(customCount/self.filters.limit) : 0;
+            self.numberOfPages = customCount !== undefined ? (Math.floor(customCount/self.filters.limit)) : 0; console.log(customCount);
             //Check if count is an odd number
-            //if(customCount%2 !== 0){
-            //    //self.numberOfPages += 1;
-            //    self.extraPages = customCount % self.filters.limit;
-            //    isOdd = true;
-            //}
+            if(customCount%self.filters.limit !== 0){
+                self.numberOfPages += 1;
+                self.extraPages = customCount % self.filters.limit;
+                isOdd = true;
+            }
             if(selectNode !== null){
                 selectNode.options.length = 0;
                 if(customCount >= self.filters.limit){
@@ -93,9 +109,10 @@ ListPageMixin = {
             defaultRequestFilter ={where:{}},
 			binding = self.getDefaultBinding(),
             page = window.location.href.split('/'),
+            globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
 
-        //console.log(newFilter);
+        console.log(newFilter);
 
         //Exempt current admin from user and permissions list
         if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
@@ -176,7 +193,7 @@ ListPageMixin = {
             self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                 self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
-                //console.log(binding.toJS());
+                console.log(binding.toJS());
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
@@ -192,7 +209,7 @@ ListPageMixin = {
                     binding.set(Immutable.fromJS(notAccepted));
                 }else{
                     binding.set(Immutable.fromJS(data));
-                    //console.log(binding.toJS());
+                    console.log(binding.toJS());
                     self.popUpState = false;
                 }
             });
@@ -231,7 +248,7 @@ ListPageMixin = {
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
-            excludeAddButton = ['logs','permissions','archive','#admin_schools'], //Add page name to this array if you don't want to display add button
+            excludeAddButton = ['logs','permissions','archive','#admin_schools','requests'], //Add page name to this array if you don't want to display add button
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
         if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){

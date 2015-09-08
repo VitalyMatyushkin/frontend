@@ -13,9 +13,14 @@ var PermissionView,
 PermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'schoolPermissions',
-    serviceCount:'schoolPermissionsCount',
+    //serviceCount:'schoolPermissionsCount',
+    pageLimit: 20,
     setPageTitle:'School Admin',
-    filters:{include:['principal',{student:['form','house']}], where:{principalId:{neq:''}}, limit:20},
+    filters:{
+        include:['principal',{student:['form','house']}],
+        where:{
+            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]}
+    },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
     isPaginated: true,
     getFullName:function(principal){
@@ -197,7 +202,7 @@ PermissionView = React.createClass({
                     <TableField dataField="principal" width="20%" filterType="none" parseFunction={self.getFullName}>Name</TableField>
                     <TableField dataField="principal" width="14%" filterType="none" parseFunction={self.getEmail}>Email</TableField>
                     <TableField dataField="principal" width="10%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="preset" width="10%" filterType="none">Role</TableField>
+                    <TableField dataField="preset" width="10%" >Role</TableField>
                     <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">

@@ -26,13 +26,13 @@ UserDetail= React.createClass({
                                 principalId: user.id,
                                 accepted: true
                             },
-                            include:['school','student']
+                            include:['school',{student:'user'}]
                         }
                     }).then(function(data){
                     user.roles = data;
                     binding.set('userWithPermissionDetail',Immutable.fromJS(user));
                     binding.set('selectedUser',{userId:selectedUserId, role:data});
-                    //console.log(binding.toJS('userWithPermissionDetail'));
+                    console.log(binding.toJS('userWithPermissionDetail'));
                 });
             });
     },

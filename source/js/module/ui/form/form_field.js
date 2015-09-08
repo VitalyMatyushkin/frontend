@@ -39,7 +39,7 @@ FormField = React.createClass({
 				<div className="eForm_fieldName">{self.props.children}</div>
 				<div className={fieldStyleClass}>
 					{inputField}
-					<div className="eForm_fieldValidText">{binding.get('error')}</div>
+					<div className="eForm_fieldValidText">{binding.get('error') || binding.get('success')}</div>
 				</div>
 			</div>
 

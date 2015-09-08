@@ -66,67 +66,69 @@ Table = React.createClass({
 			tableHeadFields,
             quickActions = self.getQuickEditActions(),
 			itemsNodes;
-        if (dataList) {
-            if(Object.keys(dataList).length !== 0){
-                itemsNodes = dataList.map(function (item) {
-                    var itemCells,
-                        itemButtons = [],
-                        getEditFunction = function() { return function(event) { self.props.onItemEdit(item); event.stopPropagation();}},
-                        getViewFunction = function() { return function(event) { self.props.onItemView(item); event.stopPropagation();}},
-                        getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();}},
-                        getQuickEditFunction = function(){return function(event){self._quickEditMenu(item,event);event.stopPropagation();}};
 
-                    self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike">Edit</span>);
-                    self.props.onItemView && self.props.displayActionText && itemButtons.push(<span onClick={getViewFunction()} className="bLinkLike">View</span>);
-                    self.props.onItemRemove && itemButtons.push(<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
-                    self.props.addQuickActions && itemButtons.push(<span onClick={getQuickEditFunction()} className="bLinkLike edit_btn">Edit
+        //Hack for a weird bug where instead of @dataList being an empty array if no data is returned by server
+        // It sometimes returns an empty object causing the rest of the UI elements to disappear
+        if(typeof dataList === 'object' && Object.keys(dataList).length === 0){dataList = []}
+
+        if (dataList) {
+            itemsNodes = dataList.map(function (item) {
+                var itemCells,
+                    itemButtons = [],
+                    getEditFunction = function() { return function(event) { self.props.onItemEdit(item); event.stopPropagation();}},
+                    getViewFunction = function() { return function(event) { self.props.onItemView(item); event.stopPropagation();}},
+                    getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();}},
+                    getQuickEditFunction = function(){return function(event){self._quickEditMenu(item,event);event.stopPropagation();}};
+
+                self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike">Edit</span>);
+                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span onClick={getViewFunction()} className="bLinkLike">View</span>);
+                self.props.onItemRemove && itemButtons.push(<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
+                self.props.addQuickActions && itemButtons.push(<span onClick={getQuickEditFunction()} className="bLinkLike edit_btn">Edit
                     <span className="caret caret_down"></span><span data-userobj={item.id} className="eQuickAction_list">{quickActions}</span></span>);
 
-                    itemCells = React.Children.map(self.props.children, function(child) {
-                        var dataField = child.props.dataField,
-                            value = item[dataField];
+                itemCells = React.Children.map(self.props.children, function(child) {
+                    var dataField = child.props.dataField,
+                        value = item[dataField];
 
-                        if (child.props.parseFunction) {
-                            value = child.props.parseFunction(value);
-                        }
+                    if (child.props.parseFunction) {
+                        value = child.props.parseFunction(value);
+                    }
 
-                        if (child.props.filterType === 'colors') {
-                            value = value.map(function(useColor){
-                                return <div className="eDataList_listItemColor" style={{background: useColor}}></div>
-                            });
-                        }
-                        //For checkboxes
-                        if(dataField ==='checkBox'){
-                            return (
-                                <div className="eDataList_listItemCell">
-                                    <input data-id={item.id} className="tickBoxGroup" type="checkbox"/>
-                                </div>);
-                        }
+                    if (child.props.filterType === 'colors') {
+                        value = value.map(function(useColor){
+                            return <div className="eDataList_listItemColor" style={{background: useColor}}></div>
+                        });
+                    }
+                    //For checkboxes
+                    if(dataField ==='checkBox'){
                         return (
-                            <div className="eDataList_listItemCell">{value}</div>
-                        );
-                    });
-
+                            <div className="eDataList_listItemCell">
+                                <input data-id={item.id} className="tickBoxGroup" type="checkbox"/>
+                            </div>);
+                    }
                     return (
-                        <div className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
-
-                            {itemCells}
-                            <If condition={self.props.hideActions !== true}>
-                                <div className="eDataList_listItemCell mActions">
-                                    {itemButtons}
-                                </div>
-                            </If>
-                        </div>
+                        <div className="eDataList_listItemCell">{value}</div>
                     );
                 });
 
-                tableHeadFields = React.Children.map(this.props.children, function (child) {
-                    return React.addons.cloneWithProps(child, {
-                        onChange: self.updateFilterState,
-                        onSort:self.updateFilterState
-                    });
+                return (
+                    <div className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
+
+                        {itemCells}
+                        <If condition={self.props.hideActions !== true}>
+                            <div className="eDataList_listItemCell mActions">
+                                {itemButtons}
+                            </div>
+                        </If>
+                    </div>
+                );
+            });
+            tableHeadFields = React.Children.map(this.props.children, function (child) {
+                return React.addons.cloneWithProps(child, {
+                    onChange: self.updateFilterState,
+                    onSort:self.updateFilterState
                 });
-            }
+            });
         }
 		return (
 		<div className="bDataList">

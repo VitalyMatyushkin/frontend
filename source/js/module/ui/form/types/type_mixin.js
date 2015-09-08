@@ -119,7 +119,7 @@ InputTypeMixin = {
     showSuccess:function(text){
         var self = this,
             binding = self.getDefaultBinding();
-        text && binding.set('error', text);
+        text && binding.set('success', text);
         binding.set('showSuccess',true);
     }
 };
