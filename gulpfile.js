@@ -13,7 +13,8 @@ var SOURCE = './source',
 	svgmin = require('gulp-svgmin'),
 	requireConvert = require('gulp-require-convert'),
 	del = require('del'),
-	using = require('gulp-using');
+	using = require('gulp-using'),
+	uglify = require('gulp-uglify');
 
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
@@ -42,6 +43,7 @@ gulp.task('bower', function() {
 	var files = gulp.src(bower({checkExistence: true}), { base: '/bower_components' });
 
 	files = files.pipe(concat('bower.js'));
+	files = files.pipe(uglify());
 	files = files.pipe(gulp.dest(BUILD + '/js'));
 
 	return files;
