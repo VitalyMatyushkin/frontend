@@ -67,6 +67,10 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .eForm_fieldSet.mInvalid .eForm_fieldValidText{
   display: block;
 }
+.eForm_fieldSet.mValid .eForm_fieldValidText{
+  display: block;
+  color:green;
+}
 
 .eForm_fieldSet.mInvalid{
   color: $INVALID_COLOR;
@@ -76,7 +80,13 @@ $INVALID_COLOR: rgb(182, 0, 0);
   border: 1px solid $INVALID_COLOR;
   color: $INVALID_COLOR;
 }
-
+.eForm_fieldSet.mValid{
+  color: green;
+}
+.eForm_fieldSet.mValid input{
+  border: 1px solid green;
+  color: green;
+}
 .eForm_fieldSet.mAreaField input{
   text-transform: uppercase;
 }

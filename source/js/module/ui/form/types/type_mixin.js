@@ -108,16 +108,20 @@ InputTypeMixin = {
 	showError: function(text) {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		text && binding.set('error', text);
 		binding.set('showError', true);
 	},
 	hideError: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		binding.set('showError', false);
-	}
+	},
+    showSuccess:function(text){
+        var self = this,
+            binding = self.getDefaultBinding();
+        text && binding.set('error', text);
+        binding.set('showSuccess',true);
+    }
 };
 
 module.exports = InputTypeMixin;

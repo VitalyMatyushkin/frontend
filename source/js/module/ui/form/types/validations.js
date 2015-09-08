@@ -78,10 +78,10 @@ var validationsSet = {
 				// Проверяем, актуально ли проверяемое значение поля
 				if (data.unique === false && self.getDefaultBinding().get('value') === value) {
 					self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
-				}else{
-                    if(data.unique === false && self.getDefaultBinding().get('value') === oldPhoneCheckVal){
-                        self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
-                    }
+				}else if(data.unique === false && self.getDefaultBinding().get('value') === oldPhoneCheckVal){
+                    self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
+                }else{
+                    self.showSuccess(self.props.name +' is available to you');
                 }
 			}
 		});

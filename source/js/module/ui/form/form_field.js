@@ -29,15 +29,16 @@ FormField = React.createClass({
 
 		if (binding.get('showError')) {
 			fieldStyleClass += ' mInvalid';
-		}
-
+		}else{
+            if(binding.get('showSuccess')){
+                fieldStyleClass += ' mValid';
+            }
+        }
 		return (
 			<div className="eForm_field">
 				<div className="eForm_fieldName">{self.props.children}</div>
-
 				<div className={fieldStyleClass}>
 					{inputField}
-
 					<div className="eForm_fieldValidText">{binding.get('error')}</div>
 				</div>
 			</div>
