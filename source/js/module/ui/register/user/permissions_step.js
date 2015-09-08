@@ -278,7 +278,7 @@ PermissionsStep = React.createClass({
 					</div>
 				</If>
 				<If condition={isShowFinishButton}>
-					<div className="bButton" onClick={self.onSuccess}>Continue</div>
+					<div className="bButton bButton_reg" onClick={self.onSuccess}>Continue</div>
 				</If>
 			</div>
 		</div>
