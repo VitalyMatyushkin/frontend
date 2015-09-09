@@ -15,44 +15,47 @@ ListPageMixin = {
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
-        //Request for total number of models - for pagination
+		self.updateData();
+	},
+    getCustomQueryCount:function(){
+        var self = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
+            customQueryFilter = self.filters;
+        delete customQueryFilter["limit"];
         if(self.isPaginated === true){
             if(activeSchoolId !== null){
                 if(self.serviceCount !== undefined){
                     window.Server[self.serviceCount].get({id:activeSchoolId}).then(function(totalCount){
-                        //console.log(totalCount);
                         globalBinding.set('totalCount',totalCount.count);
                     });
                 }else{
-                    window.Server[self.serviceName].get(activeSchoolId,{filter:self.filters}).then(function(data){
+                    window.Server[self.serviceName].get(activeSchoolId,{filter:customQueryFilter}).then(function(data){
                         globalBinding.set('totalCount',data.length);
-                        console.log(data.length);
                     });
                 }
             }else{
                 if(self.serviceCount !== undefined){
                     window.Server[self.serviceCount].get().then(function(totalCount){
-                        //console.log(totalCount);
                         globalBinding.set('totalCount',totalCount.count);
                     });
                 }else{
-                    window.Server[self.serviceName].get({filter:self.filters}).then(function(data){
+                    window.Server[self.serviceName].get({filter:customQueryFilter}).then(function(data){
                         globalBinding.set('totalCount',data.length);
-                        console.log(data.length);
-                        console.log(globalBinding.get('totalCount') );
+                        self.filters.limit = self.pageLimit;
+                        self._getTotalCountAndRenderPagination();
                     });
                 }
             }
-            self.filters.limit = self.pageLimit;
         }
-		self.updateData();
-	},
+    },
     componentDidMount:function(){
         var self = this;
-        self.timeoutId = setTimeout(function(){
-            //Pagination method
-            self._getTotalCountAndRenderPagination();
-        },4000);
+        if(self.isSuperAdminPage)React.findDOMNode(self.refs.otherCheck).checked = true;
+        //self.timeoutId = setTimeout(function(){
+        //    //Pagination method
+        //    self._getTotalCountAndRenderPagination();
+        //},4000);
     },
     _getTotalCountAndRenderPagination:function(customCount){
         var self = this,
@@ -60,11 +63,10 @@ ListPageMixin = {
             pageNumberNode = React.findDOMNode(self.refs.pageNumber),
             isOdd = false,
             selectNode = React.findDOMNode(self.refs.pageSelect);
-        if(self.isPaginated && self.filters.limit !== undefined){
-            console.log(globalBinding.get('totalCount') );
+        if(self.isPaginated){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
-            self.numberOfPages = customCount !== undefined ? (Math.floor(customCount/self.filters.limit)) : 0; console.log(customCount);
-            //Check if count is an odd number
+            self.numberOfPages = customCount !== undefined ? (Math.floor(customCount/self.filters.limit)) : 0;
+            //Check if count
             if(customCount%self.filters.limit !== 0){
                 self.numberOfPages += 1;
                 self.extraPages = customCount % self.filters.limit;
@@ -97,7 +99,6 @@ ListPageMixin = {
                 limit:{limit:self.filters.limit},
                 skip:{skip:skipLimit}
             };
-        //console.log(filterValue);
         if(metaBinding.get('isFiltersActive') === true){
             metaBinding.set('isFiltersActive',false);
         }
@@ -111,8 +112,6 @@ ListPageMixin = {
             page = window.location.href.split('/'),
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
-
-        console.log(newFilter);
 
         //Exempt current admin from user and permissions list
         if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
@@ -141,19 +140,18 @@ ListPageMixin = {
 		if (self.props.addSchoolToFilter !== false) {
 			requestFilter.where.schoolId = self.activeSchoolId;
 		}
-
-		// add custom filter
-		if (typeof self.filters === 'object') {
-			Object.keys(self.filters).forEach(function (filter) {
-				requestFilter[filter] = self.filters[filter];
+        // add custom filter
+        if (typeof self.filters === 'object') {
+            Object.keys(self.filters).forEach(function (filter) {
+                requestFilter[filter] = self.filters[filter];
                 defaultRequestFilter[filter] = self.filters[filter];
-			});
-		}
+            });
+        }
 
-		// Добавление фильтров по полям, если есть
-		if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
-			for (var filterName in newFilter) {
-				requestFilter.where[filterName] = newFilter[filterName];
+        // Добавление фильтров по полям, если есть
+        if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
+            for (var filterName in newFilter) {
+                requestFilter.where[filterName] = newFilter[filterName];
                 if('limit' in (newFilter[filterName])){
                     defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
                     requestFilter.limit = parseInt(newFilter[filterName].limit);
@@ -167,9 +165,9 @@ ListPageMixin = {
                 else{
                     defaultRequestFilter.where[filterName] = newFilter[filterName];
                 }
-			}
-			self.lastFiltersState = newFilter;
-		}
+            }
+            self.lastFiltersState = newFilter;
+        }
         //Column sorting without filters engaged
         if(newFilter && Object.keys(newFilter).length > 0){
             for(var filterName in newFilter){
@@ -193,27 +191,28 @@ ListPageMixin = {
             self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                 self.popUpState = false;
                 binding.set(Immutable.fromJS(data));
-                console.log(binding.toJS());
+                //self.getCustomQueryCount();
             });
         }else{
             self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
                 if(page[page.length-1] === 'requests'){
                     var notAccepted = [];
                     data.forEach(function(d){
-                        //console.log(d.accepted);
                         if(d.accepted === 'undefined' || d.accepted === undefined){
                             notAccepted.push(d);
                         }
                     });
                     self.popUpState = false;
                     binding.set(Immutable.fromJS(notAccepted));
+                    //self.getCustomQueryCount();
                 }else{
                     binding.set(Immutable.fromJS(data));
-                    console.log(binding.toJS());
+                    self.getCustomQueryCount();
                     self.popUpState = false;
                 }
             });
         }
+
 	},
 	componentWillUnmount: function () {
 		var self = this;
@@ -242,6 +241,65 @@ ListPageMixin = {
 			self.updateData(self.lastFiltersState);
 		}
 	},
+    toggleBaseFilters:function(el){
+        var self = this,
+            currentBase = React.findDOMNode(self.refs[el]),
+            currentBaseVal = currentBase.value,
+            isChecked = currentBase.checked;
+        $('.bFilterCheck').attr('checked',false);
+        if(isChecked){
+            currentBase.checked = isChecked;
+            switch (currentBaseVal){
+                case 'students':
+                    self.filters = {
+                        include:['principal','school']
+                        ,where:{
+                            and:[{preset:{nin:['coach','teacher','parent','manager','owner','admin']}},{preset:'student'}]
+                        },
+                        limit:self.pageLimit
+                    };
+                    break;
+                case 'all':
+                    self.filters ={
+                        include:['principal','school']
+                        ,where:{
+                            principalId:{neq:''}
+                        },
+                        limit:self.pageLimit
+                    };
+                    break;
+                case 'others':
+                    self.filters={
+                        include:['principal','school']
+                        ,where:{
+                            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+                        },
+                        limit:self.pageLimit
+                    };
+                    break;
+                default :
+                    self.filters={
+                        include:['principal','school']
+                        ,where:{
+                            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+                        },
+                        limit:self.pageLimit
+                    };
+                    break;
+            }
+            self.updateData();
+        }else{
+            React.findDOMNode(self.refs.otherCheck).checked = true;
+            self.filters={
+                include:['principal','school']
+                ,where:{
+                    and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+                },
+                limit:self.pageLimit
+            };
+            self.updateData();
+        }
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -264,6 +322,14 @@ ListPageMixin = {
                         <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
+                        <If condition={self.isSuperAdminPage}>
+                            <div className="filterBase_container">
+                                <span>Filter base: </span>
+                                <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
+                                <input type="checkbox" className="bFilterCheck" ref="otherCheck" value="others" onChange={self.toggleBaseFilters.bind(null,'otherCheck')}/><span>Others Only</span>
+                                <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
+                            </div>
+                        </If>
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={excludeAddButton.indexOf(currentPage[currentPage.length-1]) === -1}>
                             <a href={document.location.hash + '/add'} className="bButton">Add...</a>

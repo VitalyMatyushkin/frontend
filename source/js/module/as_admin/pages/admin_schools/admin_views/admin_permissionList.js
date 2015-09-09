@@ -13,27 +13,26 @@ var AdminPermissionView,
 AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'Permissions',
-    serviceCount:'getTotalNumberOfUserModels',
+    //serviceCount:'getTotalNumberOfUserModels',
     pageLimit: 20,
-    //filters:{
-    //    include:[
-    //        {permissions:['school','student']}
-    //    ],
-    //    where:{and:[{id:{neq:''}},{username:{neq:null}}]}
-    //},
     filters:{
       include:['principal','school']
         ,where:{
-            principalId:{neq:''}
-            //and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-        }
+            //principalId:{neq:''}
+            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+        },
+        limit:20
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     isPaginated: true,
+    isSuperAdminPage: true,
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;
         }
+    },
+    getPrincipal: function(principal) {
+        return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
     },
     getStatus: function(principal) {
         var self = this,
@@ -217,8 +216,7 @@ AdminPermissionView = React.createClass({
             <div className="eTable_view">
                 <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory} quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="principal" width="20%" filterType="none" parseFunction={self.getFullName}>Name</TableField>
-                    <TableField dataField="principal" width="14%" filterType="none"  parseFunction={self.getEmail}>Email</TableField>
+                    <TableField dataField="principal" width="20%" parseFunction={self.getPrincipal}>Principal</TableField>
                     <TableField dataField="principal" width="5%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
                     <TableField dataField="school" width="40%" filterType="none"  parseFunction={self.getSchool}>School</TableField>
                     <TableField dataField="preset" width="5%">Role</TableField>
