@@ -15,6 +15,7 @@ ListPageMixin = {
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
+        self.updatePageNumbers = true;
 		self.updateData();
 	},
     getCustomQueryCount:function(){
@@ -102,6 +103,7 @@ ListPageMixin = {
         if(metaBinding.get('isFiltersActive') === true){
             metaBinding.set('isFiltersActive',false);
         }
+        self.updatePageNumbers = false;
         self.updateData(filterValue);
     },
 	updateData: function(newFilter) {
@@ -207,7 +209,7 @@ ListPageMixin = {
                     //self.getCustomQueryCount();
                 }else{
                     binding.set(Immutable.fromJS(data));
-                    self.getCustomQueryCount();
+                    if(self.updatePageNumbers)self.getCustomQueryCount();
                     self.popUpState = false;
                 }
             });
@@ -287,6 +289,7 @@ ListPageMixin = {
                     };
                     break;
             }
+            self.updatePageNumbers = true;
             self.updateData();
         }else{
             React.findDOMNode(self.refs.otherCheck).checked = true;
@@ -297,6 +300,7 @@ ListPageMixin = {
                 },
                 limit:self.pageLimit
             };
+            self.updatePageNumbers = true;
             self.updateData();
         }
     },
