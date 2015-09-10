@@ -43,7 +43,6 @@ ListField = React.createClass({
 
             }
 		}
-        console.log(value);
 		self.props.onChange(dataField, value);
 	},
     onSort:function(event,order){

@@ -209,7 +209,7 @@ ListPageMixin = {
                     //self.getCustomQueryCount();
                 }else{
                     binding.set(Immutable.fromJS(data));
-                    if(self.updatePageNumbers)self.getCustomQueryCount();
+                    if(self.updatePageNumbers){if(self.isPaginated)self.getCustomQueryCount();}
                     self.popUpState = false;
                 }
             });
