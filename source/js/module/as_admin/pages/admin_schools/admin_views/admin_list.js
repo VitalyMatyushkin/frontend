@@ -48,8 +48,8 @@ SchoolListPage = React.createClass({
             <div className="eTable_view">
                 <Table title="Schools" binding={binding} onItemRemove={self._getItemRemoveFunction} onFilterChange={self.updateData}>
                     <TableField dataField="pic" width="1%" filterType="none" parseFunction={self.getSchoolLogo}>Logo</TableField>
-                    <TableField dataField="name" width="14%">School Name</TableField>
-                    <TableField dataField="phone" width="10%">Telephone</TableField>
+                    <TableField dataField="name" width="14%">School</TableField>
+                    <TableField dataField="phone" filterType="none" width="10%">Telephone</TableField>
                     <TableField dataField="address" width="20%">Address</TableField>
                     <TableField dataField="domain" width="14%">Domain</TableField>
                     <TableField dataField="status" width="14%">Status</TableField>

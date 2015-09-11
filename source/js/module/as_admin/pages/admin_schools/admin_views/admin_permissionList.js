@@ -32,7 +32,9 @@ AdminPermissionView = React.createClass({
         }
     },
     getPrincipal: function(principal) {
-        return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
+        if(principal !== undefined){
+            return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
+        }
     },
     getStatus: function(principal) {
         var self = this,
@@ -201,7 +203,9 @@ AdminPermissionView = React.createClass({
         self.forceUpdate();
     },
     getObjectVisibility:function(principal){
-        if(principal.blocked === true){return 'Blocked';}else{return 'Active';}
+        if(principal !== undefined){
+            if(principal.blocked === true){return 'Blocked';}else{return 'Active';}
+        }
     },
     getEmail:function(principal){
         if(principal !== undefined){
