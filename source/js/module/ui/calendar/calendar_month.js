@@ -54,25 +54,34 @@ CalendarMonthView = React.createClass({
 			//lastMonthDayOfWeek = self.getDayOfWeek(daysInMonth, month, year),
 			days = [];
 
+
 		// добиваем дни от начала
 		if (firstMonthDayOfWeek > 0) {
-			for (var i = 0; i <= firstMonthDayOfWeek; i += 1) {
+			for (var i = 1; i <= (firstMonthDayOfWeek-1); i += 1) {
 				days.unshift({
-					day: daysInPrevMonth - i,
+					day:(i > 1 ? (daysInPrevMonth - 1):daysInPrevMonth),
                     date: new Date(month === 0 ? year - 1 : year, month === 0 ? 11 : month -1, daysInPrevMonth - i),
                     prev: true
 				});
 			}
-		}
-
-		// вливаем дни
-		for (var j = 1; j <= daysInMonth; j += 1) {
-			days.push({
-				day: j,
-                date: new Date(year, month, j),
-                events: self.countEventInDay(new Date(year, month, j))
-			});
-		}
+            // вливаем дни
+            for (var j = 1; j <= daysInMonth; j += 1) {
+                days.push({
+                    day: j,
+                    date: new Date(year, month, j),
+                    events: self.countEventInDay(new Date(year, month, j))
+                });
+            }
+		}else{
+            // вливаем дни
+            for (var j = 2; j <= daysInMonth; j += 1) {
+                days.push({
+                    day: j,
+                    date: new Date(year, month, j),
+                    events: self.countEventInDay(new Date(year, month, j))
+                });
+            }
+        }
 
 		// вливаем дни в конец
 		if (days.length % 7 > 0) {
@@ -97,7 +106,7 @@ CalendarMonthView = React.createClass({
             prevYear = month === 0 ? year -1 : year,
             prevMonth = month === 0 ? 11 : month -1;
 
-        binding.set('currentDate', new Date(prevYear, prevMonth, 1));
+        binding.set('currentDate', new Date(prevYear, prevMonth, (binding.get('currentDayDate')!==0?binding.get('currentDayDate'):1)));
     },
     onSelectDay: function (day) {
         var self = this,
@@ -121,9 +130,10 @@ CalendarMonthView = React.createClass({
             year = date.getFullYear(),
             month = date.getMonth(),
             nextYear = month === 11 ? year + 1 : year,
-            nextMonth = month === 11 ? 0 : month + 1;
-
+            nextMonth = month === 11 ? 0 : month + 1,
+            currentDayDate = date.getDate();
         binding.set('currentDate', new Date(nextYear, nextMonth, 1));
+        binding.set('currentDayDate', currentDayDate);
     },
 	renderRow: function (row, days) {
 		var self = this,

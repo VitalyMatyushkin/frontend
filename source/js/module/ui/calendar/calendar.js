@@ -12,6 +12,7 @@ CalendarView = React.createClass({
 
 		return Immutable.fromJS({
 			currentDate: date,
+            currentDayDate:0,
 			mode: 'month',
 			hoverDay: null,
             selectDay: null,
