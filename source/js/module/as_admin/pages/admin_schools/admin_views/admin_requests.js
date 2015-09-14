@@ -28,25 +28,43 @@ AdminRequest = React.createClass({
             return principal.email;
         }
     },
+	getCurrentPermission: function(id, permissions) {
+		var permission = undefined;
+
+		for(var i = 0; i < permissions.length; i++) {
+			if(permissions[i].id === id) {
+				permission = permissions[i];
+				break;
+			}
+		}
+
+		return permission;
+	},
     _getQuickEditActionFunctions:function(event){
-        var action = event.currentTarget.innerText,
+		var self = this,
+			action = event.currentTarget.innerText,
             id = event.currentTarget.parentNode.dataset.userobj,
-            self = this,
             binding = self.getDefaultBinding(),
-            confirmMsg;
+            currentPermission = self.getCurrentPermission(id, binding.toJS()),
+			confirmMsg;
         event.currentTarget.parentNode.classList.remove('groupActionList_show');
-        switch (action){
+
+		switch (action){
             case 'Accept':
-                confirmMsg = window.confirm("Are you sure you want to accept ?");
-                if(confirmMsg === true){
-                    window.Server.setPermissions.post({id:id},{accepted:true}).then(function(){
-                        binding.update(function(permissions) {
-                            return permissions.filter(function(permission) {
-                                return permission.get('id') !== id;
-                            });
-                        });
-                    });
-                }
+                if(currentPermission.preset === "parent") {
+					window.confirm("Choose student.");
+				} else {
+					confirmMsg = window.confirm("Are you sure you want to accept ?");
+					if(confirmMsg === true){
+						window.Server.setPermissions.post({id:id},{accepted:true}).then(function(){
+							binding.update(function(permissions) {
+								return permissions.filter(function(permission) {
+									return permission.get('id') !== id;
+								});
+							});
+						});
+					}
+				}
                 break;
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");

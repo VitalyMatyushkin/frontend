@@ -171,43 +171,20 @@ PermissionsStep = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			currentType = binding.get('type'),
-			dataToPost;
-
-		if(currentType === 'parent') {
-			dataToPost = {
-				userId: binding.get('account').toJS().userId
-			};
-
-			window.Server.parentRequests
-				.post(dataToPost)
-				.then(function(parentRequest) {
-					window.Server.childRequests
-						.post(
-							parentRequest.id,
-							{
-								"schoolId": binding.get('schoolId'),
-								"formId": binding.get('formId'),
-								"houseId": binding.get('houseId'),
-								"firtsName": binding.get('firstName'),
-								"lastName": binding.get('lastName')
-							}
-						)
-						.then(function() {
-							self.props.onSuccess();
-						});
-				});
-		} else {
 			dataToPost = {
 				preset: binding.get('type'),
 				schoolId: binding.get('schoolId')
 			};
 
-			window.Server.Permissions
-				.post(dataToPost)
-				.then(function() {
-					self.props.onSuccess();
-				});
+		if(currentType === 'parent') {
+			dataToPost.comment = "Student - " + binding.get('firstName') + " " + binding.get('lastName') + ".";
 		}
+
+		window.Server.Permissions
+			.post(dataToPost)
+			.then(function() {
+				self.props.onSuccess();
+			});
 	},
 	render: function() {
 		var self = this,
