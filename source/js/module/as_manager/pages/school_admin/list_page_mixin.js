@@ -1,7 +1,8 @@
 var ListPageMixin,
     If = require('module/ui/if/if'),
     GroupAction = require('module/ui/list/group_action'),
-    Popup = require('module/ui/popup');
+    Popup = require('module/ui/popup'),
+    persistentData;
 ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired,
@@ -115,6 +116,8 @@ ListPageMixin = {
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
 
+        //console.log(newFilter);
+
         //Exempt current admin from user and permissions list
         if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
             if(typeof self.filters === 'object'){
@@ -150,71 +153,107 @@ ListPageMixin = {
             });
         }
 
-        // Добавление фильтров по полям, если есть
-        if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
-            for (var filterName in newFilter) {
-                requestFilter.where[filterName] = newFilter[filterName];
-                if('limit' in (newFilter[filterName])){
-                    defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
-                    requestFilter.limit = parseInt(newFilter[filterName].limit);
-                }else if('order' in (newFilter[filterName])){
-                    defaultRequestFilter.order = newFilter[filterName].order;
-                    requestFilter.order = newFilter[filterName].order;
-                }else if('skip' in (newFilter[filterName])){
-                    defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
-                    requestFilter.skip = parseInt(newFilter[filterName].skip);
+        if(self.sandbox === true && isFiltersActive){
+            if(newFilter && Object.keys(newFilter).length > 0){
+                var filterKey = '';
+                Object.keys(newFilter).forEach(function(filter){
+                    filterKey = filter;
+                });
+                //console.log(newFilter);
+                //console.log(filterKey);
+                //console.log(newFilter[filterKey]);
+                var innerObj = newFilter[filterKey],
+                    innerObjKey = '';
+                Object.keys(innerObj).forEach(function(ins){
+                    innerObjKey = ins;
+                });
+                if(innerObjKey !== 'order'){
+                    var filterVal = (innerObj[innerObjKey]!== undefined ? innerObj[innerObjKey]:'a') ,
+                        capitalizedVal = filterVal.replace(/^[a-z]/, function(char){return char.toUpperCase()});
+                    //console.log(capitalizedVal);
+                    if(filterVal.length > 1){
+                        binding.update(function(allList){
+                            return allList.filter(function(listItem){
+                                //console.log(listItem.get('user').toJS().firstName);
+                                var str = listItem.get(filterKey).toJS()[innerObjKey];
+                                //console.log(str);
+                                return str.indexOf(capitalizedVal) >= 0;
+                            });
+                        });
+                    }
+                    delete newFilter[filterKey];
                 }
-                else{
-                    defaultRequestFilter.where[filterName] = newFilter[filterName];
-                }
+            }else{
+                binding.set(Immutable.fromJS(persistentData));
             }
-            self.lastFiltersState = newFilter;
-        }
-        //Column sorting without filters engaged
-        if(newFilter && Object.keys(newFilter).length > 0){
-            for(var filterName in newFilter){
-                if('limit' in (newFilter[filterName])){
-                    defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
-                    requestFilter.limit = parseInt(newFilter[filterName].limit);
-                }else if('order' in (newFilter[filterName])){
-                    defaultRequestFilter.order = newFilter[filterName].order;
-                    requestFilter.order = newFilter[filterName].order;
-                }else if('skip' in (newFilter[filterName])){
-                    defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
-                    requestFilter.skip = parseInt(newFilter[filterName].skip);
-                }
-                else{
-                    defaultRequestFilter.where[filterName] = newFilter[filterName];
-                }
-            }
-        }
-        //Condition to test for other service requests without ids
-        if(self.activeSchoolId !== null){
-            self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
-                self.popUpState = false;
-                binding.set(Immutable.fromJS(data));
-                //self.getCustomQueryCount();
-            });
         }else{
-            self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
-                if(page[page.length-1] === 'requests'){
-                    var notAccepted = [];
-                    data.forEach(function(d){
-                        if(d.accepted === 'undefined' || d.accepted === undefined){
-                            notAccepted.push(d);
-                        }
-                    });
-                    self.popUpState = false;
-                    binding.set(Immutable.fromJS(notAccepted));
-                    //self.getCustomQueryCount();
-                }else{
-                    binding.set(Immutable.fromJS(data));
-                    if(self.updatePageNumbers){if(self.isPaginated)self.getCustomQueryCount();}
-                    self.popUpState = false;
+            // Добавление фильтров по полям, если есть
+            if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
+                for (var filterName in newFilter) {
+                    requestFilter.where[filterName] = newFilter[filterName];
+                    if('limit' in (newFilter[filterName])){
+                        defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                        requestFilter.limit = parseInt(newFilter[filterName].limit);
+                    }else if('order' in (newFilter[filterName])){
+                        defaultRequestFilter.order = newFilter[filterName].order;
+                        requestFilter.order = newFilter[filterName].order;
+                    }else if('skip' in (newFilter[filterName])){
+                        defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
+                        requestFilter.skip = parseInt(newFilter[filterName].skip);
+                    }
+                    else{
+                        defaultRequestFilter.where[filterName] = newFilter[filterName];
+                    }
                 }
-            });
+                self.lastFiltersState = newFilter;
+            }
+            //Column sorting without filters engaged
+            if(newFilter && Object.keys(newFilter).length > 0){
+                for(var filterName in newFilter){
+                    if('limit' in (newFilter[filterName])){
+                        defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                        requestFilter.limit = parseInt(newFilter[filterName].limit);
+                    }else if('order' in (newFilter[filterName])){
+                        defaultRequestFilter.order = newFilter[filterName].order;
+                        requestFilter.order = newFilter[filterName].order;
+                    }else if('skip' in (newFilter[filterName])){
+                        defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
+                        requestFilter.skip = parseInt(newFilter[filterName].skip);
+                    }
+                    else{
+                        defaultRequestFilter.where[filterName] = newFilter[filterName];
+                    }
+                }
+            }
+            //Condition to test for other service requests without ids
+            if(self.activeSchoolId !== null){
+                self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
+                    self.popUpState = false;
+                    binding.set(Immutable.fromJS(data));
+                    //console.log(data);
+                    persistentData = data;
+                    //self.getCustomQueryCount();
+                });
+            }else{
+                self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
+                    if(page[page.length-1] === 'requests'){
+                        var notAccepted = [];
+                        data.forEach(function(d){
+                            if(d.accepted === 'undefined' || d.accepted === undefined){
+                                notAccepted.push(d);
+                            }
+                        });
+                        self.popUpState = false;
+                        binding.set(Immutable.fromJS(notAccepted));
+                        //self.getCustomQueryCount();
+                    }else{
+                        binding.set(Immutable.fromJS(data));
+                        if(self.updatePageNumbers){if(self.isPaginated)self.getCustomQueryCount();}
+                        self.popUpState = false;
+                    }
+                });
+            }
         }
-
 	},
 	componentWillUnmount: function () {
 		var self = this;

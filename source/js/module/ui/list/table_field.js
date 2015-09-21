@@ -31,9 +31,21 @@ ListField = React.createClass({
             }
             else{
                 if(value.length >1){
-                    value = {
-                        like: value
+                    if(self.props.children === 'First name'){
+                        value = {
+                            firstName: value
+                        }
                     }
+                    else if(self.props.children === 'Last name'){
+                        value = {
+                            lastName: value
+                        }
+                    }else{
+                        value = {
+                            like: value
+                        }
+                    }
+
                 }else{
                     value={
                         regexp: "[\s\S]*",

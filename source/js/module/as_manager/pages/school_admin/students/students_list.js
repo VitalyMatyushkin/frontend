@@ -13,6 +13,7 @@ StudentsListPage = React.createClass({
 	filters: {
 		include: ['user','form','parents']
 	},
+    sandbox:true,
 	_getViewFunction: function() {
 		var self = this;
 
@@ -74,7 +75,7 @@ StudentsListPage = React.createClass({
 				<TableField width="15%" dataField="user" parseFunction={self.getFirstName}>First name</TableField>
 				<TableField width="15%" dataField="user" parseFunction={self.getLastName}>Last name</TableField>
 				<TableField width="5%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
-				<TableField width="15%" dataField="user" filterType="range" parseFunction={self.getBirthday}>Birthday</TableField>
+				<TableField width="15%" dataField="user" filterType="none" parseFunction={self.getBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
 		)
