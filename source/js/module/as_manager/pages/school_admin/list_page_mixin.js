@@ -167,6 +167,7 @@ ListPageMixin = {
                 Object.keys(innerObj).forEach(function(ins){
                     innerObjKey = ins;
                 });
+                //console.log(innerObjKey);
                 if(innerObjKey !== 'order'){
                     var filterVal = (innerObj[innerObjKey]!== undefined ? innerObj[innerObjKey]:'a') ,
                         capitalizedVal = filterVal.replace(/^[a-z]/, function(char){return char.toUpperCase()});
@@ -182,6 +183,28 @@ ListPageMixin = {
                         });
                     }
                     delete newFilter[filterKey];
+                }else{
+                    if(innerObjKey ==='order'){
+                        var primitiveData,orderKey,outOrder, inOrder,
+                            mappedData;
+                        primitiveData = binding.toJS();
+                        orderKey = newFilter[filterKey][innerObjKey];
+                        outOrder = orderKey.split(" ")[0];
+                        inOrder = orderKey.split(" ")[1];
+                        mappedData = primitiveData.map(function(el,i){
+                            //console.log(el[filterKey][innerObjKey]);
+                            return el;
+                        });
+                        mappedData.sort(function(a,b){
+                            if(inOrder ==='DESC'){
+                                return b[filterKey][outOrder].localeCompare(a[filterKey][outOrder]);
+                            }else{
+                                return a[filterKey][outOrder].localeCompare(b[filterKey][outOrder]);
+                            }
+                        });
+                        //console.log(mappedData);
+                        binding.set(Immutable.fromJS(mappedData));
+                    }
                 }
             }else{
                 binding.set(Immutable.fromJS(persistentData));

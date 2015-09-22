@@ -65,14 +65,34 @@ ListField = React.createClass({
         if(el.classList.contains('caret_up')){
             $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
             el.classList.add('caret_active_up');
-            value ={
-                order:fieldToSort+' ASC'
+            if(self.props.children === 'First name'){
+                value = {
+                    order:'firstName ASC'
+                }
+            }else if(self.props.children === 'Last name'){
+                value = {
+                    order:'lastName ASC'
+                }
+            }else{
+                value ={
+                    order:fieldToSort+' ASC'
+                }
             }
         }else{
             $('.caret').removeClass('caret_active_dwn').removeClass('caret_active_up');
             el.classList.add('caret_active_dwn');
-            value ={
-                order:fieldToSort+' DESC'
+            if(self.props.children === 'First name'){
+                value = {
+                    order:'firstName DESC'
+                }
+            }else if(self.props.children === 'Last name'){
+                value = {
+                    lastName:'lastName DESC'
+                }
+            }else{
+                value ={
+                    order:fieldToSort+' DESC'
+                }
             }
         }
         self.props.onChange(fieldToSort, value);
