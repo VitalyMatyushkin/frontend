@@ -17,9 +17,7 @@ PermissionView = React.createClass({
     pageLimit: 20,
     setPageTitle:'School Admin',
     filters:{
-        include:['principal',{student:['form','house']}],
-        where:{
-            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]}
+        include:['principal',{student:['form','house']}]
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
     isPaginated: true,

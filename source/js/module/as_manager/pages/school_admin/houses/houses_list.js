@@ -8,6 +8,7 @@ var List = require('module/ui/list/list'),
 HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName: 'houses',
+    sandbox:true,
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -15,7 +16,7 @@ HousesListPage = React.createClass({
 		return (
 			<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 				<TableField dataField="name" width="180px">House name</TableField>
-				<TableField dataField="description">Description</TableField>
+				<TableField dataField="description" filterType="none">Description</TableField>
 				<TableField dataField="colors" filterType="colors">Color</TableField>
 			</Table>
 		);

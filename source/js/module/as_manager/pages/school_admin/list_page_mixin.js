@@ -155,55 +155,118 @@ ListPageMixin = {
 
         if(self.sandbox === true && isFiltersActive){
             if(newFilter && Object.keys(newFilter).length > 0){
-                var filterKey = '';
-                Object.keys(newFilter).forEach(function(filter){
-                    filterKey = filter;
-                });
-                //console.log(newFilter);
-                //console.log(filterKey);
-                //console.log(newFilter[filterKey]);
-                var innerObj = newFilter[filterKey],
-                    innerObjKey = '';
-                Object.keys(innerObj).forEach(function(ins){
-                    innerObjKey = ins;
-                });
-                //console.log(innerObjKey);
-                if(innerObjKey !== 'order'){
-                    var filterVal = (innerObj[innerObjKey]!== undefined ? innerObj[innerObjKey]:'a') ,
-                        capitalizedVal = filterVal.replace(/^[a-z]/, function(char){return char.toUpperCase()});
-                    //console.log(capitalizedVal);
-                    if(filterVal.length > 1){
-                        binding.update(function(allList){
-                            return allList.filter(function(listItem){
-                                //console.log(listItem.get('user').toJS().firstName);
-                                var str = listItem.get(filterKey).toJS()[innerObjKey];
-                                //console.log(str);
-                                return str.indexOf(capitalizedVal) >= 0;
+                if(window.location.hash === '#school_admin/forms'){
+                    var filKey = '',filVal='';
+                    Object.keys(newFilter).forEach(function(filter){
+                        filKey = filter;
+                    });
+                    if(typeof newFilter[filKey] !== 'object'){
+                        switch(filKey){
+                            case 'name':
+                                if(newFilter[filKey].length >= 2){
+                                    filVal = newFilter[filKey].charAt(0)+newFilter[filKey].charAt(1).toUpperCase();
+                                }
+                                break;
+                            case 'age':
+                                filVal = parseInt(newFilter[filKey]);
+                                break;
+                            default :
+                                filVal = newFilter[filKey].charAt(0)+newFilter[filKey].charAt(1).toUpperCase();
+                                break;
+                        }
+                        binding.update(function(filterList){
+                            return filterList.filter(function(filterItem){
+                                if(filKey === 'age'){
+                                    return filterItem.get(filKey) === filVal;
+                                }else{return filterItem.get(filKey).indexOf(filVal) >= 0;}
                             });
                         });
+                    }else{
+                        binding.set(Immutable.fromJS(persistentData));
                     }
-                    delete newFilter[filterKey];
-                }else{
-                    if(innerObjKey ==='order'){
-                        var primitiveData,orderKey,outOrder, inOrder,
-                            mappedData;
-                        primitiveData = binding.toJS();
-                        orderKey = newFilter[filterKey][innerObjKey];
-                        outOrder = orderKey.split(" ")[0];
-                        inOrder = orderKey.split(" ")[1];
-                        mappedData = primitiveData.map(function(el,i){
-                            //console.log(el[filterKey][innerObjKey]);
-                            return el;
-                        });
-                        mappedData.sort(function(a,b){
-                            if(inOrder ==='DESC'){
-                                return b[filterKey][outOrder].localeCompare(a[filterKey][outOrder]);
-                            }else{
-                                return a[filterKey][outOrder].localeCompare(b[filterKey][outOrder]);
+                }else if(window.location.hash === '#school_admin/houses'){
+                    var key = '',val='';
+                    Object.keys(newFilter).forEach(function(filter){
+                        key= filter;
+                    });
+                    var innerObj = newFilter[key],
+                        innerObjKey = '';
+                    Object.keys(innerObj).forEach(function(ins){
+                        innerObjKey = ins;
+                    });
+                    if(innerObjKey !== 'order'){
+                        if(typeof newFilter[key] !== 'object'){
+                            val = (newFilter[key]!==undefined ? newFilter[key]:'a');
+                            var objVal = val.replace(/^[a-z]/, function(char){return char.toUpperCase()});
+                            if(val.length >=2){
+                                binding.update(function(houses){
+                                    return houses.filter(function(house){
+                                        return house.get(key).indexOf(objVal) >=0;
+                                    });
+                                });
                             }
-                        });
-                        //console.log(mappedData);
-                        binding.set(Immutable.fromJS(mappedData));
+                        }
+                    }else{
+                        if(innerObjKey === 'order'){
+                            var boundData = binding.toJS(),outOrder,inOrder,orderKey,mapped;
+                            orderKey = newFilter[key][innerObjKey];
+                            outOrder = orderKey.split(" ")[0];
+                            inOrder = orderKey.split(" ")[1];
+                            mapped= boundData.map(function(data){
+                                    return data;
+                                });
+                            mapped.sort(function(a,b){
+                                if(inOrder ==='DESC'){
+                                    return b[key].localeCompare(a[key]);
+                                }else{
+                                    return a[key].localeCompare(b[key]);
+                                }
+                            });
+                            binding.set(Immutable.fromJS(mapped));
+                        }
+                    }
+                }else{
+                    var filterKey = '';
+                    Object.keys(newFilter).forEach(function(filter){
+                        filterKey = filter;
+                    });
+                    var innerObj = newFilter[filterKey],
+                        innerObjKey = '';
+                    Object.keys(innerObj).forEach(function(ins){
+                        innerObjKey = ins;
+                    });
+                    if(innerObjKey !== 'order'){
+                        var filterVal = (innerObj[innerObjKey]!== undefined ? innerObj[innerObjKey]:'a') ,
+                            capitalizedVal = filterVal.replace(/^[a-z]/, function(char){return char.toUpperCase()});
+                        if(filterVal.length > 1){
+                            binding.update(function(allList){
+                                return allList.filter(function(listItem){
+                                    var str = listItem.get(filterKey).toJS()[innerObjKey];
+                                    return str.indexOf(capitalizedVal) >= 0;
+                                });
+                            });
+                        }
+                        delete newFilter[filterKey];
+                    }else{
+                        if(innerObjKey ==='order'){
+                            var primitiveData,orderKey,outOrder, inOrder,
+                                mappedData;
+                            primitiveData = binding.toJS();
+                            orderKey = newFilter[filterKey][innerObjKey];
+                            outOrder = orderKey.split(" ")[0];
+                            inOrder = orderKey.split(" ")[1];
+                            mappedData = primitiveData.map(function(el,i){
+                                return el;
+                            });
+                            mappedData.sort(function(a,b){
+                                if(inOrder ==='DESC'){
+                                    return b[filterKey][outOrder].localeCompare(a[filterKey][outOrder]);
+                                }else{
+                                    return a[filterKey][outOrder].localeCompare(b[filterKey][outOrder]);
+                                }
+                            });
+                            binding.set(Immutable.fromJS(mappedData));
+                        }
                     }
                 }
             }else{

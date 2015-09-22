@@ -16,7 +16,7 @@ NewsListPage = React.createClass({
 		return (
 			<Table title="News" binding={binding} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 				<TableField dataField="title" width="30%">Title</TableField>
-				<TableField dataField="body" width="45%">Text</TableField>
+				<TableField dataField="body" width="45%" filterType="none">Text</TableField>
 				<TableField dataField="date" width="190px" filterType="none" parseFunction={self.getDateFromIso}>Date</TableField>
 			</Table>
 		)

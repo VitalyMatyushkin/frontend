@@ -31,16 +31,28 @@ ListField = React.createClass({
             }
             else{
                 if(value.length >1){
-                    if(self.props.children === 'First name'){
-                        value = {
-                            firstName: value
+                    if(window.location.hash === '#school_admin/students'){
+                        if(self.props.children === 'First name'){
+                            value = {
+                                firstName: value
+                            }
                         }
+                        if(self.props.children === 'Last name'){
+                            value = {
+                                lastName: value
+                            }
+                        }
+                    }else if(window.location.hash === '#school_admin/forms'){
+                        if(self.props.children === 'Name'){
+
+                        }
+                        if(self.props.children === 'Age group'){
+
+                        }
+                    }else if(window.location.hash === '#school_admin/houses'){
+                        value;
                     }
-                    else if(self.props.children === 'Last name'){
-                        value = {
-                            lastName: value
-                        }
-                    }else{
+                    else{
                         value = {
                             like: value
                         }
@@ -65,15 +77,23 @@ ListField = React.createClass({
         if(el.classList.contains('caret_up')){
             $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
             el.classList.add('caret_active_up');
-            if(self.props.children === 'First name'){
-                value = {
-                    order:'firstName ASC'
+            if(window.location.hash === '#school_admin/students'){
+                if(self.props.children === 'First name'){
+                    value = {
+                        order:'firstName ASC'
+                    }
+                }if(self.props.children === 'Last name'){
+                    value = {
+                        order:'lastName ASC'
+                    }
                 }
-            }else if(self.props.children === 'Last name'){
+            }
+            else if(window.location.hash === '#school_admin/students'){
                 value = {
-                    order:'lastName ASC'
+                    order : 'name ASC'
                 }
-            }else{
+            }
+            else{
                 value ={
                     order:fieldToSort+' ASC'
                 }
