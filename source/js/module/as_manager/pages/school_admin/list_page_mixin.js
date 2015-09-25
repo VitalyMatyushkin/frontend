@@ -2,7 +2,9 @@ var ListPageMixin,
     If = require('module/ui/if/if'),
     GroupAction = require('module/ui/list/group_action'),
     Popup = require('module/ui/popup'),
-    persistentData;
+    //workerThread = require('module/as_manager/pages/school_admin/dataWorkerThread'),
+    persistentData,
+    dataWorker;
 ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired,
@@ -12,11 +14,20 @@ ListPageMixin = {
 	componentWillMount: function () {
 		var self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
+            metaBinding = self.getDefaultBinding().meta(),
+            binding = self.getDefaultBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
         self.updatePageNumbers = true;
+        metaBinding.set('isFiltersActive', false);
+        if(window.Worker){
+            dataWorker = new Worker('build/js/module/as_manager/pages/school_admin/dataWorkerThread.js');
+            dataWorker.onmessage = function(e){
+                binding.set(Immutable.fromJS(e.data));
+            };
+        }
 		self.updateData();
 	},
     getCustomQueryCount:function(){
@@ -56,8 +67,9 @@ ListPageMixin = {
         if(self.isSuperAdminPage)React.findDOMNode(self.refs.otherCheck).checked = true;
         //self.timeoutId = setTimeout(function(){
         //    //Pagination method
-        //    self._getTotalCountAndRenderPagination();
+        //    //self._getTotalCountAndRenderPagination();
         //},4000);
+
     },
     _getTotalCountAndRenderPagination:function(customCount){
         var self = this,
@@ -67,16 +79,16 @@ ListPageMixin = {
             selectNode = React.findDOMNode(self.refs.pageSelect);
         if(self.isPaginated){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
-            self.numberOfPages = customCount !== undefined ? (Math.floor(customCount/self.filters.limit)) : 0;
+            self.numberOfPages = Math.floor(customCount/self.pageLimit);
             //Check if count
-            if(customCount%self.filters.limit !== 0){
-                self.numberOfPages += 1;
-                self.extraPages = customCount % self.filters.limit;
-                isOdd = true;
+            if(customCount%self.pageLimit !== 0){
+                //self.numberOfPages += 1;
+                self.extraPages = customCount % self.pageLimit;
+                //isOdd = true;
             }
             if(selectNode !== null){
                 selectNode.options.length = 0;
-                if(customCount >= self.filters.limit){
+                if(customCount >= self.pageLimit){
                     for(var i=0; i<self.numberOfPages; i++){
                         var option = document.createElement('option');
                         option.text =(i < self.numberOfPages ? i+1 : i-1);
@@ -85,8 +97,10 @@ ListPageMixin = {
                     }
                 }
             }
-            if(pageNumberNode !== null){
+            if(pageNumberNode !== null && customCount >= self.pageLimit){
                 pageNumberNode.innerText = 'out of '+(self.numberOfPages);
+            }else{
+                pageNumberNode !== null ? pageNumberNode.innerText = '1 out of 1': '';
             }
         }
     },
@@ -94,13 +108,13 @@ ListPageMixin = {
         var self = this,
             selectNode = React.findDOMNode(self.refs.pageSelect),
             optVal = selectNode.options[selectNode.selectedIndex].value,
-            skipLimit = optVal >= 2 ? (optVal - 1) * self.filters.limit  : 0,
+            skipLimit = optVal >= 2 ? optVal * self.pageLimit  : 0,
             binding = self.getDefaultBinding(),
             metaBinding = binding.meta(),
             filterValue = {
-                limit:{limit:self.filters.limit},
                 skip:{skip:skipLimit}
             };
+        self.customLimit = self.pageLimit;
         if(metaBinding.get('isFiltersActive') === true){
             metaBinding.set('isFiltersActive',false);
         }
@@ -115,8 +129,6 @@ ListPageMixin = {
             page = window.location.href.split('/'),
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
-
-        //console.log(newFilter);
 
         //Exempt current admin from user and permissions list
         if(page[page.length-1] ==='#admin_schools'||page[page.length-1] ==='permissions'){
@@ -155,124 +167,21 @@ ListPageMixin = {
 
         if(self.sandbox === true && isFiltersActive){
             if(newFilter && Object.keys(newFilter).length > 0){
-                if(window.location.hash === '#school_admin/forms'){
-                    var filKey = '',filVal='';
-                    Object.keys(newFilter).forEach(function(filter){
-                        filKey = filter;
-                    });
-                    if(typeof newFilter[filKey] !== 'object'){
-                        switch(filKey){
-                            case 'name':
-                                if(newFilter[filKey].length >= 2){
-                                    filVal = newFilter[filKey].charAt(0)+newFilter[filKey].charAt(1).toUpperCase();
-                                }
-                                break;
-                            case 'age':
-                                filVal = parseInt(newFilter[filKey]);
-                                break;
-                            default :
-                                filVal = newFilter[filKey].charAt(0)+newFilter[filKey].charAt(1).toUpperCase();
-                                break;
-                        }
-                        binding.update(function(filterList){
-                            return filterList.filter(function(filterItem){
-                                if(filKey === 'age'){
-                                    return filterItem.get(filKey) === filVal;
-                                }else{return filterItem.get(filKey).indexOf(filVal) >= 0;}
-                            });
-                        });
-                    }else{
-                        binding.set(Immutable.fromJS(persistentData));
-                    }
-                }else if(window.location.hash === '#school_admin/houses'){
-                    var key = '',val='';
-                    Object.keys(newFilter).forEach(function(filter){
-                        key= filter;
-                    });
-                    var innerObj = newFilter[key],
-                        innerObjKey = '';
-                    Object.keys(innerObj).forEach(function(ins){
-                        innerObjKey = ins;
-                    });
-                    if(innerObjKey !== 'order'){
-                        if(typeof newFilter[key] !== 'object'){
-                            val = (newFilter[key]!==undefined ? newFilter[key]:'a');
-                            var objVal = val.replace(/^[a-z]/, function(char){return char.toUpperCase()});
-                            if(val.length >=2){
-                                binding.update(function(houses){
-                                    return houses.filter(function(house){
-                                        return house.get(key).indexOf(objVal) >=0;
-                                    });
-                                });
-                            }
-                        }
-                    }else{
-                        if(innerObjKey === 'order'){
-                            var boundData = binding.toJS(),outOrder,inOrder,orderKey,mapped;
-                            orderKey = newFilter[key][innerObjKey];
-                            outOrder = orderKey.split(" ")[0];
-                            inOrder = orderKey.split(" ")[1];
-                            mapped= boundData.map(function(data){
-                                    return data;
-                                });
-                            mapped.sort(function(a,b){
-                                if(inOrder ==='DESC'){
-                                    return b[key].localeCompare(a[key]);
-                                }else{
-                                    return a[key].localeCompare(b[key]);
-                                }
-                            });
-                            binding.set(Immutable.fromJS(mapped));
-                        }
-                    }
-                }else{
-                    var filterKey = '';
-                    Object.keys(newFilter).forEach(function(filter){
-                        filterKey = filter;
-                    });
-                    var innerObj = newFilter[filterKey],
-                        innerObjKey = '';
-                    Object.keys(innerObj).forEach(function(ins){
-                        innerObjKey = ins;
-                    });
-                    if(innerObjKey !== 'order'){
-                        var filterVal = (innerObj[innerObjKey]!== undefined ? innerObj[innerObjKey]:'a') ,
-                            capitalizedVal = filterVal.replace(/^[a-z]/, function(char){return char.toUpperCase()});
-                        if(filterVal.length > 1){
-                            binding.update(function(allList){
-                                return allList.filter(function(listItem){
-                                    var str = listItem.get(filterKey).toJS()[innerObjKey];
-                                    return str.indexOf(capitalizedVal) >= 0;
-                                });
-                            });
-                        }
-                        delete newFilter[filterKey];
-                    }else{
-                        if(innerObjKey ==='order'){
-                            var primitiveData,orderKey,outOrder, inOrder,
-                                mappedData;
-                            primitiveData = binding.toJS();
-                            orderKey = newFilter[filterKey][innerObjKey];
-                            outOrder = orderKey.split(" ")[0];
-                            inOrder = orderKey.split(" ")[1];
-                            mappedData = primitiveData.map(function(el,i){
-                                return el;
-                            });
-                            mappedData.sort(function(a,b){
-                                if(inOrder ==='DESC'){
-                                    return b[filterKey][outOrder].localeCompare(a[filterKey][outOrder]);
-                                }else{
-                                    return a[filterKey][outOrder].localeCompare(b[filterKey][outOrder]);
-                                }
-                            });
-                            binding.set(Immutable.fromJS(mappedData));
-                        }
-                    }
-                }
+                var tempData = self.persistantData;
+                dataWorker.postMessage([tempData,newFilter]);
             }else{
-                binding.set(Immutable.fromJS(persistentData));
+                binding.set(Immutable.fromJS(self.persistantData));
             }
-        }else{
+            self.lastFiltersState = newFilter;
+        }else if(self.sandbox === true && newFilter){
+            for(var skipFilter in newFilter){
+                if('skip' in newFilter[skipFilter]){
+                    var skippedData = self.persistantData.splice((newFilter[skipFilter].skip-1),self.pageLimit-1);
+                    binding.set(Immutable.fromJS(skippedData));
+                }
+            }
+        }
+        else{
             // Добавление фильтров по полям, если есть
             if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
                 for (var filterName in newFilter) {
@@ -316,9 +225,8 @@ ListPageMixin = {
                 self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                     self.popUpState = false;
                     binding.set(Immutable.fromJS(data));
-                    //console.log(data);
-                    persistentData = data;
-                    //self.getCustomQueryCount();
+                    self.persistantData = data;
+                    //if(self.isPaginated)self._getTotalCountAndRenderPagination(data.length);
                 });
             }else{
                 self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
@@ -329,22 +237,37 @@ ListPageMixin = {
                                 notAccepted.push(d);
                             }
                         });
-                        self.popUpState = false;
-                        binding.set(Immutable.fromJS(notAccepted));
+                        binding.set(Immutable.fromJS(data));
+                        self.persistantData = data;
+                        //self.popUpState = false;
+                        //var tempStorage = data.slice(0,self.pageLimit);
+                        //binding.set(Immutable.fromJS(tempStorage));
+                        //self.persistantData = data;
+                        //if(self.isPaginated)self._getTotalCountAndRenderPagination(data.length);
                         //self.getCustomQueryCount();
                     }else{
+                        //binding.set(Immutable.fromJS(data));
+                        //if(self.updatePageNumbers){if(self.isPaginated)self.getCustomQueryCount();}
+                        //self.popUpState = false;
+                        //var tempStorage = data.slice(0,self.pageLimit);
+                        //binding.set(Immutable.fromJS(tempStorage));
+                        //console.log(tempStorage);
+                        //self.persistantData = data;
+                        //if(self.isPaginated)self._getTotalCountAndRenderPagination(data.length);
                         binding.set(Immutable.fromJS(data));
-                        if(self.updatePageNumbers){if(self.isPaginated)self.getCustomQueryCount();}
-                        self.popUpState = false;
+                        self.persistantData = data;
                     }
                 });
             }
         }
 	},
 	componentWillUnmount: function () {
-		var self = this;
+		var self = this,
+            binding = self.getDefaultBinding();
 		self.request && self.request.abort();
         clearTimeout(self.timeoutId);
+        self.persistantData.length = 0;
+        binding.clear()
 	},
 	_getEditFunction: function() {
 		var self = this;
@@ -382,8 +305,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             and:[{preset:{nin:['coach','teacher','parent','manager','owner','admin']}},{preset:'student'}]
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
                 case 'all':
@@ -391,8 +313,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             principalId:{neq:''}
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
                 case 'others':
@@ -400,8 +321,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
                 default :
@@ -409,8 +329,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
             }
@@ -422,8 +341,7 @@ ListPageMixin = {
                 include:['principal','school']
                 ,where:{
                     and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                },
-                limit:self.pageLimit
+                }
             };
             self.updatePageNumbers = true;
             self.updateData();

@@ -17,13 +17,26 @@ PermissionView = React.createClass({
     pageLimit: 20,
     setPageTitle:'School Admin',
     filters:{
-        include:['principal',{student:['form','house']}]
+        include:['principal',{student:['form','house']}],
+        where:{
+            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]}
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
     isPaginated: true,
+    sandbox:true,
     getFullName:function(principal){
         if(principal !==undefined){
             return principal.firstName+" "+principal.lastName;
+        }
+    },
+    getFirstName:function(principal){
+        if(principal !== undefined){
+            return principal.firstName;
+        }
+    },
+    getLastName:function(principal){
+        if(principal !== undefined){
+            return principal.lastName;
         }
     },
     getEmail:function(principal){
@@ -197,10 +210,11 @@ PermissionView = React.createClass({
             <div className="eTable_view">
                 <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory} quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="principal" width="20%" filterType="none" parseFunction={self.getFullName}>Name</TableField>
+                    <TableField dataField="principal" width="20%" dataFieldKey="firstName"  parseFunction={self.getFirstName}>First name</TableField>
+                    <TableField dataField="principal" width="20%" dataFieldKey="lastName"  parseFunction={self.getLastName}>Surname</TableField>
                     <TableField dataField="principal" width="14%" filterType="none" parseFunction={self.getEmail}>Email</TableField>
                     <TableField dataField="principal" width="10%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="preset" width="10%" >Role</TableField>
+                    <TableField dataField="preset"  dataFieldKey="preset" width="10%" >Role</TableField>
                     <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">

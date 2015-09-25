@@ -70,7 +70,6 @@ Table = React.createClass({
         //Hack for a weird bug where instead of @dataList being an empty array if no data is returned by server
         // It sometimes returns an empty object causing the rest of the UI elements to disappear
         if(typeof dataList === 'object' && Object.keys(dataList).length === 0){dataList = []}
-
         if (dataList) {
             itemsNodes = dataList.map(function (item) {
                 var itemCells,

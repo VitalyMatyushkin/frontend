@@ -20,12 +20,12 @@ AdminPermissionView = React.createClass({
         ,where:{
             //principalId:{neq:''}
             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-        },
-        limit:20
+        }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     isPaginated: true,
     isSuperAdminPage: true,
+    sandbox:true,
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;
@@ -114,9 +114,7 @@ AdminPermissionView = React.createClass({
                         return t === dt.get('id');
                     })
                 );
-                console.log(t+' / '+filterTick[i].get('principalId'));
                 ticked[i] = filterTick[i].get('principalId');
-                console.log(ticked[i]);
             });
             switch (el.innerText){
                 case 'Add Role':

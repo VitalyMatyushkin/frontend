@@ -9,7 +9,8 @@ ListField = React.createClass({
 		inputParseFunction: React.PropTypes.func,
 		onChange: React.PropTypes.func.isRequired,
 		width: React.PropTypes.string,
-		filterType: React.PropTypes.string
+		filterType: React.PropTypes.string,
+        dataFieldKey: React.PropTypes.string
 	},
 	onChange: function(event) {
 		var self = this,
@@ -24,48 +25,62 @@ ListField = React.createClass({
             dataField = self.props.dataField;
         }
 		if (value && self.props.filterType !== 'number') {
-            if(self.props.children.toLowerCase()==='limit'){
-                value = {
-                    limit: value
-                }
-            }
-            else{
-                if(value.length >1){
-                    if(window.location.hash === '#school_admin/students'){
-                        if(self.props.children === 'First name'){
-                            value = {
-                                firstName: value
-                            }
-                        }
-                        if(self.props.children === 'Last name'){
-                            value = {
-                                lastName: value
-                            }
-                        }
-                    }else if(window.location.hash === '#school_admin/forms'){
-                        if(self.props.children === 'Name'){
-
-                        }
-                        if(self.props.children === 'Age group'){
-
-                        }
-                    }else if(window.location.hash === '#school_admin/houses'){
-                        value;
-                    }
-                    else{
-                        value = {
-                            like: value
-                        }
-                    }
-
+            var tempValue = {};
+            if(value.length > 1){
+                if(self.props.dataField === self.props.dataFieldKey){
+                    value;
                 }else{
-                    value={
-                        regexp: "[\s\S]*",
-                        options: 'i'
-                    }
+                    tempValue[self.props.dataFieldKey] = value;
+                    value = tempValue;
                 }
-
+            }else{
+                value={
+                    regexp: "[\s\S]*",
+                    options: 'i'
+                }
             }
+            //if(self.props.children.toLowerCase()==='limit'){
+            //    value = {
+            //        limit: value
+            //    }
+            //}
+            //else{
+            //    if(value.length >1){
+            //        if(window.location.hash === '#school_admin/students'){
+            //            if(self.props.children === 'First name'){
+            //                value = {
+            //                    firstName: value
+            //                }
+            //            }
+            //            if(self.props.children === 'Last name'){
+            //                value = {
+            //                    lastName: value
+            //                }
+            //            }
+            //        }else if(window.location.hash === '#school_admin/forms'){
+            //            if(self.props.children === 'Name'){
+            //
+            //            }
+            //            if(self.props.children === 'Age group'){
+            //
+            //            }
+            //        }else if(window.location.hash === '#school_admin/houses'){
+            //            value;
+            //        }
+            //        else{
+            //            value = {
+            //                like: value
+            //            }
+            //        }
+            //
+            //    }else{
+            //        value={
+            //            regexp: "[\s\S]*",
+            //            options: 'i'
+            //        }
+            //    }
+            //
+            //}
 		}
 		self.props.onChange(dataField, value);
 	},
