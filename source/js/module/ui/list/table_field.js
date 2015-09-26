@@ -39,98 +39,30 @@ ListField = React.createClass({
                     options: 'i'
                 }
             }
-            //if(self.props.children.toLowerCase()==='limit'){
-            //    value = {
-            //        limit: value
-            //    }
-            //}
-            //else{
-            //    if(value.length >1){
-            //        if(window.location.hash === '#school_admin/students'){
-            //            if(self.props.children === 'First name'){
-            //                value = {
-            //                    firstName: value
-            //                }
-            //            }
-            //            if(self.props.children === 'Last name'){
-            //                value = {
-            //                    lastName: value
-            //                }
-            //            }
-            //        }else if(window.location.hash === '#school_admin/forms'){
-            //            if(self.props.children === 'Name'){
-            //
-            //            }
-            //            if(self.props.children === 'Age group'){
-            //
-            //            }
-            //        }else if(window.location.hash === '#school_admin/houses'){
-            //            value;
-            //        }
-            //        else{
-            //            value = {
-            //                like: value
-            //            }
-            //        }
-            //
-            //    }else{
-            //        value={
-            //            regexp: "[\s\S]*",
-            //            options: 'i'
-            //        }
-            //    }
-            //
-            //}
 		}
 		self.props.onChange(dataField, value);
 	},
     onSort:function(event,order){
         var self = this,
-            value,
+            value ={},
             el  = event.currentTarget,
             fieldToSort = (order === 'School' || order === 'Preset')?order.toLowerCase() : self.props.dataField;
         if(el.classList.contains('caret_up')){
             $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
             el.classList.add('caret_active_up');
-            if(window.location.hash === '#school_admin/students'){
-                if(self.props.children === 'First name'){
-                    value = {
-                        order:'firstName ASC'
-                    }
-                }if(self.props.children === 'Last name'){
-                    value = {
-                        order:'lastName ASC'
-                    }
-                }
-            }
-            else if(window.location.hash === '#school_admin/students'){
-                value = {
-                    order : 'name ASC'
-                }
-            }
-            else{
-                value ={
-                    order:fieldToSort+' ASC'
-                }
-            }
+            value = {
+                order:self.props.dataFieldKey+' ASC'
+            };
+
         }else{
             $('.caret').removeClass('caret_active_dwn').removeClass('caret_active_up');
             el.classList.add('caret_active_dwn');
-            if(self.props.children === 'First name'){
-                value = {
-                    order:'firstName DESC'
-                }
-            }else if(self.props.children === 'Last name'){
-                value = {
-                    lastName:'lastName DESC'
-                }
-            }else{
-                value ={
-                    order:fieldToSort+' DESC'
-                }
-            }
+            value = {
+                order:self.props.dataFieldKey+' DESC'
+            };
         }
-        self.props.onChange(fieldToSort, value);
+        console.log(value);
+        self.props.onChange(self.props.dataField, value);
     },
 	render: function() {
 		var self = this,

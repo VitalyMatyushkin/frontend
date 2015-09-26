@@ -14,7 +14,7 @@ onmessage=function(e){
         setTimeout(function(){postMessage(filteredData)},800);
     }else if(innerFilterKey === 'order'){
         var primitiveData,orderKey,inOrder,outOrder, mappedData;
-        primitiveData = e.data[1];
+        primitiveData = e.data[0];
         orderKey = newFilter[outerFilterKey][innerFilterKey];
         outOrder = orderKey.split(" ")[0];
         inOrder = orderKey.split(" ")[1];

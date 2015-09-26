@@ -30,13 +30,12 @@ Table = React.createClass({
 	},
 	updateFilterState: function(field, value) {
 		var self = this;
-
 		if (value) {
 			self.filter[field] = value;
 		} else {
 			delete self.filter[field];
 		}
-
+        if(Object.keys(self.filter).length >1){var keyToDel =Object.keys(self.filter)[0]; delete self.filter[keyToDel];}
 		self.props.onFilterChange && self.props.onFilterChange(self.filter);
 	},
     getQuickEditActions:function(){

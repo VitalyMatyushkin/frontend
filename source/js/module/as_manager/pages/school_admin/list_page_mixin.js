@@ -164,7 +164,6 @@ ListPageMixin = {
                 defaultRequestFilter[filter] = self.filters[filter];
             });
         }
-
         if(self.sandbox === true && isFiltersActive){
             if(newFilter && Object.keys(newFilter).length > 0){
                 var tempData = self.persistantData;
@@ -172,7 +171,7 @@ ListPageMixin = {
             }else{
                 binding.set(Immutable.fromJS(self.persistantData));
             }
-            self.lastFiltersState = newFilter;
+            //self.lastFiltersState = newFilter;
         }else if(self.sandbox === true && newFilter){
             for(var skipFilter in newFilter){
                 if('skip' in newFilter[skipFilter]){
@@ -226,7 +225,6 @@ ListPageMixin = {
                     self.popUpState = false;
                     binding.set(Immutable.fromJS(data));
                     self.persistantData = data;
-                    //if(self.isPaginated)self._getTotalCountAndRenderPagination(data.length);
                 });
             }else{
                 self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
@@ -239,22 +237,9 @@ ListPageMixin = {
                         });
                         binding.set(Immutable.fromJS(data));
                         self.persistantData = data;
-                        //self.popUpState = false;
-                        //var tempStorage = data.slice(0,self.pageLimit);
-                        //binding.set(Immutable.fromJS(tempStorage));
-                        //self.persistantData = data;
-                        //if(self.isPaginated)self._getTotalCountAndRenderPagination(data.length);
-                        //self.getCustomQueryCount();
                     }else{
-                        //binding.set(Immutable.fromJS(data));
-                        //if(self.updatePageNumbers){if(self.isPaginated)self.getCustomQueryCount();}
-                        //self.popUpState = false;
-                        //var tempStorage = data.slice(0,self.pageLimit);
-                        //binding.set(Immutable.fromJS(tempStorage));
-                        //console.log(tempStorage);
-                        //self.persistantData = data;
-                        //if(self.isPaginated)self._getTotalCountAndRenderPagination(data.length);
                         binding.set(Immutable.fromJS(data));
+                        console.log(data);
                         self.persistantData = data;
                     }
                 });
@@ -396,9 +381,6 @@ ListPageMixin = {
                         </div>
                     </div>
                 </If>
-                <Popup binding={binding} stateProperty={'popup'} initState={self.popUpState} otherClass="eSchoolMaster_loading">
-                    Loading....
-                </Popup>
 			</div>
 		)
 	}
