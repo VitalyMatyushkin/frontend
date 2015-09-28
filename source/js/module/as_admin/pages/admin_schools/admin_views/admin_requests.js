@@ -8,6 +8,7 @@ var AdminRequest,
     TableField = require('module/ui/list/table_field'),
     DateTimeMixin = require('module/mixins/datetime'),
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
+
 AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     serviceName:'Permissions',
@@ -52,7 +53,7 @@ AdminRequest = React.createClass({
 		switch (action){
             case 'Accept':
                 if(currentPermission.preset === "parent") {
-					window.confirm("Choose student.");
+					document.location.hash = document.location.hash + '/accept?id=' + currentPermission.id;
 				} else {
 					confirmMsg = window.confirm("Are you sure you want to accept ?");
 					if(confirmMsg === true){

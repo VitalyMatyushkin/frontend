@@ -18,7 +18,9 @@ PermissionsStep = React.createClass({
 			type: null,
 			schoolId: null,
 			formId: null,
+			formName: null,
 			houseId: null,
+			houseName: null,
 			firstName: null,
 			lastName: null
 		});
@@ -58,7 +60,9 @@ PermissionsStep = React.createClass({
 				binding
 					.atomically()
 					.set('formId', null)
+					.set('formName', null)
 					.set('houseId', null)
+					.set('houseName', null)
 					.commit();
 			}
 		});
@@ -129,13 +133,26 @@ PermissionsStep = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		binding.set('houseId', houseId);
+		window.Server.house.get(houseId).then(function(house) {
+			binding
+				.atomically()
+				.set('houseId', houseId)
+				.set('houseName', house.name)
+				.commit();
+		});
+
 	},
 	onSelectForm: function(formId) {
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		binding.set('formId', formId);
+		window.Server.form.get(formId).then(function(form) {
+			binding
+				.atomically()
+				.set('formId', formId)
+				.set('formName', form.name)
+				.commit();
+		});
 	},
 	onChangeFirstName: function(event) {
 		var self = this,
@@ -177,7 +194,8 @@ PermissionsStep = React.createClass({
 			};
 
 		if(currentType === 'parent') {
-			dataToPost.comment = "Student - " + binding.get('firstName') + " " + binding.get('lastName') + ".";
+			dataToPost.comment = "Student - " + binding.get('firstName') + " " + binding.get('lastName') + "." +
+				" Form - " + binding.get('formName') + ". House - " + binding.get('houseName') + "."
 		}
 
 		window.Server.Permissions
