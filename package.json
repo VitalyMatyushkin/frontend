@@ -32,6 +32,7 @@
     "karma": "^0.13.10",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^0.2.0",
+    "karma-firefox-launcher": "^0.1.6",
     "karma-mocha": "^0.2.0",
     "main-bower-files": "^2.4.1",
     "mocha": "^2.3.3",

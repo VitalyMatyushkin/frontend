@@ -23,8 +23,8 @@ var SOURCE = './source',
 
 gulp.task('test', function (done) {
 	new karmaServer({
-		configFile: __dirname + '/source/__test__/karma.conf.js'
-		//singleRun: true
+		configFile: __dirname + '/source/__test__/karma.conf.js',
+		singleRun: true
 	}, done).start();
 });
 
