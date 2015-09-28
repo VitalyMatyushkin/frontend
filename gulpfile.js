@@ -1,7 +1,9 @@
 var SOURCE = './source',
 	BUILD = './build',
+	VERBOSE = false,			// set to true if extensive console output during build required
 	gulp = require('gulp'),
 	concat = require('gulp-concat'),
+	gulpif = require('gulp-if'),
 	bower = require('main-bower-files'),
 	run = require('run-sequence'),
 	sass = require('gulp-sass'),
@@ -71,7 +73,7 @@ gulp.task('amd_scripts', function(){
 function amdScrtipts(path){
 	var files = gulp.src(path);
 
-	files = files.pipe(using({})).pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
+	files = files.pipe(gulpif(VERBOSE, using({}))).pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
 	files = files.pipe(requireConvert());
 	files = files.pipe(gulp.dest(BUILD + '/js/module'));
 
