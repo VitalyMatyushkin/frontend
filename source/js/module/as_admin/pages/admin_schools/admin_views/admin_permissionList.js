@@ -20,20 +20,25 @@ AdminPermissionView = React.createClass({
         ,where:{
             //principalId:{neq:''}
             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-        },
-        limit:20
+        }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     isPaginated: true,
     isSuperAdminPage: true,
+    sandbox:true,
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;
         }
     },
-    getPrincipal: function(principal) {
+    getLastName: function(principal) {
         if(principal !== undefined){
-            return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
+            return [principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
+        }
+    },
+    getFirstName:function(principal){
+        if(principal !== undefined){
+            return principal.firstName;
         }
     },
     getStatus: function(principal) {
@@ -114,9 +119,7 @@ AdminPermissionView = React.createClass({
                         return t === dt.get('id');
                     })
                 );
-                console.log(t+' / '+filterTick[i].get('principalId'));
                 ticked[i] = filterTick[i].get('principalId');
-                console.log(ticked[i]);
             });
             switch (el.innerText){
                 case 'Add Role':
@@ -220,10 +223,11 @@ AdminPermissionView = React.createClass({
             <div className="eTable_view">
                 <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory} quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="principal" width="20%" parseFunction={self.getPrincipal}>Principal</TableField>
+                    <TableField dataField="principal" width="10%" dataFieldKey="firstName" parseFunction={self.getFirstName}>Name</TableField>
+                    <TableField dataField="principal" width="20%" dataFieldKey="lastName" parseFunction={self.getLastName}>Surname</TableField>
                     <TableField dataField="principal" width="5%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="school" width="40%" filterType="none"  parseFunction={self.getSchool}>School</TableField>
-                    <TableField dataField="preset" width="5%">Role</TableField>
+                    <TableField dataField="school" width="40%" dataFieldKey="name"  parseFunction={self.getSchool}>School</TableField>
+                    <TableField dataField="preset" width="5%" dataFieldKey="preset">Role</TableField>
                     <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">

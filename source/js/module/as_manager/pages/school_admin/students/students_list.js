@@ -13,6 +13,9 @@ StudentsListPage = React.createClass({
 	filters: {
 		include: ['user','form','parents']
 	},
+    sandbox:true,
+    isPaginated: true,
+    pageLimit: 20,
 	_getViewFunction: function() {
 		var self = this;
 
@@ -25,45 +28,55 @@ StudentsListPage = React.createClass({
 		}
 	},
 	getForm: function (value) {
-		return value.name;
+        if(value !== undefined){
+            return value.name;
+        }
 	},
 	getGender: function (user) {
 		var self = this,
-			icon = user.gender === 'male' ? 'icon_man': 'icon_woman';
+			icon = user !== undefined ?(user.gender === 'male' ? 'icon_man': 'icon_woman'):'';
 
 		return <SVG icon={icon} />;
 	},
 	getBirthday: function(user) {
 		var self = this;
-
-		return self.getAgeFromBirthday(user.birthday);
+        if(user !== undefined){
+            return self.getAgeFromBirthday(user.birthday);
+        }
 	},
 	getAgeFromBirthday: function(value) {
-		var self = this,
-			birthday = new Date(value),
-			date = self.zeroFill(birthday.getDate()),
-			month = birthday.getMonth(),
-			year = birthday.getFullYear();
+		var self = this;
+        if(value !== undefined){
+            var	birthday = new Date(value),
+                date = self.zeroFill(birthday.getDate()),
+                month = birthday.getMonth(),
+                year = birthday.getFullYear();
 
-		return [date, self.getMonthName(month), year].join(' ');
+            return [date, self.getMonthName(month), year].join(' ');
+        }
 	},
 	getParents: function(parents) {
 		var self = this;
+        if(parents !== undefined){
+            return parents ? parents.map(function(parent) {
+                var iconGender = parent.gender === 'male' ? 'icon_man': 'icon_woman';
 
-		return parents ? parents.map(function(parent) {
-			var iconGender = parent.gender === 'male' ? 'icon_man': 'icon_woman';
-
-			return (<div className="eDataList_parent">
-				<span className="eDataList_parentGender"><SVG icon={iconGender} /></span>
-				<span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
-			</div>);
-		}) : null;
+                return (<div className="eDataList_parent">
+                    <span className="eDataList_parentGender"><SVG icon={iconGender} /></span>
+                    <span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
+                </div>);
+            }) : null;
+        }
 	},
 	getFirstName: function(user) {
-		return user.firstName;
+        if(user !== undefined){
+            return user.firstName;
+        }
 	},
 	getLastName: function(user) {
-		return user.lastName;
+        if(user !== undefined){
+            return user.lastName;
+        }
 	},
 	getTableView: function() {
 		var self = this,
@@ -71,10 +84,10 @@ StudentsListPage = React.createClass({
 		return (
 			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
 				<TableField width="3%" dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="user" parseFunction={self.getFirstName}>First name</TableField>
-				<TableField width="15%" dataField="user" parseFunction={self.getLastName}>Last name</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="firstName" parseFunction={self.getFirstName}>First name</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="lastName" parseFunction={self.getLastName}>Last name</TableField>
 				<TableField width="5%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
-				<TableField width="15%" dataField="user" filterType="range" parseFunction={self.getBirthday}>Birthday</TableField>
+				<TableField width="15%" dataField="user" filterType="none" parseFunction={self.getBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
 		)

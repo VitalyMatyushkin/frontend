@@ -9,7 +9,8 @@ ListField = React.createClass({
 		inputParseFunction: React.PropTypes.func,
 		onChange: React.PropTypes.func.isRequired,
 		width: React.PropTypes.string,
-		filterType: React.PropTypes.string
+		filterType: React.PropTypes.string,
+        dataFieldKey: React.PropTypes.string
 	},
 	onChange: function(event) {
 		var self = this,
@@ -24,46 +25,44 @@ ListField = React.createClass({
             dataField = self.props.dataField;
         }
 		if (value && self.props.filterType !== 'number') {
-            if(self.props.children.toLowerCase()==='limit'){
-                value = {
-                    limit: value
-                }
-            }
-            else{
-                if(value.length >1){
-                    value = {
-                        like: value
-                    }
+            var tempValue = {};
+            if(value.length > 1){
+                if(self.props.dataField === self.props.dataFieldKey){
+                    value;
                 }else{
-                    value={
-                        regexp: "[\s\S]*",
-                        options: 'i'
-                    }
+                    tempValue[self.props.dataFieldKey] = value;
+                    value = tempValue;
                 }
-
+            }else{
+                value={
+                    regexp: "[\s\S]*",
+                    options: 'i'
+                }
             }
 		}
 		self.props.onChange(dataField, value);
 	},
     onSort:function(event,order){
         var self = this,
-            value,
+            value ={},
             el  = event.currentTarget,
             fieldToSort = (order === 'School' || order === 'Preset')?order.toLowerCase() : self.props.dataField;
         if(el.classList.contains('caret_up')){
             $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
             el.classList.add('caret_active_up');
-            value ={
-                order:fieldToSort+' ASC'
-            }
+            value = {
+                order:self.props.dataFieldKey+' ASC'
+            };
+
         }else{
             $('.caret').removeClass('caret_active_dwn').removeClass('caret_active_up');
             el.classList.add('caret_active_dwn');
-            value ={
-                order:fieldToSort+' DESC'
-            }
+            value = {
+                order:self.props.dataFieldKey+' DESC'
+            };
         }
-        self.props.onChange(fieldToSort, value);
+        console.log(value);
+        self.props.onChange(self.props.dataField, value);
     },
 	render: function() {
 		var self = this,

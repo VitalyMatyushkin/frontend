@@ -1,7 +1,10 @@
 var ListPageMixin,
     If = require('module/ui/if/if'),
     GroupAction = require('module/ui/list/group_action'),
-    Popup = require('module/ui/popup');
+    Popup = require('module/ui/popup'),
+    //workerThread = require('module/as_manager/pages/school_admin/dataWorkerThread'),
+    persistentData,
+    dataWorker;
 ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired,
@@ -11,11 +14,20 @@ ListPageMixin = {
 	componentWillMount: function () {
 		var self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
+            metaBinding = self.getDefaultBinding().meta(),
+            binding = self.getDefaultBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
         self.updatePageNumbers = true;
+        metaBinding.set('isFiltersActive', false);
+        if(window.Worker){
+            dataWorker = new Worker('build/js/module/as_manager/pages/school_admin/dataWorkerThread.js');
+            dataWorker.onmessage = function(e){
+                binding.set(Immutable.fromJS(e.data));
+            };
+        }
 		self.updateData();
 	},
     getCustomQueryCount:function(){
@@ -55,8 +67,9 @@ ListPageMixin = {
         if(self.isSuperAdminPage)React.findDOMNode(self.refs.otherCheck).checked = true;
         //self.timeoutId = setTimeout(function(){
         //    //Pagination method
-        //    self._getTotalCountAndRenderPagination();
+        //    //self._getTotalCountAndRenderPagination();
         //},4000);
+
     },
     _getTotalCountAndRenderPagination:function(customCount){
         var self = this,
@@ -66,16 +79,16 @@ ListPageMixin = {
             selectNode = React.findDOMNode(self.refs.pageSelect);
         if(self.isPaginated){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
-            self.numberOfPages = customCount !== undefined ? (Math.floor(customCount/self.filters.limit)) : 0;
+            self.numberOfPages = Math.floor(customCount/self.pageLimit);
             //Check if count
-            if(customCount%self.filters.limit !== 0){
-                self.numberOfPages += 1;
-                self.extraPages = customCount % self.filters.limit;
-                isOdd = true;
+            if(customCount%self.pageLimit !== 0){
+                //self.numberOfPages += 1;
+                self.extraPages = customCount % self.pageLimit;
+                //isOdd = true;
             }
             if(selectNode !== null){
                 selectNode.options.length = 0;
-                if(customCount >= self.filters.limit){
+                if(customCount >= self.pageLimit){
                     for(var i=0; i<self.numberOfPages; i++){
                         var option = document.createElement('option');
                         option.text =(i < self.numberOfPages ? i+1 : i-1);
@@ -84,8 +97,10 @@ ListPageMixin = {
                     }
                 }
             }
-            if(pageNumberNode !== null){
+            if(pageNumberNode !== null && customCount >= self.pageLimit){
                 pageNumberNode.innerText = 'out of '+(self.numberOfPages);
+            }else{
+                pageNumberNode !== null ? pageNumberNode.innerText = '1 out of 1': '';
             }
         }
     },
@@ -93,13 +108,13 @@ ListPageMixin = {
         var self = this,
             selectNode = React.findDOMNode(self.refs.pageSelect),
             optVal = selectNode.options[selectNode.selectedIndex].value,
-            skipLimit = optVal >= 2 ? (optVal - 1) * self.filters.limit  : 0,
+            skipLimit = optVal >= 2 ? optVal * self.pageLimit  : 0,
             binding = self.getDefaultBinding(),
             metaBinding = binding.meta(),
             filterValue = {
-                limit:{limit:self.filters.limit},
                 skip:{skip:skipLimit}
             };
+        self.customLimit = self.pageLimit;
         if(metaBinding.get('isFiltersActive') === true){
             metaBinding.set('isFiltersActive',false);
         }
@@ -149,77 +164,95 @@ ListPageMixin = {
                 defaultRequestFilter[filter] = self.filters[filter];
             });
         }
-
-        // Добавление фильтров по полям, если есть
-        if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
-            for (var filterName in newFilter) {
-                requestFilter.where[filterName] = newFilter[filterName];
-                if('limit' in (newFilter[filterName])){
-                    defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
-                    requestFilter.limit = parseInt(newFilter[filterName].limit);
-                }else if('order' in (newFilter[filterName])){
-                    defaultRequestFilter.order = newFilter[filterName].order;
-                    requestFilter.order = newFilter[filterName].order;
-                }else if('skip' in (newFilter[filterName])){
-                    defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
-                    requestFilter.skip = parseInt(newFilter[filterName].skip);
-                }
-                else{
-                    defaultRequestFilter.where[filterName] = newFilter[filterName];
-                }
+        if(self.sandbox === true && isFiltersActive){
+            if(newFilter && Object.keys(newFilter).length > 0){
+                var tempData = self.persistantData;
+                dataWorker.postMessage([tempData,newFilter]);
+            }else{
+                binding.set(Immutable.fromJS(self.persistantData));
             }
-            self.lastFiltersState = newFilter;
-        }
-        //Column sorting without filters engaged
-        if(newFilter && Object.keys(newFilter).length > 0){
-            for(var filterName in newFilter){
-                if('limit' in (newFilter[filterName])){
-                    defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
-                    requestFilter.limit = parseInt(newFilter[filterName].limit);
-                }else if('order' in (newFilter[filterName])){
-                    defaultRequestFilter.order = newFilter[filterName].order;
-                    requestFilter.order = newFilter[filterName].order;
-                }else if('skip' in (newFilter[filterName])){
-                    defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
-                    requestFilter.skip = parseInt(newFilter[filterName].skip);
-                }
-                else{
-                    defaultRequestFilter.where[filterName] = newFilter[filterName];
+            //self.lastFiltersState = newFilter;
+        }else if(self.sandbox === true && newFilter){
+            for(var skipFilter in newFilter){
+                if('skip' in newFilter[skipFilter]){
+                    var skippedData = self.persistantData.splice((newFilter[skipFilter].skip-1),self.pageLimit-1);
+                    binding.set(Immutable.fromJS(skippedData));
                 }
             }
         }
-        //Condition to test for other service requests without ids
-        if(self.activeSchoolId !== null){
-            self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
-                self.popUpState = false;
-                binding.set(Immutable.fromJS(data));
-                //self.getCustomQueryCount();
-            });
-        }else{
-            self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
-                if(page[page.length-1] === 'requests'){
-                    var notAccepted = [];
-                    data.forEach(function(d){
-                        if(d.accepted === 'undefined' || d.accepted === undefined){
-                            notAccepted.push(d);
-                        }
-                    });
+        else{
+            // Добавление фильтров по полям, если есть
+            if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
+                for (var filterName in newFilter) {
+                    requestFilter.where[filterName] = newFilter[filterName];
+                    if('limit' in (newFilter[filterName])){
+                        defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                        requestFilter.limit = parseInt(newFilter[filterName].limit);
+                    }else if('order' in (newFilter[filterName])){
+                        defaultRequestFilter.order = newFilter[filterName].order;
+                        requestFilter.order = newFilter[filterName].order;
+                    }else if('skip' in (newFilter[filterName])){
+                        defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
+                        requestFilter.skip = parseInt(newFilter[filterName].skip);
+                    }
+                    else{
+                        defaultRequestFilter.where[filterName] = newFilter[filterName];
+                    }
+                }
+                self.lastFiltersState = newFilter;
+            }
+            //Column sorting without filters engaged
+            if(newFilter && Object.keys(newFilter).length > 0){
+                for(var filterName in newFilter){
+                    if('limit' in (newFilter[filterName])){
+                        defaultRequestFilter.limit = parseInt(newFilter[filterName].limit);
+                        requestFilter.limit = parseInt(newFilter[filterName].limit);
+                    }else if('order' in (newFilter[filterName])){
+                        defaultRequestFilter.order = newFilter[filterName].order;
+                        requestFilter.order = newFilter[filterName].order;
+                    }else if('skip' in (newFilter[filterName])){
+                        defaultRequestFilter.skip = parseInt(newFilter[filterName].skip);
+                        requestFilter.skip = parseInt(newFilter[filterName].skip);
+                    }
+                    else{
+                        defaultRequestFilter.where[filterName] = newFilter[filterName];
+                    }
+                }
+            }
+            //Condition to test for other service requests without ids
+            if(self.activeSchoolId !== null){
+                self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                     self.popUpState = false;
-                    binding.set(Immutable.fromJS(notAccepted));
-                    //self.getCustomQueryCount();
-                }else{
                     binding.set(Immutable.fromJS(data));
-                    if(self.updatePageNumbers){if(self.isPaginated)self.getCustomQueryCount();}
-                    self.popUpState = false;
-                }
-            });
+                    self.persistantData = data;
+                });
+            }else{
+                self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
+                    if(page[page.length-1] === 'requests'){
+                        var notAccepted = [];
+                        data.forEach(function(d){
+                            if(d.accepted === 'undefined' || d.accepted === undefined){
+                                notAccepted.push(d);
+                            }
+                        });
+                        binding.set(Immutable.fromJS(data));
+                        self.persistantData = data;
+                    }else{
+                        binding.set(Immutable.fromJS(data));
+                        console.log(data);
+                        self.persistantData = data;
+                    }
+                });
+            }
         }
-
 	},
 	componentWillUnmount: function () {
-		var self = this;
+		var self = this,
+            binding = self.getDefaultBinding();
 		self.request && self.request.abort();
         clearTimeout(self.timeoutId);
+        self.persistantData.length = 0;
+        binding.clear()
 	},
 	_getEditFunction: function() {
 		var self = this;
@@ -257,8 +290,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             and:[{preset:{nin:['coach','teacher','parent','manager','owner','admin']}},{preset:'student'}]
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
                 case 'all':
@@ -266,8 +298,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             principalId:{neq:''}
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
                 case 'others':
@@ -275,8 +306,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
                 default :
@@ -284,8 +314,7 @@ ListPageMixin = {
                         include:['principal','school']
                         ,where:{
                             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                        },
-                        limit:self.pageLimit
+                        }
                     };
                     break;
             }
@@ -297,8 +326,7 @@ ListPageMixin = {
                 include:['principal','school']
                 ,where:{
                     and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                },
-                limit:self.pageLimit
+                }
             };
             self.updatePageNumbers = true;
             self.updateData();
@@ -353,9 +381,6 @@ ListPageMixin = {
                         </div>
                     </div>
                 </If>
-                <Popup binding={binding} stateProperty={'popup'} initState={self.popUpState} otherClass="eSchoolMaster_loading">
-                    Loading....
-                </Popup>
 			</div>
 		)
 	}

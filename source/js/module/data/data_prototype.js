@@ -1,7 +1,7 @@
 var DataPrototype = {
 	data: {},
 	/**
-	 * Получаение начального состояния данных
+	 * Getting initial state of data
 	 * @returns {*}
 	 */
 	getDefaultState: function() {
@@ -10,7 +10,7 @@ var DataPrototype = {
 		return self.data;
 	},
 	/**
-	 * Привязка к контексту Morearty
+	 * Binding to morearty context
 	 * @param bindObject
 	 */
 	setBinding: function(bindObject) {
@@ -20,7 +20,7 @@ var DataPrototype = {
 		self.initBind && self.initBind();
 	},
 	/**
-	 * Определите данный метод в класс данных
+	 * Define this method in data class
 	 */
 	initBind: function() {
 

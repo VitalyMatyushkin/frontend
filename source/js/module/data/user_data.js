@@ -2,31 +2,32 @@ var DataPrototype = require('module/data/data_prototype'),
     UserDataClass = Object.create(DataPrototype);
 
 /**
- * Получение начального состояния данных UserData
+ * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
     var self = this;
 
-    // Востановлении информации о состоянии авторизации
+    // Recovering authorization state info
     return {
         authorizationInfo: Helpers.cookie.get('authorizationInfo') || {}
     };
 };
 
 /**
- * Привязка к изменению данных UserData
+ * Binding to data update in UserData
  */
 UserDataClass.initBind = function () {
     var self = this,
         bindObject = self.bindObject;
 
-    // Данные об авторизации мы храним
+    // Keeping authorization data
     bindObject.addListener('authorizationInfo', function () {
         var data = bindObject.get('authorizationInfo'),
             authorizationInfo = data ? data.toJS() : {};
 
         data && Helpers.cookie.set('authorizationInfo', authorizationInfo);
 
+        // configuring ajax to perform all ajax requests from jquery with Authorization header
         $.ajaxSetup({
             headers: {
                 Authorization: authorizationInfo.id,
