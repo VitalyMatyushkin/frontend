@@ -150,5 +150,5 @@ gulp.task('default', function (callback) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+    run('clean', 'lint', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 });
