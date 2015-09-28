@@ -17,7 +17,16 @@ var SOURCE = './source',
 	del = require('del'),					// plugin to delete files/folders
 	using = require('gulp-using'),			// gulp.src('*.js').pipe(using({})) will show all files found by '*.js'
 	uglify = require('gulp-uglify'),		// minimize js
-	eslint = require('gulp-eslint');
+	eslint = require('gulp-eslint'),
+	karmaServer = require('karma').Server;
+
+
+gulp.task('test', function (done) {
+	new karmaServer({
+		configFile: __dirname + '/source/__test__/karma.conf.js'
+		//singleRun: true
+	}, done).start();
+});
 
 
 gulp.task('lint', function(){
