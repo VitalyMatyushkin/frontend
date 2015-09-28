@@ -16,8 +16,15 @@ var SOURCE = './source',
 	requireConvert = require('gulp-require-convert'),	// converts CommonJS modules to AMD
 	del = require('del'),					// plugin to delete files/folders
 	using = require('gulp-using'),			// gulp.src('*.js').pipe(using({})) will show all files found by '*.js'
-	uglify = require('gulp-uglify');		// minimize js
+	uglify = require('gulp-uglify'),		// minimize js
+	eslint = require('gulp-eslint');
 
+
+gulp.task('lint', function(){
+	return gulp.src([SOURCE + '/js/**/*.js', '!' + SOURCE + '/js/bower/**/*.js'])
+		.pipe(eslint())
+		.pipe(eslint.format());
+});
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
 	var files = gulp.src('./images/icons/*.svg');
@@ -52,7 +59,7 @@ gulp.task('bower', function() {
 });
 
 /** Building css from scss */
-gulp.task('styles', function (callback) {
+gulp.task('styles', function () {
 	var files = gulp.src(SOURCE + '/styles/**/*.scss');
 
 	files = files.pipe(sourcemaps.init());
@@ -124,7 +131,7 @@ gulp.task('clean_amd', function (callback) {
 
 // Run build
 gulp.task('default', function (callback) {
-	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+	run('lint', 'connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		console.log('STYLES RELOAD');

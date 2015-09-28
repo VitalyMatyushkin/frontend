@@ -10,7 +10,7 @@ RegiseterUserForm = React.createClass({
 		onSuccess: React.PropTypes.func,
         onError: React.PropTypes.func
 	},
-	getPhone(phone) {
+	getPhone: function(phone) {
 		return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
 	},
 	render: function() {
