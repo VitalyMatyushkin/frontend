@@ -13,8 +13,8 @@ var SOURCE = './source',
 	svgmin = require('gulp-svgmin'),
 	requireConvert = require('gulp-require-convert'),
 	del = require('del'),
-	using = require('gulp-using'),
-	uglify = require('gulp-uglify');
+	using = require('gulp-using'),			// gulp.src('*.js').pipe(using({})) will show all files found by '*.js'
+	uglify = require('gulp-uglify');		// minimize js
 
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
@@ -38,7 +38,7 @@ gulp.task('normalize', function () {
 	}
 });
 
-// Bower dependences
+/** Assembles all bower dependencies to one ./bower.js file and minify it */
 gulp.task('bower', function() {
 	var files = gulp.src(bower({checkExistence: true}), { base: '/bower_components' });
 
@@ -49,7 +49,7 @@ gulp.task('bower', function() {
 	return files;
 });
 
-// Styles generation
+/** Building css from scss */
 gulp.task('styles', function (callback) {
 	var files = gulp.src(SOURCE + '/styles/**/*.scss');
 
