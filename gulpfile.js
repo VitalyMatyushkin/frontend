@@ -19,7 +19,6 @@ var SOURCE = './source',
 	using = require('gulp-using'),			// gulp.src('*.js').pipe(using({})) will show all files found by '*.js'
 	uglify = require('gulp-uglify'),		// minimize js
 	eslint = require('gulp-eslint'),
-	foreach = require('gulp-foreach'),	// TODO: remove
 	filenames = require('gulp-filenames'),
 	karmaServer = require('karma').Server;
 
@@ -63,7 +62,7 @@ gulp.task('test', ['collect-test-configurations'], function () {
 	var fnames = filenames.get('karma-config-files', 'full');
 	run(fnames);
 	// maybe it should return smth... who knows..
-	
+
 });
 
 
