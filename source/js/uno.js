@@ -1,3 +1,3 @@
-/**
- * Created by wert on 29.09.15.
- */
+function uno() {
+    return "uno";
+}

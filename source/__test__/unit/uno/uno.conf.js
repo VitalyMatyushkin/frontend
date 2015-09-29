@@ -1,3 +1,11 @@
-/**
- * Created by wert on 29.09.15.
- */
+module.exports = function(config) {
+    config.set({
+        browsers: ['Chrome', 'Firefox'],
+        frameworks: ['mocha', 'chai'],
+        basePath: '.',
+        files: [
+            '../../../js/uno.js',
+            './*.spec.js'
+        ]
+    });
+};
