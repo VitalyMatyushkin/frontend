@@ -10,13 +10,13 @@ authСontroller = {
 			console.error('Error while initializing the authorization controller');
 		}
 
-		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
-		if (document.location.hash && document.location.hash.indexOf('login') === -1) {
-			self.nextPage = document.location.hash;
-		}else {
+		if (self.isLoginPage()) {
 			self.defaultPath = options.defaultPath || '#/';
 			self.nextPage = self.defaultPath;
+		} else {
+			self.nextPage = document.location.hash;
 		}
+
 		//By pass authentication for public home page for school
 		if(options.asSchool === true){
 			self.nextPage = options.defaultPath;
@@ -26,6 +26,9 @@ authСontroller = {
 
 		self.updateAuth();
 		self.binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
+	},
+	isLoginPage: function() {
+		return document.location.hash && document.location.hash.indexOf('login') !== -1;
 	},
 	updateAuth: function() {
 		var self = this,
@@ -67,7 +70,7 @@ authСontroller = {
 			if (self.binding.get('form.register.formFields') === undefined) {
 				document.location.hash = self.nextPage;
 			}
-		}else if(self.nextPage ==='home'){
+		} else if(self.nextPage ==='home'){
             document.location.hash = self.nextPage;  //Bypass authentication
         }
 	},

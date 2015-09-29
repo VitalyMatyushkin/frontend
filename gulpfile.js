@@ -1,21 +1,30 @@
 var SOURCE = './source',
 	BUILD = './build',
-	gulp = require('gulp'),
-	concat = require('gulp-concat'),
-	bower = require('main-bower-files'),
-	run = require('run-sequence'),
+	VERBOSE = false,						// set to true if extensive console output during build required
+	gulp = require('gulp'),					// gulp itself
+	concat = require('gulp-concat'),		// collects content of all files into one file
+	gulpif = require('gulp-if'),			// allows to write conditional pipes
+	bower = require('main-bower-files'),	// picks only main files of each bower component
+	run = require('run-sequence'),			// runs gulp tasks in  _synchronous_ sequence. One by one.
 	sass = require('gulp-sass'),
 	sourcemaps = require('gulp-sourcemaps'),
-	autoprefixer = require('gulp-autoprefixer'),
-	react = require('gulp-react'),
+	autoprefixer = require('gulp-autoprefixer'),	// Parse CSS and add vendor prefixes to CSS rules using values from the Can I Use website
+	react = require('gulp-react'), 					// precompiles React JSX to JS
 	connect = require('gulp-connect'),
 	svgstore = require('gulp-svgstore'),
 	svgmin = require('gulp-svgmin'),
-	requireConvert = require('gulp-require-convert'),
-	del = require('del'),
-	using = require('gulp-using'),
-	uglify = require('gulp-uglify');
+	requireConvert = require('gulp-require-convert'),	// converts CommonJS modules to AMD
+	del = require('del'),					// plugin to delete files/folders
+	using = require('gulp-using'),			// gulp.src('*.js').pipe(using({})) will show all files found by '*.js'
+	uglify = require('gulp-uglify'),		// minimize js
+	eslint = require('gulp-eslint');
 
+
+gulp.task('lint', function(){
+	return gulp.src([SOURCE + '/js/**/*.js', '!' + SOURCE + '/js/bower/**/*.js'])
+		.pipe(eslint())
+		.pipe(eslint.format());
+});
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
 	var files = gulp.src('./images/icons/*.svg');
@@ -38,7 +47,7 @@ gulp.task('normalize', function () {
 	}
 });
 
-// Bower dependences
+/** Assembles all bower dependencies to one ./bower.js file and minify it */
 gulp.task('bower', function() {
 	var files = gulp.src(bower({checkExistence: true}), { base: '/bower_components' });
 
@@ -49,8 +58,8 @@ gulp.task('bower', function() {
 	return files;
 });
 
-// Styles generation
-gulp.task('styles', function (callback) {
+/** Building css from scss */
+gulp.task('styles', function () {
 	var files = gulp.src(SOURCE + '/styles/**/*.scss');
 
 	files = files.pipe(sourcemaps.init());
@@ -71,7 +80,7 @@ gulp.task('amd_scripts', function(){
 function amdScrtipts(path){
 	var files = gulp.src(path);
 
-	files = files.pipe(using({})).pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
+	files = files.pipe(gulpif(VERBOSE, using({}))).pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
 	files = files.pipe(requireConvert());
 	files = files.pipe(gulp.dest(BUILD + '/js/module'));
 
@@ -122,7 +131,7 @@ gulp.task('clean_amd', function (callback) {
 
 // Run build
 gulp.task('default', function (callback) {
-	run('connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+	run('lint', 'connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		console.log('STYLES RELOAD');
@@ -141,5 +150,5 @@ gulp.task('default', function (callback) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+    run('clean', 'lint', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 });

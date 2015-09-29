@@ -117,7 +117,7 @@ RouterView = React.createClass({
 	 * Добавление нового маршрута
 	 * @param route
 	 */
-	addRoute: function(route){
+	addRoute: function(route) {
 		var self = this;
 
 		self.siteRoutes[route.path] = function(){
@@ -188,10 +188,8 @@ RouterView = React.createClass({
 		// Инициализации маршрутизатора
 		self.updateUrlParametrs();
 
-
 		self.routerInstance = Router(self.siteRoutes);
 		self.routerInstance.init();
-
 	},
 	render: function() {
 		var self = this,

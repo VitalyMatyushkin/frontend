@@ -90,10 +90,12 @@ function runManagerMode() {
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize({
-		binding: binding,
-		defaultPath: 'schools'
-	});
+	authController.initialize(
+		{
+			binding: binding,
+			defaultPath: 'schools'
+		}
+	);
 
 	// Инициализация приложения
 	React.render(

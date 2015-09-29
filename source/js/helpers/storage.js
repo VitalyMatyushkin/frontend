@@ -3,6 +3,7 @@
 	var Helpers = (space.Helpers = space.Helpers || {}),
 		localStorage = space.localStorage;
 
+	/** Helper to deal easier with localStorage */
 	Helpers.LocalStorage = {
 		set: function (key, value) {
 			value = $.type(value) === 'string' ? String(value) : JSON.stringify(value);
@@ -37,7 +38,7 @@
 			var self = this,
 				fields_to_remove = [];
 
-			// Формирования списка полей к удалению
+			// Filling fields_to_remove array
 			for (var i = 0, ii = localStorage.length; i < ii; i++) {
 				var field_name = localStorage.key(i);
 
@@ -46,7 +47,7 @@
 				}
 			}
 
-			// Удаление ненужных полей
+			// Deleting entries from localStorage
 			for (var j = 0, jj = fields_to_remove.length; j < jj; j++) {
 				self.remove(fields_to_remove[j]);
 			}
