@@ -1,3 +1,0 @@
-function uno() {
-    return "uno";
-}

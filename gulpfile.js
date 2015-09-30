@@ -31,7 +31,7 @@ var SOURCE = './source',
  * See docs on 'gulp-filenames' for more details.
  */
 gulp.task('collect-test-configurations', function(){
-	return gulp.src(TEST_SOURCE + "/**/*.conf.js")
+	return gulp.src(TEST_SOURCE + "/**/*.karma.js")
 		.pipe(filenames('karma-config-files'));
 });
 

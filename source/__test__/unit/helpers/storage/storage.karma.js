@@ -4,8 +4,9 @@ module.exports = function(config) {
         frameworks: ['mocha', 'chai'],
         basePath: '.',
         files: [
-            '../../../js/uno.js',
-            './*.spec.js'
+            '../../../../js/helpers/storage.js',
+            './*.spec.js',
+            '../../../../js/bower/jquery/dist/jquery.js'
         ]
     });
 };
