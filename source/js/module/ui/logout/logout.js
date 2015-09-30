@@ -3,10 +3,10 @@ LoginUserPage = React.createClass({
 	render: function() {
 		var binding = this.getDefaultBinding();
 
-		window.Server.logout.post();
+		//window.Server.logout.post();
 		Helpers.cookie.remove('authorizationInfo');
 		binding.sub('authorizationInfo').clear();
-		document.location.href = '/';
+		document.location.hash = '#login';
 
 		return null;
 	}

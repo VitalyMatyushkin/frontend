@@ -239,7 +239,7 @@ ListPageMixin = {
                         self.persistantData = data;
                     }else{
                         binding.set(Immutable.fromJS(data));
-                        console.log(data);
+                        //console.log(data);
                         self.persistantData = data;
                     }
                 });
