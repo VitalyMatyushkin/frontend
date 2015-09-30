@@ -49,10 +49,12 @@ gulp.task('test', ['collect-test-configurations'], function () {
 		).start();
 	}
 
-	/** recursively traverse array and perform doKarma() on each element */
+	/** recursively traverse array and perform doKarma() on each element.
+	 * This trick allow to start new Karma instance only when previous is down
+	 */
 	function run(arr) {
-		var step = arr.shift();
-		if(step) {	// there are still smth to process
+		var step = arr.shift();	// Note: it will be better to use immutable version here, but this works too
+		if(step) {				// there are still items to process
 			doKarma(step, function(){
 				run(arr)
 			});
