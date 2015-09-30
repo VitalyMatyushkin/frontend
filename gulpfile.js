@@ -1,5 +1,6 @@
 var SOURCE = './source',
 	BUILD = './build',
+	TEST_SOURCE = './source/__test__',
 	VERBOSE = false,						// set to true if extensive console output during build required
 	gulp = require('gulp'),					// gulp itself
 	concat = require('gulp-concat'),		// collects content of all files into one file
@@ -17,7 +18,54 @@ var SOURCE = './source',
 	del = require('del'),					// plugin to delete files/folders
 	using = require('gulp-using'),			// gulp.src('*.js').pipe(using({})) will show all files found by '*.js'
 	uglify = require('gulp-uglify'),		// minimize js
-	eslint = require('gulp-eslint');
+	eslint = require('gulp-eslint'),
+	filenames = require('gulp-filenames'),
+	karmaServer = require('karma').Server;
+
+/** This task collect all files which tends to be karma configuration and build array with filenames.
+ * This is required for __sync__ processing of each file. In case of async processing (with .pipe() for ex.)
+ * multiple Karma instances will be run simultaneously, which will lead to multiple problems, because Karma not
+ * suites for multiple launches well.
+ *
+ * Files collected with 'gulp-filenames' module and can be fetched with 'filenames.get('karma-config-files')'
+ * See docs on 'gulp-filenames' for more details.
+ */
+gulp.task('collect-test-configurations', function(){
+	return gulp.src(TEST_SOURCE + "/**/*.karma.js")
+		.pipe(filenames('karma-config-files'));
+});
+
+
+/** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
+ */
+gulp.task('test', ['collect-test-configurations'], function () {
+	/** Will run provided karma conf file and stop */
+	function doKarma(fullConfPath, done) {
+		new karmaServer({
+				configFile: fullConfPath,
+				singleRun: true
+			},
+			done
+		).start();
+	}
+
+	/** recursively traverse array and perform doKarma() on each element.
+	 * This trick allow to start new Karma instance only when previous is down
+	 */
+	function run(arr) {
+		var step = arr.shift();	// Note: it will be better to use immutable version here, but this works too
+		if(step) {				// there are still items to process
+			doKarma(step, function(){
+				run(arr)
+			});
+		}
+	}
+
+	var fnames = filenames.get('karma-config-files', 'full');
+	run(fnames);
+	// maybe it should return smth... who knows..
+
+});
 
 
 gulp.task('lint', function(){
@@ -25,6 +73,7 @@ gulp.task('lint', function(){
 		.pipe(eslint())
 		.pipe(eslint.format());
 });
+
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
 	var files = gulp.src('./images/icons/*.svg');
