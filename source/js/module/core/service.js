@@ -12,7 +12,7 @@ Service = (function() {
 		self.url = url;
 		self.binding = binding;
 
-		// Обработка параметров, если они содержатся в URL-адресе
+		// Processing parameters from provided url
 		if (url.indexOf('{') !== -1) {
 			self.requredParams = [];
 

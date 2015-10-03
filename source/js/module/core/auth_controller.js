@@ -38,23 +38,23 @@ authСontroller = {
 			data = binding.toJS('userData.authorizationInfo'),
 			userData = binding.toJS('userData.userInfo');
 
-		// Если появились данные об авторизации
+		// if we got auth data
 		if (data && data.id) {
 			var ttl;
-			// Если данные о времени окончании сессии уже присутсвуют
+			// if there is data about session die time
 			if (data.dieTime) {
 				ttl = Math.ceil((data.dieTime - Date.now()) / 1000);
 			} else {
 				ttl = data.ttl;
-				// Сохранение времени смерти сессии, на случай обновления страницы
+				// saving session die time for the refresh page case
 				authBinding.set('dieTime', Date.now() + ttl * 1000);
 			}
 
-			// Запуск таймера окончания жизни сессия
+			// Starting session die timer
 			if (ttl > 0) {
 				self.startTTLTimer(ttl);
 
-				// Получение данных о верификации аккаунта
+				// getting data about account verification
 				/*
 				if (!userData || !userData.user || !userData.user.verified) {
 					window.Server.user.get(data.userId).then(function (data) {
@@ -66,7 +66,7 @@ authСontroller = {
 			} else {
 				self.clearAuthorization();
 			}
-			// Переводим человека на ожидаемую страницу если человек не проходит регистрацию в данный момент
+			// redirecting user to awaited page if user not in registration processs now
 			if (self.binding.get('form.register.formFields') === undefined) {
 				document.location.hash = self.nextPage;
 			}

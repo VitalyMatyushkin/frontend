@@ -1,0 +1,7 @@
+{
+    "ecmaFeatures": {
+        "jsx": true
+    },
+    "rules": {
+    }
+}

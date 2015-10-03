@@ -4,7 +4,7 @@ var Service = require('module/core/service'),
 
 
 serviceList = {
-	// Сервисы, требующие авторизацию
+	// Services which require authorization
 	initialize: function(binding) {
 		serviceList.logout = new Service('/users/logout', binding);
 
@@ -147,7 +147,7 @@ serviceList = {
 		serviceList.parentRequest = new Service('/parentRequests/{id}', binding);
 		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
 	},
-	// Сервисы, не требующие авторизации
+	// Services which not require authorization
 	initializeOpenServices: function() {
 		// schools
 		serviceList.schoolsFindOne = new Service('/schools/findOne');

@@ -10,11 +10,15 @@
     "gulp": "^3.8.11"
   },
   "devDependencies": {
+    "chai": "^3.3.0",
     "del": "^1.1.1",
     "gulp-autoprefixer": "^2.0.0",
     "gulp-bower": "0.0.10",
     "gulp-concat": "^2.5.2",
     "gulp-connect": "^2.2.0",
+    "gulp-eslint": "^1.0.0",
+    "gulp-filenames": "^1.3.0",
+    "gulp-if": "^1.2.5",
     "gulp-react": "^2.0.0",
     "gulp-require-convert": "0.0.1",
     "gulp-sass": "^2.0.1",
@@ -26,7 +30,13 @@
     "jscs": "^1.13.1",
     "jshint": "~2.7.0",
     "jshint-stylish": "^1.0.1",
+    "karma": "^0.13.10",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.0",
+    "karma-firefox-launcher": "^0.1.6",
+    "karma-mocha": "^0.2.0",
     "main-bower-files": "^2.4.1",
+    "mocha": "^2.3.3",
     "run-sequence": "^1.0.2"
   },
   "scripts": {
