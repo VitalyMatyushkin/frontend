@@ -5,6 +5,9 @@ var If = require('module/ui/if/if'),
 
 PermissionAcceptPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		afterSubmitPage: React.PropTypes.string
+	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			_formAutocomplete: {},
@@ -113,7 +116,7 @@ PermissionAcceptPage = React.createClass({
 					studentId: binding.get('studentId')
 				}
 			)
-			.then(function(data) {
+			.then(function() {
 				window.Server.setPermissions
 					.post(
 						{
@@ -123,7 +126,7 @@ PermissionAcceptPage = React.createClass({
 							accepted:true
 						}
 					).then(function(){
-						document.location.hash = document.location.hash + '#admin_schools/admin_views/requests';
+						document.location.hash = self.props.afterSubmitPage;
 					}
 				);
 			});
