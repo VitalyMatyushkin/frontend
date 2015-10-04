@@ -25,26 +25,31 @@ SchoolRequest = React.createClass({
         });
     },
     _getPermissionRequests: function () {
-        var self, binding, requestData;
-        self = this;
-        binding = self.getDefaultBinding();
-        requestData = binding.toJS('permissionRequests');
+        var self = this,
+            binding = self.getDefaultBinding(),
+            requestData = binding.toJS('permissionRequests');
+
         if (requestData !== undefined) {
             return requestData.map(function (request) {
                 var acceptReq = function (permissionId) {
                     return function (event) {
-                        var confirmAcpt = confirm("Are you sure you want to accept this permission?");
+                        var self = this,
+                            confirmAcpt = confirm("Are you sure you want to accept this permission?");
                         if (confirmAcpt === true) {
-							window.Server.setPermissions
-								.post({id:permissionId},{accepted:true})
-								.then(function (res) {
-									//alert('Permission accepted!');
-									window.location.reload(true);
-								});
+                            var currentPermission = self.getCurrentPermission(permissionId, self.getDefaultBinding().get('permissionRequests').toJS());
+                            if(currentPermission.preset === "parent") {
+                                document.location.hash = document.location.hash + '/accept?id=' + currentPermission.id;
+                            } else {
+                                window.Server.setPermissions
+                                    .post({id:permissionId},{accepted:true})
+                                    .then(function (res) {
+                                        window.location.reload(true);
+                                    });
+                            }
                         }
                         event.stopPropagation();
-                    }
-                };
+                    }.bind(self);
+                }.bind(self);
                 var declineReq = function (permissionId) {
                     return function (event) {
                         var confirmAcpt = confirm("Are you sure you want to decline this permission?");
@@ -91,6 +96,18 @@ SchoolRequest = React.createClass({
                 }
             });
         }
+    },
+    getCurrentPermission: function(id, permissions) {
+        var permission = undefined;
+
+        for(var i = 0; i < permissions.length; i++) {
+            if(permissions[i].id === id) {
+                permission = permissions[i];
+                break;
+            }
+        }
+
+        return permission;
     },
     render: function () {
         var self = this,

@@ -18,7 +18,8 @@ SchoolConsole = React.createClass({
             cancel: {
                 type: 'cancel'
             },
-            consoleRouting: {}
+            consoleRouting: {},
+            parentPermission: {}
         });
     },
     componentWillMount: function () {
@@ -66,6 +67,7 @@ SchoolConsole = React.createClass({
                     <Route path='/school_console' binding={binding.sub('permissions')} component='module/as_manager/pages/school_console/views/permissions'  />
                     <Route path='/school_console/permissions' binding={binding.sub('permissions')} component='module/as_manager/pages/school_console/views/permissions'  />
                     <Route path='/school_console/requests' binding={binding.sub('requests')} component='module/as_manager/pages/school_console/views/requests'  />
+                    <Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component="module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"  afterSubmitPage="/school_console/requests"/>
                     <Route path='/school_console/archive' binding={binding.sub('archives')} component='module/as_admin/pages/admin_schools/admin_views/admin_archive'  />
                 </RouterView>
             </div>
