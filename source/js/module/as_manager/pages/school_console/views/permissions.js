@@ -14,9 +14,9 @@ var PermissionView,
 PermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'schoolPermissions',
-    //TODO Why this code is comment?
+    //TODO Why this code is comment? - because the property is not in used at the moment but could be reused
     //serviceCount:'schoolPermissionsCount',
-    pageLimit: 20,
+    pageLimit: 25,
     setPageTitle:'School Admin',
     filters:{
         include:['principal',{student:['form','house']}]

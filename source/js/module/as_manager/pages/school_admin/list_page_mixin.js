@@ -22,46 +22,20 @@ ListPageMixin = {
         self.popUpState = false;
         self.updatePageNumbers = true;
         metaBinding.set('isFiltersActive', false);
+        //setup a web worker to sort and filter data in background
         if(window.Worker){
             dataWorker = new Worker('build/js/module/as_manager/pages/school_admin/dataWorkerThread.js');
             dataWorker.onmessage = function(e){
-                binding.set(Immutable.fromJS(e.data));
+                if(self.isPaginated && e.data.length > self.pageLimit){
+                    binding.set(Immutable.fromJS(e.data.slice(0,(self.pageLimit+1))));
+                    self._getTotalCountAndRenderPagination(e.data.length);
+                }else{
+                    binding.set(Immutable.fromJS(e.data));
+                }
             };
         }
 		self.updateData();
 	},
-    getCustomQueryCount:function(){
-        var self = this,
-            globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-            customQueryFilter = self.filters;
-        delete customQueryFilter["limit"];
-        if(self.isPaginated === true){
-            if(activeSchoolId !== null){
-                if(self.serviceCount !== undefined){
-                    window.Server[self.serviceCount].get({id:activeSchoolId}).then(function(totalCount){
-                        globalBinding.set('totalCount',totalCount.count);
-                    });
-                }else{
-                    window.Server[self.serviceName].get(activeSchoolId,{filter:customQueryFilter}).then(function(data){
-                        globalBinding.set('totalCount',data.length);
-                    });
-                }
-            }else{
-                if(self.serviceCount !== undefined){
-                    window.Server[self.serviceCount].get().then(function(totalCount){
-                        globalBinding.set('totalCount',totalCount.count);
-                    });
-                }else{
-                    window.Server[self.serviceName].get({filter:customQueryFilter}).then(function(data){
-                        globalBinding.set('totalCount',data.length);
-                        self.filters.limit = self.pageLimit;
-                        self._getTotalCountAndRenderPagination();
-                    });
-                }
-            }
-        }
-    },
     componentDidMount:function(){
         var self = this;
         if(self.isSuperAdminPage)React.findDOMNode(self.refs.otherCheck).checked = true;
@@ -71,6 +45,7 @@ ListPageMixin = {
         //},4000);
 
     },
+    //@Param:customCount the length/size of data to be paginated
     _getTotalCountAndRenderPagination:function(customCount){
         var self = this,
             globalBinding = self.getMoreartyContext().getBinding(),
@@ -164,6 +139,8 @@ ListPageMixin = {
                 defaultRequestFilter[filter] = self.filters[filter];
             });
         }
+        //@Property: sandbox flag to determine if page requires extra requests to server for filtering
+        //All relevant data to the page are requested and stored in a bag for as long as the page is open
         if(self.sandbox === true && isFiltersActive){
             if(newFilter && Object.keys(newFilter).length > 0){
                 var tempData = self.persistantData;
@@ -171,12 +148,17 @@ ListPageMixin = {
             }else{
                 binding.set(Immutable.fromJS(self.persistantData));
             }
-            //self.lastFiltersState = newFilter;
+        //Execute if the filters aren't engaged but there is a filter Object
         }else if(self.sandbox === true && newFilter){
+            //If newFilter contains a skip key then perform a pagination page skip
             for(var skipFilter in newFilter){
                 if('skip' in newFilter[skipFilter]){
                     var skippedData = self.persistantData.splice((newFilter[skipFilter].skip-1),self.pageLimit-1);
                     binding.set(Immutable.fromJS(skippedData));
+                }else{
+                    //Perform an order sort
+                    var tempData = self.persistantData;
+                    dataWorker.postMessage([tempData,newFilter]);
                 }
             }
         }
@@ -223,7 +205,13 @@ ListPageMixin = {
             if(self.activeSchoolId !== null){
                 self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
                     self.popUpState = false;
-                    binding.set(Immutable.fromJS(data));
+                    //Is the page allowed to paginate
+                    if(self.isPaginated){
+                        binding.set(Immutable.fromJS(data.slice(0,(self.pageLimit+1))));
+                        self._getTotalCountAndRenderPagination(data.length);
+                    }else{
+                        binding.set(Immutable.fromJS(data));
+                    }
                     self.persistantData = data;
                 });
             }else{
@@ -235,11 +223,20 @@ ListPageMixin = {
                                 notAccepted.push(d);
                             }
                         });
-                        binding.set(Immutable.fromJS(data));
-                        self.persistantData = data;
+                        if(self.isPaginated){
+                            binding.set(Immutable.fromJS(notAccepted.slice(0,(self.pageLimit+1))));
+                            self._getTotalCountAndRenderPagination(notAccepted.length);
+                        }else{
+                            binding.set(Immutable.fromJS(notAccepted));
+                        }
+                        self.persistantData = notAccepted;
                     }else{
-                        binding.set(Immutable.fromJS(data));
-                        //console.log(data);
+                        if(self.isPaginated){
+                            binding.set(Immutable.fromJS(data.slice(0,(self.pageLimit+1))));
+                            self._getTotalCountAndRenderPagination(data.length);
+                        }else{
+                            binding.set(Immutable.fromJS(data));
+                        }
                         self.persistantData = data;
                     }
                 });

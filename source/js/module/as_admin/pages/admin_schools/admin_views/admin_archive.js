@@ -12,6 +12,7 @@ AdminArchive = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
     serviceName:'Permissions',
     filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created ASC'},
+    sandbox:true,
     getRequestDate:function(meta){
         var self = this;
         return self.getDateFromIso(meta.created);
@@ -48,12 +49,11 @@ AdminArchive = React.createClass({
             <div className="eTable_view">
                 <Table title="Permissions" binding={binding}  onFilterChange={self.updateData} hideActions={true}>
                     <TableField dataField="meta" filterType="none" parseFunction={self.getRequestDate} width="17%">Date</TableField>
-                    <TableField dataField="preset" filterType="none" width="10%">Request</TableField>
-                    <TableField dataField="principal" filterType="none" parseFunction={self.getRequestPrincipalName} width="20%">From</TableField>
+                    <TableField dataField="preset" width="10%" dataFieldKey="preset">Request</TableField>
+                    <TableField dataField="principal" dataFieldKey="lastName" parseFunction={self.getRequestPrincipalName} width="20%">From</TableField>
                     <TableField dataField="principal" filterType="none" parseFunction={self.getRequestEmail} width="15%">Email</TableField>
-                    <TableField dataField="school" filterType="none"parseFunction={self.getRequestSchoolName} width="35%">School</TableField>
-                    <TableField dataField="student" filterType="none" parseFunction={self.getRequestStudentName} width="30%">Student</TableField>
-                    <TableField dataField="accepted" filterType="none" parseFunction={self.getRequestResponse} width="14%">Response</TableField>
+                    <TableField dataField="school" dataFieldKey="name" parseFunction={self.getRequestSchoolName} width="25%">School</TableField>
+                    <TableField dataField="accepted" filterType="none" parseFunction={self.getRequestResponse} width="10%">Response</TableField>
                 </Table>
             </div>
         );

@@ -61,7 +61,6 @@ ListField = React.createClass({
                 order:self.props.dataFieldKey+' DESC'
             };
         }
-        console.log(value);
         self.props.onChange(self.props.dataField, value);
     },
 	render: function() {
@@ -75,7 +74,7 @@ ListField = React.createClass({
 
 		if (self.props.filterType !== 'colors' && self.props.filterType !== 'range' && self.props.filterType !== 'none') {
 			filterBlock =  <div className="eDataList_filter">
-				<input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by ' + self.props.children.toLowerCase() + '...'} />
+				<input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by ' + (self.props.dataFieldKey !== undefined? self.props.dataFieldKey : self.props.children.toLowerCase()) + '...'} />
 			</div>
 		}
 
