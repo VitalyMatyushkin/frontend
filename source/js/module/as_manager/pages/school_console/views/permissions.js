@@ -10,16 +10,16 @@ var PermissionView,
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
     GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
     Popup = require('module/ui/popup');
+
 PermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'schoolPermissions',
+    //TODO Why this code is comment?
     //serviceCount:'schoolPermissionsCount',
     pageLimit: 20,
     setPageTitle:'School Admin',
     filters:{
-        include:['principal',{student:['form','house']}],
-        where:{
-            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]}
+        include:['principal',{student:['form','house']}]
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
     isPaginated: true,
@@ -40,7 +40,6 @@ PermissionView = React.createClass({
         }
     },
     getEmail:function(principal){
-        var self = this;
         if(principal !== undefined){
             return principal.email;
         }
@@ -69,6 +68,7 @@ PermissionView = React.createClass({
         }
     },
     _getItemViewFunction:function(model){
+        //TODO Why this code is comment?
         console.log(model);
         //if(model.length === 1){
         //    window.location.hash = '/admin_schools/admin_views/user?id='+model[0];
@@ -143,6 +143,7 @@ PermissionView = React.createClass({
         }
     },
     _revokeAllRoles:function(ids){
+        //TODO Why this code is comment?
         var self, binding, confirmAction;
         self = this;
         binding = self.getDefaultBinding();
@@ -163,6 +164,7 @@ PermissionView = React.createClass({
         //}
     },
     _accessRestriction:function(ids,action){
+        //TODO Why this code is comment?
         var self = this,
             binding = self.getDefaultBinding(),
             confirmAction= window.confirm("Are you sure you want block user?");
