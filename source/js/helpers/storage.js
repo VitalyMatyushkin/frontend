@@ -1,9 +1,21 @@
 ;
+/**
+ * Expects to jQueries `$` to be in scope.
+ */
 (function (space) {
 	var Helpers = (space.Helpers = space.Helpers || {}),
 		localStorage = space.localStorage;
 
-	/** Helper to deal easier with localStorage */
+	/** Helper to deal easier with localStorage
+	 * LocalStorage {
+	 *  set(key, value);
+	 *  get(key);
+	 *  getSize();
+	 *  remove(key);
+	 *  clear();
+	 *  cleanSubstringContains(subkey);
+	 * }
+	 **/
 	Helpers.LocalStorage = {
 		set: function (key, value) {
 			value = $.type(value) === 'string' ? String(value) : JSON.stringify(value);
@@ -57,17 +69,23 @@
 
 	Helpers.cookie = {
 		domain: document.location.hostname.match(/^(?:https?:\/\/)?(?:[A-z0-9-]+\.)?([^\/]+)/i)[1],
-		pluses: /\+/g,
-		expires: 99,
+		pluses: /\+/g,	// TODO: WTF ????????
+		expires: 99,	// TODO: why 99 days ????
 		_decode: function (decodeString) {
 			return decodeURIComponent(decodeString.replace(this.pluses, ' '));
 		},
 		_updateCookies: function () {
 			this.cookies = document.cookie.split('; ');
 		},
-		/*
-		 * Запись Cookies
-		 * */
+		/**
+		 * Setting Cookies
+		 * @param key to set
+		 * @param value to assign
+		 * @param options few options to adjust while setting cookie. Optional.
+		 * @param options.path path for saving cookie. Optional.
+		 * @param options.expires cookie expiration date. Optional.
+		 * @param options.session boolean which defines is cookie session based. Optional.
+		 **/
 		set: function (key, value, options) {
 			var savePath = (options && options.path ? options.path : '/'),
 				expires = (options && options.expires ? options.expires : this.expires),
@@ -76,25 +94,23 @@
 				dateExpire = new Date();
 
 			dateExpire.setDate(dateExpire.getDate() + expires);
-
-
 			cookieString += encodeURIComponent(key) + '=' + encodeURIComponent(value) + '; path='+ savePath;
 
-			// Установка времени жизни, если cookie не сессионная
+			// Setting lifetime in case of cookie is not session-based
 			if (!(options && options.session === true)) {
 				cookieString += ';domain=.' + this.domain + '; expires=' + (options && options.session === true ? 0 : dateExpire.toUTCString());
 			}
 
-			// Запись Cookies
+			// setting cookie
 			document.cookie = cookieString;
 
 			this._updateCookies();
 
 			return true;
 		},
-		/*
-		 * Чтение из Cookies
-		 * */
+		/**
+		 * Getting Cookies
+		 */
 		get: function (key) {
 			var currentParts,
 				currentCookie;
@@ -111,11 +127,11 @@
 
 			return undefined;
 		},
-		/*
-		 * Удаление записи
-		 * */
+		/**
+		 * Removing given key from cookies
+		 */
 		remove: function (key) {
-			this.set(key, '', {
+			return this.set(key, '', {
 				expires: -10,
 				session: false
 			});
