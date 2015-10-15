@@ -113,7 +113,7 @@ RegisterUserPage = React.createClass({
             currentView = null,
             binding = self.getDefaultBinding(),
             currentStep = binding.get('registerStep');
-
+        //currentStep = 'permissions';
         if (currentStep === 'account') {
             currentView =
 				<AccountForm

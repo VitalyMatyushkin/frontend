@@ -52,6 +52,8 @@ $chooserIconSize: 35px;
 .eRegistration_permissionsField {
   display: flex;
   flex-flow: column nowrap;
+  width: 233px;
+  float:left;
 }
 
 .eRegistration_permissionsField input {
