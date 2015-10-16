@@ -15,7 +15,17 @@
 .bButton:hover{
   color: white;
 }
-
+.bButton_hide{
+  display:none;
+}
+.bButton_svg_check{
+  display:inline-block;
+  fill:green;
+  margin-left: 16px;
+}
+.bCheck_show{
+  display: inline-block;
+}
 .bButton:hover:before{
   content: '';
   position: absolute;
@@ -70,4 +80,7 @@
 .bButton_req{
   display: inline;
   margin: 5px;
+}
+.verify_error{
+  display: inline-block !important;;
 }
