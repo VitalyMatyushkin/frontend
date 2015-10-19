@@ -3,6 +3,7 @@
  */
 var AutoComplete = require('module/ui/autocomplete/autocomplete'),
     If = require('module/ui/if/if'),
+    ExtraPermissionsField = require('module/ui/register/user/extra_permission_fields'),
     RegistrationPermissionField;
 /*
  *
@@ -11,10 +12,11 @@ var AutoComplete = require('module/ui/autocomplete/autocomplete'),
 RegistrationPermissionField = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        isFormFilled:React.PropTypes.bool.isRequired,
+        isFormFilled:React.PropTypes.bool,
         onSuccess:React.PropTypes.func.isRequired,
         fieldCounter:React.PropTypes.number.isRequired,
-        onAnother: React.PropTypes.func.isRequired
+        onAnother: React.PropTypes.func.isRequired,
+        showButtons: React.PropTypes.bool.isRequired
     },
     /**
      * school filter by schoolName
@@ -63,7 +65,6 @@ RegistrationPermissionField = React.createClass({
     onSelectSchool: function(schoolId) {
         var self = this,
             binding = self.getDefaultBinding();
-
         binding
             .atomically()
             .set('schoolId', schoolId)
@@ -114,73 +115,90 @@ RegistrationPermissionField = React.createClass({
                 preset: binding.get('type'),
                 schoolId: binding.get('schoolId')
             };
-
         if(currentType === 'parent') {
             dataToPost.comment = "Student - " + binding.get('firstName') + " " + binding.get('lastName') + "." +
-                " Form - " + binding.get('formName') + ". House - " + binding.get('houseName') + "."
+                " Form - " + binding.get('formName') + ". House - " + binding.get('houseName') + ".";
+            if(binding.get('studentExtra_1')){
+                dataToPost.comment +="Student - "+binding.get('studentExtra_1').firstName+" "+binding.get('studentExtra_1').lastName+"."+
+                    " Form - "+binding.get('studentExtra_1').form+". House - "+binding.get('studentExtra_1').house+".";
+            }
+            if(binding.get('studentExtra_2')){
+                dataToPost.comment +="Student - "+binding.get('studentExtra_2').firstName+" "+binding.get('studentExtra_2').lastName+"."+
+                    " Form - "+binding.get('studentExtra_2').form+". House - "+binding.get('studentExtra_2').house+".";
+            }
         }
-
         window.Server.Permissions
             .post(dataToPost)
             .then(function() {
                 self.props.onSuccess();
             });
     },
-    onAddAnother:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-        if(self.props.fieldCount <= 4){
-            self.props.fieldCount += 1;
-        }
-    },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             currentType = binding.get('type');
         return(
-            <div className="eRegistration_permissionsField">
-                <If condition={currentType !== null}>
-                    <AutoComplete
-                        serviceFilter={self.serviceSchoolFilter}
-                        serverField="name"
-                        onSelect={self.onSelectSchool}
-                        binding={binding.sub('_schoolAutocomplete')}
-                        placeholderText="school's name"
-                        />
-                </If>
-
-                <If condition={binding.get('schoolId') !== null && currentType === 'parent'}>
-                    <AutoComplete
-                        serviceFilter={self.serviceHouseFilter}
-                        serverField="name"
-                        onSelect={self.onSelectHouse}
-                        binding={binding.sub('_houseAutocomplete')}
-                        placeholderText="house's name"
-                        />
-                </If>
-                <If condition={binding.get('houseId') !== null && currentType === 'parent'}>
-                    <AutoComplete
-                        serviceFilter={self.serviceFormFilter}
-                        serverField="name"
-                        onSelect={self.onSelectForm}
-                        placeholderText="form's name"
-                        binding={binding.sub('_formAutocomplete')}
-                        />
-                </If>
-                <If condition={binding.get('formId') !== null && currentType === 'parent'}>
-                    <div>
-                        <div className="eRegistration_input">
-                            <input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
+            <div>
+                <div className="eRegistration_permissionsField">
+                    <If condition={currentType !== null}>
+                        <AutoComplete
+                            serviceFilter={self.serviceSchoolFilter}
+                            serverField="name"
+                            onSelect={self.onSelectSchool}
+                            binding={binding.sub('_schoolAutocomplete')}
+                            placeholderText="school's name"
+                            />
+                    </If>
+                    <If condition={binding.get('schoolId') !== null && currentType === 'parent'}>
+                        <AutoComplete
+                            serviceFilter={self.serviceHouseFilter}
+                            serverField="name"
+                            onSelect={self.onSelectHouse}
+                            binding={binding.sub('_houseAutocomplete')}
+                            placeholderText="house's name"
+                            />
+                    </If>
+                    <If condition={binding.get('houseId') !== null && currentType === 'parent'}>
+                        <AutoComplete
+                            serviceFilter={self.serviceFormFilter}
+                            serverField="name"
+                            onSelect={self.onSelectForm}
+                            placeholderText="form's name"
+                            binding={binding.sub('_formAutocomplete')}
+                            />
+                    </If>
+                    <If condition={binding.get('formId') !== null && currentType === 'parent'}>
+                        <div>
+                            <div className="eRegistration_input">
+                                <input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
+                            </div>
+                            <div className="eRegistration_input">
+                                <input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
+                            </div>
                         </div>
-                        <div className="eRegistration_input">
-                            <input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
+                    </If>
+                    <If condition={self.props.showButtons == true}>
+                        <div>
+                            <If condition={self.props.isFormFilled && currentType ==='parent'}>
+                                <div>
+                                    <div className="bButton bButton_reg" onClick={self.onSuccess}>Continue</div>
+                                    <div className="bButton bButton_reg" onClick={self.props.onAnother}>Add</div>
+                                </div>
+                            </If>
+                            <If condition={self.props.isFormFilled && currentType !== 'parent'}>
+                                <div className="bButton bButton_reg" onClick={self.onSuccess}>Continue</div>
+                            </If>
                         </div>
+                    </If>
+                </div>
+                <If condition={self.props.fieldCounter > 1 && currentType ==='parent'}>
+                    <div className="eRegistration_permissionsField">
+                        <ExtraPermissionsField binding={binding} extraFieldKey="studentExtra_1"></ExtraPermissionsField>
                     </div>
                 </If>
-                <If condition={self.props.isFormFilled}>
-                    <div>
-                        <div className="bButton bButton_reg" onClick={self.onSuccess}>Continue</div>
-                        <div className="bButton bButton_reg" onClick={self.props.onAnother}>Add</div>
+                <If condition={self.props.fieldCounter > 2 && currentType ==='parent'}>
+                    <div className="eRegistration_permissionsField">
+                        <ExtraPermissionsField binding={binding} extraFieldKey="studentExtra_2"></ExtraPermissionsField>
                     </div>
                 </If>
             </div>

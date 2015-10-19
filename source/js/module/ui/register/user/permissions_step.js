@@ -82,7 +82,7 @@ PermissionsStep = React.createClass({
     },
     fieldsMultiplier:function(){
         var self = this;
-        if(multipleFields <= 4){
+        if(multipleFields <= 2){
             multipleFields += 1;
         }
         self.forceUpdate();
@@ -105,48 +105,38 @@ PermissionsStep = React.createClass({
 			})}
 		</div>
 	},
+    isFormFilled : function(currentType){
+        var self = this,
+            binding = self.getDefaultBinding();
+        return	(
+                (
+                    currentType === 'admin' || currentType === 'manager' ||
+                    currentType === 'teacher' || currentType === 'coach'
+                ) && binding.get('schoolId') !== null
+            ) ||
+            (
+                currentType === 'parent' &&
+                binding.get('schoolId') !== null && binding.get('houseId') !== null &&
+                binding.get('formId') !== null && binding.get('firstName') !== null &&
+                binding.get('lastName') !== null
+            );
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			currentType = binding.get('type'),
 			isShowFinishButton = false;
-
-		var isFormFilled = function(currentType) {
-
-			return	(
-						(
-							currentType === 'admin' || currentType === 'manager' ||
-							currentType === 'teacher' || currentType === 'coach'
-						) && binding.get('schoolId') !== null
-					) ||
-					(
-							currentType === 'parent' &&
-							binding.get('schoolId') !== null && binding.get('houseId') !== null &&
-							binding.get('formId') !== null && binding.get('firstName') !== null &&
-							binding.get('lastName') !== null
-					);
-		};
-
-		if(isFormFilled(currentType)) {
+		if(self.isFormFilled(currentType)) {
 			isShowFinishButton = true;
 		}
 
 		return <div className="eRegistration_permissions">
 			<div className="eRegistration_annotation">Join as:</div>
 			{self.renderChooser()}
-            <div style={{margin:10+'px',height:'auto',width:100+'%',float:'left'}}>
-                <If condition={multipleFields >=1}>
-                    <RegistrationPermissionField binding={binding} isFormFilled={isShowFinishButton} onSuccess={self.props.onSuccess} fieldCounter={multipleFields} onAnother={self.fieldsMultiplier} />
-                </If>
-                <If condition={multipleFields >=2}>
-                    <RegistrationPermissionField binding={binding} isFormFilled={isShowFinishButton} onSuccess={self.props.onSuccess} fieldCounter={multipleFields} onAnother={self.fieldsMultiplier} />
-                </If>
-                <If condition={multipleFields >=3}>
-                    <RegistrationPermissionField binding={binding} isFormFilled={isShowFinishButton} onSuccess={self.props.onSuccess} fieldCounter={multipleFields} onAnother={self.fieldsMultiplier} />
-                </If>
-                <If condition={multipleFields >=4}>
-                    <RegistrationPermissionField binding={binding} isFormFilled={isShowFinishButton} onSuccess={self.props.onSuccess} fieldCounter={multipleFields} onAnother={self.fieldsMultiplier} />
-                </If>
+            <div className="eRegistration_permissionStep" style={{}}>
+                <RegistrationPermissionField binding={binding} isFormFilled={isShowFinishButton}
+                                             onSuccess={self.props.onSuccess} showButtons={true}
+                                             fieldCounter={multipleFields} onAnother={self.fieldsMultiplier} />
             </div>
 		</div>
 	}
