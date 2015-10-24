@@ -140,20 +140,21 @@ function amdScrtipts(path){
 
 // Config and main script files
 gulp.task('main_scripts', function (path) {
-	return buildNonAmdScripts(SOURCE + '/js/*.js', 'main.js');
+	return buildVanillaJSScripts(SOURCE + '/js/*.js', 'main.js');
 });
 
 /** Build all source/js/helpers to single file */
 gulp.task('helpers_scripts', function (path) {
-	return buildNonAmdScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
+	return buildVanillaJSScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
 });
 
 /**
- * All non-AMD scripts will be concat and stored to BUILD/js/$result
+ * All vanilla JS scripts will be just concat and stored to BUILD/js/$result.
+ * No preprocessing or background magic performed
  * It is important to note that non-AMD is self-invoking functions only.
  * CommonJS modules will not be processed properly
  */
-function buildNonAmdScripts(path, result) {
+function buildVanillaJSScripts(path, result) {
 	var result = result || 'main.js';
 	return gulp.src(path)
 		.pipe(concat(result))
