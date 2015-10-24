@@ -140,23 +140,25 @@ function amdScrtipts(path){
 
 // Config and main script files
 gulp.task('main_scripts', function (path) {
-	return notAmdScripts(SOURCE + '/js/*.js', 'main.js');
+	return buildNonAmdScripts(SOURCE + '/js/*.js', 'main.js');
 });
 
-// Helpers files
+/** Build all source/js/helpers to single file */
 gulp.task('helpers_scripts', function (path) {
-	return notAmdScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
+	return buildNonAmdScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
 });
 
-function notAmdScripts(path, result) {
-	var result = result || 'main.js',
-		files = gulp.src(path);
-
-	files = files.pipe(concat(result));
-	files = files.pipe(gulp.dest(BUILD + '/js'));
-	files = files.pipe(connect.reload());
-
-	return files;
+/**
+ * All non-AMD scripts will be concat and stored to BUILD/js/$result
+ * It is important to note that non-AMD is self-invoking functions only.
+ * CommonJS modules will not be processed properly
+ */
+function buildNonAmdScripts(path, result) {
+	var result = result || 'main.js';
+	return gulp.src(path)
+		.pipe(concat(result))
+		.pipe(gulp.dest(BUILD + '/js'))
+		.pipe(connect.reload());
 }
 
 
