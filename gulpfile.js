@@ -98,13 +98,10 @@ gulp.task('normalize', function () {
 
 /** Assembles all bower dependencies to one ./bower.js file and minify it */
 gulp.task('bower', function() {
-	var files = gulp.src(bower({checkExistence: true}), { base: '/bower_components' });
-
-	files = files.pipe(concat('bower.js'));
-	files = files.pipe(uglify());
-	files = files.pipe(gulp.dest(BUILD + '/js'));
-
-	return files;
+	return gulp.src(bower({checkExistence: true}), { base: '/bower_components' })
+		.pipe(concat('bower.js'))
+		.pipe(uglify())
+		.pipe(gulp.dest(BUILD + '/js'));
 });
 
 /** Building css from scss */
@@ -160,7 +157,7 @@ function buildVanillaJSScripts(path, result) {
 }
 
 
-/** Deletes BUILD folder */
+/** Just deletes BUILD folder */
 gulp.task('clean', function (callback) {
     del([BUILD], callback);
 });
