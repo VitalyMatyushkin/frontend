@@ -123,44 +123,44 @@ gulp.task('styles', function () {
 
 // AMD script files
 gulp.task('amd_scripts', function(){
-	return amdScrtipts(SOURCE + '/js/module/**/*.js');
+	return buildToAmdScripts(SOURCE + '/js/module/**/*.js');
 });
 
-function amdScrtipts(path){
-	var files = gulp.src(path);
-
-	files = files.pipe(gulpif(VERBOSE, using({}))).pipe(react()).pipe(gulp.dest(BUILD + '/js/module'));
-	files = files.pipe(requireConvert());
-	files = files.pipe(gulp.dest(BUILD + '/js/module'));
-
-	files = files.pipe(connect.reload());
-
-	return files;
+/** compiles React's JSX to JS, wraps CommonJS modules to AMD, stores result to BUILD/js/modules */
+function buildToAmdScripts(path){
+	return gulp.src(path)						// picking everything from path
+		.pipe(gulpif(VERBOSE, using({})))		// printing all files picked in case of VERBOSE
+		.pipe(react())							// converting JSX to usual JS
+		.pipe(requireConvert())					// converting CommonJS modules to AMD modules
+		.pipe(gulp.dest(BUILD + '/js/module'))	// saving again
+		.pipe(connect.reload());				// reloading connect
 }
 
-// Config and main script files
+/** Build all source/js/*.js to one main.js file */
 gulp.task('main_scripts', function (path) {
-	return notAmdScripts(SOURCE + '/js/*.js', 'main.js');
+	return buildVanillaJSScripts(SOURCE + '/js/*.js', 'main.js');
 });
 
-// Helpers files
+/** Build all source/js/helpers to single file */
 gulp.task('helpers_scripts', function (path) {
-	return notAmdScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
+	return buildVanillaJSScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
 });
 
-function notAmdScripts(path, result) {
-	var result = result || 'main.js',
-		files = gulp.src(path);
-
-	files = files.pipe(concat(result));
-	files = files.pipe(gulp.dest(BUILD + '/js'));
-	files = files.pipe(connect.reload());
-
-	return files;
+/**
+ * All vanilla JS scripts will be just concat and stored to BUILD/js/$result.
+ * No preprocessing or background magic performed.
+ * It is important to note that vanilla JS is definitely not CommonJS and not likely AMD scripts.
+ */
+function buildVanillaJSScripts(path, result) {
+	var result = result || 'main.js';
+	return gulp.src(path)
+		.pipe(concat(result))
+		.pipe(gulp.dest(BUILD + '/js'))
+		.pipe(connect.reload());
 }
 
 
-// Clean build
+/** Deletes BUILD folder */
 gulp.task('clean', function (callback) {
     del([BUILD], callback);
 });
@@ -180,7 +180,7 @@ gulp.task('clean_amd', function (callback) {
 
 // Run build
 gulp.task('default', function (callback) {
-	run('lint', 'connect', 'clean', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+	run('clean', 'lint', 'connect', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		console.log('STYLES RELOAD');
@@ -189,7 +189,7 @@ gulp.task('default', function (callback) {
 
 	gulp.watch(SOURCE + '/js/*.js', function(event) {
 		console.log('MAIN SCRIPTS RELOAD');
-		notAmdScripts(event.path, 'main.js');
+		gulp.run('main_scripts');
 	});
 
 	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {
