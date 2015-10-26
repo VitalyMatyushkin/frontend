@@ -133,7 +133,8 @@ Autocomplete = React.createClass({
 		var self = this,
 			inputValue = self.getDefaultBinding().get('combobox.inputValue');
 
-		self.filterData(inputValue || '');
+		//self.filterData(inputValue || '');
+        self.filterData('');
 	},
 	updateFullData: function () {
 		var self = this,
