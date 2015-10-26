@@ -1,10 +1,10 @@
 var PromiseClass = require('module/core/promise'),
 	baseUrl = window.apiBase,
-	Service;
+	ServiceConstructor;
 
-//TODO Service in Service, WTF??
-Service = (function() {
-	var Service;
+/** will construct new Service instance */
+ServiceConstructor = (function() {
+	var Service;	// service instance to return
 
 	Service = function(url, binding) {
 		var self = this;
@@ -12,21 +12,41 @@ Service = (function() {
 		self.url = url;
 		self.binding = binding;
 
-		// Processing parameters from provided url
-		if (url.indexOf('{') !== -1) {
-			self.requredParams = [];
-
-			url.replace(/\{(.*?)\}/g, function(match, param) {
-								if (self.requredParams.indexOf(param) === -1) {
-										self.requredParams.push(param);
-								}
-			});
-		}
-
+		/* Processing params from provided url. All unique params enclosed in curly brackets will be stored in array */
+		var urlParams = _extractUrlParams(url);
+		self.requredParams = urlParams.length === 0 ? undefined : urlParams;
 	};
 
-	Service.prototype = {
+	/**
+	 * Extracts params enclosed in curly braces from given string.
+	 * Example:
+	 * 		/users/{id}/friends/{friend_id}  -> [id, friend_id]
+	 * 		/users -> []
+	 * @param url string which contains params in curly braces like '/user/{id}'
+	 * @returns {Array} array of extracted params
+	 * @private
+	 */
+	function _extractUrlParams(url){
+		var urlParams = [];
+		if (url.indexOf('{') !== -1) {
+			url.replace(/\{(.*?)\}/g, function(match, param) {
+				if (urlParams.indexOf(param) === -1) {
+					urlParams.push(param);
+				}
+			});
+		}
+		return urlParams;
+	}
 
+	Service.prototype = {
+		/**
+		 * Assembles request from given params and performs it with jquery's $.ajax
+		 * @param type HTTP verb
+		 * @param options
+		 * @param data
+		 * @returns {*}
+		 * @private
+		 */
 		_callService: function(type, options, data) {
 			var self = this,
 				url = self.url,
@@ -90,8 +110,7 @@ Service = (function() {
 
 		_showError: function() {
 			var self = this;
-
-			console.error('Сервис ' + self.url +' ожидает параметры: ' + self.requredParams);
+			console.error('Service ' + self.url +' expects params: ' + self.requredParams);
 		},
 
 		abort: function() {
@@ -108,19 +127,19 @@ Service = (function() {
 			var self = this,
 				sendOptions;
 
-			// Если ожидается наличие параметров
+			// If params expected
 			if (self.requredParams) {
-
-				// Если параметры отсутствуют
+				// but there is no params - return false and log an error
 				if (!options && !data) {
 					self._showError();
 					return false;
 				}
 
 				if (typeof	options !== 'object') {
-					// Если в параметры передается не объект, но ожидается несколько параметров
+					// if options is not an object but we expecting multiple params.. error
 					if (self.requredParams.length > 1) {
 						self._showError();
+						return false;
 					} else {
 						sendOptions = {};
 						sendOptions[self.requredParams[0]] = options;
@@ -141,4 +160,4 @@ Service = (function() {
 	return Service;
 })();
 
-module.exports = Service;
+module.exports = ServiceConstructor;
