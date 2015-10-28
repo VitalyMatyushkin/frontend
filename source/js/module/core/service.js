@@ -2,7 +2,11 @@ var PromiseClass = require('module/core/promise'),
 	baseUrl = window.apiBase,
 	ServiceConstructor;
 
-/** will construct new Service instance */
+/** Build ServiceConstructor which is kind of accessor to given url.
+ *  Example:
+ *  var users = new Service('/users', binding);
+ *  users.get();
+ **/
 ServiceConstructor = (function() {
 	var Service;	// service instance to return
 
