@@ -9,12 +9,14 @@ ApplicationView = React.createClass({
     mixins: [Morearty.Mixin],
     componentDidMount:function(){
         var self = this,
-            binding = self.getDefaultBinding();
-        document.addEventListener('visibilitychange',function(){
-                Helpers.cookie.remove('authorizationInfo');
-                binding.sub('authorizationInfo').clear();
-                document.location.hash = '#login';
-                if(document.visibilityState ==='hidden'){
+            binding = self.getDefaultBinding(),
+            appVisibility = Helpers.pageVisibility.checkVisibilityOptions();
+        document.addEventListener(appVisibility.visibilityChange,function(){
+                var obj = Helpers.pageVisibility.checkVisibilityOptions();
+                if(document[obj.hidden]==true){
+                    Helpers.cookie.remove('authorizationInfo');
+                    binding.sub('authorizationInfo').clear();
+                    document.location.hash = '#login';
                     document.location.reload(true);
                 }
             }

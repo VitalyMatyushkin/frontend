@@ -66,7 +66,7 @@
 			this.cookies = document.cookie.split('; ');
 		},
 		/*
-		 * Запись Cookies
+		 * Запи�?ь Cookies
 		 * */
 		set: function (key, value, options) {
 			var savePath = (options && options.path ? options.path : '/'),
@@ -80,12 +80,12 @@
 
 			cookieString += encodeURIComponent(key) + '=' + encodeURIComponent(value) + '; path='+ savePath;
 
-			// Установка времени жизни, если cookie не сессионная
+			// У�?тановка времени жизни, е�?ли cookie не �?е�?�?ионна�?
 			if (!(options && options.session === true)) {
 				cookieString += ';domain=.' + this.domain + '; expires=' + (options && options.session === true ? 0 : dateExpire.toUTCString());
 			}
 
-			// Запись Cookies
+			// Запи�?ь Cookies
 			document.cookie = cookieString;
 
 			this._updateCookies();
@@ -112,13 +112,28 @@
 			return undefined;
 		},
 		/*
-		 * Удаление записи
+		 * Удаление запи�?и
 		 * */
 		remove: function (key) {
 			this.set(key, '', {
 				expires: -10,
 				session: false
 			});
+		}
+	};
+
+	Helpers.pageVisibility={
+		//Checks for all vendor differences in visibility API
+		checkVisibilityOptions : function(){
+			if(typeof document.hidden !== "undefined"){
+				return{hidden:'hidden', visibilityChange : "visibilitychange"}
+			}else if (typeof document.mozHidden !== "undefined") {
+				return {hidden : "mozHidden", visibilityChange : "mozvisibilitychange"};
+			} else if (typeof document.msHidden !== "undefined") {
+				return{hidden : "msHidden", visibilityChange : "msvisibilitychange"};
+			} else if (typeof document.webkitHidden !== "undefined") {
+				return {hidden : "webkitHidden", visibilityChange:"webkitvisibilitychange"};
+			}
 		}
 	}
 

@@ -38,8 +38,6 @@ authСontroller = {
 			data = binding.toJS('userData.authorizationInfo'),
 			userData = binding.toJS('userData.userInfo');
 
-        console.log(document.cookie);
-
 		// if we got auth data
 		if (data && data.id) {
 			var ttl;
