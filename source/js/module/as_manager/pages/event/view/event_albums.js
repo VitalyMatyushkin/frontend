@@ -17,7 +17,7 @@ EventHeader = React.createClass({
 	onClickAlbum: function(album) {
 		var self = this;
 
-		self.isMounted() && (document.location.hash = 'albums/' + album.get('id'));
+		self.isMounted() && (document.location.hash = 'albums/view/' + album.get('id'));
 	},
 	onClickCreateAlbum: function() {
 		var self = this,
