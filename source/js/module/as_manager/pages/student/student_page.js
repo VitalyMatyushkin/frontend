@@ -51,7 +51,11 @@ LeanerView = React.createClass({
                                             leanerData.parentOne = returnedUser[0].firstName+' '+returnedUser[0].lastName;
                                             leanerData.parentTwo = returnedUser[1].firstName+' '+returnedUser[1].lastName;
                                         }
-                                        binding.set('achievements', Immutable.fromJS(leanerData));
+                                        Server.studentData.get({studentId}).then(function(student){
+                                            leanerData.student = student;
+                                            binding.set('achievements', Immutable.fromJS(leanerData));
+                                            //console.log(binding.get('achievements').toJS());
+                                        });
                                     });
                                 });
                             });

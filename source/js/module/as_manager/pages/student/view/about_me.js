@@ -11,8 +11,8 @@ AboutMeBlock = React.createClass({
 			binding = self.getDefaultBinding(),
 			bindingResult = binding.get(field);
 
-		if (bindingResult) {
-			return <div className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
+		if (bindingResult||bindingResult === 0) {
+			return <div title={field} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
 		}
 		return null;
 	},
@@ -32,14 +32,14 @@ AboutMeBlock = React.createClass({
 			binding = self.getDefaultBinding(),
 			aboutListNodes = [],
 			parentListNodes = [];
-		aboutListNodes.push(self._getAboutNode('icon_home', 'house.name'));
-		aboutListNodes.push(self._getAboutNode('icon_user-tie', 'form.name'));
+		aboutListNodes.push(self._getAboutNode('icon_home', 'houseData.name'));
+		aboutListNodes.push(self._getAboutNode('icon_library', 'classData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_shot','numOfGamesScoredIn'));
 		aboutListNodes.push(self._getAboutNode('icon_trophy', 'numOfGamesWon'));
 		aboutListNodes.push(self._getAboutNode('icon_user','numberOfGamesPlayed'));
-		aboutListNodes.push(self._getAboutNode('icon_teams', 'school.name'));
-		parentListNodes.push(self._getAboutParentNode('icon_user-tie','parents.0.firstName'));
-		parentListNodes.push(self._getAboutParentNode('icon_user','parents.1.firstName'));
+		aboutListNodes.push(self._getAboutNode('icon_office', 'schoolData.name'));
+		parentListNodes.push(self._getAboutParentNode('icon_man','parents.0.firstName'));
+		parentListNodes.push(self._getAboutParentNode('icon_woman','parents.1.firstName'));
 		return (
 			<div className="bAboutList">
 				<h6>{self.props.title || 'About me'}</h6>
