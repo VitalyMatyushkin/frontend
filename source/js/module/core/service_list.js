@@ -2,7 +2,7 @@ var Service = require('module/core/service'),
 	serviceList,
 	binding;
 
-
+/** Collection of services to reach REST API from server */
 serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
