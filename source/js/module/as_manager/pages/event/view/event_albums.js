@@ -38,18 +38,28 @@ var EventHeader = React.createClass({
 	},
 	onClickCreateAlbum: function() {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			userId = rootBinding.get('userData.authorizationInfo.userId');
+			binding = self.getDefaultBinding();
 
-		window.Server.albumsByEvent.post(binding.get('model.id'), {
-			name: binding.get('model.name') + ' - ' + binding.get('sport.name'),
-			description: binding.get('model.name'),
-			eventId: binding.get('model.id'),
-			ownerId: userId
-		}).then(function(res) {
-			self.isMounted() && (document.location.hash = 'albums/view/' + res.id);
-		});
+		if (self.isMounted()) {
+			document.location.hash = 'albums/create/' + binding.get('model.id');
+		}
+
+		return false;
+
+
+		//var self = this,
+		//	binding = self.getDefaultBinding(),
+		//	rootBinding = self.getMoreartyContext().getBinding(),
+		//	userId = rootBinding.get('userData.authorizationInfo.userId');
+        //
+		//window.Server.albumsByEvent.post(binding.get('model.id'), {
+		//	name: binding.get('model.name') + ' - ' + binding.get('sport.name'),
+		//	description: binding.get('model.name'),
+		//	eventId: binding.get('model.id'),
+		//	ownerId: userId
+		//}).then(function(res) {
+		//	self.isMounted() && (document.location.hash = 'albums/view/' + res.id);
+		//});
 	},
 	getInitialState: function() {
 		return {
