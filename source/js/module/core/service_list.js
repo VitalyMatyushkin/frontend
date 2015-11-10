@@ -50,6 +50,7 @@ serviceList = {
 		// students
 		serviceList.students = new Service('/schools/{schoolId}/students', binding);
 		serviceList.student = new Service('/students/{studentId}', binding);
+		serviceList.studentData = new Service('/students/{studentId}/user',binding);
 		serviceList.studentGamesWon = new Service('/students/{id}/events/won?include={include}', binding);
 		serviceList.studentGamesScored = new Service('/students/{id}/events/scored?include={include}', binding);
 		serviceList.studentEvents = new Service('/students/{id}/events', binding);

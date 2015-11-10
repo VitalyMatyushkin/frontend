@@ -373,7 +373,16 @@ ListPageMixin = {
                         </div>
                         <div className="eSchoolMaster_pagination">
                             <div ref="pageNumber" className="leftPagination"></div>
-                            <select ref="pageSelect" onChange={self._handlePageSelectChange.bind(null,this)} className="pagination_select"></select>
+                            <select ref="pageSelect" onChange={self._handlePageSelectChange.bind(null,this)} className="pagination_select">1</select>
+                            <div className="rightPagination">Page</div>
+                        </div>
+                    </div>
+                </If>
+                <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) === -1 && currentPage[currentPage.length-1] === 'students'}>
+                    <div className="eSchoolMaster_groupAction">
+                        <div className="eSchoolMaster_pagination">
+                            <div ref="pageNumber" className="leftPagination"></div>
+                            <select ref="pageSelect" onChange={self._handlePageSelectChange.bind(null,this)} className="pagination_select">1</select>
                             <div className="rightPagination">Page</div>
                         </div>
                     </div>
