@@ -80,6 +80,11 @@
 			border-color: red;
 		}
 	}
+	.eEventAlbums_albumDelete{
+		@extend .eEventAlbums_albumEdit;
+
+		background-image:	url('/images/icons/trash.svg');
+	}
 
 }
 
@@ -108,3 +113,4 @@
 		}
 	}
 }
+

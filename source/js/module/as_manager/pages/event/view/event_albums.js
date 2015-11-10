@@ -14,6 +14,7 @@ var EventHeader = React.createClass({
 		return (
 			<div onClick={self.onClickAlbum.bind(self, album)} key={'album-' + index} className='eEventAlbums_album' style={styles}>
 				<span onClick={self.onClickEditAlbum.bind(self, album)} className='eEventAlbums_albumEdit'></span>
+				<span onClick={self.onClickDeleteAlbum.bind(self, album)} className='eEventAlbums_albumDelete'></span>
 				<span className='eEventAlbums_albumTitle'>{album.get('name')}</span>
 			</div>
 		);
@@ -36,6 +37,17 @@ var EventHeader = React.createClass({
 
 		return false;
 	},
+	onClickDeleteAlbum: function(album) {
+		var self = this,
+				albumId = album.get('id');
+
+		if(confirm("Delete this album?"))
+			window.Server.album.delete(albumId).then(function() {
+				self.props.onRemoved();
+			});
+
+		return false;
+	},
 	onClickCreateAlbum: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -46,20 +58,6 @@ var EventHeader = React.createClass({
 
 		return false;
 
-
-		//var self = this,
-		//	binding = self.getDefaultBinding(),
-		//	rootBinding = self.getMoreartyContext().getBinding(),
-		//	userId = rootBinding.get('userData.authorizationInfo.userId');
-        //
-		//window.Server.albumsByEvent.post(binding.get('model.id'), {
-		//	name: binding.get('model.name') + ' - ' + binding.get('sport.name'),
-		//	description: binding.get('model.name'),
-		//	eventId: binding.get('model.id'),
-		//	ownerId: userId
-		//}).then(function(res) {
-		//	self.isMounted() && (document.location.hash = 'albums/view/' + res.id);
-		//});
 	},
 	getInitialState: function() {
 		return {

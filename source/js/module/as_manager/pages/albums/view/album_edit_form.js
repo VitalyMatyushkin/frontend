@@ -39,7 +39,6 @@ var AlbumEditForm = React.createClass({
 						<Morearty.DOM.option key="everyone-type" value='everyone'>everyone</Morearty.DOM.option>
 						<Morearty.DOM.option key="private-type" value='private'>private</Morearty.DOM.option>
 					</select>
-					<button style={{margin: '15px 0px'}} onClick={self.onDeleteClick}>Delete album</button>
 				</FormColumn>
 			</Form>
 		);
