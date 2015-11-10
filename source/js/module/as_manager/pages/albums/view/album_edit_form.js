@@ -5,15 +5,6 @@ var Form = require('module/ui/form/form'),
 var AlbumEditForm = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	onDeleteClick: function() {
-		var self = this,
-		albumId = self.props.albumId;
-
-		window.Server.album.delete(albumId).then(function() {
-			self.props.onRemoved();
-		});
-	},
-
 	changeAccessMode: function(event) {
 		var self = this,
 			binding = self.getDefaultBinding(),

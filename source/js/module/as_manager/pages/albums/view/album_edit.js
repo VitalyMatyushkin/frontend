@@ -36,10 +36,6 @@ var AlbumEdit = React.createClass({
 		});
 	},
 
-	onAlbumRemove: function() {
-		window.history.back();
-	},
-
 	render: function() {
 		var self = this,
 		binding = self.getDefaultBinding();
@@ -47,7 +43,6 @@ var AlbumEdit = React.createClass({
 		return (
 			<AlbumEditForm title='Edit album'
 				onFormSubmit={self.onFormSubmit}
-				onRemoved={self.onAlbumRemove}
 				albumId={self.albumId}
 				binding={binding}
 			/>
