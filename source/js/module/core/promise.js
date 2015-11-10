@@ -1,3 +1,4 @@
+// TODO: drop me in favour of normal promises. Q preffered.
 var PromiseClass = (function(){
 	var PromiseClass = function() {
 		var self = this;

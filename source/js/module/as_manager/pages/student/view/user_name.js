@@ -7,7 +7,7 @@ UserName = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<div className="bUserName">{binding.get('name')} {binding.get('firstName')} {binding.get('lastName')}</div>
+			<div className="bUserName">{binding.get('student.firstName')} {binding.get('student.lastName')}</div>
 		)
 	}
 });

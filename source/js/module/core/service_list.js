@@ -2,7 +2,7 @@ var Service = require('module/core/service'),
 	serviceList,
 	binding;
 
-
+/** Collection of services to reach REST API from server */
 serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
@@ -50,6 +50,7 @@ serviceList = {
 		// students
 		serviceList.students = new Service('/schools/{schoolId}/students', binding);
 		serviceList.student = new Service('/students/{studentId}', binding);
+		serviceList.studentData = new Service('/students/{studentId}/user',binding);
 		serviceList.studentGamesWon = new Service('/students/{id}/events/won?include={include}', binding);
 		serviceList.studentGamesScored = new Service('/students/{id}/events/scored?include={include}', binding);
 		serviceList.studentEvents = new Service('/students/{id}/events', binding);
@@ -118,6 +119,7 @@ serviceList = {
 		serviceList.albumsByEvent = new Service('/events/{id}/albums');
 		serviceList.addAlbum = new Service('/albums', binding);
 		serviceList.albumsFindOne = new Service('/albums/findOne', binding);
+		serviceList.album = new Service('/albums/{albumId}', binding);
 
 		// photos
 		serviceList.photos = new Service('/albums/{albumId}/photos', binding);

@@ -44,7 +44,7 @@ EventManager = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding();
 
-		window.Server.schoolsFindOne.get({
+        window.Server.school.get(activeSchoolId, {
             filter: {
                 where: {
                     id: activeSchoolId
