@@ -1,0 +1,20 @@
+.bAlbumPhoto {
+	opacity: 0;
+	transition: opacity 0.3s;
+
+	vertical-align: top;
+  max-height: 200px;
+  max-width: 200px;
+  display: inline-block;
+  box-sizing: border-box;
+  cursor: pointer;
+  margin-bottom: 10px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  outline: 1px solid #fff;
+  margin-right: 5px;
+}
+
+.bAlbumPhotoLoaded {
+	opacity: 1;
+}

@@ -118,6 +118,7 @@ serviceList = {
 		serviceList.albumsByEvent = new Service('/events/{id}/albums');
 		serviceList.addAlbum = new Service('/albums', binding);
 		serviceList.albumsFindOne = new Service('/albums/findOne', binding);
+		serviceList.album = new Service('/albums/{albumId}', binding);
 
 		// photos
 		serviceList.photos = new Service('/albums/{albumId}/photos', binding);
