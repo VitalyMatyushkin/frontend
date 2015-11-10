@@ -28,8 +28,8 @@ var AlbumCreate = React.createClass({
 			description: data.name,
 			eventId: self.eventId,
 			ownerId: data.ownerId,
-		}).then(function(res) {
-			self.isMounted() && (document.location.hash = 'albums/view/' + res.id);
+		}).then(function() {
+			self.isMounted() && window.history.back();
 		});
 	},
 

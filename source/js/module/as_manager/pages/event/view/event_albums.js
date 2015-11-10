@@ -39,11 +39,17 @@ var EventHeader = React.createClass({
 	},
 	onClickDeleteAlbum: function(album) {
 		var self = this,
-				albumId = album.get('id');
+			albumId = album.get('id'),
+			binding = self.getDefaultBinding(),
+			rootBinding = self.getMoreartyContext().getBinding(),
+			eventId = rootBinding.get('routing.pathParameters.0');
 
 		if(confirm("Delete this album?"))
 			window.Server.album.delete(albumId).then(function() {
-				self.props.onRemoved();
+				window.Server.albumsByEvent.get(eventId)
+					.then(function (res) {
+						binding.set('albums', Immutable.fromJS(res));
+				});
 			});
 
 		return false;
