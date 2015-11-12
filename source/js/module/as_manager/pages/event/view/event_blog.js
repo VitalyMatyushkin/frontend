@@ -111,7 +111,6 @@ Blog = React.createClass({
                         self._fetchCommentsData();
                     }
                 }
-                //clearInterval(self.intervalId);
             });
         }, 2000);
     },
@@ -121,6 +120,7 @@ Blog = React.createClass({
         binding.remove('blogs');
         topLevelComments.length = 0;
         childComments.length = 0;
+        clearInterval(self.intervalId);
     },
     _commentButtonClick:function(){
         var self = this,
