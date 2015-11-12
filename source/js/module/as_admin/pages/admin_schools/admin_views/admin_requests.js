@@ -43,7 +43,7 @@ AdminRequest = React.createClass({
 	},
     _getQuickEditActionFunctions:function(event){
 		var self = this,
-			action = event.currentTarget.innerText,
+			action = event.currentTarget.textContent,
             id = event.currentTarget.parentNode.dataset.userobj,
             binding = self.getDefaultBinding(),
             currentPermission = self.getCurrentPermission(id, binding.toJS()),
