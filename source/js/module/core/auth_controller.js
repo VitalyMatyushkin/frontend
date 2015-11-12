@@ -8,21 +8,17 @@ authСontroller = {
 		if (!options || !options.binding) {
 			console.error('Error while initializing the authorization controller');
 		}
-
 		if (self.isLoginPage()) {
 			self.defaultPath = options.defaultPath || '#/';
 			self.nextPage = self.defaultPath;
 		} else {
 			self.nextPage = document.location.hash;
 		}
-
 		//By pass authentication for public home page for school
 		if(options.asSchool === true){
 			self.nextPage = options.defaultPath;
 		}
-
 		self.binding = options.binding;
-
 		self.updateAuth();
 		self.binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
 		/*
