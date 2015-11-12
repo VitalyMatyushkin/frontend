@@ -2,10 +2,15 @@
  * Created by bridark on 16/06/15.
  */
 var If = require('module/ui/if/if'),
-    filteredBag = [],
-    filteredChild = [],
+    topLevelComments = [],
+    childComments = [],
     CommentBox = require('./event_blogBox'),
-    Blog;
+    Blog,
+    convertPostIdToInt = function(comment){
+        comment.postId = parseInt(comment.postId, 10);
+        return comment;
+    };
+
 Blog = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
@@ -56,24 +61,31 @@ Blog = React.createClass({
                     window.Server.user.get({id:comment.ownerId})
                         .then(function(author){
                             comment.commentor = author;
-                            if(comment.parentId == 1){filteredBag.push(comment)}else{filteredChild.push(comment)}
-                            filteredBag.forEach(function(par,index){
-                                if(filteredChild !== undefined){
-                                    par.replies = filteredChild.filter(function(child){
-                                        return child.parentId === par.id;
+                            if(comment.parentId === '1'){
+                                topLevelComments.push(comment)
+                            }else{
+                                childComments.push(comment);
+                            }
+                            topLevelComments.forEach(function(topLevelComment){
+                                if(childComments.length > 0){
+                                    topLevelComment.replies = childComments.filter(function(child){
+                                        return child.parentId === topLevelComment.id;
                                     });
-                                    if(par.replies.length >=1){
-                                        par.replies.sort(function (a,b) {
+                                    if(topLevelComment.replies.length >= 1){
+                                        topLevelComment.replies = topLevelComment.replies.map(convertPostIdToInt);
+                                        topLevelComment.replies.sort(function (a, b) {
                                             return a.postId - b.postId;
                                         });
-                                        filteredBag[index] = par;
                                     }
-                                    filteredBag.sort(function(a,b){return a.postId - b.postId});
-                                    binding.set('blogs',Immutable.fromJS(filteredBag));
-                                    binding.set('filteredChild',Immutable.fromJS(filteredChild));
-                                    React.findDOMNode(self.refs.newComment).style.display = 'none';
                                 }
-                            })
+                            });
+                            topLevelComments = topLevelComments.map(convertPostIdToInt);
+                            topLevelComments.sort(function(a, b){
+                                return a.postId - b.postId;
+                            });
+                            binding.set('blogs',Immutable.fromJS(topLevelComments));
+                            binding.set('filteredChild',Immutable.fromJS(childComments));
+                            React.findDOMNode(self.refs.newComment).style.display = 'none';
                         });
                 });
                 self._setBlogCount();
@@ -94,21 +106,21 @@ Blog = React.createClass({
                     if(oldCount !== res.count){
                         React.findDOMNode(self.refs.newComment).style.display = 'block';
                         binding.set('blogCount',res.count);
-                        filteredBag.length = 0;
-                        filteredChild.length = 0;
+                        topLevelComments.length = 0;
+                        childComments.length = 0;
                         self._fetchCommentsData();
                     }
                 }
                 //clearInterval(self.intervalId);
             });
-        },1000);
+        }, 2000);
     },
     componentWillUnmount:function(){
         var self = this,
             binding = self.getDefaultBinding();
         binding.remove('blogs');
-        filteredBag.length = 0;
-        filteredChild.length = 0;
+        topLevelComments.length = 0;
+        childComments.length = 0;
     },
     _commentButtonClick:function(){
         var self = this,
@@ -131,8 +143,8 @@ Blog = React.createClass({
                     window.Server.user.get({id:result.ownerId})
                         .then(function(author){
                             result.commentor = author;
-                            filteredBag.push(result);
-                            binding.set('blogs',Immutable.fromJS(filteredBag));
+                            topLevelComments.push(result);
+                            binding.set('blogs',Immutable.fromJS(topLevelComments));
                         });
                     self._setBlogCount();
                 });
