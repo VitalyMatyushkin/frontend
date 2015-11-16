@@ -76,13 +76,16 @@ AdminPermissionView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding(),
             binding = self.getDefaultBinding(),
             idAutoComplete = [],
-            userId = evt.currentTarget.parentNode.dataset.userobj;
+            userId = evt.currentTarget.parentNode.dataset.userobj,
+            currentAction;
         userId = binding.get().find(function(id){
             return userId === id.get('id');
         });
         idAutoComplete.push(userId.get('principalId'));
         evt.currentTarget.parentNode.classList.remove('groupActionList_show');
-        switch (evt.currentTarget.innerText){
+        //caters for different browser implementations of innerText and innerHTML
+        currentAction = evt.currentTarget.innerText != undefined ? evt.currentTarget.innerText : evt.currentTarget.innerHTML;
+        switch (currentAction){
             case 'Add Role':
                 rootBinding.set('popup',true);
                 rootBinding.set('groupIds',idAutoComplete);
