@@ -36,9 +36,7 @@ ClassEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-				<div style={{position:'relative', border:1+'px solid #000000'}}>
-					<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding} />
-				</div>
+				<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding} />
 		)
 	}
 });
