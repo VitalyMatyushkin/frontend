@@ -26,23 +26,7 @@ var AlbumView = React.createClass({
 		albumId = rootBinding.get('routing.pathParameters.1'),
 		binding = self.getDefaultBinding(),
 		rootBinding = self.getMoreartyContext().getBinding(),
-		userId = rootBinding.get('userData.authorizationInfo.userId'),
-		isOwner = (userId !== binding.get('album.ownerId'));
-
-		self.menuItems = [{
-			key: 'goback',
-			name: '← GO BACK',
-			href: '#'
-		}];
-
-		if (isOwner) {
-			self.menuItems.push({
-				key: 'file',
-				name: 'Add Photo',
-				href: '#',
-				onChange: self.handleFile
-			});
-		}
+		userId = rootBinding.get('userData.authorizationInfo.userId');
 
 		Server.albumsFindOne.get({
 			filter: {
@@ -59,9 +43,26 @@ var AlbumView = React.createClass({
 		})
 		.then(function(res) {
 			res.currentPhotoId = res.photos.length > 0 ? res.photos[0].id : null;
+			var isOwner = (userId == res.ownerId);
+
+			self.menuItems = [{
+				key: 'goback',
+				name: '← GO BACK',
+				href: '#'
+			}];
+
+			if (isOwner) {
+				self.menuItems.push({
+					key: 'file',
+					name: 'Add Photo',
+					href: '#',
+					onChange: self.handleFile
+				});
+			}
 
 			binding
 				.atomically()
+				.set('albumsRouting', Immutable.fromJS({albumSubMenuReloaded: true}))
 				.set('album', Immutable.fromJS(res))
 				.set('sync', true)
 				.commit();
