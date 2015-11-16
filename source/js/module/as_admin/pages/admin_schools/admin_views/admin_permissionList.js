@@ -84,7 +84,8 @@ AdminPermissionView = React.createClass({
         idAutoComplete.push(userId.get('principalId'));
         evt.currentTarget.parentNode.classList.remove('groupActionList_show');
         //caters for different browser implementations of innerText and innerHTML
-        currentAction = evt.currentTarget.innerText != undefined ? evt.currentTarget.innerText : evt.currentTarget.innerHTML;
+        //Performs the relevant quick edit actions based on the action name:string
+        currentAction = evt.currentTarget.textContent;
         switch (currentAction){
             case 'Add Role':
                 rootBinding.set('popup',true);
