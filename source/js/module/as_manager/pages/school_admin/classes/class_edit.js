@@ -22,17 +22,23 @@ ClassEditPage = React.createClass({
 	},
 	submitEdit: function(data) {
 		var self = this;
-
-		window.Server.form.put(self.formId, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school_admin/forms');
-		});
+		//Don't submit if the name field of the data is empty
+		//Server will respond with failure causing button to stop at loading
+		if(data.name !=''){
+			data.name = data.name.toUpperCase(); //cast form name to upper case for consistency
+			window.Server.form.put(self.formId, data).then(function() {
+				self.isMounted() && (document.location.hash = 'school_admin/forms');
+			});
+		}
 	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		return (
-			<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding} />
+				<div style={{position:'relative', border:1+'px solid #000000'}}>
+					<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding} />
+				</div>
 		)
 	}
 });

@@ -21,7 +21,7 @@ InputTypeMixin = {
 				if (validationsSet[validType] !== undefined) {
 					self.validations[validType] = validationsSet[validType].bind(self);
 				} else {
-					self.validations[validType] = validationsSet['any'].bind(self);;
+					self.validations[validType] = validationsSet['any'].bind(self);
 				}
 			});
 		}
@@ -98,7 +98,11 @@ InputTypeMixin = {
 
 		if (value !== '' && validateResult) {
 			self.showError();
-		} else {
+		}else if(value ==='' && self.props.promptOnBlank){
+			//Test against empty string and show error
+			self.showError();
+		}
+		else{
 			self.hideError();
 		}
 
