@@ -62,7 +62,6 @@ var AlbumView = React.createClass({
 
 			binding
 				.atomically()
-				.set('albumsRouting', Immutable.fromJS({albumSubMenuReloaded: true}))
 				.set('album', Immutable.fromJS(res))
 				.set('sync', true)
 				.commit();
@@ -136,7 +135,7 @@ var AlbumView = React.createClass({
 		return (
 			<div>
 				<div>
-				<SubMenu binding={binding.sub('albumsRouting')} items={self.menuItems} />
+				<SubMenu binding={binding} items={self.menuItems} />
 					<If condition={binding.get('sync')}>
 						<div className="bAlbum">
 							<h1 className="eAlbum_title">{binding.get('album.name')}</h1>
