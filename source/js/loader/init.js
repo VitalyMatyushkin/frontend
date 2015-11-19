@@ -18,42 +18,39 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', '../../source/js/loader/loader_utils', 'react', 'immutable'],
-    function($, loaderUtils, React, Immutable){
+    ['jquery', 'react', 'immutable', '../../source/js/loader/loader_utils', '../../source/js/helpers/storage2'],
+    function($, React, Immutable, loaderUtils, storage){
 
-    // setting some global variables for Morearty
-    window.React = React;
-    window.Immutable = Immutable;
+        // setting some global variables for Morearty
+        window.React = React;
+        window.Immutable = Immutable;
 
-    // Legacy. I don't know why we need it right here, but it was in place like that.
-    $.ajaxSetup({
-        dataType: 'json',
-        crossDomain: true
-    });
-
-    var myDomain = document.location.hostname;
-    var api = loaderUtils.apiSelector(myDomain);
-    var startModule = loaderUtils.startModuleSelector(myDomain);
-    console.log('API: ' + api);
-    console.log('start module: ' + startModule);
-
-    window.apiBase = api;
-
-    // Morearty requires React and Immutable to be global vars, so it loaded as nested module
-    require(['morearty'], function(Morearty){
-        window.Morearty = Morearty;
-        console.log("Moreary should be ok here");
-
-        window['require']([startModule], function(startCallback) {
-            startCallback();
-        })
-    });
+        window.Helpers = storage;
 
 
+        // Legacy. I don't know why we need it right here, but it was in place like that.
+        $.ajaxSetup({
+            dataType: 'json',
+            crossDomain: true
+        });
 
+        var myDomain = document.location.hostname;
+        var api = loaderUtils.apiSelector(myDomain);
+        var startModule = loaderUtils.startModuleSelector(myDomain);
+        console.log('API: ' + api);
+        console.log('start module: ' + startModule);
 
+        window.apiBase = api;
 
+        // Morearty requires React and Immutable to be global vars, so it loaded as nested module when both are ready
+        require(['morearty'], function(Morearty){
+            window.Morearty = Morearty;
+            console.log("Moreary should be ok here");
 
-    ;
+            window['require']([startModule], function(startCallback) {
+                startCallback();
+            })
+        });
+
 
 });
