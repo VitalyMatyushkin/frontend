@@ -4,7 +4,8 @@ var TypeMixin = require('module/ui/form/types/type_mixin'),
 TypeText =  React.createClass({
 	propTypes: {
 		textType: React.PropTypes.string,
-        ignoreOnBlur: React.PropTypes.bool
+        ignoreOnBlur: React.PropTypes.bool,
+		promptOnBlank:React.PropTypes.bool //This proptype ignores deep validation and prompts user of empty dialogue
 	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
@@ -38,7 +39,13 @@ TypeText =  React.createClass({
 
         if(!('ignoreOnBlur' in self.props) || (self.props.ignoreOnBlur === false)){
             if (typeof self.props.defaultValueString === 'undefined') {
-                self._forceNewValue(defaultValue);
+				/*
+				* Check if current instance of text input allows validation against empty input before
+				* forcing new value into the dialogue box
+				* */
+				if(!self.props.promptOnBlank){
+					self._forceNewValue(defaultValue);
+				}
             } else {
                 self._forceNewValue(self.props.defaultValueString);
             }

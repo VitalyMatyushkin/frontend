@@ -1,20 +1,21 @@
 .bAlbumPhoto {
-	opacity: 0;
 	transition: opacity 0.3s;
 
 	vertical-align: top;
-  max-height: 200px;
-  max-width: 200px;
+  height: 200px;
+  width: 200px;
   display: inline-block;
   box-sizing: border-box;
   cursor: pointer;
   margin-bottom: 10px;
   background-size: cover;
   background-repeat: no-repeat;
+  background-image: url("/images/spin-loader-black.gif");
+  background-position: 50%;
   outline: 1px solid #fff;
   margin-right: 5px;
 }
 
 .bAlbumPhotoLoaded {
-	opacity: 1;
+  background-image: url("/images/no-image.jpg");
 }
