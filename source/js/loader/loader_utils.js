@@ -34,7 +34,8 @@ define(function (require, exports, module) {   // remove me later ...
     function startModuleSelector(domainName) {
         var parsedDomain = parseDomainName(domainName);
         var model = parsedDomain.model;
-        var startModule = 'module/start_as_' + specialModels.indexOf(model) !== -1 ? model : defaultModel;
+        var modelToStart =  specialModels.indexOf(model) !== -1 ? model : defaultModel;
+        var startModule = 'module/start_as_' + modelToStart;
 
         // TEST SERVER TEMPORARY SOLUTION
         if (startModule === 'module/start_as_stage') {
