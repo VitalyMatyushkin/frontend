@@ -8,7 +8,7 @@ requirejs.config({
     baseUrl: '/build/js',
     paths: {
         classnames: bowerDir + 'classnames/index',
-        director:   bowerDir + 'director/lib/director',
+        director:   bowerDir + 'director/build/director',
         immutable:  bowerDir + 'immutable/dist/immutable',
         jquery:     bowerDir + 'jquery/dist/jquery',
         morearty:   bowerDir + 'moreartyjs/dist/morearty',
@@ -18,14 +18,16 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', '../../source/js/loader/loader_utils', '../../source/js/helpers/storage2'],
-    function($, React, Immutable, loaderUtils, storage){
+    ['jquery', 'react', 'immutable', 'director', '../../source/js/loader/loader_utils', '../../source/js/helpers/storage2'],
+    function($, React, Immutable, Director, loaderUtils, storage){
 
         // setting some global variables for Morearty
         window.React = React;
         window.Immutable = Immutable;
 
         window.Helpers = storage;
+        //window.Router = Director; // Director does this itself. 
+
 
 
         // Legacy. I don't know why we need it right here, but it was in place like that.
