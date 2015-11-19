@@ -38,7 +38,6 @@ authСontroller = {
 			userInfoBinding = binding.sub('userData.userInfo'),
 			data = binding.toJS('userData.authorizationInfo'),
 			userData = binding.toJS('userData.userInfo');
-
 		// if we got auth data
 		if (data && data.id) {
 			var ttl;
@@ -81,6 +80,14 @@ authСontroller = {
 				the login view because they are not authenticated.
 			 */
 			document.location.hash = '#login';
+			/*
+			*@path {boolean} showError remains uncleared after logout, causing all sorts of validation issues,
+			*since an instance of the form base class is used on the login page
+			*Check if this data field exists after logout and reload the page to clear it
+			*/
+			if(self.binding.get('userData.showError')!= undefined){
+				window.location.reload(true);
+			}
 		}
 	},
 	startTTLTimer: function(secondsToLive) {
