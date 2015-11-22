@@ -17,12 +17,12 @@ OneSchoolPage = React.createClass({
                 }
             }
         }).then(function(results){
-            //console.log(results);
             binding
                 .atomically()
                 .set('permissionRequestCount', Immutable.fromJS(results))
                 .set('sync',true)
                 .commit();
+            self._updateLiveRequestsNum();
         });
         self.menuItems = [
             {
@@ -48,7 +48,35 @@ OneSchoolPage = React.createClass({
                 href:'/#admin_schools/admin_views/logs',
                 name:'Activity Log',
                 key:'Log'
-            }]
+            }];
+        globalBinding
+            .atomically()
+            .set('subMenuItems', Immutable.fromJS(self.menuItems))
+            .commit();
+    },
+    componentDidMount: function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding();
+        self.subMenuListenerId = globalBinding.addListener('submenuNeedsUpdate', function(){
+            window.Server.schools.get({
+                filter:{
+                    include:{
+                        relation:'permissions'
+                    }
+                }
+            }).then(function(results){
+                binding
+                    .atomically()
+                    .set('permissionRequestCount', Immutable.fromJS(results))
+                    .commit();
+                self._updateLiveRequestsNum();
+            });
+        });
+    },
+    componentWillUnmount: function(){
+        var globalBinding = this.getMoreartyContext().getBinding();
+        globalBinding.removeListener(this.subMenuListenerId);
     },
     getDefaultState: function () {
         return Immutable.fromJS({
@@ -72,12 +100,9 @@ OneSchoolPage = React.createClass({
         if(reqs !== undefined){
             var permissionRequests = [];
             reqs.forEach(function(req){
-                //console.log(req.permissions);
                 permissionRequests = permissionRequests.concat(req.permissions);
             });
-            //console.log(permissionRequests);
             permissionRequests.forEach(function(perReq){
-                //console.log(perReq.accepted);
                 if(perReq.accepted === undefined){
                     num +=1;
                 }
@@ -85,17 +110,27 @@ OneSchoolPage = React.createClass({
         }
         return num;
     },
+    _updateLiveRequestsNum: function(){
+        var globalBinding = this.getMoreartyContext().getBinding();
+        var num = '(' + this._countLiveRequests() + ')';
+        var mapped = this.menuItems.map(function(menuItem){
+            if (menuItem.key === 'requests') {
+                menuItem.num = num;
+            }
+            return menuItem;
+        });
+        globalBinding
+            .atomically()
+            .set('subMenuItems', Immutable.fromJS(mapped))
+            .commit();
+    },
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-        var badge = document.querySelectorAll('.eSubMenu_item')[1];
-        if(badge !== undefined){
-            badge.textContent = "New Requests ( "+self._countLiveRequests()+" )";
-        }
         return (
             <div>
-                <SubMenu binding={binding.sub('schoolRouting')} items={self.menuItems} />
+                <SubMenu binding={{ default: binding.sub('schoolRouting'), itemsBinding: globalBinding.sub('subMenuItems') }} />
                 <div className="bSchoolMaster">
                     <RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
                         <Route path="/admin_schools " binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"/>
