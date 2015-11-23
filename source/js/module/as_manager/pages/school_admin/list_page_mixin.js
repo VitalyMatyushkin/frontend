@@ -335,7 +335,6 @@ ListPageMixin = {
             globalBinding = self.getMoreartyContext().getBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive'),
             currentPage = window.location.href.split('/'),
-            excludeAddButton = ['logs','permissions','archive','#admin_schools','requests'], //Add page name to this array if you don't want to display add button
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
         if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
@@ -360,9 +359,6 @@ ListPageMixin = {
                             </div>
                         </If>
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
-                        <If condition={excludeAddButton.indexOf(currentPage[currentPage.length-1]) === -1}>
-                            <a href={document.location.hash + '/add'} className="bButton">Add...</a>
-                        </If>
                     </div>
                 </div>
 				{self.getTableView()}

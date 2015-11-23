@@ -3,12 +3,13 @@ var authСontroller;
 authСontroller = {
 	nextPage: '',
 	dieTimer: null,
+	_publicPages:['register', 'login'],
 	initialize: function(options) {
 		var self = this;
 		if (!options || !options.binding) {
 			console.error('Error while initializing the authorization controller');
 		}
-		if (self.isLoginPage()) {
+		if (self.isPublicPage()) {
 			self.defaultPath = options.defaultPath || '#/';
 			self.nextPage = self.defaultPath;
 		} else {
@@ -28,8 +29,11 @@ authСontroller = {
 		 */
 		if(self.nextPage === ''){self.nextPage = options.defaultPath}
 	},
-	isLoginPage: function() {
-		return document.location.hash && document.location.hash.indexOf('login') !== -1;
+	isPublicPage: function() {
+        var self = this,
+            path = document.location.hash;
+
+		return self._publicPages.some(function(value){return path.indexOf(value)!== -1;});
 	},
 	updateAuth: function() {
 		var self = this,
@@ -74,7 +78,7 @@ authСontroller = {
 		} else if(self.nextPage ==='home'){
             document.location.hash = self.nextPage;  //Bypass authentication
         }
-		else{
+		else if(!self.isPublicPage()){
 			/*
 				Reset hash string to login, if authorisation fails or there is no authorised user,
 				avoids users getting stuck if the current hash string is the same as the next one but are presented

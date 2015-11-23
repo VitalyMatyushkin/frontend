@@ -83,7 +83,7 @@ PermissionView = React.createClass({
             userId = evt.currentTarget.parentNode.dataset.userobj;
         idAutoComplete.push(userId);
         evt.currentTarget.parentNode.classList.remove('groupActionList_show');
-        switch (evt.currentTarget.innerText){
+        switch (evt.currentTarget.textContent){
             case 'Add Role':
                 rootBinding.set('popup',true);
                 rootBinding.set('groupIds',idAutoComplete);
@@ -106,14 +106,14 @@ PermissionView = React.createClass({
         }
     },
     _getGroupActionsFactory:function(el,chk){
-        var actionStr = el.innerText,
+        var actionStr = el.textContent,
             selections = chk,
             self = this,
             rootBinding = self.getMoreartyContext().getBinding();
         if(actionStr !== ''){
             var ticked = [];
             for(var i=0; i<selections.length; i++)if(selections.item(i).checked===true)ticked.push(selections.item(i).dataset.id);
-            switch (el.innerText){
+            switch (el.textContent){
                 case 'Add Role':
                     if(ticked.length >=1){
                         rootBinding.set('popup',true);
@@ -148,50 +148,50 @@ PermissionView = React.createClass({
         self = this;
         binding = self.getDefaultBinding();
         confirmAction = window.confirm("Are you sure you want revoke all roles?");
-        //if(ids !== undefined && ids.length >=1 ){
-        //    if(confirmAction === true){
-        //        ids.forEach(function(id){
-        //            window.Server.Permissions.get({filter:{where:{principalId:id}}})
-        //                .then(function(permission){
-        //                    permission.forEach(function(p){
-        //                        window.Server.Permission.delete({id:p.id}).then(function(){
-        //                            self.updateData();
-        //                        });
-        //                    });
-        //                });
-        //        });
-        //    }
-        //}
+        if(ids !== undefined && ids.length >=1 ){
+            if(confirmAction === true){
+                ids.forEach(function(id){
+                    window.Server.Permissions.get({filter:{where:{principalId:id}}})
+                        .then(function(permission){
+                            permission.forEach(function(p){
+                                window.Server.Permission.delete({id:p.id}).then(function(){
+                                    self.updateData();
+                                });
+                            });
+                        });
+                });
+            }
+        }
     },
     _accessRestriction:function(ids,action){
         //TODO Why this code is comment?
         var self = this,
             binding = self.getDefaultBinding(),
             confirmAction= window.confirm("Are you sure you want block user?");
-        //if(ids !== undefined && ids.length >=1){
-        //    if(confirmAction === true){
-        //        switch(action){
-        //            case 0:
-        //                ids.forEach(function(id){
-        //                    window.Server.user.put({id:id},{blocked:false}).then(function(){
-        //                        self.updateData();
-        //                    });
-        //                });
-        //                break;
-        //            case 1:
-        //                ids.forEach(function(id){
-        //                    window.Server.user.put({id:ids},{blocked:true}).then(function(){
-        //                        self.updateData();
-        //                    });
-        //                });
-        //                break;
-        //            default :
-        //                break;
-        //        }
-        //    }
-        //}else{
-        //    alert('Please select at least 1 row');
-        //}
+        if(ids !== undefined && ids.length >=1){
+            if(confirmAction === true){
+                switch(action){
+                    case 0:
+                        ids.forEach(function(id){
+                            window.Server.user.put({id:id},{blocked:false}).then(function(res){
+                                self.updateData();
+                            });
+                        });
+                        break;
+                    case 1:
+                        ids.forEach(function(id){
+                            window.Server.user.put({id:ids},{blocked:true}).then(function(){
+                                self.updateData();
+                            });
+                        });
+                        break;
+                    default :
+                        break;
+                }
+            }
+        }else{
+            alert('Please select at least 1 row');
+        }
     },
     _closePopup:function(){
         var self = this,
