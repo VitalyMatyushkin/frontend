@@ -1,3 +1,4 @@
+
 ;
 /**
  * Expects to jQueries `$` to be in scope.
@@ -77,6 +78,9 @@
 		_updateCookies: function () {
 			this.cookies = document.cookie.split('; ');
 		},
+		/*
+		 * Запи�?ь Cookies
+		 * */
 		/**
 		 * Setting Cookies
 		 * @param key to set
@@ -96,11 +100,13 @@
 			dateExpire.setDate(dateExpire.getDate() + expires);
 			cookieString += encodeURIComponent(key) + '=' + encodeURIComponent(value) + '; path='+ savePath;
 
+			// У�?тановка времени жизни, е�?ли cookie не �?е�?�?ионна�?
 			// Setting lifetime in case of cookie is not session-based
 			if (!(options && options.session === true)) {
 				cookieString += ';domain=.' + this.domain + '; expires=' + (options && options.session === true ? 0 : dateExpire.toUTCString());
 			}
 
+			// Запи�?ь Cookies
 			// setting cookie
 			document.cookie = cookieString;
 
@@ -127,6 +133,9 @@
 
 			return undefined;
 		},
+		/*
+		 * Удаление запи�?и
+		 * */
 		/**
 		 * Removing given key from cookies
 		 */
@@ -135,6 +144,21 @@
 				expires: -10,
 				session: false
 			});
+		}
+	};
+
+	Helpers.pageVisibility={
+		//Checks for all vendor differences in visibility API
+		checkVisibilityOptions : function(){
+			if(typeof document.hidden !== "undefined"){
+				return{hidden:'hidden', visibilityChange : "visibilitychange"}
+			}else if (typeof document.mozHidden !== "undefined") {
+				return {hidden : "mozHidden", visibilityChange : "mozvisibilitychange"};
+			} else if (typeof document.msHidden !== "undefined") {
+				return{hidden : "msHidden", visibilityChange : "msvisibilitychange"};
+			} else if (typeof document.webkitHidden !== "undefined") {
+				return {hidden : "webkitHidden", visibilityChange:"webkitvisibilitychange"};
+			}
 		}
 	}
 
