@@ -49,10 +49,7 @@ OneSchoolPage = React.createClass({
                 name:'Activity Log',
                 key:'Log'
             }];
-        globalBinding
-            .atomically()
-            .set('subMenuItems', Immutable.fromJS(self.menuItems))
-            .commit();
+        globalBinding.set('subMenuItems', Immutable.fromJS(self.menuItems));
     },
     componentDidMount: function(){
         var self = this,
@@ -66,10 +63,7 @@ OneSchoolPage = React.createClass({
                     }
                 }
             }).then(function(results){
-                binding
-                    .atomically()
-                    .set('permissionRequestCount', Immutable.fromJS(results))
-                    .commit();
+                binding.set('permissionRequestCount', Immutable.fromJS(results));
                 self._updateLiveRequestsNum();
             });
         });
@@ -119,10 +113,7 @@ OneSchoolPage = React.createClass({
             }
             return menuItem;
         });
-        globalBinding
-            .atomically()
-            .set('subMenuItems', Immutable.fromJS(mapped))
-            .commit();
+        globalBinding.set('subMenuItems', Immutable.fromJS(mapped));
     },
     render: function() {
         var self = this,

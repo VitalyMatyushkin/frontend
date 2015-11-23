@@ -64,7 +64,7 @@ AdminRequest = React.createClass({
 									return permission.get('id') !== id;
 								});
 							});
-                            globalBinding.set('submenuNeedsUpdate', true);
+                            globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
 						});
 					}
 				}
@@ -78,7 +78,7 @@ AdminRequest = React.createClass({
                                 return permission.get('id') !== id;
                             });
                         });
-                        globalBinding.set('submenuNeedsUpdate', true);
+                        globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
                     });
                 }
                 break;
