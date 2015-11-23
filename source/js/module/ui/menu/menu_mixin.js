@@ -27,6 +27,7 @@ var SVG = require('module/ui/svg'),
 				itemRoutes = item.routes || [],
 				className = self.itemClassName,
 				SvgIcon = item.icon ? <SVG icon={item.icon} /> : null,
+				itemNum = item.num || '',
 				resultNode;
 
 			// check permission
@@ -45,7 +46,7 @@ var SVG = require('module/ui/svg'),
 			if (item.key === 'goback') {
 				resultNode =
                     <span onClick={function(){window.history.back();}} key={item.key} className={className}>
-                        {SvgIcon} {item.name}
+                        {SvgIcon} {item.name} {itemNum}
                     </span>;
 			} else if (item.key === 'file') {
 				resultNode =
@@ -56,7 +57,7 @@ var SVG = require('module/ui/svg'),
 			} else {
 				resultNode =
                     <a href={item.href} key={item.key} className={className}>
-                        {SvgIcon} {item.name}
+                        {SvgIcon} {item.name} {itemNum}
                     </a>;
 			}
 

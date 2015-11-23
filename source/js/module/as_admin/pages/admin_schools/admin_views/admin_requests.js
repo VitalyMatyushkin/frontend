@@ -46,6 +46,7 @@ AdminRequest = React.createClass({
 			action = event.currentTarget.textContent,
             id = event.currentTarget.parentNode.dataset.userobj,
             binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
             currentPermission = self.getCurrentPermission(id, binding.toJS()),
 			confirmMsg;
         event.currentTarget.parentNode.classList.remove('groupActionList_show');
@@ -63,6 +64,7 @@ AdminRequest = React.createClass({
 									return permission.get('id') !== id;
 								});
 							});
+                            globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
 						});
 					}
 				}
@@ -76,6 +78,7 @@ AdminRequest = React.createClass({
                                 return permission.get('id') !== id;
                             });
                         });
+                        globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
                     });
                 }
                 break;
