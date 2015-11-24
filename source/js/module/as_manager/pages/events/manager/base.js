@@ -129,19 +129,30 @@ EventManagerBase = React.createClass({
     },
 	onSelectRival: function (order, id, response, model) {
 		var self = this,
-			binding = self.getDefaultBinding();
-		if (model) {
-			binding.update('rivals', function (rivals) {
-				var index = rivals.findIndex(function (rival) {
-					return rival.get('id') === id;
-				});
-				if (index === -1) {
-					return rivals.set(order, Immutable.fromJS(model));
-				} else {
-					return rivals;
-				}
-			});
-		}
+			binding = self.getDefaultBinding(),
+            comboBoxes = document.getElementsByClassName('eCombobox_input'); //Get all input comboboxes in the component
+        /*
+        * Quick fix for duplicated fields
+        * check combo boxes for equality if equal alert the user
+        * */
+        if(comboBoxes[0].value !== comboBoxes[1].value){
+            document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
+            if (model) {
+                binding.update('rivals', function (rivals) {
+                    var index = rivals.findIndex(function (rival) {
+                        return rival.get('id') === id;
+                    });
+                    if (index === -1) {
+                        return rivals.set(order, Immutable.fromJS(model));
+                    } else {
+                        return rivals;
+                    }
+                });
+            }
+        }else{
+            window.alert('Duplicated fields - please check entries'); //Alert use of duplications
+            document.getElementsByClassName('eEvents_button')[1].style.display = 'none'; // Hide next button to avoid temptation of hitting it!
+        }
 	},
     getSports: function () {
         var self = this,
