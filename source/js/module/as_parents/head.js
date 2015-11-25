@@ -14,15 +14,15 @@ Head = React.createClass({
     },
     serviceChildrenFilter: function (userId) {
         var self = this;
-
         return window.Server.userChildren.get(userId).then(function (data) {
+            //Initial API call only returns ids of the user's children
             data.map(function (player) {
-                var name = player.firstName + ' ' + player.lastName;
-                player.name = name;
-
-                return player;
+                //Iterates and fetches all other details by making extra API calls
+                window.Server.user.get({id:player.userId}).then(function(r){
+                    player.name = r.firstName+' '+r.lastName;
+                    return player;
+                });
             });
-
             return data;
         });
     },
