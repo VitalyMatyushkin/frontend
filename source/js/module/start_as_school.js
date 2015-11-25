@@ -55,7 +55,7 @@ function init404View() {
 function runMainMode() {
 	var schoolId = Helpers.LocalStorage.get('schoolId');
 
-	if (schoolId) {
+	if (schoolId !== 'undefined') {
 		initMainView(schoolId);
 	} else {
 		serviceList.schoolsFindOne.get({
@@ -65,8 +65,7 @@ function runMainMode() {
 				}
 			}
 		}).then(function(data) {
-			var schoolId = data.id;
-
+			var schoolId = data[0].id;
 			Helpers.LocalStorage.set('schoolId', schoolId);
 			initMainView(schoolId);
 		}, init404View);

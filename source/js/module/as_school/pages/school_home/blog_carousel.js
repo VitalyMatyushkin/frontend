@@ -26,7 +26,8 @@ BlogCarousel = React.createClass({
             binding = self.getDefaultBinding(),
             fixtures = binding.toJS('fixtures'),
             blogArray = [];
-        if(fixtures !== undefined){
+        console.log(typeof fixtures);
+        if(typeof fixtures !== 'undefined'){
             //console.log(fixtures[2].id);
             window.Server.addToBlog.get({id:fixtures[2].id, filter:{order:'meta.created DESC',limit:3}}).then(function(fix){
                 fix.forEach(function(fixture){
