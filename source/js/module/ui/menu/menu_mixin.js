@@ -30,6 +30,8 @@ var SVG = require('module/ui/svg'),
 				itemNum = item.num || '',
 				resultNode;
 
+			className += item.disabled ? 'mDisabled' : '';
+
 			// check permission
 			if ((item.requiredData && !globalBinding.get(item.requiredData) || (item.authorization && !authorization))) {
 				return null
