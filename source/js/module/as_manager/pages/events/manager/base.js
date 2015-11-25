@@ -130,13 +130,15 @@ EventManagerBase = React.createClass({
 	onSelectRival: function (order, id, response, model) {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            comboBoxes = document.getElementsByClassName('eCombobox_input'); //Get all input comboboxes in the component
+            comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
+            dupErrorEl = React.findDOMNode(self.refs.dupError);
         /*
         * Quick fix for duplicated fields
         * check combo boxes for equality if equal alert the user
         * */
         if(comboBoxes[0].value !== comboBoxes[1].value){
             document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
+            dupErrorEl.style.display = 'none';
             if (model) {
                 binding.update('rivals', function (rivals) {
                     var index = rivals.findIndex(function (rival) {
@@ -150,8 +152,8 @@ EventManagerBase = React.createClass({
                 });
             }
         }else{
-            window.alert('Duplicated fields - please check entries'); //Alert use of duplications
             document.getElementsByClassName('eEvents_button')[1].style.display = 'none'; // Hide next button to avoid temptation of hitting it!
+            dupErrorEl.style.display = 'block'; //Show error message
         }
 	},
     getSports: function () {
@@ -353,6 +355,9 @@ EventManagerBase = React.createClass({
                                 onSelect={self.onSelectRival.bind(null, 1)}
                                 binding={binding.sub('autocomplete.houses.1')}
                             />
+                            <div ref="dupError" className="hHouseDuplicateError">
+                                <span>The above fields are duplicates-please select unique house names!</span>
+                            </div>
                         </div>
                     </If>
                     {type === 'internal' ? 'Create a team' : null}
