@@ -91,11 +91,12 @@ PermissionAcceptPage = React.createClass({
 				include: 'user'
 			}
 		}).then(function(students) {
+			console.log(students);
 			students.forEach(function(student) {
 				student.name = student.user.firstName + " " + student.user.lastName;
 			});
 			return new Promise().resolve(students);
-		});
+		},function(error){console.log(error)});
 	},
 	onSelectStudent: function(studentId) {
 		var self = this,
