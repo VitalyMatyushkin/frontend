@@ -43,7 +43,8 @@ OneSchoolPage = React.createClass({
 		},{
             href:'/#school_admin/gallery',
             name:'Gallery',
-            key:'Gallery'
+            key:'Gallery',
+			disabled:true
         }];
 	},
 

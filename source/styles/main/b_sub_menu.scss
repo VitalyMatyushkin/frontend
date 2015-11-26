@@ -58,3 +58,7 @@
 .eSubMenu_item:hover {
   color: #fff;
 }
+
+a.mDisabled{
+  pointer-events: none;
+}

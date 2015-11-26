@@ -20,7 +20,7 @@ var AlbumEditForm = React.createClass({
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} >
 				<FormColumn type="column">
-					<FormField type="text" field="name">Name: </FormField>
+					<FormField type="text" field="name" validation="required">Name: </FormField>
 					<span>Access mode:</span>
 					<select
 						style={{margin: '5px 0px'}}
