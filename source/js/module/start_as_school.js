@@ -54,7 +54,7 @@ function init404View() {
 
 function runMainMode() {
 	var schoolId = Helpers.LocalStorage.get('schoolId');
-
+	schoolId = 'undefined';
 	if (schoolId !== 'undefined') {
 		initMainView(schoolId);
 	} else {
