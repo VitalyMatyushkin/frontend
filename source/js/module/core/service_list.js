@@ -37,6 +37,7 @@ serviceList = {
         serviceList.schoolPermissionsCount = new Service('/schools/{id}/permissions/count',binding);
 		serviceList.schoolModelPermission = new Service('/schools/{id}/permissions/{permissionId}',binding);
 		serviceList.schoolPermission = new Service('/schools/{id}/permissions/{permissionId}/set',binding);
+		serviceList.getThisSchool = new Service('/schools/getAllSchools',binding);
 
 		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);
 		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
@@ -148,11 +149,12 @@ serviceList = {
 		serviceList.parentRequests = new Service('/parentRequests', binding);
 		serviceList.parentRequest = new Service('/parentRequests/{id}', binding);
 		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
+
 	},
 	// Services which not require authorization
 	initializeOpenServices: function() {
 		// schools
-		serviceList.schoolsFindOne = new Service('/schools/findOne');
+		serviceList.schoolsFindOne = new Service('/schools/getAllSchools');
 	}
 };
 
