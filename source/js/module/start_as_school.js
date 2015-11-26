@@ -54,7 +54,7 @@ function init404View() {
 
 function runMainMode() {
 	var schoolId = Helpers.LocalStorage.get('schoolId');
-	schoolId = 'undefined';
+	schoolId = 'undefined'; //set this to undefined string so we can perform a fresh call for school details - avoids cache problems
 	if (schoolId !== 'undefined') {
 		initMainView(schoolId);
 	} else {
