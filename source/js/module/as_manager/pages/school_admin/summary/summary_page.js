@@ -32,7 +32,7 @@ SchoolSummary = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             schoolPicture = binding.get('pic'),
-            siteLink = binding.get('domain') + '.squadintouch.com',
+            siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
 
 
