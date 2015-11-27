@@ -32,7 +32,6 @@ UserDetail= React.createClass({
                     user.roles = data;
                     binding.set('userWithPermissionDetail',Immutable.fromJS(user));
                     binding.set('selectedUser',{userId:selectedUserId, role:data});
-                    console.log(binding.toJS('userWithPermissionDetail'));
                 });
             });
     },
@@ -60,11 +59,11 @@ UserDetail= React.createClass({
                     <div className="eDataList_listItem">
                         <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={role.school !== undefined ? role.school.pic:'http://placehold.it/400x400'}/></span></div>
                         <div className="eDataList_listItemCell">{role.school !== undefined ? role.school.name: 'n/a'}</div>
-                        <div className="eDataList_listItemCell">{role.student !== undefined? role.student.firstName+" "+role.student.lastName : ''}</div>
+                        <div className="eDataList_listItemCell">{role.student !== undefined? role.student.user.firstName+" "+role.student.user.lastName : ''}</div>
                         <div className="eDataList_listItemCell">{role.preset}</div>
                     </div>
                 )
-            })
+            });
         }
     },
     _closePopup:function(){
