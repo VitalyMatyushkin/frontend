@@ -13,6 +13,7 @@ var AlbumRoutes = React.createClass({
 				<Route path="/albums/edit/:albumId" binding={binding} component="module/as_manager/pages/albums/view/album_edit"  />
 				<Route path="/albums/create/:eventId" binding={binding} component="module/as_manager/pages/albums/view/album_create"  />
 				<Route path="/albums/view/:albumId" binding={binding} component="module/as_manager/pages/albums/view/album_view"  />
+				<Route path="/albums/photo-edit/:photoId" binding={binding} component="module/as_manager/pages/albums/view/photo_edit"  />
 			</RouterView>
 		);
 	}

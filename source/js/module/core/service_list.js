@@ -125,6 +125,7 @@ serviceList = {
 		// photos
 		serviceList.photos = new Service('/albums/{albumId}/photos', binding);
 		serviceList.addPhoto = new Service('/albums',binding);
+		serviceList.photo = new Service('/photos/{photoId}', binding);
 
 		//Storage
 		serviceList.storage = new Service('/storage',binding);

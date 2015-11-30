@@ -1,11 +1,16 @@
 .bAlbumPhoto {
+  display: flex;
+  justify-content: flex-end;
+  border: 1px solid #ccc;
+  align-items: flex-end;
+  flex-wrap: wrap;
+
 	transition: opacity 0.3s;
 
 	vertical-align: top;
   height: 200px;
   width: 200px;
-  display: inline-block;
-  box-sizing: border-box;
+  box-sizing: content-box;
   cursor: pointer;
   margin-bottom: 10px;
   background-size: cover;
@@ -14,8 +19,54 @@
   background-position: 50%;
   outline: 1px solid #fff;
   margin-right: 5px;
+  position:relative;
+
+  img{
+    position: absolute;
+    left: 0;
+    top:0;
+  }
 }
 
 .bAlbumPhotoLoaded {
   background-image: url("/images/no-image.jpg");
 }
+
+.eAlbumPhoto_photoEdit{
+  display: none;
+  width:15px;
+  height:15px;
+  margin: 5px;
+  background-image:	url('/images/icons/pencil.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-color: white;
+  text-align: center;
+  justify-content: center;
+  align-self: flex-start;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  z-index: 10;
+  &:hover {
+    border-color: red;
+  }
+}
+.eAlbumPhoto_photoDelete{
+  @extend .eAlbumPhoto_photoEdit;
+
+  background-image:	url('/images/icons/trash.svg');
+}
+.bAlbumPhoto {
+  &:hover {
+    & > .eAlbumPhoto_photoEdit {
+      display: flex;
+    }
+  }
+}
+
+
+
+
+
+
