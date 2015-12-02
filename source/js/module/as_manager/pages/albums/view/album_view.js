@@ -17,6 +17,7 @@ var AlbumView = React.createClass({
 				photos: []
 			},
 			sync: false,
+            isUploading:false,
 			currentPhotoId: null
 		});
 	},
@@ -83,6 +84,7 @@ var AlbumView = React.createClass({
 		fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
 
 		formData.append('file', file, fileName);
+        self.startUploading();
 
 		$.ajax({
 			url: uri + '/upload',
@@ -98,6 +100,7 @@ var AlbumView = React.createClass({
 				};
 
 				Server.photos.post(binding.get('album.id'), model).then(function(res) {
+                    self.stopUploading();
 					binding.sub('album.photos').update(function(photos) {
 						return photos.unshift(Immutable.fromJS(res));
 					});
@@ -109,6 +112,26 @@ var AlbumView = React.createClass({
 			processData: false
 		});
 	},
+
+    startUploading:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding
+            .atomically()
+            .set('isUploading', true)
+            .commit();
+    },
+
+    stopUploading:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding
+            .atomically()
+            .set('isUploading', false)
+            .commit();
+    },
 
 	onPhotoClick: function(photo) {
 		var fullScreen = this.state.fullScreen;
@@ -141,7 +164,7 @@ var AlbumView = React.createClass({
 					<If condition={binding.get('sync')}>
 						<div className="bAlbum">
 							<h1 className="eAlbum_title">{binding.get('album.name')}</h1>
-							<PhotoList binding={binding.sub('album')}
+							<PhotoList binding={{default: binding.sub('album'), isUploading: binding.sub('isUploading')}}
 									   onPhotoClick={self.onPhotoClick}
 							/>
 						</div>
