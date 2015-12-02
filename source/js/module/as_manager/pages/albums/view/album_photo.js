@@ -22,6 +22,30 @@ var AlbumPhoto = React.createClass({
 
 		self.props.onPhotoClick(binding.get());
 	},
+	onClickEditPhoto: function(photo) {
+		var self = this;
+
+		if (self.isMounted()) {
+			document.location.hash = 'albums/photo-edit/' + photo.get('id');
+		}
+
+		return false;
+	},
+	onClickDeletePhoto: function(photo) {
+		var self = this,
+				photoId = photo.get('id'),
+				rootBinding = self.getMoreartyContext().getBinding(),
+				albumId = rootBinding.get('routing.pathParameters.1');
+
+		if(confirm("Delete this photo?"))
+			window.Server.photo.delete(photoId).then(function() {
+				console.log("onClickDeletePhoto: photoId = "+photoId+", albumId = "+albumId);
+
+				self.props.onPhotoDelete();
+			});
+
+		return false;
+	},
 
 	render: function() {
 		var self = this,
@@ -33,7 +57,11 @@ var AlbumPhoto = React.createClass({
 		}
 		var src = binding.get('pic') + '/contain?height=200';
 		return (
-			<img src={src} className={imgClasses} onLoad={self.onImageLoad} onClick={self.onImageClick} />
+			<div onClick={self.onImageClick} className={imgClasses} >
+				<span onClick={self.onClickEditPhoto.bind(self, binding)} className='eAlbumPhoto_photoEdit'></span>
+				<span onClick={self.onClickDeletePhoto.bind(self, binding)} className='eAlbumPhoto_photoDelete'></span>
+				<img src={src} onLoad={self.onImageLoad} />
+			</div>
 		);
 	}
 });

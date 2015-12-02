@@ -21,12 +21,13 @@ var AlbumView = React.createClass({
 		});
 	},
 	componentWillMount: function() {
-		var self = this,rootBinding = self.getMoreartyContext().getBinding(),
+		var self = this,
+			rootBinding = self.getMoreartyContext().getBinding(),
+			albumId = rootBinding.get('routing.pathParameters.1'),
+			binding = self.getDefaultBinding(),
+			userId = rootBinding.get('userData.authorizationInfo.userId');
 
-		albumId = rootBinding.get('routing.pathParameters.1'),
-		binding = self.getDefaultBinding(),
-		rootBinding = self.getMoreartyContext().getBinding(),
-		userId = rootBinding.get('userData.authorizationInfo.userId');
+		self.albumId = albumId;
 
 		Server.albumsFindOne.get({
 			filter: {
@@ -140,7 +141,9 @@ var AlbumView = React.createClass({
 					<If condition={binding.get('sync')}>
 						<div className="bAlbum">
 							<h1 className="eAlbum_title">{binding.get('album.name')}</h1>
-							<PhotoList binding={binding.sub('album')} onPhotoClick={self.onPhotoClick} />
+							<PhotoList binding={binding.sub('album')}
+									   onPhotoClick={self.onPhotoClick}
+							/>
 						</div>
 					</If>
 					<If condition={!binding.get('sync')}>
