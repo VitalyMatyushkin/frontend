@@ -8,12 +8,13 @@ var PhotoList = React.createClass({
     },
     renderPhoto: function(photo, index) {
         var self = this,
-        binding = this.getDefaultBinding(),
+        binding = self.getDefaultBinding(),
         photosBinding = binding.sub('photos'),
-        photoBinding = photosBinding.sub(index);
+        photoBinding = photosBinding.sub(index),
+        photoid = photoBinding.get("id");
 
         return (
-            <AlbumPhoto binding={photoBinding} key={'photo-' + index}
+            <AlbumPhoto binding={photoBinding} key={'photo-' + photoid}
                       onPhotoClick={self.onPhotoClick}
                       onPhotoDelete={self.reloadPhotoList}
             />
@@ -41,13 +42,16 @@ var PhotoList = React.createClass({
     },
 
     render: function() {
-      var self = this,
-      binding = self.getDefaultBinding();
+        var self = this,
+            binding = self.getDefaultBinding(),
+            isUploading = self.getBinding('isUploading').get();
 
-
-      return (
+        return (
         <div className="bAlbums_list">
-          {binding.get('photos').map(self.renderPhoto)}
+            <If condition={isUploading}>
+                <div className="bAlbumPhoto mUploading">uploading...</div>
+            </If>
+            {binding.get('photos').map(self.renderPhoto)}
         </div>
       );
     }
