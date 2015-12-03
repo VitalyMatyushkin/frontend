@@ -44,9 +44,10 @@ EventHeader = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId'),
-            ownerId = binding.get('participants.0.school.ownerId');
-
-        return userId === ownerId;
+            userRole = self.getMoreartyContext().getBinding().get('currentUserRole'), //Gets the global variable containing current role
+            ownerId = binding.get('participants.0.school.ownerId'),
+            authRoles = ['coach','manager','teacher']; //Roles that are allowed to control events
+        return (userId === ownerId || authRoles.indexOf(userRole)!=-1);
     },
     isEnableClose: function () {
         var self = this,
@@ -95,7 +96,6 @@ EventHeader = React.createClass({
                 mRed: self.isEnableClose(),
                 mDisable: !self.isEnableClose()
             });
-
 		return <If condition={self.isOwner() && !binding.get('model.resultId')}>
             <div className="bEventButtons">
                 <If condition={binding.get('mode') === 'general'}>
