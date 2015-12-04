@@ -10,10 +10,14 @@ RegiseterUserDone = React.createClass({
 		var self = this;
 
 		return (
-			<div>
-				<h2>Authorization failed</h2>
-				<div className="ePageMessage_text">You can <div className="bButton" onClick={self.props.onOk}>try again →</div> or <div onClick={self.props.onSingUp} className="bButton" >sing up</div> </div>
-			</div>
+			React.createElement("div", null,
+				React.createElement("h2", null, "Authorization failed"),
+				React.createElement("div", {className: "ePageMessage_text"},
+					"You can ",
+					React.createElement("a", {href: "/", className: "bButton"}, "try again →"),
+					" or ",
+					React.createElement("a", {href: "/#register", className: "bButton"}, "sign up"), " ")
+			)
 		)
 	}
 });

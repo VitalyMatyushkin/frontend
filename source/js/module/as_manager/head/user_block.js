@@ -51,7 +51,7 @@ UserBlock = React.createClass({
 			LogoutButton = <a href="/#logout" className="eTopMenu_item mLogout"><SVG icon="icon_logout"/></a>;
 		} else {
 			// Кнопка авторизации
-			LoginButton = <a href="/#login" className="eTopMenu_item mLogin"><SVG icon="icon_key"/></a>;
+			LoginButton = <a href="/" className="eTopMenu_item mLogin"><SVG icon="icon_key"/></a>;
 		}
 
 		return (
