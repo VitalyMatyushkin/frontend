@@ -59,6 +59,11 @@
 }
 .bAlbumPhoto {
   &:hover {
+    border-color: $MAIN_COLOR;
+    .eAlbumPhoto_photoTitle {
+      background: rgba(76, 175, 80, 0.5);
+    }
+
     & > .eAlbumPhoto_photoEdit {
       display: flex;
     }
@@ -69,6 +74,21 @@
   align-items: center;
   justify-content: center;
 }
+
+.eAlbumPhoto_photoTitle {
+  display: flex;
+  padding: 5px 10px;
+  background: rgba(0, 0, 0, 0.4);
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  margin-top: 5px;
+  color: #fff;
+  font-size: 12px;
+  z-index: 10;
+  max-height: 56px;
+}
+
 
 
 

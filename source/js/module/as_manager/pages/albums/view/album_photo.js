@@ -60,6 +60,7 @@ var AlbumPhoto = React.createClass({
 			<div onClick={self.onImageClick} className={imgClasses} >
 				<span onClick={self.onClickEditPhoto.bind(self, binding)} className='eAlbumPhoto_photoEdit'></span>
 				<span onClick={self.onClickDeletePhoto.bind(self, binding)} className='eAlbumPhoto_photoDelete'></span>
+				<span className='eAlbumPhoto_photoTitle'>{binding.get('description')}</span>
 				<img src={src} onLoad={self.onImageLoad} />
 			</div>
 		);
