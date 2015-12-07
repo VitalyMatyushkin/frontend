@@ -18,7 +18,7 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', '../../source/js/loader/loader_utils', '../../source/js/loader/storage2'],
+    ['jquery', 'react', 'immutable', 'director', '../../source/js/loader/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
     function($, React, Immutable, Director, loaderUtils, storage){
 
         // setting some global variables for Morearty
