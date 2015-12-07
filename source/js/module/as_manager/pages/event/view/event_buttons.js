@@ -1,5 +1,6 @@
 var If = require('module/ui/if/if'),
 	InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+    classNames = require('classnames'),
 	EventHeader;
 
 EventHeader = React.createClass({

@@ -1,4 +1,5 @@
 var EventView,
+    classNames = require('classnames'),
     RouterView = require('module/core/router'),
     Route = require('module/core/route'),
     If = require('module/ui/if/if'),

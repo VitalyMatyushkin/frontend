@@ -96,13 +96,6 @@ gulp.task('normalize', function () {
 	}
 });
 
-/** Assembles all bower dependencies to one ./bower.js file and minify it */
-gulp.task('bower', function() {
-	return gulp.src(bower({checkExistence: true}), { base: '/bower_components' })
-		.pipe(concat('bower.js'))
-		.pipe(uglify())
-		.pipe(gulp.dest(BUILD + '/js'));
-});
 
 /** Building css from scss */
 gulp.task('styles', function () {
@@ -133,28 +126,17 @@ function buildToAmdScripts(path){
 		.pipe(connect.reload());				// reloading connect
 }
 
-/** Build all source/js/*.js to one main.js file */
-gulp.task('main_scripts', function (path) {
-	return buildVanillaJSScripts(SOURCE + '/js/*.js', 'main.js');
+
+/** Moving all files from source/js to build/js withoud doing anything. Directories not affected */
+gulp.task('moveCoreScripts', function(){
+	return gulp.src(SOURCE + '/js/*.js')
+		.pipe(gulp.dest(BUILD + '/js'));
 });
 
-/** Build all source/js/helpers to single file */
-gulp.task('helpers_scripts', function (path) {
-	return buildVanillaJSScripts(SOURCE + '/js/helpers/*.js', 'helpers.js');
+gulp.task('moveBowerScripts', function() {
+	return gulp.src(bower({checkExistence: true}), { base: SOURCE + '/js/bower' })
+		.pipe(gulp.dest(BUILD + '/js/bower'));
 });
-
-/**
- * All vanilla JS scripts will be just concat and stored to BUILD/js/$result.
- * No preprocessing or background magic performed.
- * It is important to note that vanilla JS is definitely not CommonJS and not likely AMD scripts.
- */
-function buildVanillaJSScripts(path, result) {
-	var result = result || 'main.js';
-	return gulp.src(path)
-		.pipe(concat(result))
-		.pipe(gulp.dest(BUILD + '/js'))
-		.pipe(connect.reload());
-}
 
 
 /** Just deletes BUILD folder */
@@ -177,7 +159,7 @@ gulp.task('clean_amd', function (callback) {
 
 // Run build
 gulp.task('default', function (callback) {
-	run('clean', 'lint', 'connect', 'styles', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+	run('clean', 'lint', 'connect', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', callback);
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		console.log('STYLES RELOAD');
@@ -186,7 +168,7 @@ gulp.task('default', function (callback) {
 
 	gulp.watch(SOURCE + '/js/*.js', function(event) {
 		console.log('MAIN SCRIPTS RELOAD');
-		gulp.run('main_scripts');
+		gulp.run('moveCoreScripts');
 	});
 
 	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {
@@ -196,5 +178,5 @@ gulp.task('default', function (callback) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'lint', 'styles', 'normalize', 'bower', 'main_scripts', 'helpers_scripts', 'amd_scripts', 'svg_symbols', callback);
+    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', callback);
 });

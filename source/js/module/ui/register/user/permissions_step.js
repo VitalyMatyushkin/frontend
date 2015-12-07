@@ -6,6 +6,7 @@ var Form = require('module/ui/form/form'),
 	If = require('module/ui/if/if'),
 	Autocomplete = require('module/ui/autocomplete/autocomplete'),
     RegistrationPermissionField = require('module/ui/register/user/registration_permissions_field'),
+	classNames = require('classnames'),
 	PermissionsStep,
     multipleFields,
     studentFields = [];

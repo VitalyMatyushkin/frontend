@@ -3,6 +3,7 @@ var CalendarView = require('module/ui/calendar/calendar'),
     If = require('module/ui/if/if'),
     TimePicker = require('module/ui/timepicker/timepicker'),
     Manager = require('module/ui/managers/manager'),
+    classNames = require('classnames'),
     EventManager;
 
 EventManager = React.createClass({

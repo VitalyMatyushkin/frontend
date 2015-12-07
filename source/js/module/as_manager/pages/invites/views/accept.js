@@ -1,6 +1,7 @@
 var InviteAcceptView,
     If = require('module/ui/if/if'),
-    Manager = require('module/ui/managers/manager');
+    Manager = require('module/ui/managers/manager'),
+    classNames = require('classnames');
 
 InviteAcceptView = React.createClass({
     mixins: [Morearty.Mixin],

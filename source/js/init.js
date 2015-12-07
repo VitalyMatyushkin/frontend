@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-var bowerDir = '../../../source/js/bower/';
+var bowerDir = 'bower/';
 
 requirejs.config({
     baseUrl: '/build/js',
@@ -13,14 +13,27 @@ requirejs.config({
         jquery:     bowerDir + 'jquery/dist/jquery',
         morearty:   bowerDir + 'moreartyjs/dist/morearty',
         react:      bowerDir + "react/react-with-addons"
+    },
+    shim: {
+        /** Making classname acts like AMD library */
+        'classnames': {
+            init: function(){
+                var classNames = this.classNames;   // picking it from global namespace
+                this.classNames = undefined;        // removing global link
+                return classNames;                  // returning as it AMD module does
+            }
+        }
     }
 });
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', '../../source/js/loader/loader_utils', '../../source/js/loader/storage2'],
-    function($, React, Immutable, Director, loaderUtils, storage){
+    ['jquery', 'react', 'immutable', 'director', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
+    function($, React, Immutable, Director, loaderUtils, storage, loadSVG){
 
+        loadSVG();  // will add some svg resources to page
+
+        // Morearty requires to have React and Immutable in global context, so
         // setting some global variables for Morearty
         window.React = React;
         window.Immutable = Immutable;
