@@ -1,8 +1,6 @@
 
 var classNames = require('classnames');
 
-console.log("classNames: " + classNames);
-
 var CalendarMonthView;
 
 CalendarMonthView = React.createClass({
