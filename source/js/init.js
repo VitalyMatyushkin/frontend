@@ -13,7 +13,8 @@ requirejs.config({
         jquery:     bowerDir + 'jquery/dist/jquery',
         morearty:   bowerDir + 'moreartyjs/dist/morearty',
         react:      bowerDir + "react/react-with-addons",
-        loglevel:   bowerDir + "loglevel/dist/loglevel.min"
+        loglevel:   bowerDir + "loglevel/dist/loglevel.min",
+        bluebird:   bowerDir + 'bluebird/js/browser/bluebird'
     },
     shim: {
         /** Making classname acts like AMD library */
