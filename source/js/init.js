@@ -13,6 +13,16 @@ requirejs.config({
         jquery:     bowerDir + 'jquery/dist/jquery',
         morearty:   bowerDir + 'moreartyjs/dist/morearty',
         react:      bowerDir + "react/react-with-addons"
+    },
+    shim: {
+        /** Making classname acts like AMD library */
+        'classnames': {
+            init: function(){
+                var classNames = this.classNames;   // picking it from global namespace
+                this.classNames = undefined;        // removing global link
+                return classNames;                  // returning as it AMD module does
+            }
+        }
     }
 });
 
