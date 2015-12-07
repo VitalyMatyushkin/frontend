@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-var bowerDir = '../../../source/js/bower/';
+var bowerDir = 'bower/';
 
 requirejs.config({
     baseUrl: '/build/js',
@@ -18,9 +18,12 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', '../../source/js/loader/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
-    function($, React, Immutable, Director, loaderUtils, storage){
+    ['jquery', 'react', 'immutable', 'director', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
+    function($, React, Immutable, Director, loaderUtils, storage, loadSVG){
 
+        loadSVG();  // will add some svg resources to page
+
+        // Morearty requires to have React and Immutable in global context, so
         // setting some global variables for Morearty
         window.React = React;
         window.Immutable = Immutable;
