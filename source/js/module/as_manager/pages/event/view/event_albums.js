@@ -25,6 +25,7 @@ var EventHeader = React.createClass({
 
 		if (self.isMounted()) {
 			document.location.hash = 'albums/view/' + album.get('id');
+			window.location.reload(true); //reload the page - all resources to be in place(prevents Bad Request)
 		}
 
 		return false;
