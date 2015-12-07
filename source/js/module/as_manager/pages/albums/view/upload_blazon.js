@@ -1,6 +1,7 @@
 /**
  * Created by bridark on 08/06/15.
  */
+var classNames = require('classnames');
 var If = require('module/ui/if/if'),
     BlazonUpload,
     urlStr,

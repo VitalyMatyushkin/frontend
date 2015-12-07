@@ -2,6 +2,7 @@ var Manager,
 	FootballManager = require('./football/football'),
     MultiSelectTeam = require('./multiselect_team'),
     AutocompleteTeam = require('./autocompleteTeam'),
+    classNames = require('classnames'),
     Team = require('./team');
 
 Manager = React.createClass({

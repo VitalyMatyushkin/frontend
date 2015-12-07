@@ -5,6 +5,7 @@ var ChooseTypeForm = require('module/ui/register/user/choose_type'),
     PersonalForm = require('module/ui/register/user/personal_details'),
     PermissionsList = require('module/ui/register/user/permissions_step'),
     VerificationStep = require('module/ui/register/user/verification_step'),
+    classNames = require('classnames'),
     RegisterUserPage;
 
 RegisterUserPage = React.createClass({
