@@ -12,7 +12,8 @@ requirejs.config({
         immutable:  bowerDir + 'immutable/dist/immutable',
         jquery:     bowerDir + 'jquery/dist/jquery',
         morearty:   bowerDir + 'moreartyjs/dist/morearty',
-        react:      bowerDir + "react/react-with-addons"
+        react:      bowerDir + "react/react-with-addons",
+        loglevel:   bowerDir + "loglevel/dist/loglevel.min"
     },
     shim: {
         /** Making classname acts like AMD library */
@@ -28,8 +29,8 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
-    function($, React, Immutable, Director, loaderUtils, storage, loadSVG){
+    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
+    function($, React, Immutable, Director, log, loaderUtils, storage, loadSVG){
 
         loadSVG();  // will add some svg resources to page
 
@@ -42,7 +43,6 @@ requirejs(
         //window.Router = Director; // Director does this itself. 
 
 
-
         // Legacy. I don't know why we need it right here, but it was in place like that.
         $.ajaxSetup({
             dataType: 'json',
@@ -52,15 +52,16 @@ requirejs(
         var myDomain = document.location.hostname;
         var api = loaderUtils.apiSelector(myDomain);
         var startModule = loaderUtils.startModuleSelector(myDomain);
-        console.log('API: ' + api);
-        console.log('start module: ' + startModule);
+
+        log.enableAll();    // let it be here a bit...
+        log.info('API: ' + api);
+        log.info('start module: ' + startModule);
 
         window.apiBase = api;
 
         // Morearty requires React and Immutable to be global vars, so it loaded as nested module when both are ready
         require(['morearty'], function(Morearty){
             window.Morearty = Morearty;
-            console.log("Moreary should be ok here");
 
             window['require']([startModule], function(startCallback) {
                 startCallback();

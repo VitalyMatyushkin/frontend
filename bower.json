@@ -19,6 +19,7 @@
     "moreartyjs": "https://github.com/SquadInTouch/moreartyjs-legacy.git#fe618599bbe0c385b7f0cb1c934c37de85d24f17",
     "requirejs": "~2.1.15",
     "director": "~1.2.5",
-    "classnames": "~1.1.4"
+    "classnames": "~1.1.4",
+    "loglevel": "~1.4.0"
   }
 }
