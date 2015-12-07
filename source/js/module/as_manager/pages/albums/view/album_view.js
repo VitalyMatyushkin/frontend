@@ -3,8 +3,8 @@ Route = require('module/core/route'),
 If = require('module/ui/if/if'),
 SubMenu = require('module/ui/menu/sub_menu'),
 PhotoList = require('./photo_list'),
-FullScreenList = require('./album_fullscreen_list');
-
+FullScreenList = require('./album_fullscreen_list'),
+FileUpload = require('module/ui/file_upload/file_upload');
 var AlbumView = React.createClass({
 	mixins: [Morearty.Mixin],
 	displayName: 'AlbumPage',
@@ -82,37 +82,30 @@ var AlbumView = React.createClass({
 		formData = new FormData(),
 		uri = window.apiBase + '/storage/' + binding.get('album.storageId'),
 		fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
-
 		formData.append('file', file, fileName);
-        self.startUploading();
-
-		$.ajax({
-			url: uri + '/upload',
-			type: 'POST',
-			success: function(res) {
-				var uploadedFile = res.result.files.file[0],
-				model = {
-					name: uploadedFile.name,
-					albumId: binding.get('album.id'),
-					description: uploadedFile.name,
-					authorId: binding.get('album.ownerId'),
-					pic: uri + '/files/' + uploadedFile.name
-				};
-
-				Server.photos.post(binding.get('album.id'), model).then(function(res) {
-                    self.stopUploading();
-					binding.sub('album.photos').update(function(photos) {
-						return photos.unshift(Immutable.fromJS(res));
+		var uploader = new FileUpload(uri); //Instantiate new file upload service
+		self.startUploading();
+		uploader.post(formData)
+				.then(function(data){
+							var model = {
+								name: data.name,
+								albumId: binding.get('album.id'),
+								description: data.name,
+								authorId: binding.get('album.ownerId'),
+								pic: uri + '/files/' + data.name
+							};
+					Server.photos.post(binding.get('album.id'), model).then(function(res) {
+						self.stopUploading();
+						binding.sub('album.photos').update(function(photos) {
+							return photos.unshift(Immutable.fromJS(res));
+						});
 					});
+				})
+				.catch(function(data){
+					window.alert(data+' Please try again!');
+					self.stopUploading();
 				});
-			},
-			data: formData,
-			cache: false,
-			contentType: false,
-			processData: false
-		});
 	},
-
     startUploading:function(){
         var self = this,
             binding = self.getDefaultBinding();
