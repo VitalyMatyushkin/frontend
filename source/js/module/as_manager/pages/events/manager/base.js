@@ -131,29 +131,32 @@ EventManagerBase = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
             comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
-            dupErrorEl = React.findDOMNode(self.refs.dupError);
+            dupErrorEl = React.findDOMNode(self.refs.dupError),
+            gameType = React.findDOMNode(self.refs.gameType).value;
         /*
         * Quick fix for duplicated fields
         * check combo boxes for equality if equal alert the user
         * */
-        if(comboBoxes[0].value !== comboBoxes[1].value){
-            document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
-            dupErrorEl.style.display = 'none';
-            if (model) {
-                binding.update('rivals', function (rivals) {
-                    var index = rivals.findIndex(function (rival) {
-                        return rival.get('id') === id;
+        if(gameType ==='houses'){
+            if(comboBoxes[0].value !== comboBoxes[1].value){
+                document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
+                dupErrorEl.style.display = 'none';
+                if (model) {
+                    binding.update('rivals', function (rivals) {
+                        var index = rivals.findIndex(function (rival) {
+                            return rival.get('id') === id;
+                        });
+                        if (index === -1) {
+                            return rivals.set(order, Immutable.fromJS(model));
+                        } else {
+                            return rivals;
+                        }
                     });
-                    if (index === -1) {
-                        return rivals.set(order, Immutable.fromJS(model));
-                    } else {
-                        return rivals;
-                    }
-                });
+                }
+            }else{
+                document.getElementsByClassName('eEvents_button')[1].style.display = 'none'; // Hide next button to avoid temptation of hitting it!
+                dupErrorEl.style.display = 'block'; //Show error message
             }
-        }else{
-            document.getElementsByClassName('eEvents_button')[1].style.display = 'none'; // Hide next button to avoid temptation of hitting it!
-            dupErrorEl.style.display = 'block'; //Show error message
         }
 	},
     getSports: function () {
@@ -306,7 +309,7 @@ EventManagerBase = React.createClass({
             <If condition={binding.get('model.ages').count() > 0}>
                 <div className="eManager_group">
                     {'Game Type'}
-                    <select
+                    <select ref="gameType"
                         className="eManager_select"
                         defaultValue={null}
                         value={type}
