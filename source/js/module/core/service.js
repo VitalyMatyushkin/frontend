@@ -1,6 +1,4 @@
-var PromiseClass = require('module/core/promise'),
-	$ = require('jquery'),
-	Promise = require('bluebird'),
+var $ = require('jquery'),
 	log = require('loglevel'),
 	AJAX = require('module/core/AJAX'),
 	baseUrl = window.apiBase,

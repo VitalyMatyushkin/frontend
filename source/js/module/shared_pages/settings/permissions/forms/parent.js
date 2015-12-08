@@ -1,7 +1,6 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
-	PromiseClass = require('module/core/promise'),
 	FormMixin = require('module/shared_pages/settings/permissions/forms/form_mixin'),
 	ParentPermissionForm;
 

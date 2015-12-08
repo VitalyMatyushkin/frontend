@@ -1,7 +1,7 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
-	PromiseClass = require('module/core/promise'),
+	Promise = require('bluebird'),
 	StudentForm;
 
 StudentForm = React.createClass({
@@ -13,9 +13,7 @@ StudentForm = React.createClass({
 	},
 	getClassService: function() {
 		var self = this;
-
 		return function() {
-
 			return window.Server.forms.get(self.props.schoolId);
 		}
 	},
@@ -28,7 +26,6 @@ StudentForm = React.createClass({
 	},
 	getGender: function() {
 		var self = this,
-			promise = new PromiseClass(),
 			gendersArray = [
 				{
 					value: 'boy',
@@ -40,12 +37,7 @@ StudentForm = React.createClass({
 				}
 			];
 
-		promise.resolve(gendersArray);
-
-		// Service Promise capability TODO: wtf
-		promise.abort = function(){};
-
-		return promise;
+		return Promise.resolve(gendersArray);
 	},
 	render: function() {
 		var self = this;

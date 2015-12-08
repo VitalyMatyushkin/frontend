@@ -1,6 +1,6 @@
 var AutocompleteTeam,
     SVG = require('module/ui/svg'),
-    Promise = require('module/core/promise'),
+    Promise = require('bluebird'),
     Autocomplete = require('module/ui/autocomplete/autocomplete');
 
 AutocompleteTeam = React.createClass({
@@ -38,14 +38,11 @@ AutocompleteTeam = React.createClass({
     serviceStudentFullData: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            students = binding.toJS('_students'),
-            promise = new Promise();
+            students = binding.toJS('_students');
 
-        promise.resolve(students.filter(function (student) {
+        return Promise.resolve(students.filter(function (student) {
             return self.getIncludePlayersIds().toJS().indexOf(student.id) === -1;
         }));
-
-        return promise;
     },
     fetchFullData: function () {
         var self = this,

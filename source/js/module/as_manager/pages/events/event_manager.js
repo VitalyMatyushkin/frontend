@@ -142,7 +142,7 @@ EventManager = React.createClass({
 
                     window.Server.participants.post(event.id, rivalModel).then(function (res) {
                         var i = 0;
-
+                        // TODO: fix me
                         players[index].forEach(function (player) {
                             window.Server.playersRelation.put({
                                 teamId: res.id,
@@ -158,6 +158,7 @@ EventManager = React.createClass({
                                 return;  // each then-callback should have explicit return
                             });
                         });
+                        return ;
                     });
                 }
 			});

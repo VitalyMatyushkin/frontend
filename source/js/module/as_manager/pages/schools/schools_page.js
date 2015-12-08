@@ -12,7 +12,7 @@ SchoolsPage = React.createClass({
 		if (!activeSchoolId) {
 			self._updateSchoolList().then(function(schoolsList) {
 
-				// Если есть хотя бы одна школа, делаем первую школой "по умолчанию"
+				// If there is at least any school making first of them default
 				if (schoolsList[0]) {
 					globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
 					document.location.hash = 'school_admin/summary';
@@ -24,8 +24,8 @@ SchoolsPage = React.createClass({
         }
     },
 	/**
-	 * Обновление списка школ пользователя
-	 * @returns PromiseClass
+	 * Updating user's school list
+	 * @returns Promise
 	 * @private
 	 */
 	_updateSchoolList: function() {
@@ -33,9 +33,10 @@ SchoolsPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			userId = globalBinding.get('userData.authorizationInfo.userId');
 
-		// Получение и сохранение списка школ
+		// Getting and saving school list
 		return Server.schools.get().then(function(data) {
 			self.getDefaultBinding().set('schoolsList', Immutable.fromJS(data));
+			return;
 		});
 	},
 	render: function() {
