@@ -7,7 +7,11 @@ var Promise = require('bluebird');
 
 /**
  * Does $.ajax({...}) and return result as Promise
- * Accepts all $.ajax() parameters except `error` and `success` handlers. Error and success are available with
+ * Accepts all $.ajax() parameters except `error` and `success` handlers. Error and success are available with.
+ *
+ * Returned promise is cancel-friendly and can be cancelled with .cancel() synchronous call. Underlying request
+ * will be aborted in that case.
+ * 
  *  Promise semantics.
  * @returns {Promise}
  */
