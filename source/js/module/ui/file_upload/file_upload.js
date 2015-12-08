@@ -1,29 +1,24 @@
 /**
  * Created by Bright on 04/12/2015.
  */
+var AJAX = require('module/core/AJAX');
+
 'use strict';
 var uploadService = function(url){
     var fileServiceCore;
     fileServiceCore = {
         ajax: function (method, url, args) {
-            //Create a promise - normal promise instead of self written one
-            return new Promise(function (resolve, reject) {
-                $.ajax({
-                    url: url + '/upload',
-                    type: method,
-                    success: function (res) {
-                        var uploadedFile = res.result.files.file[0];
-                        resolve(uploadedFile);
-                    },
-                    error: function (xhr) {
-                        reject(xhr.statusText);
-                    },
-                    data: args,
-                    cache: false,
-                    contentType: false,
-                    processData: false
-                });
-            });
+            return AJAX({
+                url: url + '/upload',
+                type: method,
+                data: args,
+                cache: false,
+                contentType: false,
+                processData: false
+            }).then(
+                function(data){ return data.result.files.file[0] },
+                function(xhr){ return xhr.statusText }
+            );
         }
     };
     //Return module methods as in Adapter Pattern
@@ -43,4 +38,5 @@ var uploadService = function(url){
         }
     };
 };
+
 module.exports = uploadService;
