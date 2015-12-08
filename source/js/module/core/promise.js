@@ -5,7 +5,7 @@ var log = require('loglevel');
 
 var PromiseClass = function() {
 	var self = this;
-	console.warn("@@@@ Attention! Warning! Achtung! Don't use that shitty promise. Use bluebird instead");
+	console.error("@@@@ Attention! Warning! Achtung! Don't use that shitty promise. Use bluebird instead");
 
 	self.status = false;
 	self.result = undefined;

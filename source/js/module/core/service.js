@@ -59,7 +59,6 @@ ServiceConstructor = (function() {
 			var self = this,
 				url = self.url,
 				filter = options && options.filter || data && data.filter || '',
-				promise0 = new PromiseClass(),
 				authorization = self.binding ? self.binding.get() : undefined;
 
 			if (self.requredParams) {
@@ -105,7 +104,7 @@ ServiceConstructor = (function() {
 		_showError: function() {
 			var self = this;
 			log.error('Service ' + self.url +' expects params: ' + self.requredParams);
-		},
+		}
 
 		//abort: function() {
 		//	var self = this;

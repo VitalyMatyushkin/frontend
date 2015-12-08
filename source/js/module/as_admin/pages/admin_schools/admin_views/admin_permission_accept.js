@@ -1,6 +1,5 @@
 var If = require('module/ui/if/if'),
 	Autocomplete = require('module/ui/autocomplete/autocomplete'),
-	Promise = require('module/core/promise'),
 	PermissionAcceptPage;
 
 PermissionAcceptPage = React.createClass({
@@ -91,11 +90,10 @@ PermissionAcceptPage = React.createClass({
 				include: 'user'
 			}
 		}).then(function(students) {
-			console.log(students);
 			students.forEach(function(student) {
 				student.name = student.user.firstName + " " + student.user.lastName;
 			});
-			return new Promise().resolve(students);
+			return students;
 		},function(error){console.log(error)});
 	},
 	onSelectStudent: function(studentId) {
@@ -108,28 +106,17 @@ PermissionAcceptPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		window.Server.Permission
-			.put(
-				{
-					id: binding.get('permissionId')
-				},
-				{
-					studentId: binding.get('studentId')
-				}
-			)
-			.then(function() {
-				window.Server.setPermissions
-					.post(
-						{
-							id: binding.get('permissionId')
-						},
-						{
-							accepted:true
-						}
-					).then(function(){
-						document.location.hash = self.props.afterSubmitPage;
-					}
-				);
+		window.Server.Permission.put(
+				{ id: binding.get('permissionId') },
+				{ studentId: binding.get('studentId') }
+			).then(function() {
+				return window.Server.setPermissions.post(
+						{ id: binding.get('permissionId')},
+						{ accepted:true }
+					);
+			}).then(function(){
+				document.location.hash = self.props.afterSubmitPage;
+				return;
 			});
 
 	},
