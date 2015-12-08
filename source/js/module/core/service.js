@@ -81,7 +81,7 @@ ServiceConstructor = (function() {
 				}
 			}
 
-			self.currentRequest2 = AJAX({
+			self.currentRequest = AJAX({
 				url: baseUrl + url + filter,
 				type: type,
 				crossDomain: true,
@@ -99,55 +99,21 @@ ServiceConstructor = (function() {
 				}
 			});
 
-			self.currentRequest = $.ajax({
-				url: baseUrl + url + filter,
-				type: type,
-				crossDomain: true,
-				data: JSON.stringify(data),
-				dataType: 'json',
-				contentType: 'application/json',
-				error: function(data) {
-					promise0.reject(data);
-				},
-				success: function(data) {
-					promise0.resolve(data);
-				},
-				beforeSend: function (xhr) {
-					var authorizationInfo;
-					if (authorization) {
-						authorizationInfo = authorization.toJS();
-						if (authorizationInfo && authorizationInfo.id) {
-							xhr.setRequestHeader('Authorization', authorizationInfo.id);
-						}
-					}
-
-				}
-			});
-
-			var promise = Promise.resolve(self.currentRequest);
-
-			promise0.abort = function() {
-				// TODO: Very sticky situation here...
-				// TODO: Do something with cancellable - http://bluebirdjs.com/docs/api/cancellation.html
-				self.currentRequest.abort();
-				//promise.cancel();
-			};
-
-			return promise0;
+			return self.currentRequest;
 		},
 
 		_showError: function() {
 			var self = this;
-			console.error('Service ' + self.url +' expects params: ' + self.requredParams);
+			log.error('Service ' + self.url +' expects params: ' + self.requredParams);
 		},
 
-		abort: function() {
-			var self = this;
-			log.error("@@@@ Why this fucking need?");
-			if (self.currentRequest && self.currentRequest.abort) {
-				self.currentRequest.abort();
-			}
-		}
+		//abort: function() {
+		//	var self = this;
+		//	log.error("@@@@ Why this fucking need?");
+		//	if (self.currentRequest && self.currentRequest.cancel) {
+		//		self.currentRequest.cancel();
+		//	}
+		//}
 	};
 
 	['post', 'put', 'get', 'head', 'delete'].forEach(function(method) {

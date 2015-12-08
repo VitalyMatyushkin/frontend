@@ -155,6 +155,7 @@ EventManager = React.createClass({
                                     binding.clear();
                                     binding.meta().clear();
                                 }
+                                return;  // each then-callback should have explicit return
                             });
                         });
                     });
