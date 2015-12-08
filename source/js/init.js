@@ -13,7 +13,8 @@ requirejs.config({
         jquery:     bowerDir + 'jquery/dist/jquery',
         morearty:   bowerDir + 'moreartyjs/dist/morearty',
         react:      bowerDir + "react/react-with-addons",
-        loglevel:   bowerDir + "loglevel/dist/loglevel.min"
+        loglevel:   bowerDir + "loglevel/dist/loglevel.min",
+        bluebird:   bowerDir + 'bluebird/js/browser/bluebird'
     },
     shim: {
         /** Making classname acts like AMD library */
@@ -29,8 +30,12 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
-    function($, React, Immutable, Director, log, loaderUtils, storage, loadSVG){
+    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
+    function($, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG){
+
+        Promise.config({
+            cancellation: true
+        });
 
         loadSVG();  // will add some svg resources to page
 

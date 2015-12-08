@@ -35,6 +35,7 @@ EventView = React.createClass({
                 .set('sync', true)
                 .set('models', Immutable.fromJS(data))
                 .commit();
+            return;
         });
 
         !binding.get('activeChildId') && window.Server.userChildren.get({
@@ -48,8 +49,11 @@ EventView = React.createClass({
                             .set('models', Immutable.fromJS(data))
                             .set('sync', true)
                             .commit();
+                        return;
                     });
+                    return self.request;
                 }
+                return;
             });
 
         binding.get('activeChildId') && window.Server.studentEvents.get({id: binding.get('activeChildId')}).then(function (data) {
@@ -58,6 +62,7 @@ EventView = React.createClass({
                 .set('models', Immutable.fromJS(data))
                 .set('sync', true)
                 .commit();
+            return ;
         });
 
         self.menuItems = [{

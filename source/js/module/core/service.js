@@ -1,4 +1,6 @@
-var PromiseClass = require('module/core/promise'),
+var $ = require('jquery'),
+	log = require('loglevel'),
+	AJAX = require('module/core/AJAX'),
 	baseUrl = window.apiBase,
 	ServiceConstructor;
 
@@ -55,7 +57,6 @@ ServiceConstructor = (function() {
 			var self = this,
 				url = self.url,
 				filter = options && options.filter || data && data.filter || '',
-				promise = new PromiseClass(),
 				authorization = self.binding ? self.binding.get() : undefined;
 
 			if (self.requredParams) {
@@ -77,53 +78,39 @@ ServiceConstructor = (function() {
 				}
 			}
 
-
-			self.currentRequest = $.ajax({
+			self.currentRequest = AJAX({
 				url: baseUrl + url + filter,
 				type: type,
 				crossDomain: true,
 				data: JSON.stringify(data),
 				dataType: 'json',
 				contentType: 'application/json',
-				error: function(data) {
-					promise.reject(data);
-				},
-				success: function(data) {
-					promise.resolve(data);
-				},
 				beforeSend: function (xhr) {
 					var authorizationInfo;
-
 					if (authorization) {
 						authorizationInfo = authorization.toJS();
-
 						if (authorizationInfo && authorizationInfo.id) {
 							xhr.setRequestHeader('Authorization', authorizationInfo.id);
 						}
 					}
-
 				}
 			});
 
-			promise.abort = function() {
-				self.currentRequest.abort();
-			};
-
-			return promise;
+			return self.currentRequest;
 		},
 
 		_showError: function() {
 			var self = this;
-			console.error('Service ' + self.url +' expects params: ' + self.requredParams);
-		},
-
-		abort: function() {
-			var self = this;
-
-			if (self.currentRequest && self.currentRequest.abort) {
-				self.currentRequest.abort();
-			}
+			log.error('Service ' + self.url +' expects params: ' + self.requredParams);
 		}
+
+		//abort: function() {
+		//	var self = this;
+		//	log.error("@@@@ Why this fucking need?");
+		//	if (self.currentRequest && self.currentRequest.cancel) {
+		//		self.currentRequest.cancel();
+		//	}
+		//}
 	};
 
 	['post', 'put', 'get', 'head', 'delete'].forEach(function(method) {

@@ -246,7 +246,7 @@ ListPageMixin = {
 	componentWillUnmount: function () {
 		var self = this,
             binding = self.getDefaultBinding();
-		self.request && self.request.abort();
+		self.request && self.request.cancel();
         clearTimeout(self.timeoutId);
         self.persistantData.length = 0;
         binding.clear()
