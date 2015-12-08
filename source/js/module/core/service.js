@@ -1,4 +1,8 @@
 var PromiseClass = require('module/core/promise'),
+	$ = require('jquery'),
+	Promise = require('bluebird'),
+	log = require('loglevel'),
+	AJAX = require('module/core/AJAX'),
 	baseUrl = window.apiBase,
 	ServiceConstructor;
 
@@ -55,7 +59,7 @@ ServiceConstructor = (function() {
 			var self = this,
 				url = self.url,
 				filter = options && options.filter || data && data.filter || '',
-				promise = new PromiseClass(),
+				promise0 = new PromiseClass(),
 				authorization = self.binding ? self.binding.get() : undefined;
 
 			if (self.requredParams) {
@@ -77,6 +81,23 @@ ServiceConstructor = (function() {
 				}
 			}
 
+			self.currentRequest2 = AJAX({
+				url: baseUrl + url + filter,
+				type: type,
+				crossDomain: true,
+				data: JSON.stringify(data),
+				dataType: 'json',
+				contentType: 'application/json',
+				beforeSend: function (xhr) {
+					var authorizationInfo;
+					if (authorization) {
+						authorizationInfo = authorization.toJS();
+						if (authorizationInfo && authorizationInfo.id) {
+							xhr.setRequestHeader('Authorization', authorizationInfo.id);
+						}
+					}
+				}
+			});
 
 			self.currentRequest = $.ajax({
 				url: baseUrl + url + filter,
@@ -86,17 +107,15 @@ ServiceConstructor = (function() {
 				dataType: 'json',
 				contentType: 'application/json',
 				error: function(data) {
-					promise.reject(data);
+					promise0.reject(data);
 				},
 				success: function(data) {
-					promise.resolve(data);
+					promise0.resolve(data);
 				},
 				beforeSend: function (xhr) {
 					var authorizationInfo;
-
 					if (authorization) {
 						authorizationInfo = authorization.toJS();
-
 						if (authorizationInfo && authorizationInfo.id) {
 							xhr.setRequestHeader('Authorization', authorizationInfo.id);
 						}
@@ -105,11 +124,16 @@ ServiceConstructor = (function() {
 				}
 			});
 
-			promise.abort = function() {
+			var promise = Promise.resolve(self.currentRequest);
+
+			promise0.abort = function() {
+				// TODO: Very sticky situation here...
+				// TODO: Do something with cancellable - http://bluebirdjs.com/docs/api/cancellation.html
 				self.currentRequest.abort();
+				//promise.cancel();
 			};
 
-			return promise;
+			return promise0;
 		},
 
 		_showError: function() {
@@ -119,7 +143,7 @@ ServiceConstructor = (function() {
 
 		abort: function() {
 			var self = this;
-
+			log.error("@@@@ Why this fucking need?");
 			if (self.currentRequest && self.currentRequest.abort) {
 				self.currentRequest.abort();
 			}

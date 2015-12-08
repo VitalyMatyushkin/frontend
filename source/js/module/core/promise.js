@@ -5,7 +5,7 @@ var log = require('loglevel');
 
 var PromiseClass = function() {
 	var self = this;
-	log.warn("Attention! Warning! Achtung! Don't use that shitty promise. Use bluebird instead");
+	console.warn("@@@@ Attention! Warning! Achtung! Don't use that shitty promise. Use bluebird instead");
 
 	self.status = false;
 	self.result = undefined;
@@ -52,12 +52,11 @@ PromiseClass.prototype = {
 	},
 	resolve: function(result) {
 		var self = this;
-
 		self._resolve(result, 'fulfilled');
 	},
 	reject: function(result) {
 		var self = this;
-
+		self.__truePromise = bbPromise.reject(result);
 		self._resolve(result, 'rejected');
 	}
 };
