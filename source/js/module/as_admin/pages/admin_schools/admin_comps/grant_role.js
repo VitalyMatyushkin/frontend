@@ -13,7 +13,7 @@ GrantRole = React.createClass({
     serviceSchoolFilter: function(schoolName) {
         var self = this,
             binding = self.getDefaultBinding();
-        return window.Server.schools.get({
+        return window.Server.getAllSchools.get({
             filter: {
                 where: {
                     name: {
