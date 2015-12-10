@@ -119,7 +119,6 @@ ChallengesView = React.createClass({
 
                 return memo;
             }, Immutable.List());
-        console.log(binding.get('models').toJS());
         return dates.count() !== 0 ? dates.sort().map(function (datetime) {
             var date = new Date(datetime),
                 daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
