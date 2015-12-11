@@ -14,13 +14,13 @@ RegiseterUserDone = React.createClass({
 			<h2>Authorization failed</h2>
 			<div className="ePageMessage_text">
 				You can
-				<div className="bButton" onClick={self.props.onOk}>
+				<a className="bButton" href="/">
 					try again →
-				</div>
+				</a>
 					or
-				<div onClick={self.props.onSingUp} className="bButton" >
+				<a href="/#register" className="bButton" >
 					sign up
-				</div>
+				</a>
 			</div>
 		</div>
 		)
