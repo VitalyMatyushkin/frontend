@@ -52,20 +52,20 @@ ChallengesView = React.createClass({
                 comment = "There are no comments on this fixture";
             }
             if (type === 'inter-schools') {
-                firstName = eventBinding.get('invites.0.guest.name');
-                firstPic = eventBinding.get('invites.0.guest.pic');
-                secondName = eventBinding.get('invites.0.inviter.name');
-                secondPic = eventBinding.get('invites.0.inviter.pic');
+                firstName = eventBinding.get('participants.0.school.name')!== undefined ? eventBinding.get('participants.0.school.name'):'Participant not set';
+                firstPic = eventBinding.get('participants.0.school.pic');
+                secondName = eventBinding.get('participants.1.school.name')!==undefined ? eventBinding.get('participants.1.school.name'):'Participant not set';
+                secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');
                 firstPic = eventBinding.get('participants.0.school.pic');
-                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
+                secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'internal') {
                 firstName = eventBinding.get('participants.0.name');
                 secondName = eventBinding.get('participants.1.name');
                 firstPic = eventBinding.get('participants.0.school.pic');
-                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
+                secondPic = eventBinding.get('participants.1.school.pic');
             }
 
             if (event.get('resultId')) {
@@ -79,7 +79,7 @@ ChallengesView = React.createClass({
                 >
                 <div className="eChallenge_in">
                     <div className="eChallenge_rivalName">
-					{firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : ''}
+					{firstPic!== undefined ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : '-_-'}
 					{firstName}
 					</div>
 
@@ -92,7 +92,7 @@ ChallengesView = React.createClass({
 					</div>
 
 					<div className="eChallenge_rivalName">
-						{secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
+						{secondPic !== undefined ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : '-_-'}
 						{secondName}
 					</div>
                 </div>
@@ -119,8 +119,6 @@ ChallengesView = React.createClass({
 
                 return memo;
             }, Immutable.List());
-
-
         return dates.count() !== 0 ? dates.sort().map(function (datetime) {
             var date = new Date(datetime),
                 daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],

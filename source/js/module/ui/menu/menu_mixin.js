@@ -16,7 +16,6 @@ var SVG = require('module/ui/svg'),
 			authorization = globalBinding.get('userData.authorizationInfo.id'),
 			currentPath = binding.get('currentPath') || '/',
 			menuItems = self.props.items;
-
 		if (itemsBinding && itemsBinding.toJS()) {
 			menuItems = itemsBinding.toJS();
 		}
@@ -62,8 +61,12 @@ var SVG = require('module/ui/svg'),
                         {SvgIcon} {item.name} {itemNum}
                     </a>;
 			}
-
-			return resultNode;
+			//We don't want to show the console tab if the current user is not an admin
+			if(globalBinding.get('currentUserRole')!=='admin' && item.key ==='Console'){
+				return null;
+			}else{
+				return resultNode;
+			}
 		});
 
 		return MenuItemsViews;
