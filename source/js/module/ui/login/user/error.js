@@ -10,14 +10,19 @@ RegiseterUserDone = React.createClass({
 		var self = this;
 
 		return (
-			React.createElement("div", null,
-				React.createElement("h2", null, "Authorization failed"),
-				React.createElement("div", {className: "ePageMessage_text"},
-					"You can ",
-					React.createElement("a", {href: "/", className: "bButton"}, "try again →"),
-					" or ",
-					React.createElement("a", {href: "/#register", className: "bButton"}, "sign up"), " ")
-			)
+		<div>
+			<h2>Authorization failed</h2>
+			<div className="ePageMessage_text">
+				You can
+				<a className="bButton" href="/">
+					try again →
+				</a>
+					or
+				<a href="/#register" className="bButton" >
+					sign up
+				</a>
+			</div>
+		</div>
 		)
 	}
 });
