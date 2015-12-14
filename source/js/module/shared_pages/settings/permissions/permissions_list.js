@@ -15,7 +15,7 @@ PermissionsList = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			userId = globalBinding.toJS('userData.authorizationInfo.userId');
 
-		self.request && self.request.abort();
+		self.request && self.request.cancel();
 
 		self.request = window.Server.userPermission.get(userId).then(function (data) {
 			binding.set(Immutable.fromJS(data));
@@ -24,7 +24,7 @@ PermissionsList = React.createClass({
 	componentWillUnmount: function () {
 		var self = this;
 
-		self.request && self.request.abort();
+		self.request && self.request.cancel();
 	},
 	render: function() {
 		var self = this,

@@ -66,7 +66,7 @@ SchoolDetail = React.createClass({
     componentWillUnmount: function() {
         var self = this;
 
-        self.request && self.request.abort();
+        self.request && self.request.cancel();
     },
     onUserClick:function(value){
         document.location.hash = '/admin_schools/admin_views/user?id='+value;

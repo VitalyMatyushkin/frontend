@@ -127,7 +127,7 @@ ListPageMixin = {
         if(isFiltersActive === undefined && newFilter === undefined){
             self.popUpState = true;
         }
-		self.request && self.request.abort();
+		self.request && self.request.cancel();
 		// Фильтрация по школе
 		if (self.props.addSchoolToFilter !== false) {
 			requestFilter.where.schoolId = self.activeSchoolId;
