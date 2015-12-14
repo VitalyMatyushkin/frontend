@@ -37,7 +37,7 @@ UserDetail= React.createClass({
     },
     componentWillUnmount: function() {
         var self = this;
-        self.request && self.request.abort();
+        self.request && self.request.cancel();
     },
     onSchoolClick:function(value){
         document.location.hash = '/admin_schools/admin_views/detail?id='+value;
