@@ -159,7 +159,7 @@ Form = React.createClass({
                 self._createBindedClones(child);
             }
 
-            return React.addons.cloneWithProps(child, {
+            return React.cloneElement(child, {
                 binding: binding.meta(child.props.field),
                 service: self.props.service
             });
