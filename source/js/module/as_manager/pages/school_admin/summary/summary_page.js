@@ -26,7 +26,7 @@ SchoolSummary = React.createClass({
     componentWillUnmount: function() {
         var self = this;
 
-        self.request && self.request.abort();
+        self.request && self.request.cancel();
     },
     render: function() {
         var self = this,

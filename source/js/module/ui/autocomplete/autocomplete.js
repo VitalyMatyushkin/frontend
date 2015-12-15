@@ -105,9 +105,8 @@ Autocomplete = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		if (self.pendingRequest && self.pendingRequest.abort) {
-			self.pendingRequest.abort();
-		}
+		self.pendingRequest && self.pendingRequest.cancel();
+
 		binding.set('loading', true);
 		binding.set('response', null);
 
@@ -140,9 +139,8 @@ Autocomplete = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		if (self.pendingRequest && self.pendingRequest.abort) {
-			self.pendingRequest.abort();
-		}
+        self.pendingRequest && self.pendingRequest.cancel();
+
 		self.pendingRequest = self.props.serviceFullData().then(function (data) {
 			self.responseData = data;
 			self.setDefaultId();
@@ -152,9 +150,7 @@ Autocomplete = React.createClass({
 	componentWillUnmount: function () {
 		var self = this;
 
-		if (self.pendingRequest && self.pendingRequest.abort) {
-			self.pendingRequest.abort();
-		}
+        self.pendingRequest && self.pendingRequest.cancel();
 	},
 	renderComboboxOptions: function () {
 		var self = this,

@@ -35,7 +35,10 @@ Table = React.createClass({
 		} else {
 			delete self.filter[field];
 		}
-        if(Object.keys(self.filter).length >1){var keyToDel =Object.keys(self.filter)[0]; delete self.filter[keyToDel];}
+        if(Object.keys(self.filter).length >1){
+            var keyToDel =Object.keys(self.filter)[0];
+            delete self.filter[keyToDel];
+        }
 		self.props.onFilterChange && self.props.onFilterChange(self.filter);
 	},
     getQuickEditActions:function(){

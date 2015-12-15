@@ -20,7 +20,7 @@ ListPageMixin = {
 			binding = self.getDefaultBinding(),
 			isFiltersActive = binding.meta().get('isFiltersActive');
 
-		self.request && self.request.abort();
+		self.request && self.request.cancel();
 
 		// Фильтрация по школе
 		requestFilter = {
@@ -50,7 +50,7 @@ ListPageMixin = {
 	componentWillUnmount: function () {
 		var self = this;
 
-		self.request && self.request.abort();
+		self.request && self.request.cancel();
 	},
 	toggleFilters: function() {
 		var self = this,
