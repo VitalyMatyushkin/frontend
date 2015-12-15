@@ -13,12 +13,16 @@ Head = React.createClass({
         });
     },
     serviceChildrenFilter: function (userId) {
-        var self = this;
+        var self = this,
+            eventChild = [],
+            binding = self.getDefaultBinding();
         return window.Server.userChildren.get(userId).then(function (data) {
             //Initial API call only returns ids of the user's children
             data.map(function (player) {
                 //Iterates and fetches all other details by making extra API calls
                 window.Server.user.get({id:player.userId}).then(function(r){
+                    eventChild.push(r);
+                    binding.set('events.eventChild',Immutable.fromJS(eventChild));
                     player.name = r.firstName+' '+r.lastName;
                     return player;
                 });
@@ -75,6 +79,11 @@ Head = React.createClass({
                             onSelect={self.setActiveChild}
                             binding={binding.sub('autocomplete')}
                             />
+                    </div>
+                </If>
+                <If condition={rootBinding.get('userData.authorizationInfo.userId')}>
+                    <div className="bDropdown">
+                        <input type="checkbox" ref="checkAll">Show for all Children</input>
                     </div>
                 </If>
                 <UserBlock binding={binding.sub('userData')}/>

@@ -46,11 +46,9 @@ ChallengesList = React.createClass({
 			sync = binding.get('sync'),
             events = binding.get('models').filter(function (event) {
                 var eventDate = new Date(event.get('startTime'));
-
                 return eventDate.getMonth() === currentDate.getMonth() &&
                     eventDate.getFullYear() === currentDate.getFullYear();
             });
-
         return events.count() ? events.map(function (event) {
             var eventDate = new Date(event.get('startTime')),
                 hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,

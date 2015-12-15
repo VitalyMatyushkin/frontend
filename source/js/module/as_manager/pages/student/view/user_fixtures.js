@@ -80,9 +80,9 @@ UserFixtures = React.createClass({
                 }
                 if (type === 'inter-schools') {
                     firstName = event.participants[0].school.name;
-                    secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
+                    secondName = event.participants[1]!== undefined ?event.participants[1].school.name :'';
                     firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
+                    secondPic = event.participants[1]!==undefined?event.participants[1].school.pic:'';
                 } else if (type === 'houses') {
                     firstName = event.participants[0].house.name;
                     secondName = event.participants[1].house.name;
