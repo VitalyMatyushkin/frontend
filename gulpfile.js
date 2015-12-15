@@ -85,15 +85,21 @@ gulp.task('svg_symbols', function () {
 	return files;
 });
 
+/** Set few details to make build easier */
 gulp.task('normalize', function () {
 	var fs = require('fs'),
-		path = './source/js/bower/react/.bower.json',
-		json = require(path);
+		reactPath = './source/js/bower/react/.bower.json',
+		reactJSON = require(reactPath),
+		moreartyPath = './source/js/bower/moreartyjs/.bower.json',
+		moreartyJSON = require(moreartyPath);
 
-	if (json.main !== 'react-with-addons.js') {
-		json.main = 'react-with-addons.js';
-		fs.writeFile(path, JSON.stringify(json, null, 4));
+	if (reactJSON.main !== 'react-with-addons.js') {
+		reactJSON.main = 'react-with-addons.js';
+		fs.writeFile(reactPath, JSON.stringify(reactJSON, null, 4));
 	}
+
+	moreartyJSON.main = 'dist/morearty.js';
+	fs.writeFile(moreartyPath, JSON.stringify(moreartyJSON, null, 4));
 });
 
 
