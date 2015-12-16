@@ -13,6 +13,7 @@ requirejs.config({
         jquery:     bowerDir + 'jquery/dist/jquery',
         morearty:   bowerDir + 'moreartyjs/dist/morearty',
         react:      bowerDir + "react/react-with-addons",
+        reactDom:   bowerDir + 'react/react-dom',
         loglevel:   bowerDir + "loglevel/dist/loglevel.min",
         bluebird:   bowerDir + 'bluebird/js/browser/bluebird'
     },

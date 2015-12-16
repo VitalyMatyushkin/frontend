@@ -139,11 +139,19 @@ gulp.task('moveCoreScripts', function(){
 		.pipe(gulp.dest(BUILD + '/js'));
 });
 
-gulp.task('moveBowerScripts', function() {
+gulp.task('moveBowerScripts', ['moveMainBowerScripts', 'moveAdditionalBowerScripts']);
+
+/** Moving all main files from bower deps */
+gulp.task('moveMainBowerScripts', function(){
 	return gulp.src(bower({checkExistence: true}), { base: SOURCE + '/js/bower' })
-		.pipe(gulp.dest(BUILD + '/js/bower'));
+			.pipe(gulp.dest(BUILD + '/js/bower'));
 });
 
+/** Moves react-dom which is not main bower file */
+gulp.task('moveAdditionalBowerScripts', function(){
+	return gulp.src(SOURCE + '/js/bower/react/react-dom.js')
+			.pipe(gulp.dest(BUILD + '/js/bower/react'));
+});
 
 /** Just deletes BUILD folder */
 gulp.task('clean', function (callback) {

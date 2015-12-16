@@ -2,6 +2,7 @@ var ApplicationView = require('module/as_school/application'),
 	serviceList = require('module/core/service_list'),
 	userDataInstance = require('module/data/user_data'),
 	authController = require('module/core/auth_controller'),
+	ReactDom = require('reactDom'),
 	MoreartyContext,
 	binding;
 
@@ -41,7 +42,7 @@ function initMainView(schoolId) {
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
 	// Инициализация приложения
-	React.render(
+	ReactDom.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);
