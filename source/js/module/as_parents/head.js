@@ -42,6 +42,10 @@ Head = React.createClass({
             authorization: true
         }];
     },
+    componentDidMount: function () {
+        var self = this;
+        React.findDOMNode(self.refs.checkAll).checked = true; //set the check all box to checked
+    },
     setActiveChild: function() {
         var self = this,
             binding = self.getDefaultBinding();
@@ -57,8 +61,36 @@ Head = React.createClass({
                 .set('events.models', Immutable.fromJS(data))
                 .set('sync', true)
                 .commit();
-
+            React.findDOMNode(self.refs.checkAll).checked = false; //Toggle checkbox off
         });
+    },
+    toggleCheckAllBox:function(evt){
+        var checkBoxAttr = evt.currentTarget.checked,
+            self = this,
+            binding = self.getDefaultBinding();
+        if(checkBoxAttr){
+            self.persistChildId = binding.get('events.activeChildId');
+            binding
+                .atomically()
+                .set('events.activeChildId','all')
+                .set('events.models',binding.get('events.persistEventModels'))
+                .set('sync',true)
+                .commit();
+        }else{
+            if(binding.get('events.activeChildId')==='all' && self.persistChildId === undefined){
+                alert('Please choose a student');
+                evt.currentTarget.checked = true;
+            }else{
+                window.Server.studentEvents.get({id: self.persistChildId}).then(function (data) {
+                    binding
+                        .atomically()
+                        .set('events.activeChildId',self.persistChildId)
+                        .set('events.models', Immutable.fromJS(data))
+                        .set('sync', true)
+                        .commit();
+                });
+            }
+        }
     },
     render: function () {
         var self = this,
@@ -82,8 +114,8 @@ Head = React.createClass({
                     </div>
                 </If>
                 <If condition={rootBinding.get('userData.authorizationInfo.userId')}>
-                    <div className="bDropdown">
-                        <input type="checkbox" ref="checkAll">Show for all Children</input>
+                    <div className="bDropdown" style={{marginLeft:-68+'px'}}>
+                        <input type="checkbox" ref="checkAll" onClick={self.toggleCheckAllBox}>Show for all Children</input>
                     </div>
                 </If>
                 <UserBlock binding={binding.sub('userData')}/>

@@ -48,15 +48,6 @@ EventView = React.createClass({
                         window.Server.studentEvents.get({id:child.id})
                             .then(function(data){self.processRequestData(data,child.userId)});
                     });
-                    //self.request = window.Server.studentEvents.get({id: userChildren[0].id}).then(function (data) {
-                    //    binding
-                    //        .atomically()
-                    //        .set('activeChildId', Immutable.fromJS(userChildren[0].id))
-                    //        .set('models', Immutable.fromJS(data))
-                    //        .set('sync', true)
-                    //        .commit();
-                    //});
-                    //return self.request;
                     return self.request;
                 }
             });
@@ -96,6 +87,7 @@ EventView = React.createClass({
             binding
                 .atomically()
                 .set('activeChildId','all')
+                .set('persistEventModels',Immutable.fromJS(self.eventModel))
                 .set('models',Immutable.fromJS(self.eventModel))
                 .set('sync',true)
                 .commit();

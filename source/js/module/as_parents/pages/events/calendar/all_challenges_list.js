@@ -52,43 +52,20 @@ AllChallengesList = React.createClass({
                 return eventDate.getMonth() === currentDate.getMonth() &&
                     eventDate.getFullYear() === currentDate.getFullYear();
             });
-        console.log(binding.get('models').toJS());
-        //return events.count() ? events.map(function (event) {
-        //    var eventDate = new Date(event.get('startTime')),
-        //        hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
-        //        isHoverDay = hoverDay &&
-        //            hoverDay.getMonth() === eventDate.getMonth() &&
-        //            hoverDay.getDate() === eventDate.getDate(),
-        //        stringDate = self.formatDate(event.get('startTime'));
-        //
-        //    return <div className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'}>
-        //        <div className="eChallenge_basic">
-        //            <span className="eChallenge_date">{stringDate}</span>
-        //            <span className="eChallenge_type">{event.get('type')}</span>
-        //        </div>
-        //        <div className="eChallenge_name">{event.get('name')}</div>
-        //        <div className="eChallenge_rivals">
-        //            <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
-        //            <span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
-        //        </div>
-        //    </div>
-        //}).toArray() : <div className="eChallenge mNotFound">{sync ? "You haven't events on this month." : "Loading..."}</div>;
-
         //Iterate over the children present in the bag
-        return childrenOfUser.count()? childrenOfUser.map(function(child){
+        return (childrenOfUser && childrenOfUser.count())? childrenOfUser.map(function(child){
             child.event = events.filter(function(ev){
                 return ev.get('childId') === child.get('id');
             });
-            return child.event.count() ? child.event.map(function(childEv){
-                    var eventDate = new Date(childEv.get('startTime')),
-                        hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
-                        isHoverDay = hoverDay &&
-                            hoverDay.getMonth() === eventDate.getMonth() &&
-                            hoverDay.getDate() === eventDate.getDate(),
-                        stringDate = self.formatDate(childEv.get('startTime'));
+            var childFixtures = child.event.count() ? child.event.map(function(childEv){
+                var eventDate = new Date(childEv.get('startTime')),
+                    hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
+                    stringDate = self.formatDate(childEv.get('startTime')),
+                    isHoveredDay =  hoverDay &&
+                        hoverDay.getMonth() === eventDate.getMonth() &&
+                        hoverDay.getDate() === eventDate.getDate();
                 return(
-                    <div className={isHoverDay ? 'eChallenge eChallenge_all mActive' : 'eChallenge eChallenge_all'}>
-                        <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
+                    <div className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'}>
                         <div className="eChallenge_basic">
                             <span className="eChallenge_date">{stringDate}</span>
                             <span className="eChallenge_type">{childEv.get('type')}</span>
@@ -101,13 +78,18 @@ AllChallengesList = React.createClass({
                     </div>
                 );
             }).toArray() : (
-                <div className="eChallenge eChallenge_all">
-                    <div className="eChallenge_childName"> {child.get('firstName')+' '+child.get('lastName')}</div>
+                <div>
                     <div className="eChallenge_basic">
                         <span className="eChallenge_date">{}</span>
                         <span className="eChallenge_type">{'no fixtures'}</span>
                     </div>
-                    <div className="eChallenge_name">{'bright'}</div>
+                    <div className="eChallenge_name">{'N/A'}</div>
+                </div>
+            );
+            return (
+                <div className= "eChallenge eChallenge_all">
+                    <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
+                    {childFixtures}
                 </div>
             );
         }).toArray():<div className="eChallenge mNotFound">{sync ? "You haven't events on this month." : "Loading..."}</div>;
