@@ -1,6 +1,9 @@
 {
     "ecmaFeatures": {
-        "jsx": true
+        "jsx": true,
+        "blockBindings": true,
+        "templateStrings": true,
+        "arrowFunctions": true
     },
     "rules": {
     }
