@@ -98,6 +98,7 @@ function runManagerMode() {
 		}
 	);
 
+
 	// Инициализация приложения
 	ReactDom.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),

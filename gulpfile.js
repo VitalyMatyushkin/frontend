@@ -10,7 +10,6 @@ var SOURCE = './source',
 	sass = require('gulp-sass'),
 	sourcemaps = require('gulp-sourcemaps'),
 	autoprefixer = require('gulp-autoprefixer'),	// Parse CSS and add vendor prefixes to CSS rules using values from the Can I Use website
-	react = require('gulp-react'), 					// precompiles React JSX to JS
 	connect = require('gulp-connect'),
 	svgstore = require('gulp-svgstore'),
 	svgmin = require('gulp-svgmin'),
@@ -87,7 +86,7 @@ gulp.task('svg_symbols', function () {
 });
 
 /** Set few details to make build easier */
-gulp.task('normalize', function () {
+gulp.task('normalize', function (done) {
 	var fs = require('fs'),
 		reactPath = './source/js/bower/react/.bower.json',
 		reactJSON = require(reactPath),
@@ -101,21 +100,20 @@ gulp.task('normalize', function () {
 
 	moreartyJSON.main = 'dist/morearty.js';
 	fs.writeFile(moreartyPath, JSON.stringify(moreartyJSON, null, 4));
+
+	done(null);
 });
 
 
 /** Building css from scss */
 gulp.task('styles', function () {
-	var files = gulp.src(SOURCE + '/styles/**/*.scss');
-
-	files = files.pipe(sourcemaps.init());
-	files = files.pipe(autoprefixer({ browsers: ['last 2 versions'], cascade: false }));
-	files = files.pipe(concat('build.css'));
-	files = files.pipe(gulp.dest(BUILD + '/styles')).pipe(sass());
-	files = files.pipe(gulp.dest(BUILD + '/styles'));
-	files = files.pipe(connect.reload());
-
-	return files;
+	return gulp.src(SOURCE + '/styles/**/*.scss')
+		.pipe(sourcemaps.init())
+		.pipe(autoprefixer({ browsers: ['last 2 versions'], cascade: false }))
+		.pipe(concat('build.css'))
+		.pipe(gulp.dest(BUILD + '/styles')).pipe(sass())
+		.pipe(gulp.dest(BUILD + '/styles'))
+		.pipe(connect.reload());
 });
 
 // AMD script files
@@ -129,7 +127,7 @@ function buildToAmdScripts(path){
 		.pipe(gulpif(VERBOSE, using({})))		// printing all files picked in case of VERBOSE
 		.pipe(babel())							// converting JSX to JS and some parts of ES6 to ES5
 		.pipe(requireConvert())					// converting CommonJS modules to AMD modules
-		.pipe(gulp.dest(BUILD + '/js/module'))	// saving again
+		.pipe(gulp.dest(BUILD + '/js/module'))  // saving again
 		.pipe(connect.reload());				// reloading connect
 }
 
@@ -161,21 +159,20 @@ gulp.task('clean', function (callback) {
 });
 
 // Live reload
-gulp.task('connect', function() {
+gulp.task('connect', function(done) {
 	connect.server({
 		root: './',
 		livereload: true
 	});
+	done(null);
 });
-
 
 gulp.task('clean_amd', function (callback) {
 	del(BUILD + '/js/module', callback);
 });
 
 // Run build
-gulp.task('default', function (callback) {
-	run('clean', 'lint', 'connect', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', callback);
+gulp.task('default', function (done) {
 
 	gulp.watch(SOURCE + '/styles/**/*.scss', function(event) {
 		console.log('STYLES RELOAD');
@@ -191,6 +188,8 @@ gulp.task('default', function (callback) {
 		console.log('AMD SCRIPTS RELOAD');
 		run('clean_amd', 'amd_scripts');
 	});
+
+	run('clean', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', 'connect', done);
 });
 
 gulp.task('deploy', function (callback) {

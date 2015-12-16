@@ -25,7 +25,6 @@
     "gulp-eslint": "^1.0.0",
     "gulp-filenames": "^1.3.0",
     "gulp-if": "^1.2.5",
-    "gulp-react": "^2.0.0",
     "gulp-require-convert": "0.0.1",
     "gulp-sass": "^2.0.1",
     "gulp-sourcemaps": "^1.3.0",
