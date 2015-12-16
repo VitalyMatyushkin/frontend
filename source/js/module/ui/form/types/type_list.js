@@ -12,7 +12,7 @@ var TypeText = require('module/ui/form/types/text'),
     TypeTextArea = require('module/ui/form/types/textarea'),
 	typeList = {};
 
-// Типы элементов ввода
+// Input element type list
 typeList['text'] = TypeText;
 typeList['confirmText'] = TypeConfirmText;
 typeList['area'] = TypeArea;

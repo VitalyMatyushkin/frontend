@@ -4,7 +4,6 @@ var FormField,
 FormField = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
-		console.log('getting default state...');
 		return Immutable.Map({
 			value: '',
 			showError: false,
@@ -21,8 +20,6 @@ FormField = React.createClass({
 			binding = self.getDefaultBinding(),
 			inputField = React.createElement(typeList[self.props.type], self.props),
 			fieldStyleClass = 'eForm_fieldSet';
-
-		console.log("Binding is: " + binding);
 
 		inputField = React.addons.cloneWithProps(inputField, {
 			name: self.props.children,
