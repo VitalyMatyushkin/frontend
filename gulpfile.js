@@ -20,6 +20,7 @@ var SOURCE = './source',
 	uglify = require('gulp-uglify'),		// minimize js
 	eslint = require('gulp-eslint'),
 	filenames = require('gulp-filenames'),
+	babel = require("gulp-babel"),
 	karmaServer = require('karma').Server;
 
 /** This task collect all files which tends to be karma configuration and build array with filenames.
@@ -126,7 +127,7 @@ gulp.task('amd_scripts', function(){
 function buildToAmdScripts(path){
 	return gulp.src(path)						// picking everything from path
 		.pipe(gulpif(VERBOSE, using({})))		// printing all files picked in case of VERBOSE
-		.pipe(react())							// converting JSX to usual JS
+		.pipe(babel())							// converting JSX to JS and some parts of ES6 to ES5
 		.pipe(requireConvert())					// converting CommonJS modules to AMD modules
 		.pipe(gulp.dest(BUILD + '/js/module'))	// saving again
 		.pipe(connect.reload());				// reloading connect
@@ -136,6 +137,7 @@ function buildToAmdScripts(path){
 /** Moving all files from source/js to build/js withoud doing anything. Directories not affected */
 gulp.task('moveCoreScripts', function(){
 	return gulp.src(SOURCE + '/js/*.js')
+		.pipe(babel())						// some ES6 magic to people
 		.pipe(gulp.dest(BUILD + '/js'));
 });
 

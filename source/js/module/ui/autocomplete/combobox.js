@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 
 var guid = 0;
 var k = function () {

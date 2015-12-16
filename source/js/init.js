@@ -55,13 +55,13 @@ requirejs(
             crossDomain: true
         });
 
-        var myDomain = document.location.hostname;
-        var api = loaderUtils.apiSelector(myDomain);
-        var startModule = loaderUtils.startModuleSelector(myDomain);
+        const myDomain = document.location.hostname;
+        const api = loaderUtils.apiSelector(myDomain);
+        const startModule = loaderUtils.startModuleSelector(myDomain);
 
         log.enableAll();    // let it be here a bit...
-        log.info('API: ' + api);
-        log.info('start module: ' + startModule);
+        log.info(`API: ${api}`);
+        log.info(`start module: ${startModule}` );
 
         window.apiBase = api;
 
