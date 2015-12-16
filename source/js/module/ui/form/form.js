@@ -124,7 +124,7 @@ var Form = React.createClass({
             if (['object', 'function'].indexOf(typeOfService) !== -1) {
                 userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
 
-                userService(dataToPost).then(self._onServiceSucces.bind(self), self._onServiceError.bind(self));
+                userService(dataToPost).then(self._onServiceSucces/*.bind(self)*/, self._onServiceError/*.bind(self)*/); // React told we don't need .bind()
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
                 var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :
