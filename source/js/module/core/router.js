@@ -183,7 +183,7 @@ RouterView = React.createClass({
 		});
 
 		// Handling address(url) change
-		window.addEventListener('popstate', self.updateUrlParametrs.bind(self));	// React told we don't need .bind() but I'm not sure
+		window.addEventListener('popstate', self.updateUrlParametrs/*.bind(self)*/);	// React told we don't need .bind() but I'm not sure
 
 		// Binding authorization info
 		self.bindToAuthorization();

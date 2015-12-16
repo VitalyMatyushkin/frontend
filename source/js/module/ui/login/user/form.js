@@ -20,7 +20,7 @@ LoginUserForm = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<Form derName="DerLoginForm" name={self.tmpFormName} service={window.Server.login} binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
+			<Form name={self.tmpFormName} service={window.Server.login} binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				<FormField type="text" field="username" validation="required" >Username or email</FormField>
 				<FormField type="text" textType="password" field="password" validation="required" binding={binding}>Password</FormField>
 			</Form>

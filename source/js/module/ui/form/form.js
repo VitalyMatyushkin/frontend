@@ -42,7 +42,7 @@ var Form = React.createClass({
     },
 
     /**
-     * TODO: 
+     * TODO:
      * Emhhh. I'm not sure what it really does even after reading russian description. So let russian comment will stay
      * here for a while.
      *

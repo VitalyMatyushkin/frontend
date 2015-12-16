@@ -21,7 +21,8 @@ FormField = React.createClass({
 			inputField = React.createElement(typeList[self.props.type], self.props),
 			fieldStyleClass = 'eForm_fieldSet';
 
-		inputField = React.addons.cloneWithProps(inputField, {
+		// TODO: Emhh...
+		inputField = React.cloneElement(inputField, {
 			name: self.props.children,
 			service: self.props.service,
 			binding: self.getDefaultBinding()
