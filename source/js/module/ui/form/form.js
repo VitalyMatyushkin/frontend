@@ -1,8 +1,13 @@
 /**
  * HTML Form.
  *
- * All nested components will be copied and filled with binding of this form.
- * So, injecting current binding in all children is not necessary.
+ * Can propagate self binding to all children ant their children.
+ * Propagating binding is default behavior. To turn this option off provide `propagateBinding = false` property.
+ *
+ * In case of binding propagation all nested components will be copied and filled with binding of this form.
+ * In this case injecting binding in all children is not necessary.
+ *
+ * NOTE: I'm not sure if binding propagation is good idea, but it was implemented in that way.
  *
  */
 var Form = React.createClass({
@@ -35,7 +40,12 @@ var Form = React.createClass({
         binding.meta().set('buttonText', self.defaultButton);
         self.busy = false;
     },
+
     /**
+     * TODO: 
+     * Emhhh. I'm not sure what it really does even after reading russian description. So let russian comment will stay
+     * here for a while.
+     *
      * Метод переносит значение из заданного поля в поле со значением по умочанию
      * Такой подход необходим, т.к. данные могут прийти асинхронно, а значит поле value у node-элемента
      * привязать к модели напрямую нелья
@@ -205,8 +215,14 @@ var Form = React.createClass({
             Title = <h2 dangerouslySetInnerHTML={{__html: self.props.name}}/>;
         }
 
-        // Making children with current binding
-        var childrenWithBinding = self._createBindedClones(self);
+        // Making children with current binding in case if user not disabled this option.
+        var bindedChildren;
+        if(self.props.propagateBinding === false) {
+            bindedChildren = self.props.children;
+        } else {
+            bindedChildren = self._createBindedClones(self);
+        }
+
 
         return (
             <div className={self.props.formStyleClass ? self.props.formStyleClass : 'bForm'} onKeyDown={self._keyPress}>
@@ -214,7 +230,7 @@ var Form = React.createClass({
 
                     {Title}
 
-                    {childrenWithBinding}
+                    {bindedChildren}
 
                     <div className="eForm_savePanel">
                         <div className="bButton mRight" tabIndex="-1" ref="submitButton"
