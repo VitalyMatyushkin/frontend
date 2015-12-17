@@ -12,16 +12,17 @@ RouterView = React.createClass({
 		function updateAuth() {
 			var data = authBinding.toJS();
 
-			// TODO: упросить проверку, добавит права?
+			// TODO: make check a bit easier. Add policy/rules check?
 			if (data && data.id && data.verified) {
 				self.isAuthorized = true;
 
-				// Перенаправление на страницу верификации
+				// Redirecting to verification page
 				if (!data.verified.email ||  !data.verified.phone) {
 					self.isVerified = false;
 				} else {
 					self.isVerified = true;
-					// В случае возобновления авторизиаця перенаправяем пользователя на ожидаему страницу
+					// in case of redirection resumption user will be redirected to expected page
+					// TODO: does it really work????????????
 					self.nextRoute && self.setRoute(self.nextRoute);
 					self.nextRoute = false;
 				}
@@ -35,7 +36,7 @@ RouterView = React.createClass({
 		updateAuth();
 	},
 	/**
-	 * Получение данных из компонента роутинга
+	 * Getting data from routing component
 	 * @param routeComponent
 	 * @returns {Array}
 	 * @private
@@ -69,7 +70,7 @@ RouterView = React.createClass({
 		return routes;
 	},
 	/**
-	 * Обработка родительский компонентов
+	 * Handling for parent component
 	 * @param children
 	 * @returns {Array}
 	 */
@@ -78,7 +79,7 @@ RouterView = React.createClass({
 			routes = [];
 
 		children && children.forEach(function(route){
-			// Обработка вложенных маршрутов
+			// Processing nested routes
 			if (route.props.children) {
 				routes = routes.concat(self.getRouteFromChildren(route.props.children));
 			} else {
@@ -90,12 +91,12 @@ RouterView = React.createClass({
 		return routes;
 	},
 	/**
-	 * Установка заданного маршрута, как активного
+	 * Setting route to be active
 	 */
 	setRoute: function(route) {
 		var self = this;
 
-		// Загрузка компонента, соответствующего пути
+		// Loading path - related component
 		window['require']([route.component], function (ComponentView) {
 
 			self.siteComponents[route.path] = {
@@ -114,7 +115,7 @@ RouterView = React.createClass({
 		});
 	},
 	/**
-	 * Добавление нового маршрута
+	 * Adding new route
 	 * @param route
 	 */
 	addRoute: function(route) {
@@ -123,11 +124,11 @@ RouterView = React.createClass({
 		self.siteRoutes[route.path] = function(){
 			var pathParameters = Array.prototype.slice.call(arguments, 0);
 
-			// Обновление значений параметрезированных частей пути
+			// Updating parametrized parts of path
 			pathParameters.length && self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));
 
-			// В случае отсутсвия авторизации принудительно перенаправляем на страницу логина
-			// при этом сохраняем последний намеченный роутинг
+			// User will be redirected to login page when unauthorized.
+			// In this case latest routing is saved
 			if (route.unauthorizedAccess === true) {
 				self.setRoute(route);
 			} else {
@@ -151,6 +152,7 @@ RouterView = React.createClass({
 			parametersIndex = urlHash.indexOf('?'),
 			parametersResult = {};
 
+
 		if (parametersIndex !== -1) {
 			urlHash = urlHash.substr(parametersIndex + 1);
 			urlHash.split('&').forEach(function(oneParameter) {
@@ -160,6 +162,7 @@ RouterView = React.createClass({
 			});
 		}
 
+		//console.log("self: " + self);
 		self.RoutingBinding.set('parameters', Immutable.fromJS(parametersResult));
 
 	},
@@ -174,18 +177,18 @@ RouterView = React.createClass({
 		self.siteRoutes = {};
 		self.siteComponents = {};
 
-		// Добавление маршрутов сайта
+		// Adding site routes
 		routes && routes.forEach(function(route){
 			self.addRoute(route);
 		});
 
-		// Обработка изменений адреса
-		window.addEventListener('popstate', self.updateUrlParametrs.bind(self));
+		// Handling address(url) change
+		window.addEventListener('popstate', self.updateUrlParametrs/*.bind(self)*/);	// React told we don't need .bind() but I'm not sure
 
-		// Связывание с инфорамцией об авторизации
+		// Binding authorization info
 		self.bindToAuthorization();
 
-		// Инициализации маршрутизатора
+		// router init
 		self.updateUrlParametrs();
 
 		self.routerInstance = Router(self.siteRoutes);
@@ -196,7 +199,7 @@ RouterView = React.createClass({
 			currentPath = self.currentPath,
 			siteComponent = self.siteComponents[currentPath];
 
-		// Вынужденный костыль, надо сменить роутер :D
+		// Dirty ad-hoc solution. Router update required (wrote by somebody, I don't understand really)
 		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
 			document.location = '#login';
 		}

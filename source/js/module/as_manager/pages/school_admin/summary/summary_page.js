@@ -35,7 +35,6 @@ SchoolSummary = React.createClass({
             siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
 
-
         return (
             <div>
                 <h1 className="eSchoolMaster_title">
@@ -56,7 +55,7 @@ SchoolSummary = React.createClass({
 
                 <p>Site: <a href={'//' + siteLink} target="blank" title="binding.get('name') homepage">http://{siteLink}</a></p>
 
-                <If condition={geoPoint}>
+                <If condition={geoPoint !== undefined}>
                     <Map binding={binding} point={binding.toJS('postcode.point')}/>
                 </If>
             </div>

@@ -14,12 +14,12 @@
   "directory": "source/js/bower",
   "dependencies": {
     "jquery": "~2.1.3",
-    "immutable": "~3.4.1",
-    "react": "~0.13",
-    "moreartyjs": "https://github.com/SquadInTouch/moreartyjs-legacy.git#fe618599bbe0c385b7f0cb1c934c37de85d24f17",
+    "immutable": "~3.7.5",
+    "react": "~0.14",
+    "moreartyjs": "~0.7.25",
     "requirejs": "~2.1.15",
     "director": "~1.2.5",
-    "classnames": "~1.1.4",
+    "classnames": "~2.2.0",
     "loglevel": "~1.4.0",
     "bluebird": "~3.0.6"
   }

@@ -27,7 +27,7 @@ RegiseterUserForm = React.createClass({
 				<FormField type="confirmText" field="email" validation="required email server">Email</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required">Password</FormField>
 				<label>Select role</label>
-				<select id="roleSelect" onChange={self._selectChanged.bind(null,self)}>
+				<select id="roleSelect" onChange={self._selectChanged}>
 					<option value="manager">Manager</option>
 					<option value="coach">Coach</option>
 					<option value="teacher">PE Teacher</option>

@@ -67,7 +67,7 @@ var MaskedInput = React.createClass({
 				}
 				i++
 			} else {
-				if (nextChar = value.substr(j++, 1)) {
+				if ((nextChar = value.substr(j++, 1))) {
 					if (rexps[newValue.length + 1].test(nextChar)) {
 						newValue += nextChar;
 						cursorMax = newValue.length;

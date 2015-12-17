@@ -2,6 +2,7 @@ var FormField,
 	typeList = require('module/ui/form/types/type_list');
 
 FormField = React.createClass({
+	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.Map({
 			value: '',
@@ -14,14 +15,14 @@ FormField = React.createClass({
 		field: React.PropTypes.string.isRequired,
 		defaultValueString:React.PropTypes.string
 	},
-	mixins: [Morearty.Mixin],
 	render: function () {
 		var self = this,
-			binding = this.getDefaultBinding(),
+			binding = self.getDefaultBinding(),
 			inputField = React.createElement(typeList[self.props.type], self.props),
 			fieldStyleClass = 'eForm_fieldSet';
 
-		inputField = React.addons.cloneWithProps(inputField, {
+		// TODO: Emhh...
+		inputField = React.cloneElement(inputField, {
 			name: self.props.children,
 			service: self.props.service,
 			binding: self.getDefaultBinding()
