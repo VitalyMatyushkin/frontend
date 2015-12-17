@@ -99,7 +99,7 @@ gulp.task('normalize', function (done) {
 	}
 
 	moreartyJSON.main = 'dist/morearty.js';
-	fs.writeFile(moreartyPath, JSON.stringify(moreartyJSON, null, 4));
+	fs.writeFileSync(moreartyPath, JSON.stringify(moreartyJSON, null, 4));
 
 	done(null);
 });
@@ -189,7 +189,7 @@ gulp.task('default', function (done) {
 		run('clean_amd', 'amd_scripts');
 	});
 
-	run('clean', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', 'connect', done);
+	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', 'connect', done);
 });
 
 gulp.task('deploy', function (callback) {
