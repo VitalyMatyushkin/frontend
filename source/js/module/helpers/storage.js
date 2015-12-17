@@ -30,9 +30,9 @@ Helpers.LocalStorage = {
         }
     },
     get: function (key) {
-        var value;
+        const value = localStorage.getItem(key);
 
-        if (value = localStorage.getItem(key)) {
+        if (value !== null) {
             return (value.indexOf('{') !== -1 || value.indexOf('[') !== -1 ? JSON.parse(value) : value);
         } else {
             return undefined;

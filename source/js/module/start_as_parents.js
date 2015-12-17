@@ -3,6 +3,7 @@ var ApplicationView = require('module/as_parents/application'),
 	userRulesInstance = require('module/data/user_rules'),
 	authController = require('module/core/auth_controller'),
 	serviceList = require('module/core/service_list'),
+	ReactDom = require('reactDom'),
 	MoreartyContext,
 	binding;
 
@@ -52,7 +53,7 @@ function runParentMode() {
 		defaultPath: 'events/calendar'
 	});
 
-	React.render(
+	ReactDom.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);

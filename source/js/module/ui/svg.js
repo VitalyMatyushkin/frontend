@@ -1,7 +1,8 @@
-var SVG;
+
+var ReactDOM = require('reactDom');
 //<svg class="bIcon"><use xlink:href="#icon_key"></use></svg>
 
-SVG = React.createClass({
+var SVG = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		icon: React.PropTypes.string.isRequired,
@@ -9,8 +10,7 @@ SVG = React.createClass({
 	},
 	componentDidMount: function() {
 		var self = this;
-
-		self.getDOMNode().firstElementChild.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + self.props.icon);
+		ReactDOM.findDOMNode(self).firstElementChild.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + self.props.icon);
 	},
 	render: function() {
 		var self = this,

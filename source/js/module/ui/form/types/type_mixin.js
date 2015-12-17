@@ -45,7 +45,7 @@ InputTypeMixin = {
 			return false;
 		}
 
-		if (currentCheck = self.validations[validType](value)) {
+		if ((currentCheck = self.validations[validType](value))) {
 			binding.set('error', currentCheck);
 
 			return currentCheck;

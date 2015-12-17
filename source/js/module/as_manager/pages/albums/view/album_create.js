@@ -27,7 +27,7 @@ var AlbumCreate = React.createClass({
 			name: data.name,
 			description: data.name,
 			eventId: self.eventId,
-			ownerId: data.ownerId,
+			ownerId: data.ownerId
 		}).then(function() {
 			self.isMounted() && window.history.back();
 		});
