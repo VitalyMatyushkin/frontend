@@ -181,12 +181,12 @@ gulp.task('default', function (done) {
 
 	gulp.watch(SOURCE + '/js/*.js', function(event) {
 		console.log('MAIN SCRIPTS RELOAD');
-		gulp.run('moveCoreScripts');
+		run('lint', 'moveCoreScripts');
 	});
 
 	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {
 		console.log('AMD SCRIPTS RELOAD');
-		run('clean_amd', 'amd_scripts');
+		run('clean_amd', 'lint', 'amd_scripts');
 	});
 
 	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', 'connect', done);
