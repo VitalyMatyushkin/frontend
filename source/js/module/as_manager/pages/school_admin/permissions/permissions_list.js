@@ -55,7 +55,7 @@ PermissionsListPage = React.createClass({
 			obj = permission.get('student');
 			field = [
 					obj.get('firstName'),
-					obj.get('lastName'),
+					obj.get('lastName')
 				].join(' ') + '\r\n[' + [
 					permission.get('student').get('form').get('name'),
 					permission.get('student').get('house').get('name')
