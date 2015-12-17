@@ -105,7 +105,7 @@ Head = React.createClass({
             <div className="bTopPanel">
                 <Logo />
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
-                <If condition={rootBinding.get('userData.authorizationInfo.userId')}>
+                <If condition={rootBinding.get('userData.authorizationInfo.userId')!==undefined}>
                     <div className="bDropdown">
                         <Autocomplete
                             serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
@@ -116,9 +116,10 @@ Head = React.createClass({
                             />
                     </div>
                 </If>
-                <If condition={rootBinding.get('userData.authorizationInfo.userId')}>
+                <If condition={rootBinding.get('userData.authorizationInfo.userId')!==undefined}>
                     <div className="bDropdown" style={{marginLeft:-68+'px'}}>
-                        <input type="checkbox" ref="checkAll" onClick={self.toggleCheckAllBox}>Show for all Children</input>
+                        <input type="checkbox" ref="checkAll" onClick={self.toggleCheckAllBox}></input>
+                        <label>Show all children</label>
                     </div>
                 </If>
                 <UserBlock binding={binding.sub('userData')}/>
