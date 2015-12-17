@@ -53,11 +53,11 @@ AllChallengesList = React.createClass({
                     eventDate.getFullYear() === currentDate.getFullYear();
             });
         //Iterate over the children present in the bag
-        return (childrenOfUser && childrenOfUser.count())? childrenOfUser.map(function(child){
+        return (childrenOfUser && childrenOfUser.count())? childrenOfUser.map(function(child, childInd){
             child.event = events.filter(function(ev){
                 return ev.get('childId') === child.get('id');
             });
-            var childFixtures = child.event.count() ? child.event.map(function(childEv){
+            var childFixtures = child.event.count() ? child.event.map(function(childEv, childEvInd){
                 var eventDate = new Date(childEv.get('startTime')),
                     hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
                     stringDate = self.formatDate(childEv.get('startTime')),
@@ -65,7 +65,7 @@ AllChallengesList = React.createClass({
                         hoverDay.getMonth() === eventDate.getMonth() &&
                         hoverDay.getDate() === eventDate.getDate();
                 return(
-                    <div className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'}>
+                    <div key={childEvInd} className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'}>
                         <div className="eChallenge_basic">
                             <span className="eChallenge_date">{stringDate}</span>
                             <span className="eChallenge_type">{childEv.get('type')}</span>
@@ -87,7 +87,7 @@ AllChallengesList = React.createClass({
                 </div>
             );
             return (
-                <div className= "eChallenge eChallenge_all">
+                <div key={childInd} className= "eChallenge eChallenge_all">
                     <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
                     {childFixtures}
                 </div>

@@ -98,7 +98,7 @@ UserFixtures = React.createClass({
                     firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
                 }
-                return <div className="bChallenge"
+                return <div key={index} className="bChallenge"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >

@@ -29,11 +29,8 @@ ParentChildAchievement = React.createClass({
             leanerData = {};
         studentId = studentId ? studentId : binding.get('activeChildId');
         progressValue = studentId;
-        console.log(studentId);
         if(studentId === undefined)document.location.hash = 'events/calendar';
         if(studentId && studentId !=='all'){
-            console.log('entered');
-            console.log(studentId);
             return window.Server.student.get({studentId:studentId,
                 filter:{
                     include:['form','house','school','parents']
@@ -77,17 +74,20 @@ ParentChildAchievement = React.createClass({
     renderAllAchievements:function(){
        var self = this,
            binding = self.getDefaultBinding();
-        return binding.get('eventChild') && binding.get('eventChild').count() ? binding.get('eventChild').map(function (child) {
+        return binding.get('eventChild') && binding.get('eventChild').count() ? binding.get('eventChild').map(function (child,key) {
+            child.events = (binding.get('models') && binding.get('models').count())?binding.get('models').filter(function (model) {
+                return model.get('childId') === child.get('id');
+            }):0;
             return(
-                <div className="eAchievement_row">
+                <div key={key} className="eAchievement_row">
                     <div className="eAchievement_common eAchievement_name">{child.get('firstName')+' '+child.get('lastName')}</div>
-                    <div className="eAchievement_common eAchievementGamesPlayed">{'not set'}</div>
+                    <div className="eAchievement_common eAchievementGamesPlayed">{(child && child.events)?child.events.toJS().length:0}</div>
                     <div className="eAchievement_common eAchievementGamesWon">{'not set'}</div>
                     <div className="eAchievement_common eAchievementGamesLost">{'not set'}</div>
                     <div className="eAchievement_common eAchievementGoalsScored">{'not set'}</div>
                 </div>
             )
-        }).toArray() :<div className="eAchievement_row">{'nothing'}</div>;
+        }).toArray() :<div className="eAchievement_row">{'no children'}</div>;
     },
     render: function () {
         var self = this,
