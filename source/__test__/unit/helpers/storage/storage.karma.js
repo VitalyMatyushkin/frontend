@@ -3,11 +3,11 @@ module.exports = function(config) {
         browsers: ['Chrome', 'Firefox'],
         frameworks: ['mocha', 'chai'],
         hostname: 'testing.squard.com',
-        basePath: '.',
+        basePath: '../../../../../build',
         files: [
-            '../../../../js/helpers/storage.js',
-            './*.spec.js',
-            '../../../../js/bower/jquery/dist/jquery.js'
+            'js/helpers/storage.js',
+            'js/bower/jquery/dist/jquery.js',
+            './*.spec.js'
         ]
     });
 };

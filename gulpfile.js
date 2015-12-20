@@ -30,7 +30,7 @@ var SOURCE = './source',
  * Files collected with 'gulp-filenames' module and can be fetched with 'filenames.get('karma-config-files')'
  * See docs on 'gulp-filenames' for more details.
  */
-gulp.task('collect-test-configurations', function(){
+gulp.task('collect-test-configurations', function(){		// TODO: maybe done will be better here?
 	return gulp.src(TEST_SOURCE + "/**/*.karma.js")
 		.pipe(filenames('karma-config-files'));
 });
@@ -38,11 +38,11 @@ gulp.task('collect-test-configurations', function(){
 
 /** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
  */
-gulp.task('test', ['collect-test-configurations'], function () {
+gulp.task('test', ['collect-test-configurations', 'build-dev'], function () {
 	/** Will run provided karma conf file and stop */
-	function doKarma(fullConfPath, done) {
+	function doKarma(fullPathToConfig, done) {
 		new karmaServer({
-				configFile: fullConfPath,
+				configFile: fullPathToConfig,
 				singleRun: true
 			},
 			done
@@ -50,9 +50,12 @@ gulp.task('test', ['collect-test-configurations'], function () {
 	}
 
 	/** recursively traverse array and perform doKarma() on each element.
-	 * This trick allow to start new Karma instance only when previous is down
+	 * This trick allow to start new Karma instance only when previous is down.
 	 */
 	function run(arr) {
+		/* recursion required as next karma instance should be called only once previous is down.
+		 * this is allowed only via callback
+		 */
 		var step = arr.shift();	// Note: it will be better to use immutable version here, but this works too
 		if(step) {				// there are still items to process
 			doKarma(step, function(){
@@ -171,6 +174,10 @@ gulp.task('clean_amd', function (callback) {
 	del(BUILD + '/js/module', callback);
 });
 
+gulp.task('build-dev', function(done){
+	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', done);
+});
+
 // Run build
 gulp.task('default', function (done) {
 
@@ -189,7 +196,7 @@ gulp.task('default', function (done) {
 		run('clean_amd', 'lint', 'amd_scripts');
 	});
 
-	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', 'connect', done);
+	run('build-dev', 'connect', done);
 });
 
 gulp.task('deploy', function (callback) {
