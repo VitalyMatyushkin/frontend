@@ -20,7 +20,8 @@ var SOURCE = './source',
 	eslint = require('gulp-eslint'),
 	filenames = require('gulp-filenames'),
 	babel = require("gulp-babel"),
-	karmaServer = require('karma').Server;
+	karmaServer = require('karma').Server,
+	karmaTools = require('./project/karma_tools');
 
 /** This task collect all files which tends to be karma configuration and build array with filenames.
  * This is required for __sync__ processing of each file. In case of async processing (with .pipe() for ex.)
@@ -49,6 +50,7 @@ gulp.task('test', ['collect-test-configurations', 'build-dev'], function () {
 		).start();
 	}
 
+
 	/** recursively traverse array and perform doKarma() on each element.
 	 * This trick allow to start new Karma instance only when previous is down.
 	 */
@@ -65,6 +67,9 @@ gulp.task('test', ['collect-test-configurations', 'build-dev'], function () {
 	}
 
 	var fnames = filenames.get('karma-config-files', 'full');
+	var focused = karmaTools.getFocusedConfigs(fnames);
+	console.log("FOCUSED: " + JSON.stringify(focused));
+	console.log("ACTIVE:" + JSON.stringify(karmaTools.getActiveConfigs(fnames)));
 	run(fnames);
 	// maybe it should return smth... who knows..
 
