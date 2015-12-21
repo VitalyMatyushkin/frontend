@@ -20,7 +20,7 @@ var SOURCE = './source',
 	eslint = require('gulp-eslint'),
 	filenames = require('gulp-filenames'),
 	babel = require("gulp-babel"),
-	karmaServer = require('karma').Server,
+	//karmaServer = require('karma').Server,
 	karmaTools = require('./project/karma_tools');
 
 /** This task collect all files which tends to be karma configuration and build array with filenames.
@@ -39,39 +39,15 @@ gulp.task('collect-test-configurations', function(){		// TODO: maybe done will b
 
 /** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
  */
-gulp.task('test', ['collect-test-configurations', 'build-dev'], function () {
-	/** Will run provided karma conf file and stop */
-	function doKarma(fullPathToConfig, done) {
-		new karmaServer({
-				configFile: fullPathToConfig,
-				singleRun: true
-			},
-			done
-		).start();
-	}
-
-
-	/** recursively traverse array and perform doKarma() on each element.
-	 * This trick allow to start new Karma instance only when previous is down.
-	 */
-	function run(arr) {
-		/* recursion required as next karma instance should be called only once previous is down.
-		 * this is allowed only via callback
-		 */
-		var step = arr.shift();	// Note: it will be better to use immutable version here, but this works too
-		if(step) {				// there are still items to process
-			doKarma(step, function(){
-				run(arr)
-			});
-		}
-	}
+gulp.task('test', ['collect-test-configurations', 'build-dev'], function (done) {
 
 	var fnames = filenames.get('karma-config-files', 'full');
 	var focused = karmaTools.getFocusedConfigs(fnames);
 	console.log("FOCUSED: " + JSON.stringify(focused));
 	console.log("ACTIVE:" + JSON.stringify(karmaTools.getActiveConfigs(fnames)));
-	run(fnames);
-	// maybe it should return smth... who knows..
+	karmaTools.runKarma(fnames).then(function(){
+		done(null);
+	});
 
 });
 

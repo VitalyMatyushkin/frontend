@@ -2,6 +2,9 @@
  * Created by wert on 20.12.15.
  */
 
+var karmaServer = require('karma').Server;
+var Immutable = require('immutable');
+var Promise = require('bluebird');
 
 /**Constructs new FakeConfig to inject into Karma's config definition
  * Fake config is similar to Karma's config and provides few usefull methods
@@ -53,6 +56,7 @@ function getIgnoredConfigs(configPathArray) {
     });
 }
 
+/** Iterates over each key-value pair in object */
 function _objectForEach(obj, kvFunc){
     Object.keys(obj).forEach(function(key){
         var value = obj[key];
@@ -60,6 +64,7 @@ function _objectForEach(obj, kvFunc){
     })
 }
 
+/** Filters all key-value pairs in object with given kvPredicate */
 function _objectFilter(obj, kvPredicate){
     var filteredObj = {};
     _objectForEach(obj, function(key, value){
@@ -70,6 +75,7 @@ function _objectFilter(obj, kvPredicate){
     return filteredObj;
 }
 
+/** Returns object length - which is key coung really */
 function _objectLength(obj) {
     return Object.keys(obj).length;
 }
@@ -139,11 +145,36 @@ function getActiveConfigurations(configPathArray, params){
     }
 }
 
+function runKarmaConfig(fullPathToConfig){
+    return new Promise(function(resolve, reject){
+        console.log("@@ running: " + fullPathToConfig);
+        new karmaServer({
+                configFile: fullPathToConfig,
+                singleRun: true
+            },
+            function(){ resolve(fullPathToConfig) }
+        ).start();
+    });
+}
+
+/** Will run all provided Karma configurations sequentially.
+ * @param paths array of string paths or single string value
+ * @returns {*} Promise with all configurations
+ */
+function runKarma(paths) {
+    var confList = Array.isArray(paths) ? Immutable.fromJS(paths) : List(paths);
+    return Promise.reduce(confList, function(confsTried, confName){
+        return runKarmaConfig(confName).then(function(passedConf){
+            return confsTried.push(passedConf);
+        });
+    }, Immutable.List());
+}
 
 module.exports = {
     FakeConfig:                 FakeConfig,
     loadConfigFromKarmaFile:    loadConfigFromKarmaFile,
     getFocusedConfigs:          getFocusedConfigs,
     getIgnoredConfigs:          getIgnoredConfigs,
-    getActiveConfigs:           getActiveConfigurations
+    getActiveConfigs:           getActiveConfigurations,
+    runKarma:                   runKarma
 };
