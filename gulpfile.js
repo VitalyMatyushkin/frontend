@@ -20,7 +20,6 @@ var SOURCE = './source',
 	eslint = require('gulp-eslint'),
 	filenames = require('gulp-filenames'),
 	babel = require("gulp-babel"),
-	//karmaServer = require('karma').Server,
 	karmaTools = require('./project/karma_tools');
 
 /** This task collect all files which tends to be karma configuration and build array with filenames.
@@ -60,13 +59,10 @@ gulp.task('lint', function(){
 
 // SVG Symbols generation
 gulp.task('svg_symbols', function () {
-	var files = gulp.src('./images/icons/*.svg');
-
-	files = files.pipe(svgmin());
-	files = files.pipe(svgstore({ fileName: 'icons.svg', prefix: 'icon_' }));
-	files = files.pipe(gulp.dest(BUILD + '/images'));
-
-	return files;
+	return gulp.src('./images/icons/*.svg')
+		.pipe(svgmin())
+		.pipe(svgstore({ fileName: 'icons.svg', prefix: 'icon_' }))
+		.pipe(gulp.dest(BUILD + '/images'))
 });
 
 /** Set few details to make build easier */
