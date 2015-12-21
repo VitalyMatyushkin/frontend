@@ -12,6 +12,7 @@ module.exports = function(config) {
             buildPath + 'js/bower/jquery/dist/jquery.js',
             './*.spec.js'
         ],
-        FOCUS: true
+        FOCUS: true,
+        IGNORE: true
     });
 };

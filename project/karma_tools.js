@@ -70,6 +70,11 @@ function _objectFilter(obj, kvPredicate){
     return filteredObj;
 }
 
+function _objectLength(obj) {
+    return Object.keys(obj).length;
+}
+
+
 /**
  *
  * @param params is an object
@@ -111,17 +116,25 @@ function getActiveConfigurations(configPathArray, params){
         if(confSet.focused && !confSet.ignored) {       // just marked with focused - definetly running
             return true;
         } else if(confSet.focused && confSet.ignored) { // marked both with focused and ingore. Consulting external params
+            if(notifyOnFocusedIgnored) {
+                console.warn("[WARN] Both FOCUS and IGNORE on same config: " + key);
+            }
             return runFocusedIgnored;
         } else {                // not marked to be focused
             return false;
         }
     });
 
-    console.log("### confsToRun: " + JSON.stringify(confsToRun));
-    // TODO: maybe not all ways considered here...
-    if(!focusedExists || multiFocus || confsToRun.length <= 1) {    // there wasn't really focused config. All config from focused was just not marked with anything or multifocus allowed or there is one or less items
-        return confsToRun;                // return as is
-    } else if(confsToRun.length > 1 && !multiFocus) {   // if there are more than one element and no multifocus - return nothing
+    var plainConfsToRun = Object.keys(confsToRun);
+    var confsToRunCount = _objectLength(confsToRun);
+
+    if(!focusedExists) {
+        return plainConfsToRun;
+    } else if(multiFocus) {
+        return plainConfsToRun;
+    } else if(confsToRunCount <= 1) {
+        return plainConfsToRun
+    } else if(!multiFocus && confsToRunCount > 1) {
         return [];
     }
 }
