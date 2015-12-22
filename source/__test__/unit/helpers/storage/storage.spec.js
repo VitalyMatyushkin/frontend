@@ -1,7 +1,19 @@
-describe('Helpers.LocalStorage', function () {
-    it('should set and get non-json value for key', function () {
+var Helpers = require('module/helpers/storage');
+
+describe('Helpers.LocalStorage', () => {
+    it('should set and get non-json value for key', () => {
         Helpers.LocalStorage.set('iwannacake', 'now');
-        var result = Helpers.LocalStorage.get('iwannacake');
+        const result = Helpers.LocalStorage.get('iwannacake');
+        expect(result).to.equal('now');
+        Helpers.LocalStorage.remove('iwannacake');
+    });
+});
+
+
+describe('Helpers.LocalStorage', function () {
+    it('should set and get non-json value for key', () => {
+        Helpers.LocalStorage.set('iwannacake', 'now');
+        const result = Helpers.LocalStorage.get('iwannacake');
         expect(result).to.equal('now');
         Helpers.LocalStorage.remove('iwannacake');
     });
@@ -43,32 +55,32 @@ describe('Helpers.LocalStorage', function () {
 });
 
 
-describe("Helpers.cookie", function(){
-    it("should allow to set and get single cookie", function(){
-        Helpers.cookie.set('myTestCookieOne', 'thatsit');
-        var result = Helpers.cookie.get('myTestCookieOne');
-        expect(result).to.be.equal('thatsit');
-    });
-
-    it("should allow to set and get multiple cookie", function(){
-        Helpers.cookie.set("myTestCookieTwo", "2");
-        Helpers.cookie.set("myTestCookieThree", "3");
-        Helpers.cookie.set("myTestCookieFour", "4");
-        var result1 = Helpers.cookie.get("myTestCookieTwo");
-        var result2 = Helpers.cookie.get("myTestCookieThree");
-        var result3 = Helpers.cookie.get("myTestCookieFour");
-        expect(result1).to.be.equal('2');
-        expect(result2).to.be.equal('3');
-        expect(result3).to.be.equal('4');
-    });
-
-    it("should allow to remove already set cookie", function(){
-        Helpers.cookie.set('myTestCookieFive', 'heya');
-        var result1 = Helpers.cookie.get('myTestCookieFive');
-        expect(result1).to.be.equal('heya');
-        var removeResult = Helpers.cookie.remove('myTestCookieFive');
-        expect(removeResult).to.be.equal(true);
-        var result2 = Helpers.cookie.get('myTestCookieFive');
-        expect(result2).to.be.equal(undefined);
-    });
-});
+//describe("Helpers.cookie", function(){
+//    it("should allow to set and get single cookie", function(){
+//        Helpers.cookie.set('myTestCookieOne', 'thatsit');
+//        var result = Helpers.cookie.get('myTestCookieOne');
+//        expect(result).to.be.equal('thatsit');
+//    });
+//
+//    it("should allow to set and get multiple cookie", function(){
+//        Helpers.cookie.set("myTestCookieTwo", "2");
+//        Helpers.cookie.set("myTestCookieThree", "3");
+//        Helpers.cookie.set("myTestCookieFour", "4");
+//        var result1 = Helpers.cookie.get("myTestCookieTwo");
+//        var result2 = Helpers.cookie.get("myTestCookieThree");
+//        var result3 = Helpers.cookie.get("myTestCookieFour");
+//        expect(result1).to.be.equal('2');
+//        expect(result2).to.be.equal('3');
+//        expect(result3).to.be.equal('4');
+//    });
+//
+//    it("should allow to remove already set cookie", function(){
+//        Helpers.cookie.set('myTestCookieFive', 'heya');
+//        var result1 = Helpers.cookie.get('myTestCookieFive');
+//        expect(result1).to.be.equal('heya');
+//        var removeResult = Helpers.cookie.remove('myTestCookieFive');
+//        expect(removeResult).to.be.equal(true);
+//        var result2 = Helpers.cookie.get('myTestCookieFive');
+//        expect(result2).to.be.equal(undefined);
+//    });
+//});

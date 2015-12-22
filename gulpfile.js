@@ -1,6 +1,5 @@
 var SOURCE = './source',
 	BUILD = './build',
-	TEST_SOURCE = './source/__test__',
 	VERBOSE = false,						// set to true if extensive console output during build required
 	gulp = require('gulp'),					// gulp itself
 	concat = require('gulp-concat'),		// collects content of all files into one file
@@ -20,7 +19,7 @@ var SOURCE = './source',
 	eslint = require('gulp-eslint'),
 	filenames = require('gulp-filenames'),
 	babel = require("gulp-babel"),
-	karmaServer = require('karma').Server;
+	karmaTools = require('./project/karma_tools');
 
 /** This task collect all files which tends to be karma configuration and build array with filenames.
  * This is required for __sync__ processing of each file. In case of async processing (with .pipe() for ex.)
@@ -30,41 +29,22 @@ var SOURCE = './source',
  * Files collected with 'gulp-filenames' module and can be fetched with 'filenames.get('karma-config-files')'
  * See docs on 'gulp-filenames' for more details.
  */
-gulp.task('collect-test-configurations', function(){
-	return gulp.src(TEST_SOURCE + "/**/*.karma.js")
+gulp.task('collectTestConfigurations', function(){		// TODO: maybe done will be better here?
+	return gulp.src(SOURCE + "/__test__/**/*.karma.js")
 		.pipe(filenames('karma-config-files'));
 });
 
 
 /** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
  */
-gulp.task('test', ['collect-test-configurations'], function () {
-	/** Will run provided karma conf file and stop */
-	function doKarma(fullConfPath, done) {
-		new karmaServer({
-				configFile: fullConfPath,
-				singleRun: true
-			},
-			done
-		).start();
-	}
-
-	/** recursively traverse array and perform doKarma() on each element.
-	 * This trick allow to start new Karma instance only when previous is down
-	 */
-	function run(arr) {
-		var step = arr.shift();	// Note: it will be better to use immutable version here, but this works too
-		if(step) {				// there are still items to process
-			doKarma(step, function(){
-				run(arr)
-			});
-		}
-	}
-
-	var fnames = filenames.get('karma-config-files', 'full');
-	run(fnames);
-	// maybe it should return smth... who knows..
-
+gulp.task('test', function (done) {
+	run('collectTestConfigurations', 'buildDev', 'buildTests', function(){
+		var fnames = filenames.get('karma-config-files', 'full');
+		var activeConfigs = karmaTools.getActiveConfigs(fnames);
+		karmaTools.runKarma(activeConfigs).then(function(){
+			done(null);
+		});
+	});
 });
 
 
@@ -75,14 +55,11 @@ gulp.task('lint', function(){
 });
 
 // SVG Symbols generation
-gulp.task('svg_symbols', function () {
-	var files = gulp.src('./images/icons/*.svg');
-
-	files = files.pipe(svgmin());
-	files = files.pipe(svgstore({ fileName: 'icons.svg', prefix: 'icon_' }));
-	files = files.pipe(gulp.dest(BUILD + '/images'));
-
-	return files;
+gulp.task('svgSymbols', function () {
+	return gulp.src('./images/icons/*.svg')
+		.pipe(svgmin())
+		.pipe(svgstore({ fileName: 'icons.svg', prefix: 'icon_' }))
+		.pipe(gulp.dest(BUILD + '/images'))
 });
 
 /** Set few details to make build easier */
@@ -117,22 +94,22 @@ gulp.task('styles', function () {
 });
 
 // AMD script files
-gulp.task('amd_scripts', function(){
-	return buildToAmdScripts(SOURCE + '/js/module/**/*.js');
+gulp.task('amdScripts', function(){
+	return buildToAmdScripts(SOURCE + '/js/module/**/*.js', BUILD + '/js/module');
 });
 
 /** compiles React's JSX to JS, wraps CommonJS modules to AMD, stores result to BUILD/js/modules */
-function buildToAmdScripts(path){
-	return gulp.src(path)						// picking everything from path
+function buildToAmdScripts(srcPath, destPath){
+	return gulp.src(srcPath)					// picking everything from path
 		.pipe(gulpif(VERBOSE, using({})))		// printing all files picked in case of VERBOSE
 		.pipe(babel())							// converting JSX to JS and some parts of ES6 to ES5
 		.pipe(requireConvert())					// converting CommonJS modules to AMD modules
-		.pipe(gulp.dest(BUILD + '/js/module'))  // saving again
+		.pipe(gulp.dest(destPath))				// saving again
 		.pipe(connect.reload());				// reloading connect
 }
 
 
-/** Moving all files from source/js to build/js withoud doing anything. Directories not affected */
+/** Moving all files from source/js to build/js without doing anything. Directories not affected */
 gulp.task('moveCoreScripts', function(){
 	return gulp.src(SOURCE + '/js/*.js')
 		.pipe(babel())						// some ES6 magic to people
@@ -158,6 +135,19 @@ gulp.task('clean', function (callback) {
     del([BUILD], callback);
 });
 
+gulp.task('amdTestScripts', function(){
+	return buildToAmdScripts(SOURCE + '/__test__/**/*.spec.js', BUILD + "/js/__test__");
+});
+
+gulp.task('buildTests', function(done){
+	run('cleanTests', 'amdTestScripts', done);
+});
+
+/** Just deletes BUILD folder */
+gulp.task('cleanTests', function (callback) {
+	del([BUILD + "/js/__test__"], callback);
+});
+
 // Live reload
 gulp.task('connect', function(done) {
 	connect.server({
@@ -167,8 +157,12 @@ gulp.task('connect', function(done) {
 	done(null);
 });
 
-gulp.task('clean_amd', function (callback) {
+gulp.task('cleanAmd', function (callback) {
 	del(BUILD + '/js/module', callback);
+});
+
+gulp.task('buildDev', function(done){
+	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts', 'svgSymbols', done);
 });
 
 // Run build
@@ -186,12 +180,12 @@ gulp.task('default', function (done) {
 
 	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {
 		console.log('AMD SCRIPTS RELOAD');
-		run('clean_amd', 'lint', 'amd_scripts');
+		run('cleanAmd', 'lint', 'amdScripts');
 	});
 
-	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', 'connect', done);
+	run('buildDev', 'connect', done);
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', callback);
+    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts', 'svgSymbols', callback);
 });
