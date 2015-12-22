@@ -146,8 +146,7 @@ CalendarMonthView = React.createClass({
             selectDay = binding.get('selectDay'),
 			now = new Date(),
 			today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-		return <div className="eMonth_row">{days.map(function (day, i) {
+		return <div key={now.getMilliseconds()+row} className="eMonth_row">{days.map(function (day, i) {
             var classes = classNames({
 				eMonth_day: true,
 				mToday: self.equalDates(day.date, today),
@@ -161,6 +160,7 @@ CalendarMonthView = React.createClass({
 
 			return <span
                 className={classes}
+				key={i}
                 onClick={self.onSelectDay.bind(null, day)}
                 onMouseLeave={self.onMouseLeaveDay}
                 onMouseEnter={self.onMouseEnterDay.bind(null, day)}>{day.day}</span>;
@@ -169,8 +169,8 @@ CalendarMonthView = React.createClass({
 	renderDaysOfWeek: function () {
 		var daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
 
-		return <div className="eMonth_row mWeeks">{daysOfWeek.map(function (name) {
-			return <span className="eMonth_day mWeekName">{name}</span>;
+		return <div className="eMonth_row mWeeks">{daysOfWeek.map(function (name, n) {
+			return <span key={n} className="eMonth_day mWeekName">{name}</span>;
 		})}</div>;
 	},
     renderNavBar: function () {

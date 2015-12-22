@@ -73,11 +73,11 @@ EventTeams = React.createClass({
 			activeSchoolId = self.getActiveSchoolId(),
 			isOwner = type === 'inter-schools' ? participant.get('schoolId') === activeSchoolId : true;
 
-		return players ? players.map(function (player) {
+		return players ? players.map(function (player,playerIndex) {
             var isMale = player.get('user').get('gender') === 'male',
 				points = self.getPointsByStudent(player.get('id'), participant.get('id')) || 0;
 
-            return <div className="bPlayer mMini">
+            return <div key={playerIndex} className="bPlayer mMini">
                 <If condition={binding.get('mode') !== 'closing' && isOwner}>
                     <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>
@@ -85,7 +85,7 @@ EventTeams = React.createClass({
 					{!binding.get('model.resultId') && binding.get('mode') === 'closing' ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
                             <SVG icon="icon_minus" />
                         </span> : null}
-					<If condition={binding.get('model.resultId') || binding.get('mode') === 'closing'}>
+					<If condition={binding.get('model.resultId')!== undefined || binding.get('mode') === 'closing'}>
 						<span className="ePlayer_score">{points}</span>
 					</If>
 				</div>

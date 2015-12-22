@@ -31,8 +31,8 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader'],
-    function($, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG){
+    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader','reactDom'],
+    function($, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG,ReactDOM){
 
         Promise.config({
             cancellation: true
@@ -43,6 +43,7 @@ requirejs(
         // Morearty requires to have React and Immutable in global context, so
         // setting some global variables for Morearty
         window.React = React;
+        window.ReactDOM = ReactDOM; //global react-dom package
         window.Immutable = Immutable;
 
         window.Helpers = storage;
@@ -64,6 +65,8 @@ requirejs(
         log.info(`start module: ${startModule}` );
 
         window.apiBase = api;
+
+        window.logLevel = log; //Make this global for usage
 
         // Morearty requires React and Immutable to be global vars, so it loaded as nested module when both are ready
         require(['morearty'], function(Morearty){

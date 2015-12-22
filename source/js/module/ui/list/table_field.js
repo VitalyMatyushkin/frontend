@@ -7,7 +7,7 @@ ListField = React.createClass({
 		dataField: React.PropTypes.string.isRequired,
 		parseFunction: React.PropTypes.func,
 		inputParseFunction: React.PropTypes.func,
-		onChange: React.PropTypes.func.isRequired,
+		onChange: React.PropTypes.func,
 		width: React.PropTypes.string,
 		filterType: React.PropTypes.string,
         dataFieldKey: React.PropTypes.string

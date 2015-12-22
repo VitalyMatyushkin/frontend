@@ -8,7 +8,7 @@ var GroupAction,
 GroupAction = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        actionList:React.PropTypes.array.isRequired,
+        actionList:React.PropTypes.array,
         serviceName:React.PropTypes.string.isRequired,
         groupActionFactory:React.PropTypes.func
     },

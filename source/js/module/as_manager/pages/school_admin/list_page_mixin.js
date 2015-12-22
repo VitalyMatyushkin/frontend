@@ -1,9 +1,6 @@
 var ListPageMixin,
     If = require('module/ui/if/if'),
     GroupAction = require('module/ui/list/group_action'),
-    Popup = require('module/ui/popup'),
-    //workerThread = require('module/as_manager/pages/school_admin/dataWorkerThread'),
-    persistentData,
     dataWorker;
 ListPageMixin = {
 	propTypes: {
@@ -38,7 +35,7 @@ ListPageMixin = {
 	},
     componentDidMount:function(){
         var self = this;
-        if(self.isSuperAdminPage)React.findDOMNode(self.refs.otherCheck).checked = true;
+        if(self.isSuperAdminPage)ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
         //self.timeoutId = setTimeout(function(){
         //    //Pagination method
         //    //self._getTotalCountAndRenderPagination();
@@ -49,9 +46,9 @@ ListPageMixin = {
     _getTotalCountAndRenderPagination:function(customCount){
         var self = this,
             globalBinding = self.getMoreartyContext().getBinding(),
-            pageNumberNode = React.findDOMNode(self.refs.pageNumber),
+            pageNumberNode = ReactDOM.findDOMNode(self.refs.pageNumber),
             isOdd = false,
-            selectNode = React.findDOMNode(self.refs.pageSelect);
+            selectNode = ReactDOM.findDOMNode(self.refs.pageSelect);
         if(self.isPaginated){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
             self.numberOfPages = Math.floor(customCount/self.pageLimit);
@@ -81,7 +78,7 @@ ListPageMixin = {
     },
     _handlePageSelectChange:function(){
         var self = this,
-            selectNode = React.findDOMNode(self.refs.pageSelect),
+            selectNode = ReactDOM.findDOMNode(self.refs.pageSelect),
             optVal = selectNode.options[selectNode.selectedIndex].value,
             skipLimit = optVal >= 2 ? optVal * self.pageLimit  : 0,
             binding = self.getDefaultBinding(),
@@ -275,7 +272,7 @@ ListPageMixin = {
 	},
     toggleBaseFilters:function(el){
         var self = this,
-            currentBase = React.findDOMNode(self.refs[el]),
+            currentBase = ReactDOM.findDOMNode(self.refs[el]),
             currentBaseVal = currentBase.value,
             isChecked = currentBase.checked;
         $('.bFilterCheck').attr('checked',false);
@@ -318,7 +315,7 @@ ListPageMixin = {
             self.updatePageNumbers = true;
             self.updateData();
         }else{
-            React.findDOMNode(self.refs.otherCheck).checked = true;
+            ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
             self.filters={
                 include:['principal','school']
                 ,where:{
@@ -346,11 +343,11 @@ ListPageMixin = {
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
 				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                 <div className="eSchoolMaster_groupAction">
-                    <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
+                    <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
                         <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
-                        <If condition={self.isSuperAdminPage}>
+                        <If condition={self.isSuperAdminPage||false}>
                             <div className="filterBase_container">
                                 <span>Filter base: </span>
                                 <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
@@ -362,7 +359,7 @@ ListPageMixin = {
                     </div>
                 </div>
 				{self.getTableView()}
-                <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1}>
+                <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
                             <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
@@ -374,7 +371,7 @@ ListPageMixin = {
                         </div>
                     </div>
                 </If>
-                <If condition={includeGroupAction.indexOf(currentPage[currentPage.length-1]) === -1 && currentPage[currentPage.length-1] === 'students'}>
+                <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) === -1) && (currentPage[currentPage.length-1] === 'students')}>
                     <div className="eSchoolMaster_groupAction">
                         <div className="eSchoolMaster_pagination">
                             <div ref="pageNumber" className="leftPagination"></div>
