@@ -29,7 +29,7 @@ var SOURCE = './source',
  * Files collected with 'gulp-filenames' module and can be fetched with 'filenames.get('karma-config-files')'
  * See docs on 'gulp-filenames' for more details.
  */
-gulp.task('collect-test-configurations', function(){		// TODO: maybe done will be better here?
+gulp.task('collectTestConfigurations', function(){		// TODO: maybe done will be better here?
 	return gulp.src(SOURCE + "/__test__/**/*.karma.js")
 		.pipe(filenames('karma-config-files'));
 });
@@ -38,9 +38,7 @@ gulp.task('collect-test-configurations', function(){		// TODO: maybe done will b
 /** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
  */
 gulp.task('test', function (done) {
-
-	run('collect-test-configurations', 'build-dev', 'build_tests', function(){
-		console.log("dirname: " + __dirname);
+	run('collectTestConfigurations', 'build-dev', 'buildTests', function(){
 		var fnames = filenames.get('karma-config-files', 'full');
 		var activeConfigs = karmaTools.getActiveConfigs(fnames);
 		karmaTools.runKarma(activeConfigs).then(function(){
@@ -57,7 +55,7 @@ gulp.task('lint', function(){
 });
 
 // SVG Symbols generation
-gulp.task('svg_symbols', function () {
+gulp.task('svgSymbols', function () {
 	return gulp.src('./images/icons/*.svg')
 		.pipe(svgmin())
 		.pipe(svgstore({ fileName: 'icons.svg', prefix: 'icon_' }))
@@ -96,7 +94,7 @@ gulp.task('styles', function () {
 });
 
 // AMD script files
-gulp.task('amd_scripts', function(){
+gulp.task('amdScripts', function(){
 	return buildToAmdScripts(SOURCE + '/js/module/**/*.js', BUILD + '/js/module');
 });
 
@@ -137,16 +135,16 @@ gulp.task('clean', function (callback) {
     del([BUILD], callback);
 });
 
-gulp.task('amd_test_scripts', function(){
+gulp.task('amdTestScripts', function(){
 	return buildToAmdScripts(SOURCE + '/__test__/**/*.spec.js', BUILD + "/js/__test__");
 });
 
-gulp.task('build_tests', function(done){
-	run('clean_tests', 'amd_test_scripts', done);
+gulp.task('buildTests', function(done){
+	run('clean_tests', 'amdTest_scripts', done);
 });
 
 /** Just deletes BUILD folder */
-gulp.task('clean_tests', function (callback) {
+gulp.task('cleanTests', function (callback) {
 	del([BUILD + "/js/__test__"], callback);
 });
 
@@ -159,12 +157,12 @@ gulp.task('connect', function(done) {
 	done(null);
 });
 
-gulp.task('clean_amd', function (callback) {
+gulp.task('cleanAmd', function (callback) {
 	del(BUILD + '/js/module', callback);
 });
 
-gulp.task('build-dev', function(done){
-	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', done);
+gulp.task('buildDev', function(done){
+	run('clean', 'normalize', 'lint', 'styles', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts', 'svgSymbols', done);
 });
 
 // Run build
@@ -182,12 +180,12 @@ gulp.task('default', function (done) {
 
 	gulp.watch([SOURCE + '/js/module/**/*.js', SOURCE + '/js/module/*.js'], function(event) {
 		console.log('AMD SCRIPTS RELOAD');
-		run('clean_amd', 'lint', 'amd_scripts');
+		run('cleanAmd', 'lint', 'amdScripts');
 	});
 
-	run('build-dev', 'connect', done);
+	run('buildDev', 'connect', done);
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amd_scripts', 'svg_symbols', callback);
+    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts', 'svgSymbols', callback);
 });
