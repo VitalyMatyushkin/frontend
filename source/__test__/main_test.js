@@ -37,6 +37,16 @@ require.config({
         loglevel:   "bower/loglevel/dist/loglevel.min",
         bluebird:   'bower/bluebird/js/browser/bluebird'
     },
-    deps: testFiles,
-    callback: window.__karma__.start
+    //deps: testFiles,
+    //callback: window.__karma__.start
+});
+
+requirejs(['bluebird'], function(BluePromise){
+    BluePromise.config({
+        cancellation: true
+    });
+
+    require(testFiles, function(){
+        window.__karma__.start();
+    });
 });
