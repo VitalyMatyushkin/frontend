@@ -1,5 +1,6 @@
 var SOURCE = './source',
 	BUILD = './build',
+	BUILD_TEST = './build_test',
 	TEST_SOURCE = './source/__test__',
 	VERBOSE = false,						// set to true if extensive console output during build required
 	gulp = require('gulp'),					// gulp itself
@@ -38,16 +39,16 @@ gulp.task('collect-test-configurations', function(){		// TODO: maybe done will b
 
 /** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
  */
-gulp.task('test', ['collect-test-configurations', 'build-dev'], function (done) {
+gulp.task('test', function (done) {
 
-	var fnames = filenames.get('karma-config-files', 'full');
-	var focused = karmaTools.getFocusedConfigs(fnames);
-	console.log("FOCUSED: " + JSON.stringify(focused));
-	console.log("ACTIVE:" + JSON.stringify(karmaTools.getActiveConfigs(fnames)));
-	karmaTools.runKarma(fnames).then(function(){
-		done(null);
+	run('collect-test-configurations', 'build-dev', 'build_tests', function(){
+		console.log("dirname: " + __dirname);
+		var fnames = filenames.get('karma-config-files', 'full');
+		var activeConfigs = karmaTools.getActiveConfigs(fnames);
+		karmaTools.runKarma(activeConfigs).then(function(){
+			done(null);
+		});
 	});
-
 });
 
 
@@ -98,21 +99,21 @@ gulp.task('styles', function () {
 
 // AMD script files
 gulp.task('amd_scripts', function(){
-	return buildToAmdScripts(SOURCE + '/js/module/**/*.js');
+	return buildToAmdScripts(SOURCE + '/js/module/**/*.js', BUILD + '/js/module');
 });
 
 /** compiles React's JSX to JS, wraps CommonJS modules to AMD, stores result to BUILD/js/modules */
-function buildToAmdScripts(path){
-	return gulp.src(path)						// picking everything from path
+function buildToAmdScripts(srcPath, destPath){
+	return gulp.src(srcPath)					// picking everything from path
 		.pipe(gulpif(VERBOSE, using({})))		// printing all files picked in case of VERBOSE
 		.pipe(babel())							// converting JSX to JS and some parts of ES6 to ES5
 		.pipe(requireConvert())					// converting CommonJS modules to AMD modules
-		.pipe(gulp.dest(BUILD + '/js/module'))  // saving again
+		.pipe(gulp.dest(destPath))				// saving again
 		.pipe(connect.reload());				// reloading connect
 }
 
 
-/** Moving all files from source/js to build/js withoud doing anything. Directories not affected */
+/** Moving all files from source/js to build/js without doing anything. Directories not affected */
 gulp.task('moveCoreScripts', function(){
 	return gulp.src(SOURCE + '/js/*.js')
 		.pipe(babel())						// some ES6 magic to people
@@ -136,6 +137,19 @@ gulp.task('moveAdditionalBowerScripts', function(){
 /** Just deletes BUILD folder */
 gulp.task('clean', function (callback) {
     del([BUILD], callback);
+});
+
+gulp.task('amd_test_scripts', function(){
+	return buildToAmdScripts(SOURCE + '/__test__/**/*.spec.js', BUILD_TEST + "/__test__");
+});
+
+gulp.task('build_tests', function(done){
+	run('clean_tests', 'amd_test_scripts', done);
+});
+
+/** Just deletes BUILD folder */
+gulp.task('clean_tests', function (callback) {
+	del([BUILD_TEST], callback);
 });
 
 // Live reload

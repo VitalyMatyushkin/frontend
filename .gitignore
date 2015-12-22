@@ -22,6 +22,7 @@ coverage
 
 # Compiled binary addons 
 build
+build_test
 
 # Dependency directory
 node_modules

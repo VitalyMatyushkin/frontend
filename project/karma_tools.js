@@ -2,6 +2,10 @@
  * Created by wert on 20.12.15.
  */
 
+/**
+ * This module contain few things to work with Karma better
+ */
+
 var karmaServer = require('karma').Server;
 var Immutable = require('immutable');
 var Promise = require('bluebird');
@@ -27,6 +31,7 @@ function FakeConfig(){
     this.isIgnored = function(){
         return this.params.hasOwnProperty(IGNORE) && this.params[IGNORE] === true
     };
+
 
     this.params = {};
     this.isSet = false;	// allow to guess if config was really set or .set() method never called
@@ -149,8 +154,8 @@ function runKarmaConfig(fullPathToConfig){
     return new Promise(function(resolve, reject){
         console.log("@@ running: " + fullPathToConfig);
         new karmaServer({
-                configFile: fullPathToConfig,
-                singleRun: true
+                configFile: fullPathToConfig
+                //singleRun: true
             },
             function(){ resolve(fullPathToConfig) }
         ).start();
