@@ -1,7 +1,5 @@
 var SOURCE = './source',
 	BUILD = './build',
-	BUILD_TEST = './build_test',
-	TEST_SOURCE = './source/__test__',
 	VERBOSE = false,						// set to true if extensive console output during build required
 	gulp = require('gulp'),					// gulp itself
 	concat = require('gulp-concat'),		// collects content of all files into one file
@@ -32,7 +30,7 @@ var SOURCE = './source',
  * See docs on 'gulp-filenames' for more details.
  */
 gulp.task('collect-test-configurations', function(){		// TODO: maybe done will be better here?
-	return gulp.src(TEST_SOURCE + "/**/*.karma.js")
+	return gulp.src(SOURCE + "/__test__/**/*.karma.js")
 		.pipe(filenames('karma-config-files'));
 });
 
@@ -140,7 +138,7 @@ gulp.task('clean', function (callback) {
 });
 
 gulp.task('amd_test_scripts', function(){
-	return buildToAmdScripts(SOURCE + '/__test__/**/*.spec.js', BUILD_TEST + "/__test__");
+	return buildToAmdScripts(SOURCE + '/__test__/**/*.spec.js', BUILD + "/js/__test__");
 });
 
 gulp.task('build_tests', function(done){
@@ -149,7 +147,7 @@ gulp.task('build_tests', function(done){
 
 /** Just deletes BUILD folder */
 gulp.task('clean_tests', function (callback) {
-	del([BUILD_TEST], callback);
+	del([BUILD + "/js/__test__"], callback);
 });
 
 // Live reload

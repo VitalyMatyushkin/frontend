@@ -1,18 +1,20 @@
 
 var React = require('react');
+var $ = require('jquery');
+var Helpers = require('module/helpers/storage');
 
-    var Helpers = require('module/helpers/storage');
 
-    //describe('Helpers.LocalStorage', function () {
-    //    it('should set and get non-json value for key', function () {
-    //        Helpers.LocalStorage.set('iwannacake', 'now');
-    //        var result = Helpers.LocalStorage.get('iwannacake');
-    //        expect(result).to.equal('now');
-    //        Helpers.LocalStorage.remove('iwannacake');
-    //    });
-    //});
+    describe('Helpers.LocalStorage', function () {
+        it('should set and get non-json value for key', function () {
+            Helpers.LocalStorage.set('iwannacake', 'now');
+            var result = Helpers.LocalStorage.get('iwannacake');
+            expect(result).to.equal('now');
+            Helpers.LocalStorage.remove('iwannacake');
+        });
+    });
 
-    console.log("HELPERS here: " + Helpers);
+console.log("HELPERS here: " + Helpers);
+console.log("$: " + $.isArray([]));
 
 //describe('Helpers.LocalStorage', function () {
 //    it('should set and get non-json value for key', function () {

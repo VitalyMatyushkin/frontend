@@ -5,27 +5,22 @@
 module.exports = function(config) {
     config.set({
         browsers: ['Chrome'/*, 'Firefox'*/],
-        frameworks: ['requirejs'/* 'mocha', 'chai'*/],
+        frameworks: ['requirejs', 'mocha', 'chai'],
         hostname: 'testing.squard.com',
         //basePath: './',
         basePath: '../../',
         files: [
             {
-                pattern: 'build/js/bower/**/*.js',
+                pattern: "build/js/**/*.js",
                 included: false
             },
             {
-                pattern: 'build/js/module/**/*.js',
+                pattern: "build_test/**/*.js",
                 included: false
             },
-            {
-                pattern: 'source/__test__/unit/helpers/storage/*.spec.js',
-                included: false
-            },
-            "source/__test__/unit/helpers/storage/main_test.js"
 
+            "source/__test__/main_test.js"
         ],
-        FOCUS: true,
-
+        singleRun: true
     });
 };

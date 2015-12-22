@@ -152,10 +152,8 @@ function getActiveConfigurations(configPathArray, params){
 
 function runKarmaConfig(fullPathToConfig){
     return new Promise(function(resolve, reject){
-        console.log("@@ running: " + fullPathToConfig);
         new karmaServer({
                 configFile: fullPathToConfig
-                //singleRun: true
             },
             function(){ resolve(fullPathToConfig) }
         ).start();
