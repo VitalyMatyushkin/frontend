@@ -42,10 +42,12 @@ require.config({
 });
 
 requirejs(['bluebird'], function(BluePromise){
+    /* configuring bluebird to make promises cancellable */
     BluePromise.config({
         cancellation: true
     });
 
+    /* loading all test modules as dependencies and starting Karma after */
     require(testFiles, function(){
         window.__karma__.start();
     });
