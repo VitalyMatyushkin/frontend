@@ -10,7 +10,10 @@ describe("AJAX", () => {
             url: "http://testing.squard.com:9876/base/build/js/bower/classnames/index.js",
             method: "GET"
         }).then((data) => {
-            expect(data).to.be.a('string');
+            expect(data).to.be.a('object');
+            expect(data.data).to.be.a('string');
+            expect(data.textStatus).to.be.equal('success');
+            expect(data.xhr.status).to.be.equal(200);
         });
     });
 });

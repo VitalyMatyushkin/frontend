@@ -16,8 +16,8 @@ var uploadService = function(url){
                 contentType: false,
                 processData: false
             }).then(
-                function(data){ return data.result.files.file[0] },
-                function(xhr){ return xhr.statusText }
+                result => result.data.result.files.file[0] ,
+                xhr => xhr.statusText
             );
         }
     };
