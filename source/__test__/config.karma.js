@@ -6,7 +6,7 @@
 
 module.exports = function(config) {
     config.set({
-        browsers: ['Chrome'/*, 'Firefox'*/],
+        browsers: ['Chrome', 'Firefox'],
         frameworks: ['requirejs', 'mocha', 'chai'],
         hostname: 'testing.squard.com',
         basePath: '../../',

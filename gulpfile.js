@@ -38,7 +38,7 @@ gulp.task('collectTestConfigurations', function(){		// TODO: maybe done will be 
 /** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
  */
 gulp.task('test', function (done) {
-	run('collectTestConfigurations', 'build-dev', 'buildTests', function(){
+	run('collectTestConfigurations', 'buildDev', 'buildTests', function(){
 		var fnames = filenames.get('karma-config-files', 'full');
 		var activeConfigs = karmaTools.getActiveConfigs(fnames);
 		karmaTools.runKarma(activeConfigs).then(function(){
@@ -140,7 +140,7 @@ gulp.task('amdTestScripts', function(){
 });
 
 gulp.task('buildTests', function(done){
-	run('clean_tests', 'amdTest_scripts', done);
+	run('cleanTests', 'amdTestScripts', done);
 });
 
 /** Just deletes BUILD folder */
