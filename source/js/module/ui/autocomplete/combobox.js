@@ -89,7 +89,7 @@ module.exports = React.createClass({
 
 		self.defaulInputLabel = self.props.value;
 
-		this.setState({menu: this.makeMenu()});
+		self.setState({menu: this.makeMenu()});
 	},
 
 	componentWillReceiveProps: function (newProps) {
@@ -107,35 +107,18 @@ module.exports = React.createClass({
 		var activedescendant;
 		var isEmpty = true;
 		var self = this;
-
-		children = children || this.props.children;
-		React.Children.forEach(children, function (child, index) {
-			if (child.type !== ComboboxOption.type)
-			// allow random elements to live in this list
-			{
-				return;
-			}
-			isEmpty = false;
-			// TODO: cloneWithProps and map instead of altering the children in-place
-			var props = child.props;
-
-			if ((this.state.value && this.state.value === props.value) || (!this.state.value && child.props.isSelected )) {
-				//inputValue = getLabel(child);
-				this.selectOption(child);
-				/*this.setProps({
-				 value: '123'
-				 }); */
-				// need an ID for WAI-ARIA
-				props.id = props.id || 'rf-combobox-selected-' + (++guid);
-				props.isSelected = true;
-				activedescendant = props.id;
-			}
-			props.onBlur = this.handleOptionBlur;
-			props.onClick = this.selectOption.bind(this, child);
-			props.onFocus = this.handleOptionFocus;
-			props.onKeyDown = this.handleOptionKeyDown.bind(this, child);
-			props.onMouseEnter = this.handleOptionMouseEnter.bind(this, index);
-		}.bind(this));
+		//Locally scoped method for each menu entry
+		//It may be redundant but lets keep it for now
+		var testClick = function(evt){
+			self.selectOption(arguments[0]);
+		};
+		children = children || self.props.children;
+		//Using cloneWithProps TODO: update to cloneElement
+		children = React.Children.map(children, function(child){
+			return React.addons.cloneWithProps(child,{
+				onClick:testClick.bind(self,child)
+			});
+		});
 		return {
 			children: children,
 			activedescendant: activedescendant,
@@ -168,13 +151,11 @@ module.exports = React.createClass({
 	},
 	handleClick: function() {
 		var self = this;
-
 		self.props.onFocus && self.props.onFocus();
 		this.showList();
 	},
 	handleInputChange: function (event) {
 		var value = this.refs.input.getDOMNode().value;
-
 		this.clearSelectedState(function () {
 			this.setState({
 				inputValue: value
@@ -189,9 +170,8 @@ module.exports = React.createClass({
 		}.bind(this));
 	},
 
-	handleInputBlur: function () {
+	handleInputBlur: function (evt) {
 		var focusedAnOption = this.state.focusedIndex != null;
-
 		if (focusedAnOption) {
 			return;
 		}
@@ -453,8 +433,6 @@ module.exports = React.createClass({
 					defaultValue={this.props.value}
 					value={self.props.binding.get('inputValue') || defaultInputState}
 					onChange={this.handleInputChange}
-					onBlur={this.handleInputBlur}
-					onClick={this.handleClick}
 					onKeyDown={this.handleKeydown}
 					onKeyUp={this.handleInputKeyUp}
 					role="combobox"

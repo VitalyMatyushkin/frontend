@@ -82,7 +82,7 @@ UserAchievements = React.createClass({
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
                 }
                 //console.log(index+"  index");
-                return <div className="bChallenge"
+                return <div key={index} className="bChallenge"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >

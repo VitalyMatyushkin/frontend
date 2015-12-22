@@ -26,15 +26,17 @@ IndicatorView = React.createClass({
         var elProgress = React.findDOMNode(self.refs.progressIndicator),
             elText = React.findDOMNode(self.refs.progressText),
             eBar = React.findDOMNode(self.refs.progressBar);
-        eBar.style.display = 'block';
-        elProgress.value = 0;
-        self.intervalId = setInterval(function(){
-            elProgress.value += 20;
-            if(elProgress.value >= 100){
-                elText.innerText = 'Complete';
-                setTimeout(function(){eBar.style.display="none";clearInterval(self.intervalId);},800);
-            }
-        },100);
+        if(eBar !== null){
+            eBar.style.display = 'block';
+            elProgress.value = 0;
+            self.intervalId = setInterval(function(){
+                elProgress.value += 20;
+                if(elProgress.value >= 100){
+                    elText.innerText = 'Complete';
+                    setTimeout(function(){eBar.style.display="none";clearInterval(self.intervalId);},800);
+                }
+            },100);
+        }
     },
     render:function(){
         var self = this,
@@ -45,7 +47,7 @@ IndicatorView = React.createClass({
         return(
             <div ref="progressBar" className="eUserFullInfo_block">
                 <span ref="progressText" className="bProgressSpan">Loading...</span>
-                <progress ref="progressIndicator" value={0} max="100"></progress>
+                <progress ref="progressIndicator" value={0} max="100"/>
             </div>
         )
     }
