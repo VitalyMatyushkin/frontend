@@ -36,9 +36,7 @@ require.config({
         reactDom:   'bower/react/react-dom',
         loglevel:   "bower/loglevel/dist/loglevel.min",
         bluebird:   'bower/bluebird/js/browser/bluebird'
-    },
-    //deps: testFiles,
-    //callback: window.__karma__.start
+    }
 });
 
 requirejs(['bluebird'], function(BluePromise){

@@ -78,7 +78,7 @@ ServiceConstructor = (function() {
 				}
 			}
 
-			self.currentRequest = AJAX({
+			return AJAX({
 				url: baseUrl + url + filter,
 				type: type,
 				crossDomain: true,
@@ -94,23 +94,13 @@ ServiceConstructor = (function() {
 						}
 					}
 				}
-			});
-
-			return self.currentRequest;
+			}, true); // TODO: sanitize me
 		},
 
 		_showError: function() {
 			var self = this;
 			log.error('Service ' + self.url +' expects params: ' + self.requredParams);
 		}
-
-		//abort: function() {
-		//	var self = this;
-		//	log.error("@@@@ Why this fucking need?");
-		//	if (self.currentRequest && self.currentRequest.cancel) {
-		//		self.currentRequest.cancel();
-		//	}
-		//}
 	};
 
 	['post', 'put', 'get', 'head', 'delete'].forEach(function(method) {

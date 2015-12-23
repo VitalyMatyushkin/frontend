@@ -11,17 +11,36 @@ var Promise = require('bluebird');
  *
  * Returned promise is cancel-friendly and can be cancelled with .cancel() synchronous call. Underlying request
  * will be aborted in that case.
- * 
+ *
+ * On success will return object if dataOnly == true: {
+ *   data: data,
+ *   textStatus: textStatus,
+ *   xhr: jqXHR
+ * }
+ * or just data as is if dataOnly == false or undefined.
  *  Promise semantics.
  * @returns {Promise}
  */
-function ajax(configDetails) {
+function ajax(configDetails, dataOnly) {
     return new Promise(function (resolve, reject, onCancel) {
-        configDetails.error = function(data){
-          reject(data);
+        configDetails.error = function(jqXHR, textStatus, errorThrown){
+          reject({
+              xhr: jqXHR,
+              textStatus: textStatus,
+              errorThrown: errorThrown
+          });
         };
-        configDetails.success = function(data){
-            resolve(data);
+        configDetails.success = function(data, textStatus, jqXHR){
+            if(dataOnly){       // todo: fix me. dataOnly required for back compatability
+                resolve(data);
+            } else {
+                resolve({
+                    data: data,
+                    textStatus: textStatus,
+                    xhr: jqXHR
+                });
+            }
+
         };
         var request = $.ajax(configDetails);
 
