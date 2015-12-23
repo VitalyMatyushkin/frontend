@@ -25,9 +25,14 @@ var SOURCE = './source',
 
 gulp.task('buildVersionFile', function(done){
 	git.revParse({args:'HEAD'}, function (err, hash) {
-		fs.writeFile('VERSION.txt', hash, 'utf8', function(err){
+		if(err) {
+			console.log('Error during getting revision from git: ' + err);
 			done(null);
-		});
+		} else {
+			fs.writeFile('VERSION.txt', hash, 'utf8', function (err) {
+				done(null);
+			});
+		}
 	});
 });
 
