@@ -20,13 +20,13 @@ StudentAutoComplete = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             listItemClick = function(listItemId){
-                React.findDOMNode(self.refs.studentInput).value = React.findDOMNode(self.refs[listItemId]).innerText;
+                ReactDOM.findDOMNode(self.refs.studentInput).value = ReactDOM.findDOMNode(self.refs[listItemId]).innerText;
                 binding.set('selectedStudentId', listItemId);
-                React.findDOMNode(self.refs.autoComplete).style.display = 'none';
+                ReactDOM.findDOMNode(self.refs.autoComplete).style.display = 'none';
             },
-            query = React.findDOMNode(self.refs.studentInput).value;
+            query = ReactDOM.findDOMNode(self.refs.studentInput).value;
         if(query.length >=1){
-            React.findDOMNode(self.refs.autoComplete).style.display = 'block';
+            ReactDOM.findDOMNode(self.refs.autoComplete).style.display = 'block';
             window.Server.students.get({
                 schoolId:binding.get('selectedSchoolId'),
                 filter:{
@@ -74,7 +74,7 @@ StudentAutoComplete = React.createClass({
                 schoolId:schoolId,
                 principalId:userId,
                 studentId:binding.get('selectedStudentId'),
-                comment:React.findDOMNode(self.refs.commentArea).value,
+                comment:ReactDOM.findDOMNode(self.refs.commentArea).value,
                 accepted:false
             }
         }else{
@@ -82,7 +82,7 @@ StudentAutoComplete = React.createClass({
                 preset:binding.get('roleName') ,
                 schoolId:schoolId,
                 principalId:userId,
-                comment:React.findDOMNode(self.refs.commentArea).value,
+                comment:ReactDOM.findDOMNode(self.refs.commentArea).value,
                 accepted:false
             }
         }

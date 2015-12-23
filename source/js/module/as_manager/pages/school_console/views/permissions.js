@@ -154,10 +154,12 @@ PermissionView = React.createClass({
                     window.Server.Permissions.get({filter:{where:{principalId:id}}})
                         .then(function(permission){
                             permission.forEach(function(p){
-                                window.Server.Permission.delete({id:p.id}).then(function(){
+                                window.Server.Permission.delete({id:p.id}).then(function(res){
                                     self.updateData();
+                                    return res;
                                 });
                             });
+                            return permission;
                         });
                 });
             }
@@ -175,13 +177,15 @@ PermissionView = React.createClass({
                         ids.forEach(function(id){
                             window.Server.user.put({id:id},{blocked:false}).then(function(res){
                                 self.updateData();
+                                return res;
                             });
                         });
                         break;
                     case 1:
                         ids.forEach(function(id){
-                            window.Server.user.put({id:ids},{blocked:true}).then(function(){
+                            window.Server.user.put({id:ids},{blocked:true}).then(function(response){
                                 self.updateData();
+                                return response;
                             });
                         });
                         break;

@@ -55,14 +55,23 @@ LeanerView = React.createClass({
                                             leanerData.student = student;
                                             binding.set('achievements', Immutable.fromJS(leanerData));
                                             //console.log(binding.get('achievements').toJS());
+                                            return student;
                                         });
+                                        return returnedUser;
                                     });
+                                    return gamesPlayed;
                                 });
+                                return gamesScoredIn;
                             });
-                        })
+                            return gamesWon;
+                        });
+                        return schoolData;
                     });
+                    return houseData;
                 });
+                return classData;
             });
+            return data;
         });
     },
     render: function () {

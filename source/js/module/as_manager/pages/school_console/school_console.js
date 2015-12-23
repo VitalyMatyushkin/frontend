@@ -63,7 +63,7 @@ SchoolConsole = React.createClass({
         return <div>
             <SubMenu binding={binding.sub('consoleRouting')} items={self.menuItems} />
             <div className='bSchoolMaster'>
-                <RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding}>
+                <RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding || {}}>
                     <Route path='/school_console' binding={binding.sub('permissions')} component='module/as_manager/pages/school_console/views/permissions'  />
                     <Route path='/school_console/permissions' binding={binding.sub('permissions')} component='module/as_manager/pages/school_console/views/permissions'  />
                     <Route path='/school_console/requests' binding={binding.sub('requests')} component='module/as_manager/pages/school_console/views/requests'  />

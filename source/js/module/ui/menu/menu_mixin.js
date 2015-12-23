@@ -63,7 +63,9 @@ var SVG = require('module/ui/svg'),
 			}
 			//We don't want to show the console tab if the current user is not an admin
 			if(globalBinding.get('currentUserRole')!=='admin' && item.key ==='Console'){
-				return null;
+				if(globalBinding.get('userData.authorizationInfo.userId') !== undefined){
+					return resultNode;
+				}else{return null;}
 			}else{
 				return resultNode;
 			}

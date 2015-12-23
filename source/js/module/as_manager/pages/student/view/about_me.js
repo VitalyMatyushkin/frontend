@@ -1,6 +1,7 @@
 var SVG = require('module/ui/svg'),
-	AboutMeBlock;
-
+	AboutMeBlock,
+	aboutListNodes = [],
+	parentListNodes = [];
 AboutMeBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -10,9 +11,8 @@ AboutMeBlock = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			bindingResult = binding.get(field);
-
 		if (bindingResult||bindingResult === 0) {
-			return <div title={field} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
+			return <div key={aboutListNodes.length} title={field} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
 		}
 		return null;
 	},
@@ -22,16 +22,14 @@ AboutMeBlock = React.createClass({
 			bindingResult = binding.get(parentDetails);
 		if(bindingResult){
 			return (
-				<div className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
+				<div key={parentListNodes.length} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
 			)
 		}
 		return null;
 	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			aboutListNodes = [],
-			parentListNodes = [];
+			binding = self.getDefaultBinding();
 		aboutListNodes.push(self._getAboutNode('icon_home', 'houseData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_library', 'classData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_shot','numOfGamesScoredIn'));

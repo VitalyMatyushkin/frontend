@@ -115,7 +115,7 @@ module.exports = React.createClass({
 		children = children || self.props.children;
 		//Using cloneWithProps TODO: update to cloneElement
 		children = React.Children.map(children, function(child){
-			return React.addons.cloneWithProps(child,{
+			return React.cloneElement(child,{
 				onClick:testClick.bind(self,child)
 			});
 		});
@@ -155,7 +155,7 @@ module.exports = React.createClass({
 		this.showList();
 	},
 	handleInputChange: function (event) {
-		var value = this.refs.input.getDOMNode().value;
+		var value = this.refs.input.value;
 		this.clearSelectedState(function () {
 			this.setState({
 				inputValue: value
@@ -212,7 +212,7 @@ module.exports = React.createClass({
 		) {
 			return;
 		}
-		var input = this.refs.input.getDOMNode();
+		var input = this.refs.input;
 		var inputValue = input.value;
 		var firstChild = this.props.children.length ?
 			this.props.children[0] :
@@ -248,11 +248,11 @@ module.exports = React.createClass({
 	},
 
 	focusInput: function () {
-		this.refs.input.getDOMNode().focus();
+		this.refs.input.focus();
 	},
 
 	selectInput: function () {
-		this.refs.input.getDOMNode().select();
+		this.refs.input.select();
 	},
 
 	inputKeydownMap: {
@@ -302,7 +302,7 @@ module.exports = React.createClass({
 
 	selectOnEnter: function () {
 		this.maybeSelectAutocompletedOption();
-		this.refs.input.getDOMNode().select();
+		this.refs.input.select();
 	},
 
 	maybeSelectAutocompletedOption: function () {
@@ -317,12 +317,12 @@ module.exports = React.createClass({
 		options = options || {};
 		this.props.binding.set('inputValue', getLabel(child));
 
-		this.setState({
+		self.setState({
 			value: child.props.value,
 			inputValue: getLabel(child),
 			matchedAutocompleteOption: null
 		}, function () {
-			this.props.onSelect(child.props.value, child);
+			self.props.onSelect(child.props.value, child);
 			this.hideList();
 			if (options.focus !== false) {
 				this.selectInput();
@@ -398,8 +398,8 @@ module.exports = React.createClass({
 	focusOption: function () {
 		var index = this.state.focusedIndex;
 
-		if (this.refs.list.getDOMNode().childNodes[index]) {
-			this.refs.list.getDOMNode().childNodes[index].focus();
+		if (this.refs.list.childNodes[index]) {
+			this.refs.list.childNodes[index].focus();
 		}
 	},
 	//mixins: [Morearty.Mixin],
@@ -435,6 +435,7 @@ module.exports = React.createClass({
 					onChange={this.handleInputChange}
 					onKeyDown={this.handleKeydown}
 					onKeyUp={this.handleInputKeyUp}
+					onClick={this.handleClick}
 					role="combobox"
                     placeholder={self.props.placeholderText || ''}
 					aria-activedescendant={this.state.menu.activedescendant}

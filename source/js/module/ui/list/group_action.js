@@ -53,7 +53,7 @@ GroupAction = React.createClass({
     },
     handleActionItemClick:function(selectedName){
         var self = this,
-            el = React.findDOMNode(self.refs.selectedAction);
+            el = ReactDOM.findDOMNode(self.refs.selectedAction);
         el.innerText = selectedName;
         self.toggleActionList();
     },
@@ -63,7 +63,7 @@ GroupAction = React.createClass({
     },
     _renderApplyButton:function(){
         var self = this,
-            handleApplyClick = function(){return function(evt){self.props.groupActionFactory(React.findDOMNode(self.refs.selectedAction),self.checkBoxCollections); evt.stopPropagation();}};
+            handleApplyClick = function(){return (evt)=>{self.props.groupActionFactory(ReactDOM.findDOMNode(self.refs.selectedAction),self.checkBoxCollections); evt.stopPropagation();}};
         return (
             <span className="applyAction" onClick={handleApplyClick()}>Apply</span>
         )
@@ -79,8 +79,8 @@ GroupAction = React.createClass({
                     <input onClick={self.toggleCheckBoxes.bind(null,this)} type="checkbox"/> Check All</div>
                 <div className="groupAction_item">
                     <span className="groupMenu">
-                        <span ref="selectedAction"></span>
-                        <span className="caret" onClick={self.toggleActionList.bind(null, this)}></span>
+                        <span ref="selectedAction"/>
+                        <span className="caret" onClick={self.toggleActionList.bind(null, this)}/>
                         <div className={groupListClasses}>
                             {groupActionList}
                         </div>

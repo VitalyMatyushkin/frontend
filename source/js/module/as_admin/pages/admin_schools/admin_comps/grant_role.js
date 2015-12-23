@@ -37,7 +37,7 @@ GrantRole = React.createClass({
     onRoleSelectorChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            selEl = React.findDOMNode(self.refs.roleSelector);
+            selEl = ReactDOM.findDOMNode(self.refs.roleSelector);
         if(selEl.options[selEl.selectedIndex].value === 'parent'){
             binding.set('isParent', true);
             binding.set('roleName',selEl.options[selEl.selectedIndex].value);

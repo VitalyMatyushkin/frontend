@@ -49,7 +49,7 @@ ChallengesList = React.createClass({
                 return eventDate.getMonth() === currentDate.getMonth() &&
                     eventDate.getFullYear() === currentDate.getFullYear();
             });
-        return events.count() ? events.map(function (event) {
+        return events.count() ? events.map(function (event, eventIndex) {
             var eventDate = new Date(event.get('startTime')),
                 hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
                 isHoverDay = hoverDay &&
@@ -57,7 +57,7 @@ ChallengesList = React.createClass({
                     hoverDay.getDate() === eventDate.getDate(),
                 stringDate = self.formatDate(event.get('startTime'));
 
-            return <div className={isHoverDay ? 'eChallenge eChallenge_all mActive' : 'eChallenge eChallenge_all'}>
+            return <div key={eventIndex} className={isHoverDay ? 'eChallenge eChallenge_all mActive' : 'eChallenge eChallenge_all'}>
                 <div className="eChallenge_basic eChallenge_marginTopBottom">
                     <span className="eChallenge_date">{stringDate}</span>
                     <span className="eChallenge_type">{event.get('type')}</span>

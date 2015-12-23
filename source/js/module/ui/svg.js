@@ -1,5 +1,5 @@
 
-var ReactDOM = require('reactDom');
+//var ReactDOM = require('reactDom');
 //<svg class="bIcon"><use xlink:href="#icon_key"></use></svg>
 
 var SVG = React.createClass({

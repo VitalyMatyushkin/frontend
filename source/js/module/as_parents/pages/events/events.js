@@ -36,7 +36,7 @@ EventView = React.createClass({
                 .set('sync', true)
                 .set('models', Immutable.fromJS(data))
                 .commit();
-            return;
+            return data;
         });
 
         !binding.get('activeChildId') && window.Server.userChildren.get({

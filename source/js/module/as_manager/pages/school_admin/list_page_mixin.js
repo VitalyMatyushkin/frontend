@@ -4,7 +4,7 @@ var ListPageMixin,
     dataWorker;
 ListPageMixin = {
 	propTypes: {
-		formBinding: React.PropTypes.any.isRequired,
+		formBinding: React.PropTypes.any,
 		filters: React.PropTypes.object,
 		addSchoolToFilter: React.PropTypes.bool
 	},
@@ -210,6 +210,7 @@ ListPageMixin = {
                         binding.set(Immutable.fromJS(data));
                     }
                     self.persistantData = data;
+                    return data;
                 });
             }else{
                 self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
