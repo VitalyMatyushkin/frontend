@@ -18,8 +18,18 @@ var SOURCE = './source',
 	uglify = require('gulp-uglify'),		// minimize js
 	eslint = require('gulp-eslint'),
 	filenames = require('gulp-filenames'),
+	git = require('gulp-git'),
+	fs = require('fs'),
 	babel = require("gulp-babel"),
 	karmaTools = require('./project/karma_tools');
+
+gulp.task('buildVersionFile', function(done){
+	git.revParse({args:'HEAD'}, function (err, hash) {
+		fs.writeFile('VERSION.txt', hash, 'utf8', function(err){
+			done(null);
+		});
+	});
+});
 
 /** This task collect all files which tends to be karma configuration and build array with filenames.
  * This is required for __sync__ processing of each file. In case of async processing (with .pipe() for ex.)
@@ -187,5 +197,5 @@ gulp.task('default', function (done) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts', 'svgSymbols', callback);
+    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts', 'svgSymbols', 'buildVersionFile', callback);
 });
