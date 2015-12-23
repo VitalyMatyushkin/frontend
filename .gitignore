@@ -35,3 +35,6 @@ source/js/module/test
 
 #Build
 build
+
+#VERSION file
+VERSION.txt
