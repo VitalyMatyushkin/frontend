@@ -211,7 +211,7 @@ ListPageMixin = {
                     }
                     self.persistantData = data;
                     return data;
-                });
+                }).error((error)=>{console.log('error '+error.statusText)});
             }else{
                 self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
                     if(page[page.length-1] === 'requests'){

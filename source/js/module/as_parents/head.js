@@ -46,7 +46,7 @@ Head = React.createClass({
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding();
         if(rootBinding.get('userData.authorizationInfo.userId')){
-            setTimeout(function(){ReactDOM.findDOMNode(self.refs.checkAll).checked = true;},200); //set the check all box to checked
+            ReactDOM.findDOMNode(self.refs.checkAll).checked = true; //Set the check all box to checked
         }
     },
     setActiveChild: function() {

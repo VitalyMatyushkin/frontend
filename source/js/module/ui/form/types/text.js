@@ -20,8 +20,8 @@ TypeText =  React.createClass({
 	_forceNewValue: function(value) {
 		var self = this;
 
-		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.getDOMNode().value === '') {
-			self.refs.fieldInput.getDOMNode().value = value;
+		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.value === '') {
+			self.refs.fieldInput.value = value;
 			self.fullValidate(value);
 		}
 	},

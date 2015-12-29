@@ -20,11 +20,11 @@ TypeDate =  React.createClass({
 			date,
 			value;
 
-		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.getDOMNode().value === '' || self.refs.fieldInput.getDOMNode().value === '__.__.____')) {
+		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.value === '' || self.refs.fieldInput.value === '__.__.____')) {
 			date = new Date(value);
 			dateString = ('0' + (date.getMonth()+1)).slice(-2) + '.' + ('0' + date.getDate()).slice(-2) + '.' + date.getFullYear();
 
-			self.refs.fieldInput.getDOMNode().value = dateString;
+			self.refs.fieldInput.value = dateString;
 			self.fullValidate(value);
 		}
 	},
@@ -45,14 +45,14 @@ TypeDate =  React.createClass({
 	},
 	handleBlur: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.getDOMNode().value;
+			inputValue = self.refs.fieldInput.value;
 
 
 		self.setValue(self._converToIso(inputValue));
 	},
 	handleChange: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.getDOMNode().value;
+			inputValue = self.refs.fieldInput.value;
 
 		self.changeValue(self._converToIso(inputValue));
 	},

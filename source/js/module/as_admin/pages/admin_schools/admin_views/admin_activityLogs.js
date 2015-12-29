@@ -2,8 +2,6 @@
  * Created by bridark on 15/07/15.
  */
 var ActivityLogPage,
-    List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
     Table = require('module/ui/list/table'),
     TableField = require('module/ui/list/table_field'),
     DateTimeMixin = require('module/mixins/datetime'),
@@ -46,7 +44,7 @@ ActivityLogPage = React.createClass({
                 <TableField dataField="ip" width="20%" >IP</TableField>
                 <TableField dataField="referer" width="20%" >Referrer</TableField>
                 <TableField dataField="scope" width="20%" >Scope</TableField>
-                <TableField dataFied="limit">Limit</TableField>
+                <TableField dataField="limit">Limit</TableField>
             </Table>
         )
     }

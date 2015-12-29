@@ -22,20 +22,20 @@ TypeTextArea =  React.createClass({
         var self = this,
             oldValue;
 
-        if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.getDOMNode().value === '') {
-            self.refs.fieldInput.getDOMNode().value = value;
+        if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.value === '') {
+            self.refs.fieldInput.value = value;
             self.fullValidate(value);
         }
     },
     handeBlur: function(event) {
         var self = this;
 
-        self.setValue(self.refs.fieldInput.getDOMNode().value);
+        self.setValue(self.refs.fieldInput.value);
     },
     handleChange: function(event) {
         var self = this;
 
-        self.changeValue(self.refs.fieldInput.getDOMNode().value);
+        self.changeValue(self.refs.fieldInput.value);
     },
     render: function () {
         var self = this,
