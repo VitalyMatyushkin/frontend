@@ -157,6 +157,19 @@ EventManagerBase = React.createClass({
                 document.getElementsByClassName('eEvents_button')[1].style.display = 'none'; // Hide next button to avoid temptation of hitting it!
                 dupErrorEl.style.display = 'block'; //Show error message
             }
+        }else{
+            if (model) {
+                binding.update('rivals', function (rivals) {
+                    var index = rivals.findIndex(function (rival) {
+                        return rival.get('id') === id;
+                    });
+                    if (index === -1) {
+                        return rivals.set(order, Immutable.fromJS(model));
+                    } else {
+                        return rivals;
+                    }
+                });
+            }
         }
 	},
     getSports: function () {
