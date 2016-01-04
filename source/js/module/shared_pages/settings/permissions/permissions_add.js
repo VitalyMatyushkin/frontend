@@ -2,6 +2,8 @@ var CoachForm = require('module/shared_pages/settings/permissions/forms/coach'),
 	OfficialForm = require('module/shared_pages/settings/permissions/forms/official'),
 	ParentForm = require('module/shared_pages/settings/permissions/forms/parent'),
 	ChooseType = require('module/shared_pages/settings/permissions/forms/type'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	PermissionsForm;
 
 PermissionsForm = React.createClass({

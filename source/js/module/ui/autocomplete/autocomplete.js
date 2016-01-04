@@ -1,6 +1,8 @@
 var AutocompleteHelpers = require('module/ui/autocomplete/main'),
 	Combobox = AutocompleteHelpers.Combobox,
 	ComboboxOption = AutocompleteHelpers.Option,
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	Autocomplete;
 
 

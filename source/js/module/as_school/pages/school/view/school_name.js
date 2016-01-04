@@ -1,4 +1,5 @@
-var SchoolName;
+var SchoolName,
+	React = require('react');
 
 SchoolName = React.createClass({
 	mixins: [Morearty.Mixin],

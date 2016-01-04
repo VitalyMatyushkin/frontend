@@ -1,5 +1,6 @@
 var ColorPicker = require('module/ui/colors_select/color_picker'),
-	ColorsSelect;
+	ColorsSelect,
+	React = require('react');
 
 ColorsSelect =  React.createClass({
 	propTypes: {

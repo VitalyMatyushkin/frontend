@@ -1,5 +1,7 @@
 var ListField,
     If = require('module/ui/if/if'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     SortColumn = require('module/ui/list/sort_column');
 ListField = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -4,6 +4,8 @@ var k = function () {
 };
 var addClass = require('./add-class');
 var ComboboxOption = require('./option');
+var React = require('react');
+var ReactDOM = require('reactDom');
 
 module.exports = React.createClass({
 	propTypes: {

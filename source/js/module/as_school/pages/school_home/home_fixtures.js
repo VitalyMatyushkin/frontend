@@ -3,6 +3,7 @@
  */
 var HomeFixtures,
     DateTimeMixin = require('module/mixins/datetime'),
+    React = require('react'),
     SVG = require('module/ui/svg');
 HomeFixtures = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],

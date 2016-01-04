@@ -1,4 +1,6 @@
 var Team,
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     SVG = require('module/ui/svg');
 
 Team = React.createClass({

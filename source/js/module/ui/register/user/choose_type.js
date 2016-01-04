@@ -1,4 +1,5 @@
 var Form = require('module/ui/form/form'),
+	React = require('react'),
 	FormField = require('module/ui/form/form_field'),
 	ChooseRegisterTypeForm;
 

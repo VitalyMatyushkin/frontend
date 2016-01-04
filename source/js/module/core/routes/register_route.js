@@ -1,4 +1,5 @@
 var RegisterRoute,
+	React = require('react'),
 	Route = require('module/core/route');
 
 RegisterRoute = React.createClass({

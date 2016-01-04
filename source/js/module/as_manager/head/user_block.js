@@ -1,4 +1,5 @@
 var UserBlock,
+	React = require('react'),
 	SVG = require('module/ui/svg');
 
 UserBlock = React.createClass({

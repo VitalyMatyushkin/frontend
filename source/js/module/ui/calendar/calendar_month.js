@@ -1,5 +1,7 @@
 
-var classNames = require('classnames');
+var classNames = require('classnames'),
+	React = require('react'),
+	ReactDOM = require('reactDom');
 
 var CalendarMonthView;
 

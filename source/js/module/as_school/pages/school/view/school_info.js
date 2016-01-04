@@ -1,5 +1,6 @@
 var SVG = require('module/ui/svg'),
 	If = require('module/ui/if/if'),
+	React = require('react'),
 	SchoolInfo;
 
 SchoolInfo = React.createClass({

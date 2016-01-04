@@ -2,6 +2,7 @@ var ChallengesList = require('./calendar/challenges_list'),
 	AllChallengesList = require('./calendar/all_challenges_list'),
     CalendarView = require('module/ui/calendar/calendar'),
     If = require('module/ui/if/if'),
+	React = require('react'),
     Then = If.Then,
     Else = If.Else,
 	EventsCalendar;

@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 06/08/15.
  */
-var FixtureCarousel;
+var FixtureCarousel,
+    React = require('react');
 FixtureCarousel = React.createClass({
     mixins:[Morearty.Mixin],
     getParticipantEmblem:function(participant){

@@ -1,5 +1,7 @@
 var MultiSelectTeam,
     SVG = require('module/ui/svg'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     Multiselect = require('module/ui/multiselect/multiselect');
 
 MultiSelectTeam = React.createClass({

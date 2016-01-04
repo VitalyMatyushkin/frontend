@@ -1,5 +1,6 @@
 var NewsPage,
 	SVG = require('module/ui/svg'),
+	React = require('react'),
 	DateTimeMixin = require('module/mixins/datetime');
 
 NewsPage = React.createClass({

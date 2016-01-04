@@ -3,9 +3,8 @@
  */
     //TODO: refactor this component
 var IndicatorView,
-    oldActiveChild,
-    selfEl,
-    timeoutId;
+    React = require('react'),
+    ReactDOM = require('reactDom');
 IndicatorView = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{

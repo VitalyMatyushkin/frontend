@@ -2,6 +2,8 @@ var Manager,
 	FootballManager = require('./football/football'),
     MultiSelectTeam = require('./multiselect_team'),
     AutocompleteTeam = require('./autocompleteTeam'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     classNames = require('classnames'),
     Team = require('./team');
 

@@ -9,6 +9,7 @@ var Form = require('module/ui/form/form'),
 	classNames = require('classnames'),
 	PermissionsStep,
     multipleFields,
+	React = require('react'),
     studentFields = [];
 
 PermissionsStep = React.createClass({

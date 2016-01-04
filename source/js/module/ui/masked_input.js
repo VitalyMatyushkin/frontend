@@ -5,7 +5,8 @@ var MASK_REGEX = {
 	},
 	MASK_CHARS = Object.keys(MASK_REGEX),
 	PTRN_REGEX = new RegExp('[' + MASK_CHARS.join(',') + ']', 'g'),
-	MaskedInput;
+	MaskedInput,
+	React = require('react');
 
 var MaskedInput = React.createClass({
 	mixins: [Morearty.Mixin],

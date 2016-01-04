@@ -1,3 +1,4 @@
+var React = require('react');
 var MultiSelectItem = React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultProps: function() {

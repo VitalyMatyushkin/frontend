@@ -2,6 +2,8 @@
  * Created by bridark on 04/08/15.
  */
 var TypeMixin = require('module/ui/form/types/type_mixin'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     TypeTextArea;
 
 TypeTextArea =  React.createClass({

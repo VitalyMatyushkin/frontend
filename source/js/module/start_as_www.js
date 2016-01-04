@@ -4,6 +4,7 @@ var ApplicationView = require('module/as_www/application'),
 	authController = require('module/core/auth_controller'),
 	ReactDom = require('reactDom'),
 	MoreartyContext,
+	React = require('react'),
 	binding;
 
 function runWwwMode() {

@@ -1,7 +1,9 @@
 /**
  * Created by bridark on 27/07/15.
  */
-var SortColumn;
+var SortColumn,
+    React = require('react'),
+    ReactDOM = require('reactDom');
 SortColumn = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{

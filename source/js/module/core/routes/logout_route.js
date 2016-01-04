@@ -1,4 +1,5 @@
 var LogoutRoute,
+	React = require('react'),
 	Route = require('module/core/route');
 
 LogoutRoute = React.createClass({

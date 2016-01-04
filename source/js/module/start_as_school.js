@@ -3,6 +3,7 @@ var ApplicationView = require('module/as_school/application'),
 	userDataInstance = require('module/data/user_data'),
 	authController = require('module/core/auth_controller'),
 	ReactDom = require('reactDom'),
+	React = require('react'),
 	MoreartyContext,
 	binding;
 

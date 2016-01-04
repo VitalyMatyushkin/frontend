@@ -3,6 +3,7 @@ var OneSchoolPage,
 	Route = require('module/core/route'),
 	SubMenu = require('module/ui/menu/sub_menu'),
 	SchoolInfo = require('module/as_school/pages/school/view/school_info'),
+	React = require('react'),
 	SchoolName = require('module/as_school/pages/school/view/school_name');
 
 OneSchoolPage = React.createClass({

@@ -1,4 +1,5 @@
-var Route;
+var Route,
+	React = require('react');
 
 Route = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -1,4 +1,5 @@
-var ChallengesView;
+var ChallengesView,
+    React = require('react');
 ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
     sameDay: function (d1, d2) {

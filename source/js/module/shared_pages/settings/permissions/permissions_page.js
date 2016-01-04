@@ -1,4 +1,6 @@
 var PermissionsSettingsPage,
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	RouterView = require('module/core/router'),
 	Route = require('module/core/route');
 

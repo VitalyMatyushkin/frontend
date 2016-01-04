@@ -1,4 +1,6 @@
 var TypeMixin = require('module/ui/form/types/type_mixin'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeText;
 
 TypeText =  React.createClass({

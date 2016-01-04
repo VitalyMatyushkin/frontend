@@ -1,5 +1,7 @@
 var TypeMixin = require('module/ui/form/types/type_mixin'),
 	Select = require('module/ui/select/select'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeSelect;
 
 TypeSelect = React.createClass({

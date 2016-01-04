@@ -3,6 +3,7 @@ var Logo = require('module/as_manager/head/logo'),
     UserBlock = require('module/as_manager/head/user_block'),
     Autocomplete = require('module/ui/autocomplete/autocomplete'),
     If = require('module/ui/if/if'),
+    React = require('react'),
     Head;
 
 Head = React.createClass({

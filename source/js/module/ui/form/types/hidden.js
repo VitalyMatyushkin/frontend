@@ -2,6 +2,8 @@
  * Created by bridark on 08/06/15.
  */
 var TypeMixin = require('module/ui/form/types/type_mixin'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     TypeHidden;
 
 TypeHidden =  React.createClass({

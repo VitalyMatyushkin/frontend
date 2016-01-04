@@ -1,5 +1,7 @@
 var FootballManager,
     SVG = require('module/ui/svg'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	Autocomplete = require('module/ui/autocomplete/autocomplete');
 
 FootballManager = React.createClass({

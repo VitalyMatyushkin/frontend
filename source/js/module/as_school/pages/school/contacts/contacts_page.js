@@ -1,6 +1,7 @@
 var ContactsPage,
 	SVG = require('module/ui/svg'),
 	Map = require('module/ui/map/map'),
+	React = require('react'),
 	If = require('module/ui/if/if');
 
 ContactsPage = React.createClass({

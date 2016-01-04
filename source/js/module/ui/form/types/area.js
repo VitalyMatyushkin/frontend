@@ -1,5 +1,7 @@
 var TypeAutocomplete = require('module/ui/form/types/autocomplete'),
 	AreaMixin,
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeArea;
 
 TypeArea = React.createClass({

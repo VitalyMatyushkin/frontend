@@ -1,3 +1,4 @@
+var React = require('react');
 var Popup = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {

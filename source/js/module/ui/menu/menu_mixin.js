@@ -1,4 +1,6 @@
 var SVG = require('module/ui/svg'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	MenuMixin = {
 	propTypes: {
 		items: React.PropTypes.array

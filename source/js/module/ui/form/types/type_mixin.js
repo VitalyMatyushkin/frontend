@@ -1,4 +1,6 @@
 var InputTypeMixin,
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	validationsSet = require('module/ui/form/types/validations');
 
 

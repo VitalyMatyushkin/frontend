@@ -1,4 +1,6 @@
 var AutocompleteTeam,
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     SVG = require('module/ui/svg'),
     Promise = require('bluebird'),
     Autocomplete = require('module/ui/autocomplete/autocomplete');

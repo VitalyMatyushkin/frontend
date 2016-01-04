@@ -1,4 +1,6 @@
-var List;
+var List,
+	React = require('react'),
+	ReactDOM = require('reactDom');
 
 List = React.createClass({
 	mixins: [Morearty.Mixin],

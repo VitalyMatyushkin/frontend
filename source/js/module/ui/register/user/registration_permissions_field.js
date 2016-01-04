@@ -4,7 +4,8 @@
 var AutoComplete = require('module/ui/autocomplete/autocomplete'),
     If = require('module/ui/if/if'),
     ExtraPermissionsField = require('module/ui/register/user/extra_permission_fields'),
-    RegistrationPermissionField;
+    RegistrationPermissionField,
+    React = require('react');
 /*
  *
  *

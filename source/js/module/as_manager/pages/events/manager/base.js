@@ -1,6 +1,8 @@
 var Autocomplete = require('module/ui/autocomplete/autocomplete'),
     If = require('module/ui/if/if'),
     Multiselect = require('module/ui/multiselect/multiselect'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     EventManagerBase,
     oldSelectedId,
     alertPopUP;
@@ -131,8 +133,8 @@ EventManagerBase = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
             comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
-            dupErrorEl = React.findDOMNode(self.refs.dupError),
-            gameType = React.findDOMNode(self.refs.gameType).value;
+            dupErrorEl = ReactDOM.findDOMNode(self.refs.dupError),
+            gameType = ReactDOM.findDOMNode(self.refs.gameType).value;
         /*
         * Quick fix for duplicated fields
         * check combo boxes for equality if equal alert the user

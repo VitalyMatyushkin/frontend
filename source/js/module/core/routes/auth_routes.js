@@ -1,4 +1,5 @@
 var AuthRoutes,
+	React = require('react'),
 	Route = require('module/core/route');
 
 AuthRoutes = React.createClass({

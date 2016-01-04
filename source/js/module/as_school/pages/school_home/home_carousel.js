@@ -4,6 +4,7 @@
 var HomeBlog,
     SVG = require('module/ui/svg'),
     BlogCarousel = require('./blog_carousel'),
+    React = require('react'),
     FixtureCarousel = require('./fixture_carousel');
 HomeBlog = React.createClass({
     mixins:[Morearty.Mixin],

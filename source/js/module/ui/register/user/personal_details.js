@@ -1,6 +1,7 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
+	React = require('react'),
 	RegiseterUserForm;
 
 RegiseterUserForm = React.createClass({

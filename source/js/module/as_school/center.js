@@ -4,6 +4,7 @@ var RouterView = require('module/core/router'),
 	LogoutRoute = require('module/core/routes/logout_route'),
 	RegisterRoute = require('module/core/routes/register_route'),
 	VerifyRoute = require('module/core/routes/verify_route'),
+	React = require('react'),
 	Center;
 
 Center = React.createClass({

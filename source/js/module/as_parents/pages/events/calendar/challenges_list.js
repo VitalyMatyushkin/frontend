@@ -1,4 +1,6 @@
 var ChallengesList,
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
 
 ChallengesList = React.createClass({

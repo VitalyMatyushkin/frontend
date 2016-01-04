@@ -3,6 +3,8 @@
  */
 var RoleList,
     DateTimeMixin = require('module/mixins/datetime'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     SVG = require('module/ui/svg');
 RoleList = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],

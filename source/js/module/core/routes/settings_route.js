@@ -1,4 +1,5 @@
 var SettingsRoute,
+	React = require('react'),
 	Route = require('module/core/route');
 
 SettingsRoute = React.createClass({

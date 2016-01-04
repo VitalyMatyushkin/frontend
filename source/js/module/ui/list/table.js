@@ -1,5 +1,7 @@
 var Table,
-	If = require('module/ui/if/if');
+	If = require('module/ui/if/if'),
+    React = require('react'),
+    ReactDOM = require('reactDom');
 Table = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {

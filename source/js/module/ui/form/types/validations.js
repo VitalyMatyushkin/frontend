@@ -2,6 +2,7 @@
  * Раздичные виды валидации
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
+var React = require('react');
 var validationsSet = {
 	phone: function(value) {
 
