@@ -2,6 +2,7 @@
  * Created by bridark on 24/06/15.
  */
 var ConsoleList,
+    React = require('react'),
     SVG = require('module/ui/svg');
 ConsoleList = React.createClass({
     mixins:[Morearty.Mixin],

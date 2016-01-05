@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 19/06/15.
  */
-var SchoolRequestArchive;
+var SchoolRequestArchive,
+    React = require('react');
 SchoolRequestArchive = React.createClass({
     mixins:[Morearty.Mixin],
     render:function(){

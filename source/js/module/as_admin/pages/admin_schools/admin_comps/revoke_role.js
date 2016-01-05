@@ -1,7 +1,9 @@
 /**
  * Created by bridark on 29/06/15.
  */
-var RevokeAccess;
+var RevokeAccess, React ,ReactDOM;
+React = require('react');
+ReactDOM = require('reactDom');
 RevokeAccess = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){

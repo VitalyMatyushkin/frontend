@@ -5,6 +5,7 @@ var SchoolConsole,
     RouterView = require('module/core/router'),
     Route = require('module/core/route'),
     SubMenu = require('module/ui/menu/sub_menu'),
+    React = require('react'),
     liveRequestCount;
 SchoolConsole = React.createClass({
     mixins: [Morearty.Mixin],

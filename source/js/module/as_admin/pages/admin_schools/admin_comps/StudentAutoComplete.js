@@ -3,6 +3,8 @@
  */
 var StudentAutoComplete,
     Popup = require('module/ui/popup'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     list;
 StudentAutoComplete = React.createClass({
     mixins:[Morearty.Mixin],

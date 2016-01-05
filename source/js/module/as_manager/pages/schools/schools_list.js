@@ -1,4 +1,5 @@
-var SchoolListPage;
+var SchoolListPage,
+	React = require('react');
 
 SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],

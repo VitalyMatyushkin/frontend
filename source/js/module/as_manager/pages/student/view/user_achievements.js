@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 25/04/15.
  */
-var UserAchievements;
+var UserAchievements,
+    React = require('react');
 UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
     addZeroToFirst: function (num) {

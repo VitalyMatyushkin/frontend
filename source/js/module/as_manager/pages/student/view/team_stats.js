@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 03/05/15.
  */
-var TeamStats;
+var TeamStats,
+    React = require('react');
 TeamStats = React.createClass({
     mixins: [Morearty.Mixin],
     componentDidMount:function(){

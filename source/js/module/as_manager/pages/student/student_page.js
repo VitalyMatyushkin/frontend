@@ -4,6 +4,7 @@ var LeanerView,
 		UserName = require('module/as_manager/pages/student/view/user_name'),
 		UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
 		UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
+        React = require('react'),
 		TeamStats = require('module/as_manager/pages/student/view/team_stats');
 
 LeanerView = React.createClass({

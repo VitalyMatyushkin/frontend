@@ -3,6 +3,8 @@
  */
 var GrantRole,
     AutoComplete = require('module/ui/autocomplete/autocomplete'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     StudentAutoComplete = require('./StudentAutoComplete');
 GrantRole = React.createClass({
     mixins:[Morearty.Mixin],

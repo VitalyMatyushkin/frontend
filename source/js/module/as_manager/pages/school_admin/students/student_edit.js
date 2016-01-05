@@ -1,4 +1,5 @@
 var StudentForm = require('module/as_manager/pages/school_admin/students/student_form'),
+	React = require('react'),
 	StudentEditPage;
 
 StudentEditPage = React.createClass({

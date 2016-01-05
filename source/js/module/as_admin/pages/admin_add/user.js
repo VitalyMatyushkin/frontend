@@ -1,5 +1,6 @@
 var RegisterForm = require('module/as_admin/pages/admin_add/user/form'),
 	RegisterDone = require('module/as_admin/pages/admin_add/user/done'),
+	React = require('react'),
 	RegiseterUserPage;
 
 RegiseterUserPage = React.createClass({

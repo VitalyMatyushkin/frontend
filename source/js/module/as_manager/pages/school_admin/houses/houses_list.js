@@ -3,6 +3,7 @@ var List = require('module/ui/list/list'),
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+	React = require('react'),
 	HousesListPage;
 
 HousesListPage = React.createClass({

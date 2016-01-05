@@ -5,6 +5,7 @@ var List = require('module/ui/list/list'),
 	DateTimeMixin = require('module/mixins/datetime'),
 	SVG = require('module/ui/svg'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+	React = require('react'),
 	StudentsListPage;
 
 StudentsListPage = React.createClass({

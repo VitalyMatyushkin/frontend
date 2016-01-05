@@ -9,6 +9,7 @@ var PermissionView,
     DateTimeMixin = require('module/mixins/datetime'),
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
     GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+    React = require('react'),
     Popup = require('module/ui/popup');
 
 PermissionView = React.createClass({

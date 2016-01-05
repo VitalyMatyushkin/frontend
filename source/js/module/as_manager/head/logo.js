@@ -1,5 +1,5 @@
-var Logo,
-	React = require('react');
+var Logo, React;
+React = require('react');
 
 Logo = React.createClass({
 	mixins: [Morearty.Mixin],

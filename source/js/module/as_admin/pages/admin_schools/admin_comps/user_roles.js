@@ -3,6 +3,8 @@
  */
 var UserRole,
     SVG = require('module/ui/svg'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     userRoles;
 UserRole = React.createClass({
     mixins:[Morearty.Mixin],

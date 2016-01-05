@@ -12,6 +12,7 @@ var List = require('module/ui/list/list'),
     dialogState,
     Popup = require('module/ui/popup'),
     RegisterUser = require('module/ui/register/user'),
+    React = require('react'),
     theList;
 
 userListPage = React.createClass({

@@ -1,4 +1,5 @@
 var HouseForm = require('module/as_manager/pages/school_admin/houses/house_form'),
+	React = require('react'),
 	HouseAddPage;
 
 HouseAddPage = React.createClass({

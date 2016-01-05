@@ -1,8 +1,9 @@
 /**
  * Created by bridark on 25/04/15.
  */
-    require('module/as_manager/pages/events/manager/base');
+    //require('module/as_manager/pages/events/manager/base');
 var UserFixtures,
+    React = require('react'),
     fixData,
     index;
 UserFixtures = React.createClass({

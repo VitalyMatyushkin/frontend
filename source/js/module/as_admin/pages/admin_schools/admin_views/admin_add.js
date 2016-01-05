@@ -2,6 +2,8 @@
  * Created by bridark on 09/06/15.
  */
 var SchoolForm = require('module/as_manager/pages/schools/schools_form'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     AddSchoolForm;
 
 AddSchoolForm = React.createClass({

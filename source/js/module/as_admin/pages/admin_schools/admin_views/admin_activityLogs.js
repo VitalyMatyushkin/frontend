@@ -5,6 +5,8 @@ var ActivityLogPage,
     Table = require('module/ui/list/table'),
     TableField = require('module/ui/list/table_field'),
     DateTimeMixin = require('module/mixins/datetime'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
 ActivityLogPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin, DateTimeMixin],

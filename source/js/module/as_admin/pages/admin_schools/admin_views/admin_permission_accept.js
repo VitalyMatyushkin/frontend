@@ -1,5 +1,6 @@
 var If = require('module/ui/if/if'),
 	Autocomplete = require('module/ui/autocomplete/autocomplete'),
+	React = require('react'),
 	PermissionAcceptPage;
 
 PermissionAcceptPage = React.createClass({

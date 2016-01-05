@@ -4,6 +4,7 @@
 var AddToGallery,
     Popup = require('module/ui/popup'),
     SubMenu = require('module/ui/menu/sub_menu'),
+    React = require('react'),
     If = require('module/ui/if/if');
 AddToGallery = React.createClass({
     mixins:[Morearty.Mixin],

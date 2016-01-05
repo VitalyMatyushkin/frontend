@@ -1,5 +1,6 @@
 var SVG = require('module/ui/svg'),
 	AboutMeBlock,
+	React = require('react'),
 	aboutListNodes = [],
 	parentListNodes = [];
 AboutMeBlock = React.createClass({
