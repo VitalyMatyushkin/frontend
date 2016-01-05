@@ -1,6 +1,7 @@
 var ArchiveView,
 	ProcessingView = require('./processing'),
 	InviteOutbox = require('./invite'),
+	React = require('react'),
 	InvitesMixin = require('../mixins/invites_mixin');
 
 ArchiveView = React.createClass({

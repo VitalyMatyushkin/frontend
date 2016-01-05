@@ -199,13 +199,13 @@ EventManagerBase = React.createClass({
             });
 
         if (sport) {
-            return sport.toJS().limits.genders.map(function (gender) {
+            return sport.toJS().limits.genders.map(function (gender, genInd) {
                 var names = {
                     male: 'boys',
                     female: 'girls'
                 };
 
-                return <label onClick={self.changeCompleteGender}>
+                return <label key={genInd} onClick={self.changeCompleteGender}>
                             <Morearty.DOM.input
                                 type="radio"
                                 key={gender + '-gender'}

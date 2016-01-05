@@ -8,6 +8,8 @@ var EventView,
     EventButtons = require('./view/event_buttons'),
     EventTeams = require('./view/event_teams'),
     EventAlbums = require('./view/event_albums'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     Comments = require('./view/event_blog');
 
 EventView = React.createClass({

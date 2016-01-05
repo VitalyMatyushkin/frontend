@@ -1,5 +1,6 @@
 var UserPageView,
-	SVG = require('module/ui/svg');
+	SVG = require('module/ui/svg'),
+	React = require('react');
 
 UserPageView = React.createClass({
 	mixins: [Morearty.Mixin],

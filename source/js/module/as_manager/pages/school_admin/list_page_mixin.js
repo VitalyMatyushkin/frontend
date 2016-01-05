@@ -1,6 +1,7 @@
 var ListPageMixin,
     If = require('module/ui/if/if'),
     GroupAction = require('module/ui/list/group_action'),
+    React = require('react'),
     dataWorker;
 ListPageMixin = {
 	propTypes: {
