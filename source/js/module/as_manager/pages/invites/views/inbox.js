@@ -68,6 +68,7 @@ InboxView = React.createClass({
                 .set('models', Immutable.fromJS(models))
                 .set('participants', Immutable.fromJS(participants))
                 .commit();
+            return models;
 		});
 	},
     getInvites: function () {

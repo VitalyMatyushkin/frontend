@@ -114,12 +114,10 @@ EventManager = React.createClass({
             model = binding.toJS('model'),
             players = binding.toJS('players'),
 			rivals = binding.toJS('rivals');
-
 		window.Server.events.post(model).then(function (event) {
 			rootBinding.update('events.models', function (events) {
 				return events.push(Immutable.fromJS(event));
 			});
-
 			rivals.forEach(function (rival, index) {
                 if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
 					window.Server.invitesByEvent.post({eventId: event.id}, {
@@ -157,13 +155,14 @@ EventManager = React.createClass({
                                     binding.clear();
                                     binding.meta().clear();
                                 }
-                                return;  // each then-callback should have explicit return
+                                return res;  // each then-callback should have explicit return
                             });
                         });
-                        return ;
+                        return res;
                     });
                 }
 			});
+            return event;
 		});
 	},
 	render: function() {
