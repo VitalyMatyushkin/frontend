@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 02/09/15.
  */
-var SchoolLounge;
+var SchoolLounge,
+    React = require('react');
 SchoolLounge = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){

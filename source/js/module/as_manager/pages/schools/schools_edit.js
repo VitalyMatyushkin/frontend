@@ -1,4 +1,5 @@
 var SchoolForm = require('module/as_manager/pages/schools/schools_form'),
+	React = require('react'),
 	EditSchoolForm;
 
 EditSchoolForm = React.createClass({

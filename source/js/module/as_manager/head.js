@@ -2,6 +2,8 @@ var Logo = require('module/as_manager/head/logo'),
 	TopMenu = require('module/ui/menu/top_menu'),
 	UserBlock = require('module/as_manager/head/user_block'),
 	If = require('module/ui/if/if'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	Head;
 
 Head = React.createClass({

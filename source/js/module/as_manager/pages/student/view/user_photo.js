@@ -1,4 +1,5 @@
-var UserPhoto;
+var UserPhoto,
+	React = require('react');
 
 UserPhoto = React.createClass({
 	mixins: [Morearty.Mixin],

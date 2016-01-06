@@ -19,8 +19,9 @@ Blog = React.createClass({
     _setBlogCount:function(){
         var self = this,
           binding = self.getDefaultBinding();
-        window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+        return window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
             binding.set('blogCount', res.count);
+            return res;
         });
     },
     componentWillMount:function(){
@@ -46,6 +47,7 @@ Blog = React.createClass({
                     }
                 });
             }
+            return children;
         });
         //End of
         self._fetchCommentsData();
@@ -85,10 +87,12 @@ Blog = React.createClass({
                             });
                             binding.set('blogs',Immutable.fromJS(topLevelComments));
                             binding.set('filteredChild',Immutable.fromJS(childComments));
-                            React.findDOMNode(self.refs.newComment).style.display = 'none';
+                            ReactDOM.findDOMNode(self.refs.newComment).style.display = 'none';
+                            return author;
                         });
                 });
                 self._setBlogCount();
+                return comments;
             });
     },
     componentDidMount:function(){
@@ -100,11 +104,11 @@ Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         self.intervalId = setInterval(function () {
-            window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+            return window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
                 var oldCount = binding.get('blogCount');
                 if(oldCount !== undefined){
                     if(oldCount !== res.count){
-                        React.findDOMNode(self.refs.newComment).style.display = 'block';
+                        ReactDOM.findDOMNode(self.refs.newComment).style.display = 'block';
                         binding.set('blogCount',res.count);
                         topLevelComments.length = 0;
                         childComments.length = 0;
@@ -127,10 +131,11 @@ Blog = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
             eventId = binding.get('eventId'),
-            comments = React.findDOMNode(self.refs.commentBox).value,
+            comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
             bloggerId = globalBinding.get('userData.authorizationInfo.userId');
         if(self.hasChild || bloggerId !== undefined){
-            window.Server.addToBlog.post({id:eventId},
+            ReactDOM.findDOMNode(self.refs.commentBox).value="";
+            return window.Server.addToBlog.post({id:eventId},
                 {
                     eventId:eventId,
                     ownerId:bloggerId,
@@ -140,15 +145,14 @@ Blog = React.createClass({
                     hidden:false
                 })
                 .then(function(result){
-                    window.Server.user.get({id:result.ownerId})
+                    return window.Server.user.get({id:result.ownerId})
                         .then(function(author){
                             result.commentor = author;
                             topLevelComments.push(result);
                             binding.set('blogs',Immutable.fromJS(topLevelComments));
+                            self._setBlogCount();
                         });
-                    self._setBlogCount();
                 });
-            React.findDOMNode(self.refs.commentBox).value="";
         }else{
             alert("You cannot comment on this forum");
         }

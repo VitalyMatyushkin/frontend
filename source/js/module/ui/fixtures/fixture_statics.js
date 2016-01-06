@@ -1,6 +1,7 @@
 var FixturesList,
 	DateTimeMixin = require('module/mixins/datetime'),
-	If = require('module/ui/if/if');
+	If = require('module/ui/if/if'),
+	React = require('react');
 
 FixturesList = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],

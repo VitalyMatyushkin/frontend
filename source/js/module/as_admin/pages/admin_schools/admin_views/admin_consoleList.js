@@ -4,6 +4,7 @@
 var ConsoleList,
     GrantRole = require('../admin_comps/grant_role'),
     Popup = require('module/ui/popup'),
+    React = require('react'),
     If = require('module/ui/if/if'),
     currentAction,
     RevokeAccess = require('../admin_comps/revoke_role'),

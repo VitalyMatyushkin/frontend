@@ -3,6 +3,7 @@
  */
 var ExtraPermissionsField,
     AutoComplete = require('module/ui/autocomplete/autocomplete'),
+    React = require('react'),
     If = require('module/ui/if/if');
 ExtraPermissionsField = React.createClass({
     mixins:[Morearty.Mixin],

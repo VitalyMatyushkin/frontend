@@ -3,6 +3,7 @@ var Logo = require('module/as_manager/head/logo'),
     UserBlock = require('module/as_manager/head/user_block'),
     Autocomplete = require('module/ui/autocomplete/autocomplete'),
     If = require('module/ui/if/if'),
+    React = require('react'),
     Head;
 
 Head = React.createClass({
@@ -46,7 +47,7 @@ Head = React.createClass({
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding();
         if(rootBinding.get('userData.authorizationInfo.userId')){
-            setTimeout(function(){React.findDOMNode(self.refs.checkAll).checked = true;},200); //set the check all box to checked
+            ReactDOM.findDOMNode(self.refs.checkAll).checked = true; //Set the check all box to checked
         }
     },
     setActiveChild: function() {

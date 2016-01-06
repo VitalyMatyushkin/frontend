@@ -1,4 +1,6 @@
 var RadioGroup,
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	If = require('module/ui/if/if');
 
 RadioGroup = React.createClass({

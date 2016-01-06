@@ -1,6 +1,8 @@
 var InviteAcceptView,
     If = require('module/ui/if/if'),
     Manager = require('module/ui/managers/manager'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     classNames = require('classnames');
 
 InviteAcceptView = React.createClass({

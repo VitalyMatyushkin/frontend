@@ -1,7 +1,9 @@
 /**
  * Created by bridark on 23/07/15.
  */
-var TypeDrop;
+var TypeDrop,
+    React  = require('react'),
+    ReactDOM = require('reactDom');
 TypeDrop = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{

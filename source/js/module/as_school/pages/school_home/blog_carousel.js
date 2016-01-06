@@ -2,7 +2,8 @@
  * Created by bridark on 03/08/15.
  */
 var BlogCarousel,
-    SVG = require('module/ui/svg');
+    SVG = require('module/ui/svg'),
+    React = require('react');
 BlogCarousel = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{

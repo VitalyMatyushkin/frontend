@@ -1,7 +1,9 @@
 /**
  * Created by bridark on 08/07/15.
  */
-var AccountRoles;
+var AccountRoles,
+    React = require('react'),
+    ReactDOM = require('reactDom');
 AccountRoles = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){

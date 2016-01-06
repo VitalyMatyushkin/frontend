@@ -4,6 +4,7 @@ var ApplicationView = require('module/as_admin/application'),
     authController = require('module/core/auth_controller'),
     serviceList = require('module/core/service_list'),
     ReactDom = require('reactDom'),
+    React = require('react'),
     MoreartyContext,
     binding;
 

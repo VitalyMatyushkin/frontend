@@ -1,6 +1,7 @@
 var Logo = require('module/as_school/head/logo'),
 	TopMenu = require('module/ui/menu/public_menu'),
     PublicLogin = require('module/ui/menu/public_login'),
+	React = require('react'),
 	Head;
 Head = React.createClass({
 	mixins: [Morearty.Mixin],

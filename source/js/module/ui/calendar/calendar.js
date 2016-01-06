@@ -1,5 +1,7 @@
 var CalendarYearView = require('./calendar_year'),
     CalendarMonthView = require('./calendar_month'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	CalendarView;
 
 CalendarView = React.createClass({

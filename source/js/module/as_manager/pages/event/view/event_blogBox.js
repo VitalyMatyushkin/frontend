@@ -18,16 +18,18 @@ CommentBox = React.createClass({
             binding = self.getDefaultBinding();
         var collapseButtonClick,
             collapseState = self.state.collapse;
-        collapseButtonClick = function (ref, ref2) {
-            return function (evt) {
+        collapseButtonClick = (ref, ref2) => {
+            return  (evt) => {
                 if(collapseState === false){
-                    React.findDOMNode(self.refs[ref]).style.display = 'none';
-                    React.findDOMNode(self.refs[ref2]).innerText = 'Show Replies ⇣';
+                    ReactDOM.findDOMNode(self.refs[ref]).style.display = 'none';
+                    ReactDOM.findDOMNode(self.refs[ref2]).innerText = 'Show Replies ⇣';
                     self.setState({collapse:true});
+                    self.forceUpdate();
                 }else{
-                    React.findDOMNode(self.refs[ref]).style.display = 'block';
-                    React.findDOMNode(self.refs[ref2]).innerText = 'Hide Replies ⇡';
+                    ReactDOM.findDOMNode(self.refs[ref]).style.display = 'block';
+                    ReactDOM.findDOMNode(self.refs[ref2]).innerText = 'Hide Replies ⇡';
                     self.setState({collapse:false});
+                    self.forceUpdate();
                 }
                 evt.stopPropagation();
             }

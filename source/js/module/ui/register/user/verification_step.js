@@ -5,6 +5,8 @@ var Form = require('module/ui/form/form'),
     SVG = require('module/ui/svg'),
     If = require('module/ui/if/if'),
     Autocomplete = require('module/ui/autocomplete/autocomplete'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     VerificationStep;
 
 VerificationStep = React.createClass({

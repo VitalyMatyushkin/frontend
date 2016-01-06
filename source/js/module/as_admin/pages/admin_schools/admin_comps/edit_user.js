@@ -6,6 +6,8 @@ var EditUser,
     UserRole = require('./user_roles'),
     Roles,
     persistentId,
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     AvatarUpload = require('module/as_manager/pages/albums/view/upload_blazon'),
     If = require('module/ui/if/if');
 EditUser = React.createClass({

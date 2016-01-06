@@ -1,5 +1,7 @@
 var TypeMixin = require('module/ui/form/types/type_mixin'),
 	MaskedInput = require('module/ui/masked_input'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypePhone;
 
 // (___)___-____

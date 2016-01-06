@@ -1,4 +1,5 @@
 var NewsForm = require('module/as_manager/pages/school_admin/news/news_form'),
+	React = require('react'),
 	NewsEditPage;
 
 NewsEditPage = React.createClass({

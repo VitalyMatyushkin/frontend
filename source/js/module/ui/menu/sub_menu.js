@@ -1,4 +1,5 @@
 var SubMenu,
+	React = require('react'),
 	Mixin = require('module/ui/menu/menu_mixin');
 
 SubMenu = React.createClass({

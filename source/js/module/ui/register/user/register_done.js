@@ -1,5 +1,6 @@
 var RegiseterUserDone,
 	SVG = require('module/ui/svg'),
+	React = require('react'),
 	If = require('module/ui/if/if');
 
 RegiseterUserDone = React.createClass({

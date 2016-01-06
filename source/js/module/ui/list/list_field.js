@@ -1,4 +1,6 @@
-var ListField;
+var ListField,
+	React = require('react'),
+	ReactDOM = require('reactDom');
 
 ListField = React.createClass({
 	mixins: [Morearty.Mixin],

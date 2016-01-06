@@ -1,4 +1,5 @@
 var FormField,
+	React = require('react'),
 	typeList = require('module/ui/form/types/type_list');
 
 FormField = React.createClass({

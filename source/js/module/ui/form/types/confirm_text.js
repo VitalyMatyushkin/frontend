@@ -1,5 +1,7 @@
 var TypeConfirmText,
 	TypeText = require('module/ui/form/types/text'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeMixin = require('module/ui/form/types/type_mixin');
 
 TypeConfirmText = React.createClass({

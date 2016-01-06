@@ -1,4 +1,5 @@
-var ProcessingView;
+var ProcessingView,
+    React = require('react');
 
 ProcessingView = React.createClass({
     mixins: [Morearty.Mixin],

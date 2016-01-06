@@ -1,7 +1,8 @@
 var OneEvent,
 	DateTimeMixin = require('module/mixins/datetime'),
 	If = require('module/ui/if/if'),
-	EventAlbums = require('module/as_manager/pages/event/view/event_albums');
+	EventAlbums = require('module/as_manager/pages/event/view/event_albums'),
+	React = require('react');
 
 OneEvent = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],

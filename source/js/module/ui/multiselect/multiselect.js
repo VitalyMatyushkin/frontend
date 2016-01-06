@@ -1,4 +1,5 @@
-var MultiSelectItem = require('./multiselect_item');
+var MultiSelectItem = require('./multiselect_item'),
+    React = require('react');
 
 var MultiSelect = React.createClass({
     mixins: [Morearty.Mixin],

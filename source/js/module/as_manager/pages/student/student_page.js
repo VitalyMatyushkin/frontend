@@ -4,6 +4,7 @@ var LeanerView,
 		UserName = require('module/as_manager/pages/student/view/user_name'),
 		UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
 		UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
+        React = require('react'),
 		TeamStats = require('module/as_manager/pages/student/view/team_stats');
 
 LeanerView = React.createClass({
@@ -55,14 +56,23 @@ LeanerView = React.createClass({
                                             leanerData.student = student;
                                             binding.set('achievements', Immutable.fromJS(leanerData));
                                             //console.log(binding.get('achievements').toJS());
+                                            return student;
                                         });
+                                        return returnedUser;
                                     });
+                                    return gamesPlayed;
                                 });
+                                return gamesScoredIn;
                             });
-                        })
+                            return gamesWon;
+                        });
+                        return schoolData;
                     });
+                    return houseData;
                 });
+                return classData;
             });
+            return data;
         });
     },
     render: function () {

@@ -32,7 +32,7 @@ BlogReplyBox = React.createClass({
                 eventId:binding.get('eventId'),
                 ownerId:globalBinding.get('userData.authorizationInfo.userId'),
                 postId:binding.get('blogCount')+1,
-                message:React.findDOMNode(self.refs.replyTextArea).value + '/'+self.props.replyParentName, //TODO: Ideally we want a field in database for reply username reference
+                message:ReactDOM.findDOMNode(self.refs.replyTextArea).value + '/'+self.props.replyParentName, //TODO: Ideally we want a field in database for reply username reference
                 parentId:self.props.replyParentId,
                 hidden:false
             };
@@ -50,11 +50,14 @@ BlogReplyBox = React.createClass({
                         filteredBag[index]=par;
                     });
                     binding.set('blogs',Immutable.fromJS(filteredBag));
+                    return blogger;
                 });
                 window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
                     binding.set('blogCount', res.count);
+                    return res;
                 });
                 self._toggleReplyBox();
+                return blog;
             });
 
         }else{

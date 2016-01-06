@@ -1,5 +1,6 @@
 var HousesPage,
 	RouterView = require('module/core/router'),
+	React = require('react'),
 	Route = require('module/core/route');
 
 HousesPage = React.createClass({

@@ -1,6 +1,8 @@
 var Autocomplete = require('module/ui/autocomplete/autocomplete'),
     If = require('module/ui/if/if'),
     Multiselect = require('module/ui/multiselect/multiselect'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     EventManagerBase,
     oldSelectedId,
     alertPopUP;
@@ -131,8 +133,8 @@ EventManagerBase = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
             comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
-            dupErrorEl = React.findDOMNode(self.refs.dupError),
-            gameType = React.findDOMNode(self.refs.gameType).value;
+            dupErrorEl = ReactDOM.findDOMNode(self.refs.dupError),
+            gameType = ReactDOM.findDOMNode(self.refs.gameType).value;
         /*
         * Quick fix for duplicated fields
         * check combo boxes for equality if equal alert the user
@@ -197,13 +199,13 @@ EventManagerBase = React.createClass({
             });
 
         if (sport) {
-            return sport.toJS().limits.genders.map(function (gender) {
+            return sport.toJS().limits.genders.map(function (gender, genInd) {
                 var names = {
                     male: 'boys',
                     female: 'girls'
                 };
 
-                return <label onClick={self.changeCompleteGender}>
+                return <label key={genInd} onClick={self.changeCompleteGender}>
                             <Morearty.DOM.input
                                 type="radio"
                                 key={gender + '-gender'}

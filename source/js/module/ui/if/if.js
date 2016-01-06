@@ -1,4 +1,5 @@
 'use strict';
+var React = require('react');
 var If = React.createClass({
     propTypes: {
         condition: React.PropTypes.bool.isRequired

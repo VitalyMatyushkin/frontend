@@ -1,6 +1,7 @@
 var InboxView,
     Invite = require('./invite'),
 	ProcessingView = require('./processing'),
+    React = require('react'),
     InvitesMixin = require('../mixins/invites_mixin');
 
 InboxView = React.createClass({

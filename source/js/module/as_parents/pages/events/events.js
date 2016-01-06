@@ -1,6 +1,8 @@
 var EventView,
     RouterView = require('module/core/router'),
     Route = require('module/core/route'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     SubMenu = require('module/ui/menu/sub_menu');
 
 EventView = React.createClass({
@@ -36,7 +38,7 @@ EventView = React.createClass({
                 .set('sync', true)
                 .set('models', Immutable.fromJS(data))
                 .commit();
-            return;
+            return data;
         });
 
         !binding.get('activeChildId') && window.Server.userChildren.get({

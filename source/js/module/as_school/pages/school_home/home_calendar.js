@@ -3,6 +3,7 @@
  */
 var HomeCalender,
     CalendarView = require('module/ui/calendar/calendar'),
+    React = require('react'),
     DateTimeMixin = require('module/mixins/datetime');
 HomeCalender = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],

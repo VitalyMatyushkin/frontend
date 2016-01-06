@@ -4,6 +4,8 @@ var List = require('module/ui/list/list'),
 	TableField = require('module/ui/list/table_field'),
 	DateTimeMixin = require('module/mixins/datetime'),
 	SVG = require('module/ui/svg'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	PermissionsList;
 
 

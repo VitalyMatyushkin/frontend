@@ -3,13 +3,12 @@
  */
     //TODO: refactor this component
 var IndicatorView,
-    oldActiveChild,
-    selfEl,
-    timeoutId;
+    React = require('react'),
+    ReactDOM = require('reactDom');
 IndicatorView = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        reDraw: React.PropTypes.bool.isRequired
+        reDraw: React.PropTypes.bool
     },
     componentWillMount:function(){
         var self = this,
@@ -23,9 +22,9 @@ IndicatorView = React.createClass({
     _animateBar:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        var elProgress = React.findDOMNode(self.refs.progressIndicator),
-            elText = React.findDOMNode(self.refs.progressText),
-            eBar = React.findDOMNode(self.refs.progressBar);
+        var elProgress = ReactDOM.findDOMNode(self.refs.progressIndicator),
+            elText = ReactDOM.findDOMNode(self.refs.progressText),
+            eBar = ReactDOM.findDOMNode(self.refs.progressBar);
         if(eBar !== null){
             eBar.style.display = 'block';
             elProgress.value = 0;
@@ -38,12 +37,13 @@ IndicatorView = React.createClass({
             },100);
         }
     },
-    render:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+    componentDidUpdate:function(){
+        var self = this;
         if(self.props.reDraw === true){
             self._animateBar();
         }
+    },
+    render:function(){
         return(
             <div ref="progressBar" className="eUserFullInfo_block">
                 <span ref="progressText" className="bProgressSpan">Loading...</span>

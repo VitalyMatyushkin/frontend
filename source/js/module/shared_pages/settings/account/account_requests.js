@@ -6,6 +6,8 @@ var AccountRequests,
     Popup = require('module/ui/popup'),
     GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
     RoleList = require('./role_list'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     SVG = require('module/ui/svg');
 AccountRequests = React.createClass({
     mixins:[Morearty.Mixin],

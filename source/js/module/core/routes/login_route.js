@@ -1,4 +1,5 @@
 var LoginRoute,
+	React = require('react'),
 	Route = require('module/core/route');
 
 LoginRoute = React.createClass({

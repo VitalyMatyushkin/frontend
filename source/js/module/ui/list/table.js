@@ -1,5 +1,7 @@
 var Table,
-	If = require('module/ui/if/if');
+	If = require('module/ui/if/if'),
+    React = require('react'),
+    ReactDOM = require('reactDom');
 Table = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -45,10 +47,10 @@ Table = React.createClass({
         var self = this,
             el = self.props.quickEditActions;
         if(el !== undefined){
-            return el.map(function(action){
+            return el.map(function(action, actIn){
                 var handleQuickActionClick = function(){return function(event){self.props.quickEditActionsFactory(event); event.stopPropagation();}};
                 return (
-                    <div onClick={handleQuickActionClick()} className="eQuickAction_item">{action}</div>
+                    <div key={actIn} onClick={handleQuickActionClick()} className="eQuickAction_item">{action}</div>
                 );
             });
         }
@@ -73,7 +75,7 @@ Table = React.createClass({
         // It sometimes returns an empty object causing the rest of the UI elements to disappear
         if(typeof dataList === 'object' && Object.keys(dataList).length === 0){dataList = []}
         if (dataList) {
-            itemsNodes = dataList.map(function (item) {
+            itemsNodes = dataList.map(function (item, itemIndex) {
                 var itemCells,
                     itemButtons = [],
                     getEditFunction = function() { return function(event) { self.props.onItemEdit(item); event.stopPropagation();}},
@@ -81,13 +83,13 @@ Table = React.createClass({
                     getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();}},
                     getQuickEditFunction = function(){return function(event){self._quickEditMenu(item,event);event.stopPropagation();}};
 
-                self.props.onItemEdit && itemButtons.push(<span onClick={getEditFunction()} className="bLinkLike">Edit</span>);
-                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span onClick={getViewFunction()} className="bLinkLike">View</span>);
-                self.props.onItemRemove && itemButtons.push(<span onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
-                self.props.addQuickActions && itemButtons.push(<span onClick={getQuickEditFunction()} className="bLinkLike edit_btn">Edit
-                    <span className="caret caret_down"></span><span data-userobj={item.id} className="eQuickAction_list">{quickActions}</span></span>);
+                self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike">Edit</span>);
+                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike">View</span>);
+                self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
+                self.props.addQuickActions && itemButtons.push(<span key={item.id+'quickEd'} onClick={getQuickEditFunction()} className="bLinkLike edit_btn">Edit
+                    <span className="caret caret_down"/><span data-userobj={item.id+'quickAc'} className="eQuickAction_list">{quickActions}</span></span>);
 
-                itemCells = React.Children.map(self.props.children, function(child) {
+                itemCells = React.Children.map(self.props.children, function(child, childIndex) {
                     var dataField = child.props.dataField,
                         value = item[dataField];
 
@@ -96,25 +98,24 @@ Table = React.createClass({
                     }
 
                     if (child.props.filterType === 'colors') {
-                        value = value.map(function(useColor){
-                            return <div className="eDataList_listItemColor" style={{background: useColor}}></div>
+                        value = value.map(function(useColor,clrKey){
+                            return <div key={clrKey} className="eDataList_listItemColor" style={{background: useColor}}></div>
                         });
                     }
                     //For checkboxes
                     if(dataField ==='checkBox'){
                         return (
-                            <div className="eDataList_listItemCell">
+                            <div  className="eDataList_listItemCell">
                                 <input data-id={item.id} className="tickBoxGroup" type="checkbox"/>
                             </div>);
                     }
                     return (
-                        <div className="eDataList_listItemCell">{value}</div>
+                        <div key={childIndex} className="eDataList_listItemCell">{value}</div>
                     );
                 });
 
                 return (
-                    <div className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
-
+                    <div key={itemIndex} className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
                         {itemCells}
                         <If condition={self.props.hideActions !== true}>
                             <div className="eDataList_listItemCell mActions">
@@ -124,8 +125,9 @@ Table = React.createClass({
                     </div>
                 );
             });
-            tableHeadFields = React.Children.map(this.props.children, function (child) {
-                return React.addons.cloneWithProps(child, {
+            tableHeadFields = React.Children.map(this.props.children, function (child,index) {
+                return React.cloneElement(child, {
+                    key:index,
                     onChange: self.updateFilterState,
                     onSort:self.updateFilterState
                 });

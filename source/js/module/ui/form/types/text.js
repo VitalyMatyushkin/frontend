@@ -1,4 +1,6 @@
 var TypeMixin = require('module/ui/form/types/type_mixin'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeText;
 
 TypeText =  React.createClass({
@@ -20,8 +22,8 @@ TypeText =  React.createClass({
 	_forceNewValue: function(value) {
 		var self = this;
 
-		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.getDOMNode().value === '') {
-			self.refs.fieldInput.getDOMNode().value = value;
+		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.value === '') {
+			self.refs.fieldInput.value = value;
 			self.fullValidate(value);
 		}
 	},

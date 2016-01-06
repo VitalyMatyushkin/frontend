@@ -1,4 +1,5 @@
-var UserButtons;
+var UserButtons,
+	React = require('react');
 
 UserButtons = React.createClass({
 	mixins: [Morearty.Mixin],

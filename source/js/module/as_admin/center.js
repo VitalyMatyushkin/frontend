@@ -9,6 +9,7 @@ var RouterView = require('module/core/router'),
     VerifyRoute = require('module/core/routes/verify_route'),
     SettingsRoute = require('module/core/routes/settings_route'),
     AuthRoutes = require('module/core/routes/auth_routes'),
+    React = require('react'),
     Center;
 
 Center = React.createClass({

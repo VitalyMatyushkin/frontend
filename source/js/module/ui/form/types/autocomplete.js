@@ -1,5 +1,7 @@
 var TypeMixin = require('module/ui/form/types/type_mixin'),
 	Autocomplete = require('module/ui/autocomplete/autocomplete'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeAutocomplete;
 
 TypeAutocomplete = React.createClass({

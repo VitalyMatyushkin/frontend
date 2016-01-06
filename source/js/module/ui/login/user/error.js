@@ -1,4 +1,6 @@
-var RegiseterUserDone;
+var RegiseterUserDone,
+	React = require('react'),
+	ReactDOM = require('reactDom');
 
 RegiseterUserDone = React.createClass({
 	mixins: [Morearty.Mixin],

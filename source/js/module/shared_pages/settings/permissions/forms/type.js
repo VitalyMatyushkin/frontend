@@ -1,5 +1,7 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	ChoosePermissionType;
 
 ChoosePermissionType = React.createClass({

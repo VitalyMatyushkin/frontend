@@ -2,7 +2,9 @@
  * Created by bridark on 16/07/15.
  */
     //TODO: Add filtering
-var LogPagination;
+var LogPagination, React, ReactDOM;
+React = require('react');
+ReactDOM = require('reactDom');
 LogPagination = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{

@@ -6,6 +6,7 @@ var UserDetail,
     Map = require('module/ui/map/map'),
     If = require('module/ui/if/if'),
     EditUser = require('../admin_comps/edit_user'),
+    React = require('react'),
     Popup = require('module/ui/popup');
 UserDetail= React.createClass({
     mixins: [Morearty.Mixin],

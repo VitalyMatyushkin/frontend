@@ -1,7 +1,9 @@
 /**
  * Created by bridark on 31/07/15.
  */
-var HomeHeader, localArrayOfPhotos;
+var HomeHeader,
+    localArrayOfPhotos,
+    React = require('react');
 localArrayOfPhotos = [];
 HomeHeader = React.createClass({
     mixins:[Morearty.Mixin],

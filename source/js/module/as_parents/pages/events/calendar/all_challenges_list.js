@@ -2,6 +2,8 @@
  * Created by Bright on 15/12/2015.
  */
 var AllChallengesList,
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
 AllChallengesList = React.createClass({
     mixins:[Morearty.Mixin,InvitesMixin],

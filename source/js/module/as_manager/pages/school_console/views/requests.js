@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 19/06/15.
  */
-var SchoolRequest;
+var SchoolRequest,
+    React = require('react');
 SchoolRequest = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {

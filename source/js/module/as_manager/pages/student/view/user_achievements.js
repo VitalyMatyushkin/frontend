@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 25/04/15.
  */
-var UserAchievements;
+var UserAchievements,
+    React = require('react');
 UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
     addZeroToFirst: function (num) {
@@ -127,13 +128,13 @@ UserAchievements = React.createClass({
                 return memo;
             }, Immutable.List());
 
-            return dates.count()!==0 ? dates.sort().map(function(datetime){
+            return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
                 var date = new Date(datetime),
                     daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                     monthNames = [ "January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December" ],
                     dayOfWeek = date.getDay();
-                return <div className="bChallengeDate">
+                return <div key={dateTimeIndex} className="bChallengeDate">
                     <div className="eChallengeDate_date">
                         {daysOfWeek[dayOfWeek] + ' ' +
                         date.getDate() + ' ' +

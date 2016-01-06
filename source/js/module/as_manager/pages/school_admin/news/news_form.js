@@ -1,6 +1,8 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	NewsForm;
 
 NewsForm = React.createClass({

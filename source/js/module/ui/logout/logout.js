@@ -1,3 +1,5 @@
+var React = require('react'),
+	LoginUserPage;
 LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {

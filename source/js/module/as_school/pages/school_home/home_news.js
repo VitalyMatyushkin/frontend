@@ -2,6 +2,8 @@
  * Created by bridark on 03/08/15.
  */
 var HomeNews,
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     DateTimeMixin = require('module/mixins/datetime');
 HomeNews = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],

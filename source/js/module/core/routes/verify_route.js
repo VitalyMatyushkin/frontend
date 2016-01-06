@@ -1,4 +1,5 @@
 var VerifyRoute,
+	React = require('react'),
 	Route = require('module/core/route');
 
 VerifyRoute = React.createClass({

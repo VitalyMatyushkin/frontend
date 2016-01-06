@@ -1,4 +1,5 @@
-var FormColumn;
+var FormColumn,
+	React = require('react');
 
 FormColumn = React.createClass({
 	render: function () {

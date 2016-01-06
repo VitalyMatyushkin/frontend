@@ -1,4 +1,5 @@
-var AnswerView;
+var AnswerView,
+	React = require('react');
 
 AnswerView = React.createClass({
     mixins: [Morearty.Mixin],

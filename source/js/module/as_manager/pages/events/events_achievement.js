@@ -11,6 +11,7 @@ var ParentChildAchievement,
     UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
     TeamStats = require('module/as_manager/pages/student/view/team_stats'),
     IndicatorView = require('module/ui/progress_indicator/loading_prompt'),
+    React = require('react'),
     If = require('module/ui/if/if'),
     progressValue;
 

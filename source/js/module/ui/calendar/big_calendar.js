@@ -1,6 +1,8 @@
 var BigCalendar,
 	DateTimeMixin = require('module/mixins/datetime'),
-	If = require('module/ui/if/if');
+	If = require('module/ui/if/if'),
+	React = require('react'),
+	ReactDOM = require('reactDom');
 
 BigCalendar = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],

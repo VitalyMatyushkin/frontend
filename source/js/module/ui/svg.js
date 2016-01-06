@@ -1,7 +1,8 @@
 
-var ReactDOM = require('reactDom');
+//var ReactDOM = require('reactDom');
 //<svg class="bIcon"><use xlink:href="#icon_key"></use></svg>
-
+var React = require('react'),
+	ReactDOM = require('reactDom');
 var SVG = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {

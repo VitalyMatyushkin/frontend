@@ -2,6 +2,7 @@ var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
 	Promise = require('bluebird'),
+	React = require('react'),
 	StudentForm;
 
 StudentForm = React.createClass({

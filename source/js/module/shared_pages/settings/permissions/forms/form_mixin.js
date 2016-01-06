@@ -1,3 +1,4 @@
+var React = require('react');
 module.exports = {
 	propTypes: {
 		title: React.PropTypes.string.isRequired,

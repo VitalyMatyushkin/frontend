@@ -1,5 +1,6 @@
 'use strict';
-var InvitesMixin;
+var InvitesMixin,
+    React = require('react');
 
 InvitesMixin = {
 	getActiveSchoolId: function () {

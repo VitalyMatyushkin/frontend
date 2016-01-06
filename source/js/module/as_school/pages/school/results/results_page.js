@@ -1,5 +1,6 @@
 var ResultsPage,
 	SVG = require('module/ui/svg'),
+	React = require('react'),
 	FixturesList = require('module/ui/fixtures/fixtures_list');
 
 ResultsPage = React.createClass({

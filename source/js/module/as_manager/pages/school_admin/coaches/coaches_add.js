@@ -1,4 +1,5 @@
 var CoachesForm = require('module/as_manager/pages/school_admin/permissions/permissions_form'),
+	React = require('react'),
 	CoachesAddPage;
 
 CoachesAddPage = React.createClass({

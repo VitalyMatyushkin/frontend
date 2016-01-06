@@ -1,4 +1,5 @@
-var ChallengesView;
+var ChallengesView,
+    React = require('react');
 ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
     sameDay: function (d1, d2) {
@@ -30,7 +31,7 @@ ChallengesView = React.createClass({
                         new Date(event.get('startTime')),
                         new Date(date));
             });
-        return eventsByDate.map(function (event) {
+        return eventsByDate.map(function (event, evtIndex) {
             var eventDateTime = new Date(event.get('startTime')),
                 eventIndex = binding.get('models').findIndex(function (evt) {
                     return evt.get('id') === event.get('id');
@@ -73,7 +74,7 @@ ChallengesView = React.createClass({
                 secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
             }
 
-            return <div className="bChallenge"
+            return <div key={evtIndex} className="bChallenge"
                         onClick={self.onClickChallenge.bind(null, event.get('id'))}
                         id={'challenge-' + event.get('id')}
                 >
@@ -119,14 +120,14 @@ ChallengesView = React.createClass({
 
                 return memo;
             }, Immutable.List());
-        return dates.count() !== 0 ? dates.sort().map(function (datetime) {
+        return dates.count() !== 0 ? dates.sort().map(function (datetime,dtIndex) {
             var date = new Date(datetime),
                 daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                 monthNames = [ "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December" ],
                 dayOfWeek = date.getDay();
 
-            return <div className="bChallengeDate">
+            return <div key={dtIndex} className="bChallengeDate">
                 <div className="eChallengeDate_date">
 						{daysOfWeek[dayOfWeek] + ' ' +
 						date.getDate() + ' ' +

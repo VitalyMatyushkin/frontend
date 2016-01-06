@@ -2,6 +2,8 @@
  * Created by bridark on 15/07/15.
  */
 var UserLogs,
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     DateTimeMixin = require('module/mixins/datetime');
 UserLogs = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],

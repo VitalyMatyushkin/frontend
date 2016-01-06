@@ -1,4 +1,5 @@
-var RouterView;
+var RouterView,
+	React = require('react');
 
 
 RouterView = React.createClass({

@@ -4,6 +4,7 @@ var PermissionsListPage,
 	Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
 	DateTimeMixin = require('module/mixins/datetime'),
+	React = require('react'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
 
 PermissionsListPage = React.createClass({

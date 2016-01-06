@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 03/05/15.
  */
-var TeamStats;
+var TeamStats,
+    React = require('react');
 TeamStats = React.createClass({
     mixins: [Morearty.Mixin],
     componentDidMount:function(){
@@ -132,13 +133,13 @@ TeamStats = React.createClass({
                 return memo;
             }, Immutable.List());
 
-            return dates.count()!==0 ? dates.sort().map(function(datetime){
+            return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
                 var date = new Date(datetime),
                     daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                     monthNames = [ "January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December" ],
                     dayOfWeek = date.getDay();
-                return <div className="bChallengeDate">
+                return <div key={dateTimeIndex} className="bChallengeDate">
                     <div className="eChallengeDate_date">
                         {daysOfWeek[dayOfWeek] + ' ' +
                         date.getDate() + ' ' +

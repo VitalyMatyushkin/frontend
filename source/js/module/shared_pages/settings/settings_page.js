@@ -1,6 +1,8 @@
 var SettingsPage,
 	RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	SubMenu = require('module/ui/menu/sub_menu');
 
 SettingsPage = React.createClass({

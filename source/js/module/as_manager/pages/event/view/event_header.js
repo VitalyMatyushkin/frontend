@@ -7,7 +7,6 @@ EventHeader = React.createClass({
 	render: function() {
         var self = this,
 			binding = self.getDefaultBinding();
-
 		return <div className="bEventHeader">
 			<div className="eEventHeader_field mDate">{self.formatDate(binding.get('model.startTime'))}</div>
             <div className="eEventHeader_field mName">{binding.get('model.name')}</div>

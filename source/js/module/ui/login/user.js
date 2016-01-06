@@ -1,5 +1,7 @@
 var LoginForm = require('module/ui/login/user/form'),
 	LoginError = require('module/ui/login/user/error'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	LoginUserPage;
 
 LoginUserPage = React.createClass({

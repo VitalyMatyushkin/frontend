@@ -3,6 +3,8 @@
  */
 var PublicLogin,
     SVG = require('module/ui/svg'),
+    React = require('react'),
+    ReactDOM = require('reactDom'),
     LoginForm = require('module/ui/login/user/form');
 PublicLogin = React.createClass({
     mixins:[Morearty.Mixin],
