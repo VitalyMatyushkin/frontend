@@ -1,6 +1,6 @@
-const 	SVG 	= require('module/ui/svg'),
-		React 	= require('react'),
-		ReactDOM = require('reactDom');
+const 	SVG 		= require('module/ui/svg'),
+		React 		= require('react'),
+		ReactDOM 	= require('reactDom');
 
 const MenuMixin = {
 	propTypes: {

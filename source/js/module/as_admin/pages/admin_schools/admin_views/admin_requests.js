@@ -29,11 +29,7 @@ const AdminRequest = React.createClass({
         return principal !== undefined ? principal.email : undefined;
     },
 	getCurrentPermission: function(id, permissions) {
-        console.log('getting current permissions for..');
         return ArrayHelpers.find( permissions, permission => {
-            console.log('checking permission: ' + JSON.stringify(permission));
-            console.log('permission.id: ' + permission.id);
-            console.log('permission.id === id: ' + permission.id === id);
             return permission.id && permission.id === id;
         } );
 	},
@@ -48,9 +44,6 @@ const AdminRequest = React.createClass({
 
         let confirmMsg;
 
-        console.log('all permissions: ' + JSON.stringify(binding.toJS()));
-        console.log('currentPermission: ' + JSON.stringify(currentPermission));
-        console.log('id: ' + id);
         event.currentTarget.parentNode.classList.remove('groupActionList_show');
 
 		switch (action){
