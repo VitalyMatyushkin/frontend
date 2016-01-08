@@ -14,10 +14,10 @@ var AdminPermissionView,
 AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'Permissions',
-    //serviceCount:'getTotalNumberOfUserModels',
+    serviceCount:'getTotalNumberOfUserModels',
     pageLimit: 20,
     filters:{
-      include:['principal','school']
+        include:['principal','school']
         ,where:{
             //principalId:{neq:''}
             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
@@ -26,7 +26,7 @@ AdminPermissionView = React.createClass({
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     isPaginated: true,
     isSuperAdminPage: true,
-    sandbox:true,
+    sandbox:false,
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;

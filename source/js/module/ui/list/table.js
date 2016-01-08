@@ -1,5 +1,6 @@
 var Table,
 	If = require('module/ui/if/if'),
+    Pagination = require('module/ui/list/pagination');
     React = require('react'),
     ReactDOM = require('reactDom');
 Table = React.createClass({
@@ -66,7 +67,7 @@ Table = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			dataList = binding.toJS(),
+			dataList = binding.sub('data').toJS(),
 			tableHeadFields,
             quickActions = self.getQuickEditActions(),
 			itemsNodes;
@@ -105,7 +106,7 @@ Table = React.createClass({
                     //For checkboxes
                     if(dataField ==='checkBox'){
                         return (
-                            <div  className="eDataList_listItemCell">
+                            <div className="eDataList_listItemCell">
                                 <input data-id={item.id} className="tickBoxGroup" type="checkbox"/>
                             </div>);
                     }
@@ -144,6 +145,7 @@ Table = React.createClass({
 				</div>
 				{itemsNodes}
 			</div>
+            <Pagination binding={binding.sub('pagination')} />
 		</div>
 		)
 	}

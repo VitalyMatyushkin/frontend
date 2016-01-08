@@ -2,6 +2,7 @@ var ListPageMixin,
     If = require('module/ui/if/if'),
     GroupAction = require('module/ui/list/group_action'),
     React = require('react'),
+    Filter = require('module/ui/list/filter'),
     dataWorker;
 ListPageMixin = {
 	propTypes: {
@@ -9,7 +10,8 @@ ListPageMixin = {
 		filters: React.PropTypes.object,
 		addSchoolToFilter: React.PropTypes.bool
 	},
-	componentWillMount: function () {
+
+    componentWillMount: function () {
 		var self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
             metaBinding = self.getDefaultBinding().meta(),
@@ -20,15 +22,16 @@ ListPageMixin = {
         self.popUpState = false;
         self.updatePageNumbers = true;
         metaBinding.set('isFiltersActive', false);
+        self.filter = new Filter(binding);
         //setup a web worker to sort and filter data in background
         if(window.Worker){
             dataWorker = new Worker('build/js/module/as_manager/pages/school_admin/dataWorkerThread.js');
             dataWorker.onmessage = function(e){
                 if(self.isPaginated && e.data.length > self.pageLimit){
-                    binding.set(Immutable.fromJS(e.data.slice(0,(self.pageLimit+1))));
+                    binding.set('data', Immutable.fromJS(e.data.slice(0,(self.pageLimit+1))));
                     self._getTotalCountAndRenderPagination(e.data.length);
                 }else{
-                    binding.set(Immutable.fromJS(e.data));
+                    binding.set('data', Immutable.fromJS(e.data));
                 }
             };
         }
@@ -36,22 +39,23 @@ ListPageMixin = {
 	},
     componentDidMount:function(){
         var self = this;
-        if(self.isSuperAdminPage)ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
-        //self.timeoutId = setTimeout(function(){
-        //    //Pagination method
-        //    //self._getTotalCountAndRenderPagination();
-        //},4000);
-
+        if(self.isSuperAdminPage)
+            ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
+        self.getDefaultBinding().addListener('pagination.pageNumber', self._onChangePage);
     },
     //@Param:customCount the length/size of data to be paginated
     _getTotalCountAndRenderPagination:function(customCount){
         var self = this,
             globalBinding = self.getMoreartyContext().getBinding(),
-            pageNumberNode = ReactDOM.findDOMNode(self.refs.pageNumber),
+            binding = self.getDefaultBinding(),
+            pageNumberNode = ReactDOM.findDOMNode(self.refs.pageNumber),		
             isOdd = false,
             selectNode = ReactDOM.findDOMNode(self.refs.pageSelect);
+
         if(self.isPaginated){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
+            binding.set('pagination.totalCount', customCount);
+            console.log('_getTotalCountAndRenderPagination: '+binding.get('pagination.totalCount'));
             self.numberOfPages = Math.floor(customCount/self.pageLimit);
             //Check if count
             if(customCount%self.pageLimit !== 0){
@@ -93,6 +97,22 @@ ListPageMixin = {
         }
         self.updatePageNumbers = false;
         self.updateData(filterValue);
+    },
+    _onChangePage:function(changes){
+        var self = this,
+            skip = (changes.getCurrentValue()-1)*self.pageLimit;
+
+        self.filter.setPageNumber(skip);
+
+        self._loadData();
+
+        console.log('OnChangePage: '+changes.getCurrentValue());
+    },
+    _loadData:function(){
+        this._getTotalCount();
+    },
+    _getTotalCount:function(){
+
     },
 	updateData: function(newFilter) {
 		var self = this,
@@ -144,7 +164,7 @@ ListPageMixin = {
                 var tempData = self.persistantData;
                 dataWorker.postMessage([tempData,newFilter]);
             }else{
-                binding.set(Immutable.fromJS(self.persistantData));
+                binding.set('data', Immutable.fromJS(self.persistantData));
             }
         //Execute if the filters aren't engaged but there is a filter Object
         }else if(self.sandbox === true && newFilter){
@@ -152,7 +172,7 @@ ListPageMixin = {
             for(var skipFilter in newFilter){
                 if('skip' in newFilter[skipFilter]){
                     var skippedData = self.persistantData.splice((newFilter[skipFilter].skip-1),self.pageLimit-1);
-                    binding.set(Immutable.fromJS(skippedData));
+                    binding.set('data', Immutable.fromJS(skippedData));
                 }else{
                     //Perform an order sort
                     var tempData = self.persistantData;
@@ -201,18 +221,19 @@ ListPageMixin = {
             }
             //Condition to test for other service requests without ids
             if(self.activeSchoolId !== null){
-                self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
-                    self.popUpState = false;
-                    //Is the page allowed to paginate
-                    if(self.isPaginated){
-                        binding.set(Immutable.fromJS(data.slice(0,(self.pageLimit+1))));
-                        self._getTotalCountAndRenderPagination(data.length);
-                    }else{
-                        binding.set(Immutable.fromJS(data));
-                    }
-                    self.persistantData = data;
-                    return data;
-                }).error((error)=>{console.log('error '+error.statusText)});
+                self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter })
+                    .then(function (data) {
+                        self.popUpState = false;
+                        //Is the page allowed to paginate
+                        if(self.isPaginated){
+                            binding.set('data', Immutable.fromJS(data.slice(0,(self.pageLimit+1))));
+                            self._getTotalCountAndRenderPagination(data.length);
+                        }else{
+                            binding.set('data', Immutable.fromJS(data));
+                        }
+                        self.persistantData = data;
+                        return data;
+                    }).error((error)=>{console.log('error '+error.statusText)});
             }else{
                 self.request = window.Server[self.serviceName].get({filter:defaultRequestFilter}).then(function (data) {
                     if(page[page.length-1] === 'requests'){
@@ -223,18 +244,18 @@ ListPageMixin = {
                             }
                         });
                         if(self.isPaginated){
-                            binding.set(Immutable.fromJS(notAccepted.slice(0,(self.pageLimit+1))));
+                            binding.set('data', Immutable.fromJS(notAccepted.slice(0,(self.pageLimit+1))));
                             self._getTotalCountAndRenderPagination(notAccepted.length);
                         }else{
-                            binding.set(Immutable.fromJS(notAccepted));
+                            binding.set('data', Immutable.fromJS(notAccepted));
                         }
                         self.persistantData = notAccepted;
                     }else{
                         if(self.isPaginated){
-                            binding.set(Immutable.fromJS(data.slice(0,(self.pageLimit+1))));
+                            binding.set('data', Immutable.fromJS(data.slice(0,(self.pageLimit+1))));
                             self._getTotalCountAndRenderPagination(data.length);
                         }else{
-                            binding.set(Immutable.fromJS(data));
+                            binding.set('data', Immutable.fromJS(data));
                         }
                         self.persistantData = data;
                     }
@@ -337,7 +358,9 @@ ListPageMixin = {
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
         if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
-            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '+globalBinding.get('userData.userInfo.lastName')+' - '+(self.setPageTitle !== undefined ? self.setPageTitle+' )' : 'System Admin )');
+            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '
+                +globalBinding.get('userData.userInfo.lastName')+' - '
+                +(self.setPageTitle !== undefined ? self.setPageTitle+' )' : 'System Admin )');
         }else{
             listPageTitle = self.serviceName[0].toUpperCase() + self.serviceName.slice(1);
         }
@@ -346,7 +369,8 @@ ListPageMixin = {
 				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
-                        <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}  binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                        <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
+                                     binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
                         <If condition={self.isSuperAdminPage||false}>
