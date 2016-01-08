@@ -9,7 +9,6 @@ var Pagination = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             totalCount = binding.get('totalCount');
-        console.log('pagination: '+totalCount);
 
         if(!totalCount)
             totalCount = 0;

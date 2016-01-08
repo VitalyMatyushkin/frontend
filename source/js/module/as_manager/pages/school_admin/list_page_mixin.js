@@ -23,6 +23,8 @@ ListPageMixin = {
         self.updatePageNumbers = true;
         metaBinding.set('isFiltersActive', false);
         self.filter = new Filter(binding);
+        self.filter.isPaginated = true;
+        self.filter.filters = self.filters;
         //setup a web worker to sort and filter data in background
         if(window.Worker){
             dataWorker = new Worker('build/js/module/as_manager/pages/school_admin/dataWorkerThread.js');
@@ -54,8 +56,6 @@ ListPageMixin = {
 
         if(self.isPaginated){
             customCount = customCount === undefined ? globalBinding.get('totalCount') : customCount;
-            binding.set('pagination.totalCount', customCount);
-            console.log('_getTotalCountAndRenderPagination: '+binding.get('pagination.totalCount'));
             self.numberOfPages = Math.floor(customCount/self.pageLimit);
             //Check if count
             if(customCount%self.pageLimit !== 0){
@@ -99,20 +99,36 @@ ListPageMixin = {
         self.updateData(filterValue);
     },
     _onChangePage:function(changes){
-        var self = this,
-            skip = (changes.getCurrentValue()-1)*self.pageLimit;
+        var self = this;
 
-        self.filter.setPageNumber(skip);
+        self.filter.setPageNumber(changes.getCurrentValue());
 
         self._loadData();
 
         console.log('OnChangePage: '+changes.getCurrentValue());
     },
     _loadData:function(){
-        this._getTotalCount();
+        var self = this,
+            binding = self.getDefaultBinding(),
+            filter = self.filter.getFilters();
+
+        self.request = window.Server[self.serviceName].get({filter:filter}).then(function (data){
+            binding.set('data', Immutable.fromJS(data));
+        });
+
+        self._getTotalCount();
     },
     _getTotalCount:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            where = self.filter.getWhere();
 
+        self.requestCount = window.Server[self.serviceCount].get({where:where}).then(function (data) {
+            if(data && data.count){
+                binding.set('pagination.totalCount', data.count);
+                console.log('_getTotalCountAndRenderPagination: '+binding.get('pagination.totalCount'));
+            }
+        });
     },
 	updateData: function(newFilter) {
 		var self = this,
@@ -266,7 +282,8 @@ ListPageMixin = {
 	componentWillUnmount: function () {
 		var self = this,
             binding = self.getDefaultBinding();
-		self.request && self.request.cancel();
+        self.request && self.request.cancel();
+        self.requestCount && self.requestCount.cancel();
         clearTimeout(self.timeoutId);
         self.persistantData.length = 0;
         binding.clear()
@@ -335,8 +352,6 @@ ListPageMixin = {
                     };
                     break;
             }
-            self.updatePageNumbers = true;
-            self.updateData();
         }else{
             ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
             self.filters={
@@ -345,9 +360,11 @@ ListPageMixin = {
                     and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
                 }
             };
-            self.updatePageNumbers = true;
-            self.updateData();
         }
+        self.filter.filters = self.filters;
+        self._loadData();
+        //self.updatePageNumbers = true;
+        //self.updateData();
     },
 	render: function() {
 		var self = this,
