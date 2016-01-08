@@ -1,16 +1,16 @@
-var If = require('module/ui/if/if'),
-	InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-    classNames = require('classnames'),
-	EventHeader;
+const   If              = require('module/ui/if/if'),
+	    InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+        classNames      = require('classnames'),
+        React           = require('react');
 
-EventHeader = React.createClass({
+const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
     displayName: 'EventButtons',
     closeMatch: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            points = binding.toJS('points'),
-            event = binding.toJS('model');
+        const   self    = this,
+                binding = self.getDefaultBinding(),
+                points  = binding.toJS('points'),
+                event   = binding.toJS('model');
 
         window.Server.results.post({
             eventId: event.id,
