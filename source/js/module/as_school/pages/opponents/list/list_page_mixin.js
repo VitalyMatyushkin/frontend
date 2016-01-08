@@ -1,6 +1,6 @@
-var ListPageMixin;
+const 	React = require('react');
 
-ListPageMixin = {
+const ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any.isRequired,
 		filters: React.PropTypes.object
@@ -22,7 +22,7 @@ ListPageMixin = {
 
 		self.request && self.request.cancel();
 
-		// Фильтрация по школе
+		// Filtering by school
 		requestFilter = {
 
 		};
@@ -34,7 +34,7 @@ ListPageMixin = {
 			});
 		}
 
-		// Добавление фильтров по полям, если есть
+		// Adding field filters if presented
 		if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
 			for (var filterName in newFilter) {
 				requestFilter.where[filterName] = newFilter[filterName];

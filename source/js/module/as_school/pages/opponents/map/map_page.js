@@ -1,8 +1,8 @@
-var OpponentsMapPage,
-	If = require('module/ui/if/if'),
-	Map = require('module/ui/map/map');
+const 	If 		= require('module/ui/if/if'),
+		Map 	= require('module/ui/map/map'),
+		React 	= require('react');
 
-OpponentsMapPage = React.createClass({
+const OpponentsMapPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

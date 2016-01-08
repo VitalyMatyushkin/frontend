@@ -1,12 +1,10 @@
-var List = require('module/ui/list/list'),
-	ListField = require('module/ui/list/list_field'),
-	Table = require('module/ui/list/table'),
-	TableField = require('module/ui/list/table_field'),
-	DateTimeMixin = require('module/mixins/datetime'),
-	ListPageMixin = require('module/as_school/pages/opponents/list/list_page_mixin'),
-	OpponentsListPage;
+const 	Table 			= require('module/ui/list/table'),
+		TableField 		= require('module/ui/list/table_field'),
+		DateTimeMixin 	= require('module/mixins/datetime'),
+		ListPageMixin 	= require('module/as_school/pages/opponents/list/list_page_mixin'),
+		React 			= require('react');
 
-OpponentsListPage = React.createClass({
+const OpponentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	showFixtures: function(schoolData) {
 		var self = this;
