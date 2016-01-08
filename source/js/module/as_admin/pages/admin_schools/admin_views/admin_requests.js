@@ -1,16 +1,16 @@
 /**
  * Created by bridark on 24/06/15.
  */
-var AdminRequest,
-    List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
-    Table = require('module/ui/list/table'),
-    TableField = require('module/ui/list/table_field'),
-    DateTimeMixin = require('module/mixins/datetime'),
-    React = require('react'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
+const   List            = require('module/ui/list/list'),
+        ListField       = require('module/ui/list/list_field'),
+        Table           = require('module/ui/list/table'),
+        TableField      = require('module/ui/list/table_field'),
+        DateTimeMixin   = require('module/mixins/datetime'),
+        React           = require('react'),
+        ArrayHelpers    = require('module/helpers/ArrayHelpers'),
+        ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin');
 
-AdminRequest = React.createClass({
+const AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     serviceName:'Permissions',
     groupActionList:['Accept','Decline'],
@@ -26,30 +26,31 @@ AdminRequest = React.createClass({
         }
     },
     getPrincipalEmail:function(principal){
-        if(principal !== undefined){
-            return principal.email;
-        }
+        return principal !== undefined ? principal.email : undefined;
     },
 	getCurrentPermission: function(id, permissions) {
-		var permission = undefined;
-
-		for(var i = 0; i < permissions.length; i++) {
-			if(permissions[i].id === id) {
-				permission = permissions[i];
-				break;
-			}
-		}
-
-		return permission;
+        console.log('getting current permissions for..');
+        return ArrayHelpers.find( permissions, permission => {
+            console.log('checking permission: ' + JSON.stringify(permission));
+            console.log('permission.id: ' + permission.id);
+            console.log('permission.id === id: ' + permission.id === id);
+            return permission.id && permission.id === id;
+        } );
 	},
+
     _getQuickEditActionFunctions:function(event){
-		var self = this,
-			action = event.currentTarget.textContent,
-            id = event.currentTarget.parentNode.dataset.userobj,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            currentPermission = self.getCurrentPermission(id, binding.toJS()),
-			confirmMsg;
+		const   self                = this,
+			    action              = event.currentTarget.textContent,
+                id                  = event.currentTarget.parentNode.dataset.userobj,
+                binding             = self.getDefaultBinding(),
+                globalBinding       = self.getMoreartyContext().getBinding(),
+                currentPermission   = self.getCurrentPermission(id, binding.toJS());
+
+        let confirmMsg;
+
+        console.log('all permissions: ' + JSON.stringify(binding.toJS()));
+        console.log('currentPermission: ' + JSON.stringify(currentPermission));
+        console.log('id: ' + id);
         event.currentTarget.parentNode.classList.remove('groupActionList_show');
 
 		switch (action){

@@ -1,8 +1,8 @@
-var Table,
-	If = require('module/ui/if/if'),
-    React = require('react'),
-    ReactDOM = require('reactDom');
-Table = React.createClass({
+const   If          = require('module/ui/if/if'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom');
+
+const Table = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: React.PropTypes.string,
@@ -86,8 +86,13 @@ Table = React.createClass({
                 self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike">Edit</span>);
                 self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike">View</span>);
                 self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
-                self.props.addQuickActions && itemButtons.push(<span key={item.id+'quickEd'} onClick={getQuickEditFunction()} className="bLinkLike edit_btn">Edit
-                    <span className="caret caret_down"/><span data-userobj={item.id+'quickAc'} className="eQuickAction_list">{quickActions}</span></span>);
+                self.props.addQuickActions && itemButtons.push(
+                    <span key={item.id+'quickEd'} onClick={getQuickEditFunction()} className="bLinkLike edit_btn">
+                        Edit
+                        <span className="caret caret_down"/>
+                        <span key={item.id+'quickAc'} data-userobj={item.id} className="eQuickAction_list">{quickActions}</span>
+                    </span>
+                );
 
                 itemCells = React.Children.map(self.props.children, function(child, childIndex) {
                     var dataField = child.props.dataField,
