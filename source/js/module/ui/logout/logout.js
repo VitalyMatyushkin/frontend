@@ -1,9 +1,9 @@
-var React = require('react'),
-	LoginUserPage;
-LoginUserPage = React.createClass({
+const React = require('react');
+
+const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-		var binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		//window.Server.logout.post();
 		Helpers.cookie.remove('authorizationInfo');
