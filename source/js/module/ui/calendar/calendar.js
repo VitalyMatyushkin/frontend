@@ -1,10 +1,11 @@
-var CalendarYearView = require('./calendar_year'),
-    CalendarMonthView = require('./calendar_month'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	CalendarView;
+const 	CalendarYearView 	= require('./calendar_year'),
+		CalendarMonthView 	= require('./calendar_month'),
+		React 				= require('react'),
+		ReactDOM 			= require('reactDom'),
+		Immutable 			= require('immutable');
 
-CalendarView = React.createClass({
+
+const CalendarView = React.createClass({
 	mixins: [Morearty.Mixin],
     propType: {
         onSelect: React.PropTypes.func

@@ -2,7 +2,8 @@
  * Created by bridark on 25/04/15.
  */
 
-const React = require('react');
+const   React       = require('react'),
+        Immutable   = require('immutable');
 
 const UserFixtures = React.createClass({
     mixins:[Morearty.Mixin],

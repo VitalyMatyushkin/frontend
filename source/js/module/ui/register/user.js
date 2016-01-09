@@ -1,15 +1,15 @@
-var ChooseTypeForm = require('module/ui/register/user/choose_type'),
-    RegisterForm = require('module/ui/register/user/register_form'),
-    RegisterDone = require('module/ui/register/user/register_done'),
-    AccountForm = require('module/ui/register/user/account_step'),
-    PersonalForm = require('module/ui/register/user/personal_details'),
-    PermissionsList = require('module/ui/register/user/permissions_step'),
-    VerificationStep = require('module/ui/register/user/verification_step'),
-    classNames = require('classnames'),
-    React = require('react'),
-    RegisterUserPage;
+const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
+        RegisterForm        = require('module/ui/register/user/register_form'),
+        RegisterDone        = require('module/ui/register/user/register_done'),
+        AccountForm         = require('module/ui/register/user/account_step'),
+        PersonalForm        = require('module/ui/register/user/personal_details'),
+        PermissionsList     = require('module/ui/register/user/permissions_step'),
+        VerificationStep    = require('module/ui/register/user/verification_step'),
+        classNames          = require('classnames'),
+        React               = require('react'),
+        Immutable 	        = require('immutable');
 
-RegisterUserPage = React.createClass({
+const RegisterUserPage = React.createClass({
     mixins: [Morearty.Mixin],
     // TODO: вынести значение поля step в мета-данные
     getDefaultState: function () {

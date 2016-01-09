@@ -4,6 +4,7 @@
 const   CommentBox  = require('./event_blogBox'),
         React       = require('react'),
         ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable'),
         convertPostIdToInt = function(comment){
             comment.postId = parseInt(comment.postId, 10);
             return comment;

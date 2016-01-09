@@ -1,8 +1,8 @@
-var NewsForm = require('module/as_manager/pages/school_admin/news/news_form'),
-	React = require('react'),
-	NewsEditPage;
+const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'),
+		React 		= require('react'),
+		Immutable 	= require('Immutable');
 
-NewsEditPage = React.createClass({
+const NewsEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

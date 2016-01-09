@@ -2,7 +2,8 @@ const 	If 					= require('module/ui/if/if'),
 		SVG 				= require('module/ui/svg'),
 		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		AutocompleteTeam 	= require('module/ui/managers/autocompleteTeam'),
-		React				= require('react');
+		React				= require('react'),
+		Immutable			= require('immutable');
 
 const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],

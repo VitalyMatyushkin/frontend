@@ -1,9 +1,9 @@
-var EventPage,
-	SubMenu = require('module/ui/menu/sub_menu'),
-	OneEvent = require('module/ui/fixtures/one_event'),
-	If = require('module/ui/if/if');
+const 	SubMenu 	= require('module/ui/menu/sub_menu'),
+		OneEvent 	= require('module/ui/fixtures/one_event'),
+		If 			= require('module/ui/if/if'),
+		Immutable 	= require('immutable');
 
-EventPage = React.createClass({
+const EventPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function() {
 		var self = this;

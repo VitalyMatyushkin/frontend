@@ -1,10 +1,11 @@
 /**
  * Created by bridark on 05/08/15.
  */
-var GalleryListPage,
-    React = require('react'),
-    Popup = require('module/ui/popup');
-GalleryListPage = React.createClass({
+const   React       = require('react'),
+        Immutable   = require('immutable'),
+        Popup       = require('module/ui/popup');
+
+const GalleryListPage = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
         return{albumPrompt:true}

@@ -1,10 +1,10 @@
-var OutboxView,
-	ProcessingView = require('./processing'),
-	Invite = require('./invite'),
-	React = require('react'),
-	InvitesMixin = require('../mixins/invites_mixin');
+const 	ProcessingView 	= require('./processing'),
+		Invite 			= require('./invite'),
+		React 			= require('react'),
+		Immutable 		= require('immutable'),
+		InvitesMixin 	= require('../mixins/invites_mixin');
 
-OutboxView = React.createClass({
+const OutboxView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;

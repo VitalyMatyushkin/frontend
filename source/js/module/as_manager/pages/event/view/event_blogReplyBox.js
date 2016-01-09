@@ -3,7 +3,8 @@
  */
 const   React       = require('react'),
         ReactDOM    = require('reactDom'),
-        If          = require('module/ui/if/if');
+        If          = require('module/ui/if/if'),
+        Immutable   = require('immutable');
 
 
 const BlogReplyBox = React.createClass({

@@ -1,11 +1,12 @@
 /**
  * Created by bridark on 03/08/15.
  */
-var HomeCalender,
-    CalendarView = require('module/ui/calendar/calendar'),
-    React = require('react'),
-    DateTimeMixin = require('module/mixins/datetime');
-HomeCalender = React.createClass({
+const   CalendarView    = require('module/ui/calendar/calendar'),
+        React           = require('react'),
+        Immutable 	    = require('immutable'),
+        DateTimeMixin   = require('module/mixins/datetime');
+
+const HomeCalender = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
     componentWillMount:function(){
         var self = this,

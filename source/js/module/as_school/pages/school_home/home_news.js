@@ -1,11 +1,12 @@
 /**
  * Created by bridark on 03/08/15.
  */
-var HomeNews,
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    DateTimeMixin = require('module/mixins/datetime');
-HomeNews = React.createClass({
+const   React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Immutable 	    = require('immutable'),
+        DateTimeMixin   = require('module/mixins/datetime');
+
+const HomeNews = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
     componentWillMount:function(){
         var self = this,

@@ -1,9 +1,10 @@
 /**
  * Created by bridark on 25/04/15.
  */
-var UserAchievements,
-    React = require('react');
-UserAchievements = React.createClass({
+const   React       = require('react'),
+        Immutable   = require('immutable');
+
+const UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;

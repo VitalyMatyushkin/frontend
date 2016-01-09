@@ -1,11 +1,12 @@
 /**
  * Created by bridark on 31/07/15.
  */
-var HomeHeader,
-    localArrayOfPhotos,
-    React = require('react');
-localArrayOfPhotos = [];
-HomeHeader = React.createClass({
+const   Immutable 	= require('immutable'),
+        React       = require('react');
+
+let localArrayOfPhotos = [];
+
+const HomeHeader = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
         var self = this,

@@ -1,8 +1,8 @@
-var RouterView,
-	React = require('react');
+const 	Immutable 	= require('immutable'),
+		React 		= require('react');
 
 
-RouterView = React.createClass({
+const RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
 	isAuthorized: false,
 	isVerified: false,

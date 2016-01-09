@@ -1,11 +1,10 @@
-var FixturesPage,
-	SubMenu = require('module/ui/menu/sub_menu'),
-	If = require('module/ui/if/if'),
-	RadioGroup = require('module/ui/radiogroup/radiogroup'),
-	FixturesList = require('module/ui/fixtures/fixtures_list'),
-	FixturesStatistics = require('module/ui/fixtures/fixture_statics');
+const 	SubMenu 			= require('module/ui/menu/sub_menu'),
+		If 					= require('module/ui/if/if'),
+		RadioGroup 			= require('module/ui/radiogroup/radiogroup'),
+		FixturesList 		= require('module/ui/fixtures/fixtures_list'),
+		FixturesStatistics 	= require('module/ui/fixtures/fixture_statics');
 
-FixturesPage = React.createClass({
+const FixturesPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		var self = this;

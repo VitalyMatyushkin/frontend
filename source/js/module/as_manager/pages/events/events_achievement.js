@@ -1,21 +1,23 @@
 /**
  * Created by bright boahen on 02/06/15.
  */
-var ParentChildAchievement,
-    SVG = require('module/ui/svg'),
-    AboutMe = require('module/as_manager/pages/student/view/about_me'),
-    UserButtons = require('module/as_manager/pages/student/view/user_buttons'),
-    UserName = require('module/as_manager/pages/student/view/user_name'),
-    UserPhoto = require('module/as_manager/pages/student/view/user_photo'),
-    UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
-    UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
-    TeamStats = require('module/as_manager/pages/student/view/team_stats'),
-    IndicatorView = require('module/ui/progress_indicator/loading_prompt'),
-    React = require('react'),
-    If = require('module/ui/if/if'),
-    progressValue;
+const   SVG                 = require('module/ui/svg'),
+        AboutMe             = require('module/as_manager/pages/student/view/about_me'),
+        UserButtons         = require('module/as_manager/pages/student/view/user_buttons'),
+        UserName            = require('module/as_manager/pages/student/view/user_name'),
+        UserPhoto           = require('module/as_manager/pages/student/view/user_photo'),
+        UserAchievements    = require("module/as_manager/pages/student/view/user_achievements"),
+        UserFixtures        = require('module/as_manager/pages/student/view/user_fixtures'),
+        TeamStats           = require('module/as_manager/pages/student/view/team_stats'),
+        IndicatorView       = require('module/ui/progress_indicator/loading_prompt'),
+        React               = require('react'),
+        If                  = require('module/ui/if/if'),
+        Immutable           = require('immutable');
 
-ParentChildAchievement = React.createClass({
+
+let progressValue;
+
+const ParentChildAchievement = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount:function(){
         var self = this,

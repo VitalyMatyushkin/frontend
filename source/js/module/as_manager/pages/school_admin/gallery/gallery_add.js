@@ -1,11 +1,12 @@
 /**
  * Created by bridark on 05/08/15.
  */
-const   Popup   = require('module/ui/popup'),
-        SubMenu = require('module/ui/menu/sub_menu'),
-        React   = require('react'),
-        If      = require('module/ui/if/if'),
-        $       = require('jquery');
+const   Popup       = require('module/ui/popup'),
+        SubMenu     = require('module/ui/menu/sub_menu'),
+        React       = require('react'),
+        If          = require('module/ui/if/if'),
+        $           = require('jquery'),
+        Immutable   = require('immutable');
 
 const AddToGallery = React.createClass({
     mixins:[Morearty.Mixin],

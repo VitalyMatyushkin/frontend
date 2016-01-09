@@ -1,4 +1,5 @@
-const 	React = require('react');
+const 	React 		= require('react'),
+		Immutable 	= require('immutable');
 
 const ListPageMixin = {
 	propTypes: {

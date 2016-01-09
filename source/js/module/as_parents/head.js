@@ -1,12 +1,12 @@
-var Logo = require('module/as_manager/head/logo'),
-    TopMenu = require('module/ui/menu/top_menu'),
-    UserBlock = require('module/as_manager/head/user_block'),
-    Autocomplete = require('module/ui/autocomplete/autocomplete'),
-    If = require('module/ui/if/if'),
-    React = require('react'),
-    Head;
+const   Logo            = require('module/as_manager/head/logo'),
+        TopMenu         = require('module/ui/menu/top_menu'),
+        UserBlock       = require('module/as_manager/head/user_block'),
+        Autocomplete    = require('module/ui/autocomplete/autocomplete'),
+        If              = require('module/ui/if/if'),
+        React           = require('react'),
+        Immutable       = require('immutable');
 
-Head = React.createClass({
+const Head = React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultState: function() {
         return Immutable.fromJS({

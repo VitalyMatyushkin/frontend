@@ -1,6 +1,7 @@
-var ChallengesView,
-    React = require('react');
-ChallengesView = React.createClass({
+const   React = require('react'),
+        Immutable = require('immutable');
+
+const ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
     sameDay: function (d1, d2) {
         d1 = d1 instanceof Date ? d1 : new Date(d1);

@@ -1,7 +1,8 @@
 const   If              = require('module/ui/if/if'),
 	    InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
         classNames      = require('classnames'),
-        React           = require('react');
+        React           = require('react'),
+        Immutable       = require('immutable');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
