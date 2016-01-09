@@ -1,11 +1,14 @@
-var RouterView = require('module/core/router'),
-Route = require('module/core/route'),
-If = require('module/ui/if/if'),
-SubMenu = require('module/ui/menu/sub_menu'),
-PhotoList = require('./photo_list'),
-FullScreenList = require('./album_fullscreen_list'),
-FileUpload = require('module/ui/file_upload/file_upload');
-var AlbumView = React.createClass({
+const 	RouterView 		= require('module/core/router'),
+		Route 			= require('module/core/route'),
+		If 				= require('module/ui/if/if'),
+		SubMenu 		= require('module/ui/menu/sub_menu'),
+		PhotoList 		= require('./photo_list'),
+		FullScreenList 	= require('./album_fullscreen_list'),
+		FileUpload 		= require('module/ui/file_upload/file_upload'),
+		React			= require('react'),
+		Immutable		= require('immutable');
+
+const AlbumView = React.createClass({
 	mixins: [Morearty.Mixin],
 	displayName: 'AlbumPage',
 	getMergeStrategy: function() {

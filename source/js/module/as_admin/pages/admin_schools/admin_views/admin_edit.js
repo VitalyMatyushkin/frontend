@@ -1,11 +1,11 @@
 /**
  * Created by bridark on 09/06/15.
  */
-var SchoolForm = require('module/as_manager/pages/schools/schools_form'),
-    React = require('react'),
-    EditSchoolForm;
+const   SchoolForm  = require('module/as_manager/pages/schools/schools_form'),
+        React       = require('react'),
+        Immutable   = require('immutable');
 
-EditSchoolForm = React.createClass({
+const EditSchoolForm = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
         var self = this,

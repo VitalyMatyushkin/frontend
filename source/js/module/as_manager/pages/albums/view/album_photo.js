@@ -1,4 +1,6 @@
-var AlbumPhoto = React.createClass({
+const Immutable = require('immutable');
+
+const AlbumPhoto = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	getDefaultState: function() {

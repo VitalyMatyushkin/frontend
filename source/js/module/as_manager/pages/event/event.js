@@ -1,18 +1,18 @@
-var EventView,
-    classNames = require('classnames'),
-    RouterView = require('module/core/router'),
-    Route = require('module/core/route'),
-    If = require('module/ui/if/if'),
-    EventHeader = require('./view/event_header'),
-    EventRivals = require('./view/event_rivals'),
-    EventButtons = require('./view/event_buttons'),
-    EventTeams = require('./view/event_teams'),
-    EventAlbums = require('./view/event_albums'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    Comments = require('./view/event_blog');
+const   classNames      = require('classnames'),
+        RouterView      = require('module/core/router'),
+        Route           = require('module/core/route'),
+        If              = require('module/ui/if/if'),
+        EventHeader     = require('./view/event_header'),
+        EventRivals     = require('./view/event_rivals'),
+        EventButtons    = require('./view/event_buttons'),
+        EventTeams      = require('./view/event_teams'),
+        EventAlbums     = require('./view/event_albums'),
+        React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Comments        = require('./view/event_blog'),
+        Immutable       = require('immutable');
 
-EventView = React.createClass({
+const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
     displayName: 'EventPage',
     getMergeStrategy: function () {

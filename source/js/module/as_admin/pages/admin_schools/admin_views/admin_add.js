@@ -1,12 +1,10 @@
 /**
  * Created by bridark on 09/06/15.
  */
-var SchoolForm = require('module/as_manager/pages/schools/schools_form'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    AddSchoolForm;
+const   SchoolForm  = require('module/as_manager/pages/schools/schools_form'),
+        React       = require('react');
 
-AddSchoolForm = React.createClass({
+const AddSchoolForm = React.createClass({
     mixins: [Morearty.Mixin],
     submitAdd: function(schoolData) {
         var self = this,

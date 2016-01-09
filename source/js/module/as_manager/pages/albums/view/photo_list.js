@@ -1,7 +1,9 @@
-var If = require('module/ui/if/if'),
-    AlbumPhoto = require('./album_photo');
+const   If          = require('module/ui/if/if'),
+        AlbumPhoto  = require('./album_photo'),
+        React       = require('react'),
+        Immutable   = require('immutable');
 
-var PhotoList = React.createClass({
+const PhotoList = React.createClass({
     mixins: [Morearty.Mixin],
     getMergeStrategy: function() {
         return Morearty.MergeStrategy.MERGE_REPLACE;

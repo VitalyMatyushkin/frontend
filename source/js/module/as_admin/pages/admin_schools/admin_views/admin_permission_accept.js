@@ -1,9 +1,9 @@
-var If = require('module/ui/if/if'),
-	Autocomplete = require('module/ui/autocomplete/autocomplete'),
-	React = require('react'),
-	PermissionAcceptPage;
+const 	If 				= require('module/ui/if/if'),
+		Autocomplete 	= require('module/ui/autocomplete/autocomplete'),
+		React 			= require('react'),
+		Immutable 		= require('immutable');
 
-PermissionAcceptPage = React.createClass({
+const PermissionAcceptPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		afterSubmitPage: React.PropTypes.string
