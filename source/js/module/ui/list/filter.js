@@ -40,5 +40,21 @@ filter.prototype.setPageNumber = function(pageNumber){
     self.rowsSkip = (pageNumber-1)*self.pageLimit;
 };
 
+filter.prototype.setFileldFilter = function(field, value){
+    var self = this;
+
+    if(!self.filters.where)
+        self.filters.where = {};
+
+    self.filters.where[field] = value;
+};
+
+filter.prototype.setOrder = function(field, value){
+    var self = this;
+
+    self.filters.order = value;
+};
+
+
 
 module.exports = filter;

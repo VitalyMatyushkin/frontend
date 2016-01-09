@@ -1,5 +1,6 @@
 const   If          = require('module/ui/if/if'),
-    Pagination = require('module/ui/list/pagination');
+        Pagination  = require('module/ui/list/pagination'),
+        Filter      = require('module/ui/list/filter'),
         React       = require('react'),
         ReactDOM    = require('reactDom');
 
@@ -11,8 +12,11 @@ const Table = React.createClass({
 		onItemEdit: React.PropTypes.func,
 		onItemView: React.PropTypes.func,
 		onItemRemove: React.PropTypes.func,
-		onFilterChange: React.PropTypes.func,
-		hideActions: React.PropTypes.bool,
+        onFilterChange: React.PropTypes.func,
+        getDataPromise: React.PropTypes.func,
+        getTotalCountPromise: React.PropTypes.func,
+        isPaginated: React.PropTypes.bool,
+        hideActions: React.PropTypes.bool,
         quickEditActionsFactory:React.PropTypes.func, //Implement your own factory of methods to be applied to quick actions
         quickEditActions: React.PropTypes.array,
         displayActionText: React.PropTypes.bool,
@@ -21,29 +25,46 @@ const Table = React.createClass({
     getDefaultProps:function(){
         return{
             displayActionText:true,
-            addQuickActions: false
+            addQuickActions: false,
+            isPaginated:false
         }
     },
 	componentWillMount: function() {
 		var self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
-        rootBinding.set('popup',false);
-		self.filter = {};
-		self.usedFields = [];
+            binding = self.getDefaultBinding();
+
+        self.filter = new Filter(binding);
+        self.filter.isPaginated = self.props.isPaginated;
+
+        self._oldFilters = {}; // old functional filters
 	},
-	updateFilterState: function(field, value) {
-		var self = this;
-		if (value) {
-			self.filter[field] = value;
-		} else {
-			delete self.filter[field];
-		}
-        if(Object.keys(self.filter).length >1){
-            var keyToDel =Object.keys(self.filter)[0];
-            delete self.filter[keyToDel];
+    updateFilterState: function(field, value) {
+        var self = this;
+
+        self._oldUpdateFilterState(field, value);
+
+        self.filter.setFileldFilter(field, value);
+    },
+    onSort: function(field, value) {
+        var self = this;
+
+        _oldUpdateFilterState(field, value);
+
+        self.filter.setOrder(field, value);
+    },
+    _oldUpdateFilterState: function(field, value) {
+        var self = this;
+        if (value) {
+            self._oldFilters[field] = value;
+        } else {
+            delete self._oldFilters[field];
         }
-		self.props.onFilterChange && self.props.onFilterChange(self.filter);
-	},
+        if(Object.keys(self._oldFilters).length >1){
+            var keyToDel =Object.keys(self._oldFilters)[0];
+            delete self._oldFilters[keyToDel];
+        }
+        self.props.onFilterChange && self.props.onFilterChange(self._oldFilters);
+    },
     getQuickEditActions:function(){
         var self = this,
             el = self.props.quickEditActions;
@@ -135,7 +156,7 @@ const Table = React.createClass({
                 return React.cloneElement(child, {
                     key:index,
                     onChange: self.updateFilterState,
-                    onSort:self.updateFilterState
+                    onSort:self.onSort
                 });
             });
         }
@@ -150,7 +171,9 @@ const Table = React.createClass({
 				</div>
 				{itemsNodes}
 			</div>
-            <Pagination binding={binding.sub('pagination')} />
+            <If condition={self.props.isPaginated}>
+                <Pagination binding={binding.sub('pagination')} />
+            </If>
 		</div>
 		)
 	}
