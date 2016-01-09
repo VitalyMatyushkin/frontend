@@ -8,6 +8,7 @@ const Table = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: React.PropTypes.string,
+        filter: React.PropTypes.object,
 		onAddNew: React.PropTypes.func,
 		onItemEdit: React.PropTypes.func,
 		onItemView: React.PropTypes.func,
@@ -33,24 +34,81 @@ const Table = React.createClass({
 		var self = this,
             binding = self.getDefaultBinding();
 
-        self.filter = new Filter(binding);
+        self.filter = self.props.filter;
+        if(!self.filter)
+            self.filter = new Filter(binding);
+
         self.filter.isPaginated = self.props.isPaginated;
 
         self._oldFilters = {}; // old functional filters
+
+        self._loadData();
 	},
+    componentDidMount:function(){
+        var self = this;
+        self.getDefaultBinding().addListener('pagination.pageNumber', self._onChangePage);
+    },
+    componentWillUnmount: function () {
+        var self = this,
+            binding = self.getDefaultBinding();
+        self.request && self.request.cancel();
+        self.requestCount && self.requestCount.cancel();
+        binding.clear();
+    },
     updateFilterState: function(field, value) {
         var self = this;
 
         self._oldUpdateFilterState(field, value);
 
-        self.filter.setFileldFilter(field, value);
+        if(self.props.getDataPromise){
+            self.filter.setFileldFilter(field, value);
+            self._loadData();
+            self._getTotalCount();
+        }
     },
     onSort: function(field, value) {
         var self = this;
 
-        _oldUpdateFilterState(field, value);
+        self._oldUpdateFilterState(field, value);
 
-        self.filter.setOrder(field, value);
+        if(self.props.getDataPromise) {
+            self.filter.setOrder(field, value);
+            self._loadData();
+        }
+    },
+    _onChangePage:function(changes){
+        var self = this;
+
+        self.filter.setPageNumber(changes.getCurrentValue());
+
+        self._loadData();
+
+        console.log('OnChangePage: '+changes.getCurrentValue());
+    },
+    _loadData:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            filter = self.filter.getFilters();
+
+        if(self.props.getDataPromise) {
+            self.request = self.props.getDataPromise(filter).then(function (data) {
+                binding.set('data', Immutable.fromJS(data));
+            });
+        }
+    },
+    _getTotalCount:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            where = self.filter.getWhere();
+
+        if(self.props.getTotalCountPromise) {
+            self.requestCount = self.props.getTotalCountPromise(where).then(function (data) {
+                if (data && data.count) {
+                    binding.set('pagination.totalCount', data.count);
+                    console.log('_getTotalCountAndRenderPagination: ' + binding.get('pagination.totalCount'));
+                }
+            });
+        }
     },
     _oldUpdateFilterState: function(field, value) {
         var self = this;

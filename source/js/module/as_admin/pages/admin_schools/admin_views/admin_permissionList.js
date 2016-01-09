@@ -14,8 +14,6 @@ var AdminPermissionView,
 AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'Permissions',
-    serviceCount:'getTotalNumberOfUserModels',
-    pageLimit: 20,
     filters:{
         include:['principal','school']
         ,where:{
@@ -24,9 +22,14 @@ AdminPermissionView = React.createClass({
         }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
-    isPaginated: true,
     isSuperAdminPage: true,
     sandbox:false,
+    getDataPromise:function(filter){
+        return window.Server.Permissions.get({filter:filter});
+    },
+    getTotalCountPromise:function(where){
+        return window.Server.getTotalNumberOfUserModels.get({where:where});
+    },
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;
@@ -226,9 +229,10 @@ AdminPermissionView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory}
+                <Table title="Permissions" filter={self.filter} quickEditActionsFactory={self._getQuickEditActionsFactory}
                        quickEditActions={self.groupActionList} binding={binding} addQuickActions={true}
-                       onFilterChange={self.updateData}>
+                       isPaginated={true} getDataPromise={self.getDataPromise}
+                       getTotalCountPromise={self.getTotalCountPromise} >
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="principal" width="10%" dataFieldKey="firstName" parseFunction={self.getFirstName}>Name</TableField>
                     <TableField dataField="principal" width="20%" dataFieldKey="lastName" parseFunction={self.getLastName}>Surname</TableField>

@@ -17,13 +17,11 @@ ListPageMixin = {
             metaBinding = self.getDefaultBinding().meta(),
             binding = self.getDefaultBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
         self.updatePageNumbers = true;
         metaBinding.set('isFiltersActive', false);
         self.filter = new Filter(binding);
-        self.filter.isPaginated = true;
         self.filter.filters = self.filters;
         //setup a web worker to sort and filter data in background
         if(window.Worker){
@@ -37,13 +35,12 @@ ListPageMixin = {
                 }
             };
         }
-		self.updateData();
+		//self.updateData();
 	},
     componentDidMount:function(){
         var self = this;
         if(self.isSuperAdminPage)
             ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
-        self.getDefaultBinding().addListener('pagination.pageNumber', self._onChangePage);
     },
     //@Param:customCount the length/size of data to be paginated
     _getTotalCountAndRenderPagination:function(customCount){
@@ -97,38 +94,6 @@ ListPageMixin = {
         }
         self.updatePageNumbers = false;
         self.updateData(filterValue);
-    },
-    _onChangePage:function(changes){
-        var self = this;
-
-        self.filter.setPageNumber(changes.getCurrentValue());
-
-        self._loadData();
-
-        console.log('OnChangePage: '+changes.getCurrentValue());
-    },
-    _loadData:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            filter = self.filter.getFilters();
-
-        self.request = window.Server[self.serviceName].get({filter:filter}).then(function (data){
-            binding.set('data', Immutable.fromJS(data));
-        });
-
-        self._getTotalCount();
-    },
-    _getTotalCount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            where = self.filter.getWhere();
-
-        self.requestCount = window.Server[self.serviceCount].get({where:where}).then(function (data) {
-            if(data && data.count){
-                binding.set('pagination.totalCount', data.count);
-                console.log('_getTotalCountAndRenderPagination: '+binding.get('pagination.totalCount'));
-            }
-        });
     },
 	updateData: function(newFilter) {
 		var self = this,
