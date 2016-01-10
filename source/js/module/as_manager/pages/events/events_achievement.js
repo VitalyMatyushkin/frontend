@@ -40,27 +40,27 @@ const ParentChildAchievement = React.createClass({
                 }
             }).then(function (data) {
                 leanerData = data;
-                return Server.form.get(data.formId).then(function (classData) {
+                return window.Server.form.get(data.formId).then(function (classData) {
                     leanerData.classData = classData;
-                    return Server.house.get(data.houseId).then(function (houseData) {
+                    return window.Server.house.get(data.houseId).then(function (houseData) {
                         leanerData.houseData = houseData;
-                        return Server.school.get(data.schoolId).then(function (schoolData) {
+                        return window.Server.school.get(data.schoolId).then(function (schoolData) {
                             leanerData.schoolData = schoolData;
-                            return Server.studentGamesWon.get({
+                            return window.Server.studentGamesWon.get({
                                 id: studentId,
                                 include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
                             }).then(function (gamesWon) {
                                 leanerData.gamesWon = gamesWon;
                                 self.numOfGamesWon = gamesWon.length;
                                 leanerData.numOfGamesWon = gamesWon.length;
-                                return Server.studentGamesScored.get({
+                                return window.Server.studentGamesScored.get({
                                     id: studentId,
                                     include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
                                 }).then(function (gamesScoredIn) {
                                     leanerData.gamesScoredIn = gamesScoredIn;
                                     self.numOfGamesScoredIn = gamesScoredIn.length;
                                     leanerData.numOfGamesScoredIn = gamesScoredIn.length;
-                                    return Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
+                                    return window.Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
                                         leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                         self.numberOfGamesPlayed = gamesPlayed.length;
                                         leanerData.schoolEvent = gamesPlayed;

@@ -35,7 +35,7 @@ const SchoolsPage = React.createClass({
 			userId = globalBinding.get('userData.authorizationInfo.userId');
 
 		// Getting and saving school list
-		return Server.schools.get().then(function(data) {
+		return window.Server.schools.get().then(function(data) {
 			self.getDefaultBinding().set('schoolsList', Immutable.fromJS(data));
 			return;
 		});

@@ -1,7 +1,8 @@
 const 	SubMenu 		= require('module/ui/menu/sub_menu'),
 		DateTimeMixin 	= require('module/mixins/datetime'),
 		Calendar 		= require('module/ui/calendar/big_calendar'),
-		Immutable		= require('immutable');
+		Immutable		= require('immutable'),
+		React 			= require('react');
 
 const CalendarPage = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],

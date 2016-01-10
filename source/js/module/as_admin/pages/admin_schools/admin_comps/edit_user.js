@@ -4,7 +4,8 @@
 const   UserRole    = require('./user_roles'),
         React       = require('react'),
         If          = require('module/ui/if/if'),
-        Immutable   = require('immutable');
+        Immutable   = require('immutable'),
+        $           = require('jquery');
 
 let userDetails, Roles, persistentId;
 
@@ -112,7 +113,7 @@ const EditUser = React.createClass({
                                             authorId:album.ownerId,
                                             pic: uri + '/files/' + uploadedFile.name
                                         };
-                                    Server.photos.post(album.id, model).then(function(data){
+                                    window.Server.photos.post(album.id, model).then(function(data){
                                         console.log(data);
                                         document.getElementById('pic').value = 'http:'+uri+'/files/'+fileName;
                                         document.getElementById('editAvatar').src = 'http:'+uri+'/files/'+fileName;

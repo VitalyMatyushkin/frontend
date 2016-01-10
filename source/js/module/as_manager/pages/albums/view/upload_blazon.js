@@ -1,15 +1,18 @@
 /**
  * Created by bridark on 08/06/15.
  */
-var classNames = require('classnames');
-var If = require('module/ui/if/if'),
-    BlazonUpload,
+const   classNames  = require('classnames'),
+        If          = require('module/ui/if/if'),
+        React       = require('react'),
+        $           = require('jquery');
+
+let
     urlStr,
     preview,
     albumDetails={},
     currentAction;
 
-BlazonUpload = React.createClass({
+const BlazonUpload = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount:function(){
         var self = this,
@@ -75,7 +78,7 @@ BlazonUpload = React.createClass({
                                 authorId:albumDetails.ownerId,
                                 pic: uri + '/files/' + uploadedFile.name
                             };
-                        Server.photos.post(albumDetails.id, model).then(function(data){
+                        window.Server.photos.post(albumDetails.id, model).then(function(data){
                             urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=60&width=60';
                             rootBinding.set('picUrl',urlStr);
                             //React.findDOMNode(self.refs.prevImage).src = data.pic+'/contain?height=60&width=60';
@@ -113,7 +116,7 @@ BlazonUpload = React.createClass({
                                 authorId:albumDetails.ownerId,
                                 pic: uri + '/files/' + uploadedFile.name
                             };
-                        Server.photos.post(albumDetails.id, model).then(function(data){
+                        window.Server.photos.post(albumDetails.id, model).then(function(data){
                             urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=60&width=60';
                             rootBinding.set('picUrl',urlStr);
                             //React.findDOMNode(self.refs.prevImage).src = data.pic+'/contain?height=60&width=60';

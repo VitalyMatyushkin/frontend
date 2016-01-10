@@ -1,7 +1,9 @@
 const   If          = require('module/ui/if/if'),
         GroupAction = require('module/ui/list/group_action'),
         React       = require('react'),
-        Immutable   = require('immutable');
+        ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable'),
+        $           = require('jquery');
 
 let dataWorker;
 

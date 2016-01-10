@@ -33,7 +33,7 @@ const AlbumView = React.createClass({
 
 		self.albumId = albumId;
 
-		Server.albumsFindOne.get({
+		window.Server.albumsFindOne.get({
 			filter: {
 				where: {
 					id: albumId
@@ -97,7 +97,7 @@ const AlbumView = React.createClass({
 								authorId: binding.get('album.ownerId'),
 								pic: uri + '/files/' + data.name
 							};
-					Server.photos.post(binding.get('album.id'), model).then(function(res) {
+					window.Server.photos.post(binding.get('album.id'), model).then(function(res) {
 						self.stopUploading();
 						binding.sub('album.photos').update(function(photos) {
 							return photos.unshift(Immutable.fromJS(res));

@@ -7,7 +7,9 @@ const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
         VerificationStep    = require('module/ui/register/user/verification_step'),
         classNames          = require('classnames'),
         React               = require('react'),
-        Immutable 	        = require('immutable');
+        Immutable 	        = require('immutable'),
+        $                   = require('jquery'),
+        Helpers             = require('module/helpers/storage');
 
 const RegisterUserPage = React.createClass({
     mixins: [Morearty.Mixin],

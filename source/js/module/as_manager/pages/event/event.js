@@ -83,7 +83,7 @@ const EventView = React.createClass({
             key: 'Finish'
         }];
 
-        Server.eventFindOne.get({
+        window.Server.eventFindOne.get({
             filter: {
                 where: {
                     id: eventId

@@ -12,7 +12,8 @@
  */
 const   React       = require('react'),
         ReactDOM    = require('reactDom'),
-        Immutable 	= require('immutable');
+        Immutable 	= require('immutable'),
+        $           = require('jquery');
 
 var Form = React.createClass({
     mixins: [Morearty.Mixin],

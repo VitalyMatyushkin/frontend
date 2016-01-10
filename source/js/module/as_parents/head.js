@@ -4,6 +4,7 @@ const   Logo            = require('module/as_manager/head/logo'),
         Autocomplete    = require('module/ui/autocomplete/autocomplete'),
         If              = require('module/ui/if/if'),
         React           = require('react'),
+        ReactDOM        = require('reactDom'),
         Immutable       = require('immutable');
 
 const Head = React.createClass({

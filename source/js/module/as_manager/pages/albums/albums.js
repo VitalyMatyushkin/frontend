@@ -1,7 +1,8 @@
-var RouterView = require('module/core/router'),
-Route = require('module/core/route');
+const  	RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route'),
+		React		= require('react');
 
-var AlbumRoutes = React.createClass({
+const AlbumRoutes = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	render: function() {

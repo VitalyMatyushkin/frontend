@@ -1,5 +1,6 @@
 const 	AlbumEditForm 	= require('./album_edit_form'),
-		Immutable		= require('immutable');
+		Immutable		= require('immutable'),
+		React			= require('react');
 
 const AlbumEdit = React.createClass({
 	mixins: [Morearty.Mixin],

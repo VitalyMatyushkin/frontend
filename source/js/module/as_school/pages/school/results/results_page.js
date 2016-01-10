@@ -1,6 +1,6 @@
 const 	SVG 			= require('module/ui/svg'),
 		React 			= require('react'),
-		Immutable 		= require('immutable')
+		Immutable 		= require('immutable'),
 		FixturesList 	= require('module/ui/fixtures/fixtures_list');
 
 const ResultsPage = React.createClass({
