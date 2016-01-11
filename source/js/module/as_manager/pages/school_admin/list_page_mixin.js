@@ -273,10 +273,10 @@ const ListPageMixin = {
 
 		if (isFiltersActive) {
 			metaBinding.set('isFiltersActive', false);
-			self.updateData();
+			//self.updateData();
 		} else {
 			metaBinding.set('isFiltersActive', true);
-			self.updateData(self.lastFiltersState);
+			//self.updateData(self.lastFiltersState);
 		}
 	},
     toggleBaseFilters:function(el){
@@ -374,20 +374,6 @@ const ListPageMixin = {
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
                             <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
-                        </div>
-                        <div className="eSchoolMaster_pagination">
-                            <div ref="pageNumber" className="leftPagination"></div>
-                            <select ref="pageSelect" onChange={self._handlePageSelectChange.bind(null,this)} className="pagination_select">1</select>
-                            <div className="rightPagination">Page</div>
-                        </div>
-                    </div>
-                </If>
-                <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) === -1) && (currentPage[currentPage.length-1] === 'students')}>
-                    <div className="eSchoolMaster_groupAction">
-                        <div className="eSchoolMaster_pagination">
-                            <div ref="pageNumber" className="leftPagination"></div>
-                            <select ref="pageSelect" onChange={self._handlePageSelectChange.bind(null,this)} className="pagination_select">1</select>
-                            <div className="rightPagination">Page</div>
                         </div>
                     </div>
                 </If>

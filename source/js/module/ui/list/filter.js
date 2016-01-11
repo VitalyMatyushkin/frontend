@@ -61,14 +61,35 @@ filter.prototype.setPageNumber = function(pageNumber){
 filter.prototype.addFieldFilter = function(field, value){
     var self = this;
 
-    if(!self.where)
+    if(!self.where) {
         self.where = {};
+        self.where.and = [];
+    }
 
-    self.where[field] = value;
+    self._deleteLike(field);
+    if(value)
+        self._addLike(field, value);
 
     self._binding.set('where', self.where);
 };
 
+filter.prototype._addLike = function(field, value){
+    var self = this,
+        filter = {};
+
+    filter[field] = {};
+    filter[field].like = value;
+    self.where.and.push(filter);
+};
+
+filter.prototype._deleteLike = function(field){
+    var self = this,
+        and = self.where.and,
+        i;
+
+    i = and.map(function(item){return Object.keys(item)[0];}).indexOf(field);
+    i >= 0 && and.splice(i,1);
+};
 filter.prototype.setOrder = function(field, value){
     var self = this;
 

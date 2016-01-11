@@ -20,8 +20,10 @@ const Pagination = React.createClass({
         if(self.totalPages === 0 || totalCount%self.pageLimit > 0)
             self.totalPages++;
         self.pageNumber = binding.get('pageNumber');
-        if(!self.pageNumber)
+        if(!self.pageNumber || self.totalPages < self.pageNumber){
             self.pageNumber = 1;
+            binding.set('pageNumber', 1);
+        }
     },
     _onChange:function(e){
         var self = this,
