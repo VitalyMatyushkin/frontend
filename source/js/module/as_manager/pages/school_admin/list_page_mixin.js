@@ -26,8 +26,8 @@ const ListPageMixin = {
         self.popUpState = false;
         self.updatePageNumbers = true;
         metaBinding.set('isFiltersActive', false);
-        self.filter = new Filter(binding);
-        self.filter.filters = self.filters;
+        self.filter = new Filter(binding.sub('filter'));
+        self.filter.setFilters(self.filters);
         //setup a web worker to sort and filter data in background
         if(window.Worker){
             dataWorker = new Worker('build/js/module/as_manager/pages/school_admin/dataWorkerThread.js');
@@ -253,7 +253,6 @@ const ListPageMixin = {
 		var self = this,
             binding = self.getDefaultBinding();
         self.request && self.request.cancel();
-        self.requestCount && self.requestCount.cancel();
         clearTimeout(self.timeoutId);
         self.persistantData.length = 0;
         binding.clear()
@@ -331,8 +330,7 @@ const ListPageMixin = {
                 }
             };
         }
-        self.filter.filters = self.filters;
-        self._loadData();
+        self.filter.setWhere(self.filters.where);
         //self.updatePageNumbers = true;
         //self.updateData();
     },

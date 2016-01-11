@@ -2,7 +2,7 @@ const   If          = require('module/ui/if/if'),
         Pagination  = require('module/ui/list/pagination'),
         Filter      = require('module/ui/list/filter'),
         React       = require('react'),
-        ReactDOM    = require('reactDom');
+        Immutable   = require('immutable');
 
 const Table = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -17,6 +17,7 @@ const Table = React.createClass({
         getDataPromise: React.PropTypes.func,
         getTotalCountPromise: React.PropTypes.func,
         isPaginated: React.PropTypes.bool,
+        pageLimit: React.PropTypes.number,
         hideActions: React.PropTypes.bool,
         quickEditActionsFactory:React.PropTypes.func, //Implement your own factory of methods to be applied to quick actions
         quickEditActions: React.PropTypes.array,
@@ -36,17 +37,21 @@ const Table = React.createClass({
 
         self.filter = self.props.filter;
         if(!self.filter)
-            self.filter = new Filter(binding);
+            self.filter = new Filter(binding.sub('filter'));
 
-        self.filter.isPaginated = self.props.isPaginated;
+        self.props.isPaginated && self.filter.setPageLimit(self.props.pageLimit);
 
         self._oldFilters = {}; // old functional filters
 
         self._loadData();
 	},
     componentDidMount:function(){
-        var self = this;
-        self.getDefaultBinding().addListener('pagination.pageNumber', self._onChangePage);
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding.addListener('pagination.pageNumber', self._onChangePage);
+        binding.addListener('filter',self._loadData);
+        binding.addListener('filter.where',self._getTotalCount);
     },
     componentWillUnmount: function () {
         var self = this,
@@ -61,9 +66,7 @@ const Table = React.createClass({
         self._oldUpdateFilterState(field, value);
 
         if(self.props.getDataPromise){
-            self.filter.setFileldFilter(field, value);
-            self._loadData();
-            self._getTotalCount();
+            self.filter.addFieldFilter(field, value);
         }
     },
     onSort: function(field, value) {
@@ -73,17 +76,12 @@ const Table = React.createClass({
 
         if(self.props.getDataPromise) {
             self.filter.setOrder(field, value);
-            self._loadData();
         }
     },
     _onChangePage:function(changes){
         var self = this;
 
         self.filter.setPageNumber(changes.getCurrentValue());
-
-        self._loadData();
-
-        console.log('OnChangePage: '+changes.getCurrentValue());
     },
     _loadData:function(){
         var self = this,
@@ -105,7 +103,6 @@ const Table = React.createClass({
             self.requestCount = self.props.getTotalCountPromise(where).then(function (data) {
                 if (data && data.count) {
                     binding.set('pagination.totalCount', data.count);
-                    console.log('_getTotalCountAndRenderPagination: ' + binding.get('pagination.totalCount'));
                 }
             });
         }

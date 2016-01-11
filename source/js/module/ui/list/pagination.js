@@ -1,6 +1,6 @@
+const   React       = require('react');
 
-
-var Pagination = React.createClass({
+const Pagination = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
         onChange: React.PropTypes.func
