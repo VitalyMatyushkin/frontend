@@ -17,7 +17,7 @@
         "no-inner-declarations": 2,
         "no-unreachable": 2,
         "no-delete-var": 2,
-        "no-undef": 2
+        "no-undef": 1       // it will just warns us for a while. After removing all trash it will upped to 2
 //        "no-unused-vars": 2   // produces a lot of errors. Will be turned on later
     },
     "globals": {  // global variables allowed by 'no-undef' rule. true is read-write for var, false is read-only

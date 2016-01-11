@@ -48,7 +48,7 @@ const RouterView = React.createClass({
 			routes = [];
 
 		routePath.forEach(function(currentRoute) {
-			var routeData = {
+			const routeData = {
 				path: currentRoute,
 				component: routeComponent.props.component,
 				pageName: routeComponent.props.pageName || '',
@@ -184,7 +184,7 @@ const RouterView = React.createClass({
 		});
 
 		// Handling address(url) change
-		window.addEventListener('popstate', self.updateUrlParametrs/*.bind(self)*/);	// React told we don't need .bind() but I'm not sure
+		window.addEventListener('popstate', self.updateUrlParametrs);
 
 		// Binding authorization info
 		self.bindToAuthorization();
