@@ -1,9 +1,10 @@
-var ListField,
-    If = require('module/ui/if/if'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    SortColumn = require('module/ui/list/sort_column');
-ListField = React.createClass({
+const   If          = require('module/ui/if/if'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        $           = require('jquery'),
+        SortColumn  = require('module/ui/list/sort_column');
+
+const ListField = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		dataField: React.PropTypes.string.isRequired,

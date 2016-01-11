@@ -1,13 +1,13 @@
-var LeanerView,
-		SVG = require('module/ui/svg'),
-		AboutMe = require('module/as_manager/pages/student/view/about_me'),
-		UserName = require('module/as_manager/pages/student/view/user_name'),
-		UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
-		UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
-        React = require('react'),
-		TeamStats = require('module/as_manager/pages/student/view/team_stats');
+const   SVG                 = require('module/ui/svg'),
+		AboutMe             = require('module/as_manager/pages/student/view/about_me'),
+		UserName            = require('module/as_manager/pages/student/view/user_name'),
+		UserAchievements    = require("module/as_manager/pages/student/view/user_achievements"),
+		UserFixtures        = require('module/as_manager/pages/student/view/user_fixtures'),
+        React               = require('react'),
+		TeamStats           = require('module/as_manager/pages/student/view/team_stats'),
+        Immutable           = require('immutable');
 
-LeanerView = React.createClass({
+const LeanerView = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
         var self = this,
@@ -19,40 +19,41 @@ LeanerView = React.createClass({
         studentId = studentId ? studentId : binding.get('activeChildId');
         //console.log(binding.get('activeChildId'));
         if(!studentId) document.location.hash = 'events/calendar';
+        // TODO: fixme. Somebody don't know anything about .flatMap
         studentId && window.Server.student.get(studentId).then(function (data) {
             leanerData = data;
-            Server.form.get(data.formId).then(function (classData) {
+            window.Server.form.get(data.formId).then(function (classData) {
                 leanerData.classData = classData;
-                Server.house.get(data.houseId).then(function (houseData) {
+                window.Server.house.get(data.houseId).then(function (houseData) {
                     leanerData.houseData = houseData;
-                    Server.school.get(data.schoolId).then(function (schoolData) {
+                    window.Server.school.get(data.schoolId).then(function (schoolData) {
                         leanerData.schoolData = schoolData;
-                        Server.studentGamesWon.get({
+                        window.Server.studentGamesWon.get({
                             id: studentId,
                             include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
                         }).then(function (gamesWon) {
                             leanerData.gamesWon = gamesWon;
                             self.numOfGamesWon = gamesWon.length;
                             leanerData.numOfGamesWon = gamesWon.length;
-                            Server.studentGamesScored.get({
+                            window.Server.studentGamesScored.get({
                                 id: studentId,
                                 include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
                             }).then(function (gamesScoredIn) {
                                 leanerData.gamesScoredIn = gamesScoredIn;
                                 self.numOfGamesScoredIn = gamesScoredIn.length;
                                 leanerData.numOfGamesScoredIn = gamesScoredIn.length;
-                                Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
+                                window.Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
                                     leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                     self.numberOfGamesPlayed = gamesPlayed.length;
                                     leanerData.schoolEvent = gamesPlayed;
-                                    Server.studentParent.get({id:studentId}).then(function(returnedUser){
+                                    window.Server.studentParent.get({id:studentId}).then(function(returnedUser){
                                         //Checks whether the object returned is empty
                                         //TODO: May need refactoring
                                         if(returnedUser.length != 0){
                                             leanerData.parentOne = returnedUser[0].firstName+' '+returnedUser[0].lastName;
                                             leanerData.parentTwo = returnedUser[1].firstName+' '+returnedUser[1].lastName;
                                         }
-                                        Server.studentData.get(studentId).then(function(student){
+                                        window.Server.studentData.get(studentId).then(function(student){
                                             leanerData.student = student;
                                             binding.set('achievements', Immutable.fromJS(leanerData));
                                             //console.log(binding.get('achievements').toJS());

@@ -1,10 +1,12 @@
 /**
  * Created by bridark on 08/07/15.
  */
-var AccountRoles,
-    React = require('react'),
-    ReactDOM = require('reactDom');
-AccountRoles = React.createClass({
+const   React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable');
+
+
+const AccountRoles = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
         var self, binding, globalBinding;

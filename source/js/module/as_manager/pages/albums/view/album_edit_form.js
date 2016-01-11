@@ -1,8 +1,9 @@
-var Form = require('module/ui/form/form'),
-	FormColumn = require('module/ui/form/form_column'),
-	FormField = require('module/ui/form/form_field');
+const 	React 		= require('react'),
+		Form 		= require('module/ui/form/form'),
+		FormColumn 	= require('module/ui/form/form_column'),
+		FormField	= require('module/ui/form/form_field');
 
-var AlbumEditForm = React.createClass({
+const AlbumEditForm = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	changeAccessMode: function(event) {

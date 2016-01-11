@@ -1,9 +1,13 @@
-var ListPageMixin,
-    If = require('module/ui/if/if'),
-    GroupAction = require('module/ui/list/group_action'),
-    React = require('react'),
-    dataWorker;
-ListPageMixin = {
+const   If          = require('module/ui/if/if'),
+        GroupAction = require('module/ui/list/group_action'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable'),
+        $           = require('jquery');
+
+let dataWorker;
+
+const ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any,
 		filters: React.PropTypes.object,

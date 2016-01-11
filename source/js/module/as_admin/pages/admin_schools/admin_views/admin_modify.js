@@ -1,13 +1,12 @@
 /**
  * Created by bridark on 12/06/15.
  */
-var Form = require('module/ui/form/form'),
-    FormField = require('module/ui/form/form_field'),
-    FormColumn = require('module/ui/form/form_column'),
-    React = require('react'),
-    ModifyUser;
+const   Form        = require('module/ui/form/form'),
+        FormField   = require('module/ui/form/form_field'),
+        React       = require('react'),
+        Immutable   = require('immutable');
 
-ModifyUser = React.createClass({
+const ModifyUser = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
         var self = this,

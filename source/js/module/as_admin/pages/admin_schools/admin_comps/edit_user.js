@@ -1,16 +1,15 @@
 /**
  * Created by bridark on 29/06/15.
  */
-var EditUser,
-    userDetails,
-    UserRole = require('./user_roles'),
-    Roles,
-    persistentId,
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    AvatarUpload = require('module/as_manager/pages/albums/view/upload_blazon'),
-    If = require('module/ui/if/if');
-EditUser = React.createClass({
+const   UserRole    = require('./user_roles'),
+        React       = require('react'),
+        If          = require('module/ui/if/if'),
+        Immutable   = require('immutable'),
+        $           = require('jquery');
+
+let userDetails, Roles, persistentId;
+
+const EditUser = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
         return {tabState:'detail'};
@@ -114,7 +113,7 @@ EditUser = React.createClass({
                                             authorId:album.ownerId,
                                             pic: uri + '/files/' + uploadedFile.name
                                         };
-                                    Server.photos.post(album.id, model).then(function(data){
+                                    window.Server.photos.post(album.id, model).then(function(data){
                                         console.log(data);
                                         document.getElementById('pic').value = 'http:'+uri+'/files/'+fileName;
                                         document.getElementById('editAvatar').src = 'http:'+uri+'/files/'+fileName;

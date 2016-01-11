@@ -2,10 +2,10 @@
  * Created by wert on 19.11.15.
  */
 
-var $ = require('jquery');
+const   $               = require('jquery'),
+        localStorage    = window.localStorage;
 
-var Helpers = {};
-var localStorage = window.localStorage;
+let Helpers = {};
 
 /** Helper to deal easier with localStorage
  * LocalStorage {

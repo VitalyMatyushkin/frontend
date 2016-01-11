@@ -1,9 +1,9 @@
-var ResultsPage,
-	SVG = require('module/ui/svg'),
-	React = require('react'),
-	FixturesList = require('module/ui/fixtures/fixtures_list');
+const 	SVG 			= require('module/ui/svg'),
+		React 			= require('react'),
+		Immutable 		= require('immutable'),
+		FixturesList 	= require('module/ui/fixtures/fixtures_list');
 
-ResultsPage = React.createClass({
+const ResultsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		var self = this;

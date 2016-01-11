@@ -1,6 +1,7 @@
-var AlbumEditForm = require('./album_edit_form');
+const 	AlbumEditForm 	= require('./album_edit_form'),
+		React 			= require('react');
 
-var AlbumCreate = React.createClass({
+const AlbumCreate = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	getInitialState: function() {

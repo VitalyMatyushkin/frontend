@@ -1,8 +1,9 @@
-var HouseForm = require('module/as_manager/pages/school_admin/houses/house_form'),
-	React = require('react'),
-	HouseEditPage;
+const 	HouseForm = require('module/as_manager/pages/school_admin/houses/house_form'),
+		React = require('react'),
+		Immutable = require('immutable');
 
-HouseEditPage = React.createClass({
+
+const HouseEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

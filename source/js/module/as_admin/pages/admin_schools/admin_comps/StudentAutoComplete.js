@@ -1,12 +1,13 @@
 /**
  * Created by bridark on 29/06/15.
  */
-var StudentAutoComplete,
-    Popup = require('module/ui/popup'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    list;
-StudentAutoComplete = React.createClass({
+const   React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable');
+
+let list;
+
+const StudentAutoComplete = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
         var self = this,

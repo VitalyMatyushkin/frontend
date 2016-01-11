@@ -1,14 +1,12 @@
 /**
  * Created by bridark on 12/06/15.
  */
-var UserDetail,
-    SVG = require('module/ui/svg'),
-    Map = require('module/ui/map/map'),
-    If = require('module/ui/if/if'),
-    EditUser = require('../admin_comps/edit_user'),
-    React = require('react'),
-    Popup = require('module/ui/popup');
-UserDetail= React.createClass({
+const   EditUser    = require('../admin_comps/edit_user'),
+        React       = require('react'),
+        Popup       = require('module/ui/popup'),
+        Immutable   = require('immutable');
+
+const UserDetail= React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
         var self = this,

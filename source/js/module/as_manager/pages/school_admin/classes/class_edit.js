@@ -1,8 +1,8 @@
-var ClassForm = require('module/as_manager/pages/school_admin/classes/class_form'),
-	React = require('react'),
-	ClassEditPage;
+const 	ClassForm 	= require('module/as_manager/pages/school_admin/classes/class_form'),
+		React 		= require('react'),
+		Immutable 	= require('immutable');
 
-ClassEditPage = React.createClass({
+const ClassEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

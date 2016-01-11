@@ -1,11 +1,11 @@
-var AutocompleteHelpers = require('module/ui/autocomplete/main'),
-	ComboboxOption = AutocompleteHelpers.Option,
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	Autocomplete;
+const 	AutocompleteHelpers 	= require('module/ui/autocomplete/main'),
+		ComboboxOption 			= AutocompleteHelpers.Option,
+		React 					= require('react'),
+		ReactDOM 				= require('reactDom'),
+		Immutable 				= require('immutable');
 
 
-Autocomplete = React.createClass({
+const Autocomplete = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		sourcePromise: React.PropTypes.func,

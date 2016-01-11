@@ -1,10 +1,10 @@
-var OneSchoolPage,
-	RouterView = require('module/core/router'),
-	Route = require('module/core/route'),
-	React = require('react'),
-	SubMenu = require('module/ui/menu/sub_menu');
+const 	RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route'),
+		React 		= require('react'),
+		Immutable 	= require('immutable'),
+		SubMenu 	= require('module/ui/menu/sub_menu');
 
-OneSchoolPage = React.createClass({
+const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,

@@ -1,9 +1,9 @@
-var OpponentsPage,
-	RouterView = require('module/core/router'),
-	Route = require('module/core/route'),
-	SubMenu = require('module/ui/menu/sub_menu');
+const 	RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route'),
+		SubMenu 	= require('module/ui/menu/sub_menu'),
+		React 		= require('react');
 
-OpponentsPage = React.createClass({
+const OpponentsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this;

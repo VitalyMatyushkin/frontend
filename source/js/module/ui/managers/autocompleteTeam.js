@@ -1,11 +1,11 @@
-var AutocompleteTeam,
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    SVG = require('module/ui/svg'),
-    Promise = require('bluebird'),
-    Autocomplete = require('module/ui/autocomplete/autocomplete');
+const   React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Immutable 	    = require('immutable'),
+        SVG             = require('module/ui/svg'),
+        Promise         = require('bluebird'),
+        Autocomplete    = require('module/ui/autocomplete/autocomplete');
 
-AutocompleteTeam = React.createClass({
+const AutocompleteTeam = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'AutocompleteTeam',
     componentWillMount: function () {

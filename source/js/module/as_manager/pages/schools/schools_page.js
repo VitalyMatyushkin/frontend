@@ -1,9 +1,9 @@
-var SchoolsPage,
-	RouterView = require('module/core/router'),
-	React = require('react'),
-	Route = require('module/core/route');
+const 	RouterView 	= require('module/core/router'),
+		React 		= require('react'),
+		Route 		= require('module/core/route'),
+		Immutable 	= require('immutable');
 
-SchoolsPage = React.createClass({
+const SchoolsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
@@ -35,7 +35,7 @@ SchoolsPage = React.createClass({
 			userId = globalBinding.get('userData.authorizationInfo.userId');
 
 		// Getting and saving school list
-		return Server.schools.get().then(function(data) {
+		return window.Server.schools.get().then(function(data) {
 			self.getDefaultBinding().set('schoolsList', Immutable.fromJS(data));
 			return;
 		});

@@ -1,8 +1,8 @@
-var UserBlock,
-	React = require('react'),
-	SVG = require('module/ui/svg');
+const 	React 		= require('react'),
+		SVG 		= require('module/ui/svg'),
+		Immutable 	= require('immutable');
 
-UserBlock = React.createClass({
+const UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function() {
 		return Immutable.fromJS({

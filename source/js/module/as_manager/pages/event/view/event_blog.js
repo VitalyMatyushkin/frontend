@@ -1,17 +1,19 @@
 /**
  * Created by bridark on 16/06/15.
  */
-var If = require('module/ui/if/if'),
-    topLevelComments = [],
-    childComments = [],
-    CommentBox = require('./event_blogBox'),
-    Blog,
-    convertPostIdToInt = function(comment){
-        comment.postId = parseInt(comment.postId, 10);
-        return comment;
-    };
+const   CommentBox  = require('./event_blogBox'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable'),
+        convertPostIdToInt = function(comment){
+            comment.postId = parseInt(comment.postId, 10);
+            return comment;
+        };
 
-Blog = React.createClass({
+let topLevelComments    = [],
+    childComments       = [];
+
+const Blog = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
         return {blogUpdate:{}}

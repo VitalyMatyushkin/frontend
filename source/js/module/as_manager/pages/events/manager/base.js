@@ -1,13 +1,13 @@
-var Autocomplete = require('module/ui/autocomplete/autocomplete'),
-    If = require('module/ui/if/if'),
-    Multiselect = require('module/ui/multiselect/multiselect'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    EventManagerBase,
-    oldSelectedId,
-    alertPopUP;
+const   Autocomplete    = require('module/ui/autocomplete/autocomplete'),
+        If              = require('module/ui/if/if'),
+        Multiselect     = require('module/ui/multiselect/multiselect'),
+        React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Immutable       = require('immutable');
 
-EventManagerBase = React.createClass({
+let oldSelectedId, alertPopUP;
+
+const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
     /**
      * Сервис фильтрации по дому

@@ -1,11 +1,14 @@
-var RouterView = require('module/core/router'),
-Route = require('module/core/route'),
-If = require('module/ui/if/if'),
-SubMenu = require('module/ui/menu/sub_menu'),
-PhotoList = require('./photo_list'),
-FullScreenList = require('./album_fullscreen_list'),
-FileUpload = require('module/ui/file_upload/file_upload');
-var AlbumView = React.createClass({
+const 	RouterView 		= require('module/core/router'),
+		Route 			= require('module/core/route'),
+		If 				= require('module/ui/if/if'),
+		SubMenu 		= require('module/ui/menu/sub_menu'),
+		PhotoList 		= require('./photo_list'),
+		FullScreenList 	= require('./album_fullscreen_list'),
+		FileUpload 		= require('module/ui/file_upload/file_upload'),
+		React			= require('react'),
+		Immutable		= require('immutable');
+
+const AlbumView = React.createClass({
 	mixins: [Morearty.Mixin],
 	displayName: 'AlbumPage',
 	getMergeStrategy: function() {
@@ -30,7 +33,7 @@ var AlbumView = React.createClass({
 
 		self.albumId = albumId;
 
-		Server.albumsFindOne.get({
+		window.Server.albumsFindOne.get({
 			filter: {
 				where: {
 					id: albumId
@@ -94,7 +97,7 @@ var AlbumView = React.createClass({
 								authorId: binding.get('album.ownerId'),
 								pic: uri + '/files/' + data.name
 							};
-					Server.photos.post(binding.get('album.id'), model).then(function(res) {
+					window.Server.photos.post(binding.get('album.id'), model).then(function(res) {
 						self.stopUploading();
 						binding.sub('album.photos').update(function(photos) {
 							return photos.unshift(Immutable.fromJS(res));

@@ -1,10 +1,10 @@
-var LoginForm = require('module/ui/login/user/form'),
-	LoginError = require('module/ui/login/user/error'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	LoginUserPage;
+const 	LoginForm 		= require('module/ui/login/user/form'),
+		LoginError 		= require('module/ui/login/user/error'),
+		React 			= require('react'),
+		ReactDOM 		= require('reactDom'),
+		Immutable 		= require('immutable');
 
-LoginUserPage = React.createClass({
+const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount:function(){
 		var self = this,

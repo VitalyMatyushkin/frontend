@@ -1,3 +1,5 @@
+const React = require('react');
+
 var FullScreenList = React.createClass({
 
 	getInitialState: function() {

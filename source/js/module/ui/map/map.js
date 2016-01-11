@@ -1,8 +1,7 @@
-var MapView,
-	React = require('react'),
-	ReactDOM = require('reactDom');
+const 	React 		= require('react'),
+		ReactDOM 	= require('reactDom');
 
-MapView = React.createClass({
+const MapView = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		point: React.PropTypes.shape({

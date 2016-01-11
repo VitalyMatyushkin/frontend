@@ -1,9 +1,9 @@
-var RegisterForm = require('module/as_admin/pages/admin_add/user/form'),
-	RegisterDone = require('module/as_admin/pages/admin_add/user/done'),
-	React = require('react'),
-	RegiseterUserPage;
+const 	RegisterForm 	= require('module/as_admin/pages/admin_add/user/form'),
+		RegisterDone 	= require('module/as_admin/pages/admin_add/user/done'),
+		React 			= require('react'),
+		Immutable 		= require('immutable');
 
-RegiseterUserPage = React.createClass({
+const RegiseterUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.Map({

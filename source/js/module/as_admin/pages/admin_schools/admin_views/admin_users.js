@@ -1,21 +1,23 @@
 /**
  * Created by bridark on 11/06/15.
  */
-var List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
-    Table = require('module/ui/list/table'),
-    TableField = require('module/ui/list/table_field'),
-    DateTimeMixin = require('module/mixins/datetime'),
-    SVG = require('module/ui/svg'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-    userListPage,
-    dialogState,
-    Popup = require('module/ui/popup'),
-    RegisterUser = require('module/ui/register/user'),
-    React = require('react'),
-    theList;
+const   List            = require('module/ui/list/list'),
+        ListField       = require('module/ui/list/list_field'),
+        Table           = require('module/ui/list/table'),
+        TableField      = require('module/ui/list/table_field'),
+        DateTimeMixin   = require('module/mixins/datetime'),
+        SVG             = require('module/ui/svg'),
+        ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin'),
+        Popup           = require('module/ui/popup'),
+        RegisterUser    = require('module/ui/register/user'),
+        React           = require('react'),
+        Immutable       = require('immutable');
 
-userListPage = React.createClass({
+
+let theList, dialogState;
+
+
+const userListPage = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
         var self = this,
