@@ -1,9 +1,13 @@
 /**
  * Created by bridark on 14/07/15.
  */
-var BlogReplyBox,
-    If = require('module/ui/if/if');
-BlogReplyBox = React.createClass({
+const   React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        If          = require('module/ui/if/if'),
+        Immutable   = require('immutable');
+
+
+const BlogReplyBox = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         parentCheckBool: React.PropTypes.bool,

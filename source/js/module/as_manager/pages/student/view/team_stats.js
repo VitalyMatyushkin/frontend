@@ -1,9 +1,11 @@
 /**
  * Created by bridark on 03/05/15.
  */
-var TeamStats,
-    React = require('react');
-TeamStats = React.createClass({
+const   React       = require('react'),
+        Immutable   = require('immutable');
+
+
+const TeamStats = React.createClass({
     mixins: [Morearty.Mixin],
     componentDidMount:function(){
         var self = this,

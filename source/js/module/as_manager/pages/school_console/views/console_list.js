@@ -1,10 +1,12 @@
 /**
  * Created by bridark on 24/06/15.
  */
-var ConsoleList,
-    React = require('react'),
-    SVG = require('module/ui/svg');
-ConsoleList = React.createClass({
+const   React   = require('react'),
+        SVG     = require('module/ui/svg');
+
+// TODO: WTF binding is here ????
+
+const ConsoleList = React.createClass({
     mixins:[Morearty.Mixin],
     _renderListData:function(data){
         return data.map(function(item){

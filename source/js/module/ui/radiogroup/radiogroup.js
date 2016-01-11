@@ -1,9 +1,9 @@
-var RadioGroup,
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	If = require('module/ui/if/if');
+const 	React 		= require('react'),
+		ReactDOM 	= require('reactDom'),
+		Immutable 	= require('immutable'),
+		If 			= require('module/ui/if/if');
 
-RadioGroup = React.createClass({
+const RadioGroup = React.createClass({
 	mixins: [Morearty.Mixin],
     displayName: 'RadioGroup',
 	propTypes: {

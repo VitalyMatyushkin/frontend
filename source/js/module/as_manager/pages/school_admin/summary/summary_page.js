@@ -1,11 +1,11 @@
-var SchoolSummary,
-    SVG = require('module/ui/svg'),
-    Map = require('module/ui/map/map'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    If = require('module/ui/if/if');
+const   SVG         = require('module/ui/svg'),
+        Map         = require('module/ui/map/map'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        If          = require('module/ui/if/if'),
+        Immutable   = require('immutable');
 
-SchoolSummary = React.createClass({
+const SchoolSummary = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
         var self = this,

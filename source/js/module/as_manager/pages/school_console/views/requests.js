@@ -1,9 +1,11 @@
 /**
  * Created by bridark on 19/06/15.
  */
-var SchoolRequest,
-    React = require('react');
-SchoolRequest = React.createClass({
+const   Immutable   = require('immutable'),
+        React       = require('react');
+
+
+const SchoolRequest = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
         var self = this, binding;

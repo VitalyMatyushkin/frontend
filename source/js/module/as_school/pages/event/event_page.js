@@ -1,9 +1,10 @@
-var EventPage,
-	SubMenu = require('module/ui/menu/sub_menu'),
-	OneEvent = require('module/ui/fixtures/one_event'),
-	If = require('module/ui/if/if');
+const 	SubMenu 	= require('module/ui/menu/sub_menu'),
+		OneEvent 	= require('module/ui/fixtures/one_event'),
+		If 			= require('module/ui/if/if'),
+		Immutable 	= require('immutable'),
+		React 		= require('react');
 
-EventPage = React.createClass({
+const EventPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function() {
 		var self = this;
@@ -23,7 +24,7 @@ EventPage = React.createClass({
 			document.location.hash = 'schools';
 		}
 
-		Server.eventFindOne.get({
+		window.Server.eventFindOne.get({
 			filter: {
 				where: {
 					id: eventId

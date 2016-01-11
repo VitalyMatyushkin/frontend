@@ -1,10 +1,11 @@
-var If = require('module/ui/if/if'),
-	SVG = require('module/ui/svg'),
-	InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-	AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
-	EventTeams;
+const 	If 					= require('module/ui/if/if'),
+		SVG 				= require('module/ui/svg'),
+		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		AutocompleteTeam 	= require('module/ui/managers/autocompleteTeam'),
+		React				= require('react'),
+		Immutable			= require('immutable');
 
-EventTeams = React.createClass({
+const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	removePlayer: function (order, playerId) {
 		var self = this,

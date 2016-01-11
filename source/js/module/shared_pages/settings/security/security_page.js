@@ -1,11 +1,11 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	SecuritySettingaPage;
+const 	Form 		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		FormColumn 	= require('module/ui/form/form_column'),
+		React 		= require('react'),
+		ReactDOM 	= require('reactDom'),
+		Immutable 	= require('immutable');
 
-SecuritySettingaPage = React.createClass({
+const SecuritySettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
@@ -48,4 +48,4 @@ SecuritySettingaPage = React.createClass({
 });
 
 
-module.exports = SecuritySettingaPage;
+module.exports = SecuritySettingsPage;

@@ -1,8 +1,8 @@
-var EventRival,
-    If = require('module/ui/if/if'),
-    InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
+const 	If 				= require('module/ui/if/if'),
+		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		React			= require('react');
 
-EventRival = React.createClass({
+const EventRival = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	getPic: function (order) {
 		var self = this,

@@ -1,10 +1,14 @@
-var ListPageMixin,
-    If = require('module/ui/if/if'),
-    GroupAction = require('module/ui/list/group_action'),
-    React = require('react'),
-    Filter = require('module/ui/list/filter'),
-    dataWorker;
-ListPageMixin = {
+const   If          = require('module/ui/if/if'),
+        Filter = require('module/ui/list/filter'),
+        GroupAction = require('module/ui/list/group_action'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable'),
+        $           = require('jquery');
+
+let dataWorker;
+
+const ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any,
 		filters: React.PropTypes.object,
@@ -17,6 +21,7 @@ ListPageMixin = {
             metaBinding = self.getDefaultBinding().meta(),
             binding = self.getDefaultBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
         self.updatePageNumbers = true;

@@ -1,15 +1,15 @@
-var List = require('module/ui/list/list'),
-	ListField = require('module/ui/list/list_field'),
-	Table = require('module/ui/list/table'),
-	TableField = require('module/ui/list/table_field'),
-	DateTimeMixin = require('module/mixins/datetime'),
-	SVG = require('module/ui/svg'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	PermissionsList;
+const 	List 			= require('module/ui/list/list'),
+		ListField 		= require('module/ui/list/list_field'),
+		Table 			= require('module/ui/list/table'),
+		TableField 		= require('module/ui/list/table_field'),
+		DateTimeMixin 	= require('module/mixins/datetime'),
+		SVG 			= require('module/ui/svg'),
+		React 			= require('react'),
+		ReactDOM 		= require('reactDom'),
+		Immutable 		= require('immutable');
 
 
-PermissionsList = React.createClass({
+const PermissionsList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

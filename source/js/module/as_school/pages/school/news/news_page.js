@@ -1,9 +1,9 @@
-var NewsPage,
-	SVG = require('module/ui/svg'),
-	React = require('react'),
-	DateTimeMixin = require('module/mixins/datetime');
+const 	SVG 			= require('module/ui/svg'),
+		React 			= require('react'),
+		Immutable 		= require('immutable'),
+		DateTimeMixin 	= require('module/mixins/datetime');
 
-NewsPage = React.createClass({
+const NewsPage = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	componentWillMount: function () {
 		var self = this,

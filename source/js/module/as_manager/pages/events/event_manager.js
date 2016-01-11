@@ -1,14 +1,14 @@
-var CalendarView = require('module/ui/calendar/calendar'),
-    EventManagerBase = require('./manager/base'),
-    If = require('module/ui/if/if'),
-    TimePicker = require('module/ui/timepicker/timepicker'),
-    Manager = require('module/ui/managers/manager'),
-    classNames = require('classnames'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    EventManager;
+const   CalendarView        = require('module/ui/calendar/calendar'),
+        EventManagerBase    = require('./manager/base'),
+        If                  = require('module/ui/if/if'),
+        TimePicker          = require('module/ui/timepicker/timepicker'),
+        Manager             = require('module/ui/managers/manager'),
+        classNames          = require('classnames'),
+        React               = require('react'),
+        ReactDOM            = require('reactDom'),
+        Immutable           = require('immutable');
 
-EventManager = React.createClass({
+const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
     getMergeStrategy: function () {
         return Morearty.MergeStrategy.MERGE_REPLACE;

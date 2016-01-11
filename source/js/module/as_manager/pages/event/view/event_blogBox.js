@@ -1,10 +1,13 @@
 /**
  * Created by bridark on 14/07/15.
  */
-var CommentBox,
-    BlogReplyBox = require('./event_blogReplyBox'),
-    If = require('module/ui/if/if');
-CommentBox = React.createClass({
+const   BlogReplyBox    = require('./event_blogReplyBox'),
+        If              = require('module/ui/if/if'),
+        React           = require('react'),
+        ReactDOM        = require('reactDom');
+
+
+const CommentBox = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         blogData: React.PropTypes.array,

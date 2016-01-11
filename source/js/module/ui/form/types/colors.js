@@ -1,10 +1,10 @@
-var TypeMixin = require('module/ui/form/types/type_mixin'),
-	ColorsSelect = require('module/ui/colors_select/colors_select'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	TypeColors;
+const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
+		ColorsSelect 	= require('module/ui/colors_select/colors_select'),
+		React 			= require('react'),
+		Immutable 		= require('immutable'),
+		ReactDOM 		= require('reactDom');
 
-TypeColors =  React.createClass({
+const TypeColors =  React.createClass({
 	propTypes: {
 		maxColors: React.PropTypes.number
 	},

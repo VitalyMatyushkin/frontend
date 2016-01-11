@@ -10,8 +10,11 @@
  * NOTE: I'm not sure if binding propagation is good idea, but it was implemented in that way.
  *
  */
-var React = require('react'),
-    ReactDOM = require('reactDom');
+const   React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable 	= require('immutable'),
+        $           = require('jquery');
+
 var Form = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {

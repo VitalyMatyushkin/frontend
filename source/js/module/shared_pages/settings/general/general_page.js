@@ -1,11 +1,11 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-    SVG = require('module/ui/svg'),
-	React = require('react'),
-	GeneralSettingsPage;
+const 	Form 			= require('module/ui/form/form'),
+		FormField 		= require('module/ui/form/form_field'),
+		FormColumn 		= require('module/ui/form/form_column'),
+		SVG 			= require('module/ui/svg'),
+		React 			= require('react'),
+		Immutable 		= require('immutable');
 
-GeneralSettingsPage = React.createClass({
+const GeneralSettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

@@ -1,7 +1,7 @@
-var SchoolListPage,
-	React = require('react');
+const 	React 		= require('react'),
+		Immutable 	= require('immutable');
 
-SchoolListPage = React.createClass({
+const SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,

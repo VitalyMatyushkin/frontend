@@ -1,15 +1,16 @@
 /**
  * Created by bridark on 08/07/15.
  */
-var AccountRequests,
-    If = require('module/ui/if/if'),
-    Popup = require('module/ui/popup'),
-    GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
-    RoleList = require('./role_list'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    SVG = require('module/ui/svg');
-AccountRequests = React.createClass({
+const   If          = require('module/ui/if/if'),
+        Popup       = require('module/ui/popup'),
+        GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+        RoleList    = require('./role_list'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        SVG         = require('module/ui/svg'),
+        Immutable 	= require('immutable');
+
+const AccountRequests = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
         return{

@@ -1,11 +1,13 @@
 /**
  * Created by bridark on 31/07/15.
  */
-var HomeFixtures,
-    DateTimeMixin = require('module/mixins/datetime'),
-    React = require('react'),
-    SVG = require('module/ui/svg');
-HomeFixtures = React.createClass({
+const
+    DateTimeMixin   = require('module/mixins/datetime'),
+    React           = require('react'),
+    Immutable 	    = require('immutable'),
+    SVG             = require('module/ui/svg');
+
+const HomeFixtures = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
     componentWillMount:function(){
         var self = this,

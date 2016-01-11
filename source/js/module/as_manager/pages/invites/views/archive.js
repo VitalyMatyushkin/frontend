@@ -1,10 +1,10 @@
-var ArchiveView,
-	ProcessingView = require('./processing'),
-	InviteOutbox = require('./invite'),
-	React = require('react'),
-	InvitesMixin = require('../mixins/invites_mixin');
+const 	ProcessingView 	= require('./processing'),
+		InviteOutbox 	= require('./invite'),
+		React 			= require('react'),
+		InvitesMixin 	= require('../mixins/invites_mixin'),
+		Immutable		= require('immutable');
 
-ArchiveView = React.createClass({
+const ArchiveView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
     displayName: 'ArchiveView',
 	getMergeStrategy: function () {

@@ -1,15 +1,14 @@
-var Form = require('module/ui/form/form'),
-    FormField = require('module/ui/form/form_field'),
-    FormColumn = require('module/ui/form/form_column'),
-    PermissionsList = require('module/as_manager/pages/school_admin/permissions/permissions_list'),
-    SVG = require('module/ui/svg'),
-    If = require('module/ui/if/if'),
-    Autocomplete = require('module/ui/autocomplete/autocomplete'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    VerificationStep;
+const   Form = require('module/ui/form/form'),
+        FormField = require('module/ui/form/form_field'),
+        FormColumn = require('module/ui/form/form_column'),
+        PermissionsList = require('module/as_manager/pages/school_admin/permissions/permissions_list'),
+        SVG = require('module/ui/svg'),
+        If = require('module/ui/if/if'),
+        Autocomplete = require('module/ui/autocomplete/autocomplete'),
+        React = require('react'),
+        ReactDOM = require('reactDom');
 
-VerificationStep = React.createClass({
+const VerificationStep = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'VerificationStep',
     propTypes: {
@@ -21,7 +20,7 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-		Server.confirmUser.get({
+		window.Server.confirmUser.get({
             uid: accountBinding.get('userId'),
             token: binding.get('emailCode')
         }).then(function () {
@@ -42,7 +41,7 @@ VerificationStep = React.createClass({
             accountBinding = self.getBinding('account'),
             formFieldsBinding = self.getBinding('formFields');
 
-		Server.confirmUserPhone.get({
+		window.Server.confirmUserPhone.get({
             uid: accountBinding.get('userId'),
             token: binding.get('phoneCode')
         }).then(function () {

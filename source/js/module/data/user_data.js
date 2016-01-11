@@ -1,5 +1,7 @@
-var DataPrototype = require('module/data/data_prototype'),
-    UserDataClass = Object.create(DataPrototype);
+const   DataPrototype   = require('module/data/data_prototype'),
+        UserDataClass   = Object.create(DataPrototype),
+        Helpers		    = require('module/helpers/storage'),
+        $               = require('jquery');
 
 /**
  * Getting initial state of UserData

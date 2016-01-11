@@ -1,21 +1,27 @@
 /**
  * Created by bridark on 05/08/15.
  */
-var AddToGallery,
-    Popup = require('module/ui/popup'),
-    SubMenu = require('module/ui/menu/sub_menu'),
-    React = require('react'),
-    If = require('module/ui/if/if');
-AddToGallery = React.createClass({
+const   Popup       = require('module/ui/popup'),
+        SubMenu     = require('module/ui/menu/sub_menu'),
+        React       = require('react'),
+        If          = require('module/ui/if/if'),
+        $           = require('jquery'),
+        Immutable   = require('immutable');
+
+const AddToGallery = React.createClass({
     mixins:[Morearty.Mixin],
     getInitialState:function(){
-        return{expandView:false}
+        return {
+            expandView: false
+        }
     },
+
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeAlbumId = rootBinding.get('routing.parameters.id');
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                rootBinding     = self.getMoreartyContext().getBinding(),
+                activeAlbumId   = rootBinding.get('routing.parameters.id');
+
         self.currentAlbumId = activeAlbumId;
         self.currentSchoolId = rootBinding.get('userRules.activeSchoolId');
         self.menuItems = [{
@@ -33,6 +39,7 @@ AddToGallery = React.createClass({
         });
         self.expandView = false;
     },
+
     _renderPhotoGrid:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -84,6 +91,7 @@ AddToGallery = React.createClass({
             uri = window.apiBase + '/storage/squadintouch_albums_staging',
             fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
         formData.append('file', file, fileName);
+        // TODO: use promised version instead
         $.ajax({
             url: uri + '/upload',
             type: 'POST',
@@ -96,7 +104,7 @@ AddToGallery = React.createClass({
                         authorId: self.currentSchoolId,
                         pic: uri + '/files/' + uploadedFile.name
                     };
-                Server.photos.post(self.currentAlbumId, model);
+                window.Server.photos.post(self.currentAlbumId, model);
                 setTimeout(function() {
                     binding.sub('photos').update(function(photos) {
                         return photos.push(Immutable.fromJS(model));
@@ -115,9 +123,9 @@ AddToGallery = React.createClass({
         });
     },
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            photoLists = self._renderPhotoGrid();
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                photoLists  = self._renderPhotoGrid();
         return (
             <div className="bGalleryAlbumListContainer">
                 <SubMenu binding={binding.sub('galleryList')} items={self.menuItems} />

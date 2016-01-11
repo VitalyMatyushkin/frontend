@@ -1,15 +1,14 @@
-var ApplicationView = require('module/as_school/application'),
-	serviceList = require('module/core/service_list'),
-	userDataInstance = require('module/data/user_data'),
-	authController = require('module/core/auth_controller'),
-	ReactDom = require('reactDom'),
-	React = require('react'),
-	MoreartyContext,
-	binding;
+const 	ApplicationView 	= require('module/as_school/application'),
+		serviceList 		= require('module/core/service_list'),
+		userDataInstance 	= require('module/data/user_data'),
+		authController 		= require('module/core/auth_controller'),
+		ReactDom 			= require('reactDom'),
+		React 				= require('react'),
+		Helpers				= require('module/helpers/storage');
 
 function initMainView(schoolId) {
-	// Создание контекста Morearty
-	MoreartyContext = Morearty.createContext({
+	// creating morearty context
+	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			activeSchoolId: schoolId,
@@ -26,11 +25,11 @@ function initMainView(schoolId) {
 		}
 	});
 
-	binding = MoreartyContext.getBinding();
+	const binding = MoreartyContext.getBinding();
 
 	window.Server = serviceList;
 
-	// Передача связывания контекста в классы данных
+	// setting context binding to data classes
 	userDataInstance.setBinding(binding.sub('userData'));
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
@@ -39,10 +38,10 @@ function initMainView(schoolId) {
         asSchool:true //Flag for public school page
 	});
 
-	// Включение авторизации сервисов
+	// Turning on authorization service
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-	// Инициализация приложения
+	// App init
 	ReactDom.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
@@ -50,7 +49,7 @@ function initMainView(schoolId) {
 }
 
 function init404View() {
-	// Заменить на React
+	// change to React
 	document.body.innerHTML = '<h1 class="b404">404</h1>';
 }
 

@@ -1,21 +1,23 @@
 /**
  * Created by bright boahen on 02/06/15.
  */
-var ParentChildAchievement,
-    SVG = require('module/ui/svg'),
-    AboutMe = require('module/as_manager/pages/student/view/about_me'),
-    UserButtons = require('module/as_manager/pages/student/view/user_buttons'),
-    UserName = require('module/as_manager/pages/student/view/user_name'),
-    UserPhoto = require('module/as_manager/pages/student/view/user_photo'),
-    UserAchievements = require("module/as_manager/pages/student/view/user_achievements"),
-    UserFixtures = require('module/as_manager/pages/student/view/user_fixtures'),
-    TeamStats = require('module/as_manager/pages/student/view/team_stats'),
-    IndicatorView = require('module/ui/progress_indicator/loading_prompt'),
-    React = require('react'),
-    If = require('module/ui/if/if'),
-    progressValue;
+const   SVG                 = require('module/ui/svg'),
+        AboutMe             = require('module/as_manager/pages/student/view/about_me'),
+        UserButtons         = require('module/as_manager/pages/student/view/user_buttons'),
+        UserName            = require('module/as_manager/pages/student/view/user_name'),
+        UserPhoto           = require('module/as_manager/pages/student/view/user_photo'),
+        UserAchievements    = require("module/as_manager/pages/student/view/user_achievements"),
+        UserFixtures        = require('module/as_manager/pages/student/view/user_fixtures'),
+        TeamStats           = require('module/as_manager/pages/student/view/team_stats'),
+        IndicatorView       = require('module/ui/progress_indicator/loading_prompt'),
+        React               = require('react'),
+        If                  = require('module/ui/if/if'),
+        Immutable           = require('immutable');
 
-ParentChildAchievement = React.createClass({
+
+let progressValue;
+
+const ParentChildAchievement = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount:function(){
         var self = this,
@@ -38,27 +40,27 @@ ParentChildAchievement = React.createClass({
                 }
             }).then(function (data) {
                 leanerData = data;
-                return Server.form.get(data.formId).then(function (classData) {
+                return window.Server.form.get(data.formId).then(function (classData) {
                     leanerData.classData = classData;
-                    return Server.house.get(data.houseId).then(function (houseData) {
+                    return window.Server.house.get(data.houseId).then(function (houseData) {
                         leanerData.houseData = houseData;
-                        return Server.school.get(data.schoolId).then(function (schoolData) {
+                        return window.Server.school.get(data.schoolId).then(function (schoolData) {
                             leanerData.schoolData = schoolData;
-                            return Server.studentGamesWon.get({
+                            return window.Server.studentGamesWon.get({
                                 id: studentId,
                                 include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
                             }).then(function (gamesWon) {
                                 leanerData.gamesWon = gamesWon;
                                 self.numOfGamesWon = gamesWon.length;
                                 leanerData.numOfGamesWon = gamesWon.length;
-                                return Server.studentGamesScored.get({
+                                return window.Server.studentGamesScored.get({
                                     id: studentId,
                                     include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
                                 }).then(function (gamesScoredIn) {
                                     leanerData.gamesScoredIn = gamesScoredIn;
                                     self.numOfGamesScoredIn = gamesScoredIn.length;
                                     leanerData.numOfGamesScoredIn = gamesScoredIn.length;
-                                    return Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
+                                    return window.Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
                                         leanerData.numberOfGamesPlayed = gamesPlayed.length;
                                         self.numberOfGamesPlayed = gamesPlayed.length;
                                         leanerData.schoolEvent = gamesPlayed;

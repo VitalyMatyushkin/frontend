@@ -2,20 +2,21 @@
  * Created by bridark on 09/06/15.
  */
     //TODO: Refactoring
-var SchoolDetail,
-    SVG = require('module/ui/svg'),
-    Map = require('module/ui/map/map'),
-    If = require('module/ui/if/if'),
-    Popup = require('module/ui/popup'),
-    popupChildren,
-    React = require('react'),
+const   Map         = require('module/ui/map/map'),
+        If          = require('module/ui/if/if'),
+        Popup       = require('module/ui/popup'),
+        React       = require('react'),
+        Immutable   = require('immutable');
+
+
+let popupChildren,
     managerList,
     schoolOfficial,
     adminsList,
     teachersList,
     coachesList;
 
-SchoolDetail = React.createClass({
+const SchoolDetail = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
         var self = this,

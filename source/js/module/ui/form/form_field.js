@@ -1,8 +1,8 @@
-var FormField,
-	React = require('react'),
-	typeList = require('module/ui/form/types/type_list');
+const 	React 		= require('react'),
+		Immutable 	= require('immutable'),
+		typeList 	= require('module/ui/form/types/type_list');
 
-FormField = React.createClass({
+const FormField = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.Map({

@@ -1,9 +1,11 @@
-var If = require('module/ui/if/if'),
-		InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		RouterView = require('module/core/router'),
-		Route = require('module/core/route');
+const 	If 				= require('module/ui/if/if'),
+		React 			= require('react'),
+		Immutable 		= require('immutable'),
+		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		RouterView 		= require('module/core/router'),
+		Route 			= require('module/core/route');
 
-var EventHeader = React.createClass({
+const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	renderAlbum: function(album, index) {
 		var self = this,

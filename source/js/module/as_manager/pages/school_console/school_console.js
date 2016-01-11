@@ -1,13 +1,15 @@
 /**
  * Created by bridark on 19/06/15.
  */
-var SchoolConsole,
-    RouterView = require('module/core/router'),
-    Route = require('module/core/route'),
-    SubMenu = require('module/ui/menu/sub_menu'),
-    React = require('react'),
-    liveRequestCount;
-SchoolConsole = React.createClass({
+const   RouterView  = require('module/core/router'),
+        Route       = require('module/core/route'),
+        SubMenu     = require('module/ui/menu/sub_menu'),
+        React       = require('react'),
+        Immutable   = require('immutable');
+
+let liveRequestCount;
+
+const SchoolConsole = React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultState: function () {
         return Immutable.fromJS({

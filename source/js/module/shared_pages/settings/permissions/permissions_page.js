@@ -1,10 +1,10 @@
-var PermissionsSettingsPage,
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	RouterView = require('module/core/router'),
-	Route = require('module/core/route');
+const 	React 		= require('react'),
+		ReactDOM 	= require('reactDom'),
+		RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route'),
+		Immutable 	= require('immutable');
 
-PermissionsSettingsPage = React.createClass({
+const PermissionsSettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

@@ -1,11 +1,11 @@
-var SettingsPage,
-	RouterView = require('module/core/router'),
-	Route = require('module/core/route'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	SubMenu = require('module/ui/menu/sub_menu');
+const 	RouterView = require('module/core/router'),
+		Route = require('module/core/route'),
+		React = require('react'),
+		ReactDOM = require('reactDom'),
+		SubMenu = require('module/ui/menu/sub_menu'),
+		Immutable 	= require('immutable');
 
-SettingsPage = React.createClass({
+const SettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,

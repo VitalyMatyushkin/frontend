@@ -1,12 +1,12 @@
-var OneSchoolPage,
-	RouterView = require('module/core/router'),
-	Route = require('module/core/route'),
-	SubMenu = require('module/ui/menu/sub_menu'),
-	SchoolInfo = require('module/as_school/pages/school/view/school_info'),
-	React = require('react'),
-	SchoolName = require('module/as_school/pages/school/view/school_name');
+const 	RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route'),
+		SubMenu 	= require('module/ui/menu/sub_menu'),
+		SchoolInfo 	= require('module/as_school/pages/school/view/school_info'),
+		React 		= require('react'),
+		Immutable 	= require('immutable'),
+		SchoolName 	= require('module/as_school/pages/school/view/school_name');
 
-OneSchoolPage = React.createClass({
+const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({

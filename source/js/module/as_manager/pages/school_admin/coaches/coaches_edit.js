@@ -1,8 +1,8 @@
-var CoachesForm = require('module/as_manager/pages/school_admin/permissions/permissions_form'),
-	React = require('react'),
-	NewsEditPage;
+const 	CoachesForm = require('module/as_manager/pages/school_admin/permissions/permissions_form'),
+		React = require('react'),
+		Immutable = require('immutable');
 
-NewsEditPage = React.createClass({
+const NewsEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
