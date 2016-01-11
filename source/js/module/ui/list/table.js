@@ -75,7 +75,7 @@ const Table = React.createClass({
         self._oldUpdateFilterState(field, value);
 
         if(self.props.getDataPromise) {
-            self.filter.setOrder(field, value);
+            self.filter.setOrder(field, value.order);
         }
     },
     _onChangePage:function(changes){

@@ -28,7 +28,7 @@ AdminPermissionView = React.createClass({
         return window.Server.Permissions.get({filter:filter});
     },
     getTotalCountPromise:function(where){
-        return window.Server.getTotalNumberOfUserModels.get({where:where});
+        return window.Server.PermissionCount.get({where:where});
     },
     getFullName:function(principal){
         if(principal !== undefined){
