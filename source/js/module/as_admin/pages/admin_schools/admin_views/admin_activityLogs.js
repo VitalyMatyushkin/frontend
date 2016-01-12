@@ -13,7 +13,12 @@ ActivityLogPage = React.createClass({
     serviceName:'activityLogs',
     filters: {limit:40},
     serviceCount:'logCount',
-    isPaginated: true,
+    _getDataPromise:function(filter){
+        return window.Server.activityLogs.get({filter:filter});
+    },
+    _getTotalCountPromise:function(where){
+        return window.Server.logCount.get({where:where});
+    },
     getPrincipal: function(principal) {
         return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
     },
@@ -38,7 +43,9 @@ ActivityLogPage = React.createClass({
             binding = self.getDefaultBinding();
 
         return (
-            <Table title="Activity Logs" binding={binding} onFilterChange={self.updateData} hideActions={true}>
+            <Table  title="Activity Logs" binding={binding} hideActions={true}
+                    isPaginated={true} filter={self.filter} getDataPromise={self._getDataPromise}
+                    getTotalCountPromise={self._getTotalCountPromise}>
                 <TableField dataField="meta" width="35%" filterType="none" parseFunction={self.getDate}>Date</TableField>
                 <TableField dataField="method" width="10%">Method</TableField>
                 <TableField dataField="responseTime" width="15%">Duration</TableField>

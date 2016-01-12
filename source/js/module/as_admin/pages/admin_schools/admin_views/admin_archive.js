@@ -2,19 +2,15 @@
  * Created by bridark on 24/06/15.
  */
 var AdminArchive,
-    List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
     Table = require('module/ui/list/table'),
     TableField = require('module/ui/list/table_field'),
     DateTimeMixin = require('module/mixins/datetime'),
     React = require('react'),
-    ReactDOM = require('reactDom'),
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
 AdminArchive = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
     serviceName:'Permissions',
     filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created ASC'},
-    sandbox:true,
     getRequestDate:function(meta){
         var self = this;
         return self.getDateFromIso(meta.created);
@@ -49,7 +45,9 @@ AdminArchive = React.createClass({
             binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" binding={binding}  onFilterChange={self.updateData} hideActions={true}>
+                <Table title="Permissions" binding={binding}  hideActions={true}
+                       isPaginated={true} getDataPromise={self.getDataPromise}
+                       getTotalCountPromise={self.getTotalCountPromise} filter={self.filter}>
                     <TableField dataField="meta" filterType="none" parseFunction={self.getRequestDate} width="17%">Date</TableField>
                     <TableField dataField="preset" width="10%" dataFieldKey="preset">Request</TableField>
                     <TableField dataField="principal" dataFieldKey="lastName" parseFunction={self.getRequestPrincipalName} width="20%">From</TableField>

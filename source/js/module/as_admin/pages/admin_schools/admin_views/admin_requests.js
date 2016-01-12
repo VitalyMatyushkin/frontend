@@ -1,9 +1,7 @@
 /**
  * Created by bridark on 24/06/15.
  */
-const   List            = require('module/ui/list/list'),
-        ListField       = require('module/ui/list/list_field'),
-        Table           = require('module/ui/list/table'),
+const   Table           = require('module/ui/list/table'),
         TableField      = require('module/ui/list/table_field'),
         DateTimeMixin   = require('module/mixins/datetime'),
         React           = require('react'),
@@ -86,7 +84,10 @@ const AdminRequest = React.createClass({
             binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" binding={binding} addQuickActions={true} quickEditActionsFactory={self._getQuickEditActionFunctions} quickEditActions={self.groupActionList} onFilterChange={self.updateData}>
+                <Table title="Permissions" binding={binding} addQuickActions={true}
+                       quickEditActionsFactory={self._getQuickEditActionFunctions}
+                       quickEditActions={self.groupActionList} isPaginated={true} getDataPromise={self.getDataPromise}
+                       getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
                     <TableField dataField="school" filterType="none" width="20%" parseFunction={self.getSchoolName}>School</TableField>
                     <TableField dataField="school" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                     <TableField dataField="principal" filterType="none" width="20%" parseFunction={self.getPrincipalEmail}>Email</TableField>

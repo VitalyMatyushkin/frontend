@@ -44,14 +44,14 @@ const Table = React.createClass({
         self._oldFilters = {}; // old functional filters
 
         self._loadData();
+        self._getTotalCount();
 	},
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-
-        binding.addListener('pagination.pageNumber', self._onChangePage);
-        binding.addListener('filter',self._loadData);
-        binding.addListener('filter.where',self._getTotalCount);
+        this.addBindingListener(binding, 'pagination.pageNumber', self._onChangePage);
+        this.addBindingListener(binding, 'filter',self._loadData);
+        this.addBindingListener(binding, 'filter.where',self._getTotalCount);
     },
     componentWillUnmount: function () {
         var self = this,
@@ -87,7 +87,7 @@ const Table = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             filter = self.filter.getFilters();
-
+        console.log('Table load data started');
         if(self.props.getDataPromise) {
             self.request = self.props.getDataPromise(filter).then(function (data) {
                 binding.set('data', Immutable.fromJS(data));

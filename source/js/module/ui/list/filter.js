@@ -1,6 +1,3 @@
-/**
- * Created by Anatoly on 05.01.2016.
- */
 
 const defaultPageLimit = 20;
 
@@ -32,12 +29,14 @@ filter.prototype.getFilters = function(){
 };
 
 filter.prototype.setFilters = function(value){
-    var self = this;
+    const   self = this,
+            transaction = self._binding.atomically();
 
     for(var key in value){
         self[key] = value[key];
-        self._binding.set(key, self[key]);
+        transaction.set(key, self[key]);
     }
+    transaction.commit({ notify: false });
 };
 
 filter.prototype.setPageLimit = function(pageLimit){
@@ -110,7 +109,5 @@ filter.prototype.setWhere = function(value){
     self.where = value;
     self._binding.set('where', self.where);
 };
-
-
 
 module.exports = filter;

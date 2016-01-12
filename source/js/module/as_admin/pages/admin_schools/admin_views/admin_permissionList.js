@@ -1,17 +1,14 @@
 /**
  * Created by bridark on 24/06/15.
  */
-var AdminPermissionView,
-    List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
-    Table = require('module/ui/list/table'),
-    TableField = require('module/ui/list/table_field'),
-    DateTimeMixin = require('module/mixins/datetime'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-    GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
-    React = require('react'),
-    Popup = require('module/ui/popup');
-AdminPermissionView = React.createClass({
+const   Table = require('module/ui/list/table'),
+        TableField = require('module/ui/list/table_field'),
+        DateTimeMixin = require('module/mixins/datetime'),
+        ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+        GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+        React = require('react'),
+        Popup = require('module/ui/popup');
+const AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'Permissions',
     filters:{
@@ -24,12 +21,6 @@ AdminPermissionView = React.createClass({
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     isSuperAdminPage: true,
     sandbox:false,
-    getDataPromise:function(filter){
-        return window.Server.Permissions.get({filter:filter});
-    },
-    getTotalCountPromise:function(where){
-        return window.Server.PermissionCount.get({where:where});
-    },
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;
@@ -229,9 +220,9 @@ AdminPermissionView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" filter={self.filter} quickEditActionsFactory={self._getQuickEditActionsFactory}
-                       quickEditActions={self.groupActionList} binding={binding} addQuickActions={true}
-                       isPaginated={true} getDataPromise={self.getDataPromise}
+                <Table title="Permissions" binding={binding} quickEditActionsFactory={self._getQuickEditActionsFactory}
+                       quickEditActions={self.groupActionList} addQuickActions={true}
+                       isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} >
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="principal" width="10%" dataFieldKey="firstName" parseFunction={self.getFirstName}>Name</TableField>

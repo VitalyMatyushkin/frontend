@@ -15,6 +15,9 @@ var List = require('module/ui/list/list'),
 SchoolListPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     serviceName:'schools',
+    _getDataPromise:function(filter){
+        return window.Server.schools.get({filter:filter});
+    },
     getSchoolLogo:function(logo){
         if(logo){
             return (
@@ -47,7 +50,8 @@ SchoolListPage = React.createClass({
             binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
-                <Table title="Schools" binding={binding} onItemRemove={self._getItemRemoveFunction} onFilterChange={self.updateData}>
+                <Table title="Schools" binding={binding} onItemRemove={self._getItemRemoveFunction}
+                       isPaginated={false} filter={self.filter} getDataPromise={self._getDataPromise}>
                     <TableField dataField="pic" width="1%" filterType="none" parseFunction={self.getSchoolLogo}>Logo</TableField>
                     <TableField dataField="name" width="14%">School</TableField>
                     <TableField dataField="phone" filterType="none" width="10%">Telephone</TableField>
