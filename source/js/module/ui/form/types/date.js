@@ -32,7 +32,7 @@ TypeDate =  React.createClass({
 	},
 	_converToIso: function(dotString) {
 		var self = this,
-			dateParts = dotString.split('.'),
+			dateParts = dotString !== undefined ? dotString.split('.'):'',
 			inputDate = new Date();
 
 		if (dateParts.length === 3 && (dateParts[0] > 0 && dateParts[0] < 13) && (dateParts[1] > 0 && dateParts[1] < 32) && (dateParts[2])) {

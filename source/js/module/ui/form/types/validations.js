@@ -14,6 +14,16 @@ var validationsSet = {
 			return false;
 		}
 	},
+	date:function(value){
+		//TODO implement this properly
+		//console.log(value);
+		//if(!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))){
+		//	return 'Please fill out this field';
+		//}else{
+		//	return false;
+		//}
+		return false;
+	},
 	email: function(value) {
 		var self = this;
 

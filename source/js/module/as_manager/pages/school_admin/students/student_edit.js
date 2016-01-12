@@ -23,7 +23,9 @@ const StudentEditPage = React.createClass({
 					data.birthday = userdata.birthday;
 					data.gender = userdata.gender;
 					self.isMounted() && binding.set(Immutable.fromJS(data));
+					return userdata;
 				});
+				return data;
 			});
 
 			self.activeSchoolId = activeSchoolId;
