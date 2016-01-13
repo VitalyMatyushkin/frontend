@@ -1,11 +1,10 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	Promise = require('bluebird'),
-	React = require('react'),
-	StudentForm;
+const 	Form		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		FormColumn 	= require('module/ui/form/form_column'),
+		Promise 	= require('bluebird'),
+		React 		= require('react');
 
-StudentForm = React.createClass({
+const StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		schoolId: React.PropTypes.string.isRequired,
@@ -13,21 +12,21 @@ StudentForm = React.createClass({
 		onFormSubmit: React.PropTypes.func
 	},
 	getClassService: function() {
-		var self = this;
+		const self = this;
 		return function() {
 			return window.Server.forms.get(self.props.schoolId);
 		}
 	},
 	getHouseService: function() {
-		var self = this;
+		const self = this;
 
 		return function() {
 			return window.Server.houses.get(self.props.schoolId);
 		}
 	},
 	getGender: function() {
-		var self = this,
-			gendersArray = [
+		const 	self = this,
+				gendersArray = [
 				{
 					value: 'boy',
 					id: 'male'
