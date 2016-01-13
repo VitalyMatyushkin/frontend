@@ -1,4 +1,5 @@
 const 	Immutable 	= require('immutable'),
+		//Router = require('Router'),
 		React 		= require('react');
 
 
@@ -44,6 +45,7 @@ const RouterView = React.createClass({
 	 */
 	_getRouteFromComponent: function(routeComponent) {
 		var self = this,
+			binding = self.getDefaultBinding(),
 			routePath = routeComponent.props.path.split(' '),
 			routes = [];
 
@@ -192,7 +194,7 @@ const RouterView = React.createClass({
 		// router init
 		self.updateUrlParametrs();
 
-		self.routerInstance = Router(self.siteRoutes);
+		self.routerInstance = window.Router(self.siteRoutes);
 		self.routerInstance.init();
 	},
 	render: function() {

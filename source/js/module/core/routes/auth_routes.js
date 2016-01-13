@@ -13,7 +13,8 @@ AuthRoutes = React.createClass({
 		unauthorizedAccess: React.PropTypes.bool
 	},
 	render: function() {
-		var self = this;
+		var self = this,
+			binding = self.getDefaultBinding();
 
 		return (
 			<span>

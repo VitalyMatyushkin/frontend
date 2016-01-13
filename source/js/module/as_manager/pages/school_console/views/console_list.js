@@ -9,6 +9,8 @@ const   React   = require('react'),
 const ConsoleList = React.createClass({
     mixins:[Morearty.Mixin],
     _renderListData:function(data){
+        var self = this,
+            binding = self.getDefaultBinding();
         return data.map(function(item){
             var deleteEntry = function (entryId, entryName, state) {
                 return function(event){
