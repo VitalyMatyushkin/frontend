@@ -52,6 +52,7 @@ const Table = React.createClass({
         this.addBindingListener(binding, 'pagination.pageNumber', self._onChangePage);
         this.addBindingListener(binding, 'filter',self._loadData);
         this.addBindingListener(binding, 'filter.where',self._getTotalCount);
+        this.addBindingListener(binding, 'onReload',self.onReload);
     },
     componentWillUnmount: function () {
         var self = this,
@@ -105,6 +106,17 @@ const Table = React.createClass({
                     binding.set('pagination.totalCount', data.count);
                 }
             });
+        }
+    },
+    onReload:function(){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            reload = binding.get('onReload');
+
+        if(reload){
+            binding.set('onReload', false);
+            self._loadData();
+            self._getTotalCount();
         }
     },
     _oldUpdateFilterState: function(field, value) {

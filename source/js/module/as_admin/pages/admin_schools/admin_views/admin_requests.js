@@ -36,7 +36,7 @@ const AdminRequest = React.createClass({
 		const   self                = this,
 			    action              = event.currentTarget.textContent,
                 id                  = event.currentTarget.parentNode.dataset.userobj,
-                binding             = self.getDefaultBinding(),
+                binding             = self.getDefaultBinding().sub('data'),
                 globalBinding       = self.getMoreartyContext().getBinding(),
                 currentPermission   = self.getCurrentPermission(id, binding.toJS());
 
@@ -65,7 +65,7 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.Permission.setPermissions.post({id:id},{accepted:false}).then(function(){
+                    window.Server.setPermissions.post({id:id},{accepted:false}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== id;

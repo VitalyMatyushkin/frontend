@@ -41,6 +41,7 @@ SchoolListPage = React.createClass({
                             return res.get('id') !== model.id;
                         });
                     });
+                    self.reloadData();
                 }
             );
         }

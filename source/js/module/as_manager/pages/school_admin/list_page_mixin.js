@@ -39,6 +39,14 @@ const ListPageMixin = {
         clearTimeout(self.timeoutId);
         binding.clear();
 	},
+    getInitialState:function(){
+        return {
+            onReload:false
+        };
+    },
+    reloadData:function(){
+        this.stat.onReload = true;
+    },
     getDataPromise:function(filter){
         return window.Server.Permissions.get({filter:filter});
     },

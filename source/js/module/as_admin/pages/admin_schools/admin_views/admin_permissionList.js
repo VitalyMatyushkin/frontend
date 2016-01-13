@@ -69,7 +69,7 @@ const AdminPermissionView = React.createClass({
     _getQuickEditActionsFactory:function(evt){
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
-            binding = self.getDefaultBinding(),
+            binding = self.getDefaultBinding().sub('data'),
             idAutoComplete = [],
             userId = evt.currentTarget.parentNode.dataset.userobj,
             currentAction;
