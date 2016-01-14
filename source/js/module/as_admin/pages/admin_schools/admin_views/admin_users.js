@@ -1,14 +1,7 @@
 /**
  * Created by bridark on 11/06/15.
  */
-const   List            = require('module/ui/list/list'),
-        ListField       = require('module/ui/list/list_field'),
-        Table           = require('module/ui/list/table'),
-        TableField      = require('module/ui/list/table_field'),
-        DateTimeMixin   = require('module/mixins/datetime'),
-        SVG             = require('module/ui/svg'),
-        ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin'),
-        Popup           = require('module/ui/popup'),
+const   Popup           = require('module/ui/popup'),
         RegisterUser    = require('module/ui/register/user'),
         React           = require('react'),
         Immutable       = require('immutable');

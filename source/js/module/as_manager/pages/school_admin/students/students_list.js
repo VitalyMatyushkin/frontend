@@ -1,22 +1,17 @@
-var List = require('module/ui/list/list'),
-	ListField = require('module/ui/list/list_field'),
-	Table = require('module/ui/list/table'),
+const Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
 	DateTimeMixin = require('module/mixins/datetime'),
 	SVG = require('module/ui/svg'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-	React = require('react'),
-	StudentsListPage;
+	React = require('react');
 
-StudentsListPage = React.createClass({
+const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'students',
 	filters: {
 		include: ['user','form','parents']
 	},
     sandbox:true,
-    isPaginated: true,
-    pageLimit: 20,
 	_getViewFunction: function() {
 		var self = this;
 
@@ -79,11 +74,20 @@ StudentsListPage = React.createClass({
             return user.lastName;
         }
 	},
+
+	_getDataPromise:function(filter){
+		return window.Server.students.get(this.activeSchoolId, {filter:filter});
+	},
+	_getTotalCountPromise:function(where){
+		return window.Server.studentsCount.get(this.activeSchoolId, {where:where});
+	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
-			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
+			<Table title="Students" binding={binding} onItemView={self._getViewFunction()}
+				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
+				   getDataPromise={self._getDataPromise} getTotalCountPromise={self._getTotalCountPromise} >
 				<TableField width="3%" dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
 				<TableField width="15%" dataField="user" dataFieldKey="firstName" parseFunction={self.getFirstName}>First name</TableField>
 				<TableField width="15%" dataField="user" dataFieldKey="lastName" parseFunction={self.getLastName}>Last name</TableField>

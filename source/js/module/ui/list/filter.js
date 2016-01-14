@@ -44,8 +44,9 @@ filter.prototype.setPageLimit = function(pageLimit){
 
     if(pageLimit)
         self.limit = pageLimit;
-    else
+    else if(!self.limit)
         self.limit = defaultPageLimit;
+
     self._binding.set('limit', self.limit);
 };
 
