@@ -6,7 +6,8 @@ var MASK_REGEX = {
 	MASK_CHARS = Object.keys(MASK_REGEX),
 	PTRN_REGEX = new RegExp('[' + MASK_CHARS.join(',') + ']', 'g'),
 	MaskedInput,
-	React = require('react');
+	React = require('react'),
+	ReactDOM = require('reactDom');
 
 var MaskedInput = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -30,7 +31,7 @@ var MaskedInput = React.createClass({
 	},
 
 	componentDidUpdate: function () {
-		this.getDOMNode().setSelectionRange(
+		ReactDOM.findDOMNode(this).setSelectionRange(
 			this.mask.cursor,
 			this.mask.cursor
 		)
@@ -84,7 +85,7 @@ var MaskedInput = React.createClass({
 		}
 
 		var cursorPrev = this.mask.cursor;
-		var cursorCurr = this.isMounted() ? this.getDOMNode().selectionStart : 0;
+		var cursorCurr = this.isMounted() ? ReactDOM.findDOMNode(this).selectionStart : 0;
 		var removing = this.mask.cursor > cursorCurr;
 		cursorMax = Math.max(cursorMax, cursorMin);
 		if (cursorCurr <= cursorMin) {
@@ -154,7 +155,7 @@ var MaskedInput = React.createClass({
 
 	_onKeyDown: function (e) {
 		if (this.props.mask) {
-			this.mask.cursor = this.getDOMNode().selectionStart
+			this.mask.cursor = ReactDOM.findDOMNode(this).selectionStart
 		}
 		if (this.props.onKeyDown) {
 			this.props.onKeyDown(e)

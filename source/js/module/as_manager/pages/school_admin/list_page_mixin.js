@@ -62,6 +62,9 @@ const ListPageMixin = {
 			document.location.hash = document.location.hash + '/edit?id=' + data.id;
 		}
 	},
+    _getAddNewStudentFunction:function(){
+        document.location.hash = document.location.hash +'/add';
+    },
 	toggleFilters: function() {
 		var self = this,
 			metaBinding = self.getDefaultBinding().meta(),
@@ -163,6 +166,9 @@ const ListPageMixin = {
                             </div>
                         </If>
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
+                        <If condition={currentPage[currentPage.length-1] ==='students'}>
+                            <div className="bButton" onClick={self._getAddNewStudentFunction}>Add New Student</div>
+                        </If>
                     </div>
                 </div>
 				{self.getTableView()}

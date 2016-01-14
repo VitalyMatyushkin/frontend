@@ -12,21 +12,21 @@ const FormField = React.createClass({
 		});
 	},
 	propTypes: {
-		type: React.PropTypes.string.isRequired,
-		field: React.PropTypes.string.isRequired,
-		defaultValueString:React.PropTypes.string
+		type: 				React.PropTypes.string.isRequired,
+		field: 				React.PropTypes.string.isRequired,
+		defaultValueString:	React.PropTypes.string
 	},
 	render: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			inputField = React.createElement(typeList[self.props.type], self.props),
-			fieldStyleClass = 'eForm_fieldSet';
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
+		let 	inputField 		= React.createElement(typeList[self.props.type], self.props),
+				fieldStyleClass = 'eForm_fieldSet';
 
 		// TODO: Emhh...
 		inputField = React.cloneElement(inputField, {
-			name: self.props.children,
-			service: self.props.service,
-			binding: self.getDefaultBinding()
+			name: 		self.props.children,
+			service: 	self.props.service,
+			binding: 	self.getDefaultBinding()
 		});
 
 		if (binding.get('showError')) {
