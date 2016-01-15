@@ -80,6 +80,7 @@ serviceList = {
 
 		// news
 		serviceList.news = new Service('/schools/{schoolId}/news', binding);
+		serviceList.newsCount = new Service('/schools/{schoolId}/news/count', binding);
 		serviceList.oneNews = new Service('/news/{formId}', binding);
 
 		//events

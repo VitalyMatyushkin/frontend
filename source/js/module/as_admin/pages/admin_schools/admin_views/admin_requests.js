@@ -11,6 +11,7 @@ const   Table           = require('module/ui/list/table'),
 const AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     serviceName:'Permissions',
+    serviceCount:'PermissionCount',
     groupActionList:['Accept','Decline'],
     filters:{include:['principal','school']},
     getSchoolName:function(school){

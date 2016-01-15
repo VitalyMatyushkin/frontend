@@ -11,6 +11,7 @@ const   Table = require('module/ui/list/table'),
 const AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'Permissions',
+    serviceCount:'PermissionCount',
     filters:{
         include:['principal','school']
         ,where:{

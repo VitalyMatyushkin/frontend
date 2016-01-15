@@ -52,12 +52,12 @@ const OneSchoolPage = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			classes: {
-				classesList: [],
+				classesList: {},
 				classesRouting: {},
 				classesForm: {}
 			},
 			houses: {
-				housesList: [],
+				housesList: {},
 				housesRouting: {},
 				housesForm: {}
 			},
@@ -67,7 +67,7 @@ const OneSchoolPage = React.createClass({
 				studentForm: {}
 			},
 			news: {
-				newsList: [],
+				newsList: {},
 				newsRouting: {},
 				newsForm: {}
 			},

@@ -8,6 +8,7 @@ const Table = require('module/ui/list/table'),
 const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'students',
+    serviceCount:'studentsCount',
 	filters: {
 		include: ['user','form','parents']
 	},
@@ -74,20 +75,13 @@ const StudentsListPage = React.createClass({
             return user.lastName;
         }
 	},
-
-	_getDataPromise:function(filter){
-		return window.Server.students.get(this.activeSchoolId, {filter:filter});
-	},
-	_getTotalCountPromise:function(where){
-		return window.Server.studentsCount.get(this.activeSchoolId, {where:where});
-	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
 			<Table title="Students" binding={binding} onItemView={self._getViewFunction()}
 				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
-				   getDataPromise={self._getDataPromise} getTotalCountPromise={self._getTotalCountPromise} >
+				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField width="3%" dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
 				<TableField width="15%" dataField="user" dataFieldKey="firstName" parseFunction={self.getFirstName}>First name</TableField>
 				<TableField width="15%" dataField="user" dataFieldKey="lastName" parseFunction={self.getLastName}>Last name</TableField>

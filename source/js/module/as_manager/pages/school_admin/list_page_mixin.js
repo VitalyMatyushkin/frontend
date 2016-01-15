@@ -48,10 +48,20 @@ const ListPageMixin = {
     //    this.setState({onReload:true});
     //},
     getDataPromise:function(filter){
-        return window.Server.Permissions.get({filter:filter});
+        const self = this;
+
+        if(self.activeSchoolId !== null && self.serviceName)
+            return window.Server[self.serviceName].get(self.activeSchoolId, { filter: filter });
+
+        return window.Server[self.serviceName].get({filter:filter});
     },
     getTotalCountPromise:function(where){
-        return window.Server.PermissionCount.get({where:where});
+        const self = this;
+
+        if(self.activeSchoolId !== null && self.serviceCount)
+            return window.Server[self.serviceCount].get(self.activeSchoolId, { where: where });
+
+        return window.Server[self.serviceCount].get({where:where});
     },
 	_getEditFunction: function() {
 		var self = this;

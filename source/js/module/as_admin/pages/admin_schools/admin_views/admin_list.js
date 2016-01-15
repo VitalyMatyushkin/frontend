@@ -1,23 +1,15 @@
 /**
  * Created by bridark on 09/06/15.
  */
-var List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
-    Table = require('module/ui/list/table'),
-    TableField = require('module/ui/list/table_field'),
-    DateTimeMixin = require('module/mixins/datetime'),
-    SVG = require('module/ui/svg'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-    React = require('react'),
-    SchoolListPage,
-    theList;
+const   Table = require('module/ui/list/table'),
+        TableField = require('module/ui/list/table_field'),
+        DateTimeMixin = require('module/mixins/datetime'),
+        ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+        React = require('react');
 
-SchoolListPage = React.createClass({
+const SchoolListPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     serviceName:'schools',
-    _getDataPromise:function(filter){
-        return window.Server.schools.get({filter:filter});
-    },
     getSchoolLogo:function(logo){
         if(logo){
             return (
@@ -52,7 +44,7 @@ SchoolListPage = React.createClass({
         return (
             <div className="eTable_view">
                 <Table title="Schools" binding={binding} onItemRemove={self._getItemRemoveFunction}
-                       isPaginated={false} filter={self.filter} getDataPromise={self._getDataPromise}>
+                       getDataPromise={self.getDataPromise}>
                     <TableField dataField="pic" width="1%" filterType="none" parseFunction={self.getSchoolLogo}>Logo</TableField>
                     <TableField dataField="name" width="14%">School</TableField>
                     <TableField dataField="phone" filterType="none" width="10%">Telephone</TableField>
