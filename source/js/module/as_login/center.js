@@ -71,40 +71,4 @@ const Center = React.createClass({
 
 });
 
-/*
- render: function() {
-
- return (
- <div className={mainClass}>
- <div className="bPageWrap">
- <RouterView routes={ binding.sub('routing') } binding={binding}>
- <RegisterRoute binding={binding.sub('form.register')}	/>
- <LoginRoute binding={binding.sub('userData')}	/>
- <LogoutRoute binding={binding.sub('userData')}	/>
-
- <SettingsRoute binding={binding.sub('userData')} />
-
- <Route path="/student" binding={binding.sub('studentPage')} component="module/as_manager/pages/student/student_page" />
-
- <Route path="/profile/:schoolID" binding={binding.sub('schoolProfile')} component="module/as_manager/pages/school_profile/school_profile_page"	/>
-
- <Route path="/school_admin/:subPage /school_admin/:subPage/:mode" binding={binding.sub('activeSchool')} component="module/as_manager/pages/school_admin/school_page"	/>
-
- <Route path="/schools /schools/:subPage" binding={binding.sub('schoolsPage')} component="module/as_manager/pages/schools/schools_page"	/>
-
-
- <Route path="/events /events/:subPage" binding={binding.sub('events')} component="module/as_manager/pages/events/events"  />
- <Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')} component="module/as_manager/pages/event/event"  />
- <Route path="/albums /albums/:mode/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums" />
- <Route path="/photos /photos/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/school_admin/gallery/gallery_add"  />
- <Route path="/invites /invites/:filter /invites/:inviteId/:mode" binding={binding.sub('invites')} component="module/as_manager/pages/invites/invites"  />
- <Route path="/school_console /school_console/:filter /school_console/:inviteId/:mode" binding={binding.sub('permissions')} component="module/as_manager/pages/school_console/school_console"  />
- </RouterView>
-
- </div>
- </div>
- )
- }
- */
-
 module.exports = Center;
