@@ -33,11 +33,7 @@ const ListPageMixin = {
             ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
     },
 	componentWillUnmount: function () {
-		var self = this,
-            binding = self.getDefaultBinding();
-        self.request && self.request.cancel();
         clearTimeout(self.timeoutId);
-        binding.clear();
 	},
     //getInitialState:function(){
     //    return {

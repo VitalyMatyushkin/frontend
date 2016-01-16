@@ -32,7 +32,7 @@ const Table = React.createClass({
         }
     },
 	componentWillMount: function() {
-		var self = this,
+		const self = this,
             binding = self.getDefaultBinding();
 
         self.filter = self.props.filter;
@@ -47,12 +47,13 @@ const Table = React.createClass({
         self._getTotalCount();
 	},
     componentDidMount:function(){
-        var self = this,
+        const self = this,
             binding = self.getDefaultBinding();
-        this.addBindingListener(binding, 'pagination.pageNumber', self._onChangePage);
-        this.addBindingListener(binding, 'filter',self._loadData);
-        this.addBindingListener(binding, 'filter.where',self._getTotalCount);
-        this.addBindingListener(binding, 'onReload',self.onReload);
+
+        self.addBindingListener(binding, 'pagination.pageNumber', self._onChangePage);
+        self.addBindingListener(binding, 'filter',self._loadData);
+        self.addBindingListener(binding, 'filter.where',self._getTotalCount);
+        self.addBindingListener(binding, 'onReload',self.onReload);
     },
     componentWillUnmount: function () {
         var self = this,

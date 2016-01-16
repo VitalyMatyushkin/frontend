@@ -30,7 +30,6 @@ const Pagination = React.createClass({
             binding = self.getDefaultBinding();
 
         binding.set('pageNumber', e.target.value);
-        console.log('pageNumber = '+binding.get('pageNumber'));
         if(self.props.onChange)
             self.props.onChange(e);
 

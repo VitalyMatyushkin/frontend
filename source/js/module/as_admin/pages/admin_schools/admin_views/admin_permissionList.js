@@ -12,6 +12,7 @@ const AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'Permissions',
     serviceCount:'PermissionCount',
+    // for users{"include": {"relation":"permissions", "scope": {"include": {"relation": "school"}}}}
     filters:{
         include:['principal','school']
         ,where:{

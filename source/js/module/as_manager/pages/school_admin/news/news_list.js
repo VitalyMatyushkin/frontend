@@ -9,7 +9,7 @@ const NewsListPage = React.createClass({
 	serviceName: 'news',
 	serviceCount:'newsCount',
 	getTableView: function() {
-		var self = this,
+		const self = this,
 			binding = self.getDefaultBinding();
 
 		return (
