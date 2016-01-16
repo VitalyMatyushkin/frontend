@@ -166,8 +166,8 @@ gulp.task('cleanTests', function (callback) {
 // Live reload
 gulp.task('connect', function(done) {
 	connect.server({
-		root: './',
-		livereload: true
+		root: './'
+		//livereload: true
 	});
 	done(null);
 });
