@@ -1,32 +1,28 @@
 /**
  * Created by bridark on 24/06/15.
  */
-var AdminPermissionView,
-    List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
-    Table = require('module/ui/list/table'),
-    TableField = require('module/ui/list/table_field'),
-    DateTimeMixin = require('module/mixins/datetime'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-    GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
-    React = require('react'),
-    Popup = require('module/ui/popup');
-AdminPermissionView = React.createClass({
+const   Table = require('module/ui/list/table'),
+        TableField = require('module/ui/list/table_field'),
+        DateTimeMixin = require('module/mixins/datetime'),
+        ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+        GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+        React = require('react'),
+        Popup = require('module/ui/popup');
+const AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'Permissions',
-    //serviceCount:'getTotalNumberOfUserModels',
-    pageLimit: 20,
+    serviceCount:'PermissionCount',
+    // for users{"include": {"relation":"permissions", "scope": {"include": {"relation": "school"}}}}
     filters:{
-      include:['principal','school']
+        include:['principal','school']
         ,where:{
             //principalId:{neq:''}
             and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
         }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
-    isPaginated: true,
     isSuperAdminPage: true,
-    sandbox:true,
+    sandbox:false,
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;
@@ -75,7 +71,7 @@ AdminPermissionView = React.createClass({
     _getQuickEditActionsFactory:function(evt){
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
-            binding = self.getDefaultBinding(),
+            binding = self.getDefaultBinding().sub('data'),
             idAutoComplete = [],
             userId = evt.currentTarget.parentNode.dataset.userobj,
             currentAction;
@@ -226,7 +222,10 @@ AdminPermissionView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory} quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
+                <Table title="Permissions" binding={binding} quickEditActionsFactory={self._getQuickEditActionsFactory}
+                       quickEditActions={self.groupActionList} addQuickActions={true}
+                       isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
+                       getTotalCountPromise={self.getTotalCountPromise} >
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="principal" width="10%" dataFieldKey="firstName" parseFunction={self.getFirstName}>Name</TableField>
                     <TableField dataField="principal" width="20%" dataFieldKey="lastName" parseFunction={self.getLastName}>Surname</TableField>

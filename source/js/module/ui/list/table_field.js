@@ -10,7 +10,8 @@ const ListField = React.createClass({
 		dataField: React.PropTypes.string.isRequired,
 		parseFunction: React.PropTypes.func,
 		inputParseFunction: React.PropTypes.func,
-		onChange: React.PropTypes.func,
+        onChange: React.PropTypes.func,
+        onSort: React.PropTypes.func,
 		width: React.PropTypes.string,
 		filterType: React.PropTypes.string,
         dataFieldKey: React.PropTypes.string
@@ -64,7 +65,7 @@ const ListField = React.createClass({
                 order:self.props.dataFieldKey+' DESC'
             };
         }
-        self.props.onChange(self.props.dataField, value);
+        self.props.onSort && self.props.onSort(self.props.dataField, value);
     },
 	render: function() {
 		var self = this,

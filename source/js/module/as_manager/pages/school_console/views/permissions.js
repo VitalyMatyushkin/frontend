@@ -1,10 +1,7 @@
 /**
  * Created by bridark on 19/06/15.
  */
-var PermissionView,
-    List = require('module/ui/list/list'),
-    ListField = require('module/ui/list/list_field'),
-    Table = require('module/ui/list/table'),
+const Table = require('module/ui/list/table'),
     TableField = require('module/ui/list/table_field'),
     DateTimeMixin = require('module/mixins/datetime'),
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
@@ -12,18 +9,16 @@ var PermissionView,
     React = require('react'),
     Popup = require('module/ui/popup');
 
-PermissionView = React.createClass({
+const PermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'schoolPermissions',
+    serviceCount:'schoolPermissionsCount',
     //TODO Why this code is comment? - because the property is not in used at the moment but could be reused
-    //serviceCount:'schoolPermissionsCount',
-    pageLimit: 25,
     setPageTitle:'School Admin',
     filters:{
         include:['principal',{student:['form','house']}]
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
-    isPaginated: true,
     sandbox:true,
     getFullName:function(principal){
         if(principal !==undefined){
@@ -215,7 +210,10 @@ PermissionView = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory} quickEditActions={self.groupActionList} binding={binding} addQuickActions={true} onFilterChange={self.updateData}>
+                <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory}
+                       quickEditActions={self.groupActionList} binding={binding} addQuickActions={true}
+                       isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
+                       getTotalCountPromise={self.getTotalCountPromise} pageLimit={25}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="principal" width="20%" dataFieldKey="firstName"  parseFunction={self.getFirstName}>First name</TableField>
                     <TableField dataField="principal" width="20%" dataFieldKey="lastName"  parseFunction={self.getLastName}>Surname</TableField>

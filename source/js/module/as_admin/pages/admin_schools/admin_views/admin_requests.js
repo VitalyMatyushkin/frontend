@@ -1,9 +1,7 @@
 /**
  * Created by bridark on 24/06/15.
  */
-const   List            = require('module/ui/list/list'),
-        ListField       = require('module/ui/list/list_field'),
-        Table           = require('module/ui/list/table'),
+const   Table           = require('module/ui/list/table'),
         TableField      = require('module/ui/list/table_field'),
         DateTimeMixin   = require('module/mixins/datetime'),
         React           = require('react'),
@@ -13,6 +11,7 @@ const   List            = require('module/ui/list/list'),
 const AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     serviceName:'Permissions',
+    serviceCount:'PermissionCount',
     groupActionList:['Accept','Decline'],
     filters:{include:['principal','school']},
     getSchoolName:function(school){
@@ -38,7 +37,7 @@ const AdminRequest = React.createClass({
 		const   self                = this,
 			    action              = event.currentTarget.textContent,
                 id                  = event.currentTarget.parentNode.dataset.userobj,
-                binding             = self.getDefaultBinding(),
+                binding             = self.getDefaultBinding().sub('data'),
                 globalBinding       = self.getMoreartyContext().getBinding(),
                 currentPermission   = self.getCurrentPermission(id, binding.toJS());
 
@@ -67,7 +66,7 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.Permission.setPermissions.post({id:id},{accepted:false}).then(function(){
+                    window.Server.setPermissions.post({id:id},{accepted:false}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== id;
@@ -86,7 +85,10 @@ const AdminRequest = React.createClass({
             binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
-                <Table title="Permissions" binding={binding} addQuickActions={true} quickEditActionsFactory={self._getQuickEditActionFunctions} quickEditActions={self.groupActionList} onFilterChange={self.updateData}>
+                <Table title="Permissions" binding={binding} addQuickActions={true}
+                       quickEditActionsFactory={self._getQuickEditActionFunctions}
+                       quickEditActions={self.groupActionList} isPaginated={true} getDataPromise={self.getDataPromise}
+                       getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
                     <TableField dataField="school" filterType="none" width="20%" parseFunction={self.getSchoolName}>School</TableField>
                     <TableField dataField="school" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                     <TableField dataField="principal" filterType="none" width="20%" parseFunction={self.getPrincipalEmail}>Email</TableField>

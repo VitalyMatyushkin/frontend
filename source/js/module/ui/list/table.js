@@ -1,17 +1,24 @@
 const   If          = require('module/ui/if/if'),
+        Pagination  = require('module/ui/list/pagination'),
+        Filter      = require('module/ui/list/filter'),
         React       = require('react'),
-        ReactDOM    = require('reactDom');
+        Immutable   = require('immutable');
 
 const Table = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: React.PropTypes.string,
+        filter: React.PropTypes.object,
 		onAddNew: React.PropTypes.func,
 		onItemEdit: React.PropTypes.func,
 		onItemView: React.PropTypes.func,
 		onItemRemove: React.PropTypes.func,
-		onFilterChange: React.PropTypes.func,
-		hideActions: React.PropTypes.bool,
+        onFilterChange: React.PropTypes.func,
+        getDataPromise: React.PropTypes.func,
+        getTotalCountPromise: React.PropTypes.func,
+        isPaginated: React.PropTypes.bool,
+        pageLimit: React.PropTypes.number,
+        hideActions: React.PropTypes.bool,
         quickEditActionsFactory:React.PropTypes.func, //Implement your own factory of methods to be applied to quick actions
         quickEditActions: React.PropTypes.array,
         displayActionText: React.PropTypes.bool,
@@ -20,29 +27,103 @@ const Table = React.createClass({
     getDefaultProps:function(){
         return{
             displayActionText:true,
-            addQuickActions: false
+            addQuickActions: false,
+            isPaginated:false
         }
     },
 	componentWillMount: function() {
-		var self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
-        rootBinding.set('popup',false);
-		self.filter = {};
-		self.usedFields = [];
+		const self = this,
+            binding = self.getDefaultBinding();
+
+        self.filter = self.props.filter;
+        if(!self.filter)
+            self.filter = new Filter(binding.sub('filter'));
+
+        self.setPageLimit(self.props.pageLimit);
+
+        self._loadData();
+        self._getTotalCount();
 	},
-	updateFilterState: function(field, value) {
-		var self = this;
-		if (value) {
-			self.filter[field] = value;
-		} else {
-			delete self.filter[field];
-		}
-        if(Object.keys(self.filter).length >1){
-            var keyToDel =Object.keys(self.filter)[0];
-            delete self.filter[keyToDel];
+    componentDidMount:function(){
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        self.addBindingListener(binding, 'pagination.pageNumber', self._onChangePage);
+        self.addBindingListener(binding, 'filter',self._loadData);
+        self.addBindingListener(binding, 'filter.where',self._getTotalCount);
+        self.addBindingListener(binding, 'onReload',self.onReload);
+    },
+    componentWillUnmount: function () {
+        var self = this,
+            binding = self.getDefaultBinding();
+        self.request && self.request.cancel();
+        self.requestCount && self.requestCount.cancel();
+        binding.clear();
+    },
+    setPageLimit: function(limit){
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        if(self.props.isPaginated){
+            self.filter.setPageLimit(limit);
+            binding.set('pagination.pageLimit', limit);
         }
-		self.props.onFilterChange && self.props.onFilterChange(self.filter);
-	},
+    },
+    updateFilterState: function(field, value) {
+        var self = this;
+
+        if(self.props.getDataPromise){
+            self.filter.addFieldFilter(field, value);
+        }
+    },
+    onSort: function(field, value) {
+        var self = this;
+
+        if(self.props.getDataPromise) {
+            self.filter.setOrder(field, value.order);
+        }
+    },
+    _onChangePage:function(changes){
+        var self = this;
+
+        self.filter.setPageNumber(changes.getCurrentValue());
+    },
+    _loadData:function(){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            filter = self.filter.getFilters();
+
+        console.log('Table load data started');
+        if(self.props.getDataPromise) {
+            self.request = self.props.getDataPromise(filter).then(function (data) {
+                binding.set('data', Immutable.fromJS(data));
+            });
+        }
+    },
+    _getTotalCount:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            where = self.filter.getWhere();
+
+        if(self.props.getTotalCountPromise) {
+            self.requestCount = self.props.getTotalCountPromise(where).then(function (data) {
+                if (data && data.count) {
+                    binding.set('pagination.totalCount', data.count);
+                }
+            });
+        }
+    },
+    onReload:function(){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            reload = binding.get('onReload');
+
+        if(reload){
+            binding.set('onReload', false);
+            self._loadData();
+            self._getTotalCount();
+        }
+    },
     getQuickEditActions:function(){
         var self = this,
             el = self.props.quickEditActions;
@@ -66,7 +147,7 @@ const Table = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			dataList = binding.toJS(),
+			dataList = binding.sub('data').toJS(),
 			tableHeadFields,
             quickActions = self.getQuickEditActions(),
 			itemsNodes;
@@ -110,7 +191,7 @@ const Table = React.createClass({
                     //For checkboxes
                     if(dataField ==='checkBox'){
                         return (
-                            <div  className="eDataList_listItemCell">
+                            <div className="eDataList_listItemCell">
                                 <input data-id={item.id} className="tickBoxGroup" type="checkbox"/>
                             </div>);
                     }
@@ -134,7 +215,7 @@ const Table = React.createClass({
                 return React.cloneElement(child, {
                     key:index,
                     onChange: self.updateFilterState,
-                    onSort:self.updateFilterState
+                    onSort:self.onSort
                 });
             });
         }
@@ -149,6 +230,9 @@ const Table = React.createClass({
 				</div>
 				{itemsNodes}
 			</div>
+            <If condition={self.props.isPaginated}>
+                <Pagination binding={binding.sub('pagination')} />
+            </If>
 		</div>
 		)
 	}

@@ -11,9 +11,8 @@ var ActivityLogPage,
 ActivityLogPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin, DateTimeMixin],
     serviceName:'activityLogs',
-    filters: {limit:40},
+    filters: {order:'meta.created DESC'},
     serviceCount:'logCount',
-    isPaginated: true,
     getPrincipal: function(principal) {
         return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
     },
@@ -38,15 +37,14 @@ ActivityLogPage = React.createClass({
             binding = self.getDefaultBinding();
 
         return (
-            <Table title="Activity Logs" binding={binding} onFilterChange={self.updateData} hideActions={true}>
-                <TableField dataField="meta" width="35%" filterType="none" parseFunction={self.getDate}>Date</TableField>
-                <TableField dataField="method" width="10%">Method</TableField>
-                <TableField dataField="responseTime" width="15%">Duration</TableField>
-                <TableField dataField="statusCode" width="5%">Code</TableField>
-                <TableField dataField="ip" width="20%" >IP</TableField>
-                <TableField dataField="referer" width="20%" >Referrer</TableField>
-                <TableField dataField="scope" width="20%" >Scope</TableField>
-                <TableField dataField="limit">Limit</TableField>
+            <Table  title="Activity Logs" binding={binding} hideActions={true}
+                    isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
+                    getTotalCountPromise={self.getTotalCountPromise} pageLimit={40} >
+                <TableField dataField="meta" filterType="none" parseFunction={self.getDate}>Date</TableField>
+                <TableField dataField="hostname" >Hostname</TableField>
+                <TableField dataField="message">Message</TableField>
+                <TableField dataField="scope" >Scope</TableField>
+                <TableField dataField="level">Level</TableField>
             </Table>
         )
     }
