@@ -7,7 +7,7 @@ const RoleSelectorComponent = React.createClass({
     onRoleSelected: function(roleName){
         return function(){
             // TODO: fix me. Dirty solution to be ready for sprint
-            const domain = 'squard.com:8080';
+            const domain = 'stage.squadintouch.com';
             console.log(`Role selected: ${roleName}`);
             switch (true) {
                 case roleName === 'manager' || roleName === 'owner':
