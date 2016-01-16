@@ -1,7 +1,9 @@
-var FormField,
-	typeList = require('module/ui/form/types/type_list');
+const 	React 		= require('react'),
+		Immutable 	= require('immutable'),
+		typeList 	= require('module/ui/form/types/type_list');
 
-FormField = React.createClass({
+const FormField = React.createClass({
+	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.Map({
 			value: '',
@@ -10,34 +12,36 @@ FormField = React.createClass({
 		});
 	},
 	propTypes: {
-		type: React.PropTypes.string.isRequired,
-		field: React.PropTypes.string.isRequired
+		type: 				React.PropTypes.string.isRequired,
+		field: 				React.PropTypes.string.isRequired,
+		defaultValueString:	React.PropTypes.string
 	},
-	mixins: [Morearty.Mixin],
 	render: function () {
-		var self = this,
-			binding = this.getDefaultBinding(),
-			inputField =  React.createElement(typeList[self.props.type], self.props),
-			fieldStyleClass = 'eForm_fieldSet';
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
+		let 	inputField 		= React.createElement(typeList[self.props.type], self.props),
+				fieldStyleClass = 'eForm_fieldSet';
 
-		inputField = React.addons.cloneWithProps(inputField, {
-			name: self.props.children,
-			service: self.props.service,
-			binding: self.getDefaultBinding()
+		// TODO: Emhh...
+		inputField = React.cloneElement(inputField, {
+			name: 		self.props.children,
+			service: 	self.props.service,
+			binding: 	self.getDefaultBinding()
 		});
 
 		if (binding.get('showError')) {
 			fieldStyleClass += ' mInvalid';
-		}
-
+		}else{
+            if(binding.get('showSuccess')){
+                fieldStyleClass += ' mValid';
+            }
+        }
 		return (
 			<div className="eForm_field">
 				<div className="eForm_fieldName">{self.props.children}</div>
-
 				<div className={fieldStyleClass}>
 					{inputField}
-
-					<div className="eForm_fieldValidText">{binding.get('error')}</div>
+					<div className="eForm_fieldValidText">{binding.get('error') || binding.get('success')}</div>
 				</div>
 			</div>
 

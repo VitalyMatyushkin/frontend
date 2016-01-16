@@ -1,8 +1,10 @@
-var MultiSelectTeam,
-    SVG = require('module/ui/svg'),
-    Multiselect = require('module/ui/multiselect/multiselect');
+const   SVG         = require('module/ui/svg'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable 	= require('immutable'),
+        Multiselect = require('module/ui/multiselect/multiselect');
 
-MultiSelectTeam = React.createClass({
+const MultiSelectTeam = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'MultiSelectTeam',
     componentWillMount: function () {

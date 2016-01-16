@@ -1,58 +1,75 @@
-var ListPageMixin;
+const   If          = require('module/ui/if/if'),
+        Filter = require('module/ui/list/filter'),
+        GroupAction = require('module/ui/list/group_action'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        Immutable   = require('immutable'),
+        $           = require('jquery');
 
-ListPageMixin = {
+const ListPageMixin = {
 	propTypes: {
-		formBinding: React.PropTypes.any.isRequired,
+		formBinding: React.PropTypes.any,
 		filters: React.PropTypes.object,
 		addSchoolToFilter: React.PropTypes.bool
 	},
-	componentWillMount: function () {
+
+    componentWillMount: function () {
 		var self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
+            metaBinding = self.getDefaultBinding().meta(),
+            binding = self.getDefaultBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
-		self.updateData();
+        self.popUpState = false;
+        self.updatePageNumbers = true;
+        metaBinding.set('isFiltersActive', false);
+        self.filter = new Filter(binding.sub('filter'));
+        self.filter.setFilters(self.filters);
 	},
-	updateData: function(newFilter) {
-		var self = this,
-			requestFilter = { where: {} },
-			binding = self.getDefaultBinding(),
-			isFiltersActive = binding.meta().get('isFiltersActive');
-
-		self.request && self.request.abort();
-
-		// Фильтрация по школе
-		if (self.props.addSchoolToFilter !== false) {
-			requestFilter.where.schoolId = self.activeSchoolId;
-		}
-
-		// add custom filter
-		if (typeof self.filters === 'object') {
-			Object.keys(self.filters).forEach(function (filter) {
-				requestFilter[filter] = self.filters[filter];
-			});
-		}
-
-		// Добавление фильтров по полям, если есть
-		if (newFilter && isFiltersActive && Object.keys(newFilter).length > 0) {
-			for (var filterName in newFilter) {
-				requestFilter.where[filterName] = newFilter[filterName];
-			}
-
-			self.lastFiltersState = newFilter;
-		}
-
-		self.request = window.Server[self.serviceName].get(self.activeSchoolId, { filter: requestFilter }).then(function (data) {
-			binding.set(Immutable.fromJS(data));
-		});
-	},
+    componentDidMount:function(){
+        var self = this;
+        if(self.isSuperAdminPage)
+            ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
+    },
 	componentWillUnmount: function () {
-		var self = this;
-
-		self.request && self.request.abort();
+        clearTimeout(self.timeoutId);
 	},
+    getDefaultState: function () {
+        return Immutable.Map({
+            onReload:false
+        });
+    },
+    reloadData:function(){
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('onReload',true);
+    },
+    //getInitialState:function(){
+    //    return {
+    //        onReload:false
+    //    };
+    //},
+    //reloadData:function(){
+    //    this.setState({onReload:true});
+    //},
+    getDataPromise:function(filter){
+        const self = this;
+
+        if(self.activeSchoolId !== null && self.serviceName)
+            return window.Server[self.serviceName].get(self.activeSchoolId, { filter: filter });
+
+        return window.Server[self.serviceName].get({filter:filter});
+    },
+    getTotalCountPromise:function(where){
+        const self = this;
+
+        if(self.activeSchoolId !== null && self.serviceCount)
+            return window.Server[self.serviceCount].get(self.activeSchoolId, { where: where });
+
+        return window.Server[self.serviceCount].get({where:where});
+    },
 	_getEditFunction: function() {
 		var self = this;
 
@@ -62,6 +79,9 @@ ListPageMixin = {
 			document.location.hash = document.location.hash + '/edit?id=' + data.id;
 		}
 	},
+    _getAddNewStudentFunction:function(){
+        document.location.hash = document.location.hash +'/add';
+    },
 	toggleFilters: function() {
 		var self = this,
 			metaBinding = self.getDefaultBinding().meta(),
@@ -69,29 +89,113 @@ ListPageMixin = {
 
 		if (isFiltersActive) {
 			metaBinding.set('isFiltersActive', false);
-			self.updateData();
+			//self.updateData();
 		} else {
 			metaBinding.set('isFiltersActive', true);
-			self.updateData(self.lastFiltersState);
+			//self.updateData(self.lastFiltersState);
 		}
 	},
+    toggleBaseFilters:function(el){
+        var self = this,
+            currentBase = ReactDOM.findDOMNode(self.refs[el]),
+            currentBaseVal = currentBase.value,
+            isChecked = currentBase.checked;
+        $('.bFilterCheck').attr('checked',false);
+        if(isChecked){
+            currentBase.checked = isChecked;
+            switch (currentBaseVal){
+                case 'students':
+                    self.filters = {
+                        include:['principal','school']
+                        ,where:{
+                            and:[{preset:{nin:['coach','teacher','parent','manager','owner','admin']}},{preset:'student'}]
+                        }
+                    };
+                    break;
+                case 'all':
+                    self.filters ={
+                        include:['principal','school']
+                        ,where:{
+                            principalId:{neq:''}
+                        }
+                    };
+                    break;
+                case 'others':
+                    self.filters={
+                        include:['principal','school']
+                        ,where:{
+                            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+                        }
+                    };
+                    break;
+                default :
+                    self.filters={
+                        include:['principal','school']
+                        ,where:{
+                            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+                        }
+                    };
+                    break;
+            }
+        }else{
+            ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
+            self.filters={
+                include:['principal','school']
+                ,where:{
+                    and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+                }
+            };
+        }
+        self.filter.setWhere(self.filters.where);
+        //self.updatePageNumbers = true;
+        //self.updateData();
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			isFiltersActive = binding.meta().get('isFiltersActive');
-
+            globalBinding = self.getMoreartyContext().getBinding(),
+			isFiltersActive = binding.meta().get('isFiltersActive'),
+            currentPage = window.location.href.split('/'),
+            includeGroupAction = ['permissions','#admin_schools'],
+            listPageTitle;
+        if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
+            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '
+                +globalBinding.get('userData.userInfo.lastName')+' - '
+                +(self.setPageTitle !== undefined ? self.setPageTitle+' )' : 'System Admin )');
+        }else{
+            listPageTitle = self.serviceName[0].toUpperCase() + self.serviceName.slice(1);
+        }
 		return (
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
-				<h1 className="eSchoolMaster_title">{self.serviceName[0].toUpperCase() + self.serviceName.slice(1)}
-
-					<div className="eSchoolMaster_buttons">
-						<div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
-						<a href={document.location.hash + '/add'} className="bButton">Add...</a>
-					</div>
-				</h1>
-
+				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
+                <div className="eSchoolMaster_groupAction">
+                    <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
+                        <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
+                                     binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                    </If>
+                    <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
+                        <If condition={self.isSuperAdminPage||false}>
+                            <div className="filterBase_container">
+                                <span>Filter base: </span>
+                                <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
+                                <input type="checkbox" className="bFilterCheck" ref="otherCheck" value="others" onChange={self.toggleBaseFilters.bind(null,'otherCheck')}/><span>Others Only</span>
+                                <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
+                            </div>
+                        </If>
+                        <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
+                        <If condition={currentPage[currentPage.length-1] ==='students'}>
+                            <div className="bButton" onClick={self._getAddNewStudentFunction}>Add New Student</div>
+                        </If>
+                    </div>
+                </div>
 				{self.getTableView()}
-
+                <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
+                    <div className="eSchoolMaster_groupAction">
+                        <div className="groupAction bottom_action">
+                            <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName} binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                        </div>
+                    </div>
+                </If>
 			</div>
 		)
 	}

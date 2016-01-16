@@ -1,14 +1,18 @@
-var EventView,
-    RouterView = require('module/core/router'),
-    Route = require('module/core/route'),
-    If = require('module/ui/if/if'),
-    EventHeader = require('./view/event_header'),
-    EventRivals = require('./view/event_rivals'),
-    EventButtons = require('./view/event_buttons'),
-    EventTeams = require('./view/event_teams'),
-    EventAlbums = require('./view/event_albums');
+const   classNames      = require('classnames'),
+        RouterView      = require('module/core/router'),
+        Route           = require('module/core/route'),
+        If              = require('module/ui/if/if'),
+        EventHeader     = require('./view/event_header'),
+        EventRivals     = require('./view/event_rivals'),
+        EventButtons    = require('./view/event_buttons'),
+        EventTeams      = require('./view/event_teams'),
+        EventAlbums     = require('./view/event_albums'),
+        React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Comments        = require('./view/event_blog'),
+        Immutable       = require('immutable');
 
-EventView = React.createClass({
+const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
     displayName: 'EventPage',
     getMergeStrategy: function () {
@@ -79,7 +83,7 @@ EventView = React.createClass({
             key: 'Finish'
         }];
 
-        Server.eventFindOne.get({
+        window.Server.eventFindOne.get({
             filter: {
                 where: {
                     id: eventId
@@ -87,10 +91,12 @@ EventView = React.createClass({
                 include: [
 					{
 						participants: [
-                            'players',
-                            {
+							{
+								players: 'user'
+							},
+							{
 							    school: 'forms'
-						    },
+							},
                             'house'
                         ]
 					},
@@ -153,6 +159,17 @@ EventView = React.createClass({
 
         binding.set('showingComment', !binding.get('showingComment'));
     },
+    //A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
+    //This avoids the manager having to reload the screen to see what they just entered.
+    onChange:function(){
+        var self = this,
+            comment = document.getElementById('commentTextArea');
+        if(comment){
+            self.commentContent = comment.value;
+        }else{
+            self.commentContent = '0';
+        }
+    },
 	render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -160,23 +177,22 @@ EventView = React.createClass({
             commentTextClasses = classNames({
                 'eEvent_commentText': true,
                 mHide: !showingComment
-            });
-
+            });  self.onChange();
 		return <div>
             <div className="bEventContainer">
-                <If condition={binding.get('sync')}>
+                <If condition={binding.get('sync')=== true}>
                     <div className="bEvent">
                         <EventButtons binding={binding} />
                         <EventHeader binding={binding} />
                         <div className="eEvent_commentBox">
-                            <If condition={binding.get('mode') === 'closing'}>
+                            <If condition={(binding.get('mode') === 'closing') || false}>
                                 <Morearty.DOM.textarea
                                     className="eEvent_comment"
                                     onChange={Morearty.Callback.set(binding, 'model.comment')}
-                                    value={binding.get('model.comment')}
+                                    value={binding.get('model.comment')} id="commentTextArea"
                                     />
                             </If>
-                            <If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')}>
+                            <If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
                                 <div>
                                     <div className="eEvent_commentHeader" onClick={self.onToggleShowComment}>{binding.get('showingComment') ? 'hide' : 'show comment'}</div>
                                     <div className={commentTextClasses}>{binding.get('model.result.comment')}</div>
@@ -184,8 +200,14 @@ EventView = React.createClass({
                             </If>
                         </div>
                         <EventRivals binding={binding} />
+                        <If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
+                            <div className="eEvent_shadowCommentText">{self.commentContent}</div>
+                        </If>
                         <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />
+                        <If condition={((binding.get('mode') === 'general') && (binding.get('model.resultId') !== undefined)) || false}>
+                            <Comments binding={binding}/>
+                        </If>
                     </div>
                 </If>
                 <If condition={!binding.get('sync')}>

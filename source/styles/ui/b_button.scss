@@ -9,11 +9,25 @@
   position: relative;
   border-radius: 4px;
 }
-
+.bButton_reg{
+  width:66px !important;
+  margin: 2px !important;
+  text-align:center !important;
+}
 .bButton:hover{
   color: white;
 }
-
+.bButton_hide{
+  display:none;
+}
+.bButton_svg_check{
+  display:inline-block;
+  fill:green;
+  margin-left: 16px;
+}
+.bCheck_show{
+  display: inline-block;
+}
 .bButton:hover:before{
   content: '';
   position: absolute;
@@ -64,4 +78,11 @@
   &.mActive:before {
     box-shadow: 0px -2px 0 0 darken(#ff5252, 10%);
   }
+}
+.bButton_req{
+  display: inline;
+  margin: 5px;
+}
+.verify_error{
+  display: inline-block !important;;
 }

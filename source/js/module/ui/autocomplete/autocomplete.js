@@ -1,17 +1,19 @@
-var AutocompleteHelpers = require('module/ui/autocomplete/main'),
-	Combobox = AutocompleteHelpers.Combobox,
-	ComboboxOption = AutocompleteHelpers.Option,
-	Autocomplete;
+const 	AutocompleteHelpers 	= require('module/ui/autocomplete/main'),
+		Combobox 				= AutocompleteHelpers.Combobox,
+		ComboboxOption 			= AutocompleteHelpers.Option,
+		React 					= require('react'),
+		ReactDOM 				= require('reactDom'),
+		Immutable 				= require('immutable');
 
 
-Autocomplete = React.createClass({
+const Autocomplete = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		serverField: React.PropTypes.string,
 		serviceFullData: React.PropTypes.func,
 		serviceFilter: React.PropTypes.func,
 		onSelect: React.PropTypes.func,
-		onBlue: React.PropTypes.func,
+		onBlur: React.PropTypes.func,
 		onInput: React.PropTypes.func,
 		placeholderText: React.PropTypes.string,
 		clearAfterSelect: React.PropTypes.bool
@@ -105,9 +107,8 @@ Autocomplete = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		if (self.pendingRequest && self.pendingRequest.abort) {
-			self.pendingRequest.abort();
-		}
+		self.pendingRequest && self.pendingRequest.cancel();
+
 		binding.set('loading', true);
 		binding.set('response', null);
 
@@ -115,6 +116,7 @@ Autocomplete = React.createClass({
 			self.responseData = data;
 			binding.set('response', data);
 			binding.set('loading', false);
+			self.forceUpdate();
 		});
 	},
 	_filterOnClient: function (userInput) {
@@ -132,26 +134,25 @@ Autocomplete = React.createClass({
 		var self = this,
 			inputValue = self.getDefaultBinding().get('combobox.inputValue');
 
-		self.filterData(inputValue || '');
+		//self.filterData(inputValue || '');
+        self.filterData('');
 	},
 	updateFullData: function () {
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		if (self.pendingRequest && self.pendingRequest.abort) {
-			self.pendingRequest.abort();
-		}
+        self.pendingRequest && self.pendingRequest.cancel();
+
 		self.pendingRequest = self.props.serviceFullData().then(function (data) {
 			self.responseData = data;
 			self.setDefaultId();
+			self.forceUpdate();
 		});
 	},
 	componentWillUnmount: function () {
 		var self = this;
 
-		if (self.pendingRequest && self.pendingRequest.abort) {
-			self.pendingRequest.abort();
-		}
+        self.pendingRequest && self.pendingRequest.cancel();
 	},
 	renderComboboxOptions: function () {
 		var self = this,

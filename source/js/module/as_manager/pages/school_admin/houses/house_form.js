@@ -1,6 +1,7 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
+	React = require('react'),
 	ClassForm;
 
 ClassForm = React.createClass({
@@ -14,7 +15,7 @@ ClassForm = React.createClass({
 
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
-				<FormField type="text" field="name" validation="required">House name</FormField>
+				<FormField type="text" field="name" validation="required" ignoreOnBlur={true}>House name</FormField>
 				<FormField type="text" field="description">Description</FormField>
 				<FormField type="colors" maxColors={2} field="colors">House colors</FormField>
 			</Form>

@@ -1,9 +1,11 @@
-var EventView,
-    RouterView = require('module/core/router'),
-    Route = require('module/core/route'),
-    SubMenu = require('module/ui/menu/sub_menu');
+const   RouterView  = require('module/core/router'),
+        Route       = require('module/core/route'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        SubMenu     = require('module/ui/menu/sub_menu'),
+        Immutable   = require('immutable');
 
-EventView = React.createClass({
+const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
     getMergeStrategy: function () {
         return Morearty.MergeStrategy.MERGE_REPLACE

@@ -1,6 +1,7 @@
-var MapView;
+const 	React 		= require('react'),
+		ReactDOM 	= require('reactDom');
 
-MapView = React.createClass({
+const MapView = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		point: React.PropTypes.shape({
@@ -10,7 +11,7 @@ MapView = React.createClass({
 	},
 	componentDidMount: function() {
 		var self = this,
-			mapNode = self.refs.map.getDOMNode(),
+			mapNode = self.refs.map,
 			mapeCenter = new google.maps.LatLng(self.props.point.lat, self.props.point.lng),
 			binding = self.getDefaultBinding(),
 			mapOptions;
@@ -31,7 +32,7 @@ MapView = React.createClass({
 			map: self.mapView
 		});
 
-		binding && binding.addListener('list', self.addPointsToMap.bind(self));
+		binding && binding.addListener('list', self.addPointsToMap/*.bind(self)*/);
 		binding && self.addPointsToMap();
 	},
 	addPointsToMap: function() {

@@ -1,5 +1,7 @@
 var TypeMixin = require('module/ui/form/types/type_mixin'),
 	RadioGroup = require('module/ui/radiogroup/radiogroup'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeRadio;
 
 TypeRadio = React.createClass({

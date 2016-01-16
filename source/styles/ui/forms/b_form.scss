@@ -2,10 +2,15 @@
   max-width: 700px;
   margin: 40px auto;
   text-align: center;
+  position: relative;
 }
 
 .bForm h2{
   margin-bottom: 34px;
+}
+
+.bForm h3{
+  margin-bottom: 24px;
 }
 
 .bForm input[type="text"],
@@ -17,6 +22,15 @@
   display: inline-block;
   margin-right: 10px;
   position: relative;
+}
+.eForm_fieldInput textarea{
+  resize: none;
+  height: 400px;
+  width: 800px;
+}
+
+.eForm_fieldInput.mHidden {
+  display: none;
 }
 
 .eForm_fieldSmallHelp{
@@ -43,6 +57,7 @@
 .eForm_atCenter{
   display: inline-block;
   text-align: left;
+  position: relative;
 }
 
 $INVALID_COLOR: rgb(182, 0, 0);
@@ -57,6 +72,10 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .eForm_fieldSet.mInvalid .eForm_fieldValidText{
   display: block;
 }
+.eForm_fieldSet.mValid .eForm_fieldValidText{
+  display: block;
+  color:green;
+}
 
 .eForm_fieldSet.mInvalid{
   color: $INVALID_COLOR;
@@ -66,7 +85,13 @@ $INVALID_COLOR: rgb(182, 0, 0);
   border: 1px solid $INVALID_COLOR;
   color: $INVALID_COLOR;
 }
-
+.eForm_fieldSet.mValid{
+  color: green;
+}
+.eForm_fieldSet.mValid input{
+  border: 1px solid green;
+  color: green;
+}
 .eForm_fieldSet.mAreaField input{
   text-transform: uppercase;
 }
@@ -75,4 +100,44 @@ $INVALID_COLOR: rgb(182, 0, 0);
   display: inline-block;
   margin-right: 60px;
   vertical-align: top;
+}
+
+.eForm_fieldSelection{
+  display: inline-block;
+  margin-right: 10px;
+  vertical-align: top;
+}
+
+.eForm_fieldMicroHelp{
+  display: inline-block;
+  font-size: 14px;
+  width: 300px;
+  line-height: 20px;
+  color: rgb(115, 115, 115);
+}
+
+.bForm.mRegisterSteps .bButton{
+  width: 82px;
+  text-align: center;
+  height: 25px;
+  line-height: 25px;
+}
+.bSettingEmailVerify{
+  display: inline-block;
+  position:absolute;
+  left: 260px;
+  bottom: 199px;
+  width: 100px;
+  cursor: pointer;
+}
+.bSettingPhoneVerify{
+  display: inline-block;
+  position:absolute;
+  left: 260px;
+  bottom: 130px;
+  width: 100px;
+  cursor: pointer;
+}
+.bSettingEmailVerify:hover, .bSettingPhoneVerify:hover{
+  color: green;
 }

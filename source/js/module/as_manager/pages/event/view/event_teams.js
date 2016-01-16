@@ -1,10 +1,11 @@
-var If = require('module/ui/if/if'),
-	SVG = require('module/ui/svg'),
-	InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-	AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
-	EventTeams;
+const 	If 					= require('module/ui/if/if'),
+		SVG 				= require('module/ui/svg'),
+		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		AutocompleteTeam 	= require('module/ui/managers/autocompleteTeam'),
+		React				= require('react'),
+		Immutable			= require('immutable');
 
-EventTeams = React.createClass({
+const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	removePlayer: function (order, playerId) {
 		var self = this,
@@ -73,11 +74,11 @@ EventTeams = React.createClass({
 			activeSchoolId = self.getActiveSchoolId(),
 			isOwner = type === 'inter-schools' ? participant.get('schoolId') === activeSchoolId : true;
 
-		return players ? players.map(function (player) {
-            var isMale = player.get('gender') === 'male',
+		return players ? players.map(function (player,playerIndex) {
+            var isMale = player.get('user').get('gender') === 'male',
 				points = self.getPointsByStudent(player.get('id'), participant.get('id')) || 0;
 
-            return <div className="bPlayer mMini">
+            return <div key={playerIndex} className="bPlayer mMini">
                 <If condition={binding.get('mode') !== 'closing' && isOwner}>
                     <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>
@@ -85,11 +86,11 @@ EventTeams = React.createClass({
 					{!binding.get('model.resultId') && binding.get('mode') === 'closing' ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
                             <SVG icon="icon_minus" />
                         </span> : null}
-					<If condition={binding.get('model.resultId') || binding.get('mode') === 'closing'}>
+					<If condition={binding.get('model.resultId')!== undefined || binding.get('mode') === 'closing'}>
 						<span className="ePlayer_score">{points}</span>
 					</If>
 				</div>
-				<span className="ePlayer_name"><span>{player.get('firstName')}</span> <span>{player.get('lastName')}</span></span>
+				<span className="ePlayer_name"><span>{player.get('user').get('firstName')}</span> <span>{player.get('user').get('lastName')}</span></span>
 				<If condition={binding.get('mode') === 'edit_squad' && isOwner}>
 					<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, order, player.get('id'))}>
 						<SVG icon="icon_trash" />

@@ -1,9 +1,11 @@
-var SchoolSummary,
-    SVG = require('module/ui/svg'),
-    Map = require('module/ui/map/map'),
-    If = require('module/ui/if/if');
+const   SVG         = require('module/ui/svg'),
+        Map         = require('module/ui/map/map'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        If          = require('module/ui/if/if'),
+        Immutable   = require('immutable');
 
-SchoolSummary = React.createClass({
+const SchoolSummary = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
         var self = this,
@@ -12,14 +14,13 @@ SchoolSummary = React.createClass({
             activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
         self.activeSchoolId = activeSchoolId;
-        self.request = window.Server.schoolsFindOne.get({
-            filter: {
-                where: {
-                    id: activeSchoolId
-                },
-                include: 'postcode'
-            }
-        }).then(function(data) {
+
+		window.Server.school.get(
+			{
+				id: activeSchoolId,
+				filter: {include: 'postcode'}
+			}
+        ).then(function(data) {
             binding.set(Immutable.fromJS(data));
             self.isMounted() && self.forceUpdate();
         });
@@ -27,15 +28,14 @@ SchoolSummary = React.createClass({
     componentWillUnmount: function() {
         var self = this;
 
-        self.request && self.request.abort();
+        self.request && self.request.cancel();
     },
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
             schoolPicture = binding.get('pic'),
-            siteLink = binding.get('domain') + '.squadintouch.com',
+            siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
-
 
         return (
             <div>
@@ -57,7 +57,7 @@ SchoolSummary = React.createClass({
 
                 <p>Site: <a href={'//' + siteLink} target="blank" title="binding.get('name') homepage">http://{siteLink}</a></p>
 
-                <If condition={geoPoint}>
+                <If condition={geoPoint !== undefined}>
                     <Map binding={binding} point={binding.toJS('postcode.point')}/>
                 </If>
             </div>

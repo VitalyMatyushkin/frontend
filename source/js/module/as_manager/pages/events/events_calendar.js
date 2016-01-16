@@ -1,5 +1,6 @@
 var ChallengesList = require('./calendar/challenges_list'),
     CalendarView = require('module/ui/calendar/calendar'),
+	React = require('react'),
     If = require('module/ui/if/if'),
     Then = If.Then,
     Else = If.Else,

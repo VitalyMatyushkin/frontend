@@ -1,6 +1,7 @@
-var DataPrototype = require('module/data/data_prototype'),
-	userRulesInstance = Object.create(DataPrototype),
-	schoolStorageName = 'userRules.activeSchoolId';
+const 	DataPrototype 		= require('module/data/data_prototype'),
+		Helpers				= require('module/helpers/storage'),
+		userRulesInstance 	= Object.create(DataPrototype),
+		schoolStorageName 	= 'userRules.activeSchoolId';
 
 /**
  * Получение начального состояния данных userRules

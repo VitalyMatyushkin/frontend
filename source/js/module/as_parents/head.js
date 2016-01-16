@@ -1,11 +1,13 @@
-var Logo = require('module/as_manager/head/logo'),
-    TopMenu = require('module/ui/menu/top_menu'),
-    UserBlock = require('module/as_manager/head/user_block'),
-    Autocomplete = require('module/ui/autocomplete/autocomplete'),
-    If = require('module/ui/if/if'),
-    Head;
+const   Logo            = require('module/as_manager/head/logo'),
+        TopMenu         = require('module/ui/menu/top_menu'),
+        UserBlock       = require('module/as_manager/head/user_block'),
+        Autocomplete    = require('module/ui/autocomplete/autocomplete'),
+        If              = require('module/ui/if/if'),
+        React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Immutable       = require('immutable');
 
-Head = React.createClass({
+const Head = React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultState: function() {
         return Immutable.fromJS({
@@ -13,16 +15,20 @@ Head = React.createClass({
         });
     },
     serviceChildrenFilter: function (userId) {
-        var self = this;
-
+        var self = this,
+            eventChild = [],
+            binding = self.getDefaultBinding();
         return window.Server.userChildren.get(userId).then(function (data) {
+            //Initial API call only returns ids of the user's children
             data.map(function (player) {
-                var name = player.firstName + ' ' + player.lastName;
-                player.name = name;
-
-                return player;
+                //Iterates and fetches all other details by making extra API calls
+                window.Server.user.get({id:player.userId}).then(function(r){
+                    eventChild.push(r);
+                    binding.set('events.eventChild',Immutable.fromJS(eventChild));
+                    player.name = r.firstName+' '+r.lastName;
+                    return player;
+                });
             });
-
             return data;
         });
     },
@@ -37,6 +43,13 @@ Head = React.createClass({
             routes: ['/events/:subPage'],
             authorization: true
         }];
+    },
+    componentDidMount: function () {
+        var self = this,
+            rootBinding = self.getMoreartyContext().getBinding();
+        if(rootBinding.get('userData.authorizationInfo.userId')){
+            ReactDOM.findDOMNode(self.refs.checkAll).checked = true; //Set the check all box to checked
+        }
     },
     setActiveChild: function() {
         var self = this,
@@ -53,7 +66,36 @@ Head = React.createClass({
                 .set('events.models', Immutable.fromJS(data))
                 .set('sync', true)
                 .commit();
+            React.findDOMNode(self.refs.checkAll).checked = false; //Toggle checkbox off
         });
+    },
+    toggleCheckAllBox:function(evt){
+        var checkBoxAttr = evt.currentTarget.checked,
+            self = this,
+            binding = self.getDefaultBinding();
+        if(checkBoxAttr){
+            self.persistChildId = binding.get('events.activeChildId');
+            binding
+                .atomically()
+                .set('events.activeChildId','all')
+                .set('events.models',binding.get('events.persistEventModels'))
+                .set('sync',true)
+                .commit();
+        }else{
+            if(binding.get('events.activeChildId')==='all' && self.persistChildId === undefined){
+                alert('Please choose a student');
+                evt.currentTarget.checked = true;
+            }else{
+                window.Server.studentEvents.get({id: self.persistChildId}).then(function (data) {
+                    binding
+                        .atomically()
+                        .set('events.activeChildId',self.persistChildId)
+                        .set('events.models', Immutable.fromJS(data))
+                        .set('sync', true)
+                        .commit();
+                });
+            }
+        }
     },
     render: function () {
         var self = this,
@@ -65,7 +107,7 @@ Head = React.createClass({
             <div className="bTopPanel">
                 <Logo />
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
-                <If condition={rootBinding.get('userData.authorizationInfo.userId')}>
+                <If condition={rootBinding.get('userData.authorizationInfo.userId')!==undefined}>
                     <div className="bDropdown">
                         <Autocomplete
                             serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
@@ -74,6 +116,12 @@ Head = React.createClass({
                             onSelect={self.setActiveChild}
                             binding={binding.sub('autocomplete')}
                             />
+                    </div>
+                </If>
+                <If condition={rootBinding.get('userData.authorizationInfo.userId')!==undefined}>
+                    <div className="bDropdown" style={{marginLeft:-68+'px'}}>
+                        <input type="checkbox" ref="checkAll" onClick={self.toggleCheckAllBox}></input>
+                        <label>Show all children</label>
                     </div>
                 </If>
                 <UserBlock binding={binding.sub('userData')}/>

@@ -3,6 +3,7 @@
  */
 var HeadView = require('module/as_admin/head'),
     CenterView = require('module/as_admin/center'),
+    React = require('react'),
     ApplicationView;
 
 ApplicationView = React.createClass({

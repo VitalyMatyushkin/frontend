@@ -4,6 +4,7 @@ var List = require('module/ui/list/list'),
 	TableField = require('module/ui/list/table_field'),
 	DateTimeMixin = require('module/mixins/datetime'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+	React = require('react'),
 	CoeachesListPage;
 
 CoeachesListPage = React.createClass({

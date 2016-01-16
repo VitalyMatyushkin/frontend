@@ -3,3 +3,551 @@
   box-sizing: border-box;
   position: relative;
 }
+.eSchoolHomePage{
+  -webkit-font-smoothing: antialiased;
+}
+.eSchoolHeader{
+  background-size: cover;
+  height: 600px;
+  position:relative;
+}
+.eSchoolMastHead{
+  position: absolute;
+  top: 300px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  //z-index: 200;
+}
+.eSchoolSalute{
+  font-size: 86px;
+  color:#FFFFFF;
+  font-style: italic;
+  font-weight: 900;
+  margin-left: 100px;
+}
+.eSchoolSalute i{
+  font-size: 36px;
+  color:#FFFFFF;
+  font-style: italic;
+  font-weight: 100;
+}
+.eSchoolName{
+  display:block;
+  font-style: italic;
+  color:#FFFFFF;
+  font-weight: 900;
+  margin-left:300px;
+  font-size: 40px;
+}
+.eSchoolMotto{
+  position: relative;
+  width: 100%;
+  height: auto;
+  float:left;
+}
+.eSchoolMottoText{
+  width: 80%;
+  height: auto;
+  float: left;
+  padding: 26px;
+  font-size: 26px;
+}
+.eSchoolBlazon{
+  width: 10%;
+  height: auto;
+  float: left;
+  background: #FFFFFF;
+  padding: 25px;
+  text-align: center;
+  box-shadow: -7px 1px 4px #888888;
+}
+.eSchoolBlazon img{
+  width: 64px;
+  height: 64px;
+}
+.mottoWrapper{
+  width: 85%;
+  height: auto;
+  float: left;
+  background: rgba(255,255,255,0.5);
+}
+.eSchoolFixtures{
+  width: 960px;
+  background: #c8cdd0;
+  height: auto;
+  position: relative;
+  float:left;
+  margin-left: 125px;
+  margin-top: 40px;
+}
+.eSchoolFixtureTab{
+  background: $MAIN_COLOR;
+  width: 100%;
+  height: 40px;
+  position:relative;
+  text-align: center;
+}
+.eSchoolFixtureTab i{
+  font-size: 18px;
+  color: #ffffff;
+  text-transform: uppercase;
+  font-style: normal;
+  font-weight: 800;
+  position:relative;
+  top:10px;
+  left:-8px;
+}
+.eSchoolFixtureTab span{
+  display: block;
+  position:absolute;
+  top:40px;
+  left:453px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 20px 20px 0 20px;
+  border-color: $MAIN_COLOR transparent transparent transparent;
+  z-index: 999;
+}
+.bFixtureContainer{
+  border-bottom: 1px solid #CACACA;
+  cursor: pointer;
+  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.3);
+  margin-top: 15px;
+  position: relative;
+  height: auto;
+  width: 100%;
+  float:left;
+  background:#FFFFFF;
+}
+.bFixture_item{
+  float:left;
+  text-align: center;
+  padding: 10px;
+  margin: 10px 0 10px 0;
+}
+.bFixtureIcon{
+  width: 200px;
+  height:auto;
+  border-right: 2px solid #c0c0c0;
+}
+.bFixtureDate{
+  width: 200px;
+  height: auto;
+  border-right: 2px solid #c0c0c0;
+}
+.bFixtureOpponent{
+  width: 160px;
+  height: auto;
+}
+.bFixtureOpponent img{
+  width: 64px;
+  height: 64px;
+}
+.bFixtureOpponent span{
+  display: block;
+}
+.bFixtureResult{
+  width: 100px;
+  height: auto;
+  background:lighten($MAIN_COLOR,10%);
+}
+.bIcon_fixture_mod{
+  width: 100px !important;
+  height: 50px !important;
+}
+.bFix_date{
+  text-transform: uppercase;
+  color:#888888;
+  font-weight: 900;
+}
+.bFix_time{
+  border-bottom: 2px solid #c0c0c0;
+  color:#888888;
+  margin: 2px 0 2px 0;
+  font-weight: 900;
+}
+.bFix_type{
+  text-transform: capitalize;
+  color:#888888;
+  font-weight: 500;
+}
+.no-margin{
+  margin:0;
+}
+.bFix_scoreText{
+  color:#888888;
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 23px;
+}
+.bFix_scoreResult{
+  color:#888888;
+  font-weight: 900;
+  font-size: 26px;
+  margin-bottom: 23px;
+}
+.eNews_tab{
+  background:#0099FF;
+}
+.eNews_tab span{
+  border-color: #0099FF transparent transparent transparent;
+}
+.eSchoolNewsContainer{
+  width: 960px;
+  background: #FFFFFF;
+  height: auto;
+  position: relative;
+  float:left;
+  margin-left: 125px;
+  margin-top: 40px;
+}
+.eSchoolNewsItems{
+  width: 100%;
+  height: auto;
+  position: relative;
+  float:left
+}
+.eSchoolNewsItemLatest{
+  width: 98%;
+  float: left;
+  height: auto;
+  position:relative;
+  padding: 0 10px 10px 10px;
+}
+.eSchoolNewsItemLatest span.eSchoolNewsImage{
+  display: block;
+}
+.eSchoolNewsItemLatest span.eSchoolNewsImage{
+  width: 940px;
+  height: 400px;
+}
+.eSchoolNewsItemLatest span.eSchoolNewsImage img{
+  width: 940px;
+  height: 400px;
+}
+.eSchoolNewsItemLeft{
+  width: 48%;
+  float: left;
+  height: auto;
+  margin-left: 10px;
+}
+.eSchoolNewsItemLeft span.eSchoolNewsImage{
+  display: block;
+}
+.eSchoolNewsItemLeft span.eSchoolNewsImage{
+  width: 460px;
+  height: 300px;
+}
+.eSchoolNewsItemLeft span.eSchoolNewsImage img{
+  width: 460px;
+  height: 300px;
+}
+.eSchoolNewsItemRight{
+  width: 48%;
+  float: left;
+  height: auto;
+  margin-left: 18px;
+}
+.eSchoolNewsItemRight span.eSchoolNewsImage{
+  display: block;
+}
+.eSchoolNewsItemRight span.eSchoolNewsImage{
+  width: 460px;
+  height: 300px;
+}
+.eSchoolNewsItemRight span.eSchoolNewsImage img{
+  width: 460px;
+  height: 300px;
+}
+.eSchoolNewsItemDescription{
+  width:100%;
+  height:auto;
+  float:left;
+  position: relative;
+  background:#0099FF;
+}
+.eSchoolNewsItemDate{
+  width: 20%;
+  height: auto;
+  float: left;
+  padding: 22px;
+  background: #99CCFF;
+}
+.eSchoolNewsItemInfo{
+  width: 70%;
+  float:left;
+  height: auto;
+}
+.eSchoolNewsDateText{
+  font-size: 18px;
+  display:block;
+  font-weight: 500;
+}
+.inlineBlock{
+  display: inline-block;
+}
+.newsItemTitle{
+  padding: 20px;
+  text-decoration: underline;
+  font-style: italic;
+  color: #FFFFFF;
+  font-weight: 900;
+}
+.newsItemExcerpt{
+  color:#FFFFFF;
+}
+.eSchoolNewsItemLeft .newsItemTitle{
+  padding: 5px 10px 10px 10px;
+}
+.eSchoolNewsItemRight .newsItemTitle{
+  padding: 5px 10px 10px 10px;
+}
+.eSchoolNewsItemLeft .newsItemExcerpt{
+  padding: 2px 10px 10px 10px;
+}
+.eSchoolNewsItemRight .newsItemExcerpt{
+  padding: 2px 10px 10px 10px;
+}
+.eSchoolNewsItemLeft .eSchoolNewsDateText, .eSchoolNewsItemRight .eSchoolNewsDateText{
+  font-size: 16px;
+}
+.eSchoolBodyWrapper{
+  position:relative;
+  width: 100%;
+  height: auto;
+  float:left;
+  background: rgba(76,175,80,0.5);
+}
+.eSchoolCalenderContainer{
+  width: 960px;
+  background: #FFFFFF;
+  height: auto;
+  position: relative;
+  float:left;
+  margin-left: 125px;
+  margin-top: 40px;
+}
+.eCalendar_tab{
+  background: #D1D163;
+}
+.eCalendar_tab i{
+  font-weight: 800;
+}
+.eCalendar_tab span{
+  border-color: #D1D163 transparent transparent transparent;
+}
+.eSchoolCalendarWrapper{
+  width: 100%;
+  position: relative;
+  height: auto;
+  padding-top: 20px;
+  float: left;
+  background:#FFFFFF;
+}
+.eSchoolCalendarWrapper .bCalendar{
+  margin-left: 40px;
+  width: 45%;
+  float:left;
+  border-right: 2px solid #c8cdd0;
+  margin-bottom: 20px;
+}
+.eSchoolCalenderFixtureList{
+  width: 50%;
+  height: auto;
+  float:left;
+}
+.eSchoolCalenderFixtureList h4{
+  text-align: center;
+}
+.eSchoolFixtureListItem{
+  margin-left: 20px;
+}
+.eSchoolFixtureListItem h5{
+  font-style: italic;
+  color: $MAIN_COLOR;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+.eSchoolBlog{
+  width: 960px;
+  background: #FFFFFF;
+  position: relative;
+  float:left;
+  height: 250px;
+  margin: 40px 0 40px 125px;
+  overflow:hidden;
+}
+//carousel styles
+.carouselContainer{
+  height: 250px;
+  width: 2880px;
+  background: #FFFFFF;
+  overflow-x:scroll;
+  overflow-y: hidden;
+  position:relative;
+  -webkit-transition: margin 1s;
+  -moz-transition: margin 1s;
+  -ms-transition: margin 1s;
+  -o-transition: margin 1s;
+  transition: margin 1s;
+  overflow: -moz-scrollbars-none;
+  -ms-overflow-style: none;
+}
+.testChildren{
+  height: 248px;
+  width: 958px;
+  //border: 1px solid black;
+  display:inline-block;
+  text-align: center;
+  position:relative;
+  float:left;
+}
+.carouselChevron{
+  position:absolute;
+  top: 88px;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  color:#FFFFFF;
+}
+.chevRight, .chevLeft, .chevUp, .chevDown{
+  cursor: pointer;
+}
+.chevRight{
+  left: 922px;
+}
+.chevUp{
+  top: 0;
+  left: 450px;
+}
+.chevDown{
+  top: 230px;
+  left: 450px;
+}
+.chevronMod{
+  width: 40px !important;
+  height: 64px !important;
+}
+.blogAuthorPicCarousel{
+  width:300px;
+  height:248px;
+  float:left;
+  position: relative;
+  //border:1px solid red;
+}
+.authorPic{
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  border:1px solid #c8cdd0;
+  border-radius: 50%;
+  margin: 20px 20px 20px 55px;
+  overflow: hidden;
+}
+.fixtureCarouselSchoolPic{
+  position:absolute;
+  top: 0;
+  left: 0;
+  width: 200px;
+  height: 200px;
+  border:1px solid #c8cdd0;
+  border-radius: 50%;
+  margin: 20px 20px 20px 55px;
+  overflow: hidden;
+}
+.fixtureCarouselSchoolPic img{
+  width: 140px;
+  height: 184px;
+}
+.fixtureCarouselSchoolComment{
+  width: 300px;
+  height:248px;
+  float:left;
+  font-style: italic;
+  color:#8e908c;
+  font-size: 16px;
+  font-weight:500;
+}
+.authorPic img{
+  width: 206px;
+  height: 206px;
+}
+.blogCommentCarousel{
+  width: 624px;
+  height:248px;
+  float:left;
+  font-style: italic;
+  color:#8e908c;
+  font-size: 16px;
+  font-weight:500;
+  //border:1px solid blue;
+}
+.blogCommentCarousel blockquote{
+  margin-top: 80px;
+}
+.blogCommentCarousel span{
+  display: block;
+  margin: 5px 5px 5px 120px;
+  font-style: italic;
+  color:#8e908c;
+  font-weight:200;
+}
+.eSchoolHomeFooter{
+  background:$MAIN_COLOR;
+  height: 100px;
+  width: 100%;
+  padding-top: 20px;
+  line-height: 100px;
+  float:left;
+  position: relative;
+  text-align: center;
+  color:#FFFFFF;
+}
+.carouselUpScroll{
+  //overflow: hidden;
+  //overflow-y: hidden;
+  overflow: hidden;
+  //height: 1200px;
+  //border: 2px solid red;
+  //overflow: -moz-scrollbars-none;
+  //-ms-overflow-style: none;
+}
+.versusText{
+  font-size: 64px;
+  margin-top: 72px;
+}
+.carouselFixtureComment{
+  font-size: 24px;
+  margin-top:10px;
+}
+.fixtureCarouselParticipantName{
+  position: absolute;
+  top:  230px;
+  left: 130px;
+  color:#8e908c;
+}
+.eSchoolMainSlideOutBanner{
+  position: absolute;
+  top: 0;
+  left:0;
+  //z-index: 1;
+  width: 100%;
+  height: 100%;
+  background:transparent;
+}
+.eSchoolMainSlideOutBanner img{
+  width: 100%;
+  height: 100%;
+}
+.transitionImage{
+  -webkit-transition: all 0.5s ease-in-out, background 0.5s linear;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}

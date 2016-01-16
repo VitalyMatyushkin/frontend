@@ -1,9 +1,13 @@
-var Autocomplete = require('module/ui/autocomplete/autocomplete'),
-    If = require('module/ui/if/if'),
-    Multiselect = require('module/ui/multiselect/multiselect'),
-    EventManagerBase;
+const   Autocomplete    = require('module/ui/autocomplete/autocomplete'),
+        If              = require('module/ui/if/if'),
+        Multiselect     = require('module/ui/multiselect/multiselect'),
+        React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Immutable       = require('immutable');
 
-EventManagerBase = React.createClass({
+let oldSelectedId, alertPopUP;
+
+const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
     /**
      * Сервис фильтрации по дому
@@ -43,7 +47,7 @@ EventManagerBase = React.createClass({
             binding = self.getDefaultBinding(),
             schoolId = binding.get('schoolInfo.id');
 
-        return window.Server.schools.get({
+        return window.Server.getAllSchools.get({
             filter: {
                 where: {
                     id: {
@@ -127,21 +131,48 @@ EventManagerBase = React.createClass({
     },
 	onSelectRival: function (order, id, response, model) {
 		var self = this,
-			binding = self.getDefaultBinding();
-
-		if (model) {
-			binding.update('rivals', function (rivals) {
-				var index = rivals.findIndex(function (rival) {
-					return rival.get('id') === id;
-				});
-
-				if (index === -1) {
-					return rivals.set(order, Immutable.fromJS(model));
-				} else {
-					return rivals;
-				}
-			});
-		}
+			binding = self.getDefaultBinding(),
+            comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
+            dupErrorEl = ReactDOM.findDOMNode(self.refs.dupError),
+            gameType = ReactDOM.findDOMNode(self.refs.gameType).value;
+        /*
+        * Quick fix for duplicated fields
+        * check combo boxes for equality if equal alert the user
+        * */
+        if(gameType ==='houses'){
+            if(comboBoxes[0].value !== comboBoxes[1].value){
+                document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
+                dupErrorEl.style.display = 'none';
+                if (model) {
+                    binding.update('rivals', function (rivals) {
+                        var index = rivals.findIndex(function (rival) {
+                            return rival.get('id') === id;
+                        });
+                        if (index === -1) {
+                            return rivals.set(order, Immutable.fromJS(model));
+                        } else {
+                            return rivals;
+                        }
+                    });
+                }
+            }else{
+                document.getElementsByClassName('eEvents_button')[1].style.display = 'none'; // Hide next button to avoid temptation of hitting it!
+                dupErrorEl.style.display = 'block'; //Show error message
+            }
+        }else{
+            if (model) {
+                binding.update('rivals', function (rivals) {
+                    var index = rivals.findIndex(function (rival) {
+                        return rival.get('id') === id;
+                    });
+                    if (index === -1) {
+                        return rivals.set(order, Immutable.fromJS(model));
+                    } else {
+                        return rivals;
+                    }
+                });
+            }
+        }
 	},
     getSports: function () {
         var self = this,
@@ -181,13 +212,13 @@ EventManagerBase = React.createClass({
             });
 
         if (sport) {
-            return sport.toJS().limits.genders.map(function (gender) {
+            return sport.toJS().limits.genders.map(function (gender, genInd) {
                 var names = {
                     male: 'boys',
                     female: 'girls'
                 };
 
-                return <label onClick={self.changeCompleteGender}>
+                return <label key={genInd} onClick={self.changeCompleteGender}>
                             <Morearty.DOM.input
                                 type="radio"
                                 key={gender + '-gender'}
@@ -293,7 +324,7 @@ EventManagerBase = React.createClass({
             <If condition={binding.get('model.ages').count() > 0}>
                 <div className="eManager_group">
                     {'Game Type'}
-                    <select
+                    <select ref="gameType"
                         className="eManager_select"
                         defaultValue={null}
                         value={type}
@@ -342,6 +373,9 @@ EventManagerBase = React.createClass({
                                 onSelect={self.onSelectRival.bind(null, 1)}
                                 binding={binding.sub('autocomplete.houses.1')}
                             />
+                            <div ref="dupError" className="hHouseDuplicateError">
+                                <span>The above fields are duplicates-please select unique house names!</span>
+                            </div>
                         </div>
                     </If>
                     {type === 'internal' ? 'Create a team' : null}

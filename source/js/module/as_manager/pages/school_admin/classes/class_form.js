@@ -1,7 +1,8 @@
 var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
- 	PromiseClass = require('module/core/promise'),
+	Promise = require('bluebird'),
+	React = require('react'),
 	ClassForm;
 
 ClassForm = React.createClass({
@@ -12,8 +13,7 @@ ClassForm = React.createClass({
 	},
 	getAllAges: function() {
 		var self = this,
-			allAgesArray = [],
-			promise = new PromiseClass();
+			allAgesArray = [];
 
 		for (var i = 3; i <= 8; i++) {
 			allAgesArray.push({
@@ -23,19 +23,14 @@ ClassForm = React.createClass({
 			});
 		}
 
-		promise.resolve(allAgesArray);
-
-		// Service Promise capability TODO: wtf
-		promise.abort = function(){};
-
-		return promise;
+		return Promise.resolve(allAgesArray);
 	},
 	render: function() {
 		var self = this;
 
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
-				<FormField type="text" field="name" validation="required">Form name</FormField>
+				<FormField type="text" promptOnBlank={true} field="name" validation="required">Form name</FormField>
 				<FormField type="select" sourcePromise={self.getAllAges} field="age" validation="required">Age group</FormField>
 			</Form>
 		)

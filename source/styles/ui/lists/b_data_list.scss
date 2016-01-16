@@ -127,3 +127,142 @@
   display: inline-block;
   vertical-align: middle;
 }
+.eDataList_console{
+  display: table-row-group;
+}
+.eDataList_accountRole{
+  width: 40%;
+}
+.eDataList_accountRoleName{
+  width: 20%
+}
+.eSchoolMaster_plus{
+  color:green;
+  margin-right: 10px;
+  cursor:pointer;
+}
+.hideElement{
+  display:none;
+}
+.showElement{
+  display:table-cell !important;
+}
+.roleAccepted{
+  color:green;
+}
+.roleDeclined{
+  color:red;
+}
+.rolePending{
+  color:orangered;
+}
+.eDataList_accountReqSchool{
+  width: 30%;
+}
+.eDataList_accountReqRoles{
+  width: 10%;
+}
+.eDataList_accountReqDetails{
+  width: 30%
+}
+.eDataList_accountReqDate{
+  width: 15%;
+}
+.eDataList_accountReqStatus{
+  width: 15%;
+}
+.eLogDataList{
+  width: 100%;
+  height: auto;
+}
+.eLogDataList table{
+  margin-top: 20px;
+}
+.eLogDataList table, .eLogDataList td{
+  border: 1px solid #cccccc;
+  border-collapse: collapse;
+}
+.eLogDataList td{
+  text-align: center;
+  padding: 4px;
+}
+.eLogDataList tr:hover{
+  background: $MAIN_COLOR;
+  cursor: pointer;
+}
+.eLogDataList table tr th{
+  border-collapse: collapse;
+  border:1px solid black;
+  padding: 10px;
+  background: #c8cdd0;
+  width: 17%;
+}
+.eLogDateTime{
+  width: 25% !important;
+}
+.eLogDataList_header{
+  background: $MAIN_COLOR;
+  padding:10px 0 10px 0;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+  width: 100%;
+}
+.eLogDataList_header span{
+  padding-left: 10px;
+}
+.eLogDataList_filtering{
+  padding-top: 10px;
+}
+.eLogDataList_filtering span{
+  margin-left: 4px;
+  cursor: pointer;
+}
+.eLogDataList_filtering span:hover{
+  text-decoration: underline;
+  color:$MAIN_COLOR;
+}
+.ePagination_container{
+  margin-top: 20px;
+  padding: 10px;
+  width: 100%;
+  height: auto;
+  position:relative;
+  float:left;
+}
+.ePage_num{
+  display: inline-block;
+  padding: 2px;
+  width: 89%;
+  height: auto;
+  float:left;
+}
+.ePage_num span{
+  margin: 2px;
+  cursor: pointer;
+}
+.ePage_num span:hover{
+  text-decoration: underline;
+  color: $MAIN_COLOR;
+}
+.perActive{
+  text-decoration: underline;
+  color: $MAIN_COLOR;
+}
+.perInActive{
+  text-decoration: none;
+}
+.ePage_limit{
+  display: inline-block;
+  width:10%;
+  height: auto;
+  float:left;
+}
+.filterInputInActive{
+  display: none;
+}
+.filterInputActive{
+  display: table-cell;
+}
+.eTable_view{
+  border-bottom: 2px solid #c8cdd0;
+}

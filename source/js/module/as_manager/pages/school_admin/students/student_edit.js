@@ -1,7 +1,8 @@
-var StudentForm = require('module/as_manager/pages/school_admin/students/student_form'),
-	StudentEditPage;
+const 	StudentForm 	= require('module/as_manager/pages/school_admin/students/student_form'),
+		React 			= require('react'),
+		Immutable 		= require('immutable');
 
-StudentEditPage = React.createClass({
+const StudentEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
@@ -15,7 +16,16 @@ StudentEditPage = React.createClass({
 
 		if (activeSchoolId && studentId) {
 			window.Server.student.get(studentId).then(function (data) {
-				self.isMounted() && binding.set(Immutable.fromJS(data));
+				window.Server.user.get(data.userId).then(function (userdata) {
+					//TODO use filter include
+					data.firstName = userdata.firstName;
+					data.lastName = userdata.lastName;
+					data.birthday = userdata.birthday;
+					data.gender = userdata.gender;
+					self.isMounted() && binding.set(Immutable.fromJS(data));
+					return userdata;
+				});
+				return data;
 			});
 
 			self.activeSchoolId = activeSchoolId;
@@ -25,9 +35,24 @@ StudentEditPage = React.createClass({
 	submitEdit: function(data) {
 		var self = this;
 
-		window.Server.student.put(self.studentId, data).then(function() {
+		window.Server.user.put(
+			data.userId,
+			{
+				firstName: data.firstName,
+				lastName: data.lastName,
+				birthday: data.birthday,
+				gender: data.gender
+			}
+		).then(function() {
+			delete data.firstName;
+			delete data.lastName;
+			delete data.birthday;
+			delete data.gender;
+			return window.Server.student.put(self.studentId, data);
+		}).then(function() {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
 		});
+
 	},
 	render: function() {
 		var self = this,

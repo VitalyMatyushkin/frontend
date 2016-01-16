@@ -1,17 +1,17 @@
-var AutocompleteTeam,
-    SVG = require('module/ui/svg'),
-    Promise = require('module/core/promise'),
-    Autocomplete = require('module/ui/autocomplete/autocomplete');
+const   React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Immutable 	    = require('immutable'),
+        SVG             = require('module/ui/svg'),
+        Promise         = require('bluebird'),
+        Autocomplete    = require('module/ui/autocomplete/autocomplete');
 
-AutocompleteTeam = React.createClass({
+const AutocompleteTeam = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'AutocompleteTeam',
     componentWillMount: function () {
         var self = this,
             binding = self.getDefaultBinding(),
             rivalBinding = self.getBinding('rival');
-
-        binding.set('_students', Immutable.List());
 
         rivalBinding
             .meta()
@@ -40,14 +40,11 @@ AutocompleteTeam = React.createClass({
     serviceStudentFullData: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            students = binding.toJS('_students'),
-            promise = new Promise();
+            students = binding.toJS('_students');
 
-        promise.resolve(students.filter(function (student) {
+        return Promise.resolve(students.filter(function (student) {
             return self.getIncludePlayersIds().toJS().indexOf(student.id) === -1;
         }));
-
-        return promise;
     },
     fetchFullData: function () {
         var self = this,
@@ -65,26 +62,29 @@ AutocompleteTeam = React.createClass({
                         inq: forms.map(function (form) {
                             return form.get('id');
                         }).toJS()
-                    },
-                    gender: binding.get('model.gender') || 'male'
-                }
+                    }
+                },
+				include: "user"
             };
-
 
         if (type === 'houses') {
             filter.where.houseId = binding.get('id');
         }
 
-        window.Server.students.get(schoolId, {
-            filter: filter
+        window.Server.getAllStudents.get({
+			filter: filter
         }).then(function (data) {
-            data.map(function (player) {
-                player.name = player.firstName + ' ' + player.lastName;
+            var gender = binding.get('model.gender') || 'male';
+			var players = [];
+			data.forEach(function(player) {
+				//filter by gender
+				if(player.user.gender === gender) {
+					player.name = player.user.firstName + ' ' + player.user.lastName;
+					players.push(player);
+				}
+			});
 
-                return player.name;
-            });
-
-            binding.set('_students', Immutable.fromJS(data));
+            binding.set('_students', Immutable.fromJS(players));
         });
     },
     /**

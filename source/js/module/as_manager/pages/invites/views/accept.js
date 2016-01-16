@@ -1,8 +1,10 @@
-var InviteAcceptView,
-    If = require('module/ui/if/if'),
-    Manager = require('module/ui/managers/manager');
+const   If          = require('module/ui/if/if'),
+        Manager     = require('module/ui/managers/manager'),
+        React       = require('react'),
+        classNames  = require('classnames'),
+        Immutable   = require('immutable');
 
-InviteAcceptView = React.createClass({
+const InviteAcceptView = React.createClass({
     mixins: [Morearty.Mixin],
     display: 'InviteAccept',
     componentWillMount: function () {

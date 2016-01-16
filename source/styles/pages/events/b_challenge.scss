@@ -101,9 +101,79 @@
   margin-top: -8px;
   opacity: 0.8;
 }
-
-
-
+.eChallenge_all{
+  margin: 10px 0 10px 0;
+  cursor:pointer;
+  border-bottom: 1px solid #CACACA;
+  box-shadow: 0 1px 2px 1px;
+  padding: 10px !important;
+}
+.eChallenge_childName{
+  font-size: 15px;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+.eChallenge_basicMod{
+  border-top: 1px solid #CACACA;
+}
+.eChallenge_marginTopBottom{
+  margin:4px 0 4px 0;
+}
+.eAllAchievements_container{
+  position: relative;
+  float: left;
+  width: 100%;
+  height:100%;
+  border:1px solid #8e908c ;
+  box-shadow: 0 1px 2px 1px;
+}
+.eAchievement_common{
+  position: relative;
+  float:left;
+  border-right:1px solid #8e908c;
+  padding: 4px;
+}
+.eAchievement_name{
+  width:275px;
+  height: 20px;
+  border-right: 1px solid #8e908c;
+}
+.eAchievementGamesPlayed{
+  width:200px;
+  height: 20px;
+  border-right: 1px solid #8e908c;
+}
+.eAchievementGamesWon{
+  position: relative;
+  float:left;
+  width:200px;
+  height: 20px;
+  border-right: 1px solid #8e908c;
+}
+.eAchievementGamesLost{
+  width:200px;
+  height: 20px;
+}
+.eAchievementGoalsScored{
+  width:200px;
+  height: 20px;
+  border: none;
+}
+.eAchievement_header{
+  position: relative;
+  float: left;
+  width:100%;
+  height: 100%;
+  background:#cacaca;
+  border-bottom: 1px solid #8e908c;
+}
+.eAchievement_row{
+  position: relative;
+  float: left;
+  width:100%;
+  height: 100%;
+  border-bottom: 1px solid #8e908c;
+}
 
 
 

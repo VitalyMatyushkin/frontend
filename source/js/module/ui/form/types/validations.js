@@ -2,7 +2,28 @@
  * Раздичные виды валидации
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
+const 	React 	= require('react'),
+		$ 		= require('jquery');
+
 var validationsSet = {
+	phone: function(value) {
+
+		if (!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))) {
+			return 'Should contain phone number';
+		} else {
+			return false;
+		}
+	},
+	date:function(value){
+		//TODO implement this properly
+		//console.log(value);
+		//if(!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))){
+		//	return 'Please fill out this field';
+		//}else{
+		//	return false;
+		//}
+		return false;
+	},
 	email: function(value) {
 		var self = this;
 
@@ -14,9 +35,18 @@ var validationsSet = {
 	},
 	alphanumeric: function(value) {
 		var self = this;
-
-		if (/[^a-zA-Z0-9\-\/]/.test(value)) {
+        //old RegExp /[^a-zA-Z0-9\-\/]/
+		if (/[^a-zA-Z0-9\-\/]+$/.test(value)) {
 			return 'Should contain only alphanumeric characters';
+		} else {
+			return false;
+		}
+	},
+	text: function(value) {
+		var self = this;
+
+		if (/[^a-zA-Z\-\/]/.test(value)) {
+			return 'Should contain only text characters';
 		} else {
 			return false;
 		}
@@ -36,16 +66,18 @@ var validationsSet = {
 	},
 	server: function(value) {
 		var self = this,
+            oldPhoneCheckVal,
 			dataToCheck = {};
-
 		if (value === '') {
 			return false;
 		}
-
+        if(self.props.onPrePost !== undefined){
+            oldPhoneCheckVal = value;
+            value = self.props.onPrePost(value);
+        }
 		dataToCheck[self.props.field] = value;
-
 		$.ajax({
-			url: 'http://api.squadintouch.com:80/v1/' + self.props.service + '/check',
+			url: 'http:' + window.apiBase + '/' + self.props.service + '/check',
 			type: 'POST',
 			crossDomain: true,
 			data: dataToCheck,
@@ -59,7 +91,11 @@ var validationsSet = {
 				// Проверяем, актуально ли проверяемое значение поля
 				if (data.unique === false && self.getDefaultBinding().get('value') === value) {
 					self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
-				}
+				}else if(data.unique === false && self.getDefaultBinding().get('value') === oldPhoneCheckVal){
+                    self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
+                }else{
+                    self.showSuccess(self.props.name +' is available to you');
+                }
 			}
 		});
 	}

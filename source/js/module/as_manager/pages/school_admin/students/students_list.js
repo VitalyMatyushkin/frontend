@@ -1,18 +1,18 @@
-var List = require('module/ui/list/list'),
-	ListField = require('module/ui/list/list_field'),
-	Table = require('module/ui/list/table'),
+const Table = require('module/ui/list/table'),
 	TableField = require('module/ui/list/table_field'),
 	DateTimeMixin = require('module/mixins/datetime'),
 	SVG = require('module/ui/svg'),
 	ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-	StudentsListPage;
+	React = require('react');
 
-StudentsListPage = React.createClass({
+const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	serviceName: 'students',
+    serviceCount:'studentsCount',
 	filters: {
-		include: ['form', 'parents']
+		include: ['user','form','parents']
 	},
+    sandbox:true,
 	_getViewFunction: function() {
 		var self = this;
 
@@ -25,46 +25,68 @@ StudentsListPage = React.createClass({
 		}
 	},
 	getForm: function (value) {
-		return value.name;
+        if(value !== undefined){
+            return value.name;
+        }
 	},
-	getGender: function (value) {
+	getGender: function (user) {
 		var self = this,
-			icon = value === 'male' ? 'icon_man': 'icon_woman';
+			icon = user !== undefined ?(user.gender === 'male' ? 'icon_man': 'icon_woman'):'';
 
 		return <SVG icon={icon} />;
 	},
+	getBirthday: function(user) {
+		var self = this;
+        if(user !== undefined){
+            return self.getAgeFromBirthday(user.birthday);
+        }
+	},
 	getAgeFromBirthday: function(value) {
-		var self = this,
-			birthday = new Date(value),
-			date = self.zeroFill(birthday.getDate()),
-			month = birthday.getMonth(),
-			year = birthday.getFullYear();
+		var self = this;
+        if(value !== undefined){
+            var	birthday = new Date(value),
+                date = self.zeroFill(birthday.getDate()),
+                month = birthday.getMonth(),
+                year = birthday.getFullYear();
 
-		return [date, self.getMonthName(month), year].join(' ');
+            return [date, self.getMonthName(month), year].join(' ');
+        }
 	},
 	getParents: function(parents) {
 		var self = this;
+        if(parents !== undefined){
+            return parents ? parents.map(function(parent) {
+                var iconGender = parent.gender === 'male' ? 'icon_man': 'icon_woman';
 
-		return parents ? parents.map(function(parent) {
-			var iconGender = parent.gender === 'male' ? 'icon_man': 'icon_woman';
-
-			return (<div className="eDataList_parent">
-				<span className="eDataList_parentGender"><SVG icon={iconGender} /></span>
-				<span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
-			</div>);
-		}) : null;
+                return (<div className="eDataList_parent">
+                    <span className="eDataList_parentGender"><SVG icon={iconGender} /></span>
+                    <span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
+                </div>);
+            }) : null;
+        }
+	},
+	getFirstName: function(user) {
+        if(user !== undefined){
+            return user.firstName;
+        }
+	},
+	getLastName: function(user) {
+        if(user !== undefined){
+            return user.lastName;
+        }
 	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		return (
-			<Table title="Students" binding={binding} onItemView={self._getViewFunction()} onItemEdit={self._getEditFunction()} onFilterChange={self.updateData}>
-				<TableField width="3%" dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="firstName">First name</TableField>
-				<TableField width="15%" dataField="lastName">Last name</TableField>
+			<Table title="Students" binding={binding} onItemView={self._getViewFunction()}
+				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
+				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
+				<TableField width="3%" dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="firstName" parseFunction={self.getFirstName}>First name</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="lastName" parseFunction={self.getLastName}>Last name</TableField>
 				<TableField width="5%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
-				<TableField width="15%" dataField="birthday" filterType="range" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
+				<TableField width="15%" dataField="user" filterType="none" parseFunction={self.getBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
 		)

@@ -1,4 +1,5 @@
 var ClassForm = require('module/as_manager/pages/school_admin/classes/class_form'),
+	React = require('react'),
 	ClassAddPage;
 
 ClassAddPage = React.createClass({

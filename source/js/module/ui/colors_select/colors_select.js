@@ -1,7 +1,8 @@
-var ColorPicker = require('module/ui/colors_select/color_picker'),
-	ColorsSelect;
+const 	ColorPicker 	= require('module/ui/colors_select/color_picker'),
+		React 			= require('react'),
+		Immutable 		= require('immutable');
 
-ColorsSelect =  React.createClass({
+const ColorsSelect =  React.createClass({
 	propTypes: {
 		maxColors: React.PropTypes.number
 	},

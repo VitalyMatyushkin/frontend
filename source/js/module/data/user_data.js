@@ -1,31 +1,43 @@
-var DataPrototype = require('module/data/data_prototype'),
-	UserDataClass = Object.create(DataPrototype);
+const   DataPrototype   = require('module/data/data_prototype'),
+        UserDataClass   = Object.create(DataPrototype),
+        Helpers		    = require('module/helpers/storage'),
+        $               = require('jquery');
 
 /**
- * Получение начального состояния данных UserData
+ * Getting initial state of UserData
  */
-UserDataClass.getDefaultState = function(){
-	var self = this;
+UserDataClass.getDefaultState = function () {
+    var self = this;
 
-	// Востановлении информации о состоянии авторизации
-	return {
-		authorizationInfo: Helpers.LocalStorage.get('UserData.authorizationInfo') || {}
-	};
+    // Recovering authorization state info
+    return {
+        authorizationInfo: Helpers.cookie.get('authorizationInfo') || {}
+    };
 };
 
 /**
- * Привязка к изменению данных UserData
+ * Binding to data update in UserData
  */
-UserDataClass.initBind = function() {
-	var self = this,
-		bindObject = self.bindObject;
+UserDataClass.initBind = function () {
+    var self = this,
+        bindObject = self.bindObject;
 
-	// Данные об авторизации мы храним
-	bindObject.addListener('authorizationInfo', function() {
-		var data = bindObject.get('authorizationInfo');
+    // Keeping authorization data
+    bindObject.addListener('authorizationInfo', function () {
+        var data = bindObject.get('authorizationInfo'),
+            authorizationInfo = data ? data.toJS() : {};
 
-		Helpers.LocalStorage.set('UserData.authorizationInfo', data);
-	});
+        data && Helpers.cookie.set('authorizationInfo', authorizationInfo);
+
+        // configuring ajax to perform all ajax requests from jquery with Authorization header
+        $.ajaxSetup({
+            headers: {
+                Authorization: authorizationInfo.id,
+                'Content-Type': 'application/json',
+                Accept: 'application/json'
+            }
+        });
+    });
 };
 
 module.exports = UserDataClass;

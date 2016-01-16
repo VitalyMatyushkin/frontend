@@ -1,9 +1,10 @@
-var InvitesView,
-    RouterView = require('module/core/router'),
-    Route = require('module/core/route'),
-	SubMenu = require('module/ui/menu/sub_menu');
+const 	RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route'),
+		React 		= require('react'),
+		Immutable 	= require('immutable'),
+		SubMenu 	= require('module/ui/menu/sub_menu');
 
-InvitesView = React.createClass({
+const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({

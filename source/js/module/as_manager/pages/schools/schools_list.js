@@ -1,21 +1,24 @@
-var SchoolListPage;
+const 	React 		= require('react'),
+		Immutable 	= require('immutable');
 
-SchoolListPage = React.createClass({
+const SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
 			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
 
-		userId && Server.schools.get({
-            filter: {
-                where: {
-                    ownerId: userId
-                },
-                include: ['postcode']
-            }
-        }).then(function(data) {
-			self.getDefaultBinding().set(Immutable.fromJS(data));
-		});
+		if(userId !== null && userId !== undefined) {
+			window.Server.getMaSchools.get(
+				{
+					filter: {
+						presets:["owner","admin","manager","teacher","coach"],
+						include: "postcode"
+					}
+				}
+			).then(function(data){
+				self.getDefaultBinding().set(Immutable.fromJS(data));
+			});
+		}
 	},
 	setSchoolAsActive: function(school) {
 		var self = this,
@@ -35,9 +38,9 @@ SchoolListPage = React.createClass({
 			schoolList = binding.toJS();
 
 		if (schoolList && schoolList.length > 0) {
-			schoolNodes = schoolList.map(function (school) {
+			schoolNodes = schoolList.map(function (school, schoolIndex) {
 				return (
-					<a  href='/#school_admin/summary'
+					<a key={schoolIndex}  href='/#school_admin/summary'
                         className="eSchoolList_one"
                         onClick={self.setSchoolAsActive.bind(null, school)}>
                         {school.name}
@@ -52,9 +55,6 @@ SchoolListPage = React.createClass({
 
 				<div className="eSchoolList_wrap">
 					{schoolNodes}
-                    <a href="/#schools/add" className="eSchoolList_one mAddNew">
-                        +
-                    </a>
 				</div>
 			</div>
 		)
@@ -63,3 +63,8 @@ SchoolListPage = React.createClass({
 
 
 module.exports = SchoolListPage;
+
+/*
+*                     <a href="/#schools/add" className="eSchoolList_one mAddNew">
+ +
+ </a>*/

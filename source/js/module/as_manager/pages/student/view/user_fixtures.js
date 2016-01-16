@@ -1,18 +1,18 @@
 /**
  * Created by bridark on 25/04/15.
  */
-    require('module/as_manager/pages/events/manager/base');
-var UserFixtures,
-    fixData,
-    index;
-UserFixtures = React.createClass({
+
+const   React       = require('react'),
+        Immutable   = require('immutable');
+
+const UserFixtures = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
         title: React.PropTypes.string
     },
     componentDidMount:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
             fixtureBinding = self.getMoreartyContext().getBinding(),
             studentId = fixtureBinding.get('routing.parameters.id');
     },
@@ -80,9 +80,9 @@ UserFixtures = React.createClass({
                 }
                 if (type === 'inter-schools') {
                     firstName = event.participants[0].school.name;
-                    secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
+                    secondName = event.participants[1]!== undefined ?event.participants[1].school.name :'';
                     firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
+                    secondPic = event.participants[1]!==undefined?event.participants[1].school.pic:'';
                 } else if (type === 'houses') {
                     firstName = event.participants[0].house.name;
                     secondName = event.participants[1].house.name;
@@ -98,7 +98,7 @@ UserFixtures = React.createClass({
                     firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
                 }
-                return <div className="bChallenge"
+                return <div key={index} className="bChallenge"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
@@ -144,13 +144,13 @@ UserFixtures = React.createClass({
                 return memo;
             }, Immutable.List());
 
-            return dates.count()!==0 ? dates.sort().map(function(datetime){
+            return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
                 var date = new Date(datetime),
                     daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                     monthNames = [ "January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December" ],
                     dayOfWeek = date.getDay();
-                return <div className="bChallengeDate">
+                return <div key={dateTimeIndex} className="bChallengeDate">
                     <div className="eChallengeDate_date">
                         {daysOfWeek[dayOfWeek] + ' ' +
                         date.getDate() + ' ' +

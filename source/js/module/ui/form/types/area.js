@@ -1,5 +1,7 @@
 var TypeAutocomplete = require('module/ui/form/types/autocomplete'),
 	AreaMixin,
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeArea;
 
 TypeArea = React.createClass({
@@ -12,7 +14,7 @@ TypeArea = React.createClass({
 			var postCodeId = binding.get('defaultValue');
 
 			if (postCodeId) {
-				self.valueRequest && self.valueRequest.abort();
+				self.valueRequest && self.valueRequest.cancel();
 				binding.set('defaultLabel', postCodeId);
 			}
 		});
@@ -29,7 +31,7 @@ TypeArea = React.createClass({
                 limit: 10
             };
 
-		self.request && self.request.abort();
+		self.request && self.request.cancel();
 
 		if (!value) {
 			return undefined;

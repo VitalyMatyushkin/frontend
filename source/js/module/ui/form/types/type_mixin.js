@@ -1,4 +1,6 @@
 var InputTypeMixin,
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	validationsSet = require('module/ui/form/types/validations');
 
 
@@ -21,7 +23,7 @@ InputTypeMixin = {
 				if (validationsSet[validType] !== undefined) {
 					self.validations[validType] = validationsSet[validType].bind(self);
 				} else {
-					self.validations[validType] = validationsSet['any'].bind(self);;
+					self.validations[validType] = validationsSet['any'].bind(self);
 				}
 			});
 		}
@@ -45,7 +47,7 @@ InputTypeMixin = {
 			return false;
 		}
 
-		if (currentCheck = self.validations[validType](value)) {
+		if ((currentCheck = self.validations[validType](value))) {
 			binding.set('error', currentCheck);
 
 			return currentCheck;
@@ -98,7 +100,11 @@ InputTypeMixin = {
 
 		if (value !== '' && validateResult) {
 			self.showError();
-		} else {
+		}else if(value ==='' && self.props.promptOnBlank){
+			//Test against empty string and show error
+			self.showError();
+		}
+		else{
 			self.hideError();
 		}
 
@@ -108,16 +114,20 @@ InputTypeMixin = {
 	showError: function(text) {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		text && binding.set('error', text);
 		binding.set('showError', true);
 	},
 	hideError: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		binding.set('showError', false);
-	}
+	},
+    showSuccess:function(text){
+        var self = this,
+            binding = self.getDefaultBinding();
+        text && binding.set('success', text);
+        binding.set('showSuccess',true);
+    }
 };
 
 module.exports = InputTypeMixin;

@@ -1,4 +1,5 @@
 var TopMenu,
+	React = require('react'),
 	Mixin = require('module/ui/menu/menu_mixin');
 
 TopMenu = React.createClass({

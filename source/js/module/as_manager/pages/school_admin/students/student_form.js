@@ -1,10 +1,10 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	PromiseClass = require('module/core/promise'),
-	StudentForm;
+const 	Form		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		FormColumn 	= require('module/ui/form/form_column'),
+		Promise 	= require('bluebird'),
+		React 		= require('react');
 
-StudentForm = React.createClass({
+const StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		schoolId: React.PropTypes.string.isRequired,
@@ -12,24 +12,21 @@ StudentForm = React.createClass({
 		onFormSubmit: React.PropTypes.func
 	},
 	getClassService: function() {
-		var self = this;
-
+		const self = this;
 		return function() {
-
 			return window.Server.forms.get(self.props.schoolId);
 		}
 	},
 	getHouseService: function() {
-		var self = this;
+		const self = this;
 
 		return function() {
 			return window.Server.houses.get(self.props.schoolId);
 		}
 	},
 	getGender: function() {
-		var self = this,
-			promise = new PromiseClass(),
-			gendersArray = [
+		const 	self = this,
+				gendersArray = [
 				{
 					value: 'boy',
 					id: 'male'
@@ -40,12 +37,7 @@ StudentForm = React.createClass({
 				}
 			];
 
-		promise.resolve(gendersArray);
-
-		// Service Promise capability TODO: wtf
-		promise.abort = function(){};
-
-		return promise;
+		return Promise.resolve(gendersArray);
 	},
 	render: function() {
 		var self = this;
@@ -55,11 +47,11 @@ StudentForm = React.createClass({
 				<FormColumn type="column">
 					<FormField type="text" field="firstName" validation="required">First name</FormField>
 					<FormField type="text" field="lastName" validation="required">Last name</FormField>
-					<FormField type="radio" field="gender" sourcePromise={self.getGender} validation="required">Gender</FormField>
+					<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
 				</FormColumn>
 
 				<FormColumn type="column">
-					<FormField type="date" field="birthday" validation="required">Birthday</FormField>
+					<FormField type="date" field="birthday" validation="date">Birthday</FormField>
 					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" validation="required">Form</FormField>
 					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" validation="required">House</FormField>
 				</FormColumn>

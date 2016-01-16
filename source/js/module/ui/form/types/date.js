@@ -1,5 +1,7 @@
 var TypeMixin = require('module/ui/form/types/type_mixin'),
 	MaskedInput = require('module/ui/masked_input'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeDate;
 
 // mm.dd.fullyear
@@ -20,17 +22,17 @@ TypeDate =  React.createClass({
 			date,
 			value;
 
-		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.getDOMNode().value === '' || self.refs.fieldInput.getDOMNode().value === '__.__.____')) {
+		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.value === '' || self.refs.fieldInput.value === '__.__.____')) {
 			date = new Date(value);
 			dateString = ('0' + (date.getMonth()+1)).slice(-2) + '.' + ('0' + date.getDate()).slice(-2) + '.' + date.getFullYear();
 
-			self.refs.fieldInput.getDOMNode().value = dateString;
+			self.refs.fieldInput.value = dateString;
 			self.fullValidate(value);
 		}
 	},
 	_converToIso: function(dotString) {
 		var self = this,
-			dateParts = dotString.split('.'),
+			dateParts = dotString !== undefined ? dotString.split('.'):'',
 			inputDate = new Date();
 
 		if (dateParts.length === 3 && (dateParts[0] > 0 && dateParts[0] < 13) && (dateParts[1] > 0 && dateParts[1] < 32) && (dateParts[2])) {
@@ -45,14 +47,14 @@ TypeDate =  React.createClass({
 	},
 	handleBlur: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.getDOMNode().value;
+			inputValue = self.refs.fieldInput.value;
 
 
 		self.setValue(self._converToIso(inputValue));
 	},
 	handleChange: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.getDOMNode().value;
+			inputValue = self.refs.fieldInput.value;
 
 		self.changeValue(self._converToIso(inputValue));
 	},

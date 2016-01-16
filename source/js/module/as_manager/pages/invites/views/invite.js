@@ -1,4 +1,6 @@
 var InvitesMixin = require('../mixins/invites_mixin'),
+	classNames = require('classnames'),
+	React = require('react'),
     InviteView;
 
 InviteView = React.createClass({

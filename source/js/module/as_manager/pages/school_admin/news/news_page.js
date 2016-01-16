@@ -1,5 +1,6 @@
 var NewsPage,
 	RouterView = require('module/core/router'),
+	React = require('react'),
 	Route = require('module/core/route');
 
 NewsPage = React.createClass({

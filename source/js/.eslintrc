@@ -1,0 +1,35 @@
+{
+    "ecmaFeatures": {
+        "jsx":              true,
+        "blockBindings":    true,
+        "templateStrings":  true,
+        "arrowFunctions":   true
+    },
+    "rules": {
+        "comma-dangle":             [2, "never"],
+        "no-cond-assign":           2,
+        "no-constant-condition":    2,
+        "no-dupe-args":             2,
+        "no-dupe-keys":             2,
+        "no-duplicate-case":        2,
+        "no-empty":                 2,
+        "no-func-assign":           2,
+        "no-inner-declarations":    2,
+        "no-unreachable":           2,
+        "no-delete-var":            2,
+        "no-undef":                 1       // it will just warns us for a while. After removing all trash it will upped to 2
+//        "no-unused-vars": 2   // produces a lot of errors. Will be turned on later
+    },
+    "globals": {  // global variables allowed by 'no-undef' rule. true is read-write for var, false is read-only
+        "require":      false,
+        "module":       true,
+        "Morearty":     false,   // yeah f*cking Morearty is global
+        "Map":          true,         // this is really Map component, which overrides ES6 Map
+        "Promise":      true,          // hardly used with bluebird
+        "requirejs":    true,
+        "onmessage":    true   // for worker
+    },
+    "env": {
+        "browser": true
+    }
+}

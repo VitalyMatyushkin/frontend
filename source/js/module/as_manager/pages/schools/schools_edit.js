@@ -1,7 +1,8 @@
-var SchoolForm = require('module/as_manager/pages/schools/schools_form'),
-	EditSchoolForm;
+const 	SchoolForm 	= require('module/as_manager/pages/schools/schools_form'),
+		React 		= require('react'),
+		Immutable 	= require('immutable');
 
-EditSchoolForm = React.createClass({
+const EditSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
@@ -21,11 +22,12 @@ EditSchoolForm = React.createClass({
 		}
 	},
 	submitEdit: function(schoolData) {
+        console.log(schoolData);
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
-
-		window.Server.school.put(self.schoolId, schoolData).then(function() {
+        schoolData.pic = globalBinding.toJS().picUrl;
+		window.Server.school.put(self.schoolId, schoolData).then(function(res) {
 			document.location.hash = 'school_admin/summary';
 		});
 

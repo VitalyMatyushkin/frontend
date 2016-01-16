@@ -1,8 +1,10 @@
 /**
  * Created by bridark on 25/04/15.
  */
-var UserAchievements;
-UserAchievements = React.createClass({
+const   React       = require('react'),
+        Immutable   = require('immutable');
+
+const UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
@@ -82,7 +84,7 @@ UserAchievements = React.createClass({
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
                 }
                 //console.log(index+"  index");
-                return <div className="bChallenge"
+                return <div key={index} className="bChallenge"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
@@ -112,7 +114,6 @@ UserAchievements = React.createClass({
         }
     },
     getDates: function (dataFrom) {
-        //console.log(dataFrom);
         var self = this,
             binding = self.getDefaultBinding(),
             dates;
@@ -128,13 +129,13 @@ UserAchievements = React.createClass({
                 return memo;
             }, Immutable.List());
 
-            return dates.count()!==0 ? dates.sort().map(function(datetime){
+            return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
                 var date = new Date(datetime),
                     daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                     monthNames = [ "January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December" ],
                     dayOfWeek = date.getDay();
-                return <div className="bChallengeDate">
+                return <div key={dateTimeIndex} className="bChallengeDate">
                     <div className="eChallengeDate_date">
                         {daysOfWeek[dayOfWeek] + ' ' +
                         date.getDate() + ' ' +

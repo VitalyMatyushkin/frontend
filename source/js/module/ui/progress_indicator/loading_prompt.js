@@ -3,66 +3,51 @@
  */
     //TODO: refactor this component
 var IndicatorView,
-    oldActiveChild,
-    selfEl,
-    timeoutId;
+    React = require('react'),
+    ReactDOM = require('reactDom');
 IndicatorView = React.createClass({
     mixins:[Morearty.Mixin],
-    _hasChanged:function(activeId){
+    propTypes:{
+        reDraw: React.PropTypes.bool
+    },
+    componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        if(typeof oldActiveChild === 'undefined'){
-            oldActiveChild = activeId; self.progressValue = 0; self.progText = "Loading...";
-            selfEl = document.getElementById('progressBarDiv');
-            if(selfEl){
-                selfEl.style.display = "block";
-                self.progText = "Loading...";
-            }
-            self.timerId = setInterval(function(){
-                self.progressValue += 50;
-            },800);
-        }
-        else if(oldActiveChild != activeId){
-            clearTimeout(timeoutId);
-            self.progressValue = 0;
-            selfEl = document.getElementById('progressBarDiv');
-            if(selfEl){
-                selfEl.style.display = "block";
-                self.progText = "Loading...";
-            }
-            self.timerId = setInterval(function(){
-                self.progressValue += 50;
-            },800);
-            oldActiveChild = activeId;
-        }else{
-            if(oldActiveChild === activeId && typeof self.progressValue === 'undefined'){
-                self.progressValue = 0; self.progText = "Loading...";
-                self.timerId = setInterval(function(){
-                    self.progressValue += 50;
-                },800);
-            }
+    },
+    componentDidMount:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        self._animateBar();
+    },
+    _animateBar:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        var elProgress = ReactDOM.findDOMNode(self.refs.progressIndicator),
+            elText = ReactDOM.findDOMNode(self.refs.progressText),
+            eBar = ReactDOM.findDOMNode(self.refs.progressBar);
+        if(eBar !== null){
+            eBar.style.display = 'block';
+            elProgress.value = 0;
+            self.intervalId = setInterval(function(){
+                elProgress.value += 20;
+                if(elProgress.value >= 100){
+                    elText.innerText = 'Complete';
+                    setTimeout(function(){eBar.style.display="none";clearInterval(self.intervalId);},800);
+                }
+            },100);
         }
     },
-    _removeSelf:function(){
-
+    componentDidUpdate:function(){
+        var self = this;
+        if(self.props.reDraw === true){
+            self._animateBar();
+        }
     },
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-        self._hasChanged(self.props.currentChildId);
-        if(self.progressValue >=100){
-            clearInterval(self.timerId); self.progText = "Complete";
-            selfEl = document.getElementById('progressBarDiv');
-            timeoutId = setTimeout(function(){
-                if(selfEl && self.progressValue >= 100){
-                    selfEl.style.display = "none";
-                }
-            },1000);
-        }
         return(
-            <div id="progressBar" className="eUserFullInfo_block">
-                <span className="bProgressSpan">{self.progText}</span>
-                <progress value={self.progressValue} max="100"></progress>
+            <div ref="progressBar" className="eUserFullInfo_block">
+                <span ref="progressText" className="bProgressSpan">Loading...</span>
+                <progress ref="progressIndicator" value={0} max="100"/>
             </div>
         )
     }

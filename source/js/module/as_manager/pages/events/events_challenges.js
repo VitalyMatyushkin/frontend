@@ -1,5 +1,7 @@
-var ChallengesView;
-ChallengesView = React.createClass({
+const   React       = require('react'),
+        Immutable   = require('immutable');
+
+const ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
     sameDay: function (d1, d2) {
         d1 = d1 instanceof Date ? d1 : new Date(d1);
@@ -30,7 +32,7 @@ ChallengesView = React.createClass({
                         new Date(event.get('startTime')),
                         new Date(date));
             });
-        return eventsByDate.map(function (event) {
+        return eventsByDate.map(function (event, evtIndex) {
             var eventDateTime = new Date(event.get('startTime')),
                 eventIndex = binding.get('models').findIndex(function (evt) {
                     return evt.get('id') === event.get('id');
@@ -52,20 +54,20 @@ ChallengesView = React.createClass({
                 comment = "There are no comments on this fixture";
             }
             if (type === 'inter-schools') {
-                firstName = eventBinding.get('invites.0.guest.name');
-                firstPic = eventBinding.get('invites.0.guest.pic');
-                secondName = eventBinding.get('invites.0.inviter.name');
-                secondPic = eventBinding.get('invites.0.inviter.pic');
+                firstName = eventBinding.get('participants.0.school.name')!== undefined ? eventBinding.get('participants.0.school.name'):'Participant not set';
+                firstPic = eventBinding.get('participants.0.school.pic');
+                secondName = eventBinding.get('participants.1.school.name')!==undefined ? eventBinding.get('participants.1.school.name'):'Participant not set';
+                secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');
                 firstPic = eventBinding.get('participants.0.school.pic');
-                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
+                secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'internal') {
                 firstName = eventBinding.get('participants.0.name');
                 secondName = eventBinding.get('participants.1.name');
                 firstPic = eventBinding.get('participants.0.school.pic');
-                secondPic = secondPic = eventBinding.get('participants.1.school.pic');
+                secondPic = eventBinding.get('participants.1.school.pic');
             }
 
             if (event.get('resultId')) {
@@ -73,13 +75,13 @@ ChallengesView = React.createClass({
                 secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
             }
 
-            return <div className="bChallenge"
+            return <div key={evtIndex} className="bChallenge"
                         onClick={self.onClickChallenge.bind(null, event.get('id'))}
                         id={'challenge-' + event.get('id')}
                 >
                 <div className="eChallenge_in">
                     <div className="eChallenge_rivalName">
-					{firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : ''}
+					{firstPic!== undefined ? <span className="eChallenge_rivalPic"><img src={firstPic} /></span> : '-_-'}
 					{firstName}
 					</div>
 
@@ -92,7 +94,7 @@ ChallengesView = React.createClass({
 					</div>
 
 					<div className="eChallenge_rivalName">
-						{secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : ''}
+						{secondPic !== undefined ? <span className="eChallenge_rivalPic"><img src={secondPic} /></span> : '-_-'}
 						{secondName}
 					</div>
                 </div>
@@ -119,16 +121,14 @@ ChallengesView = React.createClass({
 
                 return memo;
             }, Immutable.List());
-
-
-        return dates.count() !== 0 ? dates.sort().map(function (datetime) {
+        return dates.count() !== 0 ? dates.sort().map(function (datetime,dtIndex) {
             var date = new Date(datetime),
                 daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                 monthNames = [ "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December" ],
                 dayOfWeek = date.getDay();
 
-            return <div className="bChallengeDate">
+            return <div key={dtIndex} className="bChallengeDate">
                 <div className="eChallengeDate_date">
 						{daysOfWeek[dayOfWeek] + ' ' +
 						date.getDate() + ' ' +

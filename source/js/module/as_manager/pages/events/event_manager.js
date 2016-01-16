@@ -1,11 +1,14 @@
-var CalendarView = require('module/ui/calendar/calendar'),
-    EventManagerBase = require('./manager/base'),
-    If = require('module/ui/if/if'),
-    TimePicker = require('module/ui/timepicker/timepicker'),
-    Manager = require('module/ui/managers/manager'),
-    EventManager;
+const   CalendarView        = require('module/ui/calendar/calendar'),
+        EventManagerBase    = require('./manager/base'),
+        If                  = require('module/ui/if/if'),
+        TimePicker          = require('module/ui/timepicker/timepicker'),
+        Manager             = require('module/ui/managers/manager'),
+        classNames          = require('classnames'),
+        React               = require('react'),
+        ReactDOM            = require('reactDom'),
+        Immutable           = require('immutable');
 
-EventManager = React.createClass({
+const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
     getMergeStrategy: function () {
         return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -44,7 +47,7 @@ EventManager = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			binding = self.getDefaultBinding();
 
-		window.Server.schoolsFindOne.get({
+        window.Server.school.get(activeSchoolId, {
             filter: {
                 where: {
                     id: activeSchoolId
@@ -111,12 +114,10 @@ EventManager = React.createClass({
             model = binding.toJS('model'),
             players = binding.toJS('players'),
 			rivals = binding.toJS('rivals');
-
 		window.Server.events.post(model).then(function (event) {
 			rootBinding.update('events.models', function (events) {
 				return events.push(Immutable.fromJS(event));
 			});
-
 			rivals.forEach(function (rival, index) {
                 if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
 					window.Server.invitesByEvent.post({eventId: event.id}, {
@@ -141,7 +142,7 @@ EventManager = React.createClass({
 
                     window.Server.participants.post(event.id, rivalModel).then(function (res) {
                         var i = 0;
-
+                        // TODO: fix me
                         players[index].forEach(function (player) {
                             window.Server.playersRelation.put({
                                 teamId: res.id,
@@ -154,11 +155,14 @@ EventManager = React.createClass({
                                     binding.clear();
                                     binding.meta().clear();
                                 }
+                                return res;  // each then-callback should have explicit return
                             });
                         });
+                        return res;
                     });
                 }
 			});
+            return event;
 		});
 	},
 	render: function() {

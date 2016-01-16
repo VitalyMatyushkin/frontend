@@ -3,21 +3,23 @@ var ApplicationView = require('module/as_manager/application'),
 	userRulesInstance = require('module/data/user_rules'),
 	authController = require('module/core/auth_controller'),
 	serviceList = require('module/core/service_list'),
+	ReactDom = require('reactDom'),
+	React = require('react'),
 	MoreartyContext,
 	binding;
 
 function runManagerMode() {
-// Создание контекста Morearty
+// Create Morearty context
 	MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			userRules: userRulesInstance.getDefaultState(),
 			routing: {
-				currentPath: '',		// текущий путь
-				currentPageName: '',	// имя текущей страницы, если есть
-				currentPathParts: [],	// части текущего путии
-				pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
-				parameters: {}			// GET-параметры текущего пути
+				currentPath: '',
+				currentPageName: '',	// current page name, if exist
+				currentPathParts: [],
+				pathParameters: [],
+				parameters: {}			// GET-params of current path
 			},
 			schoolProfile: {
 				schoolProfileRouting: {}
@@ -54,9 +56,9 @@ function runManagerMode() {
 					mode: 'month'
 				}
 			},
-            event: {
-                eventRouting: {}
-            },
+			event: {
+				eventRouting: {}
+			},
 			teams: {
 				sync: false,
 				models: []
@@ -82,18 +84,24 @@ function runManagerMode() {
 
 	window.Server = serviceList;
 
-// Передача связывания контекста в классы данных
+	// Передача связывания контекста в классы данных
 	userDataInstance.setBinding(binding.sub('userData'));
 	userRulesInstance.setBinding(binding.sub('userRules'));
 
-// Включение авторизации сервисов
+	// Enable servises
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize(binding);
+	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
+	authController.initialize(
+		{
+			binding: binding,
+			defaultPath: 'schools'
+		}
+	);
 
-// Инициализация приложения
-	React.render(
+
+	// Инициализация приложения
+	ReactDom.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);

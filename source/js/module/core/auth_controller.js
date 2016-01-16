@@ -3,73 +3,89 @@ var authСontroller;
 authСontroller = {
 	nextPage: '',
 	dieTimer: null,
-	/**
-	 * Метод обрабатывает появление данных авторизации
-	 */
-	getNextPage: function() {
-		var self = this,
-			binding = self.binding,
-			activeSchoolId = binding.get('userRules.activeSchoolId'),
-			nextSchoolPage = '';
-
-		// Если есть идентефикатор активной школы, показываем страницу школы
-		if (activeSchoolId) {
-			nextSchoolPage = 'school_admin/summary';
-		} else {
-			// Если активная школа не задана, отправляем к спику школ
-			nextSchoolPage = 'schools';
-
-			var subDomain = window.location.host.split('.')[0];
-			if (subDomain == 'parents'){
-				nextSchoolPage = 'events/calendar';
-			}
-
+	_publicPages:['register', 'login'],
+	initialize: function(options) {
+		var self = this;
+		if (!options || !options.binding) {
+			console.error('Error while initializing the authorization controller');
 		}
+		if (self.isPublicPage()) {
+			self.defaultPath = options.defaultPath || '#/';
+			self.nextPage = self.defaultPath;
+		} else {
+			self.nextPage = document.location.hash;
+		}
+		//By pass authentication for public home page for school
+		if(options.asSchool === true){
+			self.nextPage = options.defaultPath;
+		}
+		self.binding = options.binding;
+		self.updateAuth();
+		self.binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
+		/*
+			For reasons unknown the next page property ends up empty sometimes causing login to get stuck
+			The condition below tests the properties against an empty string and defaults the value to the
+			defaultPath passed to the initialize method of authController
+		 */
+		if(self.nextPage === ''){self.nextPage = options.defaultPath}
+	},
+	isPublicPage: function() {
+        var self = this,
+            path = document.location.hash;
 
-		return self.nextPage || nextSchoolPage;
+		return self._publicPages.some(function(value){return path.indexOf(value)!== -1;});
 	},
 	updateAuth: function() {
 		var self = this,
 			binding = self.binding,
 			authBinding = binding.sub('userData.authorizationInfo'),
-			data = authBinding.get();
+			userInfoBinding = binding.sub('userData.userInfo'),
+			data = binding.toJS('userData.authorizationInfo'),
+			userData = binding.toJS('userData.userInfo');
 
-		// Если появились данные об авторизации
-		if(data && (data = data.toJS()) && data.id) {
+		// if we got auth data
+		if (data && data.id) {
 			var ttl;
-
-			// Если данные о времени окончании сессии уже присутсвуют
+			// if there is data about session die time
 			if (data.dieTime) {
 				ttl = Math.ceil((data.dieTime - Date.now()) / 1000);
 			} else {
 				ttl = data.ttl;
-				// Сохранение времени смерти сессии, на случай обновления страницы
+				// saving session die time for the refresh page case
 				authBinding.set('dieTime', Date.now() + ttl * 1000);
 			}
 
-
-			// Запуск таймера окончания жизни сессия
+			// Starting session die timer
 			if (ttl > 0) {
 				self.startTTLTimer(ttl);
+
+				// getting data about account verification
+				/*
+				if (!userData || !userData.user || !userData.user.verified) {
+					window.Server.user.get(data.userId).then(function (data) {
+						userInfoBinding.merge(true, Immutable.fromJS(data));
+					});
+				}
+				*/
+
 			} else {
 				self.clearAuthorization();
 			}
-
-			// Переводим человека на ожидаемую страницу
-			document.location.hash = self.getNextPage();
+			// redirecting user to awaited page if user not in registration process now
+			if (self.binding.get('form.register.formFields') === undefined) {
+				document.location.hash = self.nextPage;
+			}
+		} else if(self.nextPage ==='home'){
+            document.location.hash = self.nextPage;  //Bypass authentication
+        }
+		else if(!self.isPublicPage()){
+			/*
+				Reset hash string to login, if authorisation fails or there is no authorised user,
+				avoids users getting stuck if the current hash string is the same as the next one but are presented
+				the login view because they are not authenticated.
+			 */
+			document.location.hash = '#login';
 		}
-	},
-	initialize: function(binding) {
-		var self = this;
-
-		// Если начальная страница отлична от страница логина, считаем ее следующей после авторизации
-		if (document.location.hash !== '#login') {
-			self.nextPage = document.location.hash;
-		}
-
-		self.binding = binding;
-		self.updateAuth();
-		binding.addListener('userData.authorizationInfo', self.updateAuth.bind(self));
 	},
 	startTTLTimer: function(secondsToLive) {
 		var self = this;

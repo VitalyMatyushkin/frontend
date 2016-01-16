@@ -1,8 +1,9 @@
-var SchoolsPage,
-	RouterView = require('module/core/router'),
-	Route = require('module/core/route');
+const 	RouterView 	= require('module/core/router'),
+		React 		= require('react'),
+		Route 		= require('module/core/route'),
+		Immutable 	= require('immutable');
 
-SchoolsPage = React.createClass({
+const SchoolsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
@@ -12,20 +13,20 @@ SchoolsPage = React.createClass({
 		if (!activeSchoolId) {
 			self._updateSchoolList().then(function(schoolsList) {
 
-				// Если есть хотя бы одна школа, делаем первую школой "по умолчанию"
+				// If there is at least any school making first of them default
 				if (schoolsList[0]) {
 					globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
 					document.location.hash = 'school_admin/summary';
 				} else {
-					// В противном случае перенаправляем пользователя на страницу добавления школы
-					document.location.hash = 'schools/add';
+                    //Else direct unverified user to the waiting area
+                    document.location.hash = 'schools/lounge';
 				}
 			});
-		};
-	},
+        }
+    },
 	/**
-	 * Обновление списка школ пользователя
-	 * @returns PromiseClass
+	 * Updating user's school list
+	 * @returns Promise
 	 * @private
 	 */
 	_updateSchoolList: function() {
@@ -33,9 +34,10 @@ SchoolsPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			userId = globalBinding.get('userData.authorizationInfo.userId');
 
-		// Получение и сохранение списка школ
-		return Server.ownerSchools.get(userId).then(function(data) {
+		// Getting and saving school list
+		return window.Server.schools.get().then(function(data) {
 			self.getDefaultBinding().set('schoolsList', Immutable.fromJS(data));
+			return;
 		});
 	},
 	render: function() {
@@ -48,6 +50,7 @@ SchoolsPage = React.createClass({
 				<Route path="/schools/edit" binding={ binding.sub('schoolsForm')} component="module/as_manager/pages/schools/schools_edit"  />
 				<Route path="/schools/add" binding={ binding.sub('schoolsList')} component="module/as_manager/pages/schools/schools_add"  />
 				<Route path="/schools" binding={ binding.sub('schoolsList')} component="module/as_manager/pages/schools/schools_list" />
+                <Route path="/schools/lounge" binding={ binding.sub('schoolsList')} component="module/as_manager/pages/schools/schools_lounge" />
 			</RouterView>
 		)
 	}

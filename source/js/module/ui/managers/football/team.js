@@ -1,8 +1,10 @@
-var FootballManager,
-    SVG = require('module/ui/svg'),
-	Autocomplete = require('module/ui/autocomplete/autocomplete');
+const 	SVG 			= require('module/ui/svg'),
+		React 			= require('react'),
+		ReactDOM 		= require('reactDom'),
+		Immutable 		= require('immutable'),
+		Autocomplete 	= require('module/ui/autocomplete/autocomplete');
 
-FootballManager = React.createClass({
+const FootballManager = React.createClass({
 	mixins: [Morearty.Mixin],
     propTypes: {
         order: React.PropTypes.number.isRequired

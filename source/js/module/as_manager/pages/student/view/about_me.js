@@ -1,6 +1,8 @@
 var SVG = require('module/ui/svg'),
-	AboutMeBlock;
-
+	AboutMeBlock,
+	React = require('react'),
+	aboutListNodes = [],
+	parentListNodes = [];
 AboutMeBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -10,9 +12,8 @@ AboutMeBlock = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			bindingResult = binding.get(field);
-
-		if (bindingResult) {
-			return <div className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
+		if (bindingResult||bindingResult === 0) {
+			return <div key={aboutListNodes.length} title={field} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
 		}
 		return null;
 	},
@@ -22,24 +23,22 @@ AboutMeBlock = React.createClass({
 			bindingResult = binding.get(parentDetails);
 		if(bindingResult){
 			return (
-				<div className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
+				<div key={parentListNodes.length} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
 			)
 		}
 		return null;
 	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			aboutListNodes = [],
-			parentListNodes = [];
+			binding = self.getDefaultBinding();
 		aboutListNodes.push(self._getAboutNode('icon_home', 'houseData.name'));
-		aboutListNodes.push(self._getAboutNode('icon_user-tie', 'classData.name'));
+		aboutListNodes.push(self._getAboutNode('icon_library', 'classData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_shot','numOfGamesScoredIn'));
 		aboutListNodes.push(self._getAboutNode('icon_trophy', 'numOfGamesWon'));
 		aboutListNodes.push(self._getAboutNode('icon_user','numberOfGamesPlayed'));
-		aboutListNodes.push(self._getAboutNode('icon_teams', 'schoolData.name'));
-		parentListNodes.push(self._getAboutParentNode('icon_user-tie','parentTwo'));
-		parentListNodes.push(self._getAboutParentNode('icon_user','parentOne'));
+		aboutListNodes.push(self._getAboutNode('icon_office', 'schoolData.name'));
+		parentListNodes.push(self._getAboutParentNode('icon_man','parents.0.firstName'));
+		parentListNodes.push(self._getAboutParentNode('icon_woman','parents.1.firstName'));
 		return (
 			<div className="bAboutList">
 				<h6>{self.props.title || 'About me'}</h6>

@@ -1,5 +1,7 @@
 var TypeConfirmText,
 	TypeText = require('module/ui/form/types/text'),
+	React = require('react'),
+	ReactDOM = require('reactDom'),
 	TypeMixin = require('module/ui/form/types/type_mixin');
 
 TypeConfirmText = React.createClass({
@@ -62,11 +64,15 @@ TypeConfirmText = React.createClass({
 
 		return (
 			<div>
-				<TypeText {...self.props} onSetValue={self.onSetValue} />
+				<div className="eForm_fieldColumn">
+					<TypeText {...self.props} onSetValue={self.onSetValue} />
+				</div>
 
-				<div className="eForm_fieldInput">
-					<div className="eForm_fieldSmallHelp">confirm {self.props.name.toLowerCase()}</div>
-					<input ref="confInput" type={self.props.textType || 'text'} onBlur={self.setConfirmValue} onChange={self.changeConfirmValue} />
+				<div className="eForm_fieldColumn">
+					<div className="eForm_fieldInput">
+						<div className="eForm_fieldSmallHelp">confirm {self.props.name.toLowerCase()}</div>
+						<input ref="confInput" type={self.props.textType || 'text'} onBlur={self.setConfirmValue} onChange={self.changeConfirmValue} />
+					</div>
 				</div>
 			</div>
 

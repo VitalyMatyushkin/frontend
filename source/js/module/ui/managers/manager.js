@@ -1,10 +1,13 @@
-var Manager,
-	FootballManager = require('./football/football'),
-    MultiSelectTeam = require('./multiselect_team'),
-    AutocompleteTeam = require('./autocompleteTeam'),
-    Team = require('./team');
+const   FootballManager     = require('./football/football'),
+        MultiSelectTeam     = require('./multiselect_team'),
+        AutocompleteTeam    = require('./autocompleteTeam'),
+        React               = require('react'),
+        ReactDOM            = require('reactDom'),
+        classNames          = require('classnames'),
+        Team                = require('./team'),
+        Immutable 	        = require('immutable');
 
-Manager = React.createClass({
+const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
     componentWillMount: function () {
         var self = this,

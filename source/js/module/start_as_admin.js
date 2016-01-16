@@ -3,11 +3,13 @@ var ApplicationView = require('module/as_admin/application'),
     userRulesInstance = require('module/data/user_rules'),
     authController = require('module/core/auth_controller'),
     serviceList = require('module/core/service_list'),
+    ReactDom = require('reactDom'),
+    React = require('react'),
     MoreartyContext,
     binding;
 
 function runAdminMode() {
-// Создание контекста Morearty
+// Creating Morearty context
     MoreartyContext = Morearty.createContext({
         initialState: {
             userData: userDataInstance.getDefaultState(),
@@ -90,10 +92,13 @@ function runAdminMode() {
     serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
 // Связывания контроллера, отвечающего за контроль за авторизацией с данными
-    authController.initialize(binding);
+    authController.initialize({
+        binding: binding,
+        defaultPath: 'admin_schools'
+    });
 
 // Инициализация приложения
-    React.render(
+    ReactDom.render(
         React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
         document.getElementById('jsMain')
     );

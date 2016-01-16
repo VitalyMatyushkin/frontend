@@ -1,4 +1,5 @@
 var TimePicker,
+    React = require('react'),
     InviteMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
 
 TimePicker = React.createClass({

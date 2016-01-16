@@ -1,7 +1,9 @@
-var RadioGroup,
-	If = require('module/ui/if/if');
+const 	React 		= require('react'),
+		ReactDOM 	= require('reactDom'),
+		Immutable 	= require('immutable'),
+		If 			= require('module/ui/if/if');
 
-RadioGroup = React.createClass({
+const RadioGroup = React.createClass({
 	mixins: [Morearty.Mixin],
     displayName: 'RadioGroup',
 	propTypes: {
@@ -72,22 +74,29 @@ RadioGroup = React.createClass({
 	renderRadioOptions: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			selectedId = binding.get('selectedId');
-
-		return self.responseData.map(function (dataBlock) {
-			return (
-				<label onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
-			);
-		});
+			selectedId = binding.get('selectedId'),
+			defaultObj = [{id:'male',value:'boy'},{id:'female',value:'girl'}];
+		if(self.responseData.length !== 0){
+			return self.responseData.map(function (dataBlock, index) {
+				return (
+					<label key={index} onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
+				);
+			});
+		}else{
+			return defaultObj.map(function(dataBlock, index){
+				return (
+					<label key={index} onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
+				);
+			});
+		}
 	},
 	render: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			radioNodes = self.renderRadioOptions();
-
 		return (
 			<div className="bRadioGroupMy">
-				<If condition={self.props.name}>
+				<If condition={self.props.name !== undefined}>
 					<label className="eRadioGroupMy_label">{self.props.name}</label>
 				</If>
 				{radioNodes}
