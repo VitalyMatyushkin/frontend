@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-var specialModels = ['parents', 'manager', 'admin', 'site', 'www', 'stage'];
+var specialModels = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login'];
 var defaultModel = 'school';
 var apiVersion = 1;
 
