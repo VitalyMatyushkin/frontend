@@ -35,6 +35,17 @@ const ListPageMixin = {
 	componentWillUnmount: function () {
         clearTimeout(self.timeoutId);
 	},
+    getDefaultState: function () {
+        return Immutable.Map({
+            onReload:false
+        });
+    },
+    reloadData:function(){
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('onReload',true);
+    },
     //getInitialState:function(){
     //    return {
     //        onReload:false

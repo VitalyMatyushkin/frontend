@@ -36,8 +36,7 @@ const Pagination = React.createClass({
         e.stopPropagation();
     },
     render: function () {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const self = this;
 
         self._setVariables();
 

@@ -16,8 +16,7 @@ const PermissionView = React.createClass({
     //TODO Why this code is comment? - because the property is not in used at the moment but could be reused
     setPageTitle:'School Admin',
     filters:{
-        include:['principal',{student:['form','house']}],
-        limit:25
+        include:['principal',{student:['form','house']}]
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
     sandbox:true,
@@ -214,7 +213,7 @@ const PermissionView = React.createClass({
                 <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory}
                        quickEditActions={self.groupActionList} binding={binding} addQuickActions={true}
                        isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
-                       getTotalCountPromise={self.getTotalCountPromise} >
+                       getTotalCountPromise={self.getTotalCountPromise} pageLimit={25}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
                     <TableField dataField="principal" width="20%" dataFieldKey="firstName"  parseFunction={self.getFirstName}>First name</TableField>
                     <TableField dataField="principal" width="20%" dataFieldKey="lastName"  parseFunction={self.getLastName}>Surname</TableField>

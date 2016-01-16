@@ -39,9 +39,7 @@ const Table = React.createClass({
         if(!self.filter)
             self.filter = new Filter(binding.sub('filter'));
 
-        self.props.isPaginated && self.filter.setPageLimit(self.props.pageLimit);
-
-        self._oldFilters = {}; // old functional filters
+        self.setPageLimit(self.props.pageLimit);
 
         self._loadData();
         self._getTotalCount();
@@ -62,10 +60,17 @@ const Table = React.createClass({
         self.requestCount && self.requestCount.cancel();
         binding.clear();
     },
+    setPageLimit: function(limit){
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        if(self.props.isPaginated){
+            self.filter.setPageLimit(limit);
+            binding.set('pagination.pageLimit', limit);
+        }
+    },
     updateFilterState: function(field, value) {
         var self = this;
-
-        self._oldUpdateFilterState(field, value);
 
         if(self.props.getDataPromise){
             self.filter.addFieldFilter(field, value);
@@ -73,8 +78,6 @@ const Table = React.createClass({
     },
     onSort: function(field, value) {
         var self = this;
-
-        self._oldUpdateFilterState(field, value);
 
         if(self.props.getDataPromise) {
             self.filter.setOrder(field, value.order);
@@ -86,9 +89,10 @@ const Table = React.createClass({
         self.filter.setPageNumber(changes.getCurrentValue());
     },
     _loadData:function(){
-        var self = this,
+        const self = this,
             binding = self.getDefaultBinding(),
             filter = self.filter.getFilters();
+
         console.log('Table load data started');
         if(self.props.getDataPromise) {
             self.request = self.props.getDataPromise(filter).then(function (data) {
@@ -119,19 +123,6 @@ const Table = React.createClass({
             self._loadData();
             self._getTotalCount();
         }
-    },
-    _oldUpdateFilterState: function(field, value) {
-        var self = this;
-        if (value) {
-            self._oldFilters[field] = value;
-        } else {
-            delete self._oldFilters[field];
-        }
-        if(Object.keys(self._oldFilters).length >1){
-            var keyToDel =Object.keys(self._oldFilters)[0];
-            delete self._oldFilters[keyToDel];
-        }
-        self.props.onFilterChange && self.props.onFilterChange(self._oldFilters);
     },
     getQuickEditActions:function(){
         var self = this,
