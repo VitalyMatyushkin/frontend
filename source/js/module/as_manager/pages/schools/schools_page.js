@@ -37,7 +37,7 @@ const SchoolsPage = React.createClass({
 		// Getting and saving school list
 		return window.Server.schools.get().then(function(data) {
 			self.getDefaultBinding().set('schoolsList', Immutable.fromJS(data));
-			return;
+			return data;
 		});
 	},
 	render: function() {
