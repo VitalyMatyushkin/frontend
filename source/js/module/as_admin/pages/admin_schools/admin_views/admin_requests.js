@@ -13,7 +13,8 @@ const AdminRequest = React.createClass({
     serviceName:'Permissions',
     serviceCount:'PermissionCount',
     groupActionList:['Accept','Decline'],
-    filters:{include:['principal','school']},
+    filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
+    //filters:{include:['principal','school'],where:{and:[{"accepted":"undefined"}]}},
     getSchoolName:function(school){
         if(school !== undefined ){
             return school.name;
