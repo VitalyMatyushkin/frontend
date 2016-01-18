@@ -51,8 +51,10 @@ const StudentEditPage = React.createClass({
 			return window.Server.student.put(self.studentId, data);
 		}).then(function() {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
+		}).catch((e)=>{
+			alert(e.errorThrown+' Please contact support');
+			self.isMounted() && (document.location.hash = 'school_admin/students');
 		});
-
 	},
 	render: function() {
 		var self = this,

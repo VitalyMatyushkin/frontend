@@ -37,9 +37,11 @@ StudentEditPage = React.createClass({
 			).then(function(permissionData) {
 					window.Server.setPermissions.post({id:permissionData.id},{accepted:true}).then(function() {
 						document.location.hash = 'school_admin/students';
-					})
+					});
+				return permissionData;
 				});
-		})
+			return userData;
+		});
 	},
 	render: function() {
 		var self = this,
