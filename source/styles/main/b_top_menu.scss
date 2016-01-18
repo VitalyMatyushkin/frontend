@@ -2,14 +2,14 @@
 
 .bTopMenu {
   float: left;
-  min-height: 70px;
+  min-height: 60px;
   height: 1px;
   font-size: 0px;
   text-transform: uppercase;
 }
 .bPublicMenu{
-  min-height: 70px;
-  height: 70px;
+  min-height: 60px;
+  height: 60px;
   line-height: 50px;
   font-size: 24px;
   text-transform: uppercase;
@@ -27,6 +27,10 @@
 .bTopMenu.mRight {
   float: right;
   text-align: right;
+  margin-right: 100px;
+}
+.bTopMenu.mRight a {
+  font-size: 18px;
 }
 .bPublicMenu_icon{
   width: 40px !important;
@@ -38,7 +42,7 @@
   height: auto;
   padding: 0;
   position: absolute;
-  top: 70px;
+  top: 60px;
   left: 0;
   width: 0;
   -webkit-transition: width 0.5s, padding 0.5s;
@@ -70,36 +74,35 @@
 }
 .eTopMenu_item {
   display: inline-block;
-  padding: 0 20px;
-  height: 70px;
-  line-height: 70px;
+  padding: 0 10px;
+  height: 60px;
+  line-height: 60px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 20px;
   letter-spacing: 0.7px;
-  -webkit-transition: background 0.2s;
-  -moz-transition: background 0.2s;
-  -o-transition: background 0.2s;
-  transition: background 0.2s;
-  color: white;
+  color: #235413;
   vertical-align: top;
   position: relative;
 }
 
 .eTopMenu_item:hover,
 .eTopMenu_item.mActive{
-  background: darken($MAIN_COLOR, 10% );
+  //background: darken($MAIN_COLOR, 10% );
   color: white;
 }
 
 .eTopMenu_photo{
   display: inline-block;
-  height: 70px;
-  width: 70px;
+  height: 50px;
+  width: 50px;
   background-repeat: no-repeat;
   background-size: cover;
   cursor: pointer;
   position: relative;
   color: white;
+  border-radius: 50%;
+  margin-top: 5px;
+  float: left;
 }
 
 .eTopMenu_photo:hover{
@@ -114,8 +117,8 @@
   left: 0px;
   top: 0px;
   width: 100%;
-  height: 70px;
-  line-height: 70px;
+  height: 60px;
+  line-height: 60px;
   font-size: 24px;
   text-align: center;
   background: rgba(0,0,0,0.2);
@@ -152,8 +155,8 @@
 }
 .bPublicMenu_login{
   width: 226px;
-  height: 70px;
-  line-height: 70px;
+  height: 60px;
+  line-height: 60px;
   float:left;
 }
 .loginUserIcon{
@@ -174,7 +177,7 @@
 }
 .bPublicMenu_login_tray{
   position: absolute;
-  top:70px;
+  top:60px;
   left: 0;
   width:1200px;
   height: 300px;

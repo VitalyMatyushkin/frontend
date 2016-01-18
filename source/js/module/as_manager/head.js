@@ -14,7 +14,7 @@ Head = React.createClass({
 		self.menuItems = [
 			{
 				href: '/#school_admin/summary',
-				icon: 'icon_teams',
+				icon: '',
 				name: 'School',
 				key: 'School',
 				routes: ['/school_admin/:subPage', '/school_admin/:subPage/:mode', '/schools/add', '/schools'],
@@ -22,7 +22,7 @@ Head = React.createClass({
 				verified: true
 			}, {
 				href: '/#events/calendar',
-				icon: 'icon_calendar',
+				icon: '',
 				name: 'Events',
 				key: 'Events',
 				routes: ['/events/:subPage'],
@@ -32,7 +32,7 @@ Head = React.createClass({
 			},
 			{
 				href: '/#invites/inbox',
-				icon: 'icon_shot',
+				icon: '',
 				name: 'Invites',
 				key: 'Invites',
 				routes: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
