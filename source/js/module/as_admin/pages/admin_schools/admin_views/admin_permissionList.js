@@ -3,6 +3,7 @@
  */
 const   Table = require('module/ui/list/table'),
         TableField = require('module/ui/list/table_field'),
+        up = require('module/helpers/userParsers'),
         DateTimeMixin = require('module/mixins/datetime'),
         ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
         GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
@@ -10,54 +11,26 @@ const   Table = require('module/ui/list/table'),
         Popup = require('module/ui/popup');
 const AdminPermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
-    serviceName:'Permissions',
-    serviceCount:'PermissionCount',
+    //serviceName:'Permissions',
+    //serviceCount:'PermissionsCount',
     // for users{"include": {"relation":"permissions", "scope": {"include": {"relation": "school"}}}}
+    //filters:{
+    //    include:['principal','school']
+    //    ,where:{
+    //        //principalId:{neq:''}
+    //        and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+    //    }
+    //},
+    serviceName:'users',
+    serviceCount:'getTotalNumberOfUserModels',
     filters:{
-        include:['principal','school']
-        ,where:{
-            //principalId:{neq:''}
-            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
+        include: {
+            relation:"permissions",
+            scope: { include: {"relation": "school"}}
         }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
     isSuperAdminPage: true,
-    sandbox:false,
-    getFullName:function(principal){
-        if(principal !== undefined){
-            return principal.firstName+' '+principal.lastName;
-        }
-    },
-    getLastName: function(principal) {
-        if(principal !== undefined){
-            return [principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
-        }
-    },
-    getFirstName:function(principal){
-        if(principal !== undefined){
-            return principal.firstName;
-        }
-    },
-    getStatus: function(principal) {
-        var self = this,
-            status = 'Registered';
-        if(principal !== undefined){
-            if (principal.verified.email === true && principal.verified.phone === true) {
-                status = 'Active';
-            } else if (principal.verified.email === false || principal.verified.phone === false) {
-                status = 'Registered';
-            }
-        }
-        return status;
-    },
-    getRoles:function(principal){
-
-    },
-    getSchool:function(school){
-        if(school !== undefined){
-            return school.name;
-        }
-    },
     _getItemViewFunction:function(model){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -227,12 +200,12 @@ const AdminPermissionView = React.createClass({
                        isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} >
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="principal" width="10%" dataFieldKey="firstName" parseFunction={self.getFirstName}>Name</TableField>
-                    <TableField dataField="principal" width="20%" dataFieldKey="lastName" parseFunction={self.getLastName}>Surname</TableField>
-                    <TableField dataField="principal" width="5%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="school" width="40%" dataFieldKey="name"  parseFunction={self.getSchool}>School</TableField>
+                    <TableField dataField="firstName" width="10%" >Name</TableField>
+                    <TableField dataField="lastName" width="20%" parseFunction={up.getLastName}>Surname</TableField>
+                    <TableField dataField="principal" width="5%" filterType="none" parseFunction={up.getStatus}>Status</TableField>
+                    <TableField dataField="school" width="40%" dataFieldKey="name"  parseFunction={up.getSchool}>School</TableField>
                     <TableField dataField="preset" width="5%" dataFieldKey="preset">Role</TableField>
-                    <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
+                    <TableField dataField="principal" width="1%" filterType="none" parseFunction={up.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={rootBinding}/>

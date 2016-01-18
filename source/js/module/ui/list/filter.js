@@ -2,13 +2,9 @@
 const defaultPageLimit = 20;
 
 const filter = function (binding) {
-    var self = this;
+    const self = this;
 
     self._binding = binding;
-};
-
-filter.prototype.getDefaultBinding = function(){
-    return this._binding;
 };
 
 filter.prototype.getWhere = function(){
