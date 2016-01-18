@@ -5,6 +5,7 @@
 var bowerDir = 'bower/';
 
 requirejs.config({
+    waitSeconds: 15,            // will wait for a bit longer than usual, to be ok on slow connections
     baseUrl: '/build/js',
     paths: {
         classnames: bowerDir + 'classnames/index',
