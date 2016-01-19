@@ -11,6 +11,14 @@ const MapView = React.createClass({
 		customStylingClass:React.PropTypes.string
 	},
 	componentDidMount: function() {
+		var self = this;
+		self.setUpMap();
+	},
+	componentWillReceiveProps:function(){
+		var self = this;
+		self.setUpMap();
+	},
+	setUpMap:function(){
 		var self = this,
 			mapNode = self.refs.map,
 			mapeCenter = new google.maps.LatLng(self.props.point.lat, self.props.point.lng),
@@ -19,7 +27,7 @@ const MapView = React.createClass({
 
 		mapOptions = {
 			center: mapeCenter,
-			zoom: 14,
+			zoom: 16,
 			disableDefaultUI: true
 		};
 

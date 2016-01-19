@@ -179,9 +179,10 @@ const EventManagerBase = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             sportsBinding = self.getBinding('sports');
-        //	selected={sport.get('id') === binding.get('model.sportId')} - initially inside option
+
         return sportsBinding.get('models').map(function (sport) {
             return <Morearty.DOM.option
+				selected={sport.get('id') === binding.get('model.sportId')}
                 value={sport.get('id')}
 				key={sport.get('id') + '-sport'}
 			>{sport.get('name')}</Morearty.DOM.option>
@@ -288,6 +289,7 @@ const EventManagerBase = React.createClass({
                     <select
                         className="eManager_select"
                         value={sportId}
+                        defaultValue={null}
                         onChange={self.changeCompleteSport}>
                         <Morearty.DOM.option
                             key="nullable-type"

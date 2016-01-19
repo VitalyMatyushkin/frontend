@@ -71,6 +71,7 @@ const EventVenue = React.createClass({
             window.Server.findPostCodeById.get({postCode:binding.get('rivals.1.postcodeId')})
                 .then(function(postcode){
                     binding.set('venue',postcode);
+                    self.forceUpdate();
                     return postcode;
                 })
                 .catch(function(er){
