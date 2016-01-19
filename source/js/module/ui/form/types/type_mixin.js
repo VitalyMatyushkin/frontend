@@ -77,9 +77,8 @@ InputTypeMixin = {
 	 * Метод вызывается по мере изменения значения поля, выполняется частичная валидация
 	 */
 	changeValue: function(value) {
-		var self = this,
-			value = '';
-
+		var self = this;
+			//value = '';
 		self.hideError();
 		self._checkOneValid(value, 'alphanumeric') && self.showError();
 	},
@@ -93,7 +92,6 @@ InputTypeMixin = {
 			binding = self.getDefaultBinding(),
 			oldValue = binding.get('value'),
 			validateResult = self.fullValidate(value);
-
 		if (oldValue === value) {
 			return false;
 		}
