@@ -7,7 +7,8 @@ const MapView = React.createClass({
 		point: React.PropTypes.shape({
 			lat: React.PropTypes.number,
 			lng: React.PropTypes.number
-		})
+		}),
+		customStylingClass:React.PropTypes.string
 	},
 	componentDidMount: function() {
 		var self = this,
@@ -63,15 +64,14 @@ const MapView = React.createClass({
 		});
 
 
-		self.mapView.fitBounds(self.mapBounds);
+		//self.mapView.fitBounds(self.mapBounds);
 	},
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding();
-
+			binding = self.getDefaultBinding(),
+			classNames ='bMapView '+ (self.props.customStylingClass !== undefined?self.props.customStylingClass:'');
 		return (
-			<div className="bMapView" ref="map">
-
+			<div className={classNames} ref="map">
 			</div>
 		)
 	}

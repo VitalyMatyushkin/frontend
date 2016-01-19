@@ -3,6 +3,7 @@ const   Autocomplete    = require('module/ui/autocomplete/autocomplete'),
         Multiselect     = require('module/ui/multiselect/multiselect'),
         React           = require('react'),
         ReactDOM        = require('reactDom'),
+        EventVenue      = require('./event_venue'),
         Immutable       = require('immutable');
 
 let oldSelectedId, alertPopUP;
@@ -178,10 +179,9 @@ const EventManagerBase = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             sportsBinding = self.getBinding('sports');
-
+        //	selected={sport.get('id') === binding.get('model.sportId')} - initially inside option
         return sportsBinding.get('models').map(function (sport) {
             return <Morearty.DOM.option
-				selected={sport.get('id') === binding.get('model.sportId')}
                 value={sport.get('id')}
 				key={sport.get('id') + '-sport'}
 			>{sport.get('name')}</Morearty.DOM.option>
@@ -288,7 +288,6 @@ const EventManagerBase = React.createClass({
                     <select
                         className="eManager_select"
                         value={sportId}
-                        defaultValue={null}
                         onChange={self.changeCompleteSport}>
                         <Morearty.DOM.option
                             key="nullable-type"
@@ -337,64 +336,71 @@ const EventManagerBase = React.createClass({
                 </div>
             </If>
             <If condition={!!type}>
-                <div className="eManager_group">
-                    {type === 'inter-schools' ? 'Choose school' : null}
-                    <If condition={type === 'inter-schools'} key={'if-choose-school'}>
-                        <div>
-                            <input
-                                key="firstSchool"
-                                disabled="disabled"
-                                value={activeSchoolName}
-                                type="text"
-                                className="eManager_eField" />
-                            <Autocomplete
-                                serviceFilter={services[type]}
-                                serverField="name"
-                                placeholderText={'enter school name'}
-                                onSelect={self.onSelectRival.bind(null, 1)}
-                                binding={binding.sub('autocomplete.inter-schools.0')}
-                            />
-                        </div>
-                    </If>
-                    {type === 'houses' ? 'Choose houses' : null}
-                    <If condition={type === 'houses'}>
-                        <div>
-                            <Autocomplete
-                                serviceFilter={services[type]}
-                                serverField="name"
-                                placeholderText={'enter the first house name'}
-                                onSelect={self.onSelectRival.bind(null, 0)}
-                                binding={binding.sub('autocomplete.houses.0')}
-                            />
-                            <Autocomplete
-                                serviceFilter={services[type]}
-                                serverField="name"
-                                placeholderText={'enter the second house name'}
-                                onSelect={self.onSelectRival.bind(null, 1)}
-                                binding={binding.sub('autocomplete.houses.1')}
-                            />
-                            <div ref="dupError" className="hHouseDuplicateError">
-                                <span>The above fields are duplicates-please select unique house names!</span>
+                <div>
+                    <div className="eManager_group">
+                        {type === 'inter-schools' ? 'Choose school' : null}
+                        <If condition={type === 'inter-schools'} key={'if-choose-school'}>
+                            <div>
+                                <input
+                                    key="firstSchool"
+                                    disabled="disabled"
+                                    value={activeSchoolName}
+                                    type="text"
+                                    className="eManager_eField" />
+                                <Autocomplete
+                                    serviceFilter={services[type]}
+                                    serverField="name"
+                                    placeholderText={'enter school name'}
+                                    onSelect={self.onSelectRival.bind(null, 1)}
+                                    binding={binding.sub('autocomplete.inter-schools.0')}
+                                />
                             </div>
-                        </div>
-                    </If>
-                    {type === 'internal' ? 'Create a team' : null}
-                    <If condition={type === 'internal'}>
-                        <div>
-                            <input
-                                key="firstTeam"
-                                type="text"
-                                placeholder="Enter the first team name"
-                                value={binding.get('rivals.0.name')}
-                                onChange={Morearty.Callback.set(binding.sub('rivals.0.name'))}
-                                className="eManager_eField" />
-                            <input
-                                key="secondTeam"
-                                type="text"
-                                placeholder="Enter the second team name"
-                                value={binding.get('rivals.1.name')}
-                                onChange={Morearty.Callback.set(binding.sub('rivals.1.name'))}
-                                className="eManager_eField" />
+                        </If>
+                        {type === 'houses' ? 'Choose houses' : null}
+                        <If condition={type === 'houses'}>
+                            <div>
+                                <Autocomplete
+                                    serviceFilter={services[type]}
+                                    serverField="name"
+                                    placeholderText={'enter the first house name'}
+                                    onSelect={self.onSelectRival.bind(null, 0)}
+                                    binding={binding.sub('autocomplete.houses.0')}
+                                />
+                                <Autocomplete
+                                    serviceFilter={services[type]}
+                                    serverField="name"
+                                    placeholderText={'enter the second house name'}
+                                    onSelect={self.onSelectRival.bind(null, 1)}
+                                    binding={binding.sub('autocomplete.houses.1')}
+                                />
+                                <div ref="dupError" className="hHouseDuplicateError">
+                                    <span>The above fields are duplicates-please select unique house names!</span>
+                                </div>
+                            </div>
+                        </If>
+                        {type === 'internal' ? 'Create a team' : null}
+                        <If condition={type === 'internal'}>
+                            <div>
+                                <input
+                                    key="firstTeam"
+                                    type="text"
+                                    placeholder="Enter the first team name"
+                                    value={binding.get('rivals.0.name')}
+                                    onChange={Morearty.Callback.set(binding.sub('rivals.0.name'))}
+                                    className="eManager_eField" />
+                                <input
+                                    key="secondTeam"
+                                    type="text"
+                                    placeholder="Enter the second team name"
+                                    value={binding.get('rivals.1.name')}
+                                    onChange={Morearty.Callback.set(binding.sub('rivals.1.name'))}
+                                    className="eManager_eField" />
+                            </div>
+                        </If>
+                    </div>
+                    <If condition={type === 'inter-schools'}>
+                        <div className="eManager_group">
+                            <EventVenue binding={binding}/>
                         </div>
                     </If>
                 </div>
