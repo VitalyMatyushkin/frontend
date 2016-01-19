@@ -53,6 +53,7 @@ const EventVenue = React.createClass({
                     let otherState = ReactDOM.findDOMNode(self.refs.home).checked;
                     if(!otherState){
                         ReactDOM.findDOMNode(self.refs.home).checked = true;
+                        self.callService('home');
                     }
                 }
                 break;
@@ -79,6 +80,7 @@ const EventVenue = React.createClass({
                 });
         }else{
             binding.set('venue',self.currentPostcode);
+            self.forceUpdate();
         }
     },
     render:function(){
