@@ -2,7 +2,7 @@
  * Created by Anatoly on 16.01.2016.
  */
 
-const UserParsers = {
+const PermissionParsers = {
     getFullName:function(principal){
         if(principal !== undefined){
             return principal.firstName+' '+principal.lastName;
@@ -37,7 +37,12 @@ const UserParsers = {
         if(school !== undefined){
             return school.name;
         }
+    },
+    getObjectVisibility:function(principal){
+        if(principal !== undefined){
+            if(principal.blocked === true){return 'Blocked';}else{return 'Active';}
+        }
     }
 };
 
-module.exports = UserParsers;
+module.exports = PermissionParsers;
