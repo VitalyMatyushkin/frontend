@@ -58,7 +58,7 @@ ServiceConstructor = (function() {
 				url = self.url,
 				filter = options && options.filter || data && data.filter || '',
 				where = options && options.where || data && data.where || '',
-				key = filter ? 'filter' : (where ? 'where' : '');
+				key = filter ? 'filter' : (where ? 'where' : ''),
 				authorization = self.binding ? self.binding.get() : undefined;
 
 			if (self.requredParams) {

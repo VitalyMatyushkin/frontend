@@ -19,8 +19,8 @@ TypeDate =  React.createClass({
 	_forceNewValue: function(value) {
 		var self = this,
 			dateString,
-			date,
-			value;
+			date;
+			//value;
 
 		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.value === '' || self.refs.fieldInput.value === '__.__.____')) {
 			date = new Date(value);
@@ -34,39 +34,32 @@ TypeDate =  React.createClass({
 		var self = this,
 			dateParts = dotString !== undefined ? dotString.split('.'):'',
 			inputDate = new Date();
-
 		if (dateParts.length === 3 && (dateParts[0] > 0 && dateParts[0] < 13) && (dateParts[1] > 0 && dateParts[1] < 32) && (dateParts[2])) {
-			inputDate.setYear(dateParts[2]);
-			inputDate.setMonth(dateParts[0] - 1);
-			inputDate.setDate(dateParts[1]);
-
+			inputDate.setUTCFullYear(dateParts[2],dateParts[0]-1,dateParts[1]);
 			return inputDate.toString() === 'Invalid Date' ? '' : inputDate.toISOString();
 		}
 
-		return '';
+		//return '';
 	},
 	handleBlur: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.value;
-
-
+			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
 		self.setValue(self._converToIso(inputValue));
 	},
 	handleChange: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.value;
-
+			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
 		self.changeValue(self._converToIso(inputValue));
 	},
 	render: function () {
 		var self = this,
 			defaultValue = self.getDefaultBinding().get('defaultValue');
-
 		self._forceNewValue(defaultValue);
 
 		return (
 			<div className="eForm_fieldInput">
 				<MaskedInput ref="fieldInput" onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
+				<span style={{display:'block'}}>Date format:MM/DD/YYYY</span>
 			</div>
 		)
 	}
