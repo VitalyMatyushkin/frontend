@@ -21,6 +21,7 @@
     "director": "~1.2.5",
     "classnames": "~2.2.0",
     "loglevel": "~1.4.0",
-    "bluebird": "~3.0.6"
+    "bluebird": "~3.0.6",
+    "lazy.js": "~0.4.2"
   }
 }
