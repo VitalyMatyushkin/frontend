@@ -1,7 +1,6 @@
 const 	LoginForm 		= require('module/ui/login/user/form'),
 		LoginError 		= require('module/ui/login/user/error'),
 		React 			= require('react'),
-		ReactDOM 		= require('reactDom'),
 		Immutable 		= require('immutable'),
 		RoleSelector	= require('module/as_login/pages/RoleSelector');
 

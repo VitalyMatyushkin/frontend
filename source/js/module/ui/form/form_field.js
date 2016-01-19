@@ -4,17 +4,17 @@ const 	React 		= require('react'),
 
 const FormField = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		type: 				React.PropTypes.string.isRequired,
+		field: 				React.PropTypes.string.isRequired,
+		defaultValueString:	React.PropTypes.string
+	},
 	getDefaultState: function () {
 		return Immutable.Map({
 			value: '',
 			showError: false,
 			error: false
 		});
-	},
-	propTypes: {
-		type: 				React.PropTypes.string.isRequired,
-		field: 				React.PropTypes.string.isRequired,
-		defaultValueString:	React.PropTypes.string
 	},
 	render: function () {
 		const 	self 	= this,
