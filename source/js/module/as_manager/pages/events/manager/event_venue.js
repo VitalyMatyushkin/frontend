@@ -72,6 +72,7 @@ const EventVenue = React.createClass({
             window.Server.findPostCodeById.get({postCode:binding.get('rivals.1.postcodeId')})
                 .then(function(postcode){
                     binding.set('venue',postcode);
+                    binding.set('model.venue.postcode',postcode.id);
                     self.forceUpdate();
                     return postcode;
                 })
@@ -80,6 +81,7 @@ const EventVenue = React.createClass({
                 });
         }else{
             binding.set('venue',self.currentPostcode);
+            binding.set('model.venue.postcode',self.currentPostcode.id);
             self.forceUpdate();
         }
     },
