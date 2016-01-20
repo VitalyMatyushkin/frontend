@@ -23,16 +23,16 @@ TypeDrop = React.createClass({
     _renderChildOptions:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        return self.props.optionChildren.map(function(optionNode){
+        return self.props.optionChildren.map(function(optionNode,i){
             return(
-                <option value={optionNode}>{optionNode}</option>
+                <option key={i} value={optionNode}>{optionNode}</option>
             )
         });
     },
     _handleDropChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            el = React.findDOMNode(self.refs.dropSelect);
+            el = ReactDOM.findDOMNode(self.refs.dropSelect);
     },
     render:function(){
         var self = this,

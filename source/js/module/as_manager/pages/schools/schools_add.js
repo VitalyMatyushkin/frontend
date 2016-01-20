@@ -11,7 +11,10 @@ const AddSchoolForm = React.createClass({
 
 		window.Server.schools.post(schoolData).then(function(data) {
 			// Добавляемая школа всегда становится школой "по умолчанию"
-			globalBinding.set('userRules.activeSchoolId', data.id);
+			if(document.location.href.indexOf('admin')=== -1){
+				globalBinding.set('userRules.activeSchoolId', data.id);
+			}
+			return data;
 		});
 
 		// Добавление школы в списк
@@ -20,8 +23,12 @@ const AddSchoolForm = React.createClass({
 			return ImmutableValue.push(schoolData);
 		});
 
-		// Переход к списку школ
-		document.location.hash = 'schools';
+		// Return to admin dashboard based on either manager or superadmin
+		if(document.location.href.indexOf('admin')!== -1){
+			document.location.hash = 'admin_schools/admin_views/list';
+		}else{
+			document.location.hash = 'schools';
+		}
 	},
 	render: function() {
 		var self = this;
