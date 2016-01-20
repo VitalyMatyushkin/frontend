@@ -167,7 +167,12 @@ const ListPageMixin = {
         }
 		return (
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
-				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
+          <div className="eSchoolMaster_wrap">
+              <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
+
+              <div className="eStrip">
+              </div>
+          </div>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
                         <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
@@ -184,7 +189,7 @@ const ListPageMixin = {
                         </If>
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
-                            <div className="bButton" onClick={self._getAddNewStudentFunction}>Add New Student</div>
+                            <div className="addButton" onClick={self._getAddNewStudentFunction}><img src="images/add_students.png"></img></div>
                         </If>
                     </div>
                 </div>
