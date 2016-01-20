@@ -78,14 +78,14 @@ const Table = React.createClass({
         }
     },
     onSort: function(field, value) {
-        var self = this;
+        const self = this;
 
         if(self.props.getDataPromise) {
-            self.filter.setOrder(field, value.order);
+            self.filter.setOrder(field, value);
         }
     },
     _onChangePage:function(changes){
-        var self = this;
+        const self = this;
 
         self.filter.setPageNumber(changes.getCurrentValue());
     },

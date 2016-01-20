@@ -89,7 +89,7 @@ filter.prototype._deleteLike = function(field){
 filter.prototype.setOrder = function(field, value){
     var self = this;
 
-    self.order = value;
+    self.order = field + value;
     self._binding.set('order', self.order);
 };
 
