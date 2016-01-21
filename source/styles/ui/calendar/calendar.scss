@@ -1,27 +1,31 @@
-$border-color: #eee;
+$border-color: #c2c2c2;
 
 .bCalendar {
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
   align-self: flex-start;
+  border: solid 1px #c2c2c2;
+  padding: 0 40px 40px 40px;
+  text-transform: uppercase;
+  background: #fff;
 }
 
 .eCalendar_navBar {
   display: flex;
   align-content: space-between;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  justify-content: center;
+  margin-top: 10px;
 }
 
 .eCalendar_item {
   display: flex;
-  color: #428bca;
+  color: #235413;
   cursor: pointer;
   margin: 0 7px;
   &.mNameMonth {
-    font-weight: bold;
-    color: #000;
+    font-weight: 500;
+    color: #235413;
     cursor: default;
   }
 }
@@ -29,12 +33,10 @@ $border-color: #eee;
 .eCalendar_eMonth {
   display: flex;
   flex-flow: column wrap;
-  width: 350px;
 }
 
 .eMonth_row {
   display: flex;
-  border-bottom: 1px solid $border-color;
 }
 
 .eMonth_day {
@@ -46,37 +48,50 @@ $border-color: #eee;
   text-align: center;
   justify-content: center;
   cursor: pointer;
-  border-right: 1px solid $border-color;
+  border: solid 1px $border-color;
+  border-radius: 10%;
+  margin: 5px;
+  background: #EAEAEA;
   &.mFirst {
     border-left: 1px solid $border-color;
+    background: #fff
   }
   &.mWeekName {
     border: 0;
-    font-weight: bold;
+    font-weight: 500;
+    color: #8c8c8c;
     cursor: default;
+    height: 40px;
+    background: #fff
   }
   &.mToday {
-    background-color: #428bca;
-    color: #fff;
+    background: #f26525;
+    border-color: #235413;
+    color: #235413;
   }
   &.mHover {
-    background-color: #5bc0de;
-    color: #fff;
+    background-color: #66952D;
+    border-color: #235413;
+    color: #235413;
   }
   &.mPrev,
   &.mNext {
     cursor: default;
     color: rgba(0, 0, 0, .2);
     &.mHover {
-      background-color: #fff;
+      background-color: #66952D;
+      border-color: #235413;
+      color: #235413;
     }
   }
   &.mActive {
-    color: #fff;
-    background: red;
+    background-color: #66952D;
+    border-color: #235413;
+    color: #235413;
     &.mHover {
-      background-color: #5bc0de;
-      color: #fff;
+      background-color: #66952D;
+      border-color: #235413;
+      color: #235413;
     }
   }
   &.mSelect {
