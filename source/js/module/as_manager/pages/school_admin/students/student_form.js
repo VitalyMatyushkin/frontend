@@ -55,6 +55,17 @@ const StudentForm = React.createClass({
 					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" validation="required">Form</FormField>
 					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" validation="required">House</FormField>
 				</FormColumn>
+				<FormColumn type="column">
+					<FormField type="text" field="name">Next of Kin: First name</FormField>
+					<FormField type="text" field="surname">Next of Kin: Surname</FormField>
+					<FormField type="phone" field="phone" validation="phone">Phone:</FormField>
+					<FormField type="text" field="role">Relationship:</FormField>
+				</FormColumn>
+				<FormColumn type="column">
+					<FormField type="text" field="allergy">Allergy</FormField>
+					<FormField type="text" field="injures">Injury</FormField>
+					<FormField type="text" field="other">Other:</FormField>
+				</FormColumn>
 			</Form>
 		)
 	}

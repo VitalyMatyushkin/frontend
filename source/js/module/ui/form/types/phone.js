@@ -20,20 +20,20 @@ TypePhone =  React.createClass({
 		var self = this,
 			oldValue;
 
-		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.getDOMNode().value === '(___)___-____') {
-			self.refs.fieldInput.getDOMNode().value = value;
+		if (value !== undefined && self.refs.fieldInput && ReactDOM.findDOMNode(self.refs.fieldInput).value === '(___)___-____') {
+			ReactDOM.findDOMNode(self.refs.fieldInput).value = value;
 			self.fullValidate(value);
 		}
 	},
 	handleBlur: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.getDOMNode().value;
+			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
 
 		self.setValue(inputValue);
 	},
 	handleChange: function() {
 		var self = this,
-			inputValue = self.refs.fieldInput.getDOMNode().value;
+			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
 
 		self.changeValue(inputValue);
 	},

@@ -60,6 +60,7 @@ serviceList = {
 		serviceList.getAllStudents = new Service('/students', binding);
 		serviceList.studentScored = new Service('/students/{id}/events/scored',binding);
 		serviceList.studentWon = new Service('/students/{id}/events/won',binding);
+		serviceList.studentUser = new Service('/users/{id}/students',binding);
 
 		// houses
 		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);

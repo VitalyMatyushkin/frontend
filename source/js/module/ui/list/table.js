@@ -9,6 +9,7 @@ const Table = React.createClass({
 	propTypes: {
 		title: React.PropTypes.string,
         filter: React.PropTypes.object,
+        dataModel: React.PropTypes.func,
 		onAddNew: React.PropTypes.func,
 		onItemEdit: React.PropTypes.func,
 		onItemView: React.PropTypes.func,
@@ -70,21 +71,21 @@ const Table = React.createClass({
         }
     },
     updateFilterState: function(field, value) {
-        var self = this;
+        const self = this;
 
         if(self.props.getDataPromise){
             self.filter.addFieldFilter(field, value);
         }
     },
     onSort: function(field, value) {
-        var self = this;
+        const self = this;
 
         if(self.props.getDataPromise) {
-            self.filter.setOrder(field, value.order);
+            self.filter.setOrder(field, value);
         }
     },
     _onChangePage:function(changes){
-        var self = this;
+        const self = this;
 
         self.filter.setPageNumber(changes.getCurrentValue());
     },
@@ -96,7 +97,13 @@ const Table = React.createClass({
         console.log('Table load data started');
         if(self.props.getDataPromise) {
             self.request = self.props.getDataPromise(filter).then(function (data) {
-                binding.set('data', Immutable.fromJS(data));
+                var res = data;
+                if(self.props.dataModel){
+                    res = data.map(function(item){
+                        return new self.props.dataModel(item);
+                    });
+                }
+                binding.set('data', Immutable.fromJS(res));
             });
         }
     },

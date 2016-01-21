@@ -1,41 +1,41 @@
-const SVG = require('module/ui/svg'),
-    Map = require('module/ui/map/map'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    If = require('module/ui/if/if'),
-    Immutable = require('immutable');
+const   SVG         = require('module/ui/svg'),
+        Map         = require('module/ui/map/map'),
+        React       = require('react'),
+        ReactDOM    = require('reactDom'),
+        If          = require('module/ui/if/if'),
+        Immutable   = require('immutable');
 
 const SchoolSummary = React.createClass({
-  mixins: [Morearty.Mixin],
-  componentWillMount: function () {
-    var self = this,
-        binding = self.getDefaultBinding(),
-        globalBinding = self.getMoreartyContext().getBinding(),
-        activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+    mixins: [Morearty.Mixin],
+    componentWillMount: function() {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-    self.activeSchoolId = activeSchoolId;
+        self.activeSchoolId = activeSchoolId;
 
-    window.Server.school.get(
-        {
-          id: activeSchoolId,
-          filter: {include: 'postcode'}
-        }
-    ).then(function (data) {
-          binding.set(Immutable.fromJS(data));
-          self.isMounted() && self.forceUpdate();
+		window.Server.school.get(
+			{
+				id: activeSchoolId,
+				filter: {include: 'postcode'}
+			}
+        ).then(function(data) {
+            binding.set(Immutable.fromJS(data));
+            self.isMounted() && self.forceUpdate();
         });
-  },
-  componentWillUnmount: function () {
-    var self = this;
+    },
+    componentWillUnmount: function() {
+        var self = this;
 
-    self.request && self.request.cancel();
-  },
-  render: function () {
-    var self = this,
-        binding = self.getDefaultBinding(),
-        schoolPicture = binding.get('pic'),
-        siteLink = binding.get('domain') + '.stage.squadintouch.com',
-        geoPoint = binding.toJS('postcode.point');
+        self.request && self.request.cancel();
+    },
+    render: function() {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            schoolPicture = binding.get('pic'),
+            siteLink = binding.get('domain') + '.stage.squadintouch.com',
+            geoPoint = binding.toJS('postcode.point');
 
     return (
         <div>
