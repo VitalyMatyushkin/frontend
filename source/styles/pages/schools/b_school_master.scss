@@ -13,6 +13,8 @@
 .eSchoolMaster_title{
   display: inline-block;
   color: #235413;
+  min-width: 100px;
+  text-align: right;
 }
 .eSchoolMaster_title h1{
   margin: 0;
@@ -20,6 +22,7 @@
 .eSchoolMaster_summary{
   border: solid 1px #c2c2c2;
   margin: 0 100px;
+  background: #fff;
 }
 .eSchoolMaster_summary h1{
   color: #535353;
@@ -27,6 +30,7 @@
   margin: 0 0 20px 0;
   left: -10px;
   display: block;
+  text-align: left;
 }
 .eSchoolMaster_groupAction{
   position: relative;
@@ -130,13 +134,13 @@
 }
 .eSchoolMaster_buttons{
   position: absolute;
-  right: 0;
+  left: 950px;
   top: 50%;
   margin-top: -15px;
 }
 .eSchoolMaster_buttons_admin{
   margin-top:-50px;
-  width: 600px;
+  margin-left: 20px;
 }
 .eSchoolMaster_buttons .bButton{
   margin-left: 10px;
@@ -169,8 +173,6 @@
 }
 .bSchoolMaster .bMapView {
   height: 300px;
-  width: 50%;
-
 }
 .groupActionList_show{
   display: block !important;
@@ -278,7 +280,6 @@
   margin-left: 20px;
 }
 .addButton{
-  float: right;
-  margin-right: 80px;
+  display: inline-block;
   cursor: pointer;
 }

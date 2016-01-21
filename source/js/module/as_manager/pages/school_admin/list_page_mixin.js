@@ -187,7 +187,7 @@ const ListPageMixin = {
                                 <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
                             </div>
                         </If>
-                        <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
+                        <div className="addButton" onClick={self.toggleFilters}><img src="images/search.png"></img> {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
                             <div className="addButton" onClick={self._getAddNewStudentFunction}><img src="images/add_students.png"></img></div>
                         </If>
