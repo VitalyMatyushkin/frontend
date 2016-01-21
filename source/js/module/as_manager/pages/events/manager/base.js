@@ -400,11 +400,9 @@ const EventManagerBase = React.createClass({
                             </div>
                         </If>
                     </div>
-                    <If condition={type === 'inter-schools'}>
-                        <div className="eManager_group">
-                            <EventVenue binding={binding}/>
-                        </div>
-                    </If>
+                    <div className="eManager_group">
+                        <EventVenue sportType={type} binding={binding}/>
+                    </div>
                 </div>
             </If>
         </div>;
