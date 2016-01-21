@@ -26,45 +26,47 @@ const SchoolConsole = React.createClass({
         });
     },
     componentWillMount: function () {
-        var self = this,
+        this.createSubMenu();
+    },
+    createSubMenu: function(){
+        const self = this,
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+            serviceCount = 'schoolPermissionsCount',
+            where = {and:[{accepted:{neq:true}},{accepted:{neq:false}}]};
+
+        const _createSubMenuData = function(count){
+            let menuItems = [{
+                href: '/#school_console/permissions',
+                name: 'Permissions',
+                key: 'Permissions'
+            },{
+                href: '/#school_console/requests',
+                name: 'Live Requests',
+                key: 'requests',
+                num: '(' + count + ')'
+            },{
+                href: '/#school_console/archive',
+                name: 'request archive',
+                key: 'archive'
+            }];
+            binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
+        };
+
         //Get the total number of permissions (Notification badge) in submenu
-        //TODO: filter this query down to active school and where accepted is equal to false
-        window.Server.schoolPermissions.get({id:activeSchoolId}).then(function(count){binding.atomically().set('count', Immutable.fromJS(count)).commit();});
-        self.menuItems = [{
-            href: '/#school_console/permissions',
-            name: 'Permissions',
-            key: 'Permissions'
-        },{
-            href: '/#school_console/requests',
-            name: 'Live Requests',
-            key: 'requests'
-        },{
-            href: '/#school_console/archive',
-            name: 'request archive',
-            key: 'archive'
-        }];
+        window.Server[serviceCount].get(activeSchoolId, { where: where }).then(function(data){
+            const count = data && data.count ? data.count : 0;
+            _createSubMenuData(count);
+        });
     },
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-        var badge = document.querySelectorAll('.eSubMenu_item')[1];
-        if(typeof  badge !== 'undefined'){
-           var c = 0;
-            if(typeof binding.toJS('count') !== 'undefined'){
-                for(var i=0; i<binding.toJS('count').length; i++){
-                    if(binding.toJS('count')[i].accepted === undefined){
-                        c += 1;
-                    }
-                }
-                badge.innerText = "Live Requests ( "+c+" )";
-            }
-        }
+
         return <div>
-            <SubMenu binding={binding.sub('consoleRouting')} items={self.menuItems} />
+            <SubMenu binding={{ default: binding.sub('consoleRouting'), itemsBinding: binding.sub('subMenuItems') }} />
             <div className='bSchoolMaster'>
                 <RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding || {}}>
                     <Route path='/school_console' binding={binding.sub('permissions')} component='module/as_manager/pages/school_console/views/permissions'  />
