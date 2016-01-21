@@ -71,7 +71,7 @@ const Table = React.createClass({
         }
     },
     updateFilterState: function(field, value) {
-        var self = this;
+        const self = this;
 
         if(self.props.getDataPromise){
             self.filter.addFieldFilter(field, value);

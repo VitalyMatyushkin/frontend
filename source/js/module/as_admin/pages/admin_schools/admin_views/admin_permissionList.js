@@ -29,7 +29,7 @@ const AdminPermissionView = React.createClass({
         }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
-    isSuperAdminPage: true,
+    isSuperAdminPage: false,
     _getItemViewFunction:function(model){
         var self = this,
             binding = self.getDefaultBinding(),

@@ -83,8 +83,8 @@ const StudentsListPage = React.createClass({
 				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
 				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField width="3%" dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="user" dataFieldKey="firstName" parseFunction={self.getFirstName}>First name</TableField>
-				<TableField width="15%" dataField="user" dataFieldKey="lastName" parseFunction={self.getLastName}>Last name</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="firstName" filterType="none" parseFunction={self.getFirstName}>First name</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="lastName" filterType="none" parseFunction={self.getLastName}>Last name</TableField>
 				<TableField width="5%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
 				<TableField width="15%" dataField="user" filterType="none" parseFunction={self.getBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>

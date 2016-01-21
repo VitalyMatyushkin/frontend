@@ -1,27 +1,24 @@
 
+const Immutable = require('immutable');
+
 const defaultPageLimit = 20;
 
 const filter = function (binding) {
-    const self = this;
-
-    self._binding = binding;
-};
-
-filter.prototype.getWhere = function(){
-    return  this.where ? this.where : '';
+    this._binding = binding;
 };
 
 filter.prototype.getFilters = function(){
-    var self = this,
-        res = {};
+    return this._binding.toJS();
+};
 
-    for(var key in self){
-        if(key[0] !== '_' && typeof(self[key]) !== 'function'){
-            res[key] = self[key];
-        }
-    }
+filter.prototype.getWhere = function(){
+    const self = this,
+        filters = self.getFilters();
+    return filters ? filters.where: filters;
+};
 
-    return res;
+filter.prototype.getPageLimit = function(){
+    return this._binding.get('limit');
 };
 
 filter.prototype.setFilters = function(value){
@@ -29,82 +26,76 @@ filter.prototype.setFilters = function(value){
             transaction = self._binding.atomically();
 
     for(var key in value){
-        self[key] = value[key];
-        transaction.set(key, self[key]);
+        transaction.set(key, value[key]);
     }
     transaction.commit({ notify: false });
 };
 
 filter.prototype.setPageLimit = function(pageLimit){
-    var self = this;
+    const self = this;
+    let limit = self.getPageLimit();
 
     if(pageLimit)
-        self.limit = pageLimit;
-    else if(!self.limit)
-        self.limit = defaultPageLimit;
+        limit = pageLimit;
+    else if(!limit)
+        limit = defaultPageLimit;
 
-    self._binding.set('limit', self.limit);
+    self._binding.set('limit', limit);
 };
 
 filter.prototype.setPageNumber = function(pageNumber){
-    var self = this;
-    !self.limit && console.error('Please provide page limit');
+    const self = this,
+        limit = self.getPageLimit();
 
-    self.skip = (pageNumber-1)*self.limit;
-    self._binding.set('skip', self.skip);
+    !limit && console.error('Please provide page limit');
+
+    self._binding.set('skip', (pageNumber-1)*limit);
 };
 
 filter.prototype.addFieldFilter = function(field, value){
-    var self = this;
+    const self = this;
+    let where = self._deleteLike(field);
 
-    if(!self.where) {
-        self.where = {};
-        self.where.and = [];
-    }
-
-    self._deleteLike(field);
     if(value)
-        self._addLike(field, value);
+        where = self._addLike(where, field, value);
 
-    self._binding.set('where', self.where);
+    self.setWhere(where);
 };
 
-filter.prototype._addLike = function(field, value){
-    var self = this,
-        filter = {};
+filter.prototype._addLike = function(where, field, value){
+    let filter = {};
 
     filter[field] = {};
     filter[field].like = value;
-    self.where.and.push(filter);
+
+    if(!where) {
+        where = {};
+        where.and = [];
+    }
+
+    where.and.push(filter);
+    return where;
 };
 
 filter.prototype._deleteLike = function(field){
-    var self = this,
-        and = self.where.and,
-        i;
+    const self = this;
+    let i,
+        where = self.getWhere();
 
-    i = and.map(function(item){return Object.keys(item)[0];}).indexOf(field);
-    i >= 0 && and.splice(i,1);
+    if(where && where.and){
+        i = where.and.map(function(item){return Object.keys(item)[0];}).indexOf(field);
+        i >= 0 && where.and.splice(i,1);
+        if(where.and.length == 0)
+            where = undefined;
+    }
+    return where;
 };
 filter.prototype.setOrder = function(field, value){
-    var self = this;
-
-    self.order = field + value;
-    self._binding.set('order', self.order);
-};
-
-filter.prototype.setInclude = function(value){
-    var self = this;
-
-    self.include = value;
-    self._binding.set('include', self.include);
+    this._binding.set('order', field + value);
 };
 
 filter.prototype.setWhere = function(value){
-    var self = this;
-
-    self.where = value;
-    self._binding.set('where', self.where);
+    this._binding.set('where', Immutable.fromJS(value));
 };
 
 module.exports = filter;

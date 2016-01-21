@@ -28,22 +28,23 @@ const ListField = React.createClass({
         }else{
             dataField = self.props.dataField;
         }
-		if (value && self.props.filterType !== 'number') {
-            var tempValue = {};
-            if(value.length > 1){
-                if(self.props.dataField === self.props.dataFieldKey){
-                    value;
-                }else{
-                    tempValue[self.props.dataFieldKey] = value;
-                    value = tempValue;
-                }
-            }else{
-                value={
-                    regexp: "[\s\S]*",
-                    options: 'i'
-                }
-            }
-		}
+		//if (value && self.props.filterType !== 'number') {
+         //   var tempValue = {};
+         //   if(value.length > 1){
+         //       if(self.props.dataField === self.props.dataFieldKey){
+         //           value;
+         //       }else{
+         //           tempValue[self.props.dataFieldKey] = value;
+         //           value = tempValue;
+         //       }
+         //   }
+         //   else{
+         //       value={
+         //           regexp: "[\s\S]*",
+         //           options: 'i'
+         //       }
+         //   }
+		//}
 		self.props.onChange(dataField, value);
 	},
     onSort:function(event){

@@ -215,11 +215,11 @@ const PermissionView = React.createClass({
                        isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} pageLimit={25}>
                     <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="principal" width="20%" dataFieldKey="firstName"  parseFunction={self.getFirstName}>First name</TableField>
-                    <TableField dataField="principal" width="20%" dataFieldKey="lastName"  parseFunction={self.getLastName}>Surname</TableField>
+                    <TableField dataField="principal" width="20%" dataFieldKey="firstName" filterType="none"  parseFunction={self.getFirstName}>First name</TableField>
+                    <TableField dataField="principal" width="20%" dataFieldKey="lastName" filterType="none"  parseFunction={self.getLastName}>Surname</TableField>
                     <TableField dataField="principal" width="14%" filterType="none" parseFunction={self.getEmail}>Email</TableField>
                     <TableField dataField="principal" width="10%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="preset"  dataFieldKey="preset" width="10%" >Role</TableField>
+                    <TableField dataField="preset" width="10%" >Role</TableField>
                     <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
