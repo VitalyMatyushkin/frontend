@@ -9,6 +9,8 @@ $border-color: #c2c2c2;
 .eEvents_challenges {
   margin-left: 10px;
   border: solid 1px $border-color;
+  background: #fff;
+  padding: 0 10px;
 }
 
 .eEvents_challenges .eChallenge {
@@ -17,6 +19,7 @@ $border-color: #c2c2c2;
   padding: 2px 0;
   font-size: 12px;
   cursor: pointer;
+  border-bottom: solid 1px $border-color;
   &:hover {
     background: lighten($MAIN_COLOR, 25%);
   }
