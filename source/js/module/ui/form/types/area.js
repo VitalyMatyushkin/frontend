@@ -45,7 +45,7 @@ TypeArea = React.createClass({
 			AutocompleteElement = React.createElement(TypeAutocomplete, self.props),
 			AutocompleteProped;
 
-		AutocompleteProped = React.addons.cloneWithProps(AutocompleteElement, {
+		AutocompleteProped = React.cloneElement(AutocompleteElement, {
 			serviceFilter: self.serviceFilter,
 			serverField: 'id'
 		});

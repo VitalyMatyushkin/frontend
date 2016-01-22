@@ -20,7 +20,7 @@ SchoolForm = React.createClass({
 				<FormColumn type="column">
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="text" field="description" validation="required">Description</FormField>
-					<FormField type="text" field="phone" validation="phone">Phone</FormField>
+					<FormField type="phone" field="phone" validation="phone">Phone</FormField>
 				</FormColumn>
 				<FormColumn type="column">
 					<FormField type="area" field="postcodeId" validation="required">Postcode</FormField>
@@ -35,7 +35,7 @@ SchoolForm = React.createClass({
                     <FormField type="dropdown" field="status" optionChildren={['Active','Suspended','Inactive','Email Notifications']}>School Status</FormField>
                 </FormColumn>
 				<FormColumn type="column">
-					<FormField type="hidden" validation="required" field="pic">Upload blazon by clicking on the + button below</FormField>
+					<FormField type="hidden" field="pic">Upload blazon by clicking on the + button below</FormField>
 					<BlazonUpload binding={self.getDefaultBinding().sub('album')}/>
 				</FormColumn>
 			</Form>

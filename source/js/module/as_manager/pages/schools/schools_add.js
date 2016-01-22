@@ -8,7 +8,10 @@ const AddSchoolForm = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
-
+		if(schoolData!==undefined){
+			schoolData.pic = globalBinding.get('picUrl');
+			schoolData.status = schoolData.status===''?globalBinding.get('dropDownStatus'):'Active';
+		}
 		window.Server.schools.post(schoolData).then(function(data) {
 			// Добавляемая школа всегда становится школой "по умолчанию"
 			if(document.location.href.indexOf('admin')=== -1){
@@ -18,10 +21,11 @@ const AddSchoolForm = React.createClass({
 		});
 
 		// Добавление школы в списк
-		binding.update(function(ImmutableValue){
-			ImmutableValue = ImmutableValue || Immutable.List();
-			return ImmutableValue.push(schoolData);
-		});
+		//What is this doing? //TODO: uncomment this if it gives problems but at the moment it causes issues as it is
+		//binding.update(function(ImmutableValue){
+		//	ImmutableValue = ImmutableValue || Immutable.List();
+		//	return ImmutableValue.push(schoolData);
+		//});
 
 		// Return to admin dashboard based on either manager or superadmin
 		if(document.location.href.indexOf('admin')!== -1){
