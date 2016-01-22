@@ -28,10 +28,10 @@
 
 .eChallenge_rivalName,
 .eChallenge_rivalInfo{
-  display: table-cell;
-  width: 490px;
   vertical-align: middle;
   text-align: center;
+  min-width: 100px;
+  margin: 0 5px;
 }
 
 .eChallenge_rivalInfo{

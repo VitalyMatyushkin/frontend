@@ -169,7 +169,7 @@ CalendarMonthView = React.createClass({
 		})}</div>;
 	},
 	renderDaysOfWeek: function () {
-		var daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+		var daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 		return <div className="eMonth_row mWeeks">{daysOfWeek.map(function (name, n) {
 			return <span key={n} className="eMonth_day mWeekName">{name}</span>;

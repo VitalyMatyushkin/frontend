@@ -4,6 +4,8 @@ $border-color: #c2c2c2;
   flex-direction: row;
   width: 1020px;
   margin: 70px auto;
+  text-transform: uppercase;
+  font-size: 10px;
 }
 
 .eEvents_challenges {
@@ -15,11 +17,10 @@ $border-color: #c2c2c2;
 
 .eEvents_challenges .eChallenge {
   display: flex;
-  flex-direction: column;
   padding: 2px 0;
-  font-size: 12px;
   cursor: pointer;
   border-bottom: solid 1px $border-color;
+  text-align: center;
   &:hover {
     background: lighten($MAIN_COLOR, 25%);
   }
@@ -42,4 +43,16 @@ $border-color: #c2c2c2;
 .eChallenge_rivals {
   height: 18px;
   justify-content: space-between;
+}
+.eChallenge_date{
+  color: $COLOR;
+}
+
+.eChallenge_name{
+  min-width: 100px;
+  margin: 0 5px;
+}
+.eChallenge_type{
+  min-width: 100px;
+  margin: 0 5px;
 }
