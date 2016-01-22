@@ -21,6 +21,8 @@ $border-color: #c2c2c2;
   cursor: pointer;
   border-bottom: solid 1px $border-color;
   text-align: center;
+  height: 30px;
+  vertical-align: middle;
   &:hover {
     background: lighten($MAIN_COLOR, 25%);
   }
