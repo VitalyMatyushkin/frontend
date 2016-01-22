@@ -1,6 +1,4 @@
-const 	RouterView 		= require('module/core/router'),
-		Route 			= require('module/core/route'),
-		If 				= require('module/ui/if/if'),
+const 	If 				= require('module/ui/if/if'),
 		SubMenu 		= require('module/ui/menu/sub_menu'),
 		PhotoList 		= require('./photo_list'),
 		FullScreenList 	= require('./album_fullscreen_list'),

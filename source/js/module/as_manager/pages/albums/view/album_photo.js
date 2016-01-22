@@ -3,6 +3,11 @@ const 	Immutable 	= require('immutable'),
 
 const AlbumPhoto = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		onPhotoClick: React.PropTypes.func.required,
+		onPhotoDelete: React.PropTypes.func.required,
+		onPhotoPin: React.PropTypes.func.required
+	},
 
 	getDefaultState: function() {
 		return Immutable.fromJS({
@@ -36,15 +41,31 @@ const AlbumPhoto = React.createClass({
 	},
 	onClickDeletePhoto: function(photo) {
 		var self = this,
-				photoId = photo.get('id'),
-				rootBinding = self.getMoreartyContext().getBinding(),
-				albumId = rootBinding.get('routing.pathParameters.1');
+			photoId = photo.get('id'),
+			rootBinding = self.getMoreartyContext().getBinding(),
+			albumId = rootBinding.get('routing.pathParameters.1');
 
 		if(confirm("Delete this photo?"))
 			window.Server.photo.delete(photoId).then(function() {
 				console.log("onClickDeletePhoto: photoId = "+photoId+", albumId = "+albumId);
 
 				self.props.onPhotoDelete();
+			});
+
+		return false;
+	},
+
+	onClickPinPhoto: function(photo) {
+		var self = this,
+			photoId = photo.get('id'),
+			rootBinding = self.getMoreartyContext().getBinding(),
+			albumId = rootBinding.get('routing.pathParameters.1');
+
+		if(confirm("Delete this photo?"))
+			window.Server.photo.delete(photoId).then(function() {
+				console.log("onClickDeletePhoto: photoId = "+photoId+", albumId = "+albumId);
+
+				self.props.onPhotoPin(photo);
 			});
 
 		return false;
@@ -61,6 +82,7 @@ const AlbumPhoto = React.createClass({
 		var src = binding.get('pic') + '/contain?height=200';
 		return (
 			<div onClick={self.onImageClick} className={imgClasses} >
+				<span onClick={self.props.onPhotoPin.bind(self, binding)} className='eAlbumPhoto_photoPin'></span>
 				<span onClick={self.onClickEditPhoto.bind(self, binding)} className='eAlbumPhoto_photoEdit'></span>
 				<span onClick={self.onClickDeletePhoto.bind(self, binding)} className='eAlbumPhoto_photoDelete'></span>
 				<span className='eAlbumPhoto_photoTitle'>{binding.get('description')}</span>

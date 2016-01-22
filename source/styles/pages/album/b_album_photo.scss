@@ -57,6 +57,11 @@
 
   background-image:	url('/images/icons/trash.svg');
 }
+.eAlbumPhoto_photoPin{
+  @extend .eAlbumPhoto_photoEdit;
+
+  background-image:	url('/images/icons/check.svg');
+}
 .bAlbumPhoto {
   &:hover {
     border-color: $MAIN_COLOR;
