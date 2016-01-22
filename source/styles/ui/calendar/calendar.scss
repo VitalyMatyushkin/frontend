@@ -48,16 +48,18 @@ $border-color: #c2c2c2;
   text-align: center;
   justify-content: center;
   cursor: pointer;
-  border: solid 1px $border-color;
+  border: solid 1px #dddddd;
   border-radius: 10%;
-  margin: 5px;
-  background: #EAEAEA;
+  margin: 3px;
+  background: #f1f1f1;
+  color: #8c8c8c;
+  font-size: 22px;
   &.mFirst {
-    border-left: 1px solid $border-color;
   }
   &.mWeekName {
     border: 0;
     font-weight: 500;
+    font-size: 14px;
     color: #8c8c8c;
     cursor: default;
     height: 40px;
@@ -65,11 +67,10 @@ $border-color: #c2c2c2;
   }
   &.mToday {
     background: #f26525;
-    border-color: #235413;
-    color: #235413;
+    border-color: $border-color;
+    color: #fff;
   }
   &.mHover {
-    background-color: #66952D;
     border-color: #235413;
     color: #235413;
   }
@@ -79,7 +80,6 @@ $border-color: #c2c2c2;
     background-color: #fff;
     color: rgba(0, 0, 0, .2);
     &.mHover {
-      background-color: #66952D;
       border-color: #235413;
       color: #235413;
     }
