@@ -6,7 +6,7 @@ const   If          = require('module/ui/if/if'),
 const PhotoList = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {
-        onPhotoClick: React.PropTypes.func.required
+        onPhotoClick: React.PropTypes.func
     },
     getMergeStrategy: function() {
         return Morearty.MergeStrategy.MERGE_REPLACE;

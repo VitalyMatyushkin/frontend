@@ -4,9 +4,9 @@ const 	Immutable 	= require('immutable'),
 const AlbumPhoto = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onPhotoClick: React.PropTypes.func.required,
-		onPhotoDelete: React.PropTypes.func.required,
-		onPhotoPin: React.PropTypes.func.required
+		onPhotoClick: React.PropTypes.func,
+		onPhotoDelete: React.PropTypes.func,
+		onPhotoPin: React.PropTypes.func
 	},
 
 	getDefaultState: function() {
@@ -50,22 +50,6 @@ const AlbumPhoto = React.createClass({
 				console.log("onClickDeletePhoto: photoId = "+photoId+", albumId = "+albumId);
 
 				self.props.onPhotoDelete();
-			});
-
-		return false;
-	},
-
-	onClickPinPhoto: function(photo) {
-		var self = this,
-			photoId = photo.get('id'),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			albumId = rootBinding.get('routing.pathParameters.1');
-
-		if(confirm("Delete this photo?"))
-			window.Server.photo.delete(photoId).then(function() {
-				console.log("onClickDeletePhoto: photoId = "+photoId+", albumId = "+albumId);
-
-				self.props.onPhotoPin(photo);
 			});
 
 		return false;

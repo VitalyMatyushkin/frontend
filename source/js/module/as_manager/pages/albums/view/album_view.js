@@ -167,7 +167,8 @@ const AlbumView = React.createClass({
 						<span>loading...</span>
 					</If>
 					<If condition={this.state.fullScreen}>
-						<FullScreenList onClose={self.onCloseFullscreen} photos={binding.toJS('album.photos')} startPhoto={this.state.lastClickedId} />
+						<FullScreenList onClose={self.onCloseFullscreen} photos={binding.toJS('album.photos')}
+										startPhoto={this.state.lastClickedId} />
 					</If>
 				</div>
 			</div>
