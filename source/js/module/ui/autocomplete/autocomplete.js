@@ -111,13 +111,12 @@ const Autocomplete = React.createClass({
 
 		binding.set('loading', true);
 		binding.set('response', null);
-
-		self.pendingRequest = self.props.serviceFilter(userInput).then(function (data) {
+		self.pendingRequest = userInput!==''?self.props.serviceFilter(userInput).then(function (data) {
 			self.responseData = data;
 			binding.set('response', data);
 			binding.set('loading', false);
 			self.forceUpdate();
-		});
+		}):null;
 	},
 	_filterOnClient: function (userInput) {
 		var self = this,

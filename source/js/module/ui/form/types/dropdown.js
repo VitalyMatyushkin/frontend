@@ -11,28 +11,28 @@ TypeDrop = React.createClass({
         defaultSelect: React.PropTypes.string
     },
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self = this;
     },
     componentDidMount:function(){
-        //var self = this,
-        //    binding = self.getDefaultBinding(),
-        //    el = React.findDOMNode(self.refs.dropSelect);
-        //console.log(el.options);
+        var self  = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            el = ReactDOM.findDOMNode(self.refs.dropSelect);
+        globalBinding.set('dropDownStatus',el.value);
     },
     _renderChildOptions:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        return self.props.optionChildren.map(function(optionNode){
+        return self.props.optionChildren.map(function(optionNode,i){
             return(
-                <option value={optionNode}>{optionNode}</option>
+                <option key={i} value={optionNode}>{optionNode}</option>
             )
         });
     },
     _handleDropChange:function(){
         var self = this,
-            binding = self.getDefaultBinding(),
-            el = React.findDOMNode(self.refs.dropSelect);
+            globalBinding = self.getMoreartyContext().getBinding(),
+            el = ReactDOM.findDOMNode(self.refs.dropSelect);
+        globalBinding.set('dropDownStatus',el.value);
     },
     render:function(){
         var self = this,
