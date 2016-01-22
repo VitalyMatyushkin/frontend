@@ -25,7 +25,6 @@ const HomeHeader = React.createClass({
             localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
             localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
             localArrayOfPhotos.push('https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg');
-            localArrayOfPhotos.push('http://www.sheptonmalletjournal.co.uk/images/localworld/ugc-images/276417/Article/images/21013360/6047137-large.jpg');
             localArrayOfPhotos.push('http://www.pgl.co.uk/Files/Files/Schools/Secondary%20Schools/Carousel/SS-M-Outdoor-Education-Sports-Weekends-Football-MUSS.jpg');
             window.Server.addAlbum.get({
                 filter:{
@@ -44,7 +43,6 @@ const HomeHeader = React.createClass({
                 localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
                 localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
                 localArrayOfPhotos.push('https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg');
-                localArrayOfPhotos.push('http://www.sheptonmalletjournal.co.uk/images/localworld/ugc-images/276417/Article/images/21013360/6047137-large.jpg');
                 localArrayOfPhotos.push('http://www.pgl.co.uk/Files/Files/Schools/Secondary%20Schools/Carousel/SS-M-Outdoor-Education-Sports-Weekends-Football-MUSS.jpg');
                 localArrayOfPhotos.push('http://www.northyorkshiresport.co.uk/assets/images/School%20Games/School%20Games%20Launch%201.jpg');
             });
