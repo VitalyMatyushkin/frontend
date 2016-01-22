@@ -54,7 +54,6 @@ $border-color: #c2c2c2;
   background: #EAEAEA;
   &.mFirst {
     border-left: 1px solid $border-color;
-    background: #fff
   }
   &.mWeekName {
     border: 0;
@@ -77,6 +76,7 @@ $border-color: #c2c2c2;
   &.mPrev,
   &.mNext {
     cursor: default;
+    background-color: #fff;
     color: rgba(0, 0, 0, .2);
     &.mHover {
       background-color: #66952D;
