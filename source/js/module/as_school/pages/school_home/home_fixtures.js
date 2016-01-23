@@ -5,7 +5,8 @@ const
     DateTimeMixin   = require('module/mixins/datetime'),
     React           = require('react'),
     Immutable 	    = require('immutable'),
-    SVG             = require('module/ui/svg');
+    SVG             = require('module/ui/svg'),
+    Superuser       = require('module/helpers/superuser');
 
 const HomeFixtures = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
@@ -14,9 +15,12 @@ const HomeFixtures = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('activeSchoolId');
-        window.Server.fixturesBySchoolId.get({schoolId:activeSchoolId, filter:{order:'startTime ASC'}}).then(function(events){
-            binding.set('fixtures',Immutable.fromJS(events));
-            //console.log(events);
+
+        Superuser.runAsSuperUser(rootBinding, function(logout) {
+            window.Server.fixturesBySchoolId.get({schoolId:activeSchoolId, filter:{order:'startTime ASC'}}).then(function(events){
+                binding.set('fixtures',Immutable.fromJS(events));
+                logout();
+            });
         });
     },
     getFixtureDate:function(startTime, type){
@@ -100,7 +104,6 @@ const HomeFixtures = React.createClass({
     },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding(),
             fixtures = self.renderFixtureLists();
         return (
             <div className="eSchoolFixtures">

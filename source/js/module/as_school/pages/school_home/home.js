@@ -13,7 +13,6 @@ SchoolHomePage = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        console.log(binding.toJS());
         return (
             <div className="eSchoolHomePage">
                 <HomeHeader binding={binding}/>
