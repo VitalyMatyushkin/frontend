@@ -30,17 +30,26 @@ const AlbumPhoto = React.createClass({
 
 		self.props.onPhotoClick(binding.get());
 	},
-	onClickEditPhoto: function(photo) {
-		var self = this;
+	onClickPinPhoto: function(e) {
+		var self = this,
+			photo = self.getDefaultBinding();
+
+		self.props.onPhotoPin(photo);
+		e.stopPropagation();
+	},
+	onClickEditPhoto: function(e) {
+		var self = this,
+			photo = self.getDefaultBinding();
 
 		if (self.isMounted()) {
 			document.location.hash = 'albums/photo-edit/' + photo.get('id');
 		}
 
-		return false;
+		e.stopPropagation();
 	},
-	onClickDeletePhoto: function(photo) {
+	onClickDeletePhoto: function(e) {
 		var self = this,
+			photo = self.getDefaultBinding(),
 			photoId = photo.get('id'),
 			rootBinding = self.getMoreartyContext().getBinding(),
 			albumId = rootBinding.get('routing.pathParameters.1');
@@ -52,7 +61,7 @@ const AlbumPhoto = React.createClass({
 				self.props.onPhotoDelete();
 			});
 
-		return false;
+		e.stopPropagation();
 	},
 
 	render: function() {
@@ -66,9 +75,9 @@ const AlbumPhoto = React.createClass({
 		var src = binding.get('pic') + '/contain?height=200';
 		return (
 			<div onClick={self.onImageClick} className={imgClasses} >
-				<span onClick={self.props.onPhotoPin.bind(self, binding)} className='eAlbumPhoto_photoPin'></span>
-				<span onClick={self.onClickEditPhoto.bind(self, binding)} className='eAlbumPhoto_photoEdit'></span>
-				<span onClick={self.onClickDeletePhoto.bind(self, binding)} className='eAlbumPhoto_photoDelete'></span>
+				<span onClick={self.onClickPinPhoto} className='eAlbumPhoto_photoPin'></span>
+				<span onClick={self.onClickEditPhoto} className='eAlbumPhoto_photoEdit'></span>
+				<span onClick={self.onClickDeletePhoto} className='eAlbumPhoto_photoDelete'></span>
 				<span className='eAlbumPhoto_photoTitle'>{binding.get('description')}</span>
 				<img src={src} onLoad={self.onImageLoad} />
 			</div>

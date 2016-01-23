@@ -69,11 +69,11 @@ var FullScreenList = React.createClass({
 		var leftOffset = width * 0.5;
 
 		var styles = {
-			'margin-top': -topOffset,
-			'margin-left': -leftOffset,
+			marginTop: -topOffset,
+			marginLeft: -leftOffset,
 			width: width,
 			height: height,
-			'background-image': 'url('+ src +')'
+			backgroundImage: 'url('+ src +')'
 		};
 
 		return (

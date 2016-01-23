@@ -19,7 +19,7 @@ const AlbumView = React.createClass({
 			},
 			sync: false,
             isUploading:false,
-			currentPhotoId: null
+			fullScreen: false
 		});
 	},
 	componentWillMount: function() {
@@ -45,7 +45,6 @@ const AlbumView = React.createClass({
 			}
 		})
 		.then(function(res) {
-			res.currentPhotoId = res.photos.length > 0 ? res.photos[0].id : null;
 			var isOwner = (userId == res.ownerId);
 
 			self.menuItems = [{
@@ -128,23 +127,27 @@ const AlbumView = React.createClass({
     },
 
 	onPhotoClick: function(photo) {
-		var fullScreen = this.state.fullScreen;
-		var id = photo.get('id');
-		this.setState({lastClickedId: id});
+		const self = this,
+			binding = self.getDefaultBinding(),
+			fullScreen = binding.get('fullScreen'),
+			id = photo.get('id');
+
+		self.setState({lastClickedId: id});
 		if (!fullScreen) {
-			this.setState({fullScreen: true});
+			binding.set('fullScreen', true);
 		}
 	},
 
 	getInitialState: function() {
 		return {
-			fullScreen: false,
 			lastClickedId: 0
 		};
 	},
 
-	onCloseFullscreen: function() {
-		this.setState({fullScreen: false});
+	onCloseFullScreen: function() {
+		const self = this,
+			binding = self.getDefaultBinding();
+		binding.set('fullScreen', false);
 	},
 
 	render: function() {
@@ -166,8 +169,8 @@ const AlbumView = React.createClass({
 					<If condition={!binding.get('sync')}>
 						<span>loading...</span>
 					</If>
-					<If condition={this.state.fullScreen}>
-						<FullScreenList onClose={self.onCloseFullscreen} photos={binding.toJS('album.photos')}
+					<If condition={binding.get('fullScreen')}>
+						<FullScreenList onClose={self.onCloseFullScreen} photos={binding.toJS('album.photos')}
 										startPhoto={this.state.lastClickedId} />
 					</If>
 				</div>
