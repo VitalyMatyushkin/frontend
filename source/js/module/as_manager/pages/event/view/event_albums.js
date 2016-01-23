@@ -7,7 +7,9 @@ const EventHeader = React.createClass({
 	renderAlbum: function(album, index) {
 		var self = this,
 		binding = self.getDefaultBinding(),
-		cover = binding.get('albums.' + index + '.photos.0.pic');
+			//cover = binding.get('albums.' + index + '.photos.0.pic');
+		iCover = binding.toJS('albums.' + index + '.photos').map(photo => photo.id).indexOf(album.get('coverId')),
+		cover = binding.get('albums.' + index + '.photos.' + iCover + '.pic');
 		cover = cover ? cover + '/contain?height=100': '/images/no-image.jpg';
 		var styles = {backgroundImage: 'url(' + cover + ')', width: self.state.albumWidth};
 
