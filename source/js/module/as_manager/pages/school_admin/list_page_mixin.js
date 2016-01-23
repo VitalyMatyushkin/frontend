@@ -28,12 +28,11 @@ const ListPageMixin = {
         self.filter.setFilters(self.filters);
 	},
     componentDidMount:function(){
-        var self = this;
-        if(self.isSuperAdminPage)
-            ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
+        if(this.isSuperAdminPage)
+            ReactDOM.findDOMNode(this.refs.otherCheck).checked = true;
     },
 	componentWillUnmount: function () {
-        clearTimeout(self.timeoutId);
+        clearTimeout(this.timeoutId);
 	},
     getDefaultState: function () {
         return Immutable.Map({

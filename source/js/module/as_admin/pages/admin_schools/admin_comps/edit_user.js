@@ -245,7 +245,7 @@ const EditUser = React.createClass({
             window.Server.user.put({id:binding.get('selectedUser').userId},userModel).then(function(){
                 alert("Changes successfully made");
                 //TODO: reloading page to affect re-fetching data to match selected user
-                location.reload(true);
+                window.location.reload(true);
             });
         }
     },
@@ -254,7 +254,7 @@ const EditUser = React.createClass({
             binding = self.getDefaultBinding();
         binding.set('popup',false);
         //TODO: reloading page to affect re-fetching data to match selected user
-        location.reload(true);
+        window.location.reload(true);
     },
     render:function(){
         var self = this,

@@ -4,7 +4,8 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		authController 		= require('module/core/auth_controller'),
 		ReactDom 			= require('reactDom'),
 		React 				= require('react'),
-		Helpers				= require('module/helpers/storage');
+		Helpers				= require('module/helpers/storage'),
+		Immutable			= require('immutable');
 
 function initMainView(schoolId) {
 	// creating morearty context
