@@ -41,11 +41,23 @@ function initMainView(schoolId) {
 	// Turning on authorization service
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-	// App init
-	ReactDom.render(
-		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
-		document.getElementById('jsMain')
-	);
+	// Dirty dirty hack, login as superuser.
+	window.Server.login.post({username:"superadmin",password:"superadmin"}).then(function(data) {
+		binding.update('userData.authorizationInfo', function(){
+			return Immutable.fromJS({
+				id: data.id,
+				ttl: data.ttl,
+				userId: data.userId,
+				verified: data.user.verified,
+				registerType: data.user.registerType
+			});
+		});
+
+		ReactDom.render(
+			React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
+			document.getElementById('jsMain')
+		);
+	});
 }
 
 function init404View() {
