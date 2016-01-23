@@ -4,6 +4,7 @@
 const   classNames  = require('classnames'),
         If          = require('module/ui/if/if'),
         React       = require('react'),
+        ReactDOM    = require('reactDom'),
         $           = require('jquery');
 
 let
@@ -24,7 +25,7 @@ const BlazonUpload = React.createClass({
         if(currentAction !== 'add'){
             window.Server.school.get(currentSchoolId).then(function(school){
                 //preview = self.renderPhoto(school.pic);
-                React.findDOMNode(self.refs.prevImage).src = school.pic;
+                ReactDOM.findDOMNode(self.refs.prevImage).src = school.pic;
             });
         }
     },
@@ -54,7 +55,7 @@ const BlazonUpload = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding();
         var file = e.target.files[0];
-        React.findDOMNode(self.refs.imageChanged).innerText = 'Processing...';
+        ReactDOM.findDOMNode(self.refs.imageChanged).innerText = 'Processing...';
         if(currentAction === 'add'){
             window.Server.addAlbum.post(rootBinding.get('userData.authorizationInfo.userId'), {
                 name: 'blazon_'+rootBinding.get('userData.authorizationInfo.userId')+'_staging',
@@ -81,8 +82,11 @@ const BlazonUpload = React.createClass({
                         window.Server.photos.post(albumDetails.id, model).then(function(data){
                             urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=60&width=60';
                             rootBinding.set('picUrl',urlStr);
+                            //console.log(rootBinding.get('picUrl'));
                             //React.findDOMNode(self.refs.prevImage).src = data.pic+'/contain?height=60&width=60';
-                            React.findDOMNode(self.refs.imageChanged).innerText = 'Image changed - Please submit to effect changes';
+                            ReactDOM.findDOMNode(self.refs.imageChanged).innerText = 'Image changed - Please submit to effect changes';
+                            self.forceUpdate();
+                            return data;
                         });
                     },
                     // Form data
@@ -120,7 +124,9 @@ const BlazonUpload = React.createClass({
                             urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=60&width=60';
                             rootBinding.set('picUrl',urlStr);
                             //React.findDOMNode(self.refs.prevImage).src = data.pic+'/contain?height=60&width=60';
-                            React.findDOMNode(self.refs.imageChanged).innerText = 'Image changed - Please submit to effect changes';
+                            ReactDOM.findDOMNode(self.refs.imageChanged).innerText = 'Image changed - Please submit to effect changes';
+                            self.forceUpdate();
+                            return data;
                         });
                     },
                     // Form data
@@ -149,7 +155,7 @@ const BlazonUpload = React.createClass({
             <div>
                 <img className="eBlazon_prev" ref="prevImage"/>
             </div>
-            <div><span className="eBlazon_notify" ref="imageChanged"></span></div>
+            <div><span className="eBlazon_notify" ref="imageChanged"/></div>
         </div>;
     }
 });

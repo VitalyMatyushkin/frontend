@@ -33,7 +33,7 @@ const OneSchoolPage = React.createClass({
 		window.Server.schoolInfo.get(activeSchoolId).then(function (data) {
 			binding.set('schoolInfo', Immutable.fromJS(data));
 		}, function() {
-			localStorage.clear();
+			window.localStorage.clear();
 			document.location.reload();
 		});
 

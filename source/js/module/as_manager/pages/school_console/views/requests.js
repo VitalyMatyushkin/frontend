@@ -15,9 +15,7 @@ const SchoolRequest = React.createClass({
         window.Server.schoolPermissions.get({id:activeSchoolId,
             filter: {
                 include: ['principal', 'school'],
-                where:{
-                    and:[{accepted:undefined}]
-                }
+                where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}
             }
         }).then(function (results) {
             binding

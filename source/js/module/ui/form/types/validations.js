@@ -15,14 +15,11 @@ var validationsSet = {
 		}
 	},
 	date:function(value){
-		//TODO implement this properly
-		//console.log(value);
-		//if(!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))){
-		//	return 'Please fill out this field';
-		//}else{
-		//	return false;
-		//}
-		return false;
+		if(!(/\d.\d{1,4}-\d{1,2}-\d{1,2}\D\d{1,2}:\d{1,2}:\d{1,2}.\d{1,4}\D/.test(value))){
+			return 'Please fill out this fieldx';
+		}else{
+			return false;
+		}
 	},
 	email: function(value) {
 		var self = this;

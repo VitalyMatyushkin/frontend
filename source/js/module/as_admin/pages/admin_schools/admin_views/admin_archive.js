@@ -50,10 +50,10 @@ AdminArchive = React.createClass({
                        isPaginated={true} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} filter={self.filter}>
                     <TableField dataField="meta" filterType="none" parseFunction={self.getRequestDate} width="17%">Date</TableField>
-                    <TableField dataField="preset" width="10%" dataFieldKey="preset">Request</TableField>
-                    <TableField dataField="principal" dataFieldKey="lastName" parseFunction={self.getRequestPrincipalName} width="20%">From</TableField>
+                    <TableField dataField="preset" width="10%" dataFieldKey="preset" filterType="none">Request</TableField>
+                    <TableField dataField="principal" dataFieldKey="lastName" filterType="none" parseFunction={self.getRequestPrincipalName} width="20%">From</TableField>
                     <TableField dataField="principal" filterType="none" parseFunction={self.getRequestEmail} width="15%">Email</TableField>
-                    <TableField dataField="school" dataFieldKey="name" parseFunction={self.getRequestSchoolName} width="25%">School</TableField>
+                    <TableField dataField="school" dataFieldKey="name" filterType="none" parseFunction={self.getRequestSchoolName} width="25%">School</TableField>
                     <TableField dataField="accepted" filterType="none" parseFunction={self.getRequestResponse} width="10%">Response</TableField>
                 </Table>
             </div>

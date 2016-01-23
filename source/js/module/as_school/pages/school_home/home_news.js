@@ -2,9 +2,9 @@
  * Created by bridark on 03/08/15.
  */
 const   React           = require('react'),
-        ReactDOM        = require('reactDom'),
         Immutable 	    = require('immutable'),
-        DateTimeMixin   = require('module/mixins/datetime');
+        DateTimeMixin   = require('module/mixins/datetime'),
+        Superuser       = require('module/helpers/superuser');
 
 const HomeNews = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
@@ -12,10 +12,13 @@ const HomeNews = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('activeSchoolId'); //console.log(activeSchoolId);
-        window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:3}}).then(function(schoolNews){
-            binding.set('schoolNews',Immutable.fromJS(schoolNews));
-            //console.log(schoolNews);
+            activeSchoolId = rootBinding.get('activeSchoolId');
+
+        Superuser.runAsSuperUser(rootBinding, function(logout) {
+            window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:3}}).then(function(schoolNews){
+                binding.set('schoolNews',Immutable.fromJS(schoolNews));
+                logout();
+            });
         });
     },
     //Temporarily remove img from news body
@@ -74,10 +77,10 @@ const HomeNews = React.createClass({
     },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding(),
             news = self.renderNewsItems();
-        //console.log(binding.toJS());
+
         //self.renderNewsItems();
+
         return (
             <div className="eSchoolNewsContainer">
                 <div className="eSchoolFixtureTab eNews_tab">

@@ -36,7 +36,6 @@ const SchoolSummary = React.createClass({
             schoolPicture = binding.get('pic'),
             siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
-
         return (
             <div>
                 <h1 className="eSchoolMaster_title">

@@ -1,20 +1,14 @@
 /**
  * Created by bridark on 29/06/15.
  */
-var GrantRole,
-    AutoComplete = require('module/ui/autocomplete/autocomplete'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    StudentAutoComplete = require('./StudentAutoComplete');
-GrantRole = React.createClass({
+const   AutoComplete            = require('module/ui/autocomplete/autocomplete'),
+        React                   = require('react'),
+        ReactDOM                = require('reactDom'),
+        StudentAutoComplete     = require('./StudentAutoComplete');
+
+const GrantRole = React.createClass({
     mixins:[Morearty.Mixin],
-    componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-    },
     serviceSchoolFilter: function(schoolName) {
-        var self = this,
-            binding = self.getDefaultBinding();
         return window.Server.getAllSchools.get({
             filter: {
                 where: {
@@ -23,58 +17,51 @@ GrantRole = React.createClass({
                         options: 'i'
                     }
                 },
-                include:{
-                    relation:'students'
-                },
                 limit: 10
             }
+        }).then(schoolList => {
+            console.log('got school list: ' + JSON.stringify(schoolList, null, 2));
+            return schoolList;
         });
     },
-    onSchoolSelect:function(order,id, response,model){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding();
-        binding.set('selectedSchoolId',id);
+    onSchoolSelect:function(order,id, response, model){
+        this.getDefaultBinding().set('selectedSchoolId',id);
     },
     onRoleSelectorChange:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            selEl = ReactDOM.findDOMNode(self.refs.roleSelector);
-        if(selEl.options[selEl.selectedIndex].value === 'parent'){
-            binding.set('isParent', true);
-            binding.set('roleName',selEl.options[selEl.selectedIndex].value);
-            self.forceUpdate();
-        }else{
-            binding.set('isParent',false);
-            binding.set('roleName',selEl.options[selEl.selectedIndex].value);
-            self.forceUpdate();
-        }
+        const   binding     = this.getDefaultBinding(),
+                selEl       = ReactDOM.findDOMNode(this.refs.roleSelector);
+
+        const roleName = selEl.options[selEl.selectedIndex].value;
+        binding.set('isParent', roleName === 'parent');
+        binding.set('roleName', roleName);
+        this.forceUpdate();     // TODO: do we really need it here ?
     },
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            services = {'school':self.serviceSchoolFilter};
-        return (<div className="bGrantContainer">
-                    <h2>New role</h2>
+        const   binding         = this.getDefaultBinding(),
+                services        = { school: this.serviceSchoolFilter };
+        return (
+            <div className="bGrantContainer">
+                <h2>New role</h2>
+                <div>
+                    <h4>School</h4>
                     <div>
-                        <h4>School</h4>
-                        <div>
-                            <AutoComplete serviceFilter={services['school']} serverField="name" onSelect={self.onSchoolSelect.bind(null,0)} binding={binding} />
-                        </div>
-                        <h4>Role </h4>
-                        <div>
-                            <select onChange={function(){self.onRoleSelectorChange()}} ref="roleSelector" id="roleSelector">
-                                <option value="admin">School Admin</option>
-                                <option value="manager">School Manager</option>
-                                <option value="teacher">Teacher</option>
-                                <option value="coach">Coach</option>
-                                <option value="parent">Parent</option>
-                            </select>
-                        </div>
-                        <StudentAutoComplete binding = {binding} />
+                        <AutoComplete serviceFilter={services.school} serverField="name" onSelect={this.onSchoolSelect.bind(null,0)} binding={binding} />
                     </div>
-                </div>);
+                    <h4>Role </h4>
+                    <div>
+                        <select onChange={this.onRoleSelectorChange} ref="roleSelector" id="roleSelector">
+                            <option value="admin">School Admin</option>
+                            <option value="manager">School Manager</option>
+                            <option value="teacher">Teacher</option>
+                            <option value="coach">Coach</option>
+                            <option value="parent">Parent</option>
+                        </select>
+                    </div>
+                    <StudentAutoComplete binding = {binding} />
+                </div>
+            </div>
+        );
     }
 });
+
 module.exports = GrantRole;

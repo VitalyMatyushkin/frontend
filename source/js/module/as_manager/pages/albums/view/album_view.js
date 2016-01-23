@@ -1,6 +1,4 @@
-const 	RouterView 		= require('module/core/router'),
-		Route 			= require('module/core/route'),
-		If 				= require('module/ui/if/if'),
+const 	If 				= require('module/ui/if/if'),
 		SubMenu 		= require('module/ui/menu/sub_menu'),
 		PhotoList 		= require('./photo_list'),
 		FullScreenList 	= require('./album_fullscreen_list'),
@@ -169,7 +167,8 @@ const AlbumView = React.createClass({
 						<span>loading...</span>
 					</If>
 					<If condition={this.state.fullScreen}>
-						<FullScreenList onClose={self.onCloseFullscreen} photos={binding.toJS('album.photos')} startPhoto={this.state.lastClickedId} />
+						<FullScreenList onClose={self.onCloseFullscreen} photos={binding.toJS('album.photos')}
+										startPhoto={this.state.lastClickedId} />
 					</If>
 				</div>
 			</div>

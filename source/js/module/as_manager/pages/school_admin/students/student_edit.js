@@ -44,15 +44,40 @@ const StudentEditPage = React.createClass({
 				gender: data.gender
 			}
 		).then(function() {
-			delete data.firstName;
-			delete data.lastName;
-			delete data.birthday;
-			delete data.gender;
-			return window.Server.student.put(self.studentId, data);
+			window.Server.studentUser.put({id:data.userId},{
+				nextOfKin:[{
+					name:data.name,
+					surname:data.surname,
+					phone:data.phone,
+					role:data.relationship
+				}],
+				medicalInfo:{
+					injures:data.injures,
+					allergy:data.allergy,
+					other:data.other
+				}
+			}).then(function(){
+				delete data.firstName;
+				delete data.lastName;
+				delete data.birthday;
+				delete data.gender;
+				delete data.injures;
+				delete data.name;
+				delete data.surname;
+				delete data.phone;
+				delete data.relationship;
+				delete data.allergy;
+				delete data.other;
+				return window.Server.student.put(self.studentId, data);
+			}).catch(function(er){
+				alert(er.errorThrown+' Contact Server Support');
+			})
 		}).then(function() {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
+		}).catch((e)=>{
+			alert(e.errorThrown+' Please contact support');
+			self.isMounted() && (document.location.hash = 'school_admin/students');
 		});
-
 	},
 	render: function() {
 		var self = this,

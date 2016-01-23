@@ -5,6 +5,7 @@
 var bowerDir = 'bower/';
 
 requirejs.config({
+    waitSeconds: 15,            // will wait for a bit longer than usual, to be ok on slow connections
     baseUrl: '/build/js',
     paths: {
         classnames: bowerDir + 'classnames/index',
@@ -15,7 +16,8 @@ requirejs.config({
         react:      bowerDir + "react/react-with-addons",
         reactDom:   bowerDir + 'react/react-dom',
         loglevel:   bowerDir + "loglevel/dist/loglevel.min",
-        bluebird:   bowerDir + 'bluebird/js/browser/bluebird'
+        bluebird:   bowerDir + 'bluebird/js/browser/bluebird',
+        lazyjs:     bowerDir + 'lazy.js/lazy'
     },
     shim: {
         /** Making classname acts like AMD library */

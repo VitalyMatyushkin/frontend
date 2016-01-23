@@ -1,26 +1,22 @@
-var $ = require('jquery'),
-	log = require('loglevel'),
-	AJAX = require('module/core/AJAX'),
-	baseUrl = window.apiBase,
-	ServiceConstructor;
+const 	$ 			= require('jquery'),
+		log 		= require('loglevel'),
+		AJAX 		= require('module/core/AJAX'),
+		baseUrl 	= window.apiBase;
 
 /** Build ServiceConstructor which is kind of accessor to given url.
  *  Example:
  *  var users = new Service('/users', binding);
  *  users.get();
  **/
-ServiceConstructor = (function() {
-	var Service;	// service instance to return
+const ServiceConstructor = (function() {
 
-	Service = function(url, binding) {
-		var self = this;
-
-		self.url = url;
-		self.binding = binding;
+	const Service = function(url, binding) {	// service instance to return
+		this.url = url;
+		this.binding = binding;
 
 		/* Processing params from provided url. All unique params enclosed in curly brackets will be stored in array */
 		var urlParams = _extractUrlParams(url);
-		self.requredParams = urlParams.length === 0 ? undefined : urlParams;
+		this.requredParams = urlParams.length === 0 ? undefined : urlParams;
 	};
 
 	/**
@@ -58,7 +54,7 @@ ServiceConstructor = (function() {
 				url = self.url,
 				filter = options && options.filter || data && data.filter || '',
 				where = options && options.where || data && data.where || '',
-				key = filter ? 'filter' : (where ? 'where' : '');
+				key = filter ? 'filter' : (where ? 'where' : ''),
 				authorization = self.binding ? self.binding.get() : undefined;
 
 			if (self.requredParams) {

@@ -7,71 +7,12 @@ const   RouterView  = require('module/core/router'),
 const OneSchoolPage = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding();
-        //TODO: Test purpose get the number of new requests - refactoring needed
-        window.Server.schools.get({
-            filter:{
-                include:{
-                    relation:'permissions'
-                }
-            }
-        }).then(function(results){
-            binding
-                .atomically()
-                .set('permissionRequestCount', Immutable.fromJS(results))
-                .set('sync',true)
-                .commit();
-            self._updateLiveRequestsNum();
-        });
-        self.menuItems = [
-            {
-                href:'/#admin_schools/permissions',
-                name:'Users & Permissions',
-                key:'Permissions'
-            },
-            {
-                href:'/#admin_schools/admin_views/requests',
-                name:'New Requests',
-                key:'requests'
-            },
-            {
-                href:'/#admin_schools/admin_views/archive',
-                name:'Request Archive',
-                key:'archive'
-            },
-            {
-                href: '/#admin_schools/admin_views/list',
-                name: 'schools',
-                key: 'schools'
-            },{
-                href:'/#admin_schools/admin_views/logs',
-                name:'Activity Log',
-                key:'Log'
-            }];
-        globalBinding.set('subMenuItems', Immutable.fromJS(self.menuItems));
+        this.createSubMenu();
     },
     componentDidMount: function(){
         var self = this,
-            binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-        self.subMenuListenerId = globalBinding.addListener('submenuNeedsUpdate', function(){
-            window.Server.schools.get({
-                filter:{
-                    include:{
-                        relation:'permissions'
-                    }
-                }
-            }).then(function(results){
-                binding.set('permissionRequestCount', Immutable.fromJS(results));
-                self._updateLiveRequestsNum();
-            });
-        });
-    },
-    componentWillUnmount: function(){
-        var globalBinding = this.getMoreartyContext().getBinding();
-        globalBinding.removeListener(this.subMenuListenerId);
+        self.addBindingListener(globalBinding, 'submenuNeedsUpdate', self.createSubMenu);
     },
     getDefaultState: function () {
         return Immutable.fromJS({
@@ -86,35 +27,49 @@ const OneSchoolPage = React.createClass({
             schoolRouting: {}
         });
     },
-    _countLiveRequests:function(){
-        var self = this,
+    createSubMenu: function(){
+        const self = this,
             binding = self.getDefaultBinding(),
-            num = 0,
-            reqs = binding.toJS('permissionRequestCount');
+            rootBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+            serviceCount = 'PermissionCount',
+            where = {and:[{accepted:{neq:true}},{accepted:{neq:false}}]};
 
-        if(reqs !== undefined){
-            var permissionRequests = [];
-            reqs.forEach(function(req){
-                permissionRequests = permissionRequests.concat(req.permissions);
-            });
-            permissionRequests.forEach(function(perReq){
-                if(perReq.accepted === undefined){
-                    num +=1;
-                }
-            });
-        }
-        return num;
-    },
-    _updateLiveRequestsNum: function(){
-        var globalBinding = this.getMoreartyContext().getBinding();
-        var num = '(' + this._countLiveRequests() + ')';
-        var mapped = this.menuItems.map(function(menuItem){
-            if (menuItem.key === 'requests') {
-                menuItem.num = num;
-            }
-            return menuItem;
+        const _createSubMenuData = function(count){
+            let menuItems = [
+                {
+                    href:'/#admin_schools/permissions',
+                    name:'Users & Permissions',
+                    key:'Permissions'
+                },
+                {
+                    href:'/#admin_schools/admin_views/requests',
+                    name:'New Requests',
+                    key:'requests',
+                    num: '(' + count + ')'
+                },
+                {
+                    href:'/#admin_schools/admin_views/archive',
+                    name:'Request Archive',
+                    key:'archive'
+                },
+                {
+                    href: '/#admin_schools/admin_views/list',
+                    name: 'schools',
+                    key: 'schools'
+                },{
+                    href:'/#admin_schools/admin_views/logs',
+                    name:'Activity Log',
+                    key:'Log'
+                }];
+            binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
+        };
+
+        //Get the total number of permissions (Notification badge) in submenu
+        window.Server[serviceCount].get(activeSchoolId, { where: where }).then(function(data){
+            const count = data && data.count ? data.count : 0;
+            _createSubMenuData(count);
         });
-        globalBinding.set('subMenuItems', Immutable.fromJS(mapped));
     },
     render: function() {
         var self = this,
@@ -122,7 +77,7 @@ const OneSchoolPage = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding();
         return (
             <div>
-                <SubMenu binding={{ default: binding.sub('schoolRouting'), itemsBinding: globalBinding.sub('subMenuItems') }} />
+                <SubMenu binding={{ default: binding.sub('schoolRouting'), itemsBinding: binding.sub('subMenuItems') }} />
                 <div className="bSchoolMaster">
                     <RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
                         <Route path="/admin_schools " binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"/>

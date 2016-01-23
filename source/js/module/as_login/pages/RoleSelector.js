@@ -12,8 +12,8 @@ const RoleSelectorComponent = React.createClass({
                 parent:     'parents'
             };
             // TODO: fix me. Dirty solution to be ready for sprint
-            //const domain = 'stage.squadintouch.com';
-            const domain = 'squard.com:8080';
+            const domain = 'stage.squadintouch.com';
+            //const domain = 'squard.com:8080';
             console.log(`Role selected: ${roleName}`);
             const subdomain = roleMapper[roleName.toLowerCase()];
             if(subdomain) {

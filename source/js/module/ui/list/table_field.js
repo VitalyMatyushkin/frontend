@@ -28,44 +28,42 @@ const ListField = React.createClass({
         }else{
             dataField = self.props.dataField;
         }
-		if (value && self.props.filterType !== 'number') {
-            var tempValue = {};
-            if(value.length > 1){
-                if(self.props.dataField === self.props.dataFieldKey){
-                    value;
-                }else{
-                    tempValue[self.props.dataFieldKey] = value;
-                    value = tempValue;
-                }
-            }else{
-                value={
-                    regexp: "[\s\S]*",
-                    options: 'i'
-                }
-            }
-		}
+		//if (value && self.props.filterType !== 'number') {
+         //   var tempValue = {};
+         //   if(value.length > 1){
+         //       if(self.props.dataField === self.props.dataFieldKey){
+         //           value;
+         //       }else{
+         //           tempValue[self.props.dataFieldKey] = value;
+         //           value = tempValue;
+         //       }
+         //   }
+         //   else{
+         //       value={
+         //           regexp: "[\s\S]*",
+         //           options: 'i'
+         //       }
+         //   }
+		//}
 		self.props.onChange(dataField, value);
 	},
-    onSort:function(event,order){
-        var self = this,
-            value ={},
-            el  = event.currentTarget,
-            fieldToSort = (order === 'School' || order === 'Preset')?order.toLowerCase() : self.props.dataField;
+    onSort:function(event){
+        const self = this,
+            el  = event.currentTarget;
+        let field = self.props.dataField,
+            value;
+
+        field += self.props.dataFieldKey ? '.' + self.props.dataFieldKey : '';
+        $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
         if(el.classList.contains('caret_up')){
-            $('.caret').removeClass('caret_active_up').removeClass('caret_active_dwn');
             el.classList.add('caret_active_up');
-            value = {
-                order:self.props.dataFieldKey+' ASC'
-            };
+            value = ' ASC';
 
         }else{
-            $('.caret').removeClass('caret_active_dwn').removeClass('caret_active_up');
             el.classList.add('caret_active_dwn');
-            value = {
-                order:self.props.dataFieldKey+' DESC'
-            };
+            value = ' DESC';
         }
-        self.props.onSort && self.props.onSort(self.props.dataField, value);
+        self.props.onSort && self.props.onSort(field, value);
     },
 	render: function() {
 		var self = this,

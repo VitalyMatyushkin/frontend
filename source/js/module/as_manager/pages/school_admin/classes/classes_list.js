@@ -18,8 +18,8 @@ const ClassListPage = React.createClass({
 		return (
 			<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()}
                    getDataPromise={self._getDataPromise}>
-				<TableField width="40%" dataField="name" dataFieldKey="name">Name</TableField>
-				<TableField width="40%" dataField="age" filterType="number"
+				<TableField width="40%" dataField="name" dataFieldKey="name" filterType="none">Name</TableField>
+				<TableField width="40%" dataField="age" filterType="number" filterType="none"
                             inputParseFunction={function(value) {return value.replace(/y/gi, '');}}
                             parseFunction={function(value) {return 'Y' + value;}}>Age group</TableField>
 			</Table>

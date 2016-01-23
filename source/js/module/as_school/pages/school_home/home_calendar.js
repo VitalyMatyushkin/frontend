@@ -4,20 +4,23 @@
 const   CalendarView    = require('module/ui/calendar/calendar'),
         React           = require('react'),
         Immutable 	    = require('immutable'),
-        DateTimeMixin   = require('module/mixins/datetime');
+        DateTimeMixin   = require('module/mixins/datetime'),
+        Superuser       = require('module/helpers/superuser');
 
 const HomeCalender = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
     componentWillMount:function(){
         var self = this,
-            binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding();
-        window.Server.eventsBySchoolId.get({schoolId:rootBinding.get('activeSchoolId')}).then(function(events){
-            rootBinding.set('events',Immutable.fromJS(events));
+
+        Superuser.runAsSuperUser(rootBinding, function(logout) {
+            window.Server.eventsBySchoolId.get({schoolId:rootBinding.get('activeSchoolId')}).then(function(events){
+                rootBinding.set('events',Immutable.fromJS(events));
+                logout();
+            });
         });
     },
     getTeams:function(participants){
-        var self = this;
         if(participants !== undefined){
             return participants.name;
         }else{

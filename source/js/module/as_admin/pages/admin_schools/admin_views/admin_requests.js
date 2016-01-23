@@ -5,7 +5,7 @@ const   Table           = require('module/ui/list/table'),
         TableField      = require('module/ui/list/table_field'),
         DateTimeMixin   = require('module/mixins/datetime'),
         React           = require('react'),
-        ArrayHelpers    = require('module/helpers/ArrayHelpers'),
+        Lazy            = require('lazyjs'),
         ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin');
 
 const AdminRequest = React.createClass({
@@ -13,7 +13,8 @@ const AdminRequest = React.createClass({
     serviceName:'Permissions',
     serviceCount:'PermissionCount',
     groupActionList:['Accept','Decline'],
-    filters:{include:['principal','school']},
+    filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
+    //filters:{include:['principal','school'],where:{and:[{"accepted":"undefined"}]}},
     getSchoolName:function(school){
         if(school !== undefined ){
             return school.name;
@@ -28,9 +29,7 @@ const AdminRequest = React.createClass({
         return principal !== undefined ? principal.email : undefined;
     },
 	getCurrentPermission: function(id, permissions) {
-        return ArrayHelpers.find( permissions, permission => {
-            return permission.id && permission.id === id;
-        } );
+        return Lazy(permissions).find(permission => permission.id && permission.id === id).toArray();
 	},
 
     _getQuickEditActionFunctions:function(event){

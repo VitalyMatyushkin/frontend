@@ -27,9 +27,26 @@
         "Map":          true,         // this is really Map component, which overrides ES6 Map
         "Promise":      true,          // hardly used with bluebird
         "requirejs":    true,
-        "onmessage":    true   // for worker
+        "onmessage":    true,   // for worker
+        "google":       true,
+        // emulating env: browser
+        // so, we can't remove global 'self' from browser env. Thats why we will just enumarate all allowed globals here:
+        "console":          true,
+        "window":           true,
+        "document":         true,
+        "alert":            true,
+        "confirm":          true,
+        "setTimeout":       true,
+        "clearTimeout":     true,
+        "setInterval":      true,
+        "clearInterval":    true,
+        "FormData":         true,
+        "postMessage":      true,
+        "XMLHttpRequest":   true
+
     },
     "env": {
-        "browser": true
+        // we don't use browser env here. This is because some entries like "self" considered okay in browser env.
+        // So I just declared all commonly used vars above.
     }
 }

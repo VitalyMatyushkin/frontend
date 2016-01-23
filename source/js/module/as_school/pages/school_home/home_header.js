@@ -2,7 +2,8 @@
  * Created by bridark on 31/07/15.
  */
 const   Immutable 	= require('immutable'),
-        React       = require('react');
+        React       = require('react'),
+        Superuser   = require('module/helpers/superuser');
 
 let localArrayOfPhotos = [];
 
@@ -13,47 +14,50 @@ const HomeHeader = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('activeSchoolId');
-        console.log(activeSchoolId+' active school');
+
         window.Server.getThisSchool.get({filter: {
             where: {
                 id: activeSchoolId
             }
         }}).then(function(school){
-            console.log(school[0]);
             binding.set('school',Immutable.fromJS(school[0]));
             //Hardcoded for now to test image swapping
             localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
             localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
             localArrayOfPhotos.push('https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg');
             localArrayOfPhotos.push('http://www.pgl.co.uk/Files/Files/Schools/Secondary%20Schools/Carousel/SS-M-Outdoor-Education-Sports-Weekends-Football-MUSS.jpg');
-            window.Server.addAlbum.get({
-                filter:{
-                    //where:{and:[{ownerId:school.id},{name:'schoolProfile'}]},
-                    include:'photos',
-                    limit:6
-                }}).then(function(albumForSchool){
-                //console.log(albumForSchool);
-                albumForSchool.forEach(function(album){
-                    album.photos.forEach(function(photo){
-                        //localArrayOfPhotos.push(photo.pic);
+
+            Superuser.runAsSuperUser(rootBinding, function(logout) {
+                window.Server.addAlbum.get({
+                    filter:{
+                        //where:{and:[{ownerId:school.id},{name:'schoolProfile'}]},
+                        include:'photos',
+                        limit:6
+                    }}).then(function(albumForSchool){
+                    albumForSchool.forEach(function(album){
+                        album.photos.forEach(function(photo){
+                            //localArrayOfPhotos.push(photo.pic);
+                        });
                     });
+                    //Hardcoded for now to test image swapping
+                    localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
+                    localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
+                    localArrayOfPhotos.push('https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg');
+                    localArrayOfPhotos.push('http://www.pgl.co.uk/Files/Files/Schools/Secondary%20Schools/Carousel/SS-M-Outdoor-Education-Sports-Weekends-Football-MUSS.jpg');
+                    localArrayOfPhotos.push('http://www.northyorkshiresport.co.uk/assets/images/School%20Games/School%20Games%20Launch%201.jpg');
+
+                    logout();
                 });
-                //console.log(localArrayOfPhotos);
-                //Hardcoded for now to test image swapping
-                localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
-                localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
-                localArrayOfPhotos.push('https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg');
-                localArrayOfPhotos.push('http://www.pgl.co.uk/Files/Files/Schools/Secondary%20Schools/Carousel/SS-M-Outdoor-Education-Sports-Weekends-Football-MUSS.jpg');
-                localArrayOfPhotos.push('http://www.northyorkshiresport.co.uk/assets/images/School%20Games/School%20Games%20Launch%201.jpg');
             });
-        },function(er){console.log(er)});
+        },function(error){
+            throw error;
+        });
     },
     componentDidMount:function(){
         var self = this,
             headerSection = React.findDOMNode(self.refs.schoolMainBanner);
         self.intervalId = setInterval(function(){
             var randIndexPos = Math.floor(Math.random()*((localArrayOfPhotos.length-1)+1));
-            //console.log(randIndexPos);
             headerSection.src = localArrayOfPhotos[randIndexPos];
         },5000);
     },
