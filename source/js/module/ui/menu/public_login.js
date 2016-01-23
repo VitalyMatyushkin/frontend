@@ -8,9 +8,10 @@ var PublicLogin,
 PublicLogin = React.createClass({
     mixins:[Morearty.Mixin],
     handleSignInUpClick:function(){
-        const domain = document.location.host.split('.')[1] + "." + document.location.host.split('.')[2];
-        const subdomain = "login";
-        window.location.href = `http://${subdomain}.${domain}`;
+        let subdomains = document.location.host.split('.');
+        subdomains[0] = "login";
+        let domain = subdomains.join(".");
+        window.location.href = `http://${domain}`;
     },
     render:function(){
         var self = this;
