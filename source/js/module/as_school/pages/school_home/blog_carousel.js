@@ -28,9 +28,7 @@ const BlogCarousel = React.createClass({
             binding = self.getDefaultBinding(),
             fixtures = binding.toJS('fixtures'),
             blogArray = [];
-        console.log(typeof fixtures);
         if(typeof fixtures !== 'undefined'){
-            //console.log(fixtures[2].id);
             window.Server.addToBlog.get({id:fixtures[2].id, filter:{order:'meta.created DESC',limit:3}}).then(function(fix){
                 fix.forEach(function(fixture){
                     window.Server.user.get({id:fixture.ownerId}).then(function(author){
@@ -71,8 +69,6 @@ const BlogCarousel = React.createClass({
     handleChevronClick:function(param){
         var self = this,
             carousel = React.findDOMNode(self.refs.blogScroll);
-        console.log(param);
-        console.log(carousel);
         if(param === 'panUp' && self.itemHeight < 744){
             self.itemHeight += 248;
             carousel.style.marginTop = self.itemHeight+'px';
