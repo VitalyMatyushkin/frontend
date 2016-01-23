@@ -37,7 +37,6 @@ FixtureCarousel = React.createClass({
         var self = this;
         if(data !== undefined && data !== null){
             var sortedByStatus = data.filter(function(f){
-                //console.log(f);
                 return f.status === 'closed';
             });
             return (
@@ -69,7 +68,6 @@ FixtureCarousel = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             sortedFixture = self._sortFixtureData(binding.toJS());
-        //console.log(sortedFixture);
         return (
             <div className="testChildren">
                 {sortedFixture}

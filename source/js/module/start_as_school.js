@@ -4,8 +4,7 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		authController 		= require('module/core/auth_controller'),
 		ReactDom 			= require('reactDom'),
 		React 				= require('react'),
-		Helpers				= require('module/helpers/storage'),
-		Immutable			= require('immutable');
+		Helpers				= require('module/helpers/storage');
 
 function initMainView(schoolId) {
 	// creating morearty context
@@ -42,23 +41,10 @@ function initMainView(schoolId) {
 	// Turning on authorization service
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-	// Dirty dirty hack, login as superuser.
-	window.Server.login.post({username:"superadmin",password:"superadmin"}).then(function(data) {
-		binding.update('userData.authorizationInfo', function(){
-			return Immutable.fromJS({
-				id: data.id,
-				ttl: data.ttl,
-				userId: data.userId,
-				verified: data.user.verified,
-				registerType: data.user.registerType
-			});
-		});
-
-		ReactDom.render(
-			React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
-			document.getElementById('jsMain')
-		);
-	});
+	ReactDom.render(
+		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
+		document.getElementById('jsMain')
+	);
 }
 
 function init404View() {
@@ -67,7 +53,7 @@ function init404View() {
 }
 
 function runMainMode() {
-	var schoolId = Helpers.LocalStorage.get('schoolId');
+	let schoolId = Helpers.LocalStorage.get('schoolId');
 	schoolId = 'undefined'; //set this to undefined string so we can perform a fresh call for school details - avoids cache problems
 	if (schoolId !== 'undefined') {
 		initMainView(schoolId);
@@ -79,7 +65,7 @@ function runMainMode() {
 				}
 			}
 		}).then(function(data) {
-			var schoolId = data[0].id;
+			let schoolId = data[0].id;
 			Helpers.LocalStorage.set('schoolId', schoolId);
 			initMainView(schoolId);
 		}, init404View);
