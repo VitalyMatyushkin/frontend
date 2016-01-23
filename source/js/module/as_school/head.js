@@ -49,7 +49,6 @@ Head = React.createClass({
 			<div className="bTopPanel">
                 <TopMenu menuItems={['school','fixtures','cricket','rounders','rugby','netball','football','hockey']}></TopMenu>
 				<Logo />
-                <PublicLogin binding={binding} />
 			</div>
 		)
 	}
