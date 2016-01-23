@@ -4,7 +4,8 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		authController 		= require('module/core/auth_controller'),
 		ReactDom 			= require('reactDom'),
 		React 				= require('react'),
-		Helpers				= require('module/helpers/storage');
+		Helpers				= require('module/helpers/storage'),
+		Immutable			= require('immutable');
 
 function initMainView(schoolId) {
 	// creating morearty context
@@ -41,11 +42,23 @@ function initMainView(schoolId) {
 	// Turning on authorization service
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-	// App init
-	ReactDom.render(
-		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
-		document.getElementById('jsMain')
-	);
+	// Dirty dirty hack, login as superuser.
+	window.Server.login.post({username:"superadmin",password:"superadmin"}).then(function(data) {
+		binding.update('userData.authorizationInfo', function(){
+			return Immutable.fromJS({
+				id: data.id,
+				ttl: data.ttl,
+				userId: data.userId,
+				verified: data.user.verified,
+				registerType: data.user.registerType
+			});
+		});
+
+		ReactDom.render(
+			React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
+			document.getElementById('jsMain')
+		);
+	});
 }
 
 function init404View() {

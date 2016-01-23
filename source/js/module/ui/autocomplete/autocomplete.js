@@ -2,37 +2,34 @@ const 	AutocompleteHelpers 	= require('module/ui/autocomplete/main'),
 		Combobox 				= AutocompleteHelpers.Combobox,
 		ComboboxOption 			= AutocompleteHelpers.Option,
 		React 					= require('react'),
-		ReactDOM 				= require('reactDom'),
 		Immutable 				= require('immutable');
 
 
 const Autocomplete = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		serverField: React.PropTypes.string,
-		serviceFullData: React.PropTypes.func,
-		serviceFilter: React.PropTypes.func,
-		onSelect: React.PropTypes.func,
-		onBlur: React.PropTypes.func,
-		onInput: React.PropTypes.func,
-		placeholderText: React.PropTypes.string,
-		clearAfterSelect: React.PropTypes.bool
+		serverField: 		React.PropTypes.string,
+		serviceFullData: 	React.PropTypes.func,
+		serviceFilter: 		React.PropTypes.func,
+		onSelect: 			React.PropTypes.func,
+		onBlur: 			React.PropTypes.func,
+		onInput: 			React.PropTypes.func,
+		placeholderText: 	React.PropTypes.string,
+		clearAfterSelect: 	React.PropTypes.bool
 	},
 	getDefaultState: function () {
-		var self = this;
-
-		self.responseData = [];
+		this.responseData = [];
 
 		return Immutable.fromJS({
-			response: undefined,
+			response: 	undefined,
 			selectedId: null,
-			defaultId: null
+			defaultId: 	null
 		});
 	},
 	setDefaultId: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultId = binding.get('defaultId');
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				defaultId 	= binding.get('defaultId');
 
 		if (defaultId) {
 			self.responseData.forEach(function (dataBlock) {
@@ -44,27 +41,27 @@ const Autocomplete = React.createClass({
 		}
 	},
 	setDefaultLabel: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultLabel = binding.get('defaultLabel'),
-			defaultId = binding.get('defaultId');
+		const 	binding 		= this.getDefaultBinding(),
+				defaultLabel 	= binding.get('defaultLabel'),
+				defaultId 		= binding.get('defaultId');
 
 		if (defaultLabel && defaultId) {
-			self.handleInput(defaultLabel);
-			self.handleSelect(binding.get('defaultId'));
+			this.handleInput(defaultLabel);
+			this.handleSelect(binding.get('defaultId'));
 		}
 	},
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultId = binding.get('defaultId');
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				defaultId 	= binding.get('defaultId');
 
 		// На случай, если форма заполняется асинхронно
-		binding.addListener('defaultId', function () {
+		// From Russian: for the case when form filled in asynchronously... WHAT? TODO: WAT???
+		binding.addListener('defaultId', () => {
 			self.setDefaultId();
 		});
 
-		binding.addListener('defaultLabel', function () {
+		binding.addListener('defaultLabel', () => {
 			self.setDefaultLabel();
 		});
 
@@ -111,13 +108,12 @@ const Autocomplete = React.createClass({
 
 		binding.set('loading', true);
 		binding.set('response', null);
-
-		self.pendingRequest = self.props.serviceFilter(userInput).then(function (data) {
+		self.pendingRequest = userInput!==''?self.props.serviceFilter(userInput).then(function (data) {
 			self.responseData = data;
 			binding.set('response', data);
 			binding.set('loading', false);
 			self.forceUpdate();
-		});
+		}):null;
 	},
 	_filterOnClient: function (userInput) {
 		var self = this,

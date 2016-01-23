@@ -28,12 +28,11 @@ const ListPageMixin = {
         self.filter.setFilters(self.filters);
 	},
     componentDidMount:function(){
-        var self = this;
-        if(self.isSuperAdminPage)
-            ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
+        if(this.isSuperAdminPage)
+            ReactDOM.findDOMNode(this.refs.otherCheck).checked = true;
     },
 	componentWillUnmount: function () {
-        clearTimeout(self.timeoutId);
+        clearTimeout(this.timeoutId);
 	},
     getDefaultState: function () {
         return Immutable.Map({
@@ -81,6 +80,9 @@ const ListPageMixin = {
 	},
     _getAddNewStudentFunction:function(){
         document.location.hash = document.location.hash +'/add';
+    },
+    _getAddNewSchoolFunction:function(){
+        document.location.hash = '/schools/add';
     },
 	toggleFilters: function() {
 		var self = this,
@@ -185,6 +187,9 @@ const ListPageMixin = {
                         <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
                             <div className="bButton" onClick={self._getAddNewStudentFunction}>Add New Student</div>
+                        </If>
+                        <If condition={(currentPage[currentPage.length-1] ==='list' && currentPage[currentPage.length-2] === 'admin_views')}>
+                            <div className="bButton" onClick={self._getAddNewSchoolFunction}>Add New School</div>
                         </If>
                     </div>
                 </div>

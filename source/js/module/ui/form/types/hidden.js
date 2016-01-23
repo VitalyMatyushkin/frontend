@@ -20,30 +20,38 @@ TypeHidden =  React.createClass({
             self._forceNewValue(binding.get('defaultValue'));
         });
     },
+    componentDidMount:function(){
+        var self = this,
+            defaultValue = self.getDefaultBinding().get('defaultValue');
+        self._forceNewValue(defaultValue);
+    },
+    componentDidUpdate:function(){
+        var self = this,
+            defaultValue = self.getDefaultBinding().get('defaultValue');
+        self._forceNewValue(defaultValue);
+    },
     _forceNewValue: function(value) {
         var self = this,
             oldValue;
 
-        if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.getDOMNode().value === '') {
-            self.refs.fieldInput.getDOMNode().value = value;
+        if (value !== undefined && ReactDOM.findDOMNode(self.refs.fieldInput) && ReactDOM.findDOMNode(self.refs.fieldInput).value === '') {
+            ReactDOM.findDOMNode(self.refs.fieldInput).value = value;
             self.fullValidate(value);
         }
     },
     handeBlur: function(event) {
         var self = this;
 
-        self.setValue(self.refs.fieldInput.getDOMNode().value);
+        self.setValue(ReactDOM.findDOMNode(self.refs.fieldInput).value);
     },
     handleChange: function(event) {
         var self = this;
 
-        self.changeValue(self.refs.fieldInput.getDOMNode().value);
+        self.changeValue(ReactDOM.findDOMNode(self.refs.fieldInput).value);
     },
     render: function () {
         var self = this,
             defaultValue = self.getDefaultBinding().get('defaultValue');
-
-        self._forceNewValue(defaultValue);
 
         return (
             <div className="eForm_fieldInput mHidden">
