@@ -171,8 +171,8 @@ const Table = React.createClass({
                     getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();}},
                     getQuickEditFunction = function(){return function(event){self._quickEditMenu(item,event);event.stopPropagation();}};
 
-                self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike">Edit</span>);
-                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike">View</span>);
+                self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike"><img src="images/edit_school.png"></img></span>);
+                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike"><img src="images/eye.png"></img></span>);
                 self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike">Remove</span>);
                 self.props.addQuickActions && itemButtons.push(
                     <span key={item.id+'quickEd'} onClick={getQuickEditFunction()} className="bLinkLike edit_btn">

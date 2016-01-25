@@ -169,7 +169,7 @@ CalendarMonthView = React.createClass({
 		})}</div>;
 	},
 	renderDaysOfWeek: function () {
-		var daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'];
+		var daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 		return <div className="eMonth_row mWeeks">{daysOfWeek.map(function (name, n) {
 			return <span key={n} className="eMonth_day mWeekName">{name}</span>;
@@ -181,9 +181,9 @@ CalendarMonthView = React.createClass({
             currentMonthName = binding.get('monthNames.' + binding.get('currentDate').getMonth());
 
             return <div className="eCalendar_navBar">
-            <span className="eCalendar_item" onClick={self.onClickPrevButton}>←</span>
+            <span className="eCalendar_item" onClick={self.onClickPrevButton}><img src="images/arrow_left.png"></img></span>
             <span className="eCalendar_item mNameMonth">{currentMonthName} - {binding.get('currentDate').getFullYear()}</span>
-            <span className="eCalendar_item" onClick={self.onClickNextButton}>→</span>
+            <span className="eCalendar_item" onClick={self.onClickNextButton}><img src="images/arrow_right.png"></img></span>
         </div>;
     },
 	render: function() {

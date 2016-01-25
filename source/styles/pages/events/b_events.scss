@@ -6,6 +6,10 @@ $green-color: #00AE68;
 .bEvents {
   display: flex;
   flex-flow: column wrap;
+  width: 1060px;
+  margin: auto;
+  text-transform: uppercase;
+  font-size: 14px;
 }
 
 .eEvents_buttons {

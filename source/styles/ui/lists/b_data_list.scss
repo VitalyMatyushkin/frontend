@@ -1,12 +1,17 @@
 .bDataList{
   margin-bottom: 40px;
   position: relative;
+  max-width: 1060px;
+  margin: 0 auto;
+  text-transform: uppercase;
 }
 
 .eDataList_title{
-  font-size: 18px;
+  font-size: 10px;
   margin-bottom: 6px;
   padding-bottom: 5px;
+  height: 30px;
+  line-height: 30px;
 }
 
 .eDataList_title .bLinkLike{
@@ -23,31 +28,29 @@
 }
 
 .eDataList_listItem{
-  padding: 5px 20px;
-  font-size: 15px;
   position: relative;
   cursor: pointer;
   box-sizing: border-box;
 }
 
 .eDataList_listItem:hover{
-  background: rgb(87, 142, 64);
+  background: #66952e;
   color: white;
 }
 
 .eDataList_listItem.mHead{
   cursor: default;
-  font-weight: bold;
   position: relative;
 }
 
 .eDataList_listItem.mHead .eDataList_listItemCell{
-  padding-top: 5px;
-  padding-bottom: 20px;
+  background: #66952e;
+  color: #235413;
+  border: none;
 }
 
 .eDataList_listItem.mHead{
-  font-size: 18px;
+  font-size: 16px;
 }
 
 .eDataList_listItem.mHead:hover{
@@ -65,6 +68,8 @@
 .eDataList_list.mTable{
   display: table;
   width: 100%;
+  text-align: center;
+  font-size: 11px;
 }
 
 .eDataList_list.mTable .eDataList_listItem{
@@ -73,12 +78,14 @@
 
 .eDataList_listItemCell{
   display: table-cell;
-  padding: 10px 20px;
+  line-height: 40px;
+  border-bottom: solid 1px #c2c1c2;
+  min-width: 150px;
 }
 
 .eDataList_listItemCell .bLinkLike{
   display: inline-block;
-  margin-left: 25px;
+  margin-left: 5px;
 }
 
 .eDataList_listItem:hover .bLinkLike {
@@ -91,8 +98,8 @@
 
 
 .eDataList_listItemCell.mActions{
-  width: 60px;
-  text-align: right;
+  max-width: 100px;
+  text-align: center;
 }
 
 .eDataList_filter{

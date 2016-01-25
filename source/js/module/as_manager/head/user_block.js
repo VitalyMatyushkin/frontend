@@ -43,13 +43,13 @@ const UserBlock = React.createClass({
 		if (authData && authData.id) {
 			// Кнопка перехода на страницу пользователя
 			userButtonStyle = {backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')'};
-			UserButton = <a href="/#me" className="eTopMenu_photo" style={userButtonStyle}></a>;
+			UserButton = <a href="/#settings/general" className="eTopMenu_photo" style={userButtonStyle}></a>;
 
 			// Кнопка перехода на страницу настрок
-			AccountButton =
-				<a href="/#settings/general" className={'eTopMenu_item ' + (isSettingsPage ? 'mActive' : '')}><SVG
-					icon="icon_cog"/></a>;
-			LogoutButton = <a href="/#logout" className="eTopMenu_item mLogout"><SVG icon="icon_logout"/></a>;
+			//AccountButton =
+			//	<a href="/#settings/general" className={'eTopMenu_item ' + (isSettingsPage ? 'mActive' : '')}><SVG
+			//		icon="icon_cog"/></a>;
+			LogoutButton = <a href="/#logout" className="eTopMenu_item mLogout">Log Out</a>;
 		} else {
 			// Кнопка авторизации
 			LoginButton = <a href="/" className="eTopMenu_item mLogin"><SVG icon="icon_key"/></a>;

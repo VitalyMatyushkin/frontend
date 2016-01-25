@@ -169,7 +169,12 @@ const ListPageMixin = {
         }
 		return (
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
-				<h1 className="eSchoolMaster_title">{listPageTitle}</h1>
+          <div className="eSchoolMaster_wrap">
+              <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
+
+              <div className="eStrip">
+              </div>
+          </div>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
                         <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
@@ -184,9 +189,9 @@ const ListPageMixin = {
                                 <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
                             </div>
                         </If>
-                        <div className="bButton" onClick={self.toggleFilters}>Filters {isFiltersActive ? '⇡' : '⇣'}</div>
+                        <div className="addButton" onClick={self.toggleFilters}><img src="images/search.png"></img> {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
-                            <div className="bButton" onClick={self._getAddNewStudentFunction}>Add New Student</div>
+                            <div className="addButton" onClick={self._getAddNewStudentFunction}><img src="images/add_students.png"></img></div>
                         </If>
                         <If condition={(currentPage[currentPage.length-1] ==='list' && currentPage[currentPage.length-2] === 'admin_views')}>
                             <div className="bButton" onClick={self._getAddNewSchoolFunction}>Add New School</div>

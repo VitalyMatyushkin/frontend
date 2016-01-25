@@ -36,32 +36,45 @@ const SchoolSummary = React.createClass({
             schoolPicture = binding.get('pic'),
             siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
-        return (
-            <div>
-                <h1 className="eSchoolMaster_title">
-                    {schoolPicture ? <div className="eSchoolMaster_flag"><img src={schoolPicture}/></div> : ''}
-                    {binding.get('name')}
 
-                    <div className="eSchoolMaster_buttons">
+    return (
+        <div>
+          <div className="changeSchool">
+            <a title="Change active school" href="/#schools" className="changeButton"><img
+                src="images/change_school.png"></img></a>
+          </div>
+          <div className="eSchoolMaster_summary">
+            <div className="summary_inside">
+              <div className="editSchool">
+                <a href={'/#schools/edit?id=' + self.activeSchoolId}>
+                  <img src="images/edit_school.png"></img>
+                </a>
+              </div>
+              <h1 className="eSchoolMaster_title">
+                {schoolPicture ? <div className="eSchoolMaster_flag"><img src={schoolPicture}/></div> : ''}
+                {binding.get('name')}
 
-                        <a href={'/#schools/edit?id=' + self.activeSchoolId} className="bButton">Edit...</a>
-                        <a href="/#schools" className="bButton">Change active school...</a>
-                    </div>
-                </h1>
-                <p>PostCode: {binding.get('postcodeId')}</p>
+              </h1>
 
-                <p>Address: {binding.get('address')}</p>
+              <p>PostCode: {binding.get('postcodeId')}</p>
 
+              <p>Address: {binding.get('address')}</p>
+
+              <div className="eDescription">
                 <p>Description: {binding.get('description')}</p>
-
-                <p>Site: <a href={'//' + siteLink} target="blank" title="binding.get('name') homepage">http://{siteLink}</a></p>
-
-                <If condition={geoPoint !== undefined}>
-                    <Map binding={binding} point={binding.toJS('postcode.point')}/>
-                </If>
+              </div>
+              <p>Site: <a href={'//' + siteLink} target="blank"
+                          title="binding.get('name') homepage">http://{siteLink}</a>
+              </p>
             </div>
-        )
-    }
+            <If condition={geoPoint !== undefined}>
+              <Map binding={binding} point={binding.toJS('postcode.point')}/>
+            </If>
+
+          </div>
+        </div>
+    )
+  }
 });
 
 

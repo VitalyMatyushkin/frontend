@@ -1,5 +1,11 @@
 
 .eChallengeDate_date{
-  padding: 13px 0;
-  font-weight: bold;
+  display: table-cell;
+  width: 100px;
+  vertical-align: middle;
+  border-bottom: $BORDER;
+
+}
+.bChallengeDate{
+display: table-row;
 }
