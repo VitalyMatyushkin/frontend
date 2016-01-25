@@ -1,19 +1,18 @@
 .bInvite {
   display: flex;
-  flex-direction: column;
-  padding: 5px;
-  height: auto;
-  border: 1px solid #eee;
+  flex-direction: row;
+  height: 150px;
+  border: $BORDER;
   box-sizing: border-box;
-  line-height: 19px;
-  margin-bottom: 5px;
-  position: relative;
+  width: 475px;
+  margin: 5px;
+  background: #fff;
 }
 
 .eInvite_header {
-  padding: 5px 0;
   display: flex;
   justify-content: space-between;
+  margin-top: 25px;
 }
 
 .eInvite_vs {
@@ -22,7 +21,8 @@
 }
 
 .eInvite_eventName{
-  font-size: 19px;
+  font-size: 22px;
+  color: #535353;
 }
 
 .eInvite_eventDate {
@@ -35,16 +35,19 @@
 }
 
 .eInvite_info {
-  margin-top: 5px;
-  font-size: 14px;
+  margin-bottom: 5px;
+  font-size: 16px;
   color: #666;
+  line-height: 20px;
 }
 
 .eInvite_buttons {
-  width: 200px;
+  width: 320px;
   display: flex;
   flex-direction: row;
-  margin-top: 10px;
+  margin: -20px 10px 10px;
+  text-transform: uppercase;
+  justify-content: flex-end;
 }
 
 .eInvite_buttons .bButton {
@@ -66,6 +69,16 @@
 }
 
 .bInvite.mNotRedeemed {
-  border: 5px solid #eee;
 }
 
+.eInvites_list{
+  display: flex;
+  justify-content: center;
+}
+
+.eInvite_img {
+  width: 100px;
+  height: 100px;
+  margin: 25px 20px 0;
+  border: $BORDER;
+}
