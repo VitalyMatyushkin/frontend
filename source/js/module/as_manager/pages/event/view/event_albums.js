@@ -1,17 +1,18 @@
 const 	React 			= require('react'),
 		Immutable 		= require('immutable'),
+		Lazy            = require('lazyjs'),
 		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	renderAlbum: function(album, index) {
-		var self = this,
-		binding = self.getDefaultBinding(),
-			//cover = binding.get('albums.' + index + '.photos.0.pic');
-		iCover = binding.toJS('albums.' + index + '.photos').map(photo => photo.id).indexOf(album.get('coverId')),
-		cover = binding.get('albums.' + index + '.photos.' + iCover + '.pic');
+		const self = this,
+			binding = self.getDefaultBinding(),
+			coverId = album.get('coverId');
+		let cover = Lazy(binding.toJS('albums.' + index + '.photos')).find(photo => photo.id === coverId).pic;
 		cover = cover ? cover + '/contain?height=100': '/images/no-image.jpg';
-		var styles = {backgroundImage: 'url(' + cover + ')', width: self.state.albumWidth};
+
+		const styles = {backgroundImage: 'url(' + cover + ')', width: self.state.albumWidth};
 
 		return (
 			<div onClick={self.onClickAlbum.bind(self, album)} key={'album-' + index} className='eEventAlbums_album' style={styles}>
@@ -22,7 +23,7 @@ const EventHeader = React.createClass({
 		);
 	},
 	onClickAlbum: function(album) {
-		var self = this;
+		const self = this;
 
 		if (self.isMounted()) {
 			document.location.hash = 'albums/view/' + album.get('id');
@@ -32,7 +33,7 @@ const EventHeader = React.createClass({
 		return false;
 	},
 	onClickEditAlbum: function(album) {
-		var self = this;
+		const self = this;
 
 		if (self.isMounted()) {
 			document.location.hash = 'albums/edit/' + album.get('id');
@@ -41,7 +42,7 @@ const EventHeader = React.createClass({
 		return false;
 	},
 	onClickDeleteAlbum: function(album) {
-		var self = this,
+		const self = this,
 			albumId = album.get('id'),
 			binding = self.getDefaultBinding(),
 			rootBinding = self.getMoreartyContext().getBinding(),
