@@ -29,7 +29,7 @@ const AdminRequest = React.createClass({
         return principal !== undefined ? principal.email : undefined;
     },
 	getCurrentPermission: function(id, permissions) {
-        return Lazy(permissions).find(permission => permission.id && permission.id === id).toArray();
+        return Lazy(permissions).find(permission => permission.id && permission.id === id);
 	},
 
     _getQuickEditActionFunctions:function(event){
