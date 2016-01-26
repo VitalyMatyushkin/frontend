@@ -9,8 +9,8 @@ const EventHeader = React.createClass({
 		const self = this,
 			binding = self.getDefaultBinding(),
 			coverId = album.get('coverId');
-		let cover = Lazy(binding.toJS('albums.' + index + '.photos')).find(photo => photo.id === coverId).pic;
-		cover = cover ? cover + '/contain?height=100': '/images/no-image.jpg';
+		let cover = Lazy(binding.toJS('albums.' + index + '.photos')).find(photo => photo.id === coverId);
+		cover = cover ? cover.pic + '/contain?height=100': '/images/no-image.jpg';
 
 		const styles = {backgroundImage: 'url(' + cover + ')', width: self.state.albumWidth};
 
