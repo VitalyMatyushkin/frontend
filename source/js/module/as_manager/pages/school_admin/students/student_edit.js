@@ -11,7 +11,7 @@ const StudentEditPage = React.createClass({
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
 			studentId = routingData.id;
-
+		self.activeSchoolId = activeSchoolId;
 		binding.clear();
 
 		if (activeSchoolId && studentId) {
@@ -22,6 +22,12 @@ const StudentEditPage = React.createClass({
 					data.lastName = userdata.lastName;
 					data.birthday = userdata.birthday;
 					data.gender = userdata.gender;
+					data.name = data.nextOfKin !== undefined?data.nextOfKin[0].name:'';
+					data.surname = data.nextOfKin !== undefined?data.nextOfKin[0].surname:'';
+					data.allergy = data.medicalInfo!==undefined?data.medicalInfo.allergy:'';
+					data.injures = data.medicalInfo!==undefined?data.medicalInfo.injures:'';
+					data.role = data.nextOfKin !== undefined?data.nextOfKin[0].role:'';
+					data.other = data.medicalInfo!==undefined?data.medicalInfo.other:'';
 					self.isMounted() && binding.set(Immutable.fromJS(data));
 					return userdata;
 				});
@@ -34,9 +40,9 @@ const StudentEditPage = React.createClass({
 	},
 	submitEdit: function(data) {
 		var self = this;
-
+		console.log(data);
 		window.Server.user.put(
-			data.userId,
+			{id:data.userId},
 			{
 				firstName: data.firstName,
 				lastName: data.lastName,
@@ -44,12 +50,12 @@ const StudentEditPage = React.createClass({
 				gender: data.gender
 			}
 		).then(function() {
-			window.Server.studentUser.put({id:data.userId},{
+			window.Server.addStudentToSchool.put({id:self.activeSchoolId,fk:data.userId},{
 				nextOfKin:[{
 					name:data.name,
 					surname:data.surname,
 					phone:data.phone,
-					role:data.relationship
+					role:data.role
 				}],
 				medicalInfo:{
 					injures:data.injures,
@@ -65,7 +71,7 @@ const StudentEditPage = React.createClass({
 				delete data.name;
 				delete data.surname;
 				delete data.phone;
-				delete data.relationship;
+				delete data.role;
 				delete data.allergy;
 				delete data.other;
 				return window.Server.student.put(self.studentId, data);

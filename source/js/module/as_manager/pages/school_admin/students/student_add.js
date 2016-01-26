@@ -26,7 +26,7 @@ StudentEditPage = React.createClass({
 			email: "fake" + Math.floor(Date.now() / 1000) + "@mail.ru",
 			password: "password"
 		}).then(function(userData) {
-			window.Server.studentUser.post({id:userData.id},{
+			window.Server.addStudentToSchool.post({id:self.activeSchoolId},{
 				userId:userData.id,
 				formId:data.formId,
 				houseId:data.houseId,
@@ -35,7 +35,7 @@ StudentEditPage = React.createClass({
 					name:data.name,
 					surname:data.surname,
 					phone:data.phone,
-					role:data.relationship
+					role:data.role
 				}],
 				medicalInfo:{
 					injures:data.injures,
