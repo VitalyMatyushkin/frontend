@@ -83,11 +83,11 @@ const ChallengesView = React.createClass({
 
                 <div className="eChallenge_in">
                     <div className="eChallenge_firstName">
-					{firstName}
-					</div>
+                        {firstName}
+                    </div>
+                    <p>vs</p>
                     <div className="eChallenge_secondName">
                         {secondName}
-
                     </div>
 						<div className={'eChallenge_results' + (event.get('resultId') ? ' mDone' : '') }>{event.get('resultId') ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
 

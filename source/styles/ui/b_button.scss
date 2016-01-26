@@ -1,13 +1,14 @@
 .bButton{
   background: $MAIN_COLOR;
   font-size: 15px;
-  color: white;
+  color: $COLOR;
   padding: 8px 15px;
   display: inline-block;
   user-select: none;
   cursor: pointer;
   position: relative;
   border-radius: 4px;
+  text-transform: uppercase;
 }
 .bButton_reg{
   width:66px !important;
@@ -15,7 +16,7 @@
   text-align:center !important;
 }
 .bButton:hover{
-  color: white;
+  color: $COLOR;
 }
 .bButton_hide{
   display:none;
@@ -70,13 +71,14 @@
 }
 
 .bButton.mRed {
-  background: #ff5252;
+  background: $MAIN_COLOR;
+  color: $COLOR;
   &:hover:before {
-    box-shadow: 0 2px 0 0 darken(#ff5252, 10%);
+    box-shadow: 0 2px 0 0 darken($MAIN_COLOR, 10%);
   }
   &:active:before,
   &.mActive:before {
-    box-shadow: 0px -2px 0 0 darken(#ff5252, 10%);
+    box-shadow: 0px -2px 0 0 darken($MAIN_COLOR, 10%);
   }
 }
 .bButton_req{

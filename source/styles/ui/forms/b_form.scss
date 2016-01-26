@@ -141,3 +141,24 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .bSettingEmailVerify:hover, .bSettingPhoneVerify:hover{
   color: green;
 }
+
+.eHouseForm .eForm_field{
+  display: flex;
+  border-bottom: $BORDER;
+  text-transform: uppercase;
+  align-items: center;
+  height: 60px;
+  margin: 0;
+}
+.eHouseForm .eForm_fieldName{
+  width: 150px;
+  color: $COLOR;
+  margin: 0 0 0 10px;
+  font-size: 14px;
+}
+.eHouseForm input{
+  height: 30px;
+}
+.eHouseForm h2{
+  color: $COLOR;
+}

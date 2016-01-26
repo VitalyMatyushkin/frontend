@@ -94,7 +94,11 @@ const InboxView = React.createClass({
             invites = self.getInvites();
 
         return <div key="inboxView" className="eInvites_inboxContainer">
-            <h2 className="eInvites_titlePage">Inbox</h2>
+          <div className="eSchoolMaster_wrap">
+            <h1 className="eSchoolMaster_title">Inbox</h1>
+            <div className="eStrip">
+            </div>
+          </div>
             <div className="eInvites_filterPanel"></div>
             <div className="eInvites_list" key="inboxViewList">{invites && invites.length ? invites : null}</div>
 			<ProcessingView binding={binding} />
