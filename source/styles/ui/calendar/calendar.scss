@@ -77,7 +77,7 @@ $border-color: #c2c2c2;
   &.mPrev,
   &.mNext {
     cursor: default;
-    background-color: #fff;
+    background: #fff;
     color: rgba(0, 0, 0, .2);
     &.mHover {
       border-color: #235413;
@@ -85,18 +85,18 @@ $border-color: #c2c2c2;
     }
   }
   &.mActive {
-    background-color: #66952D;
+    background: #66952D;
     border-color: #235413;
     color: #235413;
     &.mHover {
-      background-color: #66952D;
+      background: #66952D;
       border-color: #235413;
       color: #235413;
     }
   }
   &.mSelect {
     color: #fff;
-    background-color: #000;
+    background: #000;
   }
 }
 

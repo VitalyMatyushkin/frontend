@@ -171,7 +171,6 @@ const ListPageMixin = {
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
           <div className="eSchoolMaster_wrap">
               <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
-
               <div className="eStrip">
               </div>
           </div>
