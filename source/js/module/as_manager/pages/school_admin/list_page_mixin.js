@@ -78,6 +78,12 @@ const ListPageMixin = {
 			document.location.hash = document.location.hash + '/edit?id=' + data.id;
 		}
 	},
+    _addNewClassFunction:function(){
+        document.location.hash = document.location.hash +'/add';
+    },
+    _addNewHouseFunction:function(){
+        document.location.hash = document.location.hash +'/add';
+    },
     _getAddNewStudentFunction:function(){
         document.location.hash = document.location.hash +'/add';
     },
@@ -189,12 +195,18 @@ const ListPageMixin = {
                                 <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
                             </div>
                         </If>
-                        <div className="addButton" onClick={self.toggleFilters}><img src="images/search.png"></img> {isFiltersActive ? '⇡' : '⇣'}</div>
+                        <div className="addButton" onClick={self.toggleFilters}><img src="images/search.png"/> {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
-                            <div className="addButton" onClick={self._getAddNewStudentFunction}><img src="images/add_students.png"></img></div>
+                            <div className="addButton" onClick={self._getAddNewStudentFunction}><img src="images/add_students.png"/></div>
                         </If>
                         <If condition={(currentPage[currentPage.length-1] ==='list' && currentPage[currentPage.length-2] === 'admin_views')}>
                             <div className="bButton" onClick={self._getAddNewSchoolFunction}>Add New School</div>
+                        </If>
+                        <If condition={currentPage[currentPage.length-1] ==='forms'}>
+                            <div className="addButton" onClick={self._addNewClassFunction}>New Form</div>
+                        </If>
+                        <If condition={currentPage[currentPage.length-1] ==='houses'}>
+                            <div className="addButton" onClick={self._addNewHouseFunction}>New House</div>
                         </If>
                     </div>
                 </div>

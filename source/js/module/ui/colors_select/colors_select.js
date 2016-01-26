@@ -1,5 +1,6 @@
 const 	ColorPicker 	= require('module/ui/colors_select/color_picker'),
 		React 			= require('react'),
+		ReactDOM		= require('reactDom'),
 		Immutable 		= require('immutable');
 
 const ColorsSelect =  React.createClass({
@@ -24,7 +25,7 @@ const ColorsSelect =  React.createClass({
 	componentDidMount: function() {
 		var self = this;
 
-		ColorPicker(self.refs.picker.getDOMNode(), function(hex, hsv, rgb) {
+		ColorPicker(ReactDOM.findDOMNode(self.refs.picker), function(hex, hsv, rgb) {
 			self.activeHex = hex;
 		});
 	},
@@ -92,19 +93,15 @@ const ColorsSelect =  React.createClass({
 			binding = self.getDefaultBinding(),
 			colors = binding.toJS('colors'),
 			colorNodes;
-
-		console.log('RENDER')
-		console.log(colors)
-
 		self.calculateColorsCount();
 
-		colorNodes = colors.map(function (color) {
+		colorNodes = colors.map(function (color, clrIndex) {
 			var removeColor = function() {
 				self.removeColor(color);
 			};
 
 			return (
-				<div className="eColorsSelect_color mRemovable" style={{background: color}} onClick={removeColor}></div>
+				<div key={clrIndex} className="eColorsSelect_color mRemovable" style={{background: color}} onClick={removeColor}></div>
 			);
 		});
 
