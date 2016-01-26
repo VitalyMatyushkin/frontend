@@ -44,6 +44,7 @@ InviteView = React.createClass({
             invited = self.getBinding('invited'),
             schoolPicture = binding.get('pic'),
             sport = binding.get('event.sport.name'),
+            ages = binding.get('event.ages'),
             message = binding.get('message') || '',
             isRedeemed = binding.get('redeemed'),
             startDate = (new Date(binding.get('event.startTime'))).toLocaleString();
@@ -51,7 +52,8 @@ InviteView = React.createClass({
         return <div key={binding.get('id')} className={inviteClasses}>
             <div className="eInvite_img"><img src={schoolPicture}/></div>
             <div className="eInviteWrap">
-            <div className="eInvite_header">
+                <div className="eInviteSport">{sport}</div>
+                <div className="eInvite_header">
                 <span className="eInvite_eventName">
                     {isInbox ?  binding.get('inviter')  .get('name') : null}
                     {isOutBox ? binding.get('guest').get('name') : null}
@@ -59,11 +61,10 @@ InviteView = React.createClass({
                 <span className="eInvite_eventDate"></span>
             </div>
             <div className="eInvite_info">
-                <div>{'Sport:'} {sport}</div>
                 <div>{'Start date:'} {startDate}</div>
-                <div>{'Age:'} </div>
+                <div>{'Age:'} {ages}</div>
             </div>
-            <div className="eInvite_message">{isInbox || isArchive ? message : 'Awaiting opponent...' }</div>
+                {isOutBox ?<div className="eInvite_message">{isInbox || isArchive ? message : 'Awaiting opponent...' }</div> : null}
 			<div className="eInvite_buttons">
 				{isInbox ? <a href={'/#invites/' + binding.get('id') + '/accept'} className="bButton">Accept</a> : null}
 				{isInbox ? <a href={'/#invites/' + binding.get('id') + '/decline'} className="bButton mRed">Decline</a> : null}

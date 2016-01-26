@@ -1,7 +1,7 @@
 .bButton{
   background: $MAIN_COLOR;
   font-size: 15px;
-  color: white;
+  color: $COLOR;
   padding: 8px 15px;
   display: inline-block;
   user-select: none;
@@ -15,7 +15,7 @@
   text-align:center !important;
 }
 .bButton:hover{
-  color: white;
+  color: $COLOR;
 }
 .bButton_hide{
   display:none;
