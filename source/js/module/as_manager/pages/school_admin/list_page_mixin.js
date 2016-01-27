@@ -90,6 +90,9 @@ const ListPageMixin = {
     _getAddNewSchoolFunction:function(){
         document.location.hash = '/schools/add';
     },
+    _adminCreateNewUser:function(){
+        document.location.hash = 'admin_schools/admin_views/create_user';
+    },
 	toggleFilters: function() {
 		var self = this,
 			metaBinding = self.getDefaultBinding().meta(),
@@ -206,6 +209,9 @@ const ListPageMixin = {
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='houses'}>
                             <div className="addButton" onClick={self._addNewHouseFunction}>New House</div>
+                        </If>
+                        <If condition={self.isSuperAdminPage === true}>
+                            <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>
                         </If>
                     </div>
                 </div>

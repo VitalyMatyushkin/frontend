@@ -12,12 +12,10 @@ const RegiseterUserPage = React.createClass({
 	},
 	onSuccess: function() {
 		var self = this;
-
 		self.getDefaultBinding().set('showForm', false);
 	},
 	onDone: function() {
 		var self = this;
-
 		self.getDefaultBinding().set('showForm', true);
 	},
 	render: function() {

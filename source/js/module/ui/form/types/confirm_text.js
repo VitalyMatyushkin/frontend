@@ -20,8 +20,8 @@ TypeConfirmText = React.createClass({
 	_forceNewValue: function(value) {
 		var self = this;
 
-		if (self.refs.confInput && value) {
-			self.refs.confInput.getDOMNode().value = value;
+		if (ReactDOM.findDOMNode(self.refs.confInput) && value) {
+			ReactDOM.findDOMNode(self.refs.confInput).value = value;
 			self.confirmValue = value;
 		}
 	},

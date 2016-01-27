@@ -207,7 +207,7 @@ var Form = React.createClass({
             keyCode = event.keyCode;
 
         if (keyCode === 13) {
-            self.refs.submitButton.getDOMNode().focus();
+            ReactDOM.findDOMNode(self.refs.submitButton).focus();
             self.tryToSubmit();
         }
     },
