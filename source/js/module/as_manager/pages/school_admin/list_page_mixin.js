@@ -10,7 +10,9 @@ const ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any,
 		filters: React.PropTypes.object,
-		addSchoolToFilter: React.PropTypes.bool
+		addSchoolToFilter: React.PropTypes.bool,
+        serviceName: React.PropTypes.string,
+        serviceCount: React.PropTypes.string
 	},
 
     componentWillMount: function () {
@@ -19,6 +21,8 @@ const ListPageMixin = {
             metaBinding = self.getDefaultBinding().meta(),
             binding = self.getDefaultBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+        self.serviceName = self.props.serviceName ? self.props.serviceName : self.serviceName;
+        self.serviceCount = self.props.serviceCount ? self.props.serviceCount : self.serviceCount;
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
@@ -45,14 +49,6 @@ const ListPageMixin = {
 
         binding.set('onReload',true);
     },
-    //getInitialState:function(){
-    //    return {
-    //        onReload:false
-    //    };
-    //},
-    //reloadData:function(){
-    //    this.setState({onReload:true});
-    //},
     getDataPromise:function(filter){
         const self = this;
 

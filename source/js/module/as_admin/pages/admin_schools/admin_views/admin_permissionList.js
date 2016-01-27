@@ -153,14 +153,14 @@ const AdminPermissionView = React.createClass({
                     case 0:
                         ids.forEach(function(id){
                             window.Server.user.put({id:id},{blocked:false}).then(function(){
-                                self.updateData();
+                                self.reloadData();
                             });
                         });
                         break;
                     case 1:
                         ids.forEach(function(id){
                             window.Server.user.put({id:ids},{blocked:true}).then(function(){
-                                self.updateData();
+                                self.reloadData();
                             });
                         });
                         break;
@@ -203,29 +203,5 @@ const AdminPermissionView = React.createClass({
             </div>
         )
     }
-    //getTableView:function(){
-    //    var self = this,
-    //        binding = self.getDefaultBinding(),
-    //        rootBinding = self.getMoreartyContext().getBinding();
-    //    return (
-    //        <div className="eTable_view">
-    //            <Table title="Permissions" binding={binding} quickEditActionsFactory={self._getQuickEditActionsFactory}
-    //                   quickEditActions={self.groupActionList} addQuickActions={true}
-    //                   isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
-    //                   getTotalCountPromise={self.getTotalCountPromise} >
-    //                <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-    //                <TableField dataField="principal" width="10%" dataFieldKey="firstName" parseFunction={parser.getFirstName}>Name</TableField>
-    //                <TableField dataField="principal" width="20%" dataFieldKey="lastName" parseFunction={parser.getLastName}>Surname</TableField>
-    //                <TableField dataField="principal" width="5%" filterType="none" parseFunction={parser.getStatus}>Status</TableField>
-    //                <TableField dataField="school" width="40%" dataFieldKey="name"  parseFunction={parser.getSchool}>School</TableField>
-    //                <TableField dataField="preset" width="5%" dataFieldKey="preset">Role</TableField>
-    //                <TableField dataField="principal" width="1%" filterType="none" parseFunction={parser.getObjectVisibility}>Access</TableField>
-    //            </Table>
-    //            <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
-    //                <GrantRole binding={rootBinding}/>
-    //            </Popup>
-    //        </div>
-    //    )
-    //}
 });
 module.exports = AdminPermissionView;

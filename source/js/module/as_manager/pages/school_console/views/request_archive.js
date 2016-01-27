@@ -1,13 +1,15 @@
 /**
  * Created by bridark on 19/06/15.
  */
-var SchoolRequestArchive,
-    React = require('react');
-SchoolRequestArchive = React.createClass({
+const   AdminArchive = require('module/as_admin/pages/admin_schools/admin_views/admin_archive')
+        React = require('react');
+const SchoolRequestArchive = React.createClass({
     mixins:[Morearty.Mixin],
     render:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
         return(
-            <div>Request Archives go here</div>
+            <AdminArchive binding={binding} serviceName="schoolPermissions" serviceCount="schoolPermissionsCount"/>
         )
     }
 });

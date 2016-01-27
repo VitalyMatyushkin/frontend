@@ -26,13 +26,6 @@ AdminArchive = React.createClass({
             return school.name;
         }
     },
-    getRequestStudentName:function(student){
-        if(student !== undefined){
-            return student.firstName+' '+student.lastName;
-        }else{
-            return 'n/a';
-        }
-    },
     getRequestResponse:function(accepted){
         return accepted === true ? 'Accepted' :'Declined';
     },
