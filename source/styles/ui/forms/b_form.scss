@@ -1,12 +1,12 @@
 .bForm {
-  max-width: 700px;
-  margin: 40px auto;
+  margin: auto;
   text-align: center;
   position: relative;
 }
 
 .bForm h2{
   margin-bottom: 34px;
+  color: $COLOR;
 }
 
 .bForm h3{
@@ -47,7 +47,7 @@
 
 .eForm_fieldName {
   font-size: 16px;
-  margin-bottom: 8px;
+  color: $COLOR;
 }
 
 .eForm_savePanel{
@@ -161,4 +161,50 @@ $INVALID_COLOR: rgb(182, 0, 0);
 }
 .eHouseForm h2{
   color: $COLOR;
+}
+
+.editStudentForm .eForm_fieldColumn {
+  border: $BORDER;
+  background: #fff;
+  float: left;
+  width: 42%;
+  margin: 10px;
+  text-transform: uppercase;
+  padding: 10px;
+  min-height: 112px;
+}
+
+.editStudentForm .eForm_fieldName{
+  float: left;
+  min-width: 100px;
+  font-weight: bold;
+  height: 40px;
+  line-height: 40px;
+}
+.editStudentForm .eForm_field{
+  margin: 0;
+}
+.editStudentForm input[type="text"]{
+  width: 100px;
+  border: none;
+  text-transform: uppercase;
+}
+.editStudentForm .dateFormat{
+  display: none;
+}
+.editStudentForm .eCombobox_input{
+  max-width: 150px;
+  border: none;
+}
+.editStudentForm textarea{
+  width: 290px;
+  height: 60px;
+  background: #EAEAEA;
+  text-transform: uppercase;
+  margin-top: -5px;
+}
+.editStudentForm .eForm_fieldSet {
+  border-bottom: $BORDER;
+  height: 40px;
+  line-height: 40px;
 }

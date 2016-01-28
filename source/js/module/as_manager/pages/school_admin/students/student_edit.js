@@ -90,7 +90,7 @@ const StudentEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<StudentForm title="Edit student" onFormSubmit={self.submitEdit} schoolId={self.activeSchoolId} binding={binding} />
+			<StudentForm title="Student" onFormSubmit={self.submitEdit} schoolId={self.activeSchoolId} binding={binding} />
 		)
 	}
 });
