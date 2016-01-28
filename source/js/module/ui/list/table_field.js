@@ -2,7 +2,7 @@ const   If          = require('module/ui/if/if'),
         React       = require('react'),
         SortColumn  = require('module/ui/list/sort_column');
 
-const ListField = React.createClass({
+const TableField = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		dataField: React.PropTypes.string.isRequired,
@@ -67,4 +67,4 @@ const ListField = React.createClass({
 	}
 });
 
-module.exports = ListField;
+module.exports = TableField;
