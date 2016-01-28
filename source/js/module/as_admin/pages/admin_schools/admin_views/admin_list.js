@@ -22,6 +22,9 @@ const SchoolListPage = React.createClass({
     getSchoolStatus:function(){
 
     },
+    _getAdminSchoolEditFunction:function(data){
+        document.location.hash = 'admin_schools/admin_views/edit?id=' + data.id;
+    },
     _getItemRemoveFunction:function(model){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -44,7 +47,7 @@ const SchoolListPage = React.createClass({
         return (
             <div className="eTable_view">
                 <Table title="Schools" binding={binding} onItemRemove={self._getItemRemoveFunction}
-                       getDataPromise={self.getDataPromise}>
+                       getDataPromise={self.getDataPromise} onItemEdit={self._getAdminSchoolEditFunction}>
                     <TableField dataField="pic" width="1%" filterType="none" parseFunction={self.getSchoolLogo}>Logo</TableField>
                     <TableField dataField="name" width="14%">School</TableField>
                     <TableField dataField="phone" filterType="none" width="10%">Telephone</TableField>
