@@ -185,7 +185,7 @@ const ListPageMixin = {
                                      binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
-                        <If condition={self.isSuperAdminPage||false}>
+                        <If condition={self.isSuperAdminPage && false}> 
                             <div className="filterBase_container">
                                 <span>Filter base: </span>
                                 <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
