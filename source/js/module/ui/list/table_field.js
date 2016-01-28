@@ -1,6 +1,5 @@
 const   If          = require('module/ui/if/if'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
         $           = require('jquery'),
         SortColumn  = require('module/ui/list/sort_column');
 
@@ -19,14 +18,12 @@ const ListField = React.createClass({
 	onChange: function(event) {
 		var self = this,
 			value = event.currentTarget.value,
-            dataField;
+            dataField = self.props.dataField;
 		if (self.props.inputParseFunction) {
 			value = self.props.inputParseFunction(value);
 		}
-        if(self.props.children === 'Role'){
-            dataField = 'preset';
-        }else{
-            dataField = self.props.dataField;
+        if(self.props.dataFieldKey){
+            dataField += '.' + self.props.dataFieldKey;
         }
 		//if (value && self.props.filterType !== 'number') {
          //   var tempValue = {};
