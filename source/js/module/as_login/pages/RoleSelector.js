@@ -7,17 +7,35 @@ const RoleSelectorComponent = React.createClass({
     onRoleSelected: function(roleName){
         return function(){
             const roleMapper = {
+                admin:      'manager',
                 manager:    'manager',
-                owner:      'manager',
+                teacher:    'manager',
+                coach:      'manager',
                 parent:     'parents'
             };
-            // TODO: fix me. Dirty solution to be ready for sprint
-            const domain = 'stage.squadintouch.com';
-            //const domain = 'squard.com:8080';
             console.log(`Role selected: ${roleName}`);
-            const subdomain = roleMapper[roleName.toLowerCase()];
-            if(subdomain) {
-                window.location.href = `http://${subdomain}.${domain}`;
+            const roleSubdomain = roleMapper[roleName.toLowerCase()];
+            if(roleSubdomain) {
+                let subdomains = document.location.host.split('.');
+                subdomains[0] = roleSubdomain;
+                const domain = subdomains.join(".");
+                switch (roleSubdomain) {
+                    case roleMapper.admin:
+                        window.location.href = `http://${domain}/#schools`;
+                        break;
+                    case roleMapper.manager:
+                        window.location.href = `http://${domain}/#schools`;
+                        break;
+                    case roleMapper.coach:
+                        window.location.href = `http://${domain}/#schools`;
+                        break;
+                    case roleMapper.teacher:
+                        window.location.href = `http://${domain}/#schools`;
+                        break;
+                    case roleMapper.parent:
+                        window.location.href = `http://${domain}/#events/calendar`;
+                        break;
+                }
             } else {
                 alert('unknown role: ' + roleName);
             }
