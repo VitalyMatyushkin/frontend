@@ -4,51 +4,59 @@
 const React = require('react');
 
 const RoleSelectorComponent = React.createClass({
-    onRoleSelected: function(roleName){
-        return function(){
-            const roleMapper = {
-                admin:      'manager',
-                manager:    'manager',
-                teacher:    'manager',
-                coach:      'manager',
-                parent:     'parents'
-            };
-            console.log(`Role selected: ${roleName}`);
-            const roleSubdomain = roleMapper[roleName.toLowerCase()];
-            if(roleSubdomain) {
-                let subdomains = document.location.host.split('.');
-                subdomains[0] = roleSubdomain;
-                const domain = subdomains.join(".");
-                switch (roleSubdomain) {
-                    case roleMapper.admin:
-                        window.location.href = `http://${domain}/#schools`;
-                        break;
-                    case roleMapper.manager:
-                        window.location.href = `http://${domain}/#schools`;
-                        break;
-                    case roleMapper.coach:
-                        window.location.href = `http://${domain}/#schools`;
-                        break;
-                    case roleMapper.teacher:
-                        window.location.href = `http://${domain}/#schools`;
-                        break;
-                    case roleMapper.parent:
-                        window.location.href = `http://${domain}/#events/calendar`;
-                        break;
-                }
-            } else {
-                alert('unknown role: ' + roleName);
+    getRoleSubdomain: function(roleName) {
+        const roleMapper = {
+            admin:      'manager',
+            manager:    'manager',
+            teacher:    'manager',
+            coach:      'manager',
+            parent:     'parents'
+        };
+        return roleMapper[roleName.toLowerCase()];
+    },
+    redirectToStartPage: function(roleName) {
+        const self = this;
+
+        const roleSubdomain = self.getRoleSubdomain(roleName);
+        if(roleSubdomain) {
+            let subdomains = document.location.host.split('.');
+            subdomains[0] = roleSubdomain;
+            const domain = subdomains.join(".");
+            switch (roleSubdomain) {
+                case 'manager':
+                    window.location.href = `http://${domain}/#schools`;
+                    break;
+                case 'parents':
+                    window.location.href = `http://${domain}/#events/calendar`;
+                    break;
             }
+        } else {
+            alert('unknown role: ' + roleName);
+        }
+    },
+    onRoleSelected: function(roleName){
+        const self = this;
+
+        return function(){
+            console.log(`Role selected: ${roleName}`);
+            self.redirectToStartPage(roleName.toLowerCase());
         }
     },
     renderRoleButton: function(roleName){
-        return <button onClick={this.onRoleSelected(roleName)}>{roleName}</button>
+        const self = this;
+
+        return <button onClick={self.onRoleSelected(roleName)}>{roleName}</button>
     },
     render: function(){
-        const availableRoles = this.props.availableRoles;
+        const self = this;
+
+        const availableRoles = self.props.availableRoles;
+        if(availableRoles.length == 1) {
+            self.redirectToStartPage(availableRoles[0]);
+        }
         return (
             <div>
-                {availableRoles.map(this.renderRoleButton)}
+                {availableRoles.map(self.renderRoleButton)}
             </div>
         );
     }
