@@ -7,7 +7,7 @@ Logo = React.createClass({
 		var self = this;
 
 		return (
-			<div className="bPublicLogo">SquadIntouch</div>
+			<div className="bPublicLogo"></div>
 		)
 	}
 });

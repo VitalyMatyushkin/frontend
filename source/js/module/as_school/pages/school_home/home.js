@@ -17,9 +17,9 @@ SchoolHomePage = React.createClass({
             <div className="eSchoolHomePage">
                 <HomeHeader binding={binding}/>
                 <div className="eSchoolBodyWrapper">
+                    <HomeCalender binding={binding} />
                     <HomeFixture binding={binding} />
                     <HomeNews binding={binding}/>
-                    <HomeCalender binding={binding} />
                     <HomeBlog binding={binding}  />
                 </div>
                 <div className="eSchoolHomeFooter">

@@ -1,6 +1,5 @@
 var Logo = require('module/as_school/head/logo'),
 	TopMenu = require('module/ui/menu/public_menu'),
-    PublicLogin = require('module/ui/menu/public_login'),
 	React = require('react'),
 	Head;
 Head = React.createClass({
@@ -46,10 +45,10 @@ Head = React.createClass({
 			binding = this.getDefaultBinding();
 
 		return (
-			<div className="bTopPanel">
+			<div className="bTopPanel schoolPanel">
                 <TopMenu menuItems={['school','fixtures','cricket','rounders','rugby','netball','football','hockey']}></TopMenu>
 				<Logo />
-				<PublicLogin binding={binding} />
+
 			</div>
 		)
 	}
