@@ -3,7 +3,7 @@
  */
 const   Table = require('module/ui/list/table'),
         TableField = require('module/ui/list/table_field'),
-        parser = require('module/helpers/PermissionParsers'),
+        //parser = require('module/helpers/PermissionParsers'),
         UserModel = require('module/data/UserModel'),
         DateTimeMixin = require('module/mixins/datetime'),
         ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
@@ -195,7 +195,7 @@ const AdminPermissionView = React.createClass({
                     <TableField dataField="verified" filterType="none" >Status</TableField>
                     <TableField dataField="school" filterType="none" >School</TableField>
                     <TableField dataField="roles" filterType="none" >Role</TableField>
-                    <TableField dataField="blocked" >Access</TableField>
+                    <TableField dataField="blocked" filterType="none" >Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={rootBinding}/>

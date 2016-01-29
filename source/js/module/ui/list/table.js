@@ -221,6 +221,7 @@ const Table = React.createClass({
             tableHeadFields = React.Children.map(this.props.children, function (child,index) {
                 return React.cloneElement(child, {
                     key:index,
+                    binding: binding,
                     onChange: self.updateFilterState,
                     onSort:self.onSort
                 });
