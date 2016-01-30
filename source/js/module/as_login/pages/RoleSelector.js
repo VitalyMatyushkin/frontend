@@ -6,7 +6,7 @@ const React = require('react');
 const RoleSelectorComponent = React.createClass({
     getRoleSubdomain: function(roleName) {
         const roleMapper = {
-            admin:      'manager',
+            owner:      'manager',
             manager:    'manager',
             teacher:    'manager',
             coach:      'manager',
