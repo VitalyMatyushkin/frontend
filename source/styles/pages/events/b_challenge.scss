@@ -15,6 +15,11 @@ $border: solid 1px #c2c2c2;
 .eChallenge_in{
   display: table-cell;
 }
+.eChallenge_in p{
+  display: table-cell;
+  padding: 0 10px;
+  text-transform: lowercase;
+}
 .eChallenge_com_container{
   display: table-cell;
 }

@@ -1,28 +1,29 @@
 const 	React 			= require('react'),
 		Immutable 		= require('immutable'),
 		Lazy            = require('lazyjs'),
-		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin');
+		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		noImage			= '/images/no-image.jpg';
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	renderAlbum: function(album, index) {
 		const self = this,
 			binding = self.getDefaultBinding(),
-			coverId = album.get('coverId');
-		let cover = Lazy(binding.toJS('albums.' + index + '.photos')).find(photo => photo.id === coverId).pic;
-		cover = cover ? cover + '/contain?height=100': '/images/no-image.jpg';
-
-		const styles = {backgroundImage: 'url(' + cover + ')', width: self.state.albumWidth};
+			coverId = album.get('coverId'),
+			photos = binding.toJS('albums.' + index + '.photos'),
+			coverPhoto = coverId ? Lazy(photos).find(photo => photo.id === coverId) : photos[0],
+			cover = coverPhoto ? coverPhoto.pic + '/contain?height=100': noImage,
+			styles = {backgroundImage: 'url(' + cover + ')', width: self.state.albumWidth};
 
 		return (
-			<div onClick={self.onClickAlbum.bind(self, album)} key={'album-' + index} className='eEventAlbums_album' style={styles}>
-				<span onClick={self.onClickEditAlbum.bind(self, album)} className='eEventAlbums_albumEdit'></span>
-				<span onClick={self.onClickDeleteAlbum.bind(self, album)} className='eEventAlbums_albumDelete'></span>
+			<div onClick={function(e){self.onClickAlbum(e, album);}} key={'album-' + index} className='eEventAlbums_album' style={styles}>
+				<span onClick={function(e){self.onClickEditAlbum(e, album);}} className='eEventAlbums_albumEdit'></span>
+				<span onClick={function(e){self.onClickDeleteAlbum(e, album);}} className='eEventAlbums_albumDelete'></span>
 				<span className='eEventAlbums_albumTitle'>{album.get('name')}</span>
 			</div>
 		);
 	},
-	onClickAlbum: function(album) {
+	onClickAlbum: function(e, album) {
 		const self = this;
 
 		if (self.isMounted()) {
@@ -30,18 +31,18 @@ const EventHeader = React.createClass({
 			window.location.reload(true); //reload the page - all resources to be in place(prevents Bad Request)
 		}
 
-		return false;
+		e.stopPropagation();
 	},
-	onClickEditAlbum: function(album) {
+	onClickEditAlbum: function(e, album) {
 		const self = this;
 
 		if (self.isMounted()) {
 			document.location.hash = 'albums/edit/' + album.get('id');
 		}
 
-		return false;
+		e.stopPropagation();
 	},
-	onClickDeleteAlbum: function(album) {
+	onClickDeleteAlbum: function(e, album) {
 		const self = this,
 			albumId = album.get('id'),
 			binding = self.getDefaultBinding(),
@@ -56,9 +57,9 @@ const EventHeader = React.createClass({
 				});
 			});
 
-		return false;
+		e.stopPropagation();
 	},
-	onClickCreateAlbum: function() {
+	onClickCreateAlbum: function(e) {
 		var self = this,
 			binding = self.getDefaultBinding();
 
@@ -66,7 +67,7 @@ const EventHeader = React.createClass({
 			document.location.hash = 'albums/create/' + binding.get('model.id');
 		}
 
-		return false;
+		e.stopPropagation();
 
 	},
 	getInitialState: function() {

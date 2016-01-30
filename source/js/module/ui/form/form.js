@@ -31,7 +31,7 @@ var Form = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
 
-        self.defaultButton = self.props.defaultButton || 'Continue →';
+        self.defaultButton = self.props.defaultButton || 'Continue';
         self.loadingButton = self.props.loadingButton || 'Loading...';
 
         binding.addListener('', function (ChangesDescriptor) {

@@ -71,6 +71,7 @@ const SchoolRequest = React.createClass({
                         e.stopPropagation();
                     }
                 };
+                var email = request.principal ? request.principal.email : '';
                 if (request.accepted == undefined) {
                     return (
                         <div key={request.id} className="eDataList_listItem" onClick={rowClick(request.principalId)}>
@@ -80,7 +81,7 @@ const SchoolRequest = React.createClass({
                                         <img src={request.school.pic}/>
                                     </span>
                             </div>
-                            <div className="eDataList_listItemCell">{request.principal.email}</div>
+                            <div className="eDataList_listItemCell">{email}</div>
                             <div className="eDataList_listItemCell">{request.preset}</div>
                             <div
                                 className="eDataList_listItemCell">{request.comment !== undefined ? request.comment : ''}</div>

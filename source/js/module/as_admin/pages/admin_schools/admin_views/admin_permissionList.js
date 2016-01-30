@@ -135,7 +135,7 @@ const AdminPermissionView = React.createClass({
                         .then(function(permission){
                             permission.forEach(function(p){
                                 window.Server.Permission.delete({id:p.id}).then(function(){
-                                    self.updateData();
+                                    self.reloadData();
                                 });
                             });
                         });
