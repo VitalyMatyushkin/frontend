@@ -40,7 +40,7 @@ ActivityLogPage = React.createClass({
             <Table  title="Activity Logs" binding={binding} hideActions={true}
                     isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                     getTotalCountPromise={self.getTotalCountPromise} pageLimit={40} >
-                <TableField dataField="meta" filterType="none" parseFunction={self.getDate}>Date</TableField>
+                <TableField dataField="meta" dataFieldKey="created" filterType="none" parseFunction={self.getDate}>Date</TableField>
                 <TableField dataField="hostname" >Hostname</TableField>
                 <TableField dataField="message">Message</TableField>
                 <TableField dataField="scope" >Scope</TableField>

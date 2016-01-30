@@ -91,7 +91,7 @@ filter.prototype._deleteLike = function(field){
     return where;
 };
 filter.prototype.setOrder = function(field, value){
-    this._binding.set('order', field + value);
+    this._binding.set('order', field + ' ' + value);
 };
 
 filter.prototype.setWhere = function(value){
