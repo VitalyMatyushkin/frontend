@@ -23,6 +23,7 @@ SchoolHomePage = React.createClass({
                     <HomeBlog binding={binding}  />
                 </div>
                 <div className="eSchoolHomeFooter">
+                    <img src = "images/logo.png"></img>
                     &copy;All Rights Reserved, SquadInTouch.com  SquadInTouch.com &trade;
                 </div>
             </div>
