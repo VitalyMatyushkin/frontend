@@ -11,8 +11,10 @@ let userDetails, Roles, persistentId;
 
 const EditUser = React.createClass({
     mixins:[Morearty.Mixin],
-    getInitialState:function(){
-        return {tabState:'detail'};
+    getDefaultState:function(){
+        return Immutable.Map({
+            tabState:'detail'
+        });
     },
     componentWillMount:function(){
         var self = this,
@@ -216,9 +218,12 @@ const EditUser = React.createClass({
         var self = this;
     },
     editTabClick:function(active){
-        var self = this;
-        if(active !== self.state.tabState){
-            self.setState({tabState:active});
+        const self = this,
+            binding = self.getDefaultBinding(),
+            tabState = binding.get('tabState');
+
+        if(active !== tabState){
+            binding.set('tabState',active);
         }
     },
     _saveButtonClick:function(){
@@ -258,21 +263,22 @@ const EditUser = React.createClass({
     },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            tabState = binding.get('tabState');
         //if(typeof binding.get('form') !== 'undefined'){
         //    if(binding.get('popup') === true)self.getUserData();
         //}
         return (
             <div className="bPopupEdit_container">
                 <div className="bPopupEdit_row eTab">
-                    <span onClick={function(){self.editTabClick('detail')}} className={self.state.tabState === 'detail'? 'bPopupEdit_tab bPopupEdit_active' :'bPopupEdit_tab'}>
+                    <span onClick={function(){self.editTabClick('detail')}} className={tabState === 'detail'? 'bPopupEdit_tab bPopupEdit_active' :'bPopupEdit_tab'}>
                         User Details
                     </span>
-                    <span onClick={function(){self.editTabClick('permission')}}  className={self.state.tabState === 'permission'? 'bPopupEdit_tab bPopupEdit_active' :'bPopupEdit_tab'}>
+                    <span onClick={function(){self.editTabClick('permission')}}  className={tabState === 'permission'? 'bPopupEdit_tab bPopupEdit_active' :'bPopupEdit_tab'}>
                         User Roles/Permissions
                     </span>
                 </div>
-                <If condition={self.state.tabState === 'detail'}>
+                <If condition={tabState === 'detail'}>
                     <div>
                         {userDetails}
                         <div className="bPopupEdit_row">
@@ -284,7 +290,7 @@ const EditUser = React.createClass({
                         </div>
                     </div>
                 </If>
-                <If condition={self.state.tabState === 'permission'}>
+                <If condition={tabState === 'permission'}>
                     <div>
                         <UserRole binding={binding} />
                     </div>
