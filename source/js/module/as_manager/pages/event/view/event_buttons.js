@@ -22,7 +22,9 @@ const EventHeader = React.createClass({
 
                 window.Server.pointsInResult.post({resultId: result.id}, point).then(function (res) {
                     //console.log(res);
+                    return res;
                 });
+                return point;
             });
 
             delete event.participants;
@@ -39,6 +41,7 @@ const EventHeader = React.createClass({
                     .set('model.resultId', result.id)
                     .set('mode', 'general')
                     .commit();
+                return res;
             });
         });
     },
