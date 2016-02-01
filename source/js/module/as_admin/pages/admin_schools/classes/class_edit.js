@@ -1,4 +1,4 @@
-const 	ClassForm 	= require('module/as_manager/pages/school_admin/classes/class_form'),
+const 	ClassForm 	= require('module/as_admin/pages/admin_schools/classes/class_form'),
 		React 		= require('react'),
 		Immutable 	= require('immutable');
 
@@ -27,8 +27,9 @@ const ClassEditPage = React.createClass({
 		//Server will respond with failure causing button to stop at loading
 		if(data.name !=''){
 			data.name = data.name.toUpperCase(); //cast form name to upper case for consistency
+
 			window.Server.form.put(self.formId, data).then(function() {
-				self.isMounted() && (document.location.hash = 'school_admin/forms');
+				self.isMounted() && (document.location.hash = 'admin_schools/admin_views/forms');
 			});
 		}
 	},

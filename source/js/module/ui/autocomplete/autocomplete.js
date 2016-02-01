@@ -161,7 +161,6 @@ const Autocomplete = React.createClass({
 		for (var i = 0; i < viewCount; i++) {
 			(function(dataBlock) {
 				var filterFiled = self.props.serverField || 'value';
-
 				resultView.push(
 					<ComboboxOption isSelected={selectedId === dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock[filterFiled]}</ComboboxOption>
 				);

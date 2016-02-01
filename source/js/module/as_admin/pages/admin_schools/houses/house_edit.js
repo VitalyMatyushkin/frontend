@@ -1,4 +1,4 @@
-const 	HouseForm = require('module/as_manager/pages/school_admin/houses/house_form'),
+const 	HouseForm = require('module/as_admin/pages/admin_schools/houses/house_form'),
 		React = require('react'),
 		Immutable = require('immutable');
 
@@ -26,7 +26,10 @@ const HouseEditPage = React.createClass({
 		var self = this;
 
 		window.Server.house.put(self.houseId, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school_admin/houses');
+			self.isMounted() && (document.location.hash = '/admin_schools/admin_views/houses');
+		}).catch(function(er){
+			alert(er.errorThrown+' Server Error');
+			document.location.hash = '/admin_schools/admin_views/houses';
 		});
 	},
 	render: function() {
