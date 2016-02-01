@@ -30,8 +30,9 @@ const StudentAutoComplete = React.createClass({
             query = ReactDOM.findDOMNode(self.refs.studentInput).value;
         if(query.length >=1){
             ReactDOM.findDOMNode(self.refs.autoComplete).style.display = 'block';
-            window.Server.students.get({
-                schoolId:binding.get('selectedSchoolId'),
+            //window.Server.students.get({
+            //    schoolId:binding.get('selectedSchoolId'),
+                window.Server.users.get({
                 filter:{
                     where:{
                         lastName:{
@@ -59,35 +60,23 @@ const StudentAutoComplete = React.createClass({
     },
     handleClick:function(){
     },
-    closeConfirmation:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-    },
     continueButtonClick:function(){
-        var self = this,
+        const self = this,
             binding = self.getDefaultBinding(),
             confirmation = window.confirm("Are you sure you want to grant access?"),
-            globalBinding = self.getMoreartyContext().getBinding();
-        var schoolId = binding.get('selectedSchoolId'),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            schoolId = binding.get('selectedSchoolId'),
             userId = binding.get('groupIds')=== undefined ? binding.get('selectedUser').userId :'',
-            model = {};
+            model = {
+                preset:binding.get('roleName') ,
+                schoolId:schoolId,
+                principalId:userId,
+                comment:ReactDOM.findDOMNode(self.refs.commentArea).value,
+                accepted:false
+            };
+
         if(binding.get('roleName') === 'parent'){
-            model = {
-                preset:binding.get('roleName') ,
-                schoolId:schoolId,
-                principalId:userId,
-                studentId:binding.get('selectedStudentId'),
-                comment:ReactDOM.findDOMNode(self.refs.commentArea).value,
-                accepted:false
-            }
-        }else{
-            model = {
-                preset:binding.get('roleName') ,
-                schoolId:schoolId,
-                principalId:userId,
-                comment:ReactDOM.findDOMNode(self.refs.commentArea).value,
-                accepted:false
-            }
+            model.studentId = binding.get('selectedStudentId');
         }
         if(confirmation == true){
             if(document.location.hash.indexOf('settings') === -1){
@@ -133,15 +122,6 @@ const StudentAutoComplete = React.createClass({
             studentRowClass = binding.get('isParent') === true ? 'studentRowActive':'studentRowInActive';
         return (
             <div>
-                <div ref="studentRow" className={studentRowClass}>
-                    <h4>Student</h4>
-                    <input ref="studentInput" placeholder={"Enter last name"} onChange={self.handleChange} onBlur={self.handleBlur} onClick={self.handleClick} />
-                    <div>
-                        <ul ref="autoComplete" className="customAutoComplete">
-                            {list}
-                        </ul>
-                    </div>
-                </div>
                 <div>
                     <h4>Comment:</h4>
                     <textarea ref="commentArea"></textarea>
@@ -152,5 +132,30 @@ const StudentAutoComplete = React.createClass({
             </div>
         )
     }
+    //render:function(){
+    //    var self = this,
+    //        binding = self.getDefaultBinding(),
+    //        studentRowClass = binding.get('isParent') === true ? 'studentRowActive':'studentRowInActive';
+    //    return (
+    //        <div>
+    //            <div ref="studentRow" className={studentRowClass}>
+    //                <h4>Student</h4>
+    //                <input ref="studentInput" placeholder={"Enter last name"} onChange={self.handleChange} onBlur={self.handleBlur} onClick={self.handleClick} />
+    //                <div>
+    //                    <ul ref="autoComplete" className="customAutoComplete">
+    //                        {list}
+    //                    </ul>
+    //                </div>
+    //            </div>
+    //            <div>
+    //                <h4>Comment:</h4>
+    //                <textarea ref="commentArea"></textarea>
+    //            </div>
+    //            <div>
+    //                <input type="button" onClick={function(){self.continueButtonClick()}} className="bButton bGrantButton" value="Grant"/>
+    //            </div>
+    //        </div>
+    //    )
+    //}
 });
 module.exports = StudentAutoComplete;

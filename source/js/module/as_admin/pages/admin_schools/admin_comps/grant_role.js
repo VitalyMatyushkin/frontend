@@ -45,7 +45,8 @@ const GrantRole = React.createClass({
                 <div>
                     <h4>School</h4>
                     <div>
-                        <AutoComplete serviceFilter={services.school} serverField="name" onSelect={this.onSchoolSelect.bind(null,0)} binding={binding} />
+                        <AutoComplete serviceFilter={services.school} serverField="name" binding={binding.sub('grSchool')}
+                                      onSelect={this.onSchoolSelect.bind(null,0)} />
                     </div>
                     <h4>Role </h4>
                     <div>
@@ -56,6 +57,11 @@ const GrantRole = React.createClass({
                             <option value="coach">Coach</option>
                             <option value="parent">Parent</option>
                         </select>
+                    </div>
+                    <h4>Student</h4>
+                    <div>
+                        <AutoComplete serviceFilter={services.users} serverField="lastName" binding={binding.sub('grUsers')}
+                                      onSelect={function(o, id){console.log(id);}}  />
                     </div>
                     <StudentAutoComplete binding = {binding} />
                 </div>

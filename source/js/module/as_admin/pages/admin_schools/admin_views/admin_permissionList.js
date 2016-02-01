@@ -198,7 +198,7 @@ const AdminPermissionView = React.createClass({
                     <TableField dataField="blocked" filterType="none" >Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
-                    <GrantRole binding={rootBinding}/>
+                    <GrantRole binding={binding.sub('grantRole')}/>
                 </Popup>
             </div>
         )
