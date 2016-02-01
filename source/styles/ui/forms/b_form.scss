@@ -163,15 +163,20 @@ $INVALID_COLOR: rgb(182, 0, 0);
   color: $COLOR;
 }
 
+.editStudentForm{
+  width: 800px;
+  margin: 0 auto;
+}
+
 .editStudentForm .eForm_fieldColumn {
   border: $BORDER;
   background: #fff;
   float: left;
-  width: 60%;
+  min-width: 340px;
   margin: 10px;
   text-transform: uppercase;
   padding: 10px;
-  min-height: 112px;
+  min-height: 102px;
 }
 
 .editStudentForm .eForm_fieldName{
@@ -182,7 +187,9 @@ $INVALID_COLOR: rgb(182, 0, 0);
   line-height: 40px;
 }
 .editStudentForm .eForm_field{
-  margin: 0;
+  width: 320px;
+  margin: 0 auto;
+  border-bottom: $BORDER;
 }
 .editStudentForm input[type="text"]{
   width: 100px;
@@ -197,14 +204,16 @@ $INVALID_COLOR: rgb(182, 0, 0);
   border: none;
 }
 .editStudentForm textarea{
-  width: 290px;
-  height: 60px;
+  width: 320px;
+  height: 50px;
   background: #EAEAEA;
   text-transform: uppercase;
   margin-top: -5px;
 }
 .editStudentForm .eForm_fieldSet {
-  border-bottom: $BORDER;
   height: 40px;
   line-height: 40px;
+}
+.editStudentForm .bButton .mRight{
+  margin-right: 50px;
 }
