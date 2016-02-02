@@ -1,5 +1,6 @@
 const 	React 			= require('react'),
 		Immutable 		= require('immutable'),
+		ReactDOM		= require('reactDom'),
 		Lazy            = require('lazyjs'),
 		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		noImage			= '/images/no-image.jpg';
@@ -77,7 +78,7 @@ const EventHeader = React.createClass({
 		};
 	},
 	componentDidMount: function () {
-		var width = this.refs.albumsList.getDOMNode().offsetWidth;
+		var width = ReactDOM.findDOMNode(this.refs.albumsList).offsetWidth;
 		this.setState({albumWidth: width / 6 - 7});
 	},
 	render: function() {
