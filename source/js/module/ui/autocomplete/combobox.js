@@ -88,12 +88,21 @@ module.exports = React.createClass({
 
 	componentWillMount: function () {
 		var self = this;
-
 		self.defaulInputLabel = self.props.value;
-
 		self.setState({menu: this.makeMenu()});
-	},
 
+	},
+	componentDidMount:function(){
+		var self = this;
+		//Wait then set the value for the combo box if there is an initial input value
+		self.defValueTimerId = setTimeout(function(){
+			ReactDOM.findDOMNode(self.refs.input).value=self.findInputValue(self.props.value);
+		},2000);
+	},
+	componentWillUnmount:function(){
+		var self = this;
+		clearTimeout(self.defValueTimerId);
+	},
 	componentWillReceiveProps: function (newProps) {
 		this.setState({
 			menu: this.makeMenu(newProps.children)
@@ -425,8 +434,6 @@ module.exports = React.createClass({
 				});  */
 			}
 		}
-
-
 		return (
 			<div className={this.getClassName()}>
 				<input

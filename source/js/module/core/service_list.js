@@ -66,10 +66,12 @@ serviceList = {
 		// houses
 		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
+		serviceList.getAllHouses = new Service('/houses', binding);
 
 		// forms
 		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
 		serviceList.form = new Service('/forms/{formId}', binding);
+		serviceList.getAllForms = new Service('/forms', binding);
 
 		// coaches
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);

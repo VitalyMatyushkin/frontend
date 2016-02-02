@@ -41,7 +41,7 @@ ExtraPermissionsField = React.createClass({
         }
         return(
             <div className="bCombobox">
-                <input ref="listHouseInput" className="eCombobox_input" aria-owns="houseList" placeholder="House name" onBlur={self.handleInputBlur.bind(null,'listHouse')}></input>
+                <input ref="listHouseInput" className="eCombobox_input" aria-owns="houseList" placeholder="House name" onBlur={self.handleInputBlur.bind(null,'listHouse')}/>
                 <span aria-hidden="true" className="eCombobox_button" onClick={self.handleDropDownButtonClick.bind(null,'listHouse')}>▾</span>
                 <div id="houseList" ref="listHouse" className="eCombobox_list" aria-expanded="false" role="listbox">{houseListItems}</div>
             </div>
