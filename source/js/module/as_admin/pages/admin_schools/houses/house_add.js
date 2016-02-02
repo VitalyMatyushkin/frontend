@@ -24,7 +24,7 @@ HouseAddPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<HouseForm title="Add new house..." onFormSubmit={self.submitAdd} binding={binding} />
+			<HouseForm title="Add new house to school" onFormSubmit={self.submitAdd} binding={binding} />
 		)
 	}
 });
