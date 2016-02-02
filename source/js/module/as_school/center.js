@@ -1,6 +1,7 @@
 var RouterView = require('module/core/router'),
 	Route = require('module/core/route'),
-	LoginRoute = require('module/core/routes/login_route'),
+		PublicLogin = require('module/ui/menu/public_login'),
+		LoginRoute = require('module/core/routes/login_route'),
 	LogoutRoute = require('module/core/routes/logout_route'),
 	RegisterRoute = require('module/core/routes/register_route'),
 	VerifyRoute = require('module/core/routes/verify_route'),
@@ -24,7 +25,7 @@ Center = React.createClass({
 		return (
 			<div className={mainClass}>
 				<div className="bPageWrap">
-
+					<PublicLogin binding={binding} />
 					<RouterView routes={ binding.sub('routing') } binding={binding}>
 						<Route path="/ /school /school/:subPage" binding={binding.sub('schoolProfile')} component="module/as_school/pages/school/school_page"  />
 						<Route path="/fixtures" binding={binding.sub('schoolFixtures')} component="module/as_school/pages/fixtures/fixtures_page"  />

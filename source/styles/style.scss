@@ -2,19 +2,19 @@
   font-family: 'Myriad Pro';
   font-style: normal;
   font-weight: 400;
-  src: local('Myriad Pro'), local('myriad-pro-Regular'), url(#{$IMAGE_DIR}myriad-pro/MYRIADPRO-REGULAR.OTF) format('otf');
+  src: local('Myriad Pro'), local('MyriadPro-Regular'), url('#{$IMAGE_DIR}myriad-pro/MYRIADPRO-REGULAR.OTF') format('opentype');
 }
 @font-face {
   font-family: 'Myriad Pro';
   font-style: normal;
   font-weight: bold;
-  src: local('Myriad Pro'), local('myriad-pro-Bold'), url(#{$IMAGE_DIR}myriad-pro/MYRIADPRO-BOLD.OTF) format('otf');
+  src: local('Myriad Pro'), local('MyriadPro-Bold'), url('#{$IMAGE_DIR}myriad-pro/MYRIADPRO-SEMIBOLD.OTF') format('opentype');
 }
 @font-face {
   font-family: 'Myriad Pro';
   font-style: normal;
   font-weight: 500;
-  src: local('Myriad Pro'), local('myriad-pro-Cond'), url(#{$IMAGE_DIR}myriad-pro/MYRIADPRO-COND.OTF) format('otf');
+  src: local('Myriad Pro'), local('MyriadPro-Cond'), url('#{$IMAGE_DIR}myriad-pro/MYRIADPRO-COND.OTF') format('opentype');
 }
 @font-face {
   font-family: 'PT Sans';
@@ -34,7 +34,7 @@ html, body {
   height: 100%;
   min-width: 1200px;
   font-family: 'Myriad Pro', sans-serif;
-  background: #bdbdbd;;
+  background: #bdbdbd;
 }
 
 h6{
@@ -56,9 +56,9 @@ h2{
 }
 
 h1{
-  font-size: 24px;
+  font-size: 26px;
   letter-spacing: -0.03em;
-  font-weight: 500;
+  font-weight: bold;
 }
 
 .mClearFix:after {
@@ -90,7 +90,7 @@ select,
 textarea{
   font-size: 15px;
   font-family: 'Myriad Pro', sans-serif;
-  width: 100%;
+  width: auto;
   border: 1px solid #ccc;
   border-radius: 3px;
 }
