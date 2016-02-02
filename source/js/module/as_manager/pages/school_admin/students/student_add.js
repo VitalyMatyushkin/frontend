@@ -32,15 +32,10 @@ StudentEditPage = React.createClass({
 				houseId:data.houseId,
 				schoolId:data.schoolId,
 				nextOfKin:[{
-					name:data.name,
-					surname:data.surname,
-					phone:data.phone,
-					role:data.role
+					name:data.name
 				}],
 				medicalInfo:{
-					injures:data.injures,
-					allergy:data.allergy,
-					other:data.other
+					allergy:data.allergy
 				}
 			}).then(function(studentUser){
 				window.Server.Permissions.post(

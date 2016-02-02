@@ -19,6 +19,8 @@ const EditSchoolForm = React.createClass({
         if (schoolId) {
             window.Server.school.get(schoolId).then(function (data) {
                 self.isMounted() && binding.set(Immutable.fromJS(data));
+            }).catch(function(err){
+                alert(err.errorThrown+' server error');
             });
 
             self.schoolId = schoolId;

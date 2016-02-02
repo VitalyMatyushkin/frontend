@@ -16,7 +16,7 @@ var validationsSet = {
 	},
 	date:function(value){
 		if(!(/\d.\d{1,4}-\d{1,2}-\d{1,2}\D\d{1,2}:\d{1,2}:\d{1,2}.\d{1,4}\D/.test(value))){
-			return 'Please fill out this fieldx';
+			return 'Please fill out this field';
 		}else{
 			return false;
 		}
