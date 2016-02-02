@@ -10,7 +10,9 @@ const ListPageMixin = {
 	propTypes: {
 		formBinding: React.PropTypes.any,
 		filters: React.PropTypes.object,
-		addSchoolToFilter: React.PropTypes.bool
+		addSchoolToFilter: React.PropTypes.bool,
+        serviceName: React.PropTypes.string,
+        serviceCount: React.PropTypes.string
 	},
 
     componentWillMount: function () {
@@ -19,6 +21,8 @@ const ListPageMixin = {
             metaBinding = self.getDefaultBinding().meta(),
             binding = self.getDefaultBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+        self.serviceName = self.props.serviceName ? self.props.serviceName : self.serviceName;
+        self.serviceCount = self.props.serviceCount ? self.props.serviceCount : self.serviceCount;
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
         self.popUpState = false;
@@ -28,8 +32,8 @@ const ListPageMixin = {
         self.filter.setFilters(self.filters);
 	},
     componentDidMount:function(){
-        if(this.isSuperAdminPage)
-            ReactDOM.findDOMNode(this.refs.otherCheck).checked = true;
+        //if(this.isSuperAdminPage)
+        //    ReactDOM.findDOMNode(this.refs.otherCheck).checked = true;
     },
 	componentWillUnmount: function () {
         clearTimeout(this.timeoutId);
@@ -45,14 +49,6 @@ const ListPageMixin = {
 
         binding.set('onReload',true);
     },
-    //getInitialState:function(){
-    //    return {
-    //        onReload:false
-    //    };
-    //},
-    //reloadData:function(){
-    //    this.setState({onReload:true});
-    //},
     getDataPromise:function(filter){
         const self = this;
 
@@ -89,6 +85,9 @@ const ListPageMixin = {
     },
     _getAddNewSchoolFunction:function(){
         document.location.hash = '/schools/add';
+    },
+    _adminCreateNewUser:function(){
+        document.location.hash = 'admin_schools/admin_views/create_user';
     },
 	toggleFilters: function() {
 		var self = this,
@@ -186,7 +185,7 @@ const ListPageMixin = {
                                      binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
-                        <If condition={self.isSuperAdminPage||false}>
+                        <If condition={self.isSuperAdminPage && false}>
                             <div className="filterBase_container">
                                 <span>Filter base: </span>
                                 <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
@@ -206,6 +205,9 @@ const ListPageMixin = {
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='houses'}>
                             <div className="addButton addHouse" onClick={self._addNewHouseFunction}></div>
+                        </If>
+                        <If condition={self.isSuperAdminPage === true}>
+                            <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>
                         </If>
                     </div>
                 </div>

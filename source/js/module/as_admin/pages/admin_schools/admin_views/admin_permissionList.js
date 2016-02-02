@@ -3,7 +3,7 @@
  */
 const   Table = require('module/ui/list/table'),
         TableField = require('module/ui/list/table_field'),
-        parser = require('module/helpers/PermissionParsers'),
+        //parser = require('module/helpers/PermissionParsers'),
         UserModel = require('module/data/UserModel'),
         DateTimeMixin = require('module/mixins/datetime'),
         ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
@@ -29,7 +29,7 @@ const AdminPermissionView = React.createClass({
         }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
-    isSuperAdminPage: false,
+    isSuperAdminPage: true,
     _getItemViewFunction:function(model){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -153,14 +153,14 @@ const AdminPermissionView = React.createClass({
                     case 0:
                         ids.forEach(function(id){
                             window.Server.user.put({id:id},{blocked:false}).then(function(){
-                                self.updateData();
+                                self.reloadData();
                             });
                         });
                         break;
                     case 1:
                         ids.forEach(function(id){
                             window.Server.user.put({id:ids},{blocked:true}).then(function(){
-                                self.updateData();
+                                self.reloadData();
                             });
                         });
                         break;
@@ -195,7 +195,7 @@ const AdminPermissionView = React.createClass({
                     <TableField dataField="verified" filterType="none" >Status</TableField>
                     <TableField dataField="school" filterType="none" >School</TableField>
                     <TableField dataField="roles" filterType="none" >Role</TableField>
-                    <TableField dataField="blocked" >Access</TableField>
+                    <TableField dataField="blocked" filterType="none" >Access</TableField>
                 </Table>
                 <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={rootBinding}/>
@@ -203,29 +203,5 @@ const AdminPermissionView = React.createClass({
             </div>
         )
     }
-    //getTableView:function(){
-    //    var self = this,
-    //        binding = self.getDefaultBinding(),
-    //        rootBinding = self.getMoreartyContext().getBinding();
-    //    return (
-    //        <div className="eTable_view">
-    //            <Table title="Permissions" binding={binding} quickEditActionsFactory={self._getQuickEditActionsFactory}
-    //                   quickEditActions={self.groupActionList} addQuickActions={true}
-    //                   isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
-    //                   getTotalCountPromise={self.getTotalCountPromise} >
-    //                <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-    //                <TableField dataField="principal" width="10%" dataFieldKey="firstName" parseFunction={parser.getFirstName}>Name</TableField>
-    //                <TableField dataField="principal" width="20%" dataFieldKey="lastName" parseFunction={parser.getLastName}>Surname</TableField>
-    //                <TableField dataField="principal" width="5%" filterType="none" parseFunction={parser.getStatus}>Status</TableField>
-    //                <TableField dataField="school" width="40%" dataFieldKey="name"  parseFunction={parser.getSchool}>School</TableField>
-    //                <TableField dataField="preset" width="5%" dataFieldKey="preset">Role</TableField>
-    //                <TableField dataField="principal" width="1%" filterType="none" parseFunction={parser.getObjectVisibility}>Access</TableField>
-    //            </Table>
-    //            <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
-    //                <GrantRole binding={rootBinding}/>
-    //            </Popup>
-    //        </div>
-    //    )
-    //}
 });
 module.exports = AdminPermissionView;

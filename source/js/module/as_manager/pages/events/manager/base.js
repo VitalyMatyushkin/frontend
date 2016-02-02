@@ -16,27 +16,29 @@ const EventManagerBase = React.createClass({
      * @returns {*}
      */
     serviceHouseFilter: function(houseName) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            schoolId = binding.get('schoolInfo.id'),
-            ids = binding.get('autocomplete.houses').toArray().map(function (house) {
-				return house.get('selectedId') || !house.get('selectedId');
-			});
+        const   binding     = this.getDefaultBinding(),
+                schoolId    = binding.get('schoolInfo.id'),
+                ids         = binding.get('autocomplete.houses').toArray().map(house => {
+                    console.log(`houses: ${JSON.stringify(house)}`);
+                    console.log(`selectedId: ${house.get('selectedId')}`);
+				    return house.get('selectedId') || !house.get('selectedId');
+			    });
 
-        return window.Server.houses.get(schoolId, {
-            filter: {
-                where: {
-                    schoolId: schoolId,
-                    id: {
-                        nin: ids
-                    },
-                    name: {
-                        like: houseName,
-                        options: 'i'
-                    }
-                }
-            }
-        });
+        return window.Server.houses.get(schoolId);  // this is some shit happens around, so I will stay this here for a while
+        //return window.Server.houses.get(schoolId, {
+        //    filter: {
+        //        where: {
+        //            schoolId: schoolId,
+        //            id: {
+        //                nin: []//ids
+        //            },
+        //            name: {
+        //                like: houseName,
+        //                options: 'i'
+        //            }
+        //        }
+        //    }
+        //});
     },
     /**
      * Сервис фильтрации по школе

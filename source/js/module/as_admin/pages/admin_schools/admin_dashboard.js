@@ -93,6 +93,7 @@ const OneSchoolPage = React.createClass({
                         <Route path="/admin_schools/admin_views/requests/accept" binding={binding.sub('parentPermission')} component="module/as_admin/pages/admin_schools/admin_views/admin_permission_accept" afterSubmitPage="/admin_schools/admin_views/requests"/>
                         <Route path="/admin_schools/admin_views/archive" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_archive"/>
                         <Route path="/admin_schools/admin_views/logs" binding={binding.sub('logs')} component="module/as_admin/pages/admin_schools/admin_views/admin_activityLogs"/>
+                        <Route path="/admin_schools/admin_views/create_user" binding={binding.sub('userDetailPage')} component="module/as_admin/pages/admin_add/user"/>
                     </RouterView>
                 </div>
             </div>
