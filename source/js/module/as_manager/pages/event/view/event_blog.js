@@ -21,7 +21,7 @@ const Blog = React.createClass({
     _setBlogCount:function(){
         var self = this,
           binding = self.getDefaultBinding();
-        return window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+        window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
             binding.set('blogCount', res.count);
             return res;
         });
@@ -106,7 +106,7 @@ const Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         self.intervalId = setInterval(function () {
-            return window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+            window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
                 var oldCount = binding.get('blogCount');
                 if(oldCount !== undefined){
                     if(oldCount !== res.count){
@@ -117,6 +117,7 @@ const Blog = React.createClass({
                         self._fetchCommentsData();
                     }
                 }
+                return res;
             });
         }, 2000);
     },
@@ -147,13 +148,15 @@ const Blog = React.createClass({
                     hidden:false
                 })
                 .then(function(result){
-                    return window.Server.user.get({id:result.ownerId})
+                    window.Server.user.get({id:result.ownerId})
                         .then(function(author){
                             result.commentor = author;
                             topLevelComments.push(result);
                             binding.set('blogs',Immutable.fromJS(topLevelComments));
                             self._setBlogCount();
+                            return author;
                         });
+                    return result;
                 });
         }else{
             alert("You cannot comment on this forum");

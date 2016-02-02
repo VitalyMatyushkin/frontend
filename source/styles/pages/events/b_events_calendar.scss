@@ -10,16 +10,17 @@ $border-color: #c2c2c2;
 
 .eEvents_challenges {
   margin-left: 10px;
-  border: solid 1px $border-color;
+  border: $BORDER;
   background: #fff;
   padding: 0 5px;
+  min-width: 500px;
 }
 
 .eEvents_challenges .eChallenge {
   display: flex;
   padding: 2px 0;
   cursor: pointer;
-  border-bottom: solid 1px $border-color;
+  border-bottom: $BORDER;
   text-align: center;
   height: 40px;
   align-items: center;

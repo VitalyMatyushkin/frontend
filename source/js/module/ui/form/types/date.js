@@ -59,7 +59,7 @@ TypeDate =  React.createClass({
 		return (
 			<div className="eForm_fieldInput">
 				<MaskedInput ref="fieldInput" onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
-				<span style={{display:'block'}}>Date format:MM/DD/YYYY</span>
+				<span className="dateFormat">Date format:MM/DD/YYYY</span>
 			</div>
 		)
 	}

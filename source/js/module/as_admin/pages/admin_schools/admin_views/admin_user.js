@@ -41,14 +41,12 @@ const UserDetail= React.createClass({
     onSchoolClick:function(value){
         document.location.hash = '/admin_schools/admin_views/detail?id='+value;
     },
-    onEditClick:function(){
-        var self, binding;
-        self = this;
-        binding = self.getDefaultBinding();
-        return function(evt){
-            binding.set('popup',true);
-            evt.stopPropagation();
-        }
+    onEditClick:function(evt){
+        const   self = this,
+                binding = self.getDefaultBinding();
+
+        binding.set('popup',true);
+        evt.stopPropagation();
     },
     _getRelatedSchool:function(data){
         var self = this;
@@ -90,7 +88,7 @@ const UserDetail= React.createClass({
                     {profilePicture ? <div className="eSchoolMaster_flag"><img src={profilePicture}/></div> : ''}
                     {username}
                     <div className="eSchoolMaster_buttons">
-                        <a onClick={self.onEditClick()} className="bButton">Edit...</a>
+                        <a onClick={self.onEditClick} className="bButton">Edit...</a>
                     </div>
                 </h1>
                 <div className = "bChallenge">

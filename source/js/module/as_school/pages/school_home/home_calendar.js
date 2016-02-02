@@ -56,8 +56,7 @@ const HomeCalender = React.createClass({
         return (
             <div className="eSchoolCalenderContainer">
                 <div className="eSchoolFixtureTab eCalendar_tab">
-                    <i>Calendar</i>
-                    <span></span>
+                    <h1>Calendar</h1><hr/>
                 </div>
                 <div className="eSchoolCalendarWrapper">
                     <CalendarView binding={binding} />

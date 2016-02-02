@@ -62,11 +62,11 @@ const HomeNews = React.createClass({
                                 <img src={imgSrc}/>
                         </span>
                         <div className="eSchoolNewsItemDescription">
-                            <div className="eSchoolNewsItemDate">
-                                {self.getNewsDate(newsItem)}
-                            </div>
                             <div className="eSchoolNewsItemInfo">
-                                <span className="inlineBlock newsItemTitle">{newsItem.title}</span>
+                                <h1 className="inlineBlock newsItemTitle">{newsItem.title}</h1>
+                                <div className="eSchoolNewsItemDate">
+                                    {self.getNewsDate(newsItem)}
+                                </div><hr/>
                                 <span className="inlineBlock newsItemExcerpt">{self.getNewsExcerpt(newsItem.body)}</span>
                             </div>
                         </div>
@@ -84,7 +84,7 @@ const HomeNews = React.createClass({
         return (
             <div className="eSchoolNewsContainer">
                 <div className="eSchoolFixtureTab eNews_tab">
-                    <i>News</i>
+                    <h1>News</h1><hr/>
                     <span></span>
                 </div>
                 <div className="eSchoolNewsItems">
