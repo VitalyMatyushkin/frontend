@@ -25,7 +25,7 @@ function apiSelector(domainName) {
     if (parsedDomain.rootDomain === "squadintouch" && !parsedDomain.isStage) {
         apiBase = 'api.squadintouch.com';
     }
-    //apiBase = 'localhost:3000';
+    apiBase = 'localhost:3000';
     var fullApiAddress = '//' + apiBase + '/v' + apiVersion;
     return fullApiAddress;
 }

@@ -35,7 +35,7 @@ ClassForm = React.createClass({
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" promptOnBlank={true} field="name" validation="required">Form name</FormField>
 				<FormField type="select" sourcePromise={self.getAllAges} field="age" validation="required">Age group</FormField>
-				<FormField type="autocomplete" serverField="name" field="schoolId" serviceFilter={self.serviceFilter} >School</FormField>
+				<FormField type="autocomplete" field="schoolId" serviceFullData={self.serviceFilter} >School</FormField>
 			</Form>
 		)
 	}
