@@ -1,12 +1,10 @@
 /**
  * Created by bridark on 08/07/15.
  */
-const   If          = require('module/ui/if/if'),
-        Popup       = require('module/ui/popup'),
+const   Popup       = require('module/ui/popup'),
         GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
         RoleList    = require('./role_list'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
         SVG         = require('module/ui/svg'),
         Immutable 	= require('immutable');
 
@@ -21,17 +19,23 @@ const AccountRequests = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
+
+        binding.atomically()
+            .set('openFilter', false)
+            .set('popup',false)
+            .set('selectedUser',{
+                userId:globalBinding.get('userData.authorizationInfo.userId'),
+                userName:'You'
+            }).commit();
+        self.loadUserPermissions();
+    },
+    loadUserPermissions:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding();
         window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
             .then(function(userPermissions){
-                binding
-                    .atomically()
-                    .set('userAccountRoles',Immutable.fromJS(userPermissions))
-                    .set('openFilter', false)
-                    .set('popup',false)
-                    .set('selectedUser',{
-                        userId:globalBinding.get('userData.authorizationInfo.userId'),
-                        userName:'You'
-                    }).commit();
+                binding.set('userAccountRoles',Immutable.fromJS(userPermissions));
             });
     },
     handleFilterButtonClick:function(){
@@ -49,9 +53,16 @@ const AccountRequests = React.createClass({
             binding = self.getDefaultBinding();
         binding.set('popup',false);
     },
+    _onSuccess:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        binding.set('popup',false);
+        self.loadUserPermissions();
+    },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
+            rootBinding = self.getMoreartyContext().getBinding(),
             openFilter = binding.get('openFilter') !== undefined ? binding.get('openFilter') : '',
             filterDivClasses = 'eDataList_listItemCell hideElement '+(openFilter ? 'showElement':'');
         return(
@@ -82,7 +93,8 @@ const AccountRequests = React.createClass({
                     </div>
                 </div>
                 <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}} otherClass="bPopupGrant">
-                    <GrantRole binding={binding} />
+                    <GrantRole binding={binding} userIdsBinding={rootBinding.sub('userData.authorizationInfo.userId')}
+                               onSuccess={self._onSuccess}/>
                 </Popup>
             </div>
         )

@@ -67,6 +67,7 @@ filter.prototype._addLike = function(where, field, value){
 
     filter[field] = {};
     filter[field].like = value;
+    filter[field].options = 'i';
 
     if(!where) {
         where = {};

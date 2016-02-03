@@ -101,11 +101,18 @@ module.exports = React.createClass({
 		self.setState({
 			menu: self.makeMenu(newProps.children)
 		});
+
 		self.defValueTimerId = setTimeout(function(){
 			if(newProps && newProps.value!==null){
 				ReactDOM.findDOMNode(self.refs.input).value=self.findInputValue(newProps.value);
 			}
 		},200);
+		//==================================================//
+		//You can not directly change the DOM! Use State!!!	//
+		//==================================================//
+		//self.defValueTimerId = setTimeout(function(){
+		//	ReactDOM.findDOMNode(self.refs.input).value=self.findInputValue(newProps.value);
+		//},200);
 	},
 
 	/**
