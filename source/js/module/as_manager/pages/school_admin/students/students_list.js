@@ -20,7 +20,7 @@ const StudentsListPage = React.createClass({
 			//var pageBinding = self.getMoreartyContext().getBinding().sub(page);
 
 			//pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = 'student?id='+data.id;
+			document.location.hash = 'school_admin/student?id='+data.id;
 			//document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
 	},

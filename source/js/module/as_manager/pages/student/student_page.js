@@ -76,6 +76,11 @@ const LeanerView = React.createClass({
             return data;
         });
     },
+    componentWillUnmount:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        binding.clear('achievements');
+    },
     render: function () {
         var self = this,
             binding = self.getDefaultBinding();

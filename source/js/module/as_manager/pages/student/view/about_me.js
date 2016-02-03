@@ -1,9 +1,8 @@
-var SVG = require('module/ui/svg'),
-	AboutMeBlock,
-	React = require('react'),
-	aboutListNodes = [],
+const SVG = require('module/ui/svg'),
+	React = require('react');
+var	aboutListNodes = [],
 	parentListNodes = [];
-AboutMeBlock = React.createClass({
+const AboutMeBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: React.PropTypes.string
@@ -27,6 +26,11 @@ AboutMeBlock = React.createClass({
 			)
 		}
 		return null;
+	},
+	componentWillUnmount:function(){
+		//Clear the arrays used
+		aboutListNodes.length = 0;
+		parentListNodes.length = 0;
 	},
 	render: function() {
 		var self = this,

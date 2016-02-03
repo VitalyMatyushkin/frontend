@@ -102,7 +102,9 @@ module.exports = React.createClass({
 			menu: self.makeMenu(newProps.children)
 		});
 		self.defValueTimerId = setTimeout(function(){
-			ReactDOM.findDOMNode(self.refs.input).value=self.findInputValue(newProps.value);
+			if(newProps && newProps.value!==null){
+				ReactDOM.findDOMNode(self.refs.input).value=self.findInputValue(newProps.value);
+			}
 		},200);
 	},
 

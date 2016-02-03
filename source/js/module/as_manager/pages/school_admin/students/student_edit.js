@@ -12,6 +12,7 @@ const StudentEditPage = React.createClass({
 			routingData = globalBinding.sub('routing.parameters').toJS(),
 			studentId = routingData.id;
 		self.activeSchoolId = activeSchoolId;
+		console.log(globalBinding.toJS());
 		binding.clear();
 
 		if (activeSchoolId && studentId) {
@@ -39,7 +40,7 @@ const StudentEditPage = React.createClass({
 	submitEdit: function(data) {
 		var self = this;
 		console.log(data);
-		window.Server.user.put(
+		window.Server.users.put(
 			{id:data.userId},
 			{
 				firstName: data.firstName,
