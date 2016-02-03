@@ -21,7 +21,13 @@ UserModel.getFullName = function(user){
     }
 };
 UserModel.getStatus = function(user) {
-    return user && user.verified && user.verified.email && user.verified.phone ? 'Active' : 'Registered';
+    if(user && user.verified !== undefined){
+        if(user.verified.email == true && user.verified.phone == true && user.verified.personal==true){
+            return 'Verified';
+        }else{
+            return 'Registered';
+        }
+    }
 };
 UserModel.getRoles = function(user){
     var res = '';

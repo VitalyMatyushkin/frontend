@@ -11,21 +11,24 @@ const RegiseterUserPage = React.createClass({
 		});
 	},
 	onSuccess: function(data) {
-		var self = this;
+		var self = this,
+			binding = self.getDefaultBinding();
 		window.Server.user.put({id:data.id}, {
 			verified:{
 				email:true,
-				persona:true,
+				personal:true,
 				phone:true
 			}
 		}).then(function(res){
-			self.getDefaultBinding().set('showForm', false);
+			//binding.set('showForm', false);
+			//window.location.reload(true);
 			return res;
 		});
 	},
 	onDone: function() {
-		var self = this;
-		self.getDefaultBinding().set('showForm', true);
+		var self = this,
+			binding = self.getDefaultBinding();
+		//binding.set('showForm', true);
 	},
 	render: function() {
 		var self = this,
