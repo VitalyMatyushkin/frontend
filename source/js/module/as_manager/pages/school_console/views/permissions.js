@@ -75,15 +75,15 @@ const PermissionView = React.createClass({
     _getQuickEditActionsFactory:function(evt){
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
+            binding = self.getDefaultBinding(),
             idAutoComplete = [],
             userId = evt.currentTarget.parentNode.dataset.userobj;
         idAutoComplete.push(userId);
         evt.currentTarget.parentNode.classList.remove('groupActionList_show');
         switch (evt.currentTarget.textContent){
             case 'Add Role':
-                rootBinding.set('popup',true);
                 rootBinding.set('groupIds',idAutoComplete);
-                self.forceUpdate();
+                binding.set('popup',true);
                 break;
             case 'Revoke All Roles':
                 self._revokeAllRoles(idAutoComplete);
@@ -105,16 +105,17 @@ const PermissionView = React.createClass({
         var actionStr = el.textContent,
             selections = chk,
             self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
+            rootBinding = self.getMoreartyContext().getBinding(),
+            binding = self.getDefaultBinding();
+
         if(actionStr !== ''){
             var ticked = [];
             for(var i=0; i<selections.length; i++)if(selections.item(i).checked===true)ticked.push(selections.item(i).dataset.id);
             switch (el.textContent){
                 case 'Add Role':
                     if(ticked.length >=1){
-                        rootBinding.set('popup',true);
                         rootBinding.set('groupIds',ticked);
-                        self.forceUpdate();
+                        binding.set('popup',true);
                     }else{
                         alert("Please Select at least 1 row");
                     }
@@ -162,32 +163,15 @@ const PermissionView = React.createClass({
         }
     },
     _accessRestriction:function(ids,action){
-        //TODO Why this code is comment?
         var self = this,
-            binding = self.getDefaultBinding(),
             confirmAction= window.confirm("Are you sure you want block user?");
         if(ids !== undefined && ids.length >=1){
             if(confirmAction === true){
-                switch(action){
-                    case 0:
-                        ids.forEach(function(id){
-                            window.Server.user.put({id:id},{blocked:false}).then(function(res){
-                                self.updateData();
-                                return res;
-                            });
-                        });
-                        break;
-                    case 1:
-                        ids.forEach(function(id){
-                            window.Server.user.put({id:ids},{blocked:true}).then(function(response){
-                                self.updateData();
-                                return response;
-                            });
-                        });
-                        break;
-                    default :
-                        break;
-                }
+                ids.forEach(function(id){
+                    window.Server.user.put({id:id},{blocked: action==1 }).then(function(){
+                        self.reloadData();
+                    });
+                });
             }
         }else{
             alert('Please select at least 1 row');
@@ -195,9 +179,9 @@ const PermissionView = React.createClass({
     },
     _closePopup:function(){
         var self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
-        rootBinding.set('popup',false);
-        self.forceUpdate();
+            binding = self.getDefaultBinding();
+        binding.set('popup',false);
+        self.reloadData();
     },
     getObjectVisibility:function(principal){
         if(principal !== undefined){
@@ -222,8 +206,9 @@ const PermissionView = React.createClass({
                     <TableField dataField="preset" width="10%" >Role</TableField>
                     <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
-                <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
-                    <GrantRole binding={rootBinding}/>
+                <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
+                    <GrantRole binding={binding.sub('grantRole')} userIdsBinding={rootBinding.sub('groupIds')}
+                               onSuccess={self._closePopup} />
                 </Popup>
             </div>
         )

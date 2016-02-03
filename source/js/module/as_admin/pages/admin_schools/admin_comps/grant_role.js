@@ -3,7 +3,6 @@
  */
 const   AutoComplete  = require('module/ui/autocomplete/autocomplete'),
         React         = require('react'),
-        ReactDOM      = require('reactDom'),
         If            = require('module/ui/if/if'),
         Immutable     = require('immutable'),
         Lazy          = require('lazyjs');
@@ -16,7 +15,8 @@ const GrantRole = React.createClass({
     },
     getDefaultState:function(){
         return Immutable.Map({
-            roleName:'teacher'
+            roleName:'teacher',
+            comment:''
         });
     },
     getSchools: function(filter) {
@@ -52,7 +52,7 @@ const GrantRole = React.createClass({
                         options:'i'
                     }
                 },
-                limit:30
+                limit:50
             }
         }).then(function (students) {
             if(schoolId){
@@ -76,28 +76,30 @@ const GrantRole = React.createClass({
      },
     onRoleSelectorChange:function(e){
         const   binding     = this.getDefaultBinding(),
-                selEl       = ReactDOM.findDOMNode(this.refs.roleSelector);
+                roleName    = e.target.value;
 
-        const roleName = selEl.options[selEl.selectedIndex].value;
         binding.set('roleName', roleName);
     },
     continueButtonClick:function(){
         const self = this,
             binding = self.getDefaultBinding(),
+            rootBinding = self.getMoreartyContext().getBinding(),
             confirmation = window.confirm("Are you sure you want to grant access?"),
             schoolId = binding.get('selectedSchoolId'),
             model = {
-                preset:binding.get('roleName') ,
+                preset:binding.get('roleName'),
                 schoolId:schoolId,
                 principalId:'',
-                comment:ReactDOM.findDOMNode(self.refs.commentArea).value,
+                comment:binding.get('comment'),
                 accepted:false
             };
 
-        let ids = self.props.userIdsBinding.toJS();
+        let ids = self.props.userIdsBinding.toJS(),
+            itsMe = rootBinding.get('userData.authorizationInfo.userId') === ids;
+
         if(!ids)
             console.error('Error! "userIdsBinding" is not set.');
-        ids = ids && !ids.length ? [ids] : ids;
+        ids = ids && typeof ids === 'string' ? [ids] : ids;
 
         if(binding.get('roleName') === 'parent'){
             model.studentId = binding.get('selectedStudentId');
@@ -107,12 +109,18 @@ const GrantRole = React.createClass({
                 model.principalId = currentId;
                 window.Server.Permissions.post(model)
                     .then(function(result){
-                        return window.Server.setPermissions.post({id:result.id},{accepted:true});
-                    })
-                    .then(function(setPermissions){
-                        self.props.onSuccess && self.props.onSuccess();
-                        return;
+                        if(!itsMe)
+                            return window.Server.setPermissions.post({id:result.id},{accepted:true})
+                                .then(function(setPermissions){
+                                    self.props.onSuccess && self.props.onSuccess();
+                                    return;
+                                });
+                        else{
+                            self.props.onSuccess && self.props.onSuccess();
+                            return;
+                        }
                     });
+
             });
         }
     },
@@ -144,7 +152,7 @@ const GrantRole = React.createClass({
                         </div>
                     </If>
                     <h4>Comment:</h4>
-                    <textarea ref="commentArea"></textarea>
+                    <textarea onChange={function(e){binding.set('comment', e.target.value);}}></textarea>
                     <div>
                         <input type="button" onClick={self.continueButtonClick} className="bButton bGrantButton" value="Grant"/>
                     </div>
