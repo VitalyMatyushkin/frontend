@@ -108,8 +108,7 @@ const HomeFixtures = React.createClass({
         return (
             <div className="eSchoolFixtures">
                 <div className="eSchoolFixtureTab">
-                    <i>Fixtures</i>
-                    <span></span>
+                    <h1>Fixtures</h1><hr/>
                 </div>
                 {fixtures}
             </div>

@@ -17,12 +17,13 @@ SchoolHomePage = React.createClass({
             <div className="eSchoolHomePage">
                 <HomeHeader binding={binding}/>
                 <div className="eSchoolBodyWrapper">
+                    <HomeCalender binding={binding} />
                     <HomeFixture binding={binding} />
                     <HomeNews binding={binding}/>
-                    <HomeCalender binding={binding} />
                     <HomeBlog binding={binding}  />
                 </div>
                 <div className="eSchoolHomeFooter">
+                    <img src = "images/logo.png"></img>
                     &copy;All Rights Reserved, SquadInTouch.com  SquadInTouch.com &trade;
                 </div>
             </div>

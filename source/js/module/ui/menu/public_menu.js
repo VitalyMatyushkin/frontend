@@ -42,7 +42,7 @@ PublicMenu = React.createClass({
         return(
             <div className="bTopMenu bPublicMenu">
                 <span>Menu</span>
-                <span className="hBurgerIcon" onClick={self.menuToggle.bind(null,this)}><SVG classes="" icon="icon_menu"></SVG></span>
+                <span className="hBurgerIcon" onClick={self.menuToggle.bind(null,this)}><img src="images/menu.png"/></span>
                 <div className={menuClasses}>
                     {menuNodes}
                 </div>

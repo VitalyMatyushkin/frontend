@@ -60,7 +60,7 @@ TypeConfirmText = React.createClass({
 		var self = this,
 			defaultValue = self.getDefaultBinding().get('defaultValue');
 
-		self._forceNewValue(defaultValue);
+		//self._forceNewValue(defaultValue);
 
 		return (
 			<div>

@@ -58,6 +58,15 @@ const OneSchoolPage = React.createClass({
                     name: 'schools',
                     key: 'schools'
                 },{
+                   href:'/#admin_schools/admin_views/forms',
+                    name:'Forms',
+                    key:'forms'
+                },{
+                    href:'/#admin_schools/admin_views/houses',
+                    name:'Houses',
+                    key:'houses'
+
+                },{
                     href:'/#admin_schools/admin_views/logs',
                     name:'Activity Log',
                     key:'Log'
@@ -94,6 +103,8 @@ const OneSchoolPage = React.createClass({
                         <Route path="/admin_schools/admin_views/archive" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_archive"/>
                         <Route path="/admin_schools/admin_views/logs" binding={binding.sub('logs')} component="module/as_admin/pages/admin_schools/admin_views/admin_activityLogs"/>
                         <Route path="/admin_schools/admin_views/create_user" binding={binding.sub('userDetailPage')} component="module/as_admin/pages/admin_add/user"/>
+                        <Route path="/admin_schools/admin_views/forms /admin_schools/admin_views/forms/:mode" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/classes/classes_page"/>
+                        <Route path="/admin_schools/admin_views/houses /admin_schools/admin_views/houses/:mode" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/houses/houses_page" />
                     </RouterView>
                 </div>
             </div>
