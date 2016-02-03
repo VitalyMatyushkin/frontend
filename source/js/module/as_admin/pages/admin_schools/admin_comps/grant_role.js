@@ -54,7 +54,23 @@ const GrantRole = React.createClass({
         });
     },
     onStudentSelect:function(id, response, model){
-        this.getDefaultBinding().set('selectedStudentId',id);
+        const self = this,
+            binding = self.getDefaultBinding(),
+            schoolId = binding.get('selectedSchoolId');
+
+        window.Server.getAllStudents.get({
+            filter:{
+                where:{
+                    userId:id//,
+                    //schoolId:schoolId
+                }
+            }
+        }).then(students => {
+            if(students && students.length == 1)
+                binding.set('selectedStudentId',students[0].id);
+            else
+                console.error('GrantRole: Load student error!');
+        });
     },
     onRoleSelectorChange:function(e){
         const   binding     = this.getDefaultBinding(),
@@ -67,7 +83,7 @@ const GrantRole = React.createClass({
         const self = this,
             binding = self.getDefaultBinding(),
             confirmation = window.confirm("Are you sure you want to grant access?"),
-            schoolId = binding.toJS('selectedSchoolId'),
+            schoolId = binding.get('selectedSchoolId'),
             model = {
                 preset:binding.get('roleName') ,
                 schoolId:schoolId,
@@ -82,7 +98,7 @@ const GrantRole = React.createClass({
         ids = ids && !ids.length ? [ids] : ids;
 
         if(binding.get('roleName') === 'parent'){
-            model.studentId = binding.toJS('selectedStudentId');
+            model.studentId = binding.get('selectedStudentId');
         }
         if(confirmation){
             ids.forEach(function(currentId){
@@ -101,7 +117,7 @@ const GrantRole = React.createClass({
     render:function(){
         const   self = this,
                 binding = self.getDefaultBinding(),
-                isParent = binding.get('roleName') === 'parent';
+                isParent = binding.get('roleName') === 'parent' && binding.get('selectedSchoolId') !== undefined;
 
         return (
             <div className="bGrantContainer">
