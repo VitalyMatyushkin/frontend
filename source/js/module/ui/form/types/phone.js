@@ -16,6 +16,18 @@ TypePhone =  React.createClass({
 			self._forceNewValue(binding.get('defaultValue'));
 		});
 	},
+	componentWillReceiveProps:function(newProps){
+		var self = this,
+			binding = self.getDefaultBinding();
+		if(binding.get('defaultValue')!==undefined && (newProps.binding.get('defaultValue') === binding.get('defaultValue'))){
+			ReactDOM.findDOMNode(self.refs.fieldInput).value = newProps.binding.get('defaultValue');
+		}
+	},
+	componentWillUnmount:function(){
+		var self = this,
+			binding = self.getDefaultBinding();
+		binding.remove();
+	},
 	_forceNewValue: function(value) {
 		var self = this,
 			oldValue;
@@ -41,7 +53,7 @@ TypePhone =  React.createClass({
 		var self = this,
 			defaultValue = self.getDefaultBinding().get('defaultValue');
 
-		self._forceNewValue(defaultValue);
+		//self._forceNewValue(defaultValue);
 
 		return (
 			<div className="eForm_fieldInput">

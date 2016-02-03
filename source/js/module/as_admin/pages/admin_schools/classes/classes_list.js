@@ -9,8 +9,13 @@ const ClassListPage = React.createClass({
 	serviceName: 'forms',
     sandbox:true,
     _getDataPromise:function(){
-        return window.Server.getAllForms.get();
+        return window.Server.getAllForms.get({filter:{include:{relation:'school'}}});
     },
+	_getSchoolDetails:function(school){
+		if(school !== undefined){
+			return school.name;
+		}
+	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -18,6 +23,7 @@ const ClassListPage = React.createClass({
 		return (
 			<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()}
                    getDataPromise={self._getDataPromise}>
+				<TableField width="20%" dataField="school" filterType="none" parseFunction={self._getSchoolDetails}>School</TableField>
 				<TableField width="40%" dataField="name" dataFieldKey="name" filterType="none">Name</TableField>
 				<TableField width="40%" dataField="age" filterType="number" filterType="none"
                             inputParseFunction={function(value) {return value.replace(/y/gi, '');}}

@@ -13,11 +13,16 @@ TypeDrop = React.createClass({
     componentWillMount:function(){
         var self = this;
     },
-    componentDidMount:function(){
-        var self  = this,
-            globalBinding = self.getMoreartyContext().getBinding(),
-            el = ReactDOM.findDOMNode(self.refs.dropSelect);
-        globalBinding.set('dropDownStatus',el.value);
+    componentWillReceiveProps:function(newProps){
+        var self = this,
+            globalBinding = self.getMoreartyContext().getBinding();
+        if(newProps.binding.get('value')!==''){
+            ReactDOM.findDOMNode(self.refs.dropSelect).value = newProps.binding.get('value');
+            globalBinding.set('dropDownStatus',newProps.binding.get('value'));
+        }else{
+            ReactDOM.findDOMNode(self.refs.dropSelect).value = "Active";
+            globalBinding.set('dropDownStatus','Active');
+        }
     },
     _renderChildOptions:function(){
         var self = this,
