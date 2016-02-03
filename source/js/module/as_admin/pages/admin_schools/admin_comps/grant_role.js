@@ -5,12 +5,13 @@ const   AutoComplete  = require('module/ui/autocomplete/autocomplete'),
         React         = require('react'),
         ReactDOM      = require('reactDom'),
         If            = require('module/ui/if/if'),
-        Immutable     = require('immutable');
+        Immutable     = require('immutable'),
+        Lazy          = require('lazyjs');
 
 const GrantRole = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
-        userIds: React.PropTypes.object,
+        userIdsBinding: React.PropTypes.object,
         onSuccess: React.PropTypes.func
     },
     getDefaultState:function(){
@@ -38,17 +39,30 @@ const GrantRole = React.createClass({
         this.getDefaultBinding().set('selectedSchoolId',id);
     },
     getStudents:function(filter){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            schoolId = binding.get('selectedSchoolId');
+
         return window.Server.users.get({
             filter:{
+                include:["permissions"],
                 where:{
                     lastName:{
                         like:filter,
                         options:'i'
                     }
                 },
-                limit:10
+                limit:30
             }
         }).then(function (students) {
+            if(schoolId){
+                students = Lazy(students).filter(s => {
+                    return s.permissions && s.permissions.length > 0 && !Lazy(s.permissions).filter(p => {
+                            return p.preset === 'student' && p.schoolId === schoolId
+                        }).isEmpty();
+                }).first(10).toArray();
+            }
+
             const list = students.map(s => {s.fullName = s.firstName + ' ' + s.lastName; return s;});
             return list;
         });
@@ -56,22 +70,10 @@ const GrantRole = React.createClass({
     onStudentSelect:function(id, response, model){
         const self = this,
             binding = self.getDefaultBinding(),
-            schoolId = binding.get('selectedSchoolId');
+            studentId = Lazy(model.permissions).find(p=> p.preset === 'student').studentId;
 
-        window.Server.getAllStudents.get({
-            filter:{
-                where:{
-                    userId:id//,
-                    //schoolId:schoolId
-                }
-            }
-        }).then(students => {
-            if(students && students.length == 1)
-                binding.set('selectedStudentId',students[0].id);
-            else
-                console.error('GrantRole: Load student error!');
-        });
-    },
+        binding.set('selectedStudentId',studentId);
+     },
     onRoleSelectorChange:function(e){
         const   binding     = this.getDefaultBinding(),
                 selEl       = ReactDOM.findDOMNode(this.refs.roleSelector);
@@ -92,9 +94,9 @@ const GrantRole = React.createClass({
                 accepted:false
             };
 
-        let ids = self.props.userIds.toJS();
+        let ids = self.props.userIdsBinding.toJS();
         if(!ids)
-            console.error('Error! "userIds" is not set.');
+            console.error('Error! "userIdsBinding" is not set.');
         ids = ids && !ids.length ? [ids] : ids;
 
         if(binding.get('roleName') === 'parent'){
