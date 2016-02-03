@@ -34,6 +34,7 @@ const EventVenue = React.createClass({
                             self.currentPostcode = postcode;
                             ReactDOM.findDOMNode(self.refs.home).checked = true;
                             binding.set('venue',postcode);
+                            binding.set('model.venue.postcode', postcode.id);
                             binding.set('venueList',postcodes);
                             self.forceUpdate();
                         })
@@ -49,6 +50,7 @@ const EventVenue = React.createClass({
         }else{
             window.Server.postCode.get().then(function(postcodes){
                 binding.set('venue',postcodes[0]);
+                binding.set('model.venue.postcode', postcodes[0].id);
                 binding.set('venueList',postcodes);
                 self.forceUpdate();
             }).catch(function(er){
