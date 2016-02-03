@@ -89,10 +89,11 @@ const GrantRole = React.createClass({
                 model.principalId = currentId;
                 window.Server.Permissions.post(model)
                     .then(function(result){
-                        window.Server.setPermissions.post({id:result.id},{accepted:true})
-                            .then(function(){
-                                self.props.onSuccess && self.props.onSuccess();
-                            });
+                        return window.Server.setPermissions.post({id:result.id},{accepted:true});
+                    })
+                    .then(function(setPermissions){
+                        self.props.onSuccess && self.props.onSuccess();
+                        return;
                     });
             });
         }

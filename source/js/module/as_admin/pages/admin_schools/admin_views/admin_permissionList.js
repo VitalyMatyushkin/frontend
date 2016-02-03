@@ -43,11 +43,12 @@ const AdminPermissionView = React.createClass({
     _getQuickEditActionsFactory:function(evt){
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
-            binding = self.getDefaultBinding().sub('data'),
+            binding = self.getDefaultBinding(),
+            data = binding.sub('data'),
             idAutoComplete = [],
             userId = evt.currentTarget.parentNode.dataset.userobj,
             currentAction;
-        userId = binding.get().find(function(item){
+        userId = data.get().find(function(item){
             return userId === item.id;
         });
         idAutoComplete.push(userId.id);
@@ -57,9 +58,8 @@ const AdminPermissionView = React.createClass({
         currentAction = evt.currentTarget.textContent;
         switch (currentAction){
             case 'Add Role':
-                rootBinding.set('popup',true);
                 rootBinding.set('groupIds',idAutoComplete);
-                self.forceUpdate();
+                binding.set('popup',true);
                 break;
             case 'Revoke All Roles':
                 self._revokeAllRoles(idAutoComplete);
@@ -85,7 +85,10 @@ const AdminPermissionView = React.createClass({
             binding = self.getDefaultBinding();
         if(actionStr !== ''){
             var ticked = [],filterTick=[];
-            for(var i=0; i<selections.length; i++)if(selections.item(i).checked===true)ticked.push(selections.item(i).dataset.id);
+            for(var i=0; i<selections.length; i++)
+                if(selections.item(i).checked===true)
+                    ticked.push(selections.item(i).dataset.id);
+
             ticked.forEach(function(t,i){
                 filterTick.push(
                     binding.get().find(function(dt){
@@ -97,9 +100,8 @@ const AdminPermissionView = React.createClass({
             switch (el.innerText){
                 case 'Add Role':
                     if(ticked.length >=1){
-                        rootBinding.set('popup',true);
                         rootBinding.set('groupIds',ticked);
-                        self.forceUpdate();
+                        binding.set('popup',true);
                     }else{
                         alert("Please Select at least 1 row");
                     }
@@ -174,9 +176,9 @@ const AdminPermissionView = React.createClass({
     },
     _closePopup:function(){
         var self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
-        rootBinding.set('popup',false);
-        self.forceUpdate();
+            binding = self.getDefaultBinding();
+        binding.set('popup',false);
+        self.reloadData();
     },
     getTableView:function(){
         var self = this,
@@ -197,9 +199,9 @@ const AdminPermissionView = React.createClass({
                     <TableField dataField="roles" filterType="none" >Role</TableField>
                     <TableField dataField="blocked" filterType="none" >Access</TableField>
                 </Table>
-                <Popup binding={rootBinding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
+                <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={binding.sub('grantRole')} userIds={rootBinding.sub('groupIds')}
-                               onSuccess={function(){rootBinding.set('popup',false);}} />
+                               onSuccess={self._closePopup} />
                 </Popup>
             </div>
         )
