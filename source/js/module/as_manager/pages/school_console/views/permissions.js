@@ -73,12 +73,15 @@ const PermissionView = React.createClass({
         //}
     },
     _getQuickEditActionsFactory:function(evt){
-        var self = this,
+        const self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             binding = self.getDefaultBinding(),
+            data = binding.toJS('data'),
             idAutoComplete = [],
-            userId = evt.currentTarget.parentNode.dataset.userobj;
-        idAutoComplete.push(userId);
+            id = evt.currentTarget.parentNode.dataset.userobj;
+        let permission = data.find(p => id === p.id);
+        idAutoComplete.push(permission.principalId);
+
         evt.currentTarget.parentNode.classList.remove('groupActionList_show');
         switch (evt.currentTarget.textContent){
             case 'Add Role':
@@ -106,11 +109,17 @@ const PermissionView = React.createClass({
             selections = chk,
             self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            data = binding.toJS('data');
 
         if(actionStr !== ''){
             var ticked = [];
-            for(var i=0; i<selections.length; i++)if(selections.item(i).checked===true)ticked.push(selections.item(i).dataset.id);
+            for(var i=0; i<selections.length; i++)
+                if(selections.item(i).checked===true) {
+                    let permission = data.find(p => selections.item(i).dataset.id === p.id)
+                    ticked.push(permission.principalId);
+                }
+
             switch (el.textContent){
                 case 'Add Role':
                     if(ticked.length >=1){
