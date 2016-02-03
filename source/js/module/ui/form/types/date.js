@@ -16,6 +16,19 @@ TypeDate =  React.createClass({
 			self._forceNewValue(binding.get('defaultValue'));
 		});
 	},
+	componentWillReceiveProps:function(newProps){
+		var self = this,
+			binding = self.getDefaultBinding();
+		if(binding.get('defaultValue')!==undefined){
+			ReactDOM.findDOMNode(self.refs.fieldInput).value =self._reverseDefaultDateValue(binding.get('defaultValue')) ;
+			self._reverseDefaultDateValue(binding.get('defaultValue'));
+		}
+	},
+	_reverseDefaultDateValue:function(value){
+		var valueArray = value.split('-'),
+			day = valueArray[2].split('T');
+		return 	day[0]+'.'+valueArray[1]+'.'+valueArray[0];
+	},
 	_forceNewValue: function(value) {
 		var self = this,
 			dateString,
@@ -59,7 +72,7 @@ TypeDate =  React.createClass({
 		return (
 			<div className="eForm_fieldInput">
 				<MaskedInput ref="fieldInput" onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
-				<span style={{display:'block'}}>Date format:MM/DD/YYYY</span>
+				<span className="dateFormat">Date format:MM/DD/YYYY</span>
 			</div>
 		)
 	}

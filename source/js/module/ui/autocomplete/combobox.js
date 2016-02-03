@@ -88,16 +88,22 @@ module.exports = React.createClass({
 
 	componentWillMount: function () {
 		var self = this;
-
 		self.defaulInputLabel = self.props.value;
-
 		self.setState({menu: this.makeMenu()});
-	},
 
+	},
+	componentWillUnmount:function(){
+		var self = this;
+		clearTimeout(self.defValueTimerId);
+	},
 	componentWillReceiveProps: function (newProps) {
-		this.setState({
-			menu: this.makeMenu(newProps.children)
+		var self = this;
+		self.setState({
+			menu: self.makeMenu(newProps.children)
 		});
+		self.defValueTimerId = setTimeout(function(){
+			ReactDOM.findDOMNode(self.refs.input).value=self.findInputValue(newProps.value);
+		},200);
 	},
 
 	/**
@@ -425,8 +431,6 @@ module.exports = React.createClass({
 				});  */
 			}
 		}
-
-
 		return (
 			<div className={this.getClassName()}>
 				<input

@@ -284,6 +284,25 @@
   display: inline-block;
   cursor: pointer;
 }
+.addNewForm{
+  background: url("/images/add-form.png") no-repeat;
+  display: inline-block;
+  width: 35px;
+  height: 25px;
+}
+.addNewForm:hover{
+  background: url("/images/add-form2.png") no-repeat;
+}
+
+.addHouse{
+  background: url("/images/add-house1.png") no-repeat;
+  display: inline-block;
+  width: 35px;
+  height: 25px;
+}
+.addHouse:hover{
+  background: url("/images/add-house.png") no-repeat;
+}
 
 .eSort{
   padding: 0 5px;

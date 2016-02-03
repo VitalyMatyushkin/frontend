@@ -264,6 +264,22 @@ const EventManagerBase = React.createClass({
 
 		return <div className="eManager_base">
             <div className="eManager_group">
+                {'Choose Date'}
+                <Morearty.DOM.input
+                    className="eManager_field"
+                    type="text"
+                    placeholder={'choose date'}
+                    />
+            </div>
+            <div className="eManager_group">
+                {'Time'}
+                <Morearty.DOM.input
+                    className="eManager_field"
+                    type="text"
+                    placeholder={''}
+                    />
+            </div>
+            <div className="eManager_group">
                 {'Event Name'}
                 <Morearty.DOM.input
                     className="eManager_field"
@@ -271,7 +287,7 @@ const EventManagerBase = React.createClass({
                     value={binding.get('model.name')}
                     placeholder={'enter name'}
                     onChange={Morearty.Callback.set(binding.sub('model.name'))}
-                />
+                    />
             </div>
             <If condition={!!binding.get('model.name')}>
                 <div className="eManager_group">
@@ -345,12 +361,6 @@ const EventManagerBase = React.createClass({
                         {type === 'inter-schools' ? 'Choose school' : null}
                         <If condition={type === 'inter-schools'} key={'if-choose-school'}>
                             <div>
-                                <input
-                                    key="firstSchool"
-                                    disabled="disabled"
-                                    value={activeSchoolName}
-                                    type="text"
-                                    className="eManager_eField" />
                                 <Autocomplete
                                     serviceFilter={services[type]}
                                     serverField="name"

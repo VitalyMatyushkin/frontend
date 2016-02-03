@@ -201,10 +201,10 @@ const ListPageMixin = {
                             <div className="bButton" onClick={self._getAddNewSchoolFunction}>Add New School</div>
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='forms'}>
-                            <div className="addButton" onClick={self._addNewClassFunction}>New Form</div>
+                            <div className="addButton addNewForm" onClick={self._addNewClassFunction}></div>
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='houses'}>
-                            <div className="addButton" onClick={self._addNewHouseFunction}>New House</div>
+                            <div className="addButton addHouse" onClick={self._addNewHouseFunction}></div>
                         </If>
                         <If condition={self.isSuperAdminPage === true}>
                             <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>

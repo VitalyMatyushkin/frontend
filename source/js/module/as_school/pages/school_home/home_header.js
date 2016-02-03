@@ -78,17 +78,13 @@ const HomeHeader = React.createClass({
                     <img ref="schoolMainBanner" className="transitionImage" src="http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG" />
                 </div>
                 <div className="eSchoolMastHead">
-                    <div className="eSchoolGreeting">
-                        <span className="eSchoolSalute">Welcome <i>to</i></span>
-                        <span className="eSchoolName">{schoolName}</span>
-                    </div>
                     <div className="eSchoolMotto">
                         <div className="mottoWrapper">
-                            <div className="eSchoolMottoText">
-                                {schoolMotto}
-                            </div>
                             <div className="eSchoolBlazon">
                                 <img src={schoolBlazon}/>
+                            </div>
+                            <div className="eSchoolMottoText">
+                                {schoolMotto}
                             </div>
                         </div>
                     </div>
