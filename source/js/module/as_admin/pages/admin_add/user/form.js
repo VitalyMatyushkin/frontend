@@ -8,8 +8,9 @@ UserForm = React.createClass({
 		onSuccess: React.PropTypes.func,
 		otherService:React.PropTypes.string
 	},
-	onSuccess: function() {
+	onSuccess: function(data) {
 		var self = this;
+		console.log(data);
 		self.showForm = false;
 	},
 	render: function() {

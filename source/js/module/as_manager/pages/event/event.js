@@ -10,6 +10,7 @@ const   classNames      = require('classnames'),
         React           = require('react'),
         ReactDOM        = require('reactDom'),
         Comments        = require('./view/event_blog'),
+        VenuePreview    = require('../events/manager/venue_preview'),
         Immutable       = require('immutable');
 
 const EventView = React.createClass({
@@ -203,6 +204,7 @@ const EventView = React.createClass({
                         <If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
                             <div className="eEvent_shadowCommentText">{self.commentContent}</div>
                         </If>
+                        <VenuePreview binding={binding}/>
                         <EventAlbums binding={binding} />
                         <EventTeams binding={binding} />
                         <If condition={((binding.get('mode') === 'general') && (binding.get('model.resultId') !== undefined)) || false}>

@@ -10,9 +10,18 @@ const RegiseterUserPage = React.createClass({
 			showForm: true
 		});
 	},
-	onSuccess: function() {
+	onSuccess: function(data) {
 		var self = this;
-		self.getDefaultBinding().set('showForm', false);
+		window.Server.user.put({id:data.id}, {
+			verified:{
+				email:true,
+				persona:true,
+				phone:true
+			}
+		}).then(function(res){
+			self.getDefaultBinding().set('showForm', false);
+			return res;
+		});
 	},
 	onDone: function() {
 		var self = this;
