@@ -9,7 +9,6 @@ RegiseterUserDone = React.createClass({
 	render: function() {
 		var self = this;
 		document.location.hash = 'admin_schools/permissions';
-		window.location.reload(true);
 		return null;
 	}
 });

@@ -20,8 +20,7 @@ const RegiseterUserPage = React.createClass({
 				phone:true
 			}
 		}).then(function(res){
-			//binding.set('showForm', false);
-			//window.location.reload(true);
+			document.location.hash = 'admin_schools/permissions';
 			return res;
 		});
 	},
@@ -33,13 +32,7 @@ const RegiseterUserPage = React.createClass({
 	render: function() {
 		var self = this,
 			currrentView;
-
-		if (self.getDefaultBinding().get('showForm')) {
-			currrentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
-		} else {
-			currrentView = <RegisterDone onSingin={self.onDone} />
-		}
-
+		currrentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
 		return (
 			<div>
 				{currrentView}
