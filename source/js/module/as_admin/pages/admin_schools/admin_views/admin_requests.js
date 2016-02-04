@@ -15,6 +15,9 @@ const AdminRequest = React.createClass({
     groupActionList:['Accept','Decline'],
     filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
     //filters:{include:['principal','school'],where:{and:[{"accepted":"undefined"}]}},
+    componentWillMount:function(){
+        this.updateSubMenu();
+    },
     getSchoolName:function(school){
         if(school !== undefined ){
             return school.name;
@@ -31,7 +34,11 @@ const AdminRequest = React.createClass({
 	getCurrentPermission: function(id, permissions) {
         return Lazy(permissions).find(permission => permission.id && permission.id === id);
 	},
-
+    updateSubMenu:function(){
+        const   self                = this,
+            globalBinding       = self.getMoreartyContext().getBinding();
+        globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
+    },
     _getQuickEditActionFunctions:function(event){
 		const   self                = this,
 			    action              = event.currentTarget.textContent,
@@ -57,7 +64,7 @@ const AdminRequest = React.createClass({
 									return permission.get('id') !== id;
 								});
 							});
-                            globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
+                            self.updateSubMenu();
 						});
 					}
 				}
@@ -71,7 +78,7 @@ const AdminRequest = React.createClass({
                                 return permission.get('id') !== id;
                             });
                         });
-                        globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
+                        self.updateSubMenu();
                     });
                 }
                 break;
