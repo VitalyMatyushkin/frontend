@@ -36,9 +36,11 @@ FixtureCarousel = React.createClass({
     _sortFixtureData:function(data){
         var self = this;
         if(data !== undefined && data !== null){
-            var sortedByStatus = data.filter(function(f){
-                return f.status === 'closed';
-            });
+            var sortedByStatus = data;
+            // TODO What about when we do not have closed fixtures?
+            //    data.filter(function(f){
+            //    return f.status === 'closed';
+            //});
             return (
                 <div>
                     <div className="blogAuthorPicCarousel">
