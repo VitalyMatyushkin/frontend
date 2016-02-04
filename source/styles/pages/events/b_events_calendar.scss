@@ -12,7 +12,6 @@ $border-color: #c2c2c2;
   margin-left: 10px;
   border: $BORDER;
   background: #fff;
-  padding: 0 5px;
   min-width: 500px;
 }
 
@@ -45,10 +44,13 @@ $border-color: #c2c2c2;
 
 .eChallenge_rivals {
   height: 18px;
-  justify-content: space-between;
+  min-width: 200px;
+  display: flex;
+  justify-content: center;
 }
 .eChallenge_date{
   color: $COLOR;
+  width: 50px;
 }
 
 .eChallenge_name{
@@ -56,6 +58,19 @@ $border-color: #c2c2c2;
   margin: 0 5px;
 }
 .eChallenge_type{
-  min-width: 100px;
+  width: 100px;
   margin: 0 5px;
+}
+.eChallenge_rivalName{
+  width: 100px;
+  padding: 0 5px;
+}
+.eChallenge_title{
+  display: flex;
+  text-align: center;
+  font-size: 16px;
+  color: $COLOR;
+  background: $MAIN_COLOR;
+  height: 40px;
+  line-height: 42px;
 }

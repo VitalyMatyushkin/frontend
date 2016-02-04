@@ -22,7 +22,6 @@ Team = React.createClass({
 
         return players.get().map(function (player) {
 			return <div className="bPlayer mMini" key={player.get('id')}>
-				<span className="ePlayer_gender">{player.get('user').get('gender').toUpperCase()}</span>
 				<span className="ePlayer_name">{player.get('user').get('firstName')} {player.get('user').get('lastName')}</span>
 				<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, player.get('id'))}>
 					<SVG icon="icon_trash" />
@@ -35,6 +34,11 @@ Team = React.createClass({
             rivalBinding = self.getBinding('rival');
 
         return <div className="bTeam" key={rivalBinding.get('id')}>
+            <div className="bPlayer_title">
+                <span className="ePlayer_name">Name</span>
+                <span className="ePlayer_position">Position</span>
+                <span className="ePlayer_field">field</span>
+            </div>
             {self.getPlayers()}
         </div>
 
