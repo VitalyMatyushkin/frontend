@@ -211,9 +211,9 @@ const EventManager = React.createClass({
                 </If>
             </div>
 			<div className="eEvents_buttons">
-				{step > 1 ? <span className="bButton eEvents_button" onClick={self.toBack}>Back</span> : null}
-				{step < titles.length ? <span className="bButton eEvents_button" onClick={self.toNext}>Next</span> : null}
-				{step === titles.length ? <span className="bButton eEvents_button mFinish" onClick={self.toFinish}>Finish</span> : null}
+				{step > 1 ? <span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span> : null}
+				{step < titles.length ? <span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span> : null}
+				{step === titles.length ? <span className="eEvents_button mFinish" onClick={self.toFinish}>Finish</span> : null}
 			</div>
 		</div>;
 	}

@@ -13,14 +13,41 @@ $green-color: #00AE68;
 }
 
 .eEvents_buttons {
-  width: 100%;
+  width: 650px;
   display: flex;
+  justify-content: flex-end;
+  margin: auto;
+  color: #939598;
+  font-size: 16px;
+  font-weight: bold;
 }
-
 .eEvents_button {
   margin-right: 10px;
+}
+.eEvents_button:hover {
+  color: #235413;
 }
 .eEvents_venue_map{
   width:600px !important;
 }
-
+.eEvents_back{
+  background: url("/images/arrow_back1.png") no-repeat left;
+  float: left;
+  height: 16px;
+  line-height: 18px;
+  width: 50px;
+  text-align: right;
+}
+.eEvents_back:hover{
+  background: url("/images/arrow_back.png") no-repeat left;
+}
+.eEvents_next{
+  background: url("/images/arrow_next1.png") no-repeat right;
+  float: right;
+  height: 16px;
+  line-height: 18px;
+  width: 50px;
+}
+.eEvents_next:hover{
+  background: url("/images/arrow_next.png") no-repeat right;
+}
