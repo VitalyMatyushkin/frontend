@@ -74,10 +74,12 @@
   display: inline-block;
   box-sizing: border-box;
   height: 35px;
+  text-transform: uppercase;
 }
 
 .eManager_field.mTextArea {
   height: 35px;
+  padding-top: 9px;
 }
 
 .eManager_container {
@@ -106,6 +108,17 @@
 }
 
 .eManager_group .bCombobox {
-  width: 300px;
+  width: 200px;
   margin-top: 5px;
+  line-height: 30px;
+}
+.eManager_group .eCombobox_input{
+  height: 35px;
+  text-transform: uppercase;
+}
+.eManager_group .eCombobox_button{
+  text-align: right;
+}
+.eManager_group input:hover, textarea:hover, select:hover{
+  border-color: $COLOR;
 }
