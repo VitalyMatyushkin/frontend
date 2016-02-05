@@ -45,6 +45,9 @@ const HomeFixtures = React.createClass({
                 case 'cricket':
                     icon = <img classes="bIcon_fixture_mod" src="/images/cricket.png"></img>;
                     break;
+                case 'hockey':
+                    icon = <img classes="bIcon_fixture_mod" src="/images/hockey.png"></img>;
+                    break;
                 case 'rugby':
                     icon = <img classes="bIcon_fixture_mod" src="/images/rugby_ball.png"></img>;
                     break;

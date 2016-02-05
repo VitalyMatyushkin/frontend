@@ -299,27 +299,58 @@
 .eSchoolCalendarWrapper .bCalendar{
   margin-left: 40px;
   width: 45%;
-  float:left;
   border-right: 2px solid #c8cdd0;
   margin-bottom: 20px;
+  display: none;
+}
+.eSchoolCalendarWrapper:active .bCalendar,
+.eSchoolCalendarWrapper:focus .bCalendar
+{
+  display: block;
+}
+.eSchoolCalendarShow{
+  display: flex;
+  align-items: center;
+  color: $COLOR;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
 }
 .eSchoolCalenderFixtureList{
-  width: 50%;
+  width: 900px;
   height: auto;
-  float:left;
+  margin: auto;
 }
 .eSchoolCalenderFixtureList h4{
   text-align: center;
 }
 .eSchoolFixtureListItem{
-  margin-left: 20px;
+  width: 900px;
+  height: 130px;
+  margin: 10px auto;
+  background: #fff;
+  border: $BORDER;
+  color: #939598;
+  text-transform: capitalize;
+}
+.eSchoolFixtureListItem img{
+  height: 130px;
+  float: left;
+  margin-right: 30px;
 }
 .eSchoolFixtureListItem h5{
-  font-style: italic;
-  color: $MAIN_COLOR;
+  font-size: 14px;
+  color: $COLOR;
   text-transform: uppercase;
+  font-weight: bold;
+  margin-top: 20px;
+}
+.eSchoolFixtureListItem h2{
+  font-size: 22px;
+  font-weight: bold;
+  color: #333132;
+  text-transform: none;
   margin-bottom: 5px;
-  margin-top: 5px;
 }
 .eSchoolBlog{
   width: 960px;
