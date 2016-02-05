@@ -112,7 +112,7 @@ const Autocomplete = React.createClass({
 			self.responseData = data;
 			binding.set('response', data);
 			binding.set('loading', false);
-			self.isMounted()&&self.forceUpdate();
+			//self.isMounted()&&self.forceUpdate();
 		}):null;
 	},
 	_filterOnClient: function (userInput) {
@@ -142,7 +142,8 @@ const Autocomplete = React.createClass({
 		self.pendingRequest = self.props.serviceFullData().then(function (data) {
 			self.responseData = data;
 			self.setDefaultId();
-			self.isMounted()&&self.forceUpdate();
+			binding.set('response', data);
+			//self.isMounted()&&self.forceUpdate();
 		});
 	},
 	componentWillUnmount: function () {

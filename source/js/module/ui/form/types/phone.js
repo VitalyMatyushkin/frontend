@@ -16,13 +16,6 @@ TypePhone =  React.createClass({
 			self._forceNewValue(binding.get('defaultValue'));
 		});
 	},
-	componentWillReceiveProps:function(newProps){
-		var self = this,
-			binding = self.getDefaultBinding();
-		if(binding.get('defaultValue')!==undefined && (newProps.binding.get('defaultValue') === binding.get('defaultValue'))){
-			ReactDOM.findDOMNode(self.refs.fieldInput).value = newProps.binding.get('defaultValue');
-		}
-	},
 	componentWillUnmount:function(){
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -35,13 +28,23 @@ TypePhone =  React.createClass({
 		if (value !== undefined && self.refs.fieldInput && ReactDOM.findDOMNode(self.refs.fieldInput).value === '(___)___-____') {
 			ReactDOM.findDOMNode(self.refs.fieldInput).value = value;
 			self.fullValidate(value);
+		}else{
+			if(value !== undefined && self.refs.fieldInput){
+				self.fieldInputValue = value;
+				self.setValue(self.fieldInputValue);
+			}
 		}
 	},
 	handleBlur: function() {
 		var self = this,
 			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
-
-		self.setValue(inputValue);
+		//There is a default value (Old data) and the input value is empty then set the value to old one
+		//Else set to new input
+		if(inputValue ==='(___)___-____' && self.fieldInputValue !== undefined ){
+			self.setValue(self.fieldInputValue);
+		}else{
+			self.setValue(inputValue);
+		}
 	},
 	handleChange: function() {
 		var self = this,
@@ -57,7 +60,7 @@ TypePhone =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<MaskedInput ref="fieldInput" onBlur={self.handleBlur} onChange={self.handleChange} mask="(999)999-9999" />
+				<MaskedInput ref="fieldInput" value={self.fieldInputValue} onBlur={self.handleBlur} onChange={self.handleChange} mask="(999)999-9999" />
 			</div>
 		)
 	}

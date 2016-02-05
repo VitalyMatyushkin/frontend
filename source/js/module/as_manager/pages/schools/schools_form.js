@@ -43,7 +43,7 @@ SchoolForm = React.createClass({
                     <FormField type="text" field="owner" validation="required">Sports Department Email</FormField>
                 </FormColumn>
                 <FormColumn type="column">
-                    <FormField type="dropdown" field="status" defaultSelect={(binding.get('status')!==undefined?binding.get('status'):'Active')} optionChildren={['Active','Suspended','Inactive','Email Notifications']}>School Status</FormField>
+                    <FormField type="dropdown" field="status">School Status</FormField>
                 </FormColumn>
 				<FormColumn type="column">
 					<FormField type="hidden" field="pic">Upload blazon by clicking on the + button below</FormField>

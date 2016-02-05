@@ -31,11 +31,10 @@ const RegiseterUserPage = React.createClass({
 	},
 	render: function() {
 		var self = this,
-			currrentView;
-		currrentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
+			currentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
 		return (
 			<div>
-				{currrentView}
+				{currentView}
 			</div>
 		)
 	}

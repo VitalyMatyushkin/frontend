@@ -27,10 +27,7 @@ const EditSchoolForm = React.createClass({
         }
     },
     submitEdit: function(schoolData) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding();
-
+        var self = this;
         window.Server.school.put(self.schoolId, schoolData).then(function() {
             document.location.hash = 'admin_schools/admin_dashboard';
         });
