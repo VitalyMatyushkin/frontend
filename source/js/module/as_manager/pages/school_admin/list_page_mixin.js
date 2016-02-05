@@ -185,14 +185,14 @@ const ListPageMixin = {
                                      binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
                     </If>
                     <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
-                        <If condition={self.isSuperAdminPage && false}>
+                        {/*<If condition={self.isSuperAdminPage && false}>
                             <div className="filterBase_container">
                                 <span>Filter base: </span>
                                 <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
                                 <input type="checkbox" className="bFilterCheck" ref="otherCheck" value="others" onChange={self.toggleBaseFilters.bind(null,'otherCheck')}/><span>Others Only</span>
                                 <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
                             </div>
-                        </If>
+                        </If>*/}
                         <div className="addButton" onClick={self.toggleFilters}><img src="images/search.png"/> {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
                             <div className="addButton" onClick={self._getAddNewStudentFunction}><img src="images/add_students.png"/></div>
