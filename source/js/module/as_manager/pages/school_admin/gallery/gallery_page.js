@@ -40,10 +40,10 @@ const GalleryListPage = React.createClass({
         const self = this,
             binding = self.getDefaultBinding();
 
-        window.Server.album.get({id:albumId}).then(album => binding.set('defaultAlbum',album));
+        window.Server.album.get(albumId).then(album => binding.set('defaultAlbum',album));
     },
     updateSchool:function(activeSchoolId, albumId){
-        window.Server.school.put({id:activeSchoolId, defaultAlbumId:albumId});
+        window.Server.school.put(activeSchoolId, {defaultAlbumId:albumId});
     },
     getDefaultSchoolAlbum:function(){
         const self = this,
@@ -51,7 +51,7 @@ const GalleryListPage = React.createClass({
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
-        window.Server.school.get({id:activeSchoolId}).then(school => {
+        window.Server.school.get(activeSchoolId).then(school => {
             if(school){
                 school.defaultAlbumId && self.loadAlbum(school.defaultAlbumId);
                 !school.defaultAlbumId && self.createAlbum(activeSchoolId);
