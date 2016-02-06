@@ -38,7 +38,7 @@ const StudentEditPage = React.createClass({
 	},
 	submitEdit: function(data) {
 		var self = this;
-		window.Server.users.put(
+		window.Server.user.put(
 			{id:data.userId},
 			{
 				firstName: data.firstName,
@@ -46,8 +46,9 @@ const StudentEditPage = React.createClass({
 				birthday: data.birthday,
 				gender: data.gender
 			}
-		).then(function() {
-			window.Server.addStudentToSchool.put({id:self.activeSchoolId,fk:data.userId},{
+		).then(function(userDetails) {
+			console.log(userDetails);
+			window.Server.addStudentToSchool.put({id:self.activeSchoolId,fk:userDetails.id},{
 				nextOfKin:[{
 					name:data.name
 				}],

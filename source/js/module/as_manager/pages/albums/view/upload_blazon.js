@@ -1,6 +1,7 @@
 /**
  * Created by bridark on 08/06/15.
  */
+    //TODO refactor this component
 const   classNames  = require('classnames'),
         If          = require('module/ui/if/if'),
         React       = require('react'),
