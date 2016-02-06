@@ -94,81 +94,87 @@
 }
 
 .bFixtureContainer{
-  border-bottom: 1px solid #CACACA;
+  border: $BORDER;
   cursor: pointer;
-  box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.3);
-  margin-top: 15px;
+  margin: 10px auto;
   position: relative;
-  height: auto;
-  width: 100%;
-  float:left;
+  height: 130px;
+  width: 900px;
+  background: #fff;
+  display: flex;
+  justify-content: flex-start;
+  color: #535353;
 }
 .bFixture_item{
-  float:left;
   text-align: center;
-  padding: 10px;
-  margin: 10px 0 10px 0;
 }
 .bFixtureIcon{
-  width: 200px;
+  width: 180px;
   height:auto;
-  border-right: 2px solid #c0c0c0;
+  margin: auto;
 }
 .bFixtureDate{
-  width: 200px;
+  width: 280px;
   height: auto;
-  border-right: 2px solid #c0c0c0;
+  border-right: $BORDER;
+  text-align: left;
 }
 .bFixtureOpponent{
-  width: 160px;
+  width: 180px;
   height: auto;
 }
 .bFixtureOpponent img{
-  width: 64px;
-  height: 64px;
+  height: 70px;
+  margin: 10px 0;
 }
 .bFixtureOpponent span{
   display: block;
+  border-top: $BORDER;
 }
 .bFixtureResult{
-  width: 100px;
-  height: auto;
-  background:lighten($MAIN_COLOR,10%);
+  width: 90px;
+  min-height: 100px;
+  background: #007dbe;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .bIcon_fixture_mod{
-  width: 100px !important;
-  height: 50px !important;
+  width: 60px !important;
+  height: 60px !important;
 }
 .bFix_date{
   text-transform: uppercase;
-  color:#888888;
-  font-weight: 900;
+  display: inline-block;
+  font-size: 20px;
+  margin: 54px 0 20px;
 }
 .bFix_time{
-  border-bottom: 2px solid #c0c0c0;
-  color:#888888;
-  margin: 2px 0 2px 0;
-  font-weight: 900;
+  display: inline-block;
+  padding-left: 10px;
+  font-size: 20px;
+  margin: 54px 0 20px;
 }
 .bFix_type{
   text-transform: capitalize;
-  color:#888888;
-  font-weight: 500;
+  font-weight: bold;
+  border-top: $BORDER;
+  padding-top: 10px;
+  font-size: 14px;
 }
 .no-margin{
   margin:0;
 }
 .bFix_scoreText{
-  color:#888888;
   font-weight: 400;
   font-size: 18px;
-  margin-bottom: 23px;
+  margin-bottom: 5px;
+  text-transform: lowercase;
 }
 .bFix_scoreResult{
-  color:#888888;
   font-weight: 900;
   font-size: 26px;
-  margin-bottom: 23px;
 }
 
 .eSchoolFixtureTab.eNews_tab h1{
@@ -293,27 +299,58 @@
 .eSchoolCalendarWrapper .bCalendar{
   margin-left: 40px;
   width: 45%;
-  float:left;
   border-right: 2px solid #c8cdd0;
   margin-bottom: 20px;
+  display: none;
+}
+.eSchoolCalendarWrapper:active .bCalendar,
+.eSchoolCalendarWrapper:focus .bCalendar
+{
+  display: block;
+}
+.eSchoolCalendarShow{
+  display: flex;
+  align-items: center;
+  color: $COLOR;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;
 }
 .eSchoolCalenderFixtureList{
-  width: 50%;
+  width: 900px;
   height: auto;
-  float:left;
+  margin: auto;
 }
 .eSchoolCalenderFixtureList h4{
   text-align: center;
 }
 .eSchoolFixtureListItem{
-  margin-left: 20px;
+  width: 900px;
+  height: 130px;
+  margin: 10px auto;
+  background: #fff;
+  border: $BORDER;
+  color: #939598;
+  text-transform: capitalize;
+}
+.eSchoolFixtureListItem img{
+  height: 130px;
+  float: left;
+  margin-right: 30px;
 }
 .eSchoolFixtureListItem h5{
-  font-style: italic;
-  color: $MAIN_COLOR;
+  font-size: 14px;
+  color: $COLOR;
   text-transform: uppercase;
+  font-weight: bold;
+  margin-top: 20px;
+}
+.eSchoolFixtureListItem h2{
+  font-size: 22px;
+  font-weight: bold;
+  color: #333132;
+  text-transform: none;
   margin-bottom: 5px;
-  margin-top: 5px;
 }
 .eSchoolBlog{
   width: 960px;

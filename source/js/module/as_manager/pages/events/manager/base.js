@@ -372,7 +372,7 @@ const EventManagerBase = React.createClass({
                         </If>
                         {type === 'houses' ? 'Choose houses' : null}
                         <If condition={type === 'houses'}>
-                            <div>
+                            <div className="eChooseHouses">
                                 <Autocomplete
                                     serviceFilter={services[type]}
                                     serverField="name"

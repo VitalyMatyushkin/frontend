@@ -71,6 +71,7 @@ ChallengesList = React.createClass({
                 <div className="eChallenge_name">{event.get('name')}</div>
                 <div className="eChallenge_rivals">
                     <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
+                    <span>vs</span>
                     <span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
                 </div>
             </div>
@@ -80,7 +81,14 @@ ChallengesList = React.createClass({
         var self = this,
             binding = this.getDefaultBinding();
 
-        return <div className="eEvents_challenges">{self.getEvents()}</div>
+        return <div className="eEvents_challenges">
+            <div className="eChallenge_title">
+                <span className="eChallenge_date"></span>
+                <span className="eChallenge_type"></span>
+                <span className="eChallenge_name">Event Name</span>
+                <span className="eChallenge_rivals">Game Type</span>
+            </div>
+            {self.getEvents()}</div>
     }
 });
 

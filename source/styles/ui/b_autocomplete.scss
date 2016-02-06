@@ -23,7 +23,7 @@
   & div {
     cursor: pointer;
     &:hover {
-      background: #eee;
+      background: $MAIN_COLOR;
     }
   }
 }
@@ -63,11 +63,11 @@
 
 .eCombobox_option {
   display: block;
-  padding: 4px 9px;
   cursor: default;
-  color: black;
+  color: #333132;
+  font-size: 14px;
+  font-weight: normal;
 }
-
 .eCombobox_option.mSelected{
   background: $MAIN_COLOR !important;
   color: #ffffff !important;
@@ -80,4 +80,7 @@
 }
 .eCombobox_showOptions{
   display: block;
+}
+.eChooseHouses{
+  display: flex;
 }

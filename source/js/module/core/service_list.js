@@ -40,7 +40,7 @@ serviceList = {
 		serviceList.getThisSchool = new Service('/schools/getAllSchools',binding);
 
 		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);
-		serviceList.fixturesBySchoolId = new Service('/schools/{schoolId}/public/events', binding);
+		serviceList.fixturesBySchoolId = new Service('/schools/public/events?schoolId={schoolId}', binding);
 
 		serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
