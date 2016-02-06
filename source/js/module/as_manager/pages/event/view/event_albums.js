@@ -1,12 +1,9 @@
 const 	React 			= require('react'),
 		Immutable 		= require('immutable'),
-		ReactDOM		= require('reactDom'),
-		Lazy            = require('lazyjs'),
-		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		Album			= require('module/ui/gallery/album_item');
 
 const EventHeader = React.createClass({
-	mixins: [Morearty.Mixin, InvitesMixin],
+	mixins: [Morearty.Mixin],
 	renderAlbum: function(album, index) {
 		const self = this,
 			binding = self.getDefaultBinding(),
@@ -18,15 +15,6 @@ const EventHeader = React.createClass({
 			//coverPhoto = coverId ? Lazy(photos).find(photo => photo.id === coverId) : photos[0],
 			//cover = coverPhoto ? coverPhoto.pic + '/contain?height=100': noImage,
 			//styles = {backgroundImage: 'url(' + cover + ')', width: self.state.albumWidth};
-
-		//return (
-		//	<div onClick={function(e){self.onClickAlbum(e, album);}} key={'album-' + index} className='eEventAlbums_album' style={styles}>
-		//		<span onClick={function(e){self.onClickEditAlbum(e, album);}} className='eEventAlbums_albumEdit'></span>
-		//		<span onClick={function(e){self.onClickDeleteAlbum(e, album);}} className='eEventAlbums_albumDelete'></span>
-		//		<span className='eEventAlbums_albumTitle'>{album.get('name')}</span>
-		//	</div>
-		//);
-
 		return (
 			<Album binding={albumSub} key={album.id} onView={self.onClickAlbum} onEdit={self.onClickEditAlbum}
 				   onDelete={self.onClickDeleteAlbum} />

@@ -32,7 +32,7 @@ const AlbumItem = React.createClass({
 			binding = self.getDefaultBinding(),
 			a = binding.toJS();
 
-		self.props.onEdit && confirm("Delete this album?") && self.props.onEdit(a);
+		self.props.onDelete && confirm("Delete this album?") && self.props.onDelete(a);
 
 		e.stopPropagation();
 	},
@@ -42,14 +42,15 @@ const AlbumItem = React.createClass({
 		const self = this,
 			binding = self.getDefaultBinding(),
 			a = binding.toJS(),
-			cover = a.coverUrl ? a.coverUrl + '/contain?height=100': noImage,
+			name = a ? a.name : '',
+			cover = a && a.coverUrl ? a.coverUrl + '/contain?height=100': noImage,
 			styles = {backgroundImage: 'url(' + cover + ')', width: '100px'};
 
 		return (
 			<div onClick={self.onClickAlbum} className='eEventAlbums_album' style={styles}>
 				<span onClick={self.onClickEditAlbum} className='eEventAlbums_albumEdit'></span>
 				<span onClick={self.onClickDeleteAlbum} className='eEventAlbums_albumDelete'></span>
-				<span className='eEventAlbums_albumTitle'>{a.name}</span>
+				<span className='eEventAlbums_albumTitle'>{name}</span>
 			</div>
 		);
 	}
