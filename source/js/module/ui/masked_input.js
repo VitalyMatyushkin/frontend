@@ -38,7 +38,7 @@ var MaskedInput = React.createClass({
 	},
 
 	processValue: function (value) {
-		var mask = this.props.mask
+		var mask = this.props.mask;
 		var pattern = mask.replace(PTRN_REGEX, '_');
 		var rexps = {};
 
@@ -163,13 +163,15 @@ var MaskedInput = React.createClass({
 	},
 
 	_onFocus: function (e) {
-		this._onChange(e)
+		this._onChange(e);
 		if (this.props.onFocus) {
 			this.props.onFocus(e)
 		}
 	},
 	render: function () {
-		return <input type="text" {...this.props} {...this.mask.props}/>
+		//Use placeholder to display old information we already have
+		//Easier this way to use the mask to edit or add new data
+		return <input type="text" {...this.props} {...this.mask.props} placeholder={this.props.value} />
 	}
 });
 

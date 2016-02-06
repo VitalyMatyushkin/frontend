@@ -11,35 +11,30 @@ const RegiseterUserPage = React.createClass({
 		});
 	},
 	onSuccess: function(data) {
-		var self = this;
+		var self = this,
+			binding = self.getDefaultBinding();
 		window.Server.user.put({id:data.id}, {
 			verified:{
 				email:true,
-				persona:true,
+				personal:true,
 				phone:true
 			}
 		}).then(function(res){
-			self.getDefaultBinding().set('showForm', false);
+			document.location.hash = 'admin_schools/permissions';
 			return res;
 		});
 	},
 	onDone: function() {
-		var self = this;
-		self.getDefaultBinding().set('showForm', true);
+		var self = this,
+			binding = self.getDefaultBinding();
+		//binding.set('showForm', true);
 	},
 	render: function() {
 		var self = this,
-			currrentView;
-
-		if (self.getDefaultBinding().get('showForm')) {
-			currrentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
-		} else {
-			currrentView = <RegisterDone onSingin={self.onDone} />
-		}
-
+			currentView = <RegisterForm onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />;
 		return (
 			<div>
-				{currrentView}
+				{currentView}
 			</div>
 		)
 	}

@@ -14,9 +14,7 @@ StudentEditPage = React.createClass({
 	},
 	submitAdd: function(data) {
 		var self = this;
-
 		data.schoolId = self.activeSchoolId;
-		console.log(data);
 		//TODO So sick...
 		data.schoolId && window.Server.users.post({
 			firstName: data.firstName,

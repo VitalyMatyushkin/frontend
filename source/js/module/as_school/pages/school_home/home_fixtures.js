@@ -40,16 +40,19 @@ const HomeFixtures = React.createClass({
             var icon;
             switch (sport.name){
                 case 'football':
-                    icon = <SVG classes="bIcon_fixture_mod" icon="icon_soccer"></SVG>;
+                    icon = <img classes="bIcon_fixture_mod" src="/images/ball.png"></img>;
                     break;
                 case 'cricket':
-                    icon = <SVG classes="bIcon_fixture_mod" icon="icon_baseball"></SVG>;
+                    icon = <img classes="bIcon_fixture_mod" src="/images/cricket.png"></img>;
+                    break;
+                case 'hockey':
+                    icon = <img classes="bIcon_fixture_mod" src="/images/hockey.png"></img>;
                     break;
                 case 'rugby':
-                    icon = <SVG classes="bIcon_fixture_mod" icon="icon_football"></SVG>;
+                    icon = <img classes="bIcon_fixture_mod" src="/images/rugby_ball.png"></img>;
                     break;
                 default:
-                    icon = <SVG classes="bIcon_fixture_mod" icon="icon_baseball"></SVG>;
+                    icon = <img classes="bIcon_fixture_mod" src="/images/rounders.png"></img>;
                     break;
             }
             return icon;

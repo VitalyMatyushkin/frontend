@@ -165,7 +165,7 @@ const AdminPermissionView = React.createClass({
                        quickEditActions={self.groupActionList} addQuickActions={true}
                        isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} dataModel={UserModel}>
-                    <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
+                    <TableField dataField="checkBox" width="1%" filterType="none"/>
                     <TableField dataField="firstName" >Name</TableField>
                     <TableField dataField="lastName" >Surname</TableField>
                     <TableField dataField="email" >Email</TableField>

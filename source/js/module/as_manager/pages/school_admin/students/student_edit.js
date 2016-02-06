@@ -38,8 +38,7 @@ const StudentEditPage = React.createClass({
 	},
 	submitEdit: function(data) {
 		var self = this;
-		console.log(data);
-		window.Server.user.put(
+		window.Server.users.put(
 			{id:data.userId},
 			{
 				firstName: data.firstName,
