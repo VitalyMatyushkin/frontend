@@ -1,45 +1,75 @@
 /**
  * Created by bridark on 23/07/15.
  */
+    /*
+    This select button can be reused in situations where you want to provide select options that are not based on
+    a collection in the database:
+    For example a school status in the database is represented by a string field but we want administrator to have
+    options that would enable them to change that string value.
+    To customise: provide your own array of options @userProvidedOptions:Array, and selected or active selected option
+    @userActiveState:String
+     */
 var TypeDrop,
     React  = require('react'),
-    ReactDOM = require('reactDom');
+    TypeMixin = require('module/ui/form/types/type_mixin');
 TypeDrop = React.createClass({
-    mixins:[Morearty.Mixin],
+    mixins:[Morearty.Mixin, TypeMixin],
     propTypes:{
-        optionChildren: React.PropTypes.array.isRequired,
-        defaultSelect: React.PropTypes.string
+        userProvidedOptions:React.PropTypes.array,
+        userActiveState:React.PropTypes.string
+    },
+    getInitialState:function(){
+        return{
+            activeValue:'Active'
+        }
+    },
+    getDefaultProps:function(){
+        return{
+            defaultSelectOptions:[
+                'Active',
+                'Inactive',
+                'Suspended',
+                'Email Notifications'
+            ]
+        }
     },
     componentWillMount:function(){
-        var self = this;
-    },
-    componentDidMount:function(){
-        var self  = this,
-            globalBinding = self.getMoreartyContext().getBinding(),
-            el = ReactDOM.findDOMNode(self.refs.dropSelect);
-        globalBinding.set('dropDownStatus',el.value);
-    },
-    _renderChildOptions:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        return self.props.optionChildren.map(function(optionNode,i){
+        self.optionsToMap = self.props.defaultSelectOptions;
+        binding.addListener('defaultValue',function(){
+           self.isMounted()&&self.setState({activeValue:binding.get('defaultValue')});
+        });
+    },
+    componentDidMount:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        //If initial option list is provided
+        if(self.props.userProvidedOptions !== undefined && self.props.userActiveState!==undefined){
+            self.optionsToMap = self.props.userProvidedOptions;
+            binding.set('defaultValue', self.props.userActiveState);
+        }
+    },
+    _renderChildOptions:function(){
+        var self = this;
+        return self.optionsToMap.map(function(optionNode,i){
             return(
                 <option key={i} value={optionNode}>{optionNode}</option>
             )
         });
     },
-    _handleDropChange:function(){
+    _handleDropChange:function(e){
         var self = this,
-            globalBinding = self.getMoreartyContext().getBinding(),
-            el = ReactDOM.findDOMNode(self.refs.dropSelect);
-        globalBinding.set('dropDownStatus',el.value);
+            binding = self.getDefaultBinding(),
+            value = e.currentTarget.value;
+        binding.set('defaultValue',value);
+        self.setValue(value);
     },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding(),
             options = self._renderChildOptions();
         return (
-            <select ref="dropSelect" onChange={self._handleDropChange.bind(null,this)}>
+            <select value={self.state.activeValue} ref="dropSelect" onChange={self._handleDropChange}>
                 {options}
             </select>
         );

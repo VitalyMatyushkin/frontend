@@ -8,8 +8,13 @@ const HousesListPage = React.createClass({
 	serviceName: 'houses',
     sandbox:true,
     _getDataPromise:function(){
-        return window.Server.getAllHouses.get();
+        return window.Server.getAllHouses.get({filter:{include:{relation:'school'}}});
     },
+	_getSchoolDetails:function(school){
+		if(school !== undefined){
+			return school[0].name;
+		}
+	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -17,6 +22,7 @@ const HousesListPage = React.createClass({
 		return (
 			<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()}
 				   getDataPromise={self._getDataPromise}>
+				<TableField width="20%" dataField="school" filterType="none" parseFunction={self._getSchoolDetails}>School</TableField>
 				<TableField dataField="name" filterType="none" width="180px">House name</TableField>
 				<TableField dataField="description" filterType="none">Description</TableField>
 				<TableField dataField="colors" filterType="colors">Color</TableField>

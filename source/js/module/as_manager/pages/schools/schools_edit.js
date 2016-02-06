@@ -26,11 +26,11 @@ const EditSchoolForm = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
-        schoolData.pic = globalBinding.toJS().picUrl;
-		schoolData.status = globalBinding.get('dropDownStatus');
-		window.Server.school.put(self.schoolId, schoolData).then(function(res) {
-			document.location.hash = 'school_admin/summary';
-		});
+        //schoolData.pic = globalBinding.toJS().picUrl;
+		//schoolData.status = globalBinding.get('dropDownStatus');
+		//window.Server.school.put(self.schoolId, schoolData).then(function(res) {
+		//	document.location.hash = 'school_admin/summary';
+		//});
 
 	},
 	render: function() {

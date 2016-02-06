@@ -16,14 +16,7 @@ TypeDate =  React.createClass({
 			self._forceNewValue(binding.get('defaultValue'));
 		});
 	},
-	componentWillReceiveProps:function(newProps){
-		var self = this,
-			binding = self.getDefaultBinding();
-		if(binding.get('defaultValue')!==undefined){
-			ReactDOM.findDOMNode(self.refs.fieldInput).value =self._reverseDefaultDateValue(binding.get('defaultValue')) ;
-			self._reverseDefaultDateValue(binding.get('defaultValue'));
-		}
-	},
+	//Prepare date to be user friendly
 	_reverseDefaultDateValue:function(value){
 		var valueArray = value.split('-'),
 			day = valueArray[2].split('T');
@@ -33,14 +26,17 @@ TypeDate =  React.createClass({
 		var self = this,
 			dateString,
 			date;
-			//value;
-
 		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.value === '' || self.refs.fieldInput.value === '__.__.____')) {
 			date = new Date(value);
 			dateString = ('0' + (date.getMonth()+1)).slice(-2) + '.' + ('0' + date.getDate()).slice(-2) + '.' + date.getFullYear();
 
 			self.refs.fieldInput.value = dateString;
 			self.fullValidate(value);
+		}else{
+			if(value !== undefined && self.refs.fieldInput){
+				self.fieldInputValue = self._reverseDefaultDateValue(value);
+				self.setValue(self._converToIso(self.fieldInputValue));
+			}
 		}
 	},
 	_converToIso: function(dotString) {
@@ -57,7 +53,13 @@ TypeDate =  React.createClass({
 	handleBlur: function() {
 		var self = this,
 			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
-		self.setValue(self._converToIso(inputValue));
+		//There is a default value (Old data) and the input value is empty then set the value to old one
+		//Else set to new input
+		if(inputValue === '__.__.____'  && self.fieldInputValue !== undefined){
+			self.setValue(self._converToIso(self.fieldInputValue));
+		}else{
+			self.setValue(self._converToIso(inputValue));
+		}
 	},
 	handleChange: function() {
 		var self = this,
@@ -71,7 +73,7 @@ TypeDate =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<MaskedInput ref="fieldInput" onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
+				<MaskedInput ref="fieldInput" value={self.fieldInputValue} onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
 				<span className="dateFormat">Date format:MM/DD/YYYY</span>
 			</div>
 		)
