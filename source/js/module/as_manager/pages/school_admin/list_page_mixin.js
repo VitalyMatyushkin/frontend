@@ -84,7 +84,7 @@ const ListPageMixin = {
         document.location.hash = document.location.hash +'/add';
     },
     _getAddNewSchoolFunction:function(){
-        document.location.hash = '/schools/add';
+        document.location.hash = 'admin_schools/admin_views/add';
     },
     _adminCreateNewUser:function(){
         document.location.hash = 'admin_schools/admin_views/create_user';

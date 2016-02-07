@@ -24,7 +24,7 @@ const AddSchoolForm = React.createClass({
         });
 
         // Переход к списку школ
-        document.location.hash = 'schools';
+        document.location.hash = 'admin_schools/admin_views/list';
     },
     render: function() {
         var self = this;
