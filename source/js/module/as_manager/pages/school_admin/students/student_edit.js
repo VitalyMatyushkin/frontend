@@ -16,7 +16,7 @@ const StudentEditPage = React.createClass({
 
 		if (activeSchoolId && studentId) {
 			window.Server.student.get(studentId).then(function (data) {
-				window.Server.user.get(data.userId).then(function (userdata) {
+				window.Server.user.get({id:data.userId}).then(function (userdata) {
 					//TODO use filter include
 					data.firstName = userdata.firstName;
 					data.lastName = userdata.lastName;
@@ -38,37 +38,34 @@ const StudentEditPage = React.createClass({
 	},
 	submitEdit: function(data) {
 		var self = this;
-		window.Server.users.put(
-			{id:data.userId},
-			{
-				firstName: data.firstName,
-				lastName: data.lastName,
-				birthday: data.birthday,
-				gender: data.gender
-			}
-		).then(function() {
-			window.Server.addStudentToSchool.put({id:self.activeSchoolId,fk:data.userId},{
+		window.Server.user.put({
+			id:data.userId
+		},{
+			firstName:data.firstName,
+			lastName:data.lastName,
+			birthday:data.birthday,
+			gender:data.gender
+		}).then(function(userDetails){
+			window.Server.student.put({studentId:self.studentId},{
+				formId:data.formId,
+				houseId:data.houseId,
+				schoolId:data.schoolId,
 				nextOfKin:[{
 					name:data.name
 				}],
 				medicalInfo:{
 					allergy:data.allergy
 				}
-			}).then(function(){
-				delete data.firstName;
-				delete data.lastName;
-				delete data.birthday;
-				delete data.gender;
-				delete data.name;
-				delete data.allergy;
-				return window.Server.student.put(self.studentId, data);
-			}).catch(function(er){
-				alert(er.errorThrown+' Contact Server Support');
-			})
-		}).then(function() {
-			self.isMounted() && (document.location.hash = 'school_admin/students');
-		}).catch((e)=>{
-			alert(e.errorThrown+' Please contact server support');
+			}).then(function(studentDetails){
+				self.isMounted() && (document.location.hash = 'school_admin/students');
+				return studentDetails;
+			}).catch((error)=>{
+				alert(error.errorThrown+' occurred while updating student details');
+				self.isMounted() && (document.location.hash = 'school_admin/students');
+			});
+			return userDetails;
+		}).catch((error)=>{
+			alert(error.errorThrown+' occurred while updating user');
 			self.isMounted() && (document.location.hash = 'school_admin/students');
 		});
 	},

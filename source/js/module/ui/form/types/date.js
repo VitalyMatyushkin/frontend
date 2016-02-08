@@ -20,7 +20,7 @@ TypeDate =  React.createClass({
 	_reverseDefaultDateValue:function(value){
 		var valueArray = value.split('-'),
 			day = valueArray[2].split('T');
-		return 	day[0]+'.'+valueArray[1]+'.'+valueArray[0];
+		return 	valueArray[1]+'.'+day[0]+'.'+valueArray[0];
 	},
 	_forceNewValue: function(value) {
 		var self = this,
@@ -69,7 +69,7 @@ TypeDate =  React.createClass({
 	render: function () {
 		var self = this,
 			defaultValue = self.getDefaultBinding().get('defaultValue');
-		self._forceNewValue(defaultValue);
+		//self._forceNewValue(defaultValue);
 
 		return (
 			<div className="eForm_fieldInput">

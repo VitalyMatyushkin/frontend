@@ -6,18 +6,15 @@ const AddSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	submitAdd: function(schoolData) {
 		var self = this,
-			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
-		if(schoolData!==undefined){
-			schoolData.pic = globalBinding.get('picUrl');
-			schoolData.status = schoolData.status===''?globalBinding.get('dropDownStatus'):'Active';
-		}
 		window.Server.schools.post(schoolData).then(function(data) {
 			// Добавляемая школа всегда становится школой "по умолчанию"
 			if(document.location.href.indexOf('admin')=== -1){
 				globalBinding.set('userRules.activeSchoolId', data.id);
 			}
 			return data;
+		}).catch((error)=>{
+			alert(error.errorThrown+' occurred while adding school to database');
 		});
 
 		// Добавление школы в списк
@@ -27,7 +24,7 @@ const AddSchoolForm = React.createClass({
 		//	return ImmutableValue.push(schoolData);
 		//});
 
-		// Return to admin dashboard based on either manager or superadmin
+		 //Return to admin dashboard based on either manager or superadmin
 		if(document.location.href.indexOf('admin')!== -1){
 			document.location.hash = 'admin_schools/admin_views/list';
 		}else{

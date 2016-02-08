@@ -29,7 +29,7 @@ const EditSchoolForm = React.createClass({
     submitEdit: function(schoolData) {
         var self = this;
         window.Server.school.put(self.schoolId, schoolData).then(function() {
-            document.location.hash = 'admin_schools/admin_dashboard';
+            document.location.hash = 'admin_schools/admin_views/list';
         });
 
     },
