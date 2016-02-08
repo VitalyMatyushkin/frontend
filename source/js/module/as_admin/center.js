@@ -37,7 +37,7 @@ Center = React.createClass({
                         <Route path="/calendar" binding={binding.sub('schoolCalendar')} component="module/as_school/pages/calendar/calendar_page"  />
                         <Route path="/opponents/:subPage" binding={binding.sub('opponentsList')} component="module/as_school/pages/opponents/opponents_page"  />
                         <Route path="/schools/add " binding={binding.sub('schoolsPage')} component="module/as_manager/pages/schools/schools_add"	/>
-                        <Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/as_manager/pages/albums/albums"  />
+                        <Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/ui/gallery/albums"  />
                         <Route path="/admin_schools admin_schools/:subPage /admin_schools/:subPage/:mode" binding={binding.sub('adminSchoolList')} component="module/as_admin/pages/admin_schools/admin_dashboard"/>
                         <LoginRoute binding={binding.sub('userData')}  />
                         <LogoutRoute binding={binding.sub('userData')}  />

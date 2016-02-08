@@ -45,7 +45,7 @@ Center = React.createClass({
 							   component="module/as_manager/pages/event/event"/>
 
 						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')}
-							   component="module/as_manager/pages/albums/albums"/>
+							   component="module/ui/gallery/albums"/>
 
 					</RouterView>
 

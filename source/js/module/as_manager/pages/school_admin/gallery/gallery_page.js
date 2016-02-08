@@ -2,7 +2,7 @@
 const   React       = require('react'),
         Immutable   = require('immutable'),
         Popup       = require('module/ui/popup'),
-        Album	    = require('module/ui/gallery/album_item');
+        Album	    = require('module/ui/gallery/album/album_item');
 
 const GalleryListPage = React.createClass({
     mixins:[Morearty.Mixin],

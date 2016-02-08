@@ -1,5 +1,5 @@
 const   If          = require('module/ui/if/if'),
-        AlbumPhoto  = require('./album_photo'),
+        Photo       = require('./photo_item'),
         React       = require('react'),
         Immutable   = require('immutable');
 
@@ -16,10 +16,10 @@ const PhotoList = React.createClass({
         binding = self.getDefaultBinding(),
         photosBinding = binding.sub('photos'),
         photoBinding = photosBinding.sub(index),
-        photoid = photoBinding.get("id");
+        photoId = photoBinding.get("id");
 
         return (
-            <AlbumPhoto binding={photoBinding} key={'photo-' + photoid}
+            <Photo binding={photoBinding} key={'photo-' + photoId}
                     onPhotoClick={self.onPhotoClick}
                     onPhotoDelete={self.reloadPhotoList}
                     onPhotoPin={self.onPhotoPin}

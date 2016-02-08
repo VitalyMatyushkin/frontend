@@ -1,7 +1,7 @@
 const 	If 				= require('module/ui/if/if'),
 		SubMenu 		= require('module/ui/menu/sub_menu'),
-		PhotoList 		= require('./photo_list'),
-		FullScreenList 	= require('./album_fullscreen_list'),
+		PhotoList 		= require('../photo/photo_list'),
+		FullScreenList 	= require('../photo/fullscreen_list'),
 		FileUpload 		= require('module/ui/file_upload/file_upload'),
 		React			= require('react'),
 		Immutable		= require('immutable');
