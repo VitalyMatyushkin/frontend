@@ -3,6 +3,7 @@
  */
 const   TypeMixin = require('module/ui/form/types/type_mixin'),
         className = require('classnames'),
+        Immutable = require('immutable'),
         $         = require('jquery'),
         React = require('react');
 
@@ -11,19 +12,15 @@ const FileTypeUpload = React.createClass({
     propTypes:{
         typeOfFile:React.PropTypes.string
     },
-    getInitialState:function(){
-        return{
+    getDefaultState: function () {
+        return Immutable.fromJS({
             fileLoading:true
-        }
+        });
     },
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        binding.set('showLoadingGif',self.state.fileLoading);
         binding.addListener('defaultValue',function() {
-            self.isMounted()&&self.setState({fileLoading:true},()=>{
-                binding.set('showLoadingGif',self.state.fileLoading);
-            });
             self.setValue(binding.get('defaultValue'));
         });
     },
@@ -32,9 +29,7 @@ const FileTypeUpload = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
             file = e.target.files[0];
-        self.setState({fileLoading:false},function(){
-            binding.set('showLoadingGif',self.state.fileLoading);
-        });
+        binding.atomically().set('fileLoading',false).commit();
         window.Server.addAlbum.post(rootBinding.get('userData.authorizationInfo.userId'), {
             name: 'blazon_'+rootBinding.get('userData.authorizationInfo.userId')+'_staging',
             description: 'blazon_'+rootBinding.get('userData.authorizationInfo.userId')+'_staging',
@@ -60,6 +55,7 @@ const FileTypeUpload = React.createClass({
                         };
                     window.Server.photos.post(albumDetails.id, model).then(function(data){
                         binding.set('defaultValue','http:'+data.pic+'/contain?height=60&width=60');
+                        binding.atomically().set('fileLoading',true).commit();
                         return data;
                     });
                 },
@@ -77,8 +73,8 @@ const FileTypeUpload = React.createClass({
             binding = self.getDefaultBinding(),
             gifClasses = className({
                 'eLoader_gif':true,
-                'eLoader_gif_hide':binding.get('showLoadingGif'),
-                'eLoader_gif_show':!binding.get('showLoadingGif')
+                'eLoader_gif_hide':binding.get('fileLoading'),
+                'eLoader_gif_show':!binding.get('fileLoading')
             });
         return (
             <div className="eForm_blazonUpload">
