@@ -22,7 +22,6 @@ const AddSchoolForm = React.createClass({
                 description:"school_blazon",
                 ownerId:data.id
             }).then(function(storage){
-                console.log(storage);
                 return storage;
             }).catch(function(err){
                 alert(err.errorThrown+' occurred while creating storage for school profile');
