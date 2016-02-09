@@ -2,7 +2,7 @@ var Form = require('module/ui/form/form'),
 	FormField = require('module/ui/form/form_field'),
 	FormColumn = require('module/ui/form/form_column'),
 	React = require('react'),
-	BlazonUpload = require('module/as_manager/pages/albums/view/upload_blazon'),
+	BlazonUpload = require('module/ui/file_upload/upload_blazon'),
 	SchoolForm;
 
 SchoolForm = React.createClass({

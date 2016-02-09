@@ -2,7 +2,7 @@ const 	If 				= require('module/ui/if/if'),
 		SubMenu 		= require('module/ui/menu/sub_menu'),
 		PhotoList 		= require('../photo/photo_list'),
 		FullScreenList 	= require('../photo/fullscreen_list'),
-		FileUpload 		= require('module/ui/file_upload/file_upload'),
+		Gallery 		= require('../galleryServices'),
 		React			= require('react'),
 		Immutable		= require('immutable');
 
@@ -29,21 +29,9 @@ const AlbumView = React.createClass({
 			binding = self.getDefaultBinding(),
 			userId = rootBinding.get('userData.authorizationInfo.userId');
 
-		self.albumId = albumId;
+		self.gallery = new Gallery(binding.sub('album'));
 
-		window.Server.albumsFindOne.get({
-			filter: {
-				where: {
-					id: albumId
-				},
-				include: {
-					relation: 'photos',
-					scope: {
-						order: 'meta.created DESC'
-					}
-				}
-			}
-		})
+		self.gallery.albumLoad(albumId)
 		.then(function(res) {
 			var isOwner = (userId == res.ownerId);
 
@@ -72,59 +60,11 @@ const AlbumView = React.createClass({
 	},
 
 	handleFile: function(e) {
-		var file = e.target.files[0];
-		this.uploadPhoto(file);
+		const file = e.target.files[0],
+			isUploading = this.getDefaultBinding().sub('isUploading');
+
+		this.gallery.uploadPhoto(file, isUploading);
 	},
-
-	uploadPhoto: function(file) {
-		var self = this,
-		binding = self.getDefaultBinding(),
-		formData = new FormData(),
-		uri = window.apiBase + '/storage/' + binding.get('album.storageId'),
-		fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
-		formData.append('file', file, fileName);
-		var uploader = new FileUpload(uri); //Instantiate new file upload service
-		self.startUploading();
-		uploader.post(formData)
-				.then(function(data){
-							var model = {
-								name: data.name,
-								albumId: binding.get('album.id'),
-								description: data.name,
-								authorId: binding.get('album.ownerId'),
-								pic: uri + '/files/' + data.name
-							};
-					window.Server.photos.post(binding.get('album.id'), model).then(function(res) {
-						self.stopUploading();
-						binding.sub('album.photos').update(function(photos) {
-							return photos.unshift(Immutable.fromJS(res));
-						});
-					});
-				})
-				.catch(function(data){
-					window.alert(data+' Please try again!');
-					self.stopUploading();
-				});
-	},
-    startUploading:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-
-        binding
-            .atomically()
-            .set('isUploading', true)
-            .commit();
-    },
-
-    stopUploading:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-
-        binding
-            .atomically()
-            .set('isUploading', false)
-            .commit();
-    },
 
 	onPhotoClick: function(photo) {
 		const self = this,
