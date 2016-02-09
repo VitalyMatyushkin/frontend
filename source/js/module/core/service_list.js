@@ -1,6 +1,5 @@
 var Service = require('module/core/service'),
-	serviceList,
-	binding;
+	serviceList;
 
 /** Collection of services to reach REST API from server */
 serviceList = {
@@ -96,6 +95,7 @@ serviceList = {
 
 		// sports
 		serviceList.sports = new Service('/sports', binding);
+		serviceList.sport =  new Service('/sports/{sportId}', binding);
 
 		// invites
 		serviceList.invites = new Service('/invites', binding);
