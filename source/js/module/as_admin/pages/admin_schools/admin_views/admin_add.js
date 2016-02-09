@@ -15,6 +15,20 @@ const AddSchoolForm = React.createClass({
         window.Server.schools.post(schoolData).then(function(data) {
             // Добавляемая школа всегда становится школой "по умолчанию"
             globalBinding.set('userRules.activeSchoolId', data.id);
+            //Ideally, we create an album on creating the school
+            //Use it for subsequent profile or blazon upload
+            window.Server.addAlbum.post({
+                name:data.name.split(' ').join('_'),
+                description:"school_blazon",
+                ownerId:data.id
+            }).then(function(storage){
+                return storage;
+            }).catch(function(err){
+                alert(err.errorThrown+' occurred while creating storage for school profile');
+            });
+            return data;
+        }).catch(function(err){
+            alert(err.errorThrown+' occurred while creating school entity');
         });
 
         // Добавление школы в списк
@@ -24,7 +38,7 @@ const AddSchoolForm = React.createClass({
         });
 
         // Переход к списку школ
-        document.location.hash = 'schools';
+        document.location.hash = 'admin_schools/admin_views/list';
     },
     render: function() {
         var self = this;

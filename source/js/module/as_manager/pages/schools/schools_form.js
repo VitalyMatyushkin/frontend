@@ -46,8 +46,7 @@ SchoolForm = React.createClass({
                     <FormField type="dropdown" field="status">School Status</FormField>
                 </FormColumn>
 				<FormColumn type="column">
-					<FormField type="hidden" field="pic">Upload blazon by clicking on the + button below</FormField>
-					<BlazonUpload binding={self.getDefaultBinding().sub('album')}/>
+					<FormField type="file" typeOfFile="image" field="pic"/>
 				</FormColumn>
 			</Form>
 		)
