@@ -23,18 +23,18 @@ const AlbumPhoto = React.createClass({
 		const 	self = this,
 				binding = self.getDefaultBinding();
 
-		self.props.onPhotoClick && self.props.onPhotoClick(binding.get());
+		self.props.onPhotoClick && self.props.onPhotoClick(binding.toJS());
 	},
 	onClickPinPhoto: function(e) {
 		const 	self = this,
-				photo = self.getDefaultBinding().get();
+				photo = self.getDefaultBinding().toJS();
 
 		self.props.onPhotoPin(photo);
 		e.stopPropagation();
 	},
 	onClickEditPhoto: function(e) {
 		var self = this,
-			photo = self.getDefaultBinding().get();
+			photo = self.getDefaultBinding().toJS();
 
 		if (self.isMounted()) {
 			document.location.hash = 'albums/photo-edit/' + photo.id;
