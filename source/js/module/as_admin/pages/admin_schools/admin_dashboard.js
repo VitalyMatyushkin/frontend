@@ -24,7 +24,8 @@ const OneSchoolPage = React.createClass({
                 parentPermission: {}
             },
             schoolInfo: '',
-            schoolRouting: {}
+            schoolRouting: {},
+            sports: {}
         });
     },
     createSubMenu: function(){
@@ -62,10 +63,13 @@ const OneSchoolPage = React.createClass({
                     name:'Forms',
                     key:'forms'
                 },{
+                   href:'/#admin_schools/admin_views/sports',
+                    name:'Sports',
+                    key:'sports'
+                },{
                     href:'/#admin_schools/admin_views/houses',
                     name:'Houses',
                     key:'houses'
-
                 },{
                     href:'/#admin_schools/admin_views/logs',
                     name:'Activity Log',
@@ -86,25 +90,95 @@ const OneSchoolPage = React.createClass({
             globalBinding = self.getMoreartyContext().getBinding();
         return (
             <div>
-                <SubMenu binding={{ default: binding.sub('schoolRouting'), itemsBinding: binding.sub('subMenuItems') }} />
+                <SubMenu binding={{default: binding.sub('schoolRouting'), itemsBinding: binding.sub('subMenuItems')}} />
                 <div className="bSchoolMaster">
-                    <RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
-                        <Route path="/admin_schools " binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"/>
-                        <Route path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_list"/>
-                        <Route path="/admin_schools/admin_views/detail /admin_schools/admin_views/detail:mode" binding={binding.sub('SchoolDetailPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_detail" />
-                        <Route path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode" binding={binding.sub('addSchoolPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_add"/>
-                        <Route path="/admin_schools/admin_views/users /admin_schools/admin_views/users:mode" binding={binding.sub('userList')} component="module/as_admin/pages/admin_schools/admin_views/admin_users"/>
-                        <Route path="/admin_schools/admin_views/edit /admin_schools/admin_views/edit:mode" binding={binding.sub('editSchoolPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_edit"/>
-                        <Route path="/admin_schools/admin_views/user /admin_schools/admin_views/user:mode" binding={binding.sub('userDetailPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_user"/>
-                        <Route path="/admin_schools/admin_views/modify /admin_schools/admin_views/modify:mode" binding={binding.sub('userEditPage')} component="module/as_admin/pages/admin_schools/admin_views/admin_modify"/>
-                        <Route path="/admin_schools/permissions" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"/>
-                        <Route path="/admin_schools/admin_views/requests" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_requests"/>
-                        <Route path="/admin_schools/admin_views/requests/accept" binding={binding.sub('parentPermission')} component="module/as_admin/pages/admin_schools/admin_views/admin_permission_accept" afterSubmitPage="/admin_schools/admin_views/requests"/>
-                        <Route path="/admin_schools/admin_views/archive" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/admin_views/admin_archive"/>
-                        <Route path="/admin_schools/admin_views/logs" binding={binding.sub('logs')} component="module/as_admin/pages/admin_schools/admin_views/admin_activityLogs"/>
-                        <Route path="/admin_schools/admin_views/create_user" binding={binding.sub('userDetailPage')} component="module/as_admin/pages/admin_add/user"/>
-                        <Route path="/admin_schools/admin_views/forms /admin_schools/admin_views/forms/:mode" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/classes/classes_page"/>
-                        <Route path="/admin_schools/admin_views/houses /admin_schools/admin_views/houses/:mode" binding={binding.sub('schools')} component="module/as_admin/pages/admin_schools/houses/houses_page" />
+                    <RouterView routes={binding.sub('schoolRouting')} binding={globalBinding}>
+                        <Route
+                            path="/admin_schools"
+                            binding={binding.sub('schools')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode"
+                            binding={binding.sub('schools')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_list"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/detail /admin_schools/admin_views/detail:mode"
+                            binding={binding.sub('SchoolDetailPage')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_detail"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode"
+                            binding={binding.sub('addSchoolPage')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_add"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/users /admin_schools/admin_views/users:mode"
+                            binding={binding.sub('userList')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_users"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/edit /admin_schools/admin_views/edit:mode"
+                            binding={binding.sub('editSchoolPage')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_edit"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/user /admin_schools/admin_views/user:mode"
+                            binding={binding.sub('userDetailPage')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_user"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/modify /admin_schools/admin_views/modify:mode"
+                            binding={binding.sub('userEditPage')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_modify"
+                        />
+                        <Route
+                            path="/admin_schools/permissions"
+                            binding={binding.sub('schools')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/requests"
+                            binding={binding.sub('schools')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_requests"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/requests/accept"
+                            binding={binding.sub('parentPermission')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"
+                            afterSubmitPage="/admin_schools/admin_views/requests"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/archive"
+                            binding={binding.sub('schools')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_archive"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/logs"
+                            binding={binding.sub('logs')}
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_activityLogs"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/create_user"
+                            binding={binding.sub('userDetailPage')}
+                            component="module/as_admin/pages/admin_add/user"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/forms /admin_schools/admin_views/forms/:mode"
+                            binding={binding.sub('schools')}
+                            component="module/as_admin/pages/admin_schools/classes/classes_page"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/sports /admin_schools/admin_views/sports/:mode"
+                            binding={binding.sub('sports')}
+                            component="module/as_admin/pages/admin_schools/sports/sports_page"
+                        />
+                        <Route
+                            path="/admin_schools/admin_views/houses /admin_schools/admin_views/houses/:mode"
+                            binding={binding.sub('schools')}
+                            component="module/as_admin/pages/admin_schools/houses/houses_page"
+                        />
                     </RouterView>
                 </div>
             </div>

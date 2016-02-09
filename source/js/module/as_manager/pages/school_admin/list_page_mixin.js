@@ -66,8 +66,6 @@ const ListPageMixin = {
         return window.Server[self.serviceCount].get({where:where});
     },
 	_getEditFunction: function() {
-		var self = this;
-
 		return function(data) {
 			//	self.props.formBinding.set(Immutable.fromJS(data));
 
@@ -81,6 +79,9 @@ const ListPageMixin = {
         document.location.hash = document.location.hash +'/add';
     },
     _getAddNewStudentFunction:function(){
+        document.location.hash = document.location.hash +'/add';
+    },
+    _addNewSport:function(){
         document.location.hash = document.location.hash +'/add';
     },
     _getAddNewSchoolFunction:function(){
@@ -208,6 +209,9 @@ const ListPageMixin = {
                         </If>
                         <If condition={self.isSuperAdminPage === true}>
                             <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>
+                        </If>
+                        <If condition={currentPage[currentPage.length-1] ==='sports'}>
+                            <div className="bButton" onClick={self._addNewSport}>Add New Sport</div>
                         </If>
                     </div>
                 </div>
