@@ -67,7 +67,7 @@ const GrantRole = React.createClass({
             return list;
         });
     },
-    onStudentSelect:function(id, response, model){
+    onStudentSelect:function(id, model){
         const self = this,
             binding = self.getDefaultBinding(),
             studentId = Lazy(model.permissions).find(p=> p.preset === 'student').studentId;
