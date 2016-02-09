@@ -2,9 +2,9 @@ $border: solid 1px #c2c2c2;
 .bChallenge {
   cursor: pointer;
   position: relative;
-  display: block;
+  display: flex;
   border-bottom: $border;
-
+  min-height: 40px;
   &:active{
     box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.3);
     top: 2px;
@@ -13,12 +13,12 @@ $border: solid 1px #c2c2c2;
 }
 
 .eChallenge_in{
-  display: table-cell;
+  display: flex;
+  width: 25%;
+  justify-content: center;
 }
-.eChallenge_in p{
-  display: table-cell;
-  padding: 0 10px;
-  text-transform: lowercase;
+.bChallenge p{
+  margin: auto;
 }
 .eChallenge_com_container{
   display: table-cell;
@@ -28,41 +28,33 @@ $border: solid 1px #c2c2c2;
 }
 
 .eChallenge_firstName,
-.eChallenge_secondName,
-.eChallenge_rivalInfo{
+.eChallenge_secondName {
   vertical-align: middle;
   text-align: center;
-  width: 200px;
-  margin: 0 10px;
-  display: table-cell;
+  margin: auto;
+  max-width: 90px;
 }
 
-.eChallenge_firstName{
-  text-align: right;
-}
-.eChallenge_secondName{
- text-align: left;
-}
 .eChallenge_rivalInfo{
   width: 180px;
+  vertical-align: middle;
+  text-align: center;
 }
 
 .eChallenge_hours{
-  padding: 4px 0;
   text-align: center;
   font-family: "Myriad Pro", sans-serif;
   letter-spacing: 1px;
-  display: table-cell;
   width: 50px;
+  margin: auto;
 }
 
 .eChallenge_results{
-  padding: 7px 0;
   letter-spacing: 1px;
   font-family: "Myriad Pro", sans-serif;
-  display: table-cell;
   width: 50px;
   text-align: center;
+  margin: auto;
 }
 
 .eChallenge_results.mDone{
@@ -107,21 +99,7 @@ $border: solid 1px #c2c2c2;
   margin-top: -8px;
   opacity: 0.8;
 }
-.eChallenge_all{
-  margin: 10px 0 10px 0;
-  cursor:pointer;
-  border-bottom: 1px solid #CACACA;
-  box-shadow: 0 1px 2px 1px;
-  padding: 10px !important;
-}
-.eChallenge_childName{
-  font-size: 15px;
-  font-weight: 400;
-  margin-bottom: 8px;
-}
-.eChallenge_basicMod{
-  border-top: 1px solid #CACACA;
-}
+
 .eChallenge_marginTopBottom{
   margin:4px 0 4px 0;
 }
@@ -176,5 +154,13 @@ $border: solid 1px #c2c2c2;
   margin: 0 30px;
 }
 
+.eChallenge.eChallenge_basicMod{
+  border: none !important;
+  margin: 0 !important;
+}
 
-
+.eChallengeDate_list{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}

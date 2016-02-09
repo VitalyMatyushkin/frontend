@@ -60,13 +60,14 @@ ChallengesList = React.createClass({
                 stringDate = self.formatDate(event.get('startTime'));
 
             return <div key={eventIndex} className={isHoverDay ? 'eChallenge eChallenge_all mActive' : 'eChallenge eChallenge_all'}>
+                <span className="eChallenge_sport"></span>
                 <div className="eChallenge_basic eChallenge_marginTopBottom">
                     <span className="eChallenge_date">{stringDate}</span>
-                    <span className="eChallenge_type">{event.get('type')}</span>
                 </div>
                 <div className="eChallenge_name eChallenge_marginTopBottom">{event.get('name')}</div>
                 <div className="eChallenge_rivals">
                     <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
+                    <span className="eChallenge_vs">vs</span>
                     <span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
                 </div>
             </div>
@@ -77,7 +78,12 @@ ChallengesList = React.createClass({
             binding = this.getDefaultBinding();
         return (
             <div className="eEvents_challenges">
-                <h3 style={{marginBottom:10+'px'}}>Individual View</h3>
+                <div className="eChallenge_title">
+                    <span className="eChallenge_sport">Sport</span>
+                    <span className="eChallenge_date">Date</span>
+                    <span className="eChallenge_name">Event Name</span>
+                    <span className="eChallenge_rivals">Game Type</span>
+                </div>
                 {self.getEvents()}
             </div>
         );
