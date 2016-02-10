@@ -1,7 +1,7 @@
 /**
  * Created by bridark on 29/06/15.
  */
-const   AutoComplete  = require('module/ui/autocomplete/autocomplete'),
+const   AutoComplete  = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         React         = require('react'),
         If            = require('module/ui/if/if'),
         Immutable     = require('immutable'),
@@ -67,7 +67,7 @@ const GrantRole = React.createClass({
             return list;
         });
     },
-    onStudentSelect:function(id, response, model){
+    onStudentSelect:function(id, model){
         const self = this,
             binding = self.getDefaultBinding(),
             studentId = Lazy(model.permissions).find(p=> p.preset === 'student').studentId;
@@ -147,8 +147,11 @@ const GrantRole = React.createClass({
                     <If condition={isParent}>
                         <div>
                             <h4>Student</h4>
-                            <AutoComplete serviceFilter={self.getStudents} serverField="fullName" binding={binding.sub('grStudents')}
-                                          onSelect={self.onStudentSelect}  />
+                            <AutoComplete serviceFilter={self.getStudents}
+                                          serverField="fullName"
+                                          binding={binding.sub('grStudents')}
+                                          onSelect={self.onStudentSelect}
+                            />
                         </div>
                     </If>
                     <h4>Comment:</h4>

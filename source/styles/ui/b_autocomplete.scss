@@ -19,7 +19,6 @@
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
   margin-top: -2px;
-  border-top: 1px solid white;
   & div {
     cursor: pointer;
     &:hover {
@@ -38,7 +37,6 @@
 }
 
 .eCombobox_input {
-  padding-right: 20px;
   width: 100%;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
