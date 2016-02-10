@@ -42,8 +42,8 @@ const ComboBox2 = React.createClass({
             dataList:            [],
             isLoading:           false,
             isOpen:              false,
-            prevText:            undefined,
-            currentText:         undefined,
+            prevText:            '',
+            currentText:         '',
             currentIndex:        undefined,
             currentAsyncRequest: undefined
         };
@@ -61,7 +61,7 @@ const ComboBox2 = React.createClass({
     search: function(searchText) {
         const self = this;
 
-        if(searchText !== null && searchText !== undefined && searchText !== '') {
+        if(searchText !== null && searchText !== undefined) {
             const searchResult  = self.props.searchFunction(searchText);
 
             self.state.currentAsyncRequest && self.state.currentAsyncRequest.cancel();
@@ -80,10 +80,6 @@ const ComboBox2 = React.createClass({
                     isOpen: true,
                     dataList:   self.state.dataList.concat(data)
                 });
-            });
-        } else if(searchText === '') {
-            self.setState({
-                currentText: undefined
             });
         }
     },
@@ -132,6 +128,9 @@ const ComboBox2 = React.createClass({
                 break;
         }
     },
+    /**
+     * Restore prev text. So if user press escape button we should show prev request.
+     */
     restorePrevSelectedText: function() {
         const self = this;
 
@@ -140,17 +139,25 @@ const ComboBox2 = React.createClass({
             currentIndex: undefined
         });
     },
+    /**
+     * Select element in datalist. Strictly saying trigger props.onSelect function and clear dataList and currentIndex     *
+     * @param index - index of selected element
+     */
     selectElement: function(index) {
         const self = this,
               currentElement = self.state.dataList[index];
 
         self.props.onSelect(currentElement.id, currentElement);
         self.setState({
-            currentIndex: undefined,
             dataList:     [],
+            currentIndex: undefined,
             currentText:  self.props.getElementTitle(self.state.dataList[index])
         });
     },
+    /**
+     * Mark element in data list
+     * @param index
+     */
     markElement: function(index) {
         const self = this;
 
@@ -165,9 +172,15 @@ const ComboBox2 = React.createClass({
     onInputClick: function(){
         const self = this;
 
-        if(self.state.currentText !== undefined && self.state.currentText !== '') {
-            self.search(self.state.currentText);
-        }
+        self.search(self.state.currentText);
+    },
+    /**
+     * Handles left mouse button click on triangle button
+     */
+    onTriangleClick: function(){
+        const self = this;
+
+        self.search(self.state.currentText);
     },
     /**
      * Handles left mouse button click on list element
@@ -293,6 +306,9 @@ const ComboBox2 = React.createClass({
             height:      '17px',
             display:      self.state.isLoading ? undefined : "none"
         };
+        const triangleStyle = {
+            display:      !self.state.isLoading ? 'inline-block' : "none"
+        };
 
         return (
             <div className={`bCombobox ${isOpenCN}`}>
@@ -310,6 +326,7 @@ const ComboBox2 = React.createClass({
                     role="combobox"
                 />
                 <img style={loaderStyle} src="/images/spinner.gif"/>
+                <span className="eCombobox_button" style={triangleStyle} onClick={self.onTriangleClick}>▾</span>
                 {self.renderMenuItems()}
             </div>
         );
