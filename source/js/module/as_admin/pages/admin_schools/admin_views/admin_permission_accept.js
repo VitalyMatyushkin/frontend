@@ -1,5 +1,5 @@
 const 	If 				= require('module/ui/if/if'),
-		Autocomplete 	= require('module/ui/autocomplete/autocomplete'),
+		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		React 			= require('react'),
 		Immutable 		= require('immutable');
 
@@ -41,14 +41,17 @@ const PermissionAcceptPage = React.createClass({
 			});
 		}
 	},
-	serviceFormFilter: function() {
+	serviceFormFilter: function(fromName) {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		return window.Server.forms.get(binding.get('schoolId'), {
 			filter: {
 				where: {
-					schoolId: binding.get('schoolId')
+					name: {
+						like: fromName,
+						options:'i'
+					}
 				}
 			}
 		});
@@ -59,14 +62,17 @@ const PermissionAcceptPage = React.createClass({
 
 		binding.set('formId', formId);
 	},
-	serviceHouseFilter: function() {
+	serviceHouseFilter: function(houseName) {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		return window.Server.houses.get(binding.get('schoolId'), {
 			filter: {
 				where: {
-					schoolId: binding.get('schoolId')
+					name: {
+						like: houseName,
+						options:'i'
+					}
 				}
 			}
 		});
