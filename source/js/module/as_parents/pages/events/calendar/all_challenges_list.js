@@ -68,30 +68,26 @@ AllChallengesList = React.createClass({
                         hoverDay.getDate() === eventDate.getDate();
                 return(
                     <div key={childEvInd} className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'}>
+                        <span className="eChallenge_sport"></span>
                         <div className="eChallenge_basic">
                             <span className="eChallenge_date">{stringDate}</span>
-                            <span className="eChallenge_type">{childEv.get('type')}</span>
                         </div>
                         <div className="eChallenge_name">{childEv.get('name')}</div>
-                        <div className="eChallenge_rivals">
-                            <span className="eChallenge_rivalName">{self.getRivalName(childEv,0)}</span>
-                            <span className="eChallenge_rivalName">{self.getRivalName(childEv,1)}</span>
-                        </div>
                     </div>
                 );
             }).toArray() : (
-                <div>
+                <div className="eChallenge eChallenge_basicMod">
+                    <span className="eChallenge_sport"></span>
                     <div className="eChallenge_basic">
                         <span className="eChallenge_date">{}</span>
-                        <span className="eChallenge_type">{'no fixtures'}</span>
                     </div>
                     <div className="eChallenge_name">{'N/A'}</div>
                 </div>
             );
             return (
                 <div key={childInd} className= "eChallenge eChallenge_all">
-                    <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
                     {childFixtures}
+                    <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
                 </div>
             );
         }).toArray():<div className="eChallenge mNotFound">{sync ? "You haven't events on this month." : "Loading..."}</div>;
@@ -100,7 +96,12 @@ AllChallengesList = React.createClass({
         var self = this,
             binding = this.getDefaultBinding();
         return <div className="eEvents_challenges">
-            <h3 style={{marginBottom:10+'px'}}>Events for all children</h3>
+            <div className="eChallenge_title">
+                <span className="eChallenge_sport">Sport</span>
+                <span className="eChallenge_date">Date</span>
+                <span className="eChallenge_name">Event Name</span>
+                <span className="eChallenge_childName">Name</span>
+            </div>
             {self.getEvents()}
         </div>
     }
