@@ -1,7 +1,7 @@
 /**
  * Created by bridark on 15/10/15.
  */
-var AutoComplete = require('module/ui/autocomplete/autocomplete'),
+var AutoComplete  = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
     If = require('module/ui/if/if'),
     ExtraPermissionsField = require('module/ui/register/user/extra_permission_fields'),
     RegistrationPermissionField,
@@ -27,7 +27,16 @@ RegistrationPermissionField = React.createClass({
     serviceSchoolFilter: function(schoolName) {
         var self = this;
 
-        return window.Server.getAllSchools.get();
+        return window.Server.getAllSchools.get( {
+            filter: {
+                where: {
+                    name: {
+                        like: schoolName,
+                        options: 'i'
+                    }
+                }
+            }
+        });
     },
     /**
      * house filter by houseName
@@ -41,7 +50,10 @@ RegistrationPermissionField = React.createClass({
         return window.Server.houses.get(binding.get('schoolId'), {
             filter: {
                 where: {
-                    schoolId: binding.get('schoolId')
+                    name: {
+                        like: houseName,
+                        options: 'i'
+                    }
                 }
             }
         });
@@ -58,7 +70,10 @@ RegistrationPermissionField = React.createClass({
         return window.Server.forms.get(binding.get('schoolId'), {
             filter: {
                 where: {
-                    schoolId: binding.get('schoolId')
+                    name: {
+                        like: formName,
+                        options: 'i'
+                    }
                 }
             }
         });
@@ -148,7 +163,7 @@ RegistrationPermissionField = React.createClass({
                             onSelect={self.onSelectSchool}
                             binding={binding.sub('_schoolAutocomplete')}
                             placeholderText="school's name"
-                            />
+                        />
                     </If>
                     <If condition={binding.get('schoolId') !== null && currentType === 'parent'}>
                         <AutoComplete
@@ -157,7 +172,7 @@ RegistrationPermissionField = React.createClass({
                             onSelect={self.onSelectHouse}
                             binding={binding.sub('_houseAutocomplete')}
                             placeholderText="house's name"
-                            />
+                        />
                     </If>
                     <If condition={binding.get('houseId') !== null && currentType === 'parent'}>
                         <AutoComplete
@@ -166,7 +181,7 @@ RegistrationPermissionField = React.createClass({
                             onSelect={self.onSelectForm}
                             placeholderText="form's name"
                             binding={binding.sub('_formAutocomplete')}
-                            />
+                        />
                     </If>
                     <If condition={binding.get('formId') !== null && currentType === 'parent'}>
                         <div>
