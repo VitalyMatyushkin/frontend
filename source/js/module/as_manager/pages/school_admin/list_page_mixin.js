@@ -40,7 +40,8 @@ const ListPageMixin = {
 	},
     getDefaultState: function () {
         return Immutable.Map({
-            onReload:false
+            onReload:false,
+            popup:false
         });
     },
     reloadData:function(){
