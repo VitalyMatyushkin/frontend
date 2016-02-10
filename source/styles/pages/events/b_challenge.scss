@@ -21,7 +21,7 @@ $border: solid 1px #c2c2c2;
   margin: auto;
 }
 .eChallenge_com_container{
-  display: table-cell;
+  margin: auto;
 }
 .eChallenge_comments{
   text-align: center;
@@ -36,9 +36,7 @@ $border: solid 1px #c2c2c2;
 }
 
 .eChallenge_rivalInfo{
-  width: 180px;
-  vertical-align: middle;
-  text-align: center;
+  margin: auto;
 }
 
 .eChallenge_hours{
@@ -163,4 +161,8 @@ $border: solid 1px #c2c2c2;
   display: flex;
   flex-direction: column;
   width: 100%;
+}
+.eAchievements_wrap{
+  display: flex;
+  text-align: center;
 }
