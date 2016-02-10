@@ -9,12 +9,15 @@ const   FileUpload 		= require('module/ui/file_upload/file_upload'),
 const galleryServices = function(albumBinding){
     this.binding = albumBinding;
 
-    this.albumLoad = (albumId) =>{
-        return window.Server.albumsFindOne.get({
+    this.createAlbum = (model) => {
+        return window.Server.addAlbum.post(model);
+    };
+    this.loadAlbum = (albumId) => {
+        return window.Server.album.get(albumId);
+    };
+    this.loadAlbumWithPhotos = (albumId) =>{
+        return window.Server.album.get(albumId, {
             filter: {
-                where: {
-                    id: albumId
-                },
                 include: {
                     relation: 'photos',
                     scope: {
@@ -22,6 +25,30 @@ const galleryServices = function(albumBinding){
                     }
                 }
             }
+        });
+    };
+    this.updateSchool = (schoolId, albumId) => {
+        return window.Server.school.put(schoolId, {defaultAlbumId:albumId});
+    };
+    this.getDefaultSchoolAlbum = (schoolId, ownerId) => {
+        const self = this,
+            binding = self.binding;
+        let school;
+
+        window.Server.school.get(schoolId).then(res => {
+            school = res;
+            if(school.defaultAlbumId)
+                return self.loadAlbum(school.defaultAlbumId);
+            else
+                return self.createAlbum({
+                    name:'Default Album',
+                    description:'Default Album for school site',
+                    ownerId:ownerId
+                });
+        }).then(album => {
+            binding.set(album);
+            if(!school.defaultAlbumId)
+                return self.updateSchool(schoolId, album.id);
         });
     };
 
@@ -55,10 +82,10 @@ const galleryServices = function(albumBinding){
             binding.sub('photos').update(function(photos) {
                 return photos.unshift(Immutable.fromJS(res));
             });
-            !binding.get('coverUrl') && self.photoPin(res.pic).then();
+            if(!binding.get('coverUrl'))
+                return self.photoPin(res.pic);
         });
     };
-
     this._addPhoto = (fileModel) => {
         const albumId = this.binding.get('id'),
             ownerId = this.binding.get('ownerId'),
