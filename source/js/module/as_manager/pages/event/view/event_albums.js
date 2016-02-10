@@ -1,6 +1,6 @@
 const 	React 			= require('react'),
 		Immutable 		= require('immutable'),
-		Album			= require('module/ui/gallery/album_item');
+		Album			= require('module/ui/gallery/album/album_item');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],

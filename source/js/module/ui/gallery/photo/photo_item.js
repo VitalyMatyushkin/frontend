@@ -16,33 +16,28 @@ const AlbumPhoto = React.createClass({
 	},
 
 	onImageLoad: function() {
-		var self = this,
-		binding = self.getDefaultBinding();
-
-		if (this.isMounted()) {
-			binding.set('loaded', true);
-		}
+		this.getDefaultBinding().set('loaded', true);
 	},
 
 	onImageClick: function() {
-		var self = this,
-		binding = self.getDefaultBinding();
+		const 	self = this,
+				binding = self.getDefaultBinding();
 
-		self.props.onPhotoClick(binding.get());
+		self.props.onPhotoClick && self.props.onPhotoClick(binding.toJS());
 	},
 	onClickPinPhoto: function(e) {
-		var self = this,
-			photo = self.getDefaultBinding();
+		const 	self = this,
+				photo = self.getDefaultBinding().toJS();
 
 		self.props.onPhotoPin(photo);
 		e.stopPropagation();
 	},
 	onClickEditPhoto: function(e) {
 		var self = this,
-			photo = self.getDefaultBinding();
+			photo = self.getDefaultBinding().toJS();
 
 		if (self.isMounted()) {
-			document.location.hash = 'albums/photo-edit/' + photo.get('id');
+			document.location.hash = 'albums/photo-edit/' + photo.id;
 		}
 
 		e.stopPropagation();

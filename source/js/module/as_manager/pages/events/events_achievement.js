@@ -117,17 +117,17 @@ const ParentChildAchievement = React.createClass({
                                 </div>
                                 <div className="bUserFullInfo mDates">
                                     <div className="eUserFullInfo_block">
-                                        <h1>Personal Achievements: {binding.get('achievements.numOfGamesScoredIn')}</h1>
+                                        <h3>Personal Achievements: {binding.get('achievements.numOfGamesScoredIn')}</h3>
                                         <UserAchievements binding={binding.sub('achievements')}/>
                                     </div>
                                 </div>
                                 <div className="bUserFullInfo mDates">
                                     <div className="eUserFullInfo_block">
-                                        <h1>Team Statistics(Games Won): {self.numOfGamesWon}</h1>
+                                        <h3>Team Statistics(Games Won): {self.numOfGamesWon}</h3>
                                         <TeamStats binding={binding.sub('achievements')}/>
                                     </div>
                                 </div>
-                                <h1>All Fixtures: {self.numberOfGamesPlayed}</h1>
+                                <h3>All Fixtures: {self.numberOfGamesPlayed}</h3>
                                 <UserFixtures binding={binding.sub('achievements')}/>
                             </div>
                         </div>

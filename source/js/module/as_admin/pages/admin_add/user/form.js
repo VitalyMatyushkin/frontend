@@ -10,8 +10,22 @@ UserForm = React.createClass({
 	},
 	onSuccess: function(data) {
 		var self = this;
-		console.log(data);
 		self.showForm = false;
+	},
+	getGender: function() {
+		const 	self = this,
+			gendersArray = [
+				{
+					value: 'Male',
+					id: 'male'
+				},
+				{
+					value: 'female',
+					id: 'female'
+				}
+			];
+
+		return Promise.resolve(gendersArray);
 	},
 	render: function() {
 		var self = this,
@@ -21,6 +35,7 @@ UserForm = React.createClass({
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
+				<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
 				<FormField type="confirmText" field="email" validation="required email server">Email</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required">Password</FormField>
 			</Form>

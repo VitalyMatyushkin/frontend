@@ -1,11 +1,20 @@
 
 .eChallengeDate_date{
-  display: table-cell;
-  width: 100px;
   vertical-align: middle;
-  border-bottom: $BORDER;
-
+  width: 10%;
+  margin: auto 0;
 }
-.bChallengeDate{
-display: table-row;
+
+.bChallengeDate {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  text-transform: none;
+  color: #333132;
+  margin: auto;
+}
+
+.eChallengeDate_wrap{
+  display: flex;
+  padding: 0 15px;
 }

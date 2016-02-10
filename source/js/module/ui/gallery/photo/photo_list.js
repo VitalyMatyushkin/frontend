@@ -1,25 +1,29 @@
 const   If          = require('module/ui/if/if'),
-        AlbumPhoto  = require('./album_photo'),
+        Photo       = require('./photo_item'),
         React       = require('react'),
-        Immutable   = require('immutable');
+        Immutable   = require('immutable'),
+        Gallery 	= require('../galleryServices');
 
 const PhotoList = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {
         onPhotoClick: React.PropTypes.func
     },
-    getMergeStrategy: function() {
-        return Morearty.MergeStrategy.MERGE_REPLACE;
+    componentWillMount: function() {
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        self.gallery = new Gallery(binding);
     },
     renderPhoto: function(photo, index) {
         var self = this,
         binding = self.getDefaultBinding(),
         photosBinding = binding.sub('photos'),
         photoBinding = photosBinding.sub(index),
-        photoid = photoBinding.get("id");
+        photoId = photoBinding.get("id");
 
         return (
-            <AlbumPhoto binding={photoBinding} key={'photo-' + photoid}
+            <Photo binding={photoBinding} key={'photo-' + photoId}
                     onPhotoClick={self.onPhotoClick}
                     onPhotoDelete={self.reloadPhotoList}
                     onPhotoPin={self.onPhotoPin}
@@ -33,16 +37,9 @@ const PhotoList = React.createClass({
     },
 
     onPhotoPin: function(photo) {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            photoId = photo.get('id');
-        let album = binding.toJS();
-        album.coverId = photoId;
-
-        window.Server.album.put(album.id, album).then(function() {
+        this.gallery.photoPin(photo.pic).then(function() {
             alert('Album cover is changed!');
         });
-        return false;
     },
 
     reloadPhotoList: function() {

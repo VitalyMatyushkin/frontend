@@ -102,20 +102,19 @@ const UserFixtures = React.createClass({
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
+                    <div className="eChallenge_hours">{hours + ':' + minutes}</div>
                     <div className="eChallenge_in">
                         <div className="eChallenge_rivalName">
                             {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
                             {firstName}
                         </div>
                         <div className="eChallenge_rivalInfo">
-                            <div className="eChallenge_hours">{hours + ':' + minutes}</div>
+                            <div className="eChallenge_rivalName">
+                                {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
+                                {secondName}
+                            </div>
                             <div
-                                className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
-                            <div className="eChallenge_info">{event.type}</div>
-                        </div>
-                        <div className="eChallenge_rivalName">
-                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
-                            {secondName}
+                                className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '- : -'}</div>
                         </div>
                     </div>
                     <div className="eChallenge_com_container">
@@ -151,13 +150,15 @@ const UserFixtures = React.createClass({
                         "July", "August", "September", "October", "November", "December" ],
                     dayOfWeek = date.getDay();
                 return <div key={dateTimeIndex} className="bChallengeDate">
-                    <div className="eChallengeDate_date">
-                        {daysOfWeek[dayOfWeek] + ' ' +
-                        date.getDate() + ' ' +
-                        monthNames[date.getMonth()] + ' ' +
-                        date.getFullYear()}
+                    <div className="eAchievements_wrap">
+                        <div className="eChallengeDate_date">
+                            {daysOfWeek[dayOfWeek] + ' ' +
+                            date.getDate() + ' ' +
+                            monthNames[date.getMonth()] + ' ' +
+                            date.getFullYear()}
+                        </div>
+                        <div className="eChallengeDate_list">{self.getEvents(datetime, dataFrom)}</div>
                     </div>
-                    <div className="eChallengeDate_list">{self.getEvents(datetime,dataFrom)}</div>
                 </div>;
             }).toArray() : null;
         }
