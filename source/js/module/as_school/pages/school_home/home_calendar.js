@@ -41,11 +41,10 @@ const HomeCalender = React.createClass({
                     team2 = self.getTeams(fixture.participants[1]);
                 return (
                     <div key={fixture.id} className="eSchoolFixtureListItem">
-                        <img src="images/test_image.png"></img>
-                        <h5>{self.getDateFromIso(fixture.startTime)+ ':'}</h5>
-                        <h2>{team1+' vs '+team2}</h2>
-                        <span>{fixture.sport.name+ ' competitions. Starting at '}</span>
-                        <span>{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
+                        <span className="eSchoolCalenderFixtureItem">{fixture.sport.name}</span>
+                        <span className="eSchoolCalenderFixtureItem">{self.getDateFromIso(fixture.startTime)}</span>
+                        <span className="eSchoolCalenderFixtureItem">{team1+' vs '+team2}</span>
+                        <span className="eSchoolCalenderFixtureItem">{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
                     </div>
                 );
             });
@@ -61,13 +60,17 @@ const HomeCalender = React.createClass({
                     <h1>Calendar</h1><hr/>
                 </div>
                 <div className="eSchoolCalendarWrapper">
-                    <div className="eSchoolCalendarShow">
-                        <img src="images/main_search.png"></img>
-                        Calendar</div>
                     <CalendarView binding={binding} />
                     <div className="eSchoolCalenderFixtureList">
+                        <div className="eSchoolCalenderFixtureTitle">
+                            <span className="eSchoolCalenderFixtureItem">Sport</span>
+                            <span className="eSchoolCalenderFixtureItem">Date</span>
+                            <span className="eSchoolCalenderFixtureItem">Game Type</span>
+                            <span className="eSchoolCalenderFixtureItem">Time</span>
+                        </div>
                         {upcomingLists}
                     </div>
+
                 </div>
             </div>
         );

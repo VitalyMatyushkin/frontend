@@ -86,19 +86,13 @@ const ChallengesView = React.createClass({
                         {firstName}
                     </div>
                     <p>vs</p>
+
                     <div className="eChallenge_secondName">
                         {secondName}
                     </div>
-						<div className={'eChallenge_results' + (event.get('resultId') ? ' mDone' : '') }>{event.get('resultId') ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
-
-						<div className="eChallenge_info">{event.get('type')}</div>
-
                 </div>
-                <div className="eChallenge_com_container">
-                    <div className="eChallenge_comments">
-                        {comment}
-                    </div>
-                </div>
+						<div className={'eChallenge_results' + (event.get('resultId') ? ' mDone' : '') }>{event.get('resultId') ? [firstPoint, secondPoint].join(':') : '- : -'}</div>
+
             </div>;
         }).toArray();
     },
@@ -125,12 +119,14 @@ const ChallengesView = React.createClass({
                 dayOfWeek = date.getDay();
 
             return <div key={dtIndex} className="bChallengeDate">
+                <div className="eChallengeDate_wrap">
                 <div className="eChallengeDate_date">
-						{date.getDate() + ' ' +
-						monthNames[date.getMonth()] + ' ' +
+						{date.getDate() + '.' +
+						monthNames[date.getMonth()] + '.' +
 							date.getFullYear()}
                 </div>
                 <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
+            </div>
             </div>;
         }).toArray() : <div className="eUserFullInfo_block">No fixtures to report on this child</div>;
     },
@@ -139,7 +135,14 @@ const ChallengesView = React.createClass({
             binding = self.getDefaultBinding(),
             challenges = self.getDates();
 		return <div>
-            <div className="bChallenges">{challenges}</div>
+            <div className="bChallenges">
+                <div className="eChallenge_title">
+                    <span className="eChallengeDate_date">Date</span>
+                    <span className="eChallenge_hours">Time</span>
+                    <span className="eChallenge_in">Game Type</span>
+                    <span className="eChallenge_results">Score</span>
+                </div>
+                {challenges}</div>
         </div>;
 	}
 });

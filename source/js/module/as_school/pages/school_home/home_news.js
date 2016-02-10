@@ -69,6 +69,7 @@ const HomeNews = React.createClass({
                                 </div><hr/>
                                 <span className="inlineBlock newsItemExcerpt">{self.getNewsExcerpt(newsItem.body)}</span>
                             </div>
+                            <span className="eSchoolNewsMoreInfo">More Info</span>
                         </div>
                     </div>
                 )
