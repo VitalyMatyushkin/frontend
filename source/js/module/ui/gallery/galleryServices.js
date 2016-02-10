@@ -9,12 +9,9 @@ const   FileUpload 		= require('module/ui/file_upload/file_upload'),
 const galleryServices = function(albumBinding){
     this.binding = albumBinding;
 
-    this.albumLoad = (albumId) =>{
-        return window.Server.albumsFindOne.get({
+    this.loadAlbumWithPhotos = (albumId) =>{
+        return window.Server.album.get(albumId, {
             filter: {
-                where: {
-                    id: albumId
-                },
                 include: {
                     relation: 'photos',
                     scope: {

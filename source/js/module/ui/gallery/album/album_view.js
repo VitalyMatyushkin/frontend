@@ -31,7 +31,7 @@ const AlbumView = React.createClass({
 
 		self.gallery = new Gallery(binding.sub('album'));
 
-		self.gallery.albumLoad(albumId)
+		self.gallery.loadAlbumWithPhotos(albumId)
 		.then(function(res) {
 			var isOwner = (userId == res.ownerId);
 
