@@ -1,4 +1,4 @@
-const   Autocomplete    = require('module/ui/autocomplete/autocomplete'),
+const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         If              = require('module/ui/if/if'),
         Multiselect     = require('module/ui/multiselect/multiselect'),
         React           = require('react'),
@@ -17,12 +17,12 @@ const EventManagerBase = React.createClass({
      */
     serviceHouseFilter: function(houseName) {
         const   binding     = this.getDefaultBinding(),
-                schoolId    = binding.get('schoolInfo.id'),
-                ids         = binding.get('autocomplete.houses').toArray().map(house => {
-                    console.log(`houses: ${JSON.stringify(house)}`);
-                    console.log(`selectedId: ${house.get('selectedId')}`);
-				    return house.get('selectedId') || !house.get('selectedId');
-			    });
+                schoolId    = binding.get('schoolInfo.id');
+                //ids         = binding.get('autocomplete.houses').toArray().map(house => {
+                //    console.log(`houses: ${JSON.stringify(house)}`);
+                //    console.log(`selectedId: ${house.get('selectedId')}`);
+				 //   return house.get('selectedId') || !house.get('selectedId');
+			    //});
 
         return window.Server.houses.get(schoolId);  // this is some shit happens around, so I will stay this here for a while
         //return window.Server.houses.get(schoolId, {
@@ -132,7 +132,7 @@ const EventManagerBase = React.createClass({
 
         binding.set('model.ages', Immutable.fromJS(selections));
     },
-	onSelectRival: function (order, id, response, model) {
+	onSelectRival: function (order, id, model) {
 		var self = this,
 			binding = self.getDefaultBinding(),
             comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
