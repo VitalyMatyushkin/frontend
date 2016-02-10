@@ -55,7 +55,7 @@ const galleryServices = function(albumBinding){
             binding.sub('photos').update(function(photos) {
                 return photos.unshift(Immutable.fromJS(res));
             });
-            !binding.get('coverUrl') && self.photoPin(res.pic);
+            !binding.get('coverUrl') && self.photoPin(res.pic).then();
         });
     };
 
