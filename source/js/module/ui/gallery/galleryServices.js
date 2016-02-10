@@ -44,18 +44,18 @@ const galleryServices = function(albumBinding){
         startUploading();
         uploader.post(formData)
         .then(function(data){
-            self._addPhoto(data)
-            .then(function(res) {
-                stopUploading();
-                binding.sub('photos').update(function(photos) {
-                    return photos.unshift(Immutable.fromJS(res));
-                });
-                !binding.get('coverUrl') && self.photoPin(res.pic);
-            });
+            return self._addPhoto(data);
         })
         .catch(function(data){
             window.alert(data+' Please try again!');
             stopUploading();
+        })
+        .then(function(res) {
+            stopUploading();
+            binding.sub('photos').update(function(photos) {
+                return photos.unshift(Immutable.fromJS(res));
+            });
+            !binding.get('coverUrl') && self.photoPin(res.pic);
         });
     };
 
