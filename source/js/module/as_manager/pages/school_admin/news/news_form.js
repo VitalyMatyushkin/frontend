@@ -19,7 +19,9 @@ NewsForm = React.createClass({
 				<FormField type="text" field="title" validation="required">Title</FormField>
 				<FormField type="textarea" field="body" validation="required">Text</FormField>
 				<FormField type="date" field="date" validation="required">Date</FormField>
-                <input type="file" />
+				<FormColumn type="column">
+					<FormField type="file" labelText="Add image to news" typeOfFile="image" field="picUrl"/>
+				</FormColumn>
 			</Form>
 		)
 	}
