@@ -70,12 +70,14 @@ const HomeFixtures = React.createClass({
     },
     getFixtureResults:function(event){
         if(event.result !== undefined){
-            var firstPoint = event.result.summary.byTeams[event.participants[0].id] !== undefined?event.result.summary.byTeams[event.participants[0].id]: 0,
-                secondPoint = event.result.summary.byTeams[event.participants[0].id] !== undefined?event.result.summary.byTeams[event.participants[0].id]: 0;
+            const teamSummary = event.result.summary.byTeams,
+                  firstPoint =  teamSummary[event.participants[0].id] !== undefined ? teamSummary[event.participants[0].id] : 0,
+                  secondPoint = teamSummary[event.participants[1].id] !== undefined ? teamSummary[event.participants[1].id] : 0;
+
             return(
                 <div>
                     <div className="bFix_scoreText">{'Score'}</div>
-                    <div className="bFix_scoreResult">{firstPoint+' : '+secondPoint}</div>
+                    <div className="bFix_scoreResult">{`${firstPoint} : ${secondPoint}`}</div>
                 </div>
             );
         }else{
