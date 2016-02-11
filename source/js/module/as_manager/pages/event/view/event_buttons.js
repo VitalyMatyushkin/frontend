@@ -49,10 +49,9 @@ const EventHeader = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId'),
-            userRole = self.getMoreartyContext().getBinding().get('currentUserRole'), //Gets the global variable containing current role
             ownerId = binding.get('participants.0.school.ownerId'),
-            authRoles = ['coach','manager','teacher']; //Roles that are allowed to control events
-        return (userId === ownerId || authRoles.indexOf(userRole)!=-1);
+            verifiedUser = self.getMoreartyContext().getBinding().get('userData.userInfo.verified');
+        return (userId === ownerId || (verifiedUser.get('email') && verifiedUser.get('phone') && verifiedUser.get('personal')));
     },
     isEnableClose: function () {
         var self = this,
