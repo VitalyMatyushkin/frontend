@@ -3,7 +3,7 @@ const   React           = require('react'),
         Immutable 	    = require('immutable'),
         SVG             = require('module/ui/svg'),
         Promise         = require('bluebird'),
-        Autocomplete    = require('module/ui/autocomplete/autocomplete');
+        Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
 const AutocompleteTeam = React.createClass({
     mixins: [Morearty.Mixin],
@@ -148,7 +148,7 @@ const AutocompleteTeam = React.createClass({
             return data;
         });
     },
-    onSelectStudent: function (selectId, response, model) {
+    onSelectStudent: function (selectId, model) {
         var self = this,
             playersBinding = self.getBinding('players');
 

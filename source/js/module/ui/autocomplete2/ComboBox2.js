@@ -180,7 +180,10 @@ const ComboBox2 = React.createClass({
     onTriangleClick: function(){
         const self = this;
 
-        self.search(self.state.currentText);
+        if(!self.state.isOpen) {
+            self.refs.input.focus();
+            self.refs.input.click();
+        }
     },
     /**
      * Handles left mouse button click on list element
@@ -312,21 +315,25 @@ const ComboBox2 = React.createClass({
 
         return (
             <div className={`bCombobox ${isOpenCN}`}>
-                <input type='text' value={placeholder} style={hintStyle} readOnly/>
-                <input
-                    style={inputStyle}
-                    ref="input"
-                    className="eCombobox_input"
-                    placeholder={placeholder}
-                    value={value}
-                    onChange={self.onChange}
-                    onKeyUp={self.onKeyUp}
-                    onClick={self.onInputClick}
-                    onBlur={self.onBlur}
-                    role="combobox"
-                />
-                <img style={loaderStyle} src="/images/spinner.gif"/>
-                <span className="eCombobox_button" style={triangleStyle} onClick={self.onTriangleClick}>▾</span>
+                <div className="eCombobox_inputContainer">
+                    <input type='text' value={placeholder} style={hintStyle} readOnly/>
+                    <input
+                        style={inputStyle}
+                        ref="input"
+                        className="eCombobox_input"
+                        placeholder={placeholder}
+                        value={value}
+                        onChange={self.onChange}
+                        onKeyUp={self.onKeyUp}
+                        onClick={self.onInputClick}
+                        onBlur={self.onBlur}
+                        role="combobox"
+                    />
+                    <img style={loaderStyle} src="/images/spinner.gif"/>
+                </div>
+                <span className="eCombobox_button"
+                      style={triangleStyle}
+                      onClick={self.onTriangleClick}>▾</span>
                 {self.renderMenuItems()}
             </div>
         );
