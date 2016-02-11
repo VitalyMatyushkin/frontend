@@ -14,42 +14,28 @@ const Head = React.createClass({
             autocomplete: {}
         });
     },
-    serviceChildrenFilter: function (userId) {
-        var self = this,
-            eventChild = [],
-            binding = self.getDefaultBinding();
-        return window.Server.userChildren.get(userId).then(function (data) {
-            //Initial API call only returns ids of the user's children
-            data.map(function (player) {
-                //Iterates and fetches all other details by making extra API calls
-                window.Server.user.get({id:player.userId}).then(function(r){
-                    eventChild.push(r);
-                    binding.set('events.eventChild',Immutable.fromJS(eventChild));
-                    player.name = r.firstName+' '+r.lastName;
-                    return player;
-                });
-            });
-            return data;
-        });
-    },
     componentWillMount: function () {
         var self = this;
 
-        self.menuItems = [{
+        self.menuItems =
+        [{
             href: '/#events/calendar',
-            icon: 'icon_calendar',
-            name: 'Events',
-            key: 'Events',
-            routes: ['/events/:subPage'],
+            name: 'Calendar',
+            key: 'Calendar',
+            authorization: true
+        }, {
+            href: '/#events/challenges',
+            name: 'Fixtures',
+            key: 'Fixtures',
+            authorization: true
+        }, {
+            href: '/#events/achievement',
+            name: 'Achievements',
+            key: 'Achievements',
             authorization: true
         }];
     },
     componentDidMount: function () {
-        var self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
-        if(rootBinding.get('userData.authorizationInfo.userId')){
-            ReactDOM.findDOMNode(self.refs.checkAll).checked = true; //Set the check all box to checked
-        }
     },
     setActiveChild: function() {
         var self = this,
@@ -99,31 +85,12 @@ const Head = React.createClass({
     },
     render: function () {
         var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            userId = rootBinding.get('userData.authorizationInfo.userId');
+            binding = self.getDefaultBinding();
 
         return (
             <div className="bTopPanel">
                 <Logo />
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
-                <If condition={rootBinding.get('userData.authorizationInfo.userId')!==undefined}>
-                    <div className="bDropdown">
-                        <Autocomplete
-                            serviceFullData={self.serviceChildrenFilter.bind(self, userId)}
-                            serverField="name"
-                            placeholderText={'Enter child name'}
-                            onSelect={self.setActiveChild}
-                            binding={binding.sub('autocomplete')}
-                            />
-                    </div>
-                </If>
-                <If condition={rootBinding.get('userData.authorizationInfo.userId')!==undefined}>
-                    <div className="bDropdown" style={{marginLeft:-68+'px'}}>
-                        <input type="checkbox" ref="checkAll" onClick={self.toggleCheckAllBox}></input>
-                        <label>Show all children</label>
-                    </div>
-                </If>
                 <UserBlock binding={binding.sub('userData')}/>
             </div>
         )

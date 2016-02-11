@@ -1,7 +1,6 @@
 const   RouterView  = require('module/core/router'),
         Route       = require('module/core/route'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
         SubMenu     = require('module/ui/menu/sub_menu'),
         Immutable   = require('immutable');
 
@@ -48,7 +47,9 @@ const EventView = React.createClass({
                 if (userChildren && userChildren.length > 0) {
                     self.request = userChildren.map(function(child){
                         window.Server.studentEvents.get({id:child.id})
-                            .then(function(data){self.processRequestData(data,child.userId)});
+                            .then(function(data){
+                                self.processRequestData(data,child.userId);
+                            });
                     });
                     return self.request;
                 }
@@ -95,13 +96,31 @@ const EventView = React.createClass({
                 .commit();
         }
     },
+    serviceChildrenFilter: function (userId) {
+        var self = this,
+            eventChild = [],
+            binding = self.getDefaultBinding();
+        return window.Server.userChildren.get(userId).then(function (data) {
+            //Initial API call only returns ids of the user's children
+            data.map(function (player) {
+                //Iterates and fetches all other details by making extra API calls
+                window.Server.user.get({id:player.userId}).then(function(r){
+                    eventChild.push(r);
+                    binding.set('events.eventChild',Immutable.fromJS(eventChild));
+                    player.name = r.firstName+' '+r.lastName;
+                    return player;
+                });
+            });
+            return data;
+        });
+    },
     render: function () {
         var self = this,
             binding = self.getDefaultBinding(),
             rootBinging = self.getMoreartyContext().getBinding();
 
         return <div>
-            <SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems}/>
+            <SubMenu binding={{default: binding.sub('eventsRouting'), itemsBinding: binding.sub('itemsBinding')}} items={self.menuItems}/>
 
             <div className='bSchoolMaster'>
                 <div className='bEvents'>
