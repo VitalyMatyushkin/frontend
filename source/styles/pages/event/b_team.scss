@@ -3,15 +3,18 @@
   flex-direction: row;
   width: 100%;
   justify-content: space-between;
+  margin: 15px 0 10px;
 }
 
 .bEventTeams_team {
   display: flex;
   flex-direction: column;
-  width: 300px;
-  &:last-child {
-    align-items: flex-end;
-  }
+  width: 48%;
+  border: $BORDER;
+  background: #fff;
+  box-sizing: border-box;
+  align-items: center;
+  text-transform: uppercase;
 }
 .bEvents_venue_preview{
   width:100% !important;
