@@ -1,7 +1,7 @@
 const   Logo            = require('module/as_manager/head/logo'),
         TopMenu         = require('module/ui/menu/top_menu'),
         UserBlock       = require('module/as_manager/head/user_block'),
-        Autocomplete    = require('module/ui/autocomplete/autocomplete'),
+        Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         If              = require('module/ui/if/if'),
         React           = require('react'),
         ReactDOM        = require('reactDom'),
