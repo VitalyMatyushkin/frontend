@@ -2,7 +2,8 @@
 const   React       = require('react'),
         Immutable   = require('immutable'),
         Popup       = require('module/ui/popup'),
-        Album	    = require('module/ui/gallery/album/album_item');
+        Album	    = require('module/ui/gallery/album/album_item'),
+        Gallery 	= require('module/ui/gallery/galleryServices');
 
 const GalleryListPage = React.createClass({
     mixins:[Morearty.Mixin],
@@ -15,48 +16,11 @@ const GalleryListPage = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+            userId = rootBinding.get('userData.authorizationInfo.userId');
 
-        self.getDefaultSchoolAlbum();
-    },
-    componentDidMount:function(){
-
-    },
-    createAlbum:function(activeSchoolId){
-        const self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding();
-
-        window.Server.addAlbum.post({
-            name:'Default Album',
-            description:'Default Album for school site',
-            ownerId:rootBinding.get('userData.authorizationInfo.userId')
-        }).then(album => {
-            binding.set('defaultAlbum',album);
-            self.updateSchool(activeSchoolId, album.id);
-        });
-    },
-    loadAlbum:function(albumId){
-        const self = this,
-            binding = self.getDefaultBinding();
-
-        window.Server.album.get(albumId).then(album => binding.set('defaultAlbum',album));
-    },
-    updateSchool:function(activeSchoolId, albumId){
-        window.Server.school.put(activeSchoolId, {defaultAlbumId:albumId});
-    },
-    getDefaultSchoolAlbum:function(){
-        const self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId');
-
-        window.Server.school.get(activeSchoolId).then(school => {
-            if(school){
-                school.defaultAlbumId && self.loadAlbum(school.defaultAlbumId);
-                !school.defaultAlbumId && self.createAlbum(activeSchoolId);
-            }
-        });
+        self.gallery = new Gallery(binding.sub('defaultAlbum'));
+        self.gallery.getDefaultSchoolAlbum(activeSchoolId, userId);
     },
     onClickAlbum: function(album) {
         const self = this;
