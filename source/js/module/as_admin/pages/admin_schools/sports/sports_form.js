@@ -61,7 +61,7 @@ let SportsForm = React.createClass({
         if(data.positions.value === undefined) {
             data.positions.value = [];
         }
-        data.positions.value.push(event.target.value.trim());
+        data.positions.value.push(event.target.value);
         binding.meta().set("positions", Immutable.fromJS(data.positions));
     },
     onChangePosition: function(id, event) {
@@ -73,7 +73,7 @@ let SportsForm = React.createClass({
             data.positions.value.splice(id, 1);
             binding.meta().set("positions", Immutable.fromJS(data.positions));
         } else {
-            data.positions.value[id] = event.target.value.trim();
+            data.positions.value[id] = event.target.value;
             binding.meta().set("positions", Immutable.fromJS(data.positions));
         }
     },
