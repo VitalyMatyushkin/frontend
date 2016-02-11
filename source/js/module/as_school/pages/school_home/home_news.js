@@ -36,7 +36,7 @@ const HomeNews = React.createClass({
     getNewsExcerpt:function(newsBody){
         if(newsBody !== undefined){
             var tmpStr = newsBody.split('<p>')[2];
-            return tmpStr.split('</p>')[0].slice(0,50)+'...';
+            return tmpStr.split('</p>')[0].slice(0,100)+'...';
         }
     },
     renderNewsItems:function(){

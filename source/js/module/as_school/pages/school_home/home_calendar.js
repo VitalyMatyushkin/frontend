@@ -30,6 +30,32 @@ const HomeCalender = React.createClass({
     getSport:function(){
 
     },
+    getSportIcon:function(sport){
+        if(sport !== undefined){
+            var icon;
+            switch (sport.name){
+                case 'football':
+                    icon = <img classes="bIcon_fixture_mod" src="/images/ball.png"></img>;
+                    break;
+                case 'cricket':
+                    icon = <img classes="bIcon_fixture_mod" src="/images/cricket.png"></img>;
+                    break;
+                case 'hockey':
+                    icon = <img classes="bIcon_fixture_mod" src="/images/hockey.png"></img>;
+                    break;
+                case 'rugby':
+                    icon = <img classes="bIcon_fixture_mod" src="/images/rugby_ball.png"></img>;
+                    break;
+                case 'netball':
+                    icon = <img classes="bIcon_fixture_mod" src="/images/netball.png"></img>;
+                    break;
+                default:
+                    icon = <img classes="bIcon_fixture_mod" src="/images/rounders.png"></img>;
+                    break;
+            }
+            return icon;
+        }
+    },
     getCalenderFixtureLists:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -41,7 +67,7 @@ const HomeCalender = React.createClass({
                     team2 = self.getTeams(fixture.participants[1]);
                 return (
                     <div key={fixture.id} className="eSchoolFixtureListItem">
-                        <span className="eSchoolCalenderFixtureItem">{fixture.sport.name}</span>
+                        <span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
                         <span className="eSchoolCalenderFixtureItem">{self.getDateFromIso(fixture.startTime)}</span>
                         <span className="eSchoolCalenderFixtureItem">{team1+' vs '+team2}</span>
                         <span className="eSchoolCalenderFixtureItem">{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
