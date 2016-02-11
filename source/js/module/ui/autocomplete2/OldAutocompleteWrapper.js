@@ -48,6 +48,7 @@ const OldAutocompleteWrapper = React.createClass({
                 onSelect={self.props.onSelect}
                 getElementTitle={self.getInputText}
                 onEscapeSelection={self.getEscapeSelectFunction()}
+                clearAfterSelect={self.props.clearAfterSelect !== undefined ? self.props.clearAfterSelect : false}
             />
         );
     }
