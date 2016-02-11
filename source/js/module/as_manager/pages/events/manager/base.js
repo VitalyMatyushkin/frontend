@@ -143,7 +143,7 @@ const EventManagerBase = React.createClass({
         * check combo boxes for equality if equal alert the user
         * */
         if(gameType ==='houses'){
-            if(comboBoxes[0].value !== comboBoxes[1].value){
+            if(model.name !== comboBoxes[order].value){
                 document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
                 dupErrorEl.style.display = 'none';
                 if (model) {
