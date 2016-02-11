@@ -249,6 +249,12 @@ const EventManagerBase = React.createClass({
                 value={age}>{'Y' + age}</Morearty.DOM.option>;
         });
     },
+    getEventDate: function(date) {
+        return new Date(date).toLocaleDateString();
+    },
+    getEventTime: function(date) {
+        return new Date(date).toLocaleTimeString();
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -268,7 +274,8 @@ const EventManagerBase = React.createClass({
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
-                    placeholder={'choose date'}
+                    value={self.getEventDate(binding.get('model.startTime'))}
+                    disabled={'disabled'}
                     />
             </div>
             <div className="eManager_group">
@@ -276,7 +283,8 @@ const EventManagerBase = React.createClass({
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
-                    placeholder={''}
+                    value={self.getEventTime(binding.get('model.startTime'))}
+                    disabled={'disabled'}
                     />
             </div>
             <div className="eManager_group">
