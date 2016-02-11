@@ -12,30 +12,31 @@ const ComboBox2 = React.createClass({
         /**
          * Placeholder text displayed when input area is empty
          */
-        placeholder:     React.PropTypes.string,
+        placeholder:       React.PropTypes.string,
         /**
          * True when combobox expect data from an async request
          */
-        isLoading:       React.PropTypes.bool,
+        isLoading:         React.PropTypes.bool,
         /**
          * Function that return sync and async result of search.
          * @param searchText - text for search request
          * @returns {sync:[...], async:Promise}
          */
-        searchFunction:  React.PropTypes.func,
+        searchFunction:    React.PropTypes.func,
         /**
          * Call when user click on element in list.
          * @param id      - element id from search result
          * @param element - element from search result
          */
-        onSelect:                 React.PropTypes.func,
-        onEscapeSelection:        React.PropTypes.func,
+        onSelect:          React.PropTypes.func,
+        onEscapeSelection: React.PropTypes.func,
         /**
          * Function return element representaition in combobox list.
          * @param element - element from search result.
          * @returns text element representation
          */
-        getElementTitle: React.PropTypes.func
+        getElementTitle:   React.PropTypes.func,
+        clearAfterSelect:  React.PropTypes.bool
     },
     getInitialState: function(){
         return {
@@ -148,11 +149,20 @@ const ComboBox2 = React.createClass({
               currentElement = self.state.dataList[index];
 
         self.props.onSelect(currentElement.id, currentElement);
-        self.setState({
-            dataList:     [],
-            currentIndex: undefined,
-            currentText:  self.props.getElementTitle(self.state.dataList[index])
-        });
+        if(self.props.clearAfterSelect) {
+            self.setState({
+                dataList:     [],
+                currentIndex: undefined,
+                currentText:  ''
+            });
+        } else {
+            self.setState({
+                dataList:     [],
+                currentIndex: undefined,
+                currentText:  self.props.getElementTitle(self.state.dataList[index])
+            });
+        }
+
     },
     /**
      * Mark element in data list
