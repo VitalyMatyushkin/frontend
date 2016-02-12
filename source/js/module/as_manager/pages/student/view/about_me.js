@@ -39,10 +39,10 @@ const AboutMeBlock = React.createClass({
 		aboutListNodes.push(self._getAboutNode('icon_library', 'classData.name'));
 		aboutListNodes.push(self._getAboutNode('icon_shot','numOfGamesScoredIn'));
 		aboutListNodes.push(self._getAboutNode('icon_trophy', 'numOfGamesWon'));
-		aboutListNodes.push(self._getAboutNode('icon_user','numberOfGamesPlayed'));
+		aboutListNodes.push(self._getAboutNode('icon_score','numberOfGamesPlayed'));
 		aboutListNodes.push(self._getAboutNode('icon_office', 'schoolData.name'));
-		parentListNodes.push(self._getAboutParentNode('icon_man','parents.0.firstName'));
-		parentListNodes.push(self._getAboutParentNode('icon_woman','parents.1.firstName'));
+		parentListNodes.push(self._getAboutParentNode('icon_dad','parents.0.firstName'));
+		parentListNodes.push(self._getAboutParentNode('icon_mom','parents.1.firstName'));
 		return (
 			<div className="bAboutList">
 				<h6>{self.props.title || 'About me'}</h6>
