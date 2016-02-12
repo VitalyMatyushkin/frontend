@@ -39,6 +39,7 @@
 .bEventHeader_wrap {
   display: flex;
   flex-wrap: wrap;
+  margin-top: 10px;
 }
 .eEventHeader_field_wrap{
   display: flex;
@@ -48,4 +49,7 @@
 }
 .eEventHeader_field_wrap .eEventHeader_field{
   width: 100%;
+}
+.eEventHeader_field.mSport{
+  display: flex;
 }

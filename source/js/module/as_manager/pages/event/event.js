@@ -184,21 +184,7 @@ const EventView = React.createClass({
                 <If condition={binding.get('sync')=== true}>
                     <div className="bEvent">
                         <EventButtons binding={binding} />
-                        <div className="eEvent_commentBox">
-                            <If condition={(binding.get('mode') === 'closing') || false}>
-                                <Morearty.DOM.textarea
-                                    className="eEvent_comment"
-                                    onChange={Morearty.Callback.set(binding, 'model.comment')}
-                                    value={binding.get('model.comment')} id="commentTextArea"
-                                    />
-                            </If>
-                            <If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
-                                <div>
-                                    <div className="eEvent_commentHeader" onClick={self.onToggleShowComment}>{binding.get('showingComment') ? 'hide' : 'show comment'}</div>
-                                    <div className={commentTextClasses}>{binding.get('model.result.comment')}</div>
-                                </div>
-                            </If>
-                        </div>
+
                         <div className="bEventHeader_wrap">
                             <EventHeader binding={binding}/>
                             <EventRivals binding={binding}/>
@@ -211,6 +197,22 @@ const EventView = React.createClass({
                         <If condition={((binding.get('mode') === 'general') && (binding.get('model.resultId') !== undefined)) || false}>
                             <Comments binding={binding}/>
                         </If>
+                        <div className="eEvent_commentBox">
+                            <If condition={(binding.get('mode') === 'closing') || false}>
+                                <Morearty.DOM.textarea
+                                    placeholder="comments"
+                                    className="eEvent_comment"
+                                    onChange={Morearty.Callback.set(binding, 'model.comment')}
+                                    value={binding.get('model.comment')} id="commentTextArea"
+                                    />
+                            </If>
+                            <If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
+                                <div>
+                                    <div className="eEvent_commentHeader" onClick={self.onToggleShowComment}>{binding.get('showingComment') ? 'hide' : 'show comment'}</div>
+                                    <div className={commentTextClasses}>{binding.get('model.result.comment')}</div>
+                                </div>
+                            </If>
+                        </div>
                     </div>
                 </If>
                 <If condition={!binding.get('sync')}>

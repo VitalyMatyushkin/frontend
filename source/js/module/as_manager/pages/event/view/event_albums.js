@@ -74,7 +74,7 @@ const EventHeader = React.createClass({
 				</div>
 				<div ref='albumsList' className='bEventAlbums'>
 					{binding.get('albums').map(self.renderAlbum)}
-					<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate' style={{width: '100px'}}>
+					<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate'>
 						<span className='eEventAlbums_albumTitle'>Add...</span>
 					</div>
 				</div>

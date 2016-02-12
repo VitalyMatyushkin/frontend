@@ -8,6 +8,7 @@
 .bEvent_media{
   background: #fff;
   border: $BORDER;
+  display: flex;
 }
 .bEventAlbums_header {
 	width: auto;
@@ -38,7 +39,7 @@
 	display: flex;
 	margin: 10px;
 	height: 80px;
-	width: 100px;
+	width: 110px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -57,16 +58,15 @@
 			text-align: center;
 			vertical-align: middle;
 			margin: 0 auto;
-		  width: 20px;
-		  height: 20px;
-		  line-height: 20px;
+		  width: 21px;
+		  height: 21px;
+		  line-height: 21px;
 		  border: $BORDER;
 		  border-radius: 50%;
 		  background: $MAIN_COLOR;
 		}
 		&:hover {
 			&:before {
-				color: $MAIN_COLOR;
 			}
 		}
 	}
@@ -110,7 +110,6 @@
 	&:hover {
 		border-color: $MAIN_COLOR;
 		.eEventAlbums_albumTitle {
-			background: rgba(76, 175, 80, 0.5);
 		}
 	}
 	&:hover {
