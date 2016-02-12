@@ -50,8 +50,9 @@ const LeanerView = React.createClass({
                                         //Checks whether the object returned is empty
                                         //TODO: May need refactoring
                                         if(returnedUser.length != 0){
-                                            leanerData.parentOne = returnedUser[0].firstName+' '+returnedUser[0].lastName;
-                                            leanerData.parentTwo = returnedUser[1].firstName+' '+returnedUser[1].lastName;
+                                            //Some children may have one parent so checking in here too
+                                            leanerData.parentOne = returnedUser[0] !== undefined ? returnedUser[0].firstName+' '+returnedUser[0].lastName:'';
+                                            leanerData.parentTwo = returnedUser[1] !== undefined ? returnedUser[1].firstName+' '+returnedUser[1].lastName:'';
                                         }
                                         window.Server.studentData.get(studentId).then(function(student){
                                             leanerData.student = student;
