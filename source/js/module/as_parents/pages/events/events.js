@@ -14,6 +14,7 @@ const EventView = React.createClass({
 
         return Immutable.fromJS({
             eventsRouting: {},
+            eventChild:[],
             teams: [],
             sports: {
                 models: [],
@@ -30,6 +31,8 @@ const EventView = React.createClass({
             userId = rootBinding.get('userData.authorizationInfo.userId'),
             binding = self.getDefaultBinding(),
             sportsBinding = binding.sub('sports');
+
+        self.serviceChildrenFilter(userId);
         self.eventModel = [];
         window.Server.sports.get().then(function (data) {
             sportsBinding
@@ -62,20 +65,37 @@ const EventView = React.createClass({
                 .set('sync', true)
                 .commit();
         });
+    },
+    componentDidMount:function(){
+        const self = this,
+            binding = self.getDefaultBinding();
 
-        self.menuItems = [{
-            href: '/#events/calendar',
-            name: 'Calendar',
-            key: 'Calendar'
-        }, {
-            href: '/#events/challenges',
-            name: 'Fixtures',
-            key: 'Fixtures'
-        }, {
-            href: '/#events/achievement',
-            name: 'Achievements',
-            key: 'Achievements'
-        }];
+        self.addBindingListener(binding, 'eventChild', self.createSubMenu);
+        self.addBindingListener(binding, 'eventsRouting.currentPathParts', self.createSubMenu);
+    },
+    createSubMenu: function(){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            children = binding.toJS('eventChild'),
+            partPath = binding.toJS('eventsRouting.currentPathParts'),
+            mainMenuItem = partPath && partPath.length > 1 ? '/#' + partPath[0] + '/' + partPath[1] : '',
+            menuItems = [];
+
+        children.forEach(child => {
+            menuItems.push({
+                icon: child.gender === 'female' ? 'icon_girl':'icon_boy',
+                href: mainMenuItem + '/' + child.id,
+                name: child.firstName + ' ' + child.lastName,
+                key: child.id
+            });
+        });
+        menuItems.push({
+            icon: 'icon_girl_boy',
+            href: mainMenuItem,
+            name: 'Show all children',
+            key: 'all'
+        });
+        binding.set('itemsBinding', Immutable.fromJS(menuItems));
     },
     processRequestData:function(reqData,id){
         var self = this,
@@ -106,7 +126,7 @@ const EventView = React.createClass({
                 //Iterates and fetches all other details by making extra API calls
                 window.Server.user.get({id:player.userId}).then(function(r){
                     eventChild.push(r);
-                    binding.set('events.eventChild',Immutable.fromJS(eventChild));
+                    binding.set('eventChild',Immutable.fromJS(eventChild));
                     player.name = r.firstName+' '+r.lastName;
                     return player;
                 });
@@ -125,7 +145,7 @@ const EventView = React.createClass({
             <div className='bSchoolMaster'>
                 <div className='bEvents'>
                     <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
-                        <Route path='/events/calendar' binding={binding}
+                        <Route path='/events/calendar /events/calendar/:userId' binding={binding}
                                component='module/as_parents/pages/events/events_calendar'/>
                         <Route path='/events/challenges' binding={binding}
                                component='module/as_manager/pages/events/events_challenges'/>

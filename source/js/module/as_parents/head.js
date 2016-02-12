@@ -19,6 +19,7 @@ const Head = React.createClass({
 
         self.menuItems =
         [{
+            icon: 'icon_calendar',
             href: '/#events/calendar',
             name: 'Calendar',
             key: 'Calendar',
