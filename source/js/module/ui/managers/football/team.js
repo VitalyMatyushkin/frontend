@@ -2,7 +2,7 @@ const 	SVG 			= require('module/ui/svg'),
 		React 			= require('react'),
 		ReactDOM 		= require('reactDom'),
 		Immutable 		= require('immutable'),
-		Autocomplete 	= require('module/ui/autocomplete/autocomplete');
+		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
 const FootballManager = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -92,7 +92,7 @@ const FootballManager = React.createClass({
 			return data;
 		});
 	},
-	onSelectLearner: function (selectId, response, model) {
+	onSelectLearner: function (selectId, model) {
         var self = this,
             players = self.getDefaultBinding().sub(['rivals', self.props.order, 'players']);
 

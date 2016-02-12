@@ -1,4 +1,4 @@
-const   Autocomplete    = require('module/ui/autocomplete/autocomplete'),
+const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         If              = require('module/ui/if/if'),
         Multiselect     = require('module/ui/multiselect/multiselect'),
         React           = require('react'),
@@ -17,12 +17,12 @@ const EventManagerBase = React.createClass({
      */
     serviceHouseFilter: function(houseName) {
         const   binding     = this.getDefaultBinding(),
-                schoolId    = binding.get('schoolInfo.id'),
-                ids         = binding.get('autocomplete.houses').toArray().map(house => {
-                    console.log(`houses: ${JSON.stringify(house)}`);
-                    console.log(`selectedId: ${house.get('selectedId')}`);
-				    return house.get('selectedId') || !house.get('selectedId');
-			    });
+                schoolId    = binding.get('schoolInfo.id');
+                //ids         = binding.get('autocomplete.houses').toArray().map(house => {
+                //    console.log(`houses: ${JSON.stringify(house)}`);
+                //    console.log(`selectedId: ${house.get('selectedId')}`);
+				 //   return house.get('selectedId') || !house.get('selectedId');
+			    //});
 
         return window.Server.houses.get(schoolId);  // this is some shit happens around, so I will stay this here for a while
         //return window.Server.houses.get(schoolId, {
@@ -132,7 +132,7 @@ const EventManagerBase = React.createClass({
 
         binding.set('model.ages', Immutable.fromJS(selections));
     },
-	onSelectRival: function (order, id, response, model) {
+	onSelectRival: function (order, id, model) {
 		var self = this,
 			binding = self.getDefaultBinding(),
             comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
@@ -143,7 +143,7 @@ const EventManagerBase = React.createClass({
         * check combo boxes for equality if equal alert the user
         * */
         if(gameType ==='houses'){
-            if(comboBoxes[0].value !== comboBoxes[1].value){
+            if(model.name !== comboBoxes[order].value){
                 document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
                 dupErrorEl.style.display = 'none';
                 if (model) {
@@ -249,6 +249,12 @@ const EventManagerBase = React.createClass({
                 value={age}>{'Y' + age}</Morearty.DOM.option>;
         });
     },
+    getEventDate: function(date) {
+        return new Date(date).toLocaleDateString();
+    },
+    getEventTime: function(date) {
+        return new Date(date).toLocaleTimeString();
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -268,7 +274,8 @@ const EventManagerBase = React.createClass({
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
-                    placeholder={'choose date'}
+                    value={self.getEventDate(binding.get('model.startTime'))}
+                    disabled={'disabled'}
                     />
             </div>
             <div className="eManager_group">
@@ -276,7 +283,8 @@ const EventManagerBase = React.createClass({
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
-                    placeholder={''}
+                    value={self.getEventTime(binding.get('model.startTime'))}
+                    disabled={'disabled'}
                     />
             </div>
             <div className="eManager_group">

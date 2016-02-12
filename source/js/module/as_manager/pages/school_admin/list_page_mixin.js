@@ -91,6 +91,9 @@ const ListPageMixin = {
     _adminCreateNewUser:function(){
         document.location.hash = 'admin_schools/admin_views/create_user';
     },
+    _createNewsItem:function(){
+        document.location.hash = 'school_admin/news/add';
+    },
 	toggleFilters: function() {
 		var self = this,
 			metaBinding = self.getDefaultBinding().meta(),
@@ -213,6 +216,9 @@ const ListPageMixin = {
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='sports'}>
                             <div className="bButton" onClick={self._addNewSport}>Add New Sport</div>
+                        </If>
+                        <If condition={currentPage[currentPage.length-1] ==='news'}>
+                            <div className="bButton" onClick={self._createNewsItem}>Create News</div>
                         </If>
                     </div>
                 </div>

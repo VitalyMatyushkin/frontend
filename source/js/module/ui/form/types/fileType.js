@@ -11,7 +11,8 @@ const   TypeMixin = require('module/ui/form/types/type_mixin'),
 const FileTypeUpload = React.createClass({
     mixins:[Morearty.Mixin, TypeMixin],
     propTypes:{
-        typeOfFile:React.PropTypes.string
+        typeOfFile:React.PropTypes.string,
+        labelText: React.PropTypes.string
     },
     getDefaultState: function () {
         return Immutable.fromJS({
@@ -113,7 +114,7 @@ const FileTypeUpload = React.createClass({
                 </div>
                 <div className="eForm_fileInput">
                     <input className="inputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
-                    <label className="labelForInputFile" htmlFor="file">Upload School Blazon</label>
+                    <label className="labelForInputFile" htmlFor="file">{self.props.labelText || 'Default'}</label>
                 </div>
             </div>
         );
