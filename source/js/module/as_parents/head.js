@@ -1,10 +1,7 @@
 const   Logo            = require('module/as_manager/head/logo'),
         TopMenu         = require('module/ui/menu/top_menu'),
         UserBlock       = require('module/as_manager/head/user_block'),
-        Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-        If              = require('module/ui/if/if'),
         React           = require('react'),
-        ReactDOM        = require('reactDom'),
         Immutable       = require('immutable');
 
 const Head = React.createClass({
@@ -19,70 +16,24 @@ const Head = React.createClass({
 
         self.menuItems =
         [{
-            icon: 'icon_calendar',
-            href: '/#events/calendar',
+            href: '/#events/calendar/all',
             name: 'Calendar',
             key: 'Calendar',
-            authorization: true
+            authorization: true,
+            routes: ['/events/calendar/:userId']
         }, {
-            href: '/#events/challenges',
+            href: '/#events/challenges/all',
             name: 'Fixtures',
             key: 'Fixtures',
-            authorization: true
+            authorization: true,
+            routes: ['/events/challenges/:userId']
         }, {
-            href: '/#events/achievement',
+            href: '/#events/achievement/all',
             name: 'Achievements',
             key: 'Achievements',
-            authorization: true
+            authorization: true,
+            routes: ['/events/achievement/:userId']
         }];
-    },
-    componentDidMount: function () {
-    },
-    setActiveChild: function() {
-        var self = this,
-            binding = self.getDefaultBinding();
-        binding
-            .atomically()
-            .set('events.activeChildId', Immutable.fromJS(arguments[0]))
-            .set('sync', true)
-            .commit();
-
-        window.Server.studentEvents.get({id: arguments[0]}).then(function (data) {
-            binding
-                .atomically()
-                .set('events.models', Immutable.fromJS(data))
-                .set('sync', true)
-                .commit();
-            React.findDOMNode(self.refs.checkAll).checked = false; //Toggle checkbox off
-        });
-    },
-    toggleCheckAllBox:function(evt){
-        var checkBoxAttr = evt.currentTarget.checked,
-            self = this,
-            binding = self.getDefaultBinding();
-        if(checkBoxAttr){
-            self.persistChildId = binding.get('events.activeChildId');
-            binding
-                .atomically()
-                .set('events.activeChildId','all')
-                .set('events.models',binding.get('events.persistEventModels'))
-                .set('sync',true)
-                .commit();
-        }else{
-            if(binding.get('events.activeChildId')==='all' && self.persistChildId === undefined){
-                alert('Please choose a student');
-                evt.currentTarget.checked = true;
-            }else{
-                window.Server.studentEvents.get({id: self.persistChildId}).then(function (data) {
-                    binding
-                        .atomically()
-                        .set('events.activeChildId',self.persistChildId)
-                        .set('events.models', Immutable.fromJS(data))
-                        .set('sync', true)
-                        .commit();
-                });
-            }
-        }
     },
     render: function () {
         var self = this,

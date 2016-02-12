@@ -128,7 +128,8 @@ const RouterView = React.createClass({
 			var pathParameters = Array.prototype.slice.call(arguments, 0);
 
 			// Updating parametrized parts of path
-			pathParameters.length && self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));
+			//pathParameters.length && self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters)); //parameters are not removed!!!
+			self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));//set and remove parameters
 
 			// User will be redirected to login page when unauthorized.
 			// In this case latest routing is saved
