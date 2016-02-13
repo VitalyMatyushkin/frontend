@@ -8,8 +8,9 @@ const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			outbox: {},
 			inbox: {},
+			outbox: {},
+			archive: {},
 			decline: {
 				type: 'decline'
 			},
@@ -49,10 +50,9 @@ const InvitesView = React.createClass({
 			<div className='bSchoolMaster'>
 				<div className='bInvites'>
 					<RouterView routes={ binding.sub('invitesRouting') } binding={globalBinding}>
-						<Route path='/invites' binding={binding.sub('inbox')} component='module/as_manager/pages/invites/views/inbox'  />
-						<Route path='/invites/inbox' binding={binding.sub('inbox')} component='module/as_manager/pages/invites/views/inbox'  />
+						<Route path='/invites /invites/inbox' binding={binding.sub('inbox')} component='module/as_manager/pages/invites/views/inbox'  />
 						<Route path='/invites/outbox' binding={binding.sub('outbox')} component='module/as_manager/pages/invites/views/outbox'  />
-						<Route path='/invites/archive' binding={binding.sub('outbox')} component='module/as_manager/pages/invites/views/archive'  />
+						<Route path='/invites/archive' binding={binding.sub('archive')} component='module/as_manager/pages/invites/views/archive'  />
 						<Route path='/invites/:inviteId/accept' binding={binding.sub('accept')} component='module/as_manager/pages/invites/views/accept'  />
 						<Route path='/invites/:inviteId/decline' binding={binding.sub('decline')} component='module/as_manager/pages/invites/views/answer'  />
 						<Route path='/invites/:inviteId/cancel' binding={binding.sub('cancel')} component='module/as_manager/pages/invites/views/answer'  />
