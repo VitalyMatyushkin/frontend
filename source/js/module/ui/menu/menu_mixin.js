@@ -67,19 +67,10 @@ const MenuMixin = {
 			case 'file':
 				return this.__renderFileNode(item, className);
 			case 'Console':
-				// Original comment: //We don't want to show the console tab if the current user is not an admin
-				// I don't understand logic of this kind of checks but I just move it into switch.
-				// original check was few lines below
-				// TODO: fix me
-				if(userRole !== 'admin') {
-					if(userId !== undefined) {
-						return this.__renderDefaultNode(item, className);
-					} else {
-						return null;
-					}
-				} else {
+				//We don't want to show the console tab if the current user is not an admin
+				if(userRole == 'admin')
 					return this.__renderDefaultNode(item, className);
-				}
+				return null;
 			default:
 				return this.__renderDefaultNode(item, className);
 		}
