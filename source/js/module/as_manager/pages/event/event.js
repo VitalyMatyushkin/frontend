@@ -184,10 +184,23 @@ const EventView = React.createClass({
                 <If condition={binding.get('sync')=== true}>
                     <div className="bEvent">
                         <EventButtons binding={binding} />
-                        <EventHeader binding={binding} />
+
+                        <div className="bEventHeader_wrap">
+                            <EventHeader binding={binding}/>
+                            <EventRivals binding={binding}/>
+                        </div>
+                        <EventTeams binding={binding} />
+                        <If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
+                            <div className="eEvent_shadowCommentText">{self.commentContent}</div>
+                        </If>
+                        <EventAlbums binding={binding} />
+                        <If condition={((binding.get('mode') === 'general') && (binding.get('model.resultId') !== undefined)) || false}>
+                            <Comments binding={binding}/>
+                        </If>
                         <div className="eEvent_commentBox">
                             <If condition={(binding.get('mode') === 'closing') || false}>
                                 <Morearty.DOM.textarea
+                                    placeholder="comments"
                                     className="eEvent_comment"
                                     onChange={Morearty.Callback.set(binding, 'model.comment')}
                                     value={binding.get('model.comment')} id="commentTextArea"
@@ -200,16 +213,6 @@ const EventView = React.createClass({
                                 </div>
                             </If>
                         </div>
-                        <EventRivals binding={binding} />
-                        <If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
-                            <div className="eEvent_shadowCommentText">{self.commentContent}</div>
-                        </If>
-                        <VenuePreview binding={binding}/>
-                        <EventAlbums binding={binding} />
-                        <EventTeams binding={binding} />
-                        <If condition={((binding.get('mode') === 'general') && (binding.get('model.resultId') !== undefined)) || false}>
-                            <Comments binding={binding}/>
-                        </If>
                     </div>
                 </If>
                 <If condition={!binding.get('sync')}>

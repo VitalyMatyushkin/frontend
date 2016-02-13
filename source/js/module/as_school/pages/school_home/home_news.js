@@ -35,7 +35,7 @@ const HomeNews = React.createClass({
     },
     getNewsExcerpt:function(newsBody){
         if(newsBody !== undefined){
-            return `<p>${newsBody.slice(0,50)}</p>`;
+            return `<p>${newsBody.slice(0,100)}</p>`;
         }
     },
     renderNewsItems:function(){

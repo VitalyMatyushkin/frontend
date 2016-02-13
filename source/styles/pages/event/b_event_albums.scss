@@ -1,22 +1,26 @@
 .bEventAlbums {
 	display: flex;
 	width: 100%;
-	padding: 5px 0;
 	flex-flow: wrap;
 	justify-content: flex-start;
 }
 
+.bEvent_media{
+  background: #fff;
+  border: $BORDER;
+  display: flex;
+}
 .bEventAlbums_header {
 	width: auto;
 	height: 25px;
 	margin-top: 5px;
-	background-color: $MAIN_COLOR;
 	border-radius: 4px;
 	label {
 		line-height: 25px;
 		margin-left: 10px;
-		color: white;
 		float: left;
+	  	color: $COLOR;
+	  	text-transform: uppercase;
 	}
 
 	label.eEventAlbums_title {
@@ -33,9 +37,9 @@
 
 .eEventAlbums_album {
 	display: flex;
-	margin-right: 5px;
-	height: 100px;
-	width: 100px;
+	margin: 10px;
+	height: 80px;
+	width: 110px;
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center center;
@@ -48,16 +52,21 @@
 	&.mCreate {
 		&:before {
 			content: '+';
-			font-size: 55px;
-			color: rgba(76, 175, 80, 0.5);
+			font-size: 15px;
+		  	font-weight: bold;
+			color: #fff;
 			text-align: center;
 			vertical-align: middle;
 			margin: 0 auto;
-			margin-top: 7px;
+		  width: 21px;
+		  height: 21px;
+		  line-height: 21px;
+		  border: $BORDER;
+		  border-radius: 50%;
+		  background: $MAIN_COLOR;
 		}
 		&:hover {
 			&:before {
-				color: $MAIN_COLOR;
 			}
 		}
 	}
@@ -91,13 +100,9 @@
 
 .eEventAlbums_albumTitle {
 	display: flex;
-	padding: 5px 10px;
-	background: rgba(0, 0, 0, 0.4);
 	width: 100%;
 	text-align: center;
 	justify-content: center;
-	margin-top: 5px;
-	color: #fff;
 	font-size: 12px;
 }
 
@@ -105,7 +110,6 @@
 	&:hover {
 		border-color: $MAIN_COLOR;
 		.eEventAlbums_albumTitle {
-			background: rgba(76, 175, 80, 0.5);
 		}
 	}
 	&:hover {
