@@ -11,8 +11,6 @@
 
 .eInvite_header {
   justify-content: space-between;
-  text-overflow: ellipsis;
-  overflow: hidden;
   height: 40px;
   white-space: nowrap;
   display: flex;
@@ -29,8 +27,12 @@
 }
 
 .eInvite_eventName{
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: bold;
   color: #535353;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 250px;
 }
 
 .eInvite_eventDate {
@@ -53,7 +55,7 @@
   width: 320px;
   display: flex;
   flex-direction: row;
-  margin: -10px 10px 10px;
+  margin: 0 0 10px;
   text-transform: uppercase;
   justify-content: flex-end;
 }
@@ -82,7 +84,7 @@
 .eInvites_list{
   display: flex;
   flex-wrap: wrap;
-  width: 970px;
+  max-width: 970px;
   margin: auto;
 }
 
@@ -95,4 +97,9 @@
 .eInviteSport{
   display: flex;
   justify-content: flex-end;
+}
+.eInviteWrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
