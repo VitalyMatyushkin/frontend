@@ -68,8 +68,9 @@ const MenuMixin = {
 				return this.__renderFileNode(item, className);
 			case 'Console':
 				//We don't want to show the console tab if the current user is not an admin
-				if(userRole == 'admin')
-					return this.__renderDefaultNode(item, className);
+				//if(userRole == 'admin')
+				if(userId !== undefined)
+						return this.__renderDefaultNode(item, className);
 				return null;
 			default:
 				return this.__renderDefaultNode(item, className);
