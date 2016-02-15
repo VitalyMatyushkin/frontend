@@ -27,7 +27,7 @@ const RoleSelectorComponent = React.createClass({
                     window.location.href = `http://${domain}/#schools`;
                     break;
                 case 'parents':
-                    window.location.href = `http://${domain}/#events/calendar`;
+                    window.location.href = `http://${domain}/#events/calendar/all`;
                     break;
             }
         } else {

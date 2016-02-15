@@ -10,7 +10,7 @@ const AboutMeBlock = React.createClass({
 		 * Arrays holding icon names and data fields, moves away from pushing all of data onto a component array
 		 * that was not being cleared and causing page to render details twice
 		 */
-		var icons = ['icon_home', 'icon_library', 'icon_shot', 'icon_trophy', 'icon_user', 'icon_office'],
+		var icons = ['icon_home', 'icon_library', 'icon_shot', 'icon_trophy', 'icon_score', 'icon_office'],
 			fields = ['houseData.name','classData.name','numOfGamesScoredIn','numOfGamesWon','numberOfGamesPlayed', 'schoolData.name'],
 			self = this,
 			binding = self.getDefaultBinding();
@@ -22,7 +22,7 @@ const AboutMeBlock = React.createClass({
 		});
 	},
 	_getAboutParentNode:function(){
-		var icons = ['icon_man','icon_woman'],
+		var icons = ['icon_dad','icon_mom'],
 			fields = ['parentOne','parentTwo'],
 			self = this,
 			binding = self.getDefaultBinding();

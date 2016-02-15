@@ -67,13 +67,15 @@ const EventRival = React.createClass({
                     <div className="eEventResult_time">{[hours, minutes].join(':')}</div>
                 </If>
                 <If condition={!!binding.get('model.resultId') || binding.get('mode') === 'closing'}>
-                    <div className="eEventResult_score">
-                        <span>{self.getCountPoint(0)}</span>
-                        <span>:</span>
-                        <span>{self.getCountPoint(1)}</span>
-                    </div>
+									<div className="eEventResult_score">
+										<span>Score</span>
+										<div className="eEventResult_point">
+											<span>{self.getCountPoint(0)}</span>
+											<span> : </span>
+											<span>{self.getCountPoint(1)}</span>
+										</div>
+									</div>
                 </If>
-                <div className="eEventResult_vs">V</div>
             </div>
 			<div className="bEventRival">
 				<div className="eEventRival_rival">{self.getPic(1)}</div>
