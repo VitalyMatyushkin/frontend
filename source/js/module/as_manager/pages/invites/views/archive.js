@@ -94,7 +94,11 @@ const ArchiveView = React.createClass({
 			invites = self.getInvites();
 
 		return <div key="ArchiveView" className="eInvites_OutboxContainer">
-			<h2 className="eInvites_titlePage">Archive</h2>
+			<div className="eSchoolMaster_wrap">
+				<h1 className="eSchoolMaster_title">Archive</h1>
+				<div className="eStrip">
+				</div>
+			</div>
 			<div className="eInvites_filterPanel"></div>
 			<div className="eInvites_list" key="ArchiveView_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
 		</div>;

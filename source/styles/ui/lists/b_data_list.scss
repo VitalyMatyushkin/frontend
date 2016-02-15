@@ -34,8 +34,7 @@
 }
 
 .eDataList_listItem:hover{
-  background: #66952e;
-  color: white;
+  background: lighten($MAIN_COLOR, 25%);
 }
 
 .eDataList_listItem.mHead{
@@ -78,8 +77,12 @@
 
 .eDataList_listItemCell{
   display: table-cell;
-  line-height: 40px;
+  height: 40px;
+  vertical-align: middle;
   border-bottom: solid 1px #c2c1c2;
+  overflow: hidden;
+  max-width: 150px;
+  text-overflow: ellipsis;
 }
 
 .eDataList_listItemCell .bLinkLike{
@@ -99,6 +102,7 @@
 .eDataList_listItemCell.mActions{
   max-width: 100px;
   text-align: center;
+  overflow: visible;
 }
 
 .eDataList_filter{

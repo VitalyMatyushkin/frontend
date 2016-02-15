@@ -91,7 +91,7 @@ InviteView = React.createClass({
 			isArchive = typeof binding.get('accepted') === 'boolean',
             inviter = self.getBinding('inviter'),
             invited = self.getBinding('invited'),
-            schoolPicture = self.getParticipantEmblem(binding.get('inviter').get('name')),
+            schoolPicture = self.getParticipantEmblem(binding.get('guest').get('name')),
             sport = self.getSportIcon(binding.get('event.sport.name')),
             ages = binding.get('event.ages'),
             message = binding.get('message') || '',
@@ -105,6 +105,7 @@ InviteView = React.createClass({
                 <span className="eInvite_eventName">
                     {isInbox ? binding.get('inviter').get('name') : null}
                     {isOutBox ? binding.get('guest').get('name') : null}
+                    {isArchive ? binding.get('guest').get('name') : null}
                 </span>
                     <div className="eInviteSport">{sport}</div>
                 </div>
@@ -122,6 +123,8 @@ InviteView = React.createClass({
                     {isInbox ? <a href={'/#invites/' + binding.get('id') + '/decline'}
                                   className="bButton mRed">Decline</a> : null}
                     {isOutBox ? <a href={'/#invites/' + binding.get('id') + '/cancel'}
+                                   className="bButton mRed">Cancel</a> : null}
+                    {isArchive ? <a href={'/#invites/' + binding.get('id') + '/cancel'}
                                    className="bButton mRed">Cancel</a> : null}
                 </div></div>
             </div>
