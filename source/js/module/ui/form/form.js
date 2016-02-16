@@ -139,7 +139,7 @@ var Form = React.createClass({
                     crossDomain: true,
                     dataType: 'json',
                     contentType: 'application/json',
-                    data: type === 'PUT' ? JSON.stringify(dataToPost) : dataToPost,
+                    data: type === 'PUT' ? JSON.stringify(dataToPost) : JSON.stringify(dataToPost),
                     error: self._onServiceError.bind(self),
                     success: self._onServiceSucces.bind(self)
                 });
