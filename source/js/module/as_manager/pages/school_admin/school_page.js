@@ -17,6 +17,8 @@ const OneSchoolPage = React.createClass({
 		} else {
 			window.Server.school.get(activeSchoolId).then(function (data) {
 				binding.set('schoolInfo', Immutable.fromJS(data));
+			}).catch(() => {
+				document.location.hash = 'schools';
 			});
 		}
 
