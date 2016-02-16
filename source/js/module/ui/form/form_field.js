@@ -11,9 +11,9 @@ const FormField = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.Map({
-			value: '',
-			showError: false,
-			error: false
+			value: 		'',
+			showError: 	false,
+			error: 		false
 		});
 	},
 	render: function () {
