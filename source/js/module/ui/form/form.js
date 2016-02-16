@@ -132,15 +132,14 @@ var Form = React.createClass({
                 userService(dataToPost).then(self._onServiceSucces/*.bind(self)*/, self._onServiceError/*.bind(self)*/); // React told we don't need .bind()
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
-                var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :
-                    (window.apiBase + '/' + self.props.service);
-
+                var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :(window.apiBase + '/' + self.props.service);
                 $.ajax({
                     url: url,
                     type: type,
                     crossDomain: true,
                     dataType: 'json',
-                    data: type === 'PUT' ? JSON.stringify(dataToPost) : dataToPost,
+                    contentType: 'application/json',
+                    data: type === 'PUT' ? JSON.stringify(dataToPost) : JSON.stringify(dataToPost),
                     error: self._onServiceError.bind(self),
                     success: self._onServiceSucces.bind(self)
                 });

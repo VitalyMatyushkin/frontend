@@ -1,14 +1,13 @@
-var ClassesPage,
-	RouterView = require('module/core/router'),
-	React = require('react'),
-	Route = require('module/core/route');
+const 	React 		= require('react'),
+		RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route');
 
-ClassesPage = React.createClass({
+const ClassesPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding();
 
 		return (
 			<RouterView routes={ binding.sub('classesRouting') } binding={globalBinding}>
