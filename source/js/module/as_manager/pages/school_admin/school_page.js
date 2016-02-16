@@ -12,15 +12,11 @@ const OneSchoolPage = React.createClass({
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		if (!activeSchoolId) {
-			document.location.hash = 'schools';
-		} else {
-			window.Server.school.get(activeSchoolId).then(function (data) {
-				binding.set('schoolInfo', Immutable.fromJS(data));
-			}).catch(() => {
-				document.location.hash = 'schools';
-			});
-		}
+        window.Server.school.get(activeSchoolId).then(function (data) {
+            binding.set('schoolInfo', Immutable.fromJS(data));
+        }).catch(()=>{
+            document.location.hash = 'schools';
+        });
 
 		// SubMenu items
 		self.menuItems = [{

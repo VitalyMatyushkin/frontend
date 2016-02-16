@@ -7,9 +7,30 @@ const 	Logo 		= require('module/as_manager/head/logo'),
 Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-		var self = this;
+        const self = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
+            authorization 	= globalBinding.get('userData.authorizationInfo.id');
 
-		self.menuItems = [
+        if(activeSchoolId && authorization)
+            window.Server.school.get(activeSchoolId).then(function (data) {
+                self.createTopMenu();
+            }).catch(() => {
+                globalBinding.set('userRules.activeSchoolId', '');
+            });
+	},
+    componentDidMount:function(){
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        self.addBindingListener(binding, 'userRules.activeSchoolId', self.createTopMenu);
+    },
+	createTopMenu: function() {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
+		    menuItems = [
 			{
 				href: '/#school_admin/summary',
 				icon: '',
@@ -24,7 +45,6 @@ Head = React.createClass({
 				name: 'Events',
 				key: 'Events',
 				routes: ['/events/:subPage'],
-				requiredData: 'userRules.activeSchoolId',
 				authorization: true,
 				verified: true
 			},
@@ -34,7 +54,6 @@ Head = React.createClass({
 				name: 'Invites',
 				key: 'Invites',
 				routes: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
-				requiredData: 'userRules.activeSchoolId',
 				authorization: true,
 				verified: true
 			}, {
@@ -43,21 +62,24 @@ Head = React.createClass({
 				name: 'Console',
 				key: 'Console',
 				routes: ['/school_console/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
-				requiredData: 'userRules.activeSchoolId',
 				authorization: true,
 				verified: true
 			}
 		];
+
+        if(activeSchoolId)
+            binding.set('topMenuItems', menuItems);
+        else binding.clear('topMenuItems');
 	},
 	render: function() {
 		var self = this,
-			binding = this.getDefaultBinding();
+			binding = self.getDefaultBinding();
 		return (
 			<div className="bTopPanel">
 				<Logo />
                 <If condition={document.location.hash.indexOf('general')!== 10}>
                     <If condition={document.location.hash.indexOf('lounge') === -1}>
-                        <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
+                        <TopMenu binding={{default: binding.sub('routing'), itemsBinding:binding.sub('topMenuItems')}}/>
                     </If>
                 </If>
 				<If condition={document.location.hash.indexOf('login') === -1}>

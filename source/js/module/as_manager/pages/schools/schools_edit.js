@@ -37,7 +37,9 @@ const EditSchoolForm = React.createClass({
 		var self = this;
 
 		return (
-			<SchoolForm title="Edit school..." onSubmit={self.submitEdit} binding={self.getDefaultBinding()} />
+            <div className="bSchoolEdit">
+                <SchoolForm title="Edit school..." onSubmit={self.submitEdit} binding={self.getDefaultBinding()} />
+            </div>
 		)
 	}
 });
