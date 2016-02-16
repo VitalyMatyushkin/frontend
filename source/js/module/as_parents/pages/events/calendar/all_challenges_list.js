@@ -57,7 +57,7 @@ AllChallengesList = React.createClass({
         //Iterate over the children present in the bag
         return (childrenOfUser && childrenOfUser.count())? childrenOfUser.map(function(child, childInd){
             child.event = events.filter(function(ev){
-                return ev.get('childId') === child.get('id');
+                return ev.get('childId') === child.get('childId');
             });
             var childFixtures = child.event.count() ? child.event.map(function(childEv, childEvInd){
                 var eventDate = new Date(childEv.get('startTime')),

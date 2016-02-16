@@ -1,7 +1,6 @@
 const   RouterView  = require('module/core/router'),
         Route       = require('module/core/route'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
         SubMenu     = require('module/ui/menu/sub_menu'),
         Immutable   = require('immutable');
 
@@ -15,22 +14,27 @@ const EventView = React.createClass({
 
         return Immutable.fromJS({
             eventsRouting: {},
+            eventChild:[],
             teams: [],
             sports: {
                 models: [],
                 sync: false
             },
+            eventsOfAllChildren:[],
             models: [],
             sync: false,
             newEvent: {}
         });
     },
     componentWillMount: function () {
-        var self = this,
+        const self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             userId = rootBinding.get('userData.authorizationInfo.userId'),
             binding = self.getDefaultBinding(),
             sportsBinding = binding.sub('sports');
+
+        self.serviceChildrenFilter(userId);
+        self.setActiveChild();
         self.eventModel = [];
         window.Server.sports.get().then(function (data) {
             sportsBinding
@@ -41,59 +45,114 @@ const EventView = React.createClass({
             return data;
         });
 
-        !binding.get('activeChildId') && window.Server.userChildren.get({
-                id: userId
-            }).then(function (userChildren) {
-            //Set the requirement for an all children view here
-                if (userChildren && userChildren.length > 0) {
-                    self.request = userChildren.map(function(child){
-                        window.Server.studentEvents.get({id:child.id})
-                            .then(function(data){self.processRequestData(data,child.userId)});
-                    });
-                    return self.request;
-                }
-            });
+        self.loadEvents(userId);
+    },
+    componentDidMount:function(){
+        const self = this,
+            binding = self.getDefaultBinding();
 
-        binding.get('activeChildId') && window.Server.studentEvents.get({id: binding.get('activeChildId')}).then(function (data) {
-            binding
-                .atomically()
-                .set('models', Immutable.fromJS(data))
-                .set('sync', true)
-                .commit();
+        self.addBindingListener(binding, 'eventChild', self.createSubMenu);
+        self.addBindingListener(binding, 'eventsRouting.currentPathParts', self.createSubMenu);
+        self.addBindingListener(binding, 'eventsRouting.pathParameters', self.setActiveChild);
+        self.addBindingListener(binding, 'activeChildId', self.filterEvents);
+    },
+    setActiveChild: function() {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            params = binding.toJS('eventsRouting.pathParameters'),
+            newValue = params && params.length > 0 ? params[0]:'all';
+
+        binding.set('activeChildId', newValue);
+    },
+    createSubMenu: function(){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            children = binding.toJS('eventChild'),
+            partPath = binding.toJS('eventsRouting.currentPathParts'),
+            mainMenuItem = partPath && partPath.length > 1 ? '/#' + partPath[0] + '/' + partPath[1] : '',
+            menuItems = [];
+
+        children.forEach(user => {
+            menuItems.push({
+                icon: user.gender === 'female' ? 'icon_girl':'icon_boy',
+                href: mainMenuItem + '/' + user.childId,
+                name: user.firstName + ' ' + user.lastName,
+                key: user.id
+            });
+        });
+        menuItems.push({
+            icon: 'icon_girl_boy',
+            href: mainMenuItem + '/all',
+            name: 'Show all children',
+            key: 'all'
+        });
+        binding.set('itemsBinding', Immutable.fromJS(menuItems));
+    },
+    loadEvents:function(userId){
+        const self = this;
+
+        window.Server.userChildren.get({
+            id: userId
+        }).then(function (userChildren) {
+            //Set the requirement for an all children view here
+            if (userChildren && userChildren.length > 0) {
+                self.request = userChildren.map(function(child){
+                    window.Server.studentEvents.get({id:child.id})
+                        .then(function(events){
+                            self.processRequestData(events,child.id);
+                        });
+                });
+                return self.request;
+            }
         });
 
-        self.menuItems = [{
-            href: '/#events/calendar',
-            name: 'Calendar',
-            key: 'Calendar'
-        }, {
-            href: '/#events/challenges',
-            name: 'Fixtures',
-            key: 'Fixtures'
-        }, {
-            href: '/#events/achievement',
-            name: 'Achievements',
-            key: 'Achievements'
-        }];
     },
-    processRequestData:function(reqData,id){
+    filterEvents:function(){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            allEvents = binding.toJS('eventsOfAllChildren'),
+            childId = binding.get('activeChildId');
+
+        if(childId && allEvents && allEvents.length > 0){
+            let res = childId === 'all' ? allEvents : allEvents.filter(ev => ev.childId === childId);
+            binding.set('models', Immutable.fromJS(res));
+        }
+    },
+    processRequestData:function(reqData,childId){
         var self = this,
             binding = self.getDefaultBinding();
         if(reqData){
             reqData.forEach(function(el){
                 if(el !== undefined){
-                    el.childId = id;
+                    el.childId = childId;
                     self.eventModel.push(el);
                 }
             });
             binding
                 .atomically()
-                .set('activeChildId','all')
-                .set('persistEventModels',Immutable.fromJS(self.eventModel))
+                .set('eventsOfAllChildren',Immutable.fromJS(self.eventModel))
                 .set('models',Immutable.fromJS(self.eventModel))
                 .set('sync',true)
                 .commit();
         }
+    },
+    serviceChildrenFilter: function (userId) {
+        var self = this,
+            eventChild = [],
+            binding = self.getDefaultBinding();
+        return window.Server.userChildren.get(userId).then(function (children) {
+            //Initial API call only returns ids of the user's children
+            children.map(function (player) {
+                //Iterates and fetches all other details by making extra API calls
+                window.Server.user.get({id:player.userId}).then(function(user){
+                    user.childId = player.id;
+                    eventChild.push(user);
+                    binding.set('eventChild',Immutable.fromJS(eventChild));
+                    return player;
+                });
+            });
+            return children;
+        });
     },
     render: function () {
         var self = this,
@@ -101,17 +160,17 @@ const EventView = React.createClass({
             rootBinging = self.getMoreartyContext().getBinding();
 
         return <div>
-            <SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems}/>
+            <SubMenu binding={{default: binding.sub('eventsRouting'), itemsBinding: binding.sub('itemsBinding')}} items={self.menuItems}/>
 
             <div className='bSchoolMaster'>
                 <div className='bEvents'>
                     <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
-                        <Route path='/events/calendar' binding={binding}
+                        <Route path='/events/calendar /events/calendar/:userId' binding={binding}
                                component='module/as_parents/pages/events/events_calendar'/>
-                        <Route path='/events/challenges' binding={binding}
+                        <Route path='/events/challenges /events/challenges/:userId' binding={binding}
                                component='module/as_manager/pages/events/events_challenges'/>
-                        <Route path="/events/achievement" binding={binding}
-                               component="module/as_manager/pages/events/events_achievement"/>
+                        <Route path="/events/achievement /events/achievement/:userId" binding={binding}
+                               component="module/as_parents/pages/events/events_achievement"/>
                     </RouterView>
                 </div>
             </div>

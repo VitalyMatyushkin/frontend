@@ -84,7 +84,7 @@ const CommentBox = React.createClass({
                             </div>
                         </div>
                         <If condition={replies !== undefined}>
-                            <div  onClick={collapseButtonClick(blog.id, blog.postId)} className="bButton cCollapse">
+                            <div  onClick={collapseButtonClick(blog.id, blog.postId)} className="cCollapse">
                                 <span ref={blog.postId}>{'Hide Replies '+'⇡'}</span>
                             </div>
                         </If>

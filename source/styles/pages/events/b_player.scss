@@ -28,17 +28,17 @@
 }
 
 .ePlayer_score {
-  font-size: 22px;
+  font-size: 16px;
   align-self: center;
-  padding-right: 5px;
 }
-
+.bPlayer.mMini:hover .ePlayer_score{
+  color: $COLOR;
+}
 .ePlayer_name,
 .ePlayer_lastName {
   height: 100%;
   display: flex;
   margin: 0 2px 0 10px;
-  justify-content: center;
   align-items: center;
   span:first-child {
     margin-right: 5px;
@@ -52,7 +52,8 @@
 
 .bPlayer.mMini .ePlayer_name,
 .bPlayer.mMini .ePlayer_lastName {
-  font-size: 13px;
+  font-size: 15px;
+  width: 150px;
 }
 
 .bPlayer.mShowRemoveButton .ePlayer_remove {
@@ -65,7 +66,11 @@
   cursor: pointer;
   text-align: center;
 }
-
+.ePlayer_minus .bIcon,
+.ePlayer_plus .bIcon{
+  width: 8px;
+  height: 8px;
+}
 .ePlayer_gender .bIcon {
   margin-top: 2.5px;
 }

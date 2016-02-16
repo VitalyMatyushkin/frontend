@@ -71,14 +71,14 @@
 }
 
 .bButton.mRed {
-  background: $MAIN_COLOR;
-  color: $COLOR;
+  background: #a93e2f;
+  color: #fff;
   &:hover:before {
-    box-shadow: 0 2px 0 0 darken($MAIN_COLOR, 10%);
+    box-shadow: 0 2px 0 0 darken(#a93e2f, 10%);
   }
   &:active:before,
   &.mActive:before {
-    box-shadow: 0px -2px 0 0 darken($MAIN_COLOR, 10%);
+    box-shadow: 0px -2px 0 0 darken(#a93e2f, 10%);
   }
 }
 .bButton_req{
