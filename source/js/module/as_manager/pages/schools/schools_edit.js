@@ -22,7 +22,6 @@ const EditSchoolForm = React.createClass({
 		}
 	},
 	submitEdit: function(schoolData) {
-        console.log(schoolData);
 		var self = this;
 		window.Server.school.put(self.schoolId, schoolData).then(function(res) {
 			document.location.hash = 'school_admin/summary';
