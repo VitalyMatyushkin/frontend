@@ -1,30 +1,29 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	Promise = require('bluebird'),
-	React = require('react'),
-	ClassForm;
+const 	Promise 	= require('bluebird'),
+		React 		= require('react'),
+		Lazy		= require('lazyjs'),
+		Form 		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field');
 
-ClassForm = React.createClass({
+
+const ClassForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-		onFormSubmit: React.PropTypes.func
+		title: 			React.PropTypes.string.isRequired,
+		onFormSubmit: 	React.PropTypes.func
 	},
-	getAllAges: function() {
-		var self = this,
-			allAgesArray = [];
 
-		for (var i = 3; i <= 8; i++) {
-			allAgesArray.push({
+	getAllAges: function() {
+		/** it should really be a server call */
+		const ages = Lazy.range(3, 17).map(i => {
+			return {
 				value: 'Y' + i,
 				age: i,
 				id: i
-			});
-		}
-
-		return Promise.resolve(allAgesArray);
+			}
+		}).toArray();
+		return Promise.resolve(ages);
 	},
+
 	render: function() {
 		var self = this;
 
