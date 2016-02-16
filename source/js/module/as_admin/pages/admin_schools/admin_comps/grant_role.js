@@ -84,7 +84,6 @@ const GrantRole = React.createClass({
         const self = this,
             binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            confirmation = window.confirm("Are you sure you want to grant access?"),
             schoolId = binding.get('selectedSchoolId'),
             model = {
                 preset:binding.get('roleName'),
@@ -104,25 +103,23 @@ const GrantRole = React.createClass({
         if(binding.get('roleName') === 'parent'){
             model.studentId = binding.get('selectedStudentId');
         }
-        if(confirmation){
-            ids.forEach(function(currentId){
-                model.principalId = currentId;
-                window.Server.Permissions.post(model)
-                    .then(function(result){
-                        if(!itsMe)
-                            return window.Server.setPermissions.post({id:result.id},{accepted:true})
-                                .then(function(setPermissions){
-                                    self.props.onSuccess && self.props.onSuccess();
-                                    return;
-                                });
-                        else{
-                            self.props.onSuccess && self.props.onSuccess();
-                            return;
-                        }
-                    });
+        //
+        ids.forEach(function(currentId){
+            model.principalId = currentId;
+            window.Server.Permissions.post(model)
+                .then(function(result){
+                    if(!itsMe)
+                        return window.Server.setPermissions.post({id:result.id},{accepted:true})
+                            .then(function(setPermissions){
+                                self.props.onSuccess && self.props.onSuccess();
+                                return setPermissions;
+                            });
+                    else{
+                        self.props.onSuccess && self.props.onSuccess();
+                    }
+                });
 
-            });
-        }
+        });
     },
     render:function(){
         const   self = this,
@@ -157,7 +154,7 @@ const GrantRole = React.createClass({
                     <h4>Comment:</h4>
                     <textarea onChange={function(e){binding.set('comment', e.target.value);}}></textarea>
                     <div>
-                        <input type="button" onClick={self.continueButtonClick} className="bButton bGrantButton" value="Grant"/>
+                        <input type="button" onClick={self.continueButtonClick} className="bButton bGrantButton" value="Confirm"/>
                     </div>
                 </div>
             </div>
