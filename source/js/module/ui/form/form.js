@@ -132,25 +132,17 @@ var Form = React.createClass({
                 userService(dataToPost).then(self._onServiceSucces/*.bind(self)*/, self._onServiceError/*.bind(self)*/); // React told we don't need .bind()
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
-                /**
-                 * Replaced the old ajax code with one of the services
-                 * solves the issue of submitting formData instead of JSON
-                 * */
-                if(type === 'POST'){
-                    window.Server.users.post(dataToPost).then(function(postedData){
-                        self._onServiceSucces(postedData);
-                        return postedData;
-                    }).catch(function(error){
-                        self._onServiceError(error);
-                    });
-                }else{
-                    window.Server.user.put({id:dataToPost.id},dataToPost).then(function(postedData){
-                        self._onServiceSucces(postedData);
-                        return postedData;
-                    }).catch(function(error){
-                        self._onServiceError(error);
-                    });
-                }
+                var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :(window.apiBase + '/' + self.props.service);
+                $.ajax({
+                    url: url,
+                    type: type,
+                    crossDomain: true,
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: type === 'PUT' ? JSON.stringify(dataToPost) : dataToPost,
+                    error: self._onServiceError.bind(self),
+                    success: self._onServiceSucces.bind(self)
+                });
             }
 
         }
