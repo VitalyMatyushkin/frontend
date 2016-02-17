@@ -7,23 +7,27 @@ const 	Logo 		= require('module/as_manager/head/logo'),
 Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-        const self = this,
-            globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-            authorization 	= globalBinding.get('userData.authorizationInfo.id');
-
-        if(activeSchoolId && authorization)
-            window.Server.school.get(activeSchoolId).then(function (data) {
-                self.createTopMenu();
-            }).catch(() => {
-                globalBinding.set('userRules.activeSchoolId', '');
-            });
+        this.schoolExists();
 	},
     componentDidMount:function(){
         const self = this,
             binding = self.getDefaultBinding();
 
         self.addBindingListener(binding, 'userRules.activeSchoolId', self.createTopMenu);
+        self.addBindingListener(binding, 'userData.authorizationInfo.id', self.schoolExists);
+    },
+    schoolExists:function(){
+        const self = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
+            authorization 	= globalBinding.get('userData.authorizationInfo.id');
+
+        if(activeSchoolId && authorization)
+            return window.Server.school.get(activeSchoolId).then(function (data) {
+                self.createTopMenu();
+            }).catch(() => {
+                globalBinding.set('userRules.activeSchoolId', '');
+            });
     },
 	createTopMenu: function() {
         const self = this,
