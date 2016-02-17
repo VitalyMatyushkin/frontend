@@ -1,15 +1,14 @@
 const 	LoginForm 		= require('module/ui/login/user/form'),
 		LoginError 		= require('module/ui/login/user/error'),
 		React 			= require('react'),
-		ReactDOM 		= require('reactDom'),
 		Immutable 		= require('immutable');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount:function(){
-		var self = this,
-			binding = self.getDefaultBinding(),
-			domain = window.location.host.split('.')[0];
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				domain 	= window.location.host.split('.')[0];		// TODO: maybe it is better to store all required data in some other place ?
 		self.formName = domain === 'admin' ? 'Administrator Login' : 'default'; //Injects custom headings for login forms
 	},
 	getDefaultState: function () {
@@ -18,11 +17,17 @@ const LoginUserPage = React.createClass({
 		});
 	},
 	onSuccess: function(data) {
-		var self = this,
-			binding = self.getDefaultBinding();
-		//Collect all user role arrays from @args {Object} data and assign to roleObject
-		var globalBinding = self.getMoreartyContext().getBinding(),
-				roleObject = {admin:data.user.admins, coach:data.user.coaches, teacher:data.user.teachers,manager:data.user.managers};
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding(),	//Collect all user role arrays from @args {Object} data and assign to roleObject
+				roleObject 		= {
+					admin:		data.user.admins,
+					coach:		data.user.coaches,
+					teacher:	data.user.teachers,
+					manager:	data.user.managers
+				};
+
+
 		//Iterate over roleObject keys to find the array with length greater than one as
 		//that determines the user's role
 		//If found assign the key to a @path {string} currentUserRole in the global morearty context

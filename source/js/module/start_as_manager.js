@@ -7,7 +7,7 @@ const 	ApplicationView 	= require('module/as_manager/application'),
 		React 				= require('react');
 
 function runManagerMode() {
-	
+
 // Create Morearty context
 	const MoreartyContext = Morearty.createContext({
 		initialState: {

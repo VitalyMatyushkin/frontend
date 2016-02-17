@@ -1,5 +1,4 @@
 const 	React 		= require('react'),
-		Immutable 	= require('immutable'),
 		typeList 	= require('module/ui/form/types/type_list');
 
 const FormField = React.createClass({
@@ -9,32 +8,23 @@ const FormField = React.createClass({
 		field: 				React.PropTypes.string.isRequired,
 		defaultValueString:	React.PropTypes.string
 	},
-	getDefaultState: function () {
-		return Immutable.Map({
-			value: 		'',
-			showError: 	false,
-			error: 		false
-		});
-	},
 	render: function () {
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
-		let 	inputField 		= React.createElement(typeList[self.props.type], self.props),
-				fieldStyleClass = 'eForm_fieldSet';
 
-		// TODO: Emhh...
-		inputField = React.cloneElement(inputField, {
+		const inputProps = Object.assign({}, self.props, {
 			name: 		self.props.children,
 			service: 	self.props.service,
-			binding: 	self.getDefaultBinding()
+			binding: 	binding
 		});
 
+		const inputField = React.createElement(typeList[self.props.type], inputProps);
+
+		let fieldStyleClass = 'eForm_fieldSet';
 		if (binding.get('showError')) {
 			fieldStyleClass += ' mInvalid';
-		}else{
-            if(binding.get('showSuccess')){
-                fieldStyleClass += ' mValid';
-            }
+		} else if(binding.get('showSuccess')){
+			fieldStyleClass += ' mValid';
         }
 		return (
 			<div className="eForm_field">
