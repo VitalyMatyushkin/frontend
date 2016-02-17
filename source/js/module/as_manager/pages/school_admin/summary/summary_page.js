@@ -1,7 +1,6 @@
 const   SVG         = require('module/ui/svg'),
         Map         = require('module/ui/map/map'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
         If          = require('module/ui/if/if'),
         Immutable   = require('immutable');
 
@@ -22,7 +21,6 @@ const SchoolSummary = React.createClass({
 			}
         ).then(function(data) {
             binding.set(Immutable.fromJS(data));
-            self.isMounted() && self.forceUpdate();
         });
     },
     componentWillUnmount: function() {
@@ -40,8 +38,9 @@ const SchoolSummary = React.createClass({
     return (
         <div>
           <div className="changeSchool">
-            <a title="Change active school" href="/#schools" className="changeButton"><img
-                src="images/change_school.png"></img></a>
+            <a title="Change active school" href="/#schools" className="changeButton">
+                <img src="images/change_school.png"></img>
+            </a>
           </div>
           <div className="eSchoolMaster_summary">
             <div className="summary_inside">
