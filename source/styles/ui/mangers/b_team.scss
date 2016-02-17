@@ -1,9 +1,19 @@
 .bTeam {
-  width: 400px;
-  padding: 5px 10px;
+  width: 450px;
+}
+
+.eTeam_playersTableContainer {
+  min-height: 300px;
   background: #fff;
   border: $BORDER;
 }
+
+.eTeam_errorBox{
+  margin-top: 5px;
+  font-size: 14px;
+  color: #FF0000;
+}
+
 .hHouseDuplicateError{
   margin-top: 5px;
   font-size: 14px;

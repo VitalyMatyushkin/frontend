@@ -5,7 +5,6 @@ const   CalendarView        = require('module/ui/calendar/calendar'),
         Manager             = require('module/ui/managers/manager'),
         classNames          = require('classnames'),
         React               = require('react'),
-        ReactDOM            = require('reactDom'),
         Immutable           = require('immutable');
 
 const EventManager = React.createClass({
@@ -28,17 +27,28 @@ const EventManager = React.createClass({
                 ages: [],
                 description: ''
             },
+            selectedRivalIndex: 0,
             schoolInfo: {},
             inviteModel: {},
             step: 1,
-            rivals: [{id: activeSchoolId}],
+            availableAges: [],
             autocomplete: {
                 'inter-schools': [],
                 houses: [],
                 internal: []
             },
+            rivals: [{id: activeSchoolId}],
             players: [[],[]],
-            availableAges: []
+            error: [
+                {
+                    isError: false,
+                    text:    ""
+                },
+                {
+                    isError: false,
+                    text:    ""
+                }
+            ]
 		});
 	},
 	componentWillMount: function () {
@@ -106,6 +116,122 @@ const EventManager = React.createClass({
             return step - 1;
         });
 	},
+    _validateTeams: function() {
+        const self = this,
+              binding    = self.getDefaultBinding(),
+              eventType  = binding.toJS('model.type'),
+              sportModel = binding.toJS('model.sportModel');
+
+        if(eventType === 'internal') {
+            self._validatePlayers(0);
+            self._validatePlayers(1);
+
+            self._changeRivalFocus();
+        } else {
+            self._validatePlayers(0);
+        }
+    },
+    _changeRivalFocus: function() {
+        const self   = this,
+              errors = self.getDefaultBinding().toJS('error');
+
+        for (let errIndex in errors) {
+            if (errors[errIndex].isError) {
+                self.getDefaultBinding().set('selectedRivalIndex', errIndex);
+                break;
+            }
+        }
+    },
+    _validatePlayers: function(teamIndex) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            allPlayers = binding.toJS('players'),
+            sportModel = binding.toJS('model.sportModel');
+
+
+        if(allPlayers[teamIndex].length < sportModel.limits.minPlayers) {
+            binding.set(
+                `error.${teamIndex}`,
+                Immutable.fromJS(
+                    {
+                        isError: true,
+                        text:    `Player count should be greater than ${sportModel.limits.minPlayers}`
+                    }
+                )
+            );
+        } else if(allPlayers[teamIndex].length > sportModel.limits.maxPlayers) {
+            binding.set(
+                `error.${teamIndex}`,
+                Immutable.fromJS(
+                    {
+                        isError: true,
+                        text:    `Player count should be less than ${sportModel.limits.maxPlayers}`
+                    }
+                )
+            );
+        } else if(!self._isPositionsCorrect(teamIndex)) {
+            binding.set(
+                `error.${teamIndex}`,
+                Immutable.fromJS(
+                    {
+                        isError: true,
+                        text:    'All players should have position'
+                    }
+                )
+            );
+        } if(self._isSubstitutionCountCorrect(teamIndex)) {
+            binding.set(
+                `error.${teamIndex}`,
+                Immutable.fromJS(
+                    {
+                        isError: true,
+                        text:    `Substitution count should be less than ${sportModel.limits.maxSubs}`
+                    }
+                )
+            );
+        } else {
+            binding.set(
+                `error.${teamIndex}`,
+                Immutable.fromJS(
+                    {
+                        isError: false,
+                        text:    ''
+                    }
+                )
+            );
+        }
+    },
+    _isPositionsCorrect: function(teamIndex) {
+        const self = this,
+              binding = self.getDefaultBinding(),
+              players = binding.toJS(`players.${teamIndex}`);
+
+        let isCorrect = true;
+
+        for(let i = 0; i < players.length; i++) {
+            if(players[i].position === undefined) {
+                isCorrect = false;
+                break;
+            }
+        }
+
+        return isCorrect;
+    },
+    _isSubstitutionCountCorrect: function(teamIndex) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            players = binding.toJS(`players.${teamIndex}`);
+
+        let subCount = 0;
+
+        for(let i = 0; i < players.length; i++) {
+            if(players[i].isSub === undefined && players[i].isSub) {
+                subCount++;
+            }
+        }
+
+        return !(subCount > binding.toJS('model.sportModel.limits.maxSubs'));
+    },
 	toFinish: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -114,56 +240,67 @@ const EventManager = React.createClass({
             model = binding.toJS('model'),
             players = binding.toJS('players'),
 			rivals = binding.toJS('rivals');
-		window.Server.events.post(model).then(function (event) {
-			rootBinding.update('events.models', function (events) {
-				return events.push(Immutable.fromJS(event));
-			});
-			rivals.forEach(function (rival, index) {
-                if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
-					window.Server.invitesByEvent.post({eventId: event.id}, {
-                        eventId: event.id,
-                        inviterId: activeSchoolId,
-                        guestId: rival.id,
-						message: 'message'
-                    });
-                } else {
-                    var rivalModel = {
-                        sportId: event.sportId,
-                        schoolId: activeSchoolId
-                    };
 
-                    if (event.type === 'internal') {
-                        rivalModel.name = rival.name;
-                    }
+        self._validateTeams();
 
-                    if (event.type === 'houses') {
-                        rivalModel.houseId = rival.id;
-                    }
-
-                    window.Server.participants.post(event.id, rivalModel).then(function (res) {
-                        var i = 0;
-                        // TODO: fix me
-                        players[index].forEach(function (player) {
-                            window.Server.playersRelation.put({
-                                teamId: res.id,
-                                studentId: player.id
-                            }).then(function (res) {
-                                i += 1;
-
-                                if (i === players.length -1) {
-                                    document.location.hash = 'event/' + event.id;
-                                    binding.clear();
-                                    binding.meta().clear();
-                                }
-                                return res;  // each then-callback should have explicit return
-                            });
+        if(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError) {
+            window.Server.events.post(model).then(function (event) {
+                rootBinding.update('events.models', function (events) {
+                    return events.push(Immutable.fromJS(event));
+                });
+                rivals.forEach(function (rival, index) {
+                    if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
+                        window.Server.invitesByEvent.post({eventId: event.id}, {
+                            eventId:   event.id,
+                            inviterId: activeSchoolId,
+                            guestId:   rival.id,
+                            message:   'message'
                         });
-                        return res;
-                    });
-                }
-			});
-            return event;
-		});
+                    } else {
+                        var rivalModel = {
+                            sportId:  event.sportId,
+                            schoolId: activeSchoolId
+                        };
+
+                        if (event.type === 'internal') {
+                            rivalModel.name = rival.name;
+                        }
+
+                        if (event.type === 'houses') {
+                            rivalModel.houseId = rival.id;
+                        }
+
+                        window.Server.participants.post(event.id, rivalModel).then(function (res) {
+                            var i = 0;
+                            // TODO: fix me
+                            players[index].forEach(function (player) {
+                                window.Server.playersRelation.put(
+                                    {
+                                        teamId:    res.id,
+                                        studentId: player.id
+                                    },
+                                    {
+                                        position:  player.position,
+                                        sub:     player.isSub
+                                    }
+                                ).then(function (res) {
+                                    i += 1;
+
+                                    if (i === players.length -1) {
+                                        document.location.hash = 'event/' + event.id;
+                                        binding.clear();
+                                        binding.meta().clear();
+                                    }
+                                    return res;  // each then-callback should have explicit return
+                                });
+                            });
+                            return res;
+                        });
+                    }
+                });
+                return event;
+            });
+        }
 	},
 	render: function() {
 		var self = this,

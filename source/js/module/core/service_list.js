@@ -105,6 +105,7 @@ serviceList = {
 		serviceList.inviteRepay = new Service('/invites/{inviteId}/repay', binding);
 
 		// teams
+		serviceList.teams = new Service('/teams', binding);
 		serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
 		serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{studentId}', binding);
 		serviceList.playersByTeam = new Service('/teams/{teamId}/players', binding);
