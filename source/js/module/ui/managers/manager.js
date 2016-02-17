@@ -1,8 +1,6 @@
 const   FootballManager     = require('./football/football'),
-        MultiSelectTeam     = require('./multiselect_team'),
         AutocompleteTeam    = require('./autocompleteTeam'),
         React               = require('react'),
-        ReactDOM            = require('reactDom'),
         classNames          = require('classnames'),
         Team                = require('./team'),
         Immutable 	        = require('immutable');
@@ -14,7 +12,9 @@ const Manager = React.createClass({
             binding = self.getDefaultBinding();
 
         binding.set('students', Immutable.List());
-        self.onChooseRival(0);
+    },
+    showError: function() {
+        alert("Bad players count");
     },
     onChooseRival: function (index) {
         var self = this,
@@ -23,35 +23,47 @@ const Manager = React.createClass({
         binding.set('selectedRivalIndex', index);
     },
     getRivals: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            selectedRivalIndex = binding.get('selectedRivalIndex'),
-            rivalsBinding = self.getBinding('rivals');
+        const self = this,
+              binding = self.getDefaultBinding(),
+              selectedRivalIndex = binding.get('selectedRivalIndex'),
+              rivalsBinding = self.getBinding('rivals');
 
         return rivalsBinding.get().map(function (rival, index) {
-            var disable = rival.get('id') !== binding.get('schoolInfo.id')
-                    && binding.get('model.type') === 'inter-schools',
+            var disable = self._isRivalDisable(rival),
 				teamClasses = classNames({
-					mActive: selectedRivalIndex === index,
+					mActive: selectedRivalIndex == index,
 					eChooser_item: true,
 					mDisable: disable
 				});
 
-            return <span
-                className={teamClasses}
-                onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{rival.get('name')}</span>;
+            return (
+                <span className={teamClasses}
+                      onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{rival.get('name')}
+                </span>
+            );
         }).toArray();
+    },
+    _isRivalDisable: function(rival) {
+        const self = this,
+              binding = self.getDefaultBinding();
+
+        return (
+            rival.get('id') !== binding.get('schoolInfo.id') &&
+            binding.get('model.type') === 'inter-schools'
+        );
     },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
             selectedRivalIndex = binding.get('selectedRivalIndex'),
             teamBinding = {
-                default: binding,
-                rival: binding.sub('rivals.' + selectedRivalIndex),
-                players: binding.sub('players.' + selectedRivalIndex),
+                default:  binding,
+                rival:    binding.sub('rivals.' + selectedRivalIndex),
+                players:  binding.sub('players.' + selectedRivalIndex),
+                error:    binding.sub('error.' + selectedRivalIndex),
                 students: binding.sub('students')
             };
+
 
             return <div className="eManager_container">
                 <div className="eManager_chooser">

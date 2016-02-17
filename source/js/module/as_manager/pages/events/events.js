@@ -1,7 +1,6 @@
 const   RouterView  = require('module/core/router'),
         Route       = require('module/core/route'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
         SubMenu     = require('module/ui/menu/sub_menu'),
         Immutable   = require('immutable');
 
@@ -11,7 +10,6 @@ const EventView = React.createClass({
         return Morearty.MergeStrategy.MERGE_REPLACE
     },
     getDefaultState: function () {
-        var self = this;
 
         return Immutable.fromJS({
             eventsRouting: {},
@@ -75,28 +73,45 @@ const EventView = React.createClass({
 			binding = self.getDefaultBinding(),
             rootBinging = self.getMoreartyContext().getBinding();
 
-		return <div>
-            <SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems} />
-			<div className='bSchoolMaster'>
-          <div className="eSchoolMaster_wrap">
-              <h1 className="eSchoolMaster_title"></h1>
-
-              <div className="eStrip">
-              </div>
-          </div>
-				<div className='bEvents'>
-					<RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
-						<Route path='/events/calendar'  binding={binding}component='module/as_manager/pages/events/events_calendar'   />
-						<Route
-							path='/events/manager'
-							binding={{default: binding.sub('newEvent'), sports: binding.sub('sports'), calendar: binding.sub('calendar')}}
-							component='module/as_manager/pages/events/event_manager'  />
-						<Route path='/events/challenges' binding={binding} component='module/as_manager/pages/events/events_challenges'  />
-						<Route path='/events/invites' binding={binding} component='module/as_manager/pages/events/events_invites'  />
-					</RouterView>
-				</div>
-			</div>
-        </div>;
+		return (
+            <div>
+                <SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems}/>
+                <div className='bSchoolMaster'>
+                    <div className="eSchoolMaster_wrap">
+                        <h1 className="eSchoolMaster_title"></h1>
+                        <div className="eStrip">
+                        </div>
+                    </div>
+                    <div className='bEvents'>
+                        <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
+                            <Route path='/events/calendar'
+                                   binding={binding}
+                                   component='module/as_manager/pages/events/events_calendar'
+                            />
+                            <Route
+                                path='/events/manager'
+                                binding={
+                                    {
+                                        default: binding.sub('newEvent'),
+                                        sports: binding.sub('sports'),
+                                        calendar: binding.sub('calendar')
+                                    }
+                                }
+                                component='module/as_manager/pages/events/event_manager'
+                            />
+                            <Route path='/events/challenges'
+                                   binding={binding}
+                                   component='module/as_manager/pages/events/events_challenges'
+                            />
+                            <Route path='/events/invites'
+                                   binding={binding}
+                                   component='module/as_manager/pages/events/events_invites'
+                            />
+                        </RouterView>
+                    </div>
+                </div>
+            </div>
+        );
 	}
 });
 

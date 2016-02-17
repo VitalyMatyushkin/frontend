@@ -1,7 +1,5 @@
 const   React           = require('react'),
-        ReactDOM        = require('reactDom'),
         Immutable 	    = require('immutable'),
-        SVG             = require('module/ui/svg'),
         Promise         = require('bluebird'),
         Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
@@ -64,7 +62,7 @@ const AutocompleteTeam = React.createClass({
                         }).toJS()
                     }
                 },
-				include: "user"
+                include:["user","form"]
             };
 
         if (type === 'houses') {

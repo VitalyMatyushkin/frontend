@@ -6,8 +6,6 @@ const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'
         EventVenue      = require('./event_venue'),
         Immutable       = require('immutable');
 
-let oldSelectedId, alertPopUP;
-
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
     /**
@@ -110,8 +108,9 @@ const EventManagerBase = React.createClass({
 
 		binding
             .atomically()
-            .set('model.sportId', event.target.value)
-            .set('model.gender', sportsBinding.get('models.' + sportIndex + '.gender.0'))
+            .set('model.sportId',    event.target.value)
+            .set('model.sportModel', sportsBinding.get(`models.${sportIndex}`))
+            .set('model.gender',     sportsBinding.get(`models.${sportIndex}.gender.0`))
             .commit();
 	},
     //changeCompleteAges: function (event) {
