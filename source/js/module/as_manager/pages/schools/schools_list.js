@@ -5,7 +5,8 @@ const SchoolListPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
-			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+            globalBinding = self.getMoreartyContext().getBinding(),
+			userId = globalBinding.get('userData.authorizationInfo.userId');
 
 		if(userId !== null && userId !== undefined) {
 			window.Server.getMaSchools.get(
@@ -15,8 +16,15 @@ const SchoolListPage = React.createClass({
 						include: "postcode"
 					}
 				}
-			).then(function(data){
-				self.getDefaultBinding().set(Immutable.fromJS(data));
+			).then(function(schoolsList){
+				self.getDefaultBinding().set(Immutable.fromJS(schoolsList));
+                if(!schoolsList || schoolsList && schoolsList.length === 0)
+                    document.location.hash = 'schools/lounge';
+                // If there is at least any school making first of them default
+                else if (schoolsList.length === 1) {
+                    globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
+                    document.location.hash = 'school_admin/summary';
+                }
 			});
 		}
 	},
