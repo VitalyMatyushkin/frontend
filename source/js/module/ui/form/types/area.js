@@ -42,12 +42,11 @@ const TypeArea = React.createClass({
 	},
 	render: function() {
 		const 	self = this,
-				AutocompleteElement = React.createElement(TypeAutocomplete, self.props);
-
-		const AutocompleteProped = React.cloneElement(AutocompleteElement, {
-			serviceFilter: self.serviceFilter,
-			serverField: 'id'
-		});
+				autocompleteProps = Object.assign({}, self.props, {		// merging current props with new one
+					serviceFilter: 	self.serviceFilter,
+					serverField: 	'id'
+				}),
+				AutocompleteProped = React.createElement(TypeAutocomplete, autocompleteProps);	// and creating new object
 
 		return (
 			<div>{AutocompleteProped}</div>
