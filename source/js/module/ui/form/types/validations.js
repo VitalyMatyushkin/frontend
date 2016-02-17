@@ -76,8 +76,10 @@ var validationsSet = {
 		$.ajax({
 			url: 'http:' + window.apiBase + '/' + self.props.service + '/check',
 			type: 'POST',
+			dataType: 'json',
+			contentType: 'application/json',
 			crossDomain: true,
-			data: dataToCheck,
+			data: JSON.stringify(dataToCheck), //prevents submitting form data which sometimes results in bad request and failure to check for availability
 			error: function(data, error, errorText) {
 				// Проверяем, актуально ли проверяемое значение поля
 				if (errorText === 'Conflict' && self.getDefaultBinding().get('value') === value) {
