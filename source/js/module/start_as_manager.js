@@ -105,6 +105,8 @@ function runManagerMode() {
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);
+
+
 }
 
 module.exports = runManagerMode;
