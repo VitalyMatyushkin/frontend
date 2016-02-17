@@ -1,6 +1,8 @@
 var addClass = require('./add-class'),
     React = require('react');
 
+console.error("autocomplete deprecated");
+
 module.exports = React.createClass({
 
     propTypes: {
