@@ -1,17 +1,40 @@
-var Logo = require('module/as_manager/head/logo'),
-	TopMenu = require('module/ui/menu/top_menu'),
-	UserBlock = require('module/as_manager/head/user_block'),
-	If = require('module/ui/if/if'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	Head;
+const 	Logo 		= require('module/as_manager/head/logo'),
+		TopMenu 	= require('module/ui/menu/top_menu'),
+		UserBlock 	= require('module/as_manager/head/user_block'),
+		If 			= require('module/ui/if/if'),
+		React 		= require('react'),
 
 Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-		var self = this;
+        this.schoolExists();
+	},
+    componentDidMount:function(){
+        const self = this,
+            binding = self.getDefaultBinding();
 
-		self.menuItems = [
+        self.addBindingListener(binding, 'userRules.activeSchoolId', self.createTopMenu);
+        self.addBindingListener(binding, 'userData.authorizationInfo.id', self.schoolExists);
+    },
+    schoolExists:function(){
+        const self = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
+            authorization 	= globalBinding.get('userData.authorizationInfo.id');
+
+        if(activeSchoolId && authorization)
+            return window.Server.school.get(activeSchoolId).then(function (data) {
+                self.createTopMenu();
+            }).catch(() => {
+                globalBinding.set('userRules.activeSchoolId', '');
+            });
+    },
+	createTopMenu: function() {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
+		    menuItems = [
 			{
 				href: '/#school_admin/summary',
 				icon: '',
@@ -26,7 +49,6 @@ Head = React.createClass({
 				name: 'Events',
 				key: 'Events',
 				routes: ['/events/:subPage'],
-				requiredData: 'userRules.activeSchoolId',
 				authorization: true,
 				verified: true
 			},
@@ -36,7 +58,6 @@ Head = React.createClass({
 				name: 'Invites',
 				key: 'Invites',
 				routes: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
-				requiredData: 'userRules.activeSchoolId',
 				authorization: true,
 				verified: true
 			}, {
@@ -45,23 +66,22 @@ Head = React.createClass({
 				name: 'Console',
 				key: 'Console',
 				routes: ['/school_console/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
-				requiredData: 'userRules.activeSchoolId',
 				authorization: true,
 				verified: true
 			}
 		];
+
+        if(activeSchoolId)
+            binding.set('topMenuItems', menuItems);
+        else binding.clear('topMenuItems');
 	},
 	render: function() {
 		var self = this,
-			binding = this.getDefaultBinding();
+			binding = self.getDefaultBinding();
 		return (
 			<div className="bTopPanel">
 				<Logo />
-                <If condition={document.location.hash.indexOf('general')!== 10}>
-                    <If condition={document.location.hash.indexOf('lounge') === -1}>
-                        <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
-                    </If>
-                </If>
+                <TopMenu binding={{default: binding.sub('routing'), itemsBinding:binding.sub('topMenuItems')}}/>
 				<If condition={document.location.hash.indexOf('login') === -1}>
 					<UserBlock binding={binding.sub('userData')}/>
 				</If>

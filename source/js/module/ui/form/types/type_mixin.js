@@ -1,68 +1,63 @@
-var InputTypeMixin,
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	validationsSet = require('module/ui/form/types/validations');
+const 	React 			= require('react'),
+		validationsSet 	= require('module/ui/form/types/validations');
 
 
 /**
- * Общий класс для любых полей ввода на форме
+ * Common class for all inputs in form
  * @type {{componentWillMount: Function, fullValidate: Function, typingValidate: Function, getInitialState: Function, changeValue: Function, setValue: Function, showError: Function, hideError: Function}}
  */
-InputTypeMixin = {
+const InputTypeMixin = {
 	propTypes: {
-		onSetValue: React.PropTypes.func
+		onSetValue: React.PropTypes.func,
+		validation: React.PropTypes.string  // string with validations, like that: 'require phone server'
 	},
 	componentWillMount: function() {
-		var self = this;
+		const 	self 		= this,
+				validations = {};
 
-		self.validations = {};
-
-		// Добавление методов валидации в соответсвии с параметрами
+		// adding validation methods according to params
 		if (self.props.validation) {
 			self.props.validation.split(' ').forEach(function(validType) {
-				if (validationsSet[validType] !== undefined) {
-					self.validations[validType] = validationsSet[validType].bind(self);
-				} else {
-					self.validations[validType] = validationsSet['any'].bind(self);
-				}
+				const validator = validationsSet[validType] || validationsSet['any'];
+				validations[validType] = validator.bind(self);
 			});
 		}
-
+		self.validations = validations;
 		self.fullValidate(self.getDefaultBinding().get('value'));
 	},
 	/**
-	 * Проверка валидности поля на заданный тип валидации
+	 * Checking if given value is valid according to given validType.
+	 * Really just run validator on field if there is required validator.
+	 *
+	 * NOT RETURNS BOOLEAN!!! RETURNS FALSE | STRING
+	 *
 	 * @param value
 	 * @param validType
-	 * @returns {*}
+	 * @returns FALSE if valid, MESSAGE if invalide
 	 * @private
 	 */
 	_checkOneValid: function(value, validType) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			currentCheck;
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				validator	= self.validations[validType];
 
-		// Если данный тип валидации не предусмотрен
-		if (!self.validations[validType]) {
+		if(validator) {
+			const validationResult = validator(value);
+			binding.set('error', validationResult);		// TODO: I even can't imaging why fucking binding is here. I just re-structure code
+			return validationResult;
+		} else {
 			return false;
 		}
-
-		if ((currentCheck = self.validations[validType](value))) {
-			binding.set('error', currentCheck);
-
-			return currentCheck;
-		}
-
-		return false;
 	},
+
 	/**
-	 * Полная валидация соответсвющих полей
+	 * Full validation of given value
 	 * @param value
 	 * @returns {*}
 	 */
 	fullValidate: function(value) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding();
 
 		for (var validType in self.validations) {
 			if (self._checkOneValid(value, validType)) {

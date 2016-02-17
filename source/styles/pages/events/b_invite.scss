@@ -11,22 +11,28 @@
 
 .eInvite_header {
   justify-content: space-between;
-  margin-top: 10px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  width: 300px;
-  height: 30px;
+  height: 40px;
   white-space: nowrap;
+  display: flex;
+  margin: 5px 5px 0 0;
+  align-items: baseline;
 }
-
+.bIcon_invites{
+  width: 35px;
+  height: 35px;
+}
 .eInvite_vs {
   font-size: 11px;
   margin: 0 10px;
 }
 
 .eInvite_eventName{
-  font-size: 22px;
+  font-size: 24px;
+  font-weight: bold;
   color: #535353;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 250px;
 }
 
 .eInvite_eventDate {
@@ -49,7 +55,7 @@
   width: 320px;
   display: flex;
   flex-direction: row;
-  margin: -10px 10px 10px;
+  margin: 0 0 10px;
   text-transform: uppercase;
   justify-content: flex-end;
 }
@@ -78,7 +84,7 @@
 .eInvites_list{
   display: flex;
   flex-wrap: wrap;
-  width: 970px;
+  max-width: 970px;
   margin: auto;
 }
 
@@ -91,4 +97,9 @@
 .eInviteSport{
   display: flex;
   justify-content: flex-end;
+}
+.eInviteWrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }

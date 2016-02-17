@@ -1,18 +1,18 @@
-var ClassForm = require('module/as_manager/pages/school_admin/classes/class_form'),
-	React = require('react'),
-	ClassAddPage;
+const 	React 		= require('react'),
+		ClassForm 	= require('./class_form');
 
-ClassAddPage = React.createClass({
+const ClassAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+		const 	self 			= this,
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId');
 
 		self.activeSchoolId = activeSchoolId;
 	},
+
 	submitAdd: function(data) {
-		var self = this;
+		const self = this;
 
 		data.schoolId = self.activeSchoolId;
 
@@ -21,8 +21,8 @@ ClassAddPage = React.createClass({
 		});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<ClassForm title="Add new form..." onFormSubmit={self.submitAdd} binding={binding} />

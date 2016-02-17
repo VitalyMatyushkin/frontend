@@ -82,7 +82,8 @@ const EventTeams = React.createClass({
                 <If condition={binding.get('mode') !== 'closing' && isOwner}>
                     <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>
-				<div>
+							<span className="ePlayer_name"><span>{player.get('user').get('firstName')}</span> <span>{player.get('user').get('lastName')}</span></span>
+							<div>
 					{!binding.get('model.resultId') && binding.get('mode') === 'closing' ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
                             <SVG icon="icon_minus" />
                         </span> : null}
@@ -90,7 +91,6 @@ const EventTeams = React.createClass({
 						<span className="ePlayer_score">{points}</span>
 					</If>
 				</div>
-				<span className="ePlayer_name"><span>{player.get('user').get('firstName')}</span> <span>{player.get('user').get('lastName')}</span></span>
 				<If condition={binding.get('mode') === 'edit_squad' && isOwner}>
 					<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, order, player.get('id'))}>
 						<SVG icon="icon_trash" />
@@ -126,8 +126,10 @@ const EventTeams = React.createClass({
 
 		return <div className="bEventTeams">
 			<div className="bEventTeams_team">
-				{self.getAutoComplete(0)}
-				{self.getPlayersByTeamOrder(0)}
+				<div>
+					{self.getAutoComplete(0)}
+					{self.getPlayersByTeamOrder(0)}
+				</div>
 			</div>
 			<div className="bEventTeams_team">
 				<If condition={binding.get('participants').count() > 1}>

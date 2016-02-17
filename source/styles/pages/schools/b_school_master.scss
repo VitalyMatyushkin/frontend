@@ -36,11 +36,8 @@
   position: relative;
 }
 .groupAction{
-  position:absolute;
-  top:-31px;
-  left:0;
   width: 600px;
-  margin-left: 20px;
+  margin: 0 0 10px 70px;
 }
 .bottom_action{
   top: 48px;
@@ -140,8 +137,10 @@
   z-index: 100;
 }
 .eSchoolMaster_buttons_admin{
-  margin-top:-50px;
+  margin-top:-65px;
   margin-left: 20px;
+  display: flex;
+  align-items: center;
 }
 .eSchoolMaster_buttons .bButton{
   margin-left: 10px;
@@ -186,13 +185,12 @@
 }
 .eQuickAction_list{
   display: none;
-  border: 1px solid black;
   width: 150px;
   position: absolute;
-  left: -72px;
-  top: 16px;
+  left: -94px;
+  top: 25px;
   height: auto;
-  background:#c0c0c0;
+  background:lighten($MAIN_COLOR, 25%);
   z-index: 9999;
 }
 .eQuickAction_item{
@@ -268,27 +266,43 @@
   height: 40px;
 }
 .eSchoolMaster_wrap{
-  margin-left: 180px;
   height: 80px;
-  line-height: 80px;
+  display: flex;
+  max-width: 900px;
+  margin: auto;
+  align-items: center;
 }
 .eStrip{
-  display: inline-block;
-  width: 650px;
+  width: 70%;
   background: #235413;
   height: 2px;
   vertical-align: middle;
-  margin-left: 20px;
+  margin: 0 20px;
+}
+.eSchoolMaster_wrap .bButton{
+  width: 140px;
 }
 .addButton{
-  display: inline-block;
+  display: flex;
   cursor: pointer;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+.addButton .bIcon{
+  height: 50px;
+  width: 50px;
+  fill: inherit;
+}
+
+.addButton.bIcon:hover #icon_add_student use{
+  fill: $MAIN_COLOR;
 }
 .addNewForm{
   background: url("/images/add-form.png") no-repeat;
   display: inline-block;
   width: 35px;
   height: 25px;
+  margin: 0;
 }
 .addNewForm:hover{
   background: url("/images/add-form2.png") no-repeat;
@@ -299,6 +313,7 @@
   display: inline-block;
   width: 35px;
   height: 25px;
+  margin: 0;
 }
 .addHouse:hover{
   background: url("/images/add-house.png") no-repeat;
@@ -316,4 +331,8 @@
   &.mDESC:after{
     content: '↓';
   }
+}
+
+.bSchoolEdit{
+  margin: 0 30px;
 }

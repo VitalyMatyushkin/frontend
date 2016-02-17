@@ -1,20 +1,19 @@
 .bEventHeader {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  border-bottom: 0.0625rem dotted #767676;
   align-content: center;
-  width: 100%;
-  padding: 10px 2px;
+  width: 50%;
+  border: $BORDER;
+  background: #fff;
+  height: 110px;
   box-sizing: border-box;
 }
 
 .eEventHeader_field {
-  font-size: 12px;
-  color: darken(#ddd, 30%);
-  width: 150px;
+  font-size: 14px;
+  width: 110px;
+  text-transform: uppercase;
+  text-align: center;
   &:last-child {
-    text-align: right;
   }
 }
 
@@ -26,4 +25,31 @@
   width: 80%;
   max-height: 70px;
   overflow: hidden;
+}
+.eEventHeader_field.mDate {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+.eEventHeader_field.mType{
+  border-bottom: $BORDER;
+  border-top: $BORDER;
+  margin-bottom: 15px;
+  padding: 2px;
+}
+.bEventHeader_wrap {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.eEventHeader_field_wrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  width: 100%;
+}
+.eEventHeader_field_wrap .eEventHeader_field{
+  width: 100%;
+}
+.eEventHeader_field.mSport{
+  display: flex;
 }

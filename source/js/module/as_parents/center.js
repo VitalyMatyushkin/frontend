@@ -1,12 +1,11 @@
-var RouterView = require('module/core/router'),
-	Route = require('module/core/route'),
-	LoginRoute = require('module/core/routes/login_route'),
-	LogoutRoute = require('module/core/routes/logout_route'),
-	RegisterRoute = require('module/core/routes/register_route'),
-	VerifyRoute = require('module/core/routes/verify_route'),
-	SettingsRoute = require('module/core/routes/settings_route'),
-	React = require('react'),
-	Center;
+const 	RouterView = 	require('module/core/router'),
+		Route = 		require('module/core/route'),
+		LoginRoute = 	require('module/core/routes/login_route'),
+		LogoutRoute = 	require('module/core/routes/logout_route'),
+		RegisterRoute = require('module/core/routes/register_route'),
+		VerifyRoute = 	require('module/core/routes/verify_route'),
+		SettingsRoute = require('module/core/routes/settings_route'),
+		React = 		require('react'),
 
 Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -38,7 +37,7 @@ Center = React.createClass({
 						<Route path="/profile/:schoolID" binding={binding.sub('schoolProfile')}
 							   component="module/as_manager/pages/school_profile/school_profile_page"/>
 
-						<Route path="/events /events/:subPage" binding={binding.sub('events')}
+						<Route path="/events /events/:subPage /events/:subPage/:userId" binding={binding.sub('events')}
 							   component="module/as_parents/pages/events/events"/>
 
 						<Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')}

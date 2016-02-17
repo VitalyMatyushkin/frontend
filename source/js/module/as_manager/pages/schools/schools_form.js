@@ -29,7 +29,7 @@ SchoolForm = React.createClass({
 				<FormColumn type="column">
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="text" field="description" validation="required">Description</FormField>
-					<FormField type="phone" field="phone" validation="phone">Phone</FormField>
+					<FormField type="text" field="phone" validation="required">Phone</FormField>
 				</FormColumn>
 				<FormColumn type="column">
 					<FormField type="area" field="postcodeId" serviceFullData={self._serviceFullData()} validation="required">Postcode</FormField>
@@ -38,7 +38,7 @@ SchoolForm = React.createClass({
 				</FormColumn>
                 <FormColumn type="column">
                     <FormField type="text" field="email" validation="required">School Official Email</FormField>
-                    <FormField type="text" field="owner" validation="required">Sports Department Email</FormField>
+                    <FormField type="text" field="sportsDepartmentEmail" validation="required">Sports Department Email</FormField>
                 </FormColumn>
                 <FormColumn type="column">
                     <FormField type="dropdown" field="status">School Status</FormField>

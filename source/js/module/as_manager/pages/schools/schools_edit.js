@@ -22,22 +22,20 @@ const EditSchoolForm = React.createClass({
 		}
 	},
 	submitEdit: function(schoolData) {
-        console.log(schoolData);
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
-        //schoolData.pic = globalBinding.toJS().picUrl;
-		//schoolData.status = globalBinding.get('dropDownStatus');
-		//window.Server.school.put(self.schoolId, schoolData).then(function(res) {
-		//	document.location.hash = 'school_admin/summary';
-		//});
+		var self = this;
+		window.Server.school.put(self.schoolId, schoolData).then(function(res) {
+			document.location.hash = 'school_admin/summary';
+			return res;
+		});
 
 	},
 	render: function() {
 		var self = this;
 
 		return (
-			<SchoolForm title="Edit school..." onSubmit={self.submitEdit} binding={self.getDefaultBinding()} />
+            <div className="bSchoolEdit">
+                <SchoolForm title="Edit school..." onSubmit={self.submitEdit} binding={self.getDefaultBinding()} />
+            </div>
 		)
 	}
 });

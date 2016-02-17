@@ -46,7 +46,14 @@ $border: solid 1px #c2c2c2;
   width: 50px;
   margin: auto;
 }
-
+.eChallenge_sport{
+  width: 10%;
+  margin: auto;
+}
+.eChallenge_event{
+  width: 10%;
+  margin: auto;
+}
 .eChallenge_results{
   letter-spacing: 1px;
   font-family: "Myriad Pro", sans-serif;
@@ -165,4 +172,9 @@ $border: solid 1px #c2c2c2;
 .eAchievements_wrap{
   display: flex;
   text-align: center;
+}
+.bAdminView{
+  display: flex;
+  max-width: 1060px;
+  margin: 40px auto;
 }

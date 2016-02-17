@@ -28,11 +28,10 @@ const ParentChildAchievement = React.createClass({
     _updateViewOnActiveChildIdChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            studentId,
+            studentId = binding.get('activeChildId'),
             leanerData = {};
-        studentId = studentId ? studentId : binding.get('activeChildId');
         progressValue = studentId;
-        if(studentId === undefined)document.location.hash = 'events/calendar';
+        if(studentId === undefined)document.location.hash = 'events/calendar/all';
         if(studentId && studentId !=='all'){
             return window.Server.student.get({studentId:studentId,
                 filter:{
@@ -40,6 +39,9 @@ const ParentChildAchievement = React.createClass({
                 }
             }).then(function (data) {
                 leanerData = data;
+                //Perform parent check here too for the parents site
+                leanerData.parentOne = ((data.parents !== undefined && data.parents[0] !== undefined) ? data.parents[0].firstName+' '+data.parents[0].lastName: '');
+                leanerData.parentTwo = ((data.parents !== undefined && data.parents[1] !== undefined) ? data.parents[1].firstName+' '+data.parents[1].lastName: '');
                 return window.Server.form.get(data.formId).then(function (classData) {
                     leanerData.classData = classData;
                     return window.Server.house.get(data.houseId).then(function (houseData) {
@@ -79,7 +81,7 @@ const ParentChildAchievement = React.createClass({
            binding = self.getDefaultBinding();
         return binding.get('eventChild') && binding.get('eventChild').count() ? binding.get('eventChild').map(function (child,key) {
             child.events = (binding.get('models') && binding.get('models').count())?binding.get('models').filter(function (model) {
-                return model.get('childId') === child.get('id');
+                return model.get('childId') === child.get('childId');
             }):0;
             return(
                 <div key={key} className="eAchievement_row">

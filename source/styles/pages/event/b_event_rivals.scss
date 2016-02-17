@@ -1,10 +1,10 @@
 .bEventRivals {
+  border: $BORDER;
+  background: #fff;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  padding: 10px 0;
-  width: 100%;
-  border-bottom: 0.0625rem dotted #767676;
+  width: 50%;
+  height: 110px;
+  box-sizing: border-box;
 }
 
 .eEventRivals_rival {
@@ -18,7 +18,8 @@
 }
 
 .eEventRivals_pic {
-  width: 50px;
+  height: 55px;
+  margin-top: 10px;
 }
 
 .eEventRivals_name {
@@ -30,14 +31,18 @@
 .bEventRival {
   display: flex;
   flex-direction: column;
-  width: 350px;
   justify-content: space-between;
-  &:last-child {
-    align-items: flex-end;
-  }
+  width: 150px;
+  align-items: center;
 }
 
 .eEventRival_name {
-  padding-top: 5px;
+  border-top: $BORDER;
+  border-bottom: $BORDER;
+  margin-bottom: 15px;
+  padding: 2px;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
 }
 

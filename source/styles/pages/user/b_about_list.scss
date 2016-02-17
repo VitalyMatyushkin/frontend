@@ -4,11 +4,11 @@
 }
 
 .eAboutList_item{
-  padding-left: 40px;
+  padding-left: 60px;
   min-height: 40px;
   position: relative;
   font-size: 15px;
-  line-height: 40px;
+  line-height: 45px;
   color: rgb(219, 219, 219);
   border-bottom: solid 1px #3c3a3b;
 }
@@ -20,8 +20,8 @@
   margin-top: -15px;
   content: '';
   display: block;
-  height: 30px;
-  width: 30px;
+  height: 35px;
+  width: 35px;
 }
 
 .eAboutList_item.mPosition:before{
@@ -38,6 +38,6 @@
   left: 0px;
   top: 6px;
 
-  width: 23px;
-  height: 23px;
+  width: 35px;
+  height: 35px;
 }

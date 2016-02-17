@@ -40,7 +40,7 @@ const SchoolListPage = React.createClass({
 		if (schoolList && schoolList.length > 0) {
 			schoolNodes = schoolList.map(function (school, schoolIndex) {
 				return (
-					<a key={schoolIndex}  href='/#school_admin/summary'
+					<a key={school.id}  href='/#school_admin/summary'
                         className="eSchoolList_one"
                         onClick={self.setSchoolAsActive.bind(null, school)}>
                         {school.name}

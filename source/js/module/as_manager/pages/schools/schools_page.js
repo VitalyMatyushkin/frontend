@@ -6,23 +6,19 @@ const 	RouterView 	= require('module/core/router'),
 const SchoolsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-		var self = this,
+		const self = this,
 			globalBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		if (!activeSchoolId) {
-			self._updateSchoolList().then(function(schoolsList) {
-
-				// If there is at least any school making first of them default
-				if (schoolsList[0]) {
-					globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
-					document.location.hash = 'school_admin/summary';
-				} else {
-                    //Else direct unverified user to the waiting area
-                    document.location.hash = 'schools/lounge';
-				}
-			});
-        }
+        self._updateSchoolList().then(function(schoolsList) {
+            if(!schoolsList || schoolsList && schoolsList.length === 0)
+                document.location.hash = 'schools/lounge';
+            // If there is at least any school making first of them default
+            else if (schoolsList.length === 1) {
+                globalBinding.set('userRules.activeSchoolId', schoolsList[0].id);
+                document.location.hash = 'school_admin/summary';
+            }
+        });
     },
 	/**
 	 * Updating user's school list

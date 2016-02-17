@@ -1,6 +1,7 @@
 const   If          = require('module/ui/if/if'),
         Filter = require('module/ui/list/filter'),
         GroupAction = require('module/ui/list/group_action'),
+        SVG 				= require('module/ui/svg'),
         React       = require('react'),
         ReactDOM    = require('reactDom'),
         Immutable   = require('immutable'),
@@ -183,24 +184,11 @@ const ListPageMixin = {
               <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
               <div className="eStrip">
               </div>
-          </div>
-                <div className="eSchoolMaster_groupAction">
-                    <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
-                        <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
-                                     binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
-                    </If>
-                    <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
-                        {/*<If condition={self.isSuperAdminPage && false}>
-                            <div className="filterBase_container">
-                                <span>Filter base: </span>
-                                <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
-                                <input type="checkbox" className="bFilterCheck" ref="otherCheck" value="others" onChange={self.toggleBaseFilters.bind(null,'otherCheck')}/><span>Others Only</span>
-                                <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
-                            </div>
-                        </If>*/}
+
+
                         <div className="addButton" onClick={self.toggleFilters}><img src="images/search.png"/> {isFiltersActive ? '⇡' : '⇣'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
-                            <div className="addButton" onClick={self._getAddNewStudentFunction}><img src="images/add_students.png"/></div>
+                            <div className="addButton" onClick={self._getAddNewStudentFunction}><SVG icon="icon_add_student" /></div>
                         </If>
                         <If condition={(currentPage[currentPage.length-1] ==='list' && currentPage[currentPage.length-2] === 'admin_views')}>
                             <div className="bButton" onClick={self._getAddNewSchoolFunction}>Add New School</div>
@@ -220,6 +208,21 @@ const ListPageMixin = {
                         <If condition={currentPage[currentPage.length-1] ==='news'}>
                             <div className="bButton" onClick={self._createNewsItem}>Create News</div>
                         </If>
+          </div>
+          <div className="eSchoolMaster_groupAction">
+              <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
+                  <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
+                               binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+              </If>
+              <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
+                  {/*<If condition={self.isSuperAdminPage && false}>
+                   <div className="filterBase_container">
+                   <span>Filter base: </span>
+                   <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
+                   <input type="checkbox" className="bFilterCheck" ref="otherCheck" value="others" onChange={self.toggleBaseFilters.bind(null,'otherCheck')}/><span>Others Only</span>
+                   <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
+                   </div>
+                   </If>*/}
                     </div>
                 </div>
 				{self.getTableView()}

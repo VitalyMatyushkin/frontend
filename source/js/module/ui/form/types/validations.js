@@ -2,8 +2,7 @@
  * Раздичные виды валидации
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
-const 	React 	= require('react'),
-		$ 		= require('jquery');
+const 	$ 		= require('jquery');
 
 var validationsSet = {
 	phone: function(value) {
@@ -62,9 +61,10 @@ var validationsSet = {
 		}
 	},
 	server: function(value) {
-		var self = this,
-            oldPhoneCheckVal,
-			dataToCheck = {};
+		const 	self = this,
+				dataToCheck = {};
+		let 	oldPhoneCheckVal;
+
 		if (value === '') {
 			return false;
 		}
