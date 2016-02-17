@@ -290,9 +290,11 @@
 .addButton .bIcon{
   height: 50px;
   width: 50px;
+  fill: inherit;
 }
-.addButton:hover svg.bIcon{
-  fill: none !important;
+
+.addButton.bIcon:hover #icon_add_student use{
+  fill: $MAIN_COLOR;
 }
 .addNewForm{
   background: url("/images/add-form.png") no-repeat;

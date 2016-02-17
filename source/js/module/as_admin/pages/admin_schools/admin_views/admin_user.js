@@ -84,28 +84,37 @@ const UserDetail= React.createClass({
         }
         return (
             <div>
-                <h1 className="eSchoolMaster_title">
-                    {profilePicture ? <div className="eSchoolMaster_flag"><img src={profilePicture}/></div> : ''}
-                    {username}
-                    <div className="eSchoolMaster_buttons">
-                        <a onClick={self.onEditClick} className="bButton">Edit...</a>
+
+                <div className = "bAdminView">
+
+                    <h1 className="eSchoolMaster_title">
+                        {profilePicture ? <div className="eSchoolMaster_flag"><img src={profilePicture}/></div> : ''}
+                        {username}
+                        <div className="eSchoolMaster_buttons">
+                            <a onClick={self.onEditClick} className="bButton">Edit...</a>
+                        </div>
+                    </h1>
+                    <div>
+                        <div style={{padding:10+'px'}}>
+                            Name: {name}
+                        </div>
+                        <div style={{padding:10+'px'}}>
+                            Gender: {gender}
+                        </div>
+                        <div style={{padding:10+'px'}}>
+                            Email: {email}
+                        </div>
+                        <div style={{padding:10+'px'}}>
+                            Phone: {phone}
+                        </div>
                     </div>
-                </h1>
-                <div className = "bChallenge">
-                    <div style={{padding:10+'px'}}>
-                       Name: {name}
+                </div>
+
+                <div style={{padding:10+'px'}}>
+                    <div className="eSchoolMaster_wrap">
+                        <h1 className="eSchoolMaster_title">Related Schools</h1>
+                        <div className="eStrip"></div>
                     </div>
-                    <div style={{padding:10+'px'}}>
-                       Gender: {gender}
-                    </div>
-                    <div style={{padding:10+'px'}}>
-                       Email: {email}
-                    </div>
-                    <div style={{padding:10+'px'}}>
-                       Phone: {phone}
-                    </div>
-                    <div style={{padding:10+'px'}}>
-                        <h1>Related Schools</h1>
                     </div>
                     <div className="bDataList">
                         <div className="eDataList_list mTable">
@@ -118,7 +127,6 @@ const UserDetail= React.createClass({
                             {listItems}
                         </div>
                     </div>
-                </div>
                 <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}} otherClass="bPopupEdit">
                     <EditUser binding={binding} />
                 </Popup>
