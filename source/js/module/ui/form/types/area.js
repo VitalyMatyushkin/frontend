@@ -1,17 +1,17 @@
-var TypeAutocomplete = require('module/ui/form/types/autocomplete'),
-	AreaMixin,
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	TypeArea;
+const 	TypeAutocomplete 	= require('module/ui/form/types/autocomplete'),
+		React 				= require('react');
 
-TypeArea = React.createClass({
+/**
+ * Looks like this element helps to locate some geo area
+ */
+const TypeArea = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		binding.addListener('defaultValue', function() {
-			var postCodeId = binding.get('defaultValue');
+			const postCodeId = binding.get('defaultValue');
 
 			if (postCodeId) {
 				self.valueRequest && self.valueRequest.cancel();
@@ -41,11 +41,10 @@ TypeArea = React.createClass({
 		return self.request;
 	},
 	render: function() {
-		var self = this,
-			AutocompleteElement = React.createElement(TypeAutocomplete, self.props),
-			AutocompleteProped;
+		const 	self = this,
+				AutocompleteElement = React.createElement(TypeAutocomplete, self.props);
 
-		AutocompleteProped = React.cloneElement(AutocompleteElement, {
+		const AutocompleteProped = React.cloneElement(AutocompleteElement, {
 			serviceFilter: self.serviceFilter,
 			serverField: 'id'
 		});

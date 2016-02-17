@@ -32,6 +32,14 @@ requirejs.config({
 });
 
 
+const b = {
+    name: "Alex"
+};
+
+const a = Object.assign({}, b, {age: 25});
+
+console.log('a: ' + JSON.stringify(a));
+
 requirejs(
     ['jquery', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader','reactDom'],
     function($, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG,ReactDOM){
