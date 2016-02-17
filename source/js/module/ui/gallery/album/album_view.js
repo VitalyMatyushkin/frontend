@@ -99,11 +99,18 @@ const AlbumView = React.createClass({
 				<div>
 				<SubMenu binding={{ default: binding.sub('albumsRouting'), itemsBinding: binding.sub('albumSubMenu') }} />
 					<If condition={binding.get('sync')}>
+						<div>
+							<div className="eSchoolMaster_wrap">
+								<h1 className="eSchoolMaster_title">Gallery</h1>
+								<div className="eStrip"></div>
+								<h1 className="showAllPhoto">All</h1>
+							</div>
 						<div className="bAlbum">
-							<h1 className="eAlbum_title">{binding.get('album.name')}</h1>
+							<h2 className="eAlbum_title">{binding.get('album.name')}</h2>
 							<PhotoList binding={{default: binding.sub('album'), isUploading: binding.sub('isUploading')}}
 									   onPhotoClick={self.onPhotoClick}
 							/>
+						</div>
 						</div>
 					</If>
 					<If condition={!binding.get('sync')}>

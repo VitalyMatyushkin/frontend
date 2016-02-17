@@ -33,9 +33,16 @@ const GalleryListPage = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         return (
+
             <div className="bSchoolGallery">
-                <h2>School Gallery</h2>
+                <div className="eSchoolMaster_wrap">
+                    <h1 className="eSchoolMaster_title">Gallery</h1>
+                    <div className="eStrip"></div>
+                    <h1 className="showAllPhoto">All</h1>
+                </div>
+                <div className="albums_wrap">
                 <Album binding={binding.sub('defaultAlbum')} onView={self.onClickAlbum} />
+                </div>
             </div>
         )
     }

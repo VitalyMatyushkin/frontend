@@ -79,14 +79,14 @@ const ChallengesView = React.createClass({
                         onClick={self.onClickChallenge.bind(null, event.get('id'))}
                         id={'challenge-' + event.get('id')}
                 >
+                <span className="eChallenge_sport">sport</span>
+                <span className="eChallenge_event">{event.get('name')}</span>
                 <div className="eChallenge_hours">{hours + ':' + minutes}</div>
-
                 <div className="eChallenge_in">
                     <div className="eChallenge_firstName">
                         {firstName}
                     </div>
                     <p>vs</p>
-
                     <div className="eChallenge_secondName">
                         {secondName}
                     </div>
@@ -138,6 +138,8 @@ const ChallengesView = React.createClass({
             <div className="bChallenges">
                 <div className="eChallenge_title">
                     <span className="eChallengeDate_date">Date</span>
+                    <span className="eChallenge_sport">Sport</span>
+                    <span className="eChallenge_event">Event Name</span>
                     <span className="eChallenge_hours">Time</span>
                     <span className="eChallenge_in">Game Type</span>
                     <span className="eChallenge_results">Score</span>

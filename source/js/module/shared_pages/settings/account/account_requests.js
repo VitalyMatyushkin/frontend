@@ -67,13 +67,14 @@ const AccountRequests = React.createClass({
             filterDivClasses = 'eDataList_listItemCell hideElement '+(openFilter ? 'showElement':'');
         return(
             <div>
-                <h1 className="eSchoolMaster_title">
-                    My Requests
-                    <div className="eSchoolMaster_buttons">
-                        <span onClick={self.handleAddNewButtonClick.bind(null,this)} className="eSchoolMaster_plus"><SVG icon="icon_plus"/> New </span>
-                        <span onClick={self.handleFilterButtonClick.bind(null,this)} className="bButton">{binding.get('openFilter') ? 'Filter ⇡': 'Filter ⇣'}</span>
-                    </div>
-                </h1>
+                <div className="eSchoolMaster_wrap">
+                    <h1 className="eSchoolMaster_title">My Requests</h1>
+                    <div className="eStrip"></div>
+                    <span onClick={self.handleAddNewButtonClick.bind(null,this)}
+                          className="addButton addNewForm"></span>
+                    <span onClick={self.handleFilterButtonClick.bind(null,this)}
+                          className="AddButton"><img src="images/search.png"/>{binding.get('openFilter') ? '⇡' : '⇣'}</span>
+                </div>
                 <div className={filterDivClasses} ref="filterInputDiv">
                     <div className="eDataList_filter">
                         <input ref="filterInput" className="eDataList_filterInput" placeholder={'filter by role'} />

@@ -273,7 +273,7 @@
   align-items: center;
 }
 .eStrip{
-  width: 80%;
+  width: 70%;
   background: #235413;
   height: 2px;
   vertical-align: middle;
@@ -286,13 +286,16 @@
   display: flex;
   cursor: pointer;
   justify-content: flex-start;
+  cursor: pointer;
 }
 .addButton .bIcon{
   height: 50px;
   width: 50px;
+  fill: inherit;
 }
-.addButton:hover svg.bIcon{
-  fill: none !important;
+
+.addButton.bIcon:hover #icon_add_student use{
+  fill: $MAIN_COLOR;
 }
 .addNewForm{
   background: url("/images/add-form.png") no-repeat;
