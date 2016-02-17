@@ -10,6 +10,13 @@ const RegiseterUserPage = React.createClass({
 			showForm: true
 		});
 	},
+	componentWillUnmount:function(){
+		var self = this,
+			binding = self.getDefaultBinding();
+		//Lets clear data in default binding when component is unmounted
+		//to make sure some trailing data don't appear when the component is re-mounted subsequently
+		binding.clear();
+	},
 	onSuccess: function(data) {
 		var self = this,
 			binding = self.getDefaultBinding();
