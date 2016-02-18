@@ -7,6 +7,7 @@ const FormField = React.createClass({
 		type: 				React.PropTypes.string.isRequired,
 		field: 				React.PropTypes.string.isRequired,
 		defaultValueString:	React.PropTypes.string,
+		errorClassName:		React.PropTypes.string, //Error message specific class
 		binding:			React.PropTypes.any
 	},
 	render: function () {
@@ -29,12 +30,14 @@ const FormField = React.createClass({
 		} else if(binding.get('showSuccess')){
 			fieldStyleClass += ' mValid';
         }
+		//If a specific class has been provided for styling error messages then use it
+		let errorClassName = self.props.errorClassName !== undefined ? self.props.errorClassName:"eForm_fieldValidText";
 		return (
 			<div className="eForm_field">
 				<div className="eForm_fieldName">{self.props.children}</div>
 				<div className={fieldStyleClass}>
 					{inputField}
-					<div className="eForm_fieldValidText">{binding.get('error') || binding.get('success')}</div>
+					<div className={errorClassName}>{binding.get('error') || binding.get('success')}</div>
 				</div>
 			</div>
 
