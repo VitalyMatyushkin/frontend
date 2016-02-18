@@ -6,18 +6,21 @@ const FormField = React.createClass({
 	propTypes: {
 		type: 				React.PropTypes.string.isRequired,
 		field: 				React.PropTypes.string.isRequired,
-		defaultValueString:	React.PropTypes.string
+		defaultValueString:	React.PropTypes.string,
+		binding:			React.PropTypes.any
 	},
 	render: function () {
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
 
+		/* collectin all own props and adding some more additional component-specific */
 		const inputProps = Object.assign({}, self.props, {
 			name: 		self.props.children,
 			service: 	self.props.service,
 			binding: 	binding
 		});
 
+		/* creating new input with built props */
 		const inputField = React.createElement(typeList[self.props.type], inputProps);
 
 		let fieldStyleClass = 'eForm_fieldSet';
