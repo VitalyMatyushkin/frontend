@@ -108,13 +108,11 @@ const UserFixtures = React.createClass({
                             {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
                             {firstName}
                         </div>
-                        <div className="eChallenge_rivalInfo">
-                            <div className="eChallenge_rivalName">
-                                {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
-                                {secondName}
-                            </div>
-                            <div
-                                className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '- : -'}</div>
+                        <div
+                            className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '- : -'}</div>
+                        <div className="eChallenge_rivalName">
+                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
+                            {secondName}
                         </div>
                     </div>
                     <div className="eChallenge_com_container">

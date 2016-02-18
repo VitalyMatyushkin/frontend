@@ -107,18 +107,6 @@
   margin: 5px 0;
 }
 
-.eManager_group .bCombobox {
-  width: 200px;
-  margin-top: 5px;
-  line-height: 30px;
-}
-.eManager_group .eCombobox_input{
-  height: 35px;
-  text-transform: uppercase;
-}
-.eManager_group .eCombobox_button{
-  text-align: right;
-}
 .eManager_group input:hover, textarea:hover, select:hover{
   border-color: $COLOR;
 }

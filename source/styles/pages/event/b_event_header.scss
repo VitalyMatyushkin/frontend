@@ -29,6 +29,11 @@
 .eEventHeader_field.mDate {
   margin-bottom: 10px;
   font-size: 20px;
+  font-weight: bold;
+}
+.eEventHeader_field.mEvent{
+  margin-bottom: 10px;
+  text-transform: none;
 }
 .eEventHeader_field.mType{
   border-bottom: $BORDER;

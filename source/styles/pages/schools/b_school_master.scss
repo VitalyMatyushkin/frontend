@@ -291,11 +291,24 @@
 .addButton .bIcon{
   height: 50px;
   width: 50px;
-  fill: inherit;
+  color: $COLOR;
 }
-
-.addButton.bIcon:hover #icon_add_student use{
-  fill: $MAIN_COLOR;
+.addButton:hover .bIcon {
+  color: $MAIN_COLOR;
+}
+.addButtonShort{
+  display: flex;
+  cursor: pointer;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+.addButtonShort .bIcon{
+  height: 40px;
+  width: 40px;
+  color: $COLOR;
+}
+.addButtonShort:hover .bIcon {
+  color: $MAIN_COLOR;
 }
 .addNewForm{
   background: url("/images/add-form.png") no-repeat;
