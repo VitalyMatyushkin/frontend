@@ -31,23 +31,9 @@ InviteView = React.createClass({
 			inviteId: binding.get('id')
 		}, binding.toJS());
 	},
-    /*getParticipantEmblem:function(participant){
-        if(participant !== undefined){
-            return(
-                <div>
-                    <img src={participant.school.pic}/>
-                    <span>{participant.house !== undefined ? participant.house.name:''}</span>
-                </div>
-            );
-        }
-    },*/
     getParticipantEmblem:function(participant){
         if(participant !== undefined){
-            return(
-                <div>
-                    <span>{participant}</span>
-                </div>
-            );
+            return {backgroundImage: 'url(' + participant.pic + ')'};
         }
     },
     getSportIcon:function(sport){
@@ -79,9 +65,28 @@ InviteView = React.createClass({
             return icon;
         }
     },
+    getGenderIcon:function(gender){
+        if(gender !== undefined){
+            var icon;
+            switch (gender){
+                case 'female':
+                    icon = <SVG classes="bIcon_invites" icon="icon_girl"></SVG>;
+                    break;
+                default:
+                    icon = <SVG classes="bIcon_invites" icon="icon_boy"></SVG>;
+                    break;
+            }
+            return icon;
+        }
+    },
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
+            inviter = binding.toJS('inviter'),
+            guest = binding.toJS('guest'),
+            rival = guest.id === activeSchoolId ? inviter : guest,
             inviteClasses = classNames({
                 bInvite: true,
                 mNotRedeemed: !binding.get('redeemed')
@@ -89,28 +94,26 @@ InviteView = React.createClass({
 			isInbox = self.props.type === 'inbox',
 			isOutBox = self.props.type === 'outbox',
 			isArchive = typeof binding.get('accepted') === 'boolean',
-            inviter = self.getBinding('inviter'),
-            invited = self.getBinding('invited'),
-            schoolPicture = self.getParticipantEmblem(binding.get('guest').get('name')),
+            schoolPicture = self.getParticipantEmblem(rival),
             sport = self.getSportIcon(binding.get('event.sport.name')),
             ages = binding.get('event.ages'),
+            gender = self.getGenderIcon(binding.get('event.gender')),
             message = binding.get('message') || '',
             isRedeemed = binding.get('redeemed'),
             startDate = (new Date(binding.get('event.startTime'))).toLocaleString();
 
         return <div key={binding.get('id')} className={inviteClasses}>
-            <div className="eInvite_img">{schoolPicture}</div>
+            <div className="eInvite_img" style={schoolPicture}></div>
             <div className="eInviteWrap">
                 <div className="eInvite_header">
-                <span className="eInvite_eventName">
-                    {isInbox ? binding.get('inviter').get('name') : null}
-                    {isOutBox ? binding.get('guest').get('name') : null}
-                    {isArchive ? binding.get('guest').get('name') : null}
-                </span>
+                    <span className="eInvite_eventName">
+                        {rival.name}
+                    </span>
                     <div className="eInviteSport">{sport}</div>
                 </div>
                 <span className="eInvite_eventDate"></span>
                 <div className="eInvite_info">
+                    <div className="eInvite_gender">{gender}</div>
                     <div>{'Start date:'} {startDate}</div>
                     <div>{'Age:'} {ages}</div>
                 </div>

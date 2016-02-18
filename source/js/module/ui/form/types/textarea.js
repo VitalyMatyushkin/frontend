@@ -1,12 +1,10 @@
 /**
  * Created by bridark on 04/08/15.
  */
-var TypeMixin = require('module/ui/form/types/type_mixin'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    TypeTextArea;
+const   TypeMixin   = require('module/ui/form/types/type_mixin'),
+        React       = require('react');
 
-TypeTextArea =  React.createClass({
+const TypeTextArea =  React.createClass({
     propTypes: {
         textType: React.PropTypes.string
     },

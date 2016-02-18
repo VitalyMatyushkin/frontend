@@ -5,8 +5,8 @@ const 	Form 		= require('module/ui/form/form'),
 const LoginUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onSuccess: React.PropTypes.func,
-		onError: React.PropTypes.func,
+		onSuccess: 	React.PropTypes.func,
+		onError: 	React.PropTypes.func,
 		customName: React.PropTypes.string
 	},
 	componentWillMount:function(){

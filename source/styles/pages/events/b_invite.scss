@@ -93,10 +93,18 @@
   height: 100px;
   margin: 25px 20px 0;
   border: $BORDER;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: 50% 50%;
+
 }
 .eInviteSport{
   display: flex;
   justify-content: flex-end;
+}
+.eInvite_gender{
+  float: right;
+  padding-right: 5px;
 }
 .eInviteWrap{
   display: flex;

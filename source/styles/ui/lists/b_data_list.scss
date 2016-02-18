@@ -231,13 +231,9 @@
   text-decoration: underline;
   color:$MAIN_COLOR;
 }
-.ePagination_container{
-  margin-top: 20px;
-  padding: 10px;
-  width: 100%;
-  height: auto;
+.ePagination{
   position:relative;
-  float:left;
+  z-index: 10;
 }
 .ePage_num{
   display: inline-block;

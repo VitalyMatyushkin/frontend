@@ -1,5 +1,6 @@
 .bForm {
   margin: auto;
+  padding: 30px;
   text-align: center;
   position: relative;
 }
@@ -43,6 +44,10 @@
 
 .eForm_field {
   margin-bottom: 20px;
+}
+.eForm_field p{
+  font-size: 12px;
+  margin-bottom: 4px;
 }
 
 .eForm_fieldName {

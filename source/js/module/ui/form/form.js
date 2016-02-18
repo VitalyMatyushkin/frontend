@@ -15,7 +15,7 @@ const   React       = require('react'),
         Immutable 	= require('immutable'),
         $           = require('jquery');
 
-var Form = React.createClass({
+const Form = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {
         onSubmit: React.PropTypes.func,
@@ -73,19 +73,19 @@ var Form = React.createClass({
         }
     },
     tryToSubmit: function () {
-        var self = this,
-            token = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId'),
-            fields = self.getDefaultBinding().meta().toJS(),
-            hereIsError = false,
-            dataToPost = {},
-            typeOfService = typeof self.props.service,
-            userService;
+        const   self            = this,
+                token           = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId'),
+                fields          = self.getDefaultBinding().meta().toJS(),
+                typeOfService   = typeof self.props.service;
+
+        let     hereIsError     = false,
+                dataToPost      = {};
 
         if (self.busy === true) {
             return false;
         }
 
-        // Проверка всех полей данных на валидацию
+        // checking data fields validness
         for (var field in fields) {
             dataToPost[field] = fields[field].value;
 
@@ -106,7 +106,8 @@ var Form = React.createClass({
         //TODO: Заменить dataToPost на Merge данных из statePath
         //TODO: WTF??
         dataToPost.ownerId = token;
-        // Если ошибок нет, обращаемся с данными к сервису
+
+        // if there is no errors, calling service
         if (hereIsError === false) {
 
             self.busy = true;
@@ -127,8 +128,7 @@ var Form = React.createClass({
 
             // TODO: Зарефакторить эту кашицу
             if (['object', 'function'].indexOf(typeOfService) !== -1) {
-                userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
-
+                const userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
                 userService(dataToPost).then(self._onServiceSucces/*.bind(self)*/, self._onServiceError/*.bind(self)*/); // React told we don't need .bind()
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
@@ -171,8 +171,8 @@ var Form = React.createClass({
     },
 
     _createBindedClones: function(parent) {
-        var self = this,
-            binding = self.getDefaultBinding();
+       const    self    = this,
+                binding = self.getDefaultBinding();
 
         /** recursively traversing all children and their children and their children....
          * as setting binding to them
@@ -202,8 +202,8 @@ var Form = React.createClass({
     },
 
     _keyPress: function (event) {
-        var self = this,
-            keyCode = event.keyCode;
+        const   self    = this,
+                keyCode = event.keyCode;
 
         if (keyCode === 13) {
             ReactDOM.findDOMNode(self.refs.submitButton).focus();
@@ -211,9 +211,9 @@ var Form = React.createClass({
         }
     },
     render: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            Title;
+        const   self    = this,
+                binding = self.getDefaultBinding();
+        let Title;
 
         if (self.props.name !== undefined) {
             Title = <h2 dangerouslySetInnerHTML={{__html: self.props.name}}/>;
