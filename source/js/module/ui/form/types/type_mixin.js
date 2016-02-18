@@ -69,24 +69,31 @@ const InputTypeMixin = {
 		return false;
 	},
 	/**
-	 * Метод вызывается по мере изменения значения поля, выполняется частичная валидация
+	 * This method called during user's input. What it really does is hides errors if input data was changed
 	 */
 	changeValue: function(value) {
-		var self = this;
-			//value = '';
+		const self = this;
+
 		self.hideError();
 		self._checkOneValid(value, 'alphanumeric') && self.showError();
+		// just storing current input value
+		// this can trigger extra form validation, but... emh.. it works.
+		// anyway all that form shit should be dropped eventually
+		self.getDefaultBinding().set('value', value);
 	},
+
 	/**
-	 * Метод устаналивает значение поля (окончание ввода)
+	 * Set input value on off field on input end
 	 * @param value
 	 */
 	setValue: function(value) {
-		var self = this,
-			value = value || '',
-			binding = self.getDefaultBinding(),
-			oldValue = binding.get('value'),
-			validateResult = self.fullValidate(value);
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				oldValue 		= binding.get('value'),
+				validateResult 	= self.fullValidate(value);
+
+		value = value || '';
+
 		if (oldValue === value) {
 			return false;
 		}
@@ -105,19 +112,21 @@ const InputTypeMixin = {
 		self.props.onSetValue && self.props.onSetValue(value);
 	},
 	showError: function(text) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		console.log('showing error');
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 		text && binding.set('error', text);
 		binding.set('showError', true);
 	},
 	hideError: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 		binding.set('showError', false);
+		binding.remove('error');
 	},
     showSuccess:function(text){
-        var self = this,
-            binding = self.getDefaultBinding();
+        const 	self 	= this,
+            	binding = self.getDefaultBinding();
         text && binding.set('success', text);
         binding.set('showSuccess',true);
     }

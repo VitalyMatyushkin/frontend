@@ -2,9 +2,9 @@ const 	Logo 		= require('module/as_manager/head/logo'),
 		TopMenu 	= require('module/ui/menu/top_menu'),
 		UserBlock 	= require('module/as_manager/head/user_block'),
 		If 			= require('module/ui/if/if'),
-		React 		= require('react'),
+		React 		= require('react');
 
-Head = React.createClass({
+const Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
         this.schoolExists();
