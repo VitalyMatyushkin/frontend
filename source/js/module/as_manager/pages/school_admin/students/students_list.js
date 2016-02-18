@@ -24,11 +24,6 @@ const StudentsListPage = React.createClass({
 			//document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
 	},
-	getForm: function (value) {
-        if(value !== undefined){
-            return value.name;
-        }
-	},
 	getGender: function (user) {
 		var self = this,
 			icon = user !== undefined ?(user.gender === 'male' ? 'icon_man': 'icon_woman'):'';
@@ -65,16 +60,6 @@ const StudentsListPage = React.createClass({
             }) : null;
         }
 	},
-	getFirstName: function(user) {
-        if(user !== undefined){
-            return user.firstName;
-        }
-	},
-	getLastName: function(user) {
-        if(user !== undefined){
-            return user.lastName;
-        }
-	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -83,9 +68,9 @@ const StudentsListPage = React.createClass({
 				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
 				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="user" dataFieldKey="firstName" filterType="none" parseFunction={self.getFirstName}>First name</TableField>
-				<TableField width="15%" dataField="user" dataFieldKey="lastName" filterType="none" parseFunction={self.getLastName}>Last name</TableField>
-				<TableField width="5%" dataField="form" filterType="none" parseFunction={self.getForm}>Form</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="firstName" filterType="none" >First name</TableField>
+				<TableField width="15%" dataField="user" dataFieldKey="lastName" filterType="none" >Last name</TableField>
+				<TableField width="5%" dataField="form" dataFieldKey="name" filterType="none" >Form</TableField>
 				<TableField width="15%" dataField="user" filterType="none" parseFunction={self.getBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>

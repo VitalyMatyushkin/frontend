@@ -19,27 +19,6 @@ const PermissionView = React.createClass({
         include:['principal',{student:['form','house']}]
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
-    sandbox:true,
-    getFullName:function(principal){
-        if(principal !==undefined){
-            return principal.firstName+" "+principal.lastName;
-        }
-    },
-    getFirstName:function(principal){
-        if(principal !== undefined){
-            return principal.firstName;
-        }
-    },
-    getLastName:function(principal){
-        if(principal !== undefined){
-            return principal.lastName;
-        }
-    },
-    getEmail:function(principal){
-        if(principal !== undefined){
-            return principal.email;
-        }
-    },
     getStatus: function(principal) {
         if(principal !== undefined){
             if(principal.verified.email === true && principal.verified.phone === true){
@@ -56,11 +35,6 @@ const PermissionView = React.createClass({
                     <div>{role.preset}</div>
                 );
             });
-        }
-    },
-    getSchool:function(school){
-        if(school !== undefined){
-            return school.name;
         }
     },
     _getItemViewFunction:function(model){
@@ -207,13 +181,13 @@ const PermissionView = React.createClass({
                        quickEditActions={self.groupActionList} binding={binding} addQuickActions={true}
                        isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} pageLimit={25}>
-                    <TableField dataField="checkBox" width="1%" filterType="none"></TableField>
-                    <TableField dataField="principal" width="20%" dataFieldKey="firstName" filterType="none"  parseFunction={self.getFirstName}>First name</TableField>
-                    <TableField dataField="principal" width="20%" dataFieldKey="lastName" filterType="none"  parseFunction={self.getLastName}>Surname</TableField>
-                    <TableField dataField="principal" width="14%" filterType="none" parseFunction={self.getEmail}>Email</TableField>
-                    <TableField dataField="principal" width="10%" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="preset" width="10%" >Role</TableField>
-                    <TableField dataField="principal" width="1%" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
+                    <TableField dataField="checkBox" width="25px" filterType="none"></TableField>
+                    <TableField dataField="principal" dataFieldKey="firstName" filterType="none">First name</TableField>
+                    <TableField dataField="principal" dataFieldKey="lastName" filterType="none">Surname</TableField>
+                    <TableField dataField="principal" dataFieldKey="email" filterType="none">Email</TableField>
+                    <TableField dataField="principal" filterType="none" parseFunction={self.getStatus}>Status</TableField>
+                    <TableField dataField="preset" >Role</TableField>
+                    <TableField dataField="principal" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
                 </Table>
                 <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={binding.sub('grantRole')} userIdsBinding={rootBinding.sub('groupIds')}

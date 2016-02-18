@@ -31,20 +31,12 @@ let SportsList = React.createClass({
               binding = self.getDefaultBinding();
 
         return (
-            <Table title="Sports"
-                   binding={binding}
+            <Table title="Sports" binding={binding}
                    getDataPromise={self._getDataPromise}
                    onItemEdit={self._getEditFunction()}
-                   onItemRemove={self._getItemRemoveFunction}
-            >
-                <TableField width="%50%"
-                            dataField="name"
-                            filterType="none"
-                            dataFieldKey="name">Name</TableField>
-                <TableField width="50%"
-                            dataField="description"
-                            filterType="none"
-                            dataFieldKey="description">Description</TableField>
+                   onItemRemove={self._getItemRemoveFunction} >
+                <TableField width="30%" dataField="name">Name</TableField>
+                <TableField width="60%" dataField="description" >Description</TableField>
             </Table>
         )
     }

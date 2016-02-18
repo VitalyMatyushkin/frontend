@@ -69,8 +69,6 @@ const ListPageMixin = {
     },
 	_getEditFunction: function() {
 		return function(data) {
-			//	self.props.formBinding.set(Immutable.fromJS(data));
-
 			document.location.hash = document.location.hash + '/edit?id=' + data.id;
 		}
 	},
@@ -176,11 +174,12 @@ const ListPageMixin = {
                 +globalBinding.get('userData.userInfo.lastName')+' - '
                 +(self.setPageTitle !== undefined ? self.setPageTitle+' )' : 'System Admin )');
         }else{
-            listPageTitle = self.serviceName[0].toUpperCase() + self.serviceName.slice(1);
+            listPageTitle = self.setPageTitle ? self.setPageTitle:self.serviceName;
+            listPageTitle = listPageTitle[0].toUpperCase() + listPageTitle.slice(1);
         }
 		return (
 			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
-          <div className="eSchoolMaster_wrap">
+            <div className="eSchoolMaster_wrap">
               <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
               <div className="eStrip">
               </div>
