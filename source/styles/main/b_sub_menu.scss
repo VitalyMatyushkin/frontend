@@ -59,3 +59,41 @@
 a.mDisabled{
   pointer-events: none;
 }
+
+.bParentsPage .eSubMenu_item{
+  text-transform: none;
+  display: flex;
+  align-items: center;
+  line-height: 18px;
+  box-sizing: border-box;
+  font-weight: bold;
+  border-bottom: solid transparent;
+  padding: 0 0 0 20px ;
+  span{
+    max-width: 90px;
+  }
+}
+.bParentsPage .eSubMenu_item.mActive{
+  color: $MAIN_COLOR;
+  border-bottom: solid $MAIN_COLOR;
+  .bIcon {
+    color: $MAIN_COLOR;
+  }
+}
+.bParentsPage .eSubMenu_item .bIcon {
+  height: 35px;
+  width: 35px;
+  vertical-align: middle;
+  margin-right: 20px;
+  color: #b2b2b2;
+  -webkit-transition: color 0.2s;
+  -moz-transition: color 0.2s;
+  -o-transition: color 0.2s;
+  transition: color 0.2s;
+}
+.bParentsPage .eSubMenu_item:last-child .bIcon{
+  height: 55px;
+  width: 55px;
+  vertical-align: middle;
+  margin-right: 20px;
+}
