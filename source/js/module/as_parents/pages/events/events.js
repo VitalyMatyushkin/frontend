@@ -163,10 +163,6 @@ const EventView = React.createClass({
             <SubMenu binding={{default: binding.sub('eventsRouting'), itemsBinding: binding.sub('itemsBinding')}} items={self.menuItems}/>
 
             <div className='bSchoolMaster'>
-                <div className="eSchoolMaster_wrap">
-                    <h1 className="eSchoolMaster_title"></h1>
-                    <div className="eStrip"></div>
-                </div>
                 <div className='bEvents'>
                     <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
                         <Route path='/events/calendar /events/calendar/:userId' binding={binding}
