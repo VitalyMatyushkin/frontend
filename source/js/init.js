@@ -64,8 +64,7 @@ requirejs(
         });
 
         const myDomain = document.location.hostname;
-//        const api = loaderUtils.apiSelector(myDomain);
-const api = 'http://localhost:3000/v1';
+        const api = loaderUtils.apiSelector(myDomain);
         const startModule = loaderUtils.startModuleSelector(myDomain);
 
         log.enableAll();    // let it be here a bit...
