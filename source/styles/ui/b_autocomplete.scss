@@ -1,15 +1,25 @@
 .bCombobox {
   display: inline-block;
   position: relative;
-  font-size: 16px;
-  line-height: 16px;
+  font-size: 15px;
+  line-height: 15px;
+  cursor: pointer;
 }
-
+.eCombobox_inputContainer input{
+  display: none;
+  text-transform: uppercase;
+}
+.eCombobox_inputContainer .eCombobox_input{
+  display: flex;
+  height: 35px;
+}
+.bCombobox:hover .eCombobox_inputContainer {
+  background: $MAIN_COLOR;
+}
 .eCombobox_list {
   display: none;
   position: absolute;
   z-index: 1;
-  border: 1px solid #ccc;
   background: #fff;
   top: 100%;
   max-height: 400px;
@@ -18,11 +28,14 @@
   box-sizing: border-box;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
-  margin-top: -2px;
+  margin-top: 2px;
+  border: solid 1px $COLOR;
   & div {
     cursor: pointer;
+    padding-left: 8px;
     &:hover {
       background: $MAIN_COLOR;
+      color: $COLOR;
     }
   }
 }
@@ -38,6 +51,7 @@
 
 .eCombobox_input {
   width: 100%;
+  display: flex;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
@@ -48,11 +62,12 @@
   position: absolute;
   cursor: default;
   outline: none;
-  top: 4px;
+  top: 10px;
   right: 6px;
   font-size: 14px;
   cursor: default;
   color: black;
+  text-align: right;
 }
 
 .eCombobox_button:active {
@@ -63,7 +78,8 @@
   display: block;
   cursor: default;
   color: #333132;
-  font-size: 14px;
+  font-size: 15px;
+  padding: 8px;
   font-weight: normal;
 }
 .eCombobox_option.mSelected{
@@ -81,4 +97,14 @@
 }
 .eChooseHouses{
   display: flex;
+}
+.dropbox_icon {
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+  fill: current_color;
+  color: #ccc;
+}
+.bCombobox:hover .dropbox_icon{
+  color: $COLOR;
 }

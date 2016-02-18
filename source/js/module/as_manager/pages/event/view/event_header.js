@@ -41,6 +41,7 @@ const EventHeader = React.createClass({
 					<div className="eEventHeader_field mSport">{self.getSportIcon(binding.get('sport.name'))}</div>
 					<div className="eEventHeader_field_wrap">
 						<div className="eEventHeader_field mDate">{self.formatDate(binding.get('model.startTime'))}</div>
+						<div className="eEventHeader_field mEvent">{binding.get('model.name')}</div>
 						<div className="eEventHeader_field mType">{binding.get('model.type')}</div>
 					</div>
 				</div>

@@ -5,7 +5,8 @@
 /** using bluebird promise cancellation here, though this is not cleaner way I believe */
 
 const   React   = require('react'),
-        Lazy    = require('lazyjs');
+        Lazy    = require('lazyjs'),
+        SVG 		= require('module/ui/svg');
 
 const ComboBox2 = React.createClass({
     propTypes: {
@@ -343,7 +344,7 @@ const ComboBox2 = React.createClass({
                 </div>
                 <span className="eCombobox_button"
                       style={triangleStyle}
-                      onClick={self.onTriangleClick}>▾</span>
+                      onClick={self.onTriangleClick}><SVG classes="dropbox_icon" icon="icon_dropbox_arrow"/></span>
                 {self.renderMenuItems()}
             </div>
         );
