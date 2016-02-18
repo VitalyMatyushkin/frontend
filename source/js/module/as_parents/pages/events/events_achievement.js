@@ -39,6 +39,7 @@ const ParentChildAchievement = React.createClass({
                 }
             }).then(function (data) {
                 leanerData = data;
+                console.log(leanerData);
                 //Perform parent check here too for the parents site
                 leanerData.parentOne = ((data.parents !== undefined && data.parents[0] !== undefined) ? data.parents[0].firstName+' '+data.parents[0].lastName: '');
                 leanerData.parentTwo = ((data.parents !== undefined && data.parents[1] !== undefined) ? data.parents[1].firstName+' '+data.parents[1].lastName: '');

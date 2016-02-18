@@ -22,18 +22,21 @@ const AboutMeBlock = React.createClass({
 		});
 	},
 	_getAboutParentNode:function(){
-		var icons = ['icon_dad','icon_mom'],
-			fields = ['parentOne','parentTwo'],
-			self = this,
-			binding = self.getDefaultBinding();
-		return icons.map(function(icon,i){
-			let bindingResult = binding.get(fields[i]);
-			if(bindingResult){
-				return (
-					<div key={i} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
+		var self = this,
+			binding = self.getDefaultBinding(),
+			parents = binding.toJS('parents');
+		if(parents !== undefined && parents.length >= 1){
+			return parents.map(function(parent, i){
+				let icon = parent.gender === 'male'?'icon_dad':'icon_mom';
+				return(
+					<div key={i} className="eAboutList_item"><SVG icon={icon}/>{parent.firstName+' '+parent.lastName}</div>
 				)
-			}
-		});
+			});
+		}else{
+			return (
+				<div className="eAboutList_item">{"No parent details found"}</div>
+			)
+		}
 	},
 	render: function() {
 		var self = this;
