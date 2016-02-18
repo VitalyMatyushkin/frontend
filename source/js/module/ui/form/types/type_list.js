@@ -11,6 +11,7 @@ var TypeText = require('module/ui/form/types/text'),
     TypeDrop = require('module/ui/form/types/dropdown'),
     TypeTextArea = require('module/ui/form/types/textarea'),
 	TypeFileUpload = require('module/ui/form/types/fileType'),
+	TypeTermsCheckbox = require('module/ui/form/types/terms_checkbox'),
 	typeList = {};
 
 // Input element type list
@@ -25,7 +26,8 @@ typeList['radio'] = TypeRadio;
 typeList['hidden'] = TypeHidden;
 typeList['phone'] = TypePhone;
 typeList['dropdown'] = TypeDrop;
-typeList['textarea'] = TypeTextArea,
+typeList['textarea'] = TypeTextArea;
+typeList['terms'] = TypeTermsCheckbox;
 typeList['file'] = TypeFileUpload;
 
 module.exports = typeList;
