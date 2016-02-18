@@ -5,6 +5,8 @@ const 	AutocompleteHelpers 	= require('module/ui/autocomplete/main'),
 		Immutable 				= require('immutable');
 
 
+console.error("autocomplete deprecated");
+
 const Autocomplete = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {

@@ -6,7 +6,7 @@ var TypeConfirmText,
 
 TypeConfirmText = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
-	errorText: 'Both fields should be the same',
+	errorText: 'Values in both fields do not match',
 	componentWillMount: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -70,7 +70,7 @@ TypeConfirmText = React.createClass({
 
 				<div className="eForm_fieldColumn">
 					<div className="eForm_fieldInput">
-						<div className="eForm_fieldSmallHelp">confirm {self.props.name.toLowerCase()}</div>
+						<div className="eForm_fieldName eForm_fieldSmallHelp">Confirm {self.props.name.toLowerCase()}</div>
 						<input ref="confInput" type={self.props.textType || 'text'} onBlur={self.setConfirmValue} onChange={self.changeConfirmValue} />
 					</div>
 				</div>

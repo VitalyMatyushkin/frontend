@@ -78,7 +78,7 @@ const EventTeams = React.createClass({
             var isMale = player.get('user').get('gender') === 'male',
 				points = self.getPointsByStudent(player.get('id'), participant.get('id')) || 0;
 
-            return <div key={playerIndex} className="bPlayer mMini">
+            return <div key={playerIndex} className="_bPlayer _mMini">
                 <If condition={binding.get('mode') !== 'closing' && isOwner}>
                     <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>

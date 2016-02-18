@@ -159,7 +159,7 @@ const EventView = React.createClass({
             binding = self.getDefaultBinding(),
             rootBinging = self.getMoreartyContext().getBinding();
 
-        return <div>
+        return <div className="bParentsPage">
             <SubMenu binding={{default: binding.sub('eventsRouting'), itemsBinding: binding.sub('itemsBinding')}} items={self.menuItems}/>
 
             <div className='bSchoolMaster'>

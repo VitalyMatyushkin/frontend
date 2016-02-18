@@ -7,6 +7,9 @@ var ComboboxOption = require('./option');
 var React = require('react');
 var ReactDOM = require('reactDom');
 
+
+console.error("autocomplete");
+
 module.exports = React.createClass({
 	propTypes: {
 		/**

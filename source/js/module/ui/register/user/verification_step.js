@@ -68,6 +68,9 @@ const VerificationStep = React.createClass({
             isPhoneCheck = phoneCheckClasses === 'bButton_hide'?'bCheck_show':'bButton_hide';
         return (
             <div className="eRegistration_verification">
+                <div>
+                    <p style={{fontSize:12+'px'}}>Activation codes were sent to your email address and mobile phone. Please, enter them below to complete the registration.</p>
+                </div>
                 <label className="eRegistration_label">
                     <span className="eRegistration_labelField">Verification email</span>
                     <Morearty.DOM.input className='eRegistration_input'
@@ -75,7 +78,7 @@ const VerificationStep = React.createClass({
                                         value={ binding.get('emailCode') }
                                         placeholder="email code"
                                         onChange={ Morearty.Callback.set(binding, 'emailCode') }/>
-                    <button ref="emailCheck" className={emailCheckClasses} onClick={self.confirmEmail}>check</button>
+                    <button ref="emailCheck" className={emailCheckClasses} onClick={self.confirmEmail}>Verify</button>
                     <span className={isEmailCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
                 </label>
                 <label className={emailErrorCheck}>
@@ -88,7 +91,7 @@ const VerificationStep = React.createClass({
                                         value={ binding.get('phoneCode') }
                                         placeholder="phone code"
                                         onChange={ Morearty.Callback.set(binding, 'phoneCode') }/>
-                    <button ref="phoneCheck" className={phoneCheckClasses} onClick={self.confirmPhone}>check</button>
+                    <button ref="phoneCheck" className={phoneCheckClasses} onClick={self.confirmPhone}>Verify</button>
                     <span className={isPhoneCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
                 </label>
                 <label className={phoneErrorCheck}>

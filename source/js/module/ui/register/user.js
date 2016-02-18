@@ -154,7 +154,7 @@ const RegisterUserPage = React.createClass({
             currentView =
 				<RegisterDone
                 	onSuccess={self.finish}
-                	binding={binding.sub('formFields')}
+                	binding={{default:binding}}
                 />
         }
 

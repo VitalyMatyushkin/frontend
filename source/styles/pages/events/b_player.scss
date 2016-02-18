@@ -1,4 +1,4 @@
-.bPlayer {
+._bPlayer {
   display: flex;
   width: 100%;
   height: 50px;
@@ -12,11 +12,18 @@
   }
 }
 
+.bPlayer {
+
+}
+
+.bPlayer_error {
+
+}
+
 .ePlayer_avatar {
   height: 100%;
 }
 
-.ePlayer_remove,
 .ePlayer_addPoint {
   display: none;
   align-self: center;
@@ -34,7 +41,7 @@
 .bPlayer.mMini:hover .ePlayer_score{
   color: $COLOR;
 }
-.ePlayer_name,
+
 .ePlayer_lastName {
   height: 100%;
   display: flex;
@@ -45,18 +52,53 @@
   }
 }
 
-.bPlayer.mMini {
+.ePlayer_name {
+  width: 40%;
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.ePlayer_form {
+  width: 10%;
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.ePlayer_position {
+  width: 40%;
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.ePlayer_sub {
+  width: 5%;
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.ePlayer_remove {
+  width: 5%;
+  height: 30px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+._bPlayer.mMini {
   height: 25px;
   line-height: 25px;
 }
 
-.bPlayer.mMini .ePlayer_name,
-.bPlayer.mMini .ePlayer_lastName {
+._bPlayer.mMini .ePlayer_name,
+._bPlayer.mMini .ePlayer_lastName {
   font-size: 15px;
   width: 150px;
 }
 
-.bPlayer.mShowRemoveButton .ePlayer_remove {
+._bPlayer.mShowRemoveButton .ePlayer_remove {
   display: flex;
 }
 
@@ -66,15 +108,13 @@
   cursor: pointer;
   text-align: center;
 }
+
 .ePlayer_minus .bIcon,
-.ePlayer_plus .bIcon{
+.ePlayer_plus .bIcon {
   width: 8px;
   height: 8px;
 }
+
 .ePlayer_gender .bIcon {
   margin-top: 2.5px;
-}
-.bPlayer_title{
-  display: flex;
-  justify-content: space-around;
 }
