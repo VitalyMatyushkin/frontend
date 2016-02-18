@@ -19,9 +19,10 @@ const TypeText =  React.createClass({
 			self._forceNewValue(binding.get('defaultValue'));
 		});
 	},
+	/** looks like this function used for setting default value when input is empty */
 	_forceNewValue: function(value) {
 		const self = this;
-
+		/* if there is both `value` and `fieldInput` ref */
 		if (value !== undefined && self.refs.fieldInput && self.refs.fieldInput.value === '') {
 			self.refs.fieldInput.value = value;
 			self.fullValidate(value);
