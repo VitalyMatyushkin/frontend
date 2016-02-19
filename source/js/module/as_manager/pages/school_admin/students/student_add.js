@@ -11,7 +11,7 @@ const StudentEditPage = React.createClass({
 		self.activeSchoolId = activeSchoolId;
 	},
 	submitAdd: function(data) {
-		var self = this;
+		const self = this;
 		data.schoolId = self.activeSchoolId;
 		//TODO So sick...
 		data.schoolId && window.Server.users.post({
@@ -30,7 +30,18 @@ const StudentEditPage = React.createClass({
                 });
         }).then(function(permissionData) {
             return window.Server.setPermissions.post({id: permissionData.id}, {accepted: true});
-        }).then(function() {
+        }).then(permission =>{
+            if(permission && permission.student) {
+                return window.Server.student.put(permission.student.id, {
+                    nextOfKin: [{
+                        name: data.name
+                    }],
+                    medicalInfo: {
+                        allergy: data.allergy
+                    }
+                });
+            }
+        }).then(() => {
             document.location.hash = 'school_admin/students';
         }).catch(function(err){
             console.log(err);
