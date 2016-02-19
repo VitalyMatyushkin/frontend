@@ -20,18 +20,18 @@ const StudentEditPage = React.createClass({
 			gender: 	data.gender,
 			birthday: 	data.birthday
 		}).then(function(userData) {
-			window.Server.addStudentToSchool.post({id:self.activeSchoolId},{
-				userId:		userData.id,
-				formId:		data.formId,
-				houseId:	data.houseId,
-				schoolId:	data.schoolId,
-				nextOfKin:	[{
-					name:data.name
-				}],
-				medicalInfo:{
-					allergy:data.allergy
-				}
-			}).then(function(studentUser){
+			//window.Server.addStudentToSchool.post({id:self.activeSchoolId},{
+			//	userId:		userData.id,
+			//	formId:		data.formId,
+			//	houseId:	data.houseId,
+			//	schoolId:	data.schoolId,
+			//	nextOfKin:	[{
+			//		name:data.name
+			//	}],
+			//	medicalInfo:{
+			//		allergy:data.allergy
+			//	}
+			//}).then(function(studentUser){
 				window.Server.Permissions.post(
 					{
 						preset: 		'student',
@@ -46,14 +46,12 @@ const StudentEditPage = React.createClass({
 						});
 					return permissionData;
 					});
-				return studentUser;
+				return userData;
 			}).catch(function(err){
 				console.log(err);
 				alert(err.errorThrown+' Contact Server support');
 				self.isMounted() && (document.location.hash = 'school_admin/students');
 			});
-			return userData;
-		});
 	},
 	render: function() {
 		var self = this,

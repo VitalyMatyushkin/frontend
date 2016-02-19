@@ -2,7 +2,7 @@
 var guid = 0;
 var k = function () {
 };
-var addClass = require('./add-class');
+var classNames      = require('classnames');
 var ComboboxOption = require('./option');
 var React = require('react');
 var ReactDOM = require('reactDom');
@@ -136,11 +136,7 @@ module.exports = React.createClass({
 	},
 
 	getClassName: function () {
-		var className = addClass(this.props.className, 'bCombobox');
-		if (this.state.isOpen) {
-			className = addClass(className, 'mOpen');
-		}
-		return className;
+		return classNames(this.props.className, 'bCombobox' , {mOpen:this.state.isOpen});
 	},
 
 	/**
