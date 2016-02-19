@@ -20,21 +20,18 @@ const StudentEditPage = React.createClass({
 			gender: 	data.gender,
 			birthday: 	data.birthday
 		}).then(function(userData) {
-            window.Server.Permissions.post(
+            return window.Server.Permissions.post(
                 {
                     preset: 		'student',
                     principalId: 	userData.id,
                     schoolId: 		data.schoolId,
                     formId: 		data.formId,
                     houseId: 		data.houseId
-                }
-            ).then(function(permissionData) {
-                    window.Server.setPermissions.post({id:permissionData.id},{accepted:true}).then(function() {
-                        document.location.hash = 'school_admin/students';
-                    });
-                return permissionData;
                 });
-            return userData;
+        }).then(function(permissionData) {
+            return window.Server.setPermissions.post({id: permissionData.id}, {accepted: true});
+        }).then(function() {
+            document.location.hash = 'school_admin/students';
         }).catch(function(err){
             console.log(err);
             alert(err.errorThrown+' Contact Server support');
