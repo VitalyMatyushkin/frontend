@@ -47,13 +47,7 @@ const LeanerView = React.createClass({
                                     self.numberOfGamesPlayed = gamesPlayed.length;
                                     leanerData.schoolEvent = gamesPlayed;
                                     window.Server.studentParent.get({id:studentId}).then(function(returnedUser){
-                                        //Checks whether the object returned is empty
-                                        //TODO: May need refactoring
-                                        if(returnedUser.length != 0){
-                                            //Some children may have one parent so checking in here too
-                                            leanerData.parentOne = returnedUser[0] !== undefined ? returnedUser[0].firstName+' '+returnedUser[0].lastName:'';
-                                            leanerData.parentTwo = returnedUser[1] !== undefined ? returnedUser[1].firstName+' '+returnedUser[1].lastName:'';
-                                        }
+                                        leanerData.parents = returnedUser;
                                         window.Server.studentData.get(studentId).then(function(student){
                                             leanerData.student = student;
                                             binding.set('achievements', Immutable.fromJS(leanerData));
