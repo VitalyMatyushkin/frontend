@@ -4,7 +4,8 @@ const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'
         React           = require('react'),
         ReactDOM        = require('reactDom'),
         EventVenue      = require('./event_venue'),
-        Immutable       = require('immutable');
+        Immutable       = require('immutable'),
+        SVG 		        = require('module/ui/svg');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -311,16 +312,19 @@ const EventManagerBase = React.createClass({
             <If condition={!!binding.get('model.name')}>
                 <div className="eManager_group">
                     {'Game'}
-                    <select
-                        className="eManager_select"
-                        value={sportId}
-                        defaultValue={null}
-                        onChange={self.changeCompleteSport}>
-                        <Morearty.DOM.option
-                            key="nullable-type"
-                            value={null}>not selected</Morearty.DOM.option>
-                        {self.getSports()}
-                    </select>
+                    <div className="eManager_select_wrap">
+                        <select
+                            className="eManager_select"
+                            value={sportId}
+                            defaultValue={null}
+                            onChange={self.changeCompleteSport}>
+                            <Morearty.DOM.option
+                                key="nullable-type"
+                                value={null}>not selected</Morearty.DOM.option>
+                            {self.getSports()}
+                        </select>
+                        <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
+                    </div>
                 </div>
             </If>
             <If condition={!!binding.get('model.sportId')}>
@@ -350,16 +354,20 @@ const EventManagerBase = React.createClass({
             <If condition={binding.get('model.ages').count() > 0}>
                 <div className="eManager_group">
                     {'Game Type'}
-                    <select ref="gameType"
-                        className="eManager_select"
-                        defaultValue={null}
-                        value={type}
-                        onChange={self.changeCompleteType}>
-                        <Morearty.DOM.option key="nullable-type" value={null}>not selectable</Morearty.DOM.option>
-                        <Morearty.DOM.option key="inter-schools-type" value="inter-schools">inter-schools</Morearty.DOM.option>
-                        <Morearty.DOM.option key="houses-type" value="houses">houses</Morearty.DOM.option>
-                        <Morearty.DOM.option key="anyway-type" value="internal">internal</Morearty.DOM.option>
-                    </select>
+                    <div className="eManager_select_wrap">
+                        <select ref="gameType"
+                                className="eManager_select"
+                                defaultValue={null}
+                                value={type}
+                                onChange={self.changeCompleteType}>
+                            <Morearty.DOM.option key="nullable-type" value={null}>not selectable</Morearty.DOM.option>
+                            <Morearty.DOM.option key="inter-schools-type"
+                                                 value="inter-schools">inter-schools</Morearty.DOM.option>
+                            <Morearty.DOM.option key="houses-type" value="houses">houses</Morearty.DOM.option>
+                            <Morearty.DOM.option key="anyway-type" value="internal">internal</Morearty.DOM.option>
+                        </select>
+                        <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
+                    </div>
                 </div>
             </If>
             <If condition={!!type}>
@@ -383,14 +391,14 @@ const EventManagerBase = React.createClass({
                                 <Autocomplete
                                     serviceFilter={services[type]}
                                     serverField="name"
-                                    placeholderText={'enter the first house name'}
+                                    placeholderText={'The first house'}
                                     onSelect={self.onSelectRival.bind(null, 0)}
                                     binding={binding.sub('autocomplete.houses.0')}
                                 />
                                 <Autocomplete
                                     serviceFilter={services[type]}
                                     serverField="name"
-                                    placeholderText={'enter the second house name'}
+                                    placeholderText={'The second house'}
                                     onSelect={self.onSelectRival.bind(null, 1)}
                                     binding={binding.sub('autocomplete.houses.1')}
                                 />
@@ -405,14 +413,14 @@ const EventManagerBase = React.createClass({
                                 <input
                                     key="firstTeam"
                                     type="text"
-                                    placeholder="Enter the first team name"
+                                    placeholder="The first team"
                                     value={binding.get('rivals.0.name')}
                                     onChange={Morearty.Callback.set(binding.sub('rivals.0.name'))}
                                     className="eManager_eField" />
                                 <input
                                     key="secondTeam"
                                     type="text"
-                                    placeholder="Enter the second team name"
+                                    placeholder="The second team"
                                     value={binding.get('rivals.1.name')}
                                     onChange={Morearty.Callback.set(binding.sub('rivals.1.name'))}
                                     className="eManager_eField" />
