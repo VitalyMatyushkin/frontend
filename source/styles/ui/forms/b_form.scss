@@ -180,7 +180,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
 }
 
 .editStudentForm{
-  width: 800px;
+  max-width: 850px;
   margin: 0 auto;
 }
 
@@ -275,4 +275,38 @@ $INVALID_COLOR: rgb(182, 0, 0);
 }
 .eLoader_gif_show{
   display: block;
+}
+.eManager_select_wrap select {
+  border: none;
+  width: 215px;
+  color: #939598;
+}
+.eManager_select_wrap option{
+  height: 30px;
+  color: #333132;
+}
+.eManager_select_wrap option:hover{
+  background: $MAIN_COLOR;
+}
+.eManager_select_wrap {
+  border: $BORDER;
+  overflow: hidden;
+  position: relative;
+  height: 35px;
+  border-radius: 5%;
+  background: #fff;
+  width: 200px;
+}
+.eManager_select_wrap:hover select{
+  color: #333132;
+}
+.selectArrow{
+  position: absolute;
+  top: 10px;
+  right: 5px;
+  color: $COLOR;
+  z-index: 1;
+  background: #fff;
+  width: 14px;
+  height: 14px;
 }

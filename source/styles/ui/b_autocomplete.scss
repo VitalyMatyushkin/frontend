@@ -5,17 +5,21 @@
   line-height: 15px;
   cursor: pointer;
 }
-.eCombobox_inputContainer input{
+
+.eCombobox_inputContainer input {
   display: none;
   text-transform: uppercase;
 }
-.eCombobox_inputContainer .eCombobox_input{
+
+.eCombobox_inputContainer .eCombobox_input {
   display: flex;
   height: 35px;
 }
+
 .bCombobox:hover .eCombobox_inputContainer {
   background: $MAIN_COLOR;
 }
+
 .eCombobox_list {
   display: none;
   position: absolute;
@@ -82,29 +86,32 @@
   padding: 8px;
   font-weight: normal;
 }
-.eCombobox_option.mSelected{
+
+.eCombobox_option.mSelected {
   background: $MAIN_COLOR !important;
   color: #ffffff !important;
 }
-.studentRowActive{
-  display:block;
-}
-.studentRowInActive{
-  display:none;
-}
-.eCombobox_showOptions{
+
+.studentRowActive {
   display: block;
 }
-.eChooseHouses{
+
+.studentRowInActive {
+  display: none;
+}
+
+.eCombobox_showOptions {
+  display: block;
+}
+
+.eChooseHouses {
   display: flex;
 }
+
 .dropbox_icon {
   height: 14px;
   width: 14px;
   vertical-align: middle;
   fill: current_color;
-  color: #ccc;
-}
-.bCombobox:hover .dropbox_icon{
   color: $COLOR;
 }
