@@ -188,9 +188,11 @@ const Table = React.createClass({
 
                     if (child.props.parseFunction) {
                         value = child.props.parseFunction(value);
+                    }else if (child.props.dataFieldKey && value) {
+                        value = value[child.props.dataFieldKey];
                     }
 
-                    if (child.props.filterType === 'colors') {
+                    if (child.props.filterType === 'colors' && value) {
                         value = value.map(function(useColor,clrKey){
                             return <div key={clrKey} className="eDataList_listItemColor" style={{background: useColor}}></div>
                         });

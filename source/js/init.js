@@ -32,9 +32,14 @@ requirejs.config({
 });
 
 
+
+
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader','reactDom'],
-    function($, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG,ReactDOM){
+    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader','reactDom', 'module/helpers/ponyfill/es6_best_parts'],
+    function($, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG,ReactDOM, es6PonyFill){
+
+        // adding some undoubtedly required features form ES6
+        es6PonyFill();
 
         Promise.config({
             cancellation: true

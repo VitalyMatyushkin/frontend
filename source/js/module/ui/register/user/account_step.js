@@ -34,9 +34,10 @@ const RegiseterUserForm = React.createClass({
 						You will also use your email address for logging in to the system.
 					</p>
 				</div>
-				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
-				<FormField type="text" field="email" validation="required email server">Email</FormField>
-				<FormField type="text" field="phone" validation="required server" onPrePost={self.getPhone}>Mobile phone</FormField>
+				{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
+				<FormField type="text" field="username" validation="alphanumeric server" errorClassName="eForm_errorMsgRight">Username</FormField>
+				<FormField type="text" field="email" validation="required email server" errorClassName="eForm_errorMsgRight">Email</FormField>
+				<FormField type="text" field="phone" validation="required server" errorClassName="eForm_errorMsgRight" onPrePost={self.getPhone}>Mobile phone</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required password">Password</FormField>
 				<FormColumn type="column">
 					<FormField type="terms" field="terms" validation="termsAndConditions">Terms and Conditions:</FormField>

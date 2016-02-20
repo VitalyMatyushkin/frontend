@@ -122,13 +122,13 @@ const EventManager = React.createClass({
               eventType  = binding.toJS('model.type'),
               sportModel = binding.toJS('model.sportModel');
 
-        if(eventType === 'internal') {
+        if(eventType === 'inter-schools') {
+            self._validatePlayers(0);
+        } else {
             self._validatePlayers(0);
             self._validatePlayers(1);
 
             self._changeRivalFocus();
-        } else {
-            self._validatePlayers(0);
         }
     },
     _changeRivalFocus: function() {
@@ -149,7 +149,7 @@ const EventManager = React.createClass({
             sportModel = binding.toJS('model.sportModel');
 
 
-        if(allPlayers[teamIndex].length < sportModel.limits.minPlayers) {
+        if(allPlayers[teamIndex].length === 0 || allPlayers[teamIndex].length < sportModel.limits.minPlayers) {
             binding.set(
                 `error.${teamIndex}`,
                 Immutable.fromJS(
@@ -179,7 +179,7 @@ const EventManager = React.createClass({
                     }
                 )
             );
-        } if(self._isSubstitutionCountCorrect(teamIndex)) {
+        } else if(!self._isSubstitutionCountCorrect(teamIndex)) {
             binding.set(
                 `error.${teamIndex}`,
                 Immutable.fromJS(

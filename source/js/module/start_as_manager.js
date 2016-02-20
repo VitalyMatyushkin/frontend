@@ -1,16 +1,15 @@
-var ApplicationView = require('module/as_manager/application'),
-	userDataInstance = require('module/data/user_data'),
-	userRulesInstance = require('module/data/user_rules'),
-	authController = require('module/core/auth_controller'),
-	serviceList = require('module/core/service_list'),
-	ReactDom = require('reactDom'),
-	React = require('react'),
-	MoreartyContext,
-	binding;
+const 	ApplicationView 	= require('module/as_manager/application'),
+		userDataInstance 	= require('module/data/user_data'),
+		userRulesInstance 	= require('module/data/user_rules'),
+		authController 		= require('module/core/auth_controller'),
+		serviceList 		= require('module/core/service_list'),
+		ReactDom 			= require('reactDom'),
+		React 				= require('react');
 
 function runManagerMode() {
+
 // Create Morearty context
-	MoreartyContext = Morearty.createContext({
+	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			userRules: userRulesInstance.getDefaultState(),
@@ -80,7 +79,7 @@ function runManagerMode() {
 		}
 	});
 
-	binding = MoreartyContext.getBinding();
+	const binding = MoreartyContext.getBinding();
 
 	window.Server = serviceList;
 
@@ -105,6 +104,8 @@ function runManagerMode() {
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);
+
+
 }
 
 module.exports = runManagerMode;

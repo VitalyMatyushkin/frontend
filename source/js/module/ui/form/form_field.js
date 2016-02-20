@@ -1,5 +1,4 @@
 const 	React 		= require('react'),
-		Immutable 	= require('immutable'),
 		typeList 	= require('module/ui/form/types/type_list');
 
 const FormField = React.createClass({
@@ -7,41 +6,38 @@ const FormField = React.createClass({
 	propTypes: {
 		type: 				React.PropTypes.string.isRequired,
 		field: 				React.PropTypes.string.isRequired,
-		defaultValueString:	React.PropTypes.string
-	},
-	getDefaultState: function () {
-		return Immutable.Map({
-			value: 		'',
-			showError: 	false,
-			error: 		false
-		});
+		defaultValueString:	React.PropTypes.string,
+		errorClassName:		React.PropTypes.string, //Error message specific class
+		binding:			React.PropTypes.any
 	},
 	render: function () {
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
-		let 	inputField 		= React.createElement(typeList[self.props.type], self.props),
-				fieldStyleClass = 'eForm_fieldSet';
 
-		// TODO: Emhh...
-		inputField = React.cloneElement(inputField, {
+		/* collectin all own props and adding some more additional component-specific */
+		const inputProps = Object.assign({}, self.props, {
 			name: 		self.props.children,
 			service: 	self.props.service,
-			binding: 	self.getDefaultBinding()
+			binding: 	binding
 		});
 
+		/* creating new input with built props */
+		const inputField = React.createElement(typeList[self.props.type], inputProps);
+
+		let fieldStyleClass = 'eForm_fieldSet';
 		if (binding.get('showError')) {
 			fieldStyleClass += ' mInvalid';
-		}else{
-            if(binding.get('showSuccess')){
-                fieldStyleClass += ' mValid';
-            }
+		} else if(binding.get('showSuccess')){
+			fieldStyleClass += ' mValid';
         }
+		//If a specific class has been provided for styling error messages then use it
+		let errorClassName = self.props.errorClassName !== undefined ? self.props.errorClassName:"eForm_fieldValidText";
 		return (
 			<div className="eForm_field">
 				<div className="eForm_fieldName">{self.props.children}</div>
 				<div className={fieldStyleClass}>
 					{inputField}
-					<div className="eForm_fieldValidText">{binding.get('error') || binding.get('success')}</div>
+					<div className={errorClassName}>{binding.get('error') || binding.get('success')}</div>
 				</div>
 			</div>
 
