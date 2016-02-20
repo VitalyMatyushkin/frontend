@@ -105,6 +105,9 @@
 .eInvite_gender{
   float: right;
   padding-right: 5px;
+  .bIcon{
+    color:green;
+  }
 }
 .eInviteWrap{
   display: flex;

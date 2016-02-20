@@ -1,14 +1,28 @@
-var TypeMixin = require('module/ui/form/types/type_mixin'),
+const TypeMixin = require('module/ui/form/types/type_mixin'),
 	MaskedInput = require('module/ui/masked_input'),
 	React = require('react'),
-	ReactDOM = require('reactDom'),
-	TypeDate;
+    Immutable 	= require('immutable'),
+    dateFormat = 'dd.mm.yyyy',
 
-// mm.dd.fullyear
 TypeDate =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
+    getDefaultProps: function() {
+        return {
+            locales:'en-GB',
+            options:{
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }
+        };
+    },
+    getDefaultState: function() {
+        return Immutable.fromJS({
+            localValue:''
+        });
+    },
 	componentWillMount: function() {
-		var self = this,
+		const self = this,
 			binding = self.getDefaultBinding();
 
 		// На случай, если форма заполняется асинхронно
@@ -16,68 +30,46 @@ TypeDate =  React.createClass({
 			self._forceNewValue(binding.get('defaultValue'));
 		});
 	},
-	//Prepare date to be user friendly
-	_reverseDefaultDateValue:function(value){
-		var valueArray = value.split('-'),
-			day = valueArray[2].split('T');
-		return 	valueArray[1]+'.'+day[0]+'.'+valueArray[0];
-	},
 	_forceNewValue: function(value) {
-		var self = this,
-			dateString,
-			date;
-		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.value === '' || self.refs.fieldInput.value === '__.__.____')) {
-			dateString = new Date(value).toLocaleDateString('en-GB', {
-                year: 'numeric',
-                month: '2-digit',
-                day: '2-digit'
-            });
+		const self = this,
+            binding = self.getDefaultBinding(),
+            locales = self.props.locales,
+            options = self.props.options,
+			dateStr = Date.parse(value) ? new Date(value).toLocaleDateString(locales, options).replace(/[/]/g, '.'):'';
 
-			self.refs.fieldInput.value = dateString;
-			self.fullValidate(value);
-		}else{
-			if(value !== undefined && self.refs.fieldInput){
-				self.fieldInputValue = self._reverseDefaultDateValue(value);
-				self.setValue(self._converToIso(self.fieldInputValue));
-			}
-		}
+        binding.set('localValue', dateStr);
 	},
-	_converToIso: function(dotString) {
-		var self = this,
-			dateParts = dotString !== undefined ? dotString.split('.'):'',
-			inputDate = new Date();
-		if (dateParts.length === 3 && (dateParts[0] > 0 && dateParts[0] < 13) && (dateParts[1] > 0 && dateParts[1] < 32) && (dateParts[2])) {
-			inputDate.setUTCFullYear(dateParts[2],dateParts[0]-1,dateParts[1]);
-			return inputDate.toString() === 'Invalid Date' ? '' : inputDate.toISOString();
-		}
+	_toIso: function(dotString) {
+		const dateParts = dotString !== undefined ? dotString.split('.'):'',
+            isoStr = dateParts.length === 3 ? dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0]:dotString;
 
-		//return '';
+        return Date.parse(isoStr) ? new Date(isoStr).toISOString():isoStr;
 	},
-	handleBlur: function() {
+	handleBlur: function(e) {
 		var self = this,
-			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
-		//There is a default value (Old data) and the input value is empty then set the value to old one
-		//Else set to new input
-		if(inputValue === '__.__.____'  && self.fieldInputValue !== undefined){
-			self.setValue(self._converToIso(self.fieldInputValue));
-		}else{
-			self.setValue(self._converToIso(inputValue));
-		}
+            defaultValue = self.getDefaultBinding().get('defaultValue'),
+			inputValue = e.target.value;
+
+        if(!inputValue || inputValue==='__.__.____')
+            self._forceNewValue(defaultValue);
+        else
+            self.setValue(self._toIso(inputValue));
 	},
-	handleChange: function() {
+	handleChange: function(e) {
 		var self = this,
-			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
-		self.changeValue(self._converToIso(inputValue));
+            binding = self.getDefaultBinding(),
+			inputValue = e.target.value;
+
+        binding.set('localValue', inputValue);
 	},
 	render: function () {
-		var self = this,
-			defaultValue = self.getDefaultBinding().get('defaultValue');
-		//self._forceNewValue(defaultValue);
+        const self = this,
+            binding = self.getDefaultBinding(),
+            localValue = binding.get('localValue');
 
 		return (
 			<div className="eForm_fieldInput">
-				<MaskedInput ref="fieldInput" value={self.fieldInputValue} onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
-				<span className="dateFormat">Date format:MM/DD/YYYY</span>
+				<MaskedInput ref="fieldInput" value={localValue} onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
 			</div>
 		)
 	}
