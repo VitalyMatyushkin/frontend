@@ -4,6 +4,7 @@
   font-size: 15px;
   line-height: 15px;
   cursor: pointer;
+  margin-right: 10px;
 }
 
 .eCombobox_inputContainer input {
@@ -13,11 +14,14 @@
 
 .eCombobox_inputContainer .eCombobox_input {
   display: flex;
-  height: 35px;
+  height: 37px;
+  min-width: 180px;
+  cursor: pointer;
+  background: #fff;
 }
 
 .bCombobox:hover .eCombobox_inputContainer {
-  background: $MAIN_COLOR;
+  color: black;
 }
 
 .eCombobox_list {

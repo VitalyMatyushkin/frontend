@@ -38,15 +38,15 @@ const SchoolSummary = React.createClass({
     return (
         <div>
           <div className="changeSchool">
-            <a title="Change active school" href="/#schools" className="changeButton">
-                <img src="images/change_school.png"></img>
+            <a title="Change active school" href="/#schools" className="addButton">
+              <SVG icon="icon_change_school" />
             </a>
           </div>
           <div className="eSchoolMaster_summary">
             <div className="summary_inside">
               <div className="editSchool">
                 <a href={'/#schools/edit?id=' + self.activeSchoolId}>
-                  <img src="images/edit_school.png"></img>
+                  <div className="edit_btn"></div>
                 </a>
               </div>
               <h1 className="eSchoolMaster_title">

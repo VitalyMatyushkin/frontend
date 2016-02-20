@@ -9,10 +9,11 @@
 }
 
 .eEventHeader_field {
-  font-size: 14px;
+  font-size: 15px;
   width: 110px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   text-align: center;
+  font-weight: bold;
   &:last-child {
   }
 }
@@ -33,13 +34,13 @@
 }
 .eEventHeader_field.mEvent{
   margin-bottom: 10px;
-  text-transform: none;
+  font-weight: normal;
 }
 .eEventHeader_field.mType{
   border-bottom: $BORDER;
   border-top: $BORDER;
   margin-bottom: 15px;
-  padding: 2px;
+  padding: 2px 0;
 }
 .bEventHeader_wrap {
   display: flex;

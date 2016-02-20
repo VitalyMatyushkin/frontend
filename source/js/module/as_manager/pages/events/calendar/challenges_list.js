@@ -83,8 +83,8 @@ ChallengesList = React.createClass({
 
         return <div className="eEvents_challenges">
             <div className="eChallenge_title">
-                <span className="eChallenge_date"></span>
-                <span className="eChallenge_type"></span>
+                <span className="eChallenge_date">Date</span>
+                <span className="eChallenge_type">Event Type</span>
                 <span className="eChallenge_name">Event Name</span>
                 <span className="eChallenge_rivals">Game Type</span>
             </div>

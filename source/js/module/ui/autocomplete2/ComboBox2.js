@@ -309,7 +309,6 @@ const ComboBox2 = React.createClass({
             tabIndex:   -1
         };
         const inputStyle = {
-            backgroundColor:    'transparent',
             position:           'relative'
         };
         // this will act instead of loader spinner for a while
