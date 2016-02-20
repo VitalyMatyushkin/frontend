@@ -324,9 +324,11 @@ const EventManager = React.createClass({
                 calendar: self.getBinding('calendar')
             },
             managerBinding = {
-                default: binding,
-                rivals: binding.sub('rivals'),
-                players: binding.sub('players')
+                default:            binding,
+                selectedRivalIndex: binding.sub('selectedRivalIndex'),
+                rivals:             binding.sub('rivals'),
+                players:            binding.sub('players'),
+                error:              binding.sub('error')
             };
 
 		return <div>

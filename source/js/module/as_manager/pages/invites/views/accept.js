@@ -80,9 +80,20 @@ const InviteAcceptView = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             managerBinding = {
-                default: binding,
-                rivals: binding.sub('rivals'),
-                players: binding.sub('players')
+                default:            binding,
+                selectedRivalIndex: Immutable.fromJS(0),
+                rivals:             binding.sub('rivals'),
+                players:            binding.sub('players'),
+                error:              Immutable.fromJS([
+                                        {
+                                            isError: false,
+                                            text: ""
+                                        },
+                                        {
+                                            isError: false,
+                                            text: ""
+                                        }
+                                    ])
             },
             sport = binding.sub('model.sport'),
             ready = binding.get('sync') && binding.get('players.0').count() >= sport.get('limits.minPlayers'),

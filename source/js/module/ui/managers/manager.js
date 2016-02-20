@@ -17,15 +17,13 @@ const Manager = React.createClass({
         alert("Bad players count");
     },
     onChooseRival: function (index) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self = this;
 
-        binding.set('selectedRivalIndex', index);
+        self.getBinding('selectedRivalIndex').set(Immutable.fromJS(index));
     },
     getRivals: function () {
         const self = this,
-              binding = self.getDefaultBinding(),
-              selectedRivalIndex = binding.get('selectedRivalIndex'),
+              selectedRivalIndex = self.getBinding('selectedRivalIndex'),
               rivalsBinding = self.getBinding('rivals');
 
         return rivalsBinding.get().map(function (rival, index) {
@@ -54,16 +52,16 @@ const Manager = React.createClass({
     },
 	render: function() {
 		var self = this,
-			binding = self.getDefaultBinding(),
-            selectedRivalIndex = binding.get('selectedRivalIndex'),
-            teamBinding = {
-                default:  binding,
-                rival:    binding.sub('rivals.' + selectedRivalIndex),
-                players:  binding.sub('players.' + selectedRivalIndex),
-                error:    binding.sub('error.' + selectedRivalIndex),
-                students: binding.sub('students')
-            };
-
+            defaultBinding     = self.getDefaultBinding(),
+            binding            = self.getBinding(),
+            selectedRivalIndex = self.getBinding('selectedRivalIndex').toJS(),
+            teamBinding        = {
+                                    default:  defaultBinding,
+                                    rival:    binding.rivals.sub(selectedRivalIndex),
+                                    players:  binding.players.sub(selectedRivalIndex),
+                                    error:    binding.error.sub(selectedRivalIndex),
+                                    students: binding.students
+                                 };
 
             return <div className="eManager_container">
                 <div className="eManager_chooser">
