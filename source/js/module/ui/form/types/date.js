@@ -27,8 +27,11 @@ TypeDate =  React.createClass({
 			dateString,
 			date;
 		if (value !== undefined && self.refs.fieldInput && (self.refs.fieldInput.value === '' || self.refs.fieldInput.value === '__.__.____')) {
-			date = new Date(value);
-			dateString = ('0' + (date.getMonth()+1)).slice(-2) + '.' + ('0' + date.getDate()).slice(-2) + '.' + date.getFullYear();
+			dateString = new Date(value).toLocaleDateString('en-GB', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
 
 			self.refs.fieldInput.value = dateString;
 			self.fullValidate(value);
