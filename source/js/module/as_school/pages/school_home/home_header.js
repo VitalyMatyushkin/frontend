@@ -5,22 +5,47 @@ const   Immutable 	= require('immutable'),
         React       = require('react'),
         Superuser   = require('module/helpers/superuser');
 
+const defaultPhotos = [
+    'http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG',
+    'http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg',
+    'https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg'
+];
+
 let localArrayOfPhotos = [];
 
 const HomeHeader = React.createClass({
     mixins:[Morearty.Mixin],
-    componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('activeSchoolId');
+    componentWillMount:function() {
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                rootBinding     = self.getMoreartyContext().getBinding(),
+                activeSchoolId  = rootBinding.get('activeSchoolId');
+
 
         window.Server.getThisSchool.get({filter: {
             where: {
                 id: activeSchoolId
             }
-        }}).then(function(school){
-            binding.set('school',Immutable.fromJS(school[0]));
+        }}).then(function(schools){
+            const school = schools[0]; // TODO: remove that SHIT
+
+            console.log('got school: ' + JSON.stringify(school, null, 2));
+            const defaultAlbumId = school.defaultAlbumId;
+            if(defaultAlbumId) {
+                Superuser.runAsSuperUser(rootBinding, function(logout){
+                    window.Server.album.get(defaultAlbumId, {}).then( album => {
+                        console.log('got album: ' + JSON.stringify(album));
+                        window.Server.photos.get(defaultAlbumId, {}).then( photos => {
+                            console.log('got photos: ' + JSON.stringify(photos, null, 2));
+                        });
+                    }, err => {
+                        console.log('err: ' + err);
+                    }).finally(logout);
+                });
+
+            }
+
+            binding.set('school',Immutable.fromJS(schools[0]));
             //Hardcoded for now to test image swapping
             localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
             localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
@@ -54,8 +79,9 @@ const HomeHeader = React.createClass({
         });
     },
     componentDidMount:function(){
-        var self = this,
-            headerSection = React.findDOMNode(self.refs.schoolMainBanner);
+        const   self            = this,
+                headerSection   = React.findDOMNode(self.refs.schoolMainBanner);
+
         self.intervalId = setInterval(function(){
             var randIndexPos = Math.floor(Math.random()*((localArrayOfPhotos.length-1)+1));
             headerSection.src = localArrayOfPhotos[randIndexPos];
@@ -66,12 +92,12 @@ const HomeHeader = React.createClass({
       clearInterval(self.intervalId);
     },
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            schoolName = binding.get('school.name') !== undefined ? binding.get('school.name'):'The peoples School',
-            schoolMotto = binding.get('school.description') !== undefined ? binding.get('school.description') :'Mens Sana in corpore sano - Healthy mind in a healthy body',
-            schoolBlazon = binding.get('school.pic') !== undefined ? binding.get('school.pic'):'http://placehold.it/400x400',
-            backgroundImageUrl = binding.get('school.home') !== undefined ? binding.get('school.home') :'http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG';
+        const   self                = this,
+                binding             = self.getDefaultBinding(),
+                schoolName          = binding.get('school.name') !== undefined ? binding.get('school.name'):'The peoples School',
+                schoolMotto         = binding.get('school.description') !== undefined ? binding.get('school.description') :'Mens Sana in corpore sano - Healthy mind in a healthy body',
+                schoolBlazon        = binding.get('school.pic') !== undefined ? binding.get('school.pic'):'http://placehold.it/400x400',
+                backgroundImageUrl  = binding.get('school.home') !== undefined ? binding.get('school.home') :'http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG';
         return(
             <div className="eSchoolHeader">
                 <div className="eSchoolMainSlideOutBanner">
