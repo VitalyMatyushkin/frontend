@@ -3,94 +3,75 @@
  */
 const   Immutable 	= require('immutable'),
         React       = require('react'),
-        Superuser   = require('module/helpers/superuser');
+        Superuser   = require('module/helpers/superuser'),
+        Lazy        = require('lazyjs');
 
+/** Array of default photos to show when there is no photos got from server side for any possible reason */
 const defaultPhotos = [
     'http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG',
     'http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg',
     'https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg'
 ];
 
-let localArrayOfPhotos = [];
-
 const HomeHeader = React.createClass({
+
     mixins:[Morearty.Mixin],
+
     componentWillMount:function() {
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 rootBinding     = self.getMoreartyContext().getBinding(),
                 activeSchoolId  = rootBinding.get('activeSchoolId');
 
-
+        /** pulling photos from school default album */
         window.Server.getThisSchool.get({filter: {
             where: {
                 id: activeSchoolId
             }
         }}).then(function(schools){
-            const school = schools[0]; // TODO: remove that SHIT
-
-            console.log('got school: ' + JSON.stringify(school, null, 2));
-            const defaultAlbumId = school.defaultAlbumId;
+            const   school          = schools[0], // TODO: remove that SHIT
+                    defaultAlbumId  = school.defaultAlbumId;
             if(defaultAlbumId) {
                 Superuser.runAsSuperUser(rootBinding, function(logout){
-                    window.Server.album.get(defaultAlbumId, {}).then( album => {
-                        console.log('got album: ' + JSON.stringify(album));
-                        window.Server.photos.get(defaultAlbumId, {}).then( photos => {
-                            console.log('got photos: ' + JSON.stringify(photos, null, 2));
-                        });
-                    }, err => {
-                        console.log('err: ' + err);
-                    }).finally(logout);
-                });
-
+                    window.Server.photos.get(defaultAlbumId, {})
+                        .then( photos => {
+                            const photosToShow = Lazy(photos).map(photo => `${photo.pic}/contain?height=600`).toArray();
+                            if(photosToShow.length != 0) {
+                                binding.set('___photosToShow', Immutable.fromJS(photosToShow));
+                            } else {
+                                binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
+                            }
+                        })
+                        .finally(logout);
+                })
+            } else {
+                binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));    // will show default images if there is no default album found
             }
-
-            binding.set('school',Immutable.fromJS(schools[0]));
-            //Hardcoded for now to test image swapping
-            localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
-            localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
-            localArrayOfPhotos.push('https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg');
-            localArrayOfPhotos.push('http://www.pgl.co.uk/Files/Files/Schools/Secondary%20Schools/Carousel/SS-M-Outdoor-Education-Sports-Weekends-Football-MUSS.jpg');
-
-            Superuser.runAsSuperUser(rootBinding, function(logout) {
-                window.Server.addAlbum.get({
-                    filter:{
-                        //where:{and:[{ownerId:school.id},{name:'schoolProfile'}]},
-                        include:'photos',
-                        limit:6
-                    }}).then(function(albumForSchool){
-                    albumForSchool.forEach(function(album){
-                        album.photos.forEach(function(photo){
-                            //localArrayOfPhotos.push(photo.pic);
-                        });
-                    });
-                    //Hardcoded for now to test image swapping
-                    localArrayOfPhotos.push('http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG');
-                    localArrayOfPhotos.push('http://mattjwaller.com/wp-content/uploads/2011/06/Prep-Sport-Football-4.jpg');
-                    localArrayOfPhotos.push('https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg');
-                    localArrayOfPhotos.push('http://www.pgl.co.uk/Files/Files/Schools/Secondary%20Schools/Carousel/SS-M-Outdoor-Education-Sports-Weekends-Football-MUSS.jpg');
-                    localArrayOfPhotos.push('http://www.northyorkshiresport.co.uk/assets/images/School%20Games/School%20Games%20Launch%201.jpg');
-
-                    logout();
-                });
-            });
-        },function(error){
-            throw error;
+            binding.set('school',Immutable.fromJS(school));
         });
     },
+
     componentDidMount:function(){
         const   self            = this,
-                headerSection   = React.findDOMNode(self.refs.schoolMainBanner);
+                headerSection   = self.refs.schoolMainBanner;
 
-        self.intervalId = setInterval(function(){
-            var randIndexPos = Math.floor(Math.random()*((localArrayOfPhotos.length-1)+1));
-            headerSection.src = localArrayOfPhotos[randIndexPos];
+        self.intervalId = setInterval(() => {
+            const   photos          = this.getDefaultBinding().get('___photosToShow').toArray() || [],  // there is possibility that on first call binding will be empty
+                    randIndexPos    = Math.floor(Math.random() * photos.length);
+
+            if(photos.length !== 0) {
+                /* maybe this is not really so bad as it looks like because otherwise React Animation should be used */
+                headerSection.src = photos[randIndexPos];
+                console.log('src: ' + headerSection.src);
+            }
         },5000);
     },
+
     componentWillUnmount:function(){
-        var self = this;
-      clearInterval(self.intervalId);
+        clearInterval(this.intervalId);
+        this.getDefaultBinding().remove('___photosToShow'); // wiping out that shit
     },
+
     render:function(){
         const   self                = this,
                 binding             = self.getDefaultBinding(),
