@@ -18,7 +18,9 @@ TypeDate =  React.createClass({
     },
     getDefaultState: function() {
         return Immutable.fromJS({
-            localValue:''
+            localValue:'',  //local format date
+            value:'',       //ISO format date
+            defaultValue:'' //initial date
         });
     },
 	componentWillMount: function() {
@@ -26,41 +28,42 @@ TypeDate =  React.createClass({
 			binding = self.getDefaultBinding();
 
 		// На случай, если форма заполняется асинхронно
-		binding.addListener('defaultValue', function() {
-			self._forceNewValue(binding.get('defaultValue'));
-		});
+        self.addBindingListener(binding, 'defaultValue', changes => self._forceNewValue(changes.getCurrentValue()));
+        self.addBindingListener(binding, 'localValue', changes => self.setValue(self._toIso(changes.getCurrentValue())));
 	},
 	_forceNewValue: function(value) {
 		const self = this,
             binding = self.getDefaultBinding(),
             locales = self.props.locales,
             options = self.props.options,
-			dateStr = Date.parse(value) ? new Date(value).toLocaleDateString(locales, options).replace(/[/]/g, '.'):'';
+			dateStr = !self.fullValidate(value) ? new Date(value).toLocaleDateString(locales, options).replace(/[/]/g, '.'):'';
 
         binding.set('localValue', dateStr);
 	},
 	_toIso: function(dotString) {
-		const dateParts = dotString !== undefined ? dotString.split('.'):'',
-            isoStr = dateParts.length === 3 ? dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0]:dotString;
+		const dateParts = dotString ? dotString.split('.'):[],
+            //ISO format date for locales == 'en-GB', format == 'yyyy.mm.dd'
+            isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
 
-        return Date.parse(isoStr) ? new Date(isoStr).toISOString():isoStr;
+        return !this.fullValidate(isoStr)? new Date(isoStr).toISOString():isoStr;
 	},
 	handleBlur: function(e) {
-		var self = this,
+		const self = this,
             defaultValue = self.getDefaultBinding().get('defaultValue'),
 			inputValue = e.target.value;
 
         if(!inputValue || inputValue==='__.__.____')
             self._forceNewValue(defaultValue);
-        else
-            self.setValue(self._toIso(inputValue));
+
+        e.stopPropagation();
 	},
 	handleChange: function(e) {
-		var self = this,
+		const self = this,
             binding = self.getDefaultBinding(),
 			inputValue = e.target.value;
 
         binding.set('localValue', inputValue);
+        e.stopPropagation();
 	},
 	render: function () {
         const self = this,
@@ -68,9 +71,8 @@ TypeDate =  React.createClass({
             localValue = binding.get('localValue');
 
 		return (
-			<div className="eForm_fieldInput">
-				<MaskedInput ref="fieldInput" value={localValue} onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
-			</div>
+            <MaskedInput ref="fieldInput" title="Format date dd.mm.yyyy" value={localValue}
+                         onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
 		)
 	}
 });
