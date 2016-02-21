@@ -1,16 +1,15 @@
-var SVG = require('module/ui/svg'),
-	If = require('module/ui/if/if'),
-	React = require('react'),
-	SchoolInfo;
+const 	SVG 	= require('module/ui/svg'),
+		If 		= require('module/ui/if/if'),
+		React 	= require('react');
 
-SchoolInfo = React.createClass({
+const SchoolInfo = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: React.PropTypes.string
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding();
 
 		return (
 			<div className="bAboutList">
@@ -25,5 +24,4 @@ SchoolInfo = React.createClass({
 	}
 });
 
-//<div className="eAboutList_item"><SVG icon="icon_phone" />0844 4825138</div>
 module.exports = SchoolInfo;

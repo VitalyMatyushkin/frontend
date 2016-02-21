@@ -68,10 +68,10 @@
 $INVALID_COLOR: rgb(182, 0, 0);
 
 .eForm_fieldValidText{
+  font-weight: bold;
+  padding: 0 5px;
   display: none;
-  font-size: 12px;
   color: $INVALID_COLOR;
-  margin-top: 7px;
 }
 .eForm_errorMsgRight{
   display: none;
@@ -83,7 +83,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
   display: block;
 }
 .eForm_fieldSet.mInvalid .eForm_fieldValidText{
-  display: block;
+  display: inline;
 }
 .eForm_fieldSet.mValid .eForm_fieldValidText{
   display: block;
@@ -280,6 +280,9 @@ $INVALID_COLOR: rgb(182, 0, 0);
   border: none;
   width: 215px;
   color: #939598;
+  text-transform: uppercase;
+  background: #fff;
+  padding: 5px;
 }
 .eManager_select_wrap option{
   height: 30px;
@@ -293,7 +296,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
   overflow: hidden;
   position: relative;
   height: 35px;
-  border-radius: 5%;
+  border-radius: 8%;
   background: #fff;
   width: 200px;
 }
@@ -306,7 +309,6 @@ $INVALID_COLOR: rgb(182, 0, 0);
   right: 5px;
   color: $COLOR;
   z-index: 1;
-  background: #fff;
   width: 14px;
   height: 14px;
 }

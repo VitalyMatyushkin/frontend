@@ -1,30 +1,28 @@
 /**
  * Created by bridark on 31/07/15.
  */
-const
-    DateTimeMixin   = require('module/mixins/datetime'),
-    React           = require('react'),
-    Immutable 	    = require('immutable'),
-    SVG             = require('module/ui/svg'),
-    Superuser       = require('module/helpers/superuser');
+const   DateTimeMixin   = require('module/mixins/datetime'),
+        React           = require('react'),
+        Immutable 	    = require('immutable'),
+        SVG             = require('module/ui/svg'),
+        Superuser       = require('module/helpers/superuser');
 
 const HomeFixtures = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('activeSchoolId');
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                rootBinding     = self.getMoreartyContext().getBinding(),
+                activeSchoolId  = rootBinding.get('activeSchoolId');
 
-        Superuser.runAsSuperUser(rootBinding, function(logout) {
-            window.Server.fixturesBySchoolId.get({schoolId:activeSchoolId, filter:{order:'startTime ASC'}}).then(function(events){
+        Superuser.runAsSuperUser(rootBinding, () => {
+            return window.Server.fixturesBySchoolId.get({schoolId:activeSchoolId, filter:{order:'startTime ASC'}}).then((events) => {
                 binding.set('fixtures',Immutable.fromJS(events));
-                logout();
             });
         });
     },
     getFixtureDate:function(startTime, type){
-        var self = this;
+        const self = this;
         if(startTime !== undefined){
             return(
                 <div>

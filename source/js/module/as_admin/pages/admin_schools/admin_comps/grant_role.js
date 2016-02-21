@@ -10,14 +10,8 @@ const   AutoComplete  = require('module/ui/autocomplete2/OldAutocompleteWrapper'
 const GrantRole = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
-        userIdsBinding: React.PropTypes.object,
-        onSuccess: React.PropTypes.func
-    },
-    getDefaultState:function(){
-        return Immutable.Map({
-            roleName:'teacher',
-            comment:''
-        });
+        userIdsBinding:     React.PropTypes.object,
+        onSuccess:          React.PropTypes.func
     },
     getSchools: function(filter) {
         return window.Server.getAllSchools.get({
@@ -30,49 +24,36 @@ const GrantRole = React.createClass({
                 },
                 limit: 10
             }
-        }).then(schoolList => {
-            //console.log('got school list: ' + JSON.stringify(schoolList, null, 2));
-            return schoolList;
         });
     },
     onSchoolSelect:function(id, response, model){
         this.getDefaultBinding().set('selectedSchoolId',id);
     },
-    getStudents:function(filter){
-        const self = this,
-            binding = self.getDefaultBinding(),
-            schoolId = binding.get('selectedSchoolId');
+    getStudents: function(filter){
+        const   self      = this,
+                binding     = self.getDefaultBinding(),
+                schoolId    = binding.get('selectedSchoolId');
 
-        return window.Server.users.get({
-            filter:{
-                include:["permissions"],
-                where:{
-                    lastName:{
-                        like:filter,
-                        options:'i'
+        return window.Server.students.get(schoolId, {
+            filter: {
+                where: {
+                    'userInfo.lastName': {
+                        like:       filter,
+                        options:    'i'
                     }
                 },
-                limit:50
+                limit: 10
             }
-        }).then(function (students) {
-            if(schoolId){
-                students = Lazy(students).filter(s => {
-                    return s.permissions && s.permissions.length > 0 && !Lazy(s.permissions).filter(p => {
-                            return p.preset === 'student' && p.schoolId === schoolId
-                        }).isEmpty();
-                }).first(10).toArray();
-            }
-
-            const list = students.map(s => {s.fullName = s.firstName + ' ' + s.lastName; return s;});
-            return list;
+        }).then( students => {
+            return Lazy(students).map(student => {
+                student.fullName = student.userInfo.firstName + ' ' + student.userInfo.lastName;
+                return student;
+            }).toArray();
         });
     },
-    onStudentSelect:function(id, model){
-        const self = this,
-            binding = self.getDefaultBinding(),
-            studentId = Lazy(model.permissions).find(p=> p.preset === 'student').studentId;
 
-        binding.set('selectedStudentId',studentId);
+    onStudentSelect:function(id, model){
+        this.getDefaultBinding().set('selectedStudentId', model.id);
      },
     onRoleSelectorChange:function(e){
         const   binding     = this.getDefaultBinding(),
@@ -81,17 +62,17 @@ const GrantRole = React.createClass({
         binding.set('roleName', roleName);
     },
     continueButtonClick:function(){
-        const self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            schoolId = binding.get('selectedSchoolId'),
-            model = {
-                preset:binding.get('roleName'),
-                schoolId:schoolId,
-                principalId:'',
-                comment:binding.get('comment'),
-                accepted:false
-            };
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                rootBinding     = self.getMoreartyContext().getBinding(),
+                schoolId        = binding.get('selectedSchoolId'),
+                model = {
+                    preset:         binding.get('roleName'),
+                    schoolId:       schoolId,
+                    principalId:    '',
+                    comment:        binding.get('comment'),
+                    accepted:       false
+                };
 
         let ids = self.props.userIdsBinding.toJS(),
             itsMe = rootBinding.get('userData.authorizationInfo.userId') === ids;
@@ -122,9 +103,9 @@ const GrantRole = React.createClass({
         });
     },
     render:function(){
-        const   self = this,
-                binding = self.getDefaultBinding(),
-                isParent = binding.get('roleName') === 'parent' && binding.get('selectedSchoolId') !== undefined;
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                isParent    = binding.get('roleName') === 'parent' && binding.get('selectedSchoolId') !== undefined;
 
         return (
             <div className="bGrantContainer">

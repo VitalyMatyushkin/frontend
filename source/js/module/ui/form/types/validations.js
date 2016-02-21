@@ -21,10 +21,19 @@ var validationsSet = {
 		}
 	},
 	date:function(value){
-		if(!(/\d.\d{1,4}-\d{1,2}-\d{1,2}\D\d{1,2}:\d{1,2}:\d{1,2}.\d{1,4}\D/.test(value))){
-			return 'Please fill out this field';
+        const err = 'Please fill out this field';
+		if(!Date.parse(value)){
+			return err;
 		}else{
-			return false;
+            const date = new Date(value),
+                valueArray = value.split('-'),
+                day = valueArray[2].split('T')[0]*1,
+                month = valueArray[1]*1,
+                year = valueArray[0];
+			if(date.getFullYear() == year && date.getMonth() == (month - 1) && date.getDate() == day)
+                return false;
+            else
+                return err;
 		}
 	},
 	email: function(value) {

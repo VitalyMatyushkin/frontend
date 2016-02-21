@@ -37,7 +37,7 @@ const FormField = React.createClass({
 				<div className="eForm_fieldName">{self.props.children}</div>
 				<div className={fieldStyleClass}>
 					{inputField}
-					<div className={errorClassName}>{binding.get('error') || binding.get('success')}</div>
+					<span className={errorClassName} title={binding.get('error') || binding.get('success')} >!</span>
 				</div>
 			</div>
 

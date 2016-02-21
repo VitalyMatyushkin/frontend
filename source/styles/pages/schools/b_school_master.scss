@@ -11,10 +11,9 @@
 }
 
 .eSchoolMaster_title{
-  display: inline-block;
+  display: flex;
   color: #235413;
-  min-width: 100px;
-  text-align: right;
+  flex-shrink: 0;
 }
 .eSchoolMaster_title h1{
   margin: 0;
@@ -258,6 +257,8 @@
   text-align: right;
   height: 60px;
   line-height: 74px;
+  display: flex;
+  justify-content: flex-end;
 }
 .editSchool{
   width: 399px;
@@ -273,7 +274,7 @@
   align-items: center;
 }
 .eStrip{
-  width: 70%;
+  width: 100%;
   background: #235413;
   height: 2px;
   vertical-align: middle;
@@ -310,10 +311,30 @@
 .addButtonShort:hover .bIcon {
   color: $MAIN_COLOR;
 }
+
+.filter_btn {
+  display: flex
+}
+.filter_btn span{
+  color: $COLOR;
+  font-size: 25px;
+}
+.filter_btn:hover span{
+  color: $MAIN_COLOR;
+}
+.filter_btn .bIcon{
+  height: 30px;
+  width: 30px;
+  color: $COLOR;
+}
+.filter_btn:hover .bIcon{
+  color: $MAIN_COLOR;
+}
+
 .addNewForm{
   background: url("/images/add-form.png") no-repeat;
   display: inline-block;
-  width: 35px;
+  width: 50px;
   height: 25px;
   margin: 0;
 }
@@ -324,14 +345,43 @@
 .addHouse{
   background: url("/images/add-house1.png") no-repeat;
   display: inline-block;
-  width: 35px;
+  width: 50px;
   height: 25px;
   margin: 0;
 }
 .addHouse:hover{
   background: url("/images/add-house.png") no-repeat;
 }
-
+.eEdit_btn {
+  background: url("/images/edit.png") no-repeat;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+}
+.eEdit_btn:hover {
+  background: url("/images/edit-hover.png") no-repeat;
+}
+.view_btn {
+  background: url("/images/eye.png") no-repeat;
+  display: inline-block;
+  width: 25px;
+  height: 15px;
+  margin: 0;
+}
+.view_btn:hover {
+  background: url("/images/eye-hover.png") no-repeat;
+}
+.remove_btn{
+  background: url("/images/delete.png") no-repeat;
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+}
+.remove_btn:hover {
+  background: url("/images/delete-2.png") no-repeat;
+}
 .eSort{
   padding: 0 5px;
   cursor: pointer;

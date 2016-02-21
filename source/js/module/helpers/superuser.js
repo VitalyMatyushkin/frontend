@@ -2,43 +2,37 @@
  * Created by wert on 19.11.15.
  */
 
-const Lazy          = require('lazyjs'),
-      Immutable 	= require('immutable');
+const   Lazy        = require('lazyjs'),
+        Immutable 	= require('immutable'),
+        Promise     = require('bluebird');
 
-function runAsSuperUser(rootBinding, cb) {
-    loginAsSuperUser(rootBinding, function() {
-        cb(function() {
-            logout(rootBinding);
-        });
+function runAsSuperUser(rootBinding, toRun) {
+    loginAsSuperUser(rootBinding)
+        .then( toRun )
+        .finally(() => logout(rootBinding));
+}
+
+function loginAsSuperUser(rootBinding) {
+    return window.Server.login.post({username:"superadmin",password:"superadmin"}).then((data) => {
+        rootBinding.set('userData.authorizationInfo', Immutable.fromJS({
+            id:             data.id,
+            ttl:            data.ttl,
+            userId:         data.userId,
+            verified:       data.user.verified,
+            registerType:   data.user.registerType
+        }));
+        return true;    // just saying that everything is true :)
     });
-};
-
-function loginAsSuperUser(rootBinding, cb) {
-    window.Server.login.post({username:"superadmin",password:"superadmin"}).then(function(data) {
-        rootBinding.update('userData.authorizationInfo', function(){
-            return Immutable.fromJS({
-                id: data.id,
-                ttl: data.ttl,
-                userId: data.userId,
-                verified: data.user.verified,
-                registerType: data.user.registerType
-            });
-        });
-
-        cb();
-    });
-};
+}
 
 function logout(rootBinding) {
-    rootBinding.update('userData.authorizationInfo', function(){
-        return Immutable.fromJS({});
-    });
-};
+    rootBinding.set('userData.authorizationInfo', Immutable.fromJS({}));
+}
 
 const Superuser = {
-    runAsSuperUser: runAsSuperUser,
-    loginAsSuperUser: loginAsSuperUser,
-    logout: logout
+    runAsSuperUser:     runAsSuperUser,
+    loginAsSuperUser:   loginAsSuperUser,
+    logout:             logout
 };
 
 module.exports = Superuser;

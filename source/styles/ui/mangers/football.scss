@@ -57,5 +57,8 @@
 }
 
 .ePlayer_remove .bIcon {
-  color: #000;
+  color: #ccc;
+}
+.ePlayer_remove:hover .bIcon {
+  color: $COLOR;
 }
