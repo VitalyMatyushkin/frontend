@@ -13,7 +13,6 @@ const PermissionView = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'schoolPermissions',
     serviceCount:'schoolPermissionsCount',
-    //TODO Why this code is comment? - because the property is not in used at the moment but could be reused
     setPageTitle:'School Admin',
     filters:{
         include:['principal',{student:['form','house']}]
@@ -182,9 +181,9 @@ const PermissionView = React.createClass({
                        isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} pageLimit={25}>
                     <TableField dataField="checkBox" width="25px" filterType="none"></TableField>
-                    <TableField dataField="principal" dataFieldKey="firstName" filterType="none">First name</TableField>
-                    <TableField dataField="principal" dataFieldKey="lastName" filterType="none">Surname</TableField>
-                    <TableField dataField="principal" dataFieldKey="email" filterType="none">Email</TableField>
+                    <TableField dataField="principalInfo" dataFieldKey="firstName" >First name</TableField>
+                    <TableField dataField="principalInfo" dataFieldKey="lastName" >Surname</TableField>
+                    <TableField dataField="principalInfo" dataFieldKey="email" >Email</TableField>
                     <TableField dataField="principal" filterType="none" parseFunction={self.getStatus}>Status</TableField>
                     <TableField dataField="preset" >Role</TableField>
                     <TableField dataField="principal" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
