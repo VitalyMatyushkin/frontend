@@ -3,7 +3,7 @@
   position: relative;
   max-width: 1060px;
   margin: 0 auto;
-  text-transform: uppercase;
+  text-transform: none;
 }
 
 .eDataList_title{
@@ -29,27 +29,19 @@
 
 .eDataList_listItem{
   position: relative;
-  cursor: pointer;
   box-sizing: border-box;
-}
-
-.eDataList_listItem:hover{
-  background: lighten($MAIN_COLOR, 25%);
 }
 
 .eDataList_listItem.mHead{
   cursor: default;
   position: relative;
+  font-size: 18px;
 }
 
 .eDataList_listItem.mHead .eDataList_listItemCell{
   background: #66952e;
   color: #235413;
   border: none;
-}
-
-.eDataList_listItem.mHead{
-  font-size: 16px;
 }
 
 .eDataList_listItem.mHead:hover{
@@ -68,7 +60,6 @@
   display: table;
   width: 100%;
   text-align: center;
-  font-size: 11px;
 }
 
 .eDataList_list.mTable .eDataList_listItem{
@@ -272,3 +263,4 @@
 .eTable_view{
   border-bottom: 2px solid #c8cdd0;
 }
+

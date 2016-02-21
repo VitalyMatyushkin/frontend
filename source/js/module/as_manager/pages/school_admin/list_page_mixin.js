@@ -185,7 +185,7 @@ const ListPageMixin = {
               </div>
 
 
-                        <div className="addButton" onClick={self.toggleFilters}><img src="images/search.png"/> {isFiltersActive ? '⇡' : '⇣'}</div>
+            <div className="filter_btn" onClick={self.toggleFilters}><SVG icon="icon_search"/> {isFiltersActive ? '↑' : '↓'}</div>
                         <If condition={currentPage[currentPage.length-1] ==='students'}>
                             <div className="addButton" onClick={self._getAddNewStudentFunction}><SVG icon="icon_add_student" /></div>
                         </If>

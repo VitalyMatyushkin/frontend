@@ -1,8 +1,8 @@
-var Logo = require('module/as_school/head/logo'),
-	TopMenu = require('module/ui/menu/public_menu'),
-	React = require('react'),
-	Head;
-Head = React.createClass({
+const 	Logo 		= require('module/as_school/head/logo'),
+		TopMenu 	= require('module/ui/menu/public_menu'),
+		React 		= require('react');
+
+const Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		var self = this,
@@ -41,8 +41,8 @@ Head = React.createClass({
 		//}];
 	},
 	render: function() {
-		var self = this,
-			binding = this.getDefaultBinding();
+		const 	self 	= this,
+				binding = this.getDefaultBinding();
 
 		return (
 			<div className="bTopPanel schoolPanel">

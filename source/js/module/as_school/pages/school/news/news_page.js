@@ -6,23 +6,24 @@ const 	SVG 			= require('module/ui/svg'),
 const NewsPage = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	componentWillMount: function () {
-		var self = this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('activeSchoolId'),
-			binding = self.getDefaultBinding();
+		const 	self 			= this,
+				rootBinding 	= self.getMoreartyContext().getBinding(),
+				activeSchoolId 	= rootBinding.get('activeSchoolId'),
+				binding 		= self.getDefaultBinding();
 
 
 		window.Server.news.get(activeSchoolId).then(function(data) {
 			binding.set(Immutable.fromJS(data));
 		});
 	},
-	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			newsList = binding.toJS(),
-			newsNodes;
 
-		if (newsList) {
+	render: function() {
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				newsList 	= binding.toJS();
+		let	newsNodes;		// TODO: ????
+
+		if (newsList) {		// TODO: ????
 			newsNodes = newsList.map(function(news) {
 				return (
 					<div className="eSchoolNews_news">

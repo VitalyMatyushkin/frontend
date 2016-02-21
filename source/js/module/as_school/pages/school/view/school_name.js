@@ -1,11 +1,10 @@
-var SchoolName,
-	React = require('react');
+const React = require('react');
 
-SchoolName = React.createClass({
+const SchoolName = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<div className="bUserName">{binding.get('name')}</div>

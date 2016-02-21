@@ -17,11 +17,11 @@ function loginAsSuperUser(rootBinding, cb) {
     window.Server.login.post({username:"superadmin",password:"superadmin"}).then(function(data) {
         rootBinding.update('userData.authorizationInfo', function(){
             return Immutable.fromJS({
-                id: data.id,
-                ttl: data.ttl,
-                userId: data.userId,
-                verified: data.user.verified,
-                registerType: data.user.registerType
+                id:             data.id,
+                ttl:            data.ttl,
+                userId:         data.userId,
+                verified:       data.user.verified,
+                registerType:   data.user.registerType
             });
         });
 
@@ -36,9 +36,9 @@ function logout(rootBinding) {
 };
 
 const Superuser = {
-    runAsSuperUser: runAsSuperUser,
-    loginAsSuperUser: loginAsSuperUser,
-    logout: logout
+    runAsSuperUser:     runAsSuperUser,
+    loginAsSuperUser:   loginAsSuperUser,
+    logout:             logout
 };
 
 module.exports = Superuser;

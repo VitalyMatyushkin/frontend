@@ -6,21 +6,18 @@ const 	SVG 			= require('module/ui/svg'),
 const ResultsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
-		var self = this;
-
 		return Immutable.fromJS({
 			fixtures: {}
 		});
 	},
 	componentWillMount: function () {
-		var self = this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('activeSchoolId'),
-			binding = self.getDefaultBinding();
+		var self 			= this,
+			rootBinding 	= self.getMoreartyContext().getBinding(),
+			activeSchoolId 	= rootBinding.get('activeSchoolId'),
+			binding 		= self.getDefaultBinding();
 
 		if (!activeSchoolId) {
 			console.error('School id is not set');
-
 			return false;
 		}
 
