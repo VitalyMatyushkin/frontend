@@ -17,7 +17,8 @@ const InvitesView = React.createClass({
 			cancel: {
 				type: 'cancel'
 			},
-			invitesRouting: {}
+			invitesRouting: {},
+			selectedRivalIndex: 0
 		});
 	},
 	componentWillMount: function () {

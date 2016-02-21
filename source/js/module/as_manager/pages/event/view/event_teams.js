@@ -2,6 +2,7 @@ const 	If 					= require('module/ui/if/if'),
 		SVG 				= require('module/ui/svg'),
 		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		AutocompleteTeam 	= require('module/ui/managers/autocompleteTeam'),
+		Team 				= require('module/ui/managers/team'),
 		React				= require('react'),
 		Immutable			= require('immutable');
 
@@ -65,7 +66,7 @@ const EventTeams = React.createClass({
             }
         });
     },
-	getPlayersByTeamOrder: function (order) {
+	_getPlayersList: function (order) {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			type = binding.get('event.type'),
@@ -102,7 +103,7 @@ const EventTeams = React.createClass({
 			</div>;
 		}).toArray() : null;
 	},
-	getAutoComplete: function (order) {
+	_getAutoComplete: function (order) {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			type = binding.get('event.type'),
@@ -117,32 +118,65 @@ const EventTeams = React.createClass({
 		return isOwner && binding.get('mode') === 'edit_squad' && !binding.get('model.resultId') ?
             <AutocompleteTeam binding={completeBinding} /> : null;
 	},
-	render: function() {
-        var self = this,
+	_getPlayersManager: function(order) {
+		const self = this,
 			binding = self.getDefaultBinding(),
-			rivals = binding.get('rivals');
+			teamBinding = {
+				default: binding,
+				rivalId: binding.sub(['participants', order]).sub('id'),
+				players: binding.sub(['players', order])
+			};
 
-		return <div className="bEventTeams">
-			<div className="bEventTeams_team">
-				<div>
-					{self.getAutoComplete(0)}
-					{self.getPlayersByTeamOrder(0)}
-				</div>
-			</div>
-			<div className="bEventTeams_team">
-				<If condition={binding.get('participants').count() > 1}>
+		return (
+			<Team binding={teamBinding} />
+		);
+	},
+	_getPlayers: function(order) {
+		const self = this,
+			binding = self.getDefaultBinding(),
+			type = binding.get('event.type'),
+			participant = binding.sub(['participants', order]),
+			activeSchoolId = self.getActiveSchoolId(),
+			isOwner = type === 'inter-schools' ? participant.get('schoolId') === activeSchoolId : true;
+
+		return (
+			<div>
+				<If condition={binding.get('mode') === 'edit_squad' && isOwner}>
 					<div>
-						{self.getAutoComplete(1)}
-						{self.getPlayersByTeamOrder(1)}
+						{self._getAutoComplete(order)}
+						<div className="eEventTeams_managerWrapper">
+							{self._getPlayersManager(order)}
+						</div>
 					</div>
 				</If>
-				<If condition={binding.get('participants').count() === 1}>
-					<div>awaiting opponent...</div>
+				<If condition={binding.get('mode') === 'general' || binding.get('mode') === 'closing'}>
+					<div className="bEventTeams_team">
+						{self._getPlayersList(order)}
+					</div>
 				</If>
 			</div>
-        </div>;
+		);
+	},
+	render: function() {
+        const self = this,
+			binding = self.getDefaultBinding();
+
+		return (
+			<div className="bEventTeams">
+				{self._getPlayers(0)}
+				<If condition={binding.get('participants').count() > 1}>
+					{self._getPlayers(1)}
+				</If>
+				<If condition={binding.get('participants').count() === 1}>
+					<div className="bEventTeams_team">
+						<div className="eEventTeams_awaiting">
+							Awaiting opponent...
+						</div>
+					</div>
+				</If>
+        	</div>
+		);
 	}
 });
-
 
 module.exports = EventTeams;

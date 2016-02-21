@@ -1,5 +1,6 @@
 .bTeam {
-  width: 450px;
+  width: 460px;
+  display: inline-block;
 }
 
 .eTeam_playersTableContainer {
@@ -9,7 +10,8 @@
 }
 
 .eTeam_errorBox{
-  margin-top: 5px;
+  text-align: right;
+  margin-top: 10px;
   font-size: 14px;
   color: #FF0000;
 }
