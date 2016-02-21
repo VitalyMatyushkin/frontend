@@ -1,14 +1,15 @@
-const   classNames      = require('classnames'),
-        If              = require('module/ui/if/if'),
-        EventHeader     = require('./view/event_header'),
-        EventRivals     = require('./view/event_rivals'),
-        EventButtons    = require('./view/event_buttons'),
-        EventTeams      = require('./view/event_teams'),
-        EventAlbums     = require('./view/event_albums'),
-        React           = require('react'),
-        Comments        = require('./view/event_blog'),
-        VenuePreview    = require('../events/manager/venue_preview'),
-        Immutable       = require('immutable');
+const   classNames           = require('classnames'),
+        If                   = require('module/ui/if/if'),
+        EventHeader          = require('./view/event_header'),
+        EventRivals          = require('./view/event_rivals'),
+        EventButtons         = require('./view/event_buttons'),
+        EventTeams           = require('./view/event_teams'),
+        EventAlbums          = require('./view/event_albums'),
+        React                = require('react'),
+        Comments             = require('./view/event_blog'),
+        VenuePreview         = require('../events/manager/venue_preview'),
+        Immutable            = require('immutable'),
+        Lazy                 = require('lazyjs');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -33,37 +34,59 @@ const EventView = React.createClass({
     },
     componentWillMount: function () {
         var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            binding = self.getDefaultBinding(),
-            eventId = rootBinding.get('routing.pathParameters.0');
+            rootBinding  = self.getMoreartyContext().getBinding(),
+            binding      = self.getDefaultBinding(),
+            eventId      = rootBinding.get('routing.pathParameters.0');
 
-		binding.addListener('players', function (descriptor) {
+        binding.addListener('players', function (descriptor) {
 			var path = descriptor.getPath(),
 				previous = descriptor.getPreviousValue(),
 				current;
 
-			if (previous && previous.get(path[0])   ) {
-				previous = previous.get(path[0]).toJS();
-				current = binding.toJS(['players', path[0]]);
+            if (previous && previous.get(path[0])) {
+                previous = previous.get(path[0]).toJS();
+                current = binding.toJS(['players', path[0]]);
 
-				if (current.length > previous.length) {
-					window.Server.playersRelation.put({
-						teamId: binding.get(['participants', path[0], 'id']),
-						studentId: current.pop().id
-					});
-				} else if (current.length < previous.length) {
-					previous.filter(function (player) {
-						return !current.some(function (model) {
-							return model.id === player.id;
-						});
-					}).forEach(function(player) {
-						window.Server.playersRelation.delete({
-							teamId: binding.get(['participants', path[0], 'id']),
-							studentId: player.id
-						});
-					});
-				}
-			}
+                if (current.length > previous.length) {
+                    window.Server.playersRelation.put({
+                        teamId: binding.get(['participants', path[0], 'id']),
+                        studentId: current.pop().id
+                    });
+                } else if (current.length < previous.length) {
+                    previous.filter(function (player) {
+                        return !current.some(function (model) {
+                            return model.id === player.id;
+                        });
+                    }).forEach(function(player) {
+                        window.Server.playersRelation.delete({
+                            teamId: binding.get(['participants', path[0], 'id']),
+                            studentId: player.id
+                        });
+                    });
+                } else {
+                    let changedPlayer;
+                    for(let prevIndex in previous) {
+                        let findCurrPlayer = Lazy(current).findWhere({id:previous[prevIndex].id});
+                        if(
+                            findCurrPlayer.position !== previous[prevIndex].position ||
+                            findCurrPlayer.sub !== previous[prevIndex].sub
+                        ) {
+                            changedPlayer = findCurrPlayer;
+                            break;
+                        }
+                    }
+                    window.Server.exactlyPlayersByTeam.put(
+                        {
+                            teamId:    binding.get(['participants', path[0], 'id']),
+                            playerId:  changedPlayer.exactlyPlayerId
+                        },
+                        {
+                            position:  changedPlayer.position,
+                            sub:       changedPlayer.sub
+                        }
+                    )
+                }
+            }
 		});
 
         self.menuItems = [{
@@ -90,11 +113,14 @@ const EventView = React.createClass({
 					{
 						participants: [
 							{
-								players: 'user'
+								players: ['user', 'form']
 							},
 							{
 							    school: 'forms'
 							},
+                            {
+                                exactlyPlayers: 'student'
+                            },
                             'house'
                         ]
 					},
@@ -127,10 +153,14 @@ const EventView = React.createClass({
 			delete event.invites;
 			delete event.sport;
 
+            self._injectDataToStudentModel(participants[0]);
+            participants[1] && self._injectDataToStudentModel(participants[1]);
+
 			binding
 				.atomically()
 				.set('sport', Immutable.fromJS(sport))
 				.set('model', Immutable.fromJS(event))
+                .set('model.sportModel', Immutable.fromJS(sport))
 				.set('invites', Immutable.fromJS(invites))
 				.set('participants', Immutable.fromJS(participants))
                 .set('points', Immutable.fromJS(points))
@@ -150,6 +180,20 @@ const EventView = React.createClass({
         rootBinding.addListener('routing.pathParameters', function () {
             binding.set('mode', rootBinding.get('routing.pathParameters.1') || null)
         });
+    },
+    // copy id position field and sub field from player model to student model
+    _injectDataToStudentModel: function(participants) {
+        for(let studentIndex in participants.players) {
+            for(let playerIndex in participants.exactlyPlayers) {
+                if(participants.exactlyPlayers[playerIndex].student.userId === participants.players[studentIndex].userId) {
+                    participants.players[studentIndex].exactlyPlayerId = participants.exactlyPlayers[playerIndex].id;
+                    participants.players[studentIndex].position = participants.exactlyPlayers[playerIndex].position;
+                    if(participants.exactlyPlayers[playerIndex].sub) {
+                        participants.players[studentIndex].sub = participants.exactlyPlayers[playerIndex].sub;
+                    }
+                }
+            }
+        }
     },
     onToggleShowComment: function() {
         var self = this,

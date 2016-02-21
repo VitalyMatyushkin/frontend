@@ -27,7 +27,7 @@ const EventManager = React.createClass({
                 ages: [],
                 description: ''
             },
-            selectedRivalIndex: 0,
+            selectedRivalIndex: null,
             schoolInfo: {},
             inviteModel: {},
             step: 1,
@@ -42,11 +42,11 @@ const EventManager = React.createClass({
             error: [
                 {
                     isError: false,
-                    text:    ""
+                    text:    ''
                 },
                 {
                     isError: false,
-                    text:    ""
+                    text:    ''
                 }
             ]
 		});
@@ -116,121 +116,29 @@ const EventManager = React.createClass({
             return step - 1;
         });
 	},
-    _validateTeams: function() {
+    _changeRivalFocusToErrorForm: function() {
         const self = this,
-              binding    = self.getDefaultBinding(),
-              eventType  = binding.toJS('model.type'),
-              sportModel = binding.toJS('model.sportModel');
-
-        if(eventType === 'inter-schools') {
-            self._validatePlayers(0);
-        } else {
-            self._validatePlayers(0);
-            self._validatePlayers(1);
-
-            self._changeRivalFocus();
-        }
-    },
-    _changeRivalFocus: function() {
-        const self   = this,
-              errors = self.getDefaultBinding().toJS('error');
-
-        for (let errIndex in errors) {
-            if (errors[errIndex].isError) {
-                self.getDefaultBinding().set('selectedRivalIndex', errIndex);
-                break;
-            }
-        }
-    },
-    _validatePlayers: function(teamIndex) {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            allPlayers = binding.toJS('players'),
+            binding    = self.getDefaultBinding(),
+            eventType  = binding.toJS('model.type'),
             sportModel = binding.toJS('model.sportModel');
 
+        let incorrectRivalIndex = null;
 
-        if(allPlayers[teamIndex].length === 0 || allPlayers[teamIndex].length < sportModel.limits.minPlayers) {
-            binding.set(
-                `error.${teamIndex}`,
-                Immutable.fromJS(
-                    {
-                        isError: true,
-                        text:    `Player count should be greater than ${sportModel.limits.minPlayers}`
-                    }
-                )
-            );
-        } else if(allPlayers[teamIndex].length > sportModel.limits.maxPlayers) {
-            binding.set(
-                `error.${teamIndex}`,
-                Immutable.fromJS(
-                    {
-                        isError: true,
-                        text:    `Player count should be less than ${sportModel.limits.maxPlayers}`
-                    }
-                )
-            );
-        } else if(!self._isPositionsCorrect(teamIndex)) {
-            binding.set(
-                `error.${teamIndex}`,
-                Immutable.fromJS(
-                    {
-                        isError: true,
-                        text:    'All players should have position'
-                    }
-                )
-            );
-        } else if(!self._isSubstitutionCountCorrect(teamIndex)) {
-            binding.set(
-                `error.${teamIndex}`,
-                Immutable.fromJS(
-                    {
-                        isError: true,
-                        text:    `Substitution count should be less than ${sportModel.limits.maxSubs}`
-                    }
-                )
-            );
+        // for inter-schools event we can edit only one team - our team:)
+        if(eventType === 'inter-schools') {
+            incorrectRivalIndex = 0;
         } else {
-            binding.set(
-                `error.${teamIndex}`,
-                Immutable.fromJS(
-                    {
-                        isError: false,
-                        text:    ''
-                    }
-                )
-            );
-        }
-    },
-    _isPositionsCorrect: function(teamIndex) {
-        const self = this,
-              binding = self.getDefaultBinding(),
-              players = binding.toJS(`players.${teamIndex}`);
+            let errors = self.getDefaultBinding().toJS('error');
 
-        let isCorrect = true;
-
-        for(let i = 0; i < players.length; i++) {
-            if(players[i].position === undefined) {
-                isCorrect = false;
-                break;
+            for (let errIndex in errors) {
+                if (errors[errIndex].isError) {
+                    incorrectRivalIndex = errIndex;
+                    break;
+                }
             }
         }
 
-        return isCorrect;
-    },
-    _isSubstitutionCountCorrect: function(teamIndex) {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            players = binding.toJS(`players.${teamIndex}`);
-
-        let subCount = 0;
-
-        for(let i = 0; i < players.length; i++) {
-            if(players[i].isSub === undefined && players[i].isSub) {
-                subCount++;
-            }
-        }
-
-        return !(subCount > binding.toJS('model.sportModel.limits.maxSubs'));
+        self.getDefaultBinding().set('selectedRivalIndex', incorrectRivalIndex);
     },
 	toFinish: function () {
 		var self = this,
@@ -241,9 +149,7 @@ const EventManager = React.createClass({
             players = binding.toJS('players'),
 			rivals = binding.toJS('rivals');
 
-        self._validateTeams();
-
-        if(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError) {
+        if(self._isEventDataCorrect()) {
             window.Server.events.post(model).then(function (event) {
                 rootBinding.update('events.models', function (events) {
                     return events.push(Immutable.fromJS(event));
@@ -281,7 +187,7 @@ const EventManager = React.createClass({
                                     },
                                     {
                                         position:  player.position,
-                                        sub:     player.isSub
+                                        sub:       player.sub ? player.sub : false
                                     }
                                 ).then(function (res) {
                                     i += 1;
@@ -300,8 +206,17 @@ const EventManager = React.createClass({
                 });
                 return event;
             });
+        } else {
+            //So, let's show form with incorrect data
+            self._changeRivalFocusToErrorForm();
         }
 	},
+    _isEventDataCorrect: function() {
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        return !binding.toJS('error.0').isError && !binding.toJS('error.1').isError;
+    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),

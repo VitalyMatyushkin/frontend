@@ -8,16 +8,6 @@ var Team,
 Team = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'Team',
-    removePlayer: function (playerId) {
-        var self = this,
-            players = self.getBinding('players');
-
-        players.update(function (data) {
-            return data.filter(function (model) {
-                return model.get('id') !== playerId;
-            });
-        });
-    },
     _onSelectPosition: function(playerId, e) {
         const self = this,
               players = self.getBinding('players').toJS();
@@ -27,27 +17,61 @@ Team = React.createClass({
 
         self.getBinding('players').set(Immutable.fromJS(players));
     },
-    _renderPositionOptions: function() {
-        const self = this,
-              positions = self.getDefaultBinding().get('model.sportModel.limits.positions').toJS();
-
-        return positions.map((position, i) => {
-            return (<option key={i} value={position}>{position}</option>);
-        });
-    },
-    onCheckSub: function(playerId, e) {
+    _onCheckSub: function(playerId, e) {
         const self = this,
             players = self.getBinding('players').toJS();
 
         const index = Lazy(players).indexOf(Lazy(players).findWhere({id:playerId}));
-        players[index].isSub = e.target.checked;
+        players[index].sub = e.target.checked;
 
         self.getBinding('players').set(Immutable.fromJS(players));
     },
-    getPlayers: function () {
+    _renderPositionOptions: function(player) {
         const self = this,
-              players = self.getBinding('players'),
-              positions = self._renderPositionOptions();
+              positions = self.getDefaultBinding().get('model.sportModel.limits.positions').toJS();
+
+        let renderedPosition = [];
+
+        if(player.position === undefined) {
+            renderedPosition.push(<option key={0} disabled="disabled" selected="selected">Select position</option>);
+        }
+
+        renderedPosition.push(
+            positions.map((position, i) => {
+                if(position === player.position) {
+                    return (<option key={i + 1} value={position} selected="selected">{position}</option>);
+                } else {
+                    return (<option key={i + 1} value={position}>{position}</option>);
+                }
+            })
+        );
+
+        return renderedPosition;
+    },
+    _renderSubOptions: function(player) {
+        const self = this;
+
+        if(player.sub) {
+            return  (
+                <input
+                    onClick={self._onCheckSub.bind(self, player.id)}
+                    type="checkbox"
+                    checked="checked"
+                />
+            );
+        } else {
+            return (
+                <input
+                    onClick={self._onCheckSub.bind(self, player.id)}
+                    type="checkbox"
+                />
+            );
+
+        }
+    },
+    _getPlayers: function () {
+        const self = this,
+              players = self.getBinding('players');
 
         return players.get().map(function (player) {
 			return (
@@ -56,42 +80,35 @@ Team = React.createClass({
                     <td className="ePlayer_form">{player.get('form').get('name')}</td>
                     <td className="ePlayer_position">
                         <select onChange={self._onSelectPosition.bind(self, player.get('id'))}>
-                            <option selected="selected" disabled="disabled">Select position</option>
-                            {positions}
+                            {self._renderPositionOptions(player.toJS())}
                         </select>
                     </td>
                     <td className="ePlayer_sub">
-                        <input
-                            onClick={self.onCheckSub.bind(self, player.get('id'))}
-                            type="checkbox"
-                        />
+                        {self._renderSubOptions(player.toJS())}
                     </td>
-                    <td className="ePlayer_remove" onClick={self.removePlayer.bind(null, player.get('id'))}>
+                    <td className="ePlayer_remove" onClick={self._onRemovePlayer.bind(null, player.get('id'))}>
 					    <SVG icon="icon_trash" />
 				    </td>
 			    </tr>
             );
         }).toArray();
     },
+    _onRemovePlayer: function (playerId) {
+        var self = this,
+            players = self.getBinding('players');
+
+        players.update(function (data) {
+            return data.filter(function (model) {
+                return model.get('id') !== playerId;
+            });
+        });
+    },
     render: function() {
         const self = this,
-              rivalBinding = self.getBinding('rival').toJS(),
-              errorBinding = self.getBinding('error').toJS();
-
-        let errorBox;
-
-        if(errorBinding.isError) {
-            errorBox = (
-                <div className="eTeam_errorBox">
-                    {errorBinding.text}
-                </div>
-            )
-        } else {
-            errorBox = (<div className="eTeam_errorBox"></div>)
-        }
+            rivalId  = self.getBinding('rivalId').toJS();
 
         return (
-                <div className="bTeam" key={rivalBinding.id}>
+                <div className="bTeam" key={rivalId}>
                     <div className="eTeam_playersTableContainer">
                         <table>
                             <thead>
@@ -104,11 +121,10 @@ Team = React.createClass({
                             </tr>
                             </thead>
                             <tbody>
-                            {self.getPlayers()}
+                            {self._getPlayers()}
                             </tbody>
                         </table>
                     </div>
-                    {errorBox}
                 </div>
         );
     }

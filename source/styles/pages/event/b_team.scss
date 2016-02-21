@@ -9,14 +9,22 @@
 .bEventTeams_team {
   display: flex;
   flex-direction: column;
-  width: 48%;
+  width: 460px;
   border: $BORDER;
   background: #fff;
   box-sizing: border-box;
-  padding-left: 12%;
   text-transform: uppercase;
 }
 .bEvents_venue_preview{
   width:100% !important;
   height:100% !important;
+}
+
+.eEventTeams_managerWrapper {
+  margin-top: 10px;
+}
+
+.eEventTeams_awaiting {
+  padding-top: 10px;
+  text-align: center;
 }

@@ -34,11 +34,26 @@ const InviteAcceptView = React.createClass({
         }).then(function (res) {
             binding.atomically()
                 .set('invite', Immutable.fromJS(res))
+                //TODO wtf??
                 .set('model', Immutable.fromJS(res.event))
+                .set('model.sportModel', Immutable.fromJS(res.event.sport))
                 .set('rivals', Immutable.fromJS([res.guest, res.inviter]))
                 .set('players', Immutable.fromJS([[],[]]))
                 .set('sync', true)
                 .set('schoolInfo', Immutable.fromJS(res.guest))
+                //TODO wtf??
+                .set('selectedRivalIndex', Immutable.fromJS(0))
+                //TODO wtf??
+                .set('error', Immutable.fromJS([
+                    {
+                        isError: false,
+                        text: ""
+                    },
+                    {
+                        isError: false,
+                        text: ""
+                    }
+                ]))
                 .commit();
         });
     },
@@ -81,33 +96,38 @@ const InviteAcceptView = React.createClass({
             binding = self.getDefaultBinding(),
             managerBinding = {
                 default:            binding,
-                selectedRivalIndex: Immutable.fromJS(0),
+                selectedRivalIndex: binding.sub('selectedRivalIndex'),
                 rivals:             binding.sub('rivals'),
                 players:            binding.sub('players'),
-                error:              Immutable.fromJS([
-                                        {
-                                            isError: false,
-                                            text: ""
-                                        },
-                                        {
-                                            isError: false,
-                                            text: ""
-                                        }
-                                    ])
+                error:              binding.sub('error')
             },
             sport = binding.sub('model.sport'),
             ready = binding.get('sync') && binding.get('players.0').count() >= sport.get('limits.minPlayers'),
             buttonClasses = classNames({
                 bButton: true,
+                mButton_leftSidePosition: true,
                 mDisable: !ready
             });
 
-        return <div>
-            <If condition={!!binding.get('sync')}>
-                <Manager binding={managerBinding} />
-            </If>
-            <span className={buttonClasses} onClick={ready ? self.onClickAccept : null}>Accept</span>
-        </div>;
+        return (
+            <div className="bInviteAccept">
+                <div className="bManager mTeamManager">
+                    <If condition={!!binding.get('sync')}>
+                        <Manager binding={managerBinding} />
+                    </If>
+                </div>
+                <div className="eInviteAccept_footer">
+                    <div className="eInviteAccept_acceptButtonWrapper">
+                        <div className="eInviteAccept_footerLeftSide">
+                        </div>
+                        <div className="eInviteAccept_footerRightSide">
+                            <span className={buttonClasses}
+                                  onClick={ready ? self.onClickAccept : null}>Accept</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 });
 

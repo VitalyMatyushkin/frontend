@@ -1,8 +1,7 @@
 .eManagerGame {
   width: 500px;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
+  display: inline-block;
+  vertical-align: top;
 }
 
 .eManagerGame_team {
