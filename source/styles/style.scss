@@ -1,26 +1,26 @@
 @font-face {
-  font-family: 'Myriad Pro';
+  font-family: 'Glober';
   font-style: normal;
-  font-weight: 400;
-  src: local('Myriad Pro'), local('MyriadPro-Regular'), url('#{$IMAGE_DIR}myriad-pro/MYRIADPRO-REGULAR.OTF') format('opentype');
+  font-weight: normal;
+  src: local('Glober'), local('Glober-Regular'), url('/Fonts/Glober_Regular.otf') format('opentype');
 }
 @font-face {
-  font-family: 'Myriad Pro';
+  font-family: 'Glober';
+  font-style: italic;
+  font-weight: normal;
+  src: local('Glober'), local('Glober-italic'), url('/Fonts/Glober_Regular_Italic.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Glober';
   font-style: normal;
   font-weight: bold;
-  src: local('Myriad Pro'), local('MyriadPro-Bold'), url('#{$IMAGE_DIR}myriad-pro/MYRIADPRO-SEMIBOLD.OTF') format('opentype');
+  src: local('Glober'), local('Glober_Bold_Free'), url('/Fonts/Glober_Bold_Free.otf') format('opentype');
 }
 @font-face {
-  font-family: 'Myriad Pro';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Myriad Pro'), local('MyriadPro-Cond'), url('#{$IMAGE_DIR}myriad-pro/MYRIADPRO-COND.OTF') format('opentype');
-}
-@font-face {
-  font-family: 'PT Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: local('PT Sans'), local('PTSans-Regular'), url(#{$IMAGE_DIR}ptsanss.woff) format('woff');
+  font-family: 'Glober';
+  font-style: italic;
+  font-weight: bold;
+  src: local('Glober'), local('Glober_Bold_Italic'), url('/Fonts/Glober_Bold_Italic.otf') format('opentype');
 }
 
 body{
@@ -32,7 +32,7 @@ html, body {
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: 'Myriad Pro', sans-serif;
+  font-family: 'Glober', sans-serif;
   background: #bdbdbd;
   color: #333132;
   fill: currentColor;
@@ -95,7 +95,7 @@ input,
 select,
 textarea{
   font-size: 15px;
-  font-family: 'Myriad Pro', sans-serif;
+  font-family: 'Glober', sans-serif;
   width: auto;
   border: 1px solid #ccc;
   border-radius: 3px;
