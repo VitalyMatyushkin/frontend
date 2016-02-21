@@ -83,17 +83,15 @@ const EventTeams = React.createClass({
                     <span className="ePlayer_gender">{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}</span>
                 </If>
 							<span className="ePlayer_name"><span>{player.get('user').get('firstName')}</span> <span>{player.get('user').get('lastName')}</span></span>
-							<div>
 					{!binding.get('model.resultId') && binding.get('mode') === 'closing' ? <span className="ePlayer_minus" onClick={self.removePoint.bind(null, order, player.get('id'))}>
                             <SVG icon="icon_minus" />
                         </span> : null}
 					<If condition={binding.get('model.resultId')!== undefined || binding.get('mode') === 'closing'}>
 						<span className="ePlayer_score">{points}</span>
 					</If>
-				</div>
 				<If condition={binding.get('mode') === 'edit_squad' && isOwner}>
 					<span className="ePlayer_remove" onClick={self.removePlayer.bind(null, order, player.get('id'))}>
-						<SVG icon="icon_trash" />
+						<SVG icon="icon_cross" />
 					</span>
 				</If>
                 <If condition={binding.get('mode') === 'closing' && isOwner && !binding.get('model.resultId')}>

@@ -46,7 +46,7 @@ const SchoolSummary = React.createClass({
             <div className="summary_inside">
               <div className="editSchool">
                 <a href={'/#schools/edit?id=' + self.activeSchoolId}>
-                  <div className="edit_btn"></div>
+                  <div className="eEdit_btn"></div>
                 </a>
               </div>
               <h1 className="eSchoolMaster_title">

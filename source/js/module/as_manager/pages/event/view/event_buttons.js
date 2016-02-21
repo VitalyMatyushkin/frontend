@@ -2,7 +2,8 @@ const   If              = require('module/ui/if/if'),
 	    InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
         classNames      = require('classnames'),
         React           = require('react'),
-        Immutable       = require('immutable');
+        Immutable       = require('immutable'),
+        SVG 				    = require('module/ui/svg');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -96,7 +97,7 @@ const EventHeader = React.createClass({
         var self = this,
 			binding = self.getDefaultBinding(),
             closeClasses = classNames({
-                bButton: true,
+                mClose: true,
                 mRed: self.isEnableClose(),
                 mDisable: !self.isEnableClose()
             });
@@ -112,7 +113,7 @@ const EventHeader = React.createClass({
                     <div
                         className={closeClasses}
                         onClick={self.isEnableClose() ? self.onClickCloseMatch : null}
-                    >Close match</div>
+                    >Close match <SVG icon="icon_close_match"/></div>
                 </If>
                 <If condition={binding.get('mode') !== 'general'}>
                     <div
