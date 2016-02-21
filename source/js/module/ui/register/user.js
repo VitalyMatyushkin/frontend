@@ -25,16 +25,16 @@ const RegisterUserPage = React.createClass({
         self.steps = [
             {
                 name: 'account',
-                title: 'Account Setup'
+                title: 'Personal Details'
             },
             {
                 name: 'verification',
                 title: 'User Verification'
             },
-            {
-                name: 'personal',
-                title: 'Personal Details'
-            },
+            //{
+            //    name: 'personal',
+            //    title: 'Personal Details'
+            //},
             {
                 name: 'permissions',
                 title: 'Permissions Setup'
@@ -127,7 +127,7 @@ const RegisterUserPage = React.createClass({
                 />
         } else if (currentStep === 'verification') {
             currentView = <VerificationStep
-                onSuccess={self.setStepFunction.bind(null, 'personal')}
+                onSuccess={self.setStepFunction.bind(null, 'permissions')}
                 binding={{
                     account: binding.sub('account'),
 					formFields: binding.sub('formFields'),
