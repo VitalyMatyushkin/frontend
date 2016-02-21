@@ -88,3 +88,15 @@
 .verify_error{
   display: inline-block !important;;
 }
+.mClose {
+  font-weight: bold;
+  margin-right: 30px;
+  cursor: pointer;
+}
+.mClose .bIcon {
+  color: #ccc;
+  margin-left: 10px;
+}
+.mClose:hover .bIcon{
+  color: $COLOR;
+}

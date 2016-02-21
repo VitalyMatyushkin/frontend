@@ -5,20 +5,10 @@
   margin: 5px 0;
   height: 30px;
   align-items: center;
-  &:hover {
-    background: #eee;
-    .ePlayer_remove {
-      display: flex;
-    }
-  }
 }
-
-.bPlayer {
-
-}
-
-.bPlayer_error {
-
+.ePlayer_remove .bIcon {
+  width: 14px;
+  height: 14px;
 }
 
 .ePlayer_avatar {
@@ -39,7 +29,7 @@
   font-size: 16px;
   align-self: center;
 }
-.bPlayer.mMini:hover .ePlayer_score{
+._bPlayer._mMini:hover .ePlayer_score{
   color: $COLOR;
 }
 
@@ -55,7 +45,8 @@
 
 .ePlayer_name {
   vertical-align: middle;
-  text-align: center;
+  text-align: left;
+  min-width: 150px;
 }
 
 .ePlayer_form {
@@ -89,10 +80,8 @@
   line-height: 25px;
 }
 
-._bPlayer.mMini .ePlayer_name,
-._bPlayer.mMini .ePlayer_lastName {
-  font-size: 15px;
-  width: 150px;
+._bPlayer.mMini .ePlayer_name{
+  min-width: 150px;
 }
 
 ._bPlayer.mShowRemoveButton .ePlayer_remove {
@@ -104,12 +93,23 @@
   margin: 0 5px;
   cursor: pointer;
   text-align: center;
+  border: solid 1px #fff;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  &:hover{
+    border: solid 1px #c2c2c2;
+  }
 }
-
+._bPlayer:hover .ePlayer_minus .bIcon,
+._bPlayer:hover .ePlayer_plus .bIcon{
+  color: #000;
+}
 .ePlayer_minus .bIcon,
 .ePlayer_plus .bIcon {
   width: 8px;
   height: 8px;
+  color: #fff;
 }
 
 .ePlayer_gender .bIcon {

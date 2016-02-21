@@ -67,7 +67,7 @@ Team = React.createClass({
                         />
                     </td>
                     <td className="ePlayer_remove" onClick={self.removePlayer.bind(null, player.get('id'))}>
-					    <SVG icon="icon_trash" />
+					    <SVG icon="icon_cross" />
 				    </td>
 			    </tr>
             );
