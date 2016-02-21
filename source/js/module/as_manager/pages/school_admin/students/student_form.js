@@ -45,8 +45,8 @@ const StudentForm = React.createClass({
 		return ( <div className="editStudentForm">
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormColumn type="column">
-					<FormField type="text" field="firstName" validation="required">First name</FormField>
-					<FormField type="text" field="lastName" validation="required">Last name</FormField>
+					<FormField type="text" field="firstName" promptOnBlank="true" validation="required">First name</FormField>
+					<FormField type="text" field="lastName" promptOnBlank="true" validation="required">Last name</FormField>
 					<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
 					<FormField type="date" field="birthday" validation="date">Birthday</FormField>
 					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" validation="required">Form</FormField>
