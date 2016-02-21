@@ -2,8 +2,8 @@
  * Created by wert on 08.12.15.
  */
 
-var $ = require('jquery');
-var Promise = require('bluebird');
+const   $       = require('jquery');
+        Promise = require('bluebird');
 
 /**
  * Does $.ajax({...}) and return result as Promise
@@ -24,11 +24,12 @@ var Promise = require('bluebird');
 function ajax(configDetails, dataOnly) {
     return new Promise(function (resolve, reject, onCancel) {
         configDetails.error = function(jqXHR, textStatus, errorThrown){
-          reject({
-              xhr: jqXHR,
-              textStatus: textStatus,
-              errorThrown: errorThrown
-          });
+            console.log('rejecting!');
+            reject({
+                xhr:          jqXHR,
+                textStatus:   textStatus,
+                errorThrown:  errorThrown
+            });
         };
         configDetails.success = function(data, textStatus, jqXHR){
             if(dataOnly){       // todo: fix me. dataOnly required for back compatability

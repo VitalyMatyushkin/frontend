@@ -1,13 +1,12 @@
-var HeadView = require('module/as_school/head'),
-	CenterView = require('module/as_school/center'),
-	React = require('react'),
-	ApplicationView;
+const 	HeadView 	= require('module/as_school/head'),
+		CenterView 	= require('module/as_school/center'),
+		React 		= require('react');
 
-ApplicationView = React.createClass({
+const ApplicationView = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<div>
