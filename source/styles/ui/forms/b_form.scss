@@ -68,10 +68,10 @@
 $INVALID_COLOR: rgb(182, 0, 0);
 
 .eForm_fieldValidText{
+  font-weight: bold;
+  padding: 0 5px;
   display: none;
-  font-size: 12px;
   color: $INVALID_COLOR;
-  margin-top: 7px;
 }
 .eForm_errorMsgRight{
   display: none;
@@ -83,7 +83,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
   display: block;
 }
 .eForm_fieldSet.mInvalid .eForm_fieldValidText{
-  display: block;
+  display: inline;
 }
 .eForm_fieldSet.mValid .eForm_fieldValidText{
   display: block;
