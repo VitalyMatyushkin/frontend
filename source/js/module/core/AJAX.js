@@ -24,21 +24,20 @@ const   $       = require('jquery');
 function ajax(configDetails, dataOnly) {
     return new Promise(function (resolve, reject, onCancel) {
         configDetails.error = function(jqXHR, textStatus, errorThrown){
-            console.log('rejecting!');
-            reject({
-                xhr:          jqXHR,
-                textStatus:   textStatus,
-                errorThrown:  errorThrown
-            });
+            const errorToReturn         = new Error('Http non-2xx status. Considered an error in current AJAX implementation');
+            errorToReturn.xhr           = jqXHR;
+            errorToReturn.textStatus    = textStatus;
+            errorToReturn.errorThrown   = errorThrown;
+            reject(errorToReturn);
         };
         configDetails.success = function(data, textStatus, jqXHR){
             if(dataOnly){       // todo: fix me. dataOnly required for back compatability
                 resolve(data);
             } else {
                 resolve({
-                    data: data,
+                    data:       data,
                     textStatus: textStatus,
-                    xhr: jqXHR
+                    xhr:        jqXHR
                 });
             }
 

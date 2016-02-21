@@ -8,15 +8,17 @@ const   CalendarView    = require('module/ui/calendar/calendar'),
         Superuser       = require('module/helpers/superuser');
 
 const HomeCalender = React.createClass({
-    mixins:[Morearty.Mixin,DateTimeMixin],
-    componentWillMount:function(){
-        var self = this,
-            rootBinding = self.getMoreartyContext().getBinding();
 
-        Superuser.runAsSuperUser(rootBinding, function(logout) {
-            window.Server.eventsBySchoolId.get({schoolId:rootBinding.get('activeSchoolId')}).then(function(events){
+    mixins:[Morearty.Mixin,DateTimeMixin],
+
+    componentWillMount:function(){
+        const   self            = this,
+                rootBinding     = self.getMoreartyContext().getBinding(),
+                activeSchoolId  = rootBinding.get('activeSchoolId');
+
+        Superuser.runAsSuperUser(rootBinding, () => {
+            return window.Server.eventsBySchoolId.get({schoolId:activeSchoolId}).then((events) => {
                 rootBinding.set('events',Immutable.fromJS(events));
-                logout();
             });
         });
     },
@@ -57,14 +59,14 @@ const HomeCalender = React.createClass({
         }
     },
     getCalenderFixtureLists:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            fixtureList = binding.get('fixtures');
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                fixtureList = binding.get('fixtures');
         if(fixtureList !== undefined){
-            var fixtures = fixtureList.toJS();
+            const fixtures = fixtureList.toJS();
             return fixtures.map(function(fixture){
-                var team1 = self.getTeams(fixture.participants[0]),
-                    team2 = self.getTeams(fixture.participants[1]);
+                const   team1 = self.getTeams(fixture.participants[0]),
+                        team2 = self.getTeams(fixture.participants[1]);
                 return (
                     <div key={fixture.id} className="eSchoolFixtureListItem">
                         <span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
@@ -77,9 +79,9 @@ const HomeCalender = React.createClass({
         }
     },
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            upcomingLists = self.getCalenderFixtureLists();
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                upcomingLists   = self.getCalenderFixtureLists();
         return (
             <div className="eSchoolCalenderContainer">
                 <div className="eSchoolFixtureTab eCalendar_tab">

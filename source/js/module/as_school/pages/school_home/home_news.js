@@ -9,18 +9,18 @@ const   React           = require('react'),
 const HomeNews = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin],
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('activeSchoolId');
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                rootBinding     = self.getMoreartyContext().getBinding(),
+                activeSchoolId  = rootBinding.get('activeSchoolId');
 
-        Superuser.runAsSuperUser(rootBinding, function(logout) {
-            window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:3}}).then(function(schoolNews){
+        Superuser.runAsSuperUser(rootBinding, () => {
+            window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:3}}).then((schoolNews) => {
                 binding.set('schoolNews',Immutable.fromJS(schoolNews));
-                logout();
             });
         });
     },
+
     //Temporarily remove img from news body
     getNewsDate:function(news){
         var self = this;

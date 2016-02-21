@@ -56,13 +56,6 @@ requirejs(
         window.Helpers = storage;
         //window.Router = Director; // Director does this itself. 
 
-
-        // Legacy. I don't know why we need it right here, but it was in place like that.
-        $.ajaxSetup({
-            dataType: 'json',
-            crossDomain: true
-        });
-
         const myDomain = document.location.hostname;
         const api = loaderUtils.apiSelector(myDomain);
         const startModule = loaderUtils.startModuleSelector(myDomain);

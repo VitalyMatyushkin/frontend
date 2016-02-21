@@ -31,9 +31,12 @@ const HomeHeader = React.createClass({
         }}).then(function(schools){
             const   school          = schools[0], // TODO: remove that SHIT
                     defaultAlbumId  = school.defaultAlbumId;
+
+            binding.set('school',Immutable.fromJS(school));
+
             if(defaultAlbumId) {
-                Superuser.runAsSuperUser(rootBinding, function(logout){
-                    window.Server.photos.get(defaultAlbumId, {})
+                return Superuser.runAsSuperUser(rootBinding, () => {
+                    return window.Server.photos.get(defaultAlbumId, {})
                         .then( photos => {
                             const photosToShow = Lazy(photos).map(photo => `${photo.pic}/contain?height=600`).toArray();
                             if(photosToShow.length != 0) {
@@ -41,13 +44,12 @@ const HomeHeader = React.createClass({
                             } else {
                                 binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
                             }
-                        })
-                        .finally(logout);
+                        });
                 })
             } else {
                 binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));    // will show default images if there is no default album found
             }
-            binding.set('school',Immutable.fromJS(school));
+
         });
     },
 
