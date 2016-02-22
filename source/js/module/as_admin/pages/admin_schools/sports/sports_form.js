@@ -1,5 +1,6 @@
 const   Form        = require('module/ui/form/form'),
         FormField   = require('module/ui/form/form_field'),
+        FormColumn = require('module/ui/form/form_column'),
         Immutable 	= require('immutable'),
         React       = require('react');
 
@@ -84,23 +85,30 @@ let SportsForm = React.createClass({
         return (
             <div>
                 <Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} >
-                    <FormField type="text"
-                               field="name"
-                               validation="required">Sport name</FormField>
-                    <FormField type="text"
-                               field="description">Description</FormField>
-                    <FormField type="text"
-                               field="minPlayers">Minimum players</FormField>
-                    <FormField type="text"
-                               field="maxPlayers">Maximum players</FormField>
-                    <FormField type="text"
-                               field="maxSubs">Maximum substitutions</FormField>
-                    <FormField field="genders"
-                               userProvidedOptions={self.getGenderArray()}
-                               userActiveState={self.getGenders()}
-                               type="dropdown">Genders</FormField>
-                    <div className="eForm_fieldName">Positions</div>
-                    {self.getPositionFields()}
+                    <FormColumn type="column">
+                        <FormField type="text"
+                                   field="name"
+                                   validation="required">Sport name</FormField>
+                        <FormField type="text"
+                                   field="description">Description</FormField>
+                        <FormField type="text"
+                                   field="minPlayers">Minimum players</FormField>
+                        <FormField type="text"
+                                   field="maxPlayers">Maximum players</FormField>
+                        <FormField type="text"
+                                   field="maxSubs">Maximum substitutions</FormField>
+                        <FormField field="genders"
+                                   userProvidedOptions={self.getGenderArray()}
+                                   userActiveState={self.getGenders()}
+                                   type="dropdown">Genders</FormField>
+                    </FormColumn>
+                    <FormColumn type="column">
+                        <div className="eForm_fieldName">Positions</div>
+                        {self.getPositionFields()}
+                    </FormColumn>
+                    <FormColumn type="column">
+                        <FormField labelText="Upload Game Field Picture" type="file" typeOfFile="image" field="fieldPic"/>
+                    </FormColumn>
                 </Form>
             </div>
         )
