@@ -6,6 +6,7 @@ const   Table           = require('module/ui/list/table'),
         DateTimeMixin   = require('module/mixins/datetime'),
         React           = require('react'),
         Lazy            = require('lazyjs'),
+        ImageHelper     = require('module/helpers/imageHelper'),
         ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin');
 
 const AdminRequest = React.createClass({
@@ -25,7 +26,7 @@ const AdminRequest = React.createClass({
     },
     getSchoolEmblem:function(school){
         if(school !== undefined){
-            return <span className="eChallenge_rivalPic"><img src={school.pic}/></span>;
+            return <span className="eChallenge_rivalPic"><img src={ImageHelper.formatSizedImageScr(school.pic, 60, 60)}/></span>;
         }
     },
     getPrincipalEmail:function(principal){
