@@ -16,7 +16,7 @@ UserForm = React.createClass({
 		const 	self = this,
 			gendersArray = [
 				{
-					value: 'Male',
+					value: 'male',
 					id: 'male'
 				},
 				{
@@ -32,11 +32,11 @@ UserForm = React.createClass({
 			binding = self.getDefaultBinding();
 		return (
 			<Form name="Create New User" updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}>
-				<FormField type="text" field="username" validation="alphanumeric server" errorClassName="eForm_errorMsgRight">Username</FormField>
+				<FormField type="text" field="username" validation="alphanumeric server" >Username</FormField>
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
 				<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
-				<FormField type="confirmText" field="email" validation="required email server" errorClassName="eForm_errorMsgRight">Email</FormField>
+				<FormField type="confirmText" field="email" validation="required email server" >Email</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required">Password</FormField>
 			</Form>
 		)

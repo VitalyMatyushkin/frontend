@@ -1,4 +1,5 @@
 const 	React 		= require('react'),
+        classNames  = require('classnames'),
 		typeList 	= require('module/ui/form/types/type_list');
 
 const FormField = React.createClass({
@@ -12,7 +13,10 @@ const FormField = React.createClass({
 	},
 	render: function () {
 		const 	self 	= this,
-				binding = self.getDefaultBinding();
+				binding = self.getDefaultBinding(),
+                success = '&#x2713;',
+                error   = '&#x26a0;',
+                html    = {__html: binding.get('showError') ? error : success};
 
 		/* collectin all own props and adding some more additional component-specific */
 		const inputProps = Object.assign({}, self.props, {
@@ -24,20 +28,18 @@ const FormField = React.createClass({
 		/* creating new input with built props */
 		const inputField = React.createElement(typeList[self.props.type], inputProps);
 
-		let fieldStyleClass = 'eForm_fieldSet';
-		if (binding.get('showError')) {
-			fieldStyleClass += ' mInvalid';
-		} else if(binding.get('showSuccess')){
-			fieldStyleClass += ' mValid';
-        }
+		let fieldStyleClass = classNames('eForm_fieldSet', {
+                                    mInvalid: binding.get('showError'),
+                                    mValid: binding.get('showSuccess')
+                                });
 		//If a specific class has been provided for styling error messages then use it
-		let errorClassName = self.props.errorClassName !== undefined ? self.props.errorClassName:"eForm_fieldValidText";
+		let errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);
 		return (
 			<div className="eForm_field">
 				<div className="eForm_fieldName">{self.props.children}</div>
 				<div className={fieldStyleClass}>
 					{inputField}
-					<span className={errorClassName} title={binding.get('error') || binding.get('success')} >!</span>
+					<div className={errorClassName} title={binding.get('error')} dangerouslySetInnerHTML={html} />
 				</div>
 			</div>
 
