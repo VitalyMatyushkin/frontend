@@ -25,9 +25,11 @@ const GeneralSettingsPage = React.createClass({
 		var self = this;
 
 		data.id = self.userId;
+        if(!data.password)
+            delete data.password;
 
 		self.userId && window.Server.user.put(self.userId, data).then(function() {
-
+            window.history.back();
 		});
 	},
 	render: function() {
@@ -41,7 +43,7 @@ const GeneralSettingsPage = React.createClass({
                 <FormField type="text" field="email" validation="required email">Email</FormField>
                 <span className="bSettingPhoneVerify">{binding.toJS('verified.phone') !== undefined && binding.toJS('verified.phone') === true ? <span className="bPopup_verified">v</span> : <span>verify phone</span>}</span>
                 <FormField type="text" field="phone" validation="phone">Phone number</FormField>
-                <FormField type="text" field="password" validation="required alphanumeric">Password</FormField>
+                <FormField type="password" field="password" validation="alphanumeric">Password</FormField>
 			</Form>
 		)
 	}
