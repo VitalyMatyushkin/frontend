@@ -1,5 +1,6 @@
 const  	TypeText 			= require('module/ui/form/types/text'),
-		TypeHidden 			= require('module/ui/form/types/hidden'),
+        TypeHidden 			= require('module/ui/form/types/hidden'),
+        TypePassword 		= require('module/ui/form/types/password'),
 		TypeArea 			= require('module/ui/form/types/area'),
 		TypeAutocomplete 	= require('module/ui/form/types/autocomplete'),
 		TypeConfirmText 	= require('module/ui/form/types/confirm_text'),
@@ -16,6 +17,7 @@ const  	TypeText 			= require('module/ui/form/types/text'),
 
 // Input element type list
 typeList['text'] = TypeText;
+typeList['password'] = TypePassword;
 typeList['confirmText'] = TypeConfirmText;
 typeList['area'] = TypeArea;
 typeList['autocomplete'] = TypeAutocomplete;

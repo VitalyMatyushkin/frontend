@@ -279,7 +279,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .eManager_select_wrap select {
   border: none;
   width: 215px;
-  color: #939598;
+  color: #000000;
   text-transform: uppercase;
   background: #fff;
   padding: 5px;
@@ -300,9 +300,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
   background: #fff;
   width: 200px;
 }
-.eManager_select_wrap:hover select{
-  color: #333132;
-}
+
 .selectArrow{
   position: absolute;
   top: 10px;

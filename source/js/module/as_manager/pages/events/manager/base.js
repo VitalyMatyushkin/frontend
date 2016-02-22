@@ -320,7 +320,9 @@ const EventManagerBase = React.createClass({
                             onChange={self.changeCompleteSport}>
                             <Morearty.DOM.option
                                 key="nullable-type"
-                                value={null}>not selected</Morearty.DOM.option>
+                                value={null}
+                                selected="selected"
+                                disabled="disabled">not selected</Morearty.DOM.option>
                             {self.getSports()}
                         </select>
                         <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
@@ -360,11 +362,16 @@ const EventManagerBase = React.createClass({
                                 defaultValue={null}
                                 value={type}
                                 onChange={self.changeCompleteType}>
-                            <Morearty.DOM.option key="nullable-type" value={null}>not selectable</Morearty.DOM.option>
+                            <Morearty.DOM.option key="nullable-type"
+                                                 value={null}
+                                                 selected="selected"
+                                                 disabled="disabled">not selected</Morearty.DOM.option>
                             <Morearty.DOM.option key="inter-schools-type"
                                                  value="inter-schools">inter-schools</Morearty.DOM.option>
-                            <Morearty.DOM.option key="houses-type" value="houses">houses</Morearty.DOM.option>
-                            <Morearty.DOM.option key="anyway-type" value="internal">internal</Morearty.DOM.option>
+                            <Morearty.DOM.option key="houses-type"
+                                                 value="houses">houses</Morearty.DOM.option>
+                            <Morearty.DOM.option key="anyway-type"
+                                                 value="internal">internal</Morearty.DOM.option>
                         </select>
                         <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
                     </div>
