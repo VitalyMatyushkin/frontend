@@ -13,6 +13,7 @@
 const   React       = require('react'),
         ReactDOM    = require('reactDom'),
         Immutable 	= require('immutable'),
+        classNames  = require('classnames'),
         $           = require('jquery');
 
 const Form = React.createClass({
@@ -229,7 +230,7 @@ const Form = React.createClass({
 
 
         return (
-            <div className={self.props.formStyleClass ? self.props.formStyleClass : 'bForm'} onKeyDown={self._keyPress}>
+            <div className={classNames('bForm', self.props.formStyleClass)} onKeyDown={self._keyPress}>
                 <div className="eForm_atCenter">
 
                     {Title}
