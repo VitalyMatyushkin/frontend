@@ -212,10 +212,20 @@ const EventManager = React.createClass({
         }
 	},
     _isEventDataCorrect: function() {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const self = this,
+            binding    = self.getDefaultBinding(),
+            eventType  = binding.toJS('model.type');
 
-        return !binding.toJS('error.0').isError && !binding.toJS('error.1').isError;
+        let isError = false;
+
+        // for inter-schools event we can edit only one team - our team:)
+        if(eventType === 'inter-schools') {
+            isError = binding.toJS('error.0').isError;
+        } else {
+            isError = binding.toJS('error.0').isError || binding.toJS('error.1').isError;
+        }
+
+        return !isError;
     },
 	render: function() {
 		var self = this,
