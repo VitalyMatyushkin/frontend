@@ -107,14 +107,14 @@ const FileTypeUpload = React.createClass({
         return (
             <div className="eForm_blazonUpload">
                 <div className="eForm_blazonPreview">
-                    <img src={binding.get('defaultValue')||'http://placehold.it/200x200'}/>
+                    <img src={binding.get('defaultValue')||'/images/empty_pic_uploader_box.png'}/>
                     <div className={gifClasses}>
                         <img src="images/spin-loader-black.gif"/>
                     </div>
                 </div>
                 <div className="eForm_fileInput">
                     <input className="inputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
-                    <label className="labelForInputFile" htmlFor="file">{self.props.labelText || 'Default'}</label>
+                    <label className="bButton mCenteredText" htmlFor="file">{self.props.labelText || 'Default'}</label>
                 </div>
             </div>
         );
