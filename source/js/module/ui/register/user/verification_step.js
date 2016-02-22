@@ -1,7 +1,7 @@
 const   Form = require('module/ui/form/form'),
         FormField = require('module/ui/form/form_field'),
         FormColumn = require('module/ui/form/form_column'),
-        PermissionsList = require('module/as_manager/pages/school_admin/permissions/permissions_list'),
+        //PermissionsList = require('module/as_manager/pages/school_admin/permissions/permissions_list'),
         SVG = require('module/ui/svg'),
         If = require('module/ui/if/if'),
         Autocomplete = require('module/ui/autocomplete/autocomplete'),
