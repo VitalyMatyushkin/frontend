@@ -10,32 +10,28 @@ const   Popup       = require('module/ui/popup'),
 
 const AccountRequests = React.createClass({
     mixins:[Morearty.Mixin],
-    getInitialState:function(){
-        return{
-            isFilter:false
-        };
+    getDefaultState:function(){
+        return Immutable.fromJS({
+            openFilter:false,
+            popup:false
+        });
     },
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-
-        binding.atomically()
-            .set('openFilter', false)
-            .set('popup',false)
-            .set('selectedUser',{
-                userId:globalBinding.get('userData.authorizationInfo.userId'),
-                userName:'You'
-            }).commit();
-        self.loadUserPermissions();
-    },
-    loadUserPermissions:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding();
         window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
             .then(function(userPermissions){
-                binding.set('userAccountRoles',Immutable.fromJS(userPermissions));
+                binding
+                    .atomically()
+                    .set('userAccountRoles',Immutable.fromJS(userPermissions))
+                    .set('openFilter', false)
+                    .set('popup',false)
+                    .set('selectedUser',{
+                        userId:globalBinding.get('userData.authorizationInfo.userId'),
+                        userName:'You'
+                    }).commit();
+                return userPermissions;
             });
     },
     handleFilterButtonClick:function(){
@@ -55,9 +51,19 @@ const AccountRequests = React.createClass({
     },
     _onSuccess:function(){
         var self = this,
-            binding = self.getDefaultBinding();
-        binding.set('popup',false);
-        self.loadUserPermissions();
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding();
+        return window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
+            .then(function(permission){
+                binding
+                    .atomically()
+                    .set('popup',false)
+                    .set('userAccountRoles',Immutable.fromJS(permission))
+                    .commit();
+                return permission;
+            }).catch(function(error){
+            alert(error.errorThrown+' occurred while getting updated permissions');
+        });
     },
     render:function(){
         var self = this,
@@ -70,8 +76,7 @@ const AccountRequests = React.createClass({
                 <div className="eSchoolMaster_wrap">
                     <h1 className="eSchoolMaster_title">My Requests</h1>
                     <div className="eStrip"></div>
-                    <span onClick={self.handleAddNewButtonClick.bind(null,this)}
-                          className="addButton addNewForm"></span>
+                    <span onClick={self.handleAddNewButtonClick.bind(null,this)} className="addButton addNewForm"/>
                     <span onClick={self.handleFilterButtonClick.bind(null,this)}
                           className="AddButton"><img src="images/search.png"/>{binding.get('openFilter') ? '⇡' : '⇣'}</span>
                 </div>
