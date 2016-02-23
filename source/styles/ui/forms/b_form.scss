@@ -90,6 +90,9 @@ $INVALID_COLOR: rgb(182, 0, 0);
 }
 .eForm_fieldSet.mInvalid{
   color: $INVALID_COLOR;
+  .mNotRequired{
+    color: $BodyColor;
+  }
 }
 
 .eForm_fieldSet.mInvalid input{
