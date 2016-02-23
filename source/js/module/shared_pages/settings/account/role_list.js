@@ -55,7 +55,6 @@ RoleList = React.createClass({
         }
     },
     _withdrawRequest:function(permission){
-        console.log(permission);
         var self = this,
             binding = self.getDefaultBinding();
         binding
