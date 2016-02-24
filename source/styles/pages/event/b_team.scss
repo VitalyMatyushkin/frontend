@@ -9,11 +9,11 @@
 .bEventTeams_team {
   display: flex;
   flex-direction: column;
-  width: 460px;
+  width: 440px;
   border: $BORDER;
   background: #fff;
   box-sizing: border-box;
-  text-transform: uppercase;
+  padding: 20px;
 }
 .bEvents_venue_preview{
   width:100% !important;
