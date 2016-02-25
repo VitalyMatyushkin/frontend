@@ -84,6 +84,9 @@ const ListPageMixin = {
     _addNewSport:function(){
         document.location.hash = document.location.hash +'/add';
     },
+    _addNewTeam:function(){
+        document.location.hash = document.location.hash +'/add';
+    },
     _getAddNewSchoolFunction:function(){
         document.location.hash = 'admin_schools/admin_views/add';
     },
@@ -190,7 +193,7 @@ const ListPageMixin = {
                             <div className="addButton" onClick={self._getAddNewStudentFunction}><SVG icon="icon_add_student" /></div>
                         </If>
                         <If condition={(currentPage[currentPage.length-1] ==='list' && currentPage[currentPage.length-2] === 'admin_views')}>
-                            <div className="bButton" onClick={self._getAddNewSchoolFunction}>Add New School</div>
+                            <div className="addButton" onClick={self._getAddNewSchoolFunction}><SVG icon="icon_add_school" /></div>
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='forms'}>
                             <div className="addButton addNewForm" onClick={self._addNewClassFunction}></div>
@@ -203,6 +206,9 @@ const ListPageMixin = {
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='sports'}>
                             <div className="bButton" onClick={self._addNewSport}>Add New Sport</div>
+                        </If>
+                        <If condition={currentPage[currentPage.length-1] ==='teams'}>
+                            <div className="bButton" onClick={self._addNewTeam}>Add New Team</div>
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='news'}>
                             <div className="addButtonShort" onClick={self._createNewsItem}><SVG icon="icon_add_news" /></div>

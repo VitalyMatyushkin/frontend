@@ -7,9 +7,24 @@ const AutocompleteTeam = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'AutocompleteTeam',
     componentWillMount: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
+        const self       = this,
+            binding      = self.getDefaultBinding(),
+            type         = binding.get('model.type'),
             rivalBinding = self.getBinding('rival');
+
+        self.getBinding('selectedRivalIndex').addListener(() => {
+            if (type === 'houses') {
+                self.fetchFullData();
+            }
+        });
+
+        binding.sub('model.gender').addListener(() => {
+            self.fetchFullData();
+        });
+
+        binding.sub('model.ages').addListener(() => {
+            self.fetchFullData();
+        });
 
         rivalBinding
             .meta()
@@ -66,7 +81,7 @@ const AutocompleteTeam = React.createClass({
             };
 
         if (type === 'houses') {
-            filter.where.houseId = binding.get('id');
+            filter.where.houseId = self.getBinding('rival').get('id');
         }
 
         window.Server.getAllStudents.get({
@@ -91,61 +106,61 @@ const AutocompleteTeam = React.createClass({
      * @param learnerName
      * @returns {*}
      */
-    serviceLearnersFilter: function (learnerName) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            type = binding.get('model.type'),
-            ages = binding.get('model.ages'),
-            schoolId = binding.get('schoolInfo.id'),
-            forms = binding.get('schoolInfo.forms').filter(function (form) {
-                return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
-            }),
-            filter = {
-                where: {
-                    schoolId: schoolId,
-                    id: {
-                        nin: self.getIncludePlayersIds().toJS()
-                    },
-                    formId: {
-                        inq: forms.map(function (form) {
-                            return form.get('id');
-                        }).toJS()
-                    },
-					gender: binding.get('model.gender') || 'male',
-                    or: [
-                        {
-                            firstName: {
-                                like: learnerName,
-                                options: 'i'
-                            }
-                        },
-                        {
-                            lastName: {
-                                like: learnerName,
-                                options: 'i'
-                            }
-                        }
-                    ]
-                }
-            };
-
-
-        if (type === 'houses') {
-            filter.where.houseId = binding.get('id');
-        }
-
-        return window.Server.students.get(schoolId, {
-            filter: filter
-        }).then(function (data) {
-            data.map(function (player) {
-                player.name = player.firstName + ' ' + player.lastName;
-
-                return player.name;
-            });
-
-            return data;
-        });
-    },
+    //serviceLearnersFilter: function (learnerName) {
+    //    var self = this,
+    //        binding = self.getDefaultBinding(),
+    //        type = binding.get('model.type'),
+    //        ages = binding.get('model.ages'),
+    //        schoolId = binding.get('schoolInfo.id'),
+    //        forms = binding.get('schoolInfo.forms').filter(function (form) {
+    //            return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
+    //        }),
+    //        filter = {
+    //            where: {
+    //                schoolId: schoolId,
+    //                id: {
+    //                    nin: self.getIncludePlayersIds().toJS()
+    //                },
+    //                formId: {
+    //                    inq: forms.map(function (form) {
+    //                        return form.get('id');
+    //                    }).toJS()
+    //                },
+		//			gender: binding.get('model.gender') || 'male',
+    //                or: [
+    //                    {
+    //                        firstName: {
+    //                            like: learnerName,
+    //                            options: 'i'
+    //                        }
+    //                    },
+    //                    {
+    //                        lastName: {
+    //                            like: learnerName,
+    //                            options: 'i'
+    //                        }
+    //                    }
+    //                ]
+    //            }
+    //        };
+    //
+    //
+    //    if (type === 'houses') {
+    //        filter.where.houseId = binding.get('id');
+    //    }
+    //
+    //    return window.Server.students.get(schoolId, {
+    //        filter: filter
+    //    }).then(function (data) {
+    //        data.map(function (player) {
+    //            player.name = player.firstName + ' ' + player.lastName;
+    //
+    //            return player.name;
+    //        });
+    //
+    //        return data;
+    //    });
+    //},
     onSelectStudent: function (selectId, model) {
         var self = this,
             playersBinding = self.getBinding('players');

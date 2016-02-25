@@ -112,7 +112,7 @@ Team = React.createClass({
                     <div className="eTeam_playersTableContainer">
                         <table>
                             <thead>
-                            <tr className="bPlayer">
+                            <tr className="bPlayer mHead">
                                 <td className="ePlayer_name">Name</td>
                                 <td className="ePlayer_form">Form</td>
                                 <td className="ePlayer_position">Position</td>
