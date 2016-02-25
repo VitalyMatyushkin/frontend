@@ -4,18 +4,15 @@
   font-size: 15px;
   line-height: 15px;
   cursor: pointer;
-  margin-right: 10px;
 }
 
 .eCombobox_inputContainer input {
-  display: none;
-  text-transform: uppercase;
 }
 
 .eCombobox_inputContainer .eCombobox_input {
   display: flex;
   height: 37px;
-  min-width: 180px;
+  min-width: 200px;
   cursor: pointer;
   background: #fff;
 }
@@ -110,6 +107,7 @@
 
 .eChooseHouses {
   display: flex;
+  align-items: center;
 }
 
 .dropbox_icon {

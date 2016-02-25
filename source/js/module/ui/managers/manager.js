@@ -1,10 +1,10 @@
-const   FootballManager      = require('./football/football'),
-        AutocompleteTeam     = require('./autocompleteTeam'),
-        React                = require('react'),
+const   React                = require('react'),
         classNames           = require('classnames'),
         Team                 = require('./team'),
         TeamPlayersValidator = require('./helpers/team_players_validator'),
-        Immutable 	         = require('immutable');
+        GameField            = require('./gameField'),
+        AutocompleteTeam     = require('./autocompleteTeam'),
+        Immutable            = require('immutable');
 
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -124,6 +124,9 @@ const Manager = React.createClass({
                 rivalId:  binding.rivals.sub(selectedRivalIndex).sub('id'),
                 players:  binding.players.sub(selectedRivalIndex)
              },
+            gameFieldBinding = {
+                default: defaultBinding.sub('model.sportModel.fieldPic')
+            },
             errorText = binding.error.toJS(selectedRivalIndex).text;
 
             return <div className="eManager_container">
@@ -132,11 +135,11 @@ const Manager = React.createClass({
                         <span className="eChooser_title">Choose a team:</span>
                         {self.getRivals()}
                     </div>
-                    <AutocompleteTeam binding={autocompleteTeamBinding} />
+                    <AutocompleteTeam binding={autocompleteTeamBinding}/>
                 </div>
                 <div className="eManager_containerTeam">
-                    <FootballManager binding={teamBinding} />
-                    <Team binding={teamBinding} />
+                    <GameField binding={gameFieldBinding}/>
+                    <Team binding={teamBinding}/>
                     <div className="eTeam_errorBox">
                         {errorText}
                     </div>

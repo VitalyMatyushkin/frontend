@@ -8,7 +8,6 @@ $green-color: #00AE68;
   flex-flow: column wrap;
   width: 1060px;
   margin: auto;
-  text-transform: uppercase;
   font-size: 11px;
 }
 
@@ -20,6 +19,7 @@ $green-color: #00AE68;
   color: #939598;
   font-size: 16px;
   font-weight: bold;
+  text-transform: uppercase;
 }
 .eEvents_button {
   margin-right: 10px;
@@ -34,7 +34,7 @@ $green-color: #00AE68;
   background: url("/images/arrow_back1.png") no-repeat left;
   float: left;
   height: 16px;
-  line-height: 18px;
+  line-height: 21px;
   width: 50px;
   text-align: right;
 }
@@ -45,9 +45,12 @@ $green-color: #00AE68;
   background: url("/images/arrow_next1.png") no-repeat right;
   float: right;
   height: 16px;
-  line-height: 18px;
+  line-height: 21px;
   width: 50px;
 }
 .eEvents_next:hover{
   background: url("/images/arrow_next.png") no-repeat right;
+}
+.mFinish {
+  line-height: 21px;
 }

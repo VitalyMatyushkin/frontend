@@ -21,6 +21,7 @@ serviceList = {
 		serviceList.confirmUserPhone = new Service('/users/confirmPhone?uid={uid}&token={token}',binding);
 		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
 		serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
+		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 

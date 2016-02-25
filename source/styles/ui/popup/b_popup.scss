@@ -114,6 +114,48 @@
   margin-left: -186px;
   margin-top: -250px;
 }
+/*Confirm Dialog styling*/
+.bDialog{
+  width: 416px;
+  min-height: 100px;
+  margin-left: -200px;
+  margin-top: -170px;
+  border-radius: 12px;
+}
+.bDialog_header{
+  position: relative;
+  width: 100%;
+  height: 40px;
+  float: left;
+  border-bottom: 1px solid #c2c2c2;
+}
+.bDialog_content{
+  position: relative;
+  margin-top: 10px;
+  width: 100%;
+  height: 80px;
+  float: left;
+  border-bottom: 1px solid #c2c2c2;
+}
+.bDialog_actions{
+  position: relative;
+  margin-top: 5px;
+  width: 100%;
+  height: 30px;
+  float: left;
+}
+.bDialog_button{
+  position: relative;
+  width: 40%;
+  height: 100%;
+}
+.button_L{
+  float: left;
+}
+.button_R{
+  float: right;
+}
+/*end of confirm dialog styles*/
 .bGrantButton{
   width:100px;
   height: 36px;

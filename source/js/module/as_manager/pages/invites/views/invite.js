@@ -70,10 +70,10 @@ InviteView = React.createClass({
             var icon;
             switch (gender){
                 case 'female':
-                    icon = <SVG classes="bIcon_invites" icon="icon_girl"></SVG>;
+                    icon = <SVG classes="bIcon_invites" icon="icon_woman"></SVG>;
                     break;
                 default:
-                    icon = <SVG classes="bIcon_invites" icon="icon_boy"></SVG>;
+                    icon = <SVG classes="bIcon_invites" icon="icon_man"></SVG>;
                     break;
             }
             return icon;
@@ -100,7 +100,8 @@ InviteView = React.createClass({
             gender = self.getGenderIcon(binding.get('event.gender')),
             message = binding.get('message') || '',
             isRedeemed = binding.get('redeemed'),
-            startDate = (new Date(binding.get('event.startTime'))).toLocaleString();
+            startDate = (new Date(binding.get('event.startTime'))).toLocaleDateString(),
+            startTime = (new Date(binding.get('event.startTime'))).toLocaleTimeString();
 
         return <div key={binding.get('id')} className={inviteClasses}>
             <div className="eInvite_img" style={schoolPicture}></div>
@@ -115,9 +116,10 @@ InviteView = React.createClass({
                 <div className="eInvite_info">
                     <div className="eInvite_gender">{gender}</div>
                     <div>{'Start date:'} {startDate}</div>
+                    <div>{'Time:'} {startTime}</div>
                     <div>{'Age:'} {ages}</div>
                 </div>
-                <div>
+                <div className="eInvite_footer">
                 {isOutBox ? <div
                     className="eInvite_message">{isInbox || isArchive ? message : 'Awaiting opponent...' }</div> : null}
                 <div className="eInvite_buttons">

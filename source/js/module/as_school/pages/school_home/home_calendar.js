@@ -5,6 +5,7 @@ const   CalendarView    = require('module/ui/calendar/calendar'),
         React           = require('react'),
         Immutable 	    = require('immutable'),
         DateTimeMixin   = require('module/mixins/datetime'),
+        SVG         = require('module/ui/svg'),
         Superuser       = require('module/helpers/superuser');
 
 const HomeCalender = React.createClass({
@@ -37,22 +38,25 @@ const HomeCalender = React.createClass({
             var icon;
             switch (sport.name){
                 case 'football':
-                    icon = <img classes="bIcon_fixture_mod" src="/images/ball.png"></img>;
+                    icon = <SVG classes="calendar_mSport" icon="icon_ball"></SVG>;
                     break;
-                case 'cricket':
-                    icon = <img classes="bIcon_fixture_mod" src="/images/cricket.png"></img>;
-                    break;
-                case 'hockey':
-                    icon = <img classes="bIcon_fixture_mod" src="/images/hockey.png"></img>;
+                case 'rounders':
+                    icon = <SVG classes="calendar_mSport" icon="icon_rounders"></SVG>;
                     break;
                 case 'rugby':
-                    icon = <img classes="bIcon_fixture_mod" src="/images/rugby_ball.png"></img>;
+                    icon = <SVG classes="calendar_mSport" icon="icon_rugby"></SVG>;
+                    break;
+                case 'hockey':
+                    icon = <SVG classes="calendar_mSport" icon="icon_hockey"></SVG>;
+                    break;
+                case 'cricket':
+                    icon = <SVG classes="calendar_mSport" icon="icon_cricket"></SVG>;
                     break;
                 case 'netball':
-                    icon = <img classes="bIcon_fixture_mod" src="/images/netball.png"></img>;
+                    icon = <SVG classes="calendar_mSport" icon="icon_netball"></SVG>;
                     break;
                 default:
-                    icon = <img classes="bIcon_fixture_mod" src="/images/rounders.png"></img>;
+                    icon = <SVG classes="calendar_mSport" icon="icon_rounders"></SVG>;
                     break;
             }
             return icon;

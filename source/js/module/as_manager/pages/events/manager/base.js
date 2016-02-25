@@ -270,7 +270,7 @@ const EventManagerBase = React.createClass({
 
 		return <div className="eManager_base">
             <div className="eManager_group">
-                {'Choose Date'}
+                {'Date'}
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
@@ -293,7 +293,7 @@ const EventManagerBase = React.createClass({
                     className="eManager_field"
                     type="text"
                     value={binding.get('model.name')}
-                    placeholder={'enter name'}
+                    placeholder={'enter name'}F
                     onChange={Morearty.Callback.set(binding.sub('model.name'))}
                     />
             </div>
@@ -398,14 +398,15 @@ const EventManagerBase = React.createClass({
                                 <Autocomplete
                                     serviceFilter={services[type]}
                                     serverField="name"
-                                    placeholderText={'The first house'}
+                                    placeholderText={'Select the first house'}
                                     onSelect={self.onSelectRival.bind(null, 0)}
                                     binding={binding.sub('autocomplete.houses.0')}
                                 />
+                                <div className="eChoose_vs">vs</div>
                                 <Autocomplete
                                     serviceFilter={services[type]}
                                     serverField="name"
-                                    placeholderText={'The second house'}
+                                    placeholderText={'Select the second house'}
                                     onSelect={self.onSelectRival.bind(null, 1)}
                                     binding={binding.sub('autocomplete.houses.1')}
                                 />
@@ -416,18 +417,19 @@ const EventManagerBase = React.createClass({
                         </If>
                         {type === 'internal' ? 'Create a team' : null}
                         <If condition={type === 'internal'}>
-                            <div>
+                            <div className="eChooseHouses">
                                 <input
                                     key="firstTeam"
                                     type="text"
-                                    placeholder="The first team"
+                                    placeholder="Select the first team"
                                     value={binding.get('rivals.0.name')}
                                     onChange={Morearty.Callback.set(binding.sub('rivals.0.name'))}
                                     className="eManager_eField" />
+                                <div className="eChoose_vs">vs</div>
                                 <input
                                     key="secondTeam"
                                     type="text"
-                                    placeholder="The second team"
+                                    placeholder="Select the second team"
                                     value={binding.get('rivals.1.name')}
                                     onChange={Morearty.Callback.set(binding.sub('rivals.1.name'))}
                                     className="eManager_eField" />

@@ -2,7 +2,6 @@
   display: flex;
   width: 100%;
   flex-direction: row;
-  margin: 5px 0;
   height: 30px;
   align-items: center;
 }
@@ -47,6 +46,7 @@
   vertical-align: middle;
   text-align: left;
   min-width: 150px;
+  padding-left: 10px;
 }
 
 .ePlayer_form {

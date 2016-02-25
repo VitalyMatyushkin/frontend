@@ -1,11 +1,11 @@
 .bTeam {
-  width: 460px;
+  width: 440px;
   display: inline-block;
 }
 
 .eTeam_playersTableContainer {
+  min-height: 600px;
   min-height: 300px;
-  padding: 5px 10px 0 10px;
   background: #fff;
   border: $BORDER;
 }
@@ -22,4 +22,10 @@
   font-size: 14px;
   color: #FF0000;
   display: none;
+}
+.bPlayer.mHead {
+  background: $MAIN_COLOR;
+}
+.bPlayer tr{
+  padding: 0 10px;
 }

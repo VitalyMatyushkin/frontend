@@ -4,8 +4,8 @@
   width: 50%;
   border: $BORDER;
   background: #fff;
-  height: 110px;
   box-sizing: border-box;
+  min-width: 200px;
 }
 
 .eEventHeader_field {
@@ -40,6 +40,7 @@
   border-top: $BORDER;
   margin-bottom: 15px;
   padding: 2px 0;
+  min-height: 15px;
 }
 .bEventHeader_wrap {
   display: flex;

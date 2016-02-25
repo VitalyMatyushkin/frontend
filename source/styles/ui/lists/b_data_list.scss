@@ -72,7 +72,6 @@
   vertical-align: middle;
   border-bottom: solid 1px #c2c1c2;
   overflow: hidden;
-  max-width: 150px;
   text-overflow: ellipsis;
 }
 
@@ -87,7 +86,6 @@
 
 
 .eDataList_listItemCell.mActions{
-  max-width: 100px;
   text-align: center;
   overflow: visible;
 }
@@ -258,5 +256,8 @@
 }
 .eTable_view{
   border-bottom: 2px solid #c8cdd0;
+}
+.requestActions{
+  cursor: pointer;
 }
 

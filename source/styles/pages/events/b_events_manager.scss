@@ -74,7 +74,6 @@
   display: inline-block;
   box-sizing: border-box;
   height: 35px;
-  text-transform: uppercase;
 }
 
 .eManager_field.mTextArea {
@@ -103,4 +102,8 @@
 .eManager_eField {
   opacity: 0.7;
   margin: 5px 0;
+  height: 37px;
+}
+.eChoose_vs {
+  margin: 0 10px;
 }

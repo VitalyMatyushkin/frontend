@@ -98,6 +98,7 @@ const GrantRole = React.createClass({
                     else{
                         self.props.onSuccess && self.props.onSuccess();
                     }
+                    return result;
                 });
 
         });
@@ -133,7 +134,7 @@ const GrantRole = React.createClass({
                         </div>
                     </If>
                     <h4>Comment:</h4>
-                    <textarea onChange={function(e){binding.set('comment', e.target.value);}}></textarea>
+                    <textarea onChange={function(e){binding.set('comment', e.target.value);}}/>
                     <div>
                         <input type="button" onClick={self.continueButtonClick} className="bButton bGrantButton" value="Confirm"/>
                     </div>
