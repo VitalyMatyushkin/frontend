@@ -50,7 +50,7 @@ const ModifyUser = React.createClass({
                     <FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
                     <FormField type="text" field="username" validation="required alphanumeric">Nickname</FormField>
                     <FormField type="text" field="email" validation="required alphanumeric">Email</FormField>
-                    <FormField type="text" field="phone" validation="required">Phone</FormField>
+                    <FormField type="phone" field="phone" validation="required">Phone</FormField>
                     <FormField type="text" field="status" validation="alphanumeric">Status</FormField>
                 </Form>
             </div>
