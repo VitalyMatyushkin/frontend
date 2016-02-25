@@ -116,6 +116,11 @@ const SchoolRequest = React.createClass({
             binding = self.getDefaultBinding(),
             permissionList = self._getPermissionRequests();
         return <div>
+            <div className="eSchoolMaster_wrap">
+                <h1 className="eSchoolMaster_title">Live Requests</h1>
+                <div className="eStrip">
+                </div>
+                </div>
             <div className="bDataList">
                 <div className="eDataList_list mTable">
                     <div className="eDataList_listItem mHead">
