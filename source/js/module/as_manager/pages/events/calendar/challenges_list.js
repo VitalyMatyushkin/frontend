@@ -64,10 +64,8 @@ ChallengesList = React.createClass({
                 stringDate = self.formatDate(event.get('startTime'));
 
             return <div key={'event-' + event.get('id')} className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
-                <div className="eChallenge_basic">
                     <span className="eChallenge_date">{stringDate}</span>
                     <span className="eChallenge_type">{event.get('type')}</span>
-                </div>
                 <div className="eChallenge_name">{event.get('name')}</div>
                 <div className="eChallenge_rivals">
                     <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
