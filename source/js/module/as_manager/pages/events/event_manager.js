@@ -176,6 +176,9 @@ const EventManager = React.createClass({
                             rivalModel.houseId = rival.id;
                         }
 
+                        rivalModel.ages = binding.toJS('model.ages');
+                        rivalModel.gender = binding.toJS('model.gender');
+
                         window.Server.participants.post(event.id, rivalModel).then(function (res) {
                             var i = 0;
                             // TODO: fix me
