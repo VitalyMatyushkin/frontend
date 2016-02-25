@@ -43,6 +43,12 @@
 .eInvite_message {
   color: darken(#ddd, 40);
   width: 100%;
+  .mAccepted{
+    color:$DarkGreen;
+  }
+  .mRefused{
+    color:$DarkRed;
+  }
 }
 
 .eInvite_info {
@@ -56,7 +62,6 @@
   flex-direction: row;
   text-transform: uppercase;
   justify-content: flex-end;
-  width: 100%;
 }
 
 .eInvite_buttons .bButton {
@@ -66,7 +71,6 @@
 .eInvite_redeemed {
   color: #777;
   font-size: 14px;
-  position: absolute;
   right: 5px;
   text-decoration: none;
   text-shadow: 0 1px 0 #fff;
@@ -103,9 +107,8 @@
 }
 .eInvite_gender{
   float: right;
-  padding-right: 5px;
   .bIcon{
-    color:green;
+    color:$DarkGreen;
   }
 }
 .eInviteWrap{
