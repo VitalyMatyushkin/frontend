@@ -54,7 +54,7 @@ const TypeText =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<input ref="fieldInput" type={self.props.textType || 'text'} id={self.props.htmlId} onBlur={self.handleBlur} onChange={self.handleChange} />
+				<input ref="fieldInput" type={self.props.textType || 'text'} placeholder={self.props.placeholder} id={self.props.htmlId} onBlur={self.handleBlur} onChange={self.handleChange} />
 			</div>
 		)
 	}

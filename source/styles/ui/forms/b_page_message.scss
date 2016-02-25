@@ -1,10 +1,21 @@
 .bPageMessage{
   position: absolute;
-  top: 50%;
+  top: 40%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
+  text-align: center;
 }
 
 .ePageMessage_text .bButton{
   margin: 0 6px;
+}
+.bPageMessage h2 {
+  text-align: center;
+}
+.bPageMessage .eForm_atCenter {
+  text-align: center;
+}
+.bPageMessage .eForm_fieldSet{
+  padding: 0;
+  margin-left: 10px;
 }
