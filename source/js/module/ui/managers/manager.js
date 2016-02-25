@@ -114,10 +114,10 @@ const Manager = React.createClass({
             binding                 = self.getBinding(),
             selectedRivalIndex      = self.getBinding('selectedRivalIndex').toJS(),
             autocompleteTeamBinding = {
-                default:  defaultBinding,
-                rival:    binding.rivals.sub(selectedRivalIndex),
-                players:  binding.players.sub(selectedRivalIndex),
-                students: binding.students
+                default:            defaultBinding,
+                selectedRivalIndex: self.getBinding('selectedRivalIndex'),
+                rival:              binding.rivals.sub(selectedRivalIndex),
+                players:            binding.players.sub(selectedRivalIndex)
             },
             teamBinding = {
                 default:  defaultBinding,

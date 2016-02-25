@@ -8,6 +8,12 @@ const 	If 					= require('module/ui/if/if'),
 
 const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+	componentWillMount: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
+
+			binding.set('selectedRivalIndex',  Immutable.fromJS(0));
+	},
 	removePlayer: function (order, playerId) {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -110,9 +116,10 @@ const EventTeams = React.createClass({
 			activeSchoolId = self.getActiveSchoolId(),
 			isOwner = type === 'inter-schools' ?  binding.get(['participants', order, 'schoolId']) === activeSchoolId : true,
 			completeBinding = {
-				default: binding,
-				rival: binding.sub(['participants', order]),
-				players: binding.sub(['players', order])
+				default:            binding,
+				rival:              binding.sub(['participants', order]),
+				players:            binding.sub(['players', order]),
+				selectedRivalIndex: binding.sub('selectedRivalIndex')
 			};
 
 		return isOwner && binding.get('mode') === 'edit_squad' && !binding.get('model.resultId') ?

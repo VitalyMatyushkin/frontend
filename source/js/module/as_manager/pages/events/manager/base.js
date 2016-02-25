@@ -5,7 +5,7 @@ const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'
         ReactDOM        = require('reactDom'),
         EventVenue      = require('./event_venue'),
         Immutable       = require('immutable'),
-        SVG 		        = require('module/ui/svg');
+        SVG             = require('module/ui/svg');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -442,6 +442,5 @@ const EventManagerBase = React.createClass({
         </div>;
 	}
 });
-
 
 module.exports = EventManagerBase;
