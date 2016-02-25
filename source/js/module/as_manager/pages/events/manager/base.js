@@ -322,7 +322,7 @@ const EventManagerBase = React.createClass({
                                 key="nullable-type"
                                 value={null}
                                 selected="selected"
-                                disabled="disabled">not selected</Morearty.DOM.option>
+                                disabled="disabled">Please select</Morearty.DOM.option>
                             {self.getSports()}
                         </select>
                         <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
@@ -365,7 +365,7 @@ const EventManagerBase = React.createClass({
                             <Morearty.DOM.option key="nullable-type"
                                                  value={null}
                                                  selected="selected"
-                                                 disabled="disabled">not selected</Morearty.DOM.option>
+                                                 disabled="disabled">Please select</Morearty.DOM.option>
                             <Morearty.DOM.option key="inter-schools-type"
                                                  value="inter-schools">inter-schools</Morearty.DOM.option>
                             <Morearty.DOM.option key="houses-type"
