@@ -1,12 +1,8 @@
-const Form           = require('module/ui/form/form'),
-    FormField        = require('module/ui/form/form_field'),
-    FormColumn       = require('module/ui/form/form_column'),
-    Immutable        = require('immutable'),
+const Immutable      = require('immutable'),
     AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
     Autocomplete     = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
     Team             = require('module/ui/managers/team'),
     React            = require('react'),
-    ReactDOM         = require('reactDom'),
     If               = require('module/ui/if/if'),
     Multiselect      = require('module/ui/multiselect/multiselect'),
     SVG              = require('module/ui/svg');
@@ -16,48 +12,6 @@ const TeamForm = React.createClass({
     propTypes: {
         title: React.PropTypes.string.isRequired,
         onFormSubmit: React.PropTypes.func
-    },
-    componentWillMount: function() {
-        const self         = this,
-            globalBinding  = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-            binding        = self.getDefaultBinding();
-
-        self.activeSchoolId = activeSchoolId;
-
-        window.Server.school.get(activeSchoolId, {
-            filter: {
-                include: 'forms'
-            }
-        }).then(function (schoolData) {
-            return window.Server.sports.get().then(function (sportsData) {
-                !schoolData.forms && (schoolData.forms = []);
-                var ages = schoolData.forms.reduce(function (memo, form) {
-                    if (memo.indexOf(form.age) === -1) {
-                        memo.push(form.age);
-                    }
-
-                    return memo;
-                }, []);
-
-               binding
-                    .atomically()
-                    .set('default', Immutable.fromJS({
-                        schoolInfo: schoolData,
-                        model: {},
-                        players: []
-                    }))
-                    .set('sports',              Immutable.fromJS(sportsData))
-                    .set('players',             Immutable.fromJS([]))
-                    .set('availableAges',       Immutable.fromJS(ages))
-                    .set('selectedRivalIndex',  Immutable.fromJS(0))
-                    .set('rival',               Immutable.fromJS({id:0}))
-                    .set('isHouseFilterEnable', Immutable.fromJS(false))
-                    .set('isHouseSelected',     Immutable.fromJS(false))
-                    .set('houses',              Immutable.fromJS({}))
-                    .commit();
-            });
-        });
     },
     _getSports: function () {
         const self = this,
