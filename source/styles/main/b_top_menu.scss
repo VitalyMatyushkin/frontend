@@ -78,6 +78,7 @@
 .bPublicMenu_item:hover{
   text-decoration: underline;
 }
+$DarkGreen:#235413;
 .eTopMenu_item {
   display: inline-block;
   padding: 0 10px;
@@ -86,7 +87,7 @@
   cursor: pointer;
   font-size: 18px;
   letter-spacing: 0.7px;
-  color: #235413;
+  color: $DarkGreen;
   vertical-align: top;
   position: relative;
 }

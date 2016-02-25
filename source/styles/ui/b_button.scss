@@ -70,15 +70,16 @@
   }
 }
 
+$DarkRed:#a93e2f;
 .bButton.mRed {
-  background: #a93e2f;
+  background: $DarkRed;
   color: #fff;
   &:hover:before {
-    box-shadow: 0 2px 0 0 darken(#a93e2f, 10%);
+    box-shadow: 0 2px 0 0 darken($DarkRed, 10%);
   }
   &:active:before,
   &.mActive:before {
-    box-shadow: 0px -2px 0 0 darken(#a93e2f, 10%);
+    box-shadow: 0px -2px 0 0 darken($DarkRed, 10%);
   }
 }
 .bButton_req{
