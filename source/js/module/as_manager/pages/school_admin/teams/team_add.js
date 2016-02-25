@@ -1,17 +1,26 @@
-const TeamForm           = require('module/as_manager/pages/school_admin/teams/team_form'),
-    TeamPlayersValidator = require('module/ui/managers/helpers/team_players_validator'),
-    Immutable            = require('immutable'),
-    MoreartyHelper       = require('module/helpers/morearty_helper'),
-    React                = require('react');
+const   TeamForm             = require('module/as_manager/pages/school_admin/teams/team_form'),
+        Immutable            = require('immutable'),
+        MoreartyHelper       = require('module/helpers/morearty_helper'),
+        TeamHelper           = require('./team_helper'),
+        React                = require('react');
 
 const TeamAddPage = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        const self = this;
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.clear();
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initFormBinding();
+    },
+    componentWillUnmount: function() {
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.clear();
     },
     /**
      * Initialize binding for team from
@@ -34,7 +43,7 @@ const TeamAddPage = React.createClass({
                     .set('teamForm.default',             Immutable.fromJS(self._getDefaultObject(schoolData)))
                     .set('teamForm.sports',              Immutable.fromJS(sportsData))
                     .set('teamForm.players',             Immutable.fromJS([]))
-                    .set('teamForm.availableAges',       Immutable.fromJS(self._getAges(schoolData)))
+                    .set('teamForm.availableAges',       Immutable.fromJS(TeamHelper.getAges(schoolData)))
                     .set('teamForm.selectedRivalIndex',  Immutable.fromJS(self._getFakeRivalIndex()))
                     .set('teamForm.rival',               Immutable.fromJS(self._getFakeRivalObject()))
                     .set('teamForm.isHouseFilterEnable', Immutable.fromJS(false))
@@ -86,38 +95,24 @@ const TeamAddPage = React.createClass({
             text: ''
         };
     },
-    /**
-     * Reduce available students ages for game from school object
-     * @param schoolData
-     * @returns {*}
-     * @private
-     */
-    _getAges: function(schoolData) {
-        return schoolData.forms.reduce(function (memo, form) {
-            if (memo.indexOf(form.age) === -1) {
-                memo.push(form.age);
-            }
-
-            return memo;
-        }, []);
-    },
-    submitAdd: function() {
+    _submitAdd: function() {
         const self = this,
             binding = self.getDefaultBinding();
 
-        self._validate();
+        TeamHelper.validate(binding);
 
         if(!binding.toJS('teamForm.error.isError')) {
-            var rivalModel = {
+            const team = {
                 name:        binding.get('teamForm.name'),
                 description: binding.get('teamForm.description'),
                 sportId:     binding.get('teamForm.sportId'),
                 schoolId:    self.activeSchoolId,
-                ages:        binding.get('teamForm.model.ages'),
-                gender:      binding.get('teamForm.model.gender')
+                ages:        binding.toJS('teamForm.ages'),
+                gender:      binding.get('teamForm.gender'),
+                houseId:     TeamHelper.getHouseId(binding)
             };
 
-            window.Server.teams.post(rivalModel).then(function (teamsResult) {
+            window.Server.teams.post(team).then(function (teamsResult) {
                 let players = binding.get('teamForm.players').toJS();
 
                 var i = 0;
@@ -132,7 +127,7 @@ const TeamAddPage = React.createClass({
                             position:  player.position,
                             sub:       player.sub ? player.sub : false
                         }
-                    ).then(function (playerResult) {3
+                    ).then(function (playerResult) {
                         i += 1;
 
                         if (i === players.length) {
@@ -147,34 +142,12 @@ const TeamAddPage = React.createClass({
             });
         }
     },
-    /**
-     * Validate player objects
-     * @private
-     */
-    _validate: function() {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            limits = {
-                maxPlayers: binding.get('teamForm.default.model.sportModel.limits.maxPlayers'),
-                minPlayers: binding.get('teamForm.default.model.sportModel.limits.minPlayers'),
-                maxSubs:    binding.get('teamForm.default.model.sportModel.limits.maxSubs')
-            };
-
-        const result = TeamPlayersValidator.validate(
-            binding.toJS('teamForm.players'),
-            limits
-        );
-
-        binding.set('teamForm.error',
-            Immutable.fromJS(result)
-        );
-    },
     render: function() {
         var self = this,
             binding = self.getDefaultBinding();
 
         return (
-            <TeamForm title="Add new team..." onFormSubmit={self.submitAdd} binding={binding.sub('teamForm')} />
+            <TeamForm title="Add new team..." onFormSubmit={self._submitAdd} binding={binding.sub('teamForm')} />
         )
     }
 });
