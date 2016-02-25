@@ -35,8 +35,8 @@ const TeamAddPage = React.createClass({
                     .set('teamForm.sports',              Immutable.fromJS(sportsData))
                     .set('teamForm.players',             Immutable.fromJS([]))
                     .set('teamForm.availableAges',       Immutable.fromJS(self._getAges(schoolData)))
-                    .set('teamForm.selectedRivalIndex',  Immutable.fromJS(0))
-                    .set('teamForm.rival',               Immutable.fromJS({id:0}))
+                    .set('teamForm.selectedRivalIndex',  Immutable.fromJS(self._getFakeRivalIndex()))
+                    .set('teamForm.rival',               Immutable.fromJS(self._getFakeRivalObject()))
                     .set('teamForm.isHouseFilterEnable', Immutable.fromJS(false))
                     .set('teamForm.isHouseSelected',     Immutable.fromJS(false))
                     .set('teamForm.houses',              Immutable.fromJS({}))
@@ -44,6 +44,22 @@ const TeamAddPage = React.createClass({
                     .commit();
             });
         });
+    },
+    /**
+     * Get fake rival object, fake - because team manager element require rival object.
+     * @returns {{id: number}}
+     * @private
+     */
+    _getFakeRivalObject: function() {
+        return {id:0};
+    },
+    /**
+     * Get fake rival index, fake - because team manager element require rival index.
+     * @returns {number}
+     * @private
+     */
+    _getFakeRivalIndex: function() {
+        return 0;
     },
     /**
      * Get object for default binding
