@@ -6,12 +6,13 @@ const 	$ 		= require('jquery');
 
 var validationsSet = {
 	phone: function(value) {
+        return false; // temporary validation lock!!!
 
-		if (!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))) {
-			return 'Should contain phone number';
-		} else {
-			return false;
-		}
+		//if (!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))) {
+		//	return 'Should contain phone number';
+		//} else {
+		//	return false;
+		//}
 	},
 	password:function(value){
 		if(!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/).test(value)){
