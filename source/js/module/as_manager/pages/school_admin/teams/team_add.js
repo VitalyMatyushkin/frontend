@@ -1,24 +1,89 @@
 const TeamForm           = require('module/as_manager/pages/school_admin/teams/team_form'),
     TeamPlayersValidator = require('module/ui/managers/helpers/team_players_validator'),
     Immutable            = require('immutable'),
+    MoreartyHelper       = require('module/helpers/morearty_helper'),
     React                = require('react');
 
 const TeamAddPage = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        const self = this,
-            globalBinding  = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-            binding = self.getDefaultBinding();
+        const self = this;
 
-        self.activeSchoolId = activeSchoolId;
+        self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-        binding.set('teamForm', Immutable.fromJS({
-            error: {
-                isError: false,
-                text: ''
+        self._initFormBinding();
+    },
+    /**
+     * Initialize binding for team from
+     * @private
+     */
+    _initFormBinding: function() {
+        const self         = this,
+            binding        = self.getDefaultBinding();
+
+        window.Server.school.get(self.activeSchoolId, {
+            filter: {
+                include: 'forms'
             }
-        }));
+        }).then(function (schoolData) {
+            return window.Server.sports.get().then(function (sportsData) {
+                !schoolData.forms && (schoolData.forms = []);
+
+                binding
+                    .atomically()
+                    .set('teamForm.default',             Immutable.fromJS(self._getDefaultObject(schoolData)))
+                    .set('teamForm.sports',              Immutable.fromJS(sportsData))
+                    .set('teamForm.players',             Immutable.fromJS([]))
+                    .set('teamForm.availableAges',       Immutable.fromJS(self._getAges(schoolData)))
+                    .set('teamForm.selectedRivalIndex',  Immutable.fromJS(0))
+                    .set('teamForm.rival',               Immutable.fromJS({id:0}))
+                    .set('teamForm.isHouseFilterEnable', Immutable.fromJS(false))
+                    .set('teamForm.isHouseSelected',     Immutable.fromJS(false))
+                    .set('teamForm.houses',              Immutable.fromJS({}))
+                    .set('teamForm.error',               Immutable.fromJS(self._getErrorObject()))
+                    .commit();
+            });
+        });
+    },
+    /**
+     * Get object for default binding
+     * @param schoolData - school instance
+     * @returns {{schoolInfo: *, model: {}, players: Array}}
+     * @private
+     */
+    _getDefaultObject: function(schoolData) {
+        return {
+            schoolInfo: schoolData,
+            model: {},
+            players: []
+        };
+    },
+    /**
+     * Get object for error binding
+     * Error binding - container for validation data
+     * @returns {{isError: boolean, text: string}}
+     * @private
+     */
+    _getErrorObject: function() {
+        return {
+            isError: false,
+            text: ''
+        };
+    },
+    /**
+     * Reduce available students ages for game from school object
+     * @param schoolData
+     * @returns {*}
+     * @private
+     */
+    _getAges: function(schoolData) {
+        return schoolData.forms.reduce(function (memo, form) {
+            if (memo.indexOf(form.age) === -1) {
+                memo.push(form.age);
+            }
+
+            return memo;
+        }, []);
     },
     submitAdd: function() {
         const self = this,
@@ -51,7 +116,7 @@ const TeamAddPage = React.createClass({
                             position:  player.position,
                             sub:       player.sub ? player.sub : false
                         }
-                    ).then(function (playerResult) {
+                    ).then(function (playerResult) {3
                         i += 1;
 
                         if (i === players.length) {
@@ -66,6 +131,10 @@ const TeamAddPage = React.createClass({
             });
         }
     },
+    /**
+     * Validate player objects
+     * @private
+     */
     _validate: function() {
         const self = this,
             binding = self.getDefaultBinding(),
