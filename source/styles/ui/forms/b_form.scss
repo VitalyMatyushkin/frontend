@@ -34,6 +34,18 @@
   display: none;
 }
 
+.eForm_fieldInput.mPhone {
+  select{
+    border: none;
+    position: absolute;
+    margin: 2px;
+    height: 18px;
+  }
+  input{
+    padding-left: 51px;
+  }
+}
+
 .eForm_fieldSmallHelp{
   height: 12px;
   line-height: 12px;
