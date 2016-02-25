@@ -2,6 +2,7 @@ const   Table = require('module/ui/list/table'),
         TableField = require('module/ui/list/table_field'),
         DateTimeMixin = require('module/mixins/datetime'),
         ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+	    ImageHelper = require('module/helpers/imageHelper'),
         React = require('react');
 
 const NewsListPage = React.createClass({
@@ -12,7 +13,7 @@ const NewsListPage = React.createClass({
 		if(url !== undefined){
 			return (
 				<span className="eChallenge_rivalPic">
-                    <img src={url}/>
+                    <img src={ImageHelper.formatSizedImageScr(url, 60, 60)}/>
                 </span>
 			)
 		}

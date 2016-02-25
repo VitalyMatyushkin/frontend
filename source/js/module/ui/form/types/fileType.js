@@ -89,7 +89,7 @@ const FileTypeUpload = React.createClass({
                     pic: uri + '/files/' + uploadedFile.name
                 };
             window.Server.photos.post(binding.get('albumStorage.0.id'), model).then(function(data){
-                binding.set('defaultValue','http:'+data.pic+'/contain?height=60&width=60');
+                binding.set('defaultValue','http:'+data.pic);
                 binding.atomically().set('fileLoading',true).commit();
                 return data;
             });
@@ -104,17 +104,24 @@ const FileTypeUpload = React.createClass({
                 'eLoader_gif_hide':binding.get('fileLoading'),
                 'eLoader_gif_show':!binding.get('fileLoading')
             });
+
+        let coverImg;
+        if(binding.get('defaultValue') !== undefined) {
+            coverImg = binding.get('defaultValue') + '/contain?height=60&width=60';
+        } else {
+            coverImg= '/images/empty_pic_uploader_box.png';
+        }
         return (
             <div className="eForm_blazonUpload">
                 <div className="eForm_blazonPreview">
-                    <img src={binding.get('defaultValue')||'http://placehold.it/200x200'}/>
+                    <img src={coverImg}/>
                     <div className={gifClasses}>
                         <img src="images/spin-loader-black.gif"/>
                     </div>
                 </div>
                 <div className="eForm_fileInput">
                     <input className="inputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
-                    <label className="labelForInputFile" htmlFor="file">{self.props.labelText || 'Default'}</label>
+                    <label className="bButton mCenteredText" htmlFor="file">{self.props.labelText || 'Default'}</label>
                 </div>
             </div>
         );

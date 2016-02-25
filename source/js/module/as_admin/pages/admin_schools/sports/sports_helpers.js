@@ -107,6 +107,7 @@ const SportsHelpers = {
             maxPlayers:    undefined,
             maxSubs:       undefined,
             genders:       undefined,
+            fieldPic:      undefined,
             positions:     []
         };
     },
@@ -117,6 +118,7 @@ const SportsHelpers = {
 
         formData.name        = self.getData(serverData, 'name');
         formData.description = self.getData(serverData, 'description');
+        formData.fieldPic    = self.getData(serverData, 'fieldPic');
         formData.minPlayers  = self.getData(serverData, 'limits.minPlayers');
         formData.maxPlayers  = self.getData(serverData, 'limits.maxPlayers');
         formData.maxSubs     = self.getData(serverData, 'limits.maxSubs');
@@ -135,6 +137,7 @@ const SportsHelpers = {
         let dataToPost = {
             name:        dataFromForm.name,
             description: dataFromForm.description,
+            fieldPic:    dataFromForm.fieldPic,
             limits: {
                 minPlayers:  dataFromForm.minPlayers,
                 maxPlayers:  dataFromForm.maxPlayers,
