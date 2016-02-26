@@ -116,13 +116,14 @@ const GrantRole = React.createClass({
                     <AutoComplete serviceFilter={self.getSchools} serverField="name" binding={binding.sub('grSchools')}
                                   onSelect={self.onSchoolSelect} />
                     <h4>Role </h4>
+                    <div className="eManager_select_wrap">
                     <select onChange={self.onRoleSelectorChange} ref="roleSelector" id="roleSelector">
                         <option value="teacher">Teacher</option>
                         <option value="coach">Coach</option>
                         <option value="parent">Parent</option>
                         <option value="admin">School Admin</option>
                         <option value="manager">School Manager</option>
-                    </select>
+                    </select></div>
                     <If condition={isParent}>
                         <div>
                             <h4>Student</h4>
