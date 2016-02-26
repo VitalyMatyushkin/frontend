@@ -121,7 +121,7 @@ InviteView = React.createClass({
                     <div className="eInvite_gender">{gender}</div>
                     <div>{'Start date:'} {startDate}</div>
                     <div>{'Time:'} {startTime}</div>
-                    <div>{'Age:'} {ages}</div>
+                    <div>{'Year Group:'} {ages}</div>
                 </div>
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
