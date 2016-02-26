@@ -2,7 +2,8 @@ const 	LoginForm 		= require('module/ui/login/user/form'),
 		LoginError 		= require('module/ui/login/user/error'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
-		RoleSelector	= require('module/as_login/pages/RoleSelector');
+		RoleSelector	= require('module/as_login/pages/RoleSelector'),
+		SVG 		      = require('module/ui/svg');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -107,6 +108,7 @@ const LoginUserPage = React.createClass({
 
 		return (
 			<div className="bPageMessage">
+				<SVG classes="bLoginIcon" icon="icon_login"/>
 				{currentView}
 			</div>
 		)

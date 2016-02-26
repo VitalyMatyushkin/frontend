@@ -78,7 +78,7 @@ const AccountRequests = React.createClass({
                     <div className="eStrip"></div>
                     <span onClick={self.handleAddNewButtonClick.bind(null,this)} className="addButton addNewForm"/>
                     <span onClick={self.handleFilterButtonClick.bind(null,this)}
-                          className="AddButton"><img src="images/search.png"/>{binding.get('openFilter') ? '⇡' : '⇣'}</span>
+                          className="filter_btn"><SVG icon="icon_search"/>{binding.get('openFilter') ? '↑' : '↓'}</span>
                 </div>
                 <div className={filterDivClasses} ref="filterInputDiv">
                     <div className="eDataList_filter">

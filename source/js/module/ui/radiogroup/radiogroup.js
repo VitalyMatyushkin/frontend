@@ -28,9 +28,9 @@ const RadioGroup = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			defaultId = binding.get('defaultId');
-
+		//Using default binding because it renders appropriately
 		if (defaultId) {
-			self.responseData.forEach(function(dataBlock) {
+			binding.get('responseData').forEach(function(dataBlock) {
 				dataBlock.id === defaultId && self.handleSelect(defaultId);
 			});
 		}
@@ -47,18 +47,18 @@ const RadioGroup = React.createClass({
 
 		if (self.props.sourcePromise) {
 			self.props.sourcePromise().then(function(dataArray) {
-				self.responseData = dataArray;
+				binding.set('responseData', dataArray);
 				self.setDefaultId();
 			});
 		} else {
-			self.responseData = self.props.sourceArray;
+			binding.set('responseData', self.props.sourceArray);
 			self.setDefaultId();
 		}
 	},
 	handleSelect: function (newId) {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			model = self.responseData.filter(function (data) {
+			model = binding.get('responseData').filter(function (data) {
 				return data.id === newId;
 			})[0];
 
@@ -74,16 +74,9 @@ const RadioGroup = React.createClass({
 	renderRadioOptions: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			selectedId = binding.get('selectedId'),
-			defaultObj = [{id:'male',value:'boy'},{id:'female',value:'girl'}];
-		if(self.responseData.length !== 0){
-			return self.responseData.map(function (dataBlock, index) {
-				return (
-					<label key={index} onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
-				);
-			});
-		}else{
-			return defaultObj.map(function(dataBlock, index){
+			selectedId = binding.get('selectedId');
+		if(binding.get('responseData')){
+			return binding.get('responseData').map(function (dataBlock, index) {
 				return (
 					<label key={index} onClick={function () { self.handleSelect(dataBlock.id); }} className="eRadioGroupMy_label"><input checked={selectedId===dataBlock.id}  type="radio" value={dataBlock.id}/>{dataBlock.value}</label>
 				);

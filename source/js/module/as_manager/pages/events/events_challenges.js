@@ -38,7 +38,7 @@ const ChallengesView = React.createClass({
                     return evt.get('id') === event.get('id');
                 }),
                 eventBinding = binding.sub(['models', eventIndex]),
-				hours = self.addZeroToFirst(eventDateTime.getHours()),
+                hours = self.addZeroToFirst(eventDateTime.getHours()),
 				minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.get('type'),
                 firstName,
@@ -138,11 +138,13 @@ const ChallengesView = React.createClass({
             <div className="bChallenges">
                 <div className="eChallenge_title">
                     <span className="eChallengeDate_date">Date</span>
-                    <span className="eChallenge_sport">Sport</span>
-                    <span className="eChallenge_event">Event Name</span>
-                    <span className="eChallenge_hours">Time</span>
-                    <span className="eChallenge_in">Game Type</span>
-                    <span className="eChallenge_results">Score</span>
+                    <div className="bChallenge">
+                        <span className="eChallenge_sport">Sport</span>
+                        <span className="eChallenge_event">Event Name</span>
+                        <span className="eChallenge_hours">Time</span>
+                        <span className="eChallenge_in">Game Type</span>
+                        <span className="eChallenge_results">Score</span>
+                    </div>
                 </div>
                 {challenges}</div>
         </div>;
