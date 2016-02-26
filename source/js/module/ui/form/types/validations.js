@@ -15,7 +15,7 @@ var validationsSet = {
 		//}
 	},
 	password:function(value){
-		if(!(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/).test(value)){
+		if(value && !(/^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.{8,})/).test(value)){
 			return "Password must contain at least one capital, lower case character, one number and must be 8 digits long";
 		}else{
 			return false;
