@@ -18,12 +18,13 @@ ImageService.prototype.upload = function(file){
     const fd = new FormData();
     fd.append('image', file);
     return Ajax({
-        type:   'POST',
-        url:    this.__uploadUrl,
-        data:   fd,
-        processData: false,
-        contentType: false
-    }).then( success => success.data.key );
+        type:           'POST',
+        url:            this.__uploadUrl,
+        data:           fd,
+        processData:    false,
+        contentType:    false
+    })
+    .then( success => success.data.key );
 };
 
 ImageService.prototype.getOriginalUrlByKey = function(key){

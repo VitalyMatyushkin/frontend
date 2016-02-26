@@ -1,10 +1,12 @@
-var Service = require('module/core/service'),
-	serviceList;
+const 	Service 		= require('module/core/service'),
+		ImageService 	= require('module/core/services/ImageService');
+
 
 /** Collection of services to reach REST API from server */
-serviceList = {
+const serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
+
 		serviceList.logout = new Service('/users/logout', binding);
 
 		// users
@@ -170,6 +172,7 @@ serviceList = {
 	initializeOpenServices: function() {
 		// schools
 		serviceList.schoolsFindOne = new Service('/schools/getAllSchools');
+		//serviceList.images = new ImageService();
 	}
 };
 
