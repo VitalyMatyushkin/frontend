@@ -93,10 +93,12 @@ AllChallengesList = React.createClass({
             binding = this.getDefaultBinding();
         return <div className="eEvents_challenges">
             <div className="eChallenge_title">
-                <span className="eChallenge_sport">Sport</span>
-                <span className="eChallenge_date">Date</span>
-                <span className="eChallenge_name">Event Name</span>
-                <span className="eChallenge_childName">Name</span>
+                <div className="eChallenge eChallenge_basicMod">
+                    <span className="eChallenge_sport">Sport</span>
+                    <span className="eChallenge_date">Date</span>
+                    <span className="eChallenge_name">Event Name</span>
+                </div>
+                    <span className="eChallenge_childName">Name</span>
             </div>
             {self.getEvents()}
         </div>

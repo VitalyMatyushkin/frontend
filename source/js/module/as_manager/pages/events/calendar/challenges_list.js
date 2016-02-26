@@ -1,6 +1,7 @@
 var ChallengesList,
     React = require('react'),
-    InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
+    InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+    SVG = require('module/ui/svg');
 
 ChallengesList = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
@@ -43,6 +44,35 @@ ChallengesList = React.createClass({
     onClickEvent: function(eventId) {
         document.location.hash = 'event/' + eventId;
     },
+    getSportIcon:function(sport){
+        if(sport !== undefined){
+            var icon;
+            switch (sport){
+                case 'football':
+                    icon = <SVG classes="bIcon_invites" icon="icon_ball"></SVG>;
+                    break;
+                case 'rounders':
+                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"></SVG>;
+                    break;
+                case 'rugby':
+                    icon = <SVG classes="bIcon_invites" icon="icon_rugby"></SVG>;
+                    break;
+                case 'hockey':
+                    icon = <SVG classes="bIcon_invites" icon="icon_hockey"></SVG>;
+                    break;
+                case 'cricket':
+                    icon = <SVG classes="bIcon_invites" icon="icon_cricket"></SVG>;
+                    break;
+                case 'netball':
+                    icon = <SVG classes="bIcon_invites" icon="icon_netball"></SVG>;
+                    break;
+                default:
+                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"></SVG>;
+                    break;
+            }
+            return icon;
+        }
+    },
     getEvents: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -61,11 +91,13 @@ ChallengesList = React.createClass({
                 isHoverDay = hoverDay &&
                     hoverDay.getMonth() === eventDate.getMonth() &&
                     hoverDay.getDate() === eventDate.getDate(),
-                stringDate = self.formatDate(event.get('startTime'));
+                stringDate = self.formatDate(event.get('startTime')),
+                sport = self.getSportIcon(event.get('sport').get('name'));
 
             return <div key={'event-' + event.get('id')} className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
-                    <span className="eChallenge_date">{stringDate}</span>
-                    <span className="eChallenge_type">{event.get('type')}</span>
+                <span className="eChallenge_sport">{sport}</span>
+                <span className="eChallenge_date">{stringDate}</span>
+
                 <div className="eChallenge_name">{event.get('name')}</div>
                 <div className="eChallenge_rivals">
                     <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
@@ -81,8 +113,8 @@ ChallengesList = React.createClass({
 
         return <div className="eEvents_challenges">
             <div className="eChallenge_title">
+                <span className="eChallenge_sport">Sport</span>
                 <span className="eChallenge_date">Date</span>
-                <span className="eChallenge_type">Event Type</span>
                 <span className="eChallenge_name">Event Name</span>
                 <span className="eChallenge_rivals">Game Type</span>
             </div>

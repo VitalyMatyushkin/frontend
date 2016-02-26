@@ -48,7 +48,6 @@ $border: solid 1px #c2c2c2;
 }
 .eChallenge_sport{
   width: 10%;
-  margin: auto;
 }
 .eChallenge_event{
   width: 10%;
@@ -162,6 +161,9 @@ $border: solid 1px #c2c2c2;
 .eChallenge.eChallenge_basicMod{
   border: none !important;
   margin: 0 !important;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
 }
 
 .eChallengeDate_list{
