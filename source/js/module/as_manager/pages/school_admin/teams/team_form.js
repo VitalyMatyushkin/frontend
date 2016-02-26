@@ -216,7 +216,7 @@ const TeamForm = React.createClass({
 
                     <div className="eManager_base">
                         <div className="eManager_group">
-                            {'Event Name'}
+                            {'Team Name'}
                             <Morearty.DOM.input
                                 className="eManager_field"
                                 type="text"
@@ -227,7 +227,7 @@ const TeamForm = React.createClass({
                         </div>
                         <If condition={!!binding.get('name')}>
                             <div className="eManager_group">
-                                {'Event Description'}
+                                {'Team Description'}
                                 <Morearty.DOM.textarea
                                     className="eManager_field mTextArea"
                                     type="text"
