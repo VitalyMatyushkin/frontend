@@ -29,31 +29,33 @@ UserModel.getStatus = function(user) {
         }
     }
 };
+//Lets return block HTML element containing the list of roles
 UserModel.getRoles = function(user){
-    var res = '';
-
+    var res = [];
     if(user && user.permissions)
-        user.permissions.map(function(item){
-            if(res)
-                res += ', ';
-            res += item.preset;
+       res = user.permissions.map(function(item){
+           return (
+               <li style={{padding:2+'px'}}>
+                   {item.preset}
+               </li>
+           );
         });
 
-    return res;
+    return (<ul>{res}</ul>);
 };
+//Lets return block HTML element containing the list of schools
 UserModel.getSchool = function(user){
-    var res = '';
-
+    var res = [];
     if(user && user.permissions)
-        user.permissions.map(function(item){
+        res = user.permissions.map(function(item){
             if(item.school){
-                if(res)
-                    res += ', ';
-                res += item.school.name;
+                return (
+                    <li style={{padding:2+'px'}}>{item.school.name}</li>
+                );
             }
         });
 
-    return res;
+    return (<ul>{res}</ul>);
 };
 UserModel.getAccess = function(user){
     return user && user.blocked ? 'Blocked' : 'Active';
