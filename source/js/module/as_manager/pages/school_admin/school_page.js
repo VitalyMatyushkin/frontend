@@ -49,7 +49,6 @@ const OneSchoolPage = React.createClass({
             key:'Gallery'
         }];
 	},
-
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			classes: {
@@ -78,9 +77,7 @@ const OneSchoolPage = React.createClass({
 			teams:{
 				teamsList: {},
 				teamEdit: {},
-				teamAdd: {
-					teamForm: {}
-				},
+				teamAdd: {},
 				teamsRouting: {}
 			},
 			schoolInfo: '',

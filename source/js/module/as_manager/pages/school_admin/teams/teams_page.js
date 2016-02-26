@@ -19,6 +19,10 @@ const TeamsPage = React.createClass({
                 <Route path="/school_admin/teams/add"
                        binding={binding.sub('teamAdd')}
                        component="module/as_manager/pages/school_admin/teams/team_add"/>
+
+                <Route path="/school_admin/teams/edit"
+                       binding={binding.sub('teamEdit')}
+                       component="module/as_manager/pages/school_admin/teams/team_edit"/>
             </RouterView>
         );
     }

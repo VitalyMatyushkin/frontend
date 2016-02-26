@@ -113,6 +113,9 @@ serviceList = {
 		serviceList.playersByTeam = new Service('/teams/{teamId}/players', binding);
 		serviceList.exactlyPlayersByTeam = new Service('/teams/{teamId}/exactlyPlayers/{playerId}', binding);
 
+		//players
+		serviceList.players = new Service('/players', binding);
+
 		// result
 		serviceList.results = new Service('/results', binding);
 		serviceList.result = new Service('/results/{id}', binding);

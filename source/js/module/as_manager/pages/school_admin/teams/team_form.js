@@ -1,17 +1,23 @@
-const Immutable      = require('immutable'),
-    AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
-    Autocomplete     = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-    Team             = require('module/ui/managers/team'),
-    React            = require('react'),
-    If               = require('module/ui/if/if'),
-    Multiselect      = require('module/ui/multiselect/multiselect'),
-    SVG              = require('module/ui/svg');
+const   Immutable        = require('immutable'),
+        AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
+        Autocomplete     = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+        MoreartyHelper   = require('module/helpers/morearty_helper'),
+        Team             = require('module/ui/managers/team'),
+        React            = require('react'),
+        If               = require('module/ui/if/if'),
+        Multiselect      = require('module/ui/multiselect/multiselect');
 
 const TeamForm = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {
         title: React.PropTypes.string.isRequired,
         onFormSubmit: React.PropTypes.func
+    },
+    componentWillUnmount: function() {
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.clear();
     },
     _getSports: function () {
         const self = this,
@@ -84,7 +90,7 @@ const TeamForm = React.createClass({
             return (
                 <label onClick={self._changeHouseFilter}>
                     <Morearty.DOM.input
-                        type="radio"
+                        type="checkbox"
                         value={binding.get('isHouseFilterEnable')}
                         checked={binding.get('isHouseFilterEnable')}
                     />
@@ -158,7 +164,7 @@ const TeamForm = React.createClass({
     _serviceHouseFilter: function() {
         const self = this;
 
-        return window.Server.houses.get(self.activeSchoolId);
+        return window.Server.houses.get(MoreartyHelper.getActiveSchoolId(self));
     },
     _onSelectHouse: function(id, model) {
         const self = this,
@@ -166,11 +172,11 @@ const TeamForm = React.createClass({
 
         binding
             .atomically()
-            .set('default.model.type',  Immutable.fromJS('houses'))
-            .set('rival',               Immutable.fromJS(model))
-            .set('isHouseSelected',     Immutable.fromJS(true))
-            .set('default.players',     Immutable.fromJS([]))
-            .set('players',             Immutable.fromJS([]))
+            .set('default.model.type', Immutable.fromJS('houses'))
+            .set('rival',              Immutable.fromJS(model))
+            .set('isHouseSelected',    Immutable.fromJS(true))
+            .set('default.players',    Immutable.fromJS([]))
+            .set('players',            Immutable.fromJS([]))
             .commit();
     },
     _isShowTeamManager: function() {
@@ -234,21 +240,18 @@ const TeamForm = React.createClass({
                         <If condition={!!binding.get('name')}>
                             <div className="eManager_group">
                                 {'Game'}
-                                <div className="eManager_select_wrap">
-                                    <select
-                                        className="eManager_select"
-                                        value={sportId}
-                                        defaultValue={null}
-                                        onChange={self._changeCompleteSport}>
-                                        <Morearty.DOM.option
-                                            key="nullable-type"
-                                            value={null}
-                                            selected="selected"
-                                            disabled="disabled">not selected</Morearty.DOM.option>
-                                        {self._getSports()}
-                                    </select>
-                                    <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
-                                </div>
+                                <select
+                                    className="eManager_select"
+                                    value={sportId}
+                                    defaultValue={null}
+                                    onChange={self._changeCompleteSport}>
+                                    <Morearty.DOM.option
+                                        key="nullable-type"
+                                        value={null}
+                                        selected="selected"
+                                        disabled="disabled">not selected</Morearty.DOM.option>
+                                    {self._getSports()}
+                                </select>
                             </div>
                         </If>
                         <If condition={!!binding.get('sportId')}>
@@ -283,6 +286,7 @@ const TeamForm = React.createClass({
                                 {'House'}
                                 <div className="eManager_select_wrap">
                                     <Autocomplete
+                                        initialValue={binding.get('rival.name')}
                                         serviceFilter={self._serviceHouseFilter}
                                         serverField="name"
                                         placeholderText={'Select House'}
@@ -292,14 +296,16 @@ const TeamForm = React.createClass({
                                 </div>
                             </div>
                         </If>
-                        <If condition={!!binding.get('ages')}>
+                        <If condition={self._isShowTeamManager()}>
                             <div>
                                 <div className="eManager_group">
-                                    <div className ="eHouseForm">
+                                    {'Add player'}
+                                    <div className ="eManager_select_wrap">
                                         <AutocompleteTeam binding={autocompleteTeamBinding}/>
                                     </div>
                                 </div>
                                 <div className="eManager_group">
+                                    {''}
                                     <Team binding={teamBinding}/>
                                 </div>
                                 <div className="eManager_group">
