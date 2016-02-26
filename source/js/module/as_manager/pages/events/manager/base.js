@@ -5,7 +5,7 @@ const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'
         ReactDOM        = require('reactDom'),
         EventVenue      = require('./event_venue'),
         Immutable       = require('immutable'),
-        SVG 		        = require('module/ui/svg');
+        SVG             = require('module/ui/svg');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -322,7 +322,7 @@ const EventManagerBase = React.createClass({
                                 key="nullable-type"
                                 value={null}
                                 selected="selected"
-                                disabled="disabled">not selected</Morearty.DOM.option>
+                                disabled="disabled">Please select</Morearty.DOM.option>
                             {self.getSports()}
                         </select>
                         <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
@@ -365,7 +365,7 @@ const EventManagerBase = React.createClass({
                             <Morearty.DOM.option key="nullable-type"
                                                  value={null}
                                                  selected="selected"
-                                                 disabled="disabled">not selected</Morearty.DOM.option>
+                                                 disabled="disabled">Please select</Morearty.DOM.option>
                             <Morearty.DOM.option key="inter-schools-type"
                                                  value="inter-schools">inter-schools</Morearty.DOM.option>
                             <Morearty.DOM.option key="houses-type"
@@ -444,6 +444,5 @@ const EventManagerBase = React.createClass({
         </div>;
 	}
 });
-
 
 module.exports = EventManagerBase;

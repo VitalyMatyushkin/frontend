@@ -14,8 +14,7 @@
   height: 40px;
   white-space: nowrap;
   display: flex;
-  margin: 5px 5px 0 0;
-  align-items: baseline;
+  align-items: center;
 }
 .bIcon_invites{
   width: 35px;
@@ -33,6 +32,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 250px;
+  padding: 5px 0;
 }
 
 .eInvite_eventDate {
@@ -42,20 +42,24 @@
 
 .eInvite_message {
   color: darken(#ddd, 40);
+  width: 100%;
+  .mAccepted{
+    color:$DarkGreen;
+  }
+  .mRefused{
+    color:$DarkRed;
+  }
 }
 
 .eInvite_info {
-  margin-bottom: 5px;
   font-size: 16px;
   color: #666;
   line-height: 20px;
 }
 
 .eInvite_buttons {
-  width: 320px;
   display: flex;
   flex-direction: row;
-  margin: 0 0 10px;
   text-transform: uppercase;
   justify-content: flex-end;
 }
@@ -67,7 +71,6 @@
 .eInvite_redeemed {
   color: #777;
   font-size: 14px;
-  position: absolute;
   right: 5px;
   text-decoration: none;
   text-shadow: 0 1px 0 #fff;
@@ -86,6 +89,7 @@
   flex-wrap: wrap;
   max-width: 970px;
   margin: auto;
+  justify-content: center;
 }
 
 .eInvite_img {
@@ -103,16 +107,22 @@
 }
 .eInvite_gender{
   float: right;
-  padding-right: 5px;
   .bIcon{
-    color:green;
+    color:$DarkGreen;
   }
 }
 .eInviteWrap{
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  width: 100%;
+  padding: 10px;
 }
 .eInvites_processing {
   text-align: center;
+}
+.eInvite_footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

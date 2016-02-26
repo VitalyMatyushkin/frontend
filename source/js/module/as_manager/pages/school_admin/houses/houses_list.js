@@ -1,7 +1,7 @@
-const   Table = require('module/ui/list/table'),
-        TableField = require('module/ui/list/table_field'),
-        ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-        React = require('react');
+const Table         = require('module/ui/list/table'),
+      TableField    = require('module/ui/list/table_field'),
+      ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+      React         = require('react');
 
 const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
@@ -40,6 +40,5 @@ const HousesListPage = React.createClass({
 		);
 	}
 });
-
 
 module.exports = HousesListPage;

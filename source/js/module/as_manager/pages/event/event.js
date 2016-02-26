@@ -113,7 +113,7 @@ const EventView = React.createClass({
 					{
 						participants: [
 							{
-								players: ['user', 'form']
+                                players: ['user', 'form']
 							},
 							{
 							    school: 'forms'

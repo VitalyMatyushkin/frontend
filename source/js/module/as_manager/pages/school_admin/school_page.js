@@ -7,9 +7,9 @@ const 	RouterView 	= require('module/core/router'),
 const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
+		const self         = this,
+			binding        = self.getDefaultBinding(),
+			globalBinding  = self.getMoreartyContext().getBinding(),
 			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
         window.Server.school.get(activeSchoolId).then(function (data) {
@@ -35,7 +35,11 @@ const OneSchoolPage = React.createClass({
 			href: '/#school_admin/houses',
 			name: 'Houses',
 			key: 'Houses'
-		}, {
+		},{
+			href: '/#school_admin/teams',
+			name: 'Teams',
+			key: 'Teams'
+		},{
 			href: '/#school_admin/news',
 			name: 'News',
 			key: 'News'
@@ -45,7 +49,6 @@ const OneSchoolPage = React.createClass({
             key:'Gallery'
         }];
 	},
-
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			classes: {
@@ -68,16 +71,22 @@ const OneSchoolPage = React.createClass({
 				newsRouting: {},
 				newsForm: {}
 			},
-            gallery:{
-                galleryList:[]
-            },
+			gallery:{
+				galleryList:[]
+			},
+			teams:{
+				teamsList: {},
+				teamEdit: {},
+				teamAdd: {},
+				teamsRouting: {}
+			},
 			schoolInfo: '',
 			schoolRouting: {}
 		});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
+		const self        = this,
+			binding       = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
 
 		return (
@@ -85,17 +94,41 @@ const OneSchoolPage = React.createClass({
 				<SubMenu binding={binding.sub('schoolRouting')} items={self.menuItems} />
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
-						<Route path="/school_admin/summary" binding={binding.sub('summary')} component="module/as_manager/pages/school_admin/summary/summary_page"  />
-						<Route path="/school_admin/students /school_admin/students/:mode" binding={binding.sub('students')} component="module/as_manager/pages/school_admin/students/students_page"  />
-						<Route path="/school_admin/forms /school_admin/forms/:mode" binding={binding.sub('classes')} component="module/as_manager/pages/school_admin/classes/classes_page"  />
-						<Route path="/school_admin/houses /school_admin/houses/:mode" binding={binding.sub('houses')} component="module/as_manager/pages/school_admin/houses/houses_page"  />
-						<Route path="/school_admin/news /school_admin/news/:mode" binding={binding.sub('news')} component="module/as_manager/pages/school_admin/news/news_page"  />
-                        <Route path="/school_admin/gallery /school_admin/gallery/:mode" binding={binding.sub('gallery')} component="module/as_manager/pages/school_admin/gallery/gallery_page"  />
-						<Route path="/school_admin/student " binding={binding} component="module/as_manager/pages/student/student_page"/>
+						<Route path="/school_admin/summary"
+							   binding={binding.sub('summary')}
+							   component="module/as_manager/pages/school_admin/summary/summary_page"/>
+
+						<Route path="/school_admin/students /school_admin/students/:mode"
+							   binding={binding.sub('students')}
+							   component="module/as_manager/pages/school_admin/students/students_page"/>
+
+						<Route path="/school_admin/forms /school_admin/forms/:mode"
+							   binding={binding.sub('classes')}
+							   component="module/as_manager/pages/school_admin/classes/classes_page"/>
+
+						<Route path="/school_admin/houses /school_admin/houses/:mode"
+							   binding={binding.sub('houses')}
+							   component="module/as_manager/pages/school_admin/houses/houses_page"/>
+
+						<Route path="/school_admin/teams /school_admin/teams/:mode"
+							   binding={binding.sub('teams')}
+							   component="module/as_manager/pages/school_admin/teams/teams_page"/>
+
+						<Route path="/school_admin/news /school_admin/news/:mode"
+							   binding={binding.sub('news')}
+							   component="module/as_manager/pages/school_admin/news/news_page"/>
+
+                        <Route path="/school_admin/gallery /school_admin/gallery/:mode"
+							   binding={binding.sub('gallery')}
+							   component="module/as_manager/pages/school_admin/gallery/gallery_page"/>
+
+						<Route path="/school_admin/student"
+							   binding={binding}
+							   component="module/as_manager/pages/student/student_page"/>
 					</RouterView>
 				</div>
 			</div>
-		)
+		);
 	}
 });
 

@@ -69,18 +69,14 @@ AllChallengesList = React.createClass({
                 return(
                     <div key={childEvInd} className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'}>
                         <span className="eChallenge_sport"></span>
-                        <div className="eChallenge_basic">
                             <span className="eChallenge_date">{stringDate}</span>
-                        </div>
                         <div className="eChallenge_name">{childEv.get('name')}</div>
                     </div>
                 );
             }).toArray() : (
                 <div className="eChallenge eChallenge_basicMod">
                     <span className="eChallenge_sport"></span>
-                    <div className="eChallenge_basic">
                         <span className="eChallenge_date">{}</span>
-                    </div>
                     <div className="eChallenge_name">{'N/A'}</div>
                 </div>
             );
@@ -97,10 +93,12 @@ AllChallengesList = React.createClass({
             binding = this.getDefaultBinding();
         return <div className="eEvents_challenges">
             <div className="eChallenge_title">
-                <span className="eChallenge_sport">Sport</span>
-                <span className="eChallenge_date">Date</span>
-                <span className="eChallenge_name">Event Name</span>
-                <span className="eChallenge_childName">Name</span>
+                <div className="eChallenge eChallenge_basicMod">
+                    <span className="eChallenge_sport">Sport</span>
+                    <span className="eChallenge_date">Date</span>
+                    <span className="eChallenge_name">Event Name</span>
+                </div>
+                    <span className="eChallenge_childName">Name</span>
             </div>
             {self.getEvents()}
         </div>

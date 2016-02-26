@@ -1,66 +1,89 @@
-var TypeMixin = require('module/ui/form/types/type_mixin'),
-	MaskedInput = require('module/ui/masked_input'),
+const TypeMixin = require('module/ui/form/types/type_mixin'),
 	React = require('react'),
-	ReactDOM = require('reactDom'),
-	TypePhone;
+    Immutable 	= require('immutable'),
 
-// (___)___-____
 TypePhone =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
-	componentWillMount: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+    getDefaultState: function() {
+        return Immutable.fromJS({
+            phone:'',       //input value
+            cc:'+44',       //country code
+            value:'',       //final value
+            defaultValue:'' //initial value
+        });
+    },
+    componentWillMount: function() {
+        const self = this,
+            binding = self.getDefaultBinding();
 
-		// На случай, если форма заполняется асинхронно
-		binding.addListener('defaultValue', function() {
-			self._forceNewValue(binding.get('defaultValue'));
-		});
-	},
-	componentWillUnmount:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
-		binding.remove();
-	},
+        self._forceNewValue(binding.get('defaultValue'));
+        self.addBindingListener(binding, 'defaultValue', changes => self._forceNewValue(changes.getCurrentValue()));
+        self.addBindingListener(binding, 'value', changes => self.setValue(self.clearPhone(changes.getCurrentValue())));
+    },
 	_forceNewValue: function(value) {
-		var self = this,
-			oldValue;
+        const self = this,
+            binding = self.getDefaultBinding();
+        let cc = '+44',
+            phone;
 
-		if (value !== undefined && self.refs.fieldInput && ReactDOM.findDOMNode(self.refs.fieldInput).value === '(___)___-____') {
-			ReactDOM.findDOMNode(self.refs.fieldInput).value = value;
-			self.fullValidate(value);
-		}else{
-			if(value !== undefined && self.refs.fieldInput){
-				self.fieldInputValue = value;
-				self.setValue(self.fieldInputValue);
-			}
-		}
-	},
-	handleBlur: function() {
-		var self = this,
-			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
-		//There is a default value (Old data) and the input value is empty then set the value to old one
-		//Else set to new input
-		if(inputValue ==='(___)___-____' && self.fieldInputValue !== undefined ){
-			self.setValue(self.fieldInputValue);
-		}else{
-			self.setValue(inputValue);
-		}
-	},
-	handleChange: function() {
-		var self = this,
-			inputValue = ReactDOM.findDOMNode(self.refs.fieldInput).value;
+        if(!value)
+            return;
 
-		self.changeValue(inputValue);
+        if(value.indexOf('0') === 0)
+            value = value.replace('0', '');
+
+        if(value.indexOf('+7') === 0)
+            cc = '+7';
+
+        phone = value.replace(cc, '');
+        binding.atomically()
+            .set('cc', cc)
+            .set('phone', phone)
+            .commit();
+
+        self.saveValue();
 	},
+    saveValue:function(){
+        const self = this,
+            binding = self.getDefaultBinding(),
+            cc = binding.get('cc'),
+            phone = self.clearPhone(binding.get('phone'));
+
+        self.setValue(cc + phone);
+    },
+    clearPhone:function(phone){
+        const res = phone.replace(/[^+#\d]/g, '');
+        return res;
+    },
+    ccChange: function(e) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            inputValue = e.target.value;
+
+        binding.set('cc', inputValue);
+        self.saveValue();
+    },
+    phoneChange: function(e) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            inputValue = e.target.value;
+
+        binding.set('phone', inputValue);
+        self.saveValue();
+    },
 	render: function () {
-		var self = this,
-			defaultValue = self.getDefaultBinding().get('defaultValue');
-
-		//self._forceNewValue(defaultValue);
+		const self = this,
+            binding = self.getDefaultBinding(),
+            cc = binding.get('cc'),
+            phone = binding.get('phone');
 
 		return (
-			<div className="eForm_fieldInput">
-				<MaskedInput ref="fieldInput" value={self.fieldInputValue} onBlur={self.handleBlur} onChange={self.handleChange} mask="(999)999-9999" />
+			<div className="eForm_fieldInput mPhone">
+                <select onChange={self.ccChange} value={cc} >
+                    <option value="+44" >+44</option>
+                    <option value="+7" >+7</option>
+                </select>
+                <input type="text" value={phone} onChange={self.phoneChange} />
 			</div>
 		)
 	}

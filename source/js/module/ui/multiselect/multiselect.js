@@ -83,7 +83,7 @@ var MultiSelect = React.createClass({
     },
     render: function() {
         var self = this,
-            count = self.props.selections.length;
+            count = self.props.selections.size;
 
         return (
             <div key={self.props.key} className="bMultiSelect">
