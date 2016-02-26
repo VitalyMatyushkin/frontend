@@ -325,7 +325,6 @@ const EventManagerBase = React.createClass({
                                 disabled="disabled">not selected</Morearty.DOM.option>
                             {self.getSports()}
                         </select>
-                        <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
                     </div>
                 </div>
             </If>
@@ -373,7 +372,6 @@ const EventManagerBase = React.createClass({
                             <Morearty.DOM.option key="anyway-type"
                                                  value="internal">internal</Morearty.DOM.option>
                         </select>
-                        <SVG classes="selectArrow" icon="icon_dropbox_arrow"/>
                     </div>
                 </div>
             </If>

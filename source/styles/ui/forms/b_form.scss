@@ -288,10 +288,16 @@ $INVALID_COLOR: rgb(182, 0, 0);
 }
 .eManager_select_wrap select {
   border: none;
-  width: 215px;
+  width: 200px;
+  height: 37px;
   color: #000000;
-  background: #fff;
+  background: transparent;
   padding: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: $BORDER;
+  border-radius: 5%;
 }
 .eManager_select_wrap option{
   height: 30px;
@@ -301,21 +307,9 @@ $INVALID_COLOR: rgb(182, 0, 0);
   background: $MAIN_COLOR;
 }
 .eManager_select_wrap {
-  border: $BORDER;
   position: relative;
-  height: 35px;
-  border-radius: 5%;
   background: #fff;
-  width: 200px;
-  overflow: hidden;
-}
-
-.selectArrow{
-  position: absolute;
-  top: 10px;
-  right: 5px;
-  color: $COLOR;
-  z-index: 1;
-  width: 14px;
-  height: 14px;
+  width: 195px;
+  background: url("/images/icons/select_arrow.svg") right no-repeat;
+  background-size: 14px 14px;
 }
