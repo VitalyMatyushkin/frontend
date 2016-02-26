@@ -23,7 +23,7 @@ CoachesForm = React.createClass({
 
 				<FormColumn type="column">
 					<FormField type="text" field="email" validation="required">Email</FormField>
-					<FormField type="text" field="phone" validation="required">Phone</FormField>
+					<FormField type="phone" field="phone" validation="required">Phone</FormField>
 					<FormField type="text" field="password" validation="required">Password</FormField>
 				</FormColumn>
 			</Form>

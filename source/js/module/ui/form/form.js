@@ -172,32 +172,32 @@ const Form = React.createClass({
     },
 
     _createBindedClones: function(parent) {
-       const    self    = this,
+        const    self    = this,
                 binding = self.getDefaultBinding();
 
-        /** recursively traversing all children and their children and their children....
-         * as setting binding to them
-         */
-        function processChildren(parent) {
-            return React.Children.map(parent.props.children, function(child){
-                if(child.props.type === 'column') { // but we need to go deeper..
-                    var nestedChildren = processChildren(child); // processing all current child children
-                    return React.cloneElement(
-                        child,
-                        {
+            /** recursively traversing all children and their children and their children....
+             * as setting binding to them
+             */
+            function processChildren(parent) {
+                return React.Children.map(parent.props.children, function(child){
+                    if(child.props.type === 'column') { // but we need to go deeper..
+                        var nestedChildren = processChildren(child); // processing all current child children
+                        return React.cloneElement(
+                            child,
+                            {
+                                binding: binding.meta(child.props.field),
+                                service: self.props.service
+                            },
+                            nestedChildren                            // and setting them back to clone.
+                        );
+                    } else {
+                        return React.cloneElement(child, {
                             binding: binding.meta(child.props.field),
                             service: self.props.service
-                        },
-                        nestedChildren                            // and setting them back to clone.
-                    );
-                } else {
-                    return React.cloneElement(child, {
-                        binding: binding.meta(child.props.field),
-                        service: self.props.service
-                    });
-                }
-            });
-        }
+                        });
+                    }
+                });
+            }
 
         return processChildren(parent);
     },

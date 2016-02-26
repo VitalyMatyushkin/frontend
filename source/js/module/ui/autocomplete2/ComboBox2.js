@@ -6,10 +6,15 @@
 
 const   React   = require('react'),
         Lazy    = require('lazyjs'),
-        SVG 		= require('module/ui/svg');
+        SVG 	= require('module/ui/svg');
 
 const ComboBox2 = React.createClass({
     propTypes: {
+        /**
+         * There are situations when combobox should have initial value on start of his lifecycle
+         * So, if initial value define, then combobox has currentText = initValue on start of his lifecycle
+         */
+        initialValue:     React.PropTypes.string,
         /**
          * Placeholder text displayed when input area is empty
          */
@@ -39,13 +44,25 @@ const ComboBox2 = React.createClass({
         getElementTitle:   React.PropTypes.func,
         clearAfterSelect:  React.PropTypes.bool
     },
+    getFirstCurrentText: function() {
+        const self = this;
+        let currentText = '';
+
+        if(self.props.initialValue) {
+            currentText = self.props.initialValue;
+        }
+
+        return currentText;
+    },
     getInitialState: function(){
+        const self = this;
+
         return {
             dataList:            [],
             isLoading:           false,
             isOpen:              false,
             prevText:            '',
-            currentText:         '',
+            currentText:         self.getFirstCurrentText(),
             currentIndex:        undefined,
             currentAsyncRequest: undefined
         };

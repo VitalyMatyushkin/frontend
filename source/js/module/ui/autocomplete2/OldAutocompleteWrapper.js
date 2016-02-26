@@ -12,7 +12,8 @@ const OldAutocompleteWrapper = React.createClass({
         onInput: 			React.PropTypes.func,
         placeholderText: 	React.PropTypes.string,
         onEscapeSelection:  React.PropTypes.func,
-        clearAfterSelect: 	React.PropTypes.bool
+        clearAfterSelect: 	React.PropTypes.bool,
+        initialValue: 	    React.PropTypes.string
     },
     searchFunction: function(text) {
         const self = this;
@@ -43,6 +44,7 @@ const OldAutocompleteWrapper = React.createClass({
 
         return (
             <ComboBox2
+                initialValue={self.props.initialValue}
                 placeholder={self.props.placeholderText}
                 searchFunction={self.searchFunction}
                 onSelect={self.props.onSelect}
