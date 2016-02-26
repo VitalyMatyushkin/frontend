@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login'],
+const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login', 'playground'],
         defaultModel    = 'school',
         apiVersion      = 1;
 
