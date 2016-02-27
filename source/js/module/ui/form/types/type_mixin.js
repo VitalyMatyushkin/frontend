@@ -92,24 +92,15 @@ const InputTypeMixin = {
 				oldValue 		= binding.get('value'),
 				validateResult 	= self.fullValidate(value);
 
-		value = value || '';
-
-		if (oldValue === value) {
-			return false;
-		}
-
-		if (value !== '' && validateResult) {
+		if (validateResult)
 			self.showError();
-		}else if(value ==='' && self.props.promptOnBlank){
-			//Test against empty string and show error
-			self.showError();
-		}
-		else{
+        else
 			self.hideError();
-		}
 
-		self.getDefaultBinding().set('value', value);
-		self.props.onSetValue && self.props.onSetValue(value);
+        value = value || '';
+
+        self.getDefaultBinding().set('value', value);
+        self.props.onSetValue && self.props.onSetValue(value);
 	},
 	showError: function(text) {
 		console.log('showing error');

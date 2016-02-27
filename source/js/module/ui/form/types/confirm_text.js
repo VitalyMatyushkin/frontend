@@ -1,14 +1,13 @@
-var TypeConfirmText,
-	TypeText = require('module/ui/form/types/text'),
+const TypeText = require('module/ui/form/types/text'),
 	React = require('react'),
 	ReactDOM = require('reactDom'),
-	TypeMixin = require('module/ui/form/types/type_mixin');
+	TypeMixin = require('module/ui/form/types/type_mixin'),
+    errorText = 'Values in both fields do not match',
 
 TypeConfirmText = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
-	errorText: 'Values in both fields do not match',
 	componentWillMount: function() {
-		var self = this,
+		const self = this,
 			binding = self.getDefaultBinding();
 
 		binding.addListener('defaultValue', function() {
@@ -26,41 +25,31 @@ TypeConfirmText = React.createClass({
 		}
 	},
 	onSetValue: function() {
-		var self = this;
-
-		self.checkConfirm();
+        this.checkConfirm();
 	},
 	setConfirmValue: function(event) {
-		var self = this;
-
-		self.confirmValue = event.currentTarget.value;
-		self.checkConfirm();
-	},
-	changeConfirmValue: function() {
-		var self = this;
-
-		self.hideError();
+        this.confirmValue = event.currentTarget.value;
+        this.checkConfirm();
 	},
 	checkConfirm: function() {
-		var self = this,
+		const self = this,
 			binding = self.getDefaultBinding(),
 			error = binding.get('error');
 
 		// Проверку на совпадение полей делаем только в том случае, если нет других ошибок валидации
-		if (!error || error === self.errorText) {
-			binding.set('error', self.errorText);
+		if (!error || error === errorText) {
+			binding.set('error', errorText);
 
 			if (self.confirmValue && binding.get('value') === self.confirmValue) {
-				self.getDefaultBinding().set('error', false);
+                binding.set('error', false);
 				self.hideError();
 			}
 		}
 	},
 	render: function() {
-		var self = this,
-			defaultValue = self.getDefaultBinding().get('defaultValue');
-
-		//self._forceNewValue(defaultValue);
+        const self = this,
+            binding = self.getDefaultBinding(),
+			defaultValue = binding.get('defaultValue');
 
 		return (
 			<div>
