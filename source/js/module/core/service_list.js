@@ -172,7 +172,9 @@ const serviceList = {
 	initializeOpenServices: function() {
 		// schools
 		serviceList.schoolsFindOne = new Service('/schools/getAllSchools');
-		//serviceList.images = new ImageService();
+		
+		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
+		serviceList.images = new ImageService(window.apiImg);
 	}
 };
 

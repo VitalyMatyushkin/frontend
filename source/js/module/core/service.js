@@ -1,7 +1,7 @@
 const 	$ 			= require('jquery'),
 		log 		= require('loglevel'),
 		AJAX 		= require('module/core/AJAX'),
-		baseUrl 	= window.apiBase;
+		baseUrl 	= window.apiBase;	// using global vars is really bad practice
 
 /** Build ServiceConstructor which is kind of accessor to given url.
  *  Example:
