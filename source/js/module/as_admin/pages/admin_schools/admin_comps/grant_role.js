@@ -13,6 +13,15 @@ const GrantRole = React.createClass({
         userIdsBinding:     React.PropTypes.object,
         onSuccess:          React.PropTypes.func
     },
+    getDefaultState:function() {
+        return Immutable.Map({
+            roleName: 'teacher',
+            comment: ''
+        });
+    },
+    componentWillUnmount:function(){
+        this.getDefaultBinding().clear();
+    },
     getSchools: function(filter) {
         return window.Server.getAllSchools.get({
             filter: {
@@ -51,7 +60,6 @@ const GrantRole = React.createClass({
             }).toArray();
         });
     },
-
     onStudentSelect:function(id, model){
         this.getDefaultBinding().set('selectedStudentId', model.id);
      },
@@ -67,7 +75,7 @@ const GrantRole = React.createClass({
                 rootBinding     = self.getMoreartyContext().getBinding(),
                 schoolId        = binding.get('selectedSchoolId'),
                 model = {
-                    preset:         binding.get('roleName'),
+                    preset:         binding.get('roleName'),//!!
                     schoolId:       schoolId,
                     principalId:    '',
                     comment:        binding.get('comment'),
