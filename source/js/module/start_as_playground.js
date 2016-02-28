@@ -20,11 +20,10 @@ function runPlaygroundMode() {
         handleChange: function(e){
             const   self    = this,
                     file    = e.target.files[0];
-            imgService.upload(file).then( key => {
-                const url = imgService.getOriginalUrlByKey(key);
-                console.log('uploaded!: ' + JSON.stringify(url, null, 2));
+            imgService.upload(file).then( imgUrl => {
+                console.log('uploaded!: ' + JSON.stringify(imgUrl, null, 2));
                 self.setState({
-                    imgUrl: imgService.getResizedToHeightUrl(url, 300)
+                    imgUrl: imgService.getResizedToHeightUrl(imgUrl, 300)
                 });
             });
         },

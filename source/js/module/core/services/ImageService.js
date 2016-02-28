@@ -5,7 +5,7 @@
 const Ajax = require('module/core/AJAX');
 
 /**
- *
+ * Simple wrapper for image service usage
  * @constructor
  */
 const ImageService = function(endpoint){
@@ -13,7 +13,7 @@ const ImageService = function(endpoint){
     this.__uploadUrl  = endpoint + '/images';
 };
 
-/** Will upload file to storage and return it's key */
+/** Will upload file to storage and return it's url*/
 ImageService.prototype.upload = function(file){
     const fd = new FormData();
     fd.append('image', file);
@@ -24,10 +24,10 @@ ImageService.prototype.upload = function(file){
         processData:    false,
         contentType:    false
     })
-    .then( success => success.data.key );
+    .then( success => this.__getOriginalUrlByKey(success.data.key));
 };
 
-ImageService.prototype.getOriginalUrlByKey = function(key){
+ImageService.prototype.__getOriginalUrlByKey = function(key){
     return this.endpoint + '/images/' + key;
 };
 
@@ -35,12 +35,6 @@ ImageService.prototype.getResizedToHeightUrl = function(origUrl, height) {
     return `${origUrl}?sizing=height&height=${height}`;
 };
 
-ImageService.prototype.getResizedToHeightUrlByKey = function(key, height){
-    return this.getResizedToHeightUrl(
-        this.getOriginalUrlByKey(key),
-        height
-    );
-};
 
 
 module.exports = ImageService;

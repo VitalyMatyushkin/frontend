@@ -1,13 +1,12 @@
 const React = require('react');
 
 const FullScreenList = React.createClass({
-
 	getInitialState: function() {
 		return {
-			photos: [],
-			currentIndex: 0,
-			windowWidth: window.innerWidth,
-			windowHeight: window.innerHeight
+			photos: 		[],
+			currentIndex: 	0,
+			windowWidth: 	window.innerWidth,
+			windowHeight: 	window.innerHeight
 		};
 	},
 

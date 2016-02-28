@@ -9,13 +9,13 @@ const   FileUpload 		= require('module/ui/file_upload/file_upload'),
 const galleryServices = function(albumBinding){
     this.binding = albumBinding;
 
-    this.createAlbum = (model) => {
+    this.createAlbum = function(model){
         return window.Server.addAlbum.post(model);
     };
-    this.loadAlbum = (albumId) => {
+    this.loadAlbum = function(albumId){
         return window.Server.album.get(albumId);
     };
-    this.loadAlbumWithPhotos = (albumId) =>{
+    this.loadAlbumWithPhotos = function(albumId){
         return window.Server.album.get(albumId, {
             filter: {
                 include: {
@@ -27,10 +27,10 @@ const galleryServices = function(albumBinding){
             }
         });
     };
-    this.updateSchool = (schoolId, albumId) => {
+    this.updateSchool = function(schoolId, albumId){
         return window.Server.school.put(schoolId, {defaultAlbumId:albumId});
     };
-    this.getDefaultSchoolAlbum = (schoolId, ownerId) => {
+    this.getDefaultSchoolAlbum = function(schoolId, ownerId){
         const self = this,
             binding = self.binding;
         let school;
@@ -52,13 +52,11 @@ const galleryServices = function(albumBinding){
         });
     };
 
-    this.uploadPhoto = (file, isUploadingBinding) => {
-        const self = this,
-            binding = self.binding,
-            formData = new FormData(),
-            uri = window.apiBase + '/storage/' + binding.get('storageId'),
-            fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1],
-            uploader = new FileUpload(uri); //Instantiate new file upload service
+    /** Will upload given File and finally return promise which nobody cares */
+    this.uploadPhoto = function(file, isUploadingBinding){
+        const   self        = this,
+                binding     = self.binding,
+                imgService  = window.Server.images;
 
         function startUploading(){
             isUploadingBinding.set(true);
@@ -67,40 +65,32 @@ const galleryServices = function(albumBinding){
             isUploadingBinding.set(false);
         }
 
-        formData.append('file', file, fileName);
         startUploading();
-        uploader.post(formData)
-        .then(function(data){
-            return self._addPhoto(data);
-        })
-        .catch(function(data){
-            window.alert(data+' Please try again!');
-            stopUploading();
-        })
-        .then(function(res) {
-            stopUploading();
-            binding.sub('photos').update(function(photos) {
-                return photos.unshift(Immutable.fromJS(res));
-            });
-            if(!binding.get('coverUrl'))
-                return self.photoPin(res.pic);
-        });
+        return imgService.upload(file)
+            .then(self._addPhoto.bind(this))
+            .then(res => {
+                binding.sub('photos').update(photos => photos.unshift(Immutable.fromJS(res)));
+                if(!binding.get('coverUrl'))
+                    return self.photoPin(res.pic);
+            })
+            .finally(stopUploading);
     };
-    this._addPhoto = (fileModel) => {
-        const albumId = this.binding.get('id'),
-            ownerId = this.binding.get('ownerId'),
-            uri = window.apiBase + '/storage/' + this.binding.get('storageId'),
-            model = {
-                name: fileModel.name,
-                albumId: albumId,
-                description: fileModel.name,
-                authorId: ownerId,
-                pic: uri + '/files/' + fileModel.name
-            };
+
+    /** will create new API Photo item and return promise of AJAX request */
+    this._addPhoto = function(imgUrl) {
+        const   albumId     = this.binding.get('id'),
+                ownerId     = this.binding.get('ownerId'),
+                model       = {
+                    name:           "MyNameIs",
+                    albumId:        albumId,
+                    description:    "",
+                    authorId:       ownerId,
+                    pic:            imgUrl
+                };
         return window.Server.photos.post(albumId, model);
     };
 
-    this.photoPin = (coverUrl) => {
+    this.photoPin = function(coverUrl){
         return window.Server.album.put(this.binding.get('id'), {coverUrl:coverUrl});
     };
 };
