@@ -1,15 +1,13 @@
-var ApplicationView = require('module/as_www/application'),
-	serviceList = require('module/core/service_list'),
-	userDataInstance = require('module/data/user_data'),
-	authController = require('module/core/auth_controller'),
-	ReactDom = require('reactDom'),
-	MoreartyContext,
-	React = require('react'),
-	binding;
+const  	ApplicationView 	= require('module/as_www/application'),
+		serviceList 		= require('module/core/service_list'),
+		userDataInstance 	= require('module/data/user_data'),
+		authController 		= require('module/core/auth_controller'),
+		ReactDom 			= require('reactDom'),
+		React 				= require('react');
 
 function runWwwMode() {
 	// Создание контекста Morearty
-	MoreartyContext = Morearty.createContext({
+	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			routing: {
@@ -25,7 +23,7 @@ function runWwwMode() {
 		}
 	});
 
-	binding = MoreartyContext.getBinding();
+	const binding = MoreartyContext.getBinding();
 
 	window.Server = serviceList;
 
