@@ -1,0 +1,12 @@
+.bTeamViewer {
+  width: 440px;
+  min-height: 300px;
+  display: inline-block;
+  background: #fff;
+  border: $BORDER;
+  vertical-align: top;
+}
+
+.bTeamViewer.mMarginLeft{
+  margin-left: 75px;
+}

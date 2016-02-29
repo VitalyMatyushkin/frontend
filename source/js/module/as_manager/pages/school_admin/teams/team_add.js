@@ -1,7 +1,7 @@
 const   TeamForm             = require('module/as_manager/pages/school_admin/teams/team_form'),
         Immutable            = require('immutable'),
         MoreartyHelper       = require('module/helpers/morearty_helper'),
-        TeamHelper           = require('./team_helper'),
+        TeamHelper           = require('module/ui/managers/helpers/team_helper'),
         React                = require('react');
 
 const TeamAddPage = React.createClass({

@@ -109,22 +109,20 @@ Team = React.createClass({
 
         return (
                 <div className="bTeam" key={rivalId}>
-                    <div className="eTeam_playersTableContainer">
-                        <table>
-                            <thead>
-                            <tr className="bPlayer mHead">
-                                <td className="ePlayer_name">Name</td>
-                                <td className="ePlayer_form">Form</td>
-                                <td className="ePlayer_position">Position</td>
-                                <td className="ePlayer_sub">Sub</td>
-                                <td className="ePlayer_remove"></td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {self._getPlayers()}
-                            </tbody>
-                        </table>
-                    </div>
+                    <table>
+                        <thead>
+                        <tr className="bPlayer mHead">
+                            <td className="ePlayer_name">Name</td>
+                            <td className="ePlayer_form">Form</td>
+                            <td className="ePlayer_position">Position</td>
+                            <td className="ePlayer_sub">Sub</td>
+                            <td className="ePlayer_remove"></td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {self._getPlayers()}
+                        </tbody>
+                    </table>
                 </div>
         );
     }

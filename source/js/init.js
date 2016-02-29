@@ -17,7 +17,8 @@ requirejs.config({
         reactDom:   bowerDir + 'react/react-dom',
         loglevel:   bowerDir + "loglevel/dist/loglevel.min",
         bluebird:   bowerDir + 'bluebird/js/browser/bluebird',
-        lazyjs:     bowerDir + 'lazy.js/lazy'
+        lazyjs:     bowerDir + 'lazy.js/lazy',
+        async:      bowerDir + 'async/lib/async'
     },
     shim: {
         /** Making classname acts like AMD library */
@@ -35,8 +36,8 @@ requirejs.config({
 
 
 requirejs(
-    ['jquery', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader','reactDom', 'module/helpers/ponyfill/es6_best_parts'],
-    function($, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG,ReactDOM, es6PonyFill){
+    ['jquery', 'async', 'react', 'immutable', 'director', 'loglevel', 'bluebird', 'module/helpers/loader_utils', 'module/helpers/storage', 'module/helpers/svg_loader','reactDom', 'module/helpers/ponyfill/es6_best_parts'],
+    function($, async, React, Immutable, Director, log, Promise, loaderUtils, storage, loadSVG,ReactDOM, es6PonyFill){
 
         // adding some undoubtedly required features form ES6
         es6PonyFill();

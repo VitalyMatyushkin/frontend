@@ -1,13 +1,14 @@
 .bTeam {
   width: 440px;
   display: inline-block;
-}
-
-.eTeam_playersTableContainer {
-  min-height: 600px;
   min-height: 300px;
   background: #fff;
   border: $BORDER;
+}
+
+.eManager_managerTeamContainer {
+  margin-left: 18px;
+  display: inline-block;
 }
 
 .eTeam_errorBox{
