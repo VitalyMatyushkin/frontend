@@ -102,18 +102,18 @@ const UserFixtures = React.createClass({
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                    <div className="eChallenge_hours">{hours + ':' + minutes}</div>
                     <div className="eChallenge_in">
                         <div className="eChallenge_rivalName">
-                            {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
                             {firstName}
                         </div>
                         <div
                             className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '- : -'}</div>
                         <div className="eChallenge_rivalName">
-                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
                             {secondName}
                         </div>
+                    </div>
+                    <div className="eChallenge_type">
+                        {event.type}
                     </div>
                     <div className="eChallenge_com_container">
                         <div className="eChallenge_comments">
@@ -143,16 +143,14 @@ const UserFixtures = React.createClass({
 
             return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
                 var date = new Date(datetime),
-                    daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                     monthNames = [ "January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December" ],
                     dayOfWeek = date.getDay();
                 return <div key={dateTimeIndex} className="bChallengeDate">
                     <div className="eAchievements_wrap">
                         <div className="eChallengeDate_date">
-                            {daysOfWeek[dayOfWeek] + ' ' +
-                            date.getDate() + ' ' +
-                            monthNames[date.getMonth()] + ' ' +
+                            {date.getDate() + ' ' +
+                            monthNames[date.getMonth()] + ',' +
                             date.getFullYear()}
                         </div>
                         <div className="eChallengeDate_list">{self.getEvents(datetime, dataFrom)}</div>

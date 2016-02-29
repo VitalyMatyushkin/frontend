@@ -8,23 +8,23 @@ $border: solid 1px #c2c2c2;
   text-align: center;
   width: 100%;
   align-items: center;
+  justify-content: space-around;
   &:active{
     box-shadow: 0px 0px 1px 1px rgba(0,0,0,0.3);
     top: 2px;
   }
-
 }
 
 .eChallenge_in{
   display: flex;
-  width: 30%;
+  width: 42%;
   justify-content: center;
 }
 .bChallenge p{
   margin: auto;
 }
 .eChallenge_com_container{
-  margin: auto;
+  width: 25%;
 }
 .eChallenge_comments{
   text-align: center;
@@ -45,7 +45,6 @@ $border: solid 1px #c2c2c2;
 .eChallenge_hours{
   text-align: center;
   width: 10%;
-  margin: auto;
 }
 .eChallenge_sport{
   width: 10%;
@@ -55,7 +54,6 @@ $border: solid 1px #c2c2c2;
   margin: auto;
 }
 .eChallenge_results{
-
   width: 10%;
   text-align: center;
   margin: auto;
@@ -79,8 +77,8 @@ $border: solid 1px #c2c2c2;
 }
 
 .eChallenge_rivalPic img{
-  max-height: 40px;
-  max-width: 40px;
+  max-height: 75px;
+  max-width: 75px;
   margin-bottom: 5px;
 }
 
@@ -164,6 +162,9 @@ $border: solid 1px #c2c2c2;
   width: 100%;
   display: flex;
   justify-content: space-around;
+  &:hover {
+    background: lighten($MAIN_COLOR, 25%);
+  }
 }
 
 .eChallengeDate_list{
@@ -175,8 +176,58 @@ $border: solid 1px #c2c2c2;
   display: flex;
   text-align: center;
 }
+.eAchievements_wrap .bChallenge{
+  border-top: $BORDER;
+  margin-top: 1px;
+}
 .bAdminView{
   display: flex;
   max-width: 1060px;
   margin: 40px auto;
+}
+.bAchievementsDate {
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  color: #333132;
+  margin: 10px;
+}
+.eAchievementsDate_date{
+  font-size: 15px;
+  font-weight: bold;
+  color: #a8a8a8;
+  margin: 5px auto;
+}
+.bAchievement{
+  display: flex;
+  flex-direction: column;
+}
+.eAchievement_in {
+  display: flex;
+  max-width: 340px;
+  flex-wrap: wrap;
+}
+.eAchievement_rivalInfo {
+  font-size: 16px;
+  font-weight: bold;
+  margin: auto;
+}
+.eAchievement_results {
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 22px;
+}
+.eAchievement_com_container {
+  border-bottom: $BORDER;
+  border-top: $BORDER;
+  padding: 10px;
+  margin: 10px 0 15px;
+}
+.eAchievement_rivalName {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.eAchievement_rival{
+  max-width: 110px;
 }
