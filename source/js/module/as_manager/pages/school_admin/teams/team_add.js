@@ -109,7 +109,8 @@ const TeamAddPage = React.createClass({
                 schoolId:    self.activeSchoolId,
                 ages:        binding.toJS('teamForm.ages'),
                 gender:      binding.get('teamForm.gender'),
-                houseId:     TeamHelper.getHouseId(binding)
+                houseId:     TeamHelper.getHouseId(binding),
+                tempTeam:    false
             };
 
             window.Server.teams.post(team).then(function (teamsResult) {

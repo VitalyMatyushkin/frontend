@@ -240,7 +240,7 @@ const EventManager = React.createClass({
             }
         });
     },
-    _submitTempTeam: function(event, rival, rivalIndex, callback) {
+    _submitTempTeam: function(event, rival, rivalIndex) {
         const self = this,
             binding = self.getDefaultBinding(),
             activeSchoolId = binding.get('schoolInfo.id'),
@@ -248,7 +248,8 @@ const EventManager = React.createClass({
 
         let rivalModel = {
             sportId:  event.sportId,
-            schoolId: activeSchoolId
+            schoolId: activeSchoolId,
+            tempTeam: true
         };
 
         switch (event.type) {

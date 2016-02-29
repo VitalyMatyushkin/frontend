@@ -20,9 +20,9 @@ const TeamsTable = React.createClass({
         let filter = {
             where: {
                 schoolId: self.activeSchoolId,
-                    gender: model.gender,
-                    sportId: model.sportId,
-                // TODO fix me
+                gender: model.gender,
+                sportId: model.sportId,
+                tempTeam: false,
                 ages: {
                         inq: model.ages
                     }
