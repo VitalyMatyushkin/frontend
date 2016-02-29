@@ -28,26 +28,35 @@ const EventVenue = React.createClass({
         if(currentProp === 'inter-schools'){
             window.Server.findPostCodeById.get({postCode:binding.get('rivals.0.postcodeId')})
                 .then(function(postcode){
-                    window.Server.postCode.get({ limit: 10 })// TODO: fix me
-                        .then(function(postcodes){
-                            self.currentPostcode = postcode;
-                            self.refs.home.checked = true;
-                            binding.set('venue',postcode);
-                            binding.set('model.venue.postcode', postcode.id);
-                            binding.set('venueList',postcodes);
-                            self.forceUpdate();
-                        })
-                        .catch(function(er){
-                            console.log(er.errorThrown);
-                        });
+                    // TODO: fix me
+                    window.Server.postCode.get({
+                        filter: {
+                            limit:10
+                        }
+                    }).then(function(postcodes){
+                        self.currentPostcode = postcode;
+                        self.refs.home.checked = true;
+                        binding.set('venue',postcode);
+                        binding.set('model.venue.postcode', postcode.id);
+                        binding.set('venueList',postcodes);
+                        self.forceUpdate();
+                    })
+                    .catch(function(er){
+                        console.log(er.errorThrown);
+                    });
                     return postcode;
                 })
                 .catch(function(er){
                     console.log(er);
                 });
             self.neutralVenue = false;
-        }else{
-            window.Server.postCode.get({limit: 10}).then(function(postcodes){   // TODO: fix me
+        } else {
+            // TODO: fix me
+            window.Server.postCode.get({
+                filter: {
+                    limit:10
+                }
+            }).then(function(postcodes){
                 binding.set('venue',postcodes[0]);
                 binding.set('model.venue.postcode', postcodes[0].id);
                 binding.set('venueList',postcodes);
