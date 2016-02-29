@@ -57,12 +57,8 @@ requirejs(
         //window.Router = Director; // Director does this itself. 
 
         const   myDomain      = document.location.hostname,
-                //api           = loaderUtils.apiSelector(myDomain),
-                api           = 'http://localhost:3000/v1',
+                api           = loaderUtils.apiSelector(myDomain),
                 startModule   = loaderUtils.startModuleSelector(myDomain);
-
-        const parsed = loaderUtils.parseDomainName("http://manager.squard.com");
-        console.log('parsed: ' + JSON.stringify(parsed, null, 2));
 
 
         log.enableAll();    // let it be here a bit...
