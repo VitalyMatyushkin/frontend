@@ -77,8 +77,8 @@ $border: solid 1px #c2c2c2;
 }
 
 .eChallenge_rivalPic img{
-  max-height: 40px;
-  max-width: 40px;
+  max-height: 75px;
+  max-width: 75px;
   margin-bottom: 5px;
 }
 
@@ -184,4 +184,50 @@ $border: solid 1px #c2c2c2;
   display: flex;
   max-width: 1060px;
   margin: 40px auto;
+}
+.bAchievementsDate {
+  max-width: 340px;
+  display: flex;
+  flex-direction: column;
+  color: #333132;
+  margin: 10px;
+}
+.eAchievementsDate_date{
+  font-size: 15px;
+  font-weight: bold;
+  color: #a8a8a8;
+  margin: 5px auto;
+}
+.bAchievement{
+  display: flex;
+  flex-direction: column;
+}
+.eAchievement_in {
+  display: flex;
+  max-width: 340px;
+  flex-wrap: wrap;
+}
+.eAchievement_rivalInfo {
+  font-size: 16px;
+  font-weight: bold;
+  margin: auto;
+}
+.eAchievement_results {
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 22px;
+}
+.eAchievement_com_container {
+  border-bottom: $BORDER;
+  border-top: $BORDER;
+  padding: 10px;
+  margin: 10px 0 15px;
+}
+.eAchievement_rivalName {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+.eAchievement_rival{
+  max-width: 110px;
 }
