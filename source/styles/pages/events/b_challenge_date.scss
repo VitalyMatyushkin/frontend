@@ -1,14 +1,16 @@
 
 .eChallengeDate_date{
   vertical-align: middle;
-  width: 10%;
+  width: 15%;
   margin: auto 0;
+  text-align: center;
+  font-weight: bold;
 }
 
 .bChallengeDate {
   display: flex;
   flex-direction: column;
-  font-size: 16px;
+  font-size: 14px;
   text-transform: none;
   color: #333132;
   margin: auto;
