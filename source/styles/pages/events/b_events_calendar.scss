@@ -25,7 +25,6 @@ $border-color: #c2c2c2;
   align-items: center;
   margin: 0 15px;
   &:hover {
-    background: lighten($MAIN_COLOR, 25%);
   }
   &.mActive {
     color: #fff;

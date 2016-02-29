@@ -73,19 +73,16 @@ AllChallengesList = React.createClass({
                         <div className="eChallenge_name">{childEv.get('name')}</div>
                     </div>
                 );
-            }).toArray() : (
-                <div className="eChallenge eChallenge_basicMod">
-                    <span className="eChallenge_sport"></span>
-                    <span className="eChallenge_date"></span>
-                    <div className="eChallenge_name">{'N/A'}</div>
-                </div>
-            );
-            return (
-                <div key={childInd} className= "eChallenge eChallenge_all">
-                    <div className="eChildFixturesAll">{childFixtures}</div>
-                    <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
-                </div>
-            );
+            }).toArray() : null;
+            if(!childFixtures)
+                return null;
+            else
+                return (
+                    <div key={childInd} className= "eChallenge eChallenge_all">
+                        <div className="eChildFixturesAll"> {childFixtures}</div>
+                        <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
+                    </div>
+                );
         }).toArray():<div className="eChallenge mNotFound">{sync ? "You haven't events on this month." : "Loading..."}</div>;
     },
     render: function() {
