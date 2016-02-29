@@ -22,8 +22,9 @@ const TeamsTable = React.createClass({
                 schoolId: self.activeSchoolId,
                     gender: model.gender,
                     sportId: model.sportId,
-                    ages: {
-                        inq: []
+                // TODO fix me
+                ages: {
+                        inq: model.ages
                     }
             },
             include: 'sport'
@@ -33,14 +34,18 @@ const TeamsTable = React.createClass({
             filter.where.or = [{houseId: rivals[0].id}, {houseId: rivals[1].id}];
         }
 
-        model.ages.forEach((age) => {
-            filter.where.ages.inq.push(age);
-        });
-
         window.Server.teams.get({filter: filter}).then((teams)  => {
+            let filteredTeams = [];
+
+            teams.forEach((team) => {
+                if(team.ages.length <= model.ages.length) {
+                    filteredTeams.push(team)
+                }
+            });
+
             binding
                 .atomically()
-                .set('teams', Immutable.fromJS(teams))
+                .set('teams', Immutable.fromJS(filteredTeams))
                 .commit();
         });
     },
