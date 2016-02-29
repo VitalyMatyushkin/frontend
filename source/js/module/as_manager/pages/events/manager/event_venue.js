@@ -1,11 +1,12 @@
 /**
  * Created by Bright on 19/01/2016.
  */
-const React = require('react'),
-    Map = require('module/ui/map/map'),
-    Immutable = require('immutable'),
-    If = require('module/ui/if/if'),
-    ReactDOM = require('reactDom');
+const   React       = require('react'),
+        Map         = require('module/ui/map/map'),
+        Immutable   = require('immutable'),
+        If          = require('module/ui/if/if'),
+        ReactDOM    = require('reactDom');
+
 const EventVenue = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
@@ -13,26 +14,24 @@ const EventVenue = React.createClass({
     },
     displayName:'EventVenue',
     componentWillMount:function(){
-        var self = this;
-        self.componentSetupCalls();
+        this.componentSetupCalls();
     },
     componentWillReceiveProps:function(nextProps){
-        var self = this;
         if(nextProps.sportType !== this.props.sportType){
-            self.componentSetupCalls(nextProps.sportType);
+            this.componentSetupCalls(nextProps.sportType);
         }
     },
     componentSetupCalls:function(prop){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentProp = prop !== undefined?prop:self.props.sportType;
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                currentProp = prop !== undefined?prop:self.props.sportType;
         if(currentProp === 'inter-schools'){
             window.Server.findPostCodeById.get({postCode:binding.get('rivals.0.postcodeId')})
                 .then(function(postcode){
-                    window.Server.postCode.get()
+                    window.Server.postCode.get({ limit: 10 })// TODO: fix me
                         .then(function(postcodes){
                             self.currentPostcode = postcode;
-                            ReactDOM.findDOMNode(self.refs.home).checked = true;
+                            self.refs.home.checked = true;
                             binding.set('venue',postcode);
                             binding.set('model.venue.postcode', postcode.id);
                             binding.set('venueList',postcodes);
@@ -48,7 +47,7 @@ const EventVenue = React.createClass({
                 });
             self.neutralVenue = false;
         }else{
-            window.Server.postCode.get().then(function(postcodes){
+            window.Server.postCode.get({limit: 10}).then(function(postcodes){   // TODO: fix me
                 binding.set('venue',postcodes[0]);
                 binding.set('model.venue.postcode', postcodes[0].id);
                 binding.set('venueList',postcodes);
