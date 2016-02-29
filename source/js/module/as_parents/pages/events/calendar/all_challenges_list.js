@@ -79,7 +79,9 @@ AllChallengesList = React.createClass({
             else
                 return (
                     <div key={childInd} className= "eChallenge eChallenge_all">
-                        {childFixtures}
+                        <div className="eChallengeList">
+                            {childFixtures}
+                        </div>
                         <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
                     </div>
                 );
