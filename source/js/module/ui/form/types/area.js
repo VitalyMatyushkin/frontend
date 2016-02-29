@@ -23,7 +23,7 @@ const TypeArea = React.createClass({
 		const	postCodeFilter = {
 					where: {
 						id: {
-							regexp: value,
+							like: value,
 							options: 'i'
 						}
 					},

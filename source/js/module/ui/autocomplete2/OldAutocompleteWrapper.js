@@ -16,14 +16,10 @@ const OldAutocompleteWrapper = React.createClass({
         initialValue: 	    React.PropTypes.string
     },
     searchFunction: function(text) {
-        const self = this;
-
-        const result = {
+        return {
             sync:  [],
-            async: self.props.serviceFilter ? self.props.serviceFilter(text) : self.props.serviceFullData(text)
+            async: this.props.serviceFilter ? this.props.serviceFilter(text) : this.props.serviceFullData(text)
         };
-
-        return result;
     },
     getEscapeSelectFunction: function() {
         const self = this;
@@ -46,13 +42,13 @@ const OldAutocompleteWrapper = React.createClass({
 
         return (
             <ComboBox2
-                initialValue={self.props.initialValue}
-                placeholder={self.props.placeholderText}
-                searchFunction={self.searchFunction}
-                onSelect={self.props.onSelect}
-                getElementTitle={self.getInputText}
-                onEscapeSelection={self.getEscapeSelectFunction()}
-                clearAfterSelect={self.props.clearAfterSelect !== undefined ? self.props.clearAfterSelect : false}
+                initialValue        = {self.props.initialValue}
+                placeholder         = {self.props.placeholderText}
+                searchFunction      = {self.searchFunction}
+                onSelect            = {self.props.onSelect}
+                getElementTitle     = {self.getInputText}
+                onEscapeSelection   = {self.getEscapeSelectFunction()}
+                clearAfterSelect    = {self.props.clearAfterSelect !== undefined ? self.props.clearAfterSelect : false}
             />
         );
     }

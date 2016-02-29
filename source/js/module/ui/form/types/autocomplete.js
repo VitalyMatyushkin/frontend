@@ -11,34 +11,45 @@ const TypeAutocomplete = React.createClass({
 		serverField: 		React.PropTypes.string
 	},
 
-	bindToAutcomplete: function() {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				defaultValue 	= binding.get('defaultValue'),
-				defaultLabel 	= binding.get('defaultLabel');
-
-		if (defaultValue) {
-			binding.sub('autocomplete').set('defaultId', defaultValue);
-		}
-
-		if (defaultLabel) {
-			binding.sub('autocomplete').set('defaultLabel', defaultLabel);
-			self.fullValidate(defaultValue);
-		}
-
-		binding.sub('autocomplete').addListener('selectedId', function() {
-			const newSelectedId = binding.sub('autocomplete').get('selectedId');
-			self.setValue(newSelectedId);
-		});
-
+	//bindToAutcomplete: function() {
+	//	const 	self 			= this,
+	//			binding 		= self.getDefaultBinding(),
+	//			defaultValue 	= binding.get('defaultValue'),
+	//			defaultLabel 	= binding.get('defaultLabel');
+    //
+	//	if (defaultValue) {
+	//		binding.sub('autocomplete').set('defaultId', defaultValue);
+	//	}
+    //
+	//	if (defaultLabel) {
+	//		binding.sub('autocomplete').set('defaultLabel', defaultLabel);
+	//		self.fullValidate(defaultValue);
+	//	}
+    //
+	//	binding.sub('autocomplete').addListener('selectedId', function() {
+	//		const newSelectedId = binding.sub('autocomplete').get('selectedId');
+	//		self.setValue(newSelectedId);
+	//	});
+    //
+	//},
+	/** Setting component's value when it choosen */
+	onSelect: function(data){
+		this.setValue(data);
 	},
-	render: function() {
-		const self = this;
 
-		self.bindToAutcomplete();
-		// TODO: update me to new Autocomplete
+	render: function() {
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
+
+		//self.bindToAutcomplete();
 		return (
-			<Autocomplete2 serviceFilter={self.props.serviceFilter} serviceFullData={self.props.serviceFullData} serverField={self.props.serverField || 'name'} binding={self.getDefaultBinding().sub('autocomplete')} />
+			<Autocomplete2
+				serviceFilter	= {self.props.serviceFilter}
+				serviceFullData	= {self.props.serviceFullData}
+				serverField		= {self.props.serverField || 'name'}
+				onSelect		= {self.onSelect}
+				initialValue	= {binding.get('defaultValue')}
+			/>
 		);
 	}
 });

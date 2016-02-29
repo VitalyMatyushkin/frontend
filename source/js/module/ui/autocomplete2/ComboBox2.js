@@ -14,7 +14,7 @@ const ComboBox2 = React.createClass({
          * There are situations when combobox should have initial value on start of his lifecycle
          * So, if initial value define, then combobox has currentText = initValue on start of his lifecycle
          */
-        initialValue:     React.PropTypes.string,
+        initialValue:      React.PropTypes.string,
         /**
          * Placeholder text displayed when input area is empty
          */
@@ -44,28 +44,25 @@ const ComboBox2 = React.createClass({
         getElementTitle:   React.PropTypes.func,
         clearAfterSelect:  React.PropTypes.bool
     },
-    getFirstCurrentText: function() {
-        const self = this;
-        let currentText = '';
-
-        if(self.props.initialValue) {
-            currentText = self.props.initialValue;
-        }
-
-        return currentText;
-    },
     getInitialState: function(){
-        const self = this;
-
         return {
             dataList:            [],
             isLoading:           false,
             isOpen:              false,
             prevText:            '',
-            currentText:         self.getFirstCurrentText(),
+            currentText:         undefined,
             currentIndex:        undefined,
             currentAsyncRequest: undefined
         };
+    },
+    /** Calculates current text.
+     *  If there is some text in state will return it,
+     *  otherwise fallback to initialValue from props,
+     *  otherwise just ''
+      * @returns {*|string}
+     */
+    getCurrentText: function(){
+        return typeof this.state.currentText !== 'undefined' ? this.state.currentText : (this.props.initialValue || '');
     },
     /**
      * Will trigger on input end. Strictly saying on focus loose.
@@ -112,7 +109,7 @@ const ComboBox2 = React.createClass({
                     self.selectElement(currentIndex);
                     self.closeMenu();
                 } else {
-                    self.search(self.state.currentText);
+                    self.search(self.getCurrentText());
                 }
                 break;
             case 'Escape':
@@ -123,7 +120,7 @@ const ComboBox2 = React.createClass({
                 break;
             case 'ArrowUp':
                 if(!self.state.isOpen) {
-                    self.search(self.state.currentText);
+                    self.search(self.getCurrentText());
                 } else {
                     if(currentIndex === undefined || currentIndex  === 0) {
                         currentIndex = self.state.dataList.length - 1;
@@ -135,7 +132,7 @@ const ComboBox2 = React.createClass({
                 break;
             case 'ArrowDown':
                 if(!self.state.isOpen) {
-                    self.search(self.state.currentText);
+                    self.search(self.getCurrentText());
                 } else {
                     if(currentIndex === undefined || currentIndex + 1 === self.state.dataList.length) {
                         currentIndex = 0;
@@ -198,9 +195,7 @@ const ComboBox2 = React.createClass({
      * Handles left mouse button click on text input
      */
     onInputClick: function(){
-        const self = this;
-
-        self.search(self.state.currentText);
+        this.search(this.getCurrentText());
     },
     /**
      * Handles left mouse button click on triangle button
@@ -298,8 +293,9 @@ const ComboBox2 = React.createClass({
             cssStyle += " mSelected";
         }
 
+        const key = data.id ? data.id : self.props.getElementTitle(data);
         return (
-            <div className={cssStyle} onMouseDown={self.onListItemClick.bind(self, index)}>
+            <div key={key} className={cssStyle} onMouseDown={self.onListItemClick.bind(self, index)}>
                 {self.props.getElementTitle(data)}
             </div>
         );
@@ -307,16 +303,16 @@ const ComboBox2 = React.createClass({
     getPlaceHolder: function() {
         const   self = this;
 
-        if(self.state.currentText === undefined || self.state.currentText === '') {
+        if(self.getCurrentText() === '') {
             return self.props.placeholder;
         } else {
             return undefined;
         }
     },
     render: function(){
-        const   self = this,
+        const   self        = this,
                 placeholder = self.getPlaceHolder(),
-                value       = self.state.currentText,
+                value       = self.getCurrentText(),
                 isOpenCN    = self.state.isOpen === true ? 'mOpen' : '';
 
         const hintStyle = {
@@ -345,16 +341,16 @@ const ComboBox2 = React.createClass({
                 <div className="eCombobox_inputContainer">
                     <input type='text' value={placeholder} style={hintStyle} readOnly/>
                     <input
-                        style={inputStyle}
-                        ref="input"
-                        className="eCombobox_input"
-                        placeholder={placeholder}
-                        value={value}
-                        onChange={self.onChange}
-                        onKeyUp={self.onKeyUp}
-                        onClick={self.onInputClick}
-                        onBlur={self.onBlur}
-                        role="combobox"
+                        style       = {inputStyle}
+                        ref         = "input"
+                        className   = "eCombobox_input"
+                        placeholder = {placeholder}
+                        value       = {value}
+                        onChange    = {self.onChange}
+                        onKeyUp     = {self.onKeyUp}
+                        onClick     = {self.onInputClick}
+                        onBlur      = {self.onBlur}
+                        role        = "combobox"
                     />
                     <img style={loaderStyle} src="/images/spinner.gif"/>
                 </div>
