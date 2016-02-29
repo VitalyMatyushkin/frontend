@@ -1,28 +1,20 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	React = require('react'),
-	SchoolForm;
+const 	Form 		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		FormColumn 	= require('module/ui/form/form_column'),
+		React 		= require('react');
 
-SchoolForm = React.createClass({
+const SchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: React.PropTypes.string.isRequired,
 		onSubmit: React.PropTypes.func
 	},
-	_serviceFullData:function(){
-		return function(){
-			return window.Server.postCode.get();
-		}
-	},
 	componentWillUnmount:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
-		binding.clear();
+		this.getDefaultBinding().clear();
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<Form name={self.props.title} binding={self.getDefaultBinding()} onSubmit={self.props.onSubmit}>
@@ -32,7 +24,7 @@ SchoolForm = React.createClass({
 					<FormField type="phone" field="phone" validation="required">Phone</FormField>
 				</FormColumn>
 				<FormColumn type="column">
-					<FormField type="area" field="postcodeId" serviceFullData={self._serviceFullData()} validation="required">Postcode</FormField>
+					<FormField type="area" field="postcodeId" validation="required">Postcode</FormField>
 					<FormField type="text" field="address" validation="required">Address</FormField>
 					<FormField type="text" field="domain" validation="required">Domain</FormField>
 				</FormColumn>

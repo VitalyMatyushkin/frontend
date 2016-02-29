@@ -1,21 +1,21 @@
-var TypeMixin = require('module/ui/form/types/type_mixin'),
-	Autocomplete = require('module/ui/autocomplete/autocomplete'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	TypeAutocomplete;
+const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
+		//Autocomplete 	= require('module/ui/autocomplete/autocomplete'),
+		Autocomplete2	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		React 			= require('react');
 
-TypeAutocomplete = React.createClass({
+const TypeAutocomplete = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	propTypes: {
-		serviceFullData: React.PropTypes.func,
-		serviceFilter: React.PropTypes.func,
-		serverField: React.PropTypes.string
+		serviceFullData: 	React.PropTypes.func,
+		serviceFilter: 		React.PropTypes.func,
+		serverField: 		React.PropTypes.string
 	},
+
 	bindToAutcomplete: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultValue = binding.get('defaultValue'),
-			defaultLabel = binding.get('defaultLabel');
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				defaultValue 	= binding.get('defaultValue'),
+				defaultLabel 	= binding.get('defaultLabel');
 
 		if (defaultValue) {
 			binding.sub('autocomplete').set('defaultId', defaultValue);
@@ -27,19 +27,18 @@ TypeAutocomplete = React.createClass({
 		}
 
 		binding.sub('autocomplete').addListener('selectedId', function() {
-			var newSelectedId = binding.sub('autocomplete').get('selectedId');
-
+			const newSelectedId = binding.sub('autocomplete').get('selectedId');
 			self.setValue(newSelectedId);
 		});
 
 	},
 	render: function() {
-		var self = this;
+		const self = this;
 
 		self.bindToAutcomplete();
-
+		// TODO: update me to new Autocomplete
 		return (
-			<Autocomplete serviceFilter={self.props.serviceFilter} serviceFullData={self.props.serviceFullData} serverField={self.props.serverField || 'name'} binding={self.getDefaultBinding().sub('autocomplete')} />
+			<Autocomplete2 serviceFilter={self.props.serviceFilter} serviceFullData={self.props.serviceFullData} serverField={self.props.serverField || 'name'} binding={self.getDefaultBinding().sub('autocomplete')} />
 		);
 	}
 });

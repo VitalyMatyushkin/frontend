@@ -8,12 +8,12 @@ const   SchoolForm  = require('module/as_manager/pages/schools/schools_form'),
 const AddSchoolForm = React.createClass({
     mixins: [Morearty.Mixin],
     submitAdd: function(schoolData) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding();
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                globalBinding   = self.getMoreartyContext().getBinding();
 
         window.Server.schools.post(schoolData).then(function(data) {
-            // Добавляемая школа всегда становится школой "по умолчанию"
+            // Добавляемая школа всегда становится школой "по умолчанию" // TODO: WAT??????!!!!!!
             globalBinding.set('userRules.activeSchoolId', data.id);
             //Ideally, we create an album on creating the school
             //Use it for subsequent profile or blazon upload

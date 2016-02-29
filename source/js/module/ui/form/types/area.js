@@ -20,25 +20,17 @@ const TypeArea = React.createClass({
 		});
 	},
 	serviceFilter: function(value) {
-		var self = this,
-			postCodeFilter = {
-                where: {
-                    id: {
-                        like: value,
-                        options: 'i'
-                    }
-                },
-                limit: 10
-            };
+		const	postCodeFilter = {
+					where: {
+						id: {
+							regexp: value,
+							options: 'i'
+						}
+					},
+					limit: 10
+            	};
 
-		self.request && self.request.cancel();
-
-		if (!value) {
-			return undefined;
-		}
-
-		self.request = window.Server.postCode.get({ filter: postCodeFilter });
-		return self.request;
+		return window.Server.postCode.get({ filter: postCodeFilter });
 	},
 	render: function() {
 		const 	self = this,

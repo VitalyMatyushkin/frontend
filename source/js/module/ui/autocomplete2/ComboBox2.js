@@ -96,7 +96,7 @@ const ComboBox2 = React.createClass({
             searchResult.async.then((data) => {
                 self.setState({
                     isLoading:  false,
-                    isOpen: true,
+                    isOpen:     true,
                     dataList:   self.state.dataList.concat(data)
                 });
             });

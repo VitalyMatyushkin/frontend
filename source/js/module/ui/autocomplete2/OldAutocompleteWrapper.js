@@ -18,10 +18,12 @@ const OldAutocompleteWrapper = React.createClass({
     searchFunction: function(text) {
         const self = this;
 
-        return {
+        const result = {
             sync:  [],
             async: self.props.serviceFilter ? self.props.serviceFilter(text) : self.props.serviceFullData(text)
-        }
+        };
+
+        return result;
     },
     getEscapeSelectFunction: function() {
         const self = this;
