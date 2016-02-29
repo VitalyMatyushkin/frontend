@@ -40,6 +40,7 @@
     position: absolute;
     margin: 2px;
     height: 18px;
+    background-color: transparent;
   }
   input{
     padding-left: 51px;
@@ -82,7 +83,6 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .eForm_fieldValidText{
   padding: 0 5px;
   display: none;
-  color: $INVALID_COLOR;
   position: absolute;
   right: 0;
   top: 0;
@@ -93,31 +93,33 @@ $INVALID_COLOR: rgb(182, 0, 0);
   position: relative;
   padding-right: 15px;
 }
-.eForm_fieldSet.mInvalid .eForm_fieldValidText{
-  display: block;
+
+.eForm_fieldSet.mValid{
+  color: green;
+
+  .eForm_fieldValidText{
+    display: block;
+  }
+  input{
+    border: 1px solid green;
+    color: green;
+  }
 }
-.eForm_fieldSet.mValid .eForm_fieldValidText{
-  display: block;
-  color:green;
-}
+
 .eForm_fieldSet.mInvalid{
   color: $INVALID_COLOR;
   .mNotRequired{
     color: $BodyColor;
   }
+  .eForm_fieldValidText{
+    display: block;
+  }
+  input{
+    border: 1px solid $INVALID_COLOR;
+    color: $INVALID_COLOR;
+  }
 }
 
-.eForm_fieldSet.mInvalid input{
-  border: 1px solid $INVALID_COLOR;
-  color: $INVALID_COLOR;
-}
-.eForm_fieldSet.mValid{
-  color: green;
-}
-.eForm_fieldSet.mValid input{
-  border: 1px solid green;
-  color: green;
-}
 .eForm_fieldSet.mAreaField input{
   text-transform: uppercase;
 }

@@ -74,12 +74,11 @@ const ChallengesView = React.createClass({
                 firstPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.0.id')) || 0;
                 secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
             }
-
             return <div key={evtIndex} className="bChallenge"
                         onClick={self.onClickChallenge.bind(null, event.get('id'))}
                         id={'challenge-' + event.get('id')}
                 >
-                <span className="eChallenge_sport">sport</span>
+                <span className="eChallenge_sport">{event.toJS().sport.name}</span>
                 <span className="eChallenge_event">{event.get('name')}</span>
                 <div className="eChallenge_hours">{hours + ':' + minutes}</div>
                 <div className="eChallenge_in">
