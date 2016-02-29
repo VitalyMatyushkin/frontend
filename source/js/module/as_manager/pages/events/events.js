@@ -49,11 +49,6 @@ const EventView = React.createClass({
         });
         self.menuItems = [
         {
-            key: 'goback',
-            name: '? Cancel',
-            hash: '#'
-        },
-        {
             href: '/#events/calendar',
             name: 'Calendar',
             key: 'Calendar'

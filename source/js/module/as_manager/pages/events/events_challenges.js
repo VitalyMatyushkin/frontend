@@ -38,9 +38,10 @@ const ChallengesView = React.createClass({
                     return evt.get('id') === event.get('id');
                 }),
                 eventBinding = binding.sub(['models', eventIndex]),
-				hours = self.addZeroToFirst(eventDateTime.getHours()),
+                hours = self.addZeroToFirst(eventDateTime.getHours()),
 				minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.get('type'),
+                sport = event.get('sport.name'),
                 firstName,
                 secondName,
 				firstPic,
@@ -74,12 +75,11 @@ const ChallengesView = React.createClass({
                 firstPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.0.id')) || 0;
                 secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
             }
-
             return <div key={evtIndex} className="bChallenge"
                         onClick={self.onClickChallenge.bind(null, event.get('id'))}
                         id={'challenge-' + event.get('id')}
                 >
-                <span className="eChallenge_sport">sport</span>
+                <span className="eChallenge_sport">{sport}</span>
                 <span className="eChallenge_event">{event.get('name')}</span>
                 <div className="eChallenge_hours">{hours + ':' + minutes}</div>
                 <div className="eChallenge_in">
@@ -138,11 +138,13 @@ const ChallengesView = React.createClass({
             <div className="bChallenges">
                 <div className="eChallenge_title">
                     <span className="eChallengeDate_date">Date</span>
-                    <span className="eChallenge_sport">Sport</span>
-                    <span className="eChallenge_event">Event Name</span>
-                    <span className="eChallenge_hours">Time</span>
-                    <span className="eChallenge_in">Game Type</span>
-                    <span className="eChallenge_results">Score</span>
+                    <div className="bChallenge">
+                        <span className="eChallenge_sport">Sport</span>
+                        <span className="eChallenge_event">Event Name</span>
+                        <span className="eChallenge_hours">Time</span>
+                        <span className="eChallenge_in">Game Type</span>
+                        <span className="eChallenge_results">Score</span>
+                    </div>
                 </div>
                 {challenges}</div>
         </div>;

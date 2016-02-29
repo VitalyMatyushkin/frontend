@@ -40,6 +40,7 @@
     position: absolute;
     margin: 2px;
     height: 18px;
+    background-color: transparent;
   }
   input{
     padding-left: 51px;
@@ -82,7 +83,6 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .eForm_fieldValidText{
   padding: 0 5px;
   display: none;
-  color: $INVALID_COLOR;
   position: absolute;
   right: 0;
   top: 0;
@@ -93,31 +93,33 @@ $INVALID_COLOR: rgb(182, 0, 0);
   position: relative;
   padding-right: 15px;
 }
-.eForm_fieldSet.mInvalid .eForm_fieldValidText{
-  display: block;
+
+.eForm_fieldSet.mValid{
+  color: green;
+
+  .eForm_fieldValidText{
+    display: block;
+  }
+  input{
+    border: 1px solid green;
+    color: green;
+  }
 }
-.eForm_fieldSet.mValid .eForm_fieldValidText{
-  display: block;
-  color:green;
-}
+
 .eForm_fieldSet.mInvalid{
   color: $INVALID_COLOR;
   .mNotRequired{
     color: $BodyColor;
   }
+  .eForm_fieldValidText{
+    display: block;
+  }
+  input{
+    border: 1px solid $INVALID_COLOR;
+    color: $INVALID_COLOR;
+  }
 }
 
-.eForm_fieldSet.mInvalid input{
-  border: 1px solid $INVALID_COLOR;
-  color: $INVALID_COLOR;
-}
-.eForm_fieldSet.mValid{
-  color: green;
-}
-.eForm_fieldSet.mValid input{
-  border: 1px solid green;
-  color: green;
-}
 .eForm_fieldSet.mAreaField input{
   text-transform: uppercase;
 }
@@ -288,10 +290,16 @@ $INVALID_COLOR: rgb(182, 0, 0);
 }
 .eManager_select_wrap select {
   border: none;
-  width: 215px;
+  width: 200px;
+  height: 37px;
   color: #000000;
-  background: #fff;
+  background: transparent;
   padding: 5px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: $BORDER;
+  border-radius: 5%;
 }
 .eManager_select_wrap option{
   height: 30px;
@@ -301,20 +309,9 @@ $INVALID_COLOR: rgb(182, 0, 0);
   background: $MAIN_COLOR;
 }
 .eManager_select_wrap {
-  border: $BORDER;
   position: relative;
-  height: 35px;
-  border-radius: 8%;
   background: #fff;
-  width: 200px;
-}
-
-.selectArrow{
-  position: absolute;
-  top: 10px;
-  right: 5px;
-  color: $COLOR;
-  z-index: 1;
-  width: 14px;
-  height: 14px;
+  width: 195px;
+  background: url("/images/icons/select_arrow.svg") right no-repeat;
+  background-size: 14px 14px;
 }

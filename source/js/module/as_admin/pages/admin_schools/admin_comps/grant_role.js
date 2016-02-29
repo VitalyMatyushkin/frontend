@@ -13,6 +13,15 @@ const GrantRole = React.createClass({
         userIdsBinding:     React.PropTypes.object,
         onSuccess:          React.PropTypes.func
     },
+    getDefaultState:function() {
+        return Immutable.Map({
+            roleName: 'teacher',
+            comment: ''
+        });
+    },
+    componentWillUnmount:function(){
+        this.getDefaultBinding().clear();
+    },
     getSchools: function(filter) {
         return window.Server.getAllSchools.get({
             filter: {
@@ -51,7 +60,6 @@ const GrantRole = React.createClass({
             }).toArray();
         });
     },
-
     onStudentSelect:function(id, model){
         this.getDefaultBinding().set('selectedStudentId', model.id);
      },
@@ -67,7 +75,7 @@ const GrantRole = React.createClass({
                 rootBinding     = self.getMoreartyContext().getBinding(),
                 schoolId        = binding.get('selectedSchoolId'),
                 model = {
-                    preset:         binding.get('roleName'),
+                    preset:         binding.get('roleName'),//!!
                     schoolId:       schoolId,
                     principalId:    '',
                     comment:        binding.get('comment'),
@@ -116,13 +124,14 @@ const GrantRole = React.createClass({
                     <AutoComplete serviceFilter={self.getSchools} serverField="name" binding={binding.sub('grSchools')}
                                   onSelect={self.onSchoolSelect} />
                     <h4>Role </h4>
+                    <div className="eManager_select_wrap">
                     <select onChange={self.onRoleSelectorChange} ref="roleSelector" id="roleSelector">
                         <option value="teacher">Teacher</option>
                         <option value="coach">Coach</option>
                         <option value="parent">Parent</option>
                         <option value="admin">School Admin</option>
                         <option value="manager">School Manager</option>
-                    </select>
+                    </select></div>
                     <If condition={isParent}>
                         <div>
                             <h4>Student</h4>
