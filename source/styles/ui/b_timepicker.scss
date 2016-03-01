@@ -1,31 +1,52 @@
 .bTimePicker {
   display: flex;
   flex-direction: row;
-  border: 1px solid #000;
-  align-self: center;
+  border: $BORDER;
+  align-self: baseline;
   padding: 0 5px;
+  width: 160px;
+  height: 95px;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  margin-left: 20px;
 }
 
 .eTimePicker_box {
   display: flex;
   flex-direction: column;
-  padding: 10px;
+  align-items: center;
+  text-align: center;
+  font-size: 22px;
 }
 
 .eTimePicker_box.mDelimiter {
-  padding: 10px 1px;
+  padding: 10px 10px;
   justify-content: center;
   display: flex;
 }
 
 .eTimePicker_value {
-  padding: 7px 0;
+  width: 45px;
+  height: 45px;
+  line-height: 49px;
+  border: $BORDER;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  background: #eaeaea;
 }
 
 .eTimePicker_arrow {
-  color: gray;
+  color: #a8a8a8;
   cursor: pointer;
-  &:hover {
-    color: $MAIN_COLOR;
+  height: 14px;
+  &:hover .bIcon{
+    color: $COLOR;
   }
+}
+.eTimePicker_arrow .bIcon {
+  height: 14px;
+  width: 14px;
+  color: #a8a8a8;
 }
