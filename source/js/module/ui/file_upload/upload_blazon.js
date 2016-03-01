@@ -2,6 +2,7 @@
  * Created by bridark on 08/06/15.
  */
     //[Refactored use fileType instead]]
+// TODO: Do we still need it ?
 const   classNames  = require('classnames'),
         If          = require('module/ui/if/if'),
         React       = require('react'),
