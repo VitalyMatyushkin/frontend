@@ -79,8 +79,7 @@ AllChallengesList = React.createClass({
             else
                 return (
                     <div key={childInd} className= "eChallenge eChallenge_all">
-                        <div className="eChallengeList">
-                            {childFixtures}
+                        <div className="eChildFixturesAll"> {childFixtures}</div>
                         </div>
                         <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
                     </div>
@@ -92,7 +91,7 @@ AllChallengesList = React.createClass({
             binding = this.getDefaultBinding();
         return <div className="eEvents_challenges">
             <div className="eChallenge_title">
-                <div className="eChallenge eChallenge_basicMod">
+                <div className="eChildFixturesAll">
                     <span className="eChallenge_sport">Sport</span>
                     <span className="eChallenge_date">Date</span>
                     <span className="eChallenge_name">Event Name</span>

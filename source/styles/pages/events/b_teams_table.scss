@@ -1,0 +1,34 @@
+.bTeamsTable {
+  width: 100%;
+}
+
+.eTeamsTable_row:hover {
+  background-color: #00A000;
+}
+
+.eTeamsTable_cell {
+  height: 30px;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.eTeamsTable_cell.mName {
+  padding-left: 10px;
+  width: 30%;
+}
+
+.eTeamsTable_cell.mAges {
+  width: 40%;
+}
+
+.eTeamsTable_cell.mGender {
+  width: 30%;
+}
+
+.eTeamsTable_row.mHead {
+  background: $MAIN_COLOR;
+}
+
+.eTeamsTable_row.mSelected {
+  background-color: #00A000;
+}

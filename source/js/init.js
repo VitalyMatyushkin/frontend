@@ -60,9 +60,6 @@ requirejs(
                 api           = loaderUtils.apiSelector(myDomain),
                 startModule   = loaderUtils.startModuleSelector(myDomain);
 
-        const parsed = loaderUtils.parseDomainName("http://manager.squard.com");
-        console.log('parsed: ' + JSON.stringify(parsed, null, 2));
-
 
         log.enableAll();    // let it be here a bit...
         log.info(`API: ${api}`);

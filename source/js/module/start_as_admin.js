@@ -1,16 +1,14 @@
-var ApplicationView = require('module/as_admin/application'),
-    userDataInstance = require('module/data/user_data'),
-    userRulesInstance = require('module/data/user_rules'),
-    authController = require('module/core/auth_controller'),
-    serviceList = require('module/core/service_list'),
-    ReactDom = require('reactDom'),
-    React = require('react'),
-    MoreartyContext,
-    binding;
+const   ApplicationView     = require('module/as_admin/application'),
+        userDataInstance    = require('module/data/user_data'),
+        userRulesInstance   = require('module/data/user_rules'),
+        authController      = require('module/core/auth_controller'),
+        serviceList         = require('module/core/service_list'),
+        ReactDom            = require('reactDom'),
+        React               = require('react');
 
 function runAdminMode() {
 // Creating Morearty context
-    MoreartyContext = Morearty.createContext({
+    const MoreartyContext = Morearty.createContext({
         initialState: {
             userData: userDataInstance.getDefaultState(),
             userRules: userRulesInstance.getDefaultState(),
@@ -80,7 +78,7 @@ function runAdminMode() {
         }
     });
 
-    binding = MoreartyContext.getBinding();
+    const binding = MoreartyContext.getBinding();
 
     window.Server = serviceList;
 

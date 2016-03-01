@@ -138,82 +138,175 @@ const EventManager = React.createClass({
             }
         }
 
-        self.getDefaultBinding().set('selectedRivalIndex', incorrectRivalIndex);
+        self.getDefaultBinding()
+            .atomically()
+            .set('selectedRivalIndex', incorrectRivalIndex)
+            .commit();
     },
 	toFinish: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = binding.get('schoolInfo.id'),
-            model = binding.toJS('model'),
-            players = binding.toJS('players'),
-			rivals = binding.toJS('rivals');
+            model = binding.toJS('model');
 
         if(self._isEventDataCorrect()) {
-            window.Server.events.post(model).then(function (event) {
-                rootBinding.update('events.models', function (events) {
-                    return events.push(Immutable.fromJS(event));
-                });
-                rivals.forEach(function (rival, index) {
-                    if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
-                        window.Server.invitesByEvent.post({eventId: event.id}, {
-                            eventId:   event.id,
-                            inviterId: activeSchoolId,
-                            guestId:   rival.id,
-                            message:   'message'
-                        });
-                    } else {
-                        var rivalModel = {
-                            sportId:  event.sportId,
-                            schoolId: activeSchoolId
-                        };
-
-                        if (event.type === 'internal') {
-                            rivalModel.name = rival.name;
-                        }
-
-                        if (event.type === 'houses') {
-                            rivalModel.houseId = rival.id;
-                        }
-
-                        rivalModel.ages = binding.toJS('model.ages');
-                        rivalModel.gender = binding.toJS('model.gender');
-
-                        window.Server.participants.post(event.id, rivalModel).then(function (res) {
-                            var i = 0;
-                            // TODO: fix me
-                            players[index].forEach(function (player) {
-                                window.Server.playersRelation.put(
-                                    {
-                                        teamId:    res.id,
-                                        studentId: player.id
-                                    },
-                                    {
-                                        position:  player.position,
-                                        sub:       player.sub ? player.sub : false
-                                    }
-                                ).then(function (res) {
-                                    i += 1;
-
-                                    if (i === players.length -1) {
-                                        document.location.hash = 'event/' + event.id;
-                                        binding.clear();
-                                        binding.meta().clear();
-                                    }
-                                    return res;  // each then-callback should have explicit return
-                                });
-                            });
-                            return res;
-                        });
-                    }
-                });
-                return event;
-            });
+            self._submit();
         } else {
             //So, let's show form with incorrect data
             self._changeRivalFocusToErrorForm();
         }
 	},
+    _submit: function() {
+        const self = this;
+
+        self._eventSubmit().then((event) => {
+            self.getMoreartyContext().getBinding().update('events.models', function (events) {
+                return events.push(Immutable.fromJS(event));
+            });
+            self._submitRivals(event);
+            return event;
+        });
+    },
+    _eventSubmit: function() {
+        var self = this;
+
+        return window.Server.events.post(
+            self.getDefaultBinding().toJS('model')
+        );
+    },
+    _submitRivals: function(event) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            rivals = binding.toJS('rivals');
+
+        let rivalPromises = [];
+        rivals.forEach((rival, rivalIndex) => {
+            rivalPromises.push(self._submitRival(event, rival, rivalIndex));
+        });
+        Promise.all(rivalPromises).then((data) => {
+            //Create players for temp team
+            let playerPromises = [];
+            data.forEach((teamWrapper) => {
+                if(teamWrapper.type == 'temp') {
+                    playerPromises.push(self._submitPlayers(teamWrapper.team, teamWrapper.rivalIndex));
+                }
+            });
+            Promise.all(playerPromises).then(() => {
+                document.location.hash = 'event/' + event.id;
+                binding.clear();
+                binding.meta().clear();
+            });
+        });
+    },
+    _submitRival: function(event, rival, rivalIndex, callback) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            activeSchoolId = binding.get('schoolInfo.id'),
+            model = binding.toJS('model');
+
+        if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
+            self._submitInvite(event, rival);
+        }
+        let mode = binding.toJS(`mode.${rivalIndex}`);
+        let teamPromise;
+        switch (mode) {
+            case 'temp':
+                teamPromise = self._submitTempTeam(event, rival, rivalIndex, callback);
+                break;
+            case 'teams':
+                teamPromise = self._submitTeam(event, rivalIndex, callback);
+                break;
+        }
+        return teamPromise;
+    },
+    _submitTeam: function(event, rivalIndex) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            teamId = binding.toJS(`teamModeView.teamViewer.${rivalIndex}.selectedTeamId`);
+
+        return window.Server.relParticipants.put(
+            {
+                eventId: event.id,
+                teamId: teamId
+            },
+            {
+                eventId: event.id,
+                teamId: teamId
+            }
+        ).then((team) => {
+            return {
+                type:'team',
+                rivalIndex: rivalIndex,
+                team: team
+            }
+        });
+    },
+    _submitTempTeam: function(event, rival, rivalIndex) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            activeSchoolId = binding.get('schoolInfo.id'),
+            players = binding.toJS('players');
+
+        let rivalModel = {
+            sportId:  event.sportId,
+            schoolId: activeSchoolId,
+            tempTeam: true
+        };
+
+        switch (event.type) {
+            case 'internal':
+                rivalModel.name = rival.name;
+                break;
+            case 'houses':
+                rivalModel.houseId = rival.id;
+                break;
+        }
+
+        rivalModel.ages = binding.toJS('model.ages');
+        rivalModel.gender = binding.toJS('model.gender');
+
+        return window.Server.participants.post(event.id, rivalModel).then((team) => {
+            return {
+                type:'temp',
+                rivalIndex: rivalIndex,
+                team: team
+            }
+        });
+    },
+    _submitPlayers: function(team, rivalIndex) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            players = binding.toJS('players');
+
+        let playerPromises = [];
+
+        players[rivalIndex].forEach(function (player) {
+            playerPromises.push(self._submitPlayer(team, player));
+        });
+
+        return Promise.all(playerPromises);
+    },
+    _submitPlayer: function(team, player) {
+        return window.Server.playersRelation.put(
+            {
+                teamId:    team.id,
+                studentId: player.id
+            },
+            {
+                position:  player.position,
+                sub:       player.sub ? player.sub : false
+            }
+        );
+    },
+    _submitInvite: function(event, rival) {
+        const self = this;
+
+        window.Server.invitesByEvent.post({eventId: event.id}, {
+            eventId:   event.id,
+            inviterId: self.getDefaultBinding().get('schoolInfo.id'),
+            guestId:   rival.id,
+            message:   'message'
+        });
+    },
     _isEventDataCorrect: function() {
         const self = this,
             binding    = self.getDefaultBinding(),
@@ -285,6 +378,5 @@ const EventManager = React.createClass({
 		</div>;
 	}
 });
-
 
 module.exports = EventManager;

@@ -1,18 +1,17 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	React = require('react'),
-	BlazonUpload = require('module/ui/file_upload/upload_blazon'),
-	SchoolForm;
+const 	Form 			= require('module/ui/form/form'),
+		FormField 		= require('module/ui/form/form_field'),
+		FormColumn 		= require('module/ui/form/form_column'),
+		React 			= require('react'),
+		BlazonUpload 	= require('module/ui/file_upload/upload_blazon');
 
-SchoolForm = React.createClass({
+const SchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-		onSubmit: React.PropTypes.func
+		title: 		React.PropTypes.string.isRequired,
+		onSubmit: 	React.PropTypes.func
 	},
 	render: function() {
-		var self = this;
+		const self = this;
 
 		return (
 			<Form name={self.props.title} binding={self.getDefaultBinding()} onSubmit={self.props.onSubmit}>
