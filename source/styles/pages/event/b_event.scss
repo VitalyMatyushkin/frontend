@@ -69,8 +69,7 @@
 }
 .bBlog_box_reply{
   width: 80%;
-  margin-left: 60px;
-  margin-bottom: 10px;
+  margin:auto;
   position:relative;
   height: auto;
   display: flex;
@@ -97,10 +96,12 @@
 }
 .bBlog_messageBox{
   font-size: 14px;
+  width: 85%;
 }
 .bBlog_messageBox_reply{
   height: auto;
   font-size: 14px;
+  width: 100%;
 }
 .bBlog_username,.bBlog_message,.bBlog_replyButton{
   display: block;
@@ -124,17 +125,15 @@
   background: #eaeaea;;
 }
 .eBlog_replyTextArea{
-  height:60px;
+  width: 100%;
 }
 .bReplyButton{
   width: 40px !important;
-  position: absolute !important;
-  margin-left: 10px;
-  margin-top: 30px;
+  margin-right: 10px;
 }
 .cancel{
-  margin-left:90px !important;
   background-color:#cccccc;
+  text-align: center;
 }
 .cancel:hover:before{
   content: '';
@@ -190,7 +189,7 @@
   border: $BORDER;
   background: #fff;
   margin-top: 10px;
-  padding: 10px;
+  padding: 10px 20px;
 }
 .bBlogMain .bEventHeader{
   border: none;
@@ -224,7 +223,6 @@
   margin-bottom: 10px;
   padding: 5px 0;
   background: #E9EDF1;
-  text-transform: uppercase;
   color: #6A7989;
   cursor: pointer;
 }
