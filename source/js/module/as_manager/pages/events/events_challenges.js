@@ -69,9 +69,9 @@ const ChallengesView = React.createClass({
                 }),
                 eventBinding = binding.sub(['models', eventIndex]),
                 hours = self.addZeroToFirst(eventDateTime.getHours()),
-				minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
+				        minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.get('type'),
-                sport = event.get('sport').get('name'),
+                sport = event.get('sport') !== undefined ? event.get('sport').get('name') : '',
                 sportIcon = self.getSportIcon(sport),
                 firstName,
                 secondName,
@@ -110,8 +110,7 @@ const ChallengesView = React.createClass({
                         onClick={self.onClickChallenge.bind(null, event.get('id'))}
                         id={'challenge-' + event.get('id')}
                 >
-                <span className="eChallenge_sport">{sport}</span>
-                <span className="eChallenge_sportIcon">{sportIcon}</span>
+                <span className="eChallenge_sport">{sportIcon}</span>
                 <span className="eChallenge_event">{event.get('name')}</span>
                 <div className="eChallenge_hours">{hours + ':' + minutes}</div>
                 <div className="eChallenge_in">

@@ -79,6 +79,20 @@ InviteView = React.createClass({
             return icon;
         }
     },
+    addZeroToFirst: function (num) {
+        return String(num).length === 1 ? '0' + num : num;
+    },
+    _getAges: function (data) {
+        var result = '';
+
+        if (data !== undefined) {
+            result = data.map(function (elem) {
+                return 'Y' + elem;
+            }).join(";");
+        }
+
+        return result;
+    },
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -101,9 +115,11 @@ InviteView = React.createClass({
             message = binding.get('message') || '',
             isRedeemed = binding.get('redeemed'),
             accepted = binding.get('accepted'),
+            eventDate = (new Date(binding.get('event.startTime'))),
             status = isArchive ? (accepted ? 'Accepted':'Refused'):'',
-            startDate = (new Date(binding.get('event.startTime'))).toLocaleDateString(),
-            startTime = (new Date(binding.get('event.startTime'))).toLocaleTimeString();
+            startDate = eventDate.toLocaleDateString(),
+            hours = self.addZeroToFirst(eventDate.getHours()),
+            minutes = self.addZeroToFirst(eventDate.getMinutes());
 
         return (
         <div key={binding.get('id')} className={inviteClasses}>
@@ -120,8 +136,8 @@ InviteView = React.createClass({
                 <div className="eInvite_info">
                     <div className="eInvite_gender">{gender}</div>
                     <div>{'Start date:'} {startDate}</div>
-                    <div>{'Time:'} {startTime}</div>
-                    <div>{'Year Group:'} {ages}</div>
+                    <div>{'Time:'} {hours + ':' + minutes}</div>
+                    <div>{'Year Group:'} {self._getAges(ages)}</div>
                 </div>
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
