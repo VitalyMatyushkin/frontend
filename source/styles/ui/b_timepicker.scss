@@ -4,8 +4,8 @@
   border: $BORDER;
   align-self: baseline;
   padding: 0 5px;
-  width: 160px;
-  height: 95px;
+  width: 150px;
+  height: 90px;
   justify-content: center;
   align-items: center;
   background: #fff;
@@ -27,17 +27,21 @@
 }
 
 .eTimePicker_value {
-  width: 45px;
-  height: 45px;
-  line-height: 49px;
+  width: 40px;
+  height: 40px;
+  line-height: 45px;
   border: $BORDER;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   background: #eaeaea;
 }
+.eTimePicker_box:hover .eTimePicker_arrow {
+  display: block;
+}
 
 .eTimePicker_arrow {
+  display: none;
   color: #a8a8a8;
   cursor: pointer;
   height: 14px;
