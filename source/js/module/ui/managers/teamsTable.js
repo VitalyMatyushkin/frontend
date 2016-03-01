@@ -81,19 +81,26 @@ const TeamsTable = React.createClass({
     _getTeams: function() {
         const self = this,
             binding = self.getDefaultBinding(),
-            teams = binding.toJS('teams');
+            teams = binding.toJS('teams'),
+            exceptionTeamId = binding.toJS('exceptionTeamId');
 
         let result = [];
 
         if(teams) {
-            result = teams.map(team => {
-                return (
-                    <tr className="eTeamsTable_row" onClick={self._onTeamClick.bind(self, team.id)}>
-                        <td className="eTeamsTable_cell mName">{team.name}</td>
-                        <td className="eTeamsTable_cell mGender">{team.gender}</td>
-                        <td className="eTeamsTable_cell mAges">{self._geAgesTableView(team.ages)}</td>
-                    </tr>
-                );
+            teams.forEach(team => {
+                if(exceptionTeamId != team.id) {
+                    let rowClassName = classNames({
+                        eTeamsTable_row: true,
+                        mSelected: team.id == self.getDefaultBinding().toJS('selectedTeamId')
+                    });
+                    result.push((
+                        <tr className={rowClassName} onClick={self._onTeamClick.bind(self, team.id)}>
+                            <td className="eTeamsTable_cell mName">{team.name}</td>
+                            <td className="eTeamsTable_cell mGender">{team.gender}</td>
+                            <td className="eTeamsTable_cell mAges">{self._geAgesTableView(team.ages)}</td>
+                        </tr>
+                    )) ;
+                }
             });
         }
 
