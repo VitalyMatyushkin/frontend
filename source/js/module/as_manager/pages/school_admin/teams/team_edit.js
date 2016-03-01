@@ -165,8 +165,7 @@ const TeamEditPage = React.createClass({
                 sportId:     binding.get('teamForm.sportId'),
                 ages:        binding.toJS('teamForm.ages'),
                 gender:      binding.get('teamForm.gender'),
-                schoolId:    MoreartyHelper.getActiveSchoolId(self),
-                houseId:     TeamHelper.getHouseId(binding)
+                schoolId:    MoreartyHelper.getActiveSchoolId(self)
             };
 
             window.Server.team.put(
