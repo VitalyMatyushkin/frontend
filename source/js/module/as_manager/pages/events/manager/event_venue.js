@@ -2,10 +2,10 @@
  * Created by Bright on 19/01/2016.
  */
 const   React       = require('react'),
-    Map         = require('module/ui/map/map'),
-    Immutable   = require('immutable'),
-    If          = require('module/ui/if/if'),
-    ReactDOM    = require('reactDom');
+        Map         = require('module/ui/map/map'),
+        Immutable   = require('immutable'),
+        If          = require('module/ui/if/if'),
+        ReactDOM    = require('reactDom');
 
 const EventVenue = React.createClass({
     mixins:[Morearty.Mixin],
@@ -23,8 +23,8 @@ const EventVenue = React.createClass({
     },
     componentSetupCalls:function(prop){
         const   self        = this,
-            binding     = self.getDefaultBinding(),
-            currentProp = prop !== undefined?prop:self.props.sportType;
+                binding     = self.getDefaultBinding(),
+                currentProp = prop !== undefined?prop:self.props.sportType;
         if(currentProp === 'inter-schools'){
             window.Server.findPostCodeById.get({postCode:binding.get('rivals.0.postcodeId')})
                 .then(function(postcode){
@@ -34,16 +34,16 @@ const EventVenue = React.createClass({
                             limit:10
                         }
                     }).then(function(postcodes){
-                            self.currentPostcode = postcode;
-                            self.refs.home.checked = true;
-                            binding.set('venue',postcode);
-                            binding.set('model.venue.postcode', postcode.id);
-                            binding.set('venueList',postcodes);
-                            self.forceUpdate();
-                        })
-                        .catch(function(er){
-                            console.log(er.errorThrown);
-                        });
+                        self.currentPostcode = postcode;
+                        self.refs.home.checked = true;
+                        binding.set('venue',postcode);
+                        binding.set('model.venue.postcode', postcode.id);
+                        binding.set('venueList',postcodes);
+                        self.forceUpdate();
+                    })
+                    .catch(function(er){
+                        console.log(er.errorThrown);
+                    });
                     return postcode;
                 })
                 .catch(function(er){

@@ -16,7 +16,8 @@ const TeamsListPage = React.createClass({
         return window.Server.teams.get({
             filter: {
                 where: {
-                    schoolId: self.activeSchoolId
+                    schoolId: self.activeSchoolId,
+                    tempTeam: false
                 }
             }
         });

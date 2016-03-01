@@ -70,7 +70,6 @@ const AutocompleteTeam = React.createClass({
             }),
             filter = {
                 where: {
-                    schoolId: schoolId,
                     formId: {
                         inq: forms.map(function (form) {
                             return form.get('id');
@@ -84,9 +83,7 @@ const AutocompleteTeam = React.createClass({
             filter.where.houseId = self.getBinding('rival').get('id');
         }
 
-        window.Server.getAllStudents.get({
-			filter: filter
-        }).then(function (data) {
+        window.Server.students.get(schoolId, {filter: filter}).then(function (data) {
             var gender = binding.get('model.gender') || 'male';
 			var players = [];
 			data.forEach(function(player) {
