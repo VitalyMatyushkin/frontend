@@ -1,6 +1,7 @@
 /**
  * Created by bridark on 29/06/15.
  */
+    //TODO: I will refactor this component ( was put together in a haste)
 const   UserRole    = require('./user_roles'),
         React       = require('react'),
         If          = require('module/ui/if/if'),

@@ -11,7 +11,8 @@ const GrantRole = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
         userIdsBinding:     React.PropTypes.object,
-        onSuccess:          React.PropTypes.func
+        onSuccess:          React.PropTypes.func,
+        isAdmin:            React.PropTypes.bool
     },
     getDefaultState:function() {
         return Immutable.Map({
@@ -69,6 +70,11 @@ const GrantRole = React.createClass({
 
         binding.set('roleName', roleName);
     },
+    _inputValueChanged:function(e){
+        var self = this,
+            binding = self.getDefaultBinding();
+        binding.set('studentName',e.target.value);
+    },
     continueButtonClick:function(){
         const   self            = this,
                 binding         = self.getDefaultBinding(),
@@ -89,8 +95,14 @@ const GrantRole = React.createClass({
             console.error('Error! "userIdsBinding" is not set.');
         ids = ids && typeof ids === 'string' ? [ids] : ids;
 
-        if(binding.get('roleName') === 'parent'){
+        //If role selected is parent and action is being performed by superadmin
+        if(binding.get('roleName') === 'parent' && self.props.isAdmin == true){
+            //then use the id of the student selected from drop down
             model.studentId = binding.get('selectedStudentId');
+        }else{
+            //if not then overwrite the comment with the comment below with the name of the student
+            //Maybe temp solution after there is a feature backend to support this
+            model.comment = `Request to be parent of [ ${binding.get('studentName')} ]`;
         }
         //
         ids.forEach(function(currentId){
@@ -116,6 +128,7 @@ const GrantRole = React.createClass({
                 binding     = self.getDefaultBinding(),
                 isParent    = binding.get('roleName') === 'parent' && binding.get('selectedSchoolId') !== undefined;
 
+
         return (
             <div className="bGrantContainer">
                 <h2>New role</h2>
@@ -132,7 +145,8 @@ const GrantRole = React.createClass({
                         <option value="admin">School Admin</option>
                         <option value="manager">School Manager</option>
                     </select></div>
-                    <If condition={isParent}>
+                    {/* if is parent role and not superadmin show just text field */}
+                    <If condition={isParent && self.props.isAdmin == true}>
                         <div>
                             <h4>Student</h4>
                             <AutoComplete serviceFilter={self.getStudents}
@@ -140,6 +154,13 @@ const GrantRole = React.createClass({
                                           binding={binding.sub('grStudents')}
                                           onSelect={self.onStudentSelect}
                             />
+                        </div>
+                    </If>
+                    {/*if it is superadmin and parent role then show drop down*/}
+                    <If condition={isParent && self.props.isAdmin == false}>
+                        <div>
+                            <h4>Student</h4>
+                            <input type="text" onChange={self._inputValueChanged} placeholder="Enter child's name here"/>
                         </div>
                     </If>
                     <h4>Comment:</h4>
