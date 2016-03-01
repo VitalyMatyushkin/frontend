@@ -66,7 +66,7 @@ AllChallengesList = React.createClass({
                 var eventDate = new Date(childEv.get('startTime')),
                     hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
                     stringDate = self.formatDate(childEv.get('startTime')),
-                    sport = self.getSportIcon(childEv.get('sport').name),
+                    sport = self.getSportIcon(childEv.get('sport').get('name')),
                     isHoveredDay =  hoverDay &&
                         hoverDay.getMonth() === eventDate.getMonth() &&
                         hoverDay.getDate() === eventDate.getDate();
