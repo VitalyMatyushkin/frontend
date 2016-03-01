@@ -42,10 +42,9 @@ const EventView = React.createClass({
                 .set('sync', true)
                 .set('models', Immutable.fromJS(data))
                 .commit();
-            return data;
+            return self.loadEvents(userId);
         });
 
-        self.loadEvents(userId);
     },
     componentDidMount:function(){
         const self = this,
@@ -91,7 +90,7 @@ const EventView = React.createClass({
     loadEvents:function(userId){
         const self = this;
 
-        window.Server.userChildren.get({
+        return window.Server.userChildren.get({
             id: userId
         }).then(function (userChildren) {
             //Set the requirement for an all children view here
@@ -120,11 +119,13 @@ const EventView = React.createClass({
     },
     processRequestData:function(reqData,childId){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            sports = binding.toJS('sports.models');
         if(reqData){
             reqData.forEach(function(el){
                 if(el !== undefined){
                     el.childId = childId;
+                    el.sport = sports.find(s => s.id === el.sportId);
                     self.eventModel.push(el);
                 }
             });
