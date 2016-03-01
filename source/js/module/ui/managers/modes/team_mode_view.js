@@ -82,7 +82,7 @@ const TeamModeView = React.createClass({
             teamTableBinding = {
                 default: binding.sub(`teamTable.${selectedRivalIndex}`),
                 model: self.getBinding().model,
-                rivals: self.getBinding().rivals
+                rival: self.getBinding().rivals.sub(selectedRivalIndex)
             };
 
         return (

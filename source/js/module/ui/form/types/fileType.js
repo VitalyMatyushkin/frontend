@@ -96,14 +96,15 @@ const FileTypeUpload = React.createClass({
             return res;
         }).catch(function(err){alert(err.errorThrown+' occurred while posting image to storage');});
     },
+
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            gifClasses = className({
-                'eLoader_gif':true,
-                'eLoader_gif_hide':binding.get('fileLoading'),
-                'eLoader_gif_show':!binding.get('fileLoading')
-            });
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                gifClasses  = className({
+                    'eLoader_gif':      true,
+                    'eLoader_gif_hide': binding.get('fileLoading'),
+                    'eLoader_gif_show': !binding.get('fileLoading')
+                });
 
         let coverImg;
         if(binding.get('defaultValue') !== undefined) {

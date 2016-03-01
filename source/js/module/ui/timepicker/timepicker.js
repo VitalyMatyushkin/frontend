@@ -1,6 +1,7 @@
 var TimePicker,
     React = require('react'),
-    InviteMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
+    InviteMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+    SVG = require('module/ui/svg');
 
 TimePicker = React.createClass({
 	mixins: [Morearty.Mixin, InviteMixin],
@@ -48,15 +49,15 @@ TimePicker = React.createClass({
 
 		return <div className="bTimePicker" key="timePicker">
             <div key="hours-picker" className="eTimePicker_box">
-                <span className="eTimePicker_arrow mUp" onClick={self.setMinutes.bind(null, 60)}>▲</span>
+                <span className="eTimePicker_arrow mUp" onClick={self.setMinutes.bind(null, 60)}><SVG icon="icon_arrow_top"/></span>
                 <span className="eTimePicker_value">{self.zeroFill(startTime.getHours())}</span>
-                <span className="eTimePicker_arrow mDown" onClick={self.setMinutes.bind(null, -60)}>▼</span>
+                <span className="eTimePicker_arrow mDown" onClick={self.setMinutes.bind(null, -60)}><SVG icon="icon_arrow_down"/></span>
             </div>
             <div className="eTimePicker_box mDelimiter">:</div>
             <div key="minutes-picker" className="eTimePicker_box">
-                <span className="eTimePicker_arrow mUp" onClick={self.setMinutes.bind(null, 1)}>▲</span>
+                <span className="eTimePicker_arrow mUp" onClick={self.setMinutes.bind(null, 1)}><SVG icon="icon_arrow_top"/></span>
                 <span className="eTimePicker_value">{self.zeroFill(startTime.getMinutes())}</span>
-                <span className="eTimePicker_arrow mDown" onClick={self.setMinutes.bind(null, -1)}>▼</span>
+                <span className="eTimePicker_arrow mDown" onClick={self.setMinutes.bind(null, -1)}><SVG icon="icon_arrow_down"/></span>
             </div>
         </div>;
 	}

@@ -208,7 +208,7 @@ const ListPageMixin = {
                             <div className="bButton" onClick={self._addNewSport}>Add New Sport</div>
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='teams'}>
-                            <div className="bButton" onClick={self._addNewTeam}>Add New Team</div>
+                            <div className="addButtonShort" onClick={self._addNewTeam}><SVG icon="icon_add_team" /></div>
                         </If>
                         <If condition={currentPage[currentPage.length-1] ==='news'}>
                             <div className="addButtonShort" onClick={self._createNewsItem}><SVG icon="icon_add_news" /></div>

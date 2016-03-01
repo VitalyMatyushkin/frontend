@@ -1,10 +1,12 @@
-var Service = require('module/core/service'),
-	serviceList;
+const 	Service 		= require('module/core/service'),
+		ImageService 	= require('module/core/services/ImageService');
+
 
 /** Collection of services to reach REST API from server */
-serviceList = {
+const serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
+
 		serviceList.logout = new Service('/users/logout', binding);
 
 		// users
@@ -143,6 +145,7 @@ serviceList = {
 		serviceList.photo = new Service('/photos/{photoId}', binding);
 
 		//Storage
+		// TODO: DROP THIS SHIT
 		serviceList.storage = new Service('/storage',binding);
 		serviceList.addToStorageFiles = new Service('/storage/{container}/files',binding);
 
@@ -171,6 +174,9 @@ serviceList = {
 	initializeOpenServices: function() {
 		// schools
 		serviceList.schoolsFindOne = new Service('/schools/getAllSchools');
+		
+		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
+		serviceList.images = new ImageService(window.apiImg);
 	}
 };
 
