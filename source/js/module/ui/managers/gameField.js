@@ -1,5 +1,4 @@
-const React = require('react'),
-    ImageHelper = require('module/helpers/imageHelper');
+const React = require('react');
 
 const GameField = React.createClass({
     mixins: [Morearty.Mixin],
@@ -10,7 +9,7 @@ const GameField = React.createClass({
         let src;
 
         if(bindingData !== undefined) {
-            src = ImageHelper.formatSizedImageScr(bindingData, 490, 600);
+            src = window.Server.images.getResizedToBoxUrl(bindingData, 490, 600);
         } else {
             src = '';
         }

@@ -23,17 +23,17 @@ const AlbumView = React.createClass({
 		});
 	},
 	componentWillMount: function() {
-		var self = this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			albumId = rootBinding.get('routing.pathParameters.1'),
-			binding = self.getDefaultBinding(),
-			userId = rootBinding.get('userData.authorizationInfo.userId');
+		const 	self 			= this,
+				rootBinding 	= self.getMoreartyContext().getBinding(),
+				albumId 		= rootBinding.get('routing.pathParameters.1'),
+				binding 		= self.getDefaultBinding(),
+				userId 			= rootBinding.get('userData.authorizationInfo.userId');
 
 		self.gallery = new Gallery(binding.sub('album'));
 
 		self.gallery.loadAlbumWithPhotos(albumId)
 		.then(function(res) {
-			var isOwner = (userId == res.ownerId);
+			const isOwner = (userId == res.ownerId);
 
 			self.menuItems = [{
 				key: 'goback',
@@ -43,10 +43,10 @@ const AlbumView = React.createClass({
 
 			if (isOwner) {
 				self.menuItems.push({
-					key: 'file',
-					name: 'Add Photo',
-					href: '#',
-					onChange: self.handleFile
+					key: 		'file',
+					name: 		'Add Photo',
+					href: 		'#',
+					onChange: 	self.handleFile
 				});
 			}
 
@@ -59,18 +59,19 @@ const AlbumView = React.createClass({
 		});
 	},
 
+	/** Will trigger on submenu 'Add Photo' click */
 	handleFile: function(e) {
-		const file = e.target.files[0],
-			isUploading = this.getDefaultBinding().sub('isUploading');
+		const 	file 		= e.target.files[0],
+				isUploading = this.getDefaultBinding().sub('isUploading');
 
 		this.gallery.uploadPhoto(file, isUploading);
 	},
 
 	onPhotoClick: function(photo) {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			fullScreen = binding.get('fullScreen'),
-			id = photo.get('id');
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				fullScreen 	= binding.get('fullScreen'),
+				id 			= photo.get('id');
 
 		self.setState({lastClickedId: id});
 		if (!fullScreen) {
@@ -85,14 +86,12 @@ const AlbumView = React.createClass({
 	},
 
 	onCloseFullScreen: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
-		binding.set('fullScreen', false);
+		this.getDefaultBinding().set('fullScreen', false);
 	},
 
 	render: function() {
-		var self = this,
-		binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<div>

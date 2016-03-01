@@ -1,13 +1,11 @@
-var SubMenu,
-	React = require('react'),
-	Mixin = require('module/ui/menu/menu_mixin');
+const 	React 		= require('react'),
+		MenuMixin 	= require('module/ui/menu/menu_mixin');
 
-SubMenu = React.createClass({
-	mixins: [Morearty.Mixin, Mixin],
+const SubMenu = React.createClass({
+	mixins: [Morearty.Mixin, MenuMixin],
 	itemClassName: 'eSubMenu_item ',
 	render: function() {
-		var self = this;
-
+		const self = this;
 		return (
 			<div className="bSubMenu mClearFix">
 				{self.getMenuNodes()}

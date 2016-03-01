@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login'],
+const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login', 'playground'],
         defaultModel    = 'school',
         apiVersion      = 1;
 
@@ -22,18 +22,30 @@ function parseDomainName(domainName) {
 /** Returns api endpoint based on given domain name */
 function apiSelector(domainName) {
     const parsedDomain = parseDomainName(domainName);
-    let apiDomain;
+    let apiDomains;
     switch (true) {
         case parsedDomain.rootDomain === 'squadintouch':
-            apiDomain = `api${parsedDomain.env ? '.' + parsedDomain.env : ''}.squadintouch.com`;
+            apiDomains = {
+                main:   'api' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com',
+                img:    'img' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com'
+            };
             break;
         case parsedDomain.rootDomain === 'squard':
-            apiDomain = 'api.stage.squadintouch.com';
+            apiDomains = {
+                main:   'api.stage.squadintouch.com',
+                img:    'img.stage.squadintouch.com'
+            };
             break;
         default:
-            apiDomain = 'api.stage.squadintouch.com';
+            apiDomains = {
+                main:   'api.stage.squadintouch.com',
+                img:    'img.stage.squadintouch.com'
+            };
     }
-    return '//' + apiDomain + '/v' + apiVersion;
+
+    apiDomains.main = '//' + apiDomains.main + '/v' + apiVersion;
+    apiDomains.img  = '//' + apiDomains.img;
+    return apiDomains;
 }
 
 /** Chooses module to load based on given domain name */

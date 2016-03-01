@@ -10,9 +10,9 @@ const AlbumItem = React.createClass({
 	},
 
 	onClickAlbum: function(e) {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			a = binding.toJS();
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				a 			= binding.toJS();
 
 		self.props.onView && self.props.onView(a);
 
@@ -39,12 +39,12 @@ const AlbumItem = React.createClass({
 	componentDidMount: function () {
 	},
 	render: function() {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			a = binding.toJS(),
-			name = a ? a.name : '',
-			cover = a && a.coverUrl ? a.coverUrl + '/contain?height=100': noImage,
-			styles = {backgroundImage: 'url(' + cover + ')'};
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				a 		= binding.toJS(),
+				name 	= a ? a.name : '',
+				cover 	= a && a.coverUrl ? window.Server.images.getResizedToBoxUrl(a.coverUrl, 100, 100) : noImage,
+				styles 	= { backgroundImage: 'url(' + cover + ')'};
 
 		return (
 				<div onClick={self.onClickAlbum} className='eEventAlbums_album' style={styles}>
