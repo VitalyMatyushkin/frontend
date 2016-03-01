@@ -1,10 +1,10 @@
 /**
  * Created by Bright on 15/12/2015.
  */
-var AllChallengesList,
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    InvitesMixin = require('module/as_manager/pages/invites/mixins/invites_mixin');
+const   React           = require('react'),
+        InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+        Sport           = require('module/ui/icons/sport_icon'),
+
 AllChallengesList = React.createClass({
     mixins:[Morearty.Mixin,InvitesMixin],
     getRivalName: function(event, order) {
@@ -43,6 +43,9 @@ AllChallengesList = React.createClass({
 
         return rivalName;
     },
+    getSportIcon:function(sport){
+        return <Sport name={sport} className="bIcon_invites" ></Sport>;
+    },
     getEvents: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -63,13 +66,14 @@ AllChallengesList = React.createClass({
                 var eventDate = new Date(childEv.get('startTime')),
                     hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
                     stringDate = self.formatDate(childEv.get('startTime')),
+                    sport = self.getSportIcon(childEv.get('sport').name),
                     isHoveredDay =  hoverDay &&
                         hoverDay.getMonth() === eventDate.getMonth() &&
                         hoverDay.getDate() === eventDate.getDate();
                 return(
                     <div key={childEvInd} className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'}>
-                        <span className="eChallenge_sport"></span>
-                            <span className="eChallenge_date">{stringDate}</span>
+                        <span className="eChallenge_sport">{sport}</span>
+                        <span className="eChallenge_date">{stringDate}</span>
                         <div className="eChallenge_name">{childEv.get('name')}</div>
                     </div>
                 );

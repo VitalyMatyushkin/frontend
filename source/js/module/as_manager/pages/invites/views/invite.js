@@ -1,9 +1,9 @@
-var InvitesMixin = require('../mixins/invites_mixin'),
-    classNames = require('classnames'),
-    React = require('react'),
-    SVG = require('module/ui/svg'),
+const   InvitesMixin = require('../mixins/invites_mixin'),
+        classNames  = require('classnames'),
+        React       = require('react'),
+        SVG         = require('module/ui/svg'),
+        Sport       = require('module/ui/icons/sport_icon'),
 
-    InviteView;
 InviteView = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
 	propTypes: {
@@ -37,33 +37,7 @@ InviteView = React.createClass({
         }
     },
     getSportIcon:function(sport){
-        if(sport !== undefined){
-            var icon;
-            switch (sport){
-                case 'football':
-                    icon = <SVG classes="bIcon_invites" icon="icon_ball"></SVG>;
-                    break;
-                case 'rounders':
-                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"></SVG>;
-                    break;
-                case 'rugby':
-                    icon = <SVG classes="bIcon_invites" icon="icon_rugby"></SVG>;
-                    break;
-                case 'hockey':
-                    icon = <SVG classes="bIcon_invites" icon="icon_hockey"></SVG>;
-                    break;
-                case 'cricket':
-                    icon = <SVG classes="bIcon_invites" icon="icon_cricket"></SVG>;
-                    break;
-                case 'netball':
-                    icon = <SVG classes="bIcon_invites" icon="icon_netball"></SVG>;
-                    break;
-                default:
-                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"></SVG>;
-                    break;
-            }
-            return icon;
-        }
+        return <Sport name={sport} className="bIcon_invites" ></Sport>;
     },
     getGenderIcon:function(gender){
         if(gender !== undefined){

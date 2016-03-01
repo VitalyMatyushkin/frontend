@@ -5,7 +5,7 @@ const   CalendarView    = require('module/ui/calendar/calendar'),
         React           = require('react'),
         Immutable 	    = require('immutable'),
         DateTimeMixin   = require('module/mixins/datetime'),
-        SVG         = require('module/ui/svg'),
+        Sport           = require('module/ui/icons/sport_icon'),
         Superuser       = require('module/helpers/superuser');
 
 const HomeCalender = React.createClass({
@@ -34,33 +34,9 @@ const HomeCalender = React.createClass({
 
     },
     getSportIcon:function(sport){
-        if(sport !== undefined){
-            var icon;
-            switch (sport.name){
-                case 'football':
-                    icon = <SVG classes="calendar_mSport" icon="icon_ball"></SVG>;
-                    break;
-                case 'rounders':
-                    icon = <SVG classes="calendar_mSport" icon="icon_rounders"></SVG>;
-                    break;
-                case 'rugby':
-                    icon = <SVG classes="calendar_mSport" icon="icon_rugby"></SVG>;
-                    break;
-                case 'hockey':
-                    icon = <SVG classes="calendar_mSport" icon="icon_hockey"></SVG>;
-                    break;
-                case 'cricket':
-                    icon = <SVG classes="calendar_mSport" icon="icon_cricket"></SVG>;
-                    break;
-                case 'netball':
-                    icon = <SVG classes="calendar_mSport" icon="icon_netball"></SVG>;
-                    break;
-                default:
-                    icon = <SVG classes="calendar_mSport" icon="icon_rounders"></SVG>;
-                    break;
-            }
-            return icon;
-        }
+        const name = sport ? sport.name : '';
+
+        return <Sport name={name} className="bIcon_mSport" ></Sport>;
     },
     getCalenderFixtureLists:function(){
         const   self        = this,
