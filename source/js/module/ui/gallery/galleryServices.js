@@ -81,7 +81,7 @@ const galleryServices = function(albumBinding){
         const   albumId     = this.binding.get('id'),
                 ownerId     = this.binding.get('ownerId'),
                 model       = {
-                    name:           "MyNameIs",
+                    name:           "",
                     albumId:        albumId,
                     description:    "",
                     authorId:       ownerId,
