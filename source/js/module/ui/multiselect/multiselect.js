@@ -87,7 +87,7 @@ var MultiSelect = React.createClass({
 
         return (
             <div key={self.props.key} className="bMultiSelect">
-                <input onChange={this.handleFilterChange} value={this.state.filter} placeholder={this.props.placeholder} />
+                {/*<input onChange={this.handleFilterChange} value={this.state.filter} placeholder={this.props.placeholder} />*/}
                 <ul>{this.props.items.map(this.createItem)}</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;
                 {count > 0 ?
