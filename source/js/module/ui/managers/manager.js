@@ -54,7 +54,16 @@ const Manager = React.createClass({
             .set('teamModeView', Immutable.fromJS(
                 {
                     selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
-                    teamTable: {},
+                    teamTable: [
+                        {
+                            selectedTeamId: undefined,
+                            exceptionTeamId: undefined
+                        },
+                        {
+                            selectedTeamId: undefined,
+                            exceptionTeamId: undefined
+                        }
+                    ],
                     teamViewer: [
                         {
                             selectedTeamId: undefined

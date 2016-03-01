@@ -58,6 +58,8 @@ const TeamViewer = React.createClass({
             }).then((team) => {
                 return binding.set('players', Immutable.fromJS(TeamHelper.getPlayers(players, team)));
             });
+        } else {
+            binding.set('players', Immutable.fromJS(undefined));
         }
     },
     /**
