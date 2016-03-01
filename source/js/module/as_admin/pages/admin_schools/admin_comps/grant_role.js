@@ -101,7 +101,7 @@ const GrantRole = React.createClass({
             model.studentId = binding.get('selectedStudentId');
         }else{
             //if not then overwrite the comment with the comment below with the name of the student
-            //Maybe temp solution after there is a feature backend to support this
+            //Maybe temp solution until there is a feature backend to support this
             model.comment = `Request to be parent of [ ${binding.get('studentName')} ]`;
         }
         //
@@ -145,7 +145,7 @@ const GrantRole = React.createClass({
                         <option value="admin">School Admin</option>
                         <option value="manager">School Manager</option>
                     </select></div>
-                    {/* if is parent role and not superadmin show just text field */}
+                    {/* if is parent role and superadmin show drop list */}
                     <If condition={isParent && self.props.isAdmin == true}>
                         <div>
                             <h4>Student</h4>
@@ -156,7 +156,7 @@ const GrantRole = React.createClass({
                             />
                         </div>
                     </If>
-                    {/*if it is superadmin and parent role then show drop down*/}
+                    {/*if it is parent role and not super admin show an input field*/}
                     <If condition={isParent && self.props.isAdmin == false}>
                         <div>
                             <h4>Student</h4>
