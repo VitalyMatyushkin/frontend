@@ -61,7 +61,7 @@ const AlbumPhoto = React.createClass({
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
 				origSrc 	= binding.get('pic'),
-				sizedSrc 	= window.Server.images.getResizedToBpxUrl(origSrc, 200, 200);	// yeah, size a bit hardcoded here
+				sizedSrc 	= window.Server.images.getResizedToBoxUrl(origSrc, 200, 200);	// yeah, size a bit hardcoded here
 
 		let imgClasses = 'bAlbumPhoto';
 		if (binding.get('loaded')) {

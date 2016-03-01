@@ -145,6 +145,7 @@ const serviceList = {
 		serviceList.photo = new Service('/photos/{photoId}', binding);
 
 		//Storage
+		// TODO: DROP THIS SHIT
 		serviceList.storage = new Service('/storage',binding);
 		serviceList.addToStorageFiles = new Service('/storage/{container}/files',binding);
 

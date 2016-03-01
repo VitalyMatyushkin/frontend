@@ -43,7 +43,7 @@ const AlbumItem = React.createClass({
 				binding = self.getDefaultBinding(),
 				a 		= binding.toJS(),
 				name 	= a ? a.name : '',
-				cover 	= a && a.coverUrl ? window.Server.images.getResizedToBpxUrl(a.coverUrl, 100, 100) : noImage,
+				cover 	= a && a.coverUrl ? window.Server.images.getResizedToBoxUrl(a.coverUrl, 100, 100) : noImage,
 				styles 	= { backgroundImage: 'url(' + cover + ')'};
 
 		return (

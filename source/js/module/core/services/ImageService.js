@@ -35,7 +35,7 @@ ImageService.prototype.getResizedToHeightUrl = function(origUrl, height) {
     return `${origUrl}?sizing=height&height=${height}`;
 };
 
-ImageService.prototype.getResizedToBpxUrl = function(origUrl, height, width) {
+ImageService.prototype.getResizedToBoxUrl = function(origUrl, height, width) {
     return `${origUrl}?sizing=box&height=${height}&width=${width}`;
 };
 

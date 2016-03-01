@@ -38,7 +38,7 @@ const HomeHeader = React.createClass({
                 return Superuser.runAsSuperUser(rootBinding, () => {
                     return window.Server.photos.get(defaultAlbumId, {})
                         .then( photos => {
-                            const photosToShow = Lazy(photos).map(photo => `${photo.pic}/contain?height=600`).toArray();
+                            const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();
                             if(photosToShow.length != 0) {
                                 binding.set('___photosToShow', Immutable.fromJS(photosToShow));
                             } else {
