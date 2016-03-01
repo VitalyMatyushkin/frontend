@@ -1,4 +1,5 @@
 const   React       = require('react'),
+        SVG = require('module/ui/svg'),
         Immutable   = require('immutable');
 
 const ChallengesView = React.createClass({
@@ -24,6 +25,35 @@ const ChallengesView = React.createClass({
             return point.get('participantId') === participantId;
         }).count();
     },
+    getSportIcon:function(sport){
+        if(sport !== undefined){
+            var icon;
+            switch (sport){
+                case 'football':
+                    icon = <SVG classes="bIcon_invites" icon="icon_ball"/>;
+                    break;
+                case 'rounders':
+                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"/>;
+                    break;
+                case 'rugby':
+                    icon = <SVG classes="bIcon_invites" icon="icon_rugby"/>;
+                    break;
+                case 'hockey':
+                    icon = <SVG classes="bIcon_invites" icon="icon_hockey"/>;
+                    break;
+                case 'cricket':
+                    icon = <SVG classes="bIcon_invites" icon="icon_cricket"/>;
+                    break;
+                case 'netball':
+                    icon = <SVG classes="bIcon_invites" icon="icon_netball"/>;
+                    break;
+                default:
+                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"/>;
+                    break;
+            }
+            return icon;
+        }
+    },
     getEvents: function (date) {
         var self = this,
             binding = this.getDefaultBinding(),
@@ -39,8 +69,10 @@ const ChallengesView = React.createClass({
                 }),
                 eventBinding = binding.sub(['models', eventIndex]),
                 hours = self.addZeroToFirst(eventDateTime.getHours()),
-				minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
+				        minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.get('type'),
+                sport = event.get('sport') !== undefined ? event.get('sport').get('name') : '',
+                sportIcon = self.getSportIcon(sport),
                 firstName,
                 secondName,
 				firstPic,
@@ -74,12 +106,11 @@ const ChallengesView = React.createClass({
                 firstPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.0.id')) || 0;
                 secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
             }
-
             return <div key={evtIndex} className="bChallenge"
                         onClick={self.onClickChallenge.bind(null, event.get('id'))}
                         id={'challenge-' + event.get('id')}
                 >
-                <span className="eChallenge_sport">sport</span>
+                <span className="eChallenge_sport">{sportIcon}</span>
                 <span className="eChallenge_event">{event.get('name')}</span>
                 <div className="eChallenge_hours">{hours + ':' + minutes}</div>
                 <div className="eChallenge_in">

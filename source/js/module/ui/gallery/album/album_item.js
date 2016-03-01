@@ -57,7 +57,7 @@ const AlbumItem = React.createClass({
 					</div>
 					<div className="eAlbumInfo">
 						<span className='eEventAlbums_albumTitle'>{name}</span>
-						<span className='eEventAlbums_albumDate'>Date</span>
+						<span className='eEventAlbums_albumDate'></span>
 					</div>
 				</div>
 		);

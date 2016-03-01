@@ -84,27 +84,26 @@ const UserAchievements = React.createClass({
                     secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
                 }
                 //console.log(index+"  index");
-                return <div key={index} className="bChallenge"
+                return <div key={index} className="bAchievement"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                    <div className="eChallenge_in">
-                        <div className="eChallenge_rivalName">
+                    <div className="eAchievement_in">
+                        <div className="eAchievement_rivalName">
                             {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
-                            {firstName}
+                            <span className="eAchievement_rival">{firstName}</span>
                         </div>
-                        <div className="eChallenge_rivalInfo">
-                            <div className="eChallenge_hours">{hours + ':' + minutes}</div>
+                        <div className="eAchievement_rivalInfo">
                             <div
-                                className={'eChallenge_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
-                            <div className="eChallenge_info">{event.type}</div>
+                                className={'eAchievement_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
+                            <div className="eAchievement_info">{event.type}</div>
                         </div>
-                        <div className="eChallenge_rivalName">
+                        <div className="eAchievement_rivalName">
                             {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
-                            {secondName}
+                            <span className="eAchievement_rival">{secondName}</span>
                         </div>
                     </div>
-                    <div className="eChallenge_com_container">
+                    <div className="eAchievement_com_container">
                         <div className="eChallenge_comments">
                             {comment}
                         </div>
@@ -131,18 +130,15 @@ const UserAchievements = React.createClass({
 
             return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
                 var date = new Date(datetime),
-                    daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                     monthNames = [ "January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December" ],
-                    dayOfWeek = date.getDay();
-                return <div key={dateTimeIndex} className="bChallengeDate">
-                    <div className="eChallengeDate_date">
-                        {daysOfWeek[dayOfWeek] + ' ' +
-                        date.getDate() + ' ' +
+                        "July", "August", "September", "October", "November", "December" ];
+                return <div key={dateTimeIndex} className="bAchievementsDate">
+                    <h4>Scored in this fixture</h4>
+                    <div className="eAchievementsDate_date">
+                        {date.getDate() + ' ' +
                         monthNames[date.getMonth()] + ' ' +
                         date.getFullYear()}
                     </div>
-                    <h4>Scored in this fixture</h4>
                     <div className="eChallengeDate_list">{self.getEvents(datetime,dataFrom)}</div>
                 </div>;
             }).toArray() : (<div>Student hasn't achieved a goal yet!</div>);

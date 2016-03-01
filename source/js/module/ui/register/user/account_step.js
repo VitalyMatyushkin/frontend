@@ -1,6 +1,5 @@
 const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
-		FormColumn 	= require('module/ui/form/form_column'),
 		React 		= require('react');
 
 const RegiseterUserForm = React.createClass({
@@ -35,7 +34,7 @@ const RegiseterUserForm = React.createClass({
 					</p>
 				</div>
 				{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
-				<FormField type="text" field="username" validation="alphanumeric server" errorClassName="eForm_errorMsgRight">Username</FormField>
+				<FormField type="text" field="username" validation="required alphanumeric server" errorClassName="eForm_errorMsgRight">Username</FormField>
 				<FormField type="text" field="firstName" validation="required text">First Name</FormField>
 				<FormField type="text" field="lastName" validation="required text">Last name</FormField>
 				<FormField type="text" field="email" validation="required email server" errorClassName="eForm_errorMsgRight">Email</FormField>

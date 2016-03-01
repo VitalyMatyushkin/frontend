@@ -97,7 +97,7 @@ const EventView = React.createClass({
             //Set the requirement for an all children view here
             if (userChildren && userChildren.length > 0) {
                 self.request = userChildren.map(function(child){
-                    window.Server.studentEvents.get({id:child.id})
+                    window.Server.studentEvents.get({id:child.id, filter:{include:'sport'}})
                         .then(function(events){
                             self.processRequestData(events,child.id);
                         });

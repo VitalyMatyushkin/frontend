@@ -1,7 +1,8 @@
-const 	Form 		= require('module/ui/form/form'),
-		FormField 	= require('module/ui/form/form_field'),
-		FormColumn 	= require('module/ui/form/form_column'),
-		React 		= require('react');
+var Form = require('module/ui/form/form'),
+	FormField = require('module/ui/form/form_field'),
+	FormColumn = require('module/ui/form/form_column'),
+	React = require('react'),
+	SchoolForm;
 
 
 const SchoolForm = React.createClass({
@@ -30,7 +31,7 @@ const SchoolForm = React.createClass({
 					<FormField type="phone" field="phone" validation="required">Phone</FormField>
 				</FormColumn>
 				<FormColumn type="column">
-					<FormField type="area" field="postcodeId" serviceFullData={self._serviceFullData()} validation="required">Postcode</FormField>
+					<FormField type="area" field="postcodeId" validation="required">Postcode</FormField>
 					<FormField type="text" field="address" validation="required">Address</FormField>
 					<FormField type="text" field="domain" validation="required">Domain</FormField>
 				</FormColumn>

@@ -1,7 +1,7 @@
 const	TeamForm             = require('module/as_manager/pages/school_admin/teams/team_form'),
         React                = require('react'),
         MoreartyHelper       = require('module/helpers/morearty_helper'),
-        TeamHelper           = require('./team_helper'),
+        TeamHelper           = require('module/ui/managers/helpers/team_helper'),
         Immutable            = require('immutable'),
         Lazy                 = require('lazyjs');
 
@@ -79,36 +79,12 @@ const TeamEditPage = React.createClass({
                 .set('teamForm.rival', Immutable.fromJS(self._getFakeRival(team)))
                 .set('teamForm.default', Immutable.fromJS(self._getDefaultObject(schoolData, team)))
                 .set('teamForm.sports', Immutable.fromJS(sportsData))
-                .set('teamForm.players', Immutable.fromJS(self._getPlayers(_players, team)))
-                .set('initialPlayers', Immutable.fromJS(self._getPlayers(_players, team)))
+                .set('teamForm.players', Immutable.fromJS(TeamHelper.getPlayers(_players, team)))
+                .set('initialPlayers', Immutable.fromJS(TeamHelper.getPlayers(_players, team)))
                 .set('teamForm.isHouseFilterEnable', Immutable.fromJS(self._isHouseFilterEnable(team)))
                 .set('teamForm.isHouseSelected', Immutable.fromJS(self._isHouseSelected(team)))
                 .commit();
         });
-    },
-    /**
-     * Get players.
-     * player = student + player model.
-     * That need for team manager element.
-     * @param players - player model from server
-     * @param team - team model from server
-     * @returns {Array}
-     * @private
-     */
-    _getPlayers: function(players, team) {
-        let result = [];
-
-        team.players.forEach((student) => {
-            let newPlayer = student;
-            let findedPlayer = Lazy(players).findWhere({studentId: student.id});
-            newPlayer.position = findedPlayer.position;
-            newPlayer.sub = findedPlayer.sub;
-            newPlayer.playerModelId = findedPlayer.id;
-
-            result.push(newPlayer);
-        });
-
-        return result;
     },
     /**
      * Check status of house filter.
@@ -189,6 +165,7 @@ const TeamEditPage = React.createClass({
                 sportId:     binding.get('teamForm.sportId'),
                 ages:        binding.toJS('teamForm.ages'),
                 gender:      binding.get('teamForm.gender'),
+                schoolId:    MoreartyHelper.getActiveSchoolId(self),
                 houseId:     TeamHelper.getHouseId(binding)
             };
 

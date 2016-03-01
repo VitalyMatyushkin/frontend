@@ -20,7 +20,7 @@
 		margin-left: 10px;
 		float: left;
 	  	color: $COLOR;
-	  	text-transform: uppercase;
+	  	font-weight: bold;
 	}
 
 	label.eEventAlbums_title {
@@ -54,21 +54,22 @@
   cursor: pointer;
   flex-wrap: wrap;
   position: relative;
+  flex-direction: column;
+  justify-content: flex-end;
   &.mCreate {
 	&:before {
 	  content: '+';
-	  font-size: 15px;
-	  font-weight: bold;
+	  font-size: 24px;
 	  color: #fff;
 	  text-align: center;
 	  vertical-align: middle;
-	  margin: 0 auto;
 	  width: 21px;
 	  height: 21px;
-	  line-height: 21px;
+	  line-height: 26px;
 	  border: $BORDER;
 	  border-radius: 50%;
 	  background: $MAIN_COLOR;
+	  margin: auto;
 	}
 	&:hover {
 	  &:before {
@@ -135,7 +136,11 @@
   }
 }
 .eEventAlbums_albumTitle, .eEventAlbums_albumDate{
-  display: none;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 .bSchoolGallery .eEventAlbums_albumTitle {
 	display: flex;
@@ -180,6 +185,9 @@
 }
 .eAlbumInfo{
   width: 100%;
+  text-align: center;
+  color: #fff;
+  margin-bottom: 5px;
 }
 .showAllPhoto{
   color: $COLOR;
