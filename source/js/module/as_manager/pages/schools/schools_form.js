@@ -7,13 +7,8 @@ const 	Form 		= require('module/ui/form/form'),
 const SchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-		onSubmit: React.PropTypes.func
-	},
-	_serviceFullData:function(){
-		return function(){
-			return window.Server.postCode.get();
-		}
+		title: 		React.PropTypes.string.isRequired,
+		onSubmit: 	React.PropTypes.func
 	},
 	componentWillUnmount:function(){
 		this.getDefaultBinding().clear();

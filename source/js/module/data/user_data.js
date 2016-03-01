@@ -32,9 +32,9 @@ UserDataClass.initBind = function () {
         // configuring ajax to perform all ajax requests from jquery with Authorization header
         $.ajaxSetup({
             headers: {
-                Authorization: authorizationInfo.id,
-                'Content-Type': 'application/json',
-                Accept: 'application/json'
+                Authorization: authorizationInfo.id
+                //'Content-Type': 'application/json',
+                //Accept: 'application/json'
             }
         });
     });
