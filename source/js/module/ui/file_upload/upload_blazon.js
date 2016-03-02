@@ -11,6 +11,8 @@ const   classNames  = require('classnames'),
 
 // TODO: delete me
 
+console.error('upload_blazon deprecated. Use imageFileType instead');
+
 let
     urlStr,
     preview,
