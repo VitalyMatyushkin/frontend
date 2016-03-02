@@ -1,7 +1,7 @@
 /**
  * Created by bridark on 12/06/15.
  */
-const   EditUser    = require('../admin_comps/edit_user'),
+const   EditUser    = require('../admin_comps/edit_user_1'),
         React       = require('react'),
         Popup       = require('module/ui/popup'),
         Immutable   = require('immutable');
@@ -31,8 +31,32 @@ const UserDetail= React.createClass({
                     user.roles = data;
                     binding.set('userWithPermissionDetail',Immutable.fromJS(user));
                     binding.set('selectedUser',{userId:selectedUserId, role:data});
+                    return data;
                 });
+                return user;
             });
+        binding.addListener('popup',function(){
+            if(binding.get('popup')===false){
+                window.Server.user.get({id:binding.get('selectedUser').userId})
+                    .then(function(user){
+                        user.roles = {};
+                        window.Server.Permissions.get({
+                            filter: {
+                                where: {
+                                    principalId: user.id,
+                                    accepted: true
+                                },
+                                include:['school',{student:'user'}]
+                            }
+                        }).then(function(data){
+                            user.roles = data;
+                            binding.set('userWithPermissionDetail',Immutable.fromJS(user));
+                            return data;
+                        });
+                        return user;
+                    });
+            }
+        });
     },
     componentWillUnmount: function() {
         var self = this;
@@ -51,9 +75,9 @@ const UserDetail= React.createClass({
     _getRelatedSchool:function(data){
         var self = this;
         if(data !== undefined){
-            return data.map(function(role){
+            return data.map(function(role, i){
                 return(
-                    <div className="eDataList_listItem">
+                    <div key={i} className="eDataList_listItem">
                         <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={role.school !== undefined ? role.school.pic:'http://placehold.it/400x400'}/></span></div>
                         <div className="eDataList_listItemCell">{role.school !== undefined ? role.school.name: 'n/a'}</div>
                         <div className="eDataList_listItemCell">{role.student !== undefined? role.student.user.firstName+" "+role.student.user.lastName : ''}</div>
