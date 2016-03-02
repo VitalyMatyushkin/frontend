@@ -11,6 +11,8 @@ const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
         $                   = require('jquery'),
         Helpers             = require('module/helpers/storage');
 
+// TODO: remove jquery
+
 const RegisterUserPage = React.createClass({
     mixins: [Morearty.Mixin],
     // TODO: вынести значение поля step в мета-данные

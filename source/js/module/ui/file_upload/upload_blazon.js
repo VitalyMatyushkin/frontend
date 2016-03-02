@@ -9,6 +9,8 @@ const   classNames  = require('classnames'),
         ReactDOM    = require('reactDom'),
         $           = require('jquery');
 
+// TODO: delete me
+
 let
     urlStr,
     preview,
