@@ -1,5 +1,6 @@
 const 	Immutable 	= require('immutable'),
-		React 		= require('react');
+		React 		= require('react'),
+		SVG 				= require('module/ui/svg');
 
 const AlbumPhoto = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -69,13 +70,17 @@ const AlbumPhoto = React.createClass({
 		}
 
 		return (
-			<div onClick={self.onImageClick} className={imgClasses} >
-				<span onClick={self.onClickPinPhoto} className='eAlbumPhoto_photoPin'></span>
-				<span onClick={self.onClickEditPhoto} className='eAlbumPhoto_photoEdit'></span>
-				<span onClick={self.onClickDeletePhoto} className='eAlbumPhoto_photoDelete'></span>
-				<span className='eAlbumPhoto_photoTitle'>{binding.get('description')}</span>
-				<img src={sizedSrc} onLoad={self.onImageLoad} />
-			</div>
+				<div onClick={self.onImageClick} className={imgClasses}>
+					<div className='ePhotoActions'>
+						<span onClick={self.onClickPinPhoto}><SVG icon="icon_pencil"/></span>
+						<span onClick={self.onClickEditPhoto}><SVG icon="icon_edit"/></span>
+						<span ><SVG icon="icon_eye"/></span>
+						<span ><SVG icon="icon_user"/></span>
+						<span onClick={self.onClickDeletePhoto}><SVG classes="ePhotoDelete" icon="icon_cross"/></span>
+					</div>
+					<span className='eAlbumPhoto_photoTitle'>{binding.get('description')}</span>
+					<img src={sizedSrc} onLoad={self.onImageLoad}/>
+				</div>
 		);
 	}
 });
