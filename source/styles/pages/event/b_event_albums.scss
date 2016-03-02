@@ -169,6 +169,7 @@
   width: 100%;
   justify-content: space-around;
   padding-top: 5px;
+  align-items: flex-end;
 }
 .eAlbumInfo{
   width: 100%;
@@ -178,6 +179,12 @@
   bottom: 0;
   left: 0;
   background: #7f7e7c;
+}
+.eAlbumActions .bIcon {
+  color: #c2c2c2;
+}
+.eAlbumActions .bIcon:hover {
+  color: #fff;
 }
 .showAllPhoto{
   color: $COLOR;

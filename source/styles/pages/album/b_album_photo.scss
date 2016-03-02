@@ -88,12 +88,17 @@
   display: none;
   justify-content: space-around;
   padding-top: 5px;
+  align-items: flex-end;
 }
 .ePhotoActions .bIcon {
   color: #c2c2c2;
 }
 .ePhotoActions .bIcon:hover {
   color: #fff;
+}
+.ePhotoDelete {
+  width: 12px;
+  height: 12px;
 }
 
 
