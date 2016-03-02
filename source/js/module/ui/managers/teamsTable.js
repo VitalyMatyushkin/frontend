@@ -15,7 +15,7 @@ const TeamsTable = React.createClass({
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         const model = self.getBinding().model.toJS(),
-            rivals = self.getBinding().rivals.toJS();
+            rival = self.getBinding().rival.toJS();
 
         let filter = {
             where: {
@@ -27,19 +27,24 @@ const TeamsTable = React.createClass({
                         inq: model.ages
                     }
             },
-            include: 'sport'
+            include: ['sport','players']
         };
-
-        if(model.type === 'houses') {
-            filter.where.or = [{houseId: rivals[0].id}, {houseId: rivals[1].id}];
-        }
 
         window.Server.teams.get({filter: filter}).then((teams)  => {
             let filteredTeams = [];
 
             teams.forEach((team) => {
                 if(team.ages.length <= model.ages.length) {
-                    filteredTeams.push(team)
+                    switch (model.type) {
+                        case 'houses':
+                            if(self._isAllPlayersFromHouse(rival.id, team.players)) {
+                                filteredTeams.push(team);
+                            }
+                            break;
+                        default:
+                            filteredTeams.push(team);
+                            break;
+                    }
                 }
             });
 
@@ -48,6 +53,26 @@ const TeamsTable = React.createClass({
                 .set('teams', Immutable.fromJS(filteredTeams))
                 .commit();
         });
+    },
+
+    /**
+     *
+     * @param houseId
+     * @param players
+     * @returns {boolean} true if all players from current house
+     * @private
+     */
+    _isAllPlayersFromHouse: function(houseId, players) {
+        let isAllFromCurrentHouse = true;
+
+        for(let i = 0; i < players.length; i++) {
+            if(players[i].houseId != houseId) {
+                isAllFromCurrentHouse = false;
+                break;
+            }
+        }
+
+        return isAllFromCurrentHouse;
     },
     /**
      * Convert ages array to table view

@@ -353,7 +353,9 @@ const EventManager = React.createClass({
             };
 
 		return <div>
-           	<h3>{'[' + step + '/' + titles.length + ']: ' + titles[step - 1]}</h3>
+           	<div className="eManager_steps" >
+                <div className="eManager_step" >{step} </div>
+                <h3>{titles[step - 1]}</h3></div>
             <div className={bManagerClasses}>
                 <If condition={step === 1}>
                     <div className="eManager_dateTimePicker">
