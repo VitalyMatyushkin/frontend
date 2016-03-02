@@ -1,11 +1,11 @@
 /**
  * Created by Bright on 01/03/2016.
  */
-const React = require('react'),
-    Immutable = require('immutable'),
-    UserRole    = require('./user_roles'),
-    If          = require('module/ui/if/if'),
-    TabItemDetails = require('./edit_user_tabDetails');
+const   React           = require('react'),
+        Immutable       = require('immutable'),
+        UserRole        = require('./user_roles'),
+        If              = require('module/ui/if/if'),
+        TabItemDetails  = require('./edit_user_tabDetails');
 
 const EditUser = React.createClass({
     mixins:[Morearty.Mixin],

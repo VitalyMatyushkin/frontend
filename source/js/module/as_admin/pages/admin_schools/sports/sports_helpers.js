@@ -1,4 +1,3 @@
-const jquery = require('jquery');
 
 const SportsHelpers = {
     SPORTS_PAGE: 'admin_schools/admin_views/sports',
@@ -31,8 +30,7 @@ const SportsHelpers = {
      */
     getData: function(object, path) {
         const pathParts = path.split('.');
-        //clone object, fuck off side effect
-        let data = jquery.extend({}, object);
+        let data = Object.assign({}, object);
 
         //digging
         for(let i = 0; i < pathParts.length; i++) {

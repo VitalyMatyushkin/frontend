@@ -3,6 +3,7 @@ const   DataPrototype   = require('module/data/data_prototype'),
         Helpers		    = require('module/helpers/storage'),
         $               = require('jquery');
 
+
 /**
  * Getting initial state of UserData
  */
