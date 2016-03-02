@@ -23,6 +23,7 @@ const EditUser = React.createClass({
         window.Server.user.get(userId).then(function (data) {
             binding.set('form',Immutable.fromJS(data));
             self.getUserData();
+            return data;
         });
     },
     componentDidMount:function(){
@@ -205,6 +206,7 @@ const EditUser = React.createClass({
                     </div>
                 </div>);
             Roles = binding.get('selectedUser').role;
+            return data;
         });
     },
     submitEdit: function(data) {
