@@ -1,13 +1,12 @@
 const React = require('react');
 
 const FullScreenList = React.createClass({
-
 	getInitialState: function() {
 		return {
-			photos: [],
-			currentIndex: 0,
-			windowWidth: window.innerWidth,
-			windowHeight: window.innerHeight
+			photos: 		[],
+			currentIndex: 	0,
+			windowWidth: 	window.innerWidth,
+			windowHeight: 	window.innerHeight
 		};
 	},
 
@@ -16,8 +15,8 @@ const FullScreenList = React.createClass({
 	},
 
 	onPhotoClick: function() {
-		var self = this;
-		var length = self.props.photos.length;
+		const 	self 	= this,
+				length 	= self.props.photos.length;
 		this.setState({currentIndex: (self.state.currentIndex + 1) % length});
 	},
 
@@ -37,17 +36,17 @@ const FullScreenList = React.createClass({
 	},
 
 	componentDidMount: function() {
-		var self = this;
+		const self = this;
 		this.setState({currentIndex: self.getStartIndex()});
 
 		window.addEventListener('resize', this.handleResize);
 	},
 
 	getStartIndex: function() {
-		var self = this;
+		const self = this;
 
-		var photos = self.props.photos;
-		var index = 0;
+		const photos = self.props.photos;
+		let index = 0;
 		for (var i = 0; i < photos.length; i++) {
 			if (photos[i].id === self.props.startPhoto) {
 				index = i;
@@ -58,17 +57,14 @@ const FullScreenList = React.createClass({
 	},
 
 	render: function() {
-		var self = this;
+		const 	self 		= this,
+				src 		= window.Server.images.getResizedToHeightUrl(self.props.photos[self.state.currentIndex].pic, 800),
+				width 		= this.state.windowWidth * 0.8,
+				height 		= this.state.windowHeight * 0.8,
+				topOffset 	= height * 0.5,
+				leftOffset 	= width * 0.5;
 
-		var src = self.props.photos[self.state.currentIndex].pic + '/contain?height=800';
-
-		var width = this.state.windowWidth * 0.8;
-		var height = this.state.windowHeight * 0.8;
-
-		var topOffset = height * 0.5;
-		var leftOffset = width * 0.5;
-
-		var styles = {
+		const styles = {
 			marginTop: -topOffset,
 			marginLeft: -leftOffset,
 			width: width,

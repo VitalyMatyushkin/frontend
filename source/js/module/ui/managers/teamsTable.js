@@ -15,7 +15,7 @@ const TeamsTable = React.createClass({
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         const model = self.getBinding().model.toJS(),
-            rivals = self.getBinding().rivals.toJS();
+            rival = self.getBinding().rival.toJS();
 
         let filter = {
             where: {
@@ -27,19 +27,24 @@ const TeamsTable = React.createClass({
                         inq: model.ages
                     }
             },
-            include: 'sport'
+            include: ['sport','players']
         };
-
-        if(model.type === 'houses') {
-            filter.where.or = [{houseId: rivals[0].id}, {houseId: rivals[1].id}];
-        }
 
         window.Server.teams.get({filter: filter}).then((teams)  => {
             let filteredTeams = [];
 
             teams.forEach((team) => {
                 if(team.ages.length <= model.ages.length) {
-                    filteredTeams.push(team)
+                    switch (model.type) {
+                        case 'houses':
+                            if(self._isAllPlayersFromHouse(rival.id, team.players)) {
+                                filteredTeams.push(team);
+                            }
+                            break;
+                        default:
+                            filteredTeams.push(team);
+                            break;
+                    }
                 }
             });
 
@@ -48,6 +53,26 @@ const TeamsTable = React.createClass({
                 .set('teams', Immutable.fromJS(filteredTeams))
                 .commit();
         });
+    },
+
+    /**
+     *
+     * @param houseId
+     * @param players
+     * @returns {boolean} true if all players from current house
+     * @private
+     */
+    _isAllPlayersFromHouse: function(houseId, players) {
+        let isAllFromCurrentHouse = true;
+
+        for(let i = 0; i < players.length; i++) {
+            if(players[i].houseId != houseId) {
+                isAllFromCurrentHouse = false;
+                break;
+            }
+        }
+
+        return isAllFromCurrentHouse;
     },
     /**
      * Convert ages array to table view
@@ -81,19 +106,26 @@ const TeamsTable = React.createClass({
     _getTeams: function() {
         const self = this,
             binding = self.getDefaultBinding(),
-            teams = binding.toJS('teams');
+            teams = binding.toJS('teams'),
+            exceptionTeamId = binding.toJS('exceptionTeamId');
 
         let result = [];
 
         if(teams) {
-            result = teams.map(team => {
-                return (
-                    <tr className="eTeamsTable_row" onClick={self._onTeamClick.bind(self, team.id)}>
-                        <td className="eTeamsTable_cell mName">{team.name}</td>
-                        <td className="eTeamsTable_cell mGender">{team.gender}</td>
-                        <td className="eTeamsTable_cell mAges">{self._geAgesTableView(team.ages)}</td>
-                    </tr>
-                );
+            teams.forEach(team => {
+                if(exceptionTeamId != team.id) {
+                    let rowClassName = classNames({
+                        eTeamsTable_row: true,
+                        mSelected: team.id == self.getDefaultBinding().toJS('selectedTeamId')
+                    });
+                    result.push((
+                        <tr className={rowClassName} onClick={self._onTeamClick.bind(self, team.id)}>
+                            <td className="eTeamsTable_cell mName">{team.name}</td>
+                            <td className="eTeamsTable_cell mGender">{team.gender}</td>
+                            <td className="eTeamsTable_cell mAges">{self._geAgesTableView(team.ages)}</td>
+                        </tr>
+                    )) ;
+                }
             });
         }
 

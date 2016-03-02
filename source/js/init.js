@@ -60,12 +60,16 @@ requirejs(
                 api           = loaderUtils.apiSelector(myDomain),
                 startModule   = loaderUtils.startModuleSelector(myDomain);
 
+        const parsed = loaderUtils.parseDomainName("http://manager.squard.com");
+        console.log('parsed: ' + JSON.stringify(parsed, null, 2));
+
 
         log.enableAll();    // let it be here a bit...
-        log.info(`API: ${api}`);
+        log.info(`API: ${JSON.stringify(api, null, 2)}`);
         log.info(`start module: ${startModule}` );
 
-        window.apiBase = api;
+        window.apiBase  = api.main;
+        window.apiImg   = api.img;
 
         window.logLevel = log; //Make this global for usage
 

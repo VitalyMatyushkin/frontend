@@ -83,32 +83,6 @@ const TeamForm = React.createClass({
             return null;
         }
     },
-    _getHouseFilterRadioButton: function () {
-        const self = this,
-            binding = self.getDefaultBinding();
-
-            return (
-                <label onClick={self._changeHouseFilter}>
-                    <Morearty.DOM.input
-                        type="checkbox"
-                        value={binding.get('isHouseFilterEnable')}
-                        checked={binding.get('isHouseFilterEnable')}
-                    />
-                </label>
-            );
-    },
-    _changeHouseFilter: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
-
-        binding
-            .atomically()
-            .set('isHouseFilterEnable', Immutable.fromJS(!binding.get('isHouseFilterEnable')))
-            .set('default.model.type',  Immutable.fromJS(!binding.get('isHouseFilterEnable') ? "houses" : null))
-            .set('default.players',     Immutable.fromJS([]))
-            .set('players',             Immutable.fromJS([]))
-            .commit();
-    },
     _changeCompleteGender: function (event) {
         var binding = this.getDefaultBinding();
 
@@ -161,33 +135,10 @@ const TeamForm = React.createClass({
 
         return result;
     },
-    _serviceHouseFilter: function() {
+    _isShowTeamManager: function() {
         const self = this;
 
-        return window.Server.houses.get(MoreartyHelper.getActiveSchoolId(self));
-    },
-    _onSelectHouse: function(id, model) {
-        const self = this,
-            binding = self.getDefaultBinding();
-
-        binding
-            .atomically()
-            .set('default.model.type', Immutable.fromJS('houses'))
-            .set('rival',              Immutable.fromJS(model))
-            .set('isHouseSelected',    Immutable.fromJS(true))
-            .set('default.players',    Immutable.fromJS([]))
-            .set('players',            Immutable.fromJS([]))
-            .commit();
-    },
-    _isShowTeamManager: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
-
-        if(!!binding.get('isHouseFilterEnable')) {
-            return !!binding.get('ages') && !!binding.get('isHouseSelected');
-        } else {
-            return !!binding.get('ages')
-        }
+        return !!self.getDefaultBinding().get('ages');
     },
     render: function() {
         const self  = this,
@@ -271,29 +222,6 @@ const TeamForm = React.createClass({
                                     selections={self._getSelectedAges()}
                                     onChange={self._changeCompleteAges}
                                 />
-                            </div>
-                        </If>
-                        <If condition={!!binding.get('sportId')}>
-                            <div className="eManager_group">
-                                {'Filtered By House'}
-                                <div className="eManager_radiogroup">
-                                    {self._getHouseFilterRadioButton()}
-                                </div>
-                            </div>
-                        </If>
-                        <If condition={!!binding.get('isHouseFilterEnable')}>
-                            <div className="eManager_group">
-                                {'House'}
-                                <div className="eManager_select_wrap">
-                                    <Autocomplete
-                                        initialValue={binding.get('rival.name')}
-                                        serviceFilter={self._serviceHouseFilter}
-                                        serverField="name"
-                                        placeholderText={'Select House'}
-                                        onSelect={self._onSelectHouse}
-                                        binding={binding.sub('houses')}
-                                    />
-                                </div>
                             </div>
                         </If>
                         <If condition={self._isShowTeamManager()}>

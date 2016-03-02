@@ -59,43 +59,60 @@ const AutocompleteTeam = React.createClass({
             return self.getIncludePlayersIds().toJS().indexOf(student.id) === -1;
         }));
     },
-    fetchFullData: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            type = binding.get('model.type'),
-            ages = binding.get('model.ages'),
-            schoolId = binding.get('schoolInfo.id'),
-            forms = binding.get('schoolInfo.forms').filter(function (form) {
-                return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
-            }),
-            filter = {
-                where: {
-                    formId: {
-                        inq: forms.map(function (form) {
-                            return form.get('id');
-                        }).toJS()
-                    }
-                },
-                include:["user","form"]
-            };
+    /**
+     * Get school forms filtered by age
+     * @param ages
+     * @returns {*}
+     * @private
+     */
+    _getFilteredForms: function(ages) {
+        const self = this,
+            binding = self.getDefaultBinding();
 
-        if (type === 'houses') {
-            filter.where.houseId = self.getBinding('rival').get('id');
-        }
-
-        window.Server.students.get(schoolId, {filter: filter}).then(function (data) {
-            var gender = binding.get('model.gender') || 'male';
-			var players = [];
-			data.forEach(function(player) {
-				//filter by gender
-				if(player.user.gender === gender) {
-					player.name = player.user.firstName + ' ' + player.user.lastName;
-					players.push(player);
-				}
-			});
-
-            binding.set('_students', Immutable.fromJS(players));
+        return binding.get('schoolInfo.forms').filter(function (form) {
+            return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
         });
+    },
+    fetchFullData: function () {
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        //TODO fix me
+        if(binding.get('schoolInfo.forms')) {
+            const ages = binding.get('model.ages'),
+                forms = self._getFilteredForms(ages),
+                type = binding.get('model.type'),
+                schoolId = binding.get('schoolInfo.id'),
+
+                filter = {
+                    where: {
+                        formId: {
+                            inq: forms.map(function (form) {
+                                return form.get('id');
+                            }).toJS()
+                        }
+                    },
+                    include:["user","form"]
+                };
+
+            if (type === 'houses') {
+                filter.where.houseId = self.getBinding('rival').get('id');
+            }
+
+            window.Server.students.get(schoolId, {filter: filter}).then(function (data) {
+                var gender = binding.get('model.gender') || 'male';
+                var players = [];
+                data.forEach(function(player) {
+                    //filter by gender
+                    if(player.user.gender === gender) {
+                        player.name = player.user.firstName + ' ' + player.user.lastName;
+                        players.push(player);
+                    }
+                });
+
+                binding.set('_students', Immutable.fromJS(players));
+            });
+        }
     },
     /**
      * Service for filtering learner
