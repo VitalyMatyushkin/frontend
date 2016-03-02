@@ -37,7 +37,7 @@ const SchoolForm = React.createClass({
                     <FormField type="dropdown" field="status">School Status</FormField>
                 </FormColumn>
 				<FormColumn type="column">
-					<FormField labelText="Upload School Blazon" type="file" typeOfFile="image" field="pic"/>
+					<FormField labelText="Upload School Blazon" type="imageFile" typeOfFile="image" field="pic"/>
 				</FormColumn>
 			</Form>
 		)
