@@ -25,7 +25,7 @@ const AdminRequest = React.createClass({
     },
     getSchoolEmblem:function(school){
         if(school !== undefined){
-            return <span className="eChallenge_rivalPic"><img src={window.Server.image.getResizedToBoxUrl(school.pic, 60, 60)}/></span>;
+            return <span className="eChallenge_rivalPic"><img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/></span>;
         }
     },
     getPrincipalEmail:function(principal){
