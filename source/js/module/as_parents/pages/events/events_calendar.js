@@ -1,4 +1,4 @@
-const 	ChallengesList 		= require('./calendar/challenges_list'),
+const 	ChallengesList 		= require('module/as_manager/pages/events/calendar/challenges_list'),
 		AllChallengesList 	= require('./calendar/all_challenges_list'),
     	CalendarView 		= require('module/ui/calendar/calendar'),
 		If 					= require('module/ui/if/if'),
