@@ -2,6 +2,7 @@ const   If          = require('module/ui/if/if'),
         Pagination  = require('module/ui/list/pagination'),
         Filter      = require('module/ui/list/filter'),
         React       = require('react'),
+        SVG 				= require('module/ui/svg'),
         Immutable   = require('immutable');
 
 const Table = React.createClass({
@@ -171,9 +172,9 @@ const Table = React.createClass({
                     getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();}},
                     getQuickEditFunction = function(){return function(event){self._quickEditMenu(item,event);event.stopPropagation();}};
 
-                self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike eEdit_btn"></span>);
-                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike view_btn"></span>);
-                self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike remove_btn"></span>);
+                self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike"><SVG icon="icon_edit"/></span>);
+                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike"><SVG icon="icon_eye"/></span>);
+                self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike delete_btn"><SVG icon="icon_delete"/></span>);
                 self.props.addQuickActions && itemButtons.push(
                     <span key={item.id+'quickEd'} onClick={getQuickEditFunction()} className="bLinkLike edit_btn">
                         Edit
