@@ -5,6 +5,7 @@ const   CalendarView        = require('module/ui/calendar/calendar'),
         Manager             = require('module/ui/managers/manager'),
         classNames          = require('classnames'),
         React               = require('react'),
+        TeamHelper           = require('module/ui/managers/helpers/team_helper'),
         Immutable           = require('immutable');
 
 const EventManager = React.createClass({
@@ -186,8 +187,18 @@ const EventManager = React.createClass({
             //Create players for temp team
             let playerPromises = [];
             data.forEach((teamWrapper) => {
-                if(teamWrapper.type == 'temp') {
+                if(teamWrapper && teamWrapper.type == 'newTeam') {
                     playerPromises.push(self._submitPlayers(teamWrapper.team, teamWrapper.rivalIndex));
+                } else if (
+                    teamWrapper &&
+                    teamWrapper.type == 'oldTeam' &&
+                    binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.teamsSaveMode` == 'current')
+                ) {
+                    const initialPlayers = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.prevPlayers`),
+                        players = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.players`),
+                        teamId = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.selectedTeamId`);
+
+                    playerPromises.push(TeamHelper.commitPlayers(initialPlayers, players, teamId));
                 }
             });
             Promise.all(playerPromises).then(() => {
@@ -197,7 +208,7 @@ const EventManager = React.createClass({
             });
         });
     },
-    _submitRival: function(event, rival, rivalIndex, callback) {
+    _submitRival: function(event, rival, rivalIndex) {
         const self = this,
             binding = self.getDefaultBinding(),
             activeSchoolId = binding.get('schoolInfo.id'),
@@ -210,18 +221,43 @@ const EventManager = React.createClass({
         let teamPromise;
         switch (mode) {
             case 'temp':
-                teamPromise = self._submitTempTeam(event, rival, rivalIndex, callback);
+                teamPromise = self._submitTempCreationMode(event, rival, rivalIndex);
                 break;
             case 'teams':
-                teamPromise = self._submitTeam(event, rivalIndex, callback);
+                teamPromise = self._submitTeamCreationMode(event, rival, rivalIndex);
                 break;
         }
         return teamPromise;
     },
-    _submitTeam: function(event, rivalIndex) {
+    _submitTempCreationMode: function(event, rival, rivalIndex) {
+        const self = this;
+
+        self._submitNewTeam(event, rival, rivalIndex, true);
+    },
+    _submitTeamCreationMode: function(event, rival, rivalIndex) {
         const self = this,
             binding = self.getDefaultBinding(),
-            teamId = binding.toJS(`teamModeView.teamViewer.${rivalIndex}.selectedTeamId`);
+            mode = binding.get(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode`);
+
+        let promise;
+        switch (mode) {
+            case 'current':
+            case 'selectedTeam':
+                promise = self._submitOldTeam(event, rivalIndex);
+                break;
+            case 'temp':
+                promise = self._submitNewTeam(event, rival, rivalIndex, true);
+                break;
+            case 'new':
+                promise = self._submitNewTeam(event, rival, rivalIndex, false);
+                break;
+        }
+
+        return promise;
+    },
+    _submitOldTeam: function(event, rivalIndex) {
+        const self = this,
+            teamId = self.getDefaultBinding().toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
 
         return window.Server.relParticipants.put(
             {
@@ -234,13 +270,13 @@ const EventManager = React.createClass({
             }
         ).then((team) => {
             return {
-                type:'team',
+                type:'oldTeam',
                 rivalIndex: rivalIndex,
                 team: team
             }
         });
     },
-    _submitTempTeam: function(event, rival, rivalIndex) {
+    _submitNewTeam: function(event, rival, rivalIndex, isTemp) {
         const self = this,
             binding = self.getDefaultBinding(),
             activeSchoolId = binding.get('schoolInfo.id'),
@@ -249,7 +285,7 @@ const EventManager = React.createClass({
         let rivalModel = {
             sportId:  event.sportId,
             schoolId: activeSchoolId,
-            tempTeam: true
+            tempTeam: isTemp
         };
 
         switch (event.type) {
@@ -266,7 +302,7 @@ const EventManager = React.createClass({
 
         return window.Server.participants.post(event.id, rivalModel).then((team) => {
             return {
-                type:'temp',
+                type:'newTeam',
                 rivalIndex: rivalIndex,
                 team: team
             }
@@ -274,12 +310,22 @@ const EventManager = React.createClass({
     },
     _submitPlayers: function(team, rivalIndex) {
         const self = this,
-            binding = self.getDefaultBinding(),
-            players = binding.toJS('players');
+            binding = self.getDefaultBinding();
+
+        let players;
+
+        switch (binding.toJS(`mode.${rivalIndex}`)) {
+            case 'temp':
+                players = binding.toJS(`players.${rivalIndex}`);
+                break;
+            case 'teams':
+                players = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`);
+                break;
+        }
 
         let playerPromises = [];
 
-        players[rivalIndex].forEach(function (player) {
+        players.forEach(function (player) {
             playerPromises.push(self._submitPlayer(team, player));
         });
 

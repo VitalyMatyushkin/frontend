@@ -64,7 +64,7 @@ const Manager = React.createClass({
                             exceptionTeamId: undefined
                         }
                     ],
-                    teamViewer: [
+                    teamWrapper: [
                         {
                             selectedTeamId: undefined
                         },
@@ -94,10 +94,10 @@ const Manager = React.createClass({
         binding.players.sub(1).addListener(() => {
             self._validate(1);
         });
-        defaultBinding.sub('teamModeView.teamViewer.0.selectedTeamId').addListener(() => {
+        defaultBinding.sub('teamModeView.teamWrapper.0.players').addListener(() => {
             self._validate(0);
         });
-        defaultBinding.sub('teamModeView.teamViewer.1.selectedTeamId').addListener(() => {
+        defaultBinding.sub('teamModeView.teamWrapper.1.players').addListener(() => {
             self._validate(1);
         });
     },
@@ -105,17 +105,16 @@ const Manager = React.createClass({
         const self = this,
             binding = self.getDefaultBinding(),
             errorBinding = self.getBinding('error'),
-            mode = self.getDefaultBinding().toJS(`mode.${rivalIndex}`);
+            mode = self.getDefaultBinding().toJS(`mode.${rivalIndex}`),
+            limits = {
+                maxPlayers: binding.toJS('model.sportModel.limits.maxPlayers'),
+                minPlayers: binding.toJS('model.sportModel.limits.minPlayers'),
+                maxSubs:    binding.toJS('model.sportModel.limits.maxSubs')
+            };
 
         let result;
-
         switch (mode) {
             case 'temp':
-                const limits = {
-                    maxPlayers: binding.toJS('model.sportModel.limits.maxPlayers'),
-                    minPlayers: binding.toJS('model.sportModel.limits.minPlayers'),
-                    maxSubs:    binding.toJS('model.sportModel.limits.maxSubs')
-                };
                 result = TeamPlayersValidator.validate(
                     self.getBinding('players').toJS(rivalIndex),
                     limits
@@ -123,16 +122,16 @@ const Manager = React.createClass({
 
                 break;
             case 'teams':
-                if(binding.toJS(`teamModeView.teamViewer.${rivalIndex}.selectedTeamId`) === undefined) {
+                if(binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`) === undefined) {
                     result = {
                         isError: true,
                         text: 'Please select team'
                     }
                 } else {
-                    result = {
-                        isError: false,
-                        text: ''
-                    }
+                    result = TeamPlayersValidator.validate(
+                        binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`),
+                        limits
+                    );
                 }
                 break;
         }
