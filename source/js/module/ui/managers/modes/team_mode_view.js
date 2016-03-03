@@ -1,5 +1,6 @@
 const   React                = require('react'),
         TeamsTable           = require('./../teamsTable'),
+        TeamWrapper           = require('./team_wrapper'),
         TeamViewer           = require('./../teamViewer'),
         If                   = require('module/ui/if/if'),
         Immutable            = require('immutable');
@@ -40,7 +41,7 @@ const TeamModeView = React.createClass({
         binding
             .atomically()
             .set(
-                `teamViewer.${rivalIndex}.selectedTeamId`,
+                `teamWrapper.${rivalIndex}.selectedTeamId`,
                 Immutable.fromJS(teamId)
             )
             .set(
@@ -62,7 +63,7 @@ const TeamModeView = React.createClass({
         binding
             .atomically()
             .set(
-                `teamViewer.${rivalIndex}.selectedTeamId`,
+                `teamWrapper.${rivalIndex}.selectedTeamId`,
                 Immutable.fromJS(undefined)
             )
             .set(
@@ -96,18 +97,22 @@ const TeamModeView = React.createClass({
             </div>
         );
     },
-    _renderTeamViewer: function() {
+    _renderTeamWrapper: function() {
         const self = this,
             binding = self.getDefaultBinding(),
-            selectedRivalIndex = binding.toJS('selectedRivalIndex');
+            selectedRivalIndex = binding.toJS('selectedRivalIndex'),
+            tableWrapperBinding = {
+                default: binding.sub(`teamWrapper.${selectedRivalIndex}`),
+                rival: self.getBinding().rivals.sub(selectedRivalIndex)
+            };
 
         return (
-            <div className="bTeamViewer mMarginLeft">
+            <div className="bTeamWrapper mMarginLeft">
                 <If condition={selectedRivalIndex == 0}>
-                    <TeamViewer binding={binding.sub(`teamViewer.0`)}/>
+                    <TeamWrapper binding={tableWrapperBinding}/>
                 </If>
                 <If condition={selectedRivalIndex == 1}>
-                    <TeamViewer binding={binding.sub(`teamViewer.1`)}/>
+                    <TeamWrapper binding={tableWrapperBinding}/>
                 </If>
             </div>
         );
@@ -118,7 +123,7 @@ const TeamModeView = React.createClass({
         return (
             <div>
                 {self._renderTeamTable()}
-                {self._renderTeamViewer()}
+                {self._renderTeamWrapper()}
             </div>
         );
     }

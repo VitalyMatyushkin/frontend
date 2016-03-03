@@ -4,7 +4,6 @@ var Team,
     Lazy         = require('lazyjs'),
     Immutable 	 = require('immutable');
 
-
 Team = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'Team',
@@ -94,15 +93,32 @@ Team = React.createClass({
         }).toArray();
     },
     _onRemovePlayer: function (playerId) {
-        var self = this,
-            players = self.getBinding('players');
+        const self = this,
+            players = self.getBinding('players').toJS();
 
-        players.update(function (data) {
-            return data.filter(function (model) {
-                return model.get('id') !== playerId;
-            });
-        });
+        const findedPlayer = Lazy(players).findWhere({id:playerId}),
+            index = Lazy(players).indexOf(findedPlayer);
+
+        players.splice(index, 1);
+
+        self.getBinding('players').set(Immutable.fromJS(players));
+        self.props.onRemovePlayer && self.props.onRemovePlayer(findedPlayer);
     },
+    /*
+    _saveRemovedPlayer: function(player) {
+        const self = this,
+            removedPlayers = self.getDefaultBinding().toJS('removedPlayers'),
+            findedPlayer = Lazy(removedPlayers).findWhere({id:player.id});
+
+        if(findedPlayer) {
+            removedPlayers[Lazy(removedPlayers).indexOf(findedPlayer)] = player;
+        } else {
+            removedPlayers.push(player);
+        }
+
+        self.getDefaultBinding('removedPlayers').set(Immutable.fromJS(removedPlayers));
+    },
+    */
     render: function() {
         const self = this,
             rivalId  = self.getBinding('rivalId').toJS();
