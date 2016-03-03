@@ -1,73 +1,62 @@
-const 	AutocompleteHelpers 	= require('module/ui/autocomplete/main'),
-		ComboboxOption 			= AutocompleteHelpers.Option,
+const 	ComboboxOption 			= require('./option'),
 		React 					= require('react'),
-		ReactDOM 				= require('reactDom'),
-		Immutable 				= require('immutable');
+		Immutable 				= require('immutable'),
+		Lazy					= require('lazyjs');
 
 
-const Autocomplete = React.createClass({
+const Select = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		sourcePromise: React.PropTypes.func,
-        onSelect: React.PropTypes.func,
-		sourceArray: React.PropTypes.array
+        onSelect: 		React.PropTypes.func,
+		sourceArray: 	React.PropTypes.array
 	},
 	getDefaultState: function () {
-		var self = this;
-
-		self.responseData = [];
-
 		return Immutable.fromJS({
-			selectedId: null,
-			selectedValue: null,
-			defaultId: null,
-			showList: false
+			selectedId: 	null,
+			selectedValue: 	null,
+			defaultId: 		null,
+			showList: 		false
 		});
 	},
+
+	/** show/hide option list */
 	toggleList: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			showList = !(binding.get('showList') || false);
+		const 	binding 	= this.getDefaultBinding(),
+				showList 	= !(binding.get('showList') || false);
 
 		binding.set('showList', showList);
 	},
+
+
 	setDefaultId: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultId = binding.get('defaultId');
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				defaultId 	= binding.get('defaultId');
 
 		if (defaultId) {
-			self.responseData.forEach(function(dataBlock) {
-				dataBlock.id === defaultId && self.handleSelect(defaultId);
-			});
+			this.handleSelect(defaultId);
 		}
 	},
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultId = binding.get('defaultId');
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				defaultId 	= binding.get('defaultId');
 
-		// На случай, если форма заполняется асинхронно
+		// For the case when for filled async
 		binding.addListener('defaultId', function() {
 			self.setDefaultId();
 		});
 
-		if (self.props.sourcePromise) {
-			self.props.sourcePromise().then(function(dataArray) {
-				self.responseData = dataArray;
-				self.setDefaultId();
-			});
-		} else {
-			self.responseData = self.props.sourceArray;
-			self.setDefaultId();
-		}
+		self.setDefaultId();
+
 	},
+	/** should be fired on value selection.
+	 * @param newId id property of selected element
+     */
 	handleSelect: function (newId) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			model = self.responseData.filter(function (data) {
-				return data.id === newId;
-			})[0];
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				model 		= Lazy(this.props.sourceArray).findWhere({ id: newId});
 
         if (self.props.onSelect) {
             self.props.onSelect(newId, model.value);
@@ -80,23 +69,30 @@ const Autocomplete = React.createClass({
 
 		binding.set('showList', false);
 	},
+
+	/** Will render list of options according to current component state */
 	renderComboboxOptions: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			selectedId = binding.get('selectedId');
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				selectedId 	= binding.get('selectedId');
 
-		return self.responseData.map(function (dataBlock) {
-
+		return this.props.sourceArray.map(item => {
 			return (
-				<ComboboxOption onClick={function () { self.handleSelect(dataBlock.id); }} isSelected={selectedId===dataBlock.id} key={dataBlock.id} value={dataBlock.id}>{dataBlock.value}</ComboboxOption>
+				<ComboboxOption
+					onClick		= {() => { self.handleSelect(item.id); }}
+					isSelected	= { selectedId === item.id }
+					key			= { item.id }
+					value		= { item.id }>
+					{item.value}
+				</ComboboxOption>
 			);
 		});
 	},
 	render: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			dropDownNodes = self.renderComboboxOptions(),
-			listStyle = {display: 'none'};
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				dropDownNodes 	= self.renderComboboxOptions(),
+				listStyle 		= {display: 'none'};
 
 		if (binding.get('showList')) {
 			listStyle.display = 'block';
@@ -114,6 +110,6 @@ const Autocomplete = React.createClass({
 	}
 });
 
-module.exports = Autocomplete;
+module.exports = Select;
 
 
