@@ -52,8 +52,9 @@ const EventView = React.createClass({
 
         self.addBindingListener(binding, 'eventChild', self.createSubMenu);
         self.addBindingListener(binding, 'eventsRouting.currentPathParts', self.createSubMenu);
-        self.addBindingListener(binding, 'eventsRouting.pathParameters', self.setActiveChild);
+        self.addBindingListener(binding, 'eventsRouting', self.setActiveChild);
         self.addBindingListener(binding, 'activeChildId', self.filterEvents);
+        self.addBindingListener(binding, 'eventsOfAllChildren', self.filterEvents);
     },
     setActiveChild: function() {
         const self = this,
