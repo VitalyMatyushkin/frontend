@@ -2,8 +2,7 @@ const 	Promise 	= require('bluebird'),
 		React 		= require('react'),
 		Lazy 		= require('lazyjs'),
 		Form 		= require('module/ui/form/form'),
-		FormField 	= require('module/ui/form/form_field'),
-		FormColumn 	= require('module/ui/form/form_column');
+		FormField 	= require('module/ui/form/form_field');
 
 const ClassForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -20,7 +19,7 @@ const ClassForm = React.createClass({
 				id: i
 			}
 		}).toArray();
-		return Promise.resolve(ages);
+		return ages;
 	},
 	serviceFilter:function(){
 		return window.Server.getAllSchools.get();
@@ -31,7 +30,7 @@ const ClassForm = React.createClass({
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" promptOnBlank={true} field="name" validation="required">Form name</FormField>
-				<FormField type="select" sourcePromise={self.getAllAges} field="age" validation="required">Age group</FormField>
+				<FormField type="select" sourceArray={self.getAllAges()} field="age" validation="required">Age group</FormField>
 				<FormField type="autocomplete" field="schoolId" serviceFullData={self.serviceFilter} >School</FormField>
 			</Form>
 		)

@@ -11,7 +11,7 @@ const Head = React.createClass({
     render: function() {
         return (
             <div className="bTopPanel">
-                <div className="bTopLogo">SquadIntouch</div>
+                <div className="bTopLogo">SquadInTouch</div>
             </div>
         )
     }

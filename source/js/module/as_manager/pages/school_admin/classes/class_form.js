@@ -21,7 +21,7 @@ const ClassForm = React.createClass({
 				id: i
 			}
 		}).toArray();
-		return Promise.resolve(ages);
+		return ages;
 	},
 
 	render: function() {
@@ -30,7 +30,7 @@ const ClassForm = React.createClass({
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" promptOnBlank={true} field="name" validation="required">Form name</FormField>
-				<FormField type="select" sourcePromise={self.getAllAges} field="age" validation="required">Age group</FormField>
+				<FormField type="select" sourceArray={this.getAllAges()} field="age" validation="required">Age group</FormField>
 			</Form>
 		)
 	}
