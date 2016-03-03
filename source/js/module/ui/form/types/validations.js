@@ -31,7 +31,7 @@ var validationsSet = {
                 day = valueArray[2].split('T')[0]*1,
                 month = valueArray[1]*1,
                 year = valueArray[0];
-			if(date.getFullYear() == year && date.getMonth() == (month - 1) && date.getDate() == day)
+			if(date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == day)
                 return false;
             else
                 return err;
