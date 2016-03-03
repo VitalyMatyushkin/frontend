@@ -7,7 +7,9 @@ const TypeAutocomplete = React.createClass({
 	propTypes: {
 		serviceFullData: 	React.PropTypes.func,
 		serviceFilter: 		React.PropTypes.func,
-		serverField: 		React.PropTypes.string
+		serverField: 		React.PropTypes.string,
+		field:				React.PropTypes.string,
+		defaultItem:		React.PropTypes.object
 	},
 
 	/** Setting component's value when it choosen */
@@ -25,7 +27,7 @@ const TypeAutocomplete = React.createClass({
 				serviceFullData	= {self.props.serviceFullData}
 				serverField		= {self.props.serverField || 'name'}
 				onSelect		= {self.onSelect}
-				initialValue	= {binding.get('defaultValue')}
+				defaultItem		= {self.props.defaultItem}
 			/>
 		);
 	}
