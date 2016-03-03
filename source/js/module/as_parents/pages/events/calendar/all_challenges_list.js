@@ -43,6 +43,9 @@ AllChallengesList = React.createClass({
 
         return rivalName;
     },
+    onClickEvent: function(eventId) {
+        document.location.hash = 'event/' + eventId;
+    },
     getSportIcon:function(sport){
         return <Sport name={sport} className="bIcon_invites" ></Sport>;
     },
@@ -71,7 +74,7 @@ AllChallengesList = React.createClass({
                         hoverDay.getMonth() === eventDate.getMonth() &&
                         hoverDay.getDate() === eventDate.getDate();
                 return(
-                    <div key={childEvInd} className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'}>
+                    <div key={childEvInd} className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'} onClick={self.onClickEvent.bind(null, childEv.get('id'))}>
                         <span className="eChallenge_sport">{sport}</span>
                         <span className="eChallenge_date">{stringDate}</span>
                         <div className="eChallenge_name">{childEv.get('name')}</div>
