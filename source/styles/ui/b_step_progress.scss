@@ -8,7 +8,6 @@
 
 .eStepProgress_progressItem {
   list-style-type: none;
-  text-transform: uppercase;
   font-size: 10px;
   display: flex;
   flex-flow: column nowrap;
@@ -52,4 +51,8 @@
   &:last-child:after {
     display: none;
   }
+}
+.bStepProgress_wrap {
+  max-width: 360px;
+  margin-right: 40px;
 }

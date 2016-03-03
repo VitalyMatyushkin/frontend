@@ -27,11 +27,24 @@ const RegisterUserPage = React.createClass({
         self.steps = [
             {
                 name: 'account',
-                title: 'Personal Details'
+                title: 'Personal Details',
+                description: <div><p>Enter your contact details and choose a password you wish to use for logging in to
+                    your account.</p>
+
+                    <p>We ask you to provide your valid mobile phone number and email address.</p>
+
+                    <p>We'll use your mobile phone number and email address to send you activation codes.</p>
+
+                    <p>You cannot work in the system unless you verify your email address and phone number using these
+                        codes.</p>
+
+                    <p> You will also use your email address for logging in to the system.</p></div>
             },
             {
                 name: 'verification',
-                title: 'User Verification'
+                title: 'User Verification',
+                description: <p>Activation codes were sent to your email address and mobile phone. Please, enter them
+                    below to complete the registration.</p>
             },
             //{
             //    name: 'personal',
@@ -103,7 +116,8 @@ const RegisterUserPage = React.createClass({
             binding = self.getDefaultBinding(),
             currentStep = binding.get('registerStep');
 
-        return <div className="bStepProgress">
+        return <div className="bStepProgress_wrap">
+            <div className="bStepProgress">
             {self.steps.map(function (step) {
                 var stepClasses = classNames({
                     eStepProgress_progressItem: true,
@@ -111,6 +125,14 @@ const RegisterUserPage = React.createClass({
                 });
 
                 return <span className={stepClasses}>{step.title}</span>;
+            })}
+            </div>
+            {self.steps.map(function (step) {
+                var descriptionClasses = classNames({
+                    eStepDescription: true,
+                    mActive: currentStep === step.name
+                });
+                return <div className={descriptionClasses}>{step.description}</div>;
             })}
         </div>;
     },
@@ -161,9 +183,12 @@ const RegisterUserPage = React.createClass({
         }
 
         return (
-            <div className="bRegistration">
+            <div>
+                <h1 className="bRegistrationTitle">Register on Squadintouch</h1>
+                <div className="bRegistration">
                 {self.renderSteps()}
                 {currentView}
+            </div>
             </div>
         )
     }

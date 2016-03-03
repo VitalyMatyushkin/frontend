@@ -39,7 +39,7 @@
     border: none;
     position: absolute;
     margin: 2px;
-    height: 18px;
+    height: 27px;
     background-color: transparent;
   }
   input{
@@ -48,15 +48,12 @@
 }
 
 .eForm_fieldSmallHelp{
-  height: 12px;
-  line-height: 12px;
-  font-size: 12px;
-  position: absolute;
-  top: -15px;
+  height: 25px;
+  line-height: 32px;
 }
 
 .eForm_field {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .eForm_field p{
   font-size: 12px;
@@ -309,4 +306,15 @@ $INVALID_COLOR: rgb(182, 0, 0);
   background: url("/images/icons/select_arrow.svg") right no-repeat;
   background-size: 14px 14px;
   background-color: #fff;
+}
+.eForm_conditions {
+  color: #a9a9a9;
+  margin-left: -35px;
+  position: relative;
+}
+.eForm_conditions a{
+  color: $MAIN_COLOR;
+}
+.eForm_conditions a:hover{
+  color: $COLOR;
 }

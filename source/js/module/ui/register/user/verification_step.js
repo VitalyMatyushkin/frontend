@@ -68,9 +68,6 @@ const VerificationStep = React.createClass({
             isPhoneCheck = phoneCheckClasses === 'bButton_hide'?'bCheck_show':'bButton_hide';
         return (
             <div className="eRegistration_verification">
-                <div>
-                    <p style={{fontSize:12+'px'}}>Activation codes were sent to your email address and mobile phone. Please, enter them below to complete the registration.</p>
-                </div>
                 <label className="eRegistration_label">
                     <span className="eRegistration_labelField">Verification email</span>
                     <Morearty.DOM.input className='eRegistration_input'

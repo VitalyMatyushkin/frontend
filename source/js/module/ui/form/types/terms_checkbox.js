@@ -31,19 +31,19 @@ const TermsCheckbox = React.createClass({
     render:function(){
         var self = this;
         return (
-            <div>
+            <div className="eForm_conditions">
                 <div>
                     <input name="Terms" type="checkbox" value="Terms" onClick={self._checkBoxClicked}/>
-                    <label style={{fontSize:12+'px'}} htmlFor="Terms">I have read and agree to the <a href="/#register">Privacy Policy and Terms and Conditions</a></label>
+                    <label style={{fontSize:10+'px'}} htmlFor="Terms">I have read and agree to the <a href="/#register">Privacy Policy and Terms and Conditions</a></label>
                 </div>
                 <div className="mNotRequired">
                     <div>
                         <input name="newsletter" type="checkbox" value="newsletter" onClick={self._checkBoxClicked}/>
-                        <label style={{fontSize:12+'px'}} htmlFor="newsletter">I agree to receive emails such as relevant news, updates and offers from SquadInTouch Limited (trading as SquadInTouch.com)</label>
+                        <label style={{fontSize:10+'px'}} htmlFor="newsletter">I agree to receive emails such as relevant news, updates and offers from SquadInTouch Limited (trading as SquadInTouch.com)</label>
                     </div>
                     <div>
                         <input name="promotionalOffers" type="checkbox" value="promotionalOffers" onClick={self._checkBoxClicked}/>
-                        <label style={{fontSize:12+'px'}} htmlFor="promotionalOffers">I agree to receive emails such as promotional offers from carefully selected third parties companies</label>
+                        <label style={{fontSize:10+'px'}} htmlFor="promotionalOffers">I agree to receive emails such as promotional offers from carefully selected third parties companies</label>
                     </div>
                 </div>
             </div>
