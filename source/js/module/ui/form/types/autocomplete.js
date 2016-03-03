@@ -1,5 +1,4 @@
 const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
-		//Autocomplete 	= require('module/ui/autocomplete/autocomplete'),
 		Autocomplete2	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		React 			= require('react');
 
@@ -11,27 +10,6 @@ const TypeAutocomplete = React.createClass({
 		serverField: 		React.PropTypes.string
 	},
 
-	//bindToAutcomplete: function() {
-	//	const 	self 			= this,
-	//			binding 		= self.getDefaultBinding(),
-	//			defaultValue 	= binding.get('defaultValue'),
-	//			defaultLabel 	= binding.get('defaultLabel');
-    //
-	//	if (defaultValue) {
-	//		binding.sub('autocomplete').set('defaultId', defaultValue);
-	//	}
-    //
-	//	if (defaultLabel) {
-	//		binding.sub('autocomplete').set('defaultLabel', defaultLabel);
-	//		self.fullValidate(defaultValue);
-	//	}
-    //
-	//	binding.sub('autocomplete').addListener('selectedId', function() {
-	//		const newSelectedId = binding.sub('autocomplete').get('selectedId');
-	//		self.setValue(newSelectedId);
-	//	});
-    //
-	//},
 	/** Setting component's value when it choosen */
 	onSelect: function(data){
 		this.setValue(data);
@@ -41,7 +19,6 @@ const TypeAutocomplete = React.createClass({
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
 
-		//self.bindToAutcomplete();
 		return (
 			<Autocomplete2
 				serviceFilter	= {self.props.serviceFilter}
