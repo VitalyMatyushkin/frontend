@@ -1,12 +1,11 @@
 /**
  * Created by wert on 03.03.16.
  */
-var classNames      = require('classnames'),
-    React = require('react');
+const   classNames  = require('classnames'),
+        React       = require('react');
 
-console.error("autocomplete deprecated");
 
-module.exports = React.createClass({
+const Option = React.createClass({
 
     propTypes: {
 
@@ -43,3 +42,5 @@ module.exports = React.createClass({
     }
 
 });
+
+module.exports = Option;
