@@ -7,9 +7,9 @@ const 	Form		= require('module/ui/form/form'),
 const StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		schoolId: React.PropTypes.string.isRequired,
-		title: React.PropTypes.string.isRequired,
-		onFormSubmit: React.PropTypes.func
+		schoolId: 		React.PropTypes.string.isRequired,
+		title: 			React.PropTypes.string.isRequired,
+		onFormSubmit: 	React.PropTypes.func
 	},
 	getClassService: function() {
 		const self = this;
@@ -25,22 +25,21 @@ const StudentForm = React.createClass({
 		}
 	},
 	getGender: function() {
-		const 	self = this,
-				gendersArray = [
-				{
-					value: 'boy',
-					id: 'male'
-				},
-				{
-					value: 'girl',
-					id: 'female'
-				}
-			];
+		const gendersArray = [
+			{
+				value: 'boy',
+				id: 'male'
+			},
+			{
+				value: 'girl',
+				id: 'female'
+			}
+		];
 
 		return Promise.resolve(gendersArray);
 	},
 	render: function() {
-		var self = this;
+		const self = this;
 
 		return ( <div className="editStudentForm">
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
