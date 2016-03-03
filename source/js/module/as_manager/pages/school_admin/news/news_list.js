@@ -1,9 +1,8 @@
-const   Table = require('module/ui/list/table'),
-        TableField = require('module/ui/list/table_field'),
-        DateTimeMixin = require('module/mixins/datetime'),
-        ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-	    ImageHelper = require('module/helpers/imageHelper'),
-        React = require('react');
+const   Table			= require('module/ui/list/table'),
+        TableField 		= require('module/ui/list/table_field'),
+        DateTimeMixin 	= require('module/mixins/datetime'),
+        ListPageMixin 	= require('module/as_manager/pages/school_admin/list_page_mixin'),
+        React 			= require('react');
 
 const NewsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
@@ -13,14 +12,14 @@ const NewsListPage = React.createClass({
 		if(url !== undefined){
 			return (
 				<span className="eChallenge_rivalPic">
-                    <img src={ImageHelper.formatSizedImageScr(url, 60, 60)}/>
+                    <img src={window.Service.image.getResizedToBoxUrl(url, 60, 60)}/>
                 </span>
 			)
 		}
 	},
 	getTableView: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<Table title="News" binding={binding} onItemEdit={self._getEditFunction()}

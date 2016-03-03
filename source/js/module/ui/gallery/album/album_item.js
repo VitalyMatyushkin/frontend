@@ -1,5 +1,6 @@
 const 	React 			= require('react'),
-		noImage			= '/images/no-image.jpg';
+		noImage			= '/images/no-image.jpg',
+		SVG 				= require('module/ui/svg');
 
 const AlbumItem = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -10,9 +11,9 @@ const AlbumItem = React.createClass({
 	},
 
 	onClickAlbum: function(e) {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			a = binding.toJS();
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				a 			= binding.toJS();
 
 		self.props.onView && self.props.onView(a);
 
@@ -39,25 +40,24 @@ const AlbumItem = React.createClass({
 	componentDidMount: function () {
 	},
 	render: function() {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			a = binding.toJS(),
-			name = a ? a.name : '',
-			cover = a && a.coverUrl ? a.coverUrl + '/contain?height=100': noImage,
-			styles = {backgroundImage: 'url(' + cover + ')'};
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				a 		= binding.toJS(),
+				name 	= a ? a.name : '',
+				cover 	= a && a.coverUrl ? window.Server.images.getResizedToBoxUrl(a.coverUrl, 100, 100) : noImage,
+				styles 	= { backgroundImage: 'url(' + cover + ')'};
 
 		return (
 				<div onClick={self.onClickAlbum} className='eEventAlbums_album' style={styles}>
 					<div className="eAlbumActions">
-						<span className='eEventAlbums_albumPhoto'></span>
-						<span className='eEventAlbums_albumView'></span>
-						<span className='eEventAlbums_albumComments'></span>
-						<span onClick={self.onClickEditAlbum} className='eEventAlbums_albumEdit'></span>
-						<span onClick={self.onClickDeleteAlbum} className='eEventAlbums_albumDelete'></span>
+						<span><SVG icon="icon_photo"/></span>
+						<span><SVG icon="icon_comments"/></span>
+						<span ></span>
+						<span onClick={self.onClickEditAlbum}><SVG icon="icon_edit"/></span>
+						<span onClick={self.onClickDeleteAlbum}><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
 					</div>
 					<div className="eAlbumInfo">
 						<span className='eEventAlbums_albumTitle'>{name}</span>
-						<span className='eEventAlbums_albumDate'></span>
 					</div>
 				</div>
 		);

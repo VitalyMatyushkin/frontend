@@ -3,18 +3,19 @@ const 	Form 		= require('module/ui/form/form'),
 		FormColumn 	= require('module/ui/form/form_column'),
 		React 		= require('react');
 
+
 const SchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-		onSubmit: React.PropTypes.func
+		title: 		React.PropTypes.string.isRequired,
+		onSubmit: 	React.PropTypes.func
 	},
 	componentWillUnmount:function(){
 		this.getDefaultBinding().clear();
 	},
 	render: function() {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding();
 
 		return (
 			<Form name={self.props.title} binding={self.getDefaultBinding()} onSubmit={self.props.onSubmit}>
@@ -36,7 +37,7 @@ const SchoolForm = React.createClass({
                     <FormField type="dropdown" field="status">School Status</FormField>
                 </FormColumn>
 				<FormColumn type="column">
-					<FormField labelText="Upload School Blazon" type="file" typeOfFile="image" field="pic"/>
+					<FormField labelText="Upload School Blazon" type="imageFile" typeOfFile="image" field="pic"/>
 				</FormColumn>
 			</Form>
 		)

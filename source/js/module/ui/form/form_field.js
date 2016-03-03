@@ -28,9 +28,9 @@ const FormField = React.createClass({
 		/* creating new input with built props */
 		const inputField = React.createElement(typeList[self.props.type], inputProps);
 
-		let fieldStyleClass = classNames('eForm_fieldSet', {
-                                    mInvalid: binding.get('showError'),
-                                    mValid: binding.get('showSuccess')
+		const fieldStyleClass = classNames('eForm_fieldSet', {
+                                    mInvalid: 	binding.get('showError'),
+                                    mValid: 	binding.get('showSuccess')
                                 });
 		//If a specific class has been provided for styling error messages then use it
 		let errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);

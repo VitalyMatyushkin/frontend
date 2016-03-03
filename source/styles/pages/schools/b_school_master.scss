@@ -112,6 +112,16 @@
   border-width: 10px 8px 0 8px;
   border-color: #c8cdd0 transparent transparent transparent;
 }
+.bLinkLike .bIcon{
+  color: #c2c2c2;
+}
+.bLinkLike .bIcon:hover{
+  color: $COLOR;
+}
+.delete_btn .bIcon{
+  height: 12px;
+  width: 12px;
+}
 .edit_btn{
   position:relative;
 }

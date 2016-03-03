@@ -1,5 +1,5 @@
 const   React       = require('react'),
-        SVG = require('module/ui/svg'),
+        Sport       = require('module/ui/icons/sport_icon'),
         Immutable   = require('immutable');
 
 const ChallengesView = React.createClass({
@@ -26,33 +26,7 @@ const ChallengesView = React.createClass({
         }).count();
     },
     getSportIcon:function(sport){
-        if(sport !== undefined){
-            var icon;
-            switch (sport){
-                case 'football':
-                    icon = <SVG classes="bIcon_invites" icon="icon_ball"/>;
-                    break;
-                case 'rounders':
-                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"/>;
-                    break;
-                case 'rugby':
-                    icon = <SVG classes="bIcon_invites" icon="icon_rugby"/>;
-                    break;
-                case 'hockey':
-                    icon = <SVG classes="bIcon_invites" icon="icon_hockey"/>;
-                    break;
-                case 'cricket':
-                    icon = <SVG classes="bIcon_invites" icon="icon_cricket"/>;
-                    break;
-                case 'netball':
-                    icon = <SVG classes="bIcon_invites" icon="icon_netball"/>;
-                    break;
-                default:
-                    icon = <SVG classes="bIcon_invites" icon="icon_rounders"/>;
-                    break;
-            }
-            return icon;
-        }
+        return <Sport name={sport} className="bIcon_invites" ></Sport>;
     },
     getEvents: function (date) {
         var self = this,

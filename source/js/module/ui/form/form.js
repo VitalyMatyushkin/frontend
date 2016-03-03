@@ -16,27 +16,29 @@ const   React       = require('react'),
         classNames  = require('classnames'),
         $           = require('jquery');
 
+// TODO: do something with all this
+
 const Form = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {
-        onSubmit: React.PropTypes.func,
-        onSuccess: React.PropTypes.func,
-        onError: React.PropTypes.func,
-        name: React.PropTypes.string,
-        defaultButton: React.PropTypes.string,
-        loadingButton: React.PropTypes.string,
-        updateBinding: React.PropTypes.bool,
+        onSubmit:       React.PropTypes.func,
+        onSuccess:      React.PropTypes.func,
+        onError:        React.PropTypes.func,
+        name:           React.PropTypes.string,
+        defaultButton:  React.PropTypes.string,
+        loadingButton:  React.PropTypes.string,
+        updateBinding:  React.PropTypes.bool,
         formStyleClass: React.PropTypes.string
     },
     componentWillMount: function () {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         self.defaultButton = self.props.defaultButton || 'Continue';
         self.loadingButton = self.props.loadingButton || 'Loading...';
 
-        binding.addListener('', function (ChangesDescriptor) {
-            var data = binding.toJS();
+        binding.addListener('', ChangesDescriptor => {
+            const data = binding.toJS();
 
             data && ChangesDescriptor.isValueChanged() && self._setDefaultValues();
         });
