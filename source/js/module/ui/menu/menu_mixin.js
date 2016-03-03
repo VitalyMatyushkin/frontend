@@ -19,12 +19,12 @@ const MenuMixin = {
                 	{this.__itemIcon(item)} {item.name} {item.num || ''}
 				</span>;
 	},
-	/** function to render file (??? wtf ???) menu node */
+	/** function to render file menu node (for selecting file from computer) */
 	__renderFileNode: function(item, className){
 		return (
 			<span key={item.key} className={className}>
 				{item.name}
-				<input onChange={item.onChange} type='imageFile' />
+				<input onChange={item.onChange} type='file' />
 			</span>
 		);
 	},

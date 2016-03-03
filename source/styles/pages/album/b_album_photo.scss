@@ -6,14 +6,17 @@
   cursor: pointer;
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: 50% 50%;
   background-image: url("/images/spin-loader-black.gif");
   overflow: hidden;
   position: relative;
   margin: 20px;
-  img{
-    background-size: cover;
-    min-width: 160px;
-    min-height: 150px;
+  .img{
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -76,6 +79,7 @@
   max-height: 56px;
   position: absolute;
   bottom: 0;
+  box-sizing: border-box;
 }
 .bAlbumPhoto:hover .ePhotoActions {
   display: flex;
