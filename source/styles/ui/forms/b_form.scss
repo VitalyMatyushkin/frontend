@@ -173,19 +173,16 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .eHouseForm .eForm_field{
   display: flex;
   border-bottom: $BORDER;
-  text-transform: uppercase;
   align-items: center;
   height: 60px;
   margin: 0;
 }
 .eHouseForm .eForm_fieldName{
   width: 150px;
-  color: $COLOR;
-  margin: 0 0 0 10px;
-  font-size: 14px;
+  font-weight: bold;
 }
 .eHouseForm input{
-  height: 30px;
+  height: 32px;
 }
 .eHouseForm h2{
   color: $COLOR;
@@ -202,7 +199,6 @@ $INVALID_COLOR: rgb(182, 0, 0);
   float: left;
   min-width: 340px;
   margin: 10px;
-  text-transform: uppercase;
   padding: 10px;
   min-height: 102px;
 }
@@ -222,7 +218,6 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .editStudentForm input[type="text"]{
   width: 100px;
   border: none;
-  text-transform: uppercase;
 }
 .editStudentForm .dateFormat{
   display: none;
@@ -235,7 +230,6 @@ $INVALID_COLOR: rgb(182, 0, 0);
   width: 320px;
   height: 50px;
   background: #EAEAEA;
-  text-transform: uppercase;
   margin-top: -5px;
 }
 .editStudentForm .eForm_fieldSet {
