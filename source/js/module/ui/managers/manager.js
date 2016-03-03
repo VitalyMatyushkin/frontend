@@ -170,22 +170,39 @@ const Manager = React.createClass({
 
         self.getBinding('selectedRivalIndex').set(Immutable.fromJS(index));
     },
-    getRivals: function () {
+    _getRivals: function () {
         const self = this,
               selectedRivalIndex = self.getBinding('selectedRivalIndex').toJS(),
               rivalsBinding = self.getBinding('rivals');
 
         return rivalsBinding.get().map(function (rival, index) {
-            var disable = self._isRivalDisable(rival),
+            const disable = self._isRivalDisable(rival),
 				teamClasses = classNames({
 					mActive: selectedRivalIndex == index,
 					eChooser_item: true,
 					mDisable: disable
-				});
+				}),
+                eventType  = self.getDefaultBinding().toJS('model.type');
+
+            let text = '';
+
+            switch (eventType) {
+                case 'houses':
+                case 'inter-schools':
+                    text = rival.get('name');
+                    break;
+                case 'internal':
+                    if(index == 0) {
+                        text = "First team";
+                    } else {
+                        text = "Second team";
+                    }
+                    break;
+            }
 
             return (
                 <span className={teamClasses}
-                      onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{rival.get('name')}
+                      onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{text}
                 </span>
             );
         }).toArray();
@@ -220,19 +237,30 @@ const Manager = React.createClass({
 
         for(let mode in self.MODE_TYPES) {
             const teamClasses = classNames({
-                eChooser_item: true,
-                mActive: self.MODE_TYPES[mode].name === self._getMode(rivalIndex)
-            });
+                    eChooser_item: true,
+                    mActive: self.MODE_TYPES[mode].name === self._getMode(rivalIndex)
+                }),
+                text = self._getModeChooserText(self.MODE_TYPES[mode].name);
 
             chooser.push(
                 <span className={teamClasses}
                       key={`${self.MODE_TYPES[mode].name}`}
-                      onClick={self._onClickTeamMode.bind(self, self.MODE_TYPES[mode].name)}>{self.MODE_TYPES[mode].name}
-                </span>
+                      onClick={self._onClickTeamMode.bind(self, self.MODE_TYPES[mode].name)}>{text}</span>
             );
         };
 
         return chooser;
+    },
+    _getModeChooserText: function(mode) {
+        let text = '';
+
+        if(mode == 'temp') {
+            text = 'Create temporary team';
+        } else if(mode == 'teams') {
+            text = 'Select from created teams'
+        }
+
+        return text;
     },
 	render: function() {
 		const self = this,
@@ -263,23 +291,28 @@ const Manager = React.createClass({
             return <div className="eManager_container">
                 <div className="eManager_chooser">
                     <div className="bChooser">
-                        <span className="eChooser_title">Choose a team:</span>
-                        {self.getRivals()}
-                    </div>
-                    <div className="bChooser">
                         <span className="eChooser_title">Choose a team creation mode:</span>
                         {self._getModeChooser(selectedRivalIndex)}
                     </div>
                 </div>
+                <div className="eManager_chooser">
+                    <div className="bChooser">
+                        <span className="eChooser_title">Manage a team:</span>
+                        {self._getRivals()}
+                    </div>
+                </div>
+                <If condition={self._getMode(selectedRivalIndex) === 'teams'}>
+                    <div className="eManager_containerTeam">
+                        <div className="eManager_teamModeViewContainer">
+                            <TeamModeView binding={teamModeViewBinding}/>
+                        </div>
+                        <GameField binding={gameFieldBinding}/>
+                    </div>
+                </If>
                 <If condition={self._getMode(selectedRivalIndex) === 'temp'}>
                     <div className="eManager_chooser">
                         <div className="eManager_plug"></div>
                         <AutocompleteTeam binding={autocompleteTeamBinding}/>
-                    </div>
-                </If>
-                <If condition={self._getMode(selectedRivalIndex) === 'teams'}>
-                    <div className="eManager_containerTeam">
-                        <TeamModeView binding={teamModeViewBinding}/>
                     </div>
                 </If>
                 <If condition={self._getMode(selectedRivalIndex) === 'temp'}>
