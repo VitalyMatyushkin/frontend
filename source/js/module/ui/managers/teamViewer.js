@@ -5,63 +5,6 @@ const   React                = require('react'),
 
 const TeamViewer = React.createClass({
     mixins: [Morearty.Mixin],
-    propTypes: {
-        onTeamClick: React.PropTypes.func
-    },
-    componentWillMount: function () {
-        const self = this;
-
-        self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-        self._setPlayers();
-
-        self._addTeamIdListener();
-    },
-    /**
-     * Add listener for
-     * @private
-     */
-    _addTeamIdListener: function() {
-        const self = this;
-
-        self.getDefaultBinding().sub('selectedTeamId').addListener((descriptor) => {
-            self._setPlayers();
-        });
-    },
-    /**
-     * Get players from server and set it binding
-     * @private
-     */
-    _setPlayers: function() {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            teamId = binding.toJS('selectedTeamId');
-
-        if(teamId) {
-            let players;
-            window.Server.players.get({
-                filter: {
-                    where: {
-                        teamId: teamId
-                    }
-                }
-            }).then((_players) => {
-                players = _players;
-
-                return window.Server.team.get(teamId,{
-                    filter: {
-                        include: [
-                            {'players': ['user', 'form']}
-                        ]
-                    }
-                });
-            }).then((team) => {
-                return binding.set('players', Immutable.fromJS(TeamHelper.getPlayers(players, team)));
-            });
-        } else {
-            binding.set('players', Immutable.fromJS(undefined));
-        }
-    },
     /**
      * Render players for selected team
      * @private

@@ -1,27 +1,31 @@
 const   If          = require('module/ui/if/if'),
-        Filter = require('module/ui/list/filter'),
+        Filter      = require('module/ui/list/filter'),
         GroupAction = require('module/ui/list/group_action'),
-        SVG 				= require('module/ui/svg'),
+        SVG 		= require('module/ui/svg'),
         React       = require('react'),
         ReactDOM    = require('reactDom'),
         Immutable   = require('immutable'),
         $           = require('jquery');
 
+// TODO:
+//  * remove jquery
+//  * understand what the fuck is this and add comments
 const ListPageMixin = {
 	propTypes: {
-		formBinding: React.PropTypes.any,
-		filters: React.PropTypes.object,
-		addSchoolToFilter: React.PropTypes.bool,
-        serviceName: React.PropTypes.string,
-        serviceCount: React.PropTypes.string
+		formBinding:        React.PropTypes.any,
+		filters:            React.PropTypes.object,
+		addSchoolToFilter:  React.PropTypes.bool,
+        serviceName:        React.PropTypes.string,
+        serviceCount:       React.PropTypes.string
 	},
 
     componentWillMount: function () {
-		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding(),
-            metaBinding = self.getDefaultBinding().meta(),
-            binding = self.getDefaultBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+		const   self            = this,
+                globalBinding   = self.getMoreartyContext().getBinding(),
+                metaBinding     = self.getDefaultBinding().meta(),
+                binding         = self.getDefaultBinding(),
+                activeSchoolId  = globalBinding.get('userRules.activeSchoolId');
+
         self.serviceName = self.props.serviceName ? self.props.serviceName : self.serviceName;
         self.serviceCount = self.props.serviceCount ? self.props.serviceCount : self.serviceCount;
 		!self.serviceName && console.error('Please provide service name');
@@ -110,11 +114,12 @@ const ListPageMixin = {
 		}
 	},
     toggleBaseFilters:function(el){
-        var self = this,
-            currentBase = ReactDOM.findDOMNode(self.refs[el]),
-            currentBaseVal = currentBase.value,
-            isChecked = currentBase.checked;
-        $('.bFilterCheck').attr('checked',false);
+        const   self            = this,
+                currentBase     = ReactDOM.findDOMNode(self.refs[el]),
+                currentBaseVal  = currentBase.value,
+                isChecked       = currentBase.checked;
+
+        $('.bFilterCheck').attr('checked',false);       // TODO: remove this shit
         if(isChecked){
             currentBase.checked = isChecked;
             switch (currentBaseVal){

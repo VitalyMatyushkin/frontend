@@ -1,6 +1,5 @@
 const 	SVG 		= require('module/ui/svg'),
-		React 		= require('react'),
-		ReactDOM 	= require('reactDom');
+		React 		= require('react');
 
 const MenuMixin = {
 	propTypes: {
@@ -25,7 +24,7 @@ const MenuMixin = {
 		return (
 			<span key={item.key} className={className}>
 				{item.name}
-				<input onChange={item.onChange} type='file' />
+				<input onChange={item.onChange} type='imageFile' />
 			</span>
 		);
 	},

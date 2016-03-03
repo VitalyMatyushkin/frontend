@@ -154,7 +154,8 @@ const TeamEditPage = React.createClass({
     },
     _submitEdit: function() {
         const self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            teamId = binding.get('teamForm.team.id');
 
         TeamHelper.validate(binding);
 
@@ -170,88 +171,22 @@ const TeamEditPage = React.createClass({
 
             window.Server.team.put(
                 {
-                    teamId:binding.get('teamForm.team.id')
+                    teamId: teamId
                 },
                 updatedTeam
             ).then(() => {
                 const players = binding.get('teamForm.players').toJS(),
                     initialPlayers =  binding.get('initialPlayers').toJS();
 
-                initialPlayers.forEach((initialPlayer) => {
-                    let findedPlayer = Lazy(players).findWhere({id:initialPlayer.id});
-
-                    if(findedPlayer) {
-                        //Mmm, check for modifications
-                        let changes = {};
-                        if(findedPlayer.position !== initialPlayer.position) {
-                            changes.position = findedPlayer.position;
-                        }
-                        if(findedPlayer.sub !== initialPlayer.sub) {
-                            changes.sub = findedPlayer.sub;
-                        }
-                        if(!changes.position || !changes.sub) {
-                            self._changePlayer(
-                                binding.get('teamForm.team.id'),
-                                initialPlayer.playerModelId,
-                                changes
-                            );
-                        }
-                        players.splice(
-                            Lazy(players).indexOf(findedPlayer),
-                            1
-                        );
-                    } else {
-                        //So, user delete player, let's delete player from server
-                        self._deletePlayer(
-                            binding.get('teamForm.team.id'),
-                            initialPlayer.id
-                        );
-                    }
+                Promise.all(
+                    TeamHelper.commitPlayers(initialPlayers, players, teamId)
+                ).then(() => {
+                    document.location.hash = '/#school_admin/teams';
+                    binding.clear();
+                    binding.meta().clear();
                 });
-                if(players.length > 0) {
-                    //Hmmm...new players!
-                    players.forEach((player) => {
-                        self._addPlayer(
-                            binding.get('teamForm.team.id'),
-                            player
-                        );
-                    });
-                }
-
-                document.location.hash = '/#school_admin/teams';
-                binding.clear();
-                binding.meta().clear();
             });
         }
-    },
-    _addPlayer: function(teamId, player) {
-        window.Server.playersRelation.put(
-            {
-                teamId: teamId,
-                studentId: player.id
-            },{
-                position:  player.position,
-                sub:       player.sub
-            }
-        );
-    },
-    _deletePlayer: function(teamId, playerId) {
-        window.Server.playersRelation.delete({
-            teamId: teamId,
-            studentId: playerId
-        });
-    },
-    _changePlayer: function(teamId, playerId, changes) {
-        window.Server.exactlyPlayersByTeam.put(
-            {
-                teamId:    teamId,
-                playerId:  playerId
-            },
-            {
-                position:  changes.position,
-                sub:       changes.sub
-            }
-        )
     },
     render: function() {
         const self = this,

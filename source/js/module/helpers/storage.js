@@ -2,8 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const   $               = require('jquery'),
-        localStorage    = window.localStorage;
+const localStorage    = window.localStorage;
 
 let Helpers = {};
 
@@ -19,7 +18,7 @@ let Helpers = {};
 **/
 Helpers.LocalStorage = {
     set: function (key, value) {
-        value = $.type(value) === 'string' ? String(value) : JSON.stringify(value);
+        value = typeof value === 'string' ? String(value) : JSON.stringify(value);
 
         try {
             localStorage.setItem(key, value);
@@ -88,11 +87,13 @@ Helpers.cookie = {
      * @param options.session boolean which defines is cookie session based. Optional.
      **/
     set: function (key, value, options) {
-        var savePath = (options && options.path ? options.path : '/'),
-            expires = (options && options.expires ? options.expires : this.expires),
-            value = $.type(value) === 'string' ? String(value) : JSON.stringify(value),
-            cookieString = '',
-            dateExpire = new Date();
+        const   savePath    = (options && options.path ? options.path : '/'),
+                expires     = (options && options.expires ? options.expires : this.expires),
+                dateExpire  = new Date();
+
+        let cookieString = '';
+
+        value = typeof value === 'string' ? String(value) : JSON.stringify(value),
 
         dateExpire.setDate(dateExpire.getDate() + expires);
         cookieString += encodeURIComponent(key) + '=' + encodeURIComponent(value) + '; path=' + savePath;

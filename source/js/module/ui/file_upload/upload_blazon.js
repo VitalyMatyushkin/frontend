@@ -9,6 +9,10 @@ const   classNames  = require('classnames'),
         ReactDOM    = require('reactDom'),
         $           = require('jquery');
 
+// TODO: delete me
+
+console.error('upload_blazon deprecated. Use imageFileType instead');
+
 let
     urlStr,
     preview,

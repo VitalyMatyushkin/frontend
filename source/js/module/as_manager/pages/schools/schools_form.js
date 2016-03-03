@@ -7,13 +7,8 @@ const 	Form 		= require('module/ui/form/form'),
 const SchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-		onSubmit: React.PropTypes.func
-	},
-	_serviceFullData:function(){
-		return function(){
-			return window.Server.postCode.get();
-		}
+		title: 		React.PropTypes.string.isRequired,
+		onSubmit: 	React.PropTypes.func
 	},
 	componentWillUnmount:function(){
 		this.getDefaultBinding().clear();
@@ -42,7 +37,7 @@ const SchoolForm = React.createClass({
                     <FormField type="dropdown" field="status">School Status</FormField>
                 </FormColumn>
 				<FormColumn type="column">
-					<FormField labelText="Upload School Blazon" type="file" typeOfFile="image" field="pic"/>
+					<FormField labelText="Upload School Blazon" type="imageFile" typeOfFile="image" field="pic"/>
 				</FormColumn>
 			</Form>
 		)
