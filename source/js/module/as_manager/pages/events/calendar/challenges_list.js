@@ -84,7 +84,7 @@ ChallengesList = React.createClass({
         var self = this,
             binding = this.getDefaultBinding();
 
-        return <div className="eEvents_challenges">
+        return <div className="eEvents_challenges mGeneral">
             <div className="eChallenge_title">
                 <span className="eChallenge_sport">Sport</span>
                 <span className="eChallenge_date">Date</span>

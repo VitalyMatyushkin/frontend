@@ -24,14 +24,15 @@ $border-color: #c2c2c2;
   min-height: 40px;
   align-items: center;
   margin: 0 15px;
-  &:hover {
-  }
   &.mActive {
     color: #fff;
     background: lighten($MAIN_COLOR, 10%);
   }
 }
 
+.eEvents_challenges.mGeneral .eChallenge:hover {
+  background: lighten($MAIN_COLOR, 25%);
+}
 .eChallenge_rivals {
   display: flex;
   flex-direction: row;

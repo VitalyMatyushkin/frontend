@@ -92,17 +92,19 @@ AllChallengesList = React.createClass({
     render: function() {
         var self = this,
             binding = this.getDefaultBinding();
-        return <div className="eEvents_challenges">
-            <div className="eChallenge_title">
-                <div className="eChildFixturesAll">
-                    <span className="eChallenge_sport">Sport</span>
-                    <span className="eChallenge_date">Date</span>
-                    <span className="eChallenge_name">Event Name</span>
+        return (
+            <div className="eEvents_challenges mChildrenNames">
+                <div className="eChallenge_title">
+                    <div className="eChildFixturesAll">
+                        <span className="eChallenge_sport">Sport</span>
+                        <span className="eChallenge_date">Date</span>
+                        <span className="eChallenge_name">Event Name</span>
+                    </div>
+                        <span className="eChallenge_childName">Name</span>
                 </div>
-                    <span className="eChallenge_childName">Name</span>
+                {self.getEvents()}
             </div>
-            {self.getEvents()}
-        </div>
+        );
     }
 });
 module.exports = AllChallengesList;
