@@ -3,11 +3,13 @@ const 	ComboboxOption 			= require('./option'),
 		Immutable 				= require('immutable'),
 		Lazy					= require('lazyjs');
 
-
+/** Component which acts like selects and display array of data passed as sourceArray property */
 const Select = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
+		/** function to call when option selected. (item.id, item.value) */
         onSelect: 		React.PropTypes.func,
+		/** array of data to display. Each item should have id and value properties */
 		sourceArray: 	React.PropTypes.array
 	},
 	getDefaultState: function () {
