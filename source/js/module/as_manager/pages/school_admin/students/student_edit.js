@@ -18,7 +18,7 @@ const StudentEditPage = React.createClass({
 		if (activeSchoolId && studentId) {
 			window.Server.student.get(studentId, {
 				filter: {
-					include: ["user", "house", "school"]
+					include: ["user", "house", "school", "form"]
 				}
 			}).then(studentUser => {
 				studentUser.firstName 	= studentUser.user.firstName;
@@ -38,8 +38,9 @@ const StudentEditPage = React.createClass({
 			self.studentId = studentId;
 		}
 	},
+
 	submitEdit: function(data) {
-		var self = this;
+		const self = this;
 		window.Server.user.put({
 			id:data.userId
 		},{
@@ -71,12 +72,22 @@ const StudentEditPage = React.createClass({
 			self.isMounted() && (document.location.hash = 'school_admin/students');
 		});
 	},
+
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 				= this,
+				binding 			= self.getDefaultBinding(),
+				initialForm 		= binding.get('form') && binding.get('form').toJS(),
+				initialHouse		= binding.get('house') && binding.get('house').toJS();
 
 		return (
-			<StudentForm title="Student" onFormSubmit={self.submitEdit} schoolId={self.activeSchoolId} binding={binding} />
+			<StudentForm
+				title				= "Student"
+				initialForm			= {initialForm}
+				initialHouse		= {initialHouse}
+				onFormSubmit		= {self.submitEdit}
+				schoolId			= {self.activeSchoolId}
+				binding				= {binding}
+			/>
 		)
 	}
 });
