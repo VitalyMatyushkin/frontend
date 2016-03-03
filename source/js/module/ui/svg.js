@@ -1,9 +1,9 @@
 
-//var ReactDOM = require('reactDom');
 //<svg class="bIcon"><use xlink:href="#icon_key"></use></svg>
 const   React       = require('react'),
-	    ReactDOM    = require('reactDom'),
-SVG = React.createClass({
+	    ReactDOM    = require('reactDom');
+
+const SVG = React.createClass({
 	propTypes: {
 		icon: React.PropTypes.string.isRequired,
         classes: React.PropTypes.string

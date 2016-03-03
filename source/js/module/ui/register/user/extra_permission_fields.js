@@ -1,11 +1,10 @@
 /**
  * Created by bridark on 19/10/15.
  */
-var ExtraPermissionsField,
-    AutoComplete = require('module/ui/autocomplete/autocomplete'),
-    React = require('react'),
-    If = require('module/ui/if/if');
-ExtraPermissionsField = React.createClass({
+const   React = require('react');
+
+/** Component which add new input set for adding one more parent <-> child request during registration */
+const ExtraPermissionsField = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         extraFieldKey:React.PropTypes.string
@@ -16,8 +15,8 @@ ExtraPermissionsField = React.createClass({
         }
     },
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self = this,
+                binding = self.getDefaultBinding();
         self.studentObj={firstName:'',lastName:'',house:'',form:''}
     },
     /*
@@ -26,12 +25,12 @@ ExtraPermissionsField = React.createClass({
     * Implements an autocomplete box not tied into context data binding to enable separate information to be entered
     */
     renderOptionListForHouses:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            houseModel = binding.get('_houseAutocomplete.response'),
-            houseListItems;
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                houseModel  = binding.get('_houseAutocomplete.response');
+        let houseListItems;
         if(houseModel && houseModel.length > 1){
-            houseListItems = houseModel.map(function(item,index){
+            houseListItems = houseModel.map((item,index) => {
                 return (
                     <div id={item.id} className="eCombobox_option" role="option" onClick={self.handleOptionItemClick.bind(null,'listHouseInput',item.name,'listHouse')}>
                         {item.name}
@@ -39,7 +38,7 @@ ExtraPermissionsField = React.createClass({
                 );
             });
         }
-        return(
+        return (
             <div className="bCombobox">
                 <input ref="listHouseInput" className="eCombobox_input" aria-owns="houseList" placeholder="House name" onBlur={self.handleInputBlur.bind(null,'listHouse')}/>
                 <span aria-hidden="true" className="eCombobox_button" onClick={self.handleDropDownButtonClick.bind(null,'listHouse')}>▾</span>
@@ -48,10 +47,10 @@ ExtraPermissionsField = React.createClass({
         );
     },
     renderOptionListForForms:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            formsModel = binding.get('_formAutocomplete.response'),
-            formsListItems;
+        const   self = this,
+                binding = self.getDefaultBinding(),
+                formsModel = binding.get('_formAutocomplete.response');
+        let formsListItems;
         if(formsModel && formsModel.length > 1){
             formsListItems = formsModel.map(function(f){
                 return (
@@ -127,10 +126,10 @@ ExtraPermissionsField = React.createClass({
         self.studentObj.lastName = event.currentTarget.value;
     },
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            houseAutoComplete = self.renderOptionListForHouses(),
-            formAutoComplete = self.renderOptionListForForms();
+        const   self                = this,
+                binding             = self.getDefaultBinding(),
+                houseAutoComplete   = self.renderOptionListForHouses(),
+                formAutoComplete    = self.renderOptionListForForms();
         return (
             <div>
                 <input type="text" disabled value={binding.get('_schoolAutocomplete.model').name} style={{backgroundColor:'#d3d3d3'}}/>

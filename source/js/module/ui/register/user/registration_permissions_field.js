@@ -1,23 +1,22 @@
 /**
  * Created by bridark on 15/10/15.
  */
-var AutoComplete  = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-    If = require('module/ui/if/if'),
-    ExtraPermissionsField = require('module/ui/register/user/extra_permission_fields'),
-    RegistrationPermissionField,
-    React = require('react');
+const   AutoComplete            = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+        If                      = require('module/ui/if/if'),
+        ExtraPermissionsField   = require('module/ui/register/user/extra_permission_fields'),
+        React                   = require('react');
 /*
  *
  *
  */
-RegistrationPermissionField = React.createClass({
+const RegistrationPermissionField = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        isFormFilled:React.PropTypes.bool,
-        onSuccess:React.PropTypes.func.isRequired,
-        fieldCounter:React.PropTypes.number.isRequired,
-        onAnother: React.PropTypes.func.isRequired,
-        showButtons: React.PropTypes.bool.isRequired
+        isFormFilled:   React.PropTypes.bool,
+        onSuccess:      React.PropTypes.func.isRequired,
+        fieldCounter:   React.PropTypes.number.isRequired,
+        onAnother:      React.PropTypes.func.isRequired,
+        showButtons:    React.PropTypes.bool.isRequired
     },
     /**
      * school filter by schoolName
