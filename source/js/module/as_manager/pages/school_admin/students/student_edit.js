@@ -41,36 +41,23 @@ const StudentEditPage = React.createClass({
 
 	submitEdit: function(data) {
 		const self = this;
-		window.Server.user.put({
-			id:data.userId
-		},{
-			firstName:data.firstName,
-			lastName:data.lastName,
-			birthday:data.birthday,
-			gender:data.gender
-		}).then(function(userDetails){
-			window.Server.student.put({studentId:self.studentId},{
-				formId:data.formId,
-				houseId:data.houseId,
-				schoolId:data.schoolId,
-				nextOfKin:[{
-					name:data.name
-				}],
-				medicalInfo:{
-					allergy:data.allergy
-				}
-			}).then(function(studentDetails){
-				self.isMounted() && (document.location.hash = 'school_admin/students');
-				return studentDetails;
-			}).catch((error)=>{
-				alert(error.errorThrown+' occurred while updating student details');
-				self.isMounted() && (document.location.hash = 'school_admin/students');
-			});
-			return userDetails;
-		}).catch((error)=>{
-			alert(error.errorThrown+' occurred while updating user');
+
+		window.Server.studentUpdate.put({studentId: self.studentId}, {
+			schoolId:		data.schoolId,
+			formId: 		data.formId,
+			houseId:		data.houseId,
+			nextOfKin:		[{name: data.name}],
+			medicalInfo: 	{ allergy: data.allergy },
+			firstName:		data.firstName,
+			lastName:		data.lastName,
+			birthday:		data.birthday,
+			gender:			data.gender
+		}).then( updResult => {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
+			console.log('updated!');
+			return;
 		});
+
 	},
 
 	render: function() {
