@@ -306,7 +306,9 @@ const Manager = React.createClass({
                         <div className="eManager_teamModeViewContainer">
                             <TeamModeView binding={teamModeViewBinding}/>
                         </div>
-                        <GameField binding={gameFieldBinding}/>
+                        <div className="eManager_gameFieldContainer">
+                            <GameField binding={gameFieldBinding}/>
+                        </div>
                     </div>
                 </If>
                 <If condition={self._getMode(selectedRivalIndex) === 'temp'}>

@@ -9,7 +9,7 @@ const GameField = React.createClass({
         let src;
 
         if(bindingData !== undefined) {
-            src = window.Server.images.getResizedToBoxUrl(bindingData, 490, 600);
+            src = bindingData;//window.Server.images.getResizedToBoxUrl(bindingData, 490, 600);
         } else {
             src = '';
         }
@@ -21,7 +21,7 @@ const GameField = React.createClass({
 
         return (
             <div className="bGameField">
-                <img src={self._getGameFieldImg()}/>
+                <img height="600" width="490" src={self._getGameFieldImg()}/>
             </div>
         );
     }
