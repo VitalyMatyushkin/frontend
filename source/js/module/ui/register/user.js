@@ -52,7 +52,13 @@ const RegisterUserPage = React.createClass({
             //},
             {
                 name: 'permissions',
-                title: 'Permissions Setup'
+                title: 'Permissions Setup',
+                description: <p>
+                    Please choose the role and school you would like to join. If you wish to get more than one role at
+                    the same
+                    school (for instance, a teacher and a parent) choose one of them and you will be able to request
+                    more
+                    permissions once your account has been confirmed.</p>
             },
             {
                 name: 'finish',
