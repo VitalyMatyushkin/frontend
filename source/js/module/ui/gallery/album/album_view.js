@@ -71,7 +71,7 @@ const AlbumView = React.createClass({
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
 				fullScreen 	= binding.get('fullScreen'),
-				id 			= photo.get('id');
+				id 			= photo.id;
 
 		self.setState({lastClickedId: id});
 		if (!fullScreen) {
