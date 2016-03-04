@@ -62,7 +62,8 @@ const AlbumPhoto = React.createClass({
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
 				origSrc 	= binding.get('pic'),
-				sizedSrc 	= window.Server.images.getResizedToBoxUrl(origSrc, 200, 200);	// yeah, size a bit hardcoded here
+				sizedSrc 	= window.Server.images.getResizedToBoxUrl(origSrc, 200, 200), // yeah, size a bit hardcoded here
+                background  = {backgroundImage: 'url('+ sizedSrc +')'};
 
 		let imgClasses = 'bAlbumPhoto';
 		if (binding.get('loaded')) {
@@ -79,7 +80,7 @@ const AlbumPhoto = React.createClass({
 						<span onClick={self.onClickDeletePhoto}><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
 					</div>
 					<span className='eAlbumPhoto_photoTitle'>{binding.get('description')}</span>
-					<img src={sizedSrc} onLoad={self.onImageLoad}/>
+					<div className="img" style={background} onLoad={self.onImageLoad}></div>
 				</div>
 		);
 	}
