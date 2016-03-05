@@ -35,24 +35,19 @@ const PermissionsStep = React.createClass({
 
     self.types = [
       {
-        name: 'parent',
-        icon: 'users'
+        name: 'parent'
       },
       {
-        name: 'admin',
-        icon: 'user-tie'
+        name: 'admin'
       },
       {
-        name: 'manager',
-        icon: 'user-tie'
+        name: 'manager'
       },
       {
-        name: 'teacher',
-        icon: 'user'
+        name: 'teacher'
       },
       {
-        name: 'coach',
-        icon: 'user'
+        name: 'coach'
       }
     ];
 
@@ -100,8 +95,10 @@ const PermissionsStep = React.createClass({
         });
 
         return <div className={itemClasses} onClick={self._onClickType.bind(null, type.name)}>
-          <SVG icon={'icon_' + type.icon}/>
-          <span className="eRegistration_chooserTitle">{type.name.toUpperCase()}</span>
+          <div className="eChooserItem_wrap">
+            <div className="eChooserItem_inside"></div>
+          </div>
+          <span className="eRegistration_chooserTitle">{type.name}</span>
         </div>;
       })}
     </div>
@@ -132,11 +129,6 @@ const PermissionsStep = React.createClass({
     }
 
     return <div className="eRegistration_permissions">
-      <p>
-        Please choose the role and school you would like to join. If you wish to get more than one role at the same
-        school (for instance, a teacher and a parent) choose one of them and you will be able to request more
-        permissions once your account has been confirmed.
-      </p>
       <div className="eRegistration_annotation">Join as:</div>
       {self.renderChooser()}
       <div className="eRegistration_permissionStep" style={{}}>

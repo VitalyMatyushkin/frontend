@@ -98,8 +98,9 @@ textarea{
   font-family: 'Glober', sans-serif;
   width: auto;
   border: 1px solid #ccc;
-  border-radius: 3px;
+  border-radius: 2px;
   color: #333132;
+  height: 30px;
 }
 
 input{
@@ -110,6 +111,7 @@ input{
 input[type='checkbox']{
   padding-left: 0px;
   width: auto;
+  height: auto;
 }
 
 select{
