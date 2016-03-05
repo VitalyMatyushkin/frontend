@@ -75,7 +75,7 @@
   position: relative;
 }
 
-$INVALID_COLOR: rgb(182, 0, 0);
+$INVALID_COLOR: #d3978f;
 
 .eForm_fieldValidText{
   padding: 0 5px;
@@ -90,16 +90,20 @@ $INVALID_COLOR: rgb(182, 0, 0);
   position: relative;
   padding-right: 15px;
 }
+.eForm_fieldSet input:focus {
+  border: 1px solid #bfce88;
+  box-shadow: inset 1px 1px #6e7848;
+}
 
 .eForm_fieldSet.mValid{
-  color: green;
+  color: $MAIN_COLOR;
 
   .eForm_fieldValidText{
     display: block;
   }
   input{
-    border: 1px solid green;
-    color: green;
+    border: 1px solid $MAIN_COLOR;
+    color: $MAIN_COLOR;
   }
 }
 
