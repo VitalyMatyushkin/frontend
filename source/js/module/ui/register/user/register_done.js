@@ -12,8 +12,7 @@ RegiseterUserDone = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
-			<div className="bPageMessage">
-				<h2>Registration almost done</h2>
+			<div className="bRegisterMessage">
 				{/*Check the type of account registered for by the user and display information accordingly*/}
 				<If condition={(binding.get('type')==='teacher' || binding.get('type')==='coach' || binding.get('type')=='parent')}>
 					<p className="bRegisterFinish">

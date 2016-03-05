@@ -28,6 +28,7 @@ const RegisterUserPage = React.createClass({
             {
                 name: 'account',
                 title: 'Personal Details',
+                mainTitle: 'Register on Squadintouch',
                 description: <div><p>Enter your contact details and choose a password you wish to use for logging in to
                     your account.</p>
 
@@ -43,6 +44,7 @@ const RegisterUserPage = React.createClass({
             {
                 name: 'verification',
                 title: 'User Verification',
+                mainTitle: 'Register on Squadintouch',
                 description: <p>Activation codes were sent to your email address and mobile phone. Please, enter them
                     below to complete the registration.</p>
             },
@@ -53,6 +55,7 @@ const RegisterUserPage = React.createClass({
             {
                 name: 'permissions',
                 title: 'Permissions Setup',
+                mainTitle: 'Register on Squadintouch',
                 description: <p>
                     Please choose the role and school you would like to join. If you wish to get more than one role at
                     the same
@@ -62,7 +65,8 @@ const RegisterUserPage = React.createClass({
             },
             {
                 name: 'finish',
-                title: 'Finish'
+                title: 'Finish',
+                mainTitle: 'Registration almost done'
             }
         ];
     },
@@ -117,6 +121,21 @@ const RegisterUserPage = React.createClass({
 		binding.sub('authorizationInfo').clear();
 		document.location.href = '/';
     },
+    renderMainTitle: function (step) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            currentStep = binding.get('registerStep');
+        return <div>
+            {self.steps.map(function (step) {
+                var stepClasses = classNames({
+                    bRegistrationTitle: true,
+                    mActive: currentStep === step.name
+            });
+                return <div className={stepClasses}>{step.mainTitle}</div>;
+            })}
+        </div>
+    },
+
     renderSteps: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -190,7 +209,7 @@ const RegisterUserPage = React.createClass({
 
         return (
             <div>
-                <h1 className="bRegistrationTitle">Register on Squadintouch</h1>
+                {self.renderMainTitle()}
                 <div className="bRegistration">
                 {self.renderSteps()}
                 {currentView}
