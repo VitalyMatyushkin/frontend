@@ -24,44 +24,54 @@ const EventView = React.createClass({
         });
     },
     componentWillMount: function () {
-        var self = this,
+        const self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
             binding = self.getDefaultBinding(),
             sportsBinding = binding.sub('sports');
 
-        window.Server.sports.get().then(function (data) {
+        self._initMenuItems();
+
+        window.Server.sports.get().then(function (sports) {
             sportsBinding
                 .atomically()
                 .set('sync', true)
-                .set('models', Immutable.fromJS(data))
+                .set('models', Immutable.fromJS(sports))
                 .commit();
-        });
 
-        window.Server.eventsBySchoolId.get({
-            schoolId: activeSchoolId
-        }).then(function (data) {
+            return window.Server.eventsBySchoolId.get({
+                schoolId: activeSchoolId
+            }, {
+                filter: {
+                    include: 'sport'
+                }
+            });
+        }).then(function (events) {
             binding
                 .atomically()
-                .set('models', Immutable.fromJS(data))
+                .set('models', Immutable.fromJS(events))
                 .set('sync', true)
                 .commit();
         });
+    },
+    _initMenuItems: function() {
+        const self = this;
+
         self.menuItems = [
-        {
-            href: '/#events/calendar',
-            name: 'Calendar',
-            key: 'Calendar'
-        },{
-            href: '/#events/challenges',
-            name: 'Fixtures',
-            key: 'Fixtures'
-        },
-        {
-            href: '/#events/manager',
-            name: 'New',
-            key: 'New...'
-        }];
+            {
+                href: '/#events/calendar',
+                name: 'Calendar',
+                key: 'Calendar'
+            },{
+                href: '/#events/challenges',
+                name: 'Fixtures',
+                key: 'Fixtures'
+            },{
+                href: '/#events/manager',
+                name: 'New',
+                key: 'New...'
+            }
+        ];
     },
 	render: function() {
 		var self = this,
