@@ -97,14 +97,14 @@ const EventHeader = React.createClass({
         var self = this,
 			binding = self.getDefaultBinding(),
             rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+            isManager = !!rootBinding.get('userRules.activeSchoolId'),
             closeClasses = classNames({
                 mClose: true,
                 mRed: self.isEnableClose(),
                 mDisable: !self.isEnableClose()
             });
 		return (
-        <If condition={self.isOwner() && !binding.get('model.resultId') && activeSchoolId}>
+        <If condition={self.isOwner() && !binding.get('model.resultId') && isManager}>
             <div className="bEventButtons">
                 <If condition={binding.get('mode') === 'general'}>
                     <div

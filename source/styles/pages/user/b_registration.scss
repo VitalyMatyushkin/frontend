@@ -3,39 +3,60 @@ $chooserIconSize: 35px;
 
 .bRegistration {
   padding: 20px 0;
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  word-spacing: 3px;
 }
 
 .eRegistration_annotation {
-  display: flex;
-  justify-content: center;
-  font-size: 22px;
+  font-size: 18px;
+  color: $COLOR;
 }
 
 // permissions chooser
 .eRegistration_chooser {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column wrap;
   width: auto;
-  margin: 15px auto;
+  margin: 15px;
   justify-content: space-around;
 }
 
 .eRegistration_chooserItem {
   display: flex;
-  flex-flow: column nowrap;
-  width: $chooserSize;
-  height: $chooserSize;
-  border: 3px solid #ddd;
-  border-radius: 5px;
   cursor: pointer;
-  justify-content: center;
-  align-items: center;
-  &.mActive {
+  margin-bottom: 10px;
+  align-items: baseline;
+  &.mActive .eChooserItem_wrap{
     cursor: default;
-    border-color: $MAIN_COLOR;
+    border-color: $COLOR;
+    border-radius: 50%;
   }
+}
+.eRegistration_chooserItem.mActive .eChooserItem_inside {
+  display: block;
+}
+.eRegistration_chooserItem.mActive .eRegistration_chooserTitle {
+  color: $COLOR;
+}
+.eChooserItem_wrap {
+  display: flex;
+  width: 12px;
+  height: 12px;
+  border: $BORDER;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+}
+.eChooserItem_inside {
+  display: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: $COLOR;
 }
 
 .eRegistration_chooserItem .bIcon {
@@ -46,7 +67,9 @@ $chooserIconSize: 35px;
 }
 
 .eRegistration_chooserTitle {
-  margin-top: 5px;
+  text-transform: capitalize;
+  margin-left: 10px;
+  color: #a9a9a9;
 }
 
 .eRegistration_permissionsField {
@@ -54,7 +77,10 @@ $chooserIconSize: 35px;
   flex-flow: column nowrap;
   float:left;
 }
-
+.eRegistration_permissions {
+  margin-left: 40px;
+  width: 300px;
+}
 .eRegistration_permissionsField input {
   width: 200px;
   margin-bottom: 10px;
@@ -74,10 +100,11 @@ $chooserIconSize: 35px;
 .eRegistration_labelField {
   display: inline-block;
   width: 150px;
+  color: $COLOR;
 }
 
 .eRegistration_input {
-  width: 300px;
+  width: 200px;
 }
 
 .eRegistration_label .bButton {
@@ -86,8 +113,33 @@ $chooserIconSize: 35px;
   padding: 5px;
 }
 .eRegistration_permissionStep{
-  margin:10px;
   height:auto;
   width:100%;
   float:left;
+}
+.bRegistration .bForm {
+  max-width: 360px;
+  padding: 0;
+  margin-left: 40px;
+}
+.bRegistrationTitle {
+  color: $COLOR;
+  font-weight: normal;
+  text-align: center;
+  margin: 40px;
+  font-size: 30px;
+  display: none;
+}
+.bRegistrationTitle.mActive {
+  display: block;
+}
+.eRegistration_verification {
+  max-width: 300px;
+  margin-left: 40px;
+}
+.bRegisterMessage {
+  max-width: 350px;
+  color: #a9a9a9;
+  margin: 0 50px;
+  text-align: center;
 }
