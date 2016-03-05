@@ -1,0 +1,12 @@
+.eStepDescription {
+  display: none;
+  padding: 0 10px;
+  color: #a9a9a9;
+  font-size: 14px;
+}
+.eStepDescription.mActive {
+  display: block;
+}
+.eStepDescription p {
+  margin-bottom: 0;
+}

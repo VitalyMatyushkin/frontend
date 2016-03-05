@@ -47,42 +47,62 @@ ChallengesList = React.createClass({
         return <Sport name={sport} className="bIcon_invites" ></Sport>;
     },
     getEvents: function () {
-        var self = this,
+        const self = this,
             binding = self.getDefaultBinding(),
             currentDate = binding.get('calendar.currentDate'),
-			sync = binding.get('sync'),
-            events = binding.get('models').filter(function (event) {
+            sync = binding.toJS('sync') && binding.toJS('sports.sync');
+
+        let result;
+
+        if(!sync) {
+            result = (
+                <div className="eChallenge mNotFound">
+                    {"Loading..."}
+                </div>
+            );
+        } else {
+            const events = binding.get('models').filter(function (event) {
                 var eventDate = new Date(event.get('startTime'));
 
                 return eventDate.getMonth() === currentDate.getMonth() &&
                     eventDate.getFullYear() === currentDate.getFullYear();
             });
 
-        return events.count() ? events.map(function (event) {
-            var eventDate = new Date(event.get('startTime')),
-                hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
-                isHoverDay = hoverDay &&
-                    hoverDay.getMonth() === eventDate.getMonth() &&
-                    hoverDay.getDate() === eventDate.getDate(),
-                stringDate = self.formatDate(event.get('startTime')),
-                sport = self.getSportIcon(event.get('sport').get('name'));
+            if(events.count) {
+                result = events.map(function (event) {
+                    var eventDate = new Date(event.get('startTime')),
+                        hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
+                        isHoverDay = hoverDay &&
+                            hoverDay.getMonth() === eventDate.getMonth() &&
+                            hoverDay.getDate() === eventDate.getDate(),
+                        stringDate = self.formatDate(event.get('startTime')),
+                        sport = self.getSportIcon(event.get('sport').get('name'));
 
-            return <div key={'event-' + event.get('id')} className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
-                <span className="eChallenge_sport">{sport}</span>
-                <span className="eChallenge_date">{stringDate}</span>
+                    return <div key={'event-' + event.get('id')} className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
+                        <span className="eChallenge_sport">{sport}</span>
+                        <span className="eChallenge_date">{stringDate}</span>
 
-                <div className="eChallenge_name">{event.get('name')}</div>
-                <div className="eChallenge_rivals">
-                    <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
-                    <span>vs</span>
-                    <span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
-                </div>
-            </div>
-        }).toArray() : <div className="eChallenge mNotFound">{sync ? "You haven't events on this month." : "Loading..."}</div>;
+                        <div className="eChallenge_name">{event.get('name')}</div>
+                        <div className="eChallenge_rivals">
+                            <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
+                            <span>vs</span>
+                            <span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
+                        </div>
+                    </div>
+                }).toArray()
+            } else {
+                result = (
+                    <div className="eChallenge mNotFound">
+                        {"You haven't events on this month."}
+                    </div>
+                );
+            }
+        }
+
+        return result;
     },
     render: function() {
-        var self = this,
-            binding = this.getDefaultBinding();
+        var self = this;
 
         return <div className="eEvents_challenges mGeneral">
             <div className="eChallenge_title">

@@ -27,11 +27,26 @@ const RegisterUserPage = React.createClass({
         self.steps = [
             {
                 name: 'account',
-                title: 'Personal Details'
+                title: 'Personal Details',
+                mainTitle: 'Register on Squadintouch',
+                description: <div><p>Enter your contact details and choose a password you wish to use for logging in to
+                    your account.</p>
+
+                    <p>We ask you to provide your valid mobile phone number and email address.</p>
+
+                    <p>We'll use your mobile phone number and email address to send you activation codes.</p>
+
+                    <p>You cannot work in the system unless you verify your email address and phone number using these
+                        codes.</p>
+
+                    <p> You will also use your email address for logging in to the system.</p></div>
             },
             {
                 name: 'verification',
-                title: 'User Verification'
+                title: 'User Verification',
+                mainTitle: 'Register on Squadintouch',
+                description: <p>Activation codes were sent to your email address and mobile phone. Please, enter them
+                    below to complete the registration.</p>
             },
             //{
             //    name: 'personal',
@@ -39,11 +54,19 @@ const RegisterUserPage = React.createClass({
             //},
             {
                 name: 'permissions',
-                title: 'Permissions Setup'
+                title: 'Permissions Setup',
+                mainTitle: 'Register on Squadintouch',
+                description: <p>
+                    Please choose the role and school you would like to join. If you wish to get more than one role at
+                    the same
+                    school (for instance, a teacher and a parent) choose one of them and you will be able to request
+                    more
+                    permissions once your account has been confirmed.</p>
             },
             {
                 name: 'finish',
-                title: 'Finish'
+                title: 'Finish',
+                mainTitle: 'Registration almost done'
             }
         ];
     },
@@ -98,12 +121,28 @@ const RegisterUserPage = React.createClass({
 		binding.sub('authorizationInfo').clear();
 		document.location.href = '/';
     },
+    renderMainTitle: function (step) {
+        var self = this,
+            binding = self.getDefaultBinding(),
+            currentStep = binding.get('registerStep');
+        return <div>
+            {self.steps.map(function (step) {
+                var stepClasses = classNames({
+                    bRegistrationTitle: true,
+                    mActive: currentStep === step.name
+            });
+                return <div className={stepClasses}>{step.mainTitle}</div>;
+            })}
+        </div>
+    },
+
     renderSteps: function () {
         var self = this,
             binding = self.getDefaultBinding(),
             currentStep = binding.get('registerStep');
 
-        return <div className="bStepProgress">
+        return <div className="bStepProgress_wrap">
+            <div className="bStepProgress">
             {self.steps.map(function (step) {
                 var stepClasses = classNames({
                     eStepProgress_progressItem: true,
@@ -111,6 +150,14 @@ const RegisterUserPage = React.createClass({
                 });
 
                 return <span className={stepClasses}>{step.title}</span>;
+            })}
+            </div>
+            {self.steps.map(function (step) {
+                var descriptionClasses = classNames({
+                    eStepDescription: true,
+                    mActive: currentStep === step.name
+                });
+                return <div className={descriptionClasses}>{step.description}</div>;
             })}
         </div>;
     },
@@ -161,9 +208,12 @@ const RegisterUserPage = React.createClass({
         }
 
         return (
-            <div className="bRegistration">
+            <div>
+                {self.renderMainTitle()}
+                <div className="bRegistration">
                 {self.renderSteps()}
                 {currentView}
+            </div>
             </div>
         )
     }
