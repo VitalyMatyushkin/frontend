@@ -13,8 +13,12 @@ const TypeAutocomplete = React.createClass({
 	},
 
 	/** Setting component's value when it choosen */
-	onSelect: function(data){
-		this.setValue(data);
+	onSelect: function(data, fullValue){
+        const 	self 	= this,
+                binding = self.getDefaultBinding();
+
+        binding.set('fullValue', fullValue);
+        self.setValue(data);
 	},
 
 	render: function() {
