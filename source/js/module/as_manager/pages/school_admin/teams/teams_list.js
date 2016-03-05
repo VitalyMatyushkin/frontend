@@ -33,6 +33,18 @@ const TeamsListPage = React.createClass({
 
         return result;
     },
+  _getGender: function (data) {
+    var result = '';
+
+    if (data !== undefined) {
+      if (data === 'female') {
+        result = 'girls'
+      } else {
+        result = 'boys'
+      }
+    }
+    return result;
+  },
     getTableView: function() {
         var self = this,
             binding = self.getDefaultBinding();
@@ -51,7 +63,8 @@ const TeamsListPage = React.createClass({
                             filterType="none">Description</TableField>
 
                 <TableField dataField="gender"
-                            filterType="none">Gender</TableField>
+                            filterType="none"
+                            parseFunction={self._getGender}>Gender</TableField>
 
                 <TableField dataField="ages"
                             filterType="none"
