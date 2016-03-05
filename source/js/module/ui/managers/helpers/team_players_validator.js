@@ -5,7 +5,7 @@ function validate(players, limits) {
     if(players && (players.length === 0 || players.length < limits.minPlayers)) {
         isError = true;
         text = `Number of players should be great or equal ${limits.minPlayers}`;
-    } else if(player && players.length > limits.maxPlayers) {
+    } else if(players && players.length > limits.maxPlayers) {
         isError = true;
         text = `Number of players should be less or equal ${limits.maxPlayers}`;
     } else if(players && !isPositionsCorrect(players)) {
