@@ -63,8 +63,8 @@ const StudentEditPage = React.createClass({
 	render: function() {
 		const 	self 				= this,
 				binding 			= self.getDefaultBinding(),
-				initialForm 		= binding.get('form') && binding.get('form').toJS(),
-				initialHouse		= binding.get('house') && binding.get('house').toJS();
+				initialForm 		= binding.toJS('form'),
+				initialHouse		= binding.toJS('house');
 
 		return (
 			<StudentForm

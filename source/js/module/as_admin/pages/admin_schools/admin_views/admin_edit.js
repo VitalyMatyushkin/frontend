@@ -17,7 +17,7 @@ const EditSchoolForm = React.createClass({
         //binding.clear();
 
         if (schoolId) {
-            window.Server.school.get(schoolId).then(function (data) {
+            window.Server.school.get(schoolId, {filter:{include:'postcode'}}).then(function (data) {
                 self.isMounted() && binding.set(Immutable.fromJS(data));
             }).catch(function(err){
                 alert(err.errorThrown+' server error');
