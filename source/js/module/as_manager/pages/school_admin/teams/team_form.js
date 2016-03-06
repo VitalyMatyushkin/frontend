@@ -1,11 +1,10 @@
 const   Immutable        = require('immutable'),
         AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
-        Autocomplete     = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-        MoreartyHelper   = require('module/helpers/morearty_helper'),
         Team             = require('module/ui/managers/team'),
         React            = require('react'),
         If               = require('module/ui/if/if'),
-        Multiselect      = require('module/ui/multiselect/multiselect');
+        Multiselect      = require('module/ui/multiselect/multiselect'),
+        Lazy            = require('lazyjs');
 
 const TeamForm = React.createClass({
     mixins: [Morearty.Mixin],
@@ -13,11 +12,46 @@ const TeamForm = React.createClass({
         title: React.PropTypes.string.isRequired,
         onFormSubmit: React.PropTypes.func
     },
+    playersListener: undefined,
     componentWillUnmount: function() {
         const self = this,
             binding = self.getDefaultBinding();
 
         binding.clear();
+    },
+    _addPlayersListener: function() {
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        self.playersListener = binding.sub('players').addListener((descriptor) => {
+            if(descriptor.getCurrentValue() !== undefined && descriptor.getPreviousValue() !== undefined) {
+                const currPlayers = descriptor.getCurrentValue().toJS(),
+                    prevPlayers = descriptor.getPreviousValue().toJS();
+
+                if(currPlayers.length > prevPlayers.length) {
+                    self._checkRemovedPlayersCache(
+                        currPlayers[currPlayers.length - 1]
+                    );
+                }
+            }
+        });
+    },
+    _checkRemovedPlayersCache: function(player) {
+        const self = this,
+            removedPlayers = self.getDefaultBinding().toJS('removedPlayers');
+
+        let findedRemovedPlayer = Lazy(removedPlayers).findWhere({id: player.id});
+        if(findedRemovedPlayer) {
+            let players = self.getDefaultBinding().toJS('players');
+            players[players.length - 1] = findedRemovedPlayer;
+            self.getDefaultBinding().sub('players').withDisabledListener(self.playersListener, () => {
+                self.getDefaultBinding().set('players', Immutable.fromJS(players));
+
+                const index = Lazy(removedPlayers).indexOf(findedRemovedPlayer);
+                removedPlayers.splice(index, 1);
+                self.getDefaultBinding().set('removedPlayers', Immutable.fromJS(removedPlayers));
+            });
+        }
     },
     _getSports: function () {
         const self = this,
@@ -140,6 +174,13 @@ const TeamForm = React.createClass({
 
         return !!self.getDefaultBinding().get('ages');
     },
+    _onRemovePlayer: function(player) {
+        const self = this;
+
+        self.getDefaultBinding().set('removedPlayers', Immutable.fromJS(
+            self.getDefaultBinding().get('removedPlayers').push(player)
+        ));
+    },
     render: function() {
         const self  = this,
             binding = self.getDefaultBinding(),
@@ -159,6 +200,10 @@ const TeamForm = React.createClass({
         let errorText = '';
 
         binding.toJS('error') && (errorText = binding.get('error.text'));
+
+        if(!self.playersListener) {
+            self._addPlayersListener();
+        }
 
         return (
             <div style={{paddingTop: 30}}>
@@ -234,7 +279,7 @@ const TeamForm = React.createClass({
                                 </div>
                                 <div className="eManager_group">
                                     {''}
-                                    <Team binding={teamBinding}/>
+                                    <Team onRemovePlayer={self._onRemovePlayer} binding={teamBinding}/>
                                 </div>
                                 <div className="eManager_group">
                                     <div className="eTeam_errorBox">
