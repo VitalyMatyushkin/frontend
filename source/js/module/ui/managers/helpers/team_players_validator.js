@@ -4,16 +4,16 @@ function validate(players, limits) {
 
     if(players && (players.length === 0 || players.length < limits.minPlayers)) {
         isError = true;
-        text = `Player count should be greater than ${limits.minPlayers} or equal`;
+        text = `Number of players should be great or equal ${limits.minPlayers}`;
     } else if(players && players.length > limits.maxPlayers) {
         isError = true;
-        text = `Player count should be less than ${limits.maxPlayers} or equal`;
+        text = `Number of players should be less or equal ${limits.maxPlayers}`;
     } else if(players && !isPositionsCorrect(players)) {
         isError = true;
         text = 'All players should have position';
     } else if(players && !isSubstitutionCountCorrect(players, limits.maxSubs)) {
         isError = true;
-        text = `Substitution count should be less than ${limits.maxSubs} or equal`;
+        text = `Number of sub players should be less or equal ${limits.maxSubs}`;
     }
 
     return {
