@@ -159,13 +159,16 @@ const EventManager = React.createClass({
     _submit: function() {
         const self = this;
 
-        self._eventSubmit().then((event) => {
-            self.getMoreartyContext().getBinding().update('events.models', function (events) {
-                return events.push(Immutable.fromJS(event));
+        self._eventSubmit()
+            .then((event) => {
+                self.getMoreartyContext().getBinding().update('events.models', function (events) {
+                    return events.push(Immutable.fromJS(event));
+                });
+
+                self._submitRivals(event);
+
+                return event;
             });
-            self._submitRivals(event);
-            return event;
-        });
     },
     _eventSubmit: function() {
         var self = this;
@@ -179,12 +182,16 @@ const EventManager = React.createClass({
             binding = self.getDefaultBinding(),
             rivals = binding.toJS('rivals');
 
+        //Create teams(if it need) and add it to events
         let rivalPromises = [];
         rivals.forEach((rival, rivalIndex) => {
-            rivalPromises.push(self._submitRival(event, rival, rivalIndex));
+            rivalPromises.push(
+                self._submitRival(event, rival, rivalIndex)
+            );
         });
+
+        //Create players for teams(if need)
         Promise.all(rivalPromises).then((data) => {
-            //Create players for temp team
             let playerPromises = [];
             data.forEach((teamWrapper) => {
                 if(teamWrapper && teamWrapper.type == 'newTeam') {
@@ -201,6 +208,7 @@ const EventManager = React.createClass({
                     playerPromises.push(TeamHelper.commitPlayers(initialPlayers, players, teamId));
                 }
             });
+
             Promise.all(playerPromises).then(() => {
                 document.location.hash = 'event/' + event.id;
                 binding.clear();
@@ -232,7 +240,7 @@ const EventManager = React.createClass({
     _submitTempCreationMode: function(event, rival, rivalIndex) {
         const self = this;
 
-        self._submitNewTeam(event, rival, rivalIndex, true);
+        return self._submitNewTeam(event, rival, rivalIndex, true);
     },
     _submitTeamCreationMode: function(event, rival, rivalIndex) {
         const self = this,
@@ -300,13 +308,14 @@ const EventManager = React.createClass({
         rivalModel.ages = binding.toJS('model.ages');
         rivalModel.gender = binding.toJS('model.gender');
 
-        return window.Server.participants.post(event.id, rivalModel).then((team) => {
-            return {
-                type:'newTeam',
-                rivalIndex: rivalIndex,
-                team: team
-            }
-        });
+        return window.Server.participants.post(event.id, rivalModel)
+            .then((team) => {
+                return {
+                    type:'newTeam',
+                    rivalIndex: rivalIndex,
+                    team: team
+                }
+            });
     },
     _submitPlayers: function(team, rivalIndex) {
         const self = this,
