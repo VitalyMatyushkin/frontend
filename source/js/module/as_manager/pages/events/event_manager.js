@@ -182,7 +182,6 @@ const EventManager = React.createClass({
             binding = self.getDefaultBinding(),
             rivals = binding.toJS('rivals');
 
-        //Create teams(if it need) and add it to events
         let rivalPromises = [];
         rivals.forEach((rival, rivalIndex) => {
             rivalPromises.push(
@@ -190,30 +189,10 @@ const EventManager = React.createClass({
             );
         });
 
-        //Create players for teams(if need)
-        Promise.all(rivalPromises).then((data) => {
-            let playerPromises = [];
-            data.forEach((teamWrapper) => {
-                if(teamWrapper && teamWrapper.type == 'newTeam') {
-                    playerPromises.push(self._submitPlayers(teamWrapper.team, teamWrapper.rivalIndex));
-                } else if (
-                    teamWrapper &&
-                    teamWrapper.type == 'oldTeam' &&
-                    binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.teamsSaveMode` == 'current')
-                ) {
-                    const initialPlayers = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.prevPlayers`),
-                        players = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.players`),
-                        teamId = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.selectedTeamId`);
-
-                    playerPromises.push(TeamHelper.commitPlayers(initialPlayers, players, teamId));
-                }
-            });
-
-            Promise.all(playerPromises).then(() => {
-                document.location.hash = 'event/' + event.id;
-                binding.clear();
-                binding.meta().clear();
-            });
+        Promise.all(rivalPromises).then(() => {
+            document.location.hash = 'event/' + event.id;
+            binding.clear();
+            binding.meta().clear();
         });
     },
     _submitRival: function(event, rival, rivalIndex) {
@@ -265,6 +244,7 @@ const EventManager = React.createClass({
     },
     _submitOldTeam: function(event, rivalIndex) {
         const self = this,
+            binding = self.getDefaultBinding(),
             teamId = self.getDefaultBinding().toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
 
         return window.Server.relParticipants.put(
@@ -277,10 +257,14 @@ const EventManager = React.createClass({
                 teamId: teamId
             }
         ).then((team) => {
-            return {
-                type:'oldTeam',
-                rivalIndex: rivalIndex,
-                team: team
+            if (binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode` == 'current')) {
+                const initialPlayers = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.prevPlayers`),
+                    players = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`),
+                    teamId = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
+
+                return TeamHelper.commitPlayers(initialPlayers, players, teamId);
+            } else {
+                return team;
             }
         });
     },
@@ -308,13 +292,10 @@ const EventManager = React.createClass({
         rivalModel.ages = binding.toJS('model.ages');
         rivalModel.gender = binding.toJS('model.gender');
 
-        return window.Server.participants.post(event.id, rivalModel)
+        return window.Server.participants
+            .post(event.id, rivalModel)
             .then((team) => {
-                return {
-                    type:'newTeam',
-                    rivalIndex: rivalIndex,
-                    team: team
-                }
+                return self._submitPlayers(team, rivalIndex);
             });
     },
     _submitPlayers: function(team, rivalIndex) {
@@ -373,7 +354,7 @@ const EventManager = React.createClass({
         if(eventType === 'inter-schools') {
             isError = binding.toJS('error.0').isError;
         } else {
-            isError = binding.toJS('error.0').isError || binding.toJS('error.1').isError;
+            isError = !(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError);
         }
 
         return !isError;

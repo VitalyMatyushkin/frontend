@@ -2,7 +2,10 @@ function validate(players, limits) {
     let isError = false,
         text = undefined;
 
-    if(players && (players.length === 0 || players.length < limits.minPlayers)) {
+    if(players && (players.length === 0)) {
+        isError = true;
+        text = `Number of players should be great then 0`;
+    } else if(players && players.length < limits.minPlayers) {
         isError = true;
         text = `Number of players should be great or equal ${limits.minPlayers}`;
     } else if(players && !isSubstitutionCountCorrect(players, limits.maxSubs)) {
