@@ -9,9 +9,7 @@ const   CalendarView    = require('module/ui/calendar/calendar'),
         Superuser       = require('module/helpers/superuser');
 
 const HomeCalender = React.createClass({
-
     mixins:[Morearty.Mixin,DateTimeMixin],
-
     componentWillMount:function(){
         const   self            = this,
                 rootBinding     = self.getMoreartyContext().getBinding(),
@@ -19,7 +17,7 @@ const HomeCalender = React.createClass({
 
         Superuser.runAsSuperUser(rootBinding, () => {
             return window.Server.eventsBySchoolId.get({schoolId:activeSchoolId}).then((events) => {
-                rootBinding.set('events',Immutable.fromJS(events));
+                rootBinding.set('events.models',Immutable.fromJS(events));
             });
         });
     },
