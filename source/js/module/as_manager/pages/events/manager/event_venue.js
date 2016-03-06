@@ -4,6 +4,7 @@
 const   React       = require('react'),
         Map         = require('module/ui/map/map'),
         Immutable   = require('immutable'),
+        FormField 	= require('module/ui/form/form_field'),
         If          = require('module/ui/if/if'),
         ReactDOM    = require('reactDom');
 
@@ -14,7 +15,11 @@ const EventVenue = React.createClass({
     },
     displayName:'EventVenue',
     componentWillMount:function(){
-        this.componentSetupCalls();
+        const   self        = this,
+            binding     = self.getDefaultBinding();
+
+        self.componentSetupCalls();
+        self.addBindingListener(binding, 'postcode.value', self.postcodeSelectionChange);
     },
     componentWillReceiveProps:function(nextProps){
         if(nextProps.sportType !== this.props.sportType){
@@ -28,22 +33,11 @@ const EventVenue = React.createClass({
         if(currentProp === 'inter-schools'){
             window.Server.findPostCodeById.get({postCode:binding.get('rivals.0.postcodeId')})
                 .then(function(postcode){
-                    // TODO: fix me
-                    window.Server.postCode.get({
-                        filter: {
-                            limit:10
-                        }
-                    }).then(function(postcodes){
-                        self.currentPostcode = postcode;
-                        self.refs.home.checked = true;
-                        binding.set('venue',postcode);
-                        binding.set('model.venue.postcode', postcode.id);
-                        binding.set('venueList',postcodes);
-                        self.forceUpdate();
-                    })
-                    .catch(function(er){
-                        console.log(er.errorThrown);
-                    });
+                    self.currentPostcode = postcode;
+                    self.refs.home.checked = true;
+                    binding.set('venue',postcode);
+                    binding.set('model.venue.postcode', postcode.id);
+
                     return postcode;
                 })
                 .catch(function(er){
@@ -51,19 +45,6 @@ const EventVenue = React.createClass({
                 });
             self.neutralVenue = false;
         } else {
-            // TODO: fix me
-            window.Server.postCode.get({
-                filter: {
-                    limit:10
-                }
-            }).then(function(postcodes){
-                binding.set('venue',postcodes[0]);
-                binding.set('model.venue.postcode', postcodes[0].id);
-                binding.set('venueList',postcodes);
-                self.forceUpdate();
-            }).catch(function(er){
-                console.log(er.errorThrown);
-            });
             self.neutralVenue = true;
         }
     },
@@ -138,7 +119,6 @@ const EventVenue = React.createClass({
                 .then(function(postcode){
                     binding.set('venue',postcode);
                     binding.set('model.venue.postcode',postcode.id);
-                    self.forceUpdate();
                     return postcode;
                 })
                 .catch(function(er){
@@ -147,38 +127,21 @@ const EventVenue = React.createClass({
         }else{
             binding.set('venue',self.currentPostcode);
             binding.set('model.venue.postcode',self.currentPostcode.id);
-            self.forceUpdate();
-        }
-    },
-    getPostcodes:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            venueList = binding.get('venueList');
-        if(venueList !== undefined){
-            return venueList.map(function(venue,venueId){
-                return (
-                    <option key={venueId} value={venue.id}>{venue.id}</option>
-                )
-            });
         }
     },
     postcodeSelectionChange:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            selectElement = ReactDOM.findDOMNode(self.refs.postcodes),
-            selectedVal = binding.get('venueList').filter(function(cp){
-                return cp.id === selectElement.value;
-            });
-        binding.set('venue',selectedVal[0]);
-        binding.set('model.venue.postcode',selectedVal[0].id);
-        self.forceUpdate();
+            selectedVal = binding.get('postcode.fullValue');
+        binding.set('venue',selectedVal);
+        binding.set('model.venue.postcode',selectedVal.id);
 
     },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             venuePoint = binding.get('venue'),
-            point = venuePoint!== undefined ? venuePoint.point : {"lat": 50.832949, "lng": -0.246722};
+            point = venuePoint ? venuePoint.point : {"lat": 50.832949, "lng": -0.246722};
         return(
             <div>
                 <span>Change Venue</span>
@@ -191,9 +154,7 @@ const EventVenue = React.createClass({
                 </If>
                 <If condition={self.neutralVenue === true}>
                     <div style={{marginTop:10+'px', marginBottom:10+'px'}}>
-                        <select ref="postcodes" onChange={self.postcodeSelectionChange}>
-                            {self.getPostcodes()}
-                        </select>
+                        <FormField type="area" binding={binding.sub('postcode')} />
                     </div>
                 </If>
                 <div>
