@@ -159,13 +159,16 @@ const EventManager = React.createClass({
     _submit: function() {
         const self = this;
 
-        self._eventSubmit().then((event) => {
-            self.getMoreartyContext().getBinding().update('events.models', function (events) {
-                return events.push(Immutable.fromJS(event));
+        self._eventSubmit()
+            .then((event) => {
+                self.getMoreartyContext().getBinding().update('events.models', function (events) {
+                    return events.push(Immutable.fromJS(event));
+                });
+
+                self._submitRivals(event);
+
+                return event;
             });
-            self._submitRivals(event);
-            return event;
-        });
     },
     _eventSubmit: function() {
         var self = this;
@@ -181,31 +184,15 @@ const EventManager = React.createClass({
 
         let rivalPromises = [];
         rivals.forEach((rival, rivalIndex) => {
-            rivalPromises.push(self._submitRival(event, rival, rivalIndex));
+            rivalPromises.push(
+                self._submitRival(event, rival, rivalIndex)
+            );
         });
-        Promise.all(rivalPromises).then((data) => {
-            //Create players for temp team
-            let playerPromises = [];
-            data.forEach((teamWrapper) => {
-                if(teamWrapper && teamWrapper.type == 'newTeam') {
-                    playerPromises.push(self._submitPlayers(teamWrapper.team, teamWrapper.rivalIndex));
-                } else if (
-                    teamWrapper &&
-                    teamWrapper.type == 'oldTeam' &&
-                    binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.teamsSaveMode` == 'current')
-                ) {
-                    const initialPlayers = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.prevPlayers`),
-                        players = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.players`),
-                        teamId = binding.toJS(`teamModeView.teamWrapper.${teamWrapper.rivalIndex}.selectedTeamId`);
 
-                    playerPromises.push(TeamHelper.commitPlayers(initialPlayers, players, teamId));
-                }
-            });
-            Promise.all(playerPromises).then(() => {
-                document.location.hash = 'event/' + event.id;
-                binding.clear();
-                binding.meta().clear();
-            });
+        Promise.all(rivalPromises).then(() => {
+            document.location.hash = 'event/' + event.id;
+            binding.clear();
+            binding.meta().clear();
         });
     },
     _submitRival: function(event, rival, rivalIndex) {
@@ -232,7 +219,7 @@ const EventManager = React.createClass({
     _submitTempCreationMode: function(event, rival, rivalIndex) {
         const self = this;
 
-        self._submitNewTeam(event, rival, rivalIndex, true);
+        return self._submitNewTeam(event, rival, rivalIndex, true);
     },
     _submitTeamCreationMode: function(event, rival, rivalIndex) {
         const self = this,
@@ -257,6 +244,7 @@ const EventManager = React.createClass({
     },
     _submitOldTeam: function(event, rivalIndex) {
         const self = this,
+            binding = self.getDefaultBinding(),
             teamId = self.getDefaultBinding().toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
 
         return window.Server.relParticipants.put(
@@ -269,10 +257,14 @@ const EventManager = React.createClass({
                 teamId: teamId
             }
         ).then((team) => {
-            return {
-                type:'oldTeam',
-                rivalIndex: rivalIndex,
-                team: team
+            if (binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode` == 'current')) {
+                const initialPlayers = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.prevPlayers`),
+                    players = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`),
+                    teamId = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
+
+                return TeamHelper.commitPlayers(initialPlayers, players, teamId);
+            } else {
+                return team;
             }
         });
     },
@@ -300,13 +292,11 @@ const EventManager = React.createClass({
         rivalModel.ages = binding.toJS('model.ages');
         rivalModel.gender = binding.toJS('model.gender');
 
-        return window.Server.participants.post(event.id, rivalModel).then((team) => {
-            return {
-                type:'newTeam',
-                rivalIndex: rivalIndex,
-                team: team
-            }
-        });
+        return window.Server.participants
+            .post(event.id, rivalModel)
+            .then((team) => {
+                return self._submitPlayers(team, rivalIndex);
+            });
     },
     _submitPlayers: function(team, rivalIndex) {
         const self = this,
@@ -364,7 +354,7 @@ const EventManager = React.createClass({
         if(eventType === 'inter-schools') {
             isError = binding.toJS('error.0').isError;
         } else {
-            isError = binding.toJS('error.0').isError || binding.toJS('error.1').isError;
+            isError = !(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError);
         }
 
         return !isError;
