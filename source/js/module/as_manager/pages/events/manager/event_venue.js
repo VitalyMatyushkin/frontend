@@ -30,23 +30,27 @@ const EventVenue = React.createClass({
         const   self        = this,
                 binding     = self.getDefaultBinding(),
                 currentProp = prop !== undefined?prop:self.props.sportType;
-        if(currentProp === 'inter-schools'){
-            window.Server.findPostCodeById.get({postCode:binding.get('rivals.0.postcodeId')})
-                .then(function(postcode){
-                    self.currentPostcode = postcode;
-                    self.refs.home.checked = true;
-                    binding.set('venue',postcode);
-                    binding.set('model.venue.postcode', postcode.id);
 
-                    return postcode;
-                })
-                .catch(function(er){
-                    console.log(er);
-                });
+        let postCode;
+        if(currentProp === 'inter-schools'){
             self.neutralVenue = false;
+            postCode = binding.get('rivals.0.postcodeId');
         } else {
             self.neutralVenue = true;
+            postCode = binding.get('schoolInfo.postcodeId');
         }
+        window.Server.findPostCodeById.get({postCode:postCode})
+            .then(function(postcode){
+                self.currentPostcode = postcode;
+                self.refs.home && (self.refs.home.checked = true);
+                binding.set('venue',postcode);
+                binding.set('model.venue.postcode', postcode.id);
+
+                return postcode;
+            })
+            .catch(function(er){
+                console.log(er);
+            });
     },
     onRadioButtonChange:function(reference){
         var self = this,
@@ -154,7 +158,7 @@ const EventVenue = React.createClass({
                 </If>
                 <If condition={self.neutralVenue === true}>
                     <div style={{marginTop:10+'px', marginBottom:10+'px'}}>
-                        <FormField type="area" binding={binding.sub('postcode')} />
+                        <FormField type="area" field="postcodeId" defaultItem={self.currentPostcode} binding={binding.sub('postcode')} />
                     </div>
                 </If>
                 <div>
