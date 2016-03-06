@@ -1,18 +1,19 @@
-const   If          = require('module/ui/if/if'),
-        Manager     = require('module/ui/managers/manager'),
-        React       = require('react'),
-        classNames  = require('classnames'),
-        Immutable   = require('immutable');
+const   If              = require('module/ui/if/if'),
+        Manager         = require('module/ui/managers/manager'),
+        React           = require('react'),
+        classNames      = require('classnames'),
+        TeamSubmitMixin = require('module/ui/managers/helpers/team_submit_mixin'),
+        Promise         = require('bluebird'),
+        Immutable       = require('immutable');
 
 const InviteAcceptView = React.createClass({
-    mixins: [Morearty.Mixin],
+    mixins: [Morearty.Mixin, TeamSubmitMixin],
     display: 'InviteAccept',
     componentWillMount: function () {
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             binding = self.getDefaultBinding(),
-            inviteId = rootBinding.get('routing.pathParameters.0'),
-            mode = rootBinding.get('routing.pathParameters.1');
+            inviteId = rootBinding.get('routing.pathParameters.0');
 
         window.Server.invitesFindOne.get({
             filter: {
@@ -58,68 +59,34 @@ const InviteAcceptView = React.createClass({
         });
     },
     onClickAccept: function () {
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self = this;
 
         if(self._isEventDataCorrect()) {
-            let mode = binding.get('mode.0');
-
-            switch (mode) {
-                case 'teams':
-                    window.Server.relParticipants.put(
-                        {
-                            eventId: binding.get('model.id'),
-                            teamId: binding.get('teamModeView.teamViewer.0.selectedTeamId')
-                        },
-                        {
-                            eventId: binding.get('model.id'),
-                            teamId: binding.get('teamModeView.teamViewer.0.selectedTeamId')
-                        }
-                    ).then(() => {
-                        return window.Server.inviteRepay.post({inviteId: binding.get('invite.id')}, {
-                            teamId: binding.get('teamModeView.teamViewer.0.selectedTeamId'),
-                            accepted: true
-                        }).then((res) => {
-                            document.location.hash = '#event/' + binding.get('model.id');
-                            return res;
-                        });
-                    });
-                    break;
-                case 'temp':
-                    window.Server.participants.post({eventId: binding.get('model.id')}, {
-                        eventId: binding.get('model.id'),
-                        schoolId: binding.get('rivals.0.id'),
-                        sportId: binding.get('model.sportId'),
-                        name: binding.get('rivals.0.name')
-                    }).then(function (res) {
-
-                        window.Server.inviteRepay.post({inviteId: binding.get('invite.id')}, {
-                            teamId: res.id,
-                            accepted: true
-                        });
-
-                        binding.get('players.0').forEach(function (student, studentIndex) {
-                            window.Server.playersRelation.put({
-                                teamId: res.id,
-                                studentId: student.get('id')
-                            }).then(function (res) {
-                                binding.sub('players.0.' + studentIndex).meta().set('sync', true);
-
-                                var allSynced = binding.get('players.0').every(function (model, modelIndex) {
-                                    return binding.sub('players.0.' + modelIndex).meta().get('sync');
-                                });
-
-                                if (allSynced) {
-                                    document.location.hash = '#event/' + binding.get('model.id');
-                                }
-                                return res;
-                            });
-                        });
-                        return res;
-                    });
-                    break;
-            };
+            self._submit();
         }
+    },
+    _submit: function() {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            promises = self._submitRival(
+                binding.toJS('model'),
+                binding.toJS('rivals.0'),
+                0
+            );
+
+        Promise.all(promises).then((data) => {
+            data.forEach((elem) => {
+                if(elem.teamId !== undefined) {
+                    window.Server.inviteRepay.post({inviteId: binding.get('invite.id')}, {
+                        teamId: elem.teamId,
+                        accepted: true
+                    }).then(() => {
+                        document.location.hash = '#event/' + binding.get('model.id');
+                        return true;
+                    });
+                }
+            });
+        });
     },
     _isEventDataCorrect: function() {
         const self = this;

@@ -73,8 +73,6 @@ function getPlayers(players, team) {
     return result;
 };
 
-
-
 function commitPlayers(initialPlayers, players, teamId) {
     let promises = [];
 
