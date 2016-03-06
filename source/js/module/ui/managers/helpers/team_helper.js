@@ -90,7 +90,7 @@ function commitPlayers(initialPlayers, players, teamId) {
             if(findedPlayer.sub !== initialPlayer.sub) {
                 changes.sub = findedPlayer.sub;
             }
-            if(!changes.position || !changes.sub) {
+            if(changes.position !== undefined || changes.sub !== undefined) {
                 promises.push(
                     _changePlayer(
                         teamId,
