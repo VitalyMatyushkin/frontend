@@ -17,6 +17,20 @@ const HomeFixtures = React.createClass({
 
         self._setFixturesByDate(binding.toJS('currentDate'));
 
+        //Get all evens for calendar
+        //Superuser.runAsSuperUser(rootBinding, () => {
+        //    return window.Server.fixturesBySchoolId.get(
+        //        {
+        //            schoolId: activeSchoolId,
+        //            filter: {
+        //                order: 'startTime ASC'
+        //            }
+        //        }).then((events) => {
+        //            binding.set('models',Immutable.fromJS(events));
+        //        }
+        //    );
+        //});
+
         binding.sub('selectDay').addListener((descriptor) => {
             self._setFixturesByDate(descriptor.getCurrentValue().date);
         });
