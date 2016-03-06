@@ -1,10 +1,6 @@
 const 	RouterView 		= require('module/core/router'),
 		Route 			= require('module/core/route'),
 		PublicLogin 	= require('module/ui/menu/public_login'),
-		LoginRoute 		= require('module/core/routes/login_route'),
-		LogoutRoute 	= require('module/core/routes/logout_route'),
-		RegisterRoute 	= require('module/core/routes/register_route'),
-		VerifyRoute 	= require('module/core/routes/verify_route'),
 		React 			= require('react');
 
 const Center = React.createClass({
@@ -17,30 +13,44 @@ const Center = React.createClass({
 			binding = self.getDefaultBinding(),
 			currentPage =  binding.get('routing.currentPageName') || '',
 			mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
-//        <RegisterRoute binding={binding.sub('form.register')}  />
-//        <LoginRoute binding={binding.sub('userData')}  />
-//<LogoutRoute binding={binding.sub('userData')}  />
-//<VerifyRoute binding={binding.sub('userData')} />
+
 		return (
 			<div className={mainClass}>
 				<div className="bPageWrap">
 					<PublicLogin binding={binding} />
-					<RouterView routes={ binding.sub('routing') } binding={binding}>
-						<Route path="/ /school /school/:subPage" binding={binding.sub('schoolProfile')} component="module/as_school/pages/school/school_page"  />
-						<Route path="/fixtures" binding={binding.sub('schoolFixtures')} component="module/as_school/pages/fixtures/fixtures_page"  />
-						<Route path="/event" binding={binding.sub('schoolEvent')} component="module/as_school/pages/event/event_page"  />
-						<Route path="/calendar" binding={binding.sub('schoolCalendar')} component="module/as_school/pages/calendar/calendar_page"  />
-						<Route path="/opponents/:subPage" binding={binding.sub('opponentsList')} component="module/as_school/pages/opponents/opponents_page"  />
+					<RouterView routes={binding.sub('routing')} binding={binding}>
+						<Route path="/ /school /school/:subPage"
+							   binding={binding.sub('schoolProfile')}
+							   component="module/as_school/pages/school/school_page"/>
 
-						<Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/ui/gallery/albums"  />
-                        <Route path="/ /home" binding={binding.sub('schoolHomePage')} component="module/as_school/pages/school_home/home"  />
+						<Route path="/fixtures"
+							   binding={binding.sub('schoolFixtures')}
+							   component="module/as_school/pages/fixtures/fixtures_page"/>
+
+						<Route path="/event"
+							   binding={binding.sub('schoolEvent')}
+							   component="module/as_school/pages/event/event_page"/>
+
+						<Route path="/calendar"
+							   binding={binding.sub('schoolCalendar')}
+							   component="module/as_school/pages/calendar/calendar_page"/>
+
+						<Route path="/opponents/:subPage"
+							   binding={binding.sub('opponentsList')}
+							   component="module/as_school/pages/opponents/opponents_page"/>
+
+						<Route path="/albums /albums/:albumId"
+							   binding={binding.sub('albums')}
+							   component="module/ui/gallery/albums"/>
+
+                        <Route path="/ /home"
+							   binding={binding.sub('schoolHomePage')}
+							   component="module/as_school/pages/school_home/home"/>
                     </RouterView>
-
 				</div>
 			</div>
 		)
 	}
 });
-
 
 module.exports = Center;
