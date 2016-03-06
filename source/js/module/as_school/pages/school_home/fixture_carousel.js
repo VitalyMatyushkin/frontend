@@ -34,14 +34,17 @@ FixtureCarousel = React.createClass({
         }
     },
     _sortFixtureData:function(data){
-        var self = this;
-        if(data !== undefined && data !== null){
+        const self = this;
+
+        let result = '';
+
+        if(data !== undefined && data !== null && data.length != 0){
             var sortedByStatus = data;
             // TODO What about when we do not have closed fixtures?
             //    data.filter(function(f){
             //    return f.status === 'closed';
             //});
-            return (
+            result = (
                 <div>
                     <div className="blogAuthorPicCarousel">
                         <div className="fixtureCarouselSchoolPic">
@@ -65,11 +68,14 @@ FixtureCarousel = React.createClass({
                 </div>
             );
         }
+
+        return result;
     },
-    render:function(){
+    render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
             sortedFixture = self._sortFixtureData(binding.toJS());
+
         return (
             <div className="testChildren">
                 {sortedFixture}

@@ -23,6 +23,7 @@ const FixturesPage = React.createClass({
 			},
 			menuItems: [],
 			fixtures: [],
+			fixturesSync: false,
 			opponentInfo: {}
 		});
 	},
