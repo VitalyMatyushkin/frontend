@@ -83,6 +83,7 @@ const TeamEditPage = React.createClass({
                 .set('initialPlayers', Immutable.fromJS(TeamHelper.getPlayers(_players, team)))
                 .set('teamForm.isHouseFilterEnable', Immutable.fromJS(self._isHouseFilterEnable(team)))
                 .set('teamForm.isHouseSelected', Immutable.fromJS(self._isHouseSelected(team)))
+                .set('teamForm.removedPlayers', Immutable.fromJS([]))
                 .commit();
         });
     },
