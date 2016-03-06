@@ -85,8 +85,11 @@ const Manager = React.createClass({
             defaultBinding = self.getDefaultBinding(),
             binding = self.getBinding();
 
-        defaultBinding.sub('selectedRivalIndex').addListener((descriptor) => {
+        defaultBinding.sub('selectedRivalIndex').addListener(() => {
             defaultBinding.set('teamModeView.selectedRivalIndex', defaultBinding.toJS('selectedRivalIndex'))
+        });
+        defaultBinding.sub('mode').addListener(() => {
+            self._validate(defaultBinding.toJS('selectedRivalIndex'));
         });
         binding.players.sub(0).addListener(() => {
             self._validate(0);

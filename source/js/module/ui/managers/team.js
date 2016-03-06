@@ -7,12 +7,23 @@ var Team,
 Team = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'Team',
+    TEXT: {
+        POSITIONS: {
+            OPTIONS: {
+                NOT_SELECTED: 'Not selected'
+            }
+        }
+    },
     _onSelectPosition: function(playerId, e) {
         const self = this,
               players = self.getBinding('players').toJS();
 
         const index = Lazy(players).indexOf(Lazy(players).findWhere({id:playerId}));
-        players[index].position = e.target.value;
+        if(self.TEXT.POSITIONS.OPTIONS.NOT_SELECTED == e.target.value) {
+            players[index].position = undefined;
+        } else {
+            players[index].position = e.target.value;
+        }
 
         self.getBinding('players').set(Immutable.fromJS(players));
     },
@@ -25,22 +36,42 @@ Team = React.createClass({
 
         self.getBinding('players').set(Immutable.fromJS(players));
     },
+    _onRemovePlayer: function (playerId) {
+        const self = this,
+            players = self.getBinding('players').toJS();
+
+        const findedPlayer = Lazy(players).findWhere({id:playerId}),
+            index = Lazy(players).indexOf(findedPlayer);
+
+        players.splice(index, 1);
+
+        self.getBinding('players').set(Immutable.fromJS(players));
+        self.props.onRemovePlayer && self.props.onRemovePlayer(findedPlayer);
+    },
     _renderPositionOptions: function(player) {
         const self = this,
               positions = self.getDefaultBinding().get('model.sportModel.limits.positions').toJS();
 
         let renderedPosition = [];
 
+        //Add NOT SELECTED option
+        //If player doesn't has position - set this option as selected
         if(player.position === undefined) {
-            renderedPosition.push(<option key={0} disabled="disabled" selected="selected">Select position</option>);
+            renderedPosition.push(
+                <option key={'0_position'} selected="selected">{self.TEXT.POSITIONS.OPTIONS.NOT_SELECTED}</option>
+            );
+        } else {
+            renderedPosition.push(<option key={'0_position'}>Not selected</option>);
         }
 
         renderedPosition.push(
             positions.map((position, i) => {
+                const key = `${i + 1}_position`;
+
                 if(position === player.position) {
-                    return (<option key={i + 1} value={position} selected="selected">{position}</option>);
+                    return (<option key={key} value={position} selected="selected">{position}</option>);
                 } else {
-                    return (<option key={i + 1} value={position}>{position}</option>);
+                    return (<option key={key} value={position}>{position}</option>);
                 }
             })
         );
@@ -68,7 +99,7 @@ Team = React.createClass({
 
         }
     },
-    _getPlayers: function () {
+    _renderPlayers: function () {
         const self = this,
               players = self.getBinding('players');
 
@@ -92,33 +123,6 @@ Team = React.createClass({
             );
         }).toArray();
     },
-    _onRemovePlayer: function (playerId) {
-        const self = this,
-            players = self.getBinding('players').toJS();
-
-        const findedPlayer = Lazy(players).findWhere({id:playerId}),
-            index = Lazy(players).indexOf(findedPlayer);
-
-        players.splice(index, 1);
-
-        self.getBinding('players').set(Immutable.fromJS(players));
-        self.props.onRemovePlayer && self.props.onRemovePlayer(findedPlayer);
-    },
-    /*
-    _saveRemovedPlayer: function(player) {
-        const self = this,
-            removedPlayers = self.getDefaultBinding().toJS('removedPlayers'),
-            findedPlayer = Lazy(removedPlayers).findWhere({id:player.id});
-
-        if(findedPlayer) {
-            removedPlayers[Lazy(removedPlayers).indexOf(findedPlayer)] = player;
-        } else {
-            removedPlayers.push(player);
-        }
-
-        self.getDefaultBinding('removedPlayers').set(Immutable.fromJS(removedPlayers));
-    },
-    */
     render: function() {
         const self = this,
             rivalId  = self.getBinding('rivalId').toJS();
@@ -136,7 +140,7 @@ Team = React.createClass({
                         </tr>
                         </thead>
                         <tbody>
-                        {self._getPlayers()}
+                        {self._renderPlayers()}
                         </tbody>
                     </table>
                 </div>
