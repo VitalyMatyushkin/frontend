@@ -42,6 +42,7 @@ const TeamAddPage = React.createClass({
                     .atomically()
                     .set('teamForm.default',             Immutable.fromJS(self._getDefaultObject(schoolData)))
                     .set('teamForm.sports',              Immutable.fromJS(sportsData))
+                    .set('teamForm.gender',              Immutable.fromJS('male'))
                     .set('teamForm.players',             Immutable.fromJS([]))
                     .set('teamForm.availableAges',       Immutable.fromJS(TeamHelper.getAges(schoolData)))
                     .set('teamForm.selectedRivalIndex',  Immutable.fromJS(self._getFakeRivalIndex()))
