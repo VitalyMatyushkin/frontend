@@ -60,6 +60,7 @@ const EventManagerBase = React.createClass({
                         options: 'i'
                     }
                 },
+                include:'postcode',
                 limit: 10
             }
         });
