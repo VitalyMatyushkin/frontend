@@ -62,7 +62,6 @@ EventVenue = React.createClass({
 
         binding.set('venue',postcode);
         binding.set('model.venue.postcode',postcode.id);
-        self.forceUpdate();// for map props update
     },
     postcodeSelectionChange:function(){
         var self = this,
