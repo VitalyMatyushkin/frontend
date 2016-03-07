@@ -292,11 +292,32 @@ const TeamWrapper = React.createClass({
                         {'Save to selected team'}
                     </label>
                 </div>
+                <If condition={self._isShowNewTeamNameInput()}>
+                    <div className="eForm_fieldInput">
+                        <input id={'new-team-name'}
+                               type={'text'}
+                               placeholder={'Enter new team name'}
+                               onChange={self._onChangeNewTeamName}
+                               value={binding.toJS('newTeamName')}
+                        />
+                    </div>
+                </If>
                 <div className="bButton" onClick={self._onRevertChangesButtonClick}>
                     {'Revert changes'}
                 </div>
             </div>
         );
+    },
+    _isShowNewTeamNameInput: function() {
+        const self = this;
+
+        return self.getDefaultBinding().toJS('teamsSaveMode') == 'new';
+    },
+    _onChangeNewTeamName: function(event) {
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('newTeamName', Immutable.fromJS(event.target.value));
     },
     /**
      * Handler for click to revert changes button
