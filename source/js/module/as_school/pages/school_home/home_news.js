@@ -15,7 +15,7 @@ const HomeNews = React.createClass({
                 activeSchoolId  = rootBinding.get('activeSchoolId');
 
         Superuser.runAsSuperUser(rootBinding, () => {
-            window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:3}}).then((schoolNews) => {
+            window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:20}}).then((schoolNews) => {
                 binding
                     .atomically()
                     .set('schoolNews',Immutable.fromJS(schoolNews))
@@ -68,6 +68,7 @@ const HomeNews = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             news = binding.toJS('schoolNews');
+
         if(news !== undefined){
             return news.map(function(newsItem, i){
                 var classes ="",
