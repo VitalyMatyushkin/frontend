@@ -6,9 +6,8 @@ const   React       = require('react'),
         Immutable   = require('immutable'),
         FormField 	= require('module/ui/form/form_field'),
         If          = require('module/ui/if/if'),
-        ReactDOM    = require('reactDom');
 
-const EventVenue = React.createClass({
+EventVenue = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         sportType:React.PropTypes.string
@@ -54,10 +53,6 @@ const EventVenue = React.createClass({
             binding.set('radio', reference);
 
         self.callService();
-    },
-    checkStatus:function(el){
-        var self = this;
-        return ReactDOM.findDOMNode(self.refs[el]).checked;
     },
     callService:function(){
         var self = this,
