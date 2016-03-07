@@ -93,13 +93,16 @@ const TeamSubmitMixin = {
             tempTeam: isTemp
         };
 
-        switch (event.type) {
-            case 'internal':
-                rivalModel.name = rival.name;
-                break;
-            case 'houses':
-                rivalModel.houseId = rival.id;
-                break;
+
+        if(binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode`) == 'new') {
+            //if we create new team base on old team - we should get new name
+            rivalModel.name = binding.get(`teamModeView.teamWrapper.${rivalIndex}.newTeamName`);
+        } else if(event.type == 'internal') {
+            rivalModel.name = rival.name;
+        }
+
+        if(event.type == 'houses') {
+            rivalModel.houseId = rival.id;
         }
 
         rivalModel.ages = binding.toJS('model.ages');
