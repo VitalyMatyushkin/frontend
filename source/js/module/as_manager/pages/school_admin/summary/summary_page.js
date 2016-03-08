@@ -2,6 +2,7 @@ const   SVG         = require('module/ui/svg'),
         Map         = require('module/ui/map/map'),
         React       = require('react'),
         If          = require('module/ui/if/if'),
+        ActiveUserHelper = require('module/helpers/activeUser_helper'),
         Immutable   = require('immutable');
 
 const SchoolSummary = React.createClass({
@@ -21,6 +22,8 @@ const SchoolSummary = React.createClass({
 			}
         ).then(function(data) {
             binding.set(Immutable.fromJS(data));
+            ActiveUserHelper.howManySchools(self); //Lets query for number of schools related to user.
+            return data;
         });
     },
     componentWillUnmount: function() {
@@ -31,16 +34,19 @@ const SchoolSummary = React.createClass({
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
+            metaBinding = binding.meta(),
             schoolPicture = binding.get('pic'),
             siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
-
     return (
         <div>
           <div className="changeSchool">
-            <a title="Change active school" href="/#schools" className="addButton">
-              <SVG icon="icon_change_school" />
-            </a>
+              {/*Check if the current user has more than one schools listed against him/her before showing swap icon*/}
+              <If condition={metaBinding.get('numOfSchools') > 1 }>
+                  <a title="Change active school" href="/#schools" className="addButton">
+                      <SVG icon="icon_change_school" />
+                  </a>
+              </If>
           </div>
           <div className="eSchoolMaster_summary">
             <div className="summary_inside">
