@@ -2,7 +2,7 @@
  * Created by bridark on 08/07/15.
  */
 const   Popup       = require('module/ui/popup'),
-        GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+        GrantRole   = require('./request_popup'),
         RoleList    = require('./role_list'),
         React       = require('react'),
         SVG         = require('module/ui/svg'),
