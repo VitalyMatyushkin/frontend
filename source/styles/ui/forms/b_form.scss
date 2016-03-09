@@ -21,7 +21,7 @@
 
 .eForm_fieldInput {
   display: inline-block;
-  margin-right: 10px;
+  margin-right: 30px;
   position: relative;
 }
 .eForm_fieldInput textarea{
@@ -75,10 +75,10 @@
   position: relative;
 }
 
-$INVALID_COLOR: rgb(182, 0, 0);
+$INVALID_COLOR: #d3978f;
 
 .eForm_fieldValidText{
-  padding: 0 5px;
+  padding: 5px;
   display: none;
   position: absolute;
   right: 0;
@@ -90,23 +90,27 @@ $INVALID_COLOR: rgb(182, 0, 0);
   position: relative;
   padding-right: 15px;
 }
+.eForm_fieldSet input:focus {
+  border: 1px solid #bfce88;
+  box-shadow: inset 1px 1px #6e7848;
+}
 
 .eForm_fieldSet.mValid{
-  color: green;
+  color: $MAIN_COLOR;
 
   .eForm_fieldValidText{
     display: block;
   }
   input{
-    border: 1px solid green;
-    color: green;
+    border: 1px solid $MAIN_COLOR;
+    color: $MAIN_COLOR;
   }
 }
 
 .eForm_fieldSet.mInvalid{
   color: $INVALID_COLOR;
   .mNotRequired{
-    color: $BodyColor;
+    color: #a9a9a9;
   }
   .eForm_fieldValidText{
     display: block;
@@ -215,12 +219,12 @@ $INVALID_COLOR: rgb(182, 0, 0);
 .editStudentForm input[type="text"]{
   width: 100px;
   border: none;
+  box-shadow: none;
 }
 .editStudentForm .dateFormat{
   display: none;
 }
 .editStudentForm .eCombobox_input{
-  max-width: 150px;
   border: none;
 }
 .editStudentForm textarea{
@@ -317,4 +321,7 @@ $INVALID_COLOR: rgb(182, 0, 0);
 }
 .eForm_conditions a:hover{
   color: $COLOR;
+}
+.eForm_fieldSet.mInvalid .eForm_conditions {
+  color: $INVALID_COLOR
 }
