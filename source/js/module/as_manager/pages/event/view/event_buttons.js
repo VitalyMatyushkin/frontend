@@ -104,7 +104,7 @@ const EventHeader = React.createClass({
                 mDisable: !self.isEnableClose()
             });
 		return (
-        <If condition={self.isOwner() && !binding.get('model.resultId') && isManager}>
+        <If condition={!binding.get('model.resultId') && isManager}>
             <div className="bEventButtons">
                 <If condition={binding.get('mode') === 'general'}>
                     <div

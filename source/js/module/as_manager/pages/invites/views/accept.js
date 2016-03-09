@@ -103,13 +103,7 @@ const InviteAcceptView = React.createClass({
                 players:            binding.sub('players'),
                 error:              binding.sub('error')
             },
-            sport = binding.sub('model.sport'),
-            ready = binding.get('sync') && binding.get('players.0').count() >= sport.get('limits.minPlayers'),
-            buttonClasses = classNames({
-                bButton: true,
-                mButton_leftSidePosition: true,
-                mDisable: !ready
-            });
+            sport = binding.sub('model.sport');
 
         return (
             <div className="bInviteAccept">
@@ -123,8 +117,8 @@ const InviteAcceptView = React.createClass({
                         <div className="eInviteAccept_footerLeftSide">
                         </div>
                         <div className="eInviteAccept_footerRightSide">
-                            <span className={buttonClasses}
-                                  onClick={ready ? self.onClickAccept : null}>Accept</span>
+                            <span className='bButton mButton_leftSidePosition'
+                                  onClick={self.onClickAccept}>Accept</span>
                         </div>
                     </div>
                 </div>
