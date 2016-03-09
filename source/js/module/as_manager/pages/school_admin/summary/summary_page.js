@@ -3,6 +3,7 @@ const   SVG         = require('module/ui/svg'),
         React       = require('react'),
         If          = require('module/ui/if/if'),
         ActiveUserHelper = require('module/helpers/activeUser_helper'),
+        Promise     = require('bluebird'),
         Immutable   = require('immutable');
 
 const SchoolSummary = React.createClass({
@@ -10,6 +11,7 @@ const SchoolSummary = React.createClass({
     componentWillMount: function() {
         var self = this,
             binding = self.getDefaultBinding(),
+            metaBinding = binding.meta(),
             globalBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
@@ -22,7 +24,10 @@ const SchoolSummary = React.createClass({
 			}
         ).then(function(data) {
             binding.set(Immutable.fromJS(data));
-            ActiveUserHelper.howManySchools(self); //Lets query for number of schools related to user.
+            Promise.resolve(ActiveUserHelper.howManySchools(self))
+                .then(function(val){
+                    metaBinding.set('countOfSchools',val.length);
+                }).catch(function(shit){console.log(shit+' happened')});
             return data;
         });
     },
@@ -42,7 +47,7 @@ const SchoolSummary = React.createClass({
         <div>
           <div className="changeSchool">
               {/*Check if the current user has more than one schools listed against him/her before showing swap icon*/}
-              <If condition={metaBinding.get('numOfSchools') > 1 }>
+              <If condition={metaBinding.get('countOfSchools') > 1 }>
                   <a title="Change active school" href="/#schools" className="addButton">
                       <SVG icon="icon_change_school" />
                   </a>
