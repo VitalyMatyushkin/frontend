@@ -108,6 +108,7 @@ const ComboBox2 = React.createClass({
                 currentIndex:           undefined
             });
             searchResult.async.then((data) => {
+                console.log(data);
                 self.setState({
                     isLoading:  false,
                     isOpen:     true,
