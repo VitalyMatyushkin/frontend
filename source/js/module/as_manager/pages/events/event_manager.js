@@ -63,7 +63,7 @@ const EventManager = React.createClass({
                 where: {
                     id: activeSchoolId
                 },
-                include: 'forms'
+                include: ['forms', 'postcode']
             }
         }).then(function (res) {
             res.forms = res.forms || [];
