@@ -69,12 +69,10 @@ AllChallengesList = React.createClass({
                 var eventDate = new Date(childEv.get('startTime')),
                     hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
                     stringDate = self.formatDate(childEv.get('startTime')),
-                    sport = self.getSportIcon(childEv.get('sport').get('name')),
-                    isHoveredDay =  hoverDay &&
-                        hoverDay.getMonth() === eventDate.getMonth() &&
-                        hoverDay.getDate() === eventDate.getDate();
+                    sport = self.getSportIcon(childEv.get('sport').get('name'));
+
                 return(
-                    <div key={childEvInd} className={isHoveredDay?'eChallenge eChallenge_basicMod mActive':'eChallenge eChallenge_basicMod'} onClick={self.onClickEvent.bind(null, childEv.get('id'))}>
+                    <div key={childEvInd} className={'eChallenge eChallenge_basicMod'} onClick={self.onClickEvent.bind(null, childEv.get('id'))}>
                         <span className="eChallenge_sport">{sport}</span>
                         <span className="eChallenge_date">{stringDate}</span>
                         <div className="eChallenge_name">{childEv.get('name')}</div>

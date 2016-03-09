@@ -1,9 +1,55 @@
 const   React           = require('react'),
         InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+        Immutable       = require('immutable'),
         Sport           = require('module/ui/icons/sport_icon'),
 
 ChallengesList = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
+    componentWillMount: function() {
+        const self = this;
+
+        self._initBinding();
+        self._addListeners();
+    },
+    _initBinding: function() {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            currentCalendarDate = binding.toJS('calendar.currentDate');
+
+        if(currentCalendarDate) {
+            self._setFixturesByDate(currentCalendarDate);
+        } else {
+            binding.set('selectedDayFixtures', Immutable.fromJS([]));
+        }
+    },
+    _addListeners: function() {
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.sub('calendar.selectDay').addListener((descriptor) => {
+            self._setFixturesByDate(descriptor.getCurrentValue().date);
+        });
+    },
+    _setFixturesByDate:function(date) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            allFixtures = binding.toJS('models');
+
+        let selectedDayFixture = [];
+
+        if(allFixtures && allFixtures.length != 0) {
+            selectedDayFixture.push(
+                allFixtures.filter((event) => {
+                    const eventDate = new Date(event.startTime).toLocaleDateString(),
+                        currentDate = date.toLocaleDateString();
+
+                    return currentDate == eventDate;
+                })
+            );
+        }
+
+        binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
+    },
     getRivalName: function(event, order) {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -50,7 +96,7 @@ ChallengesList = React.createClass({
         const self = this,
             binding = self.getDefaultBinding(),
             currentDate = binding.get('calendar.currentDate'),
-            sync = binding.toJS('sync') && binding.toJS('sports.sync');
+            sync = binding.toJS('syncCurrentDayFixtures') && binding.toJS('sports.sync');
 
         let result;
 
@@ -61,7 +107,7 @@ ChallengesList = React.createClass({
                 </div>
             );
         } else {
-            const events = binding.get('models').filter(function (event) {
+            const events = binding.get('selectedDayFixtures').filter(function (event) {
                 var eventDate = new Date(event.get('startTime'));
 
                 return eventDate.getMonth() === currentDate.getMonth() &&
@@ -71,14 +117,10 @@ ChallengesList = React.createClass({
             if(events.count) {
                 result = events.map(function (event) {
                     var eventDate = new Date(event.get('startTime')),
-                        hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
-                        isHoverDay = hoverDay &&
-                            hoverDay.getMonth() === eventDate.getMonth() &&
-                            hoverDay.getDate() === eventDate.getDate(),
                         stringDate = self.formatDate(event.get('startTime')),
                         sport = self.getSportIcon(event.get('sport').get('name'));
 
-                    return <div key={'event-' + event.get('id')} className={isHoverDay ? 'eChallenge mActive' : 'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
+                    return <div key={'event-' + event.get('id')} className={'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
                         <span className="eChallenge_sport">{sport}</span>
                         <span className="eChallenge_date">{stringDate}</span>
 

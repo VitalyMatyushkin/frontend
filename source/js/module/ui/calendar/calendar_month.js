@@ -1,4 +1,3 @@
-
 var classNames = require('classnames'),
 		React = require('react'),
 		ReactDOM = require('reactDom'),
@@ -156,7 +155,6 @@ CalendarMonthView = React.createClass({
 				mPrev: day.prev || false,
                 mNext: day.next || false,
 				mFirst: i === 0,
-				mHover: hoverDay && self.equalDates(day.date, hoverDay.date),
                 mActive: day.events && day.events.count() > 0,
                 mSelect: selectDay && self.equalDates(day.date, selectDay.date)
 			});
@@ -164,9 +162,7 @@ CalendarMonthView = React.createClass({
 			return <span
                 className={classes}
 				key={i}
-                onClick={self.onSelectDay.bind(null, day)}
-                onMouseLeave={self.onMouseLeaveDay}
-                onMouseEnter={self.onMouseEnterDay.bind(null, day)}>{day.day}</span>;
+                onClick={self.onSelectDay.bind(null, day)}>{day.day}</span>;
 		})}</div>;
 	},
 	renderDaysOfWeek: function () {
