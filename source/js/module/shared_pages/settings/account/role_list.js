@@ -25,12 +25,15 @@ RoleList = React.createClass({
             return <span className="rolePending">{'Pending'}</span>;
         }
     },
+    /**
+     * @Private : called after confirm dialog returns true for a specific dialog in which this was passed as a callback function
+     * This will send another permission request to admin with special message/comment requesting a previous request
+     * to be removed - Temporary measure for now until we have that on server side
+     * */
     _performWithdrawal:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-        //This will send another permission request to admin with special message/comment requesting a previous request
-        //to be removed - Temporary measure for now until we have that on server side
         if(binding.get('confirmed')) {
             let withdrawalModel = {
                 preset:self.currentPermission.preset,
@@ -54,23 +57,30 @@ RoleList = React.createClass({
             });
         }
     },
+    /**
+     * @Path{String}dialogMessage - Message printed out in dialog box
+     * @Path{Bool}dialogShow - Dialog box state
+     * @Path{Func}callbackFunc - Callback function called after dialog box is dismissed
+     * */
     _withdrawRequest:function(permission){
         var self = this,
             binding = self.getDefaultBinding();
         binding
             .atomically()
-            .set('dialogMessage',`Are you sure you want to withdraw your permission ${permission.preset}`) // Message to be shown in dialog
+            .set('dialogMessage',`Are you sure you want to withdraw your permission ${permission.get('preset')}`)
             .set('dialogShow',true)
-            .set('callbackFunc',self._performWithdrawal) //callback function to be executed after confirmation
+            .set('callbackFunc',self._performWithdrawal)
             .commit();
-        self.currentPermission = permission; //persist the current permission id for the callback function to use
+        self.currentPermission = permission.toJS();
     },
-    //To be called after the confirm box returns
+    /**
+     * @Private : called after confirm dialog returns true for a specific dialog in which this was passed as a callback function
+     * This will delete the pending permission - At the moment the admin has no way of knowing a user has cancelled/deleted a pending request
+     * to be removed - Temporary measure for now until we have that on server side
+     * */
     _performCancellation:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        //This will delete the pending permission - At the moment the admin has no way of knowing a user has cancelled /
-        // deleted a pending request
         if(binding.get('confirmed')){
             window.Server.Permission.delete({id:self.currentPermissionId})
                 .then(function(result){
@@ -85,22 +95,27 @@ RoleList = React.createClass({
             });
         }
     },
+    /**
+     * @Path{String}dialogMessage - Message printed out in dialog box
+     * @Path{Bool}dialogShow - Dialog box state
+     * @Path{Func}callbackFunc - Callback function called after dialog box is dismissed
+     * */
     _cancelRequest:function(permission){
         var self = this,
             binding = self.getDefaultBinding();
         binding
             .atomically()
-            .set('dialogMessage','Are you sure you want to cancel pending request?') // Message to be shown in dialog
+            .set('dialogMessage','Are you sure you want to cancel pending request?')
             .set('dialogShow',true)
-            .set('callbackFunc',self._performCancellation) //callback function to be executed after confirmation
+            .set('callbackFunc',self._performCancellation)
             .commit();
-        self.currentPermissionId = permission.id; //persist the current permission id for the callback function to use
+        self.currentPermissionId = permission.get('id'); //persist the current permission id for the callback function to use
     },
     _setActions:function(roleData){
         var self = this;
         //If the role has been accepted or rejected then we show a button with text: Withdraw
         //else we show a cancel button instead to cancel request before admin consideration/review
-        if(roleData.accepted!== undefined){
+        if(roleData.get('accepted')!== undefined){
             return (
                 <div className="eDataList_listItemCell mActions">
                     <span title="Withdraw Request" className="requestActions" onClick={self._withdrawRequest.bind(null,roleData)}>Withdraw</span>
@@ -117,17 +132,17 @@ RoleList = React.createClass({
     _renderRoleList:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            roles = binding.get('userAccountRoles') !== undefined ?binding.toJS('userAccountRoles'):'';
-        if(roles.length >= 1){
+            roles = binding.get('userAccountRoles');
+        if(roles !== undefined && roles.count()!==0){
             return roles.map(function(role){
-                let roleStatus = self._checkRequestStatus(role.accepted),
+                let roleStatus = self._checkRequestStatus(role.get('accepted')),
                     roleActions = self._setActions(role);
                 return(
                     <div key={role.id} className="eDataList_listItem">
-                        <div className="eDataList_listItemCell">{role.school!== undefined ? role.school.name: ''}</div>
-                        <div className="eDataList_listItemCell">{role.preset}</div>
-                        <div className="eDataList_listItemCell">{role.comment !== undefined ? role.comment:''}</div>
-                        <div className="eDataList_listItemCell">{self.getDateFromIso(role.meta.created)}</div>
+                        <div className="eDataList_listItemCell">{role.get('school')!== undefined ? role.get('school').get('name'): ''}</div>
+                        <div className="eDataList_listItemCell">{role.get('preset')}</div>
+                        <div className="eDataList_listItemCell">{role.get('comment') !== undefined ? role.get('comment'):''}</div>
+                        <div className="eDataList_listItemCell">{self.getDateFromIso(role.get('meta').get('created'))}</div>
                         <div className="eDataList_listItemCell">{roleStatus}</div>
                         {roleActions}
                         <ConfirmDialog stringContent={binding.get('dialogMessage')} binding={binding} />
