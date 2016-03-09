@@ -7,47 +7,31 @@ const
         ReactDom        = require('reactDom'),
         React           = require('react'),
         Promise         = require('bluebird'),
-        ImageService    = require('module/core/services/ImageService');
+        ComboBox        = require('module/ui/autocomplete2/ComboBox2');
 
 function runPlaygroundMode() {
 
-    const imgService = new ImageService('http://img.stage.squadintouch.com');
-
-    const MyForm = React.createClass({
-        getInitialState : function() {
-            return {};
-        },
-        handleChange: function(e){
-            const   self    = this,
-                    file    = e.target.files[0];
-            imgService.upload(file).then( imgUrl => {
-                console.log('uploaded!: ' + JSON.stringify(imgUrl, null, 2));
-                self.setState({
-                    imgUrl: imgService.getResizedToHeightUrl(imgUrl, 300)
-                });
-            });
-        },
-        render: function(){
-            const img = this.state.imgUrl ? <img src={this.state.imgUrl} /> : undefined;
-            return (
-                <div>
-                    <input
-                        ref="fileInput"
-                        type="file"
-                        onChange={this.handleChange}
-                    />
-                    {img}
-                </div>
-            );
-        }
-    });
-
-
-    // Init app
-    ReactDom.render(
-        React.createElement(MyForm),
-        document.getElementById('jsMain')
-    );
+    //const defaultItme = {
+    //    id:     0,
+    //    name:   'DEFAULT'
+    //};
+    //const searchFunction = function(text) {
+    //    return {
+    //        sync: [],
+    //        async: Promise.resolve([
+    //            {id: 1, name: "Item1"},
+    //            {id: 2, name: "Item2"}
+    //        ])
+    //    }
+    //};
+    //
+    //const CB = <ComboBox />
+    //
+    //// Init app
+    //ReactDom.render(
+    //    React.createElement(MyForm),
+    //    document.getElementById('jsMain')
+    //);
 }
 
 module.exports = runPlaygroundMode;

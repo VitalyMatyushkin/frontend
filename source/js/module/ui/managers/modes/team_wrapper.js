@@ -268,29 +268,69 @@ const TeamWrapper = React.createClass({
             mode = binding.toJS('teamsSaveMode');
 
         return (
-            <div className="eManager_radiogroup">
-                <label onClick={self._onClickTypeRadioButton.bind(self, 'temp')}>
-                    <Morearty.DOM.input
-                        checked={mode == 'temp'}
-                        type="radio"
-                    />
-                    {'Save as temp team'}
-                </label>
-                <label onClick={self._onClickTypeRadioButton.bind(self, 'new')}>
-                    <Morearty.DOM.input
-                        type="radio"
-                        checked={mode == 'new'}
-                    />
-                    {'Save as new team'}
-                </label>
-                <label onClick={self._onClickTypeRadioButton.bind(self, 'current')}>
-                    <Morearty.DOM.input
-                        type="radio"
-                        checked={mode == 'current'}
-                    />
-                    {'Save to selected team'}
-                </label>
+            <div className="eTeamWrapper_modeContainer">
+                <div className="eTeamWrapper_modeRadioButtonsContainer">
+                    <label onClick={self._onClickTypeRadioButton.bind(self, 'temp')}>
+                        <Morearty.DOM.input
+                            checked={mode == 'temp'}
+                            type="radio"
+                        />
+                        {'Save as temp team'}
+                    </label>
+                    <label onClick={self._onClickTypeRadioButton.bind(self, 'new')}>
+                        <Morearty.DOM.input
+                            type="radio"
+                            checked={mode == 'new'}
+                        />
+                        {'Save as new team'}
+                    </label>
+                    <label onClick={self._onClickTypeRadioButton.bind(self, 'current')}>
+                        <Morearty.DOM.input
+                            type="radio"
+                            checked={mode == 'current'}
+                        />
+                        {'Save to selected team'}
+                    </label>
+                </div>
+                <If condition={self._isShowNewTeamNameInput()}>
+                    <div className="eForm_fieldInput">
+                        <input id={'new-team-name'}
+                               type={'text'}
+                               placeholder={'Enter new team name'}
+                               onChange={self._onChangeNewTeamName}
+                               value={binding.toJS('newTeamName')}
+                        />
+                    </div>
+                </If>
+                <div className="bButton" onClick={self._onRevertChangesButtonClick}>
+                    {'Revert changes'}
+                </div>
             </div>
+        );
+    },
+    _isShowNewTeamNameInput: function() {
+        const self = this;
+
+        return self.getDefaultBinding().toJS('teamsSaveMode') == 'new';
+    },
+    _onChangeNewTeamName: function(event) {
+        const self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('newTeamName', Immutable.fromJS(event.target.value));
+    },
+    /**
+     * Handler for click to revert changes button
+     * Set initial state of selected team as current
+     * @private
+     */
+    _onRevertChangesButtonClick: function() {
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        binding.set(
+            'players',
+            binding.get('prevPlayers')
         );
     },
     _onClickTypeRadioButton: function(mode) {
@@ -316,10 +356,12 @@ const TeamWrapper = React.createClass({
         return (
             <div>
                 <div>
-                    <div className="eTeamWrapper_autocompletePlug"></div>
                     <div className="eTeamWrapper_autocompleteWrapper">
                         <AutocompleteTeam binding={autocompleteTeamBinding}/>
                     </div>
+                </div>
+                <div className="eTeamWrapper_teamPlayersLabel">
+                    {'Team players:'}
                 </div>
                 <div className="eTeamWrapper_teamManagerWrapper">
                     <Team onRemovePlayer={self._onRemovePlayer} binding={teamBinding}/>

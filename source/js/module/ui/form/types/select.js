@@ -1,13 +1,11 @@
-var TypeMixin = require('module/ui/form/types/type_mixin'),
-	Select = require('module/ui/select/select'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	TypeSelect;
+const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
+		Select 		= require('module/ui/select/select'),
+		React 		= require('react');
 
-TypeSelect = React.createClass({
+const TypeSelect = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	propTypes: {
-		sourcePromise: React.PropTypes.func
+		sourceArray:	React.PropTypes.array
 	},
 	bindToAutcomplete: function() {
 		var self = this,
@@ -31,7 +29,7 @@ TypeSelect = React.createClass({
 		self.bindToAutcomplete();
 
 		return (
-			<Select sourcePromise={self.props.sourcePromise}  binding={self.getDefaultBinding().sub('select')} />
+			<Select sourceArray={self.props.sourceArray}  binding={self.getDefaultBinding().sub('select')} />
 		);
 	}
 });

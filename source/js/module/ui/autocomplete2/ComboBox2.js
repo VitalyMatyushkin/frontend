@@ -10,11 +10,8 @@ const   React   = require('react'),
 
 const ComboBox2 = React.createClass({
     propTypes: {
-        /**
-         * There are situations when combobox should have initial value on start of his lifecycle
-         * So, if initial value define, then combobox has currentText = initValue on start of his lifecycle
-         */
-        initialValue:      React.PropTypes.string,
+        /** piece of data to display as initial portion */
+        defaultItem:       React.PropTypes.object,
         /**
          * Placeholder text displayed when input area is empty
          */
@@ -41,7 +38,7 @@ const ComboBox2 = React.createClass({
          * @param element - element from search result.
          * @returns text element representation
          */
-        getElementTitle:   React.PropTypes.func,
+        getElementTitle:   React.PropTypes.func.isRequired,
         clearAfterSelect:  React.PropTypes.bool
     },
     getInitialState: function(){
@@ -55,6 +52,19 @@ const ComboBox2 = React.createClass({
             currentAsyncRequest: undefined
         };
     },
+    /** Checks on mount if we need to set default item */
+    componentWillMount: function(){
+        if(this.props.defaultItem && this.props.onSelect) {
+            this.props.onSelect(this.props.defaultItem.id, this.props.defaultItem);
+        }
+    },
+    /** Checks on new props if we need to set default item */
+    componentWillReceiveProps: function(nextProps) {
+        /* eliminating infinite looping by checking if really props update take place */
+        if(nextProps.defaultItem && nextProps.onSelect && JSON.stringify(nextProps.defaultItem) !== JSON.stringify(this.props.defaultItem)) {
+            nextProps.onSelect(nextProps.defaultItem.id, nextProps.defaultItem);
+        }
+    },
     /** Calculates current text.
      *  If there is some text in state will return it,
      *  otherwise fallback to initialValue from props,
@@ -62,7 +72,14 @@ const ComboBox2 = React.createClass({
       * @returns {*|string}
      */
     getCurrentText: function(){
-        return typeof this.state.currentText !== 'undefined' ? this.state.currentText : (this.props.initialValue || '');
+        switch (true) {
+            case typeof this.state.currentText !== 'undefined':
+                return this.state.currentText;
+            case typeof this.props.defaultItem !== 'undefined':
+                return this.props.getElementTitle(this.props.defaultItem);
+            default:
+                return '';
+        }
     },
     /**
      * Will trigger on input end. Strictly saying on focus loose.
@@ -160,8 +177,8 @@ const ComboBox2 = React.createClass({
      * @param index - index of selected element
      */
     selectElement: function(index) {
-        const self = this,
-              currentElement = self.state.dataList[index];
+        const self              = this,
+              currentElement    = self.state.dataList[index];
 
         self.props.onSelect(currentElement.id, currentElement);
         if(self.props.clearAfterSelect) {
@@ -355,8 +372,8 @@ const ComboBox2 = React.createClass({
                     <img style={loaderStyle} src="/images/spinner.gif"/>
                 </div>
                 <span className="eCombobox_button"
-                      style={triangleStyle}
-                      onClick={self.onTriangleClick}><SVG classes="dropbox_icon" icon="icon_dropbox_arrow"/></span>
+                      style     = {triangleStyle}
+                      onClick   = {self.onTriangleClick}><SVG classes="dropbox_icon" icon="icon_dropbox_arrow"/></span>
                 {self.renderMenuItems()}
             </div>
         );

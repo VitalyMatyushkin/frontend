@@ -60,6 +60,7 @@ const EventManagerBase = React.createClass({
                         options: 'i'
                     }
                 },
+                include:'postcode',
                 limit: 10
             }
         });
@@ -114,18 +115,6 @@ const EventManagerBase = React.createClass({
             .set('model.gender',     sportsBinding.get(`models.${sportIndex}.gender.0`))
             .commit();
 	},
-    //changeCompleteAges: function (event) {
-    //    var binding = this.getDefaultBinding(),
-    //        agesBinding = binding.sub('model.ages');
-    //
-    //    agesBinding.update(function (ages) {
-    //        if (ages === null) {
-    //            ages = Immutable.List();
-    //        }
-    //
-    //        return ages.push(event.target.value);
-    //    });
-    //},
     changeCompleteAges: function (selections) {
         var self = this,
             binding = self.getDefaultBinding();

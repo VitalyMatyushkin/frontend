@@ -12,7 +12,7 @@ const NewsListPage = React.createClass({
 		if(url !== undefined){
 			return (
 				<span className="eChallenge_rivalPic">
-                    <img src={window.Service.image.getResizedToBoxUrl(url, 60, 60)}/>
+                    <img src={window.Server.images.getResizedToBoxUrl(url, 60, 60)}/>
                 </span>
 			)
 		}

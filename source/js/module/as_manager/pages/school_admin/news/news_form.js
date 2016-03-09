@@ -1,18 +1,16 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	NewsForm;
+const 	Form 		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		FormColumn 	= require('module/ui/form/form_column'),
+		React 		= require('react');
 
-NewsForm = React.createClass({
+const NewsForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		title: React.PropTypes.string.isRequired,
 		onFormSubmit: React.PropTypes.func
 	},
 	render: function() {
-		var self = this;
+		const self = this;
 
 		return (
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
@@ -20,7 +18,7 @@ NewsForm = React.createClass({
 				<FormField type="textarea" field="body" validation="required">Text</FormField>
 				<FormField type="date" field="date" validation="required">Date</FormField>
 				<FormColumn type="column">
-					<FormField type="file" labelText="Add image to news" typeOfFile="image" field="picUrl"/>
+					<FormField type="imageFile" labelText="Add image to news" typeOfFile="image" field="picUrl"/>
 				</FormColumn>
 			</Form>
 		)

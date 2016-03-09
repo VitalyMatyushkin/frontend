@@ -1,9 +1,11 @@
-var classNames      = require('classnames'),
-    React = require('react');
+/**
+ * Created by wert on 03.03.16.
+ */
+const   classNames  = require('classnames'),
+        React       = require('react');
 
-console.error("autocomplete deprecated");
 
-module.exports = React.createClass({
+const Option = React.createClass({
 
     propTypes: {
 
@@ -30,7 +32,7 @@ module.exports = React.createClass({
     },
 
     render: function() {
-        var props = this.props;
+        const props = this.props;
 
         if (props.isSelected) {
             props.className = classNames(props.className, 'mSelected');
@@ -41,3 +43,4 @@ module.exports = React.createClass({
 
 });
 
+module.exports = Option;

@@ -13,10 +13,12 @@ const TypeArea = React.createClass({
 		binding.addListener('defaultValue', function() {
 			const postCodeId = binding.get('defaultValue');
 
-			if (postCodeId) {
-				self.valueRequest && self.valueRequest.cancel();
-				binding.set('defaultLabel', postCodeId);
-			}
+            // TODO: implement defaultValue initialisation
+            // это полная и нерабочая лажа
+			//if (postCodeId) {
+			//	self.valueRequest && self.valueRequest.cancel();
+			//	binding.set('defaultLabel', postCodeId);
+			//}
 		});
 	},
 	serviceFilter: function(value) {

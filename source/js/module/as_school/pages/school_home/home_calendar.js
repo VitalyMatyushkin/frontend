@@ -9,9 +9,7 @@ const   CalendarView    = require('module/ui/calendar/calendar'),
         Superuser       = require('module/helpers/superuser');
 
 const HomeCalender = React.createClass({
-
     mixins:[Morearty.Mixin,DateTimeMixin],
-
     componentWillMount:function(){
         const   self            = this,
                 rootBinding     = self.getMoreartyContext().getBinding(),
@@ -19,7 +17,7 @@ const HomeCalender = React.createClass({
 
         Superuser.runAsSuperUser(rootBinding, () => {
             return window.Server.eventsBySchoolId.get({schoolId:activeSchoolId}).then((events) => {
-                rootBinding.set('events',Immutable.fromJS(events));
+                rootBinding.set('events.models',Immutable.fromJS(events));
             });
         });
     },
@@ -30,38 +28,56 @@ const HomeCalender = React.createClass({
             return 'n/a';
         }
     },
-    getSport:function(){
-
-    },
-    getSportIcon:function(sport){
+    getSportIcon: function(sport) {
         const name = sport ? sport.name : '';
 
         return <Sport name={name} className="bIcon_mSport" ></Sport>;
     },
-    getCalenderFixtureLists:function(){
+    getCalenderFixtureLists: function() {
         const   self        = this,
                 binding     = self.getDefaultBinding(),
                 fixtureList = binding.get('fixtures');
-        if(fixtureList !== undefined){
-            const fixtures = fixtureList.toJS();
-            return fixtures.map(function(fixture){
-                const   team1 = self.getTeams(fixture.participants[0]),
+
+        let result;
+
+        if(binding.toJS('fixturesSync')) {
+            if(fixtureList !== undefined && fixtureList.length != 0){
+                const fixtures = fixtureList.toJS();
+
+                result = fixtures.map(function(fixture){
+                    const   team1 = self.getTeams(fixture.participants[0]),
                         team2 = self.getTeams(fixture.participants[1]);
-                return (
-                    <div key={fixture.id} className="eSchoolFixtureListItem">
-                        <span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
-                        <span className="eSchoolCalenderFixtureItem">{self.getDateFromIso(fixture.startTime)}</span>
-                        <span className="eSchoolCalenderFixtureItem">{team1+' vs '+team2}</span>
-                        <span className="eSchoolCalenderFixtureItem">{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
+                    return (
+                        <div key={fixture.id} className="eSchoolFixtureListItem">
+                            <span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
+                            <span className="eSchoolCalenderFixtureItem">{self.getDateFromIso(fixture.startTime)}</span>
+                            <span className="eSchoolCalenderFixtureItem">{team1+' vs '+team2}</span>
+                            <span className="eSchoolCalenderFixtureItem">{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
+                        </div>
+                    );
+                });
+            } else {
+                result = (
+                    <div className="bFixtureMessage">
+                        {"There aren't fixtures for current date"}
                     </div>
                 );
-            });
+            }
+        } else {
+            result = (
+                <div className="bFixtureMessage">
+                    {"Loading..."}
+                </div>
+            );
         }
+
+        return result;
     },
-    render:function(){
+    render: function() {
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 upcomingLists   = self.getCalenderFixtureLists();
+
         return (
             <div className="eSchoolCalenderContainer">
                 <div className="eSchoolFixtureTab eCalendar_tab">
@@ -78,10 +94,10 @@ const HomeCalender = React.createClass({
                         </div>
                         {upcomingLists}
                     </div>
-
                 </div>
             </div>
         );
     }
 });
+
 module.exports = HomeCalender;

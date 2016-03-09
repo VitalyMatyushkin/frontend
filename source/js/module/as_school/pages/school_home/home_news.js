@@ -15,8 +15,12 @@ const HomeNews = React.createClass({
                 activeSchoolId  = rootBinding.get('activeSchoolId');
 
         Superuser.runAsSuperUser(rootBinding, () => {
-            window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:3}}).then((schoolNews) => {
-                binding.set('schoolNews',Immutable.fromJS(schoolNews));
+            window.Server.news.get({schoolId:activeSchoolId, filter:{order:'date DESC',limit:20}}).then((schoolNews) => {
+                binding
+                    .atomically()
+                    .set('schoolNews',Immutable.fromJS(schoolNews))
+                    .set('selectedNewsItem',Immutable.fromJS(''))
+                    .commit();
             });
         });
     },
@@ -35,26 +39,58 @@ const HomeNews = React.createClass({
     },
     getNewsExcerpt:function(newsBody){
         if(newsBody !== undefined){
-            return `<p>${newsBody.slice(0,100)}</p>`;
+            return (
+                <p>
+                    {newsBody.slice(0,100)}
+                </p>
+            );
+        }
+    },
+    getFullNewsText: function(newsBody) {
+        if(newsBody !== undefined){
+            return (
+                <p>{newsBody}</p>
+            );
+        }
+    },
+    _newsItemMoreInfo: function(id) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            currentNewsId = binding.toJS('selectedNewsItem');
+
+        if(currentNewsId == id) {
+            binding.set('selectedNewsItem', Immutable.fromJS(''));
+        } else {
+            binding.set('selectedNewsItem', Immutable.fromJS(id));
         }
     },
     renderNewsItems:function(){
         var self = this,
             binding = self.getDefaultBinding(),
             news = binding.toJS('schoolNews');
+
         if(news !== undefined){
             return news.map(function(newsItem, i){
                 var classes ="",
-                    imgSrc = "";
-                if( i === 0){
-                    classes = "eSchoolNewsItemLatest";
-                    imgSrc = "http://i2.cdn.turner.com/cnnnext/dam/assets/130418171917-indian-football-1-horizontal-large-gallery.jpg";
+                    imgSrc = newsItem.picUrl;
 
-                }else if(i===1){
+                if(i === 0) {
+                    classes = "eSchoolNewsItemLatest";
+                }else if(i === 1) {
                     classes ="eSchoolNewsItemLeft";
-                    imgSrc = "http://i.telegraph.co.uk/multimedia/archive/02828/mf-rugbyschools0_2828544b.jpg";
                 }
-                else{classes = "eSchoolNewsItemRight";imgSrc = "http://www.education.vic.gov.au/PublishingImages/about/awards/schoolsport.jpg";}
+                else {
+                    classes = "eSchoolNewsItemRight";
+                }
+
+                let text;
+
+                if(binding.toJS('selectedNewsItem') == newsItem.id) {
+                    text = self.getFullNewsText(newsItem.body);
+                } else {
+                    text = self.getNewsExcerpt(newsItem.body);
+                }
+
                 return(
                     <div key={newsItem.id} className={classes}>
                         <span className="eSchoolNewsImage">
@@ -66,9 +102,9 @@ const HomeNews = React.createClass({
                                 <div className="eSchoolNewsItemDate">
                                     {self.getNewsDate(newsItem)}
                                 </div><hr/>
-                                <span className="inlineBlock newsItemExcerpt">{self.getNewsExcerpt(newsItem.body)}</span>
+                                <span className="inlineBlock newsItemExcerpt">{text}</span>
                             </div>
-                            <span className="eSchoolNewsMoreInfo">More Info</span>
+                            <span className="eSchoolNewsMoreInfo" onClick={self._newsItemMoreInfo.bind(self, newsItem.id)}>More Info</span>
                         </div>
                     </div>
                 )

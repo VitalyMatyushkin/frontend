@@ -1,7 +1,6 @@
 const   React                = require('react'),
         TeamsTable           = require('./../teamsTable'),
-        TeamWrapper           = require('./team_wrapper'),
-        TeamViewer           = require('./../teamViewer'),
+        TeamWrapper          = require('./team_wrapper'),
         If                   = require('module/ui/if/if'),
         Immutable            = require('immutable');
 
@@ -16,7 +15,7 @@ const TeamModeView = React.createClass({
         const self = this,
             binding = self.getDefaultBinding(),
             rivalIndex = binding.toJS('selectedRivalIndex'),
-            prevSelectedTeamId = binding.toJS(`teamViewer.${rivalIndex}.selectedTeamId`);
+            prevSelectedTeamId = binding.toJS(`teamWrapper.${rivalIndex}.selectedTeamId`);
 
         if(prevSelectedTeamId == teamId) {
            self._unselectTeam();
@@ -107,7 +106,8 @@ const TeamModeView = React.createClass({
             };
 
         return (
-            <div className="bTeamWrapper mMarginLeft">
+            <div className="bTeamWrapper mMarginTop">
+                {'Add player to team:'}
                 <If condition={selectedRivalIndex == 0}>
                     <TeamWrapper binding={tableWrapperBinding}/>
                 </If>
@@ -122,6 +122,7 @@ const TeamModeView = React.createClass({
 
         return (
             <div>
+                {'Select team for event:'}
                 {self._renderTeamTable()}
                 {self._renderTeamWrapper()}
             </div>

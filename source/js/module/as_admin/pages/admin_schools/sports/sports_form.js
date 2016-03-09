@@ -107,7 +107,7 @@ let SportsForm = React.createClass({
                         {self.getPositionFields()}
                     </FormColumn>
                     <FormColumn type="column">
-                        <FormField labelText="Upload Game Field Picture" type="file" typeOfFile="image" field="fieldPic"/>
+                        <FormField labelText="Upload Game Field Picture" type="imageFile" typeOfFile="image" field="fieldPic"/>
                     </FormColumn>
                 </Form>
             </div>

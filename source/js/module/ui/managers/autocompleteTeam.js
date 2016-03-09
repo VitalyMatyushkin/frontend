@@ -12,20 +12,6 @@ const AutocompleteTeam = React.createClass({
             type         = binding.get('model.type'),
             rivalBinding = self.getBinding('rival');
 
-        self.getBinding('selectedRivalIndex').addListener(() => {
-            if (type === 'houses') {
-                self.fetchFullData();
-            }
-        });
-
-        binding.sub('model.gender').addListener(() => {
-            self.fetchFullData();
-        });
-
-        binding.sub('model.ages').addListener(() => {
-            self.fetchFullData();
-        });
-
         rivalBinding
             .meta()
             .atomically()
@@ -33,9 +19,6 @@ const AutocompleteTeam = React.createClass({
                 return Immutable.Map();
             })
             .commit();
-
-        binding.set('_students', Immutable.List());
-        self.fetchFullData();
     },
     getIncludePlayersIds: function () {
         var self = this,
@@ -49,15 +32,6 @@ const AutocompleteTeam = React.createClass({
 
             return memo.concat(ids);
         }, Immutable.List());
-    },
-    serviceStudentFullData: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            students = binding.toJS('_students');
-
-        return Promise.resolve(students.filter(function (student) {
-            return self.getIncludePlayersIds().toJS().indexOf(student.id) === -1;
-        }));
     },
     /**
      * Get school forms filtered by age
@@ -73,13 +47,14 @@ const AutocompleteTeam = React.createClass({
             return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
         });
     },
-    fetchFullData: function () {
+    serviceStudentFullData: function (searchText) {
         const self = this,
             binding = self.getDefaultBinding();
 
         //TODO fix me
         if(binding.get('schoolInfo.forms')) {
             const ages = binding.get('model.ages'),
+                gender = binding.get('model.gender'),
                 forms = self._getFilteredForms(ages),
                 type = binding.get('model.type'),
                 schoolId = binding.get('schoolInfo.id'),
@@ -90,8 +65,23 @@ const AutocompleteTeam = React.createClass({
                             inq: forms.map(function (form) {
                                 return form.get('id');
                             }).toJS()
-                        }
+                        },
+                        or: [
+                                {
+                                    'userInfo.lastName': {
+                                        like:       searchText,
+                                        options:    'i'
+                                    }
+                                },
+                                {
+                                    'userInfo.firstName': {
+                                        like:       searchText,
+                                        options:    'i'
+                                    }
+                                }
+                            ]
                     },
+                    limit: 20,
                     include:["user","form"]
                 };
 
@@ -99,18 +89,24 @@ const AutocompleteTeam = React.createClass({
                 filter.where.houseId = self.getBinding('rival').get('id');
             }
 
-            window.Server.students.get(schoolId, {filter: filter}).then(function (data) {
-                var gender = binding.get('model.gender') || 'male';
-                var players = [];
-                data.forEach(function(player) {
-                    //filter by gender
-                    if(player.user.gender === gender) {
-                        player.name = player.user.firstName + ' ' + player.user.lastName;
-                        players.push(player);
-                    }
-                });
+            return window.Server.students
+                .get(schoolId, {filter: filter})
+                .then((players) => {
+                    var filteredPlayers = [];
 
-                binding.set('_students', Immutable.fromJS(players));
+                    players.forEach((player) => {
+                        //filter by gender
+                        if(player.user.gender === gender) {
+                            player.name = player.user.firstName + ' ' + player.user.lastName;
+                            filteredPlayers.push(player);
+                        }
+                    });
+
+                    return filteredPlayers;
+                });
+        } else {
+            return new Promise((resolve) => {
+                resolve([]);
             });
         }
     },

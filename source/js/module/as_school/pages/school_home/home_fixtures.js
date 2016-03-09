@@ -15,9 +15,46 @@ const HomeFixtures = React.createClass({
                 rootBinding     = self.getMoreartyContext().getBinding(),
                 activeSchoolId  = rootBinding.get('activeSchoolId');
 
+        self._setFixturesByDate(binding.toJS('currentDate'));
+
+        //Get all evens for calendar
+        //Superuser.runAsSuperUser(rootBinding, () => {
+        //    return window.Server.fixturesBySchoolId.get(
+        //        {
+        //            schoolId: activeSchoolId,
+        //            filter: {
+        //                order: 'startTime ASC'
+        //            }
+        //        }).then((events) => {
+        //            binding.set('models',Immutable.fromJS(events));
+        //        }
+        //    );
+        //});
+
+        binding.sub('selectDay').addListener((descriptor) => {
+            self._setFixturesByDate(descriptor.getCurrentValue().date);
+        });
+    },
+    _setFixturesByDate:function(date) {
+        const self = this,
+            binding = self.getDefaultBinding(),
+            rootBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId  = rootBinding.get('activeSchoolId');
+
         Superuser.runAsSuperUser(rootBinding, () => {
             return window.Server.fixturesBySchoolId.get({schoolId:activeSchoolId, filter:{order:'startTime ASC'}}).then((events) => {
-                binding.set('fixtures',Immutable.fromJS(events));
+                const filteredEvents = events.filter((event) => {
+                    const eventDate = new Date(event.startTime).toLocaleDateString(),
+                        currentDate = date.toLocaleDateString();
+
+                    return currentDate == eventDate;
+                });
+
+                binding
+                    .atomically()
+                    .set('fixtures',Immutable.fromJS(filteredEvents))
+                    .set('fixturesSync',Immutable.fromJS(true))
+                    .commit();
             });
         });
     },
@@ -70,22 +107,41 @@ const HomeFixtures = React.createClass({
         }
     },
     renderFixtureLists:function(){
-        var self = this,
+        const self = this,
             binding = self.getDefaultBinding(),
             events = binding.toJS('fixtures');
-        if(events !== undefined){
-            return events.map(function(event){
-                return (
-                    <div key={event.id} className="bFixtureContainer">
-                        <div className="bFixtureIcon bFixture_item">{self.getSportIcon(event.sport)}</div>
-                        <div className="bFixtureDate bFixture_item">{self.getFixtureDate(event.startTime,event.type)}</div>
-                        <div className="bFixtureOpponent bFixture_item no-margin">{self.getParticipantEmblem(event.participants[0])}</div>
-                        <div className="bFixtureResult bFixture_item no-margin">{self.getFixtureResults(event)}</div>
-                        <div className="bFixtureOpponent bFixture_item no-margin">{self.getParticipantEmblem(event.participants[1])}</div>
+
+        let result;
+
+        if(binding.toJS('fixturesSync')) {
+            if(events !== undefined && events.length != 0){
+                result = events.map(function(event){
+                    return (
+                        <div key={event.id} className="bFixtureContainer">
+                            <div className="bFixtureIcon bFixture_item">{self.getSportIcon(event.sport)}</div>
+                            <div className="bFixtureDate bFixture_item">{self.getFixtureDate(event.startTime,event.type)}</div>
+                            <div className="bFixtureOpponent bFixture_item no-margin">{self.getParticipantEmblem(event.participants[0])}</div>
+                            <div className="bFixtureResult bFixture_item no-margin">{self.getFixtureResults(event)}</div>
+                            <div className="bFixtureOpponent bFixture_item no-margin">{self.getParticipantEmblem(event.participants[1])}</div>
+                        </div>
+                    );
+                });
+            } else {
+                result = (
+                    <div className="bFixtureMessage">
+                        {"There aren't fixtures for current date"}
                     </div>
                 );
-            });
+            }
+        } else {
+            result = (
+                <div className="bFixtureMessage">
+                    {"Loading..."}
+                </div>
+            );
         }
+
+        return result;
     },
     render:function(){
         var self = this,

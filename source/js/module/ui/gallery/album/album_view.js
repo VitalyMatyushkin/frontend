@@ -41,14 +41,18 @@ const AlbumView = React.createClass({
 				href: '#'
 			}];
 
-			if (isOwner) {
+			 // not checking owning for a while. Any permitted user should be able to upload photo into
+			 // school public album.
+			 // this will also show 'Add Photo' button on every album. This is bad, but not as bad as school admin
+			 // who can't upload photo to album
+			//if (isOwner) {
 				self.menuItems.push({
 					key: 		'file',
 					name: 		'Add Photo',
 					href: 		'#',
 					onChange: 	self.handleFile
 				});
-			}
+			//}
 
 			binding
 				.atomically()
@@ -71,7 +75,7 @@ const AlbumView = React.createClass({
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
 				fullScreen 	= binding.get('fullScreen'),
-				id 			= photo.get('id');
+				id 			= photo.id;
 
 		self.setState({lastClickedId: id});
 		if (!fullScreen) {

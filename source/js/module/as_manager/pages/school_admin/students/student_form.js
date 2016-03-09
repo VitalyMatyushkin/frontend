@@ -7,9 +7,11 @@ const 	Form		= require('module/ui/form/form'),
 const StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		schoolId: React.PropTypes.string.isRequired,
-		title: React.PropTypes.string.isRequired,
-		onFormSubmit: React.PropTypes.func
+		schoolId: 			React.PropTypes.string.isRequired,
+		title: 				React.PropTypes.string.isRequired,
+		onFormSubmit: 		React.PropTypes.func,
+		initialForm:		React.PropTypes.object,
+		initialHouse:		React.PropTypes.object
 	},
 	getClassService: function() {
 		const self = this;
@@ -25,22 +27,21 @@ const StudentForm = React.createClass({
 		}
 	},
 	getGender: function() {
-		const 	self = this,
-				gendersArray = [
-				{
-					value: 'boy',
-					id: 'male'
-				},
-				{
-					value: 'girl',
-					id: 'female'
-				}
-			];
+		const gendersArray = [
+			{
+				value: 'boy',
+				id: 'male'
+			},
+			{
+				value: 'girl',
+				id: 'female'
+			}
+		];
 
 		return Promise.resolve(gendersArray);
 	},
 	render: function() {
-		var self = this;
+		const self = this;
 
 		return ( <div className="editStudentForm">
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
@@ -49,8 +50,8 @@ const StudentForm = React.createClass({
 					<FormField type="text" field="lastName" promptOnBlank="true" validation="required">Last name</FormField>
 					<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
 					<FormField type="date" field="birthday" validation="date">Birthday</FormField>
-					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" validation="required">Form</FormField>
-					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" validation="required">House</FormField>
+					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" defaultItem={self.props.initialForm} validation="required">Form</FormField>
+					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" defaultItem={self.props.initialHouse} validation="required">House</FormField>
 				</FormColumn>
 				<FormColumn type="column">
 					<FormField type="textarea" field="name">Next of Kin:</FormField>
