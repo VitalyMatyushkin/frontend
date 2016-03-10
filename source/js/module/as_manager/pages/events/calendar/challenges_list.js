@@ -1,160 +1,164 @@
 const   React           = require('react'),
-        InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-        Immutable       = require('immutable'),
-        Sport           = require('module/ui/icons/sport_icon'),
+		InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		Immutable       = require('immutable'),
+		Sport           = require('module/ui/icons/sport_icon'),
 
 ChallengesList = React.createClass({
-    mixins: [Morearty.Mixin, InvitesMixin],
-    componentWillMount: function() {
-        const self = this;
+	mixins: [Morearty.Mixin, InvitesMixin],
+	componentWillMount: function() {
+		const self = this;
 
-        self._initBinding();
-        self._addListeners();
-    },
-    _initBinding: function() {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            currentCalendarDate = binding.toJS('calendar.currentDate');
+		self._initBinding();
+		self._addListeners();
+	},
+	_initBinding: function() {
+		const self = this,
+			binding = self.getDefaultBinding(),
+			selectDay	= binding.get('calendar.selectDay');
 
-        if(currentCalendarDate) {
-            self._setFixturesByDate(currentCalendarDate);
-        } else {
-            binding.set('selectedDayFixtures', Immutable.fromJS([]));
-        }
-    },
-    _addListeners: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
+		if(selectDay !== undefined && selectDay !== null) {
+			self._setFixturesByDate(selectDay.date);
+		} else {
+			binding.set('selectedDayFixtures', Immutable.fromJS([]));
+		}
+	},
+	_addListeners: function() {
+		const self = this,
+			binding = self.getDefaultBinding();
 
-        binding.sub('calendar.selectDay').addListener((descriptor) => {
-            self._setFixturesByDate(descriptor.getCurrentValue().date);
-        });
-    },
-    _setFixturesByDate:function(date) {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            allFixtures = binding.toJS('models');
+		binding.sub('calendar.selectDay').addListener((descriptor) => {
+			self._setFixturesByDate(descriptor.getCurrentValue().date);
+		});
+	},
+	_setFixturesByDate:function(date) {
+		const self = this,
+			binding = self.getDefaultBinding(),
+			sync = binding.toJS('sync') && binding.toJS('sports.sync');
 
-        let selectedDayFixture = [];
+		let selectedDayFixture = [];
 
-        if(allFixtures && allFixtures.length != 0) {
-            selectedDayFixture.push(
-                allFixtures.filter((event) => {
-                    const eventDate = new Date(event.startTime).toLocaleDateString(),
-                        currentDate = date.toLocaleDateString();
+		if(sync) {
+			const allFixtures = binding.toJS('models');
 
-                    return currentDate == eventDate;
-                })
-            );
-        }
+			if(allFixtures && allFixtures.length != 0) {
 
-        binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
-    },
-    getRivalName: function(event, order) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            eventIndex = binding.get('models').findIndex(function (model) {
-                return model.get('id') === event.get('id');
-            }),
-            eventBinding = binding.sub(['models', eventIndex]),
-            type = event.get('type'),
-            played = !!event.get('resultId'),
-            rivalName = null,
-            participantBinding = eventBinding.sub(['participants', order]),
-            eventResult = played ? eventBinding.toJS('result.summary.byTeams') : null;
+				selectedDayFixture = allFixtures.filter((event) => {
+					const eventDate = new Date(event.startTime).toLocaleDateString(),
+						currentDate = date.toLocaleDateString();
 
+					return currentDate == eventDate;
+				});
+			}
+		}
 
-        if (type === 'internal') {
-            rivalName = eventBinding.get(['participants', order, 'name']);
-            if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-            }
-        } else if (type === 'houses') {
-            rivalName = eventBinding.get(['participants', order, 'house', 'name']);
-            if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-            }
-        } else {
-            rivalName = eventBinding.get(['participants', order, 'school', 'name']);
+		binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
+	},
+	getRivalName: function(event, order) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			eventIndex = binding.get('models').findIndex(function (model) {
+				return model.get('id') === event.id;
+			}),
+			eventBinding = binding.sub(['models', eventIndex]),
+			type = event.type,
+			played = !!event.resultId,
+			rivalName = null,
+			participantBinding = eventBinding.sub(['participants', order]),
+			eventResult = played ? eventBinding.toJS('result.summary.byTeams') : null;
 
-            if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-            } else if (!rivalName) {
-                rivalName = eventBinding.get(['invites', 0, 'guest', 'name']);
-            }
-        }
+		if (type === 'internal') {
+			rivalName = eventBinding.get(['participants', order, 'name']);
+			if (played && rivalName && eventResult) {
+				rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
+			}
+		} else if (type === 'houses') {
+			rivalName = eventBinding.get(['participants', order, 'house', 'name']);
+			if (played && rivalName && eventResult) {
+				rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
+			}
+		} else {
+			rivalName = eventBinding.get(['participants', order, 'school', 'name']);
 
-        return rivalName;
-    },
-    onClickEvent: function(eventId) {
-        document.location.hash = 'event/' + eventId;
-    },
-    getSportIcon:function(sport){
-        return <Sport name={sport} className="bIcon_invites" ></Sport>;
-    },
-    getEvents: function () {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            currentDate = binding.get('calendar.currentDate'),
-            sync = binding.toJS('syncCurrentDayFixtures') && binding.toJS('sports.sync');
+			if (played && rivalName && eventResult) {
+				rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
+			} else if (!rivalName) {
+				rivalName = eventBinding.get(['invites', 0, 'guest', 'name']);
+			}
+		}
 
-        let result;
+		return rivalName;
+	},
+	onClickEvent: function(eventId) {
+		document.location.hash = 'event/' + eventId;
+	},
+	getSportIcon:function(sport){
+		return <Sport name={sport} className="bIcon_invites" ></Sport>;
+	},
+	getEvents: function () {
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				currentDate	= binding.get('calendar.currentDate'),
+				selectDay	= binding.get('calendar.selectDay');
+		let		result;
 
-        if(!sync) {
-            result = (
-                <div className="eChallenge mNotFound">
-                    {"Loading..."}
-                </div>
-            );
-        } else {
-            const events = binding.get('selectedDayFixtures').filter(function (event) {
-                var eventDate = new Date(event.get('startTime'));
+		if(selectDay === undefined || selectDay === null) {
+			result = (
+				<div className="eChallenge mNotFound">{"Please select day."}</div>
+			);
+		} else if(!self._isSync()) {
+			result = (
+				<div className="eChallenge mNotFound">
+					{"Loading..."}
+				</div>
+			);
+		} else {
+			const events = binding.toJS('selectedDayFixtures');
 
-                return eventDate.getMonth() === currentDate.getMonth() &&
-                    eventDate.getFullYear() === currentDate.getFullYear();
-            });
+			if(events.length) {
+				result = events.map(function (event) {
+					const stringDate = self.formatDate(event.startTime),
+						sport = self.getSportIcon(event.sport.name);
 
-            if(events.count) {
-                result = events.map(function (event) {
-                    var eventDate = new Date(event.get('startTime')),
-                        stringDate = self.formatDate(event.get('startTime')),
-                        sport = self.getSportIcon(event.get('sport').get('name'));
+					return <div key={'event-' + event.id} className={'eChallenge'} onClick={self.onClickEvent.bind(null, event.id)}>
+						<span className="eChallenge_sport">{sport}</span>
+						<span className="eChallenge_date">{stringDate}</span>
 
-                    return <div key={'event-' + event.get('id')} className={'eChallenge'} onClick={self.onClickEvent.bind(null, event.get('id'))}>
-                        <span className="eChallenge_sport">{sport}</span>
-                        <span className="eChallenge_date">{stringDate}</span>
+						<div className="eChallenge_name">{event.name}</div>
+						<div className="eChallenge_rivals">
+							<span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
+							<span>vs</span>
+							<span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
+						</div>
+					</div>
+				});
+			} else {
+				result = (
+					<div className="eChallenge mNotFound">
+						{"You haven't events on this month."}
+					</div>
+				);
+			}
+		}
 
-                        <div className="eChallenge_name">{event.get('name')}</div>
-                        <div className="eChallenge_rivals">
-                            <span className="eChallenge_rivalName">{self.getRivalName(event, 0)}</span>
-                            <span>vs</span>
-                            <span className="eChallenge_rivalName">{self.getRivalName(event, 1)}</span>
-                        </div>
-                    </div>
-                }).toArray()
-            } else {
-                result = (
-                    <div className="eChallenge mNotFound">
-                        {"You haven't events on this month."}
-                    </div>
-                );
-            }
-        }
+		return result;
+	},
+	_isSync: function() {
+		const	self	= this;
 
-        return result;
-    },
-    render: function() {
-        var self = this;
+		return self.getDefaultBinding().toJS('sync') && self.getDefaultBinding().toJS('sports.sync');
+	},
+	render: function() {
+		var self = this;
 
-        return <div className="eEvents_challenges mGeneral">
-            <div className="eChallenge_title">
-                <span className="eChallenge_sport">Sport</span>
-                <span className="eChallenge_date">Date</span>
-                <span className="eChallenge_name">Event Name</span>
-                <span className="eChallenge_rivals">Game Type</span>
-            </div>
-            {self.getEvents()}</div>
-    }
+		return <div className="eEvents_challenges mGeneral">
+			<div className="eChallenge_title">
+				<span className="eChallenge_sport">Sport</span>
+				<span className="eChallenge_date">Date</span>
+				<span className="eChallenge_name">Event Name</span>
+				<span className="eChallenge_rivals">Game Type</span>
+			</div>
+			{self.getEvents()}</div>
+	}
 });
 
 

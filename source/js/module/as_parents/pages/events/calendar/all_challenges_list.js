@@ -1,111 +1,156 @@
-/**
- * Created by Bright on 15/12/2015.
- */
-const   React           = require('react'),
-        InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-        Sport           = require('module/ui/icons/sport_icon'),
+const	React			= require('react'),
+		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		Immutable		= require('immutable'),
+		Sport			= require('module/ui/icons/sport_icon');
 
-AllChallengesList = React.createClass({
-    mixins:[Morearty.Mixin,InvitesMixin],
-    getRivalName: function(event, order) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            eventIndex = binding.get('models').findIndex(function (model) {
-                return model.get('id') === event.get('id');
-            }),
-            eventBinding = binding.sub(['models', eventIndex]),
-            type = event.get('type'),
-            played = !!event.get('resultId'),
-            rivalName = null,
-            participantBinding = eventBinding.sub(['participants', order]),
-            eventResult = played ? eventBinding.toJS('result.summary.byTeams') : null;
+const AllChallengesList = React.createClass({
+	mixins:[Morearty.Mixin,InvitesMixin],
+	componentWillMount: function() {
+		const	self	= this;
 
+		self._initBinding();
+		self._addListeners();
+	},
+	_initBinding: function() {
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				selectDay	= binding.get('calendar.selectDay');
 
-        if (type === 'internal') {
-            rivalName = eventBinding.get(['participants', order, 'name']);
-            if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-            }
-        } else if (type === 'houses') {
-            rivalName = eventBinding.get(['participants', order, 'house', 'name']);
-            if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-            }
-        } else {
-            rivalName = eventBinding.get(['participants', order, 'school', 'name']);
+		if(selectDay !== undefined && selectDay !== null) {
+			self._setFixturesByDate(selectDay.date);
+		} else {
+			binding.set('selectedDayFixtures', Immutable.fromJS([]));
+		}
+	},
+	_addListeners: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-            if (played && rivalName && eventResult) {
-                rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-            } else if (!rivalName) {
-                rivalName = eventBinding.get(['invites', 0, 'guest', 'name']);
-            }
-        }
+		binding.sub('calendar.selectDay').addListener((descriptor) => {
+			self._setFixturesByDate(descriptor.getCurrentValue().date);
+		});
 
-        return rivalName;
-    },
-    onClickEvent: function(eventId) {
-        document.location.hash = 'event/' + eventId;
-    },
-    getSportIcon:function(sport){
-        return <Sport name={sport} className="bIcon_invites" ></Sport>;
-    },
-    getEvents: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentDate = binding.get('calendar.currentDate'),
-            sync = binding.get('sync'),
-            childrenOfUser = binding.get('eventChild'),
-            events = binding.get('models').filter(function (event) {
-                var eventDate = new Date(event.get('startTime'));
-                return eventDate.getMonth() === currentDate.getMonth() &&
-                    eventDate.getFullYear() === currentDate.getFullYear();
-            });
-        //Iterate over the children present in the bag
-        return (childrenOfUser && childrenOfUser.count())? childrenOfUser.map(function(child, childInd){
-            child.event = events.filter(function(ev){
-                return ev.get('childId') === child.get('childId');
-            });
-            var childFixtures = child.event.count() ? child.event.map(function(childEv, childEvInd){
-                var eventDate = new Date(childEv.get('startTime')),
-                    hoverDay = binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
-                    stringDate = self.formatDate(childEv.get('startTime')),
-                    sport = self.getSportIcon(childEv.get('sport').get('name'));
+		binding.sub('activeChildId').addListener((descriptor) => {
+			descriptor.getCurrentValue() == 'all' && self.isMounted() && self.forceUpdate();
+		});
+	},
+	_setFixturesByDate:function(date) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+		let		selectedDayFixture = [];
 
-                return(
-                    <div key={childEvInd} className={'eChallenge eChallenge_basicMod'} onClick={self.onClickEvent.bind(null, childEv.get('id'))}>
-                        <span className="eChallenge_sport">{sport}</span>
-                        <span className="eChallenge_date">{stringDate}</span>
-                        <div className="eChallenge_name">{childEv.get('name')}</div>
-                    </div>
-                );
-            }).toArray() : null;
-            if(!childFixtures)
-                return null;
-            else
-                return (
-                    <div key={childInd} className= "eChallenge eChallenge_all">
-                        <div className="eChildFixturesAll"> {childFixtures}</div>
-                        <div className="eChallenge_childName">{child.get('firstName')+' '+child.get('lastName')}</div>
-                    </div>
-                );
-        }).toArray():<div className="eChallenge mNotFound">{sync ? "You haven't events on this month." : "Loading..."}</div>;
-    },
-    render: function() {
-        var self = this,
-            binding = this.getDefaultBinding();
-        return (
-            <div className="eEvents_challenges mChildrenNames">
-                <div className="eChallenge_title">
-                    <div className="eChildFixturesAll">
-                        <span className="eChallenge_sport">Sport</span>
-                        <span className="eChallenge_date">Date</span>
-                        <span className="eChallenge_name">Event Name</span>
-                    </div>
-                        <span className="eChallenge_childName">Name</span>
-                </div>
-                {self.getEvents()}
-            </div>
-        );
-    }
+		if(self._isSync()) {
+			const allFixtures = binding.toJS('models');
+
+			if(allFixtures && allFixtures.length != 0) {
+				selectedDayFixture = allFixtures.filter((event) => {
+					const eventDate = new Date(event.startTime).toLocaleDateString(),
+						currentDate = date.toLocaleDateString();
+
+					return currentDate == eventDate;
+				});
+			}
+		}
+
+		binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
+	},
+	_onClickEvent: function(eventId) {
+		document.location.hash = 'event/' + eventId;
+	},
+	_getSportIcon:function(sport){
+		return <Sport name={sport} className="bIcon_invites" ></Sport>;
+	},
+	_renderEvent: function () {
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				selectDay		= binding.get('calendar.selectDay'),
+				childrenOfUser	= binding.get('eventChild');
+		let		result;
+
+		if(selectDay === undefined || selectDay === null) {
+			result = (
+				<div className="eChallenge mNotFound">{"Please select day."}</div>
+			);
+		} else if(self._isSync() && childrenOfUser && childrenOfUser.count()) {
+			const fixtures = childrenOfUser.map(self._renderChildEvents).toArray().filter((fixture) => {
+				return fixture !== null;
+			});
+
+			if(fixtures.length === 0) {
+				result = (
+					<div className="eChallenge mNotFound">{"There are no events for selected day."}</div>
+				);
+			} else {
+				result = fixtures;
+			}
+		} else {
+			result = (
+				<div className="eChallenge mNotFound">{"Loading..."}</div>
+			);
+		}
+
+		return result;
+	},
+	_renderChildEvents: function(child, childInd) {
+		const	self	= this,
+				binding	= self.getDefaultBinding(),
+				events	= binding.get('selectedDayFixtures');
+
+		child.event = events.filter(function(ev){
+			return ev.get('childId') === child.get('childId');
+		});
+
+		if(child.event.count()) {
+			//Iterate over the children present in the bag
+			const	childFixtures	= child.event.map(self._renderChildEvent).toArray();
+
+			return (
+				<div key={childInd} className= "eChallenge eChallenge_all">
+					<div className="eChildFixturesAll"> {childFixtures}</div>
+					<div className="eChallenge_childName">{`${child.get('firstName')} ${child.get('lastName')}`}</div>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
+	_renderChildEvent: function(childEv, childEvInd) {
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				hoverDay	= binding.get('calendar.hoverDay') && binding.get('calendar.hoverDay').date,
+				stringDate	= self.formatDate(childEv.get('startTime')),
+				sport		= self._getSportIcon(childEv.get('sport').get('name'));
+
+		return(
+			<div key={childEvInd} className={'eChallenge eChallenge_basicMod'} onClick={self._onClickEvent.bind(null, childEv.get('id'))}>
+				<span className="eChallenge_sport">{sport}</span>
+				<span className="eChallenge_date">{stringDate}</span>
+				<div className="eChallenge_name">{childEv.get('name')}</div>
+			</div>
+		);
+	},
+	_isSync: function() {
+		const	self	= this;
+
+		return self.getDefaultBinding().toJS('sync');
+	},
+	render: function() {
+		const	self	= this;
+
+		return (
+			<div className="eEvents_challenges mChildrenNames">
+				<div className="eChallenge_title">
+					<div className="eChildFixturesAll">
+						<span className="eChallenge_sport">Sport</span>
+						<span className="eChallenge_date">Date</span>
+						<span className="eChallenge_name">Event Name</span>
+					</div>
+						<span className="eChallenge_childName">Name</span>
+				</div>
+				{self._renderEvent()}
+			</div>
+		);
+	}
 });
+
 module.exports = AllChallengesList;
