@@ -3,13 +3,14 @@
 }
 
 .eTeamsTable_row:hover {
-  background-color: #00A000;
+  background-color: #ddd;
 }
 
 .eTeamsTable_cell {
   height: 30px;
   vertical-align: middle;
   text-align: left;
+  cursor: pointer;
 }
 
 .eTeamsTable_cell.mName {
@@ -30,5 +31,5 @@
 }
 
 .eTeamsTable_row.mSelected {
-  background-color: #00A000;
+  color: $MAIN_COLOR;
 }
