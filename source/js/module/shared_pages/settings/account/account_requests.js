@@ -2,7 +2,7 @@
  * Created by bridark on 08/07/15.
  */
 const   Popup       = require('module/ui/popup'),
-        GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+        GrantRole   = require('./request_popup'),
         RoleList    = require('./role_list'),
         React       = require('react'),
         SVG         = require('module/ui/svg'),
@@ -53,16 +53,17 @@ const AccountRequests = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-        return window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
+        binding.set('popup',false);
+        window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
             .then(function(permission){
                 binding
                     .atomically()
-                    .set('popup',false)
                     .set('userAccountRoles',Immutable.fromJS(permission))
                     .commit();
                 return permission;
             }).catch(function(error){
-            alert(error.errorThrown+' occurred while getting updated permissions');
+            //alert(error.errorThrown+' occurred while getting updated permissions');
+                console.log(error.errorThrown);
         });
     },
     render:function(){
@@ -98,9 +99,9 @@ const AccountRequests = React.createClass({
                         <RoleList binding={binding} />
                     </div>
                 </div>
-                <Popup binding={binding} stateProperty={'popup'} onRequestClose={function(){self._closePopup()}} otherClass="bPopupGrant">
+                <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={binding} userIdsBinding={rootBinding.sub('userData.authorizationInfo.userId')}
-                               onSuccess={self._onSuccess}/>
+                               onSuccess={self._onSuccess} isAdmin={false}/>
                 </Popup>
             </div>
         )

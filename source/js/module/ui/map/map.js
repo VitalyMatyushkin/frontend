@@ -12,16 +12,16 @@ const MapView = React.createClass({
 	},
 	componentDidMount: function() {
 		var self = this;
-		self.setUpMap();
+		self.setUpMap(self.props.point);
 	},
-	componentWillReceiveProps:function(){
+	componentWillReceiveProps:function(nextProps){
 		var self = this;
-		self.setUpMap();
+		self.setUpMap(nextProps.point);
 	},
-	setUpMap:function(){
+	setUpMap:function(point){
 		var self = this,
 			mapNode = self.refs.map,
-			mapeCenter = new google.maps.LatLng(self.props.point.lat, self.props.point.lng),
+			mapeCenter = new google.maps.LatLng(point.lat, point.lng),
 			binding = self.getDefaultBinding(),
 			mapOptions;
 

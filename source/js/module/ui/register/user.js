@@ -135,7 +135,23 @@ const RegisterUserPage = React.createClass({
             })}
         </div>
     },
-
+    renderProgress: function (){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            currentStep = binding.get('registerStep');
+                if (currentStep === 'account') {
+                 return <div className="eStepComplete" style={{width:20+'px'}}></div>
+                }
+                else if (currentStep === 'verification') {
+                    return <div className="eStepComplete" style={{width:113+'px'}}></div>
+                }
+                else if (currentStep === 'permissions') {
+                    return <div className="eStepComplete" style={{width:208+'px'}}></div>
+                }
+                else if (currentStep === 'finish') {
+                    return <div className="eStepComplete" style={{width:320+'px'}}></div>
+                }
+    },
     renderSteps: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -152,7 +168,10 @@ const RegisterUserPage = React.createClass({
                 return <span className={stepClasses}>{step.title}</span>;
             })}
             </div>
-            {self.steps.map(function (step) {
+            <div className ="bProgressStrip">
+                {self.renderProgress()}
+            </div>
+                {self.steps.map(function (step) {
                 var descriptionClasses = classNames({
                     eStepDescription: true,
                     mActive: currentStep === step.name

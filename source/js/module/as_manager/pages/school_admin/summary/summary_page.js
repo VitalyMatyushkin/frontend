@@ -46,30 +46,32 @@ const SchoolSummary = React.createClass({
             <div className="summary_inside">
               <div className="editSchool">
                 <a href={'/#schools/edit?id=' + self.activeSchoolId}>
-                  <div className="eEdit_btn"></div>
+                  <div className="bEditButton"><SVG icon="icon_edit"/></div>
                 </a>
               </div>
-              <h1 className="eSchoolMaster_title">
+              <div>
                 {schoolPicture ? <div className="eSchoolMaster_flag"><img src={schoolPicture}/></div> : ''}
-                {binding.get('name')}
+                <h1 className="eSchoolMaster_title">
+                  {binding.get('name')}
+                </h1>
 
-              </h1>
-
-              <p>PostCode: {binding.get('postcodeId')}</p>
-
-              <p>Address: {binding.get('address')}</p>
-
+                <div className="eSchoolAddress">
+                  {binding.get('postcodeId')}
+                  {binding.get('address')}
+                </div>
+              </div>
               <div className="eDescription">
-                <p>Description: {binding.get('description')}</p>
+                <p>{binding.get('description')}</p>
               </div>
               <p>Site: <a href={'//' + siteLink} target="blank"
                           title="binding.get('name') homepage">http://{siteLink}</a>
               </p>
             </div>
+            <div>
             <If condition={geoPoint !== undefined}>
               <Map binding={binding} point={binding.toJS('postcode.point')}/>
             </If>
-
+            </div>
           </div>
         </div>
     )

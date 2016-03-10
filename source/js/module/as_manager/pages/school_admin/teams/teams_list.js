@@ -33,18 +33,18 @@ const TeamsListPage = React.createClass({
 
         return result;
     },
-  _getGender: function (data) {
-    var result = '';
+    _getGender: function (data) {
+        var result = '';
 
-    if (data !== undefined) {
-      if (data === 'female') {
-        result = 'girls'
-      } else {
-        result = 'boys'
-      }
-    }
-    return result;
-  },
+        if (data !== undefined) {
+            if (data === 'female') {
+              result = 'girls'
+            } else {
+              result = 'boys'
+            }
+        }
+      return result;
+    },
     getTableView: function() {
         var self = this,
             binding = self.getDefaultBinding();

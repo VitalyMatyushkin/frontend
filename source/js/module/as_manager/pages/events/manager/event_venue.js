@@ -6,12 +6,16 @@ const   React       = require('react'),
         Immutable   = require('immutable'),
         FormField 	= require('module/ui/form/form_field'),
         If          = require('module/ui/if/if'),
-        ReactDOM    = require('reactDom');
 
-const EventVenue = React.createClass({
+EventVenue = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         sportType:React.PropTypes.string
+    },
+    getDefaultState:function(){
+        return Immutable.fromJS({
+            radio: 'home'
+        });
     },
     displayName:'EventVenue',
     componentWillMount:function(){
@@ -29,109 +33,35 @@ const EventVenue = React.createClass({
     componentSetupCalls:function(prop){
         const   self        = this,
                 binding     = self.getDefaultBinding(),
-                currentProp = prop !== undefined?prop:self.props.sportType;
+                currentProp = prop !== undefined?prop:self.props.sportType,
+                postCode    = binding.toJS('schoolInfo.postcode');
 
-        let postCode;
-        if(currentProp === 'inter-schools'){
-            self.neutralVenue = false;
-            postCode = binding.get('rivals.0.postcodeId');
-        } else {
-            self.neutralVenue = true;
-            postCode = binding.get('schoolInfo.postcodeId');
-        }
-        window.Server.findPostCodeById.get({postCode:postCode})
-            .then(function(postcode){
-                self.currentPostcode = postcode;
-                self.refs.home && (self.refs.home.checked = true);
-                binding.set('venue',postcode);
-                binding.set('model.venue.postcode', postcode.id);
-
-                return postcode;
-            })
-            .catch(function(er){
-                console.log(er);
-            });
+        self.neutralVenue = currentProp !== 'inter-schools';
+        self.currentPostcode = postCode;
+        binding.set('venue',postCode);
+        binding.set('model.venue.postcode', postCode.id);
+        self.refs.home && (self.refs.home.checked = true);
     },
     onRadioButtonChange:function(reference){
         var self = this,
             binding = self.getDefaultBinding();
-        switch (reference){
-            case 'home':
-                self.neutralVenue = false;
-                ReactDOM.findDOMNode(self.refs.neutral).checked = false;
-                let buttonState = self.checkStatus('home');
-                if(buttonState){
-                    ReactDOM.findDOMNode(self.refs.away).checked = false;
-                    self.callService('home');
-                }else{
-                    let otherButtonState = ReactDOM.findDOMNode(self.refs.away).checked;
-                    if(!otherButtonState){
-                        ReactDOM.findDOMNode(self.refs.home).checked = true;
-                    }
-                }
-                break;
-            case 'away':
-                self.neutralVenue = false;
-                ReactDOM.findDOMNode(self.refs.neutral).checked = false;
-                let awayButtonState = self.checkStatus('away');
-                if(awayButtonState){
-                    if(binding.get('rivals.1')!== undefined){
-                        ReactDOM.findDOMNode(self.refs.home).checked = false;
-                        self.callService('away');
-                    }else{
-                        alert('Please select rival school');
-                        ReactDOM.findDOMNode(self.refs.away).checked = false;
-                    }
-                }else{
-                    let otherState = ReactDOM.findDOMNode(self.refs.home).checked;
-                    if(!otherState){
-                        ReactDOM.findDOMNode(self.refs.home).checked = true;
-                        self.callService('home');
-                    }
-                }
-                break;
-            case 'neutral':
-                self.neutralVenue = true;
-                let neutralState = ReactDOM.findDOMNode(self.refs.neutral).checked;
-                if(neutralState){
-                    ReactDOM.findDOMNode(self.refs.home).checked = false;
-                    ReactDOM.findDOMNode(self.refs.away).checked = false;
-                    self.forceUpdate();
-                }else{
-                    ReactDOM.findDOMNode(self.refs.home).checked = true;
-                    self.neutralVenue = false;
-                    ReactDOM.findDOMNode(self.refs.away).checked = false;
-                    self.callService('home');
-                }
-                break;
-            default:
-                self.neutralVenue = false;
-                ReactDOM.findDOMNode(self.refs.home).checked = true;
-                self.callService('home');
-                break;
-        }
+
+        self.neutralVenue = reference === 'neutral';
+        if( reference==='away' && binding.get('rivals.1')=== undefined)
+            alert('Please select rival school');
+        else
+            binding.set('radio', reference);
+
+        self.callService();
     },
-    checkStatus:function(el){
-        var self = this;
-        return ReactDOM.findDOMNode(self.refs[el]).checked;
-    },
-    callService:function(param){
+    callService:function(){
         var self = this,
-            binding = self.getDefaultBinding();
-        if(param === 'away'){
-            window.Server.findPostCodeById.get({postCode:binding.get('rivals.1.postcodeId')})
-                .then(function(postcode){
-                    binding.set('venue',postcode);
-                    binding.set('model.venue.postcode',postcode.id);
-                    return postcode;
-                })
-                .catch(function(er){
-                    console.log(er);
-                });
-        }else{
-            binding.set('venue',self.currentPostcode);
-            binding.set('model.venue.postcode',self.currentPostcode.id);
-        }
+            binding = self.getDefaultBinding(),
+            radio = binding.get('radio'),
+            postcode = radio === 'away' ? binding.toJS('rivals.1.postcode'):self.currentPostcode;
+
+        binding.set('venue',postcode);
+        binding.set('model.venue.postcode',postcode.id);
     },
     postcodeSelectionChange:function(){
         var self = this,
@@ -144,6 +74,7 @@ const EventVenue = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
+            radio = binding.get('radio'),
             venuePoint = binding.get('venue'),
             point = venuePoint ? venuePoint.point : {"lat": 50.832949, "lng": -0.246722};
         return(
@@ -151,9 +82,14 @@ const EventVenue = React.createClass({
                 <span>Change Venue</span>
                 <If condition={self.props.sportType === 'inter-schools'}>
                     <div style={{marginBottom:10+'px',marginTop:10+'px'}}>
-                        <label style={{marginRight:4+'px'}}>Home</label><input ref="home" type="checkbox" onChange={function(){self.onRadioButtonChange('home')}}/>
-                        <label style={{marginRight:4+'px'}}>Away</label><input ref="away" type="checkbox" onChange={function(){self.onRadioButtonChange('away')}}/>
-                        <label style={{marginRight:4+'px'}}>Neutral</label><input ref="neutral" type="checkbox" onChange={function(){self.onRadioButtonChange('neutral')}}/>
+                        <input type="checkbox" checked={radio === 'home'} onChange={function(){self.onRadioButtonChange('home')}}/>
+                        <label style={{marginRight:4+'px'}}>Home</label>
+
+                        <input type="checkbox" checked={radio === 'away'} onChange={function(){self.onRadioButtonChange('away')}}/>
+                        <label style={{marginRight:4+'px'}}>Away</label>
+
+                        <input type="checkbox" checked={radio === 'neutral'} onChange={function(){self.onRadioButtonChange('neutral')}}/>
+                        <label style={{marginRight:4+'px'}}>Neutral</label>
                     </div>
                 </If>
                 <If condition={self.neutralVenue === true}>

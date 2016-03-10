@@ -79,7 +79,7 @@ $chooserIconSize: 35px;
 }
 .eRegistration_permissions {
   margin-left: 40px;
-  width: 300px;
+  width: 360px;
 }
 .eRegistration_permissionsField input {
   width: 200px;
@@ -94,7 +94,7 @@ $chooserIconSize: 35px;
 
 .eRegistration_label {
   display: block;
-  margin: 10px auto;
+  margin: 10px 20px;
 }
 
 .eRegistration_labelField {
@@ -134,12 +134,12 @@ $chooserIconSize: 35px;
   display: block;
 }
 .eRegistration_verification {
-  max-width: 300px;
+  max-width: 360px;
   margin-left: 40px;
 }
 .bRegisterMessage {
   max-width: 350px;
   color: #a9a9a9;
-  margin: 0 50px;
   text-align: center;
+  margin-left: 40px;
 }
