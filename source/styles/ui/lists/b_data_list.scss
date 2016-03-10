@@ -79,7 +79,9 @@
   display: inline-block;
   margin-left: 5px;
 }
-
+.bLinkLike.bViewBtn {
+  vertical-align: middle;
+}
 .eDataList_listItem:hover .bLinkLike:hover{
   text-decoration: underline;
 }
@@ -103,12 +105,12 @@
 
 .eDataList_listItemColor{
   display: inline-block;
-  height: 13px;
-  width: 13px;
+  height: 15px;
+  width: 15px;
   vertical-align: middle;
   margin-right: 3px;
   position: relative;
-  border: 1px solid #ccc;
+  border-radius: 50%;
 }
 
 .eDataList_parent {

@@ -20,16 +20,14 @@
 }
 .eSchoolMaster_summary{
   border: solid 1px #c2c2c2;
-  margin: 0 100px;
+  margin: 0 auto;
   background: #fff;
+  max-width: 1000px;
 }
 .eSchoolMaster_summary h1{
   color: #535353;
-  border:none;
-  margin: 0 0 20px 0;
-  left: -10px;
-  display: block;
   text-align: left;
+  font-weight: normal;
 }
 .eSchoolMaster_groupAction{
   position: relative;
@@ -172,8 +170,8 @@
 .eSchoolMaster_flag{
   display: inline-block;
   vertical-align: top;
-  margin: 0 20px;
   float: left;
+  margin-right: 15px;
 }
 
 .eSchoolMaster_flag img{
@@ -181,7 +179,8 @@
   max-height: 80px;
 }
 .bSchoolMaster .bMapView {
-  height: 300px;
+  min-height: 315px;
+  max-width: 500px;
 }
 .groupActionList_show{
   display: block !important;
@@ -239,28 +238,26 @@
   padding: 40px;
 }
 .summary_inside{
-  max-width: 399px;
+  max-width: 500px;
   float: left;
-  margin: 10px 30px 0 70px;
+  font-size: 14px;
+  color: #b7b7b7;
+  display: flex;
+  flex-direction: column;
+  padding: 25px 25px 70px 90px;
+  box-sizing: border-box;
+  line-height: 18px;
 }
 
 .summary_inside p{
-  margin: 0;
-  margin-left: 10px;
-  font-size: 12px;
-  color: #aeafb1;
-  line-height: 12px;
+  line-height: 18px;
+  margin-bottom: 0;
 }
 .eDescription {
-  color: #333132!important;
-  margin: 20px 0;
+  color: #333132;
+  margin: 10px 0;
 }
 
-.eDescription p{
-  color: #333132!important;
-  font-size: 14px;
-  line-height: 22px;
-}
 .changeSchool{
   width: 1000px;
   margin: 0 auto;
@@ -405,4 +402,9 @@
   &.mDESC:after{
     content: '↓';
   }
+}
+.eSchoolAddress {
+  max-width: 260px;
+  margin: 15px 10px;
+  float: left;
 }
