@@ -11,7 +11,6 @@ const SchoolSummary = React.createClass({
     componentWillMount: function() {
         var self = this,
             binding = self.getDefaultBinding(),
-            metaBinding = binding.meta(),
             globalBinding = self.getMoreartyContext().getBinding(),
             activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
@@ -24,10 +23,10 @@ const SchoolSummary = React.createClass({
 			}
         ).then(function(data) {
             binding.set(Immutable.fromJS(data));
-            Promise.resolve(ActiveUserHelper.howManySchools(self))
-                .then(function(val){
-                    metaBinding.set('countOfSchools',val.length);
-                }).catch(function(shit){console.log(shit+' happened')});
+            ActiveUserHelper.howManySchools(self).then(function(val){
+                binding.set('countOfSchools',val.length);
+                return val;
+            });
             return data;
         });
     },
@@ -39,7 +38,6 @@ const SchoolSummary = React.createClass({
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
-            metaBinding = binding.meta(),
             schoolPicture = binding.get('pic'),
             siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
@@ -47,7 +45,7 @@ const SchoolSummary = React.createClass({
         <div>
           <div className="changeSchool">
               {/*Check if the current user has more than one schools listed against him/her before showing swap icon*/}
-              <If condition={metaBinding.get('countOfSchools') > 1 }>
+              <If condition={binding.get('countOfSchools') > 1 }>
                   <a title="Change active school" href="/#schools" className="addButton">
                       <SVG icon="icon_change_school" />
                   </a>
