@@ -108,9 +108,9 @@ const EventHeader = React.createClass({
             <div className="bEventButtons">
                 <If condition={binding.get('mode') === 'general'}>
                     <div
-                        className="bButton"
+                        className="bEditButton"
                         onClick={self.onClickReFormTeamMatch}
-                    >Edit squad</div>
+                    ><SVG icon="icon_edit"/>Edit squad</div>
                 </If>
                 <If condition={binding.get('mode') === 'general'}>
                     <div
