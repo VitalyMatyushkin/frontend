@@ -67,10 +67,11 @@ const SchoolSummary = React.createClass({
                           title="binding.get('name') homepage">http://{siteLink}</a>
               </p>
             </div>
+            <div>
             <If condition={geoPoint !== undefined}>
               <Map binding={binding} point={binding.toJS('postcode.point')}/>
             </If>
-
+            </div>
           </div>
         </div>
     )
