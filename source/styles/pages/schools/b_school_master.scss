@@ -259,13 +259,15 @@
 }
 
 .changeSchool{
-  width: 1000px;
+  max-width: 1000px;
   margin: 0 auto;
   text-align: right;
   height: 60px;
   line-height: 74px;
   display: flex;
   justify-content: flex-end;
+  box-sizing: border-box;
+  padding: 0 30px;
 }
 .editSchool{
   width: 399px;
