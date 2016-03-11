@@ -2,6 +2,8 @@ const   SVG         = require('module/ui/svg'),
         Map         = require('module/ui/map/map'),
         React       = require('react'),
         If          = require('module/ui/if/if'),
+        ActiveUserHelper = require('module/helpers/activeUser_helper'),
+        Promise     = require('bluebird'),
         Immutable   = require('immutable');
 
 const SchoolSummary = React.createClass({
@@ -21,6 +23,11 @@ const SchoolSummary = React.createClass({
 			}
         ).then(function(data) {
             binding.set(Immutable.fromJS(data));
+            return data;
+        });
+        ActiveUserHelper.howManySchools(self).then(function(val){
+            binding.set('countOfSchools',val);
+            return val;
         });
     },
     componentWillUnmount: function() {
@@ -34,13 +41,15 @@ const SchoolSummary = React.createClass({
             schoolPicture = binding.get('pic'),
             siteLink = binding.get('domain') + '.stage.squadintouch.com',
             geoPoint = binding.toJS('postcode.point');
-
     return (
         <div>
           <div className="changeSchool">
-            <a title="Change active school" href="/#schools" className="addButton">
-              <SVG icon="icon_change_school" />
-            </a>
+              {/*Check if the current user has more than one schools listed against him/her before showing swap icon*/}
+              <If condition={binding.get('countOfSchools') > 1 }>
+                  <a title="Change active school" href="/#schools" className="addButton">
+                      <SVG icon="icon_change_school" />
+                  </a>
+              </If>
           </div>
           <div className="eSchoolMaster_summary">
             <div className="summary_inside">
