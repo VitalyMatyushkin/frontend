@@ -19,7 +19,9 @@ const ActiveUserHelper = {
                         include: "postcode"
                     }
                 }
-            );
+            ).then((schools)=>{
+                return new Promise(resolve => resolve(schools.length));
+            });
         }
     }
 };

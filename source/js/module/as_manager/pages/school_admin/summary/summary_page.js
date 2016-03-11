@@ -23,11 +23,11 @@ const SchoolSummary = React.createClass({
 			}
         ).then(function(data) {
             binding.set(Immutable.fromJS(data));
-            ActiveUserHelper.howManySchools(self).then(function(val){
-                binding.set('countOfSchools',val.length);
-                return val;
-            });
             return data;
+        });
+        ActiveUserHelper.howManySchools(self).then(function(val){
+            binding.set('countOfSchools',val);
+            return val;
         });
     },
     componentWillUnmount: function() {
