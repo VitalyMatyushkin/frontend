@@ -22,8 +22,8 @@ const RegiseterUserForm = React.createClass({
 			<Form updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
 				<FormField type="text" field="username" validation="required alphanumeric server" errorClassName="eForm_errorMsgRight">Username</FormField>
-				<FormField type="text" field="firstName" validation="required text">First Name</FormField>
-				<FormField type="text" field="lastName" validation="required text">Last name</FormField>
+				<FormField type="text" field="firstName" validation="required text">Name</FormField>
+				<FormField type="text" field="lastName" validation="required text">Surname</FormField>
 				<FormField type="text" field="email" validation="required email server" errorClassName="eForm_errorMsgRight">Email</FormField>
 				<FormField type="phone" field="phone" validation="required server" errorClassName="eForm_errorMsgRight" onPrePost={self.getPhone}>Mobile phone</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required password">Password</FormField>
