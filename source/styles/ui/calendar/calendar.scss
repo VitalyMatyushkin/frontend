@@ -75,20 +75,18 @@ $border-color: #c2c2c2;
     background: #fff
   }
   &.mToday {
-    background: #f26525;
-    border-color: $border-color;
-    color: #fff;
-  }
-  &.mHover {
-    border-color: $DarkGreen;
-    color: $DarkGreen;
+    background-image: url('/images/today_calendar_day.png');
+    &.mSelect {
+      color: #fff;
+      background: #f26525 url('/images/today_calendar_day.png');
+    }
   }
   &.mPrev,
   &.mNext {
     cursor: default;
     background: #fff;
     color: rgba(0, 0, 0, .2);
-    &.mHover {
+    &.hover {
       border-color: $DarkGreen;
       color: $DarkGreen;
     }
@@ -97,7 +95,7 @@ $border-color: #c2c2c2;
     background: #66952D;
     border-color: $DarkGreen;
     color: $DarkGreen;
-    &.mHover {
+    &:hover {
       background: #66952D;
       border-color: $DarkGreen;
       color: $DarkGreen;
@@ -106,6 +104,10 @@ $border-color: #c2c2c2;
   &.mSelect {
     color: #fff;
     background: #f26525;
+  }
+  &:hover {
+    border-color: $DarkGreen;
+    color: $DarkGreen;
   }
 }
 

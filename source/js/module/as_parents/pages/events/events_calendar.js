@@ -1,28 +1,35 @@
-const 	ChallengesList 		= require('module/as_manager/pages/events/calendar/challenges_list'),
+const 	ChallengesList 		= require('./calendar/challenges_list'),
 		AllChallengesList 	= require('./calendar/all_challenges_list'),
-    	CalendarView 		= require('module/ui/calendar/calendar'),
-		If 					= require('module/ui/if/if'),
-		React 				= require('react'),
+		CalendarView 		= require('module/ui/calendar/calendar'),
+		React 				= require('react');
 
-EventsCalendar = React.createClass({
+const EventsCalendar = React.createClass({
 	mixins: [Morearty.Mixin],
+	_renderChallengesListView: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		let challengesList;
+
+		if(binding.get('activeChildId') == 'all') {
+			challengesList = (<AllChallengesList binding={binding}/>);
+		} else {
+			challengesList = (<ChallengesList binding={binding}/>);
+		}
+
+		return challengesList;
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 
-        return (
-            <div className="eEvents_calendar">
-                <CalendarView binding={binding.sub('calendar')} />
-				<If condition={binding.get('activeChildId')!=='all'}>
-					<ChallengesList binding={binding} />
-				</If>
-				<If condition={binding.get('activeChildId')==='all'}>
-					<AllChallengesList binding={binding} />
-				</If>
-            </div>
+		return (
+			<div className="eEvents_calendar">
+				<CalendarView binding={binding.sub('calendar')} />
+				{self._renderChallengesListView()}
+			</div>
 		);
 	}
 });
-
 
 module.exports = EventsCalendar;

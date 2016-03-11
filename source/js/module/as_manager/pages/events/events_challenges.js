@@ -36,6 +36,7 @@ const ChallengesView = React.createClass({
                         new Date(event.get('startTime')),
                         new Date(date));
             });
+
         return eventsByDate.map(function (event, evtIndex) {
             var eventDateTime = new Date(event.get('startTime')),
                 eventIndex = binding.get('models').findIndex(function (evt) {
