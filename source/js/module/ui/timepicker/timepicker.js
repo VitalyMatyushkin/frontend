@@ -32,9 +32,9 @@ TimePicker = React.createClass({
         } else if (min === -60) {
             currentHours = currentHours === 0 ? 23 : currentHours - 1;
         } else if (min === 1) {
-            currentMinutes = currentMinutes === 59 ? 0 : currentMinutes + 1;
+            currentMinutes = currentMinutes === 55 ? 0 : currentMinutes + 5;
         } else if (min === -1) {
-            currentMinutes = currentMinutes === 0 ? 59 : currentMinutes - 1;
+            currentMinutes = currentMinutes === 0 ? 55 : currentMinutes - 5;
         }
 
         date.setMinutes(currentMinutes);

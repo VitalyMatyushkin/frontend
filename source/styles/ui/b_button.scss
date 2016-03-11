@@ -93,12 +93,10 @@ $DarkRed:#a93e2f;
 }
 .mClose {
   font-weight: bold;
-  margin-right: 30px;
   cursor: pointer;
 }
 .mClose .bIcon {
-  color: #ccc;
-  margin-left: 10px;
+  color: #929496;
 }
 .mClose:hover .bIcon{
   color: $COLOR;
@@ -106,4 +104,18 @@ $DarkRed:#a93e2f;
 
 .mCenteredText {
   text-align: center;
+}
+.bEditButton {
+  cursor: pointer;
+  font-weight: bold;
+  & .bIcon{
+    color: #929496;
+  }
+  &:hover .bIcon{
+    color: $COLOR;
+  }
+}
+.bViewBtn .bIcon{
+  width: 24px;
+  height: 24px;
 }

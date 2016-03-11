@@ -13,17 +13,36 @@ const StudentForm = React.createClass({
 		initialForm:		React.PropTypes.object,
 		initialHouse:		React.PropTypes.object
 	},
-	getClassService: function() {
+	getClassService: function(){
 		const self = this;
-		return function() {
-			return window.Server.forms.get(self.props.schoolId);
+		return function(txt){
+			return window.Server.forms.get(
+				{
+					schoolId:self.props.schoolId,
+					filter:{
+						where:{
+							name:{
+								like : txt
+							}
+						}
+					}
+				});
 		}
 	},
 	getHouseService: function() {
 		const self = this;
-
-		return function() {
-			return window.Server.houses.get(self.props.schoolId);
+		return function(txt) {
+			return window.Server.houses.get(
+				{
+					schoolId:self.props.schoolId,
+					filter:{
+						where:{
+							name:{
+								like: txt
+							}
+						}
+					}
+				});
 		}
 	},
 	getGender: function() {

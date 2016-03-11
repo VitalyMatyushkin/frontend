@@ -107,13 +107,19 @@ const HomeFixtures = React.createClass({
         }
     },
     renderFixtureLists:function(){
-        const self = this,
-            binding = self.getDefaultBinding(),
-            events = binding.toJS('fixtures');
+        const			self = this,
+            binding		= self.getDefaultBinding(),
+            events		= binding.toJS('fixtures'),
+            selectDay	= binding.get('selectDay');
+        let	result;
 
-        let result;
-
-        if(binding.toJS('fixturesSync')) {
+        if(selectDay === undefined || selectDay === null) {
+            result = (
+                <div className="bFixtureMessage">
+                    {"Please select day."}
+                </div>
+            );
+        } else if(binding.toJS('fixturesSync')) {
             if(events !== undefined && events.length != 0){
                 result = events.map(function(event){
                     return (
