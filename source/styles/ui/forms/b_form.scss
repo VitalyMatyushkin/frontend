@@ -25,9 +25,9 @@
   position: relative;
 }
 .eForm_fieldInput textarea{
-  resize: none;
-  height: 400px;
-  width: 800px;
+  resize: vertical;
+  min-height: 70px;
+  min-width: 194px;
 }
 
 .eForm_fieldInput.mHidden {

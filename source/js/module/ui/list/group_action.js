@@ -2,9 +2,7 @@
  * Created by bridark on 27/07/15.
  */
 var GroupAction,
-    GrantRole = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
     requestName,
-    Popup = require('module/ui/popup'),
     React = require('react'),
     ReactDOM = require('reactDom');
 GroupAction = React.createClass({

@@ -1,5 +1,6 @@
-const 	Service 		= require('module/core/service'),
-		ImageService 	= require('module/core/services/ImageService');
+const 	Service 		    = require('module/core/service'),
+		ImageService 	    = require('module/core/services/ImageService'),
+        FilteringServices 	= require('module/core/services/FilteringServices');
 
 
 /** Collection of services to reach REST API from server */
@@ -169,6 +170,11 @@ const serviceList = {
 		serviceList.parentRequests = new Service('/parentRequests', binding);
 		serviceList.parentRequest = new Service('/parentRequests/{id}', binding);
 		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
+
+        //Filtering services
+        serviceList.getAllSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
+        serviceList.getMaSchools.filter = FilteringServices.maSchoolsFiltering;         //(filter)
+        serviceList.students.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
 
 	},
 	// Services which not require authorization
