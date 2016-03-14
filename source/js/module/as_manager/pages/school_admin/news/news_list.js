@@ -27,7 +27,7 @@ const NewsListPage = React.createClass({
                    getTotalCountPromise={self.getTotalCountPromise}>
 				<TableField dataField="picUrl" filterType="none" parseFunction={self._getImageThumbnail}>Thumbnail</TableField>
 				<TableField dataField="title" width="30%">Title</TableField>
-				<TableField dataField="date" width="190px" filterType="none" parseFunction={self.getDateFromIso}>Date</TableField>
+                <TableField dataField="date" filterType="sorting" parseFunction={self.getDateFromIso}>Date</TableField>
 			</Table>
 		)
 	}
