@@ -28,9 +28,6 @@ const AdminRequest = React.createClass({
             return <span className="eChallenge_rivalPic"><img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/></span>;
         }
     },
-    getPrincipalEmail:function(principal){
-        return principal !== undefined ? principal.email : undefined;
-    },
 	getCurrentPermission: function(id, permissions) {
         return Lazy(permissions).find(permission => permission.id && permission.id === id);
 	},
@@ -97,9 +94,9 @@ const AdminRequest = React.createClass({
                        getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
                     <TableField dataField="school" filterType="none" width="20%" parseFunction={self.getSchoolName}>School</TableField>
                     <TableField dataField="school" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
-                    <TableField dataField="principal" filterType="none" width="20%" parseFunction={self.getPrincipalEmail}>Email</TableField>
-                    <TableField dataField="preset" filterType="none">Permission</TableField>
-                    <TableField dataField="comment" filterType="none" width="20%">Details</TableField>
+                    <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
+                    <TableField dataField="preset" >Permission</TableField>
+                    <TableField dataField="comment" >Details</TableField>
                 </Table>
             </div>
         );
