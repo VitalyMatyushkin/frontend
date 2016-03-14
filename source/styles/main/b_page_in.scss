@@ -209,24 +209,15 @@
 .eSchoolNewsItemLatest .eSchoolNewsItemDescription h1{
   font-weight: bold;
 }
+
 .eSchoolNewsItemLatest span.eSchoolNewsImage img{
   width: 940px;
   height: 400px;
   margin: 0 auto;
   padding-left: 10px;
 }
-.eSchoolNewsItemLeft{
-  display: flex;
-  height: auto;
-  background: #fff;
-  width: 920px;
-  margin: 20px;
-  border: $BORDER;
-  color: #333132;
-}
 
-
-.eSchoolNewsItemRight{
+.eSchoolNewsItem {
   display: flex;
   height: auto;
   background: #fff;
