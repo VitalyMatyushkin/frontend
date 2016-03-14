@@ -1,6 +1,7 @@
 const   Table     = require('module/ui/list/table'),
     TableField    = require('module/ui/list/table_field'),
     ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+    Sport		  = require('module/ui/icons/sport_icon'),
     React         = require('react');
 
 const TeamsListPage = React.createClass({
@@ -15,8 +16,9 @@ const TeamsListPage = React.createClass({
 
         return window.Server.teams.get({
             filter: {
-                where: {
-                    schoolId: self.activeSchoolId,
+                include:'sport',
+                    where: {
+                        schoolId: self.activeSchoolId,
                     tempTeam: false
                 }
             }
@@ -38,12 +40,17 @@ const TeamsListPage = React.createClass({
 
         if (data !== undefined) {
             if (data === 'female') {
-              result = 'girls'
+                result = 'girls'
             } else {
-              result = 'boys'
+                result = 'boys'
             }
         }
-      return result;
+        return result;
+    },
+    _getSport: function (sport) {
+        const name = sport ? sport.name : '';
+
+        return <Sport name={name} className="bIcon_invites" ></Sport>;
     },
     getTableView: function() {
         var self = this,
@@ -56,16 +63,16 @@ const TeamsListPage = React.createClass({
                    getDataPromise={self._getDataPromise}
                    onItemRemove={self._getItemRemoveFunction}
             >
+                <TableField dataField="sport"
+                            filterType="none"
+                            parseFunction={self._getSport}>Sport</TableField>
                 <TableField dataField="name"
                             filterType="none">Team Name</TableField>
-
                 <TableField dataField="description"
                             filterType="none">Description</TableField>
-
                 <TableField dataField="gender"
                             filterType="none"
                             parseFunction={self._getGender}>Gender</TableField>
-
                 <TableField dataField="ages"
                             filterType="none"
                             parseFunction={self._getAges}>Ages</TableField>
