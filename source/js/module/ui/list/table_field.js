@@ -47,7 +47,7 @@ const TableField = React.createClass({
 			cellStyle.width = self.props.width;
 		}
 
-		if (self.props.filterType !== 'colors' && self.props.filterType !== 'range' && self.props.filterType !== 'none') {
+		if (self.props.filterType !== 'colors' && self.props.filterType !== 'range' && self.props.filterType !== 'none' && self.props.filterType !== 'sorting') {
 			filterBlock =  <div className="eDataList_filter">
 				<input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by '
 					+ (self.props.dataFieldKey !== undefined? self.props.dataFieldKey : self.props.children.toLowerCase())
