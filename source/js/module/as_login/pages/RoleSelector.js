@@ -7,6 +7,7 @@ const RoleSelectorComponent = React.createClass({
     getRoleSubdomain: function(roleName) {
         const roleMapper = {
             owner:      'manager',
+            admin:      'manager',
             manager:    'manager',
             teacher:    'manager',
             coach:      'manager',
