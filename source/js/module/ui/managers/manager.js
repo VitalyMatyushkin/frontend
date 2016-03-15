@@ -294,13 +294,11 @@ const Manager = React.createClass({
             return <div className="eManager_container">
                 <div className="eManager_chooser">
                     <div className="bChooser">
-                        <span className="eChooser_title">Choose a team creation mode:</span>
                         {self._getModeChooser(selectedRivalIndex)}
                     </div>
                 </div>
                 <div className="eManager_chooser">
-                    <div className="bChooser">
-                        <span className="eChooser_title">Manage a team:</span>
+                    <div className="bChooserRival">
                         {self._getRivals()}
                     </div>
                 </div>

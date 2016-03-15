@@ -1,7 +1,4 @@
-/**
- * Created by bridark on 03/08/15.
- */
-const   CalendarView	= require('module/ui/calendar/calendar'),
+const	CalendarView	= require('module/ui/calendar/calendar'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
 		DateTimeMixin	= require('module/mixins/datetime'),
@@ -22,14 +19,14 @@ const HomeCalender = React.createClass({
 		});
 	},
 	getTeams:function(participants){
-		if(participants !== undefined){
+		if (participants !== undefined){
 			return participants.name;
-		}else{
+		} else {
 			return 'n/a';
 		}
 	},
 	getSportIcon: function(sport) {
-		const name = sport ? sport.name : '';
+		const	name	= sport ? sport.name : '';
 
 		return <Sport name={name} className="bIcon_mSport" ></Sport>;
 	},
@@ -38,7 +35,7 @@ const HomeCalender = React.createClass({
 				binding		= self.getDefaultBinding(),
 				fixtureList	= binding.get('fixtures'),
 				selectDay	= binding.get('selectDay');
-		let result;
+		let		result;
 
 		if(selectDay === undefined || selectDay === null) {
 			result = (
@@ -47,12 +44,13 @@ const HomeCalender = React.createClass({
 				</div>
 			);
 		} else if(binding.toJS('fixturesSync')) {
-			if(fixtureList !== undefined && fixtureList.length != 0){
-				const fixtures = fixtureList.toJS();
+			if(fixtureList !== undefined && fixtureList.size != 0) {
+				const	fixtures = fixtureList.toJS();
 
 				result = fixtures.map(function(fixture){
-					const   team1 = self.getTeams(fixture.participants[0]),
-						team2 = self.getTeams(fixture.participants[1]);
+					const	team1	= self.getTeams(fixture.participants[0]),
+							team2	= self.getTeams(fixture.participants[1]);
+
 					return (
 						<div key={fixture.id} className="eSchoolFixtureListItem">
 							<span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
