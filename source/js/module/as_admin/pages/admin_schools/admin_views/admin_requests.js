@@ -10,18 +10,24 @@ const   Table           = require('module/ui/list/table'),
 
 const AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
-    serviceName:'Permissions',
-    serviceCount:'PermissionCount',
+    propTypes: {
+        serviceName:    React.PropTypes.string,
+        serviceCount:   React.PropTypes.string
+    },
+    getDefaultProps: function() {
+        return {
+            serviceName:'Permissions',
+            serviceCount:'PermissionCount'
+        };
+    },
     groupActionList:['Accept','Decline'],
     filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
-    //filters:{include:['principal','school'],where:{and:[{"accepted":"undefined"}]}},
     componentWillMount:function(){
-        this.updateSubMenu();
-    },
-    getSchoolName:function(school){
-        if(school !== undefined ){
-            return school.name;
-        }
+        const self = this;
+
+        self.serviceName = self.props.serviceName;
+        self.serviceCount = self.props.serviceCount;
+        self.updateSubMenu();
     },
     getSchoolEmblem:function(school){
         if(school !== undefined){
@@ -35,6 +41,10 @@ const AdminRequest = React.createClass({
         const   self                = this,
             globalBinding       = self.getMoreartyContext().getBinding();
         globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
+    },
+    refresh:function(){
+        this.updateSubMenu();
+        this.reloadData();
     },
     _getQuickEditActionFunctions:function(event){
 		const   self                = this,
@@ -61,7 +71,7 @@ const AdminRequest = React.createClass({
 									return permission.get('id') !== id;
 								});
 							});
-                            self.updateSubMenu();
+                            self.refresh();
 						});
 					}
 				}
@@ -75,7 +85,7 @@ const AdminRequest = React.createClass({
                                 return permission.get('id') !== id;
                             });
                         });
-                        self.updateSubMenu();
+                        self.refresh();
                     });
                 }
                 break;
@@ -92,7 +102,7 @@ const AdminRequest = React.createClass({
                        quickEditActionsFactory={self._getQuickEditActionFunctions}
                        quickEditActions={self.groupActionList} isPaginated={true} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
-                    <TableField dataField="school" filterType="none" width="20%" parseFunction={self.getSchoolName}>School</TableField>
+                    <TableField dataField="school"dataFieldKey="name" filterType="none" >School</TableField>
                     <TableField dataField="school" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                     <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
                     <TableField dataField="preset" >Permission</TableField>
