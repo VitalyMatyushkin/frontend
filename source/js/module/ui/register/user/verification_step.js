@@ -75,10 +75,11 @@ const VerificationStep = React.createClass({
                     <button ref="emailCheck" className={emailCheckClasses} onClick={self.confirmEmail}>Verify</button>
                     <span className={isEmailCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
                 </label>
-                <label className={emailErrorCheck}>
-                    <span className="eForm_fieldValidText verify_error">An error occurred please try again</span>
-                </label>
+                <div className={emailErrorCheck}>
+                    <span className="verify_error">An error occurred please try again</span>
+                </div>
                 <label className="eRegistration_label">
+
                     <span className="eRegistration_labelField">Verification phone</span>
                     <Morearty.DOM.input className='eRegistration_input'
                                         ref='phoneCodeField'
@@ -88,9 +89,9 @@ const VerificationStep = React.createClass({
                     <button ref="phoneCheck" className={phoneCheckClasses} onClick={self.confirmPhone}>Verify</button>
                     <span className={isPhoneCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
                 </label>
-                <label className={phoneErrorCheck}>
-                    <span className="eForm_fieldValidText verify_error">An error occurred please try again</span>
-                </label>
+                <div className={phoneErrorCheck}>
+                    <span className="verify_error">An error occurred please try again</span>
+                </div>
             </div>
         );
     }
