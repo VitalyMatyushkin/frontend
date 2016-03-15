@@ -1,6 +1,3 @@
-/**
- * Created by bridark on 31/07/15.
- */
 const	DateTimeMixin	= require('module/mixins/datetime'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
@@ -15,10 +12,26 @@ const HomeFixtures = React.createClass({
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
-		self._setFixturesByDate(binding.toJS('currentDate'));
+		binding.set(
+			'fixturesSync',
+			Immutable.fromJS(
+				false
+			)
+		);
+		self._setFixturesByDate(
+			binding.toJS('currentDate')
+		);
 
 		binding.sub('selectDay').addListener((descriptor) => {
-			self._setFixturesByDate(descriptor.getCurrentValue().date);
+			binding.set(
+				'fixturesSync',
+				Immutable.fromJS(
+					false
+				)
+			);
+			self._setFixturesByDate(
+				descriptor.getCurrentValue().date
+			);
 		});
 	},
 	_setFixturesByDate: function(date) {
