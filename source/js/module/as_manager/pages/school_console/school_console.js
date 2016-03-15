@@ -28,6 +28,11 @@ const SchoolConsole = React.createClass({
     componentWillMount: function () {
         this.createSubMenu();
     },
+    componentDidMount: function(){
+        const self = this,
+            globalBinding = self.getMoreartyContext().getBinding();
+        self.addBindingListener(globalBinding, 'submenuNeedsUpdate', self.createSubMenu);
+    },
     createSubMenu: function(){
         const self = this,
             binding = self.getDefaultBinding(),

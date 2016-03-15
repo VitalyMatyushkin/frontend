@@ -10,7 +10,7 @@ const OneSchoolPage = React.createClass({
         this.createSubMenu();
     },
     componentDidMount: function(){
-        var self = this,
+        const self = this,
             globalBinding = self.getMoreartyContext().getBinding();
         self.addBindingListener(globalBinding, 'submenuNeedsUpdate', self.createSubMenu);
     },
