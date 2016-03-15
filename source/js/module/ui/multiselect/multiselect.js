@@ -1,4 +1,5 @@
 var MultiSelectItem = require('./multiselect_item'),
+    Immutable = require('immutable'),
     React = require('react');
 
 var MultiSelect = React.createClass({
@@ -13,40 +14,53 @@ var MultiSelect = React.createClass({
             onItemDeselected: function() {}
         }
     },
-    getInitialState: function() {
-        var self = this;
-
-        return {
-            selections: self.props.selections || [],
+    componentWillMount:function(){
+        const   self    =   this;
+        let     binding =   self.getDefaultBinding(),
+                immutableData = binding.toJS();
+        immutableData.selections = self.props.selections;
+        binding.set(Immutable.fromJS(immutableData));
+    },
+    getDefaultState:function(){
+        return Immutable.fromJS({
+            selections: [],
             filter: '',
             count: 0
-        }
+        })
     },
     handleItemClick: function(item) {
-        var selected = this.state.selections.indexOf(item.id) !== -1;
-        this.setSelected(item, !selected);
+        const   self     =   this;
+        let     binding  =   self.getDefaultBinding(),
+                selected =   binding.toJS('selections').indexOf(item.id)!==-1;
+        self.setSelected(item, !selected);
     },
     handleFilterChange: function(event) {
         // Keep track of every change to the filter input
-        this.setState({ filter: event.target.value })
+        const   self    = this;
+        let     binding = self.getDefaultBinding(),
+                immutableData = binding.toJS();
+                immutableData.filter = event.target.value;
+        binding.set(Immutable.fromJS(immutableData));
     },
     escapeRegExp: function(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     },
     createItem: function(item) {
+        const self    = this;
+        let   binding = self.getDefaultBinding();
         // Filter item visibility based on the filter input
-        var regex = new RegExp('.*'+this.escapeRegExp(this.state.filter)+'.*', 'i'),
+        var regex = new RegExp('.*'+this.escapeRegExp(binding.toJS('filter'))+'.*', 'i'),
             text = 'text' in item ? item.text
             : 'name' in item ? item.name
             : item.id;
 
         return <MultiSelectItem
-            binding={this.getDefaultBinding()}
+            binding={binding}
             key={item.id}
             text={text}
             onClick={this.handleItemClick.bind(this, item)}
             visible={regex.test(text)}
-            selected={this.state.selections.indexOf(item.id) !== -1}
+            selected={binding.toJS('selections').indexOf(item.id) !== -1}
         />
     },
     selectAll: function() {
@@ -59,9 +73,10 @@ var MultiSelect = React.createClass({
         // Accept an array or a single item
         if (!(items instanceof Array)) items = [items];
 
-        var selections = this.state.selections,
-            self = this;
-
+        const   self     = this;
+        let     binding  = self.getDefaultBinding(),
+                selections  = binding.toJS('selections'),
+                immutableData = binding.toJS();
         for (var i in items) {
             if (selected && selections.indexOf(items[i].id) === -1) {
                 selections.push(items[i].id);
@@ -77,17 +92,18 @@ var MultiSelect = React.createClass({
                 }
             }
         }
-
-        self.setState({ selections: selections });
+        //self.setState({ selections: selections });
+        immutableData.selections = selections;
+        binding.set(Immutable.fromJS(immutableData));
         self.props.onChange(selections);
     },
     render: function() {
-        var self = this,
-            count = self.props.selections.size;
-
+        const self = this;
+        let   binding = self.getDefaultBinding(),
+              count = self.props.selections.length;
         return (
             <div key={self.props.key} className="bMultiSelect">
-                {/*<input onChange={this.handleFilterChange} value={this.state.filter} placeholder={this.props.placeholder} />*/}
+                <input onChange={this.handleFilterChange} value={binding.toJS('filter')} placeholder={this.props.placeholder} />
                 <ul>{this.props.items.map(this.createItem)}</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;
                 {count > 0 ?
