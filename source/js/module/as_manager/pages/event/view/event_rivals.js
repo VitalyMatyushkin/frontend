@@ -52,10 +52,7 @@ const EventRival = React.createClass({
 	render: function() {
         var self = this,
 			binding = self.getDefaultBinding(),
-			rivals = binding.get('rivals'),
-            time = new Date(binding.get('model.startTime')),
-            hours = self.zeroFill(time.getHours()),
-            minutes = self.zeroFill(time.getMinutes());
+			rivals = binding.get('rivals');
 
 		return <div className="bEventRivals">
 			<div className="bEventRival">
@@ -64,17 +61,24 @@ const EventRival = React.createClass({
 			</div>
 			<div className="bEventResult">
                 <If condition={!binding.get('model.resultId') && binding.get('mode') !== 'closing'}>
-                    <div className="eEventResult_time">{[hours, minutes].join(':')}</div>
+					<div className="eEventResult_score">
+						<span>Score</span>
+						<div className="eEventResult_point">
+							<span>-</span>
+							<span> : </span>
+							<span>-</span>
+						</div>
+					</div>
                 </If>
                 <If condition={!!binding.get('model.resultId') || binding.get('mode') === 'closing'}>
-									<div className="eEventResult_score">
-										<span>Score</span>
-										<div className="eEventResult_point">
-											<span>{self.getCountPoint(0)}</span>
-											<span> : </span>
-											<span>{self.getCountPoint(1)}</span>
-										</div>
-									</div>
+					<div className="eEventResult_score">
+						<span>Score</span>
+						<div className="eEventResult_point">
+							<span>{self.getCountPoint(0)}</span>
+							<span> : </span>
+							<span>{self.getCountPoint(1)}</span>
+						</div>
+					</div>
                 </If>
             </div>
 			<div className="bEventRival">
