@@ -1,11 +1,10 @@
 .bManager {
   display: flex;
   flex-direction: column;
-  width: 700px;
-  margin: 0 auto;
+  width: 650px;
+  margin: 30px auto;
   color: $COLOR;
   font-size: 16px;
-  font-weight: bold;
 }
 
 .eManager_dateTimePicker {
@@ -16,7 +15,7 @@
 .bManager.mTeamManager {
   width: 960px;
   flex-direction: row;
-  margin-top: 10px;
+  margin-top: 0;
 }
 
 .eManager_group {
@@ -121,19 +120,22 @@
   align-items: baseline;
   color: $COLOR;
   margin: 0 auto 30px;
-  max-width: 850px;
+  position: absolute;
+  left: 120px;
+  top: 10px;
 }
 .eManager_steps h3 {
   color: $COLOR;
+  font-size: 16px;
+  font-weight: normal;
 }
 .eManager_step {
   font-size: 16px;
-  font-weight: bold;
   height: 18px;
   width: 18px;
   line-height: 21px;
   text-align: center;
-  border: solid 2px $COLOR;
+  border: solid 1px $COLOR;
   border-radius: 50%;
   -moz-border-radius: 50%;
   -webkit-border-radius: 50%;
