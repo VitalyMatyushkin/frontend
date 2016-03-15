@@ -1,5 +1,4 @@
-const 	Promise 	= require('bluebird'),
-		React 		= require('react'),
+const 	React 		= require('react'),
 		Lazy		= require('lazyjs'),
 		Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field');

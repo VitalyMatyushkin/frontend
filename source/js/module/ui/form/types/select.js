@@ -7,26 +7,15 @@ const TypeSelect = React.createClass({
 	propTypes: {
 		sourceArray:	React.PropTypes.array
 	},
-	bindToAutcomplete: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			defaultValue = binding.get('defaultValue');
+    componentDidMount: function(){
+        const self = this,
+            binding = self.getDefaultBinding();
 
-		if (defaultValue) {
-			binding.sub('select').set('defaultId', defaultValue);
-		}
-
-		binding.sub('select').addListener('selectedId', function() {
-			var newSelectedId = binding.get('select.selectedId');
-
-			self.setValue(newSelectedId);
-		});
-
-	},
+        self.addBindingListener(binding, 'defaultValue', changes => binding.set('select.defaultId', changes.getCurrentValue()));
+        self.addBindingListener(binding, 'select.selectedId', changes => self.setValue(changes.getCurrentValue()));
+    },
 	render: function() {
 		var self = this;
-
-		self.bindToAutcomplete();
 
 		return (
 			<Select sourceArray={self.props.sourceArray}  binding={self.getDefaultBinding().sub('select')} />
