@@ -8,7 +8,8 @@ const FormField = React.createClass({
 		type: 				React.PropTypes.string.isRequired,
 		field: 				React.PropTypes.string.isRequired,
 		defaultValueString:	React.PropTypes.string,
-		errorClassName:		React.PropTypes.string, //Error message specific class
+        errorClassName:		React.PropTypes.string, //Error message specific class
+        fieldClassName:		React.PropTypes.string,
 		binding:			React.PropTypes.any
 	},
 	render: function () {
@@ -35,7 +36,7 @@ const FormField = React.createClass({
 		//If a specific class has been provided for styling error messages then use it
 		let errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);
 		return (
-			<div className="eForm_field">
+			<div className={classNames("eForm_field", self.props.fieldClassName)}>
 				<div className="eForm_fieldName">{self.props.children}</div>
 				<div className={fieldStyleClass}>
 					{inputField}

@@ -119,3 +119,12 @@ $DarkRed:#a93e2f;
   width: 24px;
   height: 24px;
 }
+.bSchoolLink .bIcon {
+  color: #929496;
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+}
+.bSchoolLink:hover .bIcon{
+   color: $COLOR;
+ }
