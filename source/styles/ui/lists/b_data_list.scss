@@ -42,6 +42,7 @@
   background: #66952e;
   color: $DarkGreen;
   border: none;
+  line-height: 30px;
 }
 
 .eDataList_listItem.mHead:hover{
@@ -92,15 +93,12 @@
   overflow: visible;
 }
 
-.eDataList_filter{
-  margin-top: 10px;
-}
-
 .eDataList_filterInput{
   font-size: 13px;
   padding: 3px 0px;
   border: none;
   border-bottom: 1px solid #ccc;
+  height: 26px;
 }
 
 .eDataList_listItemColor{
