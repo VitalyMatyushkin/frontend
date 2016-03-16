@@ -189,13 +189,23 @@ const EventManager = React.createClass({
             );
         });
 
-        Promise.all(rivalPromises).then(() => {
-            document.location.hash = 'event/' + event.id;
-            binding.clear();
-            binding.meta().clear();
-        });
+        Promise.all(rivalPromises).then(() => self._afterEventCreation(event));
     },
-    _isEventDataCorrect: function() {
+	/**
+	 * Actions that do after fully event creation
+	 * 1) Clear binding
+	 * 2) Redirect to event page
+	 * @private
+	 */
+	_afterEventCreation: function(event) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		document.location.hash = 'event/' + event.id;
+		binding.clear();
+		binding.meta().clear();
+	},
+	_isEventDataCorrect: function() {
         const self = this,
             binding    = self.getDefaultBinding(),
             eventType  = binding.toJS('model.type');

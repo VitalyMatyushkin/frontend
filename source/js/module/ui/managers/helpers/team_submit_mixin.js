@@ -38,7 +38,7 @@ const TeamSubmitMixin = {
         switch (mode) {
             case 'current':
             case 'selectedTeam':
-                promise = self._submitOldTeam(event, rivalIndex);
+                promise = self._submitOldTeam(event, rival, rivalIndex);
                 break;
             case 'temp':
                 promise = self._submitNewTeam(event, rival, rivalIndex, true);
@@ -50,7 +50,7 @@ const TeamSubmitMixin = {
 
         return promise;
     },
-    _submitOldTeam: function(event, rivalIndex) {
+    _submitOldTeam: function(event, rival, rivalIndex) {
         const self = this,
             binding = self.getDefaultBinding(),
             teamId = self.getDefaultBinding().toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
@@ -65,20 +65,23 @@ const TeamSubmitMixin = {
                 teamId: teamId
             }
         ).then((team) => {
-            let result = [
-                new Promise((resolve) => {
-                    resolve({teamId: team.teamId});
-                })];
+            let	promises	= [],
+				teamData	= {teamId: team.teamId};
+
+			if (event.type == 'houses') {
+				teamData.houseId = rival.id;
+			}
+			promises.push(new Promise(resolve => resolve(teamData)));
 
             if (binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode` == 'current')) {
                 const initialPlayers = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.prevPlayers`),
                     players = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`),
                     teamId = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
 
-                result.push(TeamHelper.commitPlayers(initialPlayers, players, teamId));
+				promises.push(TeamHelper.commitPlayers(initialPlayers, players, teamId));
             }
 
-            return result;
+            return Promise.all(promises);
         });
     },
     _submitNewTeam: function(event, rival, rivalIndex, isTemp) {
@@ -111,14 +114,11 @@ const TeamSubmitMixin = {
         return window.Server.participants
             .post(event.id, rivalModel)
             .then((team) => {
-                let result = [
-                    new Promise((resolve) => {
-                        resolve({teamId: team.id});
-                    })];
+                let	promises	= [new Promise(resolve => resolve({teamId: team.id}))];
 
-                result.push(self._submitPlayers(team, rivalIndex));
+				promises.push(self._submitPlayers(team, rivalIndex));
 
-                return result;
+				return Promise.all(promises);
             });
     },
     _submitPlayers: function(team, rivalIndex) {
