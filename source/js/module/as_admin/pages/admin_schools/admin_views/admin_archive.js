@@ -11,7 +11,7 @@ AdminArchive = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
     serviceName:'Permissions',
     serviceCount:'PermissionCount',
-    filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created ASC'},
+    filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created DESC'},
     getRequestDate:function(meta){
         var self = this;
         return self.getDateFromIso(meta.created);
@@ -21,18 +21,8 @@ AdminArchive = React.createClass({
             return principal.firstName+' '+principal.lastName;
         }
     },
-    getRequestSchoolName:function(school){
-        if(school !== undefined){
-            return school.name;
-        }
-    },
     getRequestResponse:function(accepted){
         return accepted === true ? 'Accepted' :'Declined';
-    },
-    getRequestEmail:function(principal){
-        if(principal !== undefined){
-            return principal.email;
-        }
     },
     getTableView:function(){
         var self = this,
@@ -42,12 +32,13 @@ AdminArchive = React.createClass({
                 <Table title="Permissions" binding={binding}  hideActions={true}
                        isPaginated={true} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} filter={self.filter}>
-                    <TableField dataField="meta" filterType="none" parseFunction={self.getRequestDate} width="17%">Date</TableField>
-                    <TableField dataField="preset" width="10%" filterType="none">Request</TableField>
-                    <TableField dataField="principal" filterType="none" parseFunction={self.getRequestPrincipalName} width="20%">From</TableField>
-                    <TableField dataField="principal" filterType="none" parseFunction={self.getRequestEmail} width="15%">Email</TableField>
-                    <TableField dataField="school" filterType="none" parseFunction={self.getRequestSchoolName} width="25%">School</TableField>
-                    <TableField dataField="accepted" filterType="none" parseFunction={self.getRequestResponse} width="10%">Response</TableField>
+                    <TableField dataField="meta" dataFieldKey="created" filterType="sorting" parseFunction={self.getRequestDate} >Date</TableField>
+                    <TableField dataField="preset" >Request</TableField>
+                    <TableField dataField="principalInfo" dataFieldKey="firstName" >First Name</TableField>
+                    <TableField dataField="principalInfo" dataFieldKey="lastName" >Last Name</TableField>
+                    <TableField dataField="principalInfo" dataFieldKey="Email" >Email</TableField>
+                    <TableField dataField="school" dataFieldKey="name" filterType="none"  >School</TableField>
+                    <TableField dataField="accepted" filterType="sorting" parseFunction={self.getRequestResponse} >Response</TableField>
                 </Table>
             </div>
         );

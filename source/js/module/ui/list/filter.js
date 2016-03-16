@@ -71,6 +71,8 @@ filter.prototype._addLike = function(where, field, value){
 
     if(!where) {
         where = {};
+    }
+    if(!where.and) {
         where.and = [];
     }
 
@@ -87,6 +89,8 @@ filter.prototype._deleteLike = function(field){
         i = where.and.map(function(item){return Object.keys(item)[0];}).indexOf(field);
         i >= 0 && where.and.splice(i,1);
         if(where.and.length == 0)
+            delete where.and;
+        if(where.length == 0)
             where = undefined;
     }
     return where;
