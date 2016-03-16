@@ -113,7 +113,9 @@ const TeamAddPage = React.createClass({
                 tempTeam:    false
             };
 
-            window.Server.teams.post(team).then(function (teamsResult) {
+			binding.get('teamForm.houseId') && (team.houseId = binding.get('teamForm.houseId'));
+
+			window.Server.teams.post(team).then(function (teamsResult) {
                 let players = binding.get('teamForm.players').toJS();
 
                 var i = 0;
