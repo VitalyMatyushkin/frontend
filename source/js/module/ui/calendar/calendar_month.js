@@ -157,16 +157,17 @@ const CalendarMonthView = React.createClass({
 				now				= new Date(),
 				today			= new Date(now.getFullYear(), now.getMonth(), now.getDate()),
 				renderedDays	= days.map((day, i) => {
-					const	active	= day.events && day.events.count() > 0,
-							select	= selectDay && self._equalDates(day.date, selectDay.date),
+					const	isActive	= day.events && day.events.count() > 0,
+							isSelect	= selectDay && self._equalDates(day.date, selectDay.date),
+							isToday		= self._equalDates(day.date, today),
 							classes	= classNames({
-								eMonth_day: true,
-								mToday: self._equalDates(day.date, today),
-								mPrev: day.prev || false,
-								mNext: day.next || false,
-								mFirst: i === 0,
-								mActive: select ? false : active,
-								mSelect: select
+								eMonth_day:	true,
+								mToday:		isToday,
+								mPrev:		day.prev || false,
+								mNext:		day.next || false,
+								mFirst:		i === 0,
+								mActive:	isSelect ? false : isActive,
+								mSelect:	isSelect
 							});
 
 					return (
