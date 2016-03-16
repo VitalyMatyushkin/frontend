@@ -18,12 +18,20 @@ const HomeCalender = React.createClass({
 			});
 		});
 	},
-	getTeams:function(participants){
-		if (participants !== undefined){
-			return participants.name;
-		} else {
-			return 'n/a';
+	getTeamName: function(team, type){
+		let	name = 'n/a';
+
+		if (team !== undefined) {
+			switch (type) {
+				case 'houses':
+					name = team.house.name;
+				break;
+				default:
+					name = team.name;
+			}
 		}
+		
+		return name;
 	},
 	getSportIcon: function(sport) {
 		const	name	= sport ? sport.name : '';
@@ -48,14 +56,14 @@ const HomeCalender = React.createClass({
 				const	fixtures = fixtureList.toJS();
 
 				result = fixtures.map(function(fixture){
-					const	team1	= self.getTeams(fixture.participants[0]),
-							team2	= self.getTeams(fixture.participants[1]);
+					const	firstTeamName	= self.getTeamName(fixture.participants[0], fixture.type),
+							secondTeamName	= self.getTeamName(fixture.participants[1], fixture.type);
 
 					return (
 						<div key={fixture.id} className="eSchoolFixtureListItem">
 							<span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
 							<span className="eSchoolCalenderFixtureItem">{self.getDateFromIso(fixture.startTime)}</span>
-							<span className="eSchoolCalenderFixtureItem">{team1+' vs '+team2}</span>
+							<span className="eSchoolCalenderFixtureItem">{`${firstTeamName} vs ${secondTeamName}`}</span>
 							<span className="eSchoolCalenderFixtureItem">{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
 						</div>
 					);
