@@ -1,10 +1,12 @@
 const   Immutable        = require('immutable'),
         AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
+		Autocomplete     = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		MoreartyHelper   = require('module/helpers/morearty_helper'),
         Team             = require('module/ui/managers/team'),
         React            = require('react'),
         If               = require('module/ui/if/if'),
         Multiselect      = require('module/ui/multiselect/multiselect'),
-        Lazy            = require('lazyjs');
+        Lazy             = require('lazyjs');
 
 const TeamForm = React.createClass({
     mixins: [Morearty.Mixin],
@@ -181,6 +183,17 @@ const TeamForm = React.createClass({
             self.getDefaultBinding().get('removedPlayers').push(player)
         ));
     },
+	_serviceHouseFilter: function() {
+		const self = this;
+
+		return window.Server.houses.get(MoreartyHelper.getActiveSchoolId(self));
+	},
+	_onSelectHouse: function(id) {
+		const self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('houseId', Immutable.fromJS(id));
+	},
     render: function() {
         const self  = this,
             binding = self.getDefaultBinding(),
@@ -221,6 +234,21 @@ const TeamForm = React.createClass({
                                 onChange={Morearty.Callback.set(binding.sub('name'))}
                             />
                         </div>
+						<If condition={!!binding.get('name')}>
+							<div className="eManager_group">
+								{'House'}
+								<div className="eManager_select_wrap">
+									<Autocomplete
+										defaultItem={binding.toJS('rival')}
+										serviceFilter={self._serviceHouseFilter}
+										serverField="name"
+										placeholderText={'Select House'}
+										onSelect={self._onSelectHouse}
+										binding={binding.sub('houses')}
+									/>
+								</div>
+							</div>
+						</If>
                         <If condition={!!binding.get('name')}>
                             <div className="eManager_group">
                                 {'Team Description'}

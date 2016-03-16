@@ -170,6 +170,8 @@ const TeamEditPage = React.createClass({
                 schoolId:    MoreartyHelper.getActiveSchoolId(self)
             };
 
+            binding.get('teamForm.houseId') && (updatedTeam.houseId = binding.get('teamForm.houseId'));
+
             window.Server.team.put(
                 {
                     teamId: teamId

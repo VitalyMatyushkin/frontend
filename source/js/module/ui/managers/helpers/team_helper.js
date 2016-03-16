@@ -38,16 +38,6 @@ function validate(binding) {
     );
 };
 
-function getHouseId(binding) {
-    let id = undefined;
-
-    if(binding.get('teamForm.isHouseSelected')) {
-        id = binding.get('teamForm.rival.id');
-    }
-
-    return id;
-};
-
 /**
  * Get players.
  * player = student + player model.
@@ -161,7 +151,6 @@ function _changePlayer(teamId, playerId, changes) {
 const TeamHelper = {
     getAges: getAges,
     validate: validate,
-    getHouseId: getHouseId,
     getPlayers: getPlayers,
     commitPlayers: commitPlayers
 };
