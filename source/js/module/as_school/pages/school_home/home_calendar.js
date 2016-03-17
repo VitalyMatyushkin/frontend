@@ -36,7 +36,7 @@ const HomeCalender = React.createClass({
 	getSportIcon: function(sport) {
 		const	name	= sport ? sport.name : '';
 
-		return <Sport name={name} className="bIcon_mSport" ></Sport>;
+		return <Sport name={name} className="calendar_mSport" ></Sport>;
 	},
 	getCalenderFixtureLists: function() {
 		const	self		= this,
