@@ -229,7 +229,7 @@ const EventManager = React.createClass({
             titles = [
                 'Choose Date',
                 'Fixture Details',
-				'Squad Members'
+				'Select from created teams'
             ],
 			bManagerClasses = classNames({
 				bManager: true,

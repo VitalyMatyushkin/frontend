@@ -291,45 +291,42 @@ const Manager = React.createClass({
             },
             errorText = binding.error.toJS(selectedRivalIndex).text;
 
-            return <div className="eManager_container">
-                <div className="eManager_chooser">
-                    <div className="bChooser">
-                        {self._getModeChooser(selectedRivalIndex)}
-                    </div>
-                </div>
-                <div className="eManager_chooser">
-                    <div className="bChooserRival">
-                        {self._getRivals()}
-                    </div>
-                </div>
-                <If condition={self._getMode(selectedRivalIndex) === 'teams'}>
-                    <div className="eManager_containerTeam">
-                        <div className="eManager_gameFieldContainer">
-                            <GameField binding={gameFieldBinding}/>
-                        </div>
-                        <div className="eManager_teamModeViewContainer">
-                            <TeamModeView binding={teamModeViewBinding}/>
-                        </div>
-                    </div>
-                </If>
-                <If condition={self._getMode(selectedRivalIndex) === 'temp'}>
-                    <div className="eManager_chooser">
-                        <div className="eManager_plug"></div>
-                        <AutocompleteTeam binding={autocompleteTeamBinding}/>
-                    </div>
-                </If>
-                <If condition={self._getMode(selectedRivalIndex) === 'temp'}>
-                    <div className="eManager_containerTeam">
-                        <GameField binding={gameFieldBinding}/>
-                        <div className="eManager_managerTeamContainer">
-                            <Team binding={teamBinding}/>
-                        </div>
-                    </div>
-                </If>
-                <div className="eTeam_errorBox">
-                    {errorText}
-                </div>
-            </div>;
+            return (
+				<div className="eManager_container">
+					<div className="eManager_chooser">
+						<div className="bChooserRival">
+							{self._getRivals()}
+						</div>
+					</div>
+					<If condition={self._getMode(selectedRivalIndex) === 'teams'}>
+						<div className="eManager_containerTeam">
+							<div className="eManager_gameFieldContainer">
+								<GameField binding={gameFieldBinding}/>
+							</div>
+							<div className="eManager_teamModeViewContainer">
+								<TeamModeView binding={teamModeViewBinding}/>
+							</div>
+						</div>
+					</If>
+					<If condition={self._getMode(selectedRivalIndex) === 'temp'}>
+						<div className="eManager_chooser">
+							<div className="eManager_plug"></div>
+							<AutocompleteTeam binding={autocompleteTeamBinding}/>
+						</div>
+					</If>
+					<If condition={self._getMode(selectedRivalIndex) === 'temp'}>
+						<div className="eManager_containerTeam">
+							<GameField binding={gameFieldBinding}/>
+							<div className="eManager_managerTeamContainer">
+								<Team binding={teamBinding}/>
+							</div>
+						</div>
+					</If>
+					<div className="eTeam_errorBox">
+						{errorText}
+					</div>
+				</div>
+			);
 	}
 });
 
