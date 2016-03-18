@@ -13,14 +13,16 @@ const NewsForm = React.createClass({
 		const self = this;
 
 		return (
-			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
+				<div>
+			<Form onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" field="title" validation="required">Title</FormField>
-				<FormField type="textarea" field="body" validation="required">Text</FormField>
 				<FormField type="date" field="date" validation="required">Date</FormField>
+				<FormField type="textarea" field="body" validation="required">Text</FormField>
 				<FormColumn type="column">
-					<FormField type="imageFile" labelText="Add image to news" typeOfFile="image" field="picUrl"/>
+					<FormField type="imageFile" labelText="Add image" typeOfFile="image" field="picUrl"/>
 				</FormColumn>
 			</Form>
+					</div>
 		)
 	}
 });

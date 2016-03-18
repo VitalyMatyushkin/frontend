@@ -2,6 +2,16 @@ var NewsForm = require('module/as_manager/pages/school_admin/news/news_form'),
 	React = require('react'),
 	NewsAddPage;
 
+var NewsTitle = React.createClass({
+	render: function() {
+	return (
+			<div className="eSchoolMaster_wrap">
+				<h1 className="eSchoolMaster_title">Add news</h1>
+				<div className="eStrip">
+				</div>
+			</div>
+				)}
+});
 NewsAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
@@ -25,8 +35,11 @@ NewsAddPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<NewsForm title="Add news..." onFormSubmit={self.submitAdd} binding={binding} />
-		)
+				<div className="bNewsEdit">
+					<NewsTitle />
+					<NewsForm title="Add news" onFormSubmit={self.submitAdd} binding={binding}/>
+				</div>
+			)
 	}
 });
 
