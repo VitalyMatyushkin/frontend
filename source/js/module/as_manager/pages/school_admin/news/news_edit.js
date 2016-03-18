@@ -2,6 +2,16 @@ const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'
 		React 		= require('react'),
 		Immutable 	= require('immutable');
 
+var NewsTitle = React.createClass({
+	render: function() {
+		return (
+				<div className="eSchoolMaster_wrap">
+					<h1 className="eSchoolMaster_title">Edit news</h1>
+					<div className="eStrip">
+					</div>
+				</div>
+		)}
+});
 const NewsEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
@@ -33,8 +43,11 @@ const NewsEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<NewsForm title="Edit news" onFormSubmit={self.submitEdit} binding={binding} />
-		)
+				<div className="bNewsEdit">
+					<NewsTitle />
+					<NewsForm title="Edit news" onFormSubmit={self.submitEdit} binding={binding}/>
+				</div>
+					)
 	}
 });
 
