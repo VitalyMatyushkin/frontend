@@ -1,12 +1,12 @@
-const   React                = require('react'),
-		classNames           = require('classnames'),
-		Team                 = require('./team'),
-		TeamPlayersValidator = require('./helpers/team_players_validator'),
-		GameField            = require('./gameField'),
-		AutocompleteTeam     = require('./autocompleteTeam'),
-		If                   = require('module/ui/if/if'),
-		TeamModeView         = require('./modes/team_mode_view'),
-		Immutable            = require('immutable');
+const	React					= require('react'),
+		classNames				= require('classnames'),
+		Team					= require('./team'),
+		TeamPlayersValidator	= require('./helpers/team_players_validator'),
+		GameField				= require('./gameField'),
+		AutocompleteTeam		= require('./autocompleteTeam'),
+		If						= require('module/ui/if/if'),
+		TeamModeView			= require('./modes/team_mode_view'),
+		Immutable				= require('immutable');
 
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -33,6 +33,7 @@ const Manager = React.createClass({
 		if(binding.selectedRivalIndex.toJS() === null) {
 			self._initRivalIndex();
 		}
+		
 		defaultBinding
 			.atomically()
 			.set('students', Immutable.List())
