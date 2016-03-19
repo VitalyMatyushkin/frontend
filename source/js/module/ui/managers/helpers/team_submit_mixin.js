@@ -12,17 +12,8 @@ const TeamSubmitMixin = {
         if (model.type === 'inter-schools' && rival.id !== activeSchoolId) {
             self._submitInvite(event, rival);
         }
-        let mode = binding.toJS(`mode.${rivalIndex}`);
-        let teamPromise;
-        switch (mode) {
-            case 'temp':
-                teamPromise = self._submitTempCreationMode(event, rival, rivalIndex);
-                break;
-            case 'teams':
-                teamPromise = self._submitTeamCreationMode(event, rival, rivalIndex);
-                break;
-        }
-        return teamPromise;
+
+		return self._submitTeamCreationMode(event, rival, rivalIndex);
     },
     _submitTempCreationMode: function(event, rival, rivalIndex) {
         const self = this;
@@ -125,18 +116,8 @@ const TeamSubmitMixin = {
         const self = this,
             binding = self.getDefaultBinding();
 
-        let players;
-
-        switch (binding.toJS(`mode.${rivalIndex}`)) {
-            case 'temp':
-                players = binding.toJS(`players.${rivalIndex}`);
-                break;
-            case 'teams':
-                players = binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`);
-                break;
-        }
-
-        let playerPromises = [];
+        let	players			= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`);
+        let	playerPromises	= [];
 
         players.forEach(function (player) {
             playerPromises.push(self._submitPlayer(team, player));
