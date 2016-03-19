@@ -96,7 +96,7 @@ function runLoginMode() {
     authController.initialize(
         {
             binding: binding,
-            defaultPath: 'schools'
+            defaultPath: 'login'
         }
     );
 
