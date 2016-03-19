@@ -33,7 +33,7 @@ const Manager = React.createClass({
 		if(binding.selectedRivalIndex.toJS() === null) {
 			self._initRivalIndex();
 		}
-		
+
 		defaultBinding
 			.atomically()
 			.set('students', Immutable.List())
