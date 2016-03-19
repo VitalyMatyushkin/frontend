@@ -211,11 +211,11 @@ const Manager = React.createClass({
 						</div>
 					</div>
 					<div className="eManager_containerTeam">
-						<div className="eManager_gameFieldContainer">
-							<GameField binding={gameFieldBinding}/>
-						</div>
 						<div className="eManager_teamModeViewContainer">
 							<TeamModeView binding={teamModeViewBinding}/>
+						</div>
+						<div className="eManager_gameFieldContainer">
+							<GameField binding={gameFieldBinding}/>
 						</div>
 					</div>
 					<div className="eTeam_errorBox">
