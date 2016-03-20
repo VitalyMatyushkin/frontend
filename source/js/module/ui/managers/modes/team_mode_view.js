@@ -75,7 +75,7 @@ const TeamModeView = React.createClass({
             )
             .commit();
     },
-    _renderTeamTable: function() {
+    _renderTeamChooser: function() {
         const self = this,
             binding = self.getDefaultBinding(),
             selectedRivalIndex = binding.toJS('selectedRivalIndex'),
@@ -122,7 +122,7 @@ const TeamModeView = React.createClass({
 
         return (
             <div>
-                {self._renderTeamTable()}
+                {self._renderTeamChooser()}
                 {self._renderTeamWrapper()}
             </div>
         );
