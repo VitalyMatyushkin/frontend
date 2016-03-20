@@ -1,10 +1,7 @@
 const	React					= require('react'),
 		classNames				= require('classnames'),
-		Team					= require('./team'),
 		TeamPlayersValidator	= require('./helpers/team_players_validator'),
 		GameField				= require('./gameField'),
-		AutocompleteTeam		= require('./autocompleteTeam'),
-		If						= require('module/ui/if/if'),
 		TeamModeView			= require('./modes/team_mode_view'),
 		Immutable				= require('immutable');
 

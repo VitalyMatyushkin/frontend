@@ -1,6 +1,11 @@
 .bTeamWrapper {
-  width: 440px;
   min-height: 300px;
+
+  vertical-align: top;
+}
+
+.eTeamWrapper_teamManagerWrapper {
+  display: inline-block;
 }
 
 .eTeamWrapper_autocompleteWrapper {

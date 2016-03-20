@@ -1,10 +1,10 @@
-const   React            = require('react'),
-        Team             = require('./../team'),
-        AutocompleteTeam = require('./../autocompleteTeam'),
-        TeamHelper       = require('module/ui/managers/helpers/team_helper'),
-        Lazy             = require('lazyjs'),
-        If               = require('module/ui/if/if'),
-        Immutable        = require('immutable');
+const	React			= require('react'),
+		Team			= require('./../team'),
+		PlayerChooser	= require('./../player_chooser'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		Lazy			= require('lazyjs'),
+		If				= require('module/ui/if/if'),
+		Immutable		= require('immutable');
 
 const TeamWrapper = React.createClass({
     mixins: [Morearty.Mixin],
@@ -244,7 +244,7 @@ const TeamWrapper = React.createClass({
             players: binding.sub('players')
         };
     },
-    _autoCompleteBinding: function() {
+    _getPlayerChooserBinding: function() {
         const self = this,
             binding = self.getDefaultBinding();
 
@@ -351,20 +351,15 @@ const TeamWrapper = React.createClass({
     render: function() {
         const self = this,
             teamBinding = self._getTeamBinding(),
-            autocompleteTeamBinding = self._autoCompleteBinding();
+            playerChooserBinding = self._getPlayerChooserBinding();
 
         return (
-            <div>
-                <div>
-                    <div className="eTeamWrapper_autocompleteWrapper">
-                        <AutocompleteTeam binding={autocompleteTeamBinding}/>
-                    </div>
-                </div>
-                <div className="eTeamWrapper_teamPlayersLabel">
-                    {'Team players:'}
-                </div>
+            <div className="bTeamWrapper mMarginTop">
                 <div className="eTeamWrapper_teamManagerWrapper">
                     <Team onRemovePlayer={self._onRemovePlayer} binding={teamBinding}/>
+                </div>
+                <div className="eTeamWrapper_autocompleteWrapper">
+                    <PlayerChooser binding={playerChooserBinding}/>
                 </div>
                 <div>
                     <If condition={self._isShowTypeRadioButtons()}>

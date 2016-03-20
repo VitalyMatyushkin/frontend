@@ -106,8 +106,7 @@ const TeamModeView = React.createClass({
             };
 
         return (
-            <div className="bTeamWrapper mMarginTop">
-                {'Add player to team:'}
+            <div>
                 <If condition={selectedRivalIndex == 0}>
                     <TeamWrapper binding={tableWrapperBinding}/>
                 </If>

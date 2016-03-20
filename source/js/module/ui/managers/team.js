@@ -139,7 +139,7 @@ Team = React.createClass({
                             <td className="ePlayer_remove"></td>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody className="eTeam_body">
                         {self._renderPlayers()}
                         </tbody>
                     </table>
