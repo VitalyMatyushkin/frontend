@@ -1,0 +1,63 @@
+.bTeamChooser {
+  position: relative;
+}
+
+.eTeamChooser_button {
+  width: 120px;
+  height: 22px;
+  background-color: #759500;
+
+  text-align: center;
+  padding-top: 10px;
+
+  cursor: pointer;
+}
+
+.eTeamChooser_teamList {
+  position: absolute;
+
+  margin-top: 10px;
+  padding: 0px 5px 0px 5px;
+
+  width: 270px;
+
+  background-color: white;
+  border: solid 1px;
+  border-color: #c2c2c2;
+
+  z-index: 100;
+
+  &.mDisable {
+    display: none;
+  }
+}
+
+.eTeamChooser_team {
+  min-height: 19px;
+  width: 100%;
+
+  padding: 12px 0 10px 0;
+
+  vertical-align: top;
+
+  border-bottom: solid 1px;
+  border-color: #c2c2c2;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: #d7d7d7;
+  }
+}
+
+.eTeamChooser_teamName {
+  display: inline-block;
+
+  width: 50%;
+}
+
+.eTeamChooser_teamAges {
+  display: inline-block;
+
+  width: 50%;
+}

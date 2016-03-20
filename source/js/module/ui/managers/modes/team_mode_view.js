@@ -1,5 +1,5 @@
 const   React                = require('react'),
-        TeamsTable           = require('./../teamsTable'),
+        TeamChooser          = require('./../teamChooser'),
         TeamWrapper          = require('./team_wrapper'),
         If                   = require('module/ui/if/if'),
         Immutable            = require('immutable');
@@ -86,12 +86,12 @@ const TeamModeView = React.createClass({
             };
 
         return (
-            <div className="bTeams">
+            <div>
                 <If condition={selectedRivalIndex == 0}>
-                    <TeamsTable onTeamClick={self._onTeamClick} binding={teamTableBinding}/>
+                    <TeamChooser onTeamClick={self._onTeamClick} binding={teamTableBinding}/>
                 </If>
                 <If condition={selectedRivalIndex == 1}>
-                    <TeamsTable onTeamClick={self._onTeamClick} binding={teamTableBinding}/>
+                    <TeamChooser onTeamClick={self._onTeamClick} binding={teamTableBinding}/>
                 </If>
             </div>
         );
@@ -122,7 +122,6 @@ const TeamModeView = React.createClass({
 
         return (
             <div>
-                {'Select team for event:'}
                 {self._renderTeamTable()}
                 {self._renderTeamWrapper()}
             </div>
