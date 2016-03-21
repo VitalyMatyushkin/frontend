@@ -6,6 +6,7 @@
 
   background: #fff;
   border: $BORDER;
+  border-right: none;
 }
 
 .eManager_managerTeamContainer {
@@ -33,7 +34,7 @@
   display: none;
 }
 .bPlayer.mHead {
-  background: $MAIN_COLOR;
+  background: #759500;
 }
 .bPlayer tr{
   padding: 0 10px;
