@@ -185,7 +185,7 @@ const RegisterUserPage = React.createClass({
             binding = self.getDefaultBinding(),
             currentStep = binding.get('registerStep');
         if ((currentStep === 'account') || (currentStep === 'verification')) {
-            return <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:info@squadintouch.com?subject=Registration">Email
+            return <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:support@squadintouch.com?subject=Registration">Email
                 us</a></div>
         }
     },

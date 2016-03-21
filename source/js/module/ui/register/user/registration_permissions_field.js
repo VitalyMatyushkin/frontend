@@ -151,7 +151,7 @@ const RegistrationPermissionField = React.createClass({
     schoolMessage: function () {
         return (
             <div className="eForm_message">
-                Haven’t found your school? <a href="mailto:info@squadintouch.com?subject=Please add school">Email us</a> and we will add it!
+                Haven’t found your school? <a href="mailto:support@squadintouch.com?subject=Please add school">Email us</a> and we will add it!
             </div>)
     },
 
