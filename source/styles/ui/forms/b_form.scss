@@ -315,10 +315,12 @@
   margin-left: -35px;
   position: relative;
 }
+.eRegisterMessage a,
 .eForm_message a,
 .eForm_conditions a{
   color: $MAIN_COLOR;
 }
+.eRegisterMessage a:hover,
 .eForm_message a:hover,
 .eForm_conditions a:hover{
   color: $COLOR;
@@ -332,4 +334,11 @@
   position: relative;
   top: -7px;
   width: 200px;
+}
+.eRegisterMessage {
+  font-size: 12px;
+  color: #a9a9a9;
+  position: absolute;
+  left: 40%;
+  bottom: 5%;
 }

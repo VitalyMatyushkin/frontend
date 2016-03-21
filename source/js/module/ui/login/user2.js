@@ -12,6 +12,12 @@ const LoginUserPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			domain = window.location.host.split('.')[0];
 		self.formName = domain === 'admin' ? 'Administrator Login' : 'default'; //Injects custom headings for login forms
+
+		if(self._isAuthorized()) {
+			self._setPermissions(
+				self._getCurrentUserId()
+			);
+		};
 	},
 	onlyUnique: function(value, index, self) {
 		return self.indexOf(value) === index;
@@ -61,13 +67,7 @@ const LoginUserPage = React.createClass({
 			});
 
 
-			window.Server.userPermission.get({id: data.userId}).then(permissionList => {
-				const presetList = permissionList.map(permission => permission.preset).filter(self.onlyUnique);
-				console.log('got permissionList: ' + JSON.stringify(presetList, null, 2));
-				binding.set('__allPermissions', presetList);
-				//self.forceUpdate();
-				return presetList;
-			});
+			self._setPermissions(data.userId);
 		}
 	},
 	showError: function() {
@@ -85,6 +85,29 @@ const LoginUserPage = React.createClass({
 
 		document.location.hash = 'register';
 		self.hideError();
+	},
+	_setPermissions: function(userId) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		window.Server.userPermission.get({id: userId}).then(permissionList => {
+			const presetList = permissionList.map(permission => permission.preset).filter(self.onlyUnique);
+
+			binding.set('__allPermissions', presetList);
+
+			return presetList;
+		});
+	},
+	_isAuthorized: function() {
+		const	self	= this,
+				userId	= self.getDefaultBinding().toJS("authorizationInfo.userId");
+
+		return typeof userId !== 'undefined';
+	},
+	_getCurrentUserId: function() {
+		const	self	= this;
+
+		return self.getDefaultBinding().toJS('authorizationInfo.userId');
 	},
 	render: function() {
 		const self = this;
