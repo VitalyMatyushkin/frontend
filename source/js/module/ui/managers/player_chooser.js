@@ -9,19 +9,10 @@ const	PlayerChooser	= React.createClass({
 	componentWillMount: function () {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
-				type			= binding.get('model.type'),
-				rivalBinding	= self.getBinding('rival');
+				type			= binding.get('model.type');
 
 		self._initBinding();
 		self._addListeners();
-
-		rivalBinding
-			.meta()
-			.atomically()
-			.update('autocomplete', function () {
-				return Immutable.Map();
-			})
-			.commit();
 	},
 	_initBinding: function() {
 		const	self	= this;
