@@ -105,6 +105,8 @@ const TeamModeView = React.createClass({
                 rival: self.getBinding().rivals.sub(selectedRivalIndex)
             };
 
+        //TODO delete IF
+        //TODO merge two team wrappers tp one team wrapper
         return (
             <div>
                 <If condition={selectedRivalIndex == 0}>
@@ -120,7 +122,7 @@ const TeamModeView = React.createClass({
         const self = this;
 
         return (
-            <div>
+            <div className="eManager_teamModeViewContainer">
                 {self._renderTeamChooser()}
                 {self._renderTeamWrapper()}
             </div>
