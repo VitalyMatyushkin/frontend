@@ -17,11 +17,9 @@ const GameField = React.createClass({
         return src;
     },
     render: function() {
-        const self = this;
-
         return (
             <div className="bGameField">
-                <img height="600" width="490" src={self._getGameFieldImg()}/>
+                <img src='/images/plug_footballfield.png'/>
             </div>
         );
     }

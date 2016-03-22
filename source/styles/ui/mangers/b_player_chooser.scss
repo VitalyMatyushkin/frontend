@@ -1,0 +1,45 @@
+.bPlayerChooser {
+  width: 290px;
+
+  border: solid 1px #c2c2c2;
+
+  background-color: white;
+}
+
+.ePlayerChooser_playerSearchBox {
+  padding: 10px;
+}
+
+.ePlayerChooser_playerList {
+  height: 267px;
+
+  padding: 0 10px 0 10px;
+
+  overflow-y: auto;
+}
+
+.ePlayerChooser_player {
+  height: 10px;
+
+  padding: 10px 0 10px 0;
+
+  vertical-align: top;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: #d7d7d7;
+  }
+}
+
+.ePlayerChooser_playerName {
+  display: inline-block;
+
+  width: 90%;
+}
+
+.ePlayerChooser_playerForm {
+  display: inline-block;
+
+  width: 10%;
+}
