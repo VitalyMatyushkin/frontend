@@ -11,7 +11,7 @@ const MenuMixin = {
 		};
 	},
 	__itemIcon: function(item){
-		return item.icon ? <SVG icon={item.icon} /> : null;
+		return item.icon ? <SVG classes={item.className} icon={item.icon} /> : null;
 	},
 	/** function to render goback menu node */
 	__renderGoBackNode: function(item, className){
