@@ -1,5 +1,19 @@
 .bTeamChooser {
+
+}
+
+.eTeamChooser_leftSide {
   position: relative;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.eTeamChooser_rightSide {
+  display: inline-block;
+
+  margin-left: 14px;
+
+  vertical-align: top;
 }
 
 .eTeamChooser_button {
@@ -11,6 +25,17 @@
   padding-top: 10px;
 
   cursor: pointer;
+
+  &.mDeselect {
+    height: 20px;
+
+    background-color: #eaeaea;
+    border: solid 1px #225412;
+  }
+
+  &.mDisable {
+    display: none;
+  }
 }
 
 .eTeamChooser_teamList {

@@ -6,7 +6,8 @@ const	React			= require('react'),
 const	TeamChooser	= React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onTeamClick: React.PropTypes.func
+		onTeamClick:	React.PropTypes.func,
+		onTeamDeselect:	React.PropTypes.func
 	},
 	componentWillMount: function () {
 		const self = this;
@@ -20,6 +21,7 @@ const	TeamChooser	= React.createClass({
 		self._getTeams().then((teams) => {
 			binding
 				.atomically()
+				.set('isSelectedTeam', Immutable.fromJS(false))
 				.set('teams', Immutable.fromJS(teams))
 				.set('viewMode', Immutable.fromJS('close'))
 				.commit();
@@ -95,14 +97,27 @@ const	TeamChooser	= React.createClass({
 
 		return result;
 	},
+	_setSelectTeamFlag: function(flag) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('isSelectedTeam', Immutable.fromJS(flag));
+	},
+	_isTeamSelected: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.toJS('isSelectedTeam');
+	},
 	/**
 	 * Handler for click on team in team table
 	 * @param teamId
 	 * @private
 	 */
 	_onTeamClick: function(teamId, team) {
-		const	self = this;
+		const	self	= this;
 
+		self._setSelectTeamFlag(true);
 		self._closeTeamList();
 		self.props.onTeamClick(teamId, team);
 	},
@@ -150,6 +165,12 @@ const	TeamChooser	= React.createClass({
 				break;
 		}
 	},
+	_onTeamDeselectButtonClick: function() {
+		const	self	= this;
+
+		self._setSelectTeamFlag(false);
+		self.props.onTeamDeselect();
+	},
 	_onTeamChooserButtonBlur: function() {
 		const	self	= this;
 
@@ -165,18 +186,39 @@ const	TeamChooser	= React.createClass({
 
 		self.getDefaultBinding().set('viewMode', Immutable.fromJS('close'));
 	},
+	_renderRevertButton: function() {
+		const	self					= this,
+				classNameRevertButton	= classNames({
+					eTeamChooser_button:	true,
+					mDeselect:				true,
+					mDisable:				!self._isTeamSelected()
+				});
+
+		return (
+			<div className="eTeamChooser_rightSide">
+				<div	className={classNameRevertButton}
+						onClick={self._onTeamDeselectButtonClick}
+				>
+					Deselect Team
+				</div>
+			</div>
+		);
+	},
 	render: function() {
 		const	self	= this;
 
 		return (
-			<div class="bTeamChooser">
-				<div	className="eTeamChooser_button"
-						onClick={self._onTeamChooserButtonClick}
-						onBlur={self._onTeamChooserButtonBlur}
-				>
-					Choose Team
+			<div className="bTeamChooser">
+				<div className="eTeamChooser_leftSide">
+					<div	className="eTeamChooser_button"
+							onClick={self._onTeamChooserButtonClick}
+							onBlur={self._onTeamChooserButtonBlur}
+					>
+						Choose Team
+					</div>
+					{self._renderTeamList()}
 				</div>
-				{self._renderTeamList()}
+				{self._renderRevertButton()}
 			</div>
 		);
 	}

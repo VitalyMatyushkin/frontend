@@ -61,9 +61,7 @@ const TeamModeView = React.createClass({
 			rivalIndex = binding.toJS('selectedRivalIndex'),
 			prevSelectedTeamId = binding.toJS(`teamWrapper.${rivalIndex}.selectedTeamId`);
 
-		if(prevSelectedTeamId == teamId) {
-		   self._unselectTeam();
-		} else {
+		if(prevSelectedTeamId !== teamId) {
 			self._selectTeam(teamId, team);
 		}
 	},
@@ -105,7 +103,7 @@ const TeamModeView = React.createClass({
 			)
 			.commit();
 	},
-	_unselectTeam: function() {
+	_deselectTeam: function() {
 		const self = this,
 			binding = self.getDefaultBinding(),
 			rivalIndex = binding.toJS('selectedRivalIndex'),
@@ -148,10 +146,10 @@ const TeamModeView = React.createClass({
 		return (
 			<div>
 				<If condition={selectedRivalIndex == 0}>
-					<TeamChooser onTeamClick={self._onTeamClick} binding={teamTableBinding}/>
+					<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
 				</If>
 				<If condition={selectedRivalIndex == 1}>
-					<TeamChooser onTeamClick={self._onTeamClick} binding={teamTableBinding}/>
+					<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
 				</If>
 			</div>
 		);
