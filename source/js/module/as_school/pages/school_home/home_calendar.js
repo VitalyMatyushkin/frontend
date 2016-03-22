@@ -19,18 +19,27 @@ const HomeCalender = React.createClass({
 		});
 	},
 	getTeamName: function(team, type){
-		let	name = 'n/a';
+		const	self	= this;
+		let		name	= 'n/a';
 
 		if (team !== undefined) {
-			switch (type) {
+			switch(type) {
+				case 'inter-schools':
+					if(self.getMoreartyContext().getBinding().get('activeSchoolId') == team.school.id) {
+						name = team.name;
+					} else {
+						name = team.school.name;
+					}
+					break;
 				case 'houses':
 					name = team.house.name;
-				break;
-				default:
+					break;
+				case 'internal':
 					name = team.name;
+					break;
 			}
 		}
-		
+
 		return name;
 	},
 	getSportIcon: function(sport) {

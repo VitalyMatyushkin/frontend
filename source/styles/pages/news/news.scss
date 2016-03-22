@@ -1,0 +1,29 @@
+.bNewsEdit {
+  max-width: 650px;
+  margin: 0 auto;
+}
+.bNewsEdit textarea {
+  width: 430px;
+  height: 200px;
+}
+.bNewsEdit .bForm{
+  padding: 0;
+}
+
+.bNewsEdit .eForm_blazonUpload{
+  width: 120px;
+  height: 120px;
+  position: relative;
+}
+.bNewsEdit .eForm_blazonPreview{
+  width: 120px;
+  height: 80px;
+  overflow: hidden;
+}
+.bNewsEdit .eForm_blazonPreview img{
+  width: 120px;
+  height: 80px;
+}
+.bNewsEdit .bButton {
+  max-width: 120px;
+}

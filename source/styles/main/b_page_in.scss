@@ -95,7 +95,7 @@
   cursor: pointer;
   margin: 10px auto;
   position: relative;
-  height: 130px;
+  min-height: 130px;
   width: 900px;
   background: #fff;
   display: flex;
@@ -129,6 +129,7 @@
 .bFixtureOpponent span{
   display: block;
   border-top: $BORDER;
+  padding: 10px 0 10px 0;
 }
 .bFixtureResult{
   width: 90px;
@@ -151,7 +152,7 @@
 
 .bFix_name{
   text-transform: uppercase;
-  height: 29px;
+  height: 30px;
   font-size: 15px;
   overflow: hidden;
   padding-top: 5px;

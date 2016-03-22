@@ -82,15 +82,48 @@ const HomeFixtures = React.createClass({
 
 		return <Sport name={name} className="bIcon_mSport" ></Sport>;
 	},
-	getParticipantEmblem:function(participant){
+	getParticipantEmblem: function(participant, type){
+		const	self				= this;
+		let		participantEmblem	= '';
+
 		if(participant !== undefined){
-			return(
-				<div>
-					<img src={participant.school.pic}/>
-					<span>{participant.house !== undefined ? participant.house.name:''}</span>
-				</div>
-			);
+			switch(type) {
+				case 'inter-schools':
+					let teamName;
+
+					if(self.getMoreartyContext().getBinding().get('activeSchoolId') == participant.school.id) {
+						teamName = participant.name;
+					} else {
+						teamName = participant.school.name;
+					}
+
+					participantEmblem = (
+						<div>
+							<img src={participant.school.pic}/>
+							<span>{teamName}</span>
+						</div>
+					);
+					break;
+				case 'houses':
+					participantEmblem = (
+						<div>
+							<img src={participant.school.pic}/>
+							<span>{participant.house.name}</span>
+						</div>
+					);
+					break;
+				case 'internal':
+					participantEmblem = (
+						<div>
+							<img src={participant.school.pic}/>
+							<span>{participant.name}</span>
+						</div>
+					);
+					break;
+			}
 		}
+
+		return participantEmblem;
 	},
 	getFixtureResults:function(event){
 		if(event.result !== undefined){
@@ -131,11 +164,21 @@ const HomeFixtures = React.createClass({
 				result = events.map(function(event){
 					return (
 						<div key={event.id} className="bFixtureContainer">
-							<div className="bFixtureIcon bFixture_item">{self.getSportIcon(event.sport)}</div>
-							<div className="bFixtureInfo bFixture_item">{self.getFixtureInfo(event)}</div>
-							<div className="bFixtureOpponent bFixture_item no-margin">{self.getParticipantEmblem(event.participants[0])}</div>
-							<div className="bFixtureResult bFixture_item no-margin">{self.getFixtureResults(event)}</div>
-							<div className="bFixtureOpponent bFixture_item no-margin">{self.getParticipantEmblem(event.participants[1])}</div>
+							<div className="bFixtureIcon bFixture_item">
+								{self.getSportIcon(event.sport)}
+							</div>
+							<div className="bFixtureInfo bFixture_item">
+								{self.getFixtureInfo(event)}
+							</div>
+							<div className="bFixtureOpponent bFixture_item no-margin">
+								{self.getParticipantEmblem(event.participants[0], event.type)}
+							</div>
+							<div className="bFixtureResult bFixture_item no-margin">
+								{self.getFixtureResults(event)}
+							</div>
+							<div className="bFixtureOpponent bFixture_item no-margin">
+								{self.getParticipantEmblem(event.participants[1], event.type)}
+							</div>
 						</div>
 					);
 				});

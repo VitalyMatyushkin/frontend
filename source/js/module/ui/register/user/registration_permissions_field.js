@@ -148,21 +148,32 @@ const RegistrationPermissionField = React.createClass({
                 self.props.onSuccess();
             });
     },
+    schoolMessage: function () {
+        return (
+            <div className="eForm_message">
+                Haven’t found your school? <a href="mailto:support@squadintouch.com?subject=Please add school">Email us</a> and we will add it!
+            </div>)
+    },
+
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            currentType = binding.get('type');
+            currentType = binding.get('type'),
+            message = self.schoolMessage();
         return(
             <div>
                 <div className="eRegistration_permissionsField">
                     <If condition={currentType !== null}>
+                        <div>
                         <AutoComplete
                             serviceFilter={self.serviceSchoolFilter}
                             serverField="name"
                             onSelect={self.onSelectSchool}
                             binding={binding.sub('_schoolAutocomplete')}
                             placeholderText="school's name"
-                        />
+                            />
+                            {message}
+                        </div>
                     </If>
                     <If condition={binding.get('schoolId') !== null && currentType === 'parent'}>
                         <AutoComplete

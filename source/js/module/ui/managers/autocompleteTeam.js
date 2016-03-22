@@ -81,7 +81,6 @@ const AutocompleteTeam = React.createClass({
                                 }
                             ]
                     },
-                    limit: 20,
                     include:["user","form"]
                 };
 
