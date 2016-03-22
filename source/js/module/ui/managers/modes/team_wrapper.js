@@ -382,34 +382,49 @@ const TeamWrapper = React.createClass({
 
 		return (
 			<div className="eTeamWrapper_modeContainer">
-				<div className="eTeamWrapper_modeRadioButtonsContainer">
-					<label onClick={self._onClickTypeRadioButton.bind(self, 'temp')}>
-						<Morearty.DOM.input
+				<div className="eTeamWrapper_revertButtonContainer">
+					<div className="bButton mRevert" onClick={self._onRevertChangesButtonClick}>
+						{'Revert changes'}
+					</div>
+				</div>
+				<div className="eTeamWrapper_modeRadioButton">
+					<div className="eTeamWrapper_modeRadioButtonInput">
+						<input
 							checked={mode == 'temp'}
 							type="radio"
+							onClick={self._onClickTypeRadioButton.bind(self, 'temp')}
 						/>
-						{'Save as temp team'}
-					</label>
-					<label onClick={self._onClickTypeRadioButton.bind(self, 'new')}>
-						<Morearty.DOM.input
+					</div>
+					<div className="eTeamWrapper_modeRadioButtonIText">
+						Save as temp team
+					</div>
+				</div>
+				<div className="eTeamWrapper_modeRadioButton">
+					<div className="eTeamWrapper_modeRadioButtonInput">
+						<input
 							type="radio"
 							checked={mode == 'new'}
+							onClick={self._onClickTypeRadioButton.bind(self, 'new')}
 						/>
-						{'Save as new team'}
-					</label>
-					<If condition={self._isShowSelectedToCurrentTeamRadioButton()}>
-						<label onClick={self._onClickTypeRadioButton.bind(self, 'current')}>
-							<Morearty.DOM.input
+					</div>
+					<div className="eTeamWrapper_modeRadioButtonIText">
+						Save as new team
+					</div>
+				</div>
+				<If condition={self._isShowSelectedToCurrentTeamRadioButton()}>
+					<div className="eTeamWrapper_modeRadioButton">
+						<div className="eTeamWrapper_modeRadioButtonInput">
+							<input
 								type="radio"
 								checked={mode == 'current'}
+								onClick={self._onClickTypeRadioButton.bind(self, 'current')}
 							/>
-							{'Save to selected team'}
-						</label>
-					</If>
-				</div>
-				<div className="bButton" onClick={self._onRevertChangesButtonClick}>
-					{'Revert changes'}
-				</div>
+						</div>
+						<div className="eTeamWrapper_modeRadioButtonIText">
+							Save to selected team
+						</div>
+					</div>
+				</If>
 			</div>
 		);
 	},

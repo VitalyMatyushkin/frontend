@@ -21,8 +21,24 @@
   display: inline-block;
 }
 
-.eTeamWrapper_modeRadioButtonsContainer {
+.eTeamWrapper_revertButtonContainer {
+  margin: 10px 0 10px 0;
+}
+
+.eTeamWrapper_modeRadioButton {
   font-size: 14px;
+}
+
+.eTeamWrapper_modeRadioButtonInput {
+  display: inline-block;
+  vertical-align: top;
+}
+
+.eTeamWrapper_modeRadioButtonIText {
+  display: inline-block;
+  height: 17px;
+  vertical-align: top;
+  padding: 15px 0 0 10px;
 }
 
 .bTeamWrapper.mMarginTop{
