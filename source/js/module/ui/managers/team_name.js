@@ -57,14 +57,13 @@ const TeamName = React.createClass({
 
 		return (
 			<div className="eTeamName_nameContainer">
-				<div className="eForm_fieldInput">
-					<input	id={'team-name'}
-							type={'text'}
-							placeholder={'Enter new team name'}
-							onChange={self._onChangeTeamName}
-							value={binding.toJS('name')}
-					/>
-				</div>
+				<input	className="eTeamName_nameForm"
+						id={'team-name'}
+						type={'text'}
+						placeholder={'Enter new team name'}
+						onChange={self._onChangeTeamName}
+						value={binding.toJS('name')}
+				/>
 			</div>
 		);
 	},

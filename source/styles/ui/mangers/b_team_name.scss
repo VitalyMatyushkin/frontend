@@ -1,7 +1,7 @@
 .bTeamName {
   height: 40px;
 
-  padding-top: 20px;
+  padding-top:  10px;
 
   background-color: #759500;
 }
@@ -13,5 +13,16 @@
 }
 
 .eTeamName_name {
+  margin-top: 10px;
+
+  text-align: center;
+}
+
+.eTeamName_nameForm {
+  width: 350px;
+  height: 30px;
+
+  border: none;
+
   text-align: center;
 }
