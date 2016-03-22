@@ -31,7 +31,7 @@ const	TeamChooser	= React.createClass({
 				rival	= self.getBinding().rival.toJS(),
 				filter	= {
 					where: {
-						schoolId:	self.activeSchoolId,
+						schoolId:	MoreartyHelper.getActiveSchoolId(self),
 						gender:		model.gender,
 						sportId:	model.sportId,
 						tempTeam:	false,
@@ -39,8 +39,6 @@ const	TeamChooser	= React.createClass({
 					},
 					include: ['sport','players']
 				};
-
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		return window.Server.teams.get({filter: filter}).then((teams)  => {
 			let	filteredTeams = [];
@@ -102,11 +100,11 @@ const	TeamChooser	= React.createClass({
 	 * @param teamId
 	 * @private
 	 */
-	_onTeamClick: function(teamId) {
+	_onTeamClick: function(teamId, team) {
 		const	self = this;
 
 		self._closeTeamList();
-		self.props.onTeamClick(teamId);
+		self.props.onTeamClick(teamId, team);
 	},
 	_renderTeamList: function() {
 		const	self			= this,
@@ -119,7 +117,7 @@ const	TeamChooser	= React.createClass({
 			teams.forEach(team => {
 				if(exceptionTeamId != team.id) {
 					teamItems.push((
-						<div className="eTeamChooser_team" onMouseDown={self._onTeamClick.bind(self, team.id)}>
+						<div className="eTeamChooser_team" onMouseDown={self._onTeamClick.bind(self, team.id, team)}>
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>

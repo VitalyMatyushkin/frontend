@@ -5,31 +5,34 @@ const	React			= require('react'),
 
 const	PlayerChooser	= React.createClass({
 	mixins: [Morearty.Mixin],
-	displayName: 'AutocompleteTeam',
 	componentWillMount: function () {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				type			= binding.get('model.type');
+		const	self	= this;
 
 		self._initBinding();
 		self._addListeners();
 	},
+
+	/*HELPERS FUNCTIONS*/
 	_initBinding: function() {
 		const	self	= this;
 
-		self._searchPlayers('');
+		self._setPlayersBySearchRequest('');
 	},
 	_addListeners: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	self	= this;
 
-		binding.sub('model').addListener(() => {
-			self._searchPlayers('');
+		// If selected team was been changed
+		self.getDefaultBinding().sub('filter').addListener(() => {
+			self._setPlayersBySearchRequest('');
 		});
 
-		self.getBinding('players').addListener((descriptor) => {
+		self.getBinding('teamPlayers').addListener((descriptor) => {
 			//if player has been deleted
-			if (descriptor.getPreviousValue().size > descriptor.getCurrentValue().size) {
+			if (
+				descriptor.getPreviousValue() !== undefined &&
+				descriptor.getCurrentValue() !== undefined &&
+				descriptor.getPreviousValue().size > descriptor.getCurrentValue().size
+			) {
 				const	prevPlayersList = descriptor.getPreviousValue().toJS(),
 						currPlayersList = descriptor.getCurrentValue().toJS();
 
@@ -46,76 +49,62 @@ const	PlayerChooser	= React.createClass({
 		});
 	},
 	/**
-	 * Get school forms filtered by age
-	 * @param ages
-	 * @returns {*}
+	 * Search players by search text and set it to 'playersForSelect' binding
+	 * @param searchText
 	 * @private
 	 */
-	_getFilteredForms: function(ages) {
+	_setPlayersBySearchRequest: function(searchText) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return binding.get('schoolInfo.forms').filter(function (form) {
-			return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
-		});
-	},
-	_searchPlayers: function(searchText) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		self._getPlayers(searchText).then((players) => {
+		self._searchPlayers(searchText).then((players) => {
 			binding.set('playersForSelect', Immutable.fromJS(players));
 		});
 	},
-	_getPlayers: function (searchText) {
-		const self = this,
-			binding = self.getDefaultBinding();
+	/**
+	 * Search players by search text
+	 * @param searchText
+	 * @private
+	 */
+	_searchPlayers: function (searchText) {
+		const	self			= this;
+		let		playersPromise	= undefined;
 
-		//TODO fix me
-		if(binding.get('schoolInfo.forms')) {
-			const	ages		= binding.get('model.ages'),
-					gender		= binding.get('model.gender'),
-					forms		= self._getFilteredForms(ages),
-					type		= binding.get('model.type'),
-					schoolId	= binding.get('schoolInfo.id'),
-
-				filter = {
-					where: {
-						formId: {
-							inq: forms.map(function (form) {
-								return form.get('id');
-							}).toJS()
-						},
-						or: [
+		if (self._isFilterAvailable()) {
+			const	filter			= self.getDefaultBinding().toJS('filter'),
+					requestFilter	= {
+						where: {
+							formId: {
+								inq: filter.forms.map(form => form.id)
+							},
+							or: [
 								{
 									'userInfo.lastName': {
-										like:       searchText,
-										options:    'i'
+										like:		searchText,
+										options:	'i'
 									}
 								},
 								{
 									'userInfo.firstName': {
-										like:       searchText,
-										options:    'i'
+										like:		searchText,
+										options:	'i'
 									}
 								}
 							]
-					},
-					include:["user","form"]
-				};
+						},
+						include:["user","form"]
+					};
 
-			if (type === 'houses') {
-				filter.where.houseId = self.getBinding('rival').get('id');
-			}
+			filter.houseId && (requestFilter.where.houseId = filter.houseId);
 
-			return window.Server.students
-				.get(schoolId, {filter: filter})
+			playersPromise = window.Server.students
+				.get(filter.schoolId, {filter: requestFilter})
 				.then((players) => {
 					const	filteredPlayers	= [];
 
 					players.forEach((player) => {
 						//filter by gender
-						if(!self._isSelectedPlayer(player) && player.user.gender === gender) {
+						if(!self._isSelectedPlayer(player) && player.user.gender === filter.gender) {
 							player.name = player.user.firstName + ' ' + player.user.lastName;
 							filteredPlayers.push(player);
 						}
@@ -125,59 +114,87 @@ const	PlayerChooser	= React.createClass({
 					return filteredPlayers;
 				});
 		} else {
-			return new Promise((resolve) => {
+			playersPromise = new Promise((resolve) => {
 				resolve([]);
 			});
 		}
+
+		return playersPromise;
 	},
+	/**
+	 * Check availability of players filter
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isFilterAvailable: function() {
+		const	self	= this;
+
+		return self.getDefaultBinding().toJS('filter') !== undefined;
+	},
+	/**
+	 * If players of current team contain current player then return TRUE
+	 * @param player
+	 * @returns {boolean}
+	 * @private
+	 */
 	_isSelectedPlayer: function(player) {
 		const	self	= this,
-				selectedPlayers = self.getBinding('players').toJS();
+				selectedPlayers = self.getBinding('teamPlayers').toJS();
 
 		return Lazy(selectedPlayers).findWhere({id: player.id}) !== undefined
 	},
-	_onSelectStudent: function (index, model) {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				players	= self.getBinding('players').toJS();
-
-		players.push(model);
-		self.getBinding('players').set(Immutable.fromJS(players));
-
-		const playersForSelect = binding.toJS('playersForSelect');
-		playersForSelect.splice(index, 1);
-		binding.set('playersForSelect', playersForSelect);
-	},
-	_addPlayerForSelect: function(model) {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				playersForSelect = binding.toJS('playersForSelect');
-
-		playersForSelect.unshift(model);
-		binding.set('playersForSelect', Immutable.fromJS(playersForSelect));
-	},
-	_renderPlayerList: function() {
+	/**
+	 * Add current player to players for selection
+	 * @param model
+	 * @private
+	 */
+	_addPlayerForSelect: function(player) {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
 				playersForSelect	= binding.toJS('playersForSelect');
-		let		players				= [];
 
-		if(playersForSelect) {
-			playersForSelect.forEach((player, index) => {
-				players.push(
-					<div	className="ePlayerChooser_player"
-							onClick={self._onSelectStudent.bind(self, index, player)}
-					>
-						<div className="ePlayerChooser_playerName">
-							{`${player.userInfo.firstName} ${player.userInfo.lastName}`}
-						</div>
-						<div className="ePlayerChooser_playerForm">
-							{player.form.name}
-						</div>
-					</div>
-				);
-			});
+		if(playersForSelect !== undefined && playersForSelect !== null) {
+			playersForSelect.unshift(player);
+			binding.set('playersForSelect', Immutable.fromJS(playersForSelect));
 		}
+	},
+	/**
+	 * Remove current player from players for selection
+	 * @param model
+	 * @private
+	 */
+	_removeFromPlayerForSelect: function(playerIndex) {
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				playersForSelect	= binding.toJS('playersForSelect');
+
+		playersForSelect.splice(playerIndex, 1);
+		binding.set('playersForSelect', playersForSelect);
+	},
+	/**
+	 * Add current player to team players
+	 * @param model
+	 * @private
+	 */
+	_addPlayerToTeam: function(player) {
+		const	self	= this,
+				players	= self.getBinding('teamPlayers').toJS();
+
+		players.push(player);
+		self.getBinding('teamPlayers').set(Immutable.fromJS(players));
+	},
+
+	/*RENDER FUNCTIONS*/
+	/**
+	 * Render players for selection container
+	 * @returns {XML}
+	 * @private
+	 */
+	_renderPlayerList: function() {
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				playersForSelect	= binding.toJS('playersForSelect'),
+				players				= self._renderPlayersForSelect(playersForSelect);
 
 		return (
 			<div className="ePlayerChooser_playerList">
@@ -185,6 +202,40 @@ const	PlayerChooser	= React.createClass({
 			</div>
 		);
 	},
+	/**
+	 * Render players for selection
+	 * @param playersForSelectData
+	 * @returns {Array}
+	 * @private
+	 */
+	_renderPlayersForSelect: function(playersForSelectData) {
+		const	self	= this;
+		let		players	= [];
+
+		if(playersForSelectData) {
+			playersForSelectData.forEach((player, index) => {
+				players.push(
+					<div	className="ePlayerChooser_player"
+							onClick={self._onSelectPlayer.bind(self, index, player)}
+					>
+						<div	className="ePlayerChooser_playerName">
+							{`${player.userInfo.firstName} ${player.userInfo.lastName}`}
+						</div>
+						<div	className="ePlayerChooser_playerForm">
+							{player.form.name}
+						</div>
+					</div>
+				);
+			});
+		}
+
+		return players
+	},
+	/**
+	 * Render player search box
+	 * @returns {XML}
+	 * @private
+	 */
 	_renderPlayerSearchBox: function() {
 		const	self	= this;
 
@@ -199,10 +250,29 @@ const	PlayerChooser	= React.createClass({
 			</div>
 		);
 	},
+
+	/*HANDLERS*/
+	/**
+	 * Handler for change search box text
+	 * @param event
+	 * @private
+	 */
 	_onChangePlayerSearchBoxText: function(event) {
 		const	self	= this;
 
-		self._searchPlayers(event.target.value);
+		self._setPlayersBySearchRequest(event.target.value);
+	},
+	/**
+	 * Handler for click on player from players for selection
+	 * @param index
+	 * @param model
+	 * @private
+	 */
+	_onSelectPlayer: function (index, player) {
+		const	self	= this;
+
+		self._addPlayerToTeam(player);
+		self._removeFromPlayerForSelect(index);
 	},
 	render: function() {
 		const	self	= this;

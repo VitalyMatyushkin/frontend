@@ -13,14 +13,9 @@ const TeamSubmitMixin = {
 			self._submitInvite(event, rival);
 		}
 
-		return self._submitTeamCreationMode(event, rival, rivalIndex);
+		return self._submitTeam(event, rival, rivalIndex);
 	},
-	_submitTempCreationMode: function(event, rival, rivalIndex) {
-		const	self	= this;
-
-		return self._submitNewTeam(event, rival, rivalIndex, true);
-	},
-	_submitTeamCreationMode: function(event, rival, rivalIndex) {
+	_submitTeam: function(event, rival, rivalIndex) {
 		const	self	= this,
 				binding	= self.getDefaultBinding(),
 				mode	= binding.get(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode`);
@@ -81,24 +76,17 @@ const TeamSubmitMixin = {
 				activeSchoolId	= binding.get('schoolInfo.id'),
 				players			= binding.toJS('players');
 		let		rivalModel		= {
-			sportId:  event.sportId,
-			schoolId: activeSchoolId,
-			tempTeam: isTemp
-		};
-
-		if(binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode`) == 'new') {
-			//if we create new team base on old team - we should get new name
-			rivalModel.name = binding.get(`teamModeView.teamWrapper.${rivalIndex}.newTeamName`);
-		} else if(event.type == 'internal') {
-			rivalModel.name = rival.name;
-		}
+									name:		binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`),
+									ages:		binding.toJS('model.ages'),
+									gender:		binding.toJS('model.gender'),
+									sportId:	event.sportId,
+									schoolId:	activeSchoolId,
+									tempTeam:	isTemp
+								};
 
 		if(event.type == 'houses') {
 			rivalModel.houseId = rival.id;
 		}
-
-		rivalModel.ages = binding.toJS('model.ages');
-		rivalModel.gender = binding.toJS('model.gender');
 
 		return window.Server.participants
 			.post(event.id, rivalModel)
@@ -138,10 +126,10 @@ const TeamSubmitMixin = {
 		const	self	= this;
 
 		window.Server.invitesByEvent.post({eventId: event.id}, {
-			eventId:   event.id,
-			inviterId: self.getDefaultBinding().get('schoolInfo.id'),
-			guestId:   rival.id,
-			message:   'message'
+			eventId:	event.id,
+			inviterId:	self.getDefaultBinding().get('schoolInfo.id'),
+			guestId:	rival.id,
+			message:	'message'
 		});
 	}
 };

@@ -33,7 +33,6 @@ const Manager = React.createClass({
 
 		defaultBinding
 			.atomically()
-			.set('students', Immutable.List())
 			.set('teamModeView', Immutable.fromJS(
 				{
 					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
@@ -49,10 +48,22 @@ const Manager = React.createClass({
 					],
 					teamWrapper: [
 						{
-							selectedTeamId: undefined
+							filter: undefined,
+							selectedTeamId: undefined,
+							teamsSaveMode: undefined,
+							teamName: {
+								name: undefined,
+								mode: 'show'
+							}
 						},
 						{
-							selectedTeamId: undefined
+							filter: undefined,
+							selectedTeamId: undefined,
+							teamsSaveMode: undefined,
+							teamName: {
+								name: undefined,
+								mode: 'show'
+							}
 						}
 					]
 				}
@@ -65,25 +76,30 @@ const Manager = React.createClass({
 	 */
 	_addListeners: function() {
 		const	self			= this,
-				defaultBinding	= self.getDefaultBinding(),
-				binding			= self.getBinding();
+				binding	= self.getDefaultBinding();
 
-		defaultBinding.sub('selectedRivalIndex').addListener(() => {
-			defaultBinding.set('teamModeView.selectedRivalIndex', defaultBinding.toJS('selectedRivalIndex'))
+		binding.sub('selectedRivalIndex').addListener(() => {
+			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
 		});
-		defaultBinding.sub('mode').addListener(() => {
-			self._validate(defaultBinding.toJS('selectedRivalIndex'));
+		binding.sub('mode').addListener(() => {
+			self._validate(binding.toJS('selectedRivalIndex'));
 		});
-		binding.players.sub(0).addListener(() => {
+		binding.sub('teamModeView.teamWrapper.0.players').addListener(() => {
 			self._validate(0);
 		});
-		binding.players.sub(1).addListener(() => {
+		binding.sub('teamModeView.teamWrapper.1.players').addListener(() => {
 			self._validate(1);
 		});
-		defaultBinding.sub('teamModeView.teamWrapper.0.players').addListener(() => {
+		binding.sub('teamModeView.teamWrapper.0.creationMode').addListener(() => {
 			self._validate(0);
 		});
-		defaultBinding.sub('teamModeView.teamWrapper.1.players').addListener(() => {
+		binding.sub('teamModeView.teamWrapper.1.creationMode').addListener(() => {
+			self._validate(1);
+		});
+		binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
+			self._validate(0);
+		});
+		binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
 			self._validate(1);
 		});
 	},
@@ -98,11 +114,19 @@ const Manager = React.createClass({
 				};
 		let		result;
 
-		if(binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`) === undefined) {
+		if(binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.creationMode`) === undefined) {
 			result = {
 				isError: true,
-				text: 'Please select team'
+				text: 'Please select team or create new team'
 			}
+		} else if (
+			binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+			binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
+		) {
+			result = {
+				isError:	true,
+				text:		'Please enter team name'
+			};
 		} else {
 			result = TeamPlayersValidator.validate(
 				binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`),
@@ -191,12 +215,13 @@ const Manager = React.createClass({
 				binding				= self.getBinding(),
 				selectedRivalIndex	= self.getBinding('selectedRivalIndex').toJS(),
 				gameFieldBinding	= {
-					default: defaultBinding.sub('model.sportModel.fieldPic')
+					default:	defaultBinding.sub('model.sportModel.fieldPic')
 				},
 				teamModeViewBinding	= {
-					default: defaultBinding.sub(`teamModeView`),
-					model: defaultBinding.sub('model'),
-					rivals: defaultBinding.sub('rivals')
+					default:	defaultBinding.sub(`teamModeView`),
+					schoolInfo:	defaultBinding.sub('schoolInfo'),
+					model:		defaultBinding.sub('model'),
+					rivals:		defaultBinding.sub('rivals')
 				},
 				errorText			= binding.error.toJS(selectedRivalIndex).text;
 
