@@ -80,12 +80,15 @@ const EventView = React.createClass({
 				key: user.id
 			});
 		});
-		menuItems.push({
-			icon: 'icon_girl_boy',
-			href: mainMenuItem + '/all',
-			name: 'Show all children',
-			key: 'all'
-		});
+		if (children.length > 1) {
+			menuItems.push({
+				icon: 'icon_girl_boy',
+				href: mainMenuItem + '/all',
+				name: 'Show all children',
+				key: 'all',
+				className: 'allChildren'
+			});
+		}
 		binding.set('itemsBinding', Immutable.fromJS(menuItems));
 	},
 	loadEvents:function(userId){
