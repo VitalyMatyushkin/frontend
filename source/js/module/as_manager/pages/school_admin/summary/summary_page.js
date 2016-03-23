@@ -8,6 +8,12 @@ const	SVG					= require('module/ui/svg'),
 const SchoolSummary = React.createClass({
 	mixins: [Morearty.Mixin],
 	activeSchoolId: undefined,
+	getDefaultState:function(){
+		return Immutable.fromJS({
+			countOfSchools:0,
+			schoolData:{}
+		});
+	},
 	componentWillMount: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
@@ -22,25 +28,22 @@ const SchoolSummary = React.createClass({
 			}
 		).then(function(schoolData) {
 			binding.set(
-				Immutable.fromJS(schoolData)
+				'schoolData',Immutable.fromJS(schoolData)
 			);
-
 			return schoolData;
 		});
 
 		ActiveUserHelper.howManySchools(self).then(function(count){
-			binding.set('countOfSchools', count);
-
+			binding.set('countOfSchools',Immutable.fromJS(count));
 			return count;
 		});
 	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
-				schoolPicture	= binding.get('pic'),
-				siteLink		= `${binding.get('domain')}.stage.squadintouch.com`,
-				geoPoint		= binding.toJS('postcode.point');
-
+				schoolPicture	= binding.get('schoolData').get('pic') !== undefined ? binding.get('schoolData').get('pic'):'images/no-image.jpg',
+				siteLink		= binding.get('schoolData').get('domain')!== undefined?`${binding.get('schoolData').get('domain')}.stage.squadintouch.com`:'',
+				geoPoint		= binding.get('schoolData').get('postcode') !== undefined ?binding.toJS('schoolData').postcode.point : undefined;
 		return (
 			<div>
 				<div className="changeSchool">
@@ -63,15 +66,15 @@ const SchoolSummary = React.createClass({
 						<div>
 							{schoolPicture ? <div className="eSchoolMaster_flag"><img src={schoolPicture}/></div> : ''}
 							<h1 className="eSchoolMaster_title">
-								{binding.get('name')}
+								{binding.get('schoolData').get('name')}
 							</h1>
 							<div className="eSchoolAddress">
-							  {binding.get('postcodeId')}
-							  {binding.get('address')}
+							  {binding.get('schoolData').get('postcodeId')}
+							  {binding.get('schoolData').get('address')}
 							</div>
 						</div>
 						<div className="eDescription">
-							<p>{binding.get('description')}</p>
+							<p>{binding.get('schoolData').get('description')}</p>
 						</div>
 						<p>
 							Site:
@@ -86,7 +89,7 @@ const SchoolSummary = React.createClass({
 					</div>
 					<div>
 						<If condition={geoPoint !== undefined}>
-						  <Map binding={binding} point={binding.toJS('postcode.point')}/>
+						  <Map binding={binding} point={geoPoint}/>
 						</If>
 					</div>
 				</div>
