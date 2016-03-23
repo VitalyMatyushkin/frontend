@@ -22,7 +22,7 @@ GrantRole = React.createClass({
                 type:"text",
                 field:"studentName"
             },
-            schoolsFilter: window.Server.getMaSchools.filter
+            schoolsFilter: window.Server.getAllSchools.filter
         };
     },
     getDefaultState:function() {
