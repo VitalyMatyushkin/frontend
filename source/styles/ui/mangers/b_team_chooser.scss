@@ -31,7 +31,7 @@
 
   &.mActive {
     color: white;
-    background: #759500 url('/images/team_chooser_active.png') center;
+    background: #759500 url('/images/team_chooser_active.png') no-repeat center;
   }
 
   &.mDeselect {
@@ -46,16 +46,10 @@
   }
 }
 
-.eTeamChooser_teamList {
+.eTeamChooser_teamListContainer {
   position: absolute;
-
-  margin-top: 10px;
-  padding: 0px 5px 0px 5px;
-
-  width: 270px;
-
-  background-color: white;
-  border: solid 1px #c2c2c2;
+  width: 259px;
+  margin-top: 3px;
 
   z-index: 100;
 
@@ -64,10 +58,22 @@
   }
 }
 
+.eTeamChooser_teamList {
+  border: solid 1px #c2c2c2;
+  border-top: none;
+  padding: 10px 20px 0px 20px;
+
+  background: white;
+}
+
+.eTeamChooser_teamListHead {
+  height: 8px;
+  background: url("/images/team_chooser_list.png") no-repeat bottom;
+}
+
 .eTeamChooser_team {
   min-height: 19px;
   width: 100%;
-
   padding: 12px 0 10px 0;
 
   vertical-align: top;
@@ -75,10 +81,18 @@
   border-bottom: solid 1px;
   border-color: #c2c2c2;
 
+  color: #235413;
+  font-size: 16px;
+  font-weight: bold;
+
   cursor: pointer;
 
   &:hover {
     background-color: #d7d7d7;
+  }
+
+  &.mLast {
+    border-bottom: none;
   }
 }
 
@@ -86,10 +100,18 @@
   display: inline-block;
 
   width: 50%;
+
+  text-align: left;
+
+  vertical-align: top;
 }
 
 .eTeamChooser_teamAges {
   display: inline-block;
 
   width: 50%;
+
+  text-align: right;
+
+  vertical-align: top;
 }

@@ -129,10 +129,15 @@ const	TeamChooser	= React.createClass({
 		let		teamItems		= [];
 
 		if(teams) {
-			teams.forEach(team => {
+			teams.forEach((team, index) => {
 				if(exceptionTeamId != team.id) {
+					const	teamClass	= classNames({
+													eTeamChooser_team:	true,
+													mLast:				index == teams.length - 1
+												});
+
 					teamItems.push((
-						<div className="eTeamChooser_team" onMouseDown={self._onTeamClick.bind(self, team.id, team)}>
+						<div className={teamClass} onMouseDown={self._onTeamClick.bind(self, team.id, team)}>
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>
@@ -142,13 +147,17 @@ const	TeamChooser	= React.createClass({
 		}
 
 		const	teamChooserClass	= classNames({
-			eTeamChooser_teamList:	true,
-			mDisable:				binding.toJS('viewMode') == 'close'
-		});
+										eTeamChooser_teamListContainer:	true,
+										mDisable:						binding.toJS('viewMode') == 'close'
+									});
 
 		return (
 			<div className={teamChooserClass}>
-				{teamItems}
+				<div className="eTeamChooser_teamListHead"></div>
+				<div className="eTeamChooser_teamList">
+
+					{teamItems}
+				</div>
 			</div>
 		);
 	},
