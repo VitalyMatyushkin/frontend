@@ -176,6 +176,11 @@ const	TeamChooser	= React.createClass({
 
 		self._closeTeamList();
 	},
+	_isOpen: function() {
+		const	self	= this;
+
+		return self.getDefaultBinding().get('viewMode') === 'open';
+	},
 	_openTeamList: function() {
 		const	self	= this;
 
@@ -195,12 +200,26 @@ const	TeamChooser	= React.createClass({
 				});
 
 		return (
-			<div className="eTeamChooser_rightSide">
-				<div	className={classNameRevertButton}
-						onClick={self._onTeamDeselectButtonClick}
-				>
-					Deselect Team
-				</div>
+			<div	className={classNameRevertButton}
+					onClick={self._onTeamDeselectButtonClick}
+			>
+				Deselect Team
+			</div>
+		);
+	},
+	_renderTeamChooserButton: function() {
+		const	self						= this,
+				classNameTeamChooserButton	= classNames({
+												eTeamChooser_button:	true,
+												mActive:				self._isOpen()
+											});
+
+		return (
+			<div	className={classNameTeamChooserButton}
+					onClick={self._onTeamChooserButtonClick}
+					onBlur={self._onTeamChooserButtonBlur}
+			>
+				Choose Team
 			</div>
 		);
 	},
@@ -210,15 +229,12 @@ const	TeamChooser	= React.createClass({
 		return (
 			<div className="bTeamChooser">
 				<div className="eTeamChooser_leftSide">
-					<div	className="eTeamChooser_button"
-							onClick={self._onTeamChooserButtonClick}
-							onBlur={self._onTeamChooserButtonBlur}
-					>
-						Choose Team
-					</div>
+					{self._renderTeamChooserButton()}
 					{self._renderTeamList()}
 				</div>
-				{self._renderRevertButton()}
+				<div className="eTeamChooser_rightSide">
+					{self._renderRevertButton()}
+				</div>
 			</div>
 		);
 	}
