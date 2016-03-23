@@ -20,7 +20,7 @@
   }
   &.mActive {
     color: $MAIN_COLOR;
-    border-bottom: solid 3px $MAIN_COLOR;
+    background: repeat-x url('/images/team_selector.png') bottom;
   }
   &.mDisable {
     opacity: 0.3;
