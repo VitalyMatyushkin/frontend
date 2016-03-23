@@ -107,7 +107,7 @@ const	Team	= React.createClass({
 					<td className="ePlayer_name">{player.get('user').get('firstName')} {player.get('user').get('lastName')}</td>
 					<td className="ePlayer_form">{player.get('form').get('name')}</td>
 					<td className="ePlayer_position">
-						<select onChange={self._onSelectPosition.bind(self, player.get('id'))}>
+						<select className="ePlayer_selector" onChange={self._onSelectPosition.bind(self, player.get('id'))}>
 							{self._renderPositionOptions(player.toJS())}
 						</select>
 					</td>
@@ -143,11 +143,11 @@ const	Team	= React.createClass({
 					<table>
 						<thead>
 						<tr className="bPlayer mHead">
-							<td className="ePlayer_name">Name</td>
-							<td className="ePlayer_form">Form</td>
-							<td className="ePlayer_position">Position</td>
-							<td className="ePlayer_sub">Sub</td>
-							<td className="ePlayer_remove"></td>
+							<td className="ePlayer_name mHead">Name</td>
+							<td className="ePlayer_form mHead">Form</td>
+							<td className="ePlayer_position mHead">Position</td>
+							<td className="ePlayer_sub mHead">Sub</td>
+							<td className="ePlayer_remove mHead"></td>
 						</tr>
 						</thead>
 						<tbody className="eTeam_body">
