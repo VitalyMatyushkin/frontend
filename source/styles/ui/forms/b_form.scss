@@ -66,7 +66,11 @@
 }
 
 .eForm_savePanel{
-  margin-top: 30px;
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  padding-right: 35px;
+  box-sizing: border-box;
 }
 
 .eForm_atCenter{
@@ -86,7 +90,6 @@
 }
 .eForm_fieldSet{
   position: relative;
-  padding-right: 15px;
 }
 .eForm_fieldSet input:focus {
   border: 1px solid #bfce88;
@@ -171,7 +174,6 @@
 
 .eHouseForm .eForm_field{
   display: flex;
-  border-bottom: $BORDER;
   align-items: center;
   height: 60px;
   margin: 0;
@@ -228,7 +230,8 @@
 }
 .editStudentForm textarea{
   width: 320px;
-  height: 50px;
+  max-height: 50px !important;
+  min-height: 50px;
   background: #EAEAEA;
   margin-top: -5px;
 }

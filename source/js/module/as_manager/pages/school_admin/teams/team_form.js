@@ -314,8 +314,8 @@ const TeamForm = React.createClass({
                                         {errorText}
                                     </div>
                                 </div>
-                                <div className="eManager_group">
-                                    <div className="bButton" onClick={self.props.onFormSubmit}>Finish</div>
+                                <div className="eForm_savePanel">
+                                    <div className="bButton mRight" onClick={self.props.onFormSubmit}>Finish</div>
                                 </div>
                             </div>
                         </If>
