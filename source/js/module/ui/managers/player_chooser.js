@@ -126,7 +126,7 @@ const	PlayerChooser	= React.createClass({
 	 * Get player index in selected players array
 	 * @private
 	 */
-	_getPlayerIndex(player) {
+	_getPlayerIndex: function(player) {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
 				playersForSelect	= binding.toJS('playersForSelect');
