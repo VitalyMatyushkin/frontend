@@ -10,10 +10,6 @@ const   Table           = require('module/ui/list/table'),
 
 const AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
-    propTypes: {
-        serviceName:    React.PropTypes.string,
-        serviceCount:   React.PropTypes.string
-    },
     getDefaultProps: function() {
         return {
             serviceName:'Permissions',
@@ -21,12 +17,10 @@ const AdminRequest = React.createClass({
         };
     },
     groupActionList:['Accept','Decline'],
-    filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
+    _filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
     componentWillMount:function(){
         const self = this;
 
-        self.serviceName = self.props.serviceName;
-        self.serviceCount = self.props.serviceCount;
         self.updateSubMenu();
     },
     getSchoolEmblem:function(school){
