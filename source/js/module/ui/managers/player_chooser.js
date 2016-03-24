@@ -310,7 +310,7 @@ const	PlayerChooser	= React.createClass({
 			<div className="ePlayerChooser_playerSearchBox">
 				<input
 					ref			= "input"
-					className	= "eCombobox_input"
+					className	= "ePlayerChooser_playerSearchBoxInput"
 					placeholder	= "Enter student name"
 					onChange	= {self._onChangePlayerSearchBoxText}
 				/>
