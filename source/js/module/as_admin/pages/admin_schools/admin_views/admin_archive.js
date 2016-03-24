@@ -11,7 +11,11 @@ AdminArchive = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
     serviceName:'Permissions',
     serviceCount:'PermissionCount',
-    filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created DESC'},
+    _filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created DESC'},
+    componentWillMount:function(){
+        const self = this;
+
+    },
     getRequestDate:function(meta){
         var self = this;
         return self.getDateFromIso(meta.created);

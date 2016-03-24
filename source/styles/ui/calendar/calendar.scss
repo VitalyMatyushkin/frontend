@@ -74,17 +74,17 @@ $border-color: #c2c2c2;
     background: #fff
   }
   &.mToday {
-    background-image: url('/images/today_calendar_day.png');
+    background: url('/images/today_calendar_day.png') center;
     &.mSelect {
       color: #fff;
-      background: #f26525 url('/images/today_calendar_day.png');
+      background: #f26525 url('/images/today_calendar_day.png') center;
     }
     &.mActive {
-      background: #66952D url('/images/today_calendar_day.png');
+      background: #66952D url('/images/today_calendar_day.png') center;
       border-color: $DarkGreen;
       color: $DarkGreen;
       &:hover {
-        background: #66952D url('/images/today_calendar_day.png');
+        background: #66952D url('/images/today_calendar_day.png') center;
         border-color: $DarkGreen;
         color: $DarkGreen;
       }
