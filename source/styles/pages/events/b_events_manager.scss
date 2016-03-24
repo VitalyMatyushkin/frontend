@@ -30,6 +30,9 @@
   display: flex;
   justify-content: space-between;
 }
+.eManager_radiogroup input{
+  height: auto;
+}
 
 .eManager_radiogroup label {
   margin-left: 15px;
