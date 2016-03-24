@@ -16,25 +16,6 @@ const	Team	= React.createClass({
 		}
 	},
 	/**
-	 * Get player index in selected players array
-	 * @private
-	 */
-	_getPlayerIndex(player) {
-		const	self				= this,
-				binding				= self.getDefaultBinding(),
-				players				= binding.toJS('players');
-		let		playerIndex			= undefined;
-
-		for(let i = 0; i < players.length; i++) {
-			if(players[i].id === player.id) {
-				playerIndex = i;
-				break;
-			}
-		}
-
-		return playerIndex;
-	},
-	/**
 	 * Get CSS class for player item
 	 * @param playerId
 	 * @returns {*}
