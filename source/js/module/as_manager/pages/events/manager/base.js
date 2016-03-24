@@ -23,7 +23,10 @@ const EventManagerBase = React.createClass({
 				 //   return house.get('selectedId') || !house.get('selectedId');
 			    //});
 
-        return window.Server.houses.get(schoolId);  // this is some shit happens around, so I will stay this here for a while
+        return window.Server.houses.get({schoolId:schoolId,filter:{
+            //Some filtering to order the houses
+            order:'name ASC'
+        }});  // this is some shit happens around, so I will stay this here for a while
         //return window.Server.houses.get(schoolId, {
         //    filter: {
         //        where: {
@@ -61,6 +64,7 @@ const EventManagerBase = React.createClass({
                     }
                 },
                 include:'postcode',
+                order :'name ASC',
                 limit: 10
             }
         });
@@ -237,6 +241,7 @@ const EventManagerBase = React.createClass({
                 key={age + '-ages'}
                 value={age}>{'Y' + age}</Morearty.DOM.option>;
         });
+
     },
     getEventDate: function(date) {
         return new Date(date).toLocaleDateString();
@@ -330,12 +335,16 @@ const EventManagerBase = React.createClass({
                     {'Ages'}
                     <Multiselect
                         binding={binding}
-                        items={binding.get('availableAges').map(function (age) {
-                            return {
-                                id: age,
-                                text: 'Y' + age
-                            };
-                        }).toJS()}
+                        items={
+                            binding.get('availableAges').sort((f,l)=>{
+                                return f - l;
+                            }).map(function (age) {
+                                return {
+                                    id: age,
+                                    text: 'Y' + age
+                                };
+                            }).toJS()
+                        }
                         selections={binding.toJS('model.ages')}
                         onChange={self.changeCompleteAges}
                     />
