@@ -26,7 +26,7 @@ filter.prototype.setFilters = function(value){
             transaction = self._binding.atomically();
 
     for(var key in value){
-        transaction.set(key, value[key]);
+        transaction.set(key, Immutable.fromJS(value[key]));
     }
     transaction.commit({ notify: false });
 };
