@@ -129,10 +129,15 @@ const	TeamChooser	= React.createClass({
 		let		teamItems		= [];
 
 		if(teams) {
-			teams.forEach(team => {
+			teams.forEach((team, index) => {
 				if(exceptionTeamId != team.id) {
+					const	teamClass	= classNames({
+													eTeamChooser_team:	true,
+													mLast:				index == teams.length - 1
+												});
+
 					teamItems.push((
-						<div className="eTeamChooser_team" onMouseDown={self._onTeamClick.bind(self, team.id, team)}>
+						<div className={teamClass} onMouseDown={self._onTeamClick.bind(self, team.id, team)}>
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>
@@ -142,13 +147,17 @@ const	TeamChooser	= React.createClass({
 		}
 
 		const	teamChooserClass	= classNames({
-			eTeamChooser_teamList:	true,
-			mDisable:				binding.toJS('viewMode') == 'close'
-		});
+										eTeamChooser_teamListContainer:	true,
+										mDisable:						binding.toJS('viewMode') == 'close'
+									});
 
 		return (
 			<div className={teamChooserClass}>
-				{teamItems}
+				<div className="eTeamChooser_teamListHead"></div>
+				<div className="eTeamChooser_teamList">
+
+					{teamItems}
+				</div>
 			</div>
 		);
 	},
@@ -176,6 +185,11 @@ const	TeamChooser	= React.createClass({
 
 		self._closeTeamList();
 	},
+	_isOpen: function() {
+		const	self	= this;
+
+		return self.getDefaultBinding().get('viewMode') === 'open';
+	},
 	_openTeamList: function() {
 		const	self	= this;
 
@@ -195,12 +209,26 @@ const	TeamChooser	= React.createClass({
 				});
 
 		return (
-			<div className="eTeamChooser_rightSide">
-				<div	className={classNameRevertButton}
-						onClick={self._onTeamDeselectButtonClick}
-				>
-					Deselect Team
-				</div>
+			<div	className={classNameRevertButton}
+					onClick={self._onTeamDeselectButtonClick}
+			>
+				Deselect Team
+			</div>
+		);
+	},
+	_renderTeamChooserButton: function() {
+		const	self						= this,
+				classNameTeamChooserButton	= classNames({
+												eTeamChooser_button:	true,
+												mActive:				self._isOpen()
+											});
+
+		return (
+			<div	className={classNameTeamChooserButton}
+					onClick={self._onTeamChooserButtonClick}
+					onBlur={self._onTeamChooserButtonBlur}
+			>
+				Choose Team
 			</div>
 		);
 	},
@@ -210,15 +238,12 @@ const	TeamChooser	= React.createClass({
 		return (
 			<div className="bTeamChooser">
 				<div className="eTeamChooser_leftSide">
-					<div	className="eTeamChooser_button"
-							onClick={self._onTeamChooserButtonClick}
-							onBlur={self._onTeamChooserButtonBlur}
-					>
-						Choose Team
-					</div>
+					{self._renderTeamChooserButton()}
 					{self._renderTeamList()}
 				</div>
-				{self._renderRevertButton()}
+				<div className="eTeamChooser_rightSide">
+					{self._renderRevertButton()}
+				</div>
 			</div>
 		);
 	}

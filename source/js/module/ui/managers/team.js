@@ -2,7 +2,8 @@ const	React		= require('react'),
 		SVG			= require('module/ui/svg'),
 		Lazy		= require('lazyjs'),
 		Immutable	= require('immutable'),
-		TeamName	= require('./team_name');
+		TeamName	= require('./team_name'),
+		classNames	= require('classnames');
 
 const	Team	= React.createClass({
 	mixins: [Morearty.Mixin],
@@ -13,6 +14,71 @@ const	Team	= React.createClass({
 				NOT_SELECTED: 'Not selected'
 			}
 		}
+	},
+	/**
+	 * Get player index in selected players array
+	 * @private
+	 */
+	_getPlayerIndex(player) {
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				players				= binding.toJS('players');
+		let		playerIndex			= undefined;
+
+		for(let i = 0; i < players.length; i++) {
+			if(players[i].id === player.id) {
+				playerIndex = i;
+				break;
+			}
+		}
+
+		return playerIndex;
+	},
+	/**
+	 * Get CSS class for player item
+	 * @param playerId
+	 * @returns {*}
+	 * @private
+	 */
+	_getPlayerClass: function(playerId) {
+		const	self			= this,
+				selectedPlayer	= self._getSelectedPlayer();
+
+		return classNames({
+			eTeam_player:	true,
+			mSelected:		selectedPlayer !== undefined && selectedPlayer.id === playerId
+		});
+	},
+	/**
+	 * Get selected player
+	 * @private
+	 */
+	_getSelectedPlayer: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
+		return binding.toJS('selectedPlayer');
+	},
+	/**
+	 * Select player
+	 * @param player
+	 * @private
+	 */
+	_selectPlayer: function(player) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('selectedPlayer', Immutable.fromJS(player));
+	},
+	/**
+	 * Deselect player
+	 * @private
+	 */
+	_deselectPlayer: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
+		binding.set('selectedPlayer', Immutable.fromJS(undefined));
 	},
 	_onSelectPosition: function(playerId, e) {
 		const	self	= this,
@@ -97,29 +163,71 @@ const	Team	= React.createClass({
 
 		}
 	},
-	_renderPlayers: function () {
-		const	self	= this,
-				players	= self.getBinding('players');
+	/**
+	 * Check players binding
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isPlayersAvailable: function() {
+		const	self		= this;
 
-		return players.get().map(function (player) {
-			return (
-				<tr className="bPlayer" key={player.get('id')}>
-					<td className="ePlayer_name">{player.get('user').get('firstName')} {player.get('user').get('lastName')}</td>
-					<td className="ePlayer_form">{player.get('form').get('name')}</td>
-					<td className="ePlayer_position">
-						<select onChange={self._onSelectPosition.bind(self, player.get('id'))}>
-							{self._renderPositionOptions(player.toJS())}
-						</select>
-					</td>
-					<td className="ePlayer_sub">
-						{self._renderSubOptions(player.toJS())}
-					</td>
-					<td className="ePlayer_remove" onClick={self._onRemovePlayer.bind(null, player.get('id'))}>
-						<SVG icon="icon_trash" />
-					</td>
-				</tr>
-			);
-		}).toArray();
+		return self.getBinding('players') !== undefined && self.getBinding('players').toJS() !== undefined;
+	},
+	_renderPlayers: function () {
+		const	self		= this;
+		let		xmlPlayers	= [];
+
+		if(self._isPlayersAvailable()) {
+			const playersData = self.getBinding('players').toJS();
+
+			xmlPlayers.push(playersData.map(player => {
+				return (
+					<div	className={self._getPlayerClass(player.id)}
+							onClick={self._onPlayerClick.bind(self, player)}
+							key={player.id}
+					>
+						<div className="eTeam_playerItem mName">
+							{`${player.user.firstName} ${player.user.lastName}`}
+						</div>
+						<div className="eTeam_playerItem mForm">
+							{player.form.name}
+						</div>
+						<div className="eTeam_playerItem mSelector mPosition">
+							<select className="eTeam_positionSelector"
+									onChange={self._onSelectPosition.bind(self, player.id)}
+							>
+								{self._renderPositionOptions(player)}
+							</select>
+						</div>
+						<div className="eTeam_playerItem mSub">
+							{self._renderSubOptions(player)}
+						</div>
+					</div>
+				);
+			}));
+		}
+
+		return xmlPlayers;
+	},
+	/**
+	 * Handler for click on remove player button
+	 * @private
+	 */
+	_onRemoveButtonClick: function() {
+		const	self	= this;
+
+		self._onRemovePlayer(self._getSelectedPlayer().id);
+		self._deselectPlayer();
+	},
+	/**
+	 * Handler for click on player
+	 * @param player
+	 * @private
+	 */
+	_onPlayerClick: function(player) {
+		const	self	= this;
+
+		self._selectPlayer(player);
 	},
 	/**
 	 * Get binding for TeamName element
@@ -138,23 +246,24 @@ const	Team	= React.createClass({
 				rivalId		= self.getBinding('rivalId').toJS();
 
 		return (
+			<div className="eTeamWrapper_teamManagerWrapper">
 				<div className="bTeam" key={rivalId}>
 					<TeamName binding={self._getTeamNameBinding()}/>
-					<table>
-						<thead>
-						<tr className="bPlayer mHead">
-							<td className="ePlayer_name">Name</td>
-							<td className="ePlayer_form">Form</td>
-							<td className="ePlayer_position">Position</td>
-							<td className="ePlayer_sub">Sub</td>
-							<td className="ePlayer_remove"></td>
-						</tr>
-						</thead>
-						<tbody className="eTeam_body">
+					<div className="eTeam_player mHead">
+						<div className="eTeam_playerItem mName">Name</div>
+						<div className="eTeam_playerItem mForm">Form</div>
+						<div className="eTeam_playerItem mPosition">Position</div>
+						<div className="eTeam_playerItem mSub">Sub</div>
+					</div>
+					<div className="eTeam_playerList">
 						{self._renderPlayers()}
-						</tbody>
-					</table>
+					</div>
 				</div>
+				<div className="eTeam_removeButton"
+					 onClick={self._onRemoveButtonClick}
+				>
+				</div>
+			</div>
 		);
 	}
 });

@@ -485,12 +485,8 @@ const TeamWrapper = React.createClass({
 
 		return (
 			<div className="bTeamWrapper mMarginTop">
-				<div className="eTeamWrapper_teamManagerWrapper">
-					<Team onRemovePlayer={self._onRemovePlayer} binding={teamBinding}/>
-				</div>
-				<div className="eTeamWrapper_autocompleteWrapper">
-					<PlayerChooser binding={playerChooserBinding}/>
-				</div>
+				<Team onRemovePlayer={self._onRemovePlayer} binding={teamBinding}/>
+				<PlayerChooser binding={playerChooserBinding}/>
 				<div>
 					<If condition={self._isShowTypeRadioButtons()}>
 						{self._renderTypeRadioButtons()}

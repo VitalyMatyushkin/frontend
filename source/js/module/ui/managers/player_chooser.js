@@ -1,7 +1,8 @@
 const	React			= require('react'),
 		Immutable		= require('immutable'),
 		Promise			= require('bluebird'),
-		Lazy			= require('lazyjs');
+		Lazy			= require('lazyjs'),
+		classNames		= require('classnames');
 
 const	PlayerChooser	= React.createClass({
 	mixins: [Morearty.Mixin],
@@ -122,6 +123,25 @@ const	PlayerChooser	= React.createClass({
 		return playersPromise;
 	},
 	/**
+	 * Get player index in selected players array
+	 * @private
+	 */
+	_getPlayerIndex(player) {
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				playersForSelect	= binding.toJS('playersForSelect');
+		let		playerIndex			= undefined;
+
+		for(let i = 0; i < playersForSelect.length; i++) {
+			if(playersForSelect[i].id === player.id) {
+				playerIndex = i;
+				break;
+			}
+		}
+
+		return playerIndex;
+	},
+	/**
 	 * Check availability of players filter
 	 * @returns {boolean}
 	 * @private
@@ -163,13 +183,16 @@ const	PlayerChooser	= React.createClass({
 	 * @param model
 	 * @private
 	 */
-	_removeFromPlayerForSelect: function(playerIndex) {
+	_removeFromPlayerForSelect: function(player) {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
-				playersForSelect	= binding.toJS('playersForSelect');
+				playersForSelect	= binding.toJS('playersForSelect'),
+				playerIndex			= self._getPlayerIndex(player);
 
-		playersForSelect.splice(playerIndex, 1);
-		binding.set('playersForSelect', playersForSelect);
+		if(playerIndex !== undefined) {
+			playersForSelect.splice(playerIndex, 1);
+			binding.set('playersForSelect', playersForSelect);
+		}
 	},
 	/**
 	 * Add current player to team players
@@ -183,7 +206,51 @@ const	PlayerChooser	= React.createClass({
 		players.push(player);
 		self.getBinding('teamPlayers').set(Immutable.fromJS(players));
 	},
+	/**
+	 * Select player
+	 * @private
+	 */
+	_selectPlayer: function(player) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
+		binding.set('selectedPlayer', Immutable.fromJS(player));
+	},
+	/**
+	 * Deselect player
+	 * @private
+	 */
+	_deselectPlayer: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('selectedPlayer', Immutable.fromJS(undefined));
+	},
+	/**
+	 * Get selected player
+	 * @private
+	 */
+	_getSelectedPlayer: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.toJS('selectedPlayer');
+	},
+	/**
+	 * Get CSS class for player item
+	 * @param playerId
+	 * @returns {*}
+	 * @private
+	 */
+	_getPlayerClass: function(playerId) {
+		const	self			= this,
+				selectedPlayer	= self._getSelectedPlayer();
+
+		return classNames({
+			ePlayerChooser_player:	true,
+			mSelected:				selectedPlayer !== undefined && selectedPlayer.id === playerId
+		});
+	},
 	/*RENDER FUNCTIONS*/
 	/**
 	 * Render players for selection container
@@ -215,8 +282,8 @@ const	PlayerChooser	= React.createClass({
 		if(playersForSelectData) {
 			playersForSelectData.forEach((player, index) => {
 				players.push(
-					<div	className="ePlayerChooser_player"
-							onClick={self._onSelectPlayer.bind(self, index, player)}
+					<div	className={self._getPlayerClass(player.id)}
+							onClick={self._onPlayerClick.bind(self, index, player)}
 					>
 						<div	className="ePlayerChooser_playerName">
 							{`${player.userInfo.firstName} ${player.userInfo.lastName}`}
@@ -250,7 +317,16 @@ const	PlayerChooser	= React.createClass({
 			</div>
 		);
 	},
+	_renderAddToTeamButton: function() {
+		const	self	= this;
 
+		return (
+			<div	className="ePlayerChooser_addToTeamButton"
+					onClick={self._onAddToTeamButtonClick}
+			>
+			</div>
+		);
+	},
 	/*HANDLERS*/
 	/**
 	 * Handler for change search box text
@@ -268,19 +344,33 @@ const	PlayerChooser	= React.createClass({
 	 * @param model
 	 * @private
 	 */
-	_onSelectPlayer: function (index, player) {
+	_onPlayerClick: function (index, player) {
 		const	self	= this;
 
+		self._selectPlayer(player);
+	},
+	/**
+	 * Handler for select button click
+	 * @private
+	 */
+	_onAddToTeamButtonClick: function() {
+		const	self	= this,
+				player	= self._getSelectedPlayer();
+		
 		self._addPlayerToTeam(player);
-		self._removeFromPlayerForSelect(index);
+		self._removeFromPlayerForSelect(player);
+		self._deselectPlayer();
 	},
 	render: function() {
 		const	self	= this;
 
 		return (
-			<div className="bPlayerChooser">
-				{self._renderPlayerSearchBox()}
-				{self._renderPlayerList()}
+			<div className="eTeamWrapper_autocompleteWrapper">
+				<div className="bPlayerChooser">
+					{self._renderPlayerSearchBox()}
+					{self._renderPlayerList()}
+				</div>
+				{self._renderAddToTeamButton()}
 			</div>
 		);
 	}
