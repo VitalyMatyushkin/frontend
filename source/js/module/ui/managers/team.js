@@ -206,9 +206,14 @@ const	Team	= React.createClass({
 	 * @private
 	 */
 	_onPlayerClick: function(player) {
-		const	self	= this;
+		const	self	= this,
+				selectedPlayer = self._getSelectedPlayer();
 
-		self._selectPlayer(player);
+		if(selectedPlayer !== undefined && selectedPlayer.id === player.id ) {
+			self._deselectPlayer();
+		} else {
+			self._selectPlayer(player);
+		}
 	},
 	/**
 	 * Get binding for TeamName element
