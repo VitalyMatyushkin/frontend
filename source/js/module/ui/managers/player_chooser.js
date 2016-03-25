@@ -345,9 +345,15 @@ const	PlayerChooser	= React.createClass({
 	 * @private
 	 */
 	_onPlayerClick: function (index, player) {
-		const	self	= this;
+		const	self	= this,
+				selectedPlayer = self._getSelectedPlayer();
 
-		self._selectPlayer(player);
+		if(selectedPlayer !== undefined && selectedPlayer.id === player.id ) {
+			self._deselectPlayer();
+		} else {
+			self._selectPlayer(player);
+		}
+
 	},
 	/**
 	 * Handler for select button click
