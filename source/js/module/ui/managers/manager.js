@@ -221,7 +221,8 @@ const Manager = React.createClass({
 					default:	defaultBinding.sub(`teamModeView`),
 					schoolInfo:	defaultBinding.sub('schoolInfo'),
 					model:		defaultBinding.sub('model'),
-					rivals:		defaultBinding.sub('rivals')
+					rivals:		defaultBinding.sub('rivals'),
+					error:		binding.error
 				},
 				errorText			= binding.error.toJS(selectedRivalIndex).text;
 
@@ -237,9 +238,6 @@ const Manager = React.createClass({
 						<div className="eManager_gameFieldContainer">
 							<GameField binding={gameFieldBinding}/>
 						</div>
-					</div>
-					<div className="eTeam_errorBox">
-						{errorText}
 					</div>
 				</div>
 			);

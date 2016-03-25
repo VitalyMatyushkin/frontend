@@ -89,10 +89,13 @@
 }
 
 .eTeam_errorBox{
+  display: inline-block;
+  width: 300px;
+
   text-align: right;
   margin-top: 10px;
-  font-size: 14px;
-  color: #FF0000;
+  font-size: 16px;
+  color: #ea5a00;
 }
 
 .eTeam_removeButton {
