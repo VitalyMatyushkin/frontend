@@ -30,7 +30,7 @@ ChallengesList = React.createClass({
 			self._setFixturesByDate(descriptor.getCurrentValue().date);
 		});
 
-		binding.sub('activeChildId').addListener(() => {
+		binding.sub('models').addListener(() => {
 			const currentCalendarDate = binding.toJS('calendar.selectDay');
 
 			currentCalendarDate && self._setFixturesByDate(currentCalendarDate.date);

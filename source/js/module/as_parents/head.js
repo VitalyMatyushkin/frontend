@@ -22,11 +22,11 @@ const Head = React.createClass({
             authorization: true,
             routes: ['/events/calendar/:userId']
         }, {
-            href: '/#events/challenges/all',
+            href: '/#events/fixtures/all',
             name: 'Fixtures',
             key: 'Fixtures',
             authorization: true,
-            routes: ['/events/challenges/:userId']
+            routes: ['/events/fixtures/:userId']
         }, {
             href: '/#events/achievement/all',
             name: 'Achievements',
