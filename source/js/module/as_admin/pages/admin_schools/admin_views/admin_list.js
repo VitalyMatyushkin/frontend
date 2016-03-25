@@ -41,13 +41,19 @@ const SchoolListPage = React.createClass({
             );
         }
     },
+    _getSelectItemFunction:function(model){
+        console.log(model);
+        document.location.hash = 'school_sandbox?id='+model.id;
+    },
     getTableView:function(){
         var self = this,
             binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
                 <Table title="Schools" binding={binding} onItemRemove={self._getItemRemoveFunction}
-                       getDataPromise={self.getDataPromise} onItemEdit={self._getAdminSchoolEditFunction}>
+                       getDataPromise={self.getDataPromise} 
+                       onItemEdit={self._getAdminSchoolEditFunction} 
+                       onItemSelect={self._getSelectItemFunction}>
                     <TableField dataField="pic" width="1%" filterType="none" parseFunction={self.getSchoolLogo}>Logo</TableField>
                     <TableField dataField="name" width="14%">School</TableField>
                     <TableField dataField="phone" filterType="none" width="10%">Telephone</TableField>
