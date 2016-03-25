@@ -411,26 +411,6 @@ const EventManagerBase = React.createClass({
                                 </div>
                             </div>
                         </If>
-                        {type === 'internal' ? 'Create a team' : null}
-                        <If condition={type === 'internal'}>
-                            <div className="eChooseHouses">
-                                <input
-                                    key="firstTeam"
-                                    type="text"
-                                    placeholder="Select the first team"
-                                    value={binding.get('rivals.0.name')}
-                                    onChange={Morearty.Callback.set(binding.sub('rivals.0.name'))}
-                                    className="eManager_eField" />
-                                <div className="eChoose_vs">vs</div>
-                                <input
-                                    key="secondTeam"
-                                    type="text"
-                                    placeholder="Select the second team"
-                                    value={binding.get('rivals.1.name')}
-                                    onChange={Morearty.Callback.set(binding.sub('rivals.1.name'))}
-                                    className="eManager_eField" />
-                            </div>
-                        </If>
                     </div>
                     <div className="eManager_group">
                         <EventVenue sportType={type} binding={binding}/>
