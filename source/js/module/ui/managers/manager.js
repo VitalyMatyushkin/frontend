@@ -223,8 +223,7 @@ const Manager = React.createClass({
 					model:		defaultBinding.sub('model'),
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
-				},
-				errorText			= binding.error.toJS(selectedRivalIndex).text;
+				};
 
 			return (
 				<div className="eManager_container">
