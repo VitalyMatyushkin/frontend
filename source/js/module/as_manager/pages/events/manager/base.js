@@ -14,34 +14,50 @@ const EventManagerBase = React.createClass({
      * @param houseName
      * @returns {*}
      */
-    serviceHouseFilter: function(houseName) {
-        const   binding     = this.getDefaultBinding(),
-                schoolId    = binding.get('schoolInfo.id');
-                //ids         = binding.get('autocomplete.houses').toArray().map(house => {
-                //    console.log(`houses: ${JSON.stringify(house)}`);
-                //    console.log(`selectedId: ${house.get('selectedId')}`);
-				 //   return house.get('selectedId') || !house.get('selectedId');
-			    //});
+    serviceHouseFilter: function(order, houseName) {
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				schoolId	= binding.get('schoolInfo.id');
 
-        return window.Server.houses.get({schoolId:schoolId,filter:{
-            //Some filtering to order the houses
-            order:'name ASC'
-        }});  // this is some shit happens around, so I will stay this here for a while
-        //return window.Server.houses.get(schoolId, {
-        //    filter: {
-        //        where: {
-        //            schoolId: schoolId,
-        //            id: {
-        //                nin: []//ids
-        //            },
-        //            name: {
-        //                like: houseName,
-        //                options: 'i'
-        //            }
-        //        }
-        //    }
-        //});
+		return window.Server.houses.get(
+			{
+				schoolId: schoolId,
+				filter: {
+					where: {
+						id: {
+							nin: [self._getOtherHouseId(order)]
+						},
+						name: {
+							like: houseName,
+							options: 'i'
+						}
+					},
+					order:'name ASC'
+				}
+			}
+		);
     },
+	/**
+	 * Get house ID from other autocomplete
+	 * @param currHouseIndex -
+	 * @private
+	 */
+	_getOtherHouseId: function(currHouseIndex) {
+		const	self		= this,
+				binding		= self.getDefaultBinding();
+		let		otherHouseId;
+
+		switch (currHouseIndex) {
+			case 0:
+				otherHouseId = binding.toJS('rivals.1.id');
+				break;
+			case 1:
+				otherHouseId = binding.toJS('rivals.0.id');
+				break;
+		}
+
+		return otherHouseId;
+	},
     /**
      * Сервис фильтрации по школе
      * @param schoolName
@@ -126,49 +142,21 @@ const EventManagerBase = React.createClass({
         binding.set('model.ages', Immutable.fromJS(selections));
     },
 	onSelectRival: function (order, id, model) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-            comboBoxes = document.getElementsByClassName('eCombobox_input'), //Get all input comboboxes in the component
-            dupErrorEl = ReactDOM.findDOMNode(self.refs.dupError),
-            gameType = ReactDOM.findDOMNode(self.refs.gameType).value;
-        /*
-        * Quick fix for duplicated fields
-        * check combo boxes for equality if equal alert the user
-        * */
-        if(gameType ==='houses'){
-            if(model.name !== comboBoxes[order].value){
-                document.getElementsByClassName('eEvents_button')[1].style.display = 'inline-block'; //Show the next button again if hidden
-                dupErrorEl.style.display = 'none';
-                if (model) {
-                    binding.update('rivals', function (rivals) {
-                        var index = rivals.findIndex(function (rival) {
-                            return rival.get('id') === id;
-                        });
-                        if (index === -1) {
-                            return rivals.set(order, Immutable.fromJS(model));
-                        } else {
-                            return rivals;
-                        }
-                    });
-                }
-            }else{
-                document.getElementsByClassName('eEvents_button')[1].style.display = 'none'; // Hide next button to avoid temptation of hitting it!
-                dupErrorEl.style.display = 'block'; //Show error message
-            }
-        }else{
-            if (model) {
-                binding.update('rivals', function (rivals) {
-                    var index = rivals.findIndex(function (rival) {
-                        return rival.get('id') === id;
-                    });
-                    if (index === -1) {
-                        return rivals.set(order, Immutable.fromJS(model));
-                    } else {
-                        return rivals;
-                    }
-                });
-            }
-        }
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		if (id !== undefined && model !== undefined) {
+			binding.update('rivals', function (rivals) {
+				var index = rivals.findIndex(function (rival) {
+					return rival.get('id') === id;
+				});
+				if (index === -1) {
+					return rivals.set(order, Immutable.fromJS(model));
+				} else {
+					return rivals;
+				}
+			});
+		}
 	},
     getSports: function () {
         var self = this,
@@ -392,7 +380,8 @@ const EventManagerBase = React.createClass({
                         <If condition={type === 'houses'}>
                             <div className="eChooseHouses">
                                 <Autocomplete
-                                    serviceFilter={services[type]}
+                                    defaultItem={binding.toJS('rivals.0')}
+                                    serviceFilter={self.serviceHouseFilter.bind(null, 0)}
                                     serverField="name"
                                     placeholderText={'Select the first house'}
                                     onSelect={self.onSelectRival.bind(null, 0)}
@@ -400,15 +389,13 @@ const EventManagerBase = React.createClass({
                                 />
                                 <div className="eChoose_vs">vs</div>
                                 <Autocomplete
-                                    serviceFilter={services[type]}
+									defaultItem={binding.toJS('rivals.1')}
+                                    serviceFilter={self.serviceHouseFilter.bind(null, 1)}
                                     serverField="name"
                                     placeholderText={'Select the second house'}
                                     onSelect={self.onSelectRival.bind(null, 1)}
                                     binding={binding.sub('autocomplete.houses.1')}
                                 />
-                                <div ref="dupError" className="hHouseDuplicateError">
-                                    <span>The above fields are duplicates-please select unique house names!</span>
-                                </div>
                             </div>
                         </If>
                     </div>
