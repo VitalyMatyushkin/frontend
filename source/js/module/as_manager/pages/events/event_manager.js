@@ -270,7 +270,7 @@ const EventManager = React.createClass({
 
 		switch (step) {
 			case 1:
-				if(binding.get('model.startTime') !== undefined) {
+				if(binding.get('model.startTime') !== undefined && binding.get('model.startTime') !== null) {
 					isStepComplete = true;
 				}
 				break;
