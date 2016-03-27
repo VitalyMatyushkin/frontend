@@ -21,9 +21,6 @@ const ClassForm = React.createClass({
 		}).toArray();
 		return ages;
 	},
-	serviceFilter:function(){
-		return window.Server.getAllSchools.get();
-	},
 	render: function() {
 		var self = this;
 
@@ -31,7 +28,6 @@ const ClassForm = React.createClass({
 			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
 				<FormField type="text" promptOnBlank={true} field="name" validation="required">Form name</FormField>
 				<FormField type="select" sourceArray={self.getAllAges()} field="age" validation="required">Age group</FormField>
-				<FormField type="autocomplete" field="schoolId" serviceFullData={self.serviceFilter} >School</FormField>
 			</Form>
 		)
 	}

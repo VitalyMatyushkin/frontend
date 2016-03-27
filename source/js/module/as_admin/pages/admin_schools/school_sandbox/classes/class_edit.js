@@ -29,7 +29,7 @@ const ClassEditPage = React.createClass({
 			data.name = data.name.toUpperCase(); //cast form name to upper case for consistency
 
 			window.Server.form.put(self.formId, data).then(function() {
-				self.isMounted() && (document.location.hash = 'admin_schools/admin_views/forms');
+				self.isMounted() && (document.location.hash = 'school_sandbox/forms');
 			});
 		}
 	},

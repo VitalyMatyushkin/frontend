@@ -8,7 +8,9 @@ const HousesListPage = React.createClass({
 	serviceName: 'houses',
     sandbox:true,
     _getDataPromise:function(){
-        return window.Server.getAllHouses.get({filter:{include:{relation:'school'}}});
+		const 	self	=	this,
+				globalBinding	=	self.getMoreartyContext().getBinding();
+        return window.Server.getAllHouses.get({filter:{where:{schoolId:globalBinding.get('userRules.activeSchoolId')}}});
     },
 	getTableView: function() {
 		var self = this,

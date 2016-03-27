@@ -26,10 +26,10 @@ const HouseEditPage = React.createClass({
 		var self = this;
 
 		window.Server.house.put(self.houseId, data).then(function() {
-			self.isMounted() && (document.location.hash = '/admin_schools/admin_views/houses');
+			self.isMounted() && (document.location.hash = '//school_sandbox/houses');
 		}).catch(function(er){
 			alert(er.errorThrown+' Server Error');
-			document.location.hash = '/admin_schools/admin_views/houses';
+			document.location.hash = '//school_sandbox/houses';
 		});
 	},
 	render: function() {

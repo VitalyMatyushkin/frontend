@@ -1,5 +1,5 @@
 const 	React = require('react'),
-		ClassForm = require('module/as_admin/pages/admin_schools/classes/class_form');
+		ClassForm = require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form');
 
 const ClassAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -11,8 +11,8 @@ const ClassAddPage = React.createClass({
 		self.activeSchoolId = activeSchoolId;
 	},
 	submitAdd: function(data) {
-		var self = this;
-		window.Server.forms.post(data.schoolId, data).then(function() {
+		const self = this;
+		window.Server.forms.post(self.activeSchoolId, data).then(function() {
 			document.location.hash = 'school_sandbox/forms';
 		}).catch(function(err){
 			alert(err.errorThrown+' Server Error');

@@ -1,4 +1,4 @@
-var HouseForm = require('module/as_admin/pages/admin_schools/houses/house_form'),
+var HouseForm = require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_form'),
 	React = require('react'),
 	HouseAddPage;
 
@@ -6,15 +6,13 @@ HouseAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-
-		//self.activeSchoolId = activeSchoolId;
+			globalBinding = self.getMoreartyContext().getBinding();
+		self.activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 	},
 	submitAdd: function(data) {
 		var self = this;
-		window.Server.houses.post(data.schoolId, data).then(function() {
-			document.location.hash = '/admin_schools/admin_views/houses';
+		window.Server.houses.post(self.activeSchoolId, data).then(function() {
+			document.location.hash = '/school_sandbox/houses';
 		}).catch(function(er){
 			alert(er.errorThrown+' Server Error');
 		});

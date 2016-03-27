@@ -10,11 +10,6 @@ ClassForm = React.createClass({
 		title: React.PropTypes.string.isRequired,
 		onFormSubmit: React.PropTypes.func
 	},
-	serviceFilter:function(){
-		return function(){
-			return window.Server.getAllSchools.get();
-		}
-	},
 	render: function() {
 		var self = this;
 
@@ -23,7 +18,6 @@ ClassForm = React.createClass({
 				<FormField type="text" field="name" validation="required" ignoreOnBlur={true}>House name</FormField>
 				<FormField type="text" field="description">Description</FormField>
 				<FormField type="colors" maxColors={2} field="colors">House colors</FormField>
-				<FormField type="autocomplete" serviceFullData={self.serviceFilter()} field="schoolId">School</FormField>
 			</Form></div>
 		)
 	}

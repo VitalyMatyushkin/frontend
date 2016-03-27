@@ -42,7 +42,6 @@ const SchoolListPage = React.createClass({
         }
     },
     _getSelectItemFunction:function(model){
-        console.log(model);
         document.location.hash = 'school_sandbox?id='+model.id;
     },
     getTableView:function(){
