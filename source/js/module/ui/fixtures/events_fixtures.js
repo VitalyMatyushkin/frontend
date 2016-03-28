@@ -44,14 +44,12 @@ const ChallengesView = React.createClass({
                 }),
                 eventBinding = binding.sub(['models', eventIndex]),
                 hours = self.addZeroToFirst(eventDateTime.getHours()),
-				        minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
+                minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
                 type = event.get('type'),
                 sport = event.get('sport') !== undefined ? event.get('sport').get('name') : '',
                 sportIcon = self.getSportIcon(sport),
                 firstName,
                 secondName,
-				firstPic,
-				secondPic,
                 firstPoint,
                 secondPoint,
                 comment;
@@ -62,19 +60,13 @@ const ChallengesView = React.createClass({
             }
             if (type === 'inter-schools') {
                 firstName = eventBinding.get('participants.0.school.name')!== undefined ? eventBinding.get('participants.0.school.name'):'Participant not set';
-                firstPic = eventBinding.get('participants.0.school.pic');
                 secondName = eventBinding.get('participants.1.school.name')!==undefined ? eventBinding.get('participants.1.school.name'):'Participant not set';
-                secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'houses') {
                 firstName = eventBinding.get('participants.0.house.name');
                 secondName = eventBinding.get('participants.1.house.name');
-                firstPic = eventBinding.get('participants.0.school.pic');
-                secondPic = eventBinding.get('participants.1.school.pic');
             } else if (type === 'internal') {
                 firstName = eventBinding.get('participants.0.name');
                 secondName = eventBinding.get('participants.1.name');
-                firstPic = eventBinding.get('participants.0.school.pic');
-                secondPic = eventBinding.get('participants.1.school.pic');
             }
 
             if (event.get('resultId')) {
@@ -119,10 +111,8 @@ const ChallengesView = React.createClass({
             }, Immutable.List());
         return dates.count() !== 0 ? dates.sort().map(function (datetime,dtIndex) {
             var date = new Date(datetime),
-                daysOfWeek = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
                 monthNames = [ "01", "02", "03", "04", "05", "06",
-                "07", "08", "09", "10", "11", "12" ],
-                dayOfWeek = date.getDay();
+                "07", "08", "09", "10", "11", "12" ];
 
             return <div key={dtIndex} className="bChallengeDate">
                 <div className="eChallengeDate_wrap">

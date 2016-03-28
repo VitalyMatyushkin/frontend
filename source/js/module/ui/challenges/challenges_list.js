@@ -2,6 +2,7 @@ const	React			= require('react'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		Immutable		= require('immutable'),
 		Sport			= require('module/ui/icons/sport_icon'),
+        ChallengeModel	= require('module/ui/challenges/challenge_model'),
 
 ChallengesList = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -58,41 +59,6 @@ ChallengesList = React.createClass({
 
 		binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
 	},
-	_getRivalName: function(event, order) {
-		const	self = this,
-				binding = self.getDefaultBinding(),
-				eventIndex = binding.get('models').findIndex(function (model) {
-					return model.get('id') === event.id;
-				}),
-				eventBinding = binding.sub(['models', eventIndex]),
-				type = event.type,
-				played = !!event.resultId,
-				participantBinding = eventBinding.sub(['participants', order]),
-				eventResult = played ? eventBinding.toJS('result.summary.byTeams') : null;
-		let		rivalName = null;
-
-		if (type === 'internal') {
-			rivalName = eventBinding.get(['participants', order, 'name']);
-			if (played && rivalName && eventResult) {
-				rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-			}
-		} else if (type === 'houses') {
-			rivalName = eventBinding.get(['participants', order, 'house', 'name']);
-			if (played && rivalName && eventResult) {
-				rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-			}
-		} else {
-			rivalName = eventBinding.get(['participants', order, 'school', 'name']);
-
-			if (played && rivalName && eventResult) {
-				rivalName += '[' + eventResult[participantBinding.get('id')] + ']';
-			} else if (!rivalName) {
-				rivalName = eventBinding.get(['invites', 0, 'guest', 'name']);
-			}
-		}
-
-		return rivalName;
-	},
 	_onClickEvent: function(eventId) {
 		document.location.hash = 'event/' + eventId;
 	},
@@ -100,11 +66,12 @@ ChallengesList = React.createClass({
 		return <Sport name={sport} className="bIcon_invites" ></Sport>;
 	},
 	_getEvents: function () {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				currentDate	= binding.get('calendar.currentDate'),
-				selectDay	= binding.get('calendar.selectDay'),
-				sync		= binding.toJS('sync');
+		const	self		    = this,
+				binding		    = self.getDefaultBinding(),
+                activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				currentDate	    = binding.get('calendar.currentDate'),
+				selectDay	    = binding.get('calendar.selectDay'),
+				sync		    = binding.toJS('sync');
 		let		result;
 
 		if(selectDay === undefined || selectDay === null) {
@@ -122,20 +89,22 @@ ChallengesList = React.createClass({
 
 			if(events.length) {
 				result = events.map(function (event) {
-					const stringDate = self.formatDate(event.startTime),
-						sport = self._getSportIcon(event.sport.name);
+					const model = new ChallengeModel(event, activeSchoolId),
+						sport = self._getSportIcon(model.sport);
 
-					return <div key={'event-' + event.id} className={'eChallenge'} onClick={self._onClickEvent.bind(null, event.id)}>
-						<span className="eChallenge_sport">{sport}</span>
-						<span className="eChallenge_date">{stringDate}</span>
+					return (
+                    <div key={'event-' + event.id} className='eChallenge' onClick={self._onClickEvent.bind(null, event.id)}>
+						<div className="eChallenge_sport">{sport}</div>
+						<div className="eChallenge_date">{model.date}</div>
 
-						<div className="eChallenge_name">{event.name}</div>
+						<div className="eChallenge_name">{model.name}</div>
 						<div className="eChallenge_rivals">
-							<span className="eChallenge_rivalName">{self._getRivalName(event, 0)}</span>
+							<span className="eChallenge_rivalName">{model.rivals[0]}</span>
 							<span>vs</span>
-							<span className="eChallenge_rivalName">{self._getRivalName(event, 1)}</span>
+							<span className="eChallenge_rivalName">{model.rivals[1]}</span>
 						</div>
 					</div>
+                    );
 				});
 			} else {
 				result = (

@@ -1,6 +1,5 @@
 'use strict';
-var InvitesMixin,
-    React = require('react');
+const   DateHelper = require('module/helpers/date_helper'),
 
 InvitesMixin = {
 	getActiveSchoolId: function () {
@@ -34,11 +33,7 @@ InvitesMixin = {
         return (i < 10 ? '0' : '') + i;
     },
 	formatDate: function (string) {
-		return new Date(string).toLocaleDateString('en-GB', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit'
-		}).replace(/\./g, '/');
+		return DateHelper.format(string);
 	}
 };
 
