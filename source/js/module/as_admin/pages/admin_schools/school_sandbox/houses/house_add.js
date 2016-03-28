@@ -1,12 +1,11 @@
-var HouseForm = require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_form'),
-	React = require('react'),
-	HouseAddPage;
+const 	HouseForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_form'),
+		React 		= require('react');
 
-HouseAddPage = React.createClass({
+const HouseAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding();
+		const self 			= this,
+			globalBinding 	= self.getMoreartyContext().getBinding();
 		self.activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 	},
 	submitAdd: function(data) {

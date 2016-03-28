@@ -1,10 +1,10 @@
 
-const 	Table = require('module/ui/list/table'),
-		TableField = require('module/ui/list/table_field'),
-		ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-		Filter		=	require('module/ui/list/filter'),
-		Immutable = require('immutable'),
-		React = require('react');
+const 	Table 			= require('module/ui/list/table'),
+		TableField 		= require('module/ui/list/table_field'),
+		ListPageMixin 	= require('module/as_manager/pages/school_admin/list_page_mixin'),
+		Filter			= require('module/ui/list/filter'),
+		Immutable 		= require('immutable'),
+		React 			= require('react');
 
 const ClassListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
@@ -12,8 +12,9 @@ const ClassListPage = React.createClass({
     setPageTitle: 'forms',
     filters:{include:{relation:'school'}},
 	componentWillMount:function() {
-		const self = this,
-			globalBinding = self.getMoreartyContext().getBinding();
+		const self 			= this,
+			globalBinding 	= self.getMoreartyContext().getBinding();
+		//Set filtering constraint
 		self.filters = new Filter(Immutable.fromJS(
 			{
 				where: {
@@ -25,7 +26,6 @@ const ClassListPage = React.createClass({
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
-
 		return (
 			<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()}
                    getDataPromise={self.getDataPromise} filter={self.filters}>

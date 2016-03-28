@@ -1,16 +1,15 @@
-const 	HouseForm = require('module/as_admin/pages/admin_schools/houses/house_form'),
-		React = require('react'),
-		Immutable = require('immutable');
-
+const 	HouseForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_form'),
+		React 		= require('react'),
+		Immutable 	= require('immutable');
 
 const HouseEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
-			routingData = globalBinding.sub('routing.parameters').toJS(),
-			houseId = routingData.id;
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				houseId 		= routingData.id;
 
 		binding.clear();
 
@@ -26,10 +25,10 @@ const HouseEditPage = React.createClass({
 		var self = this;
 
 		window.Server.house.put(self.houseId, data).then(function() {
-			self.isMounted() && (document.location.hash = '//school_sandbox/houses');
+			self.isMounted() && (document.location.hash = 'school_sandbox/houses');
 		}).catch(function(er){
 			alert(er.errorThrown+' Server Error');
-			document.location.hash = '//school_sandbox/houses';
+			document.location.hash = 'school_sandbox/houses';
 		});
 	},
 	render: function() {

@@ -1,15 +1,15 @@
-const 	ClassForm 	= require('module/as_admin/pages/admin_schools/classes/class_form'),
+const 	ClassForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form'),
 		React 		= require('react'),
 		Immutable 	= require('immutable');
 
 const ClassEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
-			routingData = globalBinding.sub('routing.parameters').toJS(),
-			formId = routingData.id;
+		var self 			= this,
+			binding 		= self.getDefaultBinding(),
+			globalBinding 	= self.getMoreartyContext().getBinding(),
+			routingData 	= globalBinding.sub('routing.parameters').toJS(),
+			formId 			= routingData.id;
 
 		binding.clear();
 
