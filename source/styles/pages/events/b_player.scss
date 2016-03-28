@@ -5,6 +5,7 @@
   height: 30px;
   align-items: center;
 }
+
 .ePlayer_remove .bIcon {
   width: 14px;
   height: 14px;
@@ -44,15 +45,30 @@
 
 .ePlayer_name {
   vertical-align: middle;
-  text-align: left;
-  padding-left: 10px;
+  text-align: center;
+  padding: 5px 0 0 10px;
+  font-weight: bold;
+  font-size: 16px;
+  color: #2a2a2a;
+
+  &.mHead {
+    color: #939393;
+  }
 }
 
 .ePlayer_form {
   width: 10%;
   height: 30px;
+  padding-top: 5px;
   vertical-align: middle;
   text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #2a2a2a;
+
+  &.mHead {
+    color: #939393;
+  }
 }
 
 .ePlayer_position {
@@ -60,6 +76,13 @@
   height: 30px;
   vertical-align: middle;
   text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #2a2a2a;
+
+  &.mHead {
+    color: #939393;
+  }
 }
 
 .ePlayer_sub {
@@ -67,12 +90,27 @@
   height: 30px;
   vertical-align: middle;
   text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+  color: #2a2a2a;
+
+  &.mHead {
+    color: #939393;
+  }
 }
 
 .ePlayer_remove {
   width: 5%;
   vertical-align: middle;
   text-align: center;
+}
+
+.ePlayer_selector {
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  color: #2a2a2a;
+  margin-top: -4px;
 }
 
 ._bPlayer.mMini {

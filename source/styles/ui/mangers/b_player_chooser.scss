@@ -10,8 +10,15 @@
   padding: 10px;
 }
 
+.ePlayerChooser_playerSearchBoxInput {
+  width: 100%;
+
+  background-color: #eaeaea;
+  border: none;
+}
+
 .ePlayerChooser_playerList {
-  height: 267px;
+  height: 266px;
 
   padding: 0 10px 0 10px;
 
@@ -26,6 +33,10 @@
   vertical-align: top;
 
   cursor: pointer;
+
+  &.mSelected {
+    background-color: #d7d7d7;
+  }
 
   &:hover {
     background-color: #d7d7d7;
@@ -42,4 +53,12 @@
   display: inline-block;
 
   width: 10%;
+}
+
+.ePlayerChooser_addToTeamButton {
+  height: 40px;
+  background: #759500 url("/images/arrows_l.png") no-repeat center;
+  &:hover {
+    background-color: #566D01;
+  }
 }
