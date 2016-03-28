@@ -73,8 +73,8 @@ GrantRole = React.createClass({
                                 {id:'manager', value:'School Manager'}];
 
         return (
-        <Form name="New role" updateBinding={true} binding={binding} onSubmit={self.continueButtonClick}
-              formStyleClass="bGrantContainer" defaultButton="Confirm">
+        <Form name="New Request" updateBinding={true} binding={binding} onSubmit={self.continueButtonClick}
+              formStyleClass="bGrantContainer" defaultButton="Submit">
             <FormField type="autocomplete" field="schoolId" serviceFullData={getSchools} >School</FormField>
             <FormField type="select" field="preset" sourceArray={roleList} >Role</FormField>
             <FormField {...self.props.studentFieldProps}
