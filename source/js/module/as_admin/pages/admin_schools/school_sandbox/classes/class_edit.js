@@ -5,11 +5,11 @@ const 	ClassForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/
 const ClassEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self 			= this,
-			binding 		= self.getDefaultBinding(),
-			globalBinding 	= self.getMoreartyContext().getBinding(),
-			routingData 	= globalBinding.sub('routing.parameters').toJS(),
-			formId 			= routingData.id;
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				formId 			= routingData.id;
 
 		binding.clear();
 
