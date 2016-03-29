@@ -25,7 +25,7 @@ ListPageMixin = {
 
         metaBinding.set('isFiltersActive', false);
         self.filter = new Filter(binding.sub('filter'));
-        self.filter.setFilters(self._filters);
+        self.filter.setFilters(self.filters);
 	},
     getDefaultState: function () {
         return Immutable.Map({
