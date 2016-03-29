@@ -33,7 +33,7 @@ InvitesMixin = {
         return (i < 10 ? '0' : '') + i;
     },
 	formatDate: function (string) {
-		return DateHelper.format(string);
+		return DateHelper.getDate(string);
 	}
 };
 

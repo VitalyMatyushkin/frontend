@@ -11,13 +11,13 @@ ChallengeModel = function(event, activeSchoolId){
     self.id = event.id;
     self.name = event.name;
     self.sport = event.sport ? event.sport.name : '';
-    self.date = DateHelper.format(event.startTime);
+    self.date = DateHelper.getDate(event.startTime);
     self.time = DateHelper.getTime(event.startTime);
     self.rivals = self._getRivals(event, activeSchoolId);
 };
 
 ChallengeModel.prototype._getRivalName = function(event, order) {
-    const
+    const self = this,
         type = event.type,
         played = !!event.resultId,
         participant = order < event.participants.length ? event.participants[order] : null,
@@ -33,14 +33,19 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
             rivalName = participant && participant.house ? participant.house.name : null;
             break;
         case 'inter-schools':
-            rivalName = participant && participant.school ? participant.school.name : null;
+            if(participant && self.activeSchoolId == participant.schoolId && participant.name) {
+                rivalName = participant.name;
+            } else {
+                rivalName = participant && participant.school ? participant.school.name : null;
+            }
             break;
     }
     if (!rivalName) {
-        rivalName = event.invites[0].guest.name;
+        rivalName = 'n/a';
     }
     else if (played && rivalName && eventResult) {
-        rivalName += '[' + eventResult[participant.id] + ']';
+        let goal = eventResult[participant.id] ? eventResult[participant.id] : 0;
+        rivalName += '[' + goal + ']';
     }
 
     return rivalName;

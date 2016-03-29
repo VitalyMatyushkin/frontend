@@ -5,7 +5,7 @@
 const DateHelper = {
 
     //format date from UTC-string to 'dd/mm/yyyy'
-    format: function (string) {
+    getDate: function (string) {
         return new Date(string).toLocaleDateString('en-GB', {
             year: 'numeric',
             month: '2-digit',
@@ -14,7 +14,13 @@ const DateHelper = {
     },
 
     getTime: function(string){
-        return new Date(string).getTime();
+        const
+            date = new Date(string),
+            zeroFill = function(i) {
+                return (i < 10 ? '0' : '') + i;
+            };
+
+        return zeroFill(date.getHours()) + ':' + zeroFill(date.getMinutes());
     }
 
 };
