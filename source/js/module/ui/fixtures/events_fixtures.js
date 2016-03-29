@@ -1,8 +1,11 @@
-const   React       = require('react'),
-        Sport       = require('module/ui/icons/sport_icon'),
-        Immutable   = require('immutable');
+const   React           = require('react'),
+        Sport           = require('module/ui/icons/sport_icon'),
+        Immutable       = require('immutable'),
+        ChallengeModel	= require('module/ui/challenges/challenge_model'),
+        classNames      = require('classnames'),
+        DateHelper      = require('module/helpers/date_helper'),
 
-const ChallengesView = React.createClass({
+ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
     sameDay: function (d1, d2) {
         d1 = d1 instanceof Date ? d1 : new Date(d1);
@@ -12,18 +15,8 @@ const ChallengesView = React.createClass({
             d1.getUTCMonth() === d2.getUTCMonth() &&
             d1.getUTCDate() === d2.getUTCDate();
     },
-	addZeroToFirst: function (num) {
-		return String(num).length === 1 ? '0' + num : num;
-	},
     onClickChallenge: function (eventId) {
         document.location.hash = 'event/' + eventId;
-    },
-    getCountPoint: function (points, participantId) {
-        var self = this;
-
-        return points.filter(function (point) {
-            return point.get('participantId') === participantId;
-        }).count();
     },
     getSportIcon:function(sport){
         return <Sport name={sport} className="bIcon_invites" ></Sport>;
@@ -37,61 +30,24 @@ const ChallengesView = React.createClass({
                         new Date(date));
             });
 
-        return eventsByDate.map(function (event, evtIndex) {
-            var eventDateTime = new Date(event.get('startTime')),
-                eventIndex = binding.get('models').findIndex(function (evt) {
-                    return evt.get('id') === event.get('id');
-                }),
-                eventBinding = binding.sub(['models', eventIndex]),
-                hours = self.addZeroToFirst(eventDateTime.getHours()),
-                minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
-                type = event.get('type'),
-                sport = event.get('sport') !== undefined ? event.get('sport').get('name') : '',
-                sportIcon = self.getSportIcon(sport),
-                firstName,
-                secondName,
-                firstPoint,
-                secondPoint,
-                comment;
-            if(eventBinding.get('result') && eventBinding.get('result.comment')){
-                comment = eventBinding.get('result.comment');
-            }else{
-                comment = "There are no comments on this fixture";
-            }
-            if (type === 'inter-schools') {
-                firstName = eventBinding.get('participants.0.school.name')!== undefined ? eventBinding.get('participants.0.school.name'):'Participant not set';
-                secondName = eventBinding.get('participants.1.school.name')!==undefined ? eventBinding.get('participants.1.school.name'):'Participant not set';
-            } else if (type === 'houses') {
-                firstName = eventBinding.get('participants.0.house.name');
-                secondName = eventBinding.get('participants.1.house.name');
-            } else if (type === 'internal') {
-                firstName = eventBinding.get('participants.0.name');
-                secondName = eventBinding.get('participants.1.name');
-            }
+        return eventsByDate.map(function (event) {
+            const   activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+                    model           = new ChallengeModel(event.toJS(), activeSchoolId),
+                    sportIcon       = self.getSportIcon(model.sport);
 
-            if (event.get('resultId')) {
-                firstPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.0.id')) || 0;
-                secondPoint = eventBinding.get('result.summary.byTeams.' + eventBinding.get('participants.1.id')) || 0;
-            }
-            return <div key={evtIndex} className="bChallenge"
-                        onClick={self.onClickChallenge.bind(null, event.get('id'))}
-                        id={'challenge-' + event.get('id')}
-                >
-                <span className="eChallenge_sport">{sportIcon}</span>
-                <span className="eChallenge_event">{event.get('name')}</span>
-                <div className="eChallenge_hours">{hours + ':' + minutes}</div>
-                <div className="eChallenge_in">
-                    <div className="eChallenge_firstName">
-                        {firstName}
+            return (
+                <div key={model.id} className="bChallenge" onClick={self.onClickChallenge.bind(null, model.id)}>
+                    <span className="eChallenge_sport">{sportIcon}</span>
+                    <span className="eChallenge_event">{model.name}</span>
+                    <div className="eChallenge_hours">{model.time}</div>
+                    <div className="eChallenge_in">
+                        <span className="eChallenge_firstName">{model.rivals[0]}</span>
+                        <p>vs</p>
+                        <span className="eChallenge_secondName">{model.rivals[1]}</span>
                     </div>
-                    <p>vs</p>
-                    <div className="eChallenge_secondName">
-                        {secondName}
-                    </div>
+                    <div className={classNames({eChallenge_results:true, mDone:model.played})}>{model.score}</div>
                 </div>
-						<div className={'eChallenge_results' + (event.get('resultId') ? ' mDone' : '') }>{event.get('resultId') ? [firstPoint, secondPoint].join(':') : '- : -'}</div>
-
-            </div>;
+            );
         }).toArray();
     },
     getDates: function () {
@@ -110,40 +66,38 @@ const ChallengesView = React.createClass({
                 return memo;
             }, Immutable.List());
         return dates.count() !== 0 ? dates.sort().map(function (datetime,dtIndex) {
-            var date = new Date(datetime),
-                monthNames = [ "01", "02", "03", "04", "05", "06",
-                "07", "08", "09", "10", "11", "12" ];
+            var date = DateHelper.getDate(datetime);
 
-            return <div key={dtIndex} className="bChallengeDate">
-                <div className="eChallengeDate_wrap">
-                <div className="eChallengeDate_date">
-						{date.getDate() + '.' +
-						monthNames[date.getMonth()] + '.' +
-							date.getFullYear()}
+            return (
+                <div key={dtIndex} className="bChallengeDate">
+                    <div className="eChallengeDate_wrap">
+                        <div className="eChallengeDate_date">{date}</div>
+                        <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
+                    </div>
                 </div>
-                <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
-            </div>
-            </div>;
+            );
         }).toArray() : <div className="eUserFullInfo_block">No fixtures to report on this child</div>;
     },
 	render: function () {
         var self = this,
-            binding = self.getDefaultBinding(),
             challenges = self.getDates();
-		return <div>
-            <div className="bChallenges">
-                <div className="eChallenge_title">
-                    <span className="eChallengeDate_date">Date</span>
-                    <div className="bChallenge">
-                        <span className="eChallenge_sport">Sport</span>
-                        <span className="eChallenge_event">Event Name</span>
-                        <span className="eChallenge_hours">Time</span>
-                        <span className="eChallenge_in">Game Type</span>
-                        <span className="eChallenge_results">Score</span>
+		return (
+            <div>
+                <div className="bChallenges">
+                    <div className="eChallenge_title">
+                        <span className="eChallengeDate_date">Date</span>
+                        <div className="bChallenge">
+                            <span className="eChallenge_sport">Sport</span>
+                            <span className="eChallenge_event">Event Name</span>
+                            <span className="eChallenge_hours">Time</span>
+                            <span className="eChallenge_in">Game Type</span>
+                            <span className="eChallenge_results">Score</span>
+                        </div>
                     </div>
+                    {challenges}
                 </div>
-                {challenges}</div>
-        </div>;
+            </div>
+        );
 	}
 });
 
