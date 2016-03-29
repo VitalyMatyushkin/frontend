@@ -63,7 +63,7 @@ const EventView = React.createClass({
                 name: 'Calendar',
                 key: 'Calendar'
             },{
-                href: '/#events/challenges',
+                href: '/#events/fixtures',
                 name: 'Fixtures',
                 key: 'Fixtures'
             },{
@@ -99,9 +99,9 @@ const EventView = React.createClass({
                                 }
                                 component='module/as_manager/pages/events/event_manager'
                             />
-                            <Route path='/events/challenges'
+                            <Route path='/events/fixtures'
                                    binding={binding}
-                                   component='module/as_manager/pages/events/events_challenges'
+                                   component='module/ui/fixtures/events_fixtures'
                             />
                             <Route path='/events/invites'
                                    binding={binding}

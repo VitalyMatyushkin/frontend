@@ -1,4 +1,4 @@
-const	ChallengesList	= require('./calendar/challenges_list'),
+const	ChallengesList	= require('module/ui/challenges/challenges_list'),
 		CalendarView	= require('module/ui/calendar/calendar'),
 		React			= require('react');
 
