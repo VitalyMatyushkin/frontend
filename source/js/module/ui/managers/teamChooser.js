@@ -18,12 +18,13 @@ const	TeamChooser	= React.createClass({
 		const	self = this,
 				binding	= self.getDefaultBinding();
 
+		binding.set('viewMode',	Immutable.fromJS('close'));
+
 		self._getTeams().then((teams) => {
 			binding
 				.atomically()
-				.set('isSelectedTeam', Immutable.fromJS(false))
-				.set('teams', Immutable.fromJS(teams))
-				.set('viewMode', Immutable.fromJS('close'))
+				.set('isSelectedTeam',	Immutable.fromJS(false))
+				.set('teams',			Immutable.fromJS(teams))
 				.commit();
 		});
 	},
