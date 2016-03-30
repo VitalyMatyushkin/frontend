@@ -180,15 +180,15 @@ const RegisterUserPage = React.createClass({
             })}
         </div>;
     },
-    renderMessage: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentStep = binding.get('registerStep');
-        if ((currentStep === 'account') || (currentStep === 'verification')) {
-            return <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:support@squadintouch.com?subject=Registration">Email
-                us</a></div>
-        }
-    },
+    //renderMessage: function () {
+    //    var self = this,
+    //        binding = self.getDefaultBinding(),
+    //        currentStep = binding.get('registerStep');
+    //    if ((currentStep === 'account') || (currentStep === 'verification')) {
+    //        return <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:support@squadintouch.com?subject=Registration">Email
+    //            us</a></div>
+    //    }
+    //},
     render: function () {
         var self = this,
             currentView = null,
@@ -241,7 +241,6 @@ const RegisterUserPage = React.createClass({
                 <div className="bRegistration">
                     {self.renderSteps()}
                     {currentView}
-                    {self.renderMessage()}
                 </div>
             </div>
         )
