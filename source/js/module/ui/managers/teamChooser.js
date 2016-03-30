@@ -226,9 +226,9 @@ const	TeamChooser	= React.createClass({
 	_renderTeamChooserButton: function() {
 		const	self						= this,
 				classNameTeamChooserButton	= classNames({
-												eTeamChooser_button:	true,
-												mActive:				self._isOpen()
-											});
+					eTeamChooser_button:	true,
+					mActive:				self._isOpen()
+				});
 
 		return (
 			<div	className={classNameTeamChooserButton}

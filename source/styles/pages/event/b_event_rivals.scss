@@ -38,13 +38,17 @@
 }
 
 .eEventRival_name {
+  width: 100%;
+  min-height: 15px;
+  padding: 2px;
+  margin-bottom: 15px;
+
   border-top: $BORDER;
   border-bottom: $BORDER;
-  margin-bottom: 15px;
-  padding: 2px;
+
   font-size: 15px;
-  width: 100%;
+
   text-align: center;
-  min-height: 15px;
+  word-wrap: break-word;
 }
 
