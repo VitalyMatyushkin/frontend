@@ -1,8 +1,9 @@
 const 	React 		= require('react'),
 		SVG 		= require('module/ui/svg'),
-		Immutable 	= require('immutable');
+		Immutable 	= require('immutable'),
+        RoleList    = require('./role_list'),
 
-const UserBlock = React.createClass({
+UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function() {
 		return Immutable.fromJS({
@@ -32,7 +33,6 @@ const UserBlock = React.createClass({
 			binding = self.getDefaultBinding(),
 			authBinding = binding.get('authorizationInfo'),
 			authData = authBinding.toJS(),
-			AccountButton = null,
 			UserButton = null,
 			userButtonStyle = {},
 			LogoutButton = null,
@@ -57,7 +57,7 @@ const UserBlock = React.createClass({
 
 		return (
 			<div className="bTopMenu mRight">
-				{AccountButton}
+                <RoleList binding={binding.sub('roleList')} />
 				{LogoutButton}
 				{UserButton}
 				{LoginButton}
