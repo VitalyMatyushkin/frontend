@@ -308,8 +308,9 @@
 .eManager_select_wrap {
   position: relative;
   background: #fff;
-  width: 195px;
-  background: url("/images/icons/select_arrow.svg") right no-repeat;
+  width: 200px;
+  background: url("/images/icons/select_arrow.svg") no-repeat;
+  background-position: 95% 50%;
   background-size: 14px 14px;
   background-color: #fff;
 }
@@ -339,9 +340,8 @@
   width: 200px;
 }
 .eRegisterMessage {
-  font-size: 12px;
+  font-size: 10px;
   color: #a9a9a9;
-  position: absolute;
-  left: 40%;
-  bottom: 5%;
+  margin: 0 0 5px 12px;
+
 }

@@ -48,7 +48,7 @@ const SchoolConsole = React.createClass({
                 key: 'Permissions'
             },{
                 href: '/#school_console/requests',
-                name: 'Live Requests',
+                name: 'New Requests',
                 key: 'requests',
                 num: '(' + count + ')'
             },{

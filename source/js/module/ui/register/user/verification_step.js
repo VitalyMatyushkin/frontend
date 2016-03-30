@@ -92,6 +92,8 @@ const VerificationStep = React.createClass({
                 <div className={phoneErrorCheck}>
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
+                <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:support@squadintouch.com?subject=Registration">Email
+                    us</a></div>
             </div>
         );
     }
