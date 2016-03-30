@@ -15,12 +15,13 @@
   padding: 10px 10px 5px 10px;
   border-bottom: solid 3px transparent;
   margin-bottom: 15px;
+  cursor: pointer;
   &:hover {
     background: #d7d7d7;
   }
   &.mActive {
     color: $MAIN_COLOR;
-    border-bottom: solid 3px $MAIN_COLOR;
+    background: repeat-x url('/images/team_selector.png') bottom;
   }
   &.mDisable {
     opacity: 0.3;
@@ -34,9 +35,8 @@
 }
 .bChooserRival .eChooser_item {
   border: none;
-  font-size: 16px;
+  font-size: 20px;
 }
-
 
 .eChooser_title {
   margin-right: 10px;

@@ -151,18 +151,19 @@ const TeamModeView = React.createClass({
 				<If condition={selectedRivalIndex == 1}>
 					<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
 				</If>
+				{self._renderErrorBox()}
 			</div>
 		);
 	},
 	_renderTeamWrapper: function() {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			selectedRivalIndex = binding.toJS('selectedRivalIndex'),
-			tableWrapperBinding = {
-				default:	binding.sub(`teamWrapper.${selectedRivalIndex}`),
-				model:		self.getBinding().model,
-				rival:		self.getBinding().rivals.sub(selectedRivalIndex)
-			};
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
+				tableWrapperBinding	= {
+										default:	binding.sub(`teamWrapper.${selectedRivalIndex}`),
+										model:		self.getBinding().model,
+										rival:		self.getBinding().rivals.sub(selectedRivalIndex)
+									};
 
 		//TODO delete IF
 		//TODO merge two team wrappers tp one team wrapper
@@ -174,6 +175,18 @@ const TeamModeView = React.createClass({
 				<If condition={selectedRivalIndex == 1}>
 					<TeamWrapper binding={tableWrapperBinding}/>
 				</If>
+			</div>
+		);
+	},
+	_renderErrorBox: function() {
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
+				errorText			= self.getBinding().error.toJS(selectedRivalIndex).text;
+
+		return (
+			<div className="eTeam_errorBox">
+				{errorText}
 			</div>
 		);
 	},

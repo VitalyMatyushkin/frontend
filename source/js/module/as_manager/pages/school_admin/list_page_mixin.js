@@ -3,18 +3,10 @@ const   If          = require('module/ui/if/if'),
         GroupAction = require('module/ui/list/group_action'),
         SVG 		= require('module/ui/svg'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
         Immutable   = require('immutable'),
-        $           = require('jquery');
 
-// TODO:
-//  * remove jquery
-//  * understand what the fuck is this and add comments
-const ListPageMixin = {
+ListPageMixin = {
 	propTypes: {
-		formBinding:        React.PropTypes.any,
-		filters:            React.PropTypes.object,
-		addSchoolToFilter:  React.PropTypes.bool,
         serviceName:        React.PropTypes.string,
         serviceCount:       React.PropTypes.string
 	},
@@ -30,18 +22,10 @@ const ListPageMixin = {
         self.serviceCount = self.props.serviceCount ? self.props.serviceCount : self.serviceCount;
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
-        self.popUpState = false;
-        self.updatePageNumbers = true;
+
         metaBinding.set('isFiltersActive', false);
         self.filter = new Filter(binding.sub('filter'));
         self.filter.setFilters(self.filters);
-	},
-    componentDidMount:function(){
-        //if(this.isSuperAdminPage)
-        //    ReactDOM.findDOMNode(this.refs.otherCheck).checked = true;
-    },
-	componentWillUnmount: function () {
-        clearTimeout(this.timeoutId);
 	},
     getDefaultState: function () {
         return Immutable.Map({
@@ -105,70 +89,8 @@ const ListPageMixin = {
 			metaBinding = self.getDefaultBinding().meta(),
 			isFiltersActive = metaBinding.get('isFiltersActive');
 
-		if (isFiltersActive) {
-			metaBinding.set('isFiltersActive', false);
-			//self.updateData();
-		} else {
-			metaBinding.set('isFiltersActive', true);
-			//self.updateData(self.lastFiltersState);
-		}
+        metaBinding.set('isFiltersActive', !isFiltersActive);
 	},
-    toggleBaseFilters:function(el){
-        const   self            = this,
-                currentBase     = ReactDOM.findDOMNode(self.refs[el]),
-                currentBaseVal  = currentBase.value,
-                isChecked       = currentBase.checked;
-
-        $('.bFilterCheck').attr('checked',false);       // TODO: remove this shit
-        if(isChecked){
-            currentBase.checked = isChecked;
-            switch (currentBaseVal){
-                case 'students':
-                    self.filters = {
-                        include:['principal','school']
-                        ,where:{
-                            and:[{preset:{nin:['coach','teacher','parent','manager','owner','admin']}},{preset:'student'}]
-                        }
-                    };
-                    break;
-                case 'all':
-                    self.filters ={
-                        include:['principal','school']
-                        ,where:{
-                            principalId:{neq:''}
-                        }
-                    };
-                    break;
-                case 'others':
-                    self.filters={
-                        include:['principal','school']
-                        ,where:{
-                            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                        }
-                    };
-                    break;
-                default :
-                    self.filters={
-                        include:['principal','school']
-                        ,where:{
-                            and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                        }
-                    };
-                    break;
-            }
-        }else{
-            ReactDOM.findDOMNode(self.refs.otherCheck).checked = true;
-            self.filters={
-                include:['principal','school']
-                ,where:{
-                    and:[{principalId:{neq:''}},{preset:{neq:'student'}}]
-                }
-            };
-        }
-        self.filter.setWhere(self.filters.where);
-        //self.updatePageNumbers = true;
-        //self.updateData();
-    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -186,56 +108,45 @@ const ListPageMixin = {
             listPageTitle = listPageTitle[0].toUpperCase() + listPageTitle.slice(1);
         }
 		return (
-			<div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
-            <div className="eSchoolMaster_wrap">
-              <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
-              <div className="eStrip">
-              </div>
-
-
-            <div className="filter_btn" onClick={self.toggleFilters}><SVG icon="icon_search"/> {isFiltersActive ? '↑' : '↓'}</div>
-                        <If condition={currentPage[currentPage.length-1] ==='students'}>
-                            <div className="addButton" onClick={self._getAddNewStudentFunction}><SVG icon="icon_add_student" /></div>
-                        </If>
-                        <If condition={(currentPage[currentPage.length-1] ==='list' && currentPage[currentPage.length-2] === 'admin_views')}>
-                            <div className="addButton" onClick={self._getAddNewSchoolFunction}><SVG icon="icon_add_school" /></div>
-                        </If>
-                        <If condition={currentPage[currentPage.length-1] ==='forms'}>
-                            <div className="addButtonShort" onClick={self._addNewClassFunction}><SVG icon="icon_add_form" /></div>
-                        </If>
-                        <If condition={currentPage[currentPage.length-1] ==='houses'}>
-                            <div className="addButton addHouse" onClick={self._addNewHouseFunction}></div>
-                        </If>
-                        <If condition={self.isSuperAdminPage === true}>
-                            <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>
-                        </If>
-                        <If condition={currentPage[currentPage.length-1] ==='sports'}>
-                            <div className="bButton" onClick={self._addNewSport}>Add New Sport</div>
-                        </If>
-                        <If condition={currentPage[currentPage.length-1] ==='teams'}>
-                            <div className="addButtonShort" onClick={self._addNewTeam}><SVG icon="icon_add_team" /></div>
-                        </If>
-                        <If condition={currentPage[currentPage.length-1] ==='news'}>
-                            <div className="addButtonShort" onClick={self._createNewsItem}><SVG icon="icon_add_news" /></div>
-                        </If>
-          </div>
-          <div className="eSchoolMaster_groupAction">
-              <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
-                  <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
-                               binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
-              </If>
-              <div className="eSchoolMaster_buttons eSchoolMaster_buttons_admin">
-                  {/*<If condition={self.isSuperAdminPage && false}>
-                   <div className="filterBase_container">
-                   <span>Filter base: </span>
-                   <input type="checkbox" className="bFilterCheck" ref="stdCheck" value="students" onChange={self.toggleBaseFilters.bind(null,'stdCheck')}/><span>Students Only</span>
-                   <input type="checkbox" className="bFilterCheck" ref="otherCheck" value="others" onChange={self.toggleBaseFilters.bind(null,'otherCheck')}/><span>Others Only</span>
-                   <input type="checkbox" className="bFilterCheck" ref="allCheck" value="all" onChange={self.toggleBaseFilters.bind(null,'allCheck')}/><span>All users</span>
-                   </div>
-                   </If>*/}
+            <div className={isFiltersActive ? 'bFiltersPage' : 'bFiltersPage mNoFilters'}>
+                <div className="eSchoolMaster_wrap">
+                    <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
+                    <div className="eStrip"></div>
+                    <div className="filter_btn" onClick={self.toggleFilters}>
+                        <SVG icon="icon_search"/> {isFiltersActive ? '↑' : '↓'}
                     </div>
+                    <If condition={currentPage[currentPage.length-1] ==='students'}>
+                        <div className="addButton" onClick={self._getAddNewStudentFunction}><SVG icon="icon_add_student" /></div>
+                    </If>
+                    <If condition={(currentPage[currentPage.length-1] ==='list' && currentPage[currentPage.length-2] === 'admin_views')}>
+                        <div className="addButton" onClick={self._getAddNewSchoolFunction}><SVG icon="icon_add_school" /></div>
+                    </If>
+                    <If condition={currentPage[currentPage.length-1] ==='forms'}>
+                        <div className="addButtonShort" onClick={self._addNewClassFunction}><SVG icon="icon_add_form" /></div>
+                    </If>
+                    <If condition={currentPage[currentPage.length-1] ==='houses'}>
+                        <div className="addButton addHouse" onClick={self._addNewHouseFunction}></div>
+                    </If>
+                    <If condition={self.isSuperAdminPage === true}>
+                        <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>
+                    </If>
+                    <If condition={currentPage[currentPage.length-1] ==='sports'}>
+                        <div className="bButton" onClick={self._addNewSport}>Add New Sport</div>
+                    </If>
+                    <If condition={currentPage[currentPage.length-1] ==='teams'}>
+                        <div className="addButtonShort" onClick={self._addNewTeam}><SVG icon="icon_add_team" /></div>
+                    </If>
+                    <If condition={currentPage[currentPage.length-1] ==='news'}>
+                        <div className="addButtonShort" onClick={self._createNewsItem}><SVG icon="icon_add_news" /></div>
+                    </If>
                 </div>
-				{self.getTableView()}
+                <div className="eSchoolMaster_groupAction">
+                    <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
+                        <GroupAction groupActionFactory={self._getGroupActionsFactory} serviceName={self.serviceName}
+                                   binding={self.getMoreartyContext().getBinding()} actionList={self.groupActionList} />
+                    </If>
+                </div>
+                {self.getTableView()}
                 <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>
                     <div className="eSchoolMaster_groupAction">
                         <div className="groupAction bottom_action">
@@ -243,7 +154,7 @@ const ListPageMixin = {
                         </div>
                     </div>
                 </If>
-			</div>
+            </div>
 		)
 	}
 };

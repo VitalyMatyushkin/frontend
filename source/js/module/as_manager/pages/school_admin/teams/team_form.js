@@ -145,11 +145,10 @@ const TeamForm = React.createClass({
     _getAgeItems: function() {
         const self  = this,
             availableAges = self.getDefaultBinding().toJS('availableAges');
-
         let ageItems = [];
 
         if(availableAges) {
-            ageItems = availableAges.map(function (age) {
+            ageItems = availableAges.sort((first,last)=>{return first - last}).map(function (age) {
                 return {
                     id: age,
                     text: 'Y' + age
@@ -185,8 +184,9 @@ const TeamForm = React.createClass({
     },
 	_serviceHouseFilter: function() {
 		const self = this;
-
-		return window.Server.houses.get(MoreartyHelper.getActiveSchoolId(self));
+		return window.Server.houses.get({schoolId:MoreartyHelper.getActiveSchoolId(self),filter:{
+            order:'name ASC' //Filter by name in ascending order
+        }});
 	},
 	_onSelectHouse: function(id) {
 		const self = this,

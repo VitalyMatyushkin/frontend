@@ -180,9 +180,9 @@ const EventView = React.createClass({
 								binding={binding}
 								component='module/as_parents/pages/events/events_calendar'
 						/>
-						<Route	path='/events/challenges /events/challenges/:userId'
+						<Route	path='/events/fixtures /events/fixtures/:userId'
 								binding={binding}
-								component='module/as_manager/pages/events/events_challenges'
+								component='module/ui/fixtures/events_fixtures'
 						/>
 						<Route	path="/events/achievement /events/achievement/:userId"
 								binding={binding}

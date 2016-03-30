@@ -1,12 +1,80 @@
 .bTeam {
-  display: inline-block;
-
   width: 392px;
   height: 318px;
 
   background: #fff;
   border: $BORDER;
   border-right: none;
+
+  color: #2a2a2a;
+}
+
+.eTeam_playerList {
+  height: 233px;
+
+  overflow-y: auto;
+}
+
+.eTeam_player {
+  cursor: pointer;
+
+  &.mHead {
+    color: #939393;
+    background: #d7d7d7;
+  }
+
+  &.mSelected {
+    background-color: #d7d7d7;
+  }
+
+  &:hover {
+    background-color: #d7d7d7;
+  }
+}
+
+.eTeam_playerItem {
+  display: inline-block;
+  vertical-align: top;
+
+  height: 23px;
+  padding-top: 12px;
+
+  text-align: center;
+  font-weight: bold;
+  font-size: 16px;
+
+  &.mName {
+    width: 40%;
+  }
+
+  &.mForm {
+    width: 10%;
+  }
+
+  &.mPosition {
+    width: 40%;
+  }
+
+  &.mPosition {
+    width: 40%;
+
+    &.mSelector {
+      padding-top: 8px;
+    }
+  }
+
+  &.mSub {
+    width: 10%;
+  }
+}
+
+.eTeam_positionSelector {
+  height: 18px;
+
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  color: #2a2a2a;
 }
 
 .eManager_managerTeamContainer {
@@ -17,14 +85,26 @@
 .eManager_gameFieldContainer {
   display: inline-block;
   width: 364px;
-  margin: 42px 0 0 10px;
+  margin: 45px 0 0 10px;
 }
 
 .eTeam_errorBox{
+  display: inline-block;
+  width: 300px;
+
   text-align: right;
   margin-top: 10px;
-  font-size: 14px;
-  color: #FF0000;
+  font-size: 16px;
+  color: #ea5a00;
+}
+
+.eTeam_removeButton {
+  height: 40px;
+
+  background: #759500 url("/images/arrows_r.png") no-repeat center;
+  &:hover {
+    background-color: #566D01;
+  }
 }
 
 .hHouseDuplicateError{

@@ -221,6 +221,90 @@ const EventManager = React.createClass({
 
         return !isError;
     },
+	_renderStepButtons: function() {
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				step		= binding.get('step');
+		let		stepButtons = [];
+
+		switch (step) {
+			case 1:
+				if(self._isStepComplete(1)) {
+					stepButtons.push(
+						<span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span>
+					);
+				}
+				break;
+			case 2:
+				stepButtons.push(
+					<span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span>
+				);
+				if(self._isStepComplete(2)) {
+					stepButtons.push(
+						<span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span>
+					);
+				}
+				break;
+			case 3:
+				stepButtons.push(
+					<span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span>
+				);
+				if(self._isStepComplete(3)) {
+					stepButtons.push(
+						<span className="eEvents_button mFinish" onClick={self.toFinish}>Finish</span>
+					);
+				}
+				break;
+		}
+
+		return (
+			<div className="eEvents_buttons">
+				{stepButtons}
+			</div>
+		);
+	},
+	_isStepComplete: function(step) {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+		let		isStepComplete	= false;
+
+		switch (step) {
+			case 1:
+				if(binding.get('model.startTime') !== undefined && binding.get('model.startTime') !== null) {
+					isStepComplete = true;
+				}
+				break;
+			case 2:
+				isStepComplete = self._isSecondStepIsComplete();
+				break;
+			case 3:
+				if(!binding.toJS('error.0.isError') && !binding.toJS('error.1.isError')) {
+					isStepComplete = true;
+				};
+				break;
+		}
+
+		return isStepComplete;
+	},
+	_isSecondStepIsComplete: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+		let		isStepComplete	= false;
+
+		switch (binding.toJS('model.type')) {
+			case 'inter-schools':
+			case 'houses':
+					if(binding.toJS('rivals').length === 2) {
+					isStepComplete = true;
+				}
+				break;
+			case 'internal':
+				isStepComplete = true;
+				break;
+		}
+
+		return isStepComplete;
+	},
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
@@ -270,11 +354,7 @@ const EventManager = React.createClass({
                     <Manager binding={managerBinding} />
                 </If>
             </div>
-			<div className="eEvents_buttons">
-				{step > 1 ? <span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span> : null}
-				{step < titles.length ? <span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span> : null}
-				{step === titles.length ? <span className="eEvents_button mFinish" onClick={self.toFinish}>Finish</span> : null}
-			</div>
+			{self._renderStepButtons()}
 		</div>;
 	}
 });

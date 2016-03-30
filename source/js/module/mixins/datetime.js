@@ -1,4 +1,6 @@
-var DateTimeMixin = {
+const   DateHelper = require('module/helpers/date_helper'),
+
+DateTimeMixin = {
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 	monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -21,10 +23,7 @@ var DateTimeMixin = {
 		return [date, self.getMonthName(month), year].join(' ');
 	},
 	getTimeFromIso: function(value) {
-		var self = this,
-			converDate = new Date(value);
-
-		return self.zeroFill(converDate.getHours()) + ':' + self.zeroFill(converDate.getMinutes());
+		return DateHelper.getTime(value);
 	},
 	daysInMonth: function(date) {
 		return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();

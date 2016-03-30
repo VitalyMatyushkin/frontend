@@ -3,6 +3,7 @@ const	CalendarView	= require('module/ui/calendar/calendar'),
 		Immutable		= require('immutable'),
 		DateTimeMixin	= require('module/mixins/datetime'),
 		Sport			= require('module/ui/icons/sport_icon'),
+        ChallengeModel	= require('module/ui/challenges/challenge_model'),
 		Superuser		= require('module/helpers/superuser');
 
 const HomeCalender = React.createClass({
@@ -18,40 +19,15 @@ const HomeCalender = React.createClass({
 			});
 		});
 	},
-	getTeamName: function(team, type){
-		const	self	= this;
-		let		name	= 'n/a';
-
-		if (team !== undefined) {
-			switch(type) {
-				case 'inter-schools':
-					if(self.getMoreartyContext().getBinding().get('activeSchoolId') == team.school.id) {
-						name = team.name;
-					} else {
-						name = team.school.name;
-					}
-					break;
-				case 'houses':
-					name = team.house.name;
-					break;
-				case 'internal':
-					name = team.name;
-					break;
-			}
-		}
-
-		return name;
-	},
 	getSportIcon: function(sport) {
-		const	name	= sport ? sport.name : '';
-
-		return <Sport name={name} className="calendar_mSport" ></Sport>;
+		return <Sport name={sport} className="calendar_mSport" ></Sport>;
 	},
 	getCalenderFixtureLists: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				fixtureList	= binding.get('fixtures'),
-				selectDay	= binding.get('selectDay');
+		const	self		    = this,
+				binding		    = self.getDefaultBinding(),
+                activeSchoolId  = self.getMoreartyContext().getBinding().get('activeSchoolId'),
+				fixtureList	    = binding.get('fixtures'),
+				selectDay	    = binding.get('selectDay');
 		let		result;
 
 		if(selectDay === undefined || selectDay === null) {
@@ -64,16 +40,15 @@ const HomeCalender = React.createClass({
 			if(fixtureList !== undefined && fixtureList.size != 0) {
 				const	fixtures = fixtureList.toJS();
 
-				result = fixtures.map(function(fixture){
-					const	firstTeamName	= self.getTeamName(fixture.participants[0], fixture.type),
-							secondTeamName	= self.getTeamName(fixture.participants[1], fixture.type);
+				result = fixtures.map(function(event){
+					const	fixture	= new ChallengeModel(event, activeSchoolId);
 
 					return (
 						<div key={fixture.id} className="eSchoolFixtureListItem">
 							<span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
-							<span className="eSchoolCalenderFixtureItem">{self.getDateFromIso(fixture.startTime)}</span>
-							<span className="eSchoolCalenderFixtureItem">{`${firstTeamName} vs ${secondTeamName}`}</span>
-							<span className="eSchoolCalenderFixtureItem">{self.getTimeFromIso(fixture.startTime)+ ' '}</span>
+							<span className="eSchoolCalenderFixtureItem">{fixture.date}</span>
+							<span className="eSchoolCalenderFixtureItem">{`${fixture.rivals[0]} vs ${fixture.rivals[1]}`}</span>
+							<span className="eSchoolCalenderFixtureItem">{fixture.time+ ' '}</span>
 						</div>
 					);
 				});
