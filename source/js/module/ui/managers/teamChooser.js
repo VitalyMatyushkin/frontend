@@ -18,12 +18,13 @@ const	TeamChooser	= React.createClass({
 		const	self = this,
 				binding	= self.getDefaultBinding();
 
+		binding.set('viewMode',	Immutable.fromJS('close'));
+
 		self._getTeams().then((teams) => {
 			binding
 				.atomically()
-				.set('isSelectedTeam', Immutable.fromJS(false))
-				.set('teams', Immutable.fromJS(teams))
-				.set('viewMode', Immutable.fromJS('close'))
+				.set('isSelectedTeam',	Immutable.fromJS(false))
+				.set('teams',			Immutable.fromJS(teams))
 				.commit();
 		});
 	},
@@ -128,13 +129,13 @@ const	TeamChooser	= React.createClass({
 				exceptionTeamId	= binding.toJS('exceptionTeamId');
 		let		teamItems		= [];
 
-		if(teams) {
+		if(teams && teams.length !== 0) {
 			teams.forEach((team, index) => {
 				if(exceptionTeamId != team.id) {
 					const	teamClass	= classNames({
-													eTeamChooser_team:	true,
-													mLast:				index == teams.length - 1
-												});
+						eTeamChooser_team:	true,
+						mLast:				index == teams.length - 1
+					});
 
 					teamItems.push((
 						<div className={teamClass} onMouseDown={self._onTeamClick.bind(self, team.id, team)}>
@@ -144,12 +145,18 @@ const	TeamChooser	= React.createClass({
 					)) ;
 				}
 			});
+		} else if(teams && teams.length === 0) {
+			teamItems.push((
+				<div className='eTeamChooser_team mLast'>
+					There are no teams matching you criteria. To create a new team pick players from the list.
+				</div>
+			)) ;
 		}
 
 		const	teamChooserClass	= classNames({
-										eTeamChooser_teamListContainer:	true,
-										mDisable:						binding.toJS('viewMode') == 'close'
-									});
+			eTeamChooser_teamListContainer:	true,
+			mDisable:						binding.toJS('viewMode') == 'close'
+		});
 
 		return (
 			<div className={teamChooserClass}>
@@ -228,7 +235,7 @@ const	TeamChooser	= React.createClass({
 					onClick={self._onTeamChooserButtonClick}
 					onBlur={self._onTeamChooserButtonBlur}
 			>
-				Choose Team
+				Select Team
 			</div>
 		);
 	},
