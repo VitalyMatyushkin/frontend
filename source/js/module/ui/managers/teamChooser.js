@@ -228,7 +228,7 @@ const	TeamChooser	= React.createClass({
 					onClick={self._onTeamChooserButtonClick}
 					onBlur={self._onTeamChooserButtonBlur}
 			>
-				Choose Team
+				Select Team
 			</div>
 		);
 	},
