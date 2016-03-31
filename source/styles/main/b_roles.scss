@@ -1,0 +1,54 @@
+.bRoles{
+  font-size: 14px;
+  display: inline-block;
+  height: 30px;
+  padding: 16px 20px 14px 10px;
+  cursor: pointer;
+  position: relative;
+  text-transform: none;
+
+  .eCurrentRole{
+
+    .eArrow{
+      position: absolute;
+      right: 0;
+      top: 50%;
+      margin-top: -8px;
+    }
+  }
+
+  .eRolesList{
+    display:none;
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    margin-top: -10px;
+    background-color: white;
+    max-height: 250px;
+    overflow-y: auto;
+    width: 107%;
+
+    .eRole{
+      padding: 10px;
+      border-width: 0px 1px 1px 1px;
+      border-style: solid;
+      border-color: $MAIN_COLOR;
+    }
+  }
+
+  .eRole{
+    p{
+      margin: 0px;
+      line-height: 16px;
+      text-align: left;
+    }
+  }
+
+  &.mOpen{
+
+    .eRolesList{
+      display:block;
+    }
+
+  }
+}
