@@ -57,7 +57,7 @@ const EventRival = React.createClass({
 		return <div className="bEventRivals">
 			<div className="bEventRival">
 				<div className="eEventRival_rival">{self.getPic(0)}</div>
-				<div className="eEventRival_name">{self.getName(0)}</div>
+				<div className="eEventRival_name" title={self.getName(0)}>{self.getName(0)}</div>
 			</div>
 			<div className="bEventResult">
                 <If condition={!binding.get('model.resultId') && binding.get('mode') !== 'closing'}>
@@ -83,7 +83,7 @@ const EventRival = React.createClass({
             </div>
 			<div className="bEventRival">
 				<div className="eEventRival_rival">{self.getPic(1)}</div>
-				<div className="eEventRival_name">{self.getName(1)}</div>
+				<div className="eEventRival_name" title={self.getName(1)}>{self.getName(1)}</div>
 			</div>
         </div>;
 	}

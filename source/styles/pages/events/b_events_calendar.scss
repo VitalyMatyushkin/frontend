@@ -46,6 +46,7 @@ $border-color: #c2c2c2;
   width: 50%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .eChallenge_date{
   color: $COLOR;
@@ -55,6 +56,8 @@ $border-color: #c2c2c2;
 .eChallenge_name{
   width: 25%;
   margin: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .eChallenge_type{
   width: 10%;
@@ -63,6 +66,9 @@ $border-color: #c2c2c2;
 .eChallenge_rivalName{
   width: 110px;
   margin: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px;
 }
 .eChallenge_title{
   display: flex;
