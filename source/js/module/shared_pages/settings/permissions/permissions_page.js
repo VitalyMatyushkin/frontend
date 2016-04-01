@@ -1,5 +1,4 @@
 const 	React 		= require('react'),
-		ReactDOM 	= require('reactDom'),
 		RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
 		Immutable 	= require('immutable');

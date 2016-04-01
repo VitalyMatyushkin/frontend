@@ -3,6 +3,7 @@
  */
 
 const   React 		= require('react'),
+        ReactDOM    = require('reactDom'),
         SVG 		= require('module/ui/svg'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
@@ -43,7 +44,7 @@ RoleList = React.createClass({
                 id      = role ? role.id : null;
 
         return (
-            <div className="eRole" onClick={active ? self.onSetRole.bind(null, id) : null}>
+            <div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, id) : null}>
                 <p>{school}</p>
                 <p>{roleName}</p>
             </div>
@@ -58,8 +59,8 @@ RoleList = React.createClass({
     },
     getSelectList:function(){
         const   self 	= this,
-            binding = self.getDefaultBinding(),
-            roles   = binding.get('roles');
+                binding = self.getDefaultBinding(),
+                roles   = binding.get('roles');
 
         return roles && roles.map(r => self.getRole(r, true));
     },
@@ -67,7 +68,16 @@ RoleList = React.createClass({
         const   self 	    = this,
                 binding     = self.getDefaultBinding(),
                 listOpen    = binding.get('listOpen');
+
         binding.set('listOpen', !listOpen);
+
+        e.stopPropagation();
+    },
+    onBlur:function(e){
+        const   self 	    = this,
+                binding     = self.getDefaultBinding();
+
+        binding.set('listOpen', false);
 
         e.stopPropagation();
     },
@@ -79,10 +89,10 @@ RoleList = React.createClass({
 
         rootBinding.set('userRules.activeRoleId', roleId);
         rootBinding.set('userRules.activeSchoolId', role.schoolId);
-        binding.atomically()
-            .set('activeRole', role)
-            .set('listOpen', false)
-            .commit();
+        //binding.atomically()
+        //    .set('activeRole', role)
+        //    .set('listOpen', false)
+        //    .commit();
         window.location.reload();
     },
     render: function() {
@@ -90,10 +100,12 @@ RoleList = React.createClass({
                 binding 	= self.getDefaultBinding(),
                 listOpen    = binding.get('listOpen');
 
+        if(listOpen)
+            ReactDOM.findDOMNode(this.refs.eCurrentRole).focus();
 
         return(
             <div className={classNames({bRoles:true, mOpen:listOpen})}>
-                <div className="eCurrentRole" onClick={self.onToggle}>
+                <div tabIndex="-1" ref="eCurrentRole" onClick={self.onToggle} onBlur={self.onBlur}>
                     {self.getActiveRole()}
                     <div className="eArrow">
                         <SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
