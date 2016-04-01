@@ -8,14 +8,11 @@
   text-transform: none;
   margin: 0 10px;
 
-  .eCurrentRole{
-
-    .eArrow{
-      position: absolute;
-      right: 0;
-      top: 50%;
-      margin-top: -8px;
-    }
+  .eArrow{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -8px;
   }
 
   .eRolesList{
@@ -23,9 +20,9 @@
     position: absolute;
     top: 100%;
     left: 0px;
-    margin-top: -10px;
+    margin-top: -7px;
     width: 107%;
-    background-color: white;
+    background-color: #eaeaea;
     border-width: 0px 1px;
     border-style: solid;
     border-color: $MAIN_COLOR;
@@ -44,23 +41,26 @@
       &.mLogout{
         text-align: center;
         line-height: 32px;
+        a{
+          color: $DarkGreen;
+        }
+      }
+
+      &:hover{
+        background-color: $MAIN_COLOR;
       }
     }
   }
 
-  .eRole{
-    p{
-      margin: 0px;
-      line-height: 16px;
-      text-align: left;
-    }
+  .eRole p{
+    margin: 0px;
+    line-height: 16px;
+    text-align: left;
   }
 
   &.mOpen{
-
     .eRolesList{
       display:block;
     }
-
   }
 }
