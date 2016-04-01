@@ -9,7 +9,7 @@
 const ActiveUserHelper = {
     howManySchools:function(ctx){
         //Get current user id
-        let currentUserId = ctx.getMoreartyContext().getBinding().get('userData.userInfo').get('id');
+        let currentUserId = ctx.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
         //Check if the current user is defined, then get number of schools related to user
         if(currentUserId !== null && currentUserId !== undefined){
             return window.Server.getMaSchools.get(
@@ -23,6 +23,7 @@ const ActiveUserHelper = {
                 return new Promise(resolve => resolve(schools.length));
             });
         }
+        return new Promise(resolve => resolve(0));
     }
 };
 module.exports = ActiveUserHelper;

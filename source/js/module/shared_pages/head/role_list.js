@@ -20,13 +20,19 @@ RoleList = React.createClass({
         const 	self 			= this,
                 rootBinding 	= self.getMoreartyContext().getBinding(),
                 binding 		= self.getDefaultBinding(),
-                userId 			= rootBinding.get('userData.authorizationInfo.userId');
+                userId 			= rootBinding.get('userData.authorizationInfo.userId'),
+                activeRoleId    = rootBinding.get('userRules.activeRoleId');
 
         window.Server.userPermissions.get(userId).then(roles => {
             if(roles && roles.length)
             {
+                let activeRole = roles.find(r => r.id === activeRoleId);
+                if(!activeRole){
+                    activeRole = roles[0];
+                    rootBinding.set('userRules.activeRoleId', activeRole.id);
+                }
                 binding.set('roles', roles);
-                binding.set('activeRole', roles[0]);
+                binding.set('activeRole', activeRole);
             }
         });
     },
@@ -66,11 +72,18 @@ RoleList = React.createClass({
         e.stopPropagation();
     },
     onSetRole:function(roleId){
-        const   self 	= this,
-                binding = self.getDefaultBinding(),
-                role    = binding.get('roles').find(r => r.id === roleId);
+        const 	self 			= this,
+                rootBinding 	= self.getMoreartyContext().getBinding(),
+                binding 		= self.getDefaultBinding(),
+                role            = binding.get('roles').find(r => r.id === roleId);
 
-        binding.set('activeRole', role);
+        rootBinding.set('userRules.activeRoleId', roleId);
+        rootBinding.set('userRules.activeSchoolId', role.schoolId);
+        binding.atomically()
+            .set('activeRole', role)
+            .set('listOpen', false)
+            .commit();
+        window.location.reload();
     },
     render: function() {
         const 	self 		= this,

@@ -18,9 +18,9 @@ const Head = React.createClass({
     },
     schoolExists:function(){
         const self = this,
-            globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-            authorization 	= globalBinding.get('userData.authorizationInfo.id');
+            globalBinding   = self.getMoreartyContext().getBinding(),
+            activeSchoolId  = globalBinding.get('userRules.activeSchoolId'),
+            authorization   = globalBinding.get('userData.authorizationInfo.id');
 
         if(activeSchoolId && authorization)
             return window.Server.school.get(activeSchoolId).then(function (data) {
