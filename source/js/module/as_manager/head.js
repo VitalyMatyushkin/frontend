@@ -1,6 +1,6 @@
 const 	Logo 		= require('module/as_manager/head/logo'),
 		TopMenu 	= require('module/ui/menu/top_menu'),
-		UserBlock 	= require('module/as_manager/head/user_block'),
+		UserBlock 	= require('module/shared_pages/head/user_block'),
 		If 			= require('module/ui/if/if'),
 		React 		= require('react');
 
@@ -18,9 +18,9 @@ const Head = React.createClass({
     },
     schoolExists:function(){
         const self = this,
-            globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-            authorization 	= globalBinding.get('userData.authorizationInfo.id');
+            globalBinding   = self.getMoreartyContext().getBinding(),
+            activeSchoolId  = globalBinding.get('userRules.activeSchoolId'),
+            authorization   = globalBinding.get('userData.authorizationInfo.id');
 
         if(activeSchoolId && authorization)
             return window.Server.school.get(activeSchoolId).then(function (data) {

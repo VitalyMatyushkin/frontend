@@ -1,8 +1,9 @@
 const 	React 		= require('react'),
 		SVG 		= require('module/ui/svg'),
-		Immutable 	= require('immutable');
+		Immutable 	= require('immutable'),
+        RoleList    = require('./role_list'),
 
-const UserBlock = React.createClass({
+UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function() {
 		return Immutable.fromJS({
@@ -32,24 +33,17 @@ const UserBlock = React.createClass({
 			binding = self.getDefaultBinding(),
 			authBinding = binding.get('authorizationInfo'),
 			authData = authBinding.toJS(),
-			AccountButton = null,
 			UserButton = null,
 			userButtonStyle = {},
-			LogoutButton = null,
 			LoginButton = null,
-			isSettingsPage = document.location.hash.indexOf('settings') !== -1; // Временный костыль для подсветки пункта меню настроек
+            RolesList = null;
 
 		// TODO: Заменить данные кнопки на компонент типа Menu
 		if (authData && authData.id) {
 			// Кнопка перехода на страницу пользователя
 			userButtonStyle = {backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')'};
-			UserButton = <a href="/#settings/general" className="eTopMenu_photo" style={userButtonStyle}></a>;
-
-			// Кнопка перехода на страницу настрок
-			//AccountButton =
-			//	<a href="/#settings/general" className={'eTopMenu_item ' + (isSettingsPage ? 'mActive' : '')}><SVG
-			//		icon="icon_cog"/></a>;
-			LogoutButton = <a href="/#logout" className="eTopMenu_item mLogout">Log Out</a>;
+			UserButton = <a href="/#settings/general" className="eTopMenu_photo" style={userButtonStyle} />;
+            RolesList = <RoleList binding={binding.sub('roleList')} />;
 		} else {
 			// Кнопка авторизации
 			LoginButton = <a href="/" className="eTopMenu_item mLogin"><SVG icon="icon_key"/></a>;
@@ -57,8 +51,7 @@ const UserBlock = React.createClass({
 
 		return (
 			<div className="bTopMenu mRight">
-				{AccountButton}
-				{LogoutButton}
+                {RolesList}
 				{UserButton}
 				{LoginButton}
 			</div>

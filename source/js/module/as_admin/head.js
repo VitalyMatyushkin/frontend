@@ -3,7 +3,7 @@
  */
 var Logo = require('module/as_admin/head/logo'),
     TopMenu = require('module/ui/menu/top_menu'),
-    UserBlock = require('module/as_manager/head/user_block'),
+    UserBlock = require('module/shared_pages/head/user_block'),
     React = require('react'),
     Head;
 

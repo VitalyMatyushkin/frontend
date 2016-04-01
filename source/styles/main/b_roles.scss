@@ -1,0 +1,66 @@
+.bRoles{
+  font-size: 14px;
+  display: inline-block;
+  height: 30px;
+  padding: 16px 20px 14px 10px;
+  cursor: pointer;
+  position: relative;
+  text-transform: none;
+  margin: 0 10px;
+
+  .eArrow{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    margin-top: -8px;
+  }
+
+  .eRolesList{
+    display:none;
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    margin-top: -7px;
+    width: 107%;
+    background-color: #eaeaea;
+    border-width: 0px 1px;
+    border-style: solid;
+    border-color: $MAIN_COLOR;
+
+    .eScrollList{
+      overflow-y: auto;
+      max-height: 250px;
+
+    }
+    .eRole{
+      padding: 10px;
+      border-bottom-width: 1px;
+      border-style: solid;
+      border-color: $MAIN_COLOR;
+
+      &.mLogout{
+        text-align: center;
+        line-height: 32px;
+        a{
+          color: $DarkGreen;
+        }
+      }
+
+      &:hover{
+        background-color: $MAIN_COLOR;
+      }
+    }
+  }
+
+  .eRole p{
+    margin: 0px;
+    line-height: 16px;
+    text-align: left;
+  }
+
+  &.mOpen{
+    .eRolesList{
+      display:block;
+    }
+  }
+}
