@@ -6,6 +6,7 @@
   cursor: pointer;
   position: relative;
   text-transform: none;
+  margin: 0 10px;
 
   .eCurrentRole{
 
@@ -23,16 +24,27 @@
     top: 100%;
     left: 0px;
     margin-top: -10px;
-    background-color: white;
-    max-height: 250px;
-    overflow-y: auto;
     width: 107%;
+    background-color: white;
+    border-width: 0px 1px;
+    border-style: solid;
+    border-color: $MAIN_COLOR;
 
+    .eScrollList{
+      overflow-y: auto;
+      max-height: 250px;
+
+    }
     .eRole{
       padding: 10px;
-      border-width: 0px 1px 1px 1px;
+      border-bottom-width: 1px;
       border-style: solid;
       border-color: $MAIN_COLOR;
+
+      &.mLogout{
+        text-align: center;
+        line-height: 32px;
+      }
     }
   }
 

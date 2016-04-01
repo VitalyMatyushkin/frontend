@@ -87,7 +87,12 @@ RoleList = React.createClass({
                     </div>
                 </div>
                 <div className="eRolesList">
-                    {self.getSelectList()}
+                    <div className="eScrollList">
+                        {self.getSelectList()}
+                    </div>
+                    <div className="eRole mLogout">
+                        <a href="/#logout" >Log Out</a>
+                    </div>
                 </div>
             </div>
         );
