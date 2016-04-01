@@ -125,7 +125,7 @@ const AllChallengesList = React.createClass({
 			<div key={childEvInd} className={'eChallenge eChallenge_basicMod'} onClick={self._onClickEvent.bind(null, childEv.get('id'))}>
 				<span className="eChallenge_sport">{sport}</span>
 				<span className="eChallenge_date">{stringDate}</span>
-				<div className="eChallenge_name">{childEv.get('name')}</div>
+				<div className="eChallenge_name" title={childEv.get('name')}>{childEv.get('name')}</div>
 			</div>
 		);
 	},
