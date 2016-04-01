@@ -38,12 +38,12 @@ ChallengesView = React.createClass({
             return (
                 <div key={model.id} className="bChallenge" onClick={self.onClickChallenge.bind(null, model.id)}>
                     <span className="eChallenge_sport">{sportIcon}</span>
-                    <span className="eChallenge_event">{model.name}</span>
+                    <span className="eChallenge_event" title={model.name}>{model.name}</span>
                     <div className="eChallenge_hours">{model.time}</div>
                     <div className="eChallenge_in">
-                        <span className="eChallenge_firstName">{model.rivals[0]}</span>
+                        <span className="eChallenge_firstName" title={model.rivals[0]}>{model.rivals[0]}</span>
                         <p>vs</p>
-                        <span className="eChallenge_secondName">{model.rivals[1]}</span>
+                        <span className="eChallenge_secondName" title={model.rivals[1]}>{model.rivals[1]}</span>
                     </div>
                     <div className={classNames({eChallenge_results:true, mDone:model.played})}>{model.score}</div>
                 </div>

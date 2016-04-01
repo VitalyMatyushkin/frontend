@@ -36,6 +36,10 @@ $border: solid 1px #c2c2c2;
   text-align: center;
   margin: auto;
   min-width: 150px;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px;
 }
 
 .eChallenge_rivalInfo{
@@ -54,7 +58,9 @@ $border: solid 1px #c2c2c2;
 }
 .eChallenge_event{
   width: 20%;
-  margin: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px;
 }
 .eChallenge_results{
   width: 10%;

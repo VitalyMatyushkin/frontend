@@ -97,11 +97,11 @@ ChallengesList = React.createClass({
 						<div className="eChallenge_sport">{sport}</div>
 						<div className="eChallenge_date">{model.date}</div>
 
-						<div className="eChallenge_name">{model.name}</div>
+						<div className="eChallenge_name" title={model.name}>{model.name}</div>
 						<div className="eChallenge_rivals">
-							<div className="eChallenge_rivalName">{model.rivals[0]}</div>
-							<div className="eChallenge_vs">vs</div>
-							<div className="eChallenge_rivalName">{model.rivals[1]}</div>
+							<span className="eChallenge_rivalName" title={model.rivals[0]}>{model.rivals[0]}</span>
+							<span>vs</span>
+							<span className="eChallenge_rivalName" title={model.rivals[1]}>{model.rivals[1]}</span>
 						</div>
 					</div>
                     );

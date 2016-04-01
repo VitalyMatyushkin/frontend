@@ -36,7 +36,6 @@ $border-color: #c2c2c2;
 .eChallenge_rivals {
   display: flex;
   flex-direction: row;
-  word-wrap: break-word;
 }
 
 .eChallenge_basic {
@@ -47,6 +46,7 @@ $border-color: #c2c2c2;
   width: 50%;
   display: flex;
   justify-content: center;
+  align-items: center;
 }
 .eChallenge_date{
   color: $COLOR;
@@ -55,23 +55,20 @@ $border-color: #c2c2c2;
 
 .eChallenge_name{
   width: 25%;
-  padding: 5px;
   margin: 0 5px;
-
-  word-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .eChallenge_type{
   width: 10%;
   font-weight: bold;
 }
 .eChallenge_rivalName{
-  display: inline-block;
-
   width: 110px;
   margin: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
   padding: 5px;
-
-  vertical-align: top;
 }
 .eChallenge_vs{
   display: inline-block;
@@ -90,6 +87,9 @@ $border-color: #c2c2c2;
   height: 40px;
   line-height: 42px;
   padding: 0 15px;
+}
+.eChallenge_vs{
+  margin: auto;
 }
 
 .eChallenge_childName{
