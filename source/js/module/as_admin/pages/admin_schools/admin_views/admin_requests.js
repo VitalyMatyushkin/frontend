@@ -17,7 +17,7 @@ const AdminRequest = React.createClass({
         };
     },
     groupActionList:['Accept','Decline'],
-    _filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
+    filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
     componentWillMount:function(){
         const self = this;
 
