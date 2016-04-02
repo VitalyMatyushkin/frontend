@@ -1,3 +1,11 @@
+
+.bRoleList{
+  display: inline-block;
+  &.mLogout{
+    float: right;
+  }
+}
+
 .bRoles{
   font-size: 14px;
   display: inline-block;

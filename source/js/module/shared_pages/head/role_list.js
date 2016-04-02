@@ -7,6 +7,7 @@ const   React 		= require('react'),
         SVG 		= require('module/ui/svg'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
+        If          = require('module/ui/if/if'),
 
 RoleList = React.createClass({
     mixins: [Morearty.Mixin],
@@ -101,33 +102,35 @@ RoleList = React.createClass({
     render: function() {
         const 	self 		= this,
                 binding 	= self.getDefaultBinding(),
-                listOpen    = binding.get('listOpen');
+                listOpen    = binding.get('listOpen'),
+                empty       = binding.get('roles').length === 0;
 
-        //if(listOpen)
-        //    ReactDOM.findDOMNode(this.refs.eCurrentRole).focus();
-        //
-        //return(
-        //    <div className={classNames({bRoles:true, mOpen:listOpen})}>
-        //        <div tabIndex="-1" ref="eCurrentRole" onBlur={self.onBlur} onClick={self.onToggle}>
         if(listOpen)
             ReactDOM.findDOMNode(this.refs.role_list).focus();
 
         return(
-            <div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
-                <div onClick={self.onToggle}>
-                    {self.getActiveRole()}
-                    <div className="eArrow">
-                        <SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
+            <div className={classNames({bRoleList:true, mLogout:empty})}>
+                <If condition={!empty}>
+                    <div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
+                        <div onClick={self.onToggle}>
+                            {self.getActiveRole()}
+                            <div className="eArrow">
+                                <SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
+                            </div>
+                        </div>
+                        <div className="eRolesList">
+                            <div className="eScrollList">
+                                {self.getSelectList()}
+                            </div>
+                            <div className="eRole mLogout" onClick={self.logout}>
+                                Log Out
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="eRolesList">
-                    <div className="eScrollList">
-                        {self.getSelectList()}
-                    </div>
-                    <div className="eRole mLogout" onClick={self.logout}>
-                        Log Out
-                    </div>
-                </div>
+                </If>
+                <If condition={empty}>
+                    <a href="/#logout" className="eTopMenu_item">Log Out</a>
+                </If>
             </div>
         );
     }
