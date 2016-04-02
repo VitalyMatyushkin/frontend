@@ -95,17 +95,26 @@ RoleList = React.createClass({
         //    .commit();
         window.location.reload();
     },
+    logout:function(){
+        window.location.hash = 'logout';
+    },
     render: function() {
         const 	self 		= this,
                 binding 	= self.getDefaultBinding(),
                 listOpen    = binding.get('listOpen');
 
+        //if(listOpen)
+        //    ReactDOM.findDOMNode(this.refs.eCurrentRole).focus();
+        //
+        //return(
+        //    <div className={classNames({bRoles:true, mOpen:listOpen})}>
+        //        <div tabIndex="-1" ref="eCurrentRole" onBlur={self.onBlur} onClick={self.onToggle}>
         if(listOpen)
-            ReactDOM.findDOMNode(this.refs.eCurrentRole).focus();
+            ReactDOM.findDOMNode(this.refs.role_list).focus();
 
         return(
-            <div className={classNames({bRoles:true, mOpen:listOpen})}>
-                <div tabIndex="-1" ref="eCurrentRole" onClick={self.onToggle} onBlur={self.onBlur}>
+            <div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
+                <div onClick={self.onToggle}>
                     {self.getActiveRole()}
                     <div className="eArrow">
                         <SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
@@ -115,8 +124,8 @@ RoleList = React.createClass({
                     <div className="eScrollList">
                         {self.getSelectList()}
                     </div>
-                    <div className="eRole mLogout">
-                        <a href="/#logout" >Log Out</a>
+                    <div className="eRole mLogout" onClick={self.logout}>
+                        Log Out
                     </div>
                 </div>
             </div>

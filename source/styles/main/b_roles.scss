@@ -42,9 +42,8 @@
       &.mLogout{
         text-align: center;
         line-height: 32px;
-        a{
-          color: $DarkGreen;
-        }
+        font-size: 18px;
+        text-transform: uppercase;
       }
 
       &:hover{
