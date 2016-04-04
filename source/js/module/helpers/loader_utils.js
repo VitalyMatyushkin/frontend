@@ -32,18 +32,19 @@ function apiSelector(domainName) {
             break;
         case parsedDomain.rootDomain === 'squard':
             apiDomains = {
-                main:   'api.stage.squadintouch.com',
+                main:   'api2.stage.squadintouch.com',
                 img:    'img.stage.squadintouch.com'
             };
             break;
         default:
             apiDomains = {
-                main:   'api.stage.squadintouch.com',
+                main:   'api2.stage.squadintouch.com',
                 img:    'img.stage.squadintouch.com'
             };
     }
 
-    apiDomains.main = '//' + apiDomains.main + '/v' + apiVersion;
+    //apiDomains.main = '//' + apiDomains.main + '/v' + apiVersion;
+    apiDomains.main = '//' + apiDomains.main;
     apiDomains.img  = '//' + apiDomains.img;
     return apiDomains;
 }

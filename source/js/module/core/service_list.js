@@ -156,7 +156,8 @@ const serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		// login service
-		serviceList.login = new Service('/users/login?include=user',binding);
+        serviceList.superAdminLogin = new Service('/superadmin/login',binding);
+        serviceList.login = new Service('/users/login?include=user',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
         serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);
