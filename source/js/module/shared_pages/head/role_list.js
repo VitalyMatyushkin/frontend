@@ -3,9 +3,11 @@
  */
 
 const   React 		= require('react'),
+        ReactDOM    = require('reactDom'),
         SVG 		= require('module/ui/svg'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
+        If          = require('module/ui/if/if'),
 
 RoleList = React.createClass({
     mixins: [Morearty.Mixin],
@@ -43,7 +45,7 @@ RoleList = React.createClass({
                 id      = role ? role.id : null;
 
         return (
-            <div className="eRole" onClick={active ? self.onSetRole.bind(null, id) : null}>
+            <div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, id) : null}>
                 <p>{school}</p>
                 <p>{roleName}</p>
             </div>
@@ -58,8 +60,8 @@ RoleList = React.createClass({
     },
     getSelectList:function(){
         const   self 	= this,
-            binding = self.getDefaultBinding(),
-            roles   = binding.get('roles');
+                binding = self.getDefaultBinding(),
+                roles   = binding.get('roles');
 
         return roles && roles.map(r => self.getRole(r, true));
     },
@@ -67,7 +69,16 @@ RoleList = React.createClass({
         const   self 	    = this,
                 binding     = self.getDefaultBinding(),
                 listOpen    = binding.get('listOpen');
+
         binding.set('listOpen', !listOpen);
+
+        e.stopPropagation();
+    },
+    onBlur:function(e){
+        const   self 	    = this,
+                binding     = self.getDefaultBinding();
+
+        binding.set('listOpen', false);
 
         e.stopPropagation();
     },
@@ -79,34 +90,47 @@ RoleList = React.createClass({
 
         rootBinding.set('userRules.activeRoleId', roleId);
         rootBinding.set('userRules.activeSchoolId', role.schoolId);
-        binding.atomically()
-            .set('activeRole', role)
-            .set('listOpen', false)
-            .commit();
+        //binding.atomically()
+        //    .set('activeRole', role)
+        //    .set('listOpen', false)
+        //    .commit();
         window.location.reload();
+    },
+    logout:function(){
+        window.location.hash = 'logout';
     },
     render: function() {
         const 	self 		= this,
                 binding 	= self.getDefaultBinding(),
-                listOpen    = binding.get('listOpen');
+                listOpen    = binding.get('listOpen'),
+                empty       = binding.get('roles').length === 0;
 
+        if(listOpen)
+            ReactDOM.findDOMNode(this.refs.role_list).focus();
 
         return(
-            <div className={classNames({bRoles:true, mOpen:listOpen})}>
-                <div className="eCurrentRole" onClick={self.onToggle}>
-                    {self.getActiveRole()}
-                    <div className="eArrow">
-                        <SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
+            <div className={classNames({bRoleList:true, mLogout:empty})}>
+                <If condition={!empty}>
+                    <div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
+                        <div onClick={self.onToggle}>
+                            {self.getActiveRole()}
+                            <div className="eArrow">
+                                <SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
+                            </div>
+                        </div>
+                        <div className="eRolesList">
+                            <div className="eScrollList">
+                                {self.getSelectList()}
+                            </div>
+                            <div className="eRole mLogout" onClick={self.logout}>
+                                Log Out
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div className="eRolesList">
-                    <div className="eScrollList">
-                        {self.getSelectList()}
-                    </div>
-                    <div className="eRole mLogout">
-                        <a href="/#logout" >Log Out</a>
-                    </div>
-                </div>
+                </If>
+                <If condition={empty}>
+                    <a href="/#logout" className="eTopMenu_item">Log Out</a>
+                </If>
             </div>
         );
     }

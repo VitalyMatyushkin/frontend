@@ -1,9 +1,16 @@
+
+.bRoleList{
+  display: inline-block;
+  &.mLogout{
+    float: right;
+  }
+}
+
 .bRoles{
   font-size: 14px;
   display: inline-block;
   height: 30px;
   padding: 16px 20px 14px 10px;
-  cursor: pointer;
   position: relative;
   text-transform: none;
   margin: 0 10px;
@@ -13,6 +20,7 @@
     right: 0;
     top: 50%;
     margin-top: -8px;
+    cursor: pointer;
   }
 
   .eRolesList{
@@ -26,6 +34,7 @@
     border-width: 0px 1px;
     border-style: solid;
     border-color: $MAIN_COLOR;
+    z-index: 100;
 
     .eScrollList{
       overflow-y: auto;
@@ -41,9 +50,8 @@
       &.mLogout{
         text-align: center;
         line-height: 32px;
-        a{
-          color: $DarkGreen;
-        }
+        font-size: 18px;
+        text-transform: uppercase;
       }
 
       &:hover{
@@ -52,10 +60,15 @@
     }
   }
 
-  .eRole p{
-    margin: 0px;
-    line-height: 16px;
-    text-align: left;
+  .eRole{
+    cursor: pointer;
+
+    p {
+      margin: 0px;
+      line-height: 16px;
+      text-align: left;
+      cursor: pointer;
+    }
   }
 
   &.mOpen{
