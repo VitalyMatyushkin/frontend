@@ -6,9 +6,7 @@ var RouterView = require('module/core/router'),
     LoginRoute = require('module/core/routes/login_route'),
     LogoutRoute = require('module/core/routes/logout_route'),
     RegisterRoute = require('module/core/routes/register_route'),
-    VerifyRoute = require('module/core/routes/verify_route'),
     SettingsRoute = require('module/core/routes/settings_route'),
-    AuthRoutes = require('module/core/routes/auth_routes'),
     React = require('react'),
     Center;
 
@@ -22,11 +20,7 @@ Center = React.createClass({
             binding = self.getDefaultBinding(),
             currentPage =  binding.get('routing.currentPageName') || '',
             mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
-        //<VerifyRoute binding={binding.sub('userData')} />
-        //<RegisterRoute binding={binding.sub('form.register')}  />
-        //<SettingsRoute binding={binding.sub('userData')} />
-        //<LoginRoute binding={binding.sub('userData')}  />
-        //
+
         return (
             <div className={mainClass}>
                 <div className="bPageWrap">

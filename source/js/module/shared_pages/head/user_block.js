@@ -5,6 +5,14 @@ const 	React 		= require('react'),
 
 UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
+    propTypes:{
+        asAdmin:React.PropTypes.bool
+    },
+    getDefaultProps: function() {
+        return {
+            asAdmin: false
+        };
+    },
 	getDefaultState: function() {
 		return Immutable.fromJS({
 			userInfo: {
@@ -43,7 +51,7 @@ UserBlock = React.createClass({
 			// Кнопка перехода на страницу пользователя
 			userButtonStyle = {backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')'};
 			UserButton = <a href="/#settings/general" className="eTopMenu_photo" style={userButtonStyle} />;
-            RolesList = <RoleList binding={binding.sub('roleList')} />;
+            RolesList = <RoleList binding={binding.sub('roleList')} onlyLogout={self.props.asAdmin} />;
 		} else {
 			// Кнопка авторизации
 			LoginButton = <a href="/" className="eTopMenu_item mLogin"><SVG icon="icon_key"/></a>;

@@ -7,7 +7,7 @@ const 	Service 		    = require('module/core/service'),
 const serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
-
+        serviceList.superAdmin = {};
 		serviceList.logout = new Service('/users/logout', binding);
 
 		// users
@@ -156,7 +156,7 @@ const serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		// login service
-        serviceList.superAdminLogin = new Service('/superadmin/login',binding);
+        serviceList.superAdmin.login = new Service('/superadmin/login',binding);
         serviceList.login = new Service('/users/login?include=user',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
