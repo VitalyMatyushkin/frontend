@@ -62,6 +62,7 @@ const ServiceConstructor = (function() {
 					return options[param];
 				});
 			}
+
 			//Added condition to test for executions where there are no schoolId or other ids set for request
 			//Tests for options being equal to null
 			if (key) {
@@ -89,7 +90,7 @@ const ServiceConstructor = (function() {
 					if (authorization) {
 						authorizationInfo = authorization.toJS();
 						if (authorizationInfo && authorizationInfo.id) {
-							xhr.setRequestHeader('Authorization', authorizationInfo.id);
+							xhr.setRequestHeader('asid', authorizationInfo.id);
 						}
 					}
 				}

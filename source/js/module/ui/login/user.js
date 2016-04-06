@@ -55,7 +55,7 @@ const LoginUserPage = React.createClass({
 					id: data.key,
                     expireAt: data.expireAt,
                     adminId: data.adminId,
-					userId: data.adminId,
+					userId: data.userId,
 					verified: {"email":true,"phone":true,"personal":true}//,
 					//registerType: data.user.registerType
 				});
