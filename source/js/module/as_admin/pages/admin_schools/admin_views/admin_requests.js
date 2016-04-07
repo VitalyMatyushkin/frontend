@@ -95,7 +95,7 @@ const AdminRequest = React.createClass({
                     <TableField dataField="school" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                     <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
                     <TableField dataField="preset" >Permission</TableField>
-                    <TableField dataField="comment" >Details</TableField>
+                    <TableField dataField="comment" width="240px" >Details</TableField>
                 </Table>
             </div>
         );
