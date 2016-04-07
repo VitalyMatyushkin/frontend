@@ -55,7 +55,7 @@ const ServiceConstructor = (function() {
 				filter = options && options.filter || data && data.filter || '',
 				where = options && options.where || data && data.where || '',
 				key = filter ? 'filter' : (where ? 'where' : ''),
-				authorization = self.binding ? self.binding.get() : undefined;
+                authorizationInfo = self.binding ? self.binding.toJS() : undefined;
 
 			if (self.requredParams) {
 				url = url.replace(/\{(.*?)\}/g, function(match, param) {
@@ -86,13 +86,10 @@ const ServiceConstructor = (function() {
 				dataType: 'json',
 				contentType: 'application/json',
 				beforeSend: function (xhr) {
-					var authorizationInfo;
-					if (authorization) {
-						authorizationInfo = authorization.toJS();
-						if (authorizationInfo && authorizationInfo.id) {
-							xhr.setRequestHeader('asid', authorizationInfo.id);
-						}
-					}
+                    if (authorizationInfo && authorizationInfo.id) {
+                        let h = authorizationInfo.adminId ? "asid" : "usid";
+                        xhr.setRequestHeader(h, authorizationInfo.id);
+                    }
 				}
 			}, true); // TODO: sanitize me
 		},

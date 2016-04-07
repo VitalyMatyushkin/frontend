@@ -69,12 +69,13 @@ const OneSchoolPage = React.createClass({
                 }];
             binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
         };
+        _createSubMenuData(0);
 
         //Get the total number of permissions (Notification badge) in submenu
-        window.Server[serviceCount].get(activeSchoolId, { where: where }).then(function(data){
-            const count = data && data.count ? data.count : 0;
-            _createSubMenuData(count);
-        });
+        //window.Server[serviceCount].get(activeSchoolId, { where: where }).then(function(data){
+        //    const count = data && data.count ? data.count : 0;
+        //    _createSubMenuData(count);
+        //});
     },
     render: function() {
         var self = this,

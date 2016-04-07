@@ -2,7 +2,7 @@ const   ApplicationView     = require('module/as_admin/application'),
         userDataInstance    = require('module/data/user_data'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
-        serviceList         = require('module/core/service_list'),
+        serviceListAdmin    = require('module/core/service_list_admin'),
         ReactDom            = require('reactDom'),
         React               = require('react');
 
@@ -80,14 +80,14 @@ function runAdminMode() {
 
     const binding = MoreartyContext.getBinding();
 
-    window.Server = serviceList;
+    window.Server = serviceListAdmin;
 
 // Передача связывания контекста в классы данных
     userDataInstance.setBinding(binding.sub('userData'));
     userRulesInstance.setBinding(binding.sub('userRules'));
 
 // Включение авторизации сервисов
-    serviceList.initialize(binding.sub('userData.authorizationInfo'));
+    serviceListAdmin.initialize(binding.sub('userData.authorizationInfo'));
 
 // Связывания контроллера, отвечающего за контроль за авторизацией с данными
     authController.initialize({
