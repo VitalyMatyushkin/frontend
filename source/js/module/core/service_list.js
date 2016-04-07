@@ -11,7 +11,8 @@ const serviceList = {
 
 		// users
 		serviceList.users = new Service('/users', binding);
-		serviceList.user = new Service('/users/{id}', binding);
+		serviceList.user = new Service('/i/users/{id}', binding);
+        serviceList.myRoles = new Service('/i/roles', binding);
 		serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
@@ -22,7 +23,6 @@ const serviceList = {
 		serviceList.confirmUser = new Service('/users/confirm?uid={uid}&token={token}',binding);
 		serviceList.confirmUserPhone = new Service('/users/confirmPhone?uid={uid}&token={token}',binding);
 		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
-		serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
 		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
@@ -155,7 +155,8 @@ const serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		// login service
-        serviceList.login = new Service('/users/login?include=user',binding);
+        //serviceList.login = new Service('/i/users/login?include=user',binding);
+        serviceList.login = new Service('/i/login',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
         serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);

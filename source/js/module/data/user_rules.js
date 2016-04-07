@@ -2,7 +2,7 @@ const 	DataPrototype 		= require('module/data/data_prototype'),
 		Helpers				= require('module/helpers/storage'),
 		userRulesInstance 	= Object.create(DataPrototype),
         schoolStorageName 	= 'userRules.activeSchoolId',
-        roleStorageName 	= 'userRules.activeRoleId';
+        roleStorageName 	= 'userRules.activeRoleName';
 
 /**
  * Получение начального состояния данных userRules
@@ -13,7 +13,7 @@ userRulesInstance.getDefaultState = function(){
 	// Востановлении информации об активной школе
 	return {
 		activeSchoolId: Helpers.LocalStorage.get(schoolStorageName) || null,
-        activeRoleId: Helpers.LocalStorage.get(roleStorageName) || null
+        activeRoleName: Helpers.LocalStorage.get(roleStorageName) || null
 	};
 };
 
@@ -32,8 +32,8 @@ userRulesInstance.initBind = function() {
     });
 
     // Автоматически сохраняем данные при смене активной роли
-    bindObject.addListener('activeRoleId', function() {
-        var data = bindObject.get('activeRoleId');
+    bindObject.addListener('activeRoleName', function() {
+        var data = bindObject.get('activeRoleName');
 
         Helpers.LocalStorage.set(roleStorageName, data);
     });
