@@ -11,6 +11,9 @@ const   React 		= require('react'),
 
 RoleList = React.createClass({
     mixins: [Morearty.Mixin],
+    propTypes:{
+        onlyLogout:React.PropTypes.bool
+    },
     getDefaultState:function(){
         return Immutable.Map({
             listOpen:false,
@@ -24,19 +27,19 @@ RoleList = React.createClass({
                 binding 		= self.getDefaultBinding(),
                 userId 			= rootBinding.get('userData.authorizationInfo.userId'),
                 activeRoleId    = rootBinding.get('userRules.activeRoleId');
-
-        window.Server.userPermissions.get(userId).then(roles => {
-            if(roles && roles.length)
-            {
-                let activeRole = roles.find(r => r.id === activeRoleId);
-                if(!activeRole){
-                    activeRole = roles[0];
-                    rootBinding.set('userRules.activeRoleId', activeRole.id);
+        if(!self.props.onlyLogout) {
+            window.Server.userPermissions.get(userId).then(roles => {
+                if (roles && roles.length) {
+                    let activeRole = roles.find(r => r.id === activeRoleId);
+                    if (!activeRole) {
+                        activeRole = roles[0];
+                        rootBinding.set('userRules.activeRoleId', activeRole.id);
+                    }
+                    binding.set('roles', roles);
+                    binding.set('activeRole', activeRole);
                 }
-                binding.set('roles', roles);
-                binding.set('activeRole', activeRole);
-            }
-        });
+            });
+        }
     },
     getRole:function(role, active){
         const   self 	= this,

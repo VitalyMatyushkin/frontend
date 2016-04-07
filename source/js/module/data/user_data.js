@@ -29,15 +29,12 @@ UserDataClass.initBind = function () {
             authorizationInfo = data ? data.toJS() : {};
 
         data && Helpers.cookie.set('authorizationInfo', authorizationInfo);
+        let h = authorizationInfo.adminId ? "asid" : "usid",
+            options = {headers:{}};
+        options.headers[h] = authorizationInfo.id;
 
         // configuring ajax to perform all ajax requests from jquery with Authorization header
-        $.ajaxSetup({
-            headers: {
-                Authorization: authorizationInfo.id
-                //'Content-Type': 'application/json',
-                //Accept: 'application/json'
-            }
-        });
+        $.ajaxSetup(options);
     });
 };
 

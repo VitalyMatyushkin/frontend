@@ -33,11 +33,9 @@ UserModel.getStatus = function(user) {
 UserModel.getRoles = function(user){
     var res = [];
     if(user && user.permissions)
-       res = user.permissions.map(function(item){
+       res = user.permissions.map(function(item, i){
            return (
-               <li style={{padding:2+'px'}}>
-                   {item.preset}
-               </li>
+               <li key={i}>{item.preset}</li>
            );
         });
 
@@ -47,10 +45,10 @@ UserModel.getRoles = function(user){
 UserModel.getSchool = function(user){
     var res = [];
     if(user && user.permissions)
-        res = user.permissions.map(function(item){
+        res = user.permissions.map(function(item, i){
             if(item.school){
                 return (
-                    <li style={{padding:2+'px'}}>{item.school.name}</li>
+                    <li key={i}>{item.school.name}</li>
                 );
             }
         });

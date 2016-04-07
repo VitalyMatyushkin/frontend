@@ -30,7 +30,7 @@ Head = React.createClass({
             <div className="bTopPanel">
                 <Logo />
                 <TopMenu items={self.menuItems} binding={binding.sub('routing')} />
-                <UserBlock binding={binding.sub('userData')} />
+                <UserBlock binding={binding.sub('userData')} asAdmin={true} />
             </div>
         )
     }

@@ -57,7 +57,6 @@ const MenuMixin = {
 		}
 
 		// render
-		const userRole 	= globalBinding.get('currentUserRole');
 		const userId 	= globalBinding.get('userData.authorizationInfo.userId');
 
 		switch (item.key) {
