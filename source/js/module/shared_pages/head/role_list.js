@@ -28,11 +28,13 @@ RoleList = React.createClass({
 
         if(!self.props.onlyLogout) {
             self.addBindingListener(binding, 'roles', function(){
-                const roles = binding.get('roles'),
-                    activeRoleName  = rootBinding.get('userRules.activeRoleName');
+                const   roles           = binding.get('roles'),
+                        activeRoleName  = rootBinding.get('userRules.activeRoleName'),
+                        activeSchoolId  = rootBinding.get('userRules.activeSchoolId');
 
                 if (roles && roles.length) {
-                    let activeRole = roles.find(r => r.id === activeRoleName);
+                    let activeRole = roles.find(r => r.id === activeRoleName
+                                        && r.permissions.find(p => p.schoolId === activeSchoolId));
                     if (!activeRole) {
                         activeRole = roles[0];
                     }
@@ -56,14 +58,13 @@ RoleList = React.createClass({
             }
         });
     },
-    setRole:function(roleName){
+    setRole:function(roleName, schoolId){
         const 	self 			= this,
             rootBinding 	= self.getMoreartyContext().getBinding(),
-            binding 		= self.getDefaultBinding(),
-            role            = binding.get('roles').find(r => r.name === roleName);
+            binding 		= self.getDefaultBinding();
 
         rootBinding.set('userRules.activeRoleName', roleName);
-        rootBinding.set('userRules.activeSchoolId', role.schoolId);
+        rootBinding.set('userRules.activeSchoolId', schoolId);
         //binding.atomically()
         //    .set('activeRole', role)
         //    .set('listOpen', false)
