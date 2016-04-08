@@ -41,7 +41,7 @@ const   AdminDropList  =  React.createClass({
             binding.set('wrapperActive',Immutable.fromJS(!wState));
             event.stopPropagation();
         },
-        _getMouseLeaveFunction:function(event){
+        _getOnBlurFunction:function(event){
             const   self    =   this,
                     binding =   self.getDefaultBinding(),
                     cState  =   binding.get('wrapperActive');
@@ -59,7 +59,7 @@ const   AdminDropList  =  React.createClass({
                 <div className={binding.get('wrapperActive')?'wrapper-dropdown-5 active':'wrapper-dropdown-5'}
                      tabIndex="1"
                      onClick={self._getWrapperClickFunction} 
-                     onMouseLeave={self._getMouseLeaveFunction}>
+                     onBlur={self._getOnBlurFunction}>
                     Edit
                     {self._renderListItems()}
                 </div>
