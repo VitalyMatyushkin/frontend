@@ -12,7 +12,6 @@ const serviceList = {
 		// users
 		serviceList.users = new Service('/users', binding);
 		serviceList.user = new Service('/i/users/{id}', binding);
-        serviceList.myRoles = new Service('/i/roles', binding);
 		serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
@@ -27,8 +26,13 @@ const serviceList = {
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
+        // roles
+        serviceList.myRoles = new Service('/i/roles', binding);
+        serviceList.roleBecome = new Service('/i/roles/{roleName}/become', binding);
+
+
 		// schools
-		serviceList.schools = new Service('/schools', binding);
+		serviceList.schools = new Service('/i/schools', binding);
 		serviceList.school = new Service('/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);

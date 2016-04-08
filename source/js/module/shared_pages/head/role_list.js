@@ -33,16 +33,19 @@ RoleList = React.createClass({
                         activeSchoolId  = rootBinding.get('userRules.activeSchoolId');
 
                 if (roles && roles.length) {
-                    let activeRole = roles.find(r => r.id === activeRoleName
-                                        && r.permissions.find(p => p.schoolId === activeSchoolId));
+                    let activeRole = roles.find(r => r.name === activeRoleName);
                     if (!activeRole) {
                         activeRole = roles[0];
                     }
                     binding.set('activeRole', activeRole);
-                    self.setRole(activeRole.name, activeRole.permissions[0].schoolId);
+
+                    let activePermission = activeRole.permissions.find(p => p.schoolId === activeSchoolId);
+                    if (!activePermission) {
+                        activePermission = activeRole.permissions[0];
+                    }
+
+                    self.setRole(activeRole.name, activePermission.schoolId);
                 }
-
-
             });
 
             self.getMyRoles();
@@ -50,7 +53,7 @@ RoleList = React.createClass({
     },
     getMyRoles:function(){
         const 	self 			= this,
-            binding 		= self.getDefaultBinding();
+                binding 		= self.getDefaultBinding();
 
         window.Server.myRoles.get().then(roles => {
             if (roles && roles.length) {
@@ -60,16 +63,26 @@ RoleList = React.createClass({
     },
     setRole:function(roleName, schoolId){
         const 	self 			= this,
-            rootBinding 	= self.getMoreartyContext().getBinding(),
-            binding 		= self.getDefaultBinding();
+                rootBinding 	= self.getMoreartyContext().getBinding();
 
         rootBinding.set('userRules.activeRoleName', roleName);
         rootBinding.set('userRules.activeSchoolId', schoolId);
-        //binding.atomically()
-        //    .set('activeRole', role)
-        //    .set('listOpen', false)
-        //    .commit();
-        window.location.reload();
+    },
+    roleBecome:function(roleName){
+        const 	self 			= this,
+                rootBinding 	= self.getMoreartyContext().getBinding();
+
+        return window.Server.roleBecome.post(roleName).then(session => {
+            rootBinding.set('userData.authorizationInfo.id', session.key);
+        });
+    },
+    getMySchools:function(){
+        const 	self 	= this,
+                binding = self.getDefaultBinding();
+
+        return window.Server.schools.get().then(schools => {
+            binding.set('schools', schools);
+        });
     },
     getRole:function(role, active){
         const   self 	= this,
@@ -114,6 +127,9 @@ RoleList = React.createClass({
         binding.set('listOpen', false);
 
         e.stopPropagation();
+    },
+    onSetRole:function(){
+
     },
     logout:function(){
         window.location.hash = 'logout';
