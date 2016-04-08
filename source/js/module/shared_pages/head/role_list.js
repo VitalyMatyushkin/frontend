@@ -3,7 +3,6 @@
  */
 
 const   React 		= require('react'),
-        ReactDOM    = require('reactDom'),
         SVG 		= require('module/ui/svg'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
@@ -17,8 +16,9 @@ RoleList = React.createClass({
     getDefaultState:function(){
         return Immutable.Map({
             listOpen:false,
-            roles:[],
-            activeRole:null
+            permissions:[],
+            activePermission:null,
+            schools:[]
         });
     },
     componentWillMount: function() {
@@ -27,26 +27,23 @@ RoleList = React.createClass({
                 binding 		= self.getDefaultBinding();
 
         if(!self.props.onlyLogout) {
-            self.addBindingListener(binding, 'roles', function(){
-                const   roles           = binding.get('roles'),
+            self.addBindingListener(binding, 'permissions', function(){
+                const   permissions     = binding.get('permissions'),
                         activeRoleName  = rootBinding.get('userRules.activeRoleName'),
                         activeSchoolId  = rootBinding.get('userRules.activeSchoolId');
 
-                if (roles && roles.length) {
-                    let activeRole = roles.find(r => r.name === activeRoleName);
-                    if (!activeRole) {
-                        activeRole = roles[0];
-                    }
-                    binding.set('activeRole', activeRole);
-
-                    let activePermission = activeRole.permissions.find(p => p.schoolId === activeSchoolId);
+                if (permissions && permissions.length) {
+                    let activePermission = permissions.find(p => p.role === activeRoleName && p.schoolId === activeSchoolId);
                     if (!activePermission) {
-                        activePermission = activeRole.permissions[0];
+                        activePermission = permissions[0];
                     }
 
-                    self.setRole(activeRole.name, activePermission.schoolId);
+                    self.setRole(activePermission.role, activePermission.schoolId);
+                    self.roleBecome(activePermission);
                 }
             });
+            self.addBindingListener(binding, 'activePermission', self.getMySchools);
+
 
             self.getMyRoles();
         }
@@ -57,7 +54,15 @@ RoleList = React.createClass({
 
         window.Server.myRoles.get().then(roles => {
             if (roles && roles.length) {
-                binding.set('roles', roles);
+                const permissions = [];
+
+                roles.forEach(role => {
+                    role.permissions.forEach(permission => {
+                        permission.role = role.name;
+                        permissions.push(permission);
+                    });
+                });
+                binding.set('permissions', permissions);
             }
         });
     },
@@ -68,48 +73,54 @@ RoleList = React.createClass({
         rootBinding.set('userRules.activeRoleName', roleName);
         rootBinding.set('userRules.activeSchoolId', schoolId);
     },
-    roleBecome:function(roleName){
+    roleBecome:function(permission){
         const 	self 			= this,
+                binding 		= self.getDefaultBinding(),
                 rootBinding 	= self.getMoreartyContext().getBinding();
 
-        return window.Server.roleBecome.post(roleName).then(session => {
+        window.Server.roleBecome.post(permission.role).then(session => {
             rootBinding.set('userData.authorizationInfo.id', session.key);
+            binding.set('activePermission', permission);    // only after role/become set activePermission
         });
     },
     getMySchools:function(){
         const 	self 	= this,
                 binding = self.getDefaultBinding();
 
-        return window.Server.schools.get().then(schools => {
+        window.Server.schools.get().then(schools => {
             binding.set('schools', schools);
         });
     },
-    getRole:function(role, active){
-        const   self 	= this,
-                school  = role && role.school ? role.school.name : null,
-                roleName= role ? role.preset : null,
-                id      = role ? role.id : null;
+    getRole:function(permission, active){
+        const   self 	    = this,
+                binding     = self.getDefaultBinding(),
+                schoolId    = permission ? permission.schoolId : null,
+                schools     = binding.get('schools'),
+                school      = schools.length ? schools.find(s => s.id === schoolId) : null,
+                schoolName  = school ? school.name : null,
+                role        = permission ? permission.role : null,
+                id          = permission ? permission.id : null;
 
         return (
-            <div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, id) : null}>
-                <p>{school}</p>
-                <p>{roleName}</p>
+            <div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, role, schoolId) : null}>
+                <p>{schoolName}</p>
+                <p>{role}</p>
             </div>
         );
     },
     getActiveRole:function(){
-        const   self 	    = this,
-                binding     = self.getDefaultBinding(),
-                activeRole  = binding.get('activeRole');
+        const   self 	            = this,
+                binding             = self.getDefaultBinding(),
+                activePermission    = binding.get('activePermission');
 
-        return self.getRole(activeRole, false);
+        return self.getRole(activePermission, false);
     },
     getSelectList:function(){
         const   self 	= this,
                 binding = self.getDefaultBinding(),
-                roles   = binding.get('roles');
+                permissions   = binding.get('permissions');
 
-        return roles && roles.map(r => self.getRole(r, true));
+        return permissions && permissions.map(p => self.getRole(p, true));
     },
     onToggle:function(e){
         const   self 	    = this,
@@ -128,8 +139,10 @@ RoleList = React.createClass({
 
         e.stopPropagation();
     },
-    onSetRole:function(){
+    onSetRole:function(roleName, schoolId){
+        this.setRole(roleName, schoolId);
 
+        window.location.reload();
     },
     logout:function(){
         window.location.hash = 'logout';
@@ -138,14 +151,15 @@ RoleList = React.createClass({
         const 	self 		= this,
                 binding 	= self.getDefaultBinding(),
                 listOpen    = binding.get('listOpen'),
-                empty       = binding.get('roles').length === 0;
+                show        = !!binding.get('permissions').length,
+                hidden      = !binding.get('schools').length;
 
         if(listOpen)
-            ReactDOM.findDOMNode(this.refs.role_list).focus();
+            this.refs.role_list.focus();
 
         return(
-            <div className={classNames({bRoleList:true, mLogout:empty})}>
-                <If condition={!empty}>
+            <div className={classNames({bRoleList:true, mLogout:!show, mHidden:hidden})}>
+                <If condition={show}>
                     <div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
                         <div onClick={self.onToggle}>
                             {self.getActiveRole()}
@@ -163,7 +177,7 @@ RoleList = React.createClass({
                         </div>
                     </div>
                 </If>
-                <If condition={empty}>
+                <If condition={!show}>
                     <a href="/#logout" className="eTopMenu_item">Log Out</a>
                 </If>
             </div>

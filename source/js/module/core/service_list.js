@@ -33,7 +33,7 @@ const serviceList = {
 
 		// schools
 		serviceList.schools = new Service('/i/schools', binding);
-		serviceList.school = new Service('/schools/{id}', binding);
+		serviceList.school = new Service('/i/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);

@@ -94,7 +94,7 @@ function runManagerMode() {
 	authController.initialize(
 		{
 			binding: binding,
-			defaultPath: 'schools'
+			defaultPath: 'school_admin/summary'
 		}
 	);
 
