@@ -49,7 +49,7 @@ function runParentMode() {
 
 	authController.initialize({
 		binding: binding,
-		defaultPath: 'events/calendar'
+		defaultPath: 'events/calendar/all'
 	});
 
 	ReactDom.render(

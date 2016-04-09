@@ -3,7 +3,6 @@
  */
 
 const   React 		= require('react'),
-        ReactDOM    = require('reactDom'),
         SVG 		= require('module/ui/svg'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
@@ -11,59 +10,117 @@ const   React 		= require('react'),
 
 RoleList = React.createClass({
     mixins: [Morearty.Mixin],
+    propTypes:{
+        onlyLogout:React.PropTypes.bool
+    },
     getDefaultState:function(){
         return Immutable.Map({
             listOpen:false,
-            roles:[],
-            activeRole:null
+            permissions:[],
+            activePermission:null,
+            schools:[]
         });
     },
     componentWillMount: function() {
         const 	self 			= this,
                 rootBinding 	= self.getMoreartyContext().getBinding(),
-                binding 		= self.getDefaultBinding(),
-                userId 			= rootBinding.get('userData.authorizationInfo.userId'),
-                activeRoleId    = rootBinding.get('userRules.activeRoleId');
+                binding 		= self.getDefaultBinding();
 
-        window.Server.userPermissions.get(userId).then(roles => {
-            if(roles && roles.length)
-            {
-                let activeRole = roles.find(r => r.id === activeRoleId);
-                if(!activeRole){
-                    activeRole = roles[0];
-                    rootBinding.set('userRules.activeRoleId', activeRole.id);
+        if(!self.props.onlyLogout) {
+            self.addBindingListener(binding, 'permissions', function(){
+                const   permissions     = binding.get('permissions'),
+                        activeRoleName  = rootBinding.get('userRules.activeRoleName'),
+                        activeSchoolId  = rootBinding.get('userRules.activeSchoolId');
+
+                if (permissions && permissions.length) {
+                    let activePermission = permissions.find(p => p.role === activeRoleName && p.schoolId === activeSchoolId);
+                    if (!activePermission) {
+                        activePermission = permissions[0];
+                    }
+
+                    self.setRole(activePermission.role, activePermission.schoolId);
+                    self.roleBecome(activePermission);
                 }
-                binding.set('roles', roles);
-                binding.set('activeRole', activeRole);
+            });
+            self.addBindingListener(binding, 'activePermission', self.getMySchools);
+
+
+            self.getMyRoles();
+        }
+    },
+    getMyRoles:function(){
+        const 	self 			= this,
+                binding 		= self.getDefaultBinding();
+
+        window.Server.myRoles.get().then(roles => {
+            if (roles && roles.length) {
+                const permissions = [];
+
+                roles.forEach(role => {
+                    role.permissions.forEach(permission => {
+                        permission.role = role.name;
+                        permissions.push(permission);
+                    });
+                });
+                binding.set('permissions', permissions);
             }
         });
     },
-    getRole:function(role, active){
-        const   self 	= this,
-                school  = role && role.school ? role.school.name : null,
-                roleName= role ? role.preset : null,
-                id      = role ? role.id : null;
+    setRole:function(roleName, schoolId){
+        const 	self 			= this,
+                rootBinding 	= self.getMoreartyContext().getBinding();
+
+        rootBinding.set('userRules.activeRoleName', roleName);
+        rootBinding.set('userRules.activeSchoolId', schoolId);
+    },
+    roleBecome:function(permission){
+        const 	self 			= this,
+                binding 		= self.getDefaultBinding(),
+                rootBinding 	= self.getMoreartyContext().getBinding();
+
+        window.Server.roleBecome.post(permission.role).then(session => {
+            rootBinding.set('userData.authorizationInfo.id', session.key);
+            binding.set('activePermission', permission);    // only after role/become set activePermission
+        });
+    },
+    getMySchools:function(){
+        const 	self 	= this,
+                binding = self.getDefaultBinding();
+
+        window.Server.schools.get().then(schools => {
+            binding.set('schools', schools);
+        });
+    },
+    getRole:function(permission, active){
+        const   self 	    = this,
+                binding     = self.getDefaultBinding(),
+                schoolId    = permission ? permission.schoolId : null,
+                schools     = binding.get('schools'),
+                school      = schools.length ? schools.find(s => s.id === schoolId) : null,
+                schoolName  = school ? school.name : null,
+                role        = permission ? permission.role : null,
+                id          = permission ? permission.id : null;
 
         return (
-            <div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, id) : null}>
-                <p>{school}</p>
-                <p>{roleName}</p>
+            <div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, role, schoolId) : null}>
+                <p>{schoolName}</p>
+                <p>{role}</p>
             </div>
         );
     },
     getActiveRole:function(){
-        const   self 	    = this,
-                binding     = self.getDefaultBinding(),
-                activeRole  = binding.get('activeRole');
+        const   self 	            = this,
+                binding             = self.getDefaultBinding(),
+                activePermission    = binding.get('activePermission');
 
-        return self.getRole(activeRole, false);
+        return self.getRole(activePermission, false);
     },
     getSelectList:function(){
         const   self 	= this,
                 binding = self.getDefaultBinding(),
-                roles   = binding.get('roles');
+                permissions   = binding.get('permissions');
 
-        return roles && roles.map(r => self.getRole(r, true));
+        return permissions && permissions.map(p => self.getRole(p, true));
     },
     onToggle:function(e){
         const   self 	    = this,
@@ -82,18 +139,9 @@ RoleList = React.createClass({
 
         e.stopPropagation();
     },
-    onSetRole:function(roleId){
-        const 	self 			= this,
-                rootBinding 	= self.getMoreartyContext().getBinding(),
-                binding 		= self.getDefaultBinding(),
-                role            = binding.get('roles').find(r => r.id === roleId);
+    onSetRole:function(roleName, schoolId){
+        this.setRole(roleName, schoolId);
 
-        rootBinding.set('userRules.activeRoleId', roleId);
-        rootBinding.set('userRules.activeSchoolId', role.schoolId);
-        //binding.atomically()
-        //    .set('activeRole', role)
-        //    .set('listOpen', false)
-        //    .commit();
         window.location.reload();
     },
     logout:function(){
@@ -103,14 +151,15 @@ RoleList = React.createClass({
         const 	self 		= this,
                 binding 	= self.getDefaultBinding(),
                 listOpen    = binding.get('listOpen'),
-                empty       = binding.get('roles').length === 0;
+                show        = !!binding.get('permissions').length,
+                hidden      = !binding.get('schools').length;
 
         if(listOpen)
-            ReactDOM.findDOMNode(this.refs.role_list).focus();
+            this.refs.role_list.focus();
 
         return(
-            <div className={classNames({bRoleList:true, mLogout:empty})}>
-                <If condition={!empty}>
+            <div className={classNames({bRoleList:true, mLogout:!show, mHidden:hidden})}>
+                <If condition={show}>
                     <div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
                         <div onClick={self.onToggle}>
                             {self.getActiveRole()}
@@ -128,7 +177,7 @@ RoleList = React.createClass({
                         </div>
                     </div>
                 </If>
-                <If condition={empty}>
+                <If condition={!show}>
                     <a href="/#logout" className="eTopMenu_item">Log Out</a>
                 </If>
             </div>

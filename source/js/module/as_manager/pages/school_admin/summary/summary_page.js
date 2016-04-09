@@ -33,10 +33,10 @@ const SchoolSummary = React.createClass({
 			return schoolData;
 		});
 
-		ActiveUserHelper.howManySchools(self).then(function(count){
-			binding.set('countOfSchools',Immutable.fromJS(count));
-			return count;
-		});
+		//ActiveUserHelper.howManySchools(self).then(function(count){
+		//	binding.set('countOfSchools',Immutable.fromJS(count));
+		//	return count;
+		//});
 	},
 	render: function() {
 		const	self			= this,
@@ -46,14 +46,6 @@ const SchoolSummary = React.createClass({
 				geoPoint		= binding.get('schoolData').get('postcode') !== undefined ?binding.toJS('schoolData').postcode.point : undefined;
 		return (
 			<div>
-				<div className="changeSchool">
-					{/*Check if the current user has more than one schools listed against him/her before showing swap icon*/}
-					<If condition={binding.get('countOfSchools') > 1 }>
-						<a title="Change active school" href="/#schools" className="addButton">
-							<SVG icon="icon_change_school" />
-						</a>
-					</If>
-				</div>
 				<div className="eSchoolMaster_summary">
 					<div className="summary_inside">
 						<div className="editSchool">

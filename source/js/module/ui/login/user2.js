@@ -3,7 +3,7 @@ const 	LoginForm 		= require('module/ui/login/user/form'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
 		RoleSelector	= require('module/as_login/pages/RoleSelector'),
-		SVG 		      = require('module/ui/svg');
+		SVG 		    = require('module/ui/svg');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
