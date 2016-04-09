@@ -24,7 +24,7 @@ function apiSelector(domainName) {
     const parsedDomain = parseDomainName(domainName);
     let apiDomains;
     switch (true) {
-        case parsedDomain.rootDomain === 'squadintouch' && env === 'stage2':
+        case parsedDomain.rootDomain === 'squadintouch' && parsedDomain.env === 'stage2':
             apiDomains = {
                 main:   '//api2.stage.squadintouch.com',
                 img:    '//img.stage.squadintouch.com'
