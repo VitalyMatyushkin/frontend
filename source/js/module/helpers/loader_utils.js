@@ -9,11 +9,11 @@ const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage'
 /** Parses domain name to structure */
 function parseDomainName(domainName) {
     // http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
-    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
+    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
     return {
         fullName:   external[0],
         model:      external[1],
-        isStage:    external[2] === 'stage',
+        isStage:    external[2] === 'stage' || external[2] === 'stage2',
         rootDomain: external[3],
         env:        external[2]
     }
@@ -24,27 +24,31 @@ function apiSelector(domainName) {
     const parsedDomain = parseDomainName(domainName);
     let apiDomains;
     switch (true) {
+        case parsedDomain.rootDomain === 'squadintouch' && env === 'stage2':
+            apiDomains = {
+                main:   '//api2.stage.squadintouch.com',
+                img:    '//img.stage.squadintouch.com'
+            };
+            break;
         case parsedDomain.rootDomain === 'squadintouch':
             apiDomains = {
-                main:   'api' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com',
-                img:    'img' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com'
+                main:   '//api' + (parsedDomain.env ? '.' + parsedDomain.env : '') + `.squadintouch.com/v${apiVersion}`,
+                img:    '//img' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com'
             };
             break;
         case parsedDomain.rootDomain === 'squard':
             apiDomains = {
-                main:   'api.stage.squadintouch.com',
-                img:    'img.stage.squadintouch.com'
+                main:   `//api.stage.squadintouch.com/v${apiVersion}`,
+                img:    '//img.stage.squadintouch.com'
             };
             break;
         default:
             apiDomains = {
-                main:   'api.stage.squadintouch.com',
-                img:    'img.stage.squadintouch.com'
+                main:   `//api.stage.squadintouch.com/v${apiVersion}`,
+                img:    '//img.stage.squadintouch.com'
             };
     }
 
-    apiDomains.main = '//' + apiDomains.main + '/v' + apiVersion;
-    apiDomains.img  = '//' + apiDomains.img;
     return apiDomains;
 }
 
