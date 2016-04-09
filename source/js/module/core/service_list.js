@@ -22,14 +22,18 @@ const serviceList = {
 		serviceList.confirmUser = new Service('/users/confirm?uid={uid}&token={token}',binding);
 		serviceList.confirmUserPhone = new Service('/users/confirmPhone?uid={uid}&token={token}',binding);
 		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
-		serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
 		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
+        // roles
+        serviceList.myRoles = new Service('/i/roles', binding);
+        serviceList.roleBecome = new Service('/i/roles/{roleName}/become', binding);
+
+
 		// schools
-		serviceList.schools = new Service('/schools', binding);
-		serviceList.school = new Service('/schools/{id}', binding);
+		serviceList.schools = new Service('/i/schools', binding);
+		serviceList.school = new Service('/i/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
@@ -155,7 +159,8 @@ const serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		// login service
-        serviceList.login = new Service('/users/login?include=user',binding);
+        //serviceList.login = new Service('/i/users/login?include=user',binding);
+        serviceList.login = new Service('/i/login',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
         serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);
