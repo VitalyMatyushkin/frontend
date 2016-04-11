@@ -1,0 +1,98 @@
+.wrapper-dropdown-5 {
+  position: relative;
+  width: 205px;
+  margin: 0 auto;
+  padding: 12px 15px;
+  z-index: auto;
+  background: transparent;
+  cursor: pointer;
+  outline: none;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+
+.wrapper-dropdown-5:after { /* arrow on the right (generated content) */
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  margin-top: -3px;
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: #000 transparent;
+}
+
+.wrapper-dropdown-5 .dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-top: none;
+  border-bottom: none;
+  list-style: none;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  -ms-transition: all 0.3s ease-out;
+  -o-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+  max-height: 0;
+  display: none;
+  overflow: hidden;
+}
+
+.wrapper-dropdown-5 .dropdown li {
+  padding: 0 10px ;
+}
+
+.wrapper-dropdown-5 .dropdown li span {
+  display: block;
+  text-decoration: none;
+  color: #333;
+  padding: 10px 0;
+  transition: all 0.3s ease-out;
+  border-bottom: 1px solid #e6e8ea;
+}
+
+.wrapper-dropdown-5 .dropdown li:last-of-type span {
+  border: none;
+}
+
+.wrapper-dropdown-5 .dropdown li i {
+  margin-right: 5px;
+  color: inherit;
+  vertical-align: middle;
+}
+
+/* Hover state */
+
+.wrapper-dropdown-5 .dropdown li:hover span {
+  color: #235413;
+}
+
+/* Active state */
+
+.wrapper-dropdown-5.active {
+  background: #66952e;
+  box-shadow: none;
+  border-bottom: none;
+  color: #235413;
+  z-index: 200;
+}
+
+.wrapper-dropdown-5.active:after {
+  border-color: #235413 transparent;
+}
+
+.wrapper-dropdown-5.active .dropdown {
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+  max-height: 400px;
+  display: block;
+}
