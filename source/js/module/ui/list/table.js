@@ -1,9 +1,10 @@
-const   If          = require('module/ui/if/if'),
-        Pagination  = require('module/ui/list/pagination'),
-        Filter      = require('module/ui/list/filter'),
-        React       = require('react'),
-        SVG 				= require('module/ui/svg'),
-        Immutable   = require('immutable');
+const   If              = require('module/ui/if/if'),
+        Pagination      = require('module/ui/list/pagination'),
+        Filter          = require('module/ui/list/filter'),
+        React           = require('react'),
+        SVG 		    = require('module/ui/svg'),
+        AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
+        Immutable       = require('immutable');
 
 const Table = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -134,32 +135,11 @@ const Table = React.createClass({
             self._getTotalCount();
         }
     },
-    getQuickEditActions:function(){
-        var self = this,
-            el = self.props.quickEditActions;
-        if(el !== undefined){
-            return el.map(function(action, actIn){
-                var handleQuickActionClick = function(){return function(event){self.props.quickEditActionsFactory(event); event.stopPropagation();}};
-                return (
-                    <div key={actIn} onClick={handleQuickActionClick()} className="eQuickAction_item">{action}</div>
-                );
-            });
-        }
-    },
-    _quickEditMenu:function(model,event){
-        var target = event.currentTarget.childNodes[2];
-        if(target.classList.contains('groupActionList_show')){
-            target.classList.remove('groupActionList_show');
-        }else{
-            target.classList.add('groupActionList_show');
-        }
-    },
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			dataList = binding.sub('data').toJS(),
 			tableHeadFields,
-            quickActions = self.getQuickEditActions(),
 			itemsNodes;
 
         //Hack for a weird bug where instead of @dataList being an empty array if no data is returned by server
@@ -172,19 +152,18 @@ const Table = React.createClass({
                     getEditFunction = function() { return function(event) { self.props.onItemEdit(item); event.stopPropagation();}},
                     getViewFunction = function() { return function(event) { self.props.onItemView(item); event.stopPropagation();}},
                     getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();}},
-                    getSelectItemFunction = function() { return function(event) { self.props.onItemSelect(item); event.stopPropagation();}},
-                    getQuickEditFunction = function(){return function(event){self._quickEditMenu(item,event);event.stopPropagation();}};
+                    getSelectItemFunction = function() { return function(event) { self.props.onItemSelect(item); event.stopPropagation();}};
 
                 self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike"><SVG icon="icon_edit"/></span>);
                 self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike bViewBtn"><SVG icon="icon_eye"/></span>);
                 self.props.onItemSelect && itemButtons.push(<span key={item.id+'view'} onClick={getSelectItemFunction()} className="bLinkLike bViewBtn"><SVG icon="icon_menu"/></span>);
                 self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike delete_btn"><SVG icon="icon_delete"/></span>);
                 self.props.addQuickActions && itemButtons.push(
-                    <span key={item.id+'quickEd'} onClick={getQuickEditFunction()} className="bLinkLike edit_btn">
-                        Edit
-                        <span className="caret caret_down"/>
-                        <span key={item.id+'quickAc'} data-userobj={item.id} className="eQuickAction_list">{quickActions}</span>
-                    </span>
+                    <AdminDropList key={item.id}
+                                   binding={binding.sub('dropList'+item.id)}
+                                   itemId={item.id}
+                                   listItems={self.props.quickEditActions}
+                                   listItemFunction={self.props.quickEditActionsFactory}/>
                 );
 
                 itemCells = React.Children.map(self.props.children, function(child, childIndex) {

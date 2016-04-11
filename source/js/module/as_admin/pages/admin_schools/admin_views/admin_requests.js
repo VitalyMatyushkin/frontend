@@ -40,18 +40,13 @@ const AdminRequest = React.createClass({
         this.updateSubMenu();
         this.reloadData();
     },
-    _getQuickEditActionFunctions:function(event){
+    _getQuickEditActionFunctions:function(itemId,itemName){
 		const   self                = this,
-			    action              = event.currentTarget.textContent,
-                id                  = event.currentTarget.parentNode.dataset.userobj,
+			    action              = itemName,
+                id                  = itemId,
                 binding             = self.getDefaultBinding().sub('data'),
-                globalBinding       = self.getMoreartyContext().getBinding(),
                 currentPermission   = self.getCurrentPermission(id, binding.toJS());
-
         let confirmMsg;
-
-        event.currentTarget.parentNode.classList.remove('groupActionList_show');
-
 		switch (action){
             case 'Accept':
                 if(currentPermission.preset === "parent") {
@@ -100,7 +95,7 @@ const AdminRequest = React.createClass({
                     <TableField dataField="school" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                     <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
                     <TableField dataField="preset" >Permission</TableField>
-                    <TableField dataField="comment" >Details</TableField>
+                    <TableField dataField="comment" width="240px" >Details</TableField>
                 </Table>
             </div>
         );
