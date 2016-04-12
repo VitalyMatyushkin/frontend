@@ -67,7 +67,6 @@ const  RoleList = React.createClass({
         const 	self 			= this,
                 rootBinding 	= self.getMoreartyContext().getBinding();
 
-        rootBinding.set('userRules.activeRoleName', roleName);
         rootBinding.set('userRules.activeSchoolId', schoolId);
         self.roleBecome(roleName);
     },
