@@ -9,6 +9,7 @@ const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
         React               = require('react'),
         Immutable 	        = require('immutable'),
         $                   = require('jquery'),
+        Auth                = require('module/core/services/AuthorizationServices');
         Helpers             = require('module/helpers/storage');
 
 // TODO: remove jquery
@@ -79,9 +80,12 @@ const RegisterUserPage = React.createClass({
             currentStep = binding.get('registerStep');
 
         if (currentStep === 'account') {
-            window.Server.login.post({
-                username: username,
-                password: password
+            //Auth.login({email:binding.get('formFields').email,password:password}).then((dt)=>{console.log(dt)});
+            console.log(binding.get('formFields').email);
+            console.log(binding.get('formFields').password);
+            window.Server._login.post({
+                email: binding.get('formFields').email,
+                password: binding.get('formFields').password
             }).then(function (data) {
                 var immutableAccountInfo = Immutable.fromJS(data);
                 globalBinding.set('userData.authorizationInfo', immutableAccountInfo);
@@ -101,13 +105,15 @@ const RegisterUserPage = React.createClass({
         //Notify user of the error and allow to try again
         var message,
             responseObj = data.responseJSON.error;
-        switch (responseObj.status){
+        console.log(responseObj);
+        console.log(data);
+        switch (data){
             case 422:
-                message = responseObj.details.messages.phone[0];
+                message = data.responseJSON.details.text;
                 alert(message+' - so please try again!');
                 break;
             default:
-                message = responseObj.message;
+                message = data.responseJSON.details.text;
                 alert(message);
                 break;
         }
