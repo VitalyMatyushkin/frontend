@@ -29,23 +29,18 @@ const AdminPermissionView = React.createClass({
             alert("You can only perform this action on one Item");
         }
     },
-    _getQuickEditActionsFactory:function(evt){
+    _getQuickEditActionsFactory:function(itemId,itemName){
         var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             binding = self.getDefaultBinding(),
             data = binding.sub('data'),
             idAutoComplete = [],
-            userId = evt.currentTarget.parentNode.dataset.userobj,
-            currentAction;
+            userId = itemId;
         userId = data.get().find(function(item){
             return userId === item.id;
         });
         idAutoComplete.push(userId.id);
-        evt.currentTarget.parentNode.classList.remove('groupActionList_show');
-        //caters for different browser implementations of innerText and innerHTML
-        //Performs the relevant quick edit actions based on the action name:string
-        currentAction = evt.currentTarget.textContent;
-        switch (currentAction){
+        switch (itemName){
             case 'Add Role':
                 rootBinding.set('groupIds',idAutoComplete);
                 binding.set('popup',true);
