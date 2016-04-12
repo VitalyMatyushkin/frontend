@@ -80,9 +80,6 @@ const RegisterUserPage = React.createClass({
             currentStep = binding.get('registerStep');
 
         if (currentStep === 'account') {
-            //Auth.login({email:binding.get('formFields').email,password:password}).then((dt)=>{console.log(dt)});
-            console.log(binding.get('formFields').email);
-            console.log(binding.get('formFields').password);
             window.Server._login.post({
                 email: binding.get('formFields').email,
                 password: binding.get('formFields').password
@@ -103,10 +100,7 @@ const RegisterUserPage = React.createClass({
     catchStepFunctionError:function(step, data){
         //Temporary solution to for the 422 error
         //Notify user of the error and allow to try again
-        var message,
-            responseObj = data.responseJSON.error;
-        console.log(responseObj);
-        console.log(data);
+        var message;
         switch (data){
             case 422:
                 message = data.responseJSON.details.text;
