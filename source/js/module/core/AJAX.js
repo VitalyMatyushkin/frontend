@@ -2,7 +2,7 @@
  * Created by wert on 08.12.15.
  */
 
-const   $       = require('jquery');
+const   $       = require('jquery'),
         Promise = require('bluebird');
 
 /**
@@ -40,7 +40,6 @@ function ajax(configDetails, dataOnly) {
                     xhr:        jqXHR
                 });
             }
-
         };
         var request = $.ajax(configDetails);
 

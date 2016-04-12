@@ -25,7 +25,7 @@ const RoleSelectorComponent = React.createClass({
             const domain = subdomains.join(".");
             switch (roleSubdomain) {
                 case 'manager':
-                    window.location.href = `http://${domain}/#schools`;
+                    window.location.href = `http://${domain}/#school_admin/summary`;
                     break;
                 case 'parents':
                     window.location.href = `http://${domain}/#events/calendar/all`;

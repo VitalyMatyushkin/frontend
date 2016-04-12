@@ -38,13 +38,13 @@ authСontroller = {
 		var self = this,
 			binding = self.binding,
 			data = binding.toJS('userData.authorizationInfo'),
-			userData = binding.toJS('userData.userInfo');
+            notRegister = !binding.get('form.register.formFields');//user not in registration process now
 
 		// if we got auth data
 		if (data && data.id) {
-
-			// redirecting user to awaited page if user not in registration process now
-			if (self.binding.get('form.register.formFields') === undefined) {
+			// redirecting user to awaited page if user not in registration process now and
+            // he is a superAdmin or user after become authorization
+			if (notRegister && (data.adminId || data.userId && data.role)) {
 				document.location.hash = self.nextPage;
 			}
 		} else if(self.nextPage ==='home'){

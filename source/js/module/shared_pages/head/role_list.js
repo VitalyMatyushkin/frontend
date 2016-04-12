@@ -7,8 +7,10 @@ const   React 		= require('react'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
         If          = require('module/ui/if/if'),
+        Auth        = require('module/core/services/AuthorizationServices');
 
-RoleList = React.createClass({
+
+const  RoleList = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes:{
         onlyLogout:React.PropTypes.bool
@@ -22,37 +24,22 @@ RoleList = React.createClass({
         });
     },
     componentWillMount: function() {
-        const 	self 			= this,
-                rootBinding 	= self.getMoreartyContext().getBinding(),
-                binding 		= self.getDefaultBinding();
+        const 	self = this;
 
         if(!self.props.onlyLogout) {
-            self.addBindingListener(binding, 'permissions', function(){
-                const   permissions     = binding.get('permissions'),
-                        activeRoleName  = rootBinding.get('userRules.activeRoleName'),
-                        activeSchoolId  = rootBinding.get('userRules.activeSchoolId');
-
-                if (permissions && permissions.length) {
-                    let activePermission = permissions.find(p => p.role === activeRoleName && p.schoolId === activeSchoolId);
-                    if (!activePermission) {
-                        activePermission = permissions[0];
-                    }
-
-                    self.setRole(activePermission.role, activePermission.schoolId);
-                    self.roleBecome(activePermission);
-                }
-            });
-            self.addBindingListener(binding, 'activePermission', self.getMySchools);
-
-
             self.getMyRoles();
+            self.getMySchools();
         }
     },
     getMyRoles:function(){
         const 	self 			= this,
-                binding 		= self.getDefaultBinding();
+                binding 		= self.getDefaultBinding(),
+                rootBinding 	= self.getMoreartyContext().getBinding(),
+                activeRoleName  = rootBinding.get('userData.authorizationInfo.role'),
+                activeSchoolId  = rootBinding.get('userRules.activeSchoolId');
+        ;
 
-        window.Server.myRoles.get().then(roles => {
+        window.Server.roles.get().then(roles => {
             if (roles && roles.length) {
                 const permissions = [];
 
@@ -61,8 +48,18 @@ RoleList = React.createClass({
                         permission.role = role.name;
                         permissions.push(permission);
                     });
+
+                    if(role.name === activeRoleName){
+                        let activePermission = role.permissions.find(p => p.schoolId === activeSchoolId);
+                        if(!activePermission){
+                            activePermission = role.permissions[0];
+                            rootBinding.set('userRules.activeSchoolId', activePermission.schoolId);
+                        }
+                        binding.set('activePermission', activePermission);
+                    }
                 });
                 binding.set('permissions', permissions);
+
             }
         });
     },
@@ -70,17 +67,13 @@ RoleList = React.createClass({
         const 	self 			= this,
                 rootBinding 	= self.getMoreartyContext().getBinding();
 
-        rootBinding.set('userRules.activeRoleName', roleName);
         rootBinding.set('userRules.activeSchoolId', schoolId);
+        self.roleBecome(roleName);
     },
-    roleBecome:function(permission){
-        const 	self 			= this,
-                binding 		= self.getDefaultBinding(),
-                rootBinding 	= self.getMoreartyContext().getBinding();
+    roleBecome:function(roleName){
+        Auth.become(roleName).then(() => {
 
-        window.Server.roleBecome.post(permission.role).then(session => {
-            rootBinding.set('userData.authorizationInfo.id', session.key);
-            binding.set('activePermission', permission);    // only after role/become set activePermission
+            window.location.reload();
         });
     },
     getMySchools:function(){
@@ -141,8 +134,6 @@ RoleList = React.createClass({
     },
     onSetRole:function(roleName, schoolId){
         this.setRole(roleName, schoolId);
-
-        window.location.reload();
     },
     logout:function(){
         window.location.hash = 'logout';
@@ -152,7 +143,7 @@ RoleList = React.createClass({
                 binding 	= self.getDefaultBinding(),
                 listOpen    = binding.get('listOpen'),
                 show        = !!binding.get('permissions').length,
-                hidden      = !binding.get('schools').length;
+                hidden      = !binding.get('schools').length && !self.props.onlyLogout;
 
         if(listOpen)
             this.refs.role_list.focus();

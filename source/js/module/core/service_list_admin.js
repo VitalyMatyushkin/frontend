@@ -7,9 +7,11 @@ const 	Service 		    = require('module/core/service'),
 const serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
-		serviceList.logout = new Service('/users/logout', binding);
+        // authorization
+        serviceList._login = new Service('/superadmin/login',binding);
+        serviceList.logout = new Service('/users/logout', binding);
 
-		// users
+        // users
 		serviceList.users = new Service('/superadmin/users', binding);
         serviceList.user = new Service('/superadmin/users/{id}', binding);
 		serviceList.userChildren = new Service('/users/{id}/children', binding);

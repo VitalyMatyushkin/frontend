@@ -21,12 +21,8 @@ const SchoolSummary = React.createClass({
 
 		self.activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		window.Server.school.get(
-			{
-				id: self.activeSchoolId,
-				filter: {include: 'postcode'}
-			}
-		).then(function(schoolData) {
+		window.Server.school.get(self.activeSchoolId, {filter: {include: 'postcode'}})
+        .then(function(schoolData) {
 			binding.set(
 				'schoolData',Immutable.fromJS(schoolData)
 			);
