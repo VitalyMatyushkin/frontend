@@ -7,8 +7,7 @@ const   Immutable   = require('immutable'),
 
 const AuthorizationServices ={
     login: function(data){
-        const   self = this,
-                service = window.Server._login,
+        const   service = window.Server._login,
                 binding = service.binding;
 
         return service.post(data).then(authData => {
@@ -37,7 +36,7 @@ const AuthorizationServices ={
                 }
             }
 
-            return null;
+            return authData;
         });
     },
     become:function(roleName){
@@ -59,7 +58,7 @@ const AuthorizationServices ={
                 binding.set(Immutable.fromJS(authorizationInfo));
             }
 
-            return null;
+            return authData;
         });
     }
 };

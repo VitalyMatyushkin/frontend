@@ -32,42 +32,25 @@ const LoginUserPage = React.createClass({
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
 		//Collect all user role arrays from @args {Object} data and assign to roleObject
-		var globalBinding = self.getMoreartyContext().getBinding(),
-				roleObject = {admin:data.user.admins, coach:data.user.coaches, teacher:data.user.teachers,manager:data.user.managers};
+		var globalBinding = self.getMoreartyContext().getBinding();
 		//Iterate over roleObject keys to find the array with length greater than one as
 		//that determines the user's role
 		//If found assign the key to a @path {string} currentUserRole in the global morearty context
 		//TODO: this would need modification once data structure at backend is restructured - temporary fix (know the role of current user)
-		for(var key in roleObject){
-			if(roleObject[key].length >= 1){
-				globalBinding.set('currentUserRole', key);
-				break;
-			}
-		}
-		console.log('currentUserRole:' + globalBinding.get('currentUserRole'));
+		//for(var key in roleObject){
+		//	if(roleObject[key].length >= 1){
+		//		globalBinding.set('currentUserRole', key);
+		//		break;
+		//	}
+		//}
+		//console.log('currentUserRole:' + globalBinding.get('currentUserRole'));
 		//If there were no roles default to admin
 		//TODO: this is implemented this way because admin tend to have preset (owner) - future refactoring
-		if(globalBinding.get('currentUserRole')=== undefined){
-			globalBinding.set('currentUserRole','admin');
-		}
-		if(data.id) {
-			binding.update('userInfo', function(){
-				return Immutable.fromJS(data.user);
-			});
-
-			// TODO: попросить Стаса отдавать нормальные данные
-			binding.update('authorizationInfo', function(){
-				return Immutable.fromJS({
-					id: data.id,
-					ttl: data.ttl,
-					userId: data.userId,
-					verified: data.user.verified,
-					registerType: data.user.registerType
-				});
-			});
-
-
-			self._setPermissions(data.userId);
+		//if(globalBinding.get('currentUserRole')=== undefined){
+		//	globalBinding.set('currentUserRole','admin');
+		//}
+		if(data.key) {
+			self._setPermissions();
 		}
 	},
 	showError: function() {
@@ -86,16 +69,14 @@ const LoginUserPage = React.createClass({
 		document.location.hash = 'register';
 		self.hideError();
 	},
-	_setPermissions: function(userId) {
+	_setPermissions: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		window.Server.userPermission.get({id: userId}).then(permissionList => {
-			const presetList = permissionList.map(permission => permission.preset).filter(self.onlyUnique);
+		window.Server.roles.get().then(roleList => {
+			const presetList = roleList.map(r => r.name);
 
 			binding.set('__allPermissions', presetList);
-
-			return presetList;
 		});
 	},
 	_isAuthorized: function() {
