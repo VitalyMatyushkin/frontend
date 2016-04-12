@@ -14,7 +14,17 @@ const serviceList = {
         // users
 		serviceList.users = new Service('/superadmin/users', binding);
         serviceList.user = new Service('/superadmin/users/{id}', binding);
-		serviceList.userChildren = new Service('/users/{id}/children', binding);
+
+        //Permissions
+        serviceList.Permissions = new Service('/superadmin/users/permissions/requests',binding);
+
+        // schools
+        serviceList.schools = new Service('/superadmin/schools', binding);
+        serviceList.school = new Service('/superadmin/schools/{schoolId}', binding);
+
+
+
+        serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
 		serviceList.userManager = new Service('/users/{id}/managers',binding);
@@ -29,9 +39,6 @@ const serviceList = {
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
-		// schools
-		serviceList.schools = new Service('/schools', binding);
-		serviceList.school = new Service('/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
@@ -156,11 +163,7 @@ const serviceList = {
 		serviceList.addToBlog = new Service('/events/{id}/comments',binding);
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
-		// login service
-        serviceList.login = new Service('/superadmin/login',binding);
-		//Permissions
-		serviceList.Permissions = new Service('/permissions',binding);
-        serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);
+
 		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);
