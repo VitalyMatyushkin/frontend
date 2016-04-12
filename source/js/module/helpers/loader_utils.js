@@ -38,7 +38,7 @@ function apiSelector(domainName) {
             break;
         case parsedDomain.rootDomain === 'squard':
             apiDomains = {
-                main:   `//api.stage.squadintouch.com/v${apiVersion}`,
+                main:   `//api2.stage.squadintouch.com`,
                 img:    '//img.stage.squadintouch.com'
             };
             break;

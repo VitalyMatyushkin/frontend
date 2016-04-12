@@ -7,7 +7,11 @@ const 	Service 		    = require('module/core/service'),
 const serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
-		serviceList.logout = new Service('/users/logout', binding);
+        // authorization
+        serviceList._login = new Service('/i/login',binding);
+        serviceList.logout = new Service('/users/logout', binding);
+        serviceList.roles = new Service('/i/roles', binding);
+        serviceList._become = new Service('/i/roles/{roleName}/become', binding);
 
 		// users
 		serviceList.users = new Service('/users', binding);
@@ -26,14 +30,9 @@ const serviceList = {
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
-        // roles
-        serviceList.myRoles = new Service('/i/roles', binding);
-        serviceList.roleBecome = new Service('/i/roles/{roleName}/become', binding);
-
-
 		// schools
 		serviceList.schools = new Service('/i/schools', binding);
-		serviceList.school = new Service('/i/schools/{id}', binding);
+		serviceList.school = new Service('/i/schools/{schoolId}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
@@ -158,9 +157,6 @@ const serviceList = {
 		serviceList.addToBlog = new Service('/events/{id}/comments',binding);
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
-		// login service
-        //serviceList.login = new Service('/i/users/login?include=user',binding);
-        serviceList.login = new Service('/i/login',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
         serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);

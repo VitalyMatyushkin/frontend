@@ -1,6 +1,7 @@
 const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
-		React 		= require('react');
+		React 		= require('react'),
+        Auth        = require('module/core/services/AuthorizationServices');
 
 const LoginUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -19,7 +20,7 @@ const LoginUserForm = React.createClass({
 				binding = self.getDefaultBinding();
 
 		return (
-			<Form name={self.tmpFormName} service={window.Server.login} binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
+			<Form name={self.tmpFormName} service={Auth.login} binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				<FormField type="text" placeholder="E-mail" htmlId="login_input" field="email" validation="email required" ></FormField>
 				<FormField type="text" textType="password" placeholder="Password" htmlId="password_input" field="password" validation="required" binding={binding}></FormField>
 			</Form>

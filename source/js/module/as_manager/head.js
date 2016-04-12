@@ -14,7 +14,7 @@ const Head = React.createClass({
             binding = self.getDefaultBinding();
 
         self.addBindingListener(binding, 'userRules.activeSchoolId', self.createTopMenu);
-        self.addBindingListener(binding, 'userData.authorizationInfo.id', self.schoolExists);
+        self.addBindingListener(binding, 'userData.authorizationInfo.role', self.schoolExists);
     },
     schoolExists:function(){
         const self = this,
