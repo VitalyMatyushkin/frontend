@@ -50,8 +50,9 @@ const LoginUserPage = React.createClass({
 		//	globalBinding.set('currentUserRole','admin');
 		//}
 		if(data.key) {
-			self._setPermissions();
+			return self._setPermissions();
 		}
+        return null;
 	},
 	showError: function() {
 		var self = this;
@@ -73,10 +74,11 @@ const LoginUserPage = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		window.Server.roles.get().then(roleList => {
+		return window.Server.roles.get().then(roleList => {
 			const presetList = roleList.map(r => r.name);
 
 			binding.set('__allPermissions', presetList);
+            return null;
 		});
 	},
 	_isAuthorized: function() {

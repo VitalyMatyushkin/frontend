@@ -159,7 +159,6 @@ const serviceList = {
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
-        serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);
 		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);

@@ -14,7 +14,32 @@ const serviceList = {
         // users
 		serviceList.users = new Service('/superadmin/users', binding);
         serviceList.user = new Service('/superadmin/users/{id}', binding);
-		serviceList.userChildren = new Service('/users/{id}/children', binding);
+
+        //Permissions
+        serviceList.Permissions = new Service('/superadmin/users/permissions/requests',binding);
+
+        // schools
+        serviceList.schools = new Service('/superadmin/schools', binding);
+        serviceList.school = new Service('/superadmin/schools/{schoolId}', binding);
+
+        // sports
+        serviceList.sports = new Service('/superadmin/sports', binding);
+        serviceList.sport =  new Service('/superadmin/sports/{sportId}', binding);
+
+        // postcode
+        serviceList.postCode = new Service('/superadmin/postcodes', binding);
+
+        // forms
+        serviceList.forms = new Service('/superadmin/schools/{schoolId}/forms', binding);
+        serviceList.form = new Service('/superadmin/schools/{schoolId}/forms/{formId}', binding);
+
+        // houses
+        serviceList.houses = new Service('/superadmin/schools/{schoolId}/houses', binding);
+        serviceList.house = new Service('/superadmin/schools/{schoolId}/houses/{houseId}', binding);
+
+
+
+        serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
 		serviceList.userManager = new Service('/users/{id}/managers',binding);
@@ -29,9 +54,6 @@ const serviceList = {
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
-		// schools
-		serviceList.schools = new Service('/schools', binding);
-		serviceList.school = new Service('/schools/{id}', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
@@ -69,16 +91,6 @@ const serviceList = {
 		serviceList.addStudentToSchool = new Service('/schools/{id}/students',binding);
 		serviceList.updateStudentOfAschool = new Service('/schools/{id}/students/{fk}');
 
-		// houses
-		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
-		serviceList.house = new Service('/houses/{houseId}', binding);
-		serviceList.getAllHouses = new Service('/houses', binding);
-
-		// forms
-		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
-		serviceList.form = new Service('/forms/{formId}', binding);
-		serviceList.getAllForms = new Service('/forms', binding);
-
 		// coaches
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
 		serviceList.oneSchoolCoache = new Service('/schools/{schoolId}/coaches/{id}', binding);
@@ -100,9 +112,6 @@ const serviceList = {
 		serviceList.participants = new Service('/events/{eventId}/participants', binding);
 		serviceList.relParticipants = new Service('/events/{eventId}/participants/rel/{teamId}', binding);
 
-		// sports
-		serviceList.sports = new Service('/sports', binding);
-		serviceList.sport =  new Service('/sports/{sportId}', binding);
 
 		// invites
 		serviceList.invites = new Service('/invites', binding);
@@ -132,8 +141,6 @@ const serviceList = {
 		serviceList.studentPoints = new Service('/points?filter[where][studentId]={studentId}', binding);
 		serviceList.points = new Service('/points', binding);
 
-		// postcode
-		serviceList.postCode = new Service('/postcodes', binding);
 		serviceList.findPostCodeById = new Service('/postcodes/findOne?filter[where][id]={postCode}', binding);
 
 		// albums
@@ -156,11 +163,7 @@ const serviceList = {
 		serviceList.addToBlog = new Service('/events/{id}/comments',binding);
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
-		// login service
-        serviceList.login = new Service('/superadmin/login',binding);
-		//Permissions
-		serviceList.Permissions = new Service('/permissions',binding);
-        serviceList.usersAndPermissions = new Service('/permissions?filter[include]=school&filter[include]=student',binding);
+
 		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);

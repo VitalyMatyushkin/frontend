@@ -52,7 +52,7 @@ const SchoolSandbox = React.createClass({
         //Check if there exists an active school
         if(globalBinding.get('userRules.activeSchoolId')!==undefined){
             //Get school details so that we can display details on the current school in sandbox view
-            window.Server.school.get({id:globalBinding.get('userRules.activeSchoolId')})
+            window.Server.school.get(globalBinding.get('userRules.activeSchoolId'))
                 .then((school)=>{
                     binding.set('schoolDetails',Immutable.fromJS(school));
                     //redirect to the forms page as the initial view
