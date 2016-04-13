@@ -9,7 +9,6 @@ const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
         React               = require('react'),
         Immutable 	        = require('immutable'),
         $                   = require('jquery'),
-        Auth                = require('module/core/services/AuthorizationServices');
         Helpers             = require('module/helpers/storage');
 
 // TODO: remove jquery
