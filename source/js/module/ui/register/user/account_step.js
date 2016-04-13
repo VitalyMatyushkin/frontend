@@ -19,7 +19,7 @@ const RegiseterUserForm = React.createClass({
 
 		/* phone field have `text` type to be compatable with any phone. Validation was: validation="required phone server" */
 		return (
-				<Form updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}
+				<Form updateBinding={true} service="i/register" binding={binding} onSuccess={self.props.onSuccess}
 							onError={self.props.onError}>
 					{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
 					<FormField type="text" field="username" validation="required alphanumeric server"
@@ -35,7 +35,7 @@ const RegiseterUserForm = React.createClass({
 					<div className="eRegisterMessage">Having trouble signing up? <a
 							href="mailto:support@squadintouch.com?subject=Registration">Email
 						us</a></div>
-					<FormField type="terms" field="terms" validation="termsAndConditions"></FormField>
+					<FormField type="terms" field="terms" validation="termsAndConditions"/>
 
 				</Form>
 		)

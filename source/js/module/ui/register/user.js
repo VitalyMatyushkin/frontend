@@ -79,9 +79,9 @@ const RegisterUserPage = React.createClass({
             currentStep = binding.get('registerStep');
 
         if (currentStep === 'account') {
-            window.Server.login.post({
-                username: username,
-                password: password
+            window.Server._login.post({
+                email: binding.get('formFields').email,
+                password: binding.get('formFields').password
             }).then(function (data) {
                 var immutableAccountInfo = Immutable.fromJS(data);
                 globalBinding.set('userData.authorizationInfo', immutableAccountInfo);
@@ -99,15 +99,14 @@ const RegisterUserPage = React.createClass({
     catchStepFunctionError:function(step, data){
         //Temporary solution to for the 422 error
         //Notify user of the error and allow to try again
-        var message,
-            responseObj = data.responseJSON.error;
-        switch (responseObj.status){
+        var message;
+        switch (data){
             case 422:
-                message = responseObj.details.messages.phone[0];
+                message = data.responseJSON.details.text;
                 alert(message+' - so please try again!');
                 break;
             default:
-                message = responseObj.message;
+                message = data.responseJSON.details.text;
                 alert(message);
                 break;
         }
