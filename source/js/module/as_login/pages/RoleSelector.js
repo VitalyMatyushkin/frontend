@@ -1,7 +1,8 @@
 /**
  * Created by wert on 16.01.16.
  */
-const React = require('react');
+const React = require('react'),
+    Auth = require('module/core/services/AuthorizationServices');
 
 const RoleSelectorComponent = React.createClass({
     getRoleSubdomain: function(roleName) {
@@ -40,7 +41,9 @@ const RoleSelectorComponent = React.createClass({
 
         return function(){
             console.log(`Role selected: ${roleName}`);
-            self.redirectToStartPage(roleName.toLowerCase());
+            Auth.become(roleName).then(data => {
+                return self.redirectToStartPage(roleName.toLowerCase());
+            });
         }
     },
     renderRoleButton: function(roleName){
