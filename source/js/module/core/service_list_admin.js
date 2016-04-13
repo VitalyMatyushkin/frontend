@@ -22,6 +22,21 @@ const serviceList = {
         serviceList.schools = new Service('/superadmin/schools', binding);
         serviceList.school = new Service('/superadmin/schools/{schoolId}', binding);
 
+        // sports
+        serviceList.sports = new Service('/superadmin/sports', binding);
+        serviceList.sport =  new Service('/superadmin/sports/{sportId}', binding);
+
+        // postcode
+        serviceList.postCode = new Service('/superadmin/postcodes', binding);
+
+        // forms
+        serviceList.forms = new Service('/superadmin/schools/{schoolId}/forms', binding);
+        serviceList.form = new Service('/superadmin/schools/{schoolId}/forms/{formId}', binding);
+
+        // houses
+        serviceList.houses = new Service('/superadmin/schools/{schoolId}/houses', binding);
+        serviceList.house = new Service('/superadmin/schools/{schoolId}/houses/{houseId}', binding);
+
 
 
         serviceList.userChildren = new Service('/users/{id}/children', binding);
@@ -76,16 +91,6 @@ const serviceList = {
 		serviceList.addStudentToSchool = new Service('/schools/{id}/students',binding);
 		serviceList.updateStudentOfAschool = new Service('/schools/{id}/students/{fk}');
 
-		// houses
-		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
-		serviceList.house = new Service('/houses/{houseId}', binding);
-		serviceList.getAllHouses = new Service('/houses', binding);
-
-		// forms
-		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
-		serviceList.form = new Service('/forms/{formId}', binding);
-		serviceList.getAllForms = new Service('/forms', binding);
-
 		// coaches
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
 		serviceList.oneSchoolCoache = new Service('/schools/{schoolId}/coaches/{id}', binding);
@@ -107,9 +112,6 @@ const serviceList = {
 		serviceList.participants = new Service('/events/{eventId}/participants', binding);
 		serviceList.relParticipants = new Service('/events/{eventId}/participants/rel/{teamId}', binding);
 
-		// sports
-		serviceList.sports = new Service('/sports', binding);
-		serviceList.sport =  new Service('/sports/{sportId}', binding);
 
 		// invites
 		serviceList.invites = new Service('/invites', binding);
@@ -139,8 +141,6 @@ const serviceList = {
 		serviceList.studentPoints = new Service('/points?filter[where][studentId]={studentId}', binding);
 		serviceList.points = new Service('/points', binding);
 
-		// postcode
-		serviceList.postCode = new Service('/postcodes', binding);
 		serviceList.findPostCodeById = new Service('/postcodes/findOne?filter[where][id]={postCode}', binding);
 
 		// albums

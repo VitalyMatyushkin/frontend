@@ -30,7 +30,7 @@ const SchoolListPage = React.createClass({
             binding = self.getDefaultBinding(),
             confirm = window.confirm("Do you really want to remove this item?");
         if(confirm === true){
-            window.Server.school.delete({id:model.id}).then(function(){
+            window.Server.school.delete(model.id).then(function(){
                     binding.update(function(result) {
                         return result.filter(function(res) {
                             return res.get('id') !== model.id;
