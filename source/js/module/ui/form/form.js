@@ -136,7 +136,6 @@ const Form = React.createClass({
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
                 var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :(window.apiBase + '/' + self.props.service);
-                console.log(url);
                 $.ajax({
                     url: url,
                     type: type,
