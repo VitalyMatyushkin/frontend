@@ -1,18 +1,19 @@
 const 	React 			= 	require('react'),
-		ClassForm 		= 	require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form'),
-		MoreartyHelper	=	require('module/helpers/morearty_helper');
-		
+		ClassForm 		= 	require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form');
 
 const ClassAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	FORM_URL:'school_sandbox/forms',
 	componentWillMount: function () {
-		const 	self 			= 	this;
-		self.activeSchoolId 	= 	MoreartyHelper.getActiveSchoolId(self);
+        const   self        = this,
+                binding 	= self.getDefaultBinding(),
+                schoolId    = binding.get('routing.pathParameters.0');
+        
+		self.schoolId = schoolId;
+        self.FORM_URL = `school_sandbox/${schoolId}/forms`
 	},
 	submitAdd: function(data) {
 		const self = this;
-		window.Server.forms.post(self.activeSchoolId, data).then(function() {
+		window.Server.forms.post(self.schoolId, data).then(function() {
 			document.location.hash = self.FORM_URL;
 		}).catch(function(err){
 			document.location.hash = self.FORM_URL;
@@ -23,7 +24,7 @@ const ClassAddPage = React.createClass({
 				binding 	= self.getDefaultBinding();
 
 		return (
-			<ClassForm title="Add new form to school" onFormSubmit={self.submitAdd} binding={binding} />
+			<ClassForm title="Add new form to school" onFormSubmit={self.submitAdd} binding={binding.sub('formAdd')} />
 		)
 	}
 });

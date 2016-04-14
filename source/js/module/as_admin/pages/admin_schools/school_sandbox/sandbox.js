@@ -19,10 +19,10 @@ const SchoolSandbox = React.createClass({
         });
     },
     componentWillMount:function(){
-        const   self            =   this,
-                binding         =   self.getDefaultBinding(),
-                globalBinding   =    self.getMoreartyContext().getBinding(),
-                schoolId        =  globalBinding.sub('routing.parameters').toJS().id,
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                globalBinding   = self.getMoreartyContext().getBinding(),
+                schoolId        = globalBinding.get('routing.pathParameters.0'),
                 menuItems       = [
                                     {
                                         href:'/#admin_schools/admin_views/list',
@@ -30,66 +30,56 @@ const SchoolSandbox = React.createClass({
                                         key:'back'
                                     },
                                     {
-                                        href:'/#school_sandbox/forms',
+                                        href:`/#school_sandbox/${schoolId}/forms`,
                                         name:'Forms',
                                         key:'forms'
                                     },
                                     {
-                                        href:'/#school_sandbox/houses',
+                                        href:`/#school_sandbox/${schoolId}/houses`,
                                         name:'Houses',
                                         key:'houses'
                                     }
                                 ];
         //Set sub menu items in default binding
         binding.set('subMenuItems',Immutable.fromJS(menuItems));
-        //Set active school id : there exist a key for it already in the global context
-        globalBinding.set('userRules.activeSchoolId',Immutable.fromJS(schoolId));
     },
     componentDidMount:function(){
-        const   self            =   this,
-                binding         =   self.getDefaultBinding(),
-                globalBinding   =   self.getMoreartyContext().getBinding();
-        //Check if there exists an active school
-        if(globalBinding.get('userRules.activeSchoolId')!==undefined){
-            //Get school details so that we can display details on the current school in sandbox view
-            window.Server.school.get(globalBinding.get('userRules.activeSchoolId'))
-                .then((school)=>{
-                    binding.set('schoolDetails',Immutable.fromJS(school));
-                    //redirect to the forms page as the initial view
-                    document.location.hash = 'school_sandbox/forms';
-                    return school;
-                })
-                .catch(error=>console.log(error.errorThrown));
-        }else{
-            //Go back to school page to prevent errors and unpredictable results
-            document.location.hash = 'admin_schools/admin_views/list';
-        }
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                globalBinding   = self.getMoreartyContext().getBinding(),
+                schoolId        = globalBinding.get('routing.pathParameters.0');
+
+        //Get school details so that we can display details on the current school in sandbox view
+        window.Server.school.get(schoolId)
+            .then((school)=>{
+                binding.set('schoolDetails',Immutable.fromJS(school));
+                //redirect to the forms page as the initial view
+                document.location.hash = `school_sandbox/${schoolId}/forms`;
+                return school;
+            })
+            .catch(error=>console.log(error.errorThrown));
     },
     render:function(){
-        const   self    = this,
-                binding = self.getDefaultBinding(),
-                global  = self.getMoreartyContext().getBinding();
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                subBinding  = binding.sub('schoolSandboxRouting'),
+                global      = self.getMoreartyContext().getBinding();
         return (
             <div>
                 <SubMenu binding={{default: binding.sub('schoolRouting'), itemsBinding: binding.sub('subMenuItems')}} />
                 {/*Display current school name, so admin knows what school he or she is operating on*/}
                 <div style={{margin:10+'px',fontWeight:'bold'}}>You are currently viewing:{binding.get('schoolDetails.name')}</div>
                 <div className="bSchoolMaster">
-                    <RouterView routes={binding.sub('schoolRouting')} binding={global}>
+                    <RouterView routes={subBinding.sub('routing')} binding={global}>
                         <Route
-                            path="/school_sandbox/forms /school_sandbox/forms/:mode"
-                            binding={binding}
+                            path="/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:id/:mode"
+                            binding={subBinding}
                             component="module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page"
                         />
                         <Route
                             path="/school_sandbox/houses /school_sandbox/houses/:mode"
-                            binding={binding}
+                            binding={subBinding}
                             component="module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page"
-                        />
-                        <Route
-                            path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode"
-                            binding={binding.sub('schools')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_list"
                         />
                     </RouterView>
                 </div>

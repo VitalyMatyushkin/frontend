@@ -13,11 +13,18 @@ const ClassListPage = React.createClass({
 		//const self 			= this,
 		//	globalBinding 	= self.getMoreartyContext().getBinding();
 	},
+    onClassEdit:function(data){
+        const   self 			= this,
+        	    globalBinding 	= self.getMoreartyContext().getBinding(),
+                schoolId        = globalBinding.get('routing.pathParameters.0');
+
+        document.location.hash = `school_sandbox/${schoolId}/forms/${data.id}/edit`;
+    },
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
-			<Table title="Classes" binding={binding} onItemEdit={self._getEditFunction()}
+			<Table title="Classes" binding={binding} onItemEdit={self.onClassEdit}
                    getDataPromise={self.getDataPromise} filter={self.filter}>
 				<TableField width="40%" dataField="name" >Name</TableField>
 				<TableField width="40%" dataField="age" filterType="none"

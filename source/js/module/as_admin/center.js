@@ -33,7 +33,7 @@ Center = React.createClass({
                         <Route path="/schools/add " binding={binding.sub('schoolsPage')} component="module/as_manager/pages/schools/schools_add"	/>
                         <Route path="/albums /albums/:albumId" binding={binding.sub('albums')} component="module/ui/gallery/albums"  />
                         <Route path="/admin_schools admin_schools/:subPage /admin_schools/:subPage/:mode" binding={binding.sub('adminSchoolList')} component="module/as_admin/pages/admin_schools/admin_dashboard"/>
-                        <Route path="/school_sandbox school_sandbox/:subPage /school_sandbox/:subPage/:mode" binding={binding.sub('adminSchoolList')} component="module/as_admin/pages/admin_schools/school_sandbox/sandbox"/>
+                        <Route path="/school_sandbox/:schoolId school_sandbox/:schoolId/:subPage /school_sandbox/:schoolId/:subPage/:id/:mode" binding={binding.sub('adminSchoolList')} component="module/as_admin/pages/admin_schools/school_sandbox/sandbox"/>
                         <LoginRoute binding={binding.sub('userData')}  />
                         <LogoutRoute binding={binding.sub('userData')}  />
                         <SettingsRoute binding={binding.sub('userData')} />
