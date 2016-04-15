@@ -35,7 +35,7 @@ const TeamAddPage = React.createClass({
                 include: 'forms'
             }
         }).then(function (schoolData) {
-            return window.Server.sports.get().then(function (sportsData) {
+            return window.Server.public_sports.get().then(function (sportsData) {
                 !schoolData.forms && (schoolData.forms = []);
 
                 binding

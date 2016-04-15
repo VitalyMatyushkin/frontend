@@ -102,8 +102,8 @@ const serviceList = {
 		serviceList.relParticipants = new Service('/events/{eventId}/participants/rel/{teamId}', binding);
 
 		// sports
-		serviceList.sports = new Service('/sports', binding);
-		serviceList.sport =  new Service('/sports/{sportId}', binding);
+		serviceList.public_sports = new Service('/public/sports', binding);
+		serviceList.public_sport =  new Service('/public/sports/{sportId}', binding);
 
 		// invites
 		serviceList.invites = new Service('/invites', binding);
