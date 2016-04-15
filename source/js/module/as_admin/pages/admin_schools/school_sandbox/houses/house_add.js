@@ -1,13 +1,13 @@
 
-const 	HouseForm 		= 	require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_form'),
-		React 			= 	require('react');
+const 	HouseForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_form'),
+		React 		= require('react');
 
 const HouseAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
         const   self        = this,
-            binding 	= self.getDefaultBinding(),
-            schoolId    = binding.get('routing.pathParameters.0');
+                binding 	= self.getDefaultBinding(),
+                schoolId    = binding.get('routing.pathParameters.0');
 
         self.schoolId = schoolId;
         self.HOUSE_URL = `school_sandbox/${schoolId}/houses`;
