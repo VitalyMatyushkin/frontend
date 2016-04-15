@@ -12,9 +12,9 @@ const ClassesPage = React.createClass({
 
 		return (
 			<RouterView routes={ subBinding.sub('routing') } binding={globalBinding}>
-				<Route path="/school_sandbox/:schoolId/forms" binding={subBinding} component="module/as_admin/pages/admin_schools/school_sandbox/classes/classes_list"  />
-				<Route path="/school_sandbox/:schoolId/forms/:formId/add"  binding={subBinding} component="module/as_admin/pages/admin_schools/school_sandbox/classes/class_add"  />
-				<Route path="/school_sandbox/:schoolId/forms/:formId/edit" binding={subBinding} component="module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit"  />
+				<Route path="/school_sandbox/:schoolId/forms" binding={subBinding.sub('forms')} component="module/as_admin/pages/admin_schools/school_sandbox/classes/classes_list"  />
+				<Route path="/school_sandbox/:schoolId/forms/add"  binding={subBinding} component="module/as_admin/pages/admin_schools/school_sandbox/classes/class_add"  />
+				<Route path="/school_sandbox/:schoolId/forms/edit/:formId" binding={subBinding} component="module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit"  />
 			</RouterView>
 		)
 	}

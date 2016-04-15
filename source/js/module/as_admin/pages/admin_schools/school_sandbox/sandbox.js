@@ -53,8 +53,6 @@ const SchoolSandbox = React.createClass({
         window.Server.school.get(schoolId)
             .then((school)=>{
                 binding.set('schoolDetails',Immutable.fromJS(school));
-                //redirect to the forms page as the initial view
-                document.location.hash = `school_sandbox/${schoolId}/forms`;
                 return school;
             })
             .catch(error=>console.log(error.errorThrown));
@@ -72,7 +70,7 @@ const SchoolSandbox = React.createClass({
                 <div className="bSchoolMaster">
                     <RouterView routes={subBinding.sub('routing')} binding={global}>
                         <Route
-                            path="/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:id/:mode"
+                            path="/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
                             binding={subBinding}
                             component="module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page"
                         />

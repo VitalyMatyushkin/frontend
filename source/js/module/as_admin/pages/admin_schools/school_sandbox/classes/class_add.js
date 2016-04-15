@@ -9,7 +9,7 @@ const ClassAddPage = React.createClass({
                 schoolId    = binding.get('routing.pathParameters.0');
         
 		self.schoolId = schoolId;
-        self.FORM_URL = `school_sandbox/${schoolId}/forms`
+        self.FORM_URL = `school_sandbox/${schoolId}/forms`;
 	},
 	submitAdd: function(data) {
 		const self = this;

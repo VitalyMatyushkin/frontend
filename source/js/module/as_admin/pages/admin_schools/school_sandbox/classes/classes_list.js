@@ -18,7 +18,7 @@ const ClassListPage = React.createClass({
         	    globalBinding 	= self.getMoreartyContext().getBinding(),
                 schoolId        = globalBinding.get('routing.pathParameters.0');
 
-        document.location.hash = `school_sandbox/${schoolId}/forms/${data.id}/edit`;
+        document.location.hash = `school_sandbox/${schoolId}/forms/edit/${data.id}`;
     },
 	getTableView: function() {
 		var self = this,

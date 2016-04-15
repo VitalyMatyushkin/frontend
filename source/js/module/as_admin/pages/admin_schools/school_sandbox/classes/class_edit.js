@@ -8,14 +8,14 @@ const ClassEditPage = React.createClass({
         const   self        = this,
                 binding 	= self.getDefaultBinding(),
                 routingData = binding.toJS('routing.pathParameters'),
-                schoolId    = routingData[1],
-                formId      = routingData[2];
+                schoolId    = routingData[0],
+                formId      = routingData[1];
 
-		binding.clear();
+		binding.sub('formEdit').clear();
 
 		if (formId) {
 			window.Server.form.get({formId:formId, schoolId:schoolId}).then(function (data) {
-				self.isMounted() && binding.set(Immutable.fromJS(data));
+				self.isMounted() && binding.set('formEdit', Immutable.fromJS(data));
 			});
 		}
 	},
