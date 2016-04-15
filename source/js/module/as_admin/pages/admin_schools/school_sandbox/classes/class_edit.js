@@ -15,7 +15,7 @@ const ClassEditPage = React.createClass({
 
 		if (formId) {
 			window.Server.form.get({formId:formId, schoolId:schoolId}).then(function (data) {
-				self.isMounted() && binding.set('formEdit', Immutable.fromJS(data));
+				binding.set('formEdit', Immutable.fromJS(data));
 			});
 		}
 	},

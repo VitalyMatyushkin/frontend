@@ -1,3 +1,4 @@
+
 const 	React 			= 	require('react'),
 		ClassForm 		= 	require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form');
 

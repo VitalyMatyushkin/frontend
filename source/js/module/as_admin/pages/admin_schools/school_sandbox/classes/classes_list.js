@@ -9,10 +9,6 @@ const ClassListPage = React.createClass({
 	serviceName: 'forms',
     setPageTitle: 'forms',
     filters:{include:{relation:'school'}},
-	componentWillMount:function() {
-		//const self 			= this,
-		//	globalBinding 	= self.getMoreartyContext().getBinding();
-	},
     onClassEdit:function(data){
         const   self 			= this,
         	    globalBinding 	= self.getMoreartyContext().getBinding(),

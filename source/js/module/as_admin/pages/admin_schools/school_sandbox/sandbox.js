@@ -75,7 +75,7 @@ const SchoolSandbox = React.createClass({
                             component="module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page"
                         />
                         <Route
-                            path="/school_sandbox/houses /school_sandbox/houses/:mode"
+                            path="/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
                             binding={subBinding}
                             component="module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page"
                         />
