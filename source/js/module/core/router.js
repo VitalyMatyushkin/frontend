@@ -1,7 +1,5 @@
 const 	Immutable 	= require('immutable'),
-		//Router = require('Router'),
 		React 		= require('react');
-
 
 const RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -109,12 +107,13 @@ const RouterView = React.createClass({
 			};
 
 			self.currentPath = route.path;
-			self.isMounted() && self.forceUpdate();
 			self.RoutingBinding.atomically()
 				.set('currentPath', self.currentPath)
 				.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
 				.set('currentPageName', route.pageName)
 				.commit();
+
+            self.isMounted() && self.forceUpdate();
 		});
 	},
 	/**

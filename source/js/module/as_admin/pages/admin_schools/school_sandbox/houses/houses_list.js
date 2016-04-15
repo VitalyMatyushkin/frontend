@@ -7,12 +7,19 @@ const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName: 'houses',
     sandbox:true,
+    onHouseEdit:function(data){
+        const   self 			= this,
+            globalBinding 	= self.getMoreartyContext().getBinding(),
+            schoolId        = globalBinding.get('routing.pathParameters.0');
+
+        document.location.hash = `school_sandbox/${schoolId}/houses/edit/${data.id}`;
+    },
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		return (
-			<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()}
+			<Table title="Houses" binding={binding}  onItemEdit={self.onHouseEdit}
 				   getDataPromise={self.getDataPromise} filter={self.filter}>
 				<TableField dataField="name" filterType="none" width="180px">House name</TableField>
 				<TableField dataField="description" filterType="none">Description</TableField>
