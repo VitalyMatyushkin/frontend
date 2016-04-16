@@ -149,9 +149,9 @@ const RegisterUserPage = React.createClass({
     },
 
     renderSteps: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentStep = binding.get('registerStep');
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                currentStep = binding.get('registerStep');
 
         return <div className="bStepProgress_wrap">
             <div className="bStepProgress">
@@ -176,53 +176,47 @@ const RegisterUserPage = React.createClass({
             })}
         </div>;
     },
-    //renderMessage: function () {
-    //    var self = this,
-    //        binding = self.getDefaultBinding(),
-    //        currentStep = binding.get('registerStep');
-    //    if ((currentStep === 'account') || (currentStep === 'verification')) {
-    //        return <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:support@squadintouch.com?subject=Registration">Email
-    //            us</a></div>
-    //    }
-    //},
     render: function () {
-        var self = this,
-            currentView = null,
-            binding = self.getDefaultBinding(),
-            currentStep = binding.get('registerStep');
-        //currentStep = 'permissions';
-        if (currentStep === 'account') {
-            currentView =
-				<AccountForm
-                	onSuccess={self.setStepFunction.bind(null, 'verification')}
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                currentStep = binding.get('registerStep');
+
+        let currentView = null;
+
+        switch (currentStep) {
+            case 'account':
+                currentView = <AccountForm
+                    onSuccess={self.setStepFunction.bind(null, 'verification')}
                     onError = {self.catchStepFunctionError.bind(null,'verification')}
-                	binding={binding.sub('formFields')}
-                />
-        } else if (currentStep === 'verification') {
-            currentView = <VerificationStep
-                onSuccess={self.setStepFunction.bind(null, 'permissions')}
-                binding={{
-                    account: binding.sub('account'),
-					formFields: binding.sub('formFields'),
-					default: binding.sub('permissionsFields')
-				}}
-                />
-        } else if (currentStep === 'permissions') {
-            currentView =
-				<PermissionsList
-                	onSuccess={self.setStepFunction.bind(null, 'finish')}
-                	binding={{
-						//account: binding.sub('account'),
-						//formFields: binding.sub('formFields'),
-						default: binding
+                    binding={binding.sub('formFields')}
+                />;
+                break;
+            case 'verification':
+                currentView = <VerificationStep
+                    onSuccess={self.setStepFunction.bind(null, 'permissions')}
+                    binding={{
+                        account: binding.sub('account'),
+                        formFields: binding.sub('formFields'),
+                        default: binding.sub('permissionsFields')
+				    }}
+                />;
+                break;
+            case 'permissions':
+                currentView = <PermissionsList
+                    onSuccess={self.setStepFunction.bind(null, 'finish')}
+                    binding={{
+                        //account: binding.sub('account'),
+                        //formFields: binding.sub('formFields'),
+                        default: binding
 					}}
-                />
-        } else if (currentStep === 'finish') {
-            currentView =
-				<RegisterDone
-                	onSuccess={self.finish}
-                	binding={{default:binding}}
-                />
+                    />;
+                break;
+            case 'finish':
+                currentView = <RegisterDone
+                    onSuccess={self.finish}
+                    binding={{default:binding}}
+                />;
+                break;
         }
 
         return (
