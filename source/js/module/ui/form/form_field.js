@@ -35,7 +35,7 @@ const FormField = React.createClass({
                                     mValid: 	binding.get('showSuccess')
                                 });
 		//If a specific class has been provided for styling error messages then use it
-		let errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);
+		const errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);
 		return (
 			<div className={classNames("eForm_field", self.props.fieldClassName)}>
 				<div className="eForm_fieldName">{self.props.children}</div>

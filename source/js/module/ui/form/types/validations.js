@@ -103,28 +103,23 @@ var validationsSet = {
         }
 		dataToCheck[self.props.field] = value;
 		$.ajax({
-			url: 'http:' + window.apiBase + '/' + self.props.service + '/check',
-			type: 'POST',
-			dataType: 'json',
-			contentType: 'application/json',
-			crossDomain: true,
-			data: JSON.stringify(dataToCheck), //prevents submitting form data which sometimes results in bad request and failure to check for availability
+			url: 			window.apiBase + '/' + self.props.service + '/check',
+			type: 			'POST',
+			dataType: 		'json',
+			contentType: 	'application/json',
+			crossDomain: 	true,
+			data: 			JSON.stringify(dataToCheck), //prevents submitting form data which sometimes results in bad request and failure to check for availability
 			error: function(data, error, errorText) {
-				// Проверяем, актуально ли проверяемое значение поля
-				if (errorText === 'Conflict' && self.getDefaultBinding().get('value') === value) {
-					self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
-				}
+				self.showError(`${self.props.name} has already been taken. Choose another or log in`);
 			},
 			success: function(data) {
-				// Проверяем, актуально ли проверяемое значение поля
-				if (data.unique === false && self.getDefaultBinding().get('value') === value) {
-					self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
-				}else if(data.unique === false && self.getDefaultBinding().get('value') === oldPhoneCheckVal){
-                    self.showError(self.props.name + ' has already been taken. Choose another one or log in.');
-                }else{
-                    //self.showSuccess(self.props.name +' is available to you');
+				const status = data[self.props.field];
+
+				if(status === true) {
 					self.showSuccess('V');
-                }
+				} else {
+					self.showError(`${self.props.name} has already been taken. Choose another or log in`);
+				}
 			}
 		});
 	}
