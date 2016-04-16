@@ -2,6 +2,7 @@ const   Form            = require('module/ui/form/form'),
         FormField       = require('module/ui/form/form_field'),
         FormColumn      = require('module/ui/form/form_column'),
         SVG             = require('module/ui/svg'),
+        Immutable 	    = require('immutable'),
         If              = require('module/ui/if/if'),
         React           = require('react');
 
@@ -14,41 +15,33 @@ const VerificationStep = React.createClass({
     confirmEmail: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            accountBinding = self.getBinding('account'),
-            formFieldsBinding = self.getBinding('formFields');
-
-		window.Server.confirmUser.get({
-            uid: accountBinding.get('userId'),
+            accountBinding = self.getBinding('account');
+		window.Server.confirmUser.post({
             token: binding.get('emailCode')
-        }).then(function () {
-
-			formFieldsBinding.set('verified.email', true);
-            accountBinding.set('account.user.verified.email', true);
+        }).then(()=>{
+            accountBinding.set('verified.email', true);
             binding.set('emailConfirmationError',false);
-            if (formFieldsBinding.get('verified.phone')) {
+            if (accountBinding.get('verified.phone')) {
                 self.props.onSuccess();
             }
-        }, function () {
+        },()=>{
             binding.set('emailConfirmationError',true);
         });
     },
     confirmPhone: function () {
         var self = this,
             binding = self.getDefaultBinding(),
-            accountBinding = self.getBinding('account'),
-            formFieldsBinding = self.getBinding('formFields');
-
-		window.Server.confirmUserPhone.get({
-            uid: accountBinding.get('userId'),
+            accountBinding = self.getBinding('account');
+		window.Server.confirmUserPhone.post({
             token: binding.get('phoneCode')
-        }).then(function () {
-            formFieldsBinding.set('verified.phone', true);
-            accountBinding.set('account.user.verified.phone', true);
+        }).then(()=>{
+            accountBinding.set('verified.phone', true);
             binding.set('phoneConfirmationError',false);
-            if (formFieldsBinding.get('verified.email')) {
+            if (accountBinding.get('verified.email')) {
                 self.props.onSuccess();
             }
-        }, function () {
+
+        },()=>{
             binding.set('phoneConfirmationError',true);
         });
     },
@@ -57,8 +50,8 @@ const VerificationStep = React.createClass({
             binding = self.getDefaultBinding(),
             accountBinding = self.getBinding('account'),
             //Append classes to cause the check button to be hidden or shown
-            phoneCheckClasses = accountBinding !== undefined?(accountBinding.get('account.user.verified.phone')==true?'bButton_hide':'bButton'):'bButton',
-            emailCheckClasses = accountBinding !== undefined?(accountBinding.get('account.user.verified.email')==true?'bButton_hide':'bButton'):'bButton',
+            phoneCheckClasses = accountBinding !== undefined?(accountBinding.get('verified.phone')==true?'bButton_hide':'bButton'):'bButton',
+            emailCheckClasses = accountBinding !== undefined?(accountBinding.get('verified.email')==true?'bButton_hide':'bButton'):'bButton',
             emailErrorCheck = (binding.get('emailConfirmationError')!== undefined && binding.get('emailConfirmationError') == true)? 'eRegistration_label':'bButton_hide',
             phoneErrorCheck = (binding.get('phoneConfirmationError') !== undefined && binding.get('phoneConfirmationError') == true)?'eRegistration_label':'bButton_hide',
             isEmailCheck = emailCheckClasses === 'bButton_hide'? 'bCheck_show':'bButton_hide',

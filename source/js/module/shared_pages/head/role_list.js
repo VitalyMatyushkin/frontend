@@ -78,11 +78,13 @@ const  RoleList = React.createClass({
     },
     getMySchools:function(){
         const 	self 	= this,
-                binding = self.getDefaultBinding();
-
-        window.Server.schools.get().then(schools => {
-            binding.set('schools', schools);
-        });
+                binding = self.getDefaultBinding(),
+                rtBng   = self.getMoreartyContext().getBinding();
+        if(rtBng.get('userData.authorizationInfo.role')){
+            window.Server.schools.get().then(schools => {
+                binding.set('schools', schools);
+            });
+        }
     },
     getRole:function(permission, active){
         const   self 	    = this,

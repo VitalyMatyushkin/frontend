@@ -73,25 +73,30 @@ const RegisterUserPage = React.createClass({
     setStepFunction: function (step, data) {
         var self = this,
             binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            password = binding.get('formFields').password,
-            username = binding.get('formFields').username,
             currentStep = binding.get('registerStep');
-
         if (currentStep === 'account') {
-            window.Server._login.post({
+            const   service   =   window.Server._login,
+                    serveBinding = service.binding;
+            service.post({
                 email: binding.get('formFields').email,
-                password: binding.get('formFields').password
-            }).then(function (data) {
-                var immutableAccountInfo = Immutable.fromJS(data);
-                globalBinding.set('userData.authorizationInfo', immutableAccountInfo);
-                binding
-                    .atomically()
-                    .set('account', Immutable.fromJS(immutableAccountInfo))
-                    .merge('formFields', Immutable.fromJS(data.user))
-                    .set('registerStep', step)
-                    .commit();
-            });
+                password: binding.get('formFields').password})
+                .then(function(loginData){
+                    if(loginData.key){
+                        const authorizationInfo = {
+                            id: loginData.key,
+                            userId:loginData.userId,
+                            expireAt: loginData.expireAt,
+                            verified: {"email":false,"phone":false,"personal":true}
+                        };
+                        serveBinding.set(Immutable.fromJS(authorizationInfo));
+                        binding
+                            .atomically()
+                            .set('account', Immutable.fromJS(authorizationInfo))
+                            .merge('formFields', Immutable.fromJS(data.user))
+                            .set('registerStep', step)
+                            .commit();
+                    }
+                });
         } else {
             binding.set('registerStep', step);
         }

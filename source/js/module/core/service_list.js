@@ -23,8 +23,8 @@ const serviceList = {
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
-		serviceList.confirmUser = new Service('/users/confirm?uid={uid}&token={token}',binding);
-		serviceList.confirmUserPhone = new Service('/users/confirmPhone?uid={uid}&token={token}',binding);
+		serviceList.confirmUser = new Service('/i/confirm/email',binding);
+		serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
 		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
 		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
