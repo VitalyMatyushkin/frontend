@@ -27,17 +27,33 @@ const TeamAddPage = React.createClass({
      * @private
      */
     _initFormBinding: function() {
-        const self         = this,
-            binding        = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        window.Server.school.get(self.activeSchoolId, {
-            filter: {
-                include: 'forms'
-            }
-        }).then(function (schoolData) {
-            return window.Server.public_sports.get().then(function (sportsData) {
+        let schoolData;
+
+        window.Server.school
+            //get school data
+            .get(self.activeSchoolId)
+            .then(_schoolData => {
+                schoolData = _schoolData;
+
+                // get forms data
+                return window.Server.schoolForms.get(self.activeSchoolId);
+            })
+            .then(formsData => {
+                schoolData.forms = formsData;
+
+                // get sports data
+                return window.Server.public_sports.get();
+            })
+            .then(function (sportsData) {
                 !schoolData.forms && (schoolData.forms = []);
 
+                // prepare binding for battle:)
+                // yep, it's very excess structure
+                // it's effects of team manager element integration
+                // in the future, after refactoring that will be fixed
                 binding
                     .atomically()
                     .set('teamForm.default',             Immutable.fromJS(self._getDefaultObject(schoolData)))
@@ -53,7 +69,6 @@ const TeamAddPage = React.createClass({
                     .set('teamForm.error',               Immutable.fromJS(self._getErrorObject()))
                     .commit();
             });
-        });
     },
     /**
      * Get fake rival object, fake - because team manager element require rival object.
