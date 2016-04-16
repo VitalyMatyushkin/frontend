@@ -24,9 +24,8 @@ const RegistrationPermissionField = React.createClass({
      * @returns {*}
      */
     serviceSchoolFilter: function(schoolName) {
-        var self = this;
 
-        return window.Server.getAllSchools.get( {
+        return window.Server.publicSchools.get( {
             filter: {
                 where: {
                     name: {
@@ -46,7 +45,7 @@ const RegistrationPermissionField = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
 
-        return window.Server.houses.get(binding.get('schoolId'), {
+        return window.Server.publicSchoolHouses.get(binding.get('schoolId'), {
             filter: {
                 where: {
                     name: {
@@ -63,10 +62,10 @@ const RegistrationPermissionField = React.createClass({
      * @returns {*}
      */
     serviceFormFilter: function(formName) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        return window.Server.forms.get(binding.get('schoolId'), {
+        return window.Server.publicSchoolForms.get(binding.get('schoolId'), {
             filter: {
                 where: {
                     name: {
@@ -78,18 +77,18 @@ const RegistrationPermissionField = React.createClass({
         });
     },
     onSelectSchool: function(schoolId) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self        = this,
+                binding     = self.getDefaultBinding();
         binding
             .atomically()
             .set('schoolId', schoolId)
             .commit();
     },
     onSelectHouse: function(houseId) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        window.Server.house.get(houseId).then(function(house) {
+        window.Server.publicSchoolHouse.get({houseId: houseId, schoolId: binding.get('schoolId')}).then( house => {
             binding
                 .atomically()
                 .set('houseId', houseId)
@@ -99,10 +98,10 @@ const RegistrationPermissionField = React.createClass({
 
     },
     onSelectForm: function(formId) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        window.Server.form.get(formId).then(function(form) {
+        window.Server.publicSchoolForm.get({formId: formId, schoolId: binding.get('schoolId')}).then(form => {
             binding
                 .atomically()
                 .set('formId', formId)

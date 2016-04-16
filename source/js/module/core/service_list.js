@@ -50,7 +50,9 @@ const serviceList = {
 		serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 		serviceList.schoolOpponents = new Service('/schools/{id}/public/opponents', binding);
-		serviceList.getAllSchools = new Service('/schools/getAllSchools', binding);
+		//serviceList.getAllSchools = new Service('/schools/getAllSchools', binding);
+		serviceList.getAllSchools = new Service('/public/schools', binding);
+		serviceList.publicSchools = new Service('/public/schools', binding);
 		serviceList.getMaSchools = new Service('/schools/getMaSchools', binding);
 
 		// students
@@ -74,11 +76,15 @@ const serviceList = {
 		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
 		serviceList.getAllHouses = new Service('/houses', binding);
+		serviceList.publicSchoolHouses 	= new Service('/public/schools/{schoolId}/houses', binding);
+		serviceList.publicSchoolHouse 	= new Service('/public/schools/{schoolId}/houses/{houseId}', binding);
 
 		// forms
 		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
 		serviceList.form = new Service('/forms/{formId}', binding);
 		serviceList.getAllForms = new Service('/forms', binding);
+		serviceList.publicSchoolForms 	= new Service('/public/schools/{schoolId}/forms');
+		serviceList.publicSchoolForm 	= new Service('/public/schools/{schoolId}/forms/{formId}');
 
 		// coaches
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
