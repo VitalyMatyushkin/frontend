@@ -4,8 +4,9 @@ const   RegistrationPermissionField = require('module/ui/register/user/registrat
         Immutable                   = require('immutable');
 
 
-let multipleFields, studentFields = [];
+let multipleFields;
 
+/** component which show list of roles to join with and some info on requested role details*/
 const PermissionsStep = React.createClass({
   mixins: [Morearty.Mixin],
   displayName: 'PermissionsList',
@@ -36,7 +37,7 @@ const PermissionsStep = React.createClass({
       { name: 'coach'   }
     ];
 
-    binding.sub('schoolId').addListener(function (descriptor) {
+    binding.sub('schoolId').addListener(descriptor => {
 
       if (descriptor.isValueChanged()) {
         binding.sub('_houseAutocomplete').clear();
