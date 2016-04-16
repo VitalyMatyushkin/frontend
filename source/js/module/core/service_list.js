@@ -83,6 +83,8 @@ const serviceList = {
 		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
 		serviceList.form = new Service('/forms/{formId}', binding);
 		serviceList.getAllForms = new Service('/forms', binding);
+		serviceList.publicSchoolForms 	= new Service('/public/schools/{schoolId}/forms');
+		serviceList.publicSchoolForm 	= new Service('/public/schools/{schoolId}/forms/{formId}');
 
 		// coaches
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
