@@ -14,25 +14,34 @@ const serviceList = {
         serviceList._become = new Service('/i/roles/{roleName}/become', binding);
 
 		// users
-		serviceList.users = new Service('/users', binding);
-		serviceList.user = new Service('/users/{id}', binding);
-		serviceList.userChildren = new Service('/users/{id}/children', binding);
+        serviceList.profile = new Service('/i/profile', binding);
+        serviceList.confirmUser = new Service('/i/confirm/email',binding);
+        serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
+
+        // schools
+        serviceList.schools = new Service('/i/schools', binding);
+        serviceList.school = new Service('/i/schools/{schoolId}', binding);
+
+
+
+
+
+        serviceList.users = new Service('/users', binding);
+        serviceList.user = new Service('/users/{id}', binding);
+        serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
 		serviceList.userManager = new Service('/users/{id}/managers',binding);
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
-		serviceList.confirmUser = new Service('/i/confirm/email',binding);
-		serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
 		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
 		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
-		// schools
-		serviceList.schools = new Service('/i/schools', binding);
-		serviceList.school = new Service('/i/schools/{schoolId}', binding);
+
+
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
