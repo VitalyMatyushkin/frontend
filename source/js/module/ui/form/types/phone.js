@@ -1,8 +1,8 @@
-const TypeMixin = require('module/ui/form/types/type_mixin'),
-	React = require('react'),
-    Immutable 	= require('immutable'),
+const   TypeMixin   = require('module/ui/form/types/type_mixin'),
+	    React       = require('react'),
+        Immutable 	= require('immutable');
 
-TypePhone =  React.createClass({
+const TypePhone =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
     getDefaultState: function() {
         return Immutable.fromJS({
