@@ -7,6 +7,7 @@ const FormField = React.createClass({
 	propTypes: {
 		type: 				React.PropTypes.string.isRequired,
 		field: 				React.PropTypes.string.isRequired,
+		validation:			React.PropTypes.string,
 		defaultValueString:	React.PropTypes.string,
         errorClassName:		React.PropTypes.string, //Error message specific class
         fieldClassName:		React.PropTypes.string,
