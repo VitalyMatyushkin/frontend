@@ -13,7 +13,7 @@ const TypeText =  React.createClass({
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
 
-		// На случай, если форма заполняется асинхронно
+		// For case when form filled async
 		// HOLY GUACAMOLE!!!
 		binding.addListener('defaultValue', function() {
 			self._forceNewValue(binding.get('defaultValue'));
