@@ -2,7 +2,6 @@ const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
         RegisterForm        = require('module/ui/register/user/register_form'),
         RegisterDone        = require('module/ui/register/user/register_done'),
         AccountForm         = require('module/ui/register/user/account_step'),
-        PersonalForm        = require('module/ui/register/user/personal_details'),
         PermissionsList     = require('module/ui/register/user/permissions_step'),
         VerificationStep    = require('module/ui/register/user/verification_step'),
         classNames          = require('classnames'),
@@ -22,7 +21,7 @@ const RegisterUserPage = React.createClass({
         });
     },
     componentWillMount: function () {
-        var self = this;
+        const self = this;
 
         self.steps = [
             {
@@ -48,10 +47,6 @@ const RegisterUserPage = React.createClass({
                 description: <p>Activation codes were sent to your email address and mobile phone. Please, enter them
                     below to complete the registration.</p>
             },
-            //{
-            //    name: 'personal',
-            //    title: 'Personal Details'
-            //},
             {
                 name: 'permissions',
                 title: 'Permissions Setup',
@@ -71,12 +66,12 @@ const RegisterUserPage = React.createClass({
         ];
     },
     setStepFunction: function (step, data) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentStep = binding.get('registerStep');
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                currentStep     = binding.get('registerStep');
         if (currentStep === 'account') {
-            const   service   =   window.Server._login,
-                    serveBinding = service.binding;
+            const   service         = window.Server._login,
+                    serveBinding    = service.binding;
             service.post({
                 email: binding.get('formFields').email,
                 password: binding.get('formFields').password})
@@ -104,7 +99,7 @@ const RegisterUserPage = React.createClass({
     catchStepFunctionError:function(step, data){
         //Temporary solution to for the 422 error
         //Notify user of the error and allow to try again
-        var message;
+        let message;
         switch (data){
             case 422:
                 message = data.responseJSON.details.text;
@@ -118,7 +113,7 @@ const RegisterUserPage = React.createClass({
         $('.bButton').text('Continue →');   // TODO: remove that shit
     },
     finish: function () {
-		var binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		window.Server.logout.post();
 		Helpers.cookie.remove('authorizationInfo');
@@ -126,9 +121,9 @@ const RegisterUserPage = React.createClass({
 		document.location.href = '/';
     },
     renderMainTitle: function (step) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentStep = binding.get('registerStep');
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                currentStep = binding.get('registerStep');
         return <div>
             {self.steps.map(function (step) {
                 var stepClasses = classNames({
@@ -139,23 +134,20 @@ const RegisterUserPage = React.createClass({
             })}
         </div>
     },
+
     renderProgress: function (){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentStep = binding.get('registerStep');
-                if (currentStep === 'account') {
-                 return <div className="eStepComplete" style={{width:20+'px'}}></div>
-                }
-                else if (currentStep === 'verification') {
-                    return <div className="eStepComplete" style={{width:113+'px'}}></div>
-                }
-                else if (currentStep === 'permissions') {
-                    return <div className="eStepComplete" style={{width:208+'px'}}></div>
-                }
-                else if (currentStep === 'finish') {
-                    return <div className="eStepComplete" style={{width:320+'px'}}></div>
-                }
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                currentStep     = binding.get('registerStep');
+
+        switch (currentStep) {
+            case 'account':         return <div className="eStepComplete" style={{width:20+'px'}}></div>;
+            case 'verification':    return <div className="eStepComplete" style={{width:113+'px'}}></div>;
+            case 'permissions':     return <div className="eStepComplete" style={{width:208+'px'}}></div>;
+            case 'finish':          return <div className="eStepComplete" style={{width:320+'px'}}></div>;
+        }
     },
+
     renderSteps: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -214,12 +206,6 @@ const RegisterUserPage = React.createClass({
 					formFields: binding.sub('formFields'),
 					default: binding.sub('permissionsFields')
 				}}
-                />
-        } else if (currentStep === 'personal') {
-            currentView =
-				<PersonalForm
-                	onSuccess={self.setStepFunction.bind(null, 'permissions')}
-                	binding={binding.sub('formFields')}
                 />
         } else if (currentStep === 'permissions') {
             currentView =
