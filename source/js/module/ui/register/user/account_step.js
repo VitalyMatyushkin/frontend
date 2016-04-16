@@ -14,16 +14,14 @@ const RegiseterUserForm = React.createClass({
 		return phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		/* phone field have `text` type to be compatable with any phone. Validation was: validation="required phone server" */
 		return (
 				<Form updateBinding={true} service="i/register" binding={binding} onSuccess={self.props.onSuccess}
 							onError={self.props.onError}>
 					{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
-					<FormField type="text" field="username" validation="required alphanumeric server"
-										 errorClassName="eForm_errorMsgRight">Username</FormField>
 					<FormField type="text" field="firstName" validation="required text">Name</FormField>
 					<FormField type="text" field="lastName" validation="required text">Surname</FormField>
 					<FormField type="text" field="email" validation="required email server" errorClassName="eForm_errorMsgRight">Email</FormField>

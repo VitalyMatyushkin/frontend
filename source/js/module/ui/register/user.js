@@ -115,7 +115,7 @@ const RegisterUserPage = React.createClass({
                 alert(message);
                 break;
         }
-        $('.bButton').text('Continue →');
+        $('.bButton').text('Continue →');   // TODO: remove that shit
     },
     finish: function () {
 		var binding = this.getDefaultBinding();
