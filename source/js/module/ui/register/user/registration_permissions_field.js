@@ -24,7 +24,6 @@ const RegistrationPermissionField = React.createClass({
      * @returns {*}
      */
     serviceSchoolFilter: function(schoolName) {
-        var self = this;
 
         return window.Server.publicSchools.get( {
             filter: {
@@ -63,10 +62,10 @@ const RegistrationPermissionField = React.createClass({
      * @returns {*}
      */
     serviceFormFilter: function(formName) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        return window.Server.forms.get(binding.get('schoolId'), {
+        return window.Server.publicSchoolForms.get(binding.get('schoolId'), {
             filter: {
                 where: {
                     name: {
@@ -99,10 +98,10 @@ const RegistrationPermissionField = React.createClass({
 
     },
     onSelectForm: function(formId) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        window.Server.form.get(formId).then(function(form) {
+        window.Server.publicSchoolForm.get({formId: formId, schoolId: binding.get('schoolId')}).then(form => {
             binding
                 .atomically()
                 .set('formId', formId)
