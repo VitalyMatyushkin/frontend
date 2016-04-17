@@ -17,6 +17,7 @@ const serviceList = {
         serviceList.profile = new Service('/i/profile', binding);
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
         serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
+        serviceList.users = new Service('/i/schools/{schoolId}/users', binding);
 
         // schools
         serviceList.schools = new Service('/i/schools', binding);
@@ -41,9 +42,10 @@ const serviceList = {
         // news
         serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
 
+        //Permissions
+        serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
 
 
-        serviceList.users = new Service('/users', binding);
         serviceList.user = new Service('/users/{id}', binding);
         serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
