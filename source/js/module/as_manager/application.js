@@ -1,8 +1,8 @@
 const 	HeadView 	= require('module/as_manager/head'),
 		CenterView 	= require('module/as_manager/center'),
-		React 		= require('react'),
+		React 		= require('react');
 
-ApplicationView = React.createClass({
+const ApplicationView = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,

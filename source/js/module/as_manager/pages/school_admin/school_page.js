@@ -10,13 +10,10 @@ const OneSchoolPage = React.createClass({
 		const self         = this,
 			binding        = self.getDefaultBinding(),
 			globalBinding  = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+            activeRoleName = globalBinding.get('userData.authorizationInfo.role');
 
-        window.Server.school.get(activeSchoolId).then(function (data) {
-            binding.set('schoolInfo', Immutable.fromJS(data));
-        }).catch(()=>{
-            document.location.hash = 'schools';
-        });
+        if(!activeRoleName)
+            document.location.hash = 'no_role';
 
 		// SubMenu items
 		self.menuItems = [{
@@ -49,6 +46,12 @@ const OneSchoolPage = React.createClass({
             key:'Gallery'
         }];
 	},
+    loadSchool:function(){
+        const self         = this,
+            binding        = self.getDefaultBinding(),
+            globalBinding  = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+    },
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			classes: {

@@ -6,9 +6,9 @@ const SchoolListPage = React.createClass({
 	componentWillMount: function() {
 		var self = this,
             globalBinding = self.getMoreartyContext().getBinding(),
-			userId = globalBinding.get('userData.authorizationInfo.userId');
+			role = globalBinding.get('userData.authorizationInfo.role');
 
-		if(userId !== null && userId !== undefined) {
+		if(role) {
 			window.Server.getMaSchools.get(
 				{
 					filter: {
