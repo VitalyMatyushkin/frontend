@@ -15,28 +15,43 @@ const StudentEditPage = React.createClass({
 		self.activeSchoolId = activeSchoolId;
 		binding.clear();
 
-		if (activeSchoolId && studentId) {
-			window.Server.student.get(studentId, {
-				filter: {
-					include: ["user", "house", "school", "form"]
-				}
-			}).then(studentUser => {
-				studentUser.firstName 	= studentUser.user.firstName;
-				studentUser.lastName 	= studentUser.user.lastName;
-				studentUser.birthday 	= studentUser.user.birthday;
-				studentUser.gender 		= studentUser.user.gender;
-				studentUser.name 		= studentUser.nextOfKin !== undefined ? studentUser.nextOfKin[0].name : '';
-				studentUser.allergy 	= studentUser.medicalInfo !== undefined ? studentUser.medicalInfo.allergy : '';
+		// loading student data
+		if(activeSchoolId && studentId) {
+			window.Server.schoolStudent.get({schoolId: activeSchoolId, studentId: studentId}).then( studentUser => {
+				// window.Server.
 				self.isMounted() && binding.set(Immutable.fromJS(studentUser));
 				return studentUser;
-			})
-			.catch( err => {
+			}).catch( err => {
 				alert(err.errorThrown + ' server error occurred while getting student data');
 			});
 
 			self.activeSchoolId = activeSchoolId;
 			self.studentId = studentId;
 		}
+
+
+		// if (activeSchoolId && studentId) {
+		// 	window.Server.student.get(studentId, {
+		// 		filter: {
+		// 			include: ["user", "house", "school", "form"]
+		// 		}
+		// 	}).then(studentUser => {
+		// 		studentUser.firstName 	= studentUser.user.firstName;
+		// 		studentUser.lastName 	= studentUser.user.lastName;
+		// 		studentUser.birthday 	= studentUser.user.birthday;
+		// 		studentUser.gender 		= studentUser.user.gender;
+		// 		studentUser.name 		= studentUser.nextOfKin !== undefined ? studentUser.nextOfKin[0].name : '';
+		// 		studentUser.allergy 	= studentUser.medicalInfo !== undefined ? studentUser.medicalInfo.allergy : '';
+		// 		self.isMounted() && binding.set(Immutable.fromJS(studentUser));
+		// 		return studentUser;
+		// 	})
+		// 	.catch( err => {
+		// 		alert(err.errorThrown + ' server error occurred while getting student data');
+		// 	});
+        //
+		// 	self.activeSchoolId = activeSchoolId;
+		// 	self.studentId = studentId;
+		// }
 	},
 
 	submitEdit: function(data) {
