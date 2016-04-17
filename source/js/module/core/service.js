@@ -50,12 +50,12 @@ const ServiceConstructor = (function() {
 		 * @private
 		 */
 		_callService: function(type, options, data) {
-			var self = this,
-				url = self.url,
-				filter = options && options.filter || data && data.filter || '',
-				where = options && options.where || data && data.where || '',
-				key = filter ? 'filter' : (where ? 'where' : ''),
-                authorizationInfo = self.binding ? self.binding.toJS() : undefined;
+			let 	self 				= this,
+					url 				= self.url,
+					filter 				= options && options.filter || data && data.filter || '',
+					where 				= options && options.where || data && data.where || '',
+					key 				= filter ? 'filter' : (where ? 'where' : ''),
+					authorizationInfo 	= self.binding ? self.binding.toJS() : undefined;
 
 			if (self.requredParams) {
 				url = url.replace(/\{(.*?)\}/g, function(match, param) {
@@ -79,16 +79,16 @@ const ServiceConstructor = (function() {
 			}
 
 			return AJAX({
-				url: baseUrl + url + filter,
-				type: type,
-				crossDomain: true,
-				data: JSON.stringify(data),
-				dataType: 'json',
-				contentType: 'application/json',
+				url: 			baseUrl + url + filter,
+				type: 			type,
+				crossDomain: 	true,
+				data: 			JSON.stringify(data),
+				dataType: 		'json',
+				contentType: 	'application/json',
 				beforeSend: function (xhr) {
                     if (authorizationInfo && authorizationInfo.id) {
-                        let h = authorizationInfo.adminId ? "asid" : "usid";
-                        xhr.setRequestHeader(h, authorizationInfo.id);
+                        const headerName = authorizationInfo.adminId ? "asid" : "usid";
+                        xhr.setRequestHeader(headerName, authorizationInfo.id);
                     }
 				}
 			}, true); // TODO: sanitize me

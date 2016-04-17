@@ -2,6 +2,7 @@ const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		React 		= require('react');
 
+/** First registration step where user input email, password, firstname and lastname */
 const RegiseterUserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	displayName: 'AccountForm',
