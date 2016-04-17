@@ -42,7 +42,7 @@ authСontroller = {
 
 		// if we got auth data
 		if (data && data.id) {
-			// redirecting user to awaited page if user not in registration process now 
+			// redirecting user to awaited page if user not in registration process now
 			if (notRegister) {
 				document.location.hash = self.nextPage;
 			}
