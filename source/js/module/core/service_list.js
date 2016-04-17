@@ -30,12 +30,14 @@ const serviceList = {
         serviceList.students = new Service('/i/schools/{schoolId}/students', binding);
 
         // forms
-        serviceList.forms = new Service('/i/schools/{schoolId}/forms', binding);
+        serviceList.forms 		= new Service('/i/schools/{schoolId}/forms', binding);
+		serviceList.schoolForm 	= new Service('/i/schools/{schoolId}/forms/{formId}', binding);
         serviceList.publicSchoolForms 	= new Service('/public/schools/{schoolId}/forms');
         serviceList.publicSchoolForm 	= new Service('/public/schools/{schoolId}/forms/{formId}');
 
         // houses
-        serviceList.houses = new Service('/i/schools/{schoolId}/houses', binding);
+        serviceList.houses 			= new Service('/i/schools/{schoolId}/houses', binding);
+		serviceList.schoolHouse 	= new Service('/i/schools/{schoolId}/houses/{houseId}', binding);
         serviceList.publicSchoolHouses 	= new Service('/public/schools/{schoolId}/houses', binding);
         serviceList.publicSchoolHouse 	= new Service('/public/schools/{schoolId}/houses/{houseId}', binding);
 
@@ -56,7 +58,8 @@ const serviceList = {
 
 
 
-		serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
+		serviceList.schoolStudents 	= new Service('/i/schools/{schoolId}/students', binding);
+		serviceList.schoolStudent 	= new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 
 
 
