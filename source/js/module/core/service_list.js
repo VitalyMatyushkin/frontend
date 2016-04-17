@@ -13,8 +13,10 @@ const serviceList = {
         serviceList.roles = new Service('/i/roles', binding);
         serviceList._become = new Service('/i/roles/{roleName}/become', binding);
 
-		// users
+        // profile
         serviceList.profile = new Service('/i/profile', binding);
+
+        // users
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
         serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
         serviceList.users = new Service('/i/schools/{schoolId}/users', binding);
