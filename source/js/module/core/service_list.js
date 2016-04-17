@@ -15,6 +15,7 @@ const serviceList = {
 
         // profile
         serviceList.profile = new Service('/i/profile', binding);
+        serviceList.userPermission = new Service('/i/permissions', binding);
 
         // users
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
@@ -66,7 +67,6 @@ const serviceList = {
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
-		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
 		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
