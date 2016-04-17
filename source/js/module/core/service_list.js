@@ -168,6 +168,8 @@ const serviceList = {
 		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);
+		serviceList.permissionRequests = new Service('/i/permissions/requests');
+		
 		//Activity Logs
 		serviceList.activityLogs = new Service('/logs',binding);
 		serviceList.logCount = new Service('/logs/count',binding);
