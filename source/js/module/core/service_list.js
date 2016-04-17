@@ -56,6 +56,7 @@ const serviceList = {
 
 
 
+		serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
 
 
 
