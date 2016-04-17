@@ -11,7 +11,7 @@ SchoolRequest = React.createClass({
             binding = self.getDefaultBinding();
 
         return (
-            <LiveRequest serviceName="schoolPermissions" serviceCount="schoolPermissionsCount" binding={binding} />
+            <LiveRequest binding={binding} />
         );
     }
 });

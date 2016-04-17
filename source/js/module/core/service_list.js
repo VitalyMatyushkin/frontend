@@ -13,26 +13,56 @@ const serviceList = {
         serviceList.roles = new Service('/i/roles', binding);
         serviceList._become = new Service('/i/roles/{roleName}/become', binding);
 
-		// users
-		serviceList.users = new Service('/users', binding);
-		serviceList.user = new Service('/users/{id}', binding);
-		serviceList.userChildren = new Service('/users/{id}/children', binding);
+        // profile
+        serviceList.profile = new Service('/i/profile', binding);
+
+        // users
+        serviceList.confirmUser = new Service('/i/confirm/email',binding);
+        serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
+        serviceList.users = new Service('/i/schools/{schoolId}/users', binding);
+
+        // schools
+        serviceList.schools = new Service('/i/schools', binding);
+        serviceList.school = new Service('/i/schools/{schoolId}', binding);
+
+        // students
+        serviceList.students = new Service('/i/schools/{schoolId}/students', binding);
+
+        // forms
+        serviceList.forms = new Service('/i/schools/{schoolId}/forms', binding);
+        serviceList.publicSchoolForms 	= new Service('/public/schools/{schoolId}/forms');
+        serviceList.publicSchoolForm 	= new Service('/public/schools/{schoolId}/forms/{formId}');
+
+        // houses
+        serviceList.houses = new Service('/i/schools/{schoolId}/houses', binding);
+        serviceList.publicSchoolHouses 	= new Service('/public/schools/{schoolId}/houses', binding);
+        serviceList.publicSchoolHouse 	= new Service('/public/schools/{schoolId}/houses/{houseId}', binding);
+
+        // teams
+        serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
+
+        // news
+        serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
+
+        //Permissions
+        serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+
+
+        serviceList.user = new Service('/users/{id}', binding);
+        serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
 		serviceList.userManager = new Service('/users/{id}/managers',binding);
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
-		serviceList.confirmUser = new Service('/i/confirm/email',binding);
-		serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
 		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
 		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
-		// schools
-		serviceList.schools = new Service('/i/schools', binding);
-		serviceList.school = new Service('/i/schools/{schoolId}', binding);
+
+
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
@@ -55,8 +85,6 @@ const serviceList = {
 		serviceList.publicSchools = new Service('/public/schools', binding);
 		serviceList.getMaSchools = new Service('/schools/getMaSchools', binding);
 
-		// students
-		serviceList.students = new Service('/schools/{schoolId}/students', binding);
 		serviceList.studentsCount = new Service('/schools/{schoolId}/students/count', binding);
 		serviceList.student = new Service('/students/{studentId}', binding);
 		serviceList.studentUpdate = new Service('/students/{studentId}/update', binding);
@@ -72,19 +100,11 @@ const serviceList = {
 		serviceList.addStudentToSchool = new Service('/schools/{id}/students',binding);
 		serviceList.updateStudentOfAschool = new Service('/schools/{id}/students/{fk}');
 
-		// houses
-		serviceList.houses = new Service('/schools/{schoolId}/houses', binding);
 		serviceList.house = new Service('/houses/{houseId}', binding);
 		serviceList.getAllHouses = new Service('/houses', binding);
-		serviceList.publicSchoolHouses 	= new Service('/public/schools/{schoolId}/houses', binding);
-		serviceList.publicSchoolHouse 	= new Service('/public/schools/{schoolId}/houses/{houseId}', binding);
 
-		// forms
-		serviceList.forms = new Service('/schools/{schoolId}/forms', binding);
 		serviceList.form = new Service('/forms/{formId}', binding);
 		serviceList.getAllForms = new Service('/forms', binding);
-		serviceList.publicSchoolForms 	= new Service('/public/schools/{schoolId}/forms');
-		serviceList.publicSchoolForm 	= new Service('/public/schools/{schoolId}/forms/{formId}');
 
 		// coaches
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
@@ -95,8 +115,6 @@ const serviceList = {
 		serviceList.schoolManager = new Service('/schools/{id}/managers',binding);
 		serviceList.schoolTeacher = new Service('/schools/{id}/teachers',binding);
 
-		// news
-		serviceList.news = new Service('/schools/{schoolId}/news', binding);
 		serviceList.newsCount = new Service('/schools/{schoolId}/news/count', binding);
 		serviceList.oneNews = new Service('/news/{formId}', binding);
 
@@ -118,8 +136,6 @@ const serviceList = {
 		serviceList.invitesByEvent = new Service('/events/{eventId}/invites', binding);
 		serviceList.inviteRepay = new Service('/invites/{inviteId}/repay', binding);
 
-		// teams
-		serviceList.teams = new Service('/teams', binding);
 		serviceList.team = new Service('/teams/{teamId}', binding);
 		serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
 		serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{studentId}', binding);
