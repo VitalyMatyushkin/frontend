@@ -6,7 +6,6 @@ const   Table 			= require('module/ui/list/table'),
 const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName: 'houses',
-    sandbox:true,
     onHouseEdit:function(data){
         const   self 			= this,
             globalBinding 	= self.getMoreartyContext().getBinding(),
