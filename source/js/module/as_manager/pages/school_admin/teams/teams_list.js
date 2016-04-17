@@ -7,22 +7,12 @@ const   Table     = require('module/ui/list/table'),
 const TeamsListPage = React.createClass({
     mixins: [Morearty.Mixin, ListPageMixin],
     serviceName: 'teams',
-    sandbox:true,
+    filters: {
+        include:'sport',
+        where: {tempTeam: false }
+    },
     _getItemRemoveFunction: function(data){
 
-    },
-    _getDataPromise: function() {
-        const  self = this;
-
-        return window.Server.teams.get({
-            filter: {
-                include:'sport',
-                    where: {
-                        schoolId: self.activeSchoolId,
-                    tempTeam: false
-                }
-            }
-        });
     },
     _getAges: function(data) {
         let result = '';
@@ -60,7 +50,7 @@ const TeamsListPage = React.createClass({
             <Table title="Teams"
                    binding={binding}
                    onItemEdit={self._getEditFunction()}
-                   getDataPromise={self._getDataPromise}
+                   getDataPromise={self.getDataPromise}
                    onItemRemove={self._getItemRemoveFunction}
             >
                 <TableField dataField="sport"

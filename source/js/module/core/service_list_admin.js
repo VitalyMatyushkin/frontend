@@ -16,7 +16,7 @@ const serviceList = {
         serviceList.user = new Service('/superadmin/users/{id}', binding);
 
         //Permissions
-        serviceList.Permissions = new Service('/superadmin/users/permissions/requests',binding);
+        serviceList.PermissionRequests = new Service('/superadmin/users/permissions/requests',binding);
 
         // schools
         serviceList.schools = new Service('/superadmin/schools', binding);

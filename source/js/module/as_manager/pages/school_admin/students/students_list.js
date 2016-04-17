@@ -12,7 +12,6 @@ const StudentsListPage = React.createClass({
 	filters: {
 		include: ['user','form','parents']
 	},
-    sandbox:true,
 	_getViewFunction: function() {
 		var self = this;
 

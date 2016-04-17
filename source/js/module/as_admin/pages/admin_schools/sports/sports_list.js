@@ -7,7 +7,6 @@ const 	Table         = require('module/ui/list/table'),
 let SportsList = React.createClass({
     mixins: [Morearty.Mixin, ListPageMixin],
     serviceName: 'sports',
-    sandbox:true,
     _getDataPromise: function(){
         return window.Server.sports.get();
     },
