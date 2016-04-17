@@ -42,8 +42,8 @@ const RegistrationPermissionField = React.createClass({
      * @returns {*}
      */
     serviceHouseFilter: function(houseName) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         return window.Server.publicSchoolHouses.get(binding.get('schoolId'), {
             filter: {
@@ -110,25 +110,25 @@ const RegistrationPermissionField = React.createClass({
         });
     },
     onChangeFirstName: function(event) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self = this,
+                binding = self.getDefaultBinding();
 
         binding.set('firstName', event.currentTarget.value);
     },
     onChangeLastName: function(event) {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self = this,
+                binding = self.getDefaultBinding();
 
         binding.set('lastName', event.currentTarget.value);
     },
     onSuccess: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentType = binding.get('type'),
-            dataToPost = {
-                preset: binding.get('type'),
-                schoolId: binding.get('schoolId')
-            };
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                currentType = binding.get('type'),
+                dataToPost  = {
+                    preset:     binding.get('type'),
+                    schoolId:   binding.get('schoolId')
+                };
         if(currentType === 'parent') {
             dataToPost.comment = "Student - " + binding.get('firstName') + " " + binding.get('lastName') + "." +
                 " Form - " + binding.get('formName') + ". House - " + binding.get('houseName') + ".";
@@ -141,11 +141,7 @@ const RegistrationPermissionField = React.createClass({
                     " Form - "+binding.get('studentExtra_2').form+". House - "+binding.get('studentExtra_2').house+".";
             }
         }
-        window.Server.Permissions
-            .post(dataToPost)
-            .then(function() {
-                self.props.onSuccess();
-            });
+        window.Server.permissionRequests.post(dataToPost).then( _ => self.props.onSuccess());
     },
     schoolMessage: function () {
         return (
@@ -155,10 +151,10 @@ const RegistrationPermissionField = React.createClass({
     },
 
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentType = binding.get('type'),
-            message = self.schoolMessage();
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                currentType = binding.get('type'),
+                message     = self.schoolMessage();
         return(
             <div>
                 <div className="eRegistration_permissionsField">
