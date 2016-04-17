@@ -46,12 +46,6 @@ const OneSchoolPage = React.createClass({
             key:'Gallery'
         }];
 	},
-    loadSchool:function(){
-        const self         = this,
-            binding        = self.getDefaultBinding(),
-            globalBinding  = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId');
-    },
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			classes: {
