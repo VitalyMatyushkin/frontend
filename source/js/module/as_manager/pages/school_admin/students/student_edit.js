@@ -1,6 +1,7 @@
 const 	StudentForm 	= require('module/as_manager/pages/school_admin/students/student_form'),
 		React 			= require('react'),
-		Immutable 		= require('immutable');
+		Immutable 		= require('immutable'),
+		Promise			= require('bluebird');
 
 const StudentEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -18,9 +19,15 @@ const StudentEditPage = React.createClass({
 		// loading student data
 		if(activeSchoolId && studentId) {
 			window.Server.schoolStudent.get({schoolId: activeSchoolId, studentId: studentId}).then( studentUser => {
-				// window.Server.
-				self.isMounted() && binding.set(Immutable.fromJS(studentUser));
-				return studentUser;
+				return Promise.all([
+					window.Server.schoolForm.get({schoolId: activeSchoolId, formId: studentUser.formId}),
+					window.Server.schoolHouse.get({schoolId: activeSchoolId, houseId: studentUser.houseId})
+				]).then( formAndHouseArray => {
+					// TODO: populate house and form details
+					self.isMounted() && binding.set(Immutable.fromJS(studentUser));
+					return studentUser;
+				});
+
 			}).catch( err => {
 				alert(err.errorThrown + ' server error occurred while getting student data');
 			});
@@ -28,48 +35,16 @@ const StudentEditPage = React.createClass({
 			self.activeSchoolId = activeSchoolId;
 			self.studentId = studentId;
 		}
-
-
-		// if (activeSchoolId && studentId) {
-		// 	window.Server.student.get(studentId, {
-		// 		filter: {
-		// 			include: ["user", "house", "school", "form"]
-		// 		}
-		// 	}).then(studentUser => {
-		// 		studentUser.firstName 	= studentUser.user.firstName;
-		// 		studentUser.lastName 	= studentUser.user.lastName;
-		// 		studentUser.birthday 	= studentUser.user.birthday;
-		// 		studentUser.gender 		= studentUser.user.gender;
-		// 		studentUser.name 		= studentUser.nextOfKin !== undefined ? studentUser.nextOfKin[0].name : '';
-		// 		studentUser.allergy 	= studentUser.medicalInfo !== undefined ? studentUser.medicalInfo.allergy : '';
-		// 		self.isMounted() && binding.set(Immutable.fromJS(studentUser));
-		// 		return studentUser;
-		// 	})
-		// 	.catch( err => {
-		// 		alert(err.errorThrown + ' server error occurred while getting student data');
-		// 	});
-        //
-		// 	self.activeSchoolId = activeSchoolId;
-		// 	self.studentId = studentId;
-		// }
 	},
 
 	submitEdit: function(data) {
-		const self = this;
+		const 	self = this,
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId');
 
-		window.Server.studentUpdate.put({studentId: self.studentId}, {
-			schoolId:		data.schoolId,
-			formId: 		data.formId,
-			houseId:		data.houseId,
-			nextOfKin:		[{name: data.name}],
-			medicalInfo: 	{ allergy: data.allergy },
-			firstName:		data.firstName,
-			lastName:		data.lastName,
-			birthday:		data.birthday,
-			gender:			data.gender
-		}).then( updResult => {
+		data.birthday = data.birthday.substr(0, data.birthday.indexOf('T'));    // TODO: fix that hack
+		window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: self.studentId}, data).then( updResult => {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
-			console.log('updated!');
 			return;
 		});
 
