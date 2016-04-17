@@ -142,11 +142,6 @@ const RegistrationPermissionField = React.createClass({
             }
         }
         window.Server.permissionRequests.post(dataToPost).then( _ => self.props.onSuccess());
-        // window.Server.Permissions
-        //     .post(dataToPost)
-        //     .then(function() {
-        //         self.props.onSuccess();
-        //     });
     },
     schoolMessage: function () {
         return (
@@ -156,10 +151,10 @@ const RegistrationPermissionField = React.createClass({
     },
 
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            currentType = binding.get('type'),
-            message = self.schoolMessage();
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                currentType = binding.get('type'),
+                message     = self.schoolMessage();
         return(
             <div>
                 <div className="eRegistration_permissionsField">
