@@ -15,6 +15,7 @@ const serviceList = {
 
         // profile
         serviceList.profile = new Service('/i/profile', binding);
+        serviceList.userPermission = new Service('/i/permissions', binding);
 
         // users
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
@@ -47,6 +48,16 @@ const serviceList = {
         //Permissions
         serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
 
+        // sports
+        serviceList.sports = new Service('/public/sports', binding);
+
+        //events
+        serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
+
+
+
+
+
 
         serviceList.user = new Service('/users/{id}', binding);
         serviceList.userChildren = new Service('/users/{id}/children', binding);
@@ -56,7 +67,6 @@ const serviceList = {
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
 		serviceList.userAdmin = new Service('/users/{id}/admins',binding);
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
-		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
 		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
 		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
@@ -118,15 +128,11 @@ const serviceList = {
 		serviceList.newsCount = new Service('/schools/{schoolId}/news/count', binding);
 		serviceList.oneNews = new Service('/news/{formId}', binding);
 
-		//events
-		serviceList.events = new Service('/events', binding);
 		serviceList.eventFindOne = new Service('/events/findOne', binding);
 		serviceList.event = new Service('/events/{eventId}', binding);
 		serviceList.participants = new Service('/events/{eventId}/participants', binding);
 		serviceList.relParticipants = new Service('/events/{eventId}/participants/rel/{teamId}', binding);
 
-		// sports
-		serviceList.sports = new Service('/sports', binding);
 		serviceList.sport =  new Service('/sports/{sportId}', binding);
 
 		// invites
