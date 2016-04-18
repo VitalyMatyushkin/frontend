@@ -55,7 +55,7 @@ const serviceList = {
 		serviceList.getMaSchools = new Service('/schools/getMaSchools', binding);
 
 		// students
-		serviceList.students = new Service('/schools/{schoolId}/students', binding);
+		serviceList.students = new Service('/i/schools/{schoolId}/students', binding);
 		serviceList.studentsCount = new Service('/schools/{schoolId}/students/count', binding);
 		serviceList.student = new Service('/students/{studentId}', binding);
 		serviceList.studentUpdate = new Service('/students/{studentId}/update', binding);
@@ -114,9 +114,11 @@ const serviceList = {
 		serviceList.inviteRepay = new Service('/invites/{inviteId}/repay', binding);
 
 		// teams
-		serviceList.teams = new Service('/teams', binding);
-		serviceList.team = new Service('/teams/{teamId}', binding);
-		serviceList.teamsBySchoolId = new Service('/teams?filter[where][schoolId]={schoolId}&filter[include]=events', binding);
+		serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
+		serviceList.team = new Service('/i/schools/{schoolId}/teams/{teamId}', binding);
+		serviceList.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
+		serviceList.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);
+		serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
 		serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{studentId}', binding);
 		serviceList.playersByTeam = new Service('/teams/{teamId}/players', binding);
 		serviceList.exactlyPlayersByTeam = new Service('/teams/{teamId}/exactlyPlayers/{playerId}', binding);

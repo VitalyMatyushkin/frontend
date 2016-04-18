@@ -1,28 +1,38 @@
-const   Table     = require('module/ui/list/table'),
-    TableField    = require('module/ui/list/table_field'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-    Sport		  = require('module/ui/icons/sport_icon'),
-    React         = require('react');
+const   Table           = require('module/ui/list/table'),
+        TableField      = require('module/ui/list/table_field'),
+        ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin'),
+        Sport           = require('module/ui/icons/sport_icon'),
+        React           = require('react');
 
 const TeamsListPage = React.createClass({
     mixins: [Morearty.Mixin, ListPageMixin],
     serviceName: 'teams',
     sandbox:true,
-    _getItemRemoveFunction: function(data){
-
-    },
     _getDataPromise: function() {
         const  self = this;
 
-        return window.Server.teams.get({
+        return window.Server.teams.get( self.activeSchoolId, {
             filter: {
                 include:'sport',
-                    where: {
-                        schoolId: self.activeSchoolId,
+                where: {
                     tempTeam: false
                 }
             }
+        }).then(teams => {
+            return teams.filter(team => team.removed === false && team.tempTeam === false);
         });
+    },
+    _removeTeam: function(data){
+        const   self    = this,
+                binding = self.getDefaultBinding();
+        
+        if(data !== undefined){
+            window.Server.team.delete( { schoolId: self.activeSchoolId, teamId: data.id } ).then(function(res){
+                binding.update( 'data', teams => teams.filter( team => team.get('id') !== data.id ) );
+                
+                return res;
+            });
+        }
     },
     _getAges: function(data) {
         let result = '';
@@ -61,7 +71,7 @@ const TeamsListPage = React.createClass({
                    binding={binding}
                    onItemEdit={self._getEditFunction()}
                    getDataPromise={self._getDataPromise}
-                   onItemRemove={self._getItemRemoveFunction}
+                   onItemRemove={self._removeTeam}
             >
                 <TableField dataField="sport"
                             filterType="none"

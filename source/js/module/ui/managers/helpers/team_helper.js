@@ -39,31 +39,27 @@ function validate(binding) {
 };
 
 /**
- * Get players.
- * player = student + player model.
+ * FOR EACH PLAYER: Method search user by userId from player and return updated user with players info.
  * That need for team manager element.
- * @param players - player model from server
- * @param team - team model from server
- * @returns {Array}
- * @private
+ * @param users
+ * @param players
+ * @returns [user + player info]
  */
-function getPlayers(players, team) {
-    let result = [];
+function getPlayersWithUserInfo(players, users) {
+    return players.map( player => {
+        const foundUser = Lazy(users).findWhere({id: player.userId});
 
-    team.players.forEach((student) => {
-        let newPlayer = student;
-        let findedPlayer = Lazy(players).findWhere({studentId: student.id});
-        newPlayer.position = findedPlayer.position;
-        newPlayer.sub = findedPlayer.sub;
-        newPlayer.playerModelId = findedPlayer.id;
+        const updUser = Object.assign({}, foundUser);
 
-        result.push(newPlayer);
+        updUser.position        = player.position;
+        updUser.sub             = player.sub;
+        updUser.playerModelId   = player._id;
+
+        return updUser;
     });
-
-    return result;
 };
 
-function commitPlayers(initialPlayers, players, teamId) {
+function commitPlayers(initialPlayers, players, teamId, schoolId) {
     let promises = [];
 
     initialPlayers.forEach((initialPlayer) => {
@@ -81,6 +77,7 @@ function commitPlayers(initialPlayers, players, teamId) {
             if(changes.position !== undefined || changes.sub !== undefined) {
                 promises.push(
                     _changePlayer(
+                        schoolId,
                         teamId,
                         initialPlayer.playerModelId,
                         changes
@@ -95,6 +92,7 @@ function commitPlayers(initialPlayers, players, teamId) {
             //So, user delete player, let's delete player from server
             promises.push(
                 _deletePlayer(
+                    schoolId,
                     teamId,
                     initialPlayer.id
                 )
@@ -106,6 +104,7 @@ function commitPlayers(initialPlayers, players, teamId) {
         players.forEach((player) => {
             promises.push(
                 _addPlayer(
+                    schoolId,
                     teamId,
                     player
                 )
@@ -116,43 +115,71 @@ function commitPlayers(initialPlayers, players, teamId) {
     return promises;
 };
 
-function _addPlayer(teamId, player) {
-    return window.Server.playersRelation.put(
+function _addPlayer(schoolId, teamId, body) {
+    return window.Server.teamPlayers.post(
         {
-            teamId: teamId,
-            studentId: player.id
-        },{
-            position:  player.position,
-            sub:       player.sub
-        }
+            schoolId:  schoolId,
+            teamId:     teamId
+        },
+        body
     );
 };
 
-function _deletePlayer(teamId, playerId) {
-    return window.Server.playersRelation.delete({
-        teamId: teamId,
-        studentId: playerId
+function _deletePlayer(schoolId, teamId, playerId) {
+    return window.Server.teamPlayer.delete({
+        schoolId:   schoolId,
+        teamId:     teamId,
+        playerId:   playerId
     });
 };
 
-function _changePlayer(teamId, playerId, changes) {
-    return window.Server.exactlyPlayersByTeam.put(
+function _changePlayer(schoolId, teamId, playerId, changes) {
+    return window.Server.teamPlayer.put(
         {
-            teamId:    teamId,
-            playerId:  playerId
+            schoolId:   schoolId,
+            teamId:     teamId,
+            playerId:   playerId
         },
-        {
-            position:  changes.position,
-            sub:       changes.sub
-        }
+        changes
     );
 };
 
+/**
+ * Method inject form data to each player
+ * Method required until on the server becomes available "include" functional
+ */
+function injectFormsToPlayers(players, forms) {
+    const playersWithForms = [];
+
+    players.forEach(player => {
+        const form = Lazy(forms).findWhere( { id: player.formId } );
+        const tempPlayer = Object.assign({}, player);
+
+        tempPlayer.form = form;
+
+        playersWithForms.push(tempPlayer);
+    });
+
+    return playersWithForms;
+};
+
+/**
+ * Search sport by sportId in sport array and return it.
+ * @param sportId - current sport id
+ * @param sports - sports array
+ * @returns found sport
+ */
+function getSportById(sportId, sports) {
+    return Lazy(sports).findWhere({id: sportId});
+};
+
 const TeamHelper = {
-    getAges: getAges,
-    validate: validate,
-    getPlayers: getPlayers,
-    commitPlayers: commitPlayers
+    getAges:                getAges,
+    validate:               validate,
+    getSportById:           getSportById,
+    getPlayersWithUserInfo: getPlayersWithUserInfo,
+    commitPlayers:          commitPlayers,
+    injectFormsToPlayers:   injectFormsToPlayers
 };
 
 module.exports = TeamHelper;

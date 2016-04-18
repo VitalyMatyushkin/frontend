@@ -32,9 +32,8 @@ const TeamAddPage = React.createClass({
 
         let schoolData;
 
-        window.Server.school
-            //get school data
-            .get(self.activeSchoolId)
+        //get school data
+        window.Server.school.get(self.activeSchoolId)
             .then(_schoolData => {
                 schoolData = _schoolData;
 
@@ -119,45 +118,41 @@ const TeamAddPage = React.createClass({
 
         if(!binding.toJS('teamForm.error.isError')) {
             const team = {
-                name:        binding.get('teamForm.name'),
-                description: binding.get('teamForm.description'),
-                sportId:     binding.get('teamForm.sportId'),
-                schoolId:    self.activeSchoolId,
-                ages:        binding.toJS('teamForm.ages'),
-                gender:      binding.get('teamForm.gender'),
-                tempTeam:    false
+                name:           binding.get('teamForm.name'),
+                description:    binding.get('teamForm.description'),
+                sportId:        binding.get('teamForm.sportId'),
+                schoolId:       self.activeSchoolId,
+                ages:           binding.toJS('teamForm.ages'),
+                gender:         binding.get('teamForm.gender'),
+                tempTeam:       false
             };
 
-			binding.get('teamForm.houseId') && (team.houseId = binding.get('teamForm.houseId'));
+            binding.get('teamForm.houseId') && (team.houseId = binding.get('teamForm.houseId'));
 
-			window.Server.teams.post(team).then(function (teamsResult) {
-                let players = binding.get('teamForm.players').toJS();
+            window.Server.teamsBySchoolId.post( self.activeSchoolId, team )
+                .then(team => {
+                    const players = binding.get('teamForm.players').toJS();
 
-                var i = 0;
-                // TODO: fix me
-                players.forEach((player) => {
-                    window.Server.playersRelation.put(
-                        {
-                            teamId:    teamsResult.id,
-                            studentId: player.id
-                        },
-                        {
-                            position:  player.position,
-                            sub:       player.sub ? player.sub : false
-                        }
-                    ).then(function (playerResult) {
-                        i += 1;
+                    return Promise.all(players.map( player => {
+                        const body = {
+                            userId:     player.id,
+                            sub:        player.sub ? player.sub : false,
+                            position:   player.position
+                        };
 
-                        if (i === players.length) {
-                            document.location.hash = '/#school_admin/teams';
-                            binding.clear();
-                            binding.meta().clear();
-                        }
-                        return playerResult;  // each then-callback should have explicit return
+                        return window.Server.teamPlayers.post(
+                            {
+                                schoolId:   self.activeSchoolId,
+                                teamId:     team.id
+                            },
+                            body
+                        );
+                    })).then( _ => {
+                        document.location.hash = '/#school_admin/teams';
+
+                        return team;
                     });
                 });
-                return teamsResult;
-            });
         }
     },
     render: function() {

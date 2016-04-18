@@ -48,10 +48,26 @@ function getHouseId(binding) {
     return id;
 };
 
+/**
+ * Return player Id's from players array
+ * @param players
+ * @returns {Array}
+ */
+function getPlayerIds(players) {
+    const playerIds = [];
+
+    players.forEach(player => {
+        playerIds.push(player.id);
+    });
+
+    return playerIds;
+};
+
 const TeamHelper = {
-    getAges: getAges,
-    validate: validate,
-    getHouseId: getHouseId
+    getAges:        getAges,
+    validate:       validate,
+    getHouseId:     getHouseId,
+    getPlayerIds:    getPlayerIds
 };
 
 module.exports = TeamHelper;
