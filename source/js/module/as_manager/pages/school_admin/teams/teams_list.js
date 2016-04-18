@@ -25,11 +25,11 @@ const TeamsListPage = React.createClass({
     _removeTeam: function(data){
         const   self    = this,
                 binding = self.getDefaultBinding();
-        
+
         if(data !== undefined){
             window.Server.team.delete( { schoolId: self.activeSchoolId, teamId: data.id } ).then(function(res){
                 binding.update( 'data', teams => teams.filter( team => team.get('id') !== data.id ) );
-                
+
                 return res;
             });
         }

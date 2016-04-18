@@ -16,30 +16,36 @@ const SchoolSummary = React.createClass({
 	},
 	componentWillMount: function() {
 		const	self			= this,
-				binding			= self.getDefaultBinding(),
 				globalBinding	= self.getMoreartyContext().getBinding();
 
 		self.activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		window.Server.school.get(self.activeSchoolId, {filter: {include: 'postcode'}})
-        .then(function(schoolData) {
-			binding.set(
-				'schoolData',Immutable.fromJS(schoolData)
-			);
-			return schoolData;
-		});
+        if(self.activeSchoolId)
+            self.loadSchool();
+        else
+            self.addBindingListener(globalBinding, 'userRules.activeSchoolId', self.loadSchool);
 
 		//ActiveUserHelper.howManySchools(self).then(function(count){
 		//	binding.set('countOfSchools',Immutable.fromJS(count));
 		//	return count;
 		//});
 	},
+    loadSchool:function(){
+        const	self	= this,
+                binding	= self.getDefaultBinding();
+
+        window.Server.school.get(self.activeSchoolId, {filter: {include: 'postcode'}})
+            .then(function(schoolData) {
+                binding.set('schoolData',Immutable.fromJS(schoolData));
+                return schoolData;
+            });
+    },
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
-				schoolPicture	= binding.get('schoolData').get('pic') !== undefined ? binding.get('schoolData').get('pic'):'images/no-image.jpg',
-				siteLink		= binding.get('schoolData').get('domain')!== undefined?`${binding.get('schoolData').get('domain')}.stage.squadintouch.com`:'',
-				geoPoint		= binding.get('schoolData').get('postcode') !== undefined ?binding.toJS('schoolData').postcode.point : undefined;
+				schoolPicture	= binding.get('schoolData.pic') ? binding.get('schoolData.pic'):'images/no-image.jpg',
+				siteLink		= binding.get('schoolData.domain') ? `${binding.get('schoolData.domain')}.stage.squadintouch.com`:'',
+				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined;
 		return (
 			<div>
 				<div className="eSchoolMaster_summary">

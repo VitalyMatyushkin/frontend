@@ -5,30 +5,33 @@ const 	HouseForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/
 const HouseEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				globalBinding 	= self.getMoreartyContext().getBinding(),
-				routingData 	= globalBinding.sub('routing.parameters').toJS(),
-				houseId 		= routingData.id;
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+                routingData = binding.toJS('routing.pathParameters'),
+                schoolId    = routingData[0],
+                houseId     = routingData[1];
 
-		binding.clear();
+		binding.sub('houseEdit').clear();
 
 		if (houseId) {
-			window.Server.house.get(houseId).then(function (data) {
-				self.isMounted() && binding.set(Immutable.fromJS(data));
+			window.Server.house.get({houseId:houseId, schoolId:schoolId}).then(function (data) {
+				binding.set('houseEdit', Immutable.fromJS(data));
 			});
-
-			self.houseId = houseId;
 		}
 	},
 	submitEdit: function(data) {
-		var self = this;
+        const 	self 		= this,
+            binding 	= self.getDefaultBinding(),
+            routingData = binding.toJS('routing.pathParameters'),
+            schoolId    = routingData[0],
+            houseId     = routingData[1],
+            url         = `school_sandbox/${schoolId}/houses`;
 
-		window.Server.house.put(self.houseId, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school_sandbox/houses');
+		window.Server.house.put({houseId:houseId, schoolId:schoolId}, data).then(function() {
+			document.location.hash = url;
 		}).catch(function(er){
-			alert(er.errorThrown+' Server Error');
-			document.location.hash = 'school_sandbox/houses';
+			console.error(er.errorThrown+' Server Error');
+			document.location.hash = url;
 		});
 	},
 	render: function() {
@@ -36,7 +39,7 @@ const HouseEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<HouseForm title="Edit house" onFormSubmit={self.submitEdit} binding={binding} />
+			<HouseForm title="Edit house" onFormSubmit={self.submitEdit} binding={binding.sub('houseEdit')} />
 		)
 	}
 });

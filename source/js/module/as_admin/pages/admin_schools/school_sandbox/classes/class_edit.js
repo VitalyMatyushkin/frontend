@@ -5,31 +5,34 @@ const 	ClassForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/
 const ClassEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				globalBinding 	= self.getMoreartyContext().getBinding(),
-				routingData 	= globalBinding.sub('routing.parameters').toJS(),
-				formId 			= routingData.id;
+        const   self        = this,
+                binding 	= self.getDefaultBinding(),
+                routingData = binding.toJS('routing.pathParameters'),
+                schoolId    = routingData[0],
+                formId      = routingData[1];
 
-		binding.clear();
+		binding.sub('formEdit').clear();
 
 		if (formId) {
-			window.Server.form.get(formId).then(function (data) {
-				self.isMounted() && binding.set(Immutable.fromJS(data));
+			window.Server.form.get({formId:formId, schoolId:schoolId}).then(function (data) {
+				binding.set('formEdit', Immutable.fromJS(data));
 			});
-
-			self.formId = formId;
 		}
 	},
 	submitEdit: function(data) {
-		var self = this;
-		//Don't submit if the name field of the data is empty
+		const   self        = this,
+                binding 	= self.getDefaultBinding(),
+                routingData = binding.toJS('routing.pathParameters'),
+                schoolId    = routingData[0],
+                formId      = routingData[1];
+
+        //Don't submit if the name field of the data is empty
 		//Server will respond with failure causing button to stop at loading
 		if(data.name !=''){
 			data.name = data.name.toUpperCase(); //cast form name to upper case for consistency
 
-			window.Server.form.put(self.formId, data).then(function() {
-				self.isMounted() && (document.location.hash = 'school_sandbox/forms');
+			window.Server.form.put({formId:formId, schoolId:schoolId}, data).then(function() {
+				document.location.hash = `school_sandbox/${schoolId}/forms`;
 			});
 		}
 	},
@@ -38,7 +41,7 @@ const ClassEditPage = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-				<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding} />
+				<ClassForm title="Edit form" onFormSubmit={self.submitEdit} binding={binding.sub('formEdit')} />
 		)
 	}
 });

@@ -1,10 +1,9 @@
-const   Form            = require('module/ui/form/form'),
-        FormField       = require('module/ui/form/form_field'),
-        FormColumn      = require('module/ui/form/form_column'),
-        SVG             = require('module/ui/svg'),
-        If              = require('module/ui/if/if'),
-        React           = require('react');
+const   SVG     = require('module/ui/svg'),
+        React   = require('react');
 
+/**
+ * This component show two inputs with button each. First one takes email verification code, second one takes phone verification code
+ */
 const VerificationStep = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'VerificationStep',
@@ -12,66 +11,65 @@ const VerificationStep = React.createClass({
         onSuccess: React.PropTypes.func
     },
     confirmEmail: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            accountBinding = self.getBinding('account'),
-            formFieldsBinding = self.getBinding('formFields');
-
-		window.Server.confirmUser.get({
-            uid: accountBinding.get('userId'),
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                accountBinding  = self.getBinding('account');
+		window.Server.confirmUser.post({
             token: binding.get('emailCode')
-        }).then(function () {
-
-			formFieldsBinding.set('verified.email', true);
-            accountBinding.set('account.user.verified.email', true);
-            binding.set('emailConfirmationError',false);
-            if (formFieldsBinding.get('verified.phone')) {
-                self.props.onSuccess();
+        }).then( data => {
+            if(data.confirmed === true) {
+                accountBinding.set('verified.email', true);
+                binding.set('emailConfirmationError',false);
+                if (accountBinding.get('verified.phone')) {
+                    self.props.onSuccess();
+                }
+            } else {
+                binding.set('emailConfirmationError',true);
             }
-        }, function () {
+        }).catch(() => {
             binding.set('emailConfirmationError',true);
         });
     },
     confirmPhone: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            accountBinding = self.getBinding('account'),
-            formFieldsBinding = self.getBinding('formFields');
-
-		window.Server.confirmUserPhone.get({
-            uid: accountBinding.get('userId'),
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                accountBinding  = self.getBinding('account');
+		window.Server.confirmUserPhone.post({
             token: binding.get('phoneCode')
-        }).then(function () {
-            formFieldsBinding.set('verified.phone', true);
-            accountBinding.set('account.user.verified.phone', true);
-            binding.set('phoneConfirmationError',false);
-            if (formFieldsBinding.get('verified.email')) {
-                self.props.onSuccess();
+        }).then( data => {
+            if(data.confirmed === true) {
+                accountBinding.set('verified.phone', true);
+                binding.set('phoneConfirmationError',false);
+                if (accountBinding.get('verified.email')) {
+                    self.props.onSuccess();
+                }
+            } else {
+                binding.set('phoneConfirmationError',true);
             }
-        }, function () {
+        }).catch(() => {
             binding.set('phoneConfirmationError',true);
         });
     },
     render: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            accountBinding = self.getBinding('account'),
-            //Append classes to cause the check button to be hidden or shown
-            phoneCheckClasses = accountBinding !== undefined?(accountBinding.get('account.user.verified.phone')==true?'bButton_hide':'bButton'):'bButton',
-            emailCheckClasses = accountBinding !== undefined?(accountBinding.get('account.user.verified.email')==true?'bButton_hide':'bButton'):'bButton',
-            emailErrorCheck = (binding.get('emailConfirmationError')!== undefined && binding.get('emailConfirmationError') == true)? 'eRegistration_label':'bButton_hide',
-            phoneErrorCheck = (binding.get('phoneConfirmationError') !== undefined && binding.get('phoneConfirmationError') == true)?'eRegistration_label':'bButton_hide',
-            isEmailCheck = emailCheckClasses === 'bButton_hide'? 'bCheck_show':'bButton_hide',
-            isPhoneCheck = phoneCheckClasses === 'bButton_hide'?'bCheck_show':'bButton_hide';
+        const   self                = this,
+                binding             = self.getDefaultBinding(),
+                accountBinding      = self.getBinding('account'),
+                //Append classes to cause the check button to be hidden or shown
+                phoneCheckClasses   = accountBinding !== undefined?(accountBinding.get('verified.phone')==true?'bButton_hide':'bButton'):'bButton',
+                emailCheckClasses   = accountBinding !== undefined?(accountBinding.get('verified.email')==true?'bButton_hide':'bButton'):'bButton',
+                emailErrorCheck     = (binding.get('emailConfirmationError')!== undefined && binding.get('emailConfirmationError') == true)? 'eRegistration_label':'bButton_hide',
+                phoneErrorCheck     = (binding.get('phoneConfirmationError') !== undefined && binding.get('phoneConfirmationError') == true)?'eRegistration_label':'bButton_hide',
+                isEmailCheck        = emailCheckClasses === 'bButton_hide'? 'bCheck_show':'bButton_hide',
+                isPhoneCheck        = phoneCheckClasses === 'bButton_hide'?'bCheck_show':'bButton_hide';
         return (
             <div className="eRegistration_verification">
                 <label className="eRegistration_label">
                     <span className="eRegistration_labelField">Verification email</span>
-                    <Morearty.DOM.input className='eRegistration_input'
-                                        ref='emailCodeField'
-                                        value={ binding.get('emailCode') }
-                                        placeholder="email code"
-                                        onChange={ Morearty.Callback.set(binding, 'emailCode') }/>
+                    <input className    ='eRegistration_input'
+                           ref          ='emailCodeField'
+                           value        ={ binding.get('emailCode') }
+                           placeholder  ="email code"
+                           onChange     ={ Morearty.Callback.set(binding, 'emailCode') }/>
                     <button ref="emailCheck" className={emailCheckClasses} onClick={self.confirmEmail}>Verify</button>
                     <span className={isEmailCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
                 </label>
@@ -81,7 +79,7 @@ const VerificationStep = React.createClass({
                 <label className="eRegistration_label">
 
                     <span className="eRegistration_labelField">Verification phone</span>
-                    <Morearty.DOM.input className='eRegistration_input'
+                    <input className='eRegistration_input'
                                         ref='phoneCodeField'
                                         value={ binding.get('phoneCode') }
                                         placeholder="phone code"

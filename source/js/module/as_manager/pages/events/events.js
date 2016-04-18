@@ -39,13 +39,12 @@ const EventView = React.createClass({
                 .set('models', Immutable.fromJS(sports))
                 .commit();
 
-            return window.Server.eventsBySchoolId.get({
-                schoolId: activeSchoolId
-            }, {
-                filter: {
-                    include: 'sport'
-                }
-            });
+            return window.Server.events.get(activeSchoolId,
+                {
+                    filter: {
+                        include: 'sport'
+                    }
+                });
         }).then(function (events) {
             binding
                 .atomically()

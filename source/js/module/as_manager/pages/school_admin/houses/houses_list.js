@@ -6,7 +6,6 @@ const Table         = require('module/ui/list/table'),
 const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName: 'houses',
-    sandbox:true,
     _getDataPromise:function(){
         return window.Server.houses.get(this.activeSchoolId);
     },

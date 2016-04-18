@@ -1,16 +1,12 @@
-const Form                        = require('module/ui/form/form'),
-      FormField                   = require('module/ui/form/form_field'),
-      FormColumn                  = require('module/ui/form/form_column'),
-      SVG                         = require('module/ui/svg'),
-      If                          = require('module/ui/if/if'),
-      RegistrationPermissionField = require('module/ui/register/user/registration_permissions_field'),
-      classNames                  = require('classnames'),
-      React                       = require('react'),
-      Immutable                   = require('immutable');
+const   RegistrationPermissionField = require('module/ui/register/user/registration_permissions_field'),
+        classNames                  = require('classnames'),
+        React                       = require('react'),
+        Immutable                   = require('immutable');
 
 
-let multipleFields, studentFields = [];
+let multipleFields;
 
+/** component which show list of roles to join with and some info on requested role details*/
 const PermissionsStep = React.createClass({
   mixins: [Morearty.Mixin],
   displayName: 'PermissionsList',
@@ -19,39 +15,29 @@ const PermissionsStep = React.createClass({
   },
   getDefaultState: function () {
     return Immutable.fromJS({
-      type: null,
-      schoolId: null,
-      formId: null,
-      formName: null,
-      houseId: null,
-      houseName: null,
-      firstName: null,
-      lastName: null
+      type:       null,
+      schoolId:   null,
+      formId:     null,
+      formName:   null,
+      houseId:    null,
+      houseName:  null,
+      firstName:  null,
+      lastName:   null
     });
   },
   componentWillMount: function () {
-    var self = this,
-        binding = self.getDefaultBinding();
+    const   self    = this,
+            binding = self.getDefaultBinding();
 
     self.types = [
-      {
-        name: 'parent'
-      },
-      {
-        name: 'admin'
-      },
-      {
-        name: 'manager'
-      },
-      {
-        name: 'teacher'
-      },
-      {
-        name: 'coach'
-      }
+      { name: 'parent'  },
+      { name: 'admin'   },
+      { name: 'manager' },
+      { name: 'teacher' },
+      { name: 'coach'   }
     ];
 
-    binding.sub('schoolId').addListener(function (descriptor) {
+    binding.sub('schoolId').addListener(descriptor => {
 
       if (descriptor.isValueChanged()) {
         binding.sub('_houseAutocomplete').clear();
@@ -83,9 +69,11 @@ const PermissionsStep = React.createClass({
     }
     self.forceUpdate();
   },
+
+  /** will render list with all available roles to join */
   renderChooser: function () {
-    var self = this,
-        binding = self.getDefaultBinding();
+    const   self    = this,
+            binding = self.getDefaultBinding();
 
     return <div className="eRegistration_chooser">
       {self.types.map(function (type) {
@@ -104,8 +92,8 @@ const PermissionsStep = React.createClass({
     </div>
   },
   isFormFilled: function (currentType) {
-    var self = this,
-        binding = self.getDefaultBinding();
+    const   self    = this,
+            binding = self.getDefaultBinding();
     return (
             (
                 currentType === 'admin' || currentType === 'manager' ||
@@ -120,10 +108,12 @@ const PermissionsStep = React.createClass({
         );
   },
   render: function () {
-    var self = this,
-        binding = self.getDefaultBinding(),
-        currentType = binding.get('type'),
-        isShowFinishButton = false;
+    const   self                = this,
+            binding             = self.getDefaultBinding(),
+            currentType         = binding.get('type');
+
+    let isShowFinishButton  = false;
+
     if (self.isFormFilled(currentType)) {
       isShowFinishButton = true;
     }

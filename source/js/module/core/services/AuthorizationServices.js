@@ -27,10 +27,11 @@ const AuthorizationServices ={
 
                 if(authData.userId){
                     return window.Server.roles.get().then(roles => {
-                        if(roles && roles.length){
+                        if(roles && roles.length == 1){
                             return AuthorizationServices.become(roles[0].name);
                         }
-                        return null;
+                        else
+                            return AuthorizationServices.become('NOBODY');
                     });
 
                 }
@@ -49,6 +50,7 @@ const AuthorizationServices ={
                 const authorizationInfo = {
                     id: authData.key,
                     role:authData.role,
+                    isBecome:true,
                     userId:authData.userId,
                     expireAt: authData.expireAt,
                     verified: {"email":true,"phone":true,"personal":true}//,

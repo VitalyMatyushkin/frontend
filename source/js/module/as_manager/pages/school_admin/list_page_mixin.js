@@ -3,9 +3,9 @@ const   If          = require('module/ui/if/if'),
         GroupAction = require('module/ui/list/group_action'),
         SVG 		= require('module/ui/svg'),
         React       = require('react'),
-        Immutable   = require('immutable'),
+        Immutable   = require('immutable');
 
-ListPageMixin = {
+const ListPageMixin = {
 	propTypes: {
         serviceName:        React.PropTypes.string,
         serviceCount:       React.PropTypes.string

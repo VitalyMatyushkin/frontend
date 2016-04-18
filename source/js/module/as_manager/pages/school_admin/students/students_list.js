@@ -12,7 +12,6 @@ const StudentsListPage = React.createClass({
 	filters: {
 		include: ['user','form','parents']
 	},
-    sandbox:true,
 	_getViewFunction: function() {
 		var self = this;
 
@@ -24,9 +23,8 @@ const StudentsListPage = React.createClass({
 			//document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
 		}
 	},
-	getGender: function (user) {
-		var self = this,
-			icon = user !== undefined ?(user.gender === 'male' ? 'icon_man': 'icon_woman'):'';
+	getGender: function (gender) {
+		var icon = gender === 'male' ? 'icon_man': 'icon_woman';
 
 		return <SVG icon={icon} />;
 	},
@@ -67,11 +65,11 @@ const StudentsListPage = React.createClass({
 			<Table title="Students" binding={binding} onItemView={self._getViewFunction()}
 				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
 				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
-				<TableField dataField="user" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="userInfo" dataFieldKey="firstName" >First name</TableField>
-				<TableField width="15%" dataField="userInfo" dataFieldKey="lastName" >Last name</TableField>
+				<TableField dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
+				<TableField width="15%" dataField="firstName" >First name</TableField>
+				<TableField width="15%" dataField="lastName" >Last name</TableField>
 				<TableField width="5%" dataField="form" dataFieldKey="name" filterType="none" >Form</TableField>
-				<TableField width="15%" dataField="userInfo" dataFieldKey="birthday" parseFunction={self.getBirthday}>Birthday</TableField>
+				<TableField width="15%" dataField="birthday" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
 		)

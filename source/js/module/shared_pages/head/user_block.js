@@ -2,8 +2,9 @@ const 	React 		= require('react'),
 		SVG 		= require('module/ui/svg'),
 		Immutable 	= require('immutable'),
         RoleList    = require('./role_list'),
+        classNames   = require('classnames');
 
-UserBlock = React.createClass({
+const UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
     propTypes:{
         asAdmin:React.PropTypes.bool
@@ -43,6 +44,10 @@ UserBlock = React.createClass({
 			authData = authBinding.toJS(),
 			UserButton = null,
 			userButtonStyle = {},
+            userClasses = classNames({
+                eTopMenu_photo:true,
+                mDisabled:self.props.asAdmin
+            }),
 			LoginButton = null,
             RolesList = null;
 
@@ -50,7 +55,7 @@ UserBlock = React.createClass({
 		if (authData && authData.id) {
 			// Кнопка перехода на страницу пользователя
 			userButtonStyle = {backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')'};
-			UserButton = <a href="/#settings/general" className="eTopMenu_photo" style={userButtonStyle} />;
+			UserButton = <a href="/#settings/general" className={userClasses} style={userButtonStyle} />;
             RolesList = <RoleList binding={binding.sub('roleList')} onlyLogout={self.props.asAdmin} />;
 		} else {
 			// Кнопка авторизации
