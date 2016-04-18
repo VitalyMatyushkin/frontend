@@ -5,6 +5,7 @@ const   Table           = require('module/ui/list/table'),
         TableField      = require('module/ui/list/table_field'),
         DateTimeMixin   = require('module/mixins/datetime'),
         React           = require('react'),
+        If              = require('module/ui/if/if'),
         Lazy            = require('lazyjs'),
         ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin');
 
@@ -22,42 +23,68 @@ const AdminRequest = React.createClass({
         const self = this;
 
         self.updateSubMenu();
+        self.getSchools();
     },
-    getSchoolEmblem:function(school){
-        if(school !== undefined){
+    getSchools:function(){
+        const 	self 	= this,
+            binding = self.getDefaultBinding();
+
+        window.Server.publicSchools.get().then(schools => {
+            binding.set('schools', schools);
+        });
+    },
+    getSchoolEmblem:function(permission){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            schools = binding.get('schools'),
+            school = schools && permission ? schools.find(s => s.id === permission.schoolId) : null;
+
+        if(school && school.pic){
             return <span className="eChallenge_rivalPic"><img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/></span>;
         }
     },
-	getCurrentPermission: function(id, permissions) {
-        return Lazy(permissions).find(permission => permission.id && permission.id === id);
-	},
+    getSchoolName:function(permission){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            schools = binding.get('schools'),
+            school = schools && permission ? schools.find(s => s.id === permission.schoolId) : null;
+
+        if(school){
+            return school.name;
+        }
+    },
     updateSubMenu:function(){
-        const   self                = this,
-            globalBinding       = self.getMoreartyContext().getBinding();
+        const   self            = this,
+                globalBinding   = self.getMoreartyContext().getBinding();
+
         globalBinding.set('submenuNeedsUpdate', !globalBinding.get('submenuNeedsUpdate'));
     },
     refresh:function(){
         this.updateSubMenu();
         this.reloadData();
     },
+    getCurrentPermission: function(id, permissions) {
+        return Lazy(permissions).find(permission => permission.id && permission.id === id);
+    },
     _getQuickEditActionFunctions:function(itemId,itemName){
-		const   self                = this,
-			    action              = itemName,
-                id                  = itemId,
-                binding             = self.getDefaultBinding().sub('data'),
-                currentPermission   = self.getCurrentPermission(id, binding.toJS());
+		const   self      = this,
+			    action    = itemName,
+                prId        = itemId,
+                binding   = self.getDefaultBinding().sub('data'),
+                currentPr = self.getCurrentPermission(prId, binding.toJS()),
+                schoolId  = currentPr.requestedPermission.schoolId;
         let confirmMsg;
 		switch (action){
             case 'Accept':
-                if(currentPermission.preset === "parent") {
-					document.location.hash = document.location.hash + '/accept?id=' + currentPermission.id;
+                if(currentPr.preset === "parent") {
+					document.location.hash = document.location.hash + '/accept?id=' + currentPr.id;
 				} else {
 					confirmMsg = window.confirm("Are you sure you want to accept ?");
 					if(confirmMsg === true){
-						window.Server.setPermissions.post({id:id},{accepted:true}).then(function(){
+						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'}).then(function(){
 							binding.update(function(permissions) {
 								return permissions.filter(function(permission) {
-									return permission.get('id') !== id;
+									return permission.get('id') !== prId;
 								});
 							});
                             self.refresh();
@@ -68,10 +95,10 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.setPermissions.post({id:id},{accepted:false}).then(function(){
+                    window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
-                                return permission.get('id') !== id;
+                                return permission.get('id') !== prId;
                             });
                         });
                         self.refresh();
@@ -84,20 +111,23 @@ const AdminRequest = React.createClass({
     },
     getTableView:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            schools = binding.get('schools');
         return (
-            <div className="eTable_view">
-                <Table title="Permissions" binding={binding} addQuickActions={true}
-                       quickEditActionsFactory={self._getQuickEditActionFunctions}
-                       quickEditActions={self.groupActionList} isPaginated={true} getDataPromise={self.getDataPromise}
-                       getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
-                    <TableField dataField="school"dataFieldKey="name" filterType="none" >School</TableField>
-                    <TableField dataField="school" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
-                    <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
-                    <TableField dataField="preset" >Permission</TableField>
-                    <TableField dataField="comment" width="240px" >Details</TableField>
-                </Table>
-            </div>
+            <If condition={!!schools}>
+                <div className="eTable_view">
+                    <Table title="Permissions" binding={binding} addQuickActions={true}
+                           quickEditActionsFactory={self._getQuickEditActionFunctions}
+                           quickEditActions={self.groupActionList} isPaginated={true} getDataPromise={self.getDataPromise}
+                           getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
+                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
+                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
+                        <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
+                        <TableField dataField="requestedPermission" dataFieldKey="preset" >Permission</TableField>
+                        <TableField dataField="requestedPermission" dataFieldKey="comment" width="240px" >Details</TableField>
+                    </Table>
+                </div>
+            </If>
         );
     }
 });

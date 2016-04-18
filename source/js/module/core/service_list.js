@@ -29,6 +29,7 @@ const serviceList = {
 
         // students
         serviceList.students = new Service('/i/schools/{schoolId}/students', binding);
+        serviceList.student = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 
         // forms
         serviceList.forms 		= new Service('/i/schools/{schoolId}/forms', binding);
@@ -50,6 +51,8 @@ const serviceList = {
 
         //Permissions
         serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        serviceList.permissionRequests = new Service('/i/permissions/requests');
+        serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
         // sports
         serviceList.sports = new Service('/public/sports', binding);
@@ -59,8 +62,6 @@ const serviceList = {
 
 
 
-		serviceList.schoolStudents 	= new Service('/i/schools/{schoolId}/students', binding);
-		serviceList.schoolStudent 	= new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 
 
 
@@ -202,10 +203,8 @@ const serviceList = {
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
-		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);
-		serviceList.permissionRequests = new Service('/i/permissions/requests');
 
 		//Activity Logs
 		serviceList.activityLogs = new Service('/logs',binding);

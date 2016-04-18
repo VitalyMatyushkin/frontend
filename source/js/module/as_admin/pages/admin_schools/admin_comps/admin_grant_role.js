@@ -21,7 +21,7 @@ AdminGrantRole = React.createClass({
         const self = this;
 
         if(permission.preset === 'parent' && permission.studentId || permission.preset !== 'parent')
-            return window.Server.setPermissions.post({id:permission.id},{accepted:true})
+            return window.Server.statusPermissionRequest.post({id:permission.id},{accepted:true})
                 .then(function(setPermissions){
                     return self.props.onSuccess && self.props.onSuccess(setPermissions);
                 });
