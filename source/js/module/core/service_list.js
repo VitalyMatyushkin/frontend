@@ -16,6 +16,7 @@ const serviceList = {
         // profile
         serviceList.profile = new Service('/i/profile', binding);
         serviceList.userPermission = new Service('/i/permissions', binding);
+        serviceList.profileRequests = new Service('/i/permissions/requests', binding);
 
         // users
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
@@ -51,7 +52,6 @@ const serviceList = {
 
         //Permissions
         serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
-        serviceList.permissionRequests = new Service('/i/permissions/requests');
         serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
         // sports
