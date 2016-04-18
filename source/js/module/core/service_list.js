@@ -24,6 +24,7 @@ const serviceList = {
 
         // schools
         serviceList.schools = new Service('/i/schools', binding);
+        serviceList.publicSchools = new Service('/public/schools', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
 
         // students

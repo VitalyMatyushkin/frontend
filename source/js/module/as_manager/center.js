@@ -27,11 +27,14 @@ const Center = React.createClass({
 
 						<SettingsRoute binding={binding.sub('userData')} />
 
-						<Route path="/student /student/:subPage /student/:subPage/:mode"
-							   binding={binding.sub('studentPage')}
-							   component="module/as_manager/pages/student/student_page"/>
+                        <Route path="/no_role"
+                               component="module/shared_pages/no_role"/>
 
-						<Route path="/profile/:schoolID"
+                        <Route path="/student /student/:subPage /student/:subPage/:mode"
+                               binding={binding.sub('studentPage')}
+                               component="module/as_manager/pages/student/student_page"/>
+
+                        <Route path="/profile/:schoolID"
 							   binding={binding.sub('schoolProfile')}
 							   component="module/as_manager/pages/school_profile/school_profile_page"/>
 

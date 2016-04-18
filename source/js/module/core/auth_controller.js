@@ -42,8 +42,9 @@ authСontroller = {
 
 		// if we got auth data
 		if (data && data.id) {
-			// redirecting user to awaited page if user not in registration process now
-			if (notRegister) {
+			// redirecting user to awaited page if user not in registration process now and
+            // he is a superAdmin or user after become authorization
+			if (notRegister && (data.adminId || data.isBecome)) {
 				document.location.hash = self.nextPage;
 			}
 		} else if(self.nextPage ==='home'){
