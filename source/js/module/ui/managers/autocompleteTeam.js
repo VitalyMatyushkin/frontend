@@ -1,6 +1,7 @@
 const   React           = require('react'),
         Immutable 	    = require('immutable'),
         Promise         = require('bluebird'),
+        Lazy            = require('lazyjs'),
         Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
 const AutocompleteTeam = React.createClass({
@@ -88,15 +89,23 @@ const AutocompleteTeam = React.createClass({
                 filter.where.houseId = self.getBinding('rival').get('id');
             }
 
-            return window.Server.students
-                .get(schoolId, {filter: filter})
-                .then((players) => {
+            let players;
+
+            return window.Server.students.get(schoolId, {filter: filter})
+                .then(_players => {
+                    players = _players;
+
+                    return window.Server.schoolForms.get(schoolId);
+                })
+                .then(forms => {
+                    let playersWithForms = self.injectFormsToPlayers(players, forms);
+
                     var filteredPlayers = [];
 
-                    players.forEach((player) => {
+                    playersWithForms.forEach((player) => {
                         //filter by gender
-                        if(player.user.gender === gender) {
-                            player.name = player.user.firstName + ' ' + player.user.lastName;
+                        if(player.gender === gender.toUpperCase()) {
+                            player.name = player.firstName + ' ' + player.lastName;
                             filteredPlayers.push(player);
                         }
                     });
@@ -108,6 +117,24 @@ const AutocompleteTeam = React.createClass({
                 resolve([]);
             });
         }
+    },
+	/**
+     * Method inject form data to each player
+     * Method required until on the server becomes available "include" functional
+     */
+    injectFormsToPlayers: function(players, forms) {
+        const playersWithForms = [];
+
+        players.forEach(player => {
+            const form = Lazy(forms).findWhere( { id: player.formId } );
+            const tempPlayer = Object.assign({}, player);
+
+            tempPlayer.form = form;
+
+            playersWithForms.push(tempPlayer);
+        });
+
+        return playersWithForms;
     },
     /**
      * Service for filtering learner

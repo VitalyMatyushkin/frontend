@@ -3,10 +3,17 @@
   height: 318px;
 
   background: #fff;
-  border: $BORDER;
-  border-right: none;
 
   color: #2a2a2a;
+
+  &.mDefaultView {
+    border: $BORDER;
+  }
+
+  &.mSkypeStyleView {
+    border: $BORDER;
+    border-right: none;
+  }
 }
 
 .eTeam_playerList {
@@ -45,6 +52,9 @@
 
   &.mName {
     width: 40%;
+    &.mDefaultView {
+      width: 35%;
+    }
   }
 
   &.mForm {
@@ -65,6 +75,10 @@
 
   &.mSub {
     width: 10%;
+  }
+
+  &.mRemove {
+    width: 5%;
   }
 }
 

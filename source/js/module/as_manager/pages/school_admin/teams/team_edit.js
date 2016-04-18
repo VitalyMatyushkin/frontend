@@ -13,6 +13,8 @@ const TeamEditPage = React.createClass({
 
         binding.clear();
 
+        self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
         self._initFormBinding();
     },
     componentWillUnmount: function() {
@@ -31,61 +33,71 @@ const TeamEditPage = React.createClass({
                 teamId  = self._getTeamId();
 
         let schoolData,
-            sportsData,
-            team;
+            sports,
+            team,
+            players;
 
-        window.Server.school.get(MoreartyHelper.getActiveSchoolId(self), {
-            filter: {
-                include: 'forms'
-            }
-        }).then((_schoolData) => {
-            schoolData = _schoolData;
+        //get school data
+        window.Server.school.get(self.activeSchoolId)
+            .then( _schoolData => {
+                schoolData = _schoolData;
 
-            return window.Server.sports.get();
-        }).then((_sportsData) => {
-            sportsData = _sportsData;
-            !schoolData.forms && (schoolData.forms = []);
+                // get forms data
+                return window.Server.schoolForms.get(self.activeSchoolId);
+            })
+            .then( formsData => {
+                schoolData.forms = formsData;
 
-            return window.Server.team.get(teamId,{
-                filter: {
-                    include: [
-                        'house',
-                        'sport',
-                        {'players': ['user', 'form']}
-                    ]
-                }
-            });
-        }).then((_team) => {
-            team = _team;
+                // get sports data
+                return window.Server.public_sports.get();
+            })
+            .then( _sportsData => {
+                sports = _sportsData;
+                !schoolData.forms && (schoolData.forms = []);
 
-            return window.Server.players.get({
-                filter: {
-                    where: {
-                        teamId: team.id
+                return window.Server.team.get(
+                    {
+                        schoolId: self.activeSchoolId,
+                        teamId: teamId
                     }
-                }
+                );
+            })
+            .then( _team => {
+                team = _team;
+
+                // inject sport to team
+                team.sport = TeamHelper.getSportById(team.sportId, sports);
+
+                return window.Server.students.get(self.activeSchoolId);
+            })
+            .then( users => {
+                // inject users to players, because we need user info
+                // yep, ugly method name
+                let usersWithPlayerInfo = TeamHelper.getPlayersWithUserInfo(team.players, users);
+
+                // inject forms to players
+                usersWithPlayerInfo = TeamHelper.injectFormsToPlayers(usersWithPlayerInfo, schoolData.forms);
+
+                return binding
+                    .atomically()
+                    .set('teamForm.team',                   Immutable.fromJS(team))
+                    .set('teamForm.name',                   Immutable.fromJS(team.name))
+                    .set('teamForm.description',            Immutable.fromJS(team.description))
+                    .set('teamForm.sportId',                Immutable.fromJS(team.sportId))
+                    .set('teamForm.sportModel',             Immutable.fromJS(team.sport))
+                    .set('teamForm.gender',                 Immutable.fromJS(team.gender))
+                    .set('teamForm.ages',                   Immutable.fromJS(team.ages))
+                    .set('teamForm.availableAges',          Immutable.fromJS(TeamHelper.getAges(schoolData)))
+                    .set('teamForm.rival',                  Immutable.fromJS(self._getFakeRival(team)))
+                    .set('teamForm.default',                Immutable.fromJS(self._getDefaultObject(schoolData, team)))
+                    .set('teamForm.sports',                 Immutable.fromJS(sports))
+                    .set('teamForm.players',                Immutable.fromJS(usersWithPlayerInfo))
+                    .set('initialPlayers',                  Immutable.fromJS(usersWithPlayerInfo))
+                    .set('teamForm.isHouseFilterEnable',    Immutable.fromJS(self._isHouseFilterEnable(team)))
+                    .set('teamForm.isHouseSelected',        Immutable.fromJS(self._isHouseSelected(team)))
+                    .set('teamForm.removedPlayers',         Immutable.fromJS([]))
+                    .commit();
             });
-        }).then((_players) => {
-            return binding
-                .atomically()
-                .set('teamForm.team', Immutable.fromJS(team))
-                .set('teamForm.name', Immutable.fromJS(team.name))
-                .set('teamForm.description', Immutable.fromJS(team.description))
-                .set('teamForm.sportId', Immutable.fromJS(team.sportId))
-                .set('teamForm.sportModel', Immutable.fromJS(team.sport))
-                .set('teamForm.gender', Immutable.fromJS(team.gender))
-                .set('teamForm.ages', Immutable.fromJS(team.ages))
-                .set('teamForm.availableAges', Immutable.fromJS(TeamHelper.getAges(schoolData)))
-                .set('teamForm.rival', Immutable.fromJS(self._getFakeRival(team)))
-                .set('teamForm.default', Immutable.fromJS(self._getDefaultObject(schoolData, team)))
-                .set('teamForm.sports', Immutable.fromJS(sportsData))
-                .set('teamForm.players', Immutable.fromJS(TeamHelper.getPlayers(_players, team)))
-                .set('initialPlayers', Immutable.fromJS(TeamHelper.getPlayers(_players, team)))
-                .set('teamForm.isHouseFilterEnable', Immutable.fromJS(self._isHouseFilterEnable(team)))
-                .set('teamForm.isHouseSelected', Immutable.fromJS(self._isHouseSelected(team)))
-                .set('teamForm.removedPlayers', Immutable.fromJS([]))
-                .commit();
-        });
     },
     /**
      * Check status of house filter.
@@ -135,7 +147,7 @@ const TeamEditPage = React.createClass({
      * @private
      */
     _getFakeRival: function(team) {
-        let rival = {id:0};
+        let rival = { id: 0 };
 
         if(team.houseId) {
             rival = team.house;
@@ -174,15 +186,16 @@ const TeamEditPage = React.createClass({
 
             window.Server.team.put(
                 {
+                    schoolId: self.activeSchoolId,
                     teamId: teamId
                 },
                 updatedTeam
-            ).then(() => {
-                const players = binding.get('teamForm.players').toJS(),
-                    initialPlayers =  binding.get('initialPlayers').toJS();
+            ).then( _ => {
+                const   players         = binding.get('teamForm.players').toJS(),
+                        initialPlayers  =  binding.get('initialPlayers').toJS();
 
                 Promise.all(
-                    TeamHelper.commitPlayers(initialPlayers, players, teamId)
+                    TeamHelper.commitPlayers(initialPlayers, players, teamId, self.activeSchoolId)
                 ).then(() => {
                     document.location.hash = '/#school_admin/teams';
                     binding.clear();

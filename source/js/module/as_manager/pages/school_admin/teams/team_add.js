@@ -27,17 +27,32 @@ const TeamAddPage = React.createClass({
      * @private
      */
     _initFormBinding: function() {
-        const self         = this,
-            binding        = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        window.Server.school.get(self.activeSchoolId, {
-            filter: {
-                include: 'forms'
-            }
-        }).then(function (schoolData) {
-            return window.Server.sports.get().then(function (sportsData) {
+        let schoolData;
+
+        //get school data
+        window.Server.school.get(self.activeSchoolId)
+            .then(_schoolData => {
+                schoolData = _schoolData;
+
+                // get forms data
+                return window.Server.schoolForms.get(self.activeSchoolId);
+            })
+            .then(formsData => {
+                schoolData.forms = formsData;
+
+                // get sports data
+                return window.Server.public_sports.get();
+            })
+            .then(function (sportsData) {
                 !schoolData.forms && (schoolData.forms = []);
 
+                // prepare binding for battle:)
+                // yep, it's very excess structure
+                // it's effects of team manager element integration
+                // in the future, after refactoring that will be fixed
                 binding
                     .atomically()
                     .set('teamForm.default',             Immutable.fromJS(self._getDefaultObject(schoolData)))
@@ -53,7 +68,6 @@ const TeamAddPage = React.createClass({
                     .set('teamForm.error',               Immutable.fromJS(self._getErrorObject()))
                     .commit();
             });
-        });
     },
     /**
      * Get fake rival object, fake - because team manager element require rival object.
@@ -104,45 +118,41 @@ const TeamAddPage = React.createClass({
 
         if(!binding.toJS('teamForm.error.isError')) {
             const team = {
-                name:        binding.get('teamForm.name'),
-                description: binding.get('teamForm.description'),
-                sportId:     binding.get('teamForm.sportId'),
-                schoolId:    self.activeSchoolId,
-                ages:        binding.toJS('teamForm.ages'),
-                gender:      binding.get('teamForm.gender'),
-                tempTeam:    false
+                name:           binding.get('teamForm.name'),
+                description:    binding.get('teamForm.description'),
+                sportId:        binding.get('teamForm.sportId'),
+                schoolId:       self.activeSchoolId,
+                ages:           binding.toJS('teamForm.ages'),
+                gender:         binding.get('teamForm.gender'),
+                tempTeam:       false
             };
 
-			binding.get('teamForm.houseId') && (team.houseId = binding.get('teamForm.houseId'));
+            binding.get('teamForm.houseId') && (team.houseId = binding.get('teamForm.houseId'));
 
-			window.Server.teams.post(team).then(function (teamsResult) {
-                let players = binding.get('teamForm.players').toJS();
+            window.Server.teamsBySchoolId.post( self.activeSchoolId, team )
+                .then(team => {
+                    const players = binding.get('teamForm.players').toJS();
 
-                var i = 0;
-                // TODO: fix me
-                players.forEach((player) => {
-                    window.Server.playersRelation.put(
-                        {
-                            teamId:    teamsResult.id,
-                            studentId: player.id
-                        },
-                        {
-                            position:  player.position,
-                            sub:       player.sub ? player.sub : false
-                        }
-                    ).then(function (playerResult) {
-                        i += 1;
+                    return Promise.all(players.map( player => {
+                        const body = {
+                            userId:     player.id,
+                            sub:        player.sub ? player.sub : false,
+                            position:   player.position
+                        };
 
-                        if (i === players.length) {
-                            document.location.hash = '/#school_admin/teams';
-                            binding.clear();
-                            binding.meta().clear();
-                        }
-                        return playerResult;  // each then-callback should have explicit return
+                        return window.Server.teamPlayers.post(
+                            {
+                                schoolId:   self.activeSchoolId,
+                                teamId:     team.id
+                            },
+                            body
+                        );
+                    })).then( _ => {
+                        document.location.hash = '/#school_admin/teams';
+
+                        return team;
                     });
                 });
-                return teamsResult;
-            });
         }
     },
     render: function() {

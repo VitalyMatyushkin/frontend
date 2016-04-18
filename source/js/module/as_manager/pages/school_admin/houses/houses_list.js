@@ -20,8 +20,6 @@ const HousesListPage = React.createClass({
 					});
 				});
 				return res;
-			}).catch(function(err){
-				alert(err.errorThrown+' occurred while deleting house');
 			});
 		}
 	},
