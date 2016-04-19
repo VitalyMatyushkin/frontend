@@ -40,29 +40,29 @@ const HomeFixtures = React.createClass({
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
-		Superuser.runAsSuperUser(rootBinding, () => {
-			return window.Server.fixturesBySchoolId.get(
-				{
-					schoolId: activeSchoolId,
-					filter: {
-						order: 'startTime ASC'
-					}
-				}
-			).then((events) => {
-				const filteredEvents = events.filter((event) => {
-					const	eventDate	= new Date(event.startTime).toLocaleDateString(),
-							currentDate	= date.toLocaleDateString();
-
-					return currentDate == eventDate;
-				});
-
-				binding
-					.atomically()
-					.set('fixtures',Immutable.fromJS(filteredEvents))
-					.set('fixturesSync',Immutable.fromJS(true))
-					.commit();
-			});
-		});
+		// Superuser.runAsSuperUser(rootBinding, () => {
+		// 	return window.Server.fixturesBySchoolId.get(
+		// 		{
+		// 			schoolId: activeSchoolId,
+		// 			filter: {
+		// 				order: 'startTime ASC'
+		// 			}
+		// 		}
+		// 	).then((events) => {
+		// 		const filteredEvents = events.filter((event) => {
+		// 			const	eventDate	= new Date(event.startTime).toLocaleDateString(),
+		// 					currentDate	= date.toLocaleDateString();
+        //
+		// 			return currentDate == eventDate;
+		// 		});
+        //
+		// 		binding
+		// 			.atomically()
+		// 			.set('fixtures',Immutable.fromJS(filteredEvents))
+		// 			.set('fixturesSync',Immutable.fromJS(true))
+		// 			.commit();
+		// 	});
+		// });
 	},
 	getFixtureInfo: function(event) {
 		const	self	= this;

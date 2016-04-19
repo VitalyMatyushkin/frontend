@@ -30,7 +30,6 @@ const HomeHeader = React.createClass({
                 id: activeSchoolId
             }
         }}).then(function(schools){
-            console.log(schools);
             const   school          = schools[0], // TODO: remove that SHIT
                     defaultAlbumId  = school.defaultAlbumId;
 

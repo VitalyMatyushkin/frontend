@@ -11,23 +11,23 @@ const HomeNews = React.createClass({
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
-		Superuser.runAsSuperUser(rootBinding, () => {
-			window.Server.news
-				.get(
-				{
-					schoolId: activeSchoolId,
-					filter: {
-						order: 'date DESC',
-						limit: 20
-					}
-				})
-				.then((schoolNews) => {
-					binding.atomically()
-						.set('schoolNews',Immutable.fromJS(schoolNews))
-						.set('selectedNewsItem',Immutable.fromJS(''))
-						.commit();
-				});
-		});
+		// Superuser.runAsSuperUser(rootBinding, () => {
+		// 	window.Server.news
+		// 		.get(
+		// 		{
+		// 			schoolId: activeSchoolId,
+		// 			filter: {
+		// 				order: 'date DESC',
+		// 				limit: 20
+		// 			}
+		// 		})
+		// 		.then((schoolNews) => {
+		// 			binding.atomically()
+		// 				.set('schoolNews',Immutable.fromJS(schoolNews))
+		// 				.set('selectedNewsItem',Immutable.fromJS(''))
+		// 				.commit();
+		// 		});
+		// });
 	},
 
 	//Temporarily remove img from news body

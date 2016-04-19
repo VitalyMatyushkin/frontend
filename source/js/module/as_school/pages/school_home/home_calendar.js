@@ -13,11 +13,11 @@ const HomeCalender = React.createClass({
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
-		Superuser.runAsSuperUser(rootBinding, () => {
-			return window.Server.eventsBySchoolId.get({schoolId:activeSchoolId}).then((events) => {
-				rootBinding.set('events.models',Immutable.fromJS(events));
-			});
-		});
+		// Superuser.runAsSuperUser(rootBinding, () => {
+		// 	return window.Server.eventsBySchoolId.get({schoolId:activeSchoolId}).then((events) => {
+		// 		rootBinding.set('events.models',Immutable.fromJS(events));
+		// 	});
+		// });
 	},
 	getSportIcon: function(sport) {
 		return <Sport name={sport} className="calendar_mSport" ></Sport>;
