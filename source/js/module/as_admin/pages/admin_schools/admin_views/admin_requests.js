@@ -95,7 +95,7 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'}).then(function(){
+                    window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== prId;
