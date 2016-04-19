@@ -49,11 +49,7 @@ const AccountRequests = React.createClass({
     getActions:function(request){
         const self = this;
 
-        if(request.status === 'ACCEPTED'){
-            return (
-                <span title="Withdraw Request" className="requestActions" onClick={self._withdrawRequest.bind(null,request)}>Withdraw</span>
-            );
-        }else{
+        if(request.status === 'NEW'){
             return (
                 <span title="Cancel Request" className="requestActions" onClick={self._cancelRequest.bind(null,request)}>Cancel</span>
             );
