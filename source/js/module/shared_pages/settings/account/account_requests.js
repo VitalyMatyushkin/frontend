@@ -7,6 +7,7 @@ const   Table           = require('module/ui/list/table'),
         React           = require('react'),
         If              = require('module/ui/if/if'),
         Lazy            = require('lazyjs'),
+        Date            = require('module/helpers/date_helper'),
         ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin'),
         Popup           = require('module/ui/popup'),
         GrantRole       = require('module/ui/grant_role/grant_role'),
@@ -48,7 +49,7 @@ const AccountRequests = React.createClass({
         return <span className={'request-'+status.toLowerCase()}>{status}</span>;
     },
     getActions:function(request){
-        return 'not implemented';
+        return request && request.id;
     },
     _getQuickEditActionFunctions:function(itemId,itemName){
         const   self      = this,
@@ -95,9 +96,9 @@ const AccountRequests = React.createClass({
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
                         <TableField dataField="requestedPermission" dataFieldKey="preset" >Permission</TableField>
                         <TableField dataField="requestedPermission" dataFieldKey="comment" >Details</TableField>
-                        <TableField dataField="date" filterType="none" >Request Date</TableField>
-                        <TableField dataField="status" parseFunction={self.getStatus} >Request Status</TableField>
-                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getActions} >Actions</TableField>
+                        <TableField dataField="createdAt" filterType="none" parseFunction={Date.getDate} >Date</TableField>
+                        <TableField dataField="status" parseFunction={self.getStatus} >Status</TableField>
+                        <TableField dataField="" filterType="none" parseFunction={self.getActions} >Actions</TableField>
                     </Table>
                     <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                         <GrantRole binding={binding.sub('grantRole')} userIdsBinding={rootBinding.sub('userData.authorizationInfo.userId')}
