@@ -21,21 +21,22 @@ const HomeHeader = React.createClass({
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 rootBinding     = self.getMoreartyContext().getBinding(),
+                serviceBinding  = window.Server._login.binding,
                 activeSchoolId  = rootBinding.get('activeSchoolId');
 
         /** pulling photos from school default album */
-        window.Server.getThisSchool.get({filter: {
+        window.Server.publicSchools.get({filter: {
             where: {
                 id: activeSchoolId
             }
         }}).then(function(schools){
+            console.log(schools);
             const   school          = schools[0], // TODO: remove that SHIT
                     defaultAlbumId  = school.defaultAlbumId;
 
             binding.set('school',Immutable.fromJS(school));
-
             if(defaultAlbumId) {
-                return Superuser.runAsSuperUser(rootBinding, () => {
+                return Superuser.runAsSuperUser(serviceBinding, () => {
                     return window.Server.photos.get(defaultAlbumId, {})
                         .then( photos => {
                             const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();

@@ -13,7 +13,7 @@ function runAsSuperUser(rootBinding, toRun) {
 }
 
 function loginAsSuperUser(rootBinding) {
-    return window.Server.login.post({username:"superadmin",password:"superadmin"}).then((data) => {
+    return window.Server._login.post({email:"superadmin@squadintouch.com",password:"superadmin"}).then((data) => {
         rootBinding.set('userData.authorizationInfo', Immutable.fromJS({
             id:             data.id,
             ttl:            data.ttl,

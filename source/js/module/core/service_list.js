@@ -224,7 +224,7 @@ const serviceList = {
 	// Services which not require authorization
 	initializeOpenServices: function() {
 		// schools
-		serviceList.schoolsFindOne = new Service('/schools/getAllSchools');
+		serviceList.schoolsFindOne = new Service('/public/schools');
 		
 		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
 		serviceList.images = new ImageService(window.apiImg);

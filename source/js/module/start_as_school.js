@@ -65,6 +65,7 @@ function runMainMode() {
 				}
 			}
 		}).then(function(data) {
+			console.log(data);
 			let schoolId = data[0].id;
 			Helpers.LocalStorage.set('schoolId', schoolId);
 			initMainView(schoolId);
