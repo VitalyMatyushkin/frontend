@@ -77,6 +77,7 @@ const AccountRequests = React.createClass({
                 <div className="eSchoolMaster_wrap">
                     <h1 className="eSchoolMaster_title">My Requests</h1>
                     <div className="eStrip"></div>
+
                     <span onClick={self.handleAddNewButtonClick.bind(null,this)} className="addButton addNewForm"/>
                     <span onClick={self.handleFilterButtonClick.bind(null,this)}
                           className="filter_btn"><SVG icon="icon_search"/>{binding.get('openFilter') ? '↑' : '↓'}</span>

@@ -76,10 +76,8 @@ const AccountRequests = React.createClass({
         return (
             <If condition={!!schools}>
                 <div className="eTable_view">
-                    <Table title="Permissions" binding={binding} addQuickActions={true}
-                           quickEditActionsFactory={self._getQuickEditActionFunctions}
-                           quickEditActions={self.groupActionList} getDataPromise={self.getDataPromise}
-                           filter={self.filter} >
+                    <Table title="My Requests" binding={binding} getDataPromise={self.getDataPromise}
+                           filter={self.filter} hideActions={true} >
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                         <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
