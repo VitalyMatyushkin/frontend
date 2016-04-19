@@ -164,7 +164,7 @@ const serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 
-		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
+		serviceList.statusPermissionRequest = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);
 		//Activity Logs

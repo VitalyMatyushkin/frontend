@@ -117,7 +117,7 @@ const PermissionAcceptPage = React.createClass({
 				{ id: binding.get('permissionId') },
 				{ studentId: binding.get('studentId') }
 			).then(function() {
-				return window.Server.setPermissions.post(
+				return window.Server.statusPermissionRequest.post(
 						{ id: binding.get('permissionId')},
 						{ accepted:true }
 					);

@@ -18,7 +18,7 @@ const StudentEditPage = React.createClass({
 
 		// loading student data
 		if(activeSchoolId && studentId) {
-			window.Server.schoolStudent.get({schoolId: activeSchoolId, studentId: studentId}).then( studentUser => {
+			window.Server.student.get({schoolId: activeSchoolId, studentId: studentId}).then( studentUser => {
 				return Promise.all([
 					window.Server.schoolForm.get({schoolId: activeSchoolId, formId: studentUser.formId}),
 					window.Server.schoolHouse.get({schoolId: activeSchoolId, houseId: studentUser.houseId})
@@ -43,7 +43,7 @@ const StudentEditPage = React.createClass({
 				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId');
 
 		data.birthday = data.birthday.substr(0, data.birthday.indexOf('T'));    // TODO: fix that hack
-		window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: self.studentId}, data).then( updResult => {
+		window.Server.student.put({schoolId: activeSchoolId, studentId: self.studentId}, data).then( updResult => {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
 			return;
 		});
