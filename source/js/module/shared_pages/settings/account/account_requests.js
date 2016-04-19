@@ -60,10 +60,23 @@ const AccountRequests = React.createClass({
         }
     },
     _withdrawRequest:function(request){
-        const   self      = this;
+        const   self = this,
+                conf = confirm(`Are you sure you want to withdraw your permission ${request.requestedPermission.preset}`);
+
+        if(conf){
+            //window.Server.profilePermission.delete(request.id).then(p => {
+            //    return window.Server.profileRequest.delete(request.id).then(res => self.reloadData());
+            //});
+            alert('Not implemented');
+        }
     },
     _cancelRequest:function(request){
-        const   self      = this;
+        const   self = this,
+                conf = confirm('Are you sure you want to cancel pending request?');
+
+        if(conf){
+                window.Server.profileRequest.delete(request.id).then(res => self.reloadData());
+        }
     },
     handleAddNewButtonClick:function(){
         var self = this,
