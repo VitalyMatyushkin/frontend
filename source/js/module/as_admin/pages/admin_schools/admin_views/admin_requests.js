@@ -34,7 +34,7 @@ const AdminRequest = React.createClass({
         });
     },
     getSchoolEmblem:function(permission){
-        var self = this,
+        const self = this,
             binding = self.getDefaultBinding(),
             schools = binding.get('schools'),
             school = schools && permission ? schools.find(s => s.id === permission.schoolId) : null;
@@ -44,7 +44,7 @@ const AdminRequest = React.createClass({
         }
     },
     getSchoolName:function(permission){
-        var self = this,
+        const self = this,
             binding = self.getDefaultBinding(),
             schools = binding.get('schools'),
             school = schools && permission ? schools.find(s => s.id === permission.schoolId) : null;
@@ -95,7 +95,7 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'}).then(function(){
+                    window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== prId;
@@ -122,7 +122,7 @@ const AdminRequest = React.createClass({
                            getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
-                        <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
+                        <TableField dataField="requester" dataFieldKey="email">Email</TableField>
                         <TableField dataField="requestedPermission" dataFieldKey="preset" >Permission</TableField>
                         <TableField dataField="requestedPermission" dataFieldKey="comment" width="240px" >Details</TableField>
                     </Table>
@@ -131,4 +131,5 @@ const AdminRequest = React.createClass({
         );
     }
 });
+
 module.exports = AdminRequest;

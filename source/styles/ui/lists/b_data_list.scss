@@ -69,11 +69,12 @@
 
 .eDataList_listItemCell{
   display: table-cell;
-  height: 40px;
+  height: 38px;
   vertical-align: middle;
   border-bottom: solid 1px #c2c1c2;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 1px 5px;
 
   ul{
     li{
@@ -148,14 +149,14 @@
 .showElement{
   display:table-cell !important;
 }
-.roleAccepted{
+.request-accepted{
   color:green;
 }
-.roleDeclined{
+.request-rejected{
   color:red;
 }
-.rolePending{
-  color:orangered;
+.request-new{
+  color:orange;
 }
 .eDataList_accountReqSchool{
   width: 30%;

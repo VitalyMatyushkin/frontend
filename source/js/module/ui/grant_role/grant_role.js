@@ -22,7 +22,8 @@ GrantRole = React.createClass({
                 type:"text",
                 field:"studentName"
             },
-            schoolsFilter: window.Server.getAllSchools.filter
+            schoolsFilter: window.Server.getAllSchools.filter,
+            submitService: window.Server.profileRequests
         };
     },
     getDefaultState:function() {
@@ -44,7 +45,8 @@ GrantRole = React.createClass({
         this.getDefaultBinding().clear();
     },
     continueButtonClick:function(model){
-        const self = this;
+        const self = this,
+            service = self.props.submitService;
 
         let ids = self.props.userIdsBinding.toJS();
         ids = ids && typeof ids === 'string' ? [ids] : ids;
@@ -54,7 +56,7 @@ GrantRole = React.createClass({
 
         ids.forEach(function(currentId){
             model.principalId = currentId;
-            window.Server.Permissions.post(model)
+            service.post(model)
                 .then(function(result){
                     return self.props.onSuccess && self.props.onSuccess(result);
                 });
