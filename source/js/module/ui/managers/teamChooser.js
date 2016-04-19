@@ -43,26 +43,31 @@ const	TeamChooser	= React.createClass({
 					include: ['sport','players']
 				};
 
-		return window.Server.teams.get({filter: filter}).then((teams)  => {
-			let	filteredTeams = [];
+		//TODO use filter in future
+		return window.Server.teams.get(MoreartyHelper.getActiveSchoolId(self))
+			// filter removed and temp teams
+			.then(teams => Promise.resolve(teams.filter(team => team.removed === false && team.tempTeam === false)))
+			.then(teams  => {
+				// filter teams by age
+				let	filteredTeams = [];
 
-			teams.forEach((team) => {
-				if(team.ages.length <= model.ages.length) {
-					switch (model.type) {
-						case 'houses':
-							if(self._isAllPlayersFromHouse(rival.id, team.players)) {
+				teams.forEach((team) => {
+					if(team.ages.length <= model.ages.length) {
+						switch (model.type) {
+							case 'houses':
+								if(self._isAllPlayersFromHouse(rival.id, team.players)) {
+									filteredTeams.push(team);
+								}
+								break;
+							default:
 								filteredTeams.push(team);
-							}
-							break;
-						default:
-							filteredTeams.push(team);
-							break;
+								break;
+						}
 					}
-				}
-			});
+				});
 
-			return filteredTeams;
-		});
+				return filteredTeams;
+			});
 	},
 	/**
 	 *

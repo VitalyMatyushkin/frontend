@@ -19,22 +19,22 @@ const EventManagerBase = React.createClass({
 				binding		= self.getDefaultBinding(),
 				schoolId	= binding.get('schoolInfo.id');
 
-		return window.Server.houses.get(
-			{
-				schoolId: schoolId,
-				filter: {
-					where: {
-						id: {
-							nin: [self._getOtherHouseId(order)]
-						},
-						name: {
-							like: houseName,
-							options: 'i'
-						}
-					},
-					order:'name ASC'
-				}
-			}
+		return window.Server.schoolHouses.get(schoolId
+			//{
+			//	schoolId: schoolId,
+			//	filter: {
+			//		where: {
+			//			id: {
+			//				nin: [self._getOtherHouseId(order)]
+			//			},
+			//			name: {
+			//				like: houseName,
+			//				options: 'i'
+			//			}
+			//		},
+			//		order:'name ASC'
+			//	}
+			//}
 		);
     },
 	/**
@@ -68,22 +68,23 @@ const EventManagerBase = React.createClass({
             binding = self.getDefaultBinding(),
             schoolId = binding.get('schoolInfo.id');
 
-        return window.Server.getAllSchools.get({
-            filter: {
-                where: {
-                    id: {
-                        neq: schoolId
-                    },
-                    name: {
-                        like: schoolName,
-                        options: 'i'
-                    }
-                },
-                include:'postcode',
-                order :'name ASC',
-                limit: 10
-            }
-        });
+		//{
+		//	filter: {
+		//		where: {
+		//			id: {
+		//				neq: schoolId
+		//			},
+		//			name: {
+		//				like: schoolName,
+		//					options: 'i'
+		//			}
+		//		},
+		//		include:'postcode',
+		//			order :'name ASC',
+		//			limit: 10
+		//	}
+		//}
+        return window.Server.getAllSchools.get();
     },
     changeCompleteType: function (event) {
         var self = this,
@@ -92,20 +93,26 @@ const EventManagerBase = React.createClass({
             schoolInfo = binding.get('schoolInfo'),
             rivals = Immutable.List();
 
-        if (type === 'inter-schools') {
-            rivals = rivals.push(binding.get('schoolInfo'));
-        } else if (type === 'internal') {
-            rivals = Immutable.fromJS([
-                {
-                    id: null,
-                    name: ''
-                },
-                {
-                    id: null,
-                    name: ''
-                }
-            ]);
-        }
+		switch (type) {
+			case 'inter-schools'://EXTERNAL_SCHOOLS
+				rivals = rivals.push(binding.get('schoolInfo'));
+				break;
+			case 'internal'://INTERNAL_TEAMS
+				rivals = Immutable.fromJS([
+					{
+						id: null,
+						name: ''
+					},
+					{
+						id: null,
+						name: ''
+					}
+				]);
+				break;
+			case 'houses'://INTERNAL_HOUSES
+
+				break;
+		};
 
         binding
             .atomically()

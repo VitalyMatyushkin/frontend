@@ -1,10 +1,10 @@
 /**
  * Created by Anatoly on 28.03.2016.
  */
+const   DateHelper  = require('module/helpers/date_helper'),
+        EventHelper = require('module/helpers/eventHelper');
 
-const DateHelper = require('module/helpers/date_helper'),
-
-ChallengeModel = function(event, activeSchoolId){
+const ChallengeModel = function(event, activeSchoolId){
     const self = this;
 
     self.activeSchoolId = activeSchoolId;
@@ -33,13 +33,13 @@ ChallengeModel.prototype._getResultByTeam = function(event, order) {
 
 ChallengeModel.prototype._getRivalName = function(event, order) {
     const self = this,
-        type = event.type,
+        eventType = event.eventType,
         played = self.played,
         participant = order < event.participants.length ? event.participants[order] : null;
 
     let	rivalName = null;
 
-    switch(type) {
+    switch(EventHelper.serverClientTypeClientEventTypeToMapping[eventType]) {
         case 'internal':
             rivalName = participant ? participant.name : null;
             break;

@@ -1,7 +1,8 @@
 const	React			= require('react'),
-		Team			= require('./../team'),
+		Team			= require('./../team/skypeStyleTeam'),
 		PlayerChooser	= require('./../player_chooser'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Lazy			= require('lazyjs'),
 		If				= require('module/ui/if/if'),
 		Immutable		= require('immutable');
@@ -15,6 +16,8 @@ const TeamWrapper = React.createClass({
 	},
 	componentWillMount: function () {
 		const self = this;
+
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self)
 
 		self._initBinding();
 		self._addListeners();
@@ -141,14 +144,14 @@ const TeamWrapper = React.createClass({
 			filter: binding.toJS('filter')
 		}));
 	},
-	_getPlayerChooserFilter: function(team) {
+	_getPlayerChooserFilter: function(team, school) {
 		const	self = this;
 
 		return {
 			gender:		team.gender,
 			houseId:	team.houseId,
-			schoolId:	team.school.id,
-			forms:		self._getFilteredAgesBySchoolForms(team.ages, team.school.forms)
+			schoolId:	school.id,
+			forms:		self._getFilteredAgesBySchoolForms(team.ages, school.forms)
 		};
 	},
 	/**
@@ -286,25 +289,51 @@ const TeamWrapper = React.createClass({
 			binding = self.getDefaultBinding();
 
 		if(teamId) {
-			let players;
-			self._getPlayersFromServer(teamId).then((_players) => {
-				players = _players;
+			let	schoolData,
+				players,
+				team;
 
-				return self._getTeamFromServer(teamId);
-			}).then((team) => {
-				const updatedPlayers = TeamHelper.getPlayers(players, team);
-				binding
-					.atomically()
-					.set('teamTable.model.players',		Immutable.fromJS(updatedPlayers))
-					.set('teamTable.model.ages',		Immutable.fromJS(team.ages))
-					.set('teamTable.schoolInfo',		Immutable.fromJS(team.school))
-					.set('players',						Immutable.fromJS(updatedPlayers))
-					.set('prevPlayers',					Immutable.fromJS(updatedPlayers))
-					.set('removedPlayers',				Immutable.fromJS([]))
-					.set('playerChooser.filter',		Immutable.fromJS(self._getPlayerChooserFilter(team)))
-					.commit();
-				return team;
-			});
+			window.Server.school.get(self.activeSchoolId)
+				.then( _schoolData => {
+					schoolData = _schoolData;
+
+					// get forms data. they will inject to school
+					return window.Server.schoolForms.get(self.activeSchoolId);
+				})
+				.then( formsData => {
+					schoolData.forms = formsData;
+
+					return self._getPlayersFromServer(teamId);
+				})
+				.then((_players) => {
+					players = _players;
+
+					return self._getTeamFromServer(teamId);
+				})
+				.then((_team) => {
+					team = _team;
+
+					// Get all students, because in next step we should inject users data to players
+					return window.Server.students.get(self.activeSchoolId);
+				})
+				.then(users => {
+					let updatedPlayers = TeamHelper.getPlayersWithUserInfo(players, users);
+
+					// inject forms to players
+					updatedPlayers = TeamHelper.injectFormsToPlayers(updatedPlayers, schoolData.forms);
+
+					binding
+						.atomically()
+						.set('teamTable.model.players',		Immutable.fromJS(updatedPlayers))
+						.set('teamTable.model.ages',		Immutable.fromJS(team.ages))
+						.set('teamTable.schoolInfo',		Immutable.fromJS(schoolData))
+						.set('players',						Immutable.fromJS(updatedPlayers))
+						.set('prevPlayers',					Immutable.fromJS(updatedPlayers))
+						.set('removedPlayers',				Immutable.fromJS([]))
+						.set('playerChooser.filter',		Immutable.fromJS(self._getPlayerChooserFilter(team, schoolData)))
+						.commit();
+					return team;
+				});
 		} else {
 			binding
 				.atomically()
@@ -323,12 +352,11 @@ const TeamWrapper = React.createClass({
 	 * @private
 	 */
 	_getPlayersFromServer: function(teamId) {
-		return window.Server.players.get({
-			filter: {
-				where: {
-					teamId: teamId
-				}
-			}
+		const self = this;
+
+		return window.Server.teamPlayers.get({
+			schoolId:	self.activeSchoolId,
+			teamId:		teamId
 		});
 	},
 	/**
@@ -338,19 +366,20 @@ const TeamWrapper = React.createClass({
 	 * @private
 	 */
 	_getTeamFromServer: function(teamId) {
-		return window.Server.team.get(teamId, {
-			filter: {
-				include: [
-					{'players': ['user', 'form']},
-					{'school': ['forms']},
-					'sport'
-				]
-			}
-		});
+		const self = this;
+		// TODO Don't forget about filter when API will support includes
+		//filter: {
+		//	include: [
+		//		{'players': ['user', 'form']},
+		//		{'school': ['forms']},
+		//		'sport'
+		//	]
+		//}
+		return window.Server.team.get( { schoolId: self.activeSchoolId, teamId: teamId } );
 	},
 	_getTeamBinding: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return {
 			default:	binding.sub('teamTable'),

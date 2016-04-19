@@ -32,26 +32,51 @@ const EventView = React.createClass({
 
         self._initMenuItems();
 
-        window.Server.sports.get().then(function (sports) {
-            sportsBinding
-                .atomically()
-                .set('sync', true)
-                .set('models', Immutable.fromJS(sports))
-                .commit();
+        let events;
 
-            return window.Server.events.get(activeSchoolId,
-                {
-                    filter: {
-                        include: 'sport'
-                    }
-                });
-        }).then(function (events) {
-            binding
-                .atomically()
-                .set('models', Immutable.fromJS(events))
-                .set('sync', true)
-                .commit();
-        });
+        window.Server.sports.get()
+            .then( sports => {
+                sportsBinding
+                    .atomically()
+                    .set('sync', true)
+                    .set('models', Immutable.fromJS(sports))
+                    .commit();
+
+                // TODO don't forget about include
+                //{
+                //    filter: {
+                //        include: 'sport'
+                //    }
+                //}
+                return window.Server.events.get(activeSchoolId);
+            })
+            .then( _events => {
+                events = _events;
+
+                // inject team models to event
+                return Promise.all(
+                    events.map(event => {
+                        // Get event teams
+                        return Promise.all(event.teams.map(
+                            teamId => window.Server.team.get(
+                                {
+                                    schoolId: activeSchoolId,
+                                    teamId: teamId
+                                }
+                            ))
+                        )
+                        // Set teams to event
+                        .then(teams => event.participants = teams);
+                    })
+                );
+            })
+            .then( _ => {
+                binding
+                    .atomically()
+                    .set('models', Immutable.fromJS(events))
+                    .set('sync', true)
+                    .commit();
+            });
     },
     _initMenuItems: function() {
         const self = this;
