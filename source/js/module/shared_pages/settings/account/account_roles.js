@@ -13,10 +13,7 @@ const AccountRoles = React.createClass({
         self = this;
         binding = self.getDefaultBinding();
         globalBinding = self.getMoreartyContext().getBinding();
-        window.Server.userPermission.get({id:globalBinding.get('userData.authorizationInfo.userId'),filter:{
-            where:{
-                accepted:true
-            },
+        window.Server.profilePermissions.get({filter:{
             include:{
                 relation:'school'
             }

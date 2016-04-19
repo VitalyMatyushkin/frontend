@@ -15,7 +15,10 @@ const serviceList = {
 
         // profile
         serviceList.profile = new Service('/i/profile', binding);
-        serviceList.userPermission = new Service('/i/permissions', binding);
+        serviceList.profilePermissions = new Service('/i/permissions', binding);
+        serviceList.profilePermission = new Service('/i/permissions/{permissionId}', binding);
+        serviceList.profileRequests = new Service('/i/permissions/requests', binding);
+        serviceList.profileRequest = new Service('/i/permissions/requests/{prId}', binding);
 
         // users
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
@@ -29,9 +32,11 @@ const serviceList = {
 
         // students
         serviceList.students = new Service('/i/schools/{schoolId}/students', binding);
+        serviceList.student = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 
         // forms
         serviceList.forms 		= new Service('/i/schools/{schoolId}/forms', binding);
+        serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);
 		serviceList.schoolForm 	= new Service('/i/schools/{schoolId}/forms/{formId}', binding);
         serviceList.publicSchoolForms 	= new Service('/public/schools/{schoolId}/forms');
         serviceList.publicSchoolForm 	= new Service('/public/schools/{schoolId}/forms/{formId}');
@@ -44,12 +49,17 @@ const serviceList = {
 
         // teams
         serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
+        serviceList.team = new Service('/i/schools/{schoolId}/teams/{teamId}', binding);
+        serviceList.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
+        serviceList.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);
+        serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
 
         // news
         serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
 
         //Permissions
         serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
         // sports
         serviceList.sports = new Service('/public/sports', binding);
@@ -61,8 +71,6 @@ const serviceList = {
 
 
 
-		serviceList.schoolStudents 	= new Service('/i/schools/{schoolId}/students', binding);
-		serviceList.schoolStudent 	= new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 
 
 
@@ -79,10 +87,6 @@ const serviceList = {
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
 		// schools
-		serviceList.schools = new Service('/i/schools', binding);
-		serviceList.school = new Service('/i/schools/{schoolId}', binding);
-		serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);
-		serviceList.schoolHouses = new Service('/i/schools/{schoolId}/houses', binding);
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
 		serviceList.manager= new Service('/schools/{id}/managers/rel/{fk}',binding);
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
@@ -105,9 +109,7 @@ const serviceList = {
 		serviceList.getMaSchools = new Service('/schools/getMaSchools', binding);
 
 		// students
-		serviceList.students = new Service('/i/schools/{schoolId}/students', binding);
 		serviceList.studentsCount = new Service('/schools/{schoolId}/students/count', binding);
-		serviceList.student = new Service('/students/{studentId}', binding);
 		serviceList.studentUpdate = new Service('/students/{studentId}/update', binding);
 		serviceList.studentData = new Service('/students/{studentId}/user',binding);
 		serviceList.studentGamesWon = new Service('/students/{id}/events/won?include={include}', binding);
@@ -156,11 +158,6 @@ const serviceList = {
 		serviceList.inviteRepay = new Service('/invites/{inviteId}/repay', binding);
 
 		// teams
-		serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
-		serviceList.team = new Service('/i/schools/{schoolId}/teams/{teamId}', binding);
-		serviceList.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
-		serviceList.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);
-		serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
 		serviceList.playersRelation = new Service('/teams/{teamId}/players/rel/{studentId}', binding);
 		serviceList.playersByTeam = new Service('/teams/{teamId}/players', binding);
 		serviceList.exactlyPlayersByTeam = new Service('/teams/{teamId}/exactlyPlayers/{playerId}', binding);
@@ -204,10 +201,8 @@ const serviceList = {
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 		//Permissions
 		serviceList.Permissions = new Service('/permissions',binding);
-		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);
-		serviceList.permissionRequests = new Service('/i/permissions/requests');
 
 		//Activity Logs
 		serviceList.activityLogs = new Service('/logs',binding);
