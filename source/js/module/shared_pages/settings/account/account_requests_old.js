@@ -20,7 +20,7 @@ const AccountRequests = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
-        window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
+        window.Server.profileRequests.get()
             .then(function(userPermissions){
                 binding
                     .atomically()
@@ -54,7 +54,7 @@ const AccountRequests = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding();
         binding.set('popup',false);
-        window.Server.userPermissions.get({userId:globalBinding.get('userData.authorizationInfo.userId')})
+        window.Server.profileRequests.get()
             .then(function(permission){
                 binding
                     .atomically()
