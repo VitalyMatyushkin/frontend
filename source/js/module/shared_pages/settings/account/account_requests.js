@@ -9,18 +9,22 @@ const   Table           = require('module/ui/list/table'),
         Lazy            = require('lazyjs'),
         ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin'),
         Popup           = require('module/ui/popup'),
-        GrantRole       = require('module/ui/grant_role/grant_role');
+        GrantRole       = require('module/ui/grant_role/grant_role'),
+        Immutable 	    = require('immutable');
+
 
 const AccountRequests = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin],
     serviceName:'profileRequests',
     groupActionList:['Accept','Decline'],
     filters:{include:['school']},
-
+    addButton:true,
     componentWillMount:function(){
         const self = this;
 
         self.getSchools();
+        self.addButton = <span onClick={self.handleAddNewButtonClick} className="addButton addNewForm"/>;
+
     },
     getSchools:function(){
         const 	self 	= this,
@@ -29,16 +33,6 @@ const AccountRequests = React.createClass({
         window.Server.publicSchools.get().then(schools => {
             binding.set('schools', schools);
         });
-    },
-    getSchoolEmblem:function(permission){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            schools = binding.get('schools'),
-            school = schools && permission ? schools.find(s => s.id === permission.schoolId) : null;
-
-        if(school && school.pic){
-            return <span className="eChallenge_rivalPic"><img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/></span>;
-        }
     },
     getSchoolName:function(permission){
         var self = this,
@@ -49,6 +43,12 @@ const AccountRequests = React.createClass({
         if(school){
             return school.name;
         }
+    },
+    getStatus:function(status){
+        return <span className={'request-'+status.toLowerCase()}>{status}</span>;
+    },
+    getActions:function(request){
+        return 'not implemented';
     },
     _getQuickEditActionFunctions:function(itemId,itemName){
         const   self      = this,
@@ -67,6 +67,20 @@ const AccountRequests = React.createClass({
                 break;
         }
     },
+    handleAddNewButtonClick:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        binding.set('popup',true);
+    },
+    _closePopup:function(){
+        var self = this,
+            binding = self.getDefaultBinding();
+        binding.set('popup',false);
+    },
+    _onSuccess:function(){
+        this._closePopup();
+        this.reloadData();
+    },
     getTableView:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -79,13 +93,14 @@ const AccountRequests = React.createClass({
                     <Table title="My Requests" binding={binding} getDataPromise={self.getDataPromise}
                            filter={self.filter} hideActions={true} >
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
-                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
-                        <TableField dataField="principalInfo" dataFieldKey="email">Email</TableField>
                         <TableField dataField="requestedPermission" dataFieldKey="preset" >Permission</TableField>
                         <TableField dataField="requestedPermission" dataFieldKey="comment" >Details</TableField>
+                        <TableField dataField="date" filterType="none" >Request Date</TableField>
+                        <TableField dataField="status" parseFunction={self.getStatus} >Request Status</TableField>
+                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getActions} >Actions</TableField>
                     </Table>
                     <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
-                        <GrantRole binding={binding} userIdsBinding={rootBinding.sub('userData.authorizationInfo.userId')}
+                        <GrantRole binding={binding.sub('grantRole')} userIdsBinding={rootBinding.sub('userData.authorizationInfo.userId')}
                                    onSuccess={self._onSuccess}/>
                     </Popup>
                 </div>
