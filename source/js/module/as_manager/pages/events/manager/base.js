@@ -19,7 +19,7 @@ const EventManagerBase = React.createClass({
 				binding		= self.getDefaultBinding(),
 				schoolId	= binding.get('schoolInfo.id');
 
-		return window.Server.schoolHouses.get(schoolId
+		return window.Server.houses.get(schoolId
 			//{
 			//	schoolId: schoolId,
 			//	filter: {
