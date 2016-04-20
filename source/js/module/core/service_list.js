@@ -213,7 +213,7 @@ const serviceList = {
         //Filtering services
         serviceList.getAllSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
         serviceList.getMaSchools.filter = FilteringServices.maSchoolsFiltering;         //(filter)
-        serviceList.students.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
+        serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
 
 	},
 	// Services which not require authorization

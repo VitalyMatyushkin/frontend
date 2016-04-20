@@ -6,7 +6,7 @@ const 	Table = require('module/ui/list/table'),
 
 const ClassListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
-	serviceName: 'forms',
+	serviceName: 'schoolForms',
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
