@@ -194,7 +194,7 @@ const  RoleList = React.createClass({
                 role        = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.role'),
                 listOpen    = binding.get('listOpen'),
                 show        = !!binding.get('permissions').length,
-                hidden      = !binding.get('schools').length && !role;
+                hidden      = !binding.get('schools').length && !role && !self.props.onlyLogout;
 
         if(listOpen)
             this.refs.role_list.focus();

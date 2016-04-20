@@ -76,7 +76,7 @@ const AdminRequest = React.createClass({
         let confirmMsg;
 		switch (action){
             case 'Accept':
-                if(currentPr.preset === "parent") {
+                if(currentPr.requestedPermission.preset === "parent") {
 					document.location.hash = document.location.hash + '/accept?id=' + currentPr.id;
 				} else {
 					confirmMsg = window.confirm("Are you sure you want to accept ?");
