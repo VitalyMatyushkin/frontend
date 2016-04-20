@@ -36,7 +36,6 @@ const SchoolSummary = React.createClass({
 
         window.Server.school.get(self.activeSchoolId, {filter: {include: 'postcode'}})
             .then(function(schoolData) {
-				console.log(schoolData);
                 binding.set('schoolData',Immutable.fromJS(schoolData));
                 return schoolData;
             });

@@ -14,15 +14,14 @@ const HomeNews = React.createClass({
 		if(activeSchoolId !== undefined || activeSchoolId !== null){
 			window.Server.publicSchoolNews.get({schoolId:activeSchoolId})
 				.then(news =>{
-					console.log(news);
 					binding.atomically()
 						.set('schoolNews',Immutable.fromJS(news))
 						.set('selectedNewsItem',Immutable.fromJS(''))
 						.commit();
 				},error=>{
-					console.log('shit happened '+error);
+					console.log(error);
 				}).catch(failed =>{
-					console.log('failed '+failed);
+					console.log(failed);
 				});
 		}
 
