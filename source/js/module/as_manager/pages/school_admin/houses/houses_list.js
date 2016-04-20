@@ -7,7 +7,7 @@ const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName: 'houses',
     _getDataPromise:function(){
-        return window.Server.houses.get(this.activeSchoolId);
+        return window.Server.schoolHouses.get(this.activeSchoolId);
     },
 	_getItemRemoveFunction:function(data){
 		var self = this,

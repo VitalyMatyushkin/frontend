@@ -33,7 +33,7 @@ const FilteringServices = {
     },
 
     studentsFilteringByLastName: function (schoolId, filter) {
-        return window.Server.students.get(schoolId, {
+        return window.Server.schoolStudents.get(schoolId, {
             filter: {
                 where: {
                     'userInfo.lastName': {

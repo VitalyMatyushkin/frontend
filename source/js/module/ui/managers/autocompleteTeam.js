@@ -91,7 +91,7 @@ const AutocompleteTeam = React.createClass({
 
             let players;
 
-            return window.Server.students.get(schoolId, {filter: filter})
+            return window.Server.schoolStudents.get(schoolId, {filter: filter})
                 .then(_players => {
                     players = _players;
 
@@ -185,7 +185,7 @@ const AutocompleteTeam = React.createClass({
     //        filter.where.houseId = binding.get('id');
     //    }
     //
-    //    return window.Server.students.get(schoolId, {
+    //    return window.Server.schoolStudents.get(schoolId, {
     //        filter: filter
     //    }).then(function (data) {
     //        data.map(function (player) {

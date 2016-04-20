@@ -16,7 +16,7 @@ const StudentForm = React.createClass({
 	getClassService: function(){
 		const self = this;
 		return function(txt){
-			return window.Server.forms.get(
+			return window.Server.schoolForms.get(
 				{
 					schoolId:self.props.schoolId,
 					filter:{
@@ -32,7 +32,7 @@ const StudentForm = React.createClass({
 	getHouseService: function() {
 		const self = this;
 		return function(txt) {
-			return window.Server.houses.get(
+			return window.Server.schoolHouses.get(
 				{
 					schoolId:self.props.schoolId,
 					filter:{

@@ -68,7 +68,7 @@ const TeamEditPage = React.createClass({
                 // inject sport to team
                 team.sport = TeamHelper.getSportById(team.sportId, sports);
 
-                return window.Server.students.get(self.activeSchoolId);
+                return window.Server.schoolStudents.get(self.activeSchoolId);
             })
             .then( users => {
                 // inject users to players, because we need user info
