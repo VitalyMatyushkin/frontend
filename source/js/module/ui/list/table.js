@@ -168,7 +168,7 @@ const Table = React.createClass({
 
                 itemCells = React.Children.map(self.props.children, function(child, childIndex) {
                     var dataField = child.props.dataField,
-                        value = item[dataField];
+                        value = dataField ? item[dataField] : item;
 
                     if (child.props.parseFunction) {
                         value = child.props.parseFunction(value);

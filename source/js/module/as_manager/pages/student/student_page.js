@@ -20,7 +20,7 @@ const LeanerView = React.createClass({
         //console.log(binding.get('activeChildId'));
         if(!studentId) document.location.hash = 'events/calendar';
         // TODO: fixme. Somebody don't know anything about .flatMap
-        studentId && window.Server.student.get(studentId).then(function (data) {
+        studentId && window.Server.schoolStudent.get(studentId).then(function (data) {
             leanerData = data;
             window.Server.form.get(data.formId).then(function (classData) {
                 leanerData.classData = classData;

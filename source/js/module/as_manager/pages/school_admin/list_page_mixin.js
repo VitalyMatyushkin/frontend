@@ -139,6 +139,9 @@ const ListPageMixin = {
                     <If condition={currentPage[currentPage.length-1] ==='news'}>
                         <div className="addButtonShort" onClick={self._createNewsItem}><SVG icon="icon_add_news" /></div>
                     </If>
+                    <If condition={!!self.addButton}>
+                        {self.addButton}
+                    </If>
                 </div>
                 <div className="eSchoolMaster_groupAction">
                     <If condition={(includeGroupAction.indexOf(currentPage[currentPage.length-1]) !== -1)}>

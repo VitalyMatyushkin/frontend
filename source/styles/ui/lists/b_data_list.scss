@@ -1,6 +1,5 @@
 .bDataList{
   margin-bottom: 40px;
-  position: relative;
   max-width: 1060px;
   margin: 0 auto;
   text-transform: none;
@@ -24,11 +23,9 @@
 }
 
 .eDataList_list{
-  position: relative;
 }
 
 .eDataList_listItem{
-  position: relative;
   box-sizing: border-box;
 }
 
@@ -69,11 +66,12 @@
 
 .eDataList_listItemCell{
   display: table-cell;
-  height: 40px;
+  height: 38px;
   vertical-align: middle;
   border-bottom: solid 1px #c2c1c2;
   overflow: hidden;
   text-overflow: ellipsis;
+  padding: 1px 5px;
 
   ul{
     li{
@@ -148,14 +146,14 @@
 .showElement{
   display:table-cell !important;
 }
-.roleAccepted{
+.request-accepted{
   color:green;
 }
-.roleDeclined{
+.request-rejected{
   color:red;
 }
-.rolePending{
-  color:orangered;
+.request-new{
+  color:orange;
 }
 .eDataList_accountReqSchool{
   width: 30%;
@@ -223,8 +221,7 @@
   color:$MAIN_COLOR;
 }
 .ePagination{
-  position:relative;
-  z-index: 10;
+  margin-top: 10px;
 }
 .ePage_num{
   display: inline-block;
@@ -261,7 +258,8 @@
   display: table-cell;
 }
 .eTable_view{
-  border-bottom: 2px solid #c8cdd0;
+  padding-bottom: 30px;
+
 }
 .requestActions{
   cursor: pointer;

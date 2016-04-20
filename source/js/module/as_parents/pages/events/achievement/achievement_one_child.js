@@ -26,7 +26,7 @@ const AchievementOneChild = React.createClass({
             leanerData = {};
         if(studentId === undefined)document.location.hash = 'events/calendar/all';
         if(studentId && studentId !=='all'){
-            return window.Server.student.get({studentId:studentId,
+            return window.Server.schoolStudent.get({studentId:studentId,
                 filter:{
                     include:['form','house','school','parents']
                 }

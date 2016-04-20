@@ -21,6 +21,7 @@ const serviceList = {
         // schools
         serviceList.schools = new Service('/superadmin/schools', binding);
         serviceList.school = new Service('/superadmin/schools/{schoolId}', binding);
+        serviceList.publicSchools = new Service('/public/schools', binding);
 
         // sports
         serviceList.sports = new Service('/superadmin/sports', binding);
@@ -164,7 +165,7 @@ const serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 
-		serviceList.setPermissions = new Service('/permissions/{id}/set', binding);
+		serviceList.statusPermissionRequest = new Service('/permissions/{id}/set', binding);
 		serviceList.Permission = new Service('/permissions/{id}', binding);
 		serviceList.PermissionCount = new Service('/permissions/count', binding);
 		//Activity Logs

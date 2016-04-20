@@ -45,7 +45,7 @@ const PermissionAcceptPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		return window.Server.forms.get(binding.get('schoolId'), {
+		return window.Server.schoolForms.get(binding.get('schoolId'), {
 			filter: {
 				where: {
 					name: {
@@ -66,7 +66,7 @@ const PermissionAcceptPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		return window.Server.houses.get(binding.get('schoolId'), {
+		return window.Server.schoolHouses.get(binding.get('schoolId'), {
 			filter: {
 				where: {
 					name: {
@@ -117,7 +117,7 @@ const PermissionAcceptPage = React.createClass({
 				{ id: binding.get('permissionId') },
 				{ studentId: binding.get('studentId') }
 			).then(function() {
-				return window.Server.setPermissions.post(
+				return window.Server.statusPermissionRequest.post(
 						{ id: binding.get('permissionId')},
 						{ accepted:true }
 					);
