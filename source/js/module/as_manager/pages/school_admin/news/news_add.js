@@ -26,7 +26,7 @@ NewsAddPage = React.createClass({
 
 		data.schoolId = self.activeSchoolId;
 
-		self.activeSchoolId && window.Server.news.post(self.activeSchoolId, data).then(function() {
+		self.activeSchoolId && window.Server.privateSchoolNews.post(self.activeSchoolId, data).then(function() {
 			document.location.hash = 'school_admin/news';
 		});
 	},

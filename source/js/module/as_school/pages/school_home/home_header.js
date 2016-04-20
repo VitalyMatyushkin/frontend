@@ -4,6 +4,7 @@
 const   Immutable 	= require('immutable'),
         React       = require('react'),
         Superuser   = require('module/helpers/superuser'),
+        Helpers		= require('module/helpers/storage'),
         Lazy        = require('lazyjs');
 
 /** Array of default photos to show when there is no photos got from server side for any possible reason */
@@ -21,8 +22,8 @@ const HomeHeader = React.createClass({
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 rootBinding     = self.getMoreartyContext().getBinding(),
-                serviceBinding  = window.Server._login.binding,
-                activeSchoolId  = rootBinding.get('activeSchoolId');
+                activeSchoolId  = Helpers.LocalStorage.get('activeSchoolData').id;
+        rootBinding.set('activeSchoolId',Immutable.fromJS(activeSchoolId));
 
         /** pulling photos from school default album */
         window.Server.publicSchools.get({filter: {
@@ -35,7 +36,7 @@ const HomeHeader = React.createClass({
 
             binding.set('school',Immutable.fromJS(school));
             if(defaultAlbumId) {
-                return Superuser.runAsSuperUser(serviceBinding, () => {
+                return Superuser.runAsSuperUser(rootBinding, () => {
                     return window.Server.photos.get(defaultAlbumId, {})
                         .then( photos => {
                             const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();
@@ -64,7 +65,7 @@ const HomeHeader = React.createClass({
             if(photos.length !== 0) {
                 /* maybe this is not really so bad as it looks like because otherwise React Animation should be used */
                 headerSection.src = photos[randIndexPos];
-                console.log('src: ' + headerSection.src);
+                //console.log('src: ' + headerSection.src);
             }
         },5000);
     },

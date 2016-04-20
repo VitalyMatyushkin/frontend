@@ -36,6 +36,7 @@ const SchoolSummary = React.createClass({
 
         window.Server.school.get(self.activeSchoolId, {filter: {include: 'postcode'}})
             .then(function(schoolData) {
+				console.log(schoolData);
                 binding.set('schoolData',Immutable.fromJS(schoolData));
                 return schoolData;
             });
@@ -44,7 +45,7 @@ const SchoolSummary = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				schoolPicture	= binding.get('schoolData.pic') ? binding.get('schoolData.pic'):'images/no-image.jpg',
-				siteLink		= binding.get('schoolData.domain') ? `${binding.get('schoolData.domain')}.stage.squadintouch.com`:'',
+				siteLink		= binding.get('schoolData.domain') ? `${binding.get('schoolData.domain')}.stage2.squadintouch.com`:'',
 				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined;
 		return (
 			<div>
@@ -70,16 +71,23 @@ const SchoolSummary = React.createClass({
 						<div className="eDescription">
 							<p>{binding.get('schoolData').get('description')}</p>
 						</div>
-						<p>
-							Site:
-							<a	href={'//' + siteLink}
-								target="blank"
-								title="binding.get('name') homepage"
-									className="bSchoolLink"
-							>
+						{/*Lets not render a link when there is no domain for school*/}
+						<If condition={siteLink!==''}>
+							<p>
+								Site:
+								<a	href={'//' + siteLink}
+									  target="blank" title="binding.get('name') homepage"
+									  className="bSchoolLink">
 									<SVG icon="icon_sch_link" />
 								</a>
-						</p>
+							</p>
+						</If>
+						<If condition={siteLink===''}>
+							<p>
+								Site:
+								School has no active domain
+							</p>
+						</If>
 					</div>
 					<div>
 						<If condition={geoPoint !== undefined}>

@@ -12,7 +12,7 @@ const HomeCalender = React.createClass({
 		const	self			= this,
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
-
+		//TODO: Do we need this as we now have public and private views?
 		// Superuser.runAsSuperUser(rootBinding, () => {
 		// 	return window.Server.eventsBySchoolId.get({schoolId:activeSchoolId}).then((events) => {
 		// 		rootBinding.set('events.models',Immutable.fromJS(events));

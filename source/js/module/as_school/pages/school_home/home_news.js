@@ -11,6 +11,22 @@ const HomeNews = React.createClass({
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
+		if(activeSchoolId !== undefined || activeSchoolId !== null){
+			window.Server.news.get({schoolId:activeSchoolId})
+				.then(news =>{
+					console.log(news);
+					binding.atomically()
+						.set('schoolNews',Immutable.fromJS(news))
+						.set('selectedNewsItem',Immutable.fromJS(''))
+						.commit();
+				},error=>{
+					console.log('shit happened '+error);
+				}).catch(failed =>{
+					console.log('failed '+failed);
+				});
+		}
+
+		//TODO: Do we need this as we now have public and private views?
 		// Superuser.runAsSuperUser(rootBinding, () => {
 		// 	window.Server.news
 		// 		.get(

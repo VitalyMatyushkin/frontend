@@ -39,7 +39,7 @@ const HomeFixtures = React.createClass({
 				binding			= self.getDefaultBinding(),
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
-
+		//TODO: Do we need this as we now have public and private views?
 		// Superuser.runAsSuperUser(rootBinding, () => {
 		// 	return window.Server.fixturesBySchoolId.get(
 		// 		{
