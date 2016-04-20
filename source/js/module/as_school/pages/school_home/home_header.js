@@ -22,36 +22,45 @@ const HomeHeader = React.createClass({
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 rootBinding     = self.getMoreartyContext().getBinding(),
+                currentSch      = Helpers.LocalStorage.get('activeSchoolData'),
+                defaultAlbumId  = currentSch.defaultAlbumId,
                 activeSchoolId  = Helpers.LocalStorage.get('activeSchoolData').id;
         rootBinding.set('activeSchoolId',Immutable.fromJS(activeSchoolId));
-
+        //we already have current school data so lets use it - at least for the school details
+        binding.set('school',Immutable.fromJS(currentSch));
+        if(defaultAlbumId){
+            //if we have album id we do some logic here - TBC
+        }else{
+            binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
+        }
         /** pulling photos from school default album */
-        window.Server.publicSchools.get({filter: {
-            where: {
-                id: activeSchoolId
-            }
-        }}).then(function(schools){
-            const   school          = schools[0], // TODO: remove that SHIT
-                    defaultAlbumId  = school.defaultAlbumId;
-
-            binding.set('school',Immutable.fromJS(school));
-            if(defaultAlbumId) {
-                return Superuser.runAsSuperUser(rootBinding, () => {
-                    return window.Server.photos.get(defaultAlbumId, {})
-                        .then( photos => {
-                            const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();
-                            if(photosToShow.length != 0) {
-                                binding.set('___photosToShow', Immutable.fromJS(photosToShow));
-                            } else {
-                                binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
-                            }
-                        });
-                })
-            } else {
-                binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));    // will show default images if there is no default album found
-            }
-
-        });
+        //TODO: Reuse code below when photos method and view has been implemented on server
+        // window.Server.publicSchools.get({filter: {
+        //     where: {
+        //         id: activeSchoolId
+        //     }
+        // }}).then(function(schools){
+        //     const   school          = schools[0], // TODO: remove that SHIT
+        //             defaultAlbumId  = school.defaultAlbumId;
+        //
+        //     binding.set('school',Immutable.fromJS(school));
+        //     if(defaultAlbumId) {
+        //         return Superuser.runAsSuperUser(rootBinding, () => { //TODO: Do we need this login process?
+        //             return window.Server.photos.get(defaultAlbumId, {})
+        //                 .then( photos => {
+        //                     const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();
+        //                     if(photosToShow.length != 0) {
+        //                         binding.set('___photosToShow', Immutable.fromJS(photosToShow));
+        //                     } else {
+        //                         binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
+        //                     }
+        //                 });
+        //         })
+        //     } else {
+        //         binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));    // will show default images if there is no default album found
+        //     }
+        //
+        // });
     },
 
     componentDidMount:function(){

@@ -12,7 +12,7 @@ const HomeNews = React.createClass({
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
 		if(activeSchoolId !== undefined || activeSchoolId !== null){
-			window.Server.news.get({schoolId:activeSchoolId})
+			window.Server.publicSchoolNews.get({schoolId:activeSchoolId})
 				.then(news =>{
 					console.log(news);
 					binding.atomically()

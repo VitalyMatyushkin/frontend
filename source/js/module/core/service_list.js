@@ -29,7 +29,8 @@ const serviceList = {
         serviceList.schools = new Service('/i/schools', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
-		serviceList.privateSchoolNews = new Service('/i/schools/{schoolId}/news',binding);
+		serviceList.publicSchoolNews = new Service('/public/schools/{schoolId}/news',binding);
+		serviceList.newsItem = new Service('/i/schools/{schoolId}/news/{newsId}',binding);
 
         // students
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
@@ -55,7 +56,7 @@ const serviceList = {
         serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
 
         // news
-        serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
+        serviceList.news = new Service('/i/schools/{schoolId}/news', binding);
 
         //Permissions
         serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
