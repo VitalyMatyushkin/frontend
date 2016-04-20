@@ -98,7 +98,7 @@ const	PlayerChooser	= React.createClass({
 
 			filter.houseId && (requestFilter.where.houseId = filter.houseId);
 
-			playersPromise = window.Server.students
+			playersPromise = window.Server.schoolStudents
 				.get(filter.schoolId, {filter: requestFilter})
 				.then((players) => {
 					const	filteredPlayers	= [];

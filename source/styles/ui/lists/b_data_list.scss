@@ -1,6 +1,5 @@
 .bDataList{
   margin-bottom: 40px;
-  position: relative;
   max-width: 1060px;
   margin: 0 auto;
   text-transform: none;
@@ -24,11 +23,9 @@
 }
 
 .eDataList_list{
-  position: relative;
 }
 
 .eDataList_listItem{
-  position: relative;
   box-sizing: border-box;
 }
 
@@ -224,8 +221,7 @@
   color:$MAIN_COLOR;
 }
 .ePagination{
-  position:relative;
-  z-index: 10;
+  margin-top: 10px;
 }
 .ePage_num{
   display: inline-block;
@@ -262,7 +258,8 @@
   display: table-cell;
 }
 .eTable_view{
-  border-bottom: 2px solid #c8cdd0;
+  padding-bottom: 30px;
+
 }
 .requestActions{
   cursor: pointer;

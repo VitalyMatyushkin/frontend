@@ -16,7 +16,7 @@ const ClassAddPage = React.createClass({
 
 		data.schoolId = self.activeSchoolId;
 
-		self.activeSchoolId && window.Server.forms.post(self.activeSchoolId, data).then(function() {
+		self.activeSchoolId && window.Server.schoolForms.post(self.activeSchoolId, data).then(function() {
 			document.location.hash = 'school_admin/forms';
 		});
 	},

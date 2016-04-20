@@ -7,7 +7,7 @@ const Table = require('module/ui/list/table'),
 
 const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
-	serviceName: 'students',
+	serviceName: 'schoolStudents',
     serviceCount:'studentsCount',
 	filters: {
 		include: ['user','form','parents']

@@ -5,10 +5,7 @@ const Table         = require('module/ui/list/table'),
 
 const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
-	serviceName: 'houses',
-    _getDataPromise:function(){
-        return window.Server.houses.get(this.activeSchoolId);
-    },
+	serviceName: 'schoolHouses',
 	_getItemRemoveFunction:function(data){
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -29,7 +26,7 @@ const HousesListPage = React.createClass({
 
 		return (
 			<Table title="Houses" binding={binding} onItemEdit={self._getEditFunction()}
-				   getDataPromise={self._getDataPromise} onItemRemove={self._getItemRemoveFunction}>
+				   getDataPromise={self.getDataPromise} onItemRemove={self._getItemRemoveFunction}>
 				<TableField dataField="name" filterType="none" width="180px">House name</TableField>
 				<TableField dataField="description" filterType="none">Description</TableField>
 				<TableField dataField="colors" filterType="colors">Color</TableField>

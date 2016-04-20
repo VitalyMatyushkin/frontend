@@ -21,6 +21,7 @@ const serviceList = {
         // schools
         serviceList.schools = new Service('/superadmin/schools', binding);
         serviceList.school = new Service('/superadmin/schools/{schoolId}', binding);
+        serviceList.publicSchools = new Service('/public/schools', binding);
 
         // sports
         serviceList.sports = new Service('/superadmin/sports', binding);

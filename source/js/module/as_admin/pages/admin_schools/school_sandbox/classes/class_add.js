@@ -14,7 +14,7 @@ const ClassAddPage = React.createClass({
 	},
 	submitAdd: function(data) {
 		const self = this;
-		window.Server.forms.post(self.schoolId, data).then(function() {
+		window.Server.schoolForms.post(self.schoolId, data).then(function() {
 			document.location.hash = self.FORM_URL;
 		}).catch(function(err){
 			document.location.hash = self.FORM_URL;

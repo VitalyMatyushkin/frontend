@@ -40,7 +40,7 @@ const MultiSelectTeam = React.createClass({
             };
         }
 
-        window.Server.students.get(schoolId, {
+        window.Server.schoolStudents.get(schoolId, {
             filter: filter
         }).then(function (data) {
             data.map(function (player) {
