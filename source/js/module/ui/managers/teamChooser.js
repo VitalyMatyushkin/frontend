@@ -32,6 +32,7 @@ const	TeamChooser	= React.createClass({
 		const	self	= this,
 				model	= self.getBinding().model.toJS(),
 				rival	= self.getBinding().rival.toJS(),
+				//TODO use filter in future
 				filter	= {
 					where: {
 						schoolId:	MoreartyHelper.getActiveSchoolId(self),
@@ -43,8 +44,12 @@ const	TeamChooser	= React.createClass({
 					include: ['sport','players']
 				};
 
-		//TODO use filter in future
-		return window.Server.teams.get(MoreartyHelper.getActiveSchoolId(self))
+
+		return window.Server.teams.get(MoreartyHelper.getActiveSchoolId(self), {
+				filter: {
+					limit: 100
+				}
+			})
 			// filter removed and temp teams
 			.then(teams => Promise.resolve(teams.filter(team => team.removed === false && team.tempTeam === false)))
 			.then(teams  => {

@@ -11,12 +11,16 @@ const TeamsListPage = React.createClass({
     _getDataPromise: function() {
         const  self = this;
 
+        // TODO don't forget about filter
+        //filter: {
+        //    include:'sport',
+        //        where: {
+        //        tempTeam: false
+        //    }
+        //}
         return window.Server.teams.get( self.activeSchoolId, {
             filter: {
-                include:'sport',
-                where: {
-                    tempTeam: false
-                }
+                limit: 100
             }
         }).then(teams => {
             return teams.filter(team => team.removed === false && team.tempTeam === false);

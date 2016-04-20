@@ -34,7 +34,11 @@ const EventView = React.createClass({
 
         let events;
 
-        window.Server.sports.get()
+        window.Server.sports.get({
+                filter: {
+                    limit: 100
+                }
+            })
             .then( sports => {
                 sportsBinding
                     .atomically()
@@ -48,7 +52,11 @@ const EventView = React.createClass({
                 //        include: 'sport'
                 //    }
                 //}
-                return window.Server.events.get(activeSchoolId);
+                return window.Server.events.get(activeSchoolId, {
+                    filter: {
+                        limit: 100
+                    }
+                });
             })
             .then( _events => {
                 events = _events;

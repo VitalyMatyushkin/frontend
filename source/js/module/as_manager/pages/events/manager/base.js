@@ -94,10 +94,10 @@ const EventManagerBase = React.createClass({
             rivals = Immutable.List();
 
 		switch (type) {
-			case 'inter-schools'://EXTERNAL_SCHOOLS
+			case 'inter-schools':
 				rivals = rivals.push(binding.get('schoolInfo'));
 				break;
-			case 'internal'://INTERNAL_TEAMS
+			case 'internal':
 				rivals = Immutable.fromJS([
 					{
 						id: null,
@@ -108,9 +108,6 @@ const EventManagerBase = React.createClass({
 						name: ''
 					}
 				]);
-				break;
-			case 'houses'://INTERNAL_HOUSES
-
 				break;
 		};
 
