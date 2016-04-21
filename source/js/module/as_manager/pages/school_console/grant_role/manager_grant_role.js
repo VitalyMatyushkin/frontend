@@ -17,7 +17,7 @@ ManagerGrantRole = React.createClass({
 
         return (
             <GrantRole userIdsBinding={self.props.userIdsBinding} onSuccess={self.props.onSuccess} binding={binding}
-                       studentFieldProps={self.props.studentFieldProps} schoolsFilter={window.Server.getMaSchools.filter} />
+                       schoolsFilter={window.Server.getMaSchools.filter} />
         );
     }
 });

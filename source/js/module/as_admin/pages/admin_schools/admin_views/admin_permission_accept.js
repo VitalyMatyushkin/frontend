@@ -112,22 +112,16 @@ const PermissionAcceptPage = React.createClass({
 		binding.set('studentId', studentId);
 	},
 	onAcceptPermission: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+        var self = this,
+            binding = self.getDefaultBinding(),
+            prId = binding.get('prId'),
+            schoolId = binding.get('schoolId'),
+            studentId = binding.get('studentId');
 
-		window.Server.PermissionRequest.put(
-				{ id: binding.get('prId') },
-				{ studentId: binding.get('studentId') }
-			).then(function() {
-				return window.Server.statusPermissionRequest.post(
-						{ id: binding.get('prId')},
-						{ accepted:true }
-					);
-			}).then(function(){
+        window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED', studentId:studentId})
+            .then(function(){
 				document.location.hash = self.props.afterSubmitPage;
-				return;
 			});
-
 	},
 	render: function() {
 		var self = this,

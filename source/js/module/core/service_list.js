@@ -212,7 +212,7 @@ const serviceList = {
 		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
 
         //Filtering services
-        serviceList.getAllSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
+        serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
         serviceList.getMaSchools.filter = FilteringServices.maSchoolsFiltering;         //(filter)
         serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
 
