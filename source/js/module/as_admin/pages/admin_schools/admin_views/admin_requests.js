@@ -69,7 +69,7 @@ const AdminRequest = React.createClass({
     _getQuickEditActionFunctions:function(itemId,itemName){
 		const   self      = this,
 			    action    = itemName,
-                prId        = itemId,
+                prId      = itemId,
                 binding   = self.getDefaultBinding().sub('data'),
                 currentPr = self.getCurrentPermission(prId, binding.toJS()),
                 schoolId  = currentPr.requestedPermission.schoolId;
@@ -77,7 +77,7 @@ const AdminRequest = React.createClass({
 		switch (action){
             case 'Accept':
                 if(currentPr.requestedPermission.preset === "PARENT") {
-					document.location.hash = document.location.hash + '/accept?id=' + currentPr.id;
+					document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`;
 				} else {
 					confirmMsg = window.confirm("Are you sure you want to accept ?");
 					if(confirmMsg === true){

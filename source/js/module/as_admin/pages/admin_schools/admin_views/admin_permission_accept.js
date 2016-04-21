@@ -26,26 +26,28 @@ const PermissionAcceptPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
-			permissionId = routingData.id;
+			prId = routingData.prId,
+            schoolId = routingData.schoolId;
 
 		binding.clear();
-		binding.set('permissionId', permissionId);
+		binding.set('prId', prId);
 
-		if (permissionId) {
-			window.Server.Permission.get(permissionId).then(function (data) {
+		if (prId) {
+			window.Server.PermissionRequest.get({prId:prId, schoolId:schoolId}).then(function (data) {
 				self.isMounted() && binding
 										.atomically()
 										.set('comment', data.comment)
-										.set('schoolId', data.schoolId)
+										.set('schoolId', schoolId)
 										.commit();
 			});
 		}
 	},
 	serviceFormFilter: function(fromName) {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+            schoolId = binding.get('schoolId');
 
-		return window.Server.schoolForms.get(binding.get('schoolId'), {
+		return window.Server.schoolForms.get(schoolId, {
 			filter: {
 				where: {
 					name: {
@@ -64,9 +66,10 @@ const PermissionAcceptPage = React.createClass({
 	},
 	serviceHouseFilter: function(houseName) {
 		var self = this,
-			binding = self.getDefaultBinding();
+			binding = self.getDefaultBinding(),
+            schoolId = binding.get('schoolId');
 
-		return window.Server.schoolHouses.get(binding.get('schoolId'), {
+		return window.Server.schoolHouses.get(schoolId, {
 			filter: {
 				where: {
 					name: {
@@ -87,14 +90,13 @@ const PermissionAcceptPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		return window.Server.getAllStudents.get({
+		return window.Server.schoolStudents.get({
 			filter: {
 				where: {
 					schoolId: binding.get('schoolId'),
 					formId: binding.get('formId'),
 					houseId: binding.get('houseId')
-				},
-				include: 'user'
+				}
 			}
 		}).then(function(students) {
 			students.forEach(function(student) {
@@ -113,12 +115,12 @@ const PermissionAcceptPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		window.Server.Permission.put(
-				{ id: binding.get('permissionId') },
+		window.Server.PermissionRequest.put(
+				{ id: binding.get('prId') },
 				{ studentId: binding.get('studentId') }
 			).then(function() {
 				return window.Server.statusPermissionRequest.post(
-						{ id: binding.get('permissionId')},
+						{ id: binding.get('prId')},
 						{ accepted:true }
 					);
 			}).then(function(){
