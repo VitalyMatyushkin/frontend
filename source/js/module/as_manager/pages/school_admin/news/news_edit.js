@@ -25,7 +25,7 @@ const NewsEditPage = React.createClass({
 		binding.clear();
 
 		if (newsId) {
-			window.Server.newsItem.get({schoolId:schoolId,newsId:newsId})
+			window.Server.schoolNewsItem.get({schoolId:schoolId,newsId:newsId})
 				.then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
@@ -36,7 +36,7 @@ const NewsEditPage = React.createClass({
 	},
 	submitEdit: function(data) {
 		const self = this;
-		window.Server.newsItem.put({schoolId:self.schoolId,newsId:self.newsId}, data).then(function() {
+		window.Server.schoolNewsItem.put({schoolId:self.schoolId,newsId:self.newsId}, data).then(function() {
 			self.isMounted() && (document.location.hash = 'school_admin/news');
 		});
 	},

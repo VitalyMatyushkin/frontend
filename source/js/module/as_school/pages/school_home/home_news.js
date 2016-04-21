@@ -24,25 +24,6 @@ const HomeNews = React.createClass({
 					console.log(failed);
 				});
 		}
-
-		//TODO: Do we need this as we now have public and private views?
-		// Superuser.runAsSuperUser(rootBinding, () => {
-		// 	window.Server.news
-		// 		.get(
-		// 		{
-		// 			schoolId: activeSchoolId,
-		// 			filter: {
-		// 				order: 'date DESC',
-		// 				limit: 20
-		// 			}
-		// 		})
-		// 		.then((schoolNews) => {
-		// 			binding.atomically()
-		// 				.set('schoolNews',Immutable.fromJS(schoolNews))
-		// 				.set('selectedNewsItem',Immutable.fromJS(''))
-		// 				.commit();
-		// 		});
-		// });
 	},
 
 	//Temporarily remove img from news body
