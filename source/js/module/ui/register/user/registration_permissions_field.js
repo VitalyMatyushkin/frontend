@@ -141,7 +141,7 @@ const RegistrationPermissionField = React.createClass({
                     " Form - "+binding.get('studentExtra_2').form+". House - "+binding.get('studentExtra_2').house+".";
             }
         }
-        window.Server.permissionRequests.post(dataToPost).then( _ => self.props.onSuccess());
+        window.Server.profileRequests.post(dataToPost).then( _ => self.props.onSuccess());
     },
     schoolMessage: function () {
         return (
