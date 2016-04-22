@@ -1,18 +1,18 @@
-const   Immutable        = require('immutable'),
-		AutocompleteTeam = require('module/ui/managers/autocompleteTeam'),
-		Autocomplete     = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		MoreartyHelper   = require('module/helpers/morearty_helper'),
-		Team             = require('module/ui/managers/team/defaultTeam'),
-		React            = require('react'),
-		If               = require('module/ui/if/if'),
-		Multiselect      = require('module/ui/multiselect/multiselect'),
-		Lazy             = require('lazyjs');
+const   Immutable			= require('immutable'),
+		AutocompleteTeam	= require('module/ui/managers/autocompleteTeam'),
+		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
+		Team				= require('module/ui/managers/team/defaultTeam'),
+		React				= require('react'),
+		If					= require('module/ui/if/if'),
+		Multiselect			= require('module/ui/multiselect/multiselect'),
+		Lazy				= require('lazyjs');
 
 const TeamForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: React.PropTypes.string.isRequired,
-		onFormSubmit: React.PropTypes.func
+		title:			React.PropTypes.string.isRequired,
+		onFormSubmit:	React.PropTypes.func
 	},
 	playersListener: undefined,
 	componentWillUnmount: function() {
