@@ -79,7 +79,7 @@ const FootballManager = React.createClass({
 			filter.where.formId = binding.get(['autocomplete', rivalsType, self.props.order, 'selectedId']);
 		}
 
-		return window.Server.students.get(schoolId, {
+		return window.Server.schoolStudents.get(schoolId, {
 			filter: filter
 		}).then(function (data) {
 			data.map(function (player) {

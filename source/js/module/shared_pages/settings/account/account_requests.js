@@ -10,7 +10,7 @@ const   Table           = require('module/ui/list/table'),
         Date            = require('module/helpers/date_helper'),
         ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin'),
         Popup           = require('module/ui/popup'),
-        GrantRole       = require('module/ui/grant_role/grant_role'),
+        AddRequest      = require('module/shared_pages/settings/account/add_request'),
         Immutable 	    = require('immutable');
 
 
@@ -107,8 +107,7 @@ const AccountRequests = React.createClass({
                         <TableField dataField="" filterType="none" parseFunction={self.getActions} >Actions</TableField>
                     </Table>
                     <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
-                        <GrantRole binding={binding.sub('grantRole')} userIdsBinding={rootBinding.sub('userData.authorizationInfo.userId')}
-                                   onSuccess={self._onSuccess}/>
+                        <AddRequest binding={binding.sub('addRequest')} onSuccess={self._onSuccess}/>
                     </Popup>
                 </div>
             </If>

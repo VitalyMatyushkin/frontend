@@ -7,6 +7,7 @@ const   Form        = require('module/ui/form/form'),
         React       = require('react'),
         Immutable   = require('immutable'),
         classNames  = require('classnames'),
+        roleList    = require('module/data/roles_data'),
 
 GrantRole = React.createClass({
     mixins:[Morearty.Mixin],
@@ -22,7 +23,7 @@ GrantRole = React.createClass({
                 type:"text",
                 field:"studentName"
             },
-            schoolsFilter: window.Server.getAllSchools.filter,
+            schoolsFilter: window.Server.publicSchools.filter,
             submitService: window.Server.profileRequests
         };
     },
@@ -67,15 +68,10 @@ GrantRole = React.createClass({
         const   self        = this,
                 binding     = self.getDefaultBinding(),
                 getSchools  = self.props.schoolsFilter,
-                isParent    = binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS(),
-                roleList    = [ {id:'teacher', value:'Teacher'},
-                                {id:'coach', value:'Coach'},
-                                {id:'parent', value:'Parent'},
-                                {id:'admin', value:'School Admin'},
-                                {id:'manager', value:'School Manager'}];
+                isParent    = binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS();
 
         return (
-        <Form name="New Request" updateBinding={true} binding={binding} onSubmit={self.continueButtonClick}
+        <Form name="New Permission" updateBinding={true} binding={binding} onSubmit={self.continueButtonClick}
               formStyleClass="bGrantContainer" defaultButton="Submit">
             <FormField type="autocomplete" field="schoolId" serviceFullData={getSchools} >School</FormField>
             <FormField type="select" field="preset" sourceArray={roleList} >Role</FormField>

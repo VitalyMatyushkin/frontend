@@ -9,7 +9,6 @@ const serviceList = {
 	initialize: function(binding) {
         // authorization
         serviceList._login = new Service('/i/login',binding);
-        serviceList.logout = new Service('/users/logout', binding);
         serviceList.roles = new Service('/i/roles', binding);
         serviceList._become = new Service('/i/roles/{roleName}/become', binding);
 
@@ -30,20 +29,21 @@ const serviceList = {
         serviceList.publicSchool = new Service('/public/schools/{schoolId}', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
+		serviceList.publicSchoolNews = new Service('/public/schools/{schoolId}/news',binding);
+		serviceList.schoolNewsItem = new Service('/i/schools/{schoolId}/news/{newsId}',binding);
 
         // students
-        serviceList.students = new Service('/i/schools/{schoolId}/students', binding);
-        serviceList.student = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
+        serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
+        serviceList.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 
         // forms
-        serviceList.forms 		= new Service('/i/schools/{schoolId}/forms', binding);
         serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);
 		serviceList.schoolForm 	= new Service('/i/schools/{schoolId}/forms/{formId}', binding);
         serviceList.publicSchoolForms 	= new Service('/public/schools/{schoolId}/forms');
         serviceList.publicSchoolForm 	= new Service('/public/schools/{schoolId}/forms/{formId}');
 
         // houses
-        serviceList.houses 			= new Service('/i/schools/{schoolId}/houses', binding);
+        serviceList.schoolHouses 	= new Service('/i/schools/{schoolId}/houses', binding);
 		serviceList.schoolHouse 	= new Service('/i/schools/{schoolId}/houses/{houseId}', binding);
         serviceList.publicSchoolHouses 	= new Service('/public/schools/{schoolId}/houses', binding);
         serviceList.publicSchoolHouse 	= new Service('/public/schools/{schoolId}/houses/{houseId}', binding);
@@ -56,10 +56,11 @@ const serviceList = {
         serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
 
         // news
-        serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
+        serviceList.schoolNews = new Service('/i/schools/{schoolId}/news', binding);
 
-        //Permissions
-        serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        //Permission Requests
+        serviceList.permissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        serviceList.permissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}',binding);
         serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
         // sports
@@ -219,15 +220,18 @@ const serviceList = {
 		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
 
         //Filtering services
-        serviceList.getAllSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
+        serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
         serviceList.getMaSchools.filter = FilteringServices.maSchoolsFiltering;         //(filter)
-        serviceList.students.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
+        serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
 
 	},
 	// Services which not require authorization
 	initializeOpenServices: function() {
 		// schools
-		serviceList.schoolsFindOne = new Service('/schools/getAllSchools');
+		/*Instead of find one we find all because we don't know school id when user click or type in school domain url
+		* so we query all schools 
+		* */
+		serviceList.schoolsFindOne = new Service('/public/schools'); 
 		
 		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
 		serviceList.images = new ImageService(window.apiImg);

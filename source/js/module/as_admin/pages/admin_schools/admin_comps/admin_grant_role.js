@@ -14,7 +14,7 @@ AdminGrantRole = React.createClass({
     },
     getDefaultProps: function() {
         return {
-            schoolsFilter: window.Server.getAllSchools.filter
+            schoolsFilter: window.Server.publicSchools.filter
         };
     },
     onSuccess:function(permission){

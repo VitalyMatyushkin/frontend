@@ -5,7 +5,7 @@ const   Lazy        = require('lazyjs');
 
 const FilteringServices = {
     allSchoolsFiltering: function (filter) {
-        return window.Server.getAllSchools.get({
+        return window.Server.publicSchools.get({
             filter: {
                 where: {
                     name: {
@@ -18,9 +18,8 @@ const FilteringServices = {
         });
     },
     maSchoolsFiltering: function (filter) {
-        return window.Server.getMaSchools.get({
+        return window.Server.schools.get({
             filter: {
-                presets: ['owner', 'admin', 'manager', 'teacher', 'coach', 'student'],
                 where: {
                     name: {
                         like: filter,
@@ -33,7 +32,7 @@ const FilteringServices = {
     },
 
     studentsFilteringByLastName: function (schoolId, filter) {
-        return window.Server.students.get(schoolId, {
+        return window.Server.schoolStudents.get(schoolId, {
             filter: {
                 where: {
                     'userInfo.lastName': {

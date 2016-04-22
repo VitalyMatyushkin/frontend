@@ -184,7 +184,7 @@ const TeamForm = React.createClass({
     },
 	_serviceHouseFilter: function() {
 		const self = this;
-		return window.Server.houses.get({schoolId:MoreartyHelper.getActiveSchoolId(self),filter:{
+		return window.Server.schoolHouses.get({schoolId:MoreartyHelper.getActiveSchoolId(self),filter:{
             order:'name ASC' //Filter by name in ascending order
         }});
 	},

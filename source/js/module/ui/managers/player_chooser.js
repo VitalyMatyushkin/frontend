@@ -107,7 +107,7 @@ const	PlayerChooser	= React.createClass({
 					forms = _forms;
 
 					// get all avail students
-					return window.Server.students.get(filter.schoolId);
+					return window.Server.schoolStudents.get(filter.schoolId);
 				})
 				.then( players => {
 					const updPlayers = TeamHelper.injectFormsToPlayers(players, forms);

@@ -14,7 +14,7 @@ const HouseAddPage = React.createClass({
 	},
 	submitAdd: function(data) {
 		var self = this;
-		window.Server.houses.post(self.schoolId, data).then(function() {
+		window.Server.schoolHouses.post(self.schoolId, data).then(function() {
 			document.location.hash = self.HOUSE_URL;
 		}).catch(function(er){
 			document.location.hash = self.HOUSE_URL;
