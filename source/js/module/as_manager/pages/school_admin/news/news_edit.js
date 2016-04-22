@@ -15,26 +15,28 @@ var NewsTitle = React.createClass({
 const NewsEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
-			routingData = globalBinding.sub('routing.parameters').toJS(),
-			newsId = routingData.id;
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				newsId 			= routingData.id,
+				schoolId		= globalBinding.get('userRules.activeSchoolId');
 
 		binding.clear();
 
 		if (newsId) {
-			window.Server.oneNews.get(newsId).then(function (data) {
+			window.Server.schoolNewsItem.get({schoolId:schoolId,newsId:newsId})
+				.then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
-			self.newsId = newsId;
+			self.newsId 	= newsId;
+			self.schoolId 	= schoolId;
 		}
 	},
 	submitEdit: function(data) {
-		var self = this;
-
-		window.Server.oneNews.put(self.newsId, data).then(function() {
+		const self = this;
+		window.Server.schoolNewsItem.put({schoolId:self.schoolId,newsId:self.newsId}, data).then(function() {
 			self.isMounted() && (document.location.hash = 'school_admin/news');
 		});
 	},

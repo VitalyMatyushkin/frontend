@@ -11,23 +11,19 @@ const HomeNews = React.createClass({
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
-		Superuser.runAsSuperUser(rootBinding, () => {
-			window.Server.news
-				.get(
-				{
-					schoolId: activeSchoolId,
-					filter: {
-						order: 'date DESC',
-						limit: 20
-					}
-				})
-				.then((schoolNews) => {
+		if(activeSchoolId !== undefined || activeSchoolId !== null){
+			window.Server.publicSchoolNews.get({schoolId:activeSchoolId})
+				.then(news =>{
 					binding.atomically()
-						.set('schoolNews',Immutable.fromJS(schoolNews))
+						.set('schoolNews',Immutable.fromJS(news))
 						.set('selectedNewsItem',Immutable.fromJS(''))
 						.commit();
+				},error=>{
+					console.log(error);
+				}).catch(failed =>{
+					console.log(failed);
 				});
-		});
+		}
 	},
 
 	//Temporarily remove img from news body

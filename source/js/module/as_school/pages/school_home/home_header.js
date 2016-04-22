@@ -4,6 +4,7 @@
 const   Immutable 	= require('immutable'),
         React       = require('react'),
         Superuser   = require('module/helpers/superuser'),
+        Helpers		= require('module/helpers/storage'),
         Lazy        = require('lazyjs');
 
 /** Array of default photos to show when there is no photos got from server side for any possible reason */
@@ -21,36 +22,27 @@ const HomeHeader = React.createClass({
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 rootBinding     = self.getMoreartyContext().getBinding(),
-                activeSchoolId  = rootBinding.get('activeSchoolId');
-
-        /** pulling photos from school default album */
-        window.Server.getThisSchool.get({filter: {
-            where: {
-                id: activeSchoolId
-            }
-        }}).then(function(schools){
-            const   school          = schools[0], // TODO: remove that SHIT
-                    defaultAlbumId  = school.defaultAlbumId;
-
-            binding.set('school',Immutable.fromJS(school));
-
-            if(defaultAlbumId) {
-                return Superuser.runAsSuperUser(rootBinding, () => {
-                    return window.Server.photos.get(defaultAlbumId, {})
-                        .then( photos => {
-                            const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();
-                            if(photosToShow.length != 0) {
-                                binding.set('___photosToShow', Immutable.fromJS(photosToShow));
-                            } else {
-                                binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
-                            }
-                        });
-                })
-            } else {
-                binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));    // will show default images if there is no default album found
-            }
-
-        });
+                currentSch      = Helpers.LocalStorage.get('activeSchoolData'),
+                defaultAlbumId  = currentSch.defaultAlbumId,
+                activeSchoolId  = Helpers.LocalStorage.get('activeSchoolData').id;
+        rootBinding.set('activeSchoolId',Immutable.fromJS(activeSchoolId));
+        //we already have current school data so lets use it - at least for the school details
+        binding.set('school',Immutable.fromJS(currentSch));
+        if(defaultAlbumId){
+            //if we have album id we do some logic here - TBC
+            //TODO: Reuse code below when photos method and view has been implemented on server
+            // window.Server.photos.get(defaultAlbumId, {})
+            //     .then( photos => {
+            //         const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();
+            //         if(photosToShow.length != 0) {
+            //             binding.set('___photosToShow', Immutable.fromJS(photosToShow));
+            //         } else {
+            //             binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
+            //         }
+            //     });
+        }else{
+            binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
+        }
     },
 
     componentDidMount:function(){
@@ -64,7 +56,7 @@ const HomeHeader = React.createClass({
             if(photos.length !== 0) {
                 /* maybe this is not really so bad as it looks like because otherwise React Animation should be used */
                 headerSection.src = photos[randIndexPos];
-                console.log('src: ' + headerSection.src);
+                //console.log('src: ' + headerSection.src);
             }
         },5000);
     },

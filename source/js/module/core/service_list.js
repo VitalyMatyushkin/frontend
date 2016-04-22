@@ -29,6 +29,8 @@ const serviceList = {
         serviceList.schools = new Service('/i/schools', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
+		serviceList.publicSchoolNews = new Service('/public/schools/{schoolId}/news',binding);
+		serviceList.schoolNewsItem = new Service('/i/schools/{schoolId}/news/{newsId}',binding);
 
         // students
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
@@ -54,7 +56,7 @@ const serviceList = {
         serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
 
         // news
-        serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
+        serviceList.schoolNews = new Service('/i/schools/{schoolId}/news', binding);
 
         //Permission Requests
         serviceList.permissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
@@ -220,7 +222,10 @@ const serviceList = {
 	// Services which not require authorization
 	initializeOpenServices: function() {
 		// schools
-		serviceList.schoolsFindOne = new Service('/schools/getAllSchools');
+		/*Instead of find one we find all because we don't know school id when user click or type in school domain url
+		* so we query all schools 
+		* */
+		serviceList.schoolsFindOne = new Service('/public/schools'); 
 		
 		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
 		serviceList.images = new ImageService(window.apiImg);
