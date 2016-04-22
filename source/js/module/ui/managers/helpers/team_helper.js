@@ -1,6 +1,6 @@
 const   TeamPlayersValidator = require('module/ui/managers/helpers/team_players_validator'),
-        Lazy                 = require('lazyjs'),
-        Immutable            = require('immutable');
+		Lazy                 = require('lazyjs'),
+		Immutable            = require('immutable');
 
 /**
  * Reduce available students ages for game from school object
@@ -9,33 +9,33 @@ const   TeamPlayersValidator = require('module/ui/managers/helpers/team_players_
  * @private
  */
 function getAges(schoolData) {
-    return schoolData.forms.reduce(function (memo, form) {
-        if (memo.indexOf(form.age) === -1) {
-            memo.push(form.age);
-        }
+	return schoolData.forms.reduce(function (memo, form) {
+		if (memo.indexOf(form.age) === -1) {
+			memo.push(form.age);
+		}
 
-        return memo;
-    }, []);
+		return memo;
+	}, []);
 };
 
 /**
  * Validate player objects
  */
 function validate(binding) {
-    const limits = {
-        maxPlayers: binding.get('teamForm.default.model.sportModel.limits.maxPlayers'),
-        minPlayers: binding.get('teamForm.default.model.sportModel.limits.minPlayers'),
-        maxSubs:    binding.get('teamForm.default.model.sportModel.limits.maxSubs')
-    };
+	const limits = {
+		maxPlayers: binding.get('teamForm.default.model.sportModel.limits.maxPlayers'),
+		minPlayers: binding.get('teamForm.default.model.sportModel.limits.minPlayers'),
+		maxSubs:    binding.get('teamForm.default.model.sportModel.limits.maxSubs')
+	};
 
-    const result = TeamPlayersValidator.validate(
-        binding.toJS('teamForm.players'),
-        limits
-    );
+	const result = TeamPlayersValidator.validate(
+		binding.toJS('teamForm.players'),
+		limits
+	);
 
-    binding.set('teamForm.error',
-        Immutable.fromJS(result)
-    );
+	binding.set('teamForm.error',
+		Immutable.fromJS(result)
+	);
 };
 
 /**
@@ -46,102 +46,105 @@ function validate(binding) {
  * @returns [user + player info]
  */
 function getPlayersWithUserInfo(players, users) {
-    return players.map( player => {
-        const foundUser = Lazy(users).findWhere({id: player.userId});
+	return players.map( player => {
+		const foundUser = Lazy(users).findWhere({id: player.userId});
 
-        const updUser = Object.assign({}, foundUser);
-
-        updUser.position        = player.position;
-        updUser.sub             = player.sub;
-        updUser.playerModelId   = player._id;
-
-        return updUser;
-    });
+		return Object.assign(
+			{},
+			foundUser,
+			{
+				position:		player.position,
+				sub:			player.sub,
+				playerModelId:	player._id,
+				teamId:			player.teamId
+			}
+		);
+	});
 };
 
 function commitPlayers(initialPlayers, players, teamId, schoolId) {
-    let promises = [];
+	let promises = [];
 
-    initialPlayers.forEach((initialPlayer) => {
-        let findedPlayer = Lazy(players).findWhere({id:initialPlayer.id});
+	initialPlayers.forEach((initialPlayer) => {
+		let findedPlayer = Lazy(players).findWhere({id:initialPlayer.id});
 
-        if(findedPlayer) {
-            //Mmm, check for modifications
-            let changes = {};
-            if(findedPlayer.position !== initialPlayer.position) {
-                changes.position = findedPlayer.position;
-            }
-            if(findedPlayer.sub !== initialPlayer.sub) {
-                changes.sub = findedPlayer.sub;
-            }
-            if(changes.position !== undefined || changes.sub !== undefined) {
-                promises.push(
-                    _changePlayer(
-                        schoolId,
-                        teamId,
-                        initialPlayer.playerModelId,
-                        changes
-                    )
-                );
-            }
-            players.splice(
-                Lazy(players).indexOf(findedPlayer),
-                1
-            );
-        } else {
-            //So, user delete player, let's delete player from server
-            promises.push(
-                _deletePlayer(
-                    schoolId,
-                    teamId,
-                    initialPlayer.id
-                )
-            );
-        }
-    });
-    if(players.length > 0) {
-        //Hmmm...new players!
-        players.forEach((player) => {
-            promises.push(
-                _addPlayer(
-                    schoolId,
-                    teamId,
-                    player
-                )
-            );
-        });
-    }
+		if(findedPlayer) {
+			//Mmm, check for modifications
+			let changes = {};
+			if(findedPlayer.position !== initialPlayer.position) {
+				changes.position = findedPlayer.position;
+			}
+			if(findedPlayer.sub !== initialPlayer.sub) {
+				changes.sub = findedPlayer.sub;
+			}
+			if(changes.position !== undefined || changes.sub !== undefined) {
+				promises.push(
+					changePlayer(
+						schoolId,
+						teamId,
+						initialPlayer.playerModelId,
+						changes
+					)
+				);
+			}
+			players.splice(
+				Lazy(players).indexOf(findedPlayer),
+				1
+			);
+		} else {
+			//So, user delete player, let's delete player from server
+			promises.push(
+				deletePlayer(
+					schoolId,
+					teamId,
+					initialPlayer.id
+				)
+			);
+		}
+	});
+	if(players.length > 0) {
+		//Hmmm...new players!
+		players.forEach((player) => {
+			promises.push(
+				addPlayer(
+					schoolId,
+					teamId,
+					player
+				)
+			);
+		});
+	}
 
-    return promises;
+	return promises;
 };
 
-function _addPlayer(schoolId, teamId, body) {
-    return window.Server.teamPlayers.post(
-        {
-            schoolId:  schoolId,
-            teamId:     teamId
-        },
-        body
-    );
+function addPlayer(schoolId, teamId, body) {
+	return window.Server.teamPlayers.post(
+		{
+			schoolId:  schoolId,
+			teamId:     teamId
+		},
+		body
+	);
 };
 
-function _deletePlayer(schoolId, teamId, playerId) {
-    return window.Server.teamPlayer.delete({
-        schoolId:   schoolId,
-        teamId:     teamId,
-        playerId:   playerId
-    });
+function deletePlayer(schoolId, teamId, playerId) {
+	return window.Server.teamPlayer.delete({
+		schoolId:   schoolId,
+		teamId:     teamId,
+		playerId:   playerId
+	});
 };
 
-function _changePlayer(schoolId, teamId, playerId, changes) {
-    return window.Server.teamPlayer.put(
-        {
-            schoolId:   schoolId,
-            teamId:     teamId,
-            playerId:   playerId
-        },
-        changes
-    );
+function changePlayer(schoolId, teamId, playerId, changes) {
+	return window.Server.teamPlayer.put(
+		{
+			schoolId:   schoolId,
+			teamId:     teamId,
+			playerId:   playerId
+		},
+		changes
+	);
 };
 
 /**
@@ -149,18 +152,28 @@ function _changePlayer(schoolId, teamId, playerId, changes) {
  * Method required until on the server becomes available "include" functional
  */
 function injectFormsToPlayers(players, forms) {
-    const playersWithForms = [];
+	const playersWithForms = [];
 
-    players.forEach(player => {
-        const form = Lazy(forms).findWhere( { id: player.formId } );
-        const tempPlayer = Object.assign({}, player);
+	players.forEach(player => {
+		const form = Lazy(forms).findWhere( { id: player.formId } );
+		const tempPlayer = Object.assign({}, player);
 
-        tempPlayer.form = form;
+		tempPlayer.form = form;
 
-        playersWithForms.push(tempPlayer);
-    });
+		playersWithForms.push(tempPlayer);
+	});
 
-    return playersWithForms;
+	return playersWithForms;
+};
+
+/**
+ * Inject teamId to players
+ * @param teamId
+ * @param players
+ * @returns {Array}
+ */
+function injectTeamIdToPlayers(teamId, players) {
+	return players.map(player => Object.assign({}, player, {teamId: teamId}));
 };
 
 /**
@@ -170,16 +183,38 @@ function injectFormsToPlayers(players, forms) {
  * @returns found sport
  */
 function getSportById(sportId, sports) {
-    return Lazy(sports).findWhere({id: sportId});
+	return Lazy(sports).findWhere({id: sportId});
+};
+
+/**
+ * Convert server points model to client points model
+ * Server points model [userId:{score, teamId}, userId:{score, teamId},...] - hash map
+ * Client points model [{userId, score, teamId}, {userId, score, teamId}] - array
+ */
+function convertPointsToClientModel(serverPointsModel) {
+	const clientPointsModel = [];
+
+	for(let key in serverPointsModel) {
+		clientPointsModel.push(
+			Object.assign({}, serverPointsModel[key], {userId: key})
+		);
+	}
+
+	return clientPointsModel;
 };
 
 const TeamHelper = {
-    getAges:                getAges,
-    validate:               validate,
-    getSportById:           getSportById,
-    getPlayersWithUserInfo: getPlayersWithUserInfo,
-    commitPlayers:          commitPlayers,
-    injectFormsToPlayers:   injectFormsToPlayers
+	getAges:					getAges,
+	validate:					validate,
+	getSportById:				getSportById,
+	getPlayersWithUserInfo:		getPlayersWithUserInfo,
+	addPlayer:					addPlayer,
+	changePlayer:				changePlayer,
+	deletePlayer:				deletePlayer,
+	commitPlayers:				commitPlayers,
+	injectFormsToPlayers:		injectFormsToPlayers,
+	injectTeamIdToPlayers:		injectTeamIdToPlayers,
+	convertPointsToClientModel:	convertPointsToClientModel
 };
 
 module.exports = TeamHelper;

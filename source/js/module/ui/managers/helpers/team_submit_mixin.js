@@ -1,4 +1,5 @@
 const	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		EventHelper			= require('module/helpers/eventHelper'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		Promise				= require('bluebird');
 
@@ -53,7 +54,7 @@ const TeamSubmitMixin = {
 			let	promises	= [],
 				teamData	= {teamId: teamId};
 
-			if (event.type == 'houses') {
+			if (event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
 				teamData.houseId = rival.id;
 			}
 			promises.push(new Promise(resolve => resolve(teamData)));
@@ -101,7 +102,7 @@ const TeamSubmitMixin = {
 									tempTeam:	isTemp
 								};
 
-		if(event.type == 'houses') {
+		if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
 			rivalModel.houseId = rival.id;
 		}
 

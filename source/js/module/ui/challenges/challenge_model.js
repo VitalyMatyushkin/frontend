@@ -39,7 +39,7 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
 
     let	rivalName = null;
 
-    switch(EventHelper.serverClientTypeClientEventTypeToMapping[eventType]) {
+    switch(EventHelper.serverEventTypeToClientEventTypeMapping[eventType]) {
         case 'internal':
             rivalName = participant ? participant.name : null;
             break;

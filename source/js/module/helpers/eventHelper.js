@@ -4,7 +4,7 @@ const EventHelper = {
 		'houses':			'INTERNAL_HOUSES',
 		'internal':			'INTERNAL_TEAMS'
 	},
-	serverClientTypeClientEventTypeToMapping: {
+	serverEventTypeToClientEventTypeMapping: {
 		'EXTERNAL_SCHOOLS':	'inter-schools',
 		'INTERNAL_HOUSES':	'houses',
 		'INTERNAL_TEAMS':	'internal'

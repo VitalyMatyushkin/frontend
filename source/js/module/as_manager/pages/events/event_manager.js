@@ -201,10 +201,24 @@ const EventManager = React.createClass({
 			endRegistrationTime:	model.endRegistrationTime
 		};
 
-		if(model.type === 'inter-schools') {
-			body.invitedSchoolId = binding.toJS('rivals.1.id');
-		} else {
-			body.invitedSchoolId = self.activeSchoolId;
+		switch (model.type) {
+			case 'inter-schools':
+				body.invitedSchoolId = binding.toJS('rivals.1.id');
+
+				break;
+			case 'houses':
+				body.invitedSchoolId = self.activeSchoolId;
+
+				body.houses = [
+					binding.toJS('rivals.0.id'),
+					binding.toJS('rivals.1.id')
+				];
+
+				break;
+			case 'internal':
+				body.invitedSchoolId = self.activeSchoolId;
+
+				break;
 		}
 
         return window.Server.events.post(
@@ -313,7 +327,10 @@ const EventManager = React.createClass({
 				isStepComplete = self._isSecondStepIsComplete();
 				break;
 			case 3:
-				if(!binding.toJS('error.0.isError') && !binding.toJS('error.1.isError')) {
+				if(
+					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0.isError') || // for inter-schools
+					!binding.toJS('error.0.isError') && !binding.toJS('error.1.isError') // for other type of event
+				) {
 					isStepComplete = true;
 				};
 				break;

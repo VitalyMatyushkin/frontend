@@ -65,13 +65,30 @@ const EventView = React.createClass({
                 return Promise.all(
                     events.map(event => {
                         // Get event teams
-                        return Promise.all(event.teams.map(
-                            teamId => window.Server.team.get(
-                                {
-                                    schoolId: activeSchoolId,
-                                    teamId: teamId
-                                }
-                            ))
+                        return Promise.all(
+                            event.teams.map(teamId => {
+                                return window.Server.team.get(
+                                        {
+                                            schoolId:   activeSchoolId,
+                                            teamId:     teamId
+                                        }
+                                    )
+                                    .then(team => {
+                                        if(team.houseId) {
+                                            return window.Server.schoolHouse.get(
+                                                {
+                                                    schoolId:   activeSchoolId,
+                                                    houseId:    team.houseId
+                                                }
+                                            ).then(house => {
+                                                team.house = house;
+                                                return Promise.resolve(team);
+                                            });
+                                        } else {
+                                            return Promise.resolve(team);
+                                        }
+                                    });
+                            })
                         )
                         // Set teams to event
                         .then(teams => event.participants = teams);

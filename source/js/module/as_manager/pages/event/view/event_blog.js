@@ -21,10 +21,12 @@ const Blog = React.createClass({
     _setBlogCount:function(){
         var self = this,
           binding = self.getDefaultBinding();
-        window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
-            binding.set('blogCount', res.count);
-            return res;
-        });
+
+        // TODO implement after available on server
+        //window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+        //    binding.set('blogCount', res.count);
+        //    return res;
+        //});
     },
     componentWillMount:function(){
         var self = this,
@@ -33,24 +35,25 @@ const Blog = React.createClass({
             loggedUser = globalBinding.get('userData.authorizationInfo.userId');
         self.hasChild = false;
         //For permissions
-        window.Server.userChildren.get({id:loggedUser}).then(function(children){
-                var participants = binding.get('players').toJS();
-            if(participants !== undefined && participants.length >=1){
-                var childrenId = children.map(function(child){
-                    return child.id;
-                });
-                participants.forEach(function(part){
-                    if(part !== undefined){
-                        for(var i=0; i<part.length; i++){
-                            for(var x=0; x <childrenId.length; x++){
-                                if(part[i].id === childrenId[x]){self.hasChild = true; break;}
-                            }
-                        }
-                    }
-                });
-            }
-            return children;
-        });
+        //TODO implement after available on server
+        //window.Server.userChildren.get({id:loggedUser}).then(function(children){
+        //        var participants = binding.get('players').toJS();
+        //    if(participants !== undefined && participants.length >=1){
+        //        var childrenId = children.map(function(child){
+        //            return child.id;
+        //        });
+        //        participants.forEach(function(part){
+        //            if(part !== undefined){
+        //                for(var i=0; i<part.length; i++){
+        //                    for(var x=0; x <childrenId.length; x++){
+        //                        if(part[i].id === childrenId[x]){self.hasChild = true; break;}
+        //                    }
+        //                }
+        //            }
+        //        });
+        //    }
+        //    return children;
+        //});
         //End of
         self._fetchCommentsData();
     },
@@ -59,43 +62,44 @@ const Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             eventId = binding.get('eventId');
-        window.Server.addToBlog.get({id:eventId,filter:{order:'postId ASC'}})
-            .then(function(comments){
-                comments.forEach(function(comment){
-                    window.Server.user.get({id:comment.ownerId})
-                        .then(function(author){
-                            comment.commentor = author;
-                            if(comment.parentId === '1'){
-                                topLevelComments.push(comment)
-                            }else{
-                                childComments.push(comment);
-                            }
-                            topLevelComments.forEach(function(topLevelComment){
-                                if(childComments.length > 0){
-                                    topLevelComment.replies = childComments.filter(function(child){
-                                        return child.parentId === topLevelComment.id;
-                                    });
-                                    if(topLevelComment.replies.length >= 1){
-                                        topLevelComment.replies = topLevelComment.replies.map(convertPostIdToInt);
-                                        topLevelComment.replies.sort(function (a, b) {
-                                            return a.postId - b.postId;
-                                        });
-                                    }
-                                }
-                            });
-                            topLevelComments = topLevelComments.map(convertPostIdToInt);
-                            topLevelComments.sort(function(a, b){
-                                return a.postId - b.postId;
-                            });
-                            binding.set('blogs',Immutable.fromJS(topLevelComments));
-                            binding.set('filteredChild',Immutable.fromJS(childComments));
-                            ReactDOM.findDOMNode(self.refs.newComment).style.display = 'none';
-                            return author;
-                        });
-                });
-                self._setBlogCount();
-                return comments;
-            });
+        // TODO implement after available on server
+        //window.Server.addToBlog.get({id:eventId,filter:{order:'postId ASC'}})
+        //    .then(function(comments){
+        //        comments.forEach(function(comment){
+        //            window.Server.user.get({id:comment.ownerId})
+        //                .then(function(author){
+        //                    comment.commentor = author;
+        //                    if(comment.parentId === '1'){
+        //                        topLevelComments.push(comment)
+        //                    }else{
+        //                        childComments.push(comment);
+        //                    }
+        //                    topLevelComments.forEach(function(topLevelComment){
+        //                        if(childComments.length > 0){
+        //                            topLevelComment.replies = childComments.filter(function(child){
+        //                                return child.parentId === topLevelComment.id;
+        //                            });
+        //                            if(topLevelComment.replies.length >= 1){
+        //                                topLevelComment.replies = topLevelComment.replies.map(convertPostIdToInt);
+        //                                topLevelComment.replies.sort(function (a, b) {
+        //                                    return a.postId - b.postId;
+        //                                });
+        //                            }
+        //                        }
+        //                    });
+        //                    topLevelComments = topLevelComments.map(convertPostIdToInt);
+        //                    topLevelComments.sort(function(a, b){
+        //                        return a.postId - b.postId;
+        //                    });
+        //                    binding.set('blogs',Immutable.fromJS(topLevelComments));
+        //                    binding.set('filteredChild',Immutable.fromJS(childComments));
+        //                    ReactDOM.findDOMNode(self.refs.newComment).style.display = 'none';
+        //                    return author;
+        //                });
+        //        });
+        //        self._setBlogCount();
+        //        return comments;
+        //    });
     },
     componentDidMount:function(){
         var self = this,
@@ -105,21 +109,23 @@ const Blog = React.createClass({
     _tickerForNewComments:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        self.intervalId = setInterval(function () {
-            window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
-                var oldCount = binding.get('blogCount');
-                if(oldCount !== undefined){
-                    if(oldCount !== res.count){
-                        ReactDOM.findDOMNode(self.refs.newComment).style.display = 'block';
-                        binding.set('blogCount',res.count);
-                        topLevelComments.length = 0;
-                        childComments.length = 0;
-                        self._fetchCommentsData();
-                    }
-                }
-                return res;
-            });
-        }, 2000);
+
+        // TODO implement after available on server
+        //self.intervalId = setInterval(function () {
+        //    window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+        //        var oldCount = binding.get('blogCount');
+        //        if(oldCount !== undefined){
+        //            if(oldCount !== res.count){
+        //                ReactDOM.findDOMNode(self.refs.newComment).style.display = 'block';
+        //                binding.set('blogCount',res.count);
+        //                topLevelComments.length = 0;
+        //                childComments.length = 0;
+        //                self._fetchCommentsData();
+        //            }
+        //        }
+        //        return res;
+        //    });
+        //}, 2000);
     },
     componentWillUnmount:function(){
         var self = this,
