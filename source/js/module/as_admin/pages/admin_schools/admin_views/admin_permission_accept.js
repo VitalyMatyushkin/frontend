@@ -30,14 +30,14 @@ const PermissionAcceptPage = React.createClass({
             schoolId = routingData.schoolId;
 
 		binding.clear();
-		binding.set('prId', prId);
+        binding.set('prId', prId);
+        binding.set('schoolId', schoolId);
 
 		if (prId) {
 			window.Server.permissionRequest.get({prId:prId, schoolId:schoolId}).then(function (data) {
 				self.isMounted() && binding
 										.atomically()
 										.set('comment', data.comment)
-										.set('schoolId', schoolId)
 										.commit();
 			});
 		}
