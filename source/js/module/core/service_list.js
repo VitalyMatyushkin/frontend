@@ -56,9 +56,9 @@ const serviceList = {
         // news
         serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
 
-        //Permissions
-        serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
-        serviceList.PermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}',binding);
+        //Permission Requests
+        serviceList.permissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        serviceList.permissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}',binding);
         serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
         // sports

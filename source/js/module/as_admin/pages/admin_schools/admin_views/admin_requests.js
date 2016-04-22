@@ -13,7 +13,7 @@ const AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     getDefaultProps: function() {
         return {
-            serviceName:'PermissionRequests',
+            serviceName:'permissionRequests',
             serviceCount:'PermissionCount'
         };
     },
