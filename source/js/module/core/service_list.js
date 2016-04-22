@@ -56,8 +56,9 @@ const serviceList = {
         // news
         serviceList.news = new Service('/public/schools/{schoolId}/news', binding);
 
-        //Permissions
-        serviceList.PermissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        //Permission Requests
+        serviceList.permissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        serviceList.permissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}',binding);
         serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
         // sports
@@ -211,7 +212,7 @@ const serviceList = {
 		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
 
         //Filtering services
-        serviceList.getAllSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
+        serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
         serviceList.getMaSchools.filter = FilteringServices.maSchoolsFiltering;         //(filter)
         serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
 
