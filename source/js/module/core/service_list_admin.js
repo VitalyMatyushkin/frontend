@@ -9,14 +9,15 @@ const serviceList = {
 	initialize: function(binding) {
         // authorization
         serviceList._login = new Service('/superadmin/login',binding);
-        serviceList.logout = new Service('/users/logout', binding);
 
         // users
 		serviceList.users = new Service('/superadmin/users', binding);
         serviceList.user = new Service('/superadmin/users/{id}', binding);
 
-        //Permissions
+        //Permission Requests
         serviceList.permissionRequests = new Service('/superadmin/users/permissions/requests',binding);
+        serviceList.permissionRequest = new Service('/superadmin/users/permissions/requests/{prId}',binding);
+        serviceList.statusPermissionRequest = new Service('/superadmin/users/permissions/requests/{prId}/status',binding);
 
         // schools
         serviceList.schools = new Service('/superadmin/schools', binding);
@@ -31,12 +32,23 @@ const serviceList = {
         serviceList.postCode = new Service('/superadmin/postcodes', binding);
 
         // forms
-        serviceList.forms = new Service('/superadmin/schools/{schoolId}/forms', binding);
-        serviceList.form = new Service('/superadmin/schools/{schoolId}/forms/{formId}', binding);
+        serviceList.schoolForms = new Service('/superadmin/schools/{schoolId}/forms', binding);
+        serviceList.schoolForm = new Service('/superadmin/schools/{schoolId}/forms/{formId}', binding);
 
         // houses
-        serviceList.houses = new Service('/superadmin/schools/{schoolId}/houses', binding);
-        serviceList.house = new Service('/superadmin/schools/{schoolId}/houses/{houseId}', binding);
+        serviceList.schoolHouses = new Service('/superadmin/schools/{schoolId}/houses', binding);
+        serviceList.schoolHouse = new Service('/superadmin/schools/{schoolId}/houses/{houseId}', binding);
+
+        // students
+        serviceList.schoolStudents = new Service('/superadmin/schools/{schoolId}/students', binding);
+        serviceList.schoolStudent = new Service('/superadmin/schools/{schoolId}/students/{studentId}', binding);
+
+
+
+
+
+
+
 
 
 
@@ -76,10 +88,6 @@ const serviceList = {
 		serviceList.getMaSchools = new Service('/schools/getMaSchools', binding);
 
 		// students
-		serviceList.students = new Service('/schools/{schoolId}/students', binding);
-		serviceList.studentsCount = new Service('/schools/{schoolId}/students/count', binding);
-		serviceList.student = new Service('/students/{studentId}', binding);
-		serviceList.studentUpdate = new Service('/students/{studentId}/update', binding);
 		serviceList.studentData = new Service('/students/{studentId}/user',binding);
 		serviceList.studentGamesWon = new Service('/students/{id}/events/won?include={include}', binding);
 		serviceList.studentGamesScored = new Service('/students/{id}/events/scored?include={include}', binding);
@@ -165,9 +173,6 @@ const serviceList = {
 		serviceList.replyToBlog = new Service('/events/{id}/comments/rel/{fk}',binding);
 		serviceList.getCommentCount = new Service('/events/{id}/comments/count',binding);
 
-		serviceList.statusPermissionRequest = new Service('/permissions/{id}/set', binding);
-		serviceList.Permission = new Service('/permissions/{id}', binding);
-		serviceList.PermissionCount = new Service('/permissions/count', binding);
 		//Activity Logs
 		serviceList.activityLogs = new Service('/logs',binding);
 		serviceList.logCount = new Service('/logs/count',binding);
@@ -177,9 +182,9 @@ const serviceList = {
 		serviceList.childRequests = new Service('/parentRequests/{id}/childRequests', binding);
 
         //Filtering services
-        serviceList.getAllSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
+        serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
         serviceList.getMaSchools.filter = FilteringServices.maSchoolsFiltering;         //(filter)
-        serviceList.students.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
+        serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
 
 	},
 	// Services which not require authorization

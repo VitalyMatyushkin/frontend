@@ -9,7 +9,6 @@ const serviceList = {
 	initialize: function(binding) {
         // authorization
         serviceList._login = new Service('/i/login',binding);
-        serviceList.logout = new Service('/users/logout', binding);
         serviceList.roles = new Service('/i/roles', binding);
         serviceList._become = new Service('/i/roles/{roleName}/become', binding);
 
