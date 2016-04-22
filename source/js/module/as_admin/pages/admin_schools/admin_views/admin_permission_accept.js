@@ -33,7 +33,7 @@ const PermissionAcceptPage = React.createClass({
 		binding.set('prId', prId);
 
 		if (prId) {
-			window.Server.PermissionRequest.get({prId:prId, schoolId:schoolId}).then(function (data) {
+			window.Server.permissionRequest.get({prId:prId, schoolId:schoolId}).then(function (data) {
 				self.isMounted() && binding
 										.atomically()
 										.set('comment', data.comment)
@@ -90,17 +90,16 @@ const PermissionAcceptPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		return window.Server.schoolStudents.get({
+		return window.Server.schoolStudents.get(binding.get('schoolId'),{
 			filter: {
 				where: {
-					schoolId: binding.get('schoolId'),
 					formId: binding.get('formId'),
 					houseId: binding.get('houseId')
 				}
 			}
 		}).then(function(students) {
 			students.forEach(function(student) {
-				student.name = student.user.firstName + " " + student.user.lastName;
+				student.name = student.firstName + " " + student.lastName;
 			});
 			return students;
 		},function(error){console.log(error)});
