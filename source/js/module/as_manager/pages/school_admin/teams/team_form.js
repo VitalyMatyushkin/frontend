@@ -6,6 +6,7 @@ const   Immutable			= require('immutable'),
 		React				= require('react'),
 		If					= require('module/ui/if/if'),
 		Multiselect			= require('module/ui/multiselect/multiselect'),
+		EventHelper			= require('module/helpers/eventHelper'),
 		Lazy				= require('lazyjs');
 
 const TeamForm = React.createClass({
@@ -159,6 +160,45 @@ const TeamForm = React.createClass({
 
 		return ageItems;
 	},
+	_getHouseFilterRadioButton: function () {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return (
+			<label onClick={self._changeHouseFilter}>
+				<Morearty.DOM.input
+					type="checkbox"
+					value={binding.get('isHouseFilterEnable')}
+					checked={binding.get('isHouseFilterEnable')}
+				/>
+			</label>
+		);
+	},
+	_changeHouseFilter: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding
+			.atomically()
+			.set('isHouseFilterEnable',	Immutable.fromJS(!binding.get('isHouseFilterEnable')))
+			.set('default.model.type',	Immutable.fromJS(!binding.get('isHouseFilterEnable') ? "houses" : null))
+			.set('default.players',		Immutable.fromJS([]))
+			.set('players',				Immutable.fromJS([]))
+			.commit();
+	},
+	_serviceHouseFilter: function() {
+		const self = this;
+
+		//filter:{
+		//	order:'name ASC' //Filter by name in ascending order
+		//}}
+		return window.Server.schoolHouses.get({
+			schoolId: MoreartyHelper.getActiveSchoolId(self),
+			filter: {
+				limit: 100
+			}
+		});
+	},
 	_getSelectedAges: function() {
 		const	self	= this,
 				ages	= self.getDefaultBinding().get('ages');
@@ -166,9 +206,14 @@ const TeamForm = React.createClass({
 		return ages ? ages : [];
 	},
 	_isShowTeamManager: function() {
-		const self = this;
+		const self = this,
+			binding = self.getDefaultBinding();
 
-		return !!self.getDefaultBinding().get('ages');
+		if(!!binding.get('isHouseFilterEnable')) {
+			return !!binding.get('ages') && !!binding.get('isHouseSelected');
+		} else {
+			return !!binding.get('ages')
+		}
 	},
 	_onRemovePlayer: function(player) {
 		const self = this;
@@ -177,18 +222,60 @@ const TeamForm = React.createClass({
 			self.getDefaultBinding().get('removedPlayers').push(player)
 		));
 	},
-	_serviceHouseFilter: function() {
-		const self = this;
-		
-		return window.Server.schoolHouses.get({schoolId:MoreartyHelper.getActiveSchoolId(self),filter:{
-			order:'name ASC' //Filter by name in ascending order
-		}});
+	_onSelectHouse: function(id, model) {
+		const	self = this,
+				binding = self.getDefaultBinding();
+
+		if(binding.get('isHouseAutocompleteInit')) {
+			binding
+				.atomically()
+				.set('default.model.type',	Immutable.fromJS('houses'))
+				.set('rival',				Immutable.fromJS(model))
+				.set('houseId',				Immutable.fromJS(id))
+				.set('isHouseSelected',		Immutable.fromJS(true))
+				.set('default.players',		Immutable.fromJS([]))
+				.set('players',				Immutable.fromJS([]))
+				.commit();
+		} else {
+			binding
+				.atomically()
+				.set('default.model.type',		Immutable.fromJS('houses'))
+				.set('rival',					Immutable.fromJS(model))
+				.set('houseId',					Immutable.fromJS(id))
+				.set('isHouseSelected',			Immutable.fromJS(true))
+				.set('isHouseAutocompleteInit',	Immutable.fromJS(true))
+				.commit();
+		}
 	},
-	_onSelectHouse: function(id) {
+	_renderHouseAutocomplete: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.set('houseId', Immutable.fromJS(id));
+		// set house as defaultItem
+		// unfortunately we can't set undefined to defaultItem if team isn't house team
+		// so either send defaultItem or not
+		if(binding.get('isHouseSelected')) {
+			return (
+				<Autocomplete
+					defaultItem={binding.get('rival').toJS()}
+					serviceFilter={self._serviceHouseFilter}
+					serverField="name"
+					placeholderText={'Select House'}
+					onSelect={self._onSelectHouse}
+					binding={binding.sub('houses')}
+				/>
+			);
+		} else {
+			return (
+				<Autocomplete
+					serviceFilter={self._serviceHouseFilter}
+					serverField="name"
+					placeholderText={'Select House'}
+					onSelect={self._onSelectHouse}
+					binding={binding.sub('houses')}
+				/>
+			);
+		}
 	},
 	render: function() {
 		const	self					= this,
@@ -230,21 +317,6 @@ const TeamForm = React.createClass({
 								onChange={Morearty.Callback.set(binding.sub('name'))}
 							/>
 						</div>
-						<If condition={!!binding.get('name')}>
-							<div className="eManager_group">
-								{'House'}
-								<div className="eManager_select_wrap">
-									<Autocomplete
-										defaultItem={binding.toJS('rival')}
-										serviceFilter={self._serviceHouseFilter}
-										serverField="name"
-										placeholderText={'Select House'}
-										onSelect={self._onSelectHouse}
-										binding={binding.sub('houses')}
-									/>
-								</div>
-							</div>
-						</If>
 						<If condition={!!binding.get('name')}>
 							<div className="eManager_group">
 								{'Team Description'}
@@ -291,6 +363,22 @@ const TeamForm = React.createClass({
 									selections={self._getSelectedAges()}
 									onChange={self._changeCompleteAges}
 								/>
+							</div>
+						</If>
+						<If condition={!!binding.get('sportId')}>
+							<div className="eManager_group">
+								{'Filtered By House'}
+								<div className="eManager_radiogroup">
+									{self._getHouseFilterRadioButton()}
+								</div>
+							</div>
+						</If>
+						<If condition={!!binding.get('isHouseFilterEnable')}>
+							<div className="eManager_group">
+								{'House'}
+								<div className="eManager_select_wrap">
+									{self._renderHouseAutocomplete()}
+								</div>
 							</div>
 						</If>
 						<If condition={self._isShowTeamManager()}>

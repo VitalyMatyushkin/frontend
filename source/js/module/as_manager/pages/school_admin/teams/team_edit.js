@@ -65,12 +65,20 @@ const TeamEditPage = React.createClass({
             .then( _team => {
                 team = _team;
 
+                if(team.houseId) {
+                    return window.Server.schoolHouse.get({schoolId: self.activeSchoolId, houseId: team.houseId})
+                        .then(house => team.house = house);
+                } else {
+                    return Promise.resolve(team);
+                }
+            })
+            .then(_ => {
                 // inject sport to team
                 team.sport = TeamHelper.getSportById(team.sportId, sports);
 
                 return window.Server.schoolStudents.get(self.activeSchoolId);
             })
-            .then( users => {
+            .then(users => {
                 // inject users to players, because we need user info
                 // yep, ugly method name
                 let usersWithPlayerInfo = TeamHelper.getPlayersWithUserInfo(team.players, users);
@@ -95,6 +103,7 @@ const TeamEditPage = React.createClass({
                     .set('initialPlayers',                  Immutable.fromJS(usersWithPlayerInfo))
                     .set('teamForm.isHouseFilterEnable',    Immutable.fromJS(self._isHouseFilterEnable(team)))
                     .set('teamForm.isHouseSelected',        Immutable.fromJS(self._isHouseSelected(team)))
+                    .set('teamForm.isHouseAutocompleteInit',Immutable.fromJS(!self._isHouseSelected(team)))
                     .set('teamForm.removedPlayers',         Immutable.fromJS([]))
                     .commit();
             });
