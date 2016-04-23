@@ -221,7 +221,7 @@ const EventView = React.createClass({
 		})
 		.then(_ => {
 			// get all students
-			return window.Server.students.get(self.activeSchoolId);
+			return window.Server.schoolStudents.get(self.activeSchoolId);
 		})
 		.then(users => {
 			const players = [];

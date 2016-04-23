@@ -314,7 +314,7 @@ const TeamWrapper = React.createClass({
 					team = _team;
 
 					// Get all students, because in next step we should inject users data to players
-					return window.Server.students.get(self.activeSchoolId);
+					return window.Server.schoolStudents.get(self.activeSchoolId);
 				})
 				.then(users => {
 					let updatedPlayers = TeamHelper.getPlayersWithUserInfo(players, users);
