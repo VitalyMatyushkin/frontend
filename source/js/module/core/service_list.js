@@ -76,7 +76,8 @@ const serviceList = {
         serviceList.schoolEventInvite = new Service('/i/schools/{schoolId}/events/{eventId}/invite', binding);
         serviceList.addTeamToschoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/addTeam', binding);
 
-
+		// invites
+		serviceList.invites = new Service('/i/schools/{schoolId}/invites', binding);
 
 
 
@@ -158,7 +159,7 @@ const serviceList = {
 		serviceList.public_sport =  new Service('/public/sports/{sportId}', binding);
 
 		// invites
-		serviceList.invites = new Service('/invites', binding);
+		//serviceList.invites = new Service('/invites', binding);
 		serviceList.invitesFindOne = new Service('/invites/findOne', binding);
 		serviceList.invite = new Service('/invites/{inviteId}', binding);
 		serviceList.invitesByEvent = new Service('/events/{eventId}/invites', binding);
