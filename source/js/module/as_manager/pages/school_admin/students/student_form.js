@@ -4,6 +4,7 @@ const 	Form		= require('module/ui/form/form'),
 		Promise 	= require('bluebird'),
 		React 		= require('react');
 
+/** Tiny student-related Form wrapper */
 const StudentForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
@@ -11,7 +12,8 @@ const StudentForm = React.createClass({
 		title: 				React.PropTypes.string.isRequired,
 		onFormSubmit: 		React.PropTypes.func,
 		initialForm:		React.PropTypes.object,
-		initialHouse:		React.PropTypes.object
+		initialHouse:		React.PropTypes.object,
+		binding: 			React.PropTypes.any
 	},
 	getClassService: function(){
 		const self = this;
@@ -49,11 +51,11 @@ const StudentForm = React.createClass({
 		const gendersArray = [
 			{
 				value: 'boy',
-				id: 'male'
+				id: 'MALE'
 			},
 			{
 				value: 'girl',
-				id: 'female'
+				id: 'FEMALE'
 			}
 		];
 
@@ -73,10 +75,10 @@ const StudentForm = React.createClass({
 					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" defaultItem={self.props.initialHouse} validation="required">House</FormField>
 				</FormColumn>
 				<FormColumn type="column">
-					<FormField type="textarea" field="name">Next of Kin:</FormField>
+					<FormField type="textarea" field="nextOfKin">Next of Kin:</FormField>
 				</FormColumn>
 				<FormColumn type="column">
-					<FormField type="textarea" field="allergy">Medical Information</FormField>
+					<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
 				</FormColumn>
 			</Form></div>
 		)

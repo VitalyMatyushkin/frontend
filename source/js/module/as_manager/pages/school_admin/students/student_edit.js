@@ -3,6 +3,7 @@ const 	StudentForm 	= require('module/as_manager/pages/school_admin/students/stu
 		Immutable 		= require('immutable'),
 		Promise			= require('bluebird');
 
+/** Page to edit student details */
 const StudentEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
@@ -24,6 +25,8 @@ const StudentEditPage = React.createClass({
 					window.Server.schoolHouse.get({schoolId: activeSchoolId, houseId: studentUser.houseId})
 				]).then( formAndHouseArray => {
 					// TODO: populate house and form details
+					studentUser.form 	= formAndHouseArray[0];
+					studentUser.house 	= formAndHouseArray[1];
 					self.isMounted() && binding.set(Immutable.fromJS(studentUser));
 					return studentUser;
 				});
