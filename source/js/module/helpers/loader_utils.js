@@ -38,7 +38,8 @@ function apiSelector(domainName) {
             break;
         case parsedDomain.rootDomain === 'squard':
             apiDomains = {
-                main:   `//api2.stage.squadintouch.com`,
+                main:   `//localhost:3000`,
+                //main:   `//api2.stage.squadintouch.com`,
                 img:    '//img.stage.squadintouch.com'
             };
             break;

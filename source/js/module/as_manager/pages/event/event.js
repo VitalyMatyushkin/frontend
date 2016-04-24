@@ -1,266 +1,368 @@
-const   classNames           = require('classnames'),
-        If                   = require('module/ui/if/if'),
-        EventHeader          = require('./view/event_header'),
-        EventRivals          = require('./view/event_rivals'),
-        EventButtons         = require('./view/event_buttons'),
-        EventTeams           = require('./view/event_teams'),
-        EventAlbums          = require('./view/event_albums'),
-        React                = require('react'),
-        Comments             = require('./view/event_blog'),
-        VenuePreview         = require('../events/manager/venue_preview'),
-        Immutable            = require('immutable'),
-        Lazy                 = require('lazyjs');
+const	classNames		= require('classnames'),
+		If				= require('module/ui/if/if'),
+		EventHeader		= require('./view/event_header'),
+		EventRivals		= require('./view/event_rivals'),
+		EventButtons	= require('./view/event_buttons'),
+		EventTeams		= require('./view/event_teams'),
+		EventAlbums		= require('./view/event_albums'),
+		React			= require('react'),
+		Comments		= require('./view/event_blog'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		Immutable		= require('immutable'),
+		Lazy			= require('lazyjs');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
-    displayName: 'EventPage',
-    getMergeStrategy: function () {
-        return Morearty.MergeStrategy.MERGE_REPLACE;
-    },
-    getDefaultState: function () {
-        return Immutable.fromJS({
-            model: {},
-            participants: [],
-            eventId: null,
-            players: [],
-            points: [],
-            result: {
-                points: []
-            },
-            sync: false,
-            mode: 'general',
-            showingComment: false
-        });
-    },
-    componentWillMount: function () {
-        var self = this,
-            rootBinding  = self.getMoreartyContext().getBinding(),
-            binding      = self.getDefaultBinding(),
-            eventId      = rootBinding.get('routing.pathParameters.0');
+	displayName: 'EventPage',
+	getMergeStrategy: function () {
+		return Morearty.MergeStrategy.MERGE_REPLACE;
+	},
+	getDefaultState: function () {
+		return Immutable.fromJS({
+			model: {},
+			participants: [],
+			eventId: null,
+			players: [],
+			points: [],
+			result: {
+				points: []
+			},
+			sync: false,
+			mode: 'general',
+			showingComment: false
+		});
+	},
+	componentWillMount: function () {
+		const	self		= this,
+				rootBinding	= self.getMoreartyContext().getBinding(),
+				binding		= self.getDefaultBinding(),
+				eventId		= rootBinding.get('routing.pathParameters.0');
 
-        binding.addListener('players', function (descriptor) {
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		// TODO should decompose to functions
+		// TODO Houston, we need to refactor, urgently!
+		binding.addListener('players', function (descriptor) {
 			var path = descriptor.getPath(),
 				previous = descriptor.getPreviousValue(),
 				current;
 
-            if (previous && previous.get(path[0])) {
-                previous = previous.get(path[0]).toJS();
-                current = binding.toJS(['players', path[0]]);
+			if (previous && previous.get(path[0])) {
+				previous = previous.get(path[0]).toJS();
+				current = binding.toJS(['players', path[0]]);
 
-                if (current.length > previous.length) {
-                    window.Server.playersRelation.put({
-                        teamId: binding.get(['participants', path[0], 'id']),
-                        studentId: current.pop().id
-                    });
-                } else if (current.length < previous.length) {
-                    previous.filter(function (player) {
-                        return !current.some(function (model) {
-                            return model.id === player.id;
-                        });
-                    }).forEach(function(player) {
-                        window.Server.playersRelation.delete({
-                            teamId: binding.get(['participants', path[0], 'id']),
-                            studentId: player.id
-                        });
-                    });
-                } else {
-                    let changedPlayer;
-                    for(let prevIndex in previous) {
-                        let findCurrPlayer = Lazy(current).findWhere({id:previous[prevIndex].id});
-                        if(
-                            findCurrPlayer.position !== previous[prevIndex].position ||
-                            findCurrPlayer.sub !== previous[prevIndex].sub
-                        ) {
-                            changedPlayer = findCurrPlayer;
-                            break;
-                        }
-                    }
-                    window.Server.exactlyPlayersByTeam.put(
-                        {
-                            teamId:    binding.get(['participants', path[0], 'id']),
-                            playerId:  changedPlayer.exactlyPlayerId
-                        },
-                        {
-                            position:  changedPlayer.position,
-                            sub:       changedPlayer.sub
-                        }
-                    )
-                }
-            }
+				if (current.length > previous.length) {
+					const currentPlayer = current.pop();
+
+					const body = {
+						userId: currentPlayer.id
+					};
+
+					currentPlayer.position && (body.position = currentPlayer.position);
+					currentPlayer.sub && (body.sub = currentPlayer.sub);
+
+					TeamHelper.addPlayer(
+						self.activeSchoolId,
+						binding.get(['participants', path[0], 'id']),
+						body
+					);
+				} else if (current.length < previous.length) {
+					previous.filter(player => {
+						return !current.some(function (model) {
+							return model.id === player.id;
+						});
+					}).forEach(player => {
+						TeamHelper.deletePlayer(
+							self.activeSchoolId,
+							binding.get(['participants', path[0], 'id']),
+							player.id
+						);
+					});
+				} else {
+					let changedPlayer;
+					for(let prevIndex in previous) {
+						let findCurrPlayer = Lazy(current).findWhere({id:previous[prevIndex].id});
+						if(
+							findCurrPlayer.position !== previous[prevIndex].position ||
+							findCurrPlayer.sub !== previous[prevIndex].sub
+						) {
+							changedPlayer = findCurrPlayer;
+							break;
+						}
+					}
+					TeamHelper.changePlayer(
+						self.activeSchoolId,
+						binding.get(['participants', path[0], 'id']),
+						changedPlayer.playerModelId,
+						{
+							position:  changedPlayer.position,
+							sub:       changedPlayer.sub
+						}
+					);
+				}
+			}
 		});
 
-        self.menuItems = [{
-            href: '/#event/' + eventId,
-            name: 'General',
-            key: 'General'
-        },{
-            href: '/#event/' + eventId + '/edit',
-            name: 'Edit',
-            key: 'Edit'
-        },
-        {
-            href: '/#event/' + eventId + '/finish',
-            name: 'Finish',
-            key: 'Finish'
-        }];
+		self._initMenuItems();
 
-        window.Server.eventFindOne.get({
-            filter: {
-                where: {
-                    id: eventId
-                },
-                include: [
-					{
-						participants: [
-							{
-                                players: ['user', 'form']
-							},
-							{
-							    school: 'forms'
-							},
-                            {
-                                exactlyPlayers: 'student'
-                            },
-                            'house'
-                        ]
-					},
-					{
-						invites: ['guest', 'inviter']
-					},
-                    {
-                        result: 'points'
-                    },
-                    {
-                        sport: ''
-                    },
-                    {
-                        albums: 'photos'
-                    }
-                ]
-            }
-        }).then(function (res) {
-			var event = res,
-				participants = res.participants,
-				invites = res.invites,
-				activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-				sport = res.sport,
-                albums = res.albums,
-				schoolInfo = event.participants[0].school.id === activeSchoolId ?
-					event.participants[0].school : event.participants[1].school,
-                points = event.result && event.result.points ? event.result.points : [];
+		let	school,
+			event,
+			invites,
+			teams,
+			sport;
 
-			delete event.participants;
-			delete event.invites;
-			delete event.sport;
+		// TODO don't forget about filter
+		//filter: {
+		//    where: {
+		//        id: eventId
+		//    },
+		//    include: [
+		//        {
+		//            participants: [
+		//                {
+		//                    players: ['user', 'form']
+		//                },
+		//                {
+		//                    school: 'forms'
+		//                },
+		//                {
+		//                    exactlyPlayers: 'student'
+		//                },
+		//                'house'
+		//            ]
+		//        },
+		//        {
+		//            invites: ['guest', 'inviter']
+		//        },
+		//        {
+		//            result: 'points'
+		//        },
+		//        {
+		//            sport: ''
+		//        },
+		//        {
+		//            albums: 'photos'
+		//        }
+		//    ]
+		//}
+		window.Server.school.get(self.activeSchoolId)
+		.then(_school => {
+			school = _school;
 
-            self._injectDataToStudentModel(participants[0]);
-            participants[1] && self._injectDataToStudentModel(participants[1]);
+			// Get event
+			return window.Server.schoolForms.get(self.activeSchoolId);
+		})
+		.then(forms => {
+			school.forms = forms;
+
+			// Get forms
+			return window.Server.schoolEvent.get({
+				schoolId: self.activeSchoolId,
+				eventId: eventId
+			});
+		})
+		.then(_event => {
+			event = _event;
+
+			// Get sport
+			return window.Server.sport.get(event.sportId);
+		})
+		.then(_sport => {
+			sport = _sport;
+
+			// Get invite
+			if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+				return window.Server.schoolEventInvite.get({
+					schoolId:	self.activeSchoolId,
+					eventId:	event.id
+				})
+				.then(_invite => {
+					invites = _invite;
+
+					return window.Server.school.get(invites.inviterSchoolId)
+					.then(inviterSchool => {
+						invites.inviterSchool = inviterSchool;
+
+						return window.Server.publicSchool.get(invites.invitedSchoolId);
+					})
+					.then(invitedSchool => {
+						invites.invitedSchool = invitedSchool;
+
+						return Promise.resolve(invites);
+					});
+				});
+			} else {
+				// TODO Hmmm...really?
+				return Promise.resolve(sport);
+			}
+		})
+		.then(_ => {
+			return Promise.all(event.teams.map(
+				teamId => window.Server.team.get({schoolId: self.activeSchoolId, teamId: teamId})
+			));
+		})
+		.then(_teams => {
+			teams = _teams;
+
+			if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
+				return Promise.all(
+					teams.map(team => window.Server.schoolHouse.get(
+						{
+							schoolId: self.activeSchoolId,
+							houseId: team.houseId
+						}
+					).then(house => team.house = house))
+				);
+			} else {
+				return Promise.resolve(_teams);
+			}
+		})
+		.then(_ => {
+			// get all students
+			return window.Server.schoolStudents.get(self.activeSchoolId);
+		})
+		.then(users => {
+			const players = [];
+
+			players.push(
+				TeamHelper.injectFormsToPlayers( // inject forms to players
+					TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
+						TeamHelper.injectTeamIdToPlayers(teams[0].id, teams[0].players),
+						users
+					),
+					school.forms
+				)
+			);
+
+			if(teams[1]) {
+				players.push(
+					TeamHelper.injectFormsToPlayers( // inject forms to players
+						TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
+							TeamHelper.injectTeamIdToPlayers(teams[1].id, teams[1].players), // player + teamId
+							users
+						),
+						school.forms
+					));
+			}
+
+			// TODO remove plug and implement albums
+			const	albums	= [], // res.albums,
+					points	= event.result && event.result.points ? TeamHelper.convertPointsToClientModel(event.result.points) : [];
 
 			binding
 				.atomically()
-				.set('sport', Immutable.fromJS(sport))
-				.set('model', Immutable.fromJS(event))
-                .set('model.sportModel', Immutable.fromJS(sport))
-				.set('invites', Immutable.fromJS(invites))
-				.set('participants', Immutable.fromJS(participants))
-                .set('points', Immutable.fromJS(points))
-                .set('albums', Immutable.fromJS(albums))
-				.set('players', Immutable.fromJS([
-					participants[0].players,
-					participants[1] ? participants[1].players : []
-				]))
-				.set('schoolInfo', Immutable.fromJS(schoolInfo))
-				.set('eventId', eventId)
-                .set('mode', 'general')
-                .set('sync', true)
+				.set('sport',				Immutable.fromJS(sport))
+				.set('model',				Immutable.fromJS(event))
+				.set('model.sportModel',	Immutable.fromJS(sport))
+				.set('invites',				Immutable.fromJS(invites))
+				.set('participants',		Immutable.fromJS(teams))
+				.set('points',				Immutable.fromJS(points))
+				.set('albums',				Immutable.fromJS(albums))
+				.set('players',				Immutable.fromJS(players))
+				.set('schoolInfo',			Immutable.fromJS(school))
+				.set('eventId',				Immutable.fromJS(eventId))
+				.set('mode',				Immutable.fromJS('general'))
+				.set('sync',				Immutable.fromJS(true))
 				.commit();
+		});
 
-        });
+		rootBinding.addListener('routing.pathParameters', function () {
+			binding.set('mode', Immutable.fromJS(rootBinding.get('routing.pathParameters.1') || null))
+		});
+	},
+	/**
+	 * Initialize data for menu items
+	 * @private
+	 */
+	_initMenuItems: function() {
+		const	self	= this,
+				eventId	= self.getMoreartyContext().getBinding().get('routing.pathParameters.0');
 
-        rootBinding.addListener('routing.pathParameters', function () {
-            binding.set('mode', rootBinding.get('routing.pathParameters.1') || null)
-        });
-    },
-    // copy id position field and sub field from player model to student model
-    _injectDataToStudentModel: function(participants) {
-        for(let studentIndex in participants.players) {
-            for(let playerIndex in participants.exactlyPlayers) {
-                if(participants.exactlyPlayers[playerIndex].student.userId === participants.players[studentIndex].userId) {
-                    participants.players[studentIndex].exactlyPlayerId = participants.exactlyPlayers[playerIndex].id;
-                    participants.players[studentIndex].position = participants.exactlyPlayers[playerIndex].position;
-                    if(participants.exactlyPlayers[playerIndex].sub) {
-                        participants.players[studentIndex].sub = participants.exactlyPlayers[playerIndex].sub;
-                    }
-                }
-            }
-        }
-    },
-    onToggleShowComment: function() {
-        var self = this,
-            binding = self.getDefaultBinding();
+		self.menuItems = [
+			{
+				href: '/#event/' + eventId,
+				name: 'General',
+				key: 'General'
+			},{
+				href: '/#event/' + eventId + '/edit',
+				name: 'Edit',
+				key: 'Edit'
+			},
+			{
+				href: '/#event/' + eventId + '/finish',
+				name: 'Finish',
+				key: 'Finish'
+			}
+		];
+	},
+	onToggleShowComment: function() {
+		var self = this,
+			binding = self.getDefaultBinding();
 
-        binding.set('showingComment', !binding.get('showingComment'));
-    },
-    //A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
-    //This avoids the manager having to reload the screen to see what they just entered.
-    onChange:function(){
-        var self = this,
-            comment = document.getElementById('commentTextArea');
-        if(comment){
-            self.commentContent = comment.value;
-        }else{
-            self.commentContent = '0';
-        }
-    },
+		binding.set('showingComment', !binding.get('showingComment'));
+	},
+	//A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
+	//This avoids the manager having to reload the screen to see what they just entered.
+	onChange:function(){
+		var self = this,
+			comment = document.getElementById('commentTextArea');
+		if(comment){
+			self.commentContent = comment.value;
+		}else{
+			self.commentContent = '0';
+		}
+	},
 	render: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            showingComment = binding.get('showingComment'),
-            commentTextClasses = classNames({
-                'eEvent_commentText': true,
-                mHide: !showingComment
-            });  self.onChange();
+		var self = this,
+			binding = self.getDefaultBinding(),
+			showingComment = binding.get('showingComment'),
+			commentTextClasses = classNames({
+				'eEvent_commentText': true,
+				mHide: !showingComment
+			});  self.onChange();
 		return <div>
-            <div className="bEventContainer">
-                <If condition={binding.get('sync')=== true}>
-                    <div className="bEvent">
-                        <div className="eEvent_commentBox">
-                            <If condition={(binding.get('mode') === 'closing') || false}>
-                                <Morearty.DOM.textarea
-                                    placeholder="comments"
-                                    className="eEvent_comment"
-                                    onChange={Morearty.Callback.set(binding, 'model.comment')}
-                                    value={binding.get('model.comment')} id="commentTextArea"
-                                    />
-                            </If>
-                            <If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
-                                <div>
-                                    <div className="eEvent_commentHeader" onClick={self.onToggleShowComment}>{binding.get('showingComment') ? 'hide' : 'show comment'}</div>
-                                    <div className={commentTextClasses}>{binding.get('model.result.comment')}</div>
-                                </div>
-                            </If>
-                        </div>
-                        <EventButtons binding={binding} />
+			<div className="bEventContainer">
+				<If condition={binding.get('sync')=== true}>
+					<div className="bEvent">
+						<div className="eEvent_commentBox">
+							<If condition={(binding.get('mode') === 'closing') || false}>
+								<Morearty.DOM.textarea
+									placeholder="comments"
+									className="eEvent_comment"
+									onChange={Morearty.Callback.set(binding, 'model.comment')}
+									value={binding.get('model.comment')} id="commentTextArea"
+									/>
+							</If>
+							<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
+								<div>
+									<div className="eEvent_commentHeader" onClick={self.onToggleShowComment}>{binding.get('showingComment') ? 'hide' : 'show comment'}</div>
+									<div className={commentTextClasses}>{binding.get('model.result.comment')}</div>
+								</div>
+							</If>
+						</div>
+						<EventButtons binding={binding} />
 
-                        <div className="bEventHeader_wrap">
-                            <EventHeader binding={binding}/>
-                            <EventRivals binding={binding}/>
-                        </div>
-                        <EventTeams binding={binding} />
-                        <If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
-                            <div className="eEvent_shadowCommentText">{self.commentContent}</div>
-                        </If>
-                        <EventAlbums binding={binding} />
-                        <If condition={((binding.get('mode') === 'general') && (binding.get('model.resultId') !== undefined)) || false}>
-                            <Comments binding={binding}/>
-                        </If>
-                    </div>
-                </If>
-                <If condition={!binding.get('sync')}>
-                    <span>loading...</span>
-                </If>
-            </div>
-        </div>;
+						<div className="bEventHeader_wrap">
+							<EventHeader binding={binding}/>
+							<EventRivals binding={binding}/>
+						</div>
+						<EventTeams binding={binding} />
+						<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
+							<div className="eEvent_shadowCommentText">{self.commentContent}</div>
+						</If>
+						<EventAlbums binding={binding} />
+						<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
+							<Comments binding={binding}/>
+						</If>
+					</div>
+				</If>
+				<If condition={!binding.get('sync')}>
+					<span>loading...</span>
+				</If>
+			</div>
+		</div>;
 	}
 });
 

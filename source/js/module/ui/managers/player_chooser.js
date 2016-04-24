@@ -2,6 +2,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		Promise			= require('bluebird'),
 		Lazy			= require('lazyjs'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		classNames		= require('classnames');
 
 const	PlayerChooser	= React.createClass({
@@ -98,15 +99,25 @@ const	PlayerChooser	= React.createClass({
 
 			filter.houseId && (requestFilter.where.houseId = filter.houseId);
 
-			playersPromise = window.Server.schoolStudents
-				.get(filter.schoolId, {filter: requestFilter})
-				.then((players) => {
-					const	filteredPlayers	= [];
+			let	forms;
 
-					players.forEach((player) => {
+			// get forms data. they will inject to users
+			playersPromise = window.Server.schoolForms.get(filter.schoolId)
+				.then( _forms => {
+					forms = _forms;
+
+					// get all avail students
+					return window.Server.schoolStudents.get(filter.schoolId);
+				})
+				.then( players => {
+					const updPlayers = TeamHelper.injectFormsToPlayers(players, forms);
+
+					const filteredPlayers = [];
+
+					updPlayers.forEach((player) => {
 						//filter by gender
-						if(!self._isSelectedPlayer(player) && player.user.gender === filter.gender) {
-							player.name = player.user.firstName + ' ' + player.user.lastName;
+						if(!self._isSelectedPlayer(player) && player.gender === filter.gender.toUpperCase()) {
+							player.name = player.firstName + ' ' + player.lastName;
 							filteredPlayers.push(player);
 						}
 
@@ -286,7 +297,7 @@ const	PlayerChooser	= React.createClass({
 							onClick={self._onPlayerClick.bind(self, index, player)}
 					>
 						<div	className="ePlayerChooser_playerName">
-							{`${player.userInfo.firstName} ${player.userInfo.lastName}`}
+							{`${player.firstName} ${player.lastName}`}
 						</div>
 						<div	className="ePlayerChooser_playerForm">
 							{player.form.name}

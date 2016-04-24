@@ -68,22 +68,23 @@ const EventManagerBase = React.createClass({
             binding = self.getDefaultBinding(),
             schoolId = binding.get('schoolInfo.id');
 
-        return window.Server.getAllSchools.get({
-            filter: {
-                where: {
-                    id: {
-                        neq: schoolId
-                    },
-                    name: {
-                        like: schoolName,
-                        options: 'i'
-                    }
-                },
-                include:'postcode',
-                order :'name ASC',
-                limit: 10
-            }
-        });
+		//{
+		//	filter: {
+		//		where: {
+		//			id: {
+		//				neq: schoolId
+		//			},
+		//			name: {
+		//				like: schoolName,
+		//					options: 'i'
+		//			}
+		//		},
+		//		include:'postcode',
+		//			order :'name ASC',
+		//			limit: 10
+		//	}
+		//}
+        return window.Server.getAllSchools.get();
     },
     changeCompleteType: function (event) {
         var self = this,
@@ -92,20 +93,23 @@ const EventManagerBase = React.createClass({
             schoolInfo = binding.get('schoolInfo'),
             rivals = Immutable.List();
 
-        if (type === 'inter-schools') {
-            rivals = rivals.push(binding.get('schoolInfo'));
-        } else if (type === 'internal') {
-            rivals = Immutable.fromJS([
-                {
-                    id: null,
-                    name: ''
-                },
-                {
-                    id: null,
-                    name: ''
-                }
-            ]);
-        }
+		switch (type) {
+			case 'inter-schools':
+				rivals = rivals.push(binding.get('schoolInfo'));
+				break;
+			case 'internal':
+				rivals = Immutable.fromJS([
+					{
+						id: null,
+						name: ''
+					},
+					{
+						id: null,
+						name: ''
+					}
+				]);
+				break;
+		};
 
         binding
             .atomically()
