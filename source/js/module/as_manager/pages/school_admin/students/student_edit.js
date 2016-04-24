@@ -3,6 +3,7 @@ const 	StudentForm 	= require('module/as_manager/pages/school_admin/students/stu
 		Immutable 		= require('immutable'),
 		Promise			= require('bluebird');
 
+/** Page to edit student details */
 const StudentEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
