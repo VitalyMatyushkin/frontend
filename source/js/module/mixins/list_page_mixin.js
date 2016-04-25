@@ -99,10 +99,8 @@ const ListPageMixin = {
             currentPage = window.location.href.split('/'),
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
-        if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
-            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '
-                +globalBinding.get('userData.userInfo.lastName')+' - '
-                +(self.setPageTitle !== undefined ? self.setPageTitle+' )' : 'System Admin )');
+        if((currentPage[currentPage.length-1] === 'users'||currentPage[currentPage.length-1] ==='#admin_schools')){
+            listPageTitle = 'Users & Permissions ( System Admin )';
         }else{
             listPageTitle = self.setPageTitle ? self.setPageTitle:self.serviceName;
             listPageTitle = listPageTitle[0].toUpperCase() + listPageTitle.slice(1);

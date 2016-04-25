@@ -1,6 +1,6 @@
 const 	Table         = require('module/ui/list/table'),
         TableField    = require('module/ui/list/table_field'),
-        ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
+        ListPageMixin = require('module/mixins/list_page_mixin'),
         React         = require('react'),
         Immutable 	  = require('immutable');
 

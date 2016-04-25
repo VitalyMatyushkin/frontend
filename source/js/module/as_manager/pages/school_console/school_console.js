@@ -43,9 +43,9 @@ const SchoolConsole = React.createClass({
 
         const _createSubMenuData = function(count){
             let menuItems = [{
-                href: '/#school_console/permissions',
-                name: 'Permissions',
-                key: 'Permissions'
+                href: '/#school_console/users',
+                name: 'Users & Permissions',
+                key: 'Users'
             },{
                 href: '/#school_console/requests',
                 name: 'New Requests',
@@ -77,8 +77,7 @@ const SchoolConsole = React.createClass({
             <SubMenu binding={{ default: binding.sub('consoleRouting'), itemsBinding: binding.sub('subMenuItems') }} />
             <div className='bSchoolMaster'>
                 <RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding || {}}>
-                    <Route path='/school_console' binding={binding.sub('permissions')} component='module/as_admin/pages/admin_schools/admin_views/admin_permissionList'  />
-                    <Route path='/school_console/permissions' binding={binding.sub('permissions')} component='module/as_admin/pages/admin_schools/admin_views/admin_permissionList'  />
+                    <Route path='/school_console /school_console/users' binding={binding.sub('users')} component='module/as_manager/pages/school_console/views/users'  />
                     <Route path='/school_console/requests' binding={binding.sub('requests')} component='module/as_admin/pages/admin_schools/admin_views/admin_requests'  />
                     <Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component="module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"  afterSubmitPage="/school_console/requests"/>
                     <Route path='/school_console/archive' binding={binding.sub('archives')} component='module/as_manager/pages/school_console/views/request_archive'  />
