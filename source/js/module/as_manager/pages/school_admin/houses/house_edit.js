@@ -10,12 +10,13 @@ const HouseEditPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
 			houseId = routingData.id;
 
 		binding.clear();
 
 		if (houseId) {
-			window.Server.house.get(houseId).then(function (data) {
+			window.Server.schoolHouse.get({schoolId:activeSchoolId, houseId:houseId}).then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
@@ -23,9 +24,11 @@ const HouseEditPage = React.createClass({
 		}
 	},
 	submitEdit: function(data) {
-		var self = this;
+        var self = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
-		window.Server.house.put(self.houseId, data).then(function() {
+		window.Server.schoolHouse.put({schoolId:activeSchoolId, houseId:self.houseId}, data).then(function() {
 			self.isMounted() && (document.location.hash = 'school_admin/houses');
 		});
 	},

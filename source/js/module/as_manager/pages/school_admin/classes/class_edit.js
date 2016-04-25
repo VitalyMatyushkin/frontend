@@ -9,12 +9,13 @@ const ClassEditPage = React.createClass({
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding(),
 			routingData = globalBinding.sub('routing.parameters').toJS(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
 			formId = routingData.id;
 
 		binding.clear();
 
 		if (formId) {
-			window.Server.form.get(formId).then(function (data) {
+			window.Server.schoolForm.get({schoolId:activeSchoolId, formId:formId}).then(function (data) {
 				self.isMounted() && binding.set(Immutable.fromJS(data));
 			});
 
@@ -22,12 +23,15 @@ const ClassEditPage = React.createClass({
 		}
 	},
 	submitEdit: function(data) {
-		var self = this;
+        var self = this,
+            globalBinding = self.getMoreartyContext().getBinding(),
+            activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+
 		//Don't submit if the name field of the data is empty
 		//Server will respond with failure causing button to stop at loading
 		if(data.name !=''){
 			data.name = data.name.toUpperCase(); //cast form name to upper case for consistency
-			window.Server.form.put(self.formId, data).then(function() {
+			window.Server.schoolForm.put({schoolId:activeSchoolId, formId:self.formId}, data).then(function() {
 				self.isMounted() && (document.location.hash = 'school_admin/forms');
 			});
 		}
