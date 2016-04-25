@@ -22,9 +22,9 @@ const LeanerView = React.createClass({
         // TODO: fixme. Somebody don't know anything about .flatMap
         studentId && window.Server.schoolStudent.get(studentId).then(function (data) {
             leanerData = data;
-            window.Server.form.get(data.formId).then(function (classData) {
+            window.Server.schoolForm.get(data.formId).then(function (classData) {
                 leanerData.classData = classData;
-                window.Server.house.get(data.houseId).then(function (houseData) {
+                window.Server.schoolHouse.get(data.houseId).then(function (houseData) {
                     leanerData.houseData = houseData;
                     window.Server.school.get(data.schoolId).then(function (schoolData) {
                         leanerData.schoolData = schoolData;

@@ -32,12 +32,14 @@ const SchoolSandbox = React.createClass({
                                     {
                                         href:`/#school_sandbox/${schoolId}/forms`,
                                         name:'Forms',
-                                        key:'forms'
+                                        key:'forms',
+                                        routes:[`/school_sandbox/${schoolId}/forms`]
                                     },
                                     {
                                         href:`/#school_sandbox/${schoolId}/houses`,
                                         name:'Houses',
-                                        key:'houses'
+                                        key:'houses',
+                                        routes:[`/school_sandbox/${schoolId}/houses`]
                                     }
                                 ];
         //Set sub menu items in default binding
@@ -64,7 +66,7 @@ const SchoolSandbox = React.createClass({
                 global      = self.getMoreartyContext().getBinding();
         return (
             <div>
-                <SubMenu binding={{default: binding.sub('schoolRouting'), itemsBinding: binding.sub('subMenuItems')}} />
+                <SubMenu binding={{default: subBinding.sub('routing'), itemsBinding: binding.sub('subMenuItems')}} />
                 {/*Display current school name, so admin knows what school he or she is operating on*/}
                 <div style={{margin:10+'px',fontWeight:'bold'}}>You are currently viewing:{binding.get('schoolDetails.name')}</div>
                 <div className="bSchoolMaster">

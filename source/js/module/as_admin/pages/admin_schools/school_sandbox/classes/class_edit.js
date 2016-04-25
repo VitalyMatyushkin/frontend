@@ -14,7 +14,7 @@ const ClassEditPage = React.createClass({
 		binding.sub('formEdit').clear();
 
 		if (formId) {
-			window.Server.form.get({formId:formId, schoolId:schoolId}).then(function (data) {
+			window.Server.schoolForm.get({formId:formId, schoolId:schoolId}).then(function (data) {
 				binding.set('formEdit', Immutable.fromJS(data));
 			});
 		}
@@ -31,7 +31,7 @@ const ClassEditPage = React.createClass({
 		if(data.name !=''){
 			data.name = data.name.toUpperCase(); //cast form name to upper case for consistency
 
-			window.Server.form.put({formId:formId, schoolId:schoolId}, data).then(function() {
+			window.Server.schoolForm.put({formId:formId, schoolId:schoolId}, data).then(function() {
 				document.location.hash = `school_sandbox/${schoolId}/forms`;
 			});
 		}
