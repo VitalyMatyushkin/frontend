@@ -6,7 +6,10 @@ const   CalendarView        = require('module/ui/calendar/calendar'),
         classNames          = require('classnames'),
         React               = require('react'),
         TeamSubmitMixin     = require('module/ui/managers/helpers/team_submit_mixin'),
-        Immutable           = require('immutable');
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		EventHelper			= require('module/helpers/eventHelper'),
+		Immutable           = require('immutable');
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin, TeamSubmitMixin],
@@ -53,34 +56,43 @@ const EventManager = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-			binding = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-        window.Server.school.get(activeSchoolId, {
-            filter: {
-                where: {
-                    id: activeSchoolId
-                },
-                include: ['forms', 'postcode']
-            }
-        }).then(function (res) {
-            res.forms = res.forms || [];
-            var ages = res.forms.reduce(function (memo, form) {
-                if (memo.indexOf(form.age) === -1) {
-                    memo.push(form.age);
-                }
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-                return memo;
-            }, []);
+		let schoolData;
 
-            binding
-                .atomically()
-                .set('schoolInfo', Immutable.fromJS(res))
-                .set('availableAges', Immutable.fromJS(ages))
-                .commit();
-		});
+		//get school data
+        window.Server.school.get(self.activeSchoolId)
+			.then(_schoolData => {
+				schoolData = _schoolData;
+
+				// get forms data
+				return window.Server.schoolForms.get(self.activeSchoolId);
+			})
+			.then(forms => {
+				schoolData.forms = forms;
+
+				//TODO set postcodes
+				//TODO yes, it's fake postcodes. temp.
+				schoolData.postcode = {
+					"id": "AB101AA",
+					"point": {
+						"lat": 57.148231662050215,
+						"lng": -2.0966478976010827
+					}
+				};
+
+				// get avail ages
+				const ages = TeamHelper.getAges(schoolData);
+
+				binding
+					.atomically()
+					.set('schoolInfo', Immutable.fromJS(schoolData))
+					.set('availableAges', Immutable.fromJS(ages))
+					.commit();
+			});
 	},
     onSelectDate: function (date) {
         var self = this,
@@ -171,10 +183,47 @@ const EventManager = React.createClass({
             });
     },
     _eventSubmit: function() {
-        var self = this;
+        const	self	= this,
+				binding = self.getDefaultBinding(),
+				model	= binding.toJS('model');
+
+
+		const body = {
+			name:					model.name,
+			description:			model.description,
+			gender:					model.gender,
+			// convert client event type const to server event type const
+			eventType:				EventHelper.clientEventTypeToServerClientTypeMapping[model.type],
+			ages:					model.ages,
+			sportId:				model.sportId,
+			startTime:				model.startTime,
+			startRegistrationTime:	model.startRegistrationTime,
+			endRegistrationTime:	model.endRegistrationTime
+		};
+
+		switch (model.type) {
+			case 'inter-schools':
+				body.invitedSchoolId = binding.toJS('rivals.1.id');
+
+				break;
+			case 'houses':
+				body.invitedSchoolId = self.activeSchoolId;
+
+				body.houses = [
+					binding.toJS('rivals.0.id'),
+					binding.toJS('rivals.1.id')
+				];
+
+				break;
+			case 'internal':
+				body.invitedSchoolId = self.activeSchoolId;
+
+				break;
+		}
 
         return window.Server.events.post(
-            self.getDefaultBinding().toJS('model')
+			self.activeSchoolId,
+            body
         );
     },
     _submitRivals: function(event) {
@@ -278,7 +327,10 @@ const EventManager = React.createClass({
 				isStepComplete = self._isSecondStepIsComplete();
 				break;
 			case 3:
-				if(!binding.toJS('error.0.isError') && !binding.toJS('error.1.isError')) {
+				if(
+					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0.isError') || // for inter-schools
+					!binding.toJS('error.0.isError') && !binding.toJS('error.1.isError') // for other type of event
+				) {
 					isStepComplete = true;
 				};
 				break;

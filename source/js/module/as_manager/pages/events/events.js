@@ -32,26 +32,76 @@ const EventView = React.createClass({
 
         self._initMenuItems();
 
-        window.Server.sports.get().then(function (sports) {
-            sportsBinding
-                .atomically()
-                .set('sync', true)
-                .set('models', Immutable.fromJS(sports))
-                .commit();
+        let events;
 
-            return window.Server.events.get(activeSchoolId,
-                {
+        window.Server.sports.get({
+                filter: {
+                    limit: 100
+                }
+            })
+            .then( sports => {
+                sportsBinding
+                    .atomically()
+                    .set('sync', true)
+                    .set('models', Immutable.fromJS(sports))
+                    .commit();
+
+                // TODO don't forget about include
+                //{
+                //    filter: {
+                //        include: 'sport'
+                //    }
+                //}
+                return window.Server.events.get(activeSchoolId, {
                     filter: {
-                        include: 'sport'
+                        limit: 100
                     }
                 });
-        }).then(function (events) {
-            binding
-                .atomically()
-                .set('models', Immutable.fromJS(events))
-                .set('sync', true)
-                .commit();
-        });
+            })
+            .then( _events => {
+                events = _events;
+
+                // inject team models to event
+                return Promise.all(
+                    events.map(event => {
+                        // Get event teams
+                        return Promise.all(
+                            event.teams.map(teamId => {
+                                return window.Server.team.get(
+                                        {
+                                            schoolId:   activeSchoolId,
+                                            teamId:     teamId
+                                        }
+                                    )
+                                    .then(team => {
+                                        if(team.houseId) {
+                                            return window.Server.schoolHouse.get(
+                                                {
+                                                    schoolId:   activeSchoolId,
+                                                    houseId:    team.houseId
+                                                }
+                                            ).then(house => {
+                                                team.house = house;
+                                                return Promise.resolve(team);
+                                            });
+                                        } else {
+                                            return Promise.resolve(team);
+                                        }
+                                    });
+                            })
+                        )
+                        // Set teams to event
+                        .then(teams => event.participants = teams);
+                    })
+                );
+            })
+            .then( _ => {
+                binding
+                    .atomically()
+                    .set('models', Immutable.fromJS(events))
+                    .set('sync', true)
+                    .commit();
+            });
     },
     _initMenuItems: function() {
         const self = this;

@@ -26,6 +26,7 @@ const serviceList = {
 
         // schools
         serviceList.schools = new Service('/i/schools', binding);
+        serviceList.publicSchool = new Service('/public/schools/{schoolId}', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
 		serviceList.publicSchoolNews = new Service('/public/schools/{schoolId}/news',binding);
@@ -68,11 +69,19 @@ const serviceList = {
 
         // sports
         serviceList.sports = new Service('/public/sports', binding);
+        serviceList.sport = new Service('/public/sports/{sportId}', binding);
 
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
+        serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
+        serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
+        serviceList.addPointToSchoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result/points', binding);
+        serviceList.finishSchoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/finish', binding);
+        serviceList.schoolEventInvite = new Service('/i/schools/{schoolId}/events/{eventId}/invite', binding);
+        serviceList.addTeamToschoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/addTeam', binding);
 
-
+		// invites
+		serviceList.invites = new Service('/i/schools/{schoolId}/invites', binding);
 
 
 
@@ -107,7 +116,6 @@ const serviceList = {
 		serviceList.eventsBySchoolId = new Service('/schools/{schoolId}/events', binding);
 		serviceList.ownerSchools = new Service('/schools?filter[where][ownerId]={ownerId}', binding);
 		serviceList.schoolOpponents = new Service('/schools/{id}/public/opponents', binding);
-		//serviceList.getAllSchools = new Service('/schools/getAllSchools', binding);
 		serviceList.getAllSchools = new Service('/public/schools', binding);
 		serviceList.publicSchools = new Service('/public/schools', binding);
 		serviceList.getMaSchools = new Service('/schools/getMaSchools', binding);
@@ -155,7 +163,7 @@ const serviceList = {
 		serviceList.public_sport =  new Service('/public/sports/{sportId}', binding);
 
 		// invites
-		serviceList.invites = new Service('/invites', binding);
+		//serviceList.invites = new Service('/invites', binding);
 		serviceList.invitesFindOne = new Service('/invites/findOne', binding);
 		serviceList.invite = new Service('/invites/{inviteId}', binding);
 		serviceList.invitesByEvent = new Service('/events/{eventId}/invites', binding);

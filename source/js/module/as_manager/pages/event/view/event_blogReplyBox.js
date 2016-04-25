@@ -56,10 +56,11 @@ const BlogReplyBox = React.createClass({
                     binding.set('blogs',Immutable.fromJS(filteredBag));
                     return blogger;
                 });
-                window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
-                    binding.set('blogCount', res.count);
-                    return res;
-                });
+                // TODO implement after available on server
+                //window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
+                //    binding.set('blogCount', res.count);
+                //    return res;
+                //});
                 self._toggleReplyBox();
                 return blog;
             });
