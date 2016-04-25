@@ -35,7 +35,7 @@ const FilteringServices = {
         return window.Server.schoolStudents.get(schoolId, {
             filter: {
                 where: {
-                    'userInfo.lastName': {
+                    lastName: {
                         like: filter,
                         options: 'i'
                     }
@@ -44,7 +44,7 @@ const FilteringServices = {
             }
         }).then(students => {
             return Lazy(students).map(student => {
-                student.fullName = student.userInfo.firstName + ' ' + student.userInfo.lastName;
+                student.fullName = student.firstName + ' ' + student.lastName;
                 return student;
             }).toArray();
         });

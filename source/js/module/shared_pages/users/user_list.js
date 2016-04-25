@@ -1,62 +1,50 @@
 /**
- * Created by bridark on 19/06/15.
+ * Created by Anatoly on 24.04.2016.
  */
-const Table = require('module/ui/list/table'),
-    TableField = require('module/ui/list/table_field'),
-    DateTimeMixin = require('module/mixins/datetime'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin'),
-    GrantRole = require('module/as_manager/pages/school_console/grant_role/manager_grant_role'),
-    React = require('react'),
-    Popup = require('module/ui/popup');
 
-const PermissionView = React.createClass({
+const   Table = require('module/ui/list/table'),
+        TableField = require('module/ui/list/table_field'),
+        UserModel = require('module/data/UserModel'),
+        DateTimeMixin = require('module/mixins/datetime'),
+        ListPageMixin = require('module/mixins/list_page_mixin'),
+        React = require('react'),
+        Popup = require('module/ui/popup');
+
+const UsersList = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
-    serviceName:'schoolPermissions',
-    serviceCount:'schoolPermissionsCount',
-    setPageTitle:'School Admin',
+    propTypes:{
+        grantRole:React.PropTypes.object
+    },
+    serviceName:'users',
+    serviceCount:'',
     filters:{
-        include:['principal',{student:['form','house']}]
-    },
-    groupActionList:['Add Role','Revoke All Roles','Unblock','Block'],
-    getStatus: function(principal) {
-        if(principal !== undefined){
-            if(principal.verified.email === true && principal.verified.phone === true){
-                return "Active";
-            }else{
-                return "Registered";
-            }
+        include: {
+            relation:"permissions",
+            scope: { include: {"relation": "school"}}
         }
     },
-    getRoles:function(permissions){
-        if(permissions !== undefined){
-            return permissions.map(function(role){
-                return (
-                    <div>{role.preset}</div>
-                );
-            });
-        }
-    },
+    groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
+    setPageTitle:"Users & Permissions",
     _getItemViewFunction:function(model){
-        //TODO Why this code is comment?
-        console.log(model);
-        //if(model.length === 1){
-        //    window.location.hash = '/admin_schools/admin_views/user?id='+model[0];
-        //}else{
-        //    alert("You can only perform this action on one Item");
-        //}
+        var self = this;
+        if(model.length === 1){
+            window.location.hash = '/admin_schools/admin_views/user?id='+model[0];
+        }else{
+            alert("You can only perform this action on one Item");
+        }
     },
-    _getQuickEditActionsFactory:function(evt){
-        const self = this,
+    _getQuickEditActionsFactory:function(itemId,itemName){
+        var self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             binding = self.getDefaultBinding(),
-            data = binding.toJS('data'),
+            data = binding.sub('data'),
             idAutoComplete = [],
-            id = evt.currentTarget.parentNode.dataset.userobj;
-        let permission = data.find(p => id === p.id);
-        idAutoComplete.push(permission.principalId);
-
-        evt.currentTarget.parentNode.classList.remove('groupActionList_show');
-        switch (evt.currentTarget.textContent){
+            userId = itemId;
+        userId = data.get().find(function(item){
+            return userId === item.id;
+        });
+        idAutoComplete.push(userId.id);
+        switch (itemName){
             case 'Add Role':
                 rootBinding.set('groupIds',idAutoComplete);
                 binding.set('popup',true);
@@ -78,22 +66,26 @@ const PermissionView = React.createClass({
         }
     },
     _getGroupActionsFactory:function(el,chk){
-        var actionStr = el.textContent,
+        var actionStr = el.innerText,
             selections = chk,
             self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
-            binding = self.getDefaultBinding(),
-            data = binding.toJS('data');
-
+            binding = self.getDefaultBinding();
         if(actionStr !== ''){
-            var ticked = [];
+            var ticked = [],filterTick=[];
             for(var i=0; i<selections.length; i++)
-                if(selections.item(i).checked===true) {
-                    let permission = data.find(p => selections.item(i).dataset.id === p.id)
-                    ticked.push(permission.principalId);
-                }
+                if(selections.item(i).checked===true)
+                    ticked.push(selections.item(i).dataset.id);
 
-            switch (el.textContent){
+            ticked.forEach(function(t,i){
+                filterTick.push(
+                    binding.get().find(function(dt){
+                        return t === dt.id;
+                    })
+                );
+                ticked[i] = filterTick[i].id;
+            });
+            switch (el.innerText){
                 case 'Add Role':
                     if(ticked.length >=1){
                         rootBinding.set('groupIds',ticked);
@@ -122,7 +114,6 @@ const PermissionView = React.createClass({
         }
     },
     _revokeAllRoles:function(ids){
-        //TODO Why this code is comment?
         var self, binding, confirmAction;
         self = this;
         binding = self.getDefaultBinding();
@@ -133,12 +124,10 @@ const PermissionView = React.createClass({
                     window.Server.Permissions.get({filter:{where:{principalId:id}}})
                         .then(function(permission){
                             permission.forEach(function(p){
-                                window.Server.Permission.delete({id:p.id}).then(function(res){
-                                    self.updateData();
-                                    return res;
+                                window.Server.Permission.delete({id:p.id}).then(function(){
+                                    self.reloadData();
                                 });
                             });
-                            return permission;
                         });
                 });
             }
@@ -165,28 +154,25 @@ const PermissionView = React.createClass({
         binding.set('popup',false);
         self.reloadData();
     },
-    getObjectVisibility:function(principal){
-        if(principal !== undefined){
-            return principal.blocked === false ? 'Active' : 'Blocked';
-        }
-    },
     getTableView:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding();
+            rootBinding = self.getMoreartyContext().getBinding(),
+            GrantRole = self.props.grantRole;
         return (
             <div className="eTable_view">
-                <Table title="Permissions" quickEditActionsFactory={self._getQuickEditActionsFactory}
-                       quickEditActions={self.groupActionList} binding={binding} addQuickActions={true}
+                <Table title="Permissions" binding={binding} quickEditActionsFactory={self._getQuickEditActionsFactory}
+                       quickEditActions={self.groupActionList} addQuickActions={true}
                        isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
-                       getTotalCountPromise={self.getTotalCountPromise} pageLimit={25}>
-                    <TableField dataField="checkBox" width="25px" filterType="none"></TableField>
-                    <TableField dataField="principalInfo" dataFieldKey="firstName" >First name</TableField>
-                    <TableField dataField="principalInfo" dataFieldKey="lastName" >Surname</TableField>
-                    <TableField dataField="principalInfo" dataFieldKey="email" >Email</TableField>
-                    <TableField dataField="principal" filterType="none" parseFunction={self.getStatus}>Status</TableField>
-                    <TableField dataField="preset" >Role</TableField>
-                    <TableField dataField="principal" filterType="none" parseFunction={self.getObjectVisibility}>Access</TableField>
+                       getTotalCountPromise={self.getTotalCountPromise} dataModel={UserModel}>
+                    <TableField dataField="checkBox" width="1%" filterType="none"/>
+                    <TableField dataField="firstName" >Name</TableField>
+                    <TableField dataField="lastName" >Surname</TableField>
+                    <TableField dataField="email" >Email</TableField>
+                    <TableField dataField="verified" filterType="none" >Status</TableField>
+                    <TableField dataField="school" filterType="none" >School</TableField>
+                    <TableField dataField="roles" filterType="none" >Role</TableField>
+                    <TableField dataField="blocked" filterType="none" >Access</TableField>
                 </Table>
                 <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={binding.sub('grantRole')} userIdsBinding={rootBinding.sub('groupIds')}
@@ -196,4 +182,4 @@ const PermissionView = React.createClass({
         )
     }
 });
-module.exports = PermissionView;
+module.exports = UsersList;

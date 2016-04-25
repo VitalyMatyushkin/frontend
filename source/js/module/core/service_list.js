@@ -63,6 +63,10 @@ const serviceList = {
         serviceList.permissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}',binding);
         serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 
+        //Permissions
+        serviceList.schoolUserPermissions = new Service('/i/schools/{schoolId}/users/{userId}/permissions',binding);
+        serviceList.schoolUserPermission = new Service('/i/schools/{schoolId}/users/{userId}/permissions/{permissionId}',binding);
+
         // sports
         serviceList.sports = new Service('/public/sports', binding);
         serviceList.sport = new Service('/public/sports/{sportId}', binding);

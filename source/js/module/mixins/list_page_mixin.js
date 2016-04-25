@@ -8,7 +8,8 @@ const   If          = require('module/ui/if/if'),
 const ListPageMixin = {
 	propTypes: {
         serviceName:        React.PropTypes.string,
-        serviceCount:       React.PropTypes.string
+        serviceCount:       React.PropTypes.string,
+        addButton:          React.PropTypes.object
 	},
 
     componentWillMount: function () {
@@ -20,6 +21,7 @@ const ListPageMixin = {
 
         self.serviceName = self.props.serviceName ? self.props.serviceName : self.serviceName;
         self.serviceCount = self.props.serviceCount ? self.props.serviceCount : self.serviceCount;
+        self.addButton = self.props.addButton ? self.props.addButton : self.addButton;
 		!self.serviceName && console.error('Please provide service name');
 		self.activeSchoolId = activeSchoolId;
 
@@ -78,9 +80,6 @@ const ListPageMixin = {
     _getAddNewSchoolFunction:function(){
         document.location.hash = 'admin_schools/admin_views/add';
     },
-    _adminCreateNewUser:function(){
-        document.location.hash = 'admin_schools/admin_views/create_user';
-    },
     _createNewsItem:function(){
         document.location.hash = 'school_admin/news/add';
     },
@@ -99,10 +98,8 @@ const ListPageMixin = {
             currentPage = window.location.href.split('/'),
             includeGroupAction = ['permissions','#admin_schools'],
             listPageTitle;
-        if((currentPage[currentPage.length-1] === 'permissions'||currentPage[currentPage.length-1] ==='#admin_schools')){
-            listPageTitle = 'Permissions ( '+globalBinding.get('userData.userInfo.firstName')+' '
-                +globalBinding.get('userData.userInfo.lastName')+' - '
-                +(self.setPageTitle !== undefined ? self.setPageTitle+' )' : 'System Admin )');
+        if(currentPage[currentPage.length-1] ==='#admin_schools'){
+            listPageTitle = 'Users & Permissions ( System Admin )';
         }else{
             listPageTitle = self.setPageTitle ? self.setPageTitle:self.serviceName;
             listPageTitle = listPageTitle[0].toUpperCase() + listPageTitle.slice(1);
@@ -126,9 +123,6 @@ const ListPageMixin = {
                     </If>
                     <If condition={currentPage[currentPage.length-1] ==='houses'}>
                         <div className="addButton addHouse" onClick={self._addNewHouseFunction}></div>
-                    </If>
-                    <If condition={self.isSuperAdminPage === true}>
-                        <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>
                     </If>
                     <If condition={currentPage[currentPage.length-1] ==='sports'}>
                         <div className="bButton" onClick={self._addNewSport}>Add New Sport</div>

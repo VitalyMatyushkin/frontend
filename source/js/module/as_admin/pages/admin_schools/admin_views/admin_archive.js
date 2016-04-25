@@ -6,12 +6,13 @@ var AdminArchive,
     TableField = require('module/ui/list/table_field'),
     DateTimeMixin = require('module/mixins/datetime'),
     React = require('react'),
-    ListPageMixin = require('module/as_manager/pages/school_admin/list_page_mixin');
+    ListPageMixin = require('module/mixins/list_page_mixin');
 AdminArchive = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
-    serviceName:'Permissions',
+    serviceName:'permissionRequests',
     serviceCount:'PermissionCount',
     filters:{include:['principal','school'],where:{or:[{accepted:true},{accepted:false}]},order:'meta.created DESC'},
+    setPageTitle:"Requests archive",
     componentWillMount:function(){
         const self = this;
 

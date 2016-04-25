@@ -7,7 +7,7 @@ const   Table           = require('module/ui/list/table'),
         React           = require('react'),
         If              = require('module/ui/if/if'),
         Lazy            = require('lazyjs'),
-        ListPageMixin   = require('module/as_manager/pages/school_admin/list_page_mixin');
+        ListPageMixin   = require('module/mixins/list_page_mixin');
 
 const AdminRequest = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
@@ -17,6 +17,7 @@ const AdminRequest = React.createClass({
             serviceCount:'PermissionCount'
         };
     },
+    setPageTitle:"New Requests",
     groupActionList:['Accept','Decline'],
     filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
     componentWillMount:function(){

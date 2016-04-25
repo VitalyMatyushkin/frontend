@@ -19,6 +19,10 @@ const serviceList = {
         serviceList.permissionRequest = new Service('/superadmin/users/permissions/requests/{prId}',binding);
         serviceList.statusPermissionRequest = new Service('/superadmin/users/permissions/requests/{prId}/status',binding);
 
+        //Permissions
+        serviceList.userPermissions = new Service('/superadmin/users/{userId}/permissions',binding);
+        serviceList.userPermission = new Service('/superadmin/users/{userId}/permissions/{permissionId}',binding);
+
         // schools
         serviceList.schools = new Service('/superadmin/schools', binding);
         serviceList.school = new Service('/superadmin/schools/{schoolId}', binding);
@@ -61,10 +65,6 @@ const serviceList = {
 		serviceList.userPasswordReset = new Service('/users/reset',binding);
 		serviceList.confirmUser = new Service('/users/confirm?uid={uid}&token={token}',binding);
 		serviceList.confirmUserPhone = new Service('/users/confirmPhone?uid={uid}&token={token}',binding);
-		serviceList.userPermission = new Service('/users/{id}/permissions', binding);
-		serviceList.userPermissions = new Service('/users/{userId}/permissions?filter[include]=school', binding);
-		serviceList.userPermissionWithPermissionId = new Service('/users/{id}/permissions/{fk}',binding);
-		serviceList.updateUserPermission = new Service('/users/{id}/permissions/{fk}',binding);
         serviceList.getTotalNumberOfUserModels = new Service('/users/count',binding);
 
 		serviceList.schoolInfo = new Service('/schools/findOne?filter[where][id]={id}&filter[include]=postcode', binding);
@@ -72,10 +72,6 @@ const serviceList = {
 		serviceList.administrator = new Service('/schools/{id}/admins/rel/{fk}',binding);
 		serviceList.addCoach = new Service('/schools/{id}/coaches/rel/{fk}',binding);
 		serviceList.addTeacher = new Service('/schools/{id}/teachers/rel/{fk}',binding);
-		serviceList.schoolPermissions = new Service('/schools/{id}/permissions',binding);
-        serviceList.schoolPermissionsCount = new Service('/schools/{id}/permissions/count',binding);
-		serviceList.schoolModelPermission = new Service('/schools/{id}/permissions/{permissionId}',binding);
-		serviceList.schoolPermission = new Service('/schools/{id}/permissions/{permissionId}/set',binding);
 		serviceList.getThisSchool = new Service('/schools/getAllSchools',binding);
 
 		serviceList.fixturesVsOtherSchool = new Service('/schools/{schoolId}/events/{opponentId}', binding);

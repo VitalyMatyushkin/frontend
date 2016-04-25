@@ -39,9 +39,9 @@ const OneSchoolPage = React.createClass({
         const _createSubMenuData = function(count){
             let menuItems = [
                 {
-                    href:'/#admin_schools/permissions',
+                    href:'/#admin_schools/users',
                     name:'Users & Permissions',
-                    key:'Permissions'
+                    key:'Users'
                 },
                 {
                     href:'/#admin_schools/admin_views/requests',
@@ -87,9 +87,9 @@ const OneSchoolPage = React.createClass({
                 <div className="bSchoolMaster">
                     <RouterView routes={binding.sub('schoolRouting')} binding={globalBinding}>
                         <Route
-                            path="/admin_schools"
+                            path="/admin_schools /admin_schools/users"
                             binding={binding.sub('schools')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"
+                            component="module/as_admin/pages/admin_schools/admin_views/admin_users_list"
                         />
                         <Route
                             path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode"
@@ -107,11 +107,6 @@ const OneSchoolPage = React.createClass({
                             component="module/as_admin/pages/admin_schools/admin_views/admin_add"
                         />
                         <Route
-                            path="/admin_schools/admin_views/users /admin_schools/admin_views/users:mode"
-                            binding={binding.sub('userList')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_users"
-                        />
-                        <Route
                             path="/admin_schools/admin_views/edit /admin_schools/admin_views/edit:mode"
                             binding={binding.sub('editSchoolPage')}
                             component="module/as_admin/pages/admin_schools/admin_views/admin_edit"
@@ -125,11 +120,6 @@ const OneSchoolPage = React.createClass({
                             path="/admin_schools/admin_views/modify /admin_schools/admin_views/modify:mode"
                             binding={binding.sub('userEditPage')}
                             component="module/as_admin/pages/admin_schools/admin_views/admin_modify"
-                        />
-                        <Route
-                            path="/admin_schools/permissions"
-                            binding={binding.sub('schools')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_permissionList"
                         />
                         <Route
                             path="/admin_schools/admin_views/requests"
