@@ -6,7 +6,7 @@ const 	Table 			= require('module/ui/list/table'),
 
 const ClassListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
-	serviceName: 'forms',
+	serviceName: 'schoolForms',
     setPageTitle: 'forms',
     filters:{include:{relation:'school'}},
     onClassEdit:function(data){
@@ -16,12 +16,19 @@ const ClassListPage = React.createClass({
 
         document.location.hash = `school_sandbox/${schoolId}/forms/edit/${data.id}`;
     },
+    _getDataPromise:function(filter){
+        const   self 			= this,
+                globalBinding 	= self.getMoreartyContext().getBinding(),
+                schoolId        = globalBinding.get('routing.pathParameters.0');
+
+        return window.Server[self.serviceName].get(schoolId, { filter: filter });
+    },
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
 			<Table title="Classes" binding={binding} onItemEdit={self.onClassEdit}
-                   getDataPromise={self.getDataPromise} filter={self.filter}>
+                   getDataPromise={self._getDataPromise} filter={self.filter}>
 				<TableField width="40%" dataField="name" >Name</TableField>
 				<TableField width="40%" dataField="age" filterType="none"
                             inputParseFunction={function(value) {return value.replace(/y/gi, '');}}
