@@ -61,7 +61,7 @@ const Head = React.createClass({
 				authorization: true,
 				verified: true
 			}, {
-				href: '/#school_console/permissions',
+				href: '/#school_console/users',
 				icon: '',
 				name: 'Console',
 				key: 'Console',

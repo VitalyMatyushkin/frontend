@@ -9,12 +9,16 @@ const   React       = require('react'),
 const AdminUsersList = React.createClass({
     mixins:[Morearty.Mixin],
 
+    _adminCreateNewUser:function(){
+        document.location.hash = 'admin_schools/admin_views/create_user';
+    },
     render:function(){
         var self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            addButton = <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>;
 
         return (
-            <UserList binding={binding} grantRole={GrantRole} />
+            <UserList binding={binding} grantRole={GrantRole} addButton={addButton} />
         );
 
     }

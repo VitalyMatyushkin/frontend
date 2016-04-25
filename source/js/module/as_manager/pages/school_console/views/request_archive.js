@@ -10,7 +10,7 @@ const SchoolRequestArchive = React.createClass({
         var self = this,
             binding = self.getDefaultBinding();
         return(
-            <AdminArchive binding={binding} serviceName="schoolPermissions" serviceCount="schoolPermissionsCount"/>
+            <AdminArchive binding={binding} serviceName="permissionRequests" serviceCount="permissionRequestsCount"/>
         )
     }
 });

@@ -24,6 +24,7 @@ const UsersList = React.createClass({
         }
     },
     groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
+    setPageTitle:"Users & Permissions",
     _getItemViewFunction:function(model){
         var self = this;
         if(model.length === 1){
