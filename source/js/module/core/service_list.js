@@ -84,6 +84,7 @@ const serviceList = {
 		serviceList.schoolInvites = new Service('/i/schools/{schoolId}/invites', binding);
 		serviceList.schoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
 		serviceList.acceptSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
+		serviceList.declineSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/decline', binding);
 
 
 
