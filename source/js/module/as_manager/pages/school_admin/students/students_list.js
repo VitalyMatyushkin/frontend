@@ -7,6 +7,7 @@ const Table = require('module/ui/list/table'),
 
 const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
+	setPageTitle: 'Students',
 	serviceName: 'schoolStudents',
     serviceCount:'studentsCount',
 	filters: {
