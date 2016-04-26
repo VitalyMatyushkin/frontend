@@ -1,11 +1,15 @@
-const 	ProcessingView 	= require('./processing'),
+const	ProcessingView 	= require('./processing'),
 		Invite 			= require('./invite'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		InvitesMixin 	= require('../mixins/invites_mixin');
 
 const OutboxView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+	// ID of current school
+	// Will set on componentWillMount event
+	activeSchoolId: undefined,
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -18,56 +22,82 @@ const OutboxView = React.createClass({
 	},
 	componentWillMount: function () {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+			binding = self.getDefaultBinding();
 
-		window.Server.invites.get({
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		let outboxInvites;
+		
+		// TODO Don't forget about filter
+		//{
+		//	filter: {
+		//		where: {
+		//			inviterId: activeSchoolId,
+		//				accepted: {
+		//				nin: [true, false]
+		//			}
+		//		},
+		//		include: [
+		//			{
+		//				inviter: ['forms', 'houses']
+		//			},
+		//			{
+		//				event: 'sport'
+		//			},
+		//			{
+		//				guest: ['forms', 'houses']
+		//			}
+		//		]
+		//	}
+		//}
+		window.Server.schoolInvites.get(self.activeSchoolId, {
 			filter: {
-				where: {
-					inviterId: activeSchoolId,
-					accepted: {
-						nin: [true, false]
-					}
-				},
-				include: [
-					{
-						inviter: ['forms', 'houses']
-					},
-					{
-                        event: 'sport'
-                    },
-                    {
-						guest: ['forms', 'houses']
-					}
-				]
+				limit: 100
 			}
-		}).then(function (models) {
-            var participants = models.reduce(function (memo, invite) {
-                var foundInviter = memo.filter(function (model) {
-                        return invite.inviter.id === model.id;
-                    }),
-                    foundGuest = memo.filter(function (model) {
-                        return invite.guest.id === model.id;
-                    });
+		})
+		.then(function (allInvites) {
+			// About all invites - get all invites for our school.
+			// Then filter inbox invites
+			outboxInvites = allInvites.filter(invite => invite.inviterSchoolId === self.activeSchoolId
+			&& invite.invitedSchoolId !== self.activeSchoolId && invite.accepted === 'NOT_READY');
 
-                if (foundInviter.length === 0) {
-                    memo.push(invite.inviter);
-                }
+			// get info about current school
+			return window.Server.school.get(self.activeSchoolId);
+		})
+		.then(activeSchool => {
+			return Promise.all(
+				outboxInvites.map(invite =>
+					// inject schoolInfo to invite
+					window.Server.publicSchool.get(invite.invitedSchoolId)
+						.then(invitedSchool => {
+							invite.inviterSchool = activeSchool;
+							invite.invitedSchool = invitedSchool;
 
-                if (foundGuest.length === 0) {
-                    memo.push(invite.guest);
-                }
+							// inject event to invite
+							return window.Server.schoolEvent.get({schoolId: self.activeSchoolId, eventId: invite.eventId});
+						})
+						.then(event => {
+							invite.event = event;
 
-                return memo;
-            }, []);
+							// inject sport to invite
+							return window.Server.public_sport.get(event.sportId).then(sport => {
+								invite.sport = sport;
 
-            binding
-                .atomically()
-                .set('sync', true)
-                .set('models', Immutable.fromJS(models))
-                .set('participants', Immutable.fromJS(participants))
-                .commit();
+								return sport;
+							})
+						})
+				)
+			);
+		})
+		.then(_ => {
+			binding
+				.atomically()
+				.set('sync', true)
+				.set('models', Immutable.fromJS(outboxInvites))
+				.set('participants', Immutable.fromJS([]))// TODO to deal with this shit
+				.commit();
+
+			return outboxInvites;
 		});
 	},
 	getInvites: function () {
