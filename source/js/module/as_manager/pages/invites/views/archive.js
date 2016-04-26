@@ -2,10 +2,14 @@ const 	ProcessingView 	= require('./processing'),
 		InviteOutbox 	= require('./invite'),
 		React 			= require('react'),
 		InvitesMixin 	= require('../mixins/invites_mixin'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Immutable		= require('immutable');
 
 const ArchiveView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+	// ID of current school
+	// Will set on componentWillMount event
+	activeSchoolId: undefined,
     displayName: 'ArchiveView',
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -19,57 +23,86 @@ const ArchiveView = React.createClass({
 	},
 	componentWillMount: function () {
 		var self = this,
-			binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+			binding = self.getDefaultBinding();
 
-		window.Server.invites.get({
-			filter: {
-				where: {
-					or: [
-						{
-							inviterId: activeSchoolId
-						},
-						{
-							guestId: activeSchoolId
-						}
-					],
-					accepted: {
-                        inq: [true, false]
-                    }
-				},
-                include: ['inviter', 'guest', {
-                	event: 'sport'
-                }]
-			}
-		}).then(function (models) {
-			var uniqueIds = models.reduce(function (memo, invite) {
-				if (memo.indexOf(invite.inviterId) === -1) {
-					memo.push(invite.inviterId);
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		let invites;
+
+		// TODO Don't forget about filter
+		//{
+		//	filter: {
+		//		where: {
+		//			or: [
+		//				{
+		//					inviterId: activeSchoolId
+		//				},
+		//				{
+		//					guestId: activeSchoolId
+		//				}
+		//			],
+		//				accepted: {
+		//				inq: [true, false]
+		//			}
+		//		},
+		//		include: ['inviter', 'guest', {
+		//			event: 'sport'
+		//		}]
+		//	}
+		//}
+		window.Server.schoolInvites.get(self.activeSchoolId, {
+				filter: {
+					limit: 100
 				}
+			})
+			.then(function (_invites) {
+				// About all invites - get all invites for our school.
+				// Then filter accepted or decline invites
+				invites = _invites.filter(invite => invite.accepted !== 'NOT_READY');
 
-				return memo;
-			}, []);
+				// get info about current school
+				return window.Server.school.get(self.activeSchoolId);
+			})
+			.then(activeSchool => {
 
-			if (uniqueIds.length > 0) {
-				window.Server.schools.get({
-					filter: {
-						where: {
-							id: {
-								inq: uniqueIds
-							}
-						}
-					}
-				}).then(function (participants) {
-					binding
-						.atomically()
-						.set('sync', true)
-						.set('models', Immutable.fromJS(models))
-						.set('participants', Immutable.fromJS(participants))
-						.commit();
-				});
-			}
-		});
+				return Promise.all(
+					invites.map(invite =>
+						// inject schoolInfo to invite
+						window.Server.publicSchool.get(
+							// it all depends on whether the school is inviting active or not
+							invite.inviterSchoolId !== self.activeSchoolId ? invite.inviterSchoolId : invite.invitedSchoolId
+						)
+							.then(otherSchool => {
+								// it all depends on whether the school is inviting active or not
+								invite.inviterSchool = invite.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+								invite.invitedSchool = invite.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+
+								// inject event to invite
+								return window.Server.schoolEvent.get({schoolId: self.activeSchoolId, eventId: invite.eventId});
+							})
+							.then(event => {
+								invite.event = event;
+
+								// inject sport to invite
+								return window.Server.public_sport.get(event.sportId).then(sport => {
+									invite.sport = sport;
+
+									return sport;
+								})
+							})
+					)
+				);
+			})
+			.then(_ => {
+
+				binding
+					.atomically()
+					.set('sync', true)
+					.set('models', Immutable.fromJS(invites))
+					.commit();
+
+				return invites;
+			});
 	},
 	getInvites: function () {
 		var self = this,
@@ -77,12 +110,10 @@ const ArchiveView = React.createClass({
 			invites = binding.get('models');
 
 		return invites.map(function (invite, index) {
-			var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),
-				invitedIndex = self.findIndexParticipant(invite.get('guestId')),
-				inviteBinding = {
+			var inviteBinding = {
 					default: binding.sub(['models', index]),
-					inviter: binding.sub(['participants', inviterIndex]),
-					invited: binding.sub(['participants', invitedIndex])
+					inviterSchool: binding.sub(['models', index, 'inviterSchool']),
+					invitedSchool: binding.sub(['models', index, 'invitedSchool'])
 				};
 
 			return <InviteOutbox binding={inviteBinding} />;
