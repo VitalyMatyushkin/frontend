@@ -5,6 +5,7 @@ const Table         = require('module/ui/list/table'),
 
 const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
+	setPageTitle: 'Houses',
 	serviceName: 'schoolHouses',
 	_getItemRemoveFunction:function(data){
 		var self = this,
