@@ -59,7 +59,7 @@ const InboxView = React.createClass({
 			// About all invites - get all invites for our school.
 			// Then filter inbox invites
 			inboxInvites = allInvites.filter(invite => invite.inviterSchoolId !== self.activeSchoolId
-			&& invite.invitedSchoolId === self.activeSchoolId);
+			&& invite.invitedSchoolId === self.activeSchoolId && invite.accepted === 'NOT_READY');
 
 			// get info about current school
 			return window.Server.school.get(self.activeSchoolId);
