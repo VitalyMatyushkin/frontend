@@ -5,14 +5,7 @@ const	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 
 const TeamSubmitMixin = {
 	_submitRival: function(event, rival, rivalIndex) {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
-				model			= binding.toJS('model');
-
-		//if(model.type === 'inter-schools' && rival.id !== activeSchoolId) {
-		//	self._submitInvite(event, rival);
-		//}
+		const	self = this;
 
 		return self._submitTeam(event, rival, rivalIndex);
 	},

@@ -4,10 +4,14 @@ const   If              = require('module/ui/if/if'),
         classNames      = require('classnames'),
         TeamSubmitMixin = require('module/ui/managers/helpers/team_submit_mixin'),
         Promise         = require('bluebird'),
+        MoreartyHelper	= require('module/helpers/morearty_helper'),
         Immutable       = require('immutable');
 
 const InviteAcceptView = React.createClass({
     mixins: [Morearty.Mixin, TeamSubmitMixin],
+    // ID of current school
+    // Will set on componentWillMount event
+    activeSchoolId: undefined,
     display: 'InviteAccept',
     componentWillMount: function () {
         var self = this,
@@ -15,33 +19,64 @@ const InviteAcceptView = React.createClass({
             binding = self.getDefaultBinding(),
             inviteId = rootBinding.get('routing.pathParameters.0');
 
-        window.Server.invitesFindOne.get({
-            filter: {
-                where: {
-                    id: inviteId
-                },
-                include: [
-                    {
-                        guest: ['forms']
-                    },
-                    {
-                        event: 'sport'
-                    },
-                    {
-                        inviter: ['forms']
-                    }
-                ]
-            }
-        }).then(function (res) {
+        self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+        let invite;
+        // TODO don't forget about filter
+        //{
+        //    filter: {
+        //        where: {
+        //            id: inviteId
+        //        },
+        //        include: [
+        //            {
+        //                guest: ['forms']
+        //            },
+        //            {
+        //                event: 'sport'
+        //            },
+        //            {
+        //                inviter: ['forms']
+        //            }
+        //        ]
+        //    }
+        //}
+        window.Server.schoolInvite.get({schoolId: self.activeSchoolId, inviteId: inviteId})
+        .then(_invite => {
+            invite = _invite;
+
+            return window.Server.school.get(self.activeSchoolId)
+            .then(currentSchool => {
+                invite.invitedSchool = currentSchool;
+
+                return window.Server.schoolForms.get(self.activeSchoolId).then(forms => currentSchool.forms = forms);
+            })
+            .then(_ => {
+                return window.Server.publicSchool.get(invite.inviterSchoolId).then(inviterSchool => {
+                    invite.inviterSchool = inviterSchool;
+
+                    return window.Server.publicSchoolForms.get(invite.inviterSchoolId).then(forms => inviterSchool.forms = forms);
+                });
+            })
+            .then(_ => {
+                return window.Server.schoolEvent.get({schoolId: self.activeSchoolId, eventId: invite.eventId});
+            })
+            .then(event => {
+                invite.event = event;
+
+                return window.Server.public_sport.get(event.sportId).then(sport => invite.event.sport = sport);
+            });
+        })
+        .then(function (res) {
             binding.atomically()
-                .set('invite', Immutable.fromJS(res))
+                .set('invite', Immutable.fromJS(invite))
                 //TODO wtf??
-                .set('model', Immutable.fromJS(res.event))
-                .set('model.sportModel', Immutable.fromJS(res.event.sport))
-                .set('rivals', Immutable.fromJS([res.guest, res.inviter]))
+                .set('model', Immutable.fromJS(invite.event))
+                .set('model.sportModel', Immutable.fromJS(invite.event.sport))
+                .set('rivals', Immutable.fromJS([invite.invitedSchool, invite.inviterSchool]))
                 .set('players', Immutable.fromJS([[],[]]))
                 .set('sync', true)
-                .set('schoolInfo', Immutable.fromJS(res.guest))
+                .set('schoolInfo', Immutable.fromJS(invite.invitedSchool))
                 //TODO wtf??
                 .set('selectedRivalIndex', Immutable.fromJS(0))
                 //TODO wtf??
@@ -67,25 +102,25 @@ const InviteAcceptView = React.createClass({
     },
     _submit: function() {
         const self = this,
-            binding = self.getDefaultBinding(),
-            promises = self._submitRival(
+            binding = self.getDefaultBinding();
+
+        Promise.all(
+            self._submitRival(
                 binding.toJS('model'),
                 binding.toJS('rivals.0'),
                 0
-            );
-
-        Promise.all(promises).then((data) => {
-            data.forEach((elem) => {
-                if(elem.teamId !== undefined) {
-                    window.Server.inviteRepay.post({inviteId: binding.get('invite.id')}, {
-                        teamId: elem.teamId,
-                        accepted: true
-                    }).then(() => {
-                        document.location.hash = '#event/' + binding.get('model.id');
-                        return true;
-                    });
-                }
+            )
+        )
+        .then(_ => {
+            return window.Server.acceptSchoolInvite.post({
+                schoolId: self.activeSchoolId,
+                inviteId: binding.get('invite.id')
             });
+        })
+        .then(_ => {
+            document.location.hash = '#event/' + binding.get('model.id');
+
+            return _;
         });
     },
     _isEventDataCorrect: function() {
