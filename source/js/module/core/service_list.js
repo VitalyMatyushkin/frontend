@@ -81,7 +81,7 @@ const serviceList = {
         serviceList.addTeamToschoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/addTeam', binding);
 
 		// invites
-		serviceList.invites = new Service('/i/schools/{schoolId}/invites', binding);
+		serviceList.schoolInvites = new Service('/i/schools/{schoolId}/invites', binding);
 
 
 
