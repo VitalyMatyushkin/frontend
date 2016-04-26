@@ -2,34 +2,21 @@ const   InvitesMixin = require('../mixins/invites_mixin'),
         classNames  = require('classnames'),
         React       = require('react'),
         SVG         = require('module/ui/svg'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
         Sport       = require('module/ui/icons/sport_icon'),
 
 InviteView = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
+	// ID of current school
+	// Will set on componentWillMount event
+	activeSchoolId: undefined,
 	propTypes: {
 		type: React.PropTypes.oneOf(['inbox', 'outbox'])
 	},
-	onClickCancel: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+	componentWillMount: function() {
+		const self = this;
 
-		binding
-			.set('redeemed', true)
-			.set('accepted', false);
-
-		window.Server.invite.put({
-			inviteId: binding.get('id')
-		}, binding.toJS());
-	},
-    onClickRedeemed: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
-
-		binding.set('redeemed', true);
-
-		window.Server.invite.put({
-			inviteId: binding.get('id')
-		}, binding.toJS());
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 	},
     getParticipantEmblem:function(participant){
         if(participant !== undefined){
@@ -70,11 +57,9 @@ InviteView = React.createClass({
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-            inviter = binding.toJS('inviter'),
-            guest = binding.toJS('guest'),
-            rival = guest.id === activeSchoolId ? inviter : guest,
+			inviterSchool = binding.toJS('inviterSchool'),
+			invitedSchool = binding.toJS('invitedSchool'),
+            rival = invitedSchool.id === self.activeSchoolId ? inviterSchool : invitedSchool,
             inviteClasses = classNames({
                 bInvite: true,
                 mNotRedeemed: !binding.get('redeemed')
@@ -116,7 +101,6 @@ InviteView = React.createClass({
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
                         {isOutBox ? 'Awaiting opponent...' : null}
-                        {isInbox && !isRedeemed ? <span className="eInvite_redeemed" onClick={self.onClickRedeemed}>{'was read?'}</span> : null}
                         {isArchive ? <span className={'m'+status}>{status}</span>: null}
                     </div>
                     <div className="eInvite_buttons">
