@@ -6,7 +6,7 @@ const 	React = require('react');
 const NoRolePage = React.createClass({
    render:function(){
        return(
-           <h2 style={{textAlign: 'center', marginTop: '50px'}}>The role is not selected.</h2>
+           <h2 style={{textAlign: 'center', marginTop: '50px'}}>Please select a role from the list.</h2>
        );
    }
 });

@@ -9,8 +9,11 @@ const LoginUserPage = React.createClass({
 		//window.Server.logout.post();
 		Helpers.cookie.remove('authorizationInfo');
 		binding.sub('authorizationInfo').clear();
-		document.location.hash = '#login';
-		window.location.reload(true);
+        let subdomains = document.location.host.split('.');
+        subdomains[0] = 'login';
+        const domain = subdomains.join(".");
+        window.location.href = `http://${domain}/#login`;
+		//window.location.reload(true);
 		return null;
 	}
 });
