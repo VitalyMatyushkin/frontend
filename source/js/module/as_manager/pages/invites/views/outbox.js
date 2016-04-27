@@ -94,7 +94,6 @@ const OutboxView = React.createClass({
 				.atomically()
 				.set('sync', true)
 				.set('models', Immutable.fromJS(outboxInvites))
-				.set('participants', Immutable.fromJS([]))// TODO to deal with this shit
 				.commit();
 
 			return outboxInvites;
@@ -106,13 +105,11 @@ const OutboxView = React.createClass({
 			invites = binding.get('models');
 
 		return invites.map(function (invite, index) {
-			var inviterIndex = self.findIndexParticipant(invite.get('inviterId')),
-				invitedIndex = self.findIndexParticipant(invite.get('guestId')),
-				inviteBinding = {
-					default: binding.sub(['models', index]),
-					inviter: binding.sub(['participants', inviterIndex]),
-					invited: binding.sub(['participants', invitedIndex])
-				};
+			const inviteBinding = {
+				default: binding.sub(['models', index]),
+				inviterSchool: binding.sub(['models', index, 'inviterSchool']),
+				invitedSchool: binding.sub(['models', index, 'invitedSchool'])
+			};
 
 			return <Invite type="outbox" binding={inviteBinding} />;
 		}).toArray();
