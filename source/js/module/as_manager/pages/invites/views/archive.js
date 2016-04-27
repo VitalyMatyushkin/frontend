@@ -75,7 +75,7 @@ const ArchiveView = React.createClass({
 							.then(otherSchool => {
 								// it all depends on whether the school is inviting active or not
 								invite.inviterSchool = invite.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
-								invite.invitedSchool = invite.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+								invite.invitedSchool = invite.invitedSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
 
 								// inject event to invite
 								return window.Server.schoolEvent.get({schoolId: self.activeSchoolId, eventId: invite.eventId});

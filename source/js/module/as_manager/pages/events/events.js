@@ -2,10 +2,15 @@ const   RouterView  = require('module/core/router'),
         Route       = require('module/core/route'),
         React       = require('react'),
         SubMenu     = require('module/ui/menu/sub_menu'),
+        MoreartyHelper	= require('module/helpers/morearty_helper'),
+        EventHelper	= require('module/helpers/eventHelper'),
         Immutable   = require('immutable');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
+    // ID of current school
+    // Will set on componentWillMount event
+    activeSchoolId: undefined,
     getMergeStrategy: function () {
         return Morearty.MergeStrategy.MERGE_REPLACE
     },
@@ -25,10 +30,10 @@ const EventView = React.createClass({
     },
     componentWillMount: function () {
         const self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
             binding = self.getDefaultBinding(),
             sportsBinding = binding.sub('sports');
+
+        self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initMenuItems();
 
@@ -52,7 +57,7 @@ const EventView = React.createClass({
                 //        include: 'sport'
                 //    }
                 //}
-                return window.Server.events.get(activeSchoolId, {
+                return window.Server.events.get(self.activeSchoolId, {
                     filter: {
                         limit: 100
                     }
@@ -64,34 +69,23 @@ const EventView = React.createClass({
                 // inject team models to event
                 return Promise.all(
                     events.map(event => {
-                        // Get event teams
-                        return Promise.all(
-                            event.teams.map(teamId => {
-                                return window.Server.team.get(
-                                        {
-                                            schoolId:   activeSchoolId,
-                                            teamId:     teamId
-                                        }
-                                    )
-                                    .then(team => {
-                                        if(team.houseId) {
-                                            return window.Server.schoolHouse.get(
-                                                {
-                                                    schoolId:   activeSchoolId,
-                                                    houseId:    team.houseId
-                                                }
-                                            ).then(house => {
-                                                team.house = house;
-                                                return Promise.resolve(team);
-                                            });
-                                        } else {
-                                            return Promise.resolve(team);
-                                        }
+                        // if event has inter-school type, then we should inject school model to each team from other school
+                        if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+                            return window.Server.publicSchool.get(event.inviterSchoolId !== self.activeSchoolId ? event.inviterSchoolId : event.invitedSchoolId)
+                                .then(school => {
+                                    return self._getEventTeams(event).then(teams => {
+                                        return teams.map(team => {
+                                            if(team.schoolId === school.id) {
+                                                team.school = school;
+                                            }
+
+                                            return team;
+                                        });
                                     });
-                            })
-                        )
-                        // Set teams to event
-                        .then(teams => event.participants = teams);
+                                })
+                        } else {
+                            return self._getEventTeams(event);
+                        }
                     })
                 );
             })
@@ -102,6 +96,38 @@ const EventView = React.createClass({
                     .set('sync', true)
                     .commit();
             });
+    },
+    _getEventTeams: function(event) {
+        const self = this;
+
+        // Get event teams
+        return Promise.all(
+            event.teams.map(teamId => {
+                return window.Server.team.get(
+                    {
+                        schoolId:   self.activeSchoolId,
+                        teamId:     teamId
+                    }
+                    )
+                    .then(team => {
+                        if(team.houseId) {
+                            return window.Server.schoolHouse.get(
+                                {
+                                    schoolId:   self.activeSchoolId,
+                                    houseId:    team.houseId
+                                }
+                            ).then(house => {
+                                team.house = house;
+                                return Promise.resolve(team);
+                            });
+                        } else {
+                            return Promise.resolve(team);
+                        }
+                    });
+            })
+        )
+        // Set teams to event
+        .then(teams => event.participants = teams);
     },
     _initMenuItems: function() {
         const self = this;

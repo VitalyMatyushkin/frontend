@@ -2,6 +2,7 @@ const 	If 					= require('module/ui/if/if'),
 		SVG 				= require('module/ui/svg'),
 		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		AutocompleteTeam 	= require('module/ui/managers/autocompleteTeam'),
+		EventHelper			= require('module/helpers/eventHelper'),
 		Team 				= require('module/ui/managers/team/defaultTeam'),
 		React				= require('react'),
 		Immutable			= require('immutable');
@@ -149,10 +150,12 @@ const EventTeams = React.createClass({
 	_getPlayers: function(order) {
 		const self = this,
 			binding = self.getDefaultBinding(),
-			type = binding.get('event.type'),
+			eventType = binding.get('model.eventType'),
 			participant = binding.sub(['participants', order]),
 			activeSchoolId = self.getActiveSchoolId(),
-			isOwner = type === 'inter-schools' ? participant.get('schoolId') === activeSchoolId : true;
+			isOwner = eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] ?
+				participant.get('schoolId') === activeSchoolId :
+				true;
 
 		return (
 			<div>

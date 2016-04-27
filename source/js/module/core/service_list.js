@@ -51,6 +51,7 @@ const serviceList = {
         // teams
         serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.team = new Service('/i/schools/{schoolId}/teams/{teamId}', binding);
+        serviceList.schoolTeamStudents = new Service('/i/schools/{schoolId}/teams/{teamId}/students', binding);
         serviceList.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);
         serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
