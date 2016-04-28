@@ -6,6 +6,7 @@ const   Table			= require('module/ui/list/table'),
 
 const NewsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
+	setPageTitle: 'News',
 	serviceName: 'schoolNews',
 	serviceCount:'newsCount',
 	_getImageThumbnail:function(url){

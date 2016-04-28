@@ -7,6 +7,7 @@ const Table = require('module/ui/list/table'),
 
 const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
+	setPageTitle: 'Students',
 	serviceName: 'schoolStudents',
     serviceCount:'studentsCount',
 	filters: {
@@ -66,8 +67,8 @@ const StudentsListPage = React.createClass({
 				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
 				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="firstName" >First name</TableField>
-				<TableField width="15%" dataField="lastName" >Last name</TableField>
+				<TableField width="15%" dataField="firstName" >Name</TableField>
+				<TableField width="15%" dataField="lastName" >Surname</TableField>
 				<TableField width="5%" dataField="form" dataFieldKey="name" filterType="none" >Form</TableField>
 				<TableField width="15%" dataField="birthday" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
 				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>

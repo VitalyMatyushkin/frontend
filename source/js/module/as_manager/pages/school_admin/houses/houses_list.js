@@ -5,12 +5,13 @@ const Table         = require('module/ui/list/table'),
 
 const HousesListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
+	setPageTitle: 'Houses',
 	serviceName: 'schoolHouses',
 	_getItemRemoveFunction:function(data){
 		var self = this,
 			binding = self.getDefaultBinding();
 		if(data !== undefined){
-			window.Server.house.delete({houseId:data.id}).then(function(res){
+			window.Server.schoolHouse.delete({houseId:data.id}).then(function(res){
 				binding.update('data',function(houses){
 					return houses.filter(function(house){
 						return house.get('id') !== data.id;

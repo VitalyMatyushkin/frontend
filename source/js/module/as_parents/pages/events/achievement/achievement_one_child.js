@@ -32,9 +32,9 @@ const AchievementOneChild = React.createClass({
                 }
             }).then(function (data) {
                 leanerData = data;
-                return window.Server.form.get(data.formId).then(function (classData) {
+                return window.Server.schoolForm.get(data.formId).then(function (classData) {
                     leanerData.classData = classData;
-                    return window.Server.house.get(data.houseId).then(function (houseData) {
+                    return window.Server.schoolHouse.get(data.houseId).then(function (houseData) {
                         leanerData.houseData = houseData;
                         return window.Server.school.get(data.schoolId).then(function (schoolData) {
                             leanerData.schoolData = schoolData;

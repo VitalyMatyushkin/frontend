@@ -14,7 +14,7 @@ const HouseEditPage = React.createClass({
 		binding.sub('houseEdit').clear();
 
 		if (houseId) {
-			window.Server.house.get({houseId:houseId, schoolId:schoolId}).then(function (data) {
+			window.Server.schoolHouse.get({houseId:houseId, schoolId:schoolId}).then(function (data) {
 				binding.set('houseEdit', Immutable.fromJS(data));
 			});
 		}
@@ -27,7 +27,7 @@ const HouseEditPage = React.createClass({
             houseId     = routingData[1],
             url         = `school_sandbox/${schoolId}/houses`;
 
-		window.Server.house.put({houseId:houseId, schoolId:schoolId}, data).then(function() {
+		window.Server.schoolHouse.put({houseId:houseId, schoolId:schoolId}, data).then(function() {
 			document.location.hash = url;
 		}).catch(function(er){
 			console.error(er.errorThrown+' Server Error');
