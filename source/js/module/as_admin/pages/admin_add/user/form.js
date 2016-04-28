@@ -31,8 +31,7 @@ UserForm = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
-			<Form name="Create New User" updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}>
-				<FormField type="text" field="username" validation="alphanumeric server" >Username</FormField>
+			<Form name="Create New User" updateBinding={true} service="superadmin/users" binding={binding} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
 				<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>

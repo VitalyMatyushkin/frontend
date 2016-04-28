@@ -132,7 +132,7 @@ const Form = React.createClass({
             // TODO: Зарефакторить эту кашицу
             if (['object', 'function'].indexOf(typeOfService) !== -1) {
                 const userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
-                userService(dataToPost).then(self._onServiceSucces/*.bind(self)*/, self._onServiceError/*.bind(self)*/); // React told we don't need .bind()
+                userService(dataToPost).then(self._onServiceSucces, self._onServiceError); // React told we don't need .bind()
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
                 var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :(window.apiBase + '/' + self.props.service);
@@ -142,7 +142,7 @@ const Form = React.createClass({
                     crossDomain: true,
                     dataType: 'json',
                     contentType: 'application/json',
-                    data: type === 'PUT' ? JSON.stringify(dataToPost) : JSON.stringify(dataToPost),
+                    data: JSON.stringify(dataToPost),
                     error: self._onServiceError.bind(self),
                     success: self._onServiceSucces.bind(self)
                 });
