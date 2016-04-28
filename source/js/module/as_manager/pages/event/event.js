@@ -107,7 +107,7 @@ const EventView = React.createClass({
 
 		self._initMenuItems();
 
-		let	school,
+		let	activeSchool,
 			event,
 			invites,
 			teams,
@@ -149,13 +149,13 @@ const EventView = React.createClass({
 		//}
 		window.Server.school.get(self.activeSchoolId)
 		.then(_school => {
-			school = _school;
+			activeSchool = _school;
 
 			// Get event
 			return window.Server.schoolForms.get(self.activeSchoolId);
 		})
 		.then(forms => {
-			school.forms = forms;
+			activeSchool.forms = forms;
 
 			// Get forms
 			return window.Server.schoolEvent.get({
@@ -181,14 +181,21 @@ const EventView = React.createClass({
 				.then(_invite => {
 					invites = _invite;
 
-					return window.Server.school.get(invites.inviterSchoolId)
-					.then(inviterSchool => {
-						invites.inviterSchool = inviterSchool;
+					return window.Server.publicSchool.get(
+						// it all depends on whether the school is inviting active or not
+						invites.inviterSchoolId !== self.activeSchoolId ? invites.inviterSchoolId : invites.invitedSchoolId
+					)
+					.then(otherSchool => {
+						return window.Server.publicSchoolForms.get(otherSchool.id).then(forms => {
+							otherSchool.forms = forms;
 
-						return window.Server.publicSchool.get(invites.invitedSchoolId);
+							return otherSchool;
+						});
 					})
-					.then(invitedSchool => {
-						invites.invitedSchool = invitedSchool;
+					.then(otherSchool => {
+						// it all depends on whether the school is inviting active or not
+						invites.inviterSchool = invites.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+						invites.invitedSchool = invites.invitedSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
 
 						return Promise.resolve(invites);
 					});
@@ -221,18 +228,33 @@ const EventView = React.createClass({
 		})
 		.then(_ => {
 			// get all students
-			return window.Server.schoolStudents.get(self.activeSchoolId);
+			return Promise.all(teams.map(team => {
+				return window.Server.schoolTeamStudents.get({schoolId: team.schoolId, teamId: team.id}).then(users => {
+					// inject students to team
+					team.users = users;
+
+					// inject school to team
+					if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+						team.school = team.schoolId === invites.inviterSchoolId ? invites.inviterSchool : invites.invitedSchool;
+					} else {
+						team.school = activeSchool;
+					}
+
+
+					return team;
+				});
+			}));
 		})
-		.then(users => {
+		.then(_ => {
 			const players = [];
 
 			players.push(
 				TeamHelper.injectFormsToPlayers( // inject forms to players
 					TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
 						TeamHelper.injectTeamIdToPlayers(teams[0].id, teams[0].players),
-						users
+						teams[0].users
 					),
-					school.forms
+					teams[0].school.forms
 				)
 			);
 
@@ -241,9 +263,9 @@ const EventView = React.createClass({
 					TeamHelper.injectFormsToPlayers( // inject forms to players
 						TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
 							TeamHelper.injectTeamIdToPlayers(teams[1].id, teams[1].players), // player + teamId
-							users
+							teams[1].users
 						),
-						school.forms
+						teams[1].school.forms
 					));
 			}
 
@@ -261,7 +283,7 @@ const EventView = React.createClass({
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))
 				.set('players',				Immutable.fromJS(players))
-				.set('schoolInfo',			Immutable.fromJS(school))
+				.set('schoolInfo',			Immutable.fromJS(activeSchool))
 				.set('eventId',				Immutable.fromJS(eventId))
 				.set('mode',				Immutable.fromJS('general'))
 				.set('sync',				Immutable.fromJS(true))
@@ -365,6 +387,5 @@ const EventView = React.createClass({
 		</div>;
 	}
 });
-
 
 module.exports = EventView;

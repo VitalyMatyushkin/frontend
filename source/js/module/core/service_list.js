@@ -51,6 +51,7 @@ const serviceList = {
         // teams
         serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.team = new Service('/i/schools/{schoolId}/teams/{teamId}', binding);
+        serviceList.schoolTeamStudents = new Service('/i/schools/{schoolId}/teams/{teamId}/students', binding);
         serviceList.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);
         serviceList.teamPlayer = new Service('/i/schools/{schoolId}/teams/{teamId}/players/{playerId}', binding);
@@ -81,7 +82,10 @@ const serviceList = {
         serviceList.addTeamToschoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/addTeam', binding);
 
 		// invites
-		serviceList.invites = new Service('/i/schools/{schoolId}/invites', binding);
+		serviceList.schoolInvites = new Service('/i/schools/{schoolId}/invites', binding);
+		serviceList.schoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
+		serviceList.acceptSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
+		serviceList.declineSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/decline', binding);
 
 
 
