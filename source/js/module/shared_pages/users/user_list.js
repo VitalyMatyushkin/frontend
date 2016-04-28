@@ -13,7 +13,7 @@ const   Table = require('module/ui/list/table'),
 const UsersList = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     propTypes:{
-        grantRole:React.PropTypes.object
+        grantRole:React.PropTypes.func
     },
     serviceName:'users',
     serviceCount:'',
