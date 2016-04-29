@@ -9,7 +9,7 @@ const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	setPageTitle: 'Students',
 	serviceName: 'schoolStudents',
-    serviceCount:'studentsCount',
+    serviceCount:'schoolStudentsCount',
 	filters: {
 		include: ['user','form','parents']
 	},

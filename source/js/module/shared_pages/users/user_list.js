@@ -16,7 +16,7 @@ const UsersList = React.createClass({
         grantRole:React.PropTypes.func
     },
     serviceName:'users',
-    serviceCount:'',
+    serviceCount:'usersCount',
     filters:{
         include: {
             relation:"permissions",

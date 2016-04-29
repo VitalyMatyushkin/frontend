@@ -114,15 +114,15 @@ const Table = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             where = self.filter.getWhere();
-        binding.set('pagination.totalCount', 10);
+        //binding.set('pagination.totalCount', 10);
 
-        //if(self.props.getTotalCountPromise) {
-        //    self.requestCount = self.props.getTotalCountPromise(where).then(function (data) {
-        //        if (data && data.count) {
-        //            binding.set('pagination.totalCount', data.count);
-        //        }
-        //    });
-        //}
+        if(self.props.getTotalCountPromise) {
+            self.requestCount = self.props.getTotalCountPromise(where).then(function (data) {
+                if (data && data.count) {
+                    binding.set('pagination.totalCount', data.count);
+                }
+            });
+        }
     },
     onReload:function(){
         const self = this,

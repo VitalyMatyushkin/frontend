@@ -14,12 +14,12 @@ const AdminRequest = React.createClass({
     getDefaultProps: function() {
         return {
             serviceName:'permissionRequests',
-            serviceCount:'PermissionCount'
+            serviceCount:'permissionRequestsCount'
         };
     },
     setPageTitle:"New Requests",
     groupActionList:['Accept','Decline'],
-    filters:{include:['principal','school'],where:{and:[{accepted:{neq:true}},{accepted:{neq:false}}]}},
+    filters:{include:['principal','school'],where:{status:'NEW'}},
     componentWillMount:function(){
         const self = this;
 
