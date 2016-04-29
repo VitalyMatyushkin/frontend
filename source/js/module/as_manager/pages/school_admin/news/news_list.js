@@ -8,7 +8,7 @@ const NewsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
 	setPageTitle: 'News',
 	serviceName: 'schoolNews',
-	serviceCount:'newsCount',
+	serviceCount:'schoolNewsCount',
 	_getImageThumbnail:function(url){
 		if(url !== undefined){
 			return (
