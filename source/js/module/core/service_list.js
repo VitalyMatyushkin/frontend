@@ -23,6 +23,7 @@ const serviceList = {
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
         serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
         serviceList.users = new Service('/i/schools/{schoolId}/users', binding);
+        serviceList.user = new Service('/i/schools/{schoolId}/users/{userId}', binding);
 
         // schools
         serviceList.schools = new Service('/i/schools', binding);
@@ -87,10 +88,12 @@ const serviceList = {
 		serviceList.acceptSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
 		serviceList.declineSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/decline', binding);
 
+		// event comments
+		serviceList.schoolEventComment = new Service('/i/schools/{schoolId}/events/{eventId}/comments/{commentId}', binding);
+		serviceList.schoolEventComments = new Service('/i/schools/{schoolId}/events/{eventId}/comments', binding);
+		serviceList.schoolEventCommentsCount = new Service('/i/schools/{schoolId}/events/{eventId}/comments/count', binding);
 
 
-
-        serviceList.user = new Service('/users/{id}', binding);
         serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);

@@ -1,10 +1,11 @@
 /**
  * Created by bridark on 16/06/15.
  */
-const   CommentBox  = require('./event_blogBox'),
-        React       = require('react'),
-        ReactDOM    = require('reactDom'),
-        Immutable   = require('immutable'),
+const   CommentBox      = require('./event_blogBox'),
+        React           = require('react'),
+        ReactDOM        = require('reactDom'),
+        Immutable       = require('immutable'),
+        MoreartyHelper  = require('module/helpers/morearty_helper'),
         convertPostIdToInt = function(comment){
             comment.postId = parseInt(comment.postId, 10);
             return comment;
@@ -15,27 +16,67 @@ let topLevelComments    = [],
 
 const Blog = React.createClass({
     mixins:[Morearty.Mixin],
+    // ID of current school
+    // Will set on componentWillMount event
+    activeSchoolId: undefined,
+    loggedUser: undefined,
     getInitialState:function(){
         return {blogUpdate:{}}
     },
     _setBlogCount:function(){
-        var self = this,
-          binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        // TODO implement after available on server
-        //window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
-        //    binding.set('blogCount', res.count);
-        //    return res;
-        //});
+        window.Server.schoolEventCommentsCount.get({schoolId: self.activeSchoolId, eventId: binding.get('eventId')})
+            .then(res => {
+                binding.set('blogCount', res.count);
+                return res;
+            });
+    },
+	/**
+     * Get all comments for event from server
+     * @private
+     */
+    _setComments: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        window.Server.schoolEventComments.get(
+            {
+                schoolId:   self.activeSchoolId,
+                eventId:    binding.get('eventId')
+            }
+        ).then(function(blogs){
+            Promise.all(
+                blogs.map(blog =>
+                    window.Server.user.get({
+                        schoolId:   self.activeSchoolId,
+                        userId:     blog.authorId
+                    })
+                    .then(user => blog.author = user)
+                )
+            )
+            .then(_ => {
+                binding
+                    .atomically()
+                    .set('blogs',       Immutable.fromJS(blogs))
+                    .set('blogCount',   Immutable.fromJS(blogs.length))
+                    .commit();
+            });
+        });
     },
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            loggedUser = globalBinding.get('userData.authorizationInfo.userId');
-        self.hasChild = false;
+        const self = this;
+
+        self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+        self._setLoggedUser();
+
+        // upload all comments from server
+        self._setComments();
+
+        //TODO WTF?!
         //For permissions
-        //TODO implement after available on server
         //window.Server.userChildren.get({id:loggedUser}).then(function(children){
         //        var participants = binding.get('players').toJS();
         //    if(participants !== undefined && participants.length >=1){
@@ -57,7 +98,16 @@ const Blog = React.createClass({
         //End of
         self._fetchCommentsData();
     },
-    //
+    _setLoggedUser: function() {
+        const   self            = this,
+                loggedUserId    = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+
+        window.Server.user.get({
+                schoolId:   self.activeSchoolId,
+                userId:     loggedUserId
+            })
+            .then(user => self.loggedUser = user)
+    },
     _fetchCommentsData:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -101,31 +151,26 @@ const Blog = React.createClass({
         //        return comments;
         //    });
     },
+    // TODO HMMMMM???
     componentDidMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
+
         self._tickerForNewComments();
     },
     _tickerForNewComments:function(){
         var self = this,
             binding = self.getDefaultBinding();
 
-        // TODO implement after available on server
-        //self.intervalId = setInterval(function () {
-        //    window.Server.getCommentCount.get({id:binding.get('eventId')}).then(function(res){
-        //        var oldCount = binding.get('blogCount');
-        //        if(oldCount !== undefined){
-        //            if(oldCount !== res.count){
-        //                ReactDOM.findDOMNode(self.refs.newComment).style.display = 'block';
-        //                binding.set('blogCount',res.count);
-        //                topLevelComments.length = 0;
-        //                childComments.length = 0;
-        //                self._fetchCommentsData();
-        //            }
-        //        }
-        //        return res;
-        //    });
-        //}, 2000);
+        self.intervalId = setInterval(function () {
+            window.Server.schoolEventCommentsCount.get({schoolId: self.activeSchoolId, eventId: binding.get('eventId')}).then(function(res){
+                var oldCount = binding.get('blogCount');
+                if(oldCount && oldCount !== res.count) {
+                    self._setComments();
+                }
+                return res;
+            });
+        }, 10000);
     },
     componentWillUnmount:function(){
         var self = this,
@@ -138,35 +183,33 @@ const Blog = React.createClass({
     _commentButtonClick:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
             eventId = binding.get('eventId'),
-            comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
-            bloggerId = globalBinding.get('userData.authorizationInfo.userId');
-        if(self.hasChild || bloggerId !== undefined){
-            ReactDOM.findDOMNode(self.refs.commentBox).value="";
-            return window.Server.addToBlog.post({id:eventId},
-                {
-                    eventId:eventId,
-                    ownerId:bloggerId,
-                    parentId:1,
-                    postId:binding.get('blogCount')+1,
-                    message:comments,
-                    hidden:false
-                })
-                .then(function(result){
-                    window.Server.user.get({id:result.ownerId})
-                        .then(function(author){
-                            result.commentor = author;
-                            topLevelComments.push(result);
-                            binding.set('blogs',Immutable.fromJS(topLevelComments));
-                            self._setBlogCount();
-                            return author;
-                        });
-                    return result;
-                });
-        }else{
-            alert("You cannot comment on this forum");
-        }
+            comments = ReactDOM.findDOMNode(self.refs.commentBox).value;
+
+        ReactDOM.findDOMNode(self.refs.commentBox).value = "";
+
+        return window.Server.schoolEventComments.post(
+            {
+                schoolId: self.activeSchoolId,
+                eventId: binding.get('eventId')
+            },
+            {
+                text: comments
+            }
+        )
+        .then(function(comment){
+            const   blogs       = binding.toJS('blogs'),
+                    blogCount   = binding.toJS('blogCount');
+
+            comment.author = self.loggedUser;
+            blogs.push(comment);
+
+            binding
+                .atomically()
+                .set('blogCount', Immutable.fromJS(blogCount + 1))
+                .set('blogs', Immutable.fromJS(blogs))
+                .commit();
+        });
     },
     render:function(){
         var self = this,
