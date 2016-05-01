@@ -23,6 +23,7 @@ const serviceList = {
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
         serviceList.confirmUserPhone = new Service('/i/confirm/phone',binding);
         serviceList.users = new Service('/i/schools/{schoolId}/users', binding);
+        serviceList.usersCount = new Service('/i/schools/{schoolId}/users/count', binding);
         serviceList.user = new Service('/i/schools/{schoolId}/users/{userId}', binding);
 
         // schools
@@ -35,6 +36,7 @@ const serviceList = {
 
         // students
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
+        serviceList.schoolStudentsCount = new Service('/i/schools/{schoolId}/students/count', binding);
         serviceList.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
 
         // forms
@@ -59,9 +61,11 @@ const serviceList = {
 
         // news
         serviceList.schoolNews = new Service('/i/schools/{schoolId}/news', binding);
+        serviceList.schoolNewsCount = new Service('/i/schools/{schoolId}/news/count', binding);
 
         //Permission Requests
         serviceList.permissionRequests = new Service('/i/schools/{schoolId}/permissions/requests',binding);
+        serviceList.permissionRequestsCount = new Service('/i/schools/{schoolId}/permissions/requests/count',binding);
         serviceList.permissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}',binding);
         serviceList.statusPermissionRequest = new Service('/i/schools/{schoolId}/permissions/requests/{prId}/status', binding);
 

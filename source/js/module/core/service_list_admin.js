@@ -13,9 +13,11 @@ const serviceList = {
         // users
 		serviceList.users = new Service('/superadmin/users', binding);
         serviceList.user = new Service('/superadmin/users/{id}', binding);
+        serviceList.usersCount = new Service('/superadmin/users/count', binding);
 
         //Permission Requests
         serviceList.permissionRequests = new Service('/superadmin/users/permissions/requests',binding);
+        serviceList.permissionRequestsCount = new Service('/superadmin/users/permissions/requests/count',binding);
         serviceList.permissionRequest = new Service('/superadmin/users/permissions/requests/{prId}',binding);
         serviceList.statusPermissionRequest = new Service('/superadmin/users/permissions/requests/{prId}/status',binding);
 
