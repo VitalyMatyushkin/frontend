@@ -1,7 +1,7 @@
 /**
  * Created by bridark on 12/06/15.
  */
-const   EditUser    = require('../admin_comps/edit_user_1'),
+const   EditUser    = require('./user_edit'),
         React       = require('react'),
         Popup       = require('module/ui/popup'),
         Immutable   = require('immutable');
