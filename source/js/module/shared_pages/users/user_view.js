@@ -19,12 +19,8 @@ const UserDetail= React.createClass({
         self.request = window.Server.user.get({id:selectedUserId})
             .then(function(user){
                 user.roles = {};
-                window.Server.Permissions.get({
+                window.Server.userPermissions.get(user.id,{
                         filter: {
-                            where: {
-                                principalId: user.id,
-                                accepted: true
-                            },
                             include:['school',{student:'user'}]
                         }
                     }).then(function(data){
@@ -40,12 +36,8 @@ const UserDetail= React.createClass({
                 window.Server.user.get({id:binding.get('selectedUser').userId})
                     .then(function(user){
                         user.roles = {};
-                        window.Server.Permissions.get({
+                        window.Server.userPermissions.get(user.id, {
                             filter: {
-                                where: {
-                                    principalId: user.id,
-                                    accepted: true
-                                },
                                 include:['school',{student:'user'}]
                             }
                         }).then(function(data){
