@@ -247,8 +247,8 @@ const serviceList = {
 		/*Instead of find one we find all because we don't know school id when user click or type in school domain url
 		* so we query all schools 
 		* */
-		serviceList.schoolsFindOne = new Service('/public/schools'); 
-		
+		serviceList.publicSchools = new Service('/public/schools');
+
 		/* I don't like idea of using window.apiImg here, but it was easiest solution withoug global refactoring */
 		serviceList.images = new ImageService(window.apiImg);
 	}

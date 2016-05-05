@@ -58,13 +58,15 @@ function runMainMode() {
 	if (schoolId !== 'undefined') {
 		initMainView(schoolId);
 	} else {
-		serviceList.schoolsFindOne.get({
-			filter: {
-				where: {
-					domain: document.location.host.split('.')[0]
-				}
-			}
-		}).then(function(data) {
+		// TODO don't forget about filter
+		//{
+		//	filter: {
+		//		where: {
+		//			domain: document.location.host.split('.')[0]
+		//		}
+		//	}
+		//}
+		serviceList.publicSchools.get().then(function(data) {
 			/*TODO: Not the best solution - with this iteration but for now we can use to identify school(HACK)
 			* We can delete this once filtering is performed on the server 
 			* */
