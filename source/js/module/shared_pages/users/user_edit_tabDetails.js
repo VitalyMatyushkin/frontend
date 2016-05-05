@@ -6,6 +6,7 @@ const React = require('react'),
     Form = require('module/ui/form/form'),
     FormColumn 	= require('module/ui/form/form_column'),
     FormField = require('module/ui/form/form_field');
+
 const TabItemDetails = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
@@ -41,7 +42,7 @@ const TabItemDetails = React.createClass({
             <div style={{position:'relative',marginTop:60+'px'}}>
                 <Form binding={binding.sub('form')} onSubmit={self._onSubmit} defaultButton="Save">
                     <FormColumn type="column">
-                        <FormField labelText="Upload New Avatar" type="file" typeOfFile="image" field="avatar"/>
+                        <FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
                     </FormColumn>
                     <FormColumn type="column">
                         <FormField type="text" field="firstName" validation="required">First name</FormField>

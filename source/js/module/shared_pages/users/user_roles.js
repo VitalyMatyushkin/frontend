@@ -15,7 +15,7 @@ UserRole = React.createClass({
             return function(event){
                 var cf = confirm("Are you sure you want to revoke this permission?");
                 if(cf === true){
-                    window.Server.Permission.delete({id:roleId})
+                    window.Server.userPermissions.delete({id:roleId})
                         .then(function(res){
                             console.log(res);
                             alert('Role successfully revoked');
@@ -31,7 +31,7 @@ UserRole = React.createClass({
             tempArray = userRoles.map(function(role){
                 return(
                     <div className="bPopupEdit_row bRole">
-                        <div className="bPopupEdit_role" style={{width:240+'px'}}>{role.school.name}</div>
+                        <div className="bPopupEdit_role" style={{width:240+'px'}}>{role.school ? role.school.name:''}</div>
                         <div className="bPopupEdit_role" style={{width:180+'px'}}>{role.preset}</div>
                         <div className="bPopupEdit_role">{typeof role.student !== 'undefined'?role.student.firstName+" "+role.student.lastName:''}</div>
                         <span><SVG classes="bIcon-mod" icon="icon_blocked"/></span>

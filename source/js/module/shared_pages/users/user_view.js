@@ -70,9 +70,9 @@ const UserDetail= React.createClass({
             return data.map(function(role, i){
                 return(
                     <div key={i} className="eDataList_listItem">
-                        <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={role.school !== undefined ? role.school.pic:'http://placehold.it/400x400'}/></span></div>
-                        <div className="eDataList_listItemCell">{role.school !== undefined ? role.school.name: 'n/a'}</div>
-                        <div className="eDataList_listItemCell">{role.student !== undefined? role.student.user.firstName+" "+role.student.user.lastName : ''}</div>
+                        <div className="eDataList_listItemCell"><span className="eChallenge_rivalPic"><img src={role.school ? role.school.pic:'http://placehold.it/400x400'}/></span></div>
+                        <div className="eDataList_listItemCell">{role.school ? role.school.name: 'n/a'}</div>
+                        <div className="eDataList_listItemCell">{role.student ? role.student.firstName+" "+role.student.lastName : ''}</div>
                         <div className="eDataList_listItemCell">{role.preset}</div>
                     </div>
                 )
