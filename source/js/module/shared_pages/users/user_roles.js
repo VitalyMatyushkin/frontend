@@ -15,7 +15,7 @@ UserRole = React.createClass({
             return function(event){
                 var cf = confirm("Are you sure you want to revoke this permission?");
                 if(cf === true){
-                    window.Server.userPermissions.delete({id:roleId})
+                    window.Server.userPermission.delete(roleId)
                         .then(function(res){
                             console.log(res);
                             alert('Role successfully revoked');
