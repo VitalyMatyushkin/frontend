@@ -86,6 +86,10 @@ const serviceList = {
         serviceList.schoolEventInvite = new Service('/i/schools/{schoolId}/events/{eventId}/invite', binding);
         serviceList.addTeamToschoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/addTeam', binding);
 
+		serviceList.publicSchoolEvent = new Service('/public/schools/{schoolId}/events/{eventId}', binding);
+		serviceList.publicSchoolEvents = new Service('/public/schools/{schoolId}/events', binding);
+		serviceList.publicSchoolEventTeams = new Service('/public/schools/{schoolId}/events/{eventId}/teams', binding);
+
 		// invites
 		serviceList.schoolInvites = new Service('/i/schools/{schoolId}/invites', binding);
 		serviceList.schoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
