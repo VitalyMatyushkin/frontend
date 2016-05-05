@@ -101,11 +101,6 @@ const OneSchoolPage = React.createClass({
                             component="module/as_admin/pages/admin_schools/admin_views/admin_list"
                         />
                         <Route
-                            path="/admin_schools/admin_views/detail /admin_schools/admin_views/detail:mode"
-                            binding={binding.sub('SchoolDetailPage')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_detail"
-                        />
-                        <Route
                             path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode"
                             binding={binding.sub('addSchoolPage')}
                             component="module/as_admin/pages/admin_schools/admin_views/admin_add"

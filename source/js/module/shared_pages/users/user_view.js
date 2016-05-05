@@ -54,9 +54,6 @@ const UserDetail= React.createClass({
         var self = this;
         self.request && self.request.cancel();
     },
-    onSchoolClick:function(value){
-        document.location.hash = '/admin_schools/admin_views/detail?id='+value;
-    },
     onEditClick:function(evt){
         const   self = this,
                 binding = self.getDefaultBinding();
