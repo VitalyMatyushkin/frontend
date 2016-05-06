@@ -12,8 +12,13 @@ const TabItemDetails = React.createClass({
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            userId = binding.get('selectedUser').userId;
-        window.Server.user.get(userId).then(function (data) {
+            globalBinding = self.getMoreartyContext().getBinding(),
+            userId = binding.get('selectedUser').userId,
+            schoolId = globalBinding.get('userRules.activeSchoolId');
+
+        self.params = {schoolId:schoolId, userId:userId};
+
+        window.Server.user.get(self.params).then(function (data) {
             binding.set('form',Immutable.fromJS(data));
             return data;
         });
@@ -26,7 +31,7 @@ const TabItemDetails = React.createClass({
     _onSubmit:function(data){
         var self = this,
             binding = self.getDefaultBinding();
-        window.Server.user.put({id:binding.get('selectedUser').userId},data).then(function(user){
+        window.Server.user.put(self.params,data).then(function(user){
             binding.set('popup',false);
             return user;
         });

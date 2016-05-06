@@ -68,6 +68,7 @@ const Center = React.createClass({
 
                         <Route path="/user/view"
                                binding={binding.sub('userDetailPage')}
+                               userPermissionsService={window.Server.schoolUserPermissions}
                                component="module/shared_pages/users/user_view"/>
                     </RouterView>
 				</div>

@@ -1,6 +1,16 @@
 /**
  * Created by bridark on 12/06/15.
  */
+
+//      Данный компонент общий, поэтому должен уметь работать как для суперадмина, так и для менеджера.
+// Есть две проблемы которые необходимо решить:
+//            1. разные сервисы у суперадмина и менеджеров,
+//            2. разные наборы параметров для этих сервисов.
+//      Первая проблема решается с помощью props и способностью роутера эти props передавать. Посредством пропс
+// мы передаем сервис, который нужно использовать. (см. метод - getDefaultProps)
+//      Вторая проблема решается формированием избыточного набора параметров, т.е. включающего параметры необходимые в
+// обоих случаях. Сервис сам отберет только нужные ему значения. (self.params = {schoolId:schoolId, userId:userId};)
+
 const   EditUser    = require('./user_edit'),
         React       = require('react'),
         Popup       = require('module/ui/popup'),
@@ -8,35 +18,44 @@ const   EditUser    = require('./user_edit'),
 
 const UserDetail= React.createClass({
     mixins: [Morearty.Mixin],
+    getDefaultProps: function() {
+        return {
+            userPermissionsService: window.Server.userPermissions //service for superadmin by default
+        };
+    },
     componentWillMount: function() {
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            selectedUserId = globalBinding.get('routing.parameters.id');
-        self.selectedUserId = selectedUserId;
-        binding.set('selectedUser',{userId:selectedUserId});
+            userId = globalBinding.get('routing.parameters.id'),
+            schoolId = globalBinding.get('userRules.activeSchoolId');
+
+        //Parameters services for the super-administrator and managers
+        self.params = {schoolId:schoolId, userId:userId};
+
+        binding.set('selectedUser',{userId:userId});
         binding.set('popup',false);
-        self.request = window.Server.user.get({id:selectedUserId})
+        self.request = window.Server.user.get(self.params)
             .then(function(user){
                 user.roles = {};
-                window.Server.userPermissions.get(user.id,{
+                self.props.userPermissionsService.get(self.params,{
                         filter: {
                             include:['school',{student:'user'}]
                         }
                     }).then(function(data){
                     user.roles = data;
                     binding.set('userWithPermissionDetail',Immutable.fromJS(user));
-                    binding.set('selectedUser',{userId:selectedUserId, role:data});
+                    binding.set('selectedUser',{userId:userId, role:data});
                     return data;
                 });
                 return user;
             });
         binding.addListener('popup',function(){
             if(binding.get('popup')===false){
-                window.Server.user.get({id:binding.get('selectedUser').userId})
+                window.Server.user.get(self.params)
                     .then(function(user){
                         user.roles = {};
-                        window.Server.userPermissions.get(user.id, {
+                        self.props.userPermissionsService.get(self.params, {
                             filter: {
                                 include:['school',{student:'user'}]
                             }
