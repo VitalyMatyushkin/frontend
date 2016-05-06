@@ -1,16 +1,13 @@
 const	DateTimeMixin	= require('module/mixins/datetime'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
-		Sport			= require('module/ui/icons/sport_icon'),
-		Superuser		= require('module/helpers/superuser');
+		Sport			= require('module/ui/icons/sport_icon');
 
 const HomeFixtures = React.createClass({
 	mixins:[Morearty.Mixin,DateTimeMixin],
 	componentWillMount: function() {
 		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				rootBinding		= self.getMoreartyContext().getBinding(),
-				activeSchoolId	= rootBinding.get('activeSchoolId');
+				binding			= self.getDefaultBinding();
 
 		binding.set(
 			'fixturesSync',
@@ -39,31 +36,73 @@ const HomeFixtures = React.createClass({
 				binding			= self.getDefaultBinding(),
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
-		//TODO: Code below to be reused 
-		// window.Server.fixturesBySchoolId.get(
-		// 		{
-		// 			schoolId: activeSchoolId,
-		// 			filter: {
-		// 				order: 'startTime ASC'
-		// 			}
-		// 		}
-		// 	).then((events) => {
-		// 		const filteredEvents = events.filter((event) => {
-		// 			const	eventDate	= new Date(event.startTime).toLocaleDateString(),
-		// 					currentDate	= date.toLocaleDateString();
-		//
-		// 			return currentDate == eventDate;
-		// 		});
-		//
-		// 		binding
-		// 			.atomically()
-		// 			.set('fixtures',Immutable.fromJS(filteredEvents))
-		// 			.set('fixturesSync',Immutable.fromJS(true))
-		// 			.commit();
-		// 	});
+
+		// TODO don't forget about filter
+		//filter: {
+		//	order: 'startTime ASC'
+		//}
+		window.Server.publicSchoolEvents.get({schoolId: activeSchoolId}).then((events) => {
+				const filteredEvents = events.filter((event) => {
+					const	eventDate	= new Date(event.startTime).toLocaleDateString(),
+							currentDate	= date.toLocaleDateString();
+
+					return currentDate == eventDate;
+				});
+
+				return Promise.all(filteredEvents.map(event => {
+					return self._getEventTeams(event);
+				}));
+			}).then(events => {
+				binding
+					.atomically()
+					.set('fixtures',Immutable.fromJS(events))
+					.set('fixturesSync',Immutable.fromJS(true))
+					.commit();
+			});
+	},
+	_getEventTeams: function(event) {
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('activeSchoolId');
+
+		return window.Server.publicSchoolEventTeams.get({
+				schoolId:	activeSchoolId,
+				eventId:	event.id
+			})
+			.then(teams => {
+				return Promise.all(teams.map(team => {
+					if(team.houseId) {
+						return window.Server.publicSchoolHouse.get(
+							{
+								schoolId:   activeSchoolId,
+								houseId:    team.houseId
+							}
+						).then(house => {
+							team.house = house;
+
+							return self._getSchoolForTeam(team);
+						});
+					} else {
+						return self._getSchoolForTeam(team);
+					}
+				}))
+				.then(teams => {
+					event.participants = teams;
+
+					return event;
+				});
+			});
+	},
+	_getSchoolForTeam: function(team) {
+		return window.Server.publicSchool.get(team.schoolId)
+			.then(school => {
+				team.school = school;
+
+				return team;
+			});
 	},
 	getFixtureInfo: function(event) {
-		const	self	= this;
+		const self = this;
 
 		if(event !== undefined){
 			return(
