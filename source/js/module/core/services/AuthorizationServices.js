@@ -2,8 +2,7 @@
  * Created by Anatoly on 10.04.2016.
  */
 
-const   Immutable   = require('immutable'),
-        Promise     = require('bluebird');
+const   Immutable   = require('immutable');
 
 const AuthorizationServices ={
     login: function(data){
