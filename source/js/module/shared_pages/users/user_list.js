@@ -28,7 +28,7 @@ const UsersList = React.createClass({
     _getItemViewFunction:function(model){
         var self = this;
         if(model.length === 1){
-            window.location.hash = '/admin_schools/admin_views/user?id='+model[0];
+            window.location.hash = '/user/view?id='+model[0];
         }else{
             alert("You can only perform this action on one Item");
         }

@@ -65,6 +65,10 @@ const Center = React.createClass({
 						<Route path="/school_console /school_console/:filter /school_console/:inviteId/:mode"
 							   binding={binding.sub('permissions')}
 							   component="module/as_manager/pages/school_console/school_console"/>
+
+                        <Route path="/user/view"
+                               binding={binding.sub('userDetailPage')}
+                               component="module/shared_pages/users/user_view"/>
                     </RouterView>
 				</div>
 			</div>

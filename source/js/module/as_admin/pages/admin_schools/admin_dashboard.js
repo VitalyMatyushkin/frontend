@@ -91,7 +91,7 @@ const OneSchoolPage = React.createClass({
                             component="module/as_admin/pages/admin_schools/admin_views/admin_users_list"
                         />
                         <Route
-                            path="/admin_schools/admin_views/user /admin_schools/admin_views/user:mode"
+                            path="/user/view"
                             binding={binding.sub('userDetailPage')}
                             component="module/shared_pages/users/user_view"
                         />
