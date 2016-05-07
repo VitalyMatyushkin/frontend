@@ -52,7 +52,17 @@ const HomeFixtures = React.createClass({
 				return Promise.all(filteredEvents.map(event => {
 					return self._getEventTeams(event);
 				}));
-			}).then(events => {
+			})
+			.then(events => {
+				return Promise.all(events.map(event => {
+					return window.Server.public_sport.get(event.sportId).then(sport => {
+						event.sport = sport;
+
+						return event;
+					});
+				}));
+			})
+			.then(events => {
 				binding
 					.atomically()
 					.set('fixtures',Immutable.fromJS(events))
