@@ -163,10 +163,12 @@ const HomeFixtures = React.createClass({
 		return participantEmblem;
 	},
 	getFixtureResults:function(event){
+		const self = this;
+
 		if(event.result !== undefined){
-			const	teamSummary	= event.result.summary.byTeams,
-					firstPoint	=  teamSummary[event.participants[0].id] !== undefined ? teamSummary[event.participants[0].id] : 0,
-					secondPoint	= teamSummary[event.participants[1].id] !== undefined ? teamSummary[event.participants[1].id] : 0;
+			const	teamsSummary	= self._getTeamsSummaryByTeamResult(event.result),
+					firstPoint		=  teamsSummary[event.participants[0].id] !== undefined ? teamsSummary[event.participants[0].id] : 0,
+					secondPoint		= teamsSummary[event.participants[1].id] !== undefined ? teamsSummary[event.participants[1].id] : 0;
 
 			return(
 				<div>
@@ -182,6 +184,24 @@ const HomeFixtures = React.createClass({
 				</div>
 			);
 		}
+	},
+	/**
+	 * Create teams summary object by event result object.
+	 * Method calculate scores for each team in event and return hashMap [firstTeamId:score, secondTeamId]
+	 * @private
+	 */
+	_getTeamsSummaryByTeamResult: function(eventResult) {
+		const teamSummary = {};
+
+		for(let userId in eventResult.points) {
+			if(teamSummary[eventResult.points[userId].teamId]) {
+				teamSummary[eventResult.points[userId].teamId] += eventResult.points[userId].score;
+			} else {
+				teamSummary[eventResult.points[userId].teamId] = eventResult.points[userId].score;
+			}
+		}
+
+		return teamSummary;
 	},
 	renderFixtureLists:function(){
 		const	self		= this,
