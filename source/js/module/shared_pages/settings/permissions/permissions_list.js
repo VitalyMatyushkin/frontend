@@ -1,11 +1,6 @@
-const 	List 			= require('module/ui/list/list'),
-		ListField 		= require('module/ui/list/list_field'),
-		Table 			= require('module/ui/list/table'),
+const 	Table 			= require('module/ui/list/table'),
 		TableField 		= require('module/ui/list/table_field'),
-		DateTimeMixin 	= require('module/mixins/datetime'),
-		SVG 			= require('module/ui/svg'),
 		React 			= require('react'),
-		ReactDOM 		= require('reactDom'),
 		Immutable 		= require('immutable');
 
 

@@ -89,12 +89,12 @@ var validationsSet = {
 			return 'Please accept the Terms and Conditions';
 		}
 	},
-	server: function(value) {
+	server: function(value, defaultValue) {
 		const 	self = this,
 				dataToCheck = {};
 		let 	oldPhoneCheckVal;
 
-		if (value === '') {
+		if (value === '' || value === defaultValue) {
 			return false;
 		}
         if(self.props.onPrePost !== undefined){

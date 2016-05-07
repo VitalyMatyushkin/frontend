@@ -91,14 +91,14 @@ const OneSchoolPage = React.createClass({
                             component="module/as_admin/pages/admin_schools/admin_views/admin_users_list"
                         />
                         <Route
+                            path="/user/view"
+                            binding={binding.sub('userDetailPage')}
+                            component="module/shared_pages/users/user_view"
+                        />
+                        <Route
                             path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode"
                             binding={binding.sub('schools')}
                             component="module/as_admin/pages/admin_schools/admin_views/admin_list"
-                        />
-                        <Route
-                            path="/admin_schools/admin_views/detail /admin_schools/admin_views/detail:mode"
-                            binding={binding.sub('SchoolDetailPage')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_detail"
                         />
                         <Route
                             path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode"
@@ -109,16 +109,6 @@ const OneSchoolPage = React.createClass({
                             path="/admin_schools/admin_views/edit /admin_schools/admin_views/edit:mode"
                             binding={binding.sub('editSchoolPage')}
                             component="module/as_admin/pages/admin_schools/admin_views/admin_edit"
-                        />
-                        <Route
-                            path="/admin_schools/admin_views/user /admin_schools/admin_views/user:mode"
-                            binding={binding.sub('userDetailPage')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_user"
-                        />
-                        <Route
-                            path="/admin_schools/admin_views/modify /admin_schools/admin_views/modify:mode"
-                            binding={binding.sub('userEditPage')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_modify"
                         />
                         <Route
                             path="/admin_schools/admin_views/requests"

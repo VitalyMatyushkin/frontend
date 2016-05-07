@@ -39,10 +39,11 @@ const InputTypeMixin = {
 	_checkOneValid: function(value, validType) {
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
-				validator	= self.validations[validType];
+				validator	= self.validations[validType],
+                defaultValue= binding.get('defaultValue');
 
 		if(validator) {
-			const validationResult = validator(value);
+			const validationResult = validator(value, defaultValue);
 			binding.set('error', validationResult);		// TODO: I even can't imaging why fucking binding is here. I just re-structure code
 			return validationResult;
 		} else {
