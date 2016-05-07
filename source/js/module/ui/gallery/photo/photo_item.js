@@ -61,7 +61,7 @@ const AlbumPhoto = React.createClass({
 	render: function() {
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
-				origSrc 	= binding.get('pic'),
+				origSrc 	= binding.get('picUrl'),
 				sizedSrc 	= window.Server.images.getResizedToBoxUrl(origSrc, 200, 200), // yeah, size a bit hardcoded here
                 background  = {backgroundImage: 'url('+ sizedSrc +')'};
 

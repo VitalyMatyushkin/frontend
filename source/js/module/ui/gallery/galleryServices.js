@@ -12,8 +12,8 @@ const galleryServices = function(albumBinding){
     this.createAlbum = function(model){
         return window.Server.addAlbum.post(model);
     };
-    this.loadAlbum = function(albumId){
-        return window.Server.album.get(albumId);
+    this.loadAlbum = function(schoolId, albumId){
+        return window.Server.schoolAlbum.get({schoolId:schoolId, albumId:albumId});
     };
     this.loadAlbumWithPhotos = function(albumId){
         return window.Server.album.get(albumId, {
@@ -27,28 +27,18 @@ const galleryServices = function(albumBinding){
             }
         });
     };
-    this.updateSchool = function(schoolId, albumId){
-        return window.Server.school.put(schoolId, {defaultAlbumId:albumId});
-    };
     this.getDefaultSchoolAlbum = function(schoolId, ownerId){
-        const self = this,
-            binding = self.binding;
-        let school;
+        const self = this;
 
-        window.Server.school.get(schoolId).then(res => {
-            school = res;
+        window.Server.school.get(schoolId).then(school => {
             if(school.defaultAlbumId)
-                return self.loadAlbum(school.defaultAlbumId);
-            else
-                return self.createAlbum({
-                    name:'Default Album',
-                    description:'Default Album for school site',
-                    ownerId:ownerId
-                });
+                return self.loadAlbum(schoolId, school.defaultAlbumId);
+            else{
+                console.error('school.defaultAlbumId is undefined')
+                return null;
+            }
         }).then(album => {
-            binding.set(album);
-            if(!school.defaultAlbumId)
-                return self.updateSchool(schoolId, album.id);
+            self.binding.set(album);
         });
     };
 
@@ -80,18 +70,23 @@ const galleryServices = function(albumBinding){
     this._addPhoto = function(imgUrl) {
         const   albumId     = this.binding.get('id'),
                 ownerId     = this.binding.get('ownerId'),
+                schoolId    = this.binding.get('schoolId'),
+                params      = {schoolId:schoolId, albumId:albumId},
                 model       = {
                     name:           "",
-                    albumId:        albumId,
                     description:    "",
                     authorId:       ownerId,
-                    pic:            imgUrl
+                    picUrl:         imgUrl
                 };
-        return window.Server.photos.post(albumId, model);
+        return window.Server.schoolAlbumPhotos.post(params, model);
     };
 
     this.photoPin = function(coverUrl){
-        return window.Server.album.put(this.binding.get('id'), {coverUrl:coverUrl});
+        const   albumId     = this.binding.get('id'),
+                schoolId    = this.binding.get('schoolId'),
+                params      = {schoolId:schoolId, albumId:albumId};
+
+        return window.Server.schoolAlbum.put(params, {coverUrl:coverUrl});
     };
 };
 

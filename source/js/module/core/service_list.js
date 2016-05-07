@@ -101,6 +101,27 @@ const serviceList = {
 		serviceList.schoolEventComments = new Service('/i/schools/{schoolId}/events/{eventId}/comments', binding);
 		serviceList.schoolEventCommentsCount = new Service('/i/schools/{schoolId}/events/{eventId}/comments/count', binding);
 
+        // albums
+        serviceList.schoolAlbum = new Service('/i/schools/{schoolId}/albums/{albumId}', binding);
+
+        // photos
+        serviceList.schoolAlbumPhotos = new Service('/i/schools/{schoolId}/albums/{albumId}/photos', binding);
+        serviceList.schoolAlbumPhoto = new Service('/i/schools/{schoolId}/albums/{albumId}/photos/{photoId}', binding);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         serviceList.userChildren = new Service('/users/{id}/children', binding);
 		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
@@ -160,11 +181,6 @@ const serviceList = {
 		serviceList.schoolCoaches = new Service('/schools/{id}/coaches', binding);
 		serviceList.oneSchoolCoache = new Service('/schools/{schoolId}/coaches/{id}', binding);
 
-		//Admins
-		serviceList.schoolAdmins = new Service('/schools/{id}/admins',binding);
-		serviceList.schoolManager = new Service('/schools/{id}/managers',binding);
-		serviceList.schoolTeacher = new Service('/schools/{id}/teachers',binding);
-
 		serviceList.newsCount = new Service('/schools/{schoolId}/news/count', binding);
 		serviceList.oneNews = new Service('/news/{formId}', binding);
 
@@ -172,10 +188,6 @@ const serviceList = {
 		serviceList.event = new Service('/events/{eventId}', binding);
 		serviceList.participants = new Service('/events/{eventId}/participants', binding);
 		serviceList.relParticipants = new Service('/events/{eventId}/participants/rel/{teamId}', binding);
-
-		// sports
-		serviceList.public_sports = new Service('/public/sports', binding);
-		serviceList.public_sport =  new Service('/public/sports/{sportId}', binding);
 
 		// invites
 		//serviceList.invites = new Service('/invites', binding);
@@ -210,12 +222,7 @@ const serviceList = {
 		serviceList.albumsByEvent = new Service('/events/{id}/albums');
 		serviceList.addAlbum = new Service('/albums', binding);
 		serviceList.albumsFindOne = new Service('/albums/findOne', binding);
-		serviceList.album = new Service('/albums/{albumId}', binding);
 
-		// photos
-		serviceList.photos = new Service('/albums/{albumId}/photos', binding);
-		serviceList.addPhoto = new Service('/albums',binding);
-		serviceList.photo = new Service('/photos/{photoId}', binding);
 
 		//Storage
 		// TODO: DROP THIS SHIT
