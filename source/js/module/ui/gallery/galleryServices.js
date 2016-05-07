@@ -86,7 +86,7 @@ const galleryServices = function(albumBinding){
                 schoolId    = this.binding.get('schoolId'),
                 params      = {schoolId:schoolId, albumId:albumId};
 
-        return null; //window.Server.schoolAlbum.put(params, {coverUrl:coverUrl});
+        return window.Server.schoolAlbum.put(params, {coverUrl:coverUrl});
     };
 };
 
