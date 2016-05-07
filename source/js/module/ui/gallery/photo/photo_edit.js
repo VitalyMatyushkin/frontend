@@ -15,7 +15,7 @@ const PhotoEdit = React.createClass({
 
 		binding.clear();
 
-		window.Server.photo.get(photoId).then(function(data) {
+		window.Server.schoolAlbumPhoto.get(photoId).then(function(data) {
 			if (self.isMounted()) {
 				binding.set(Immutable.fromJS(data));
 			}
@@ -27,7 +27,7 @@ const PhotoEdit = React.createClass({
 	onFormSubmit: function(data) {
 		var self = this;
 
-		window.Server.photo.put(self.photoId, data).then(function() {
+		window.Server.schoolAlbumPhoto.put(self.photoId, data).then(function() {
 			if (self.isMounted()) {
 				window.history.back();
 			}

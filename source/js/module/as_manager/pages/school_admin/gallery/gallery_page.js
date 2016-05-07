@@ -23,11 +23,7 @@ const GalleryListPage = React.createClass({
         self.gallery.getDefaultSchoolAlbum(activeSchoolId, userId);
     },
     onClickAlbum: function(album) {
-        const self = this;
-
-        if (self.isMounted()) {
             document.location.hash = 'albums/view/' + album.id;
-        }
     },
     render:function(){
         var self = this,
@@ -41,7 +37,7 @@ const GalleryListPage = React.createClass({
                     <h1 className="showAllPhoto">All</h1>
                 </div>
                 <div className="albums_wrap">
-                <Album binding={binding.sub('defaultAlbum')} onView={self.onClickAlbum} />
+                    <Album binding={binding.sub('defaultAlbum')} onView={self.onClickAlbum} />
                 </div>
             </div>
         )
