@@ -19,7 +19,7 @@ const RegiseterUserPage = React.createClass({
 	onSuccess: function(data) {
 		var self = this,
 			binding = self.getDefaultBinding();
-		window.Server.user.put({id:data.id}, {
+		window.Server.user.put({userId:data.id}, {
 			verified:{
 				email:true,
 				personal:true,
