@@ -10,7 +10,7 @@ const ChallengeModel = function(event, activeSchoolId){
     self.activeSchoolId = activeSchoolId;
     self.id = event.id;
     self.name = event.name;
-    self.played = !!event.resultId;
+    self.played = !!event.result;
     self.sport = event.sport ? event.sport.name : '';
     self.date = DateHelper.getDate(event.startTime);
     self.time = DateHelper.getTime(event.startTime);
@@ -20,12 +20,14 @@ const ChallengeModel = function(event, activeSchoolId){
 
 ChallengeModel.prototype._getResultByTeam = function(event, order) {
     const self = this,
-        participant = order < event.participants.length ? event.participants[order] : null,
-        eventResult = self.played ? event.result.summary.byTeams : null;
+        participant = order < event.participants.length ? event.participants[order] : null;
+
     let goal = '-';
 
     if (self.played) {
-        goal = eventResult[participant.id] ? eventResult[participant.id] : 0;
+        const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
+
+        goal = eventSummary[participant.id] ? eventSummary[participant.id] : 0;
     }
 
     return goal;

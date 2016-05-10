@@ -1,6 +1,7 @@
 const	DateTimeMixin	= require('module/mixins/datetime'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
+		EventHelper		= require('module/helpers/eventHelper'),
 		Sport			= require('module/ui/icons/sport_icon');
 
 const HomeFixtures = React.createClass({
@@ -163,12 +164,10 @@ const HomeFixtures = React.createClass({
 		return participantEmblem;
 	},
 	getFixtureResults:function(event){
-		const self = this;
-
 		if(event.result !== undefined){
-			const	teamsSummary	= self._getTeamsSummaryByTeamResult(event.result),
-					firstPoint		=  teamsSummary[event.participants[0].id] !== undefined ? teamsSummary[event.participants[0].id] : 0,
-					secondPoint		= teamsSummary[event.participants[1].id] !== undefined ? teamsSummary[event.participants[1].id] : 0;
+			const	eventSummary	= EventHelper.getTeamsSummaryByEventResult(event.result),
+					firstPoint		= eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0,
+					secondPoint		= eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0;
 
 			return(
 				<div>
@@ -184,24 +183,6 @@ const HomeFixtures = React.createClass({
 				</div>
 			);
 		}
-	},
-	/**
-	 * Create teams summary object by event result object.
-	 * Method calculate scores for each team in event and return hashMap [firstTeamId:score, secondTeamId]
-	 * @private
-	 */
-	_getTeamsSummaryByTeamResult: function(eventResult) {
-		const teamSummary = {};
-
-		for(let userId in eventResult.points) {
-			if(teamSummary[eventResult.points[userId].teamId]) {
-				teamSummary[eventResult.points[userId].teamId] += eventResult.points[userId].score;
-			} else {
-				teamSummary[eventResult.points[userId].teamId] = eventResult.points[userId].score;
-			}
-		}
-
-		return teamSummary;
 	},
 	renderFixtureLists:function(){
 		const	self		= this,
