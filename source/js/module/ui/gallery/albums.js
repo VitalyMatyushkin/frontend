@@ -14,7 +14,7 @@ const AlbumRoutes = React.createClass({
 				<Route path="/albums/edit/:albumId" binding={binding} component="module/ui/gallery/album/album_edit"  />
 				<Route path="/albums/create/:eventId" binding={binding} component="module/ui/gallery/album/album_create"  />
 				<Route path="/albums/view/:albumId" binding={binding} component="module/ui/gallery/album/album_view"  />
-				<Route path="/albums/photo-edit/:photoId" binding={binding} component="module/ui/gallery/photo/photo_edit"  />
+				<Route path="/albums/:albumId/photo-edit/:photoId" binding={binding} component="module/ui/gallery/photo/photo_edit"  />
 			</RouterView>
 		);
 	}

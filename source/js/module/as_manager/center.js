@@ -54,7 +54,7 @@ const Center = React.createClass({
 							   binding={binding.sub('events')}
 							   component="module/as_manager/pages/event/event"/>
 
-						<Route path="/albums /albums/:mode/:albumId"
+						<Route path="/albums /albums/:mode/:albumId /albums/:albumId/:mode/:photoId"
 							   binding={binding.sub('albums')}
 							   component="module/ui/gallery/albums"/>
 

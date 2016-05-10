@@ -58,7 +58,7 @@ const FullScreenList = React.createClass({
 
 	render: function() {
 		const 	self 		= this,
-				src 		= window.Server.images.getResizedToHeightUrl(self.props.photos[self.state.currentIndex].pic, 800),
+				src 		= window.Server.images.getResizedToHeightUrl(self.props.photos[self.state.currentIndex].picUrl, 800),
 				width 		= this.state.windowWidth * 0.8,
 				height 		= this.state.windowHeight * 0.8,
 				topOffset 	= height * 0.5,
