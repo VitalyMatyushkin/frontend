@@ -1,10 +1,11 @@
-const   RouterView  = require('module/core/router'),
-        Route       = require('module/core/route'),
-        React       = require('react'),
-        SubMenu     = require('module/ui/menu/sub_menu'),
-        MoreartyHelper	= require('module/helpers/morearty_helper'),
-        EventHelper	= require('module/helpers/eventHelper'),
-        Immutable   = require('immutable');
+const   RouterView      = require('module/core/router'),
+        Route           = require('module/core/route'),
+        React           = require('react'),
+        SubMenu         = require('module/ui/menu/sub_menu'),
+        MoreartyHelper  = require('module/helpers/morearty_helper'),
+        EventHelper     = require('module/helpers/eventHelper'),
+        Lazy            = require('lazyjs'),
+        Immutable       = require('immutable');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -37,14 +38,16 @@ const EventView = React.createClass({
 
         self._initMenuItems();
 
-        let events;
+        let events, sports;
 
         window.Server.sports.get({
                 filter: {
                     limit: 100
                 }
             })
-            .then( sports => {
+            .then(_sports => {
+                sports = _sports;
+
                 sportsBinding
                     .atomically()
                     .set('sync', true)
@@ -63,8 +66,12 @@ const EventView = React.createClass({
                     }
                 });
             })
-            .then( _events => {
+            .then(_events => {
                 events = _events;
+
+                // inject sport to events
+                // method modify events array
+                self._injectSportToEvents(events, sports);
 
                 // inject team models to event
                 return Promise.all(
@@ -128,6 +135,16 @@ const EventView = React.createClass({
         )
         // Set teams to event
         .then(teams => event.participants = teams);
+    },
+    /**
+     * Methods inject sport model to each event by sportId from event.
+     * !!! Method modify events array.
+     * @param events
+     * @param sports
+     * @private
+     */
+    _injectSportToEvents: function(events, sports) {
+        events.map(event => event.sport = Lazy(sports).findWhere({id: event.sportId}));
     },
     _initMenuItems: function() {
         const self = this;
