@@ -110,7 +110,7 @@ const HomeFixtures = React.createClass({
 				<div>
 					<div className="bFix_date">{`${self.getDateFromIso(event.startTime)} ${self.getTimeFromIso(event.startTime)}`}</div>
 					<div className="bFix_name">{event.name}</div>
-					<div className="bFix_type">{event.type}</div>
+					<div className="bFix_type">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
 				</div>
 			)
 		}
