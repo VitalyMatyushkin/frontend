@@ -120,7 +120,7 @@ const HomeFixtures = React.createClass({
 				<div>
 					<div className="bFix_date">{`${self.getDateFromIso(event.startTime)} ${self.getTimeFromIso(event.startTime)}`}</div>
 					<div className="bFix_name">{event.name}</div>
-					<div className="bFix_type">{event.type}</div>
+					<div className="bFix_type">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
 				</div>
 			)
 		}
@@ -136,7 +136,7 @@ const HomeFixtures = React.createClass({
 
 		if(participant !== undefined){
 			switch(type) {
-				case 'inter-schools':
+				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 					let teamName;
 
 					if(self.getMoreartyContext().getBinding().get('activeSchoolId') == participant.school.id) {
@@ -152,7 +152,7 @@ const HomeFixtures = React.createClass({
 						</div>
 					);
 					break;
-				case 'houses':
+				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 					participantEmblem = (
 						<div>
 							<img src={participant.school.pic}/>
@@ -160,7 +160,7 @@ const HomeFixtures = React.createClass({
 						</div>
 					);
 					break;
-				case 'internal':
+				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					participantEmblem = (
 						<div>
 							<img src={participant.school.pic}/>
@@ -219,13 +219,13 @@ const HomeFixtures = React.createClass({
 								{self.getFixtureInfo(event)}
 							</div>
 							<div className="bFixtureOpponent bFixture_item no-margin">
-								{self.getParticipantEmblem(event.participants[0], event.type)}
+								{self.getParticipantEmblem(event.participants[0], event.eventType)}
 							</div>
 							<div className="bFixtureResult bFixture_item no-margin">
 								{self.getFixtureResults(event)}
 							</div>
 							<div className="bFixtureOpponent bFixture_item no-margin">
-								{self.getParticipantEmblem(event.participants[1], event.type)}
+								{self.getParticipantEmblem(event.participants[1], event.eventType)}
 							</div>
 						</div>
 					);
