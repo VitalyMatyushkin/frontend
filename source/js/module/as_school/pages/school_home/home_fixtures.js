@@ -56,7 +56,7 @@ const HomeFixtures = React.createClass({
 			})
 			.then(events => {
 				return Promise.all(events.map(event => {
-					return window.Server.public_sport.get(event.sportId).then(sport => {
+					return window.Server.sport.get(event.sportId).then(sport => {
 						event.sport = sport;
 
 						return event;
