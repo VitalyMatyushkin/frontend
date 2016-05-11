@@ -4,7 +4,8 @@
 
 const   React       = require('react'),
         UserList    = require('module/shared_pages/users/user_list'),
-        GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role');
+        GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+        SVG					= require('module/ui/svg');
 
 const AdminUsersList = React.createClass({
     mixins:[Morearty.Mixin],
@@ -15,7 +16,7 @@ const AdminUsersList = React.createClass({
     render:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            addButton = <div className="bButton" onClick={self._adminCreateNewUser}>Create User</div>;
+            addButton = <div className="bButtonAdd" onClick={self._adminCreateNewUser}><SVG icon="icon_add_men" /></div>;
 
         return (
             <UserList binding={binding} grantRole={GrantRole} addButton={addButton} />
