@@ -1,6 +1,7 @@
 const	DateTimeMixin	= require('module/mixins/datetime'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
+		EventHelper		= require('module/helpers/eventHelper'),
 		Sport			= require('module/ui/icons/sport_icon');
 
 const HomeFixtures = React.createClass({
@@ -125,7 +126,7 @@ const HomeFixtures = React.createClass({
 
 		if(participant !== undefined){
 			switch(type) {
-				case 'inter-schools':
+				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 					let teamName;
 
 					if(self.getMoreartyContext().getBinding().get('activeSchoolId') == participant.school.id) {
@@ -141,7 +142,7 @@ const HomeFixtures = React.createClass({
 						</div>
 					);
 					break;
-				case 'houses':
+				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 					participantEmblem = (
 						<div>
 							<img src={participant.school.pic}/>
@@ -149,7 +150,7 @@ const HomeFixtures = React.createClass({
 						</div>
 					);
 					break;
-				case 'internal':
+				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					participantEmblem = (
 						<div>
 							<img src={participant.school.pic}/>
@@ -208,13 +209,13 @@ const HomeFixtures = React.createClass({
 								{self.getFixtureInfo(event)}
 							</div>
 							<div className="bFixtureOpponent bFixture_item no-margin">
-								{self.getParticipantEmblem(event.participants[0], event.type)}
+								{self.getParticipantEmblem(event.participants[0], event.eventType)}
 							</div>
 							<div className="bFixtureResult bFixture_item no-margin">
 								{self.getFixtureResults(event)}
 							</div>
 							<div className="bFixtureOpponent bFixture_item no-margin">
-								{self.getParticipantEmblem(event.participants[1], event.type)}
+								{self.getParticipantEmblem(event.participants[1], event.eventType)}
 							</div>
 						</div>
 					);
