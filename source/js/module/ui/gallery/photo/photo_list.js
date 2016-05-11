@@ -37,7 +37,7 @@ const PhotoList = React.createClass({
     },
 
     onPhotoPin: function(photo) {
-        this.gallery.photoPin(photo.pic).then(function() {
+        this.gallery.photoPin(photo.picUrl).then(function() {
             alert('Album cover is changed!');
         });
     },
@@ -46,9 +46,15 @@ const PhotoList = React.createClass({
         const self = this,
             rootBinding = self.getMoreartyContext().getBinding(),
             albumId = rootBinding.get('routing.pathParameters.1'),
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+            schoolId    = rootBinding.get('userRules.activeSchoolId'),
+            params      = {
+                schoolId:schoolId,
+                albumId:albumId
+            };
 
-        window.Server.photos.get(albumId).then(function(res){
+
+        window.Server.schoolAlbumPhotos.get(params).then(function(res){
             binding
                 .atomically()
                 .set('photos', Immutable.fromJS(res))

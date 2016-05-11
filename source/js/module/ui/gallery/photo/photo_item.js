@@ -34,11 +34,14 @@ const AlbumPhoto = React.createClass({
 		e.stopPropagation();
 	},
 	onClickEditPhoto: function(e) {
-		var self = this,
-			photo = self.getDefaultBinding().toJS();
+        const 	self 		= this,
+                photo 		= self.getDefaultBinding(),
+                photoId 	= photo.get('id'),
+                rootBinding = self.getMoreartyContext().getBinding(),
+                albumId 	= rootBinding.get('routing.pathParameters.1');
 
 		if (self.isMounted()) {
-			document.location.hash = 'albums/photo-edit/' + photo.id;
+			document.location.hash = `albums/${albumId}/photo-edit/${photoId}`;
 		}
 
 		e.stopPropagation();
@@ -48,10 +51,16 @@ const AlbumPhoto = React.createClass({
 				photo 		= self.getDefaultBinding(),
 				photoId 	= photo.get('id'),
 				rootBinding = self.getMoreartyContext().getBinding(),
-				albumId 	= rootBinding.get('routing.pathParameters.1');
+				albumId 	= rootBinding.get('routing.pathParameters.1'),
+                schoolId    = rootBinding.get('userRules.activeSchoolId'),
+                params      = {
+                    schoolId:schoolId,
+                    albumId:albumId,
+                    photoId:photoId
+                };
 
 		if(confirm("Delete this photo?"))
-			window.Server.photo.delete(photoId).then(function() {
+			window.Server.schoolAlbumPhoto.delete(params).then(function() {
 				self.props.onPhotoDelete();
 			});
 
