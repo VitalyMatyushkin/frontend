@@ -12,7 +12,7 @@ const serviceList = {
 
         // users
 		serviceList.users = new Service('/superadmin/users', binding);
-        serviceList.user = new Service('/superadmin/users/{id}', binding);
+        serviceList.user = new Service('/superadmin/users/{userId}', binding);
         serviceList.usersCount = new Service('/superadmin/users/count', binding);
 
         //Permission Requests

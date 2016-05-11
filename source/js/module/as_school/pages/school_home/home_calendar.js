@@ -14,7 +14,7 @@ const HomeCalender = React.createClass({
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
 		window.Server.publicSchoolEvents.get({schoolId:activeSchoolId})
-			.then((events) => {
+			.then(events => {
 				rootBinding.set('events.models',Immutable.fromJS(events));
 			});
 	},

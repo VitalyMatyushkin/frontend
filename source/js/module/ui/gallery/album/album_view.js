@@ -25,13 +25,14 @@ const AlbumView = React.createClass({
 	componentWillMount: function() {
 		const 	self 			= this,
 				rootBinding 	= self.getMoreartyContext().getBinding(),
+                binding 		= self.getDefaultBinding(),
 				albumId 		= rootBinding.get('routing.pathParameters.1'),
-				binding 		= self.getDefaultBinding(),
-				userId 			= rootBinding.get('userData.authorizationInfo.userId');
+				userId 			= rootBinding.get('userData.authorizationInfo.userId'),
+                schoolId        = rootBinding.get('userRules.activeSchoolId');
 
 		self.gallery = new Gallery(binding.sub('album'));
 
-		self.gallery.loadAlbumWithPhotos(albumId)
+		self.gallery.loadAlbum(schoolId, albumId)
 		.then(function(res) {
 			const isOwner = (userId == res.ownerId);
 

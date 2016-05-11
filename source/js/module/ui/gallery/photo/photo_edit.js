@@ -8,26 +8,34 @@ const PhotoEdit = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	componentWillMount: function() {
-		var self = this,
-		rootBinding = self.getMoreartyContext().getBinding(),
-		photoId = rootBinding.get('routing.pathParameters.1'),
-		binding = self.getDefaultBinding();
+		var self        = this,
+            binding     = self.getDefaultBinding(),
+            rootBinding = self.getMoreartyContext().getBinding(),
+            photoId     = rootBinding.get('routing.pathParameters.2'),
+            albumId 	= rootBinding.get('routing.pathParameters.0'),
+            schoolId    = rootBinding.get('userRules.activeSchoolId'),
+            params      = {
+                schoolId:schoolId,
+                albumId:albumId,
+                photoId:photoId
+            };
 
-		binding.clear();
 
-		window.Server.photo.get(photoId).then(function(data) {
+        binding.clear();
+
+		window.Server.schoolAlbumPhoto.get(params).then(function(data) {
 			if (self.isMounted()) {
 				binding.set(Immutable.fromJS(data));
 			}
 		});
 
-		self.photoId = photoId;
+		self.params = params;
 	},
 
 	onFormSubmit: function(data) {
 		var self = this;
 
-		window.Server.photo.put(self.photoId, data).then(function() {
+		window.Server.schoolAlbumPhoto.put(self.params, data).then(function() {
 			if (self.isMounted()) {
 				window.history.back();
 			}

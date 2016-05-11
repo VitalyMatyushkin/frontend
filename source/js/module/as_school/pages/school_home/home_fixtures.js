@@ -53,7 +53,17 @@ const HomeFixtures = React.createClass({
 				return Promise.all(filteredEvents.map(event => {
 					return self._getEventTeams(event);
 				}));
-			}).then(events => {
+			})
+			.then(events => {
+				return Promise.all(events.map(event => {
+					return window.Server.public_sport.get(event.sportId).then(sport => {
+						event.sport = sport;
+
+						return event;
+					});
+				}));
+			})
+			.then(events => {
 				binding
 					.atomically()
 					.set('fixtures',Immutable.fromJS(events))
@@ -165,9 +175,9 @@ const HomeFixtures = React.createClass({
 	},
 	getFixtureResults:function(event){
 		if(event.result !== undefined){
-			const	teamSummary	= event.result.summary.byTeams,
-					firstPoint	=  teamSummary[event.participants[0].id] !== undefined ? teamSummary[event.participants[0].id] : 0,
-					secondPoint	= teamSummary[event.participants[1].id] !== undefined ? teamSummary[event.participants[1].id] : 0;
+			const	eventSummary	= EventHelper.getTeamsSummaryByEventResult(event.result),
+					firstPoint		= eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0,
+					secondPoint		= eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0;
 
 			return(
 				<div>
