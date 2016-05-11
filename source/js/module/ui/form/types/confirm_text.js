@@ -52,7 +52,7 @@ TypeConfirmText = React.createClass({
 			defaultValue = binding.get('defaultValue');
 
 		return (
-			<div>
+			<div className="eForm_confirmField">
 				<div className="eForm_fieldColumn">
 					<TypeText {...self.props} onSetValue={self.onSetValue} />
 				</div>
