@@ -103,6 +103,8 @@ const serviceList = {
 
         // albums
         serviceList.schoolAlbum = new Service('/i/schools/{schoolId}/albums/{albumId}', binding);
+        serviceList.schoolEventAlbums = new Service('/i/schools/{schoolId}/events/{eventId}/albums', binding);
+        serviceList.schoolEventAlbum = new Service('/i/schools/{schoolId}/events/{eventId}/albums/{albumId}', binding);
 
         // photos
         serviceList.schoolAlbumPhotos = new Service('/i/schools/{schoolId}/albums/{albumId}/photos', binding);
