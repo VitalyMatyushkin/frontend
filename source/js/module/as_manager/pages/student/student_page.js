@@ -14,17 +14,18 @@ const LeanerView = React.createClass({
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
             studentId = globalBinding.get('routing.parameters.id'),
+            schoolId = globalBinding.get('userRules.activeSchoolId'),
             leanerData = {};
         //console.log(studentId);
         studentId = studentId ? studentId : binding.get('activeChildId');
         //console.log(binding.get('activeChildId'));
         if(!studentId) document.location.hash = 'events/calendar';
         // TODO: fixme. Somebody don't know anything about .flatMap
-        studentId && window.Server.schoolStudent.get(studentId).then(function (data) {
+        studentId && window.Server.schoolStudent.get({schoolId:schoolId, studentId:studentId}).then(function (data) {
             leanerData = data;
-            window.Server.schoolForm.get(data.formId).then(function (classData) {
+            window.Server.schoolForm.get({schoolId:schoolId, formId:data.formId}).then(function (classData) {
                 leanerData.classData = classData;
-                window.Server.schoolHouse.get(data.houseId).then(function (houseData) {
+                window.Server.schoolHouse.get({schoolId:schoolId, houseId:data.houseId}).then(function (houseData) {
                     leanerData.houseData = houseData;
                     window.Server.school.get(data.schoolId).then(function (schoolData) {
                         leanerData.schoolData = schoolData;
