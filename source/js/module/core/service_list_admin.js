@@ -19,7 +19,7 @@ const serviceList = {
         serviceList.permissionRequests = new Service('/superadmin/users/permissions/requests',binding);
         serviceList.permissionRequestsCount = new Service('/superadmin/users/permissions/requests/count',binding);
         serviceList.permissionRequest = new Service('/superadmin/users/permissions/requests/{prId}',binding);
-        serviceList.statusPermissionRequest = new Service('/superadmin/users/{userId}/permissions/requests/{prId}/status',binding);
+        serviceList.statusPermissionRequest = new Service('/superadmin/users/permissions/requests/{prId}/status',binding);
 
         //Permissions
         serviceList.userPermissions = new Service('/superadmin/users/{userId}/permissions',binding);

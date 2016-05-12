@@ -1,11 +1,12 @@
 /**
  * Created by bridark on 19/06/15.
  */
-const   RouterView  = require('module/core/router'),
-        Route       = require('module/core/route'),
-        SubMenu     = require('module/ui/menu/sub_menu'),
-        React       = require('react'),
-        Immutable   = require('immutable');
+const   RouterView      = require('module/core/router'),
+        Route           = require('module/core/route'),
+        SubMenu         = require('module/ui/menu/sub_menu'),
+        React           = require('react'),
+        MoreartyHelper	= require('module/helpers/morearty_helper'),
+        Immutable       = require('immutable');
 
 let liveRequestCount;
 
@@ -35,11 +36,7 @@ const SchoolConsole = React.createClass({
     },
     createSubMenu: function(){
         const self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-            serviceCount = 'schoolPermissionsCount',
-            where = {and:[{accepted:{neq:true}},{accepted:{neq:false}}]};
+            binding = self.getDefaultBinding();
 
         const _createSubMenuData = function(count){
             let menuItems = [{
@@ -60,13 +57,21 @@ const SchoolConsole = React.createClass({
         };
 
 
-        _createSubMenuData(0); // временный костыль
-
         //Get the total number of permissions (Notification badge) in submenu
-        //window.Server[serviceCount].get(activeSchoolId, { where: where }).then(function(data){
-        //    const count = data && data.count ? data.count : 0;
-        //    _createSubMenuData(count);
-        //});
+        // TODO shitty way
+        // server doesn't implement filters
+        // so we should filter and count permissions by our hands
+        return window.Server.permissionRequests.get(MoreartyHelper.getActiveSchoolId(self), {
+                filter: {
+                    limit: 1000
+                }
+            })
+            .then(permissions => permissions.filter(permission => permission.status === "NEW"))
+            .then(permissions => {
+                _createSubMenuData(permissions.length);
+                // yep, always i'm right
+                return true;
+            });
     },
     render: function() {
         var self = this,

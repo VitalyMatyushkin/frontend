@@ -7,6 +7,7 @@ const   Table           = require('module/ui/list/table'),
         React           = require('react'),
         If              = require('module/ui/if/if'),
         Lazy            = require('lazyjs'),
+        MoreartyHelper	= require('module/helpers/morearty_helper'),
         ListPageMixin   = require('module/mixins/list_page_mixin');
 
 const AdminRequest = React.createClass({
@@ -33,7 +34,10 @@ const AdminRequest = React.createClass({
     // so we should filter permissions by our hands
     // let's go my friend
     _getDataPromise: function() {
-        return window.Server.permissionRequests.get({
+        const self = this;
+
+        // About activeSchoolId pls look at comment from AdminRequest._getQuickEditActionFunctions
+        return window.Server.permissionRequests.get(MoreartyHelper.getActiveSchoolId(self), {
                 filter: {
                     limit: 1000
                 }
@@ -43,7 +47,10 @@ const AdminRequest = React.createClass({
             });
     },
     _getTotalCountPromise: function() {
-        return window.Server.permissionRequests.get({
+        const self = this;
+
+        // About activeSchoolId pls look at comment from AdminRequest._getQuickEditActionFunctions
+        return window.Server.permissionRequests.get(MoreartyHelper.getActiveSchoolId(self), {
                 filter: {
                     limit: 1000
                 }
@@ -111,7 +118,14 @@ const AdminRequest = React.createClass({
 				} else {
 					confirmMsg = window.confirm("Are you sure you want to accept ?");
 					if(confirmMsg === true){
-						window.Server.statusPermissionRequest.put({userId:currentPr.requesterId, prId:prId},{status:'ACCEPTED'}).then(function(){
+                        // TODO Sweet Jesus! Where in the hell did that come from!
+                        // Hm, this component(AdminRequest) used on manager side and on admin side. WTF?! It's AdminRequest!
+                        // Yep, it's sad, but true.
+                        // Ok go to subject, for manager and for admin we have different service lists, with different routes, but with same route names.
+                        // For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
+                        // For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
+                        // So, for manager schoolId is required, for admin isn't required.
+						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'}).then(function(){
 							binding.update(function(permissions) {
 								return permissions.filter(function(permission) {
 									return permission.get('id') !== prId;
@@ -125,7 +139,9 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.statusPermissionRequest.put({userId:currentPr.requesterId, prId:prId},{status:'REJECTED'}).then(function(){
+                    // TODO Ohhhh, same again
+                    // Pls look up at previous comment
+                    window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== prId;
