@@ -19,12 +19,41 @@ const AdminRequest = React.createClass({
     },
     setPageTitle:"New Requests",
     groupActionList:['Accept','Decline'],
-    filters:{include:['principal','school'],where:{status:'NEW'}},
+    // TODO shitty way
+    // pls see below to _getDataPromise
+    //filters:{include:['principal','school'],where:{status:'NEW'}},
     componentWillMount:function(){
         const self = this;
 
         self.updateSubMenu();
         self.getSchools();
+    },
+    // TODO shitty way
+    // yep, ListPageMixin use field "filters", which you see above, but server still doesn't understand filter
+    // so we should filter permissions by our hands
+    // let's go my friend
+    _getDataPromise: function() {
+        return window.Server.permissionRequests.get({
+                filter: {
+                    limit: 1000
+                }
+            })
+            .then(permissions => {
+                return permissions.filter(permission => permission.status === "NEW");
+            });
+    },
+    _getTotalCountPromise: function() {
+        return window.Server.permissionRequests.get({
+                filter: {
+                    limit: 1000
+                }
+            })
+            .then(permissions => {
+                return permissions.filter(permission => permission.status === "NEW");
+            })
+            .then(permissions => {
+                return permissions.length;
+            });
     },
     getSchools:function(){
         const 	self 	= this,
@@ -82,7 +111,7 @@ const AdminRequest = React.createClass({
 				} else {
 					confirmMsg = window.confirm("Are you sure you want to accept ?");
 					if(confirmMsg === true){
-						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'}).then(function(){
+						window.Server.statusPermissionRequest.put({userId:currentPr.requesterId, prId:prId},{status:'ACCEPTED'}).then(function(){
 							binding.update(function(permissions) {
 								return permissions.filter(function(permission) {
 									return permission.get('id') !== prId;
@@ -96,7 +125,7 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
-                    window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'}).then(function(){
+                    window.Server.statusPermissionRequest.put({userId:currentPr.requesterId, prId:prId},{status:'REJECTED'}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
                                 return permission.get('id') !== prId;
@@ -117,10 +146,15 @@ const AdminRequest = React.createClass({
         return (
             <If condition={!!schools}>
                 <div className="eTable_view">
-                    <Table title="Permissions" binding={binding} addQuickActions={true}
+                    <Table title="Permissions" binding={binding}
+                           addQuickActions={true}
+                           getDataPromise={self._getDataPromise}
                            quickEditActionsFactory={self._getQuickEditActionFunctions}
-                           quickEditActions={self.groupActionList} isPaginated={true} getDataPromise={self.getDataPromise}
-                           getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
+                           quickEditActions={self.groupActionList}
+                           isPaginated={true}
+                           getTotalCountPromise={self._getTotalCountPromise}
+                           filter={self.filter}
+                    >
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                         <TableField dataField="requester" dataFieldKey="email">Email</TableField>
