@@ -45,14 +45,13 @@ const TabItemDetails = React.createClass({
             binding = self.getDefaultBinding();
         return (
             <div style={{position:'relative',marginTop:60+'px'}}>
-                <Form binding={binding.sub('form')} onSubmit={self._onSubmit} defaultButton="Save">
+                <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={self._onSubmit} defaultButton="Save">
                     <FormColumn type="column">
                         <FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
                     </FormColumn>
                     <FormColumn type="column">
                         <FormField type="text" field="firstName" validation="required">First name</FormField>
                         <FormField type="text" field="lastName" validation="required">Surname</FormField>
-                        <FormField type="text" field="username" validation="required">Nickname</FormField>
                         <FormField type="text" field="email" validation="required email server">Email</FormField>
                         <FormField type="phone" field="phone" validation="required server" onPrePost={self.getPhone}>Mobile phone</FormField>
                         <FormField type="dropdown" field="status" userActiveState="Active" userProvidedOptions={['Active','Blocked']}>Status</FormField>

@@ -1,0 +1,9 @@
+.bButtonAdd .bIcon {
+  height: 28px;
+  width: 28px;
+  color: $COLOR;
+  cursor: pointer;
+}
+.bButtonAdd:hover .bIcon{
+  color: $MAIN_COLOR;
+}

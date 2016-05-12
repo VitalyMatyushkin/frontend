@@ -20,8 +20,7 @@ const UserBlock = React.createClass({
 				firstName: '',
 				lastName: '',
 				username: '',
-				email: '',
-				avatar: 'http://lorempixel.com/640/480/sports'
+				email: ''
 			}
 		});
 	},
@@ -43,7 +42,6 @@ const UserBlock = React.createClass({
 			authBinding = binding.get('authorizationInfo'),
 			authData = authBinding.toJS(),
 			UserButton = null,
-			userButtonStyle = {},
             userClasses = classNames({
                 eTopMenu_photo:true,
                 mDisabled:self.props.asAdmin
@@ -54,8 +52,22 @@ const UserBlock = React.createClass({
 		// TODO: Заменить данные кнопки на компонент типа Menu
 		if (authData && authData.id) {
 			// Кнопка перехода на страницу пользователя
-			userButtonStyle = {backgroundImage: 'url(' + binding.get('userInfo.avatar') + ')'};
-			UserButton = <a href="/#settings/general" className={userClasses} style={userButtonStyle} />;
+			const avatar = binding.get('userInfo.avatar');
+			if(avatar) {
+				const userButtonStyle = {
+					backgroundImage: `url(${binding.get('userInfo.avatar')})`
+				};
+				UserButton = <a href="/#settings/general" className={userClasses} style={userButtonStyle} />;
+			} else {
+				UserButton = (
+					<a href="/#settings/general" className={userClasses}>
+						<div className="eTopMenu_avatar_plug_wrapper">
+							<SVG icon="icon_avatar_plug"/>
+						</div>
+					</a>
+				);
+			}
+
             RolesList = <RoleList binding={binding.sub('roleList')} onlyLogout={self.props.asAdmin} />;
 		} else {
 			// Кнопка авторизации
