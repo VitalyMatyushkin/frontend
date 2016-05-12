@@ -14,13 +14,15 @@
 const   EditUser    = require('./user_edit'),
         React       = require('react'),
         Popup       = require('module/ui/popup'),
-        Immutable   = require('immutable');
+        Immutable   = require('immutable'),
+        If          = require('module/ui/if/if');
 
 const UserDetail= React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultProps: function() {
         return {
-            userPermissionsService: window.Server.userPermissions //service for superadmin by default
+            userPermissionsService: window.Server.userPermissions, //service for superadmin by default
+            isEditable:true
         };
     },
     componentWillMount: function() {
@@ -50,22 +52,22 @@ const UserDetail= React.createClass({
                 });
                 return user;
             });
-        binding.addListener('popup',function(){
+        self.addBindingListener(binding, 'popup', function(){
             if(binding.get('popup')===false){
                 window.Server.user.get(self.params)
-                    .then(function(user){
-                        user.roles = {};
-                        self.props.userPermissionsService.get(self.params, {
-                            filter: {
-                                include:['school',{student:'user'}]
-                            }
-                        }).then(function(data){
-                            user.roles = data;
-                            binding.set('userWithPermissionDetail',Immutable.fromJS(user));
-                            return data;
-                        });
-                        return user;
+                .then(function(user){
+                    user.roles = {};
+                    self.props.userPermissionsService.get(self.params, {
+                        filter: {
+                            include:['school',{student:'user'}]
+                        }
+                    }).then(function(data){
+                        user.roles = data;
+                        binding.set('userWithPermissionDetail',Immutable.fromJS(user));
+                        return data;
                     });
+                    return user;
+                });
             }
         });
     },
@@ -122,9 +124,11 @@ const UserDetail= React.createClass({
                     <h1 className="eSchoolMaster_title">
                         {profilePicture ? <div className="eSchoolMaster_flag"><img src={profilePicture}/></div> : ''}
                         {username}
-                        <div className="eSchoolMaster_buttons">
-                            <a onClick={self.onEditClick} className="bButton">Edit...</a>
-                        </div>
+                        <If condition={self.props.isEditable}>
+                            <div className="eSchoolMaster_buttons">
+                                <a onClick={self.onEditClick} className="bButton">Edit...</a>
+                            </div>
+                        </If>
                     </h1>
                     <div>
                         <div style={{padding:10+'px'}}>
