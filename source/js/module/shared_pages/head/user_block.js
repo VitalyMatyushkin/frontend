@@ -20,8 +20,7 @@ const UserBlock = React.createClass({
 				firstName: '',
 				lastName: '',
 				username: '',
-				email: '',
-				avatar: 'http://lorempixel.com/640/480/sports'
+				email: ''
 			}
 		});
 	},
