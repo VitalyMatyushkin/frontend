@@ -1,13 +1,10 @@
-var Logo,React;
-React = require('react');
-Logo = React.createClass({
-	mixins: [Morearty.Mixin],
-	render: function() {
-		var self = this;
+const React = require('react');
 
+const Logo = React.createClass({
+	render: function() {
 		return (
 			<div className="bTopLogo">SquadInTouch - Admin Portal</div>
-		)
+		);
 	}
 });
 
