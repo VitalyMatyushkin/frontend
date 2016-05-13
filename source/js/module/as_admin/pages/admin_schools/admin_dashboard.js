@@ -30,11 +30,7 @@ const OneSchoolPage = React.createClass({
     },
     createSubMenu: function(){
         const self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-            serviceCount = 'permissionRequestsCount',
-            where = {status:'NEW'};
+            binding = self.getDefaultBinding();
 
         const _createSubMenuData = function(count){
             let menuItems = [
@@ -71,10 +67,20 @@ const OneSchoolPage = React.createClass({
         };
 
         //Get the total number of permissions (Notification badge) in submenu
-        window.Server[serviceCount].get(activeSchoolId, { where: where }).then(function(data){
-            const count = data && data.count ? data.count : 0;
-            _createSubMenuData(count);
-        });
+        // TODO shitty way
+        // server doesn't implement filters
+        // so we should filter and count permissions by our hands
+        return window.Server.permissionRequests.get({
+                filter: {
+                    limit: 1000
+                }
+            })
+            .then(permissions => permissions.filter(permission => permission.status === "NEW"))
+            .then(permissions => {
+                _createSubMenuData(permissions.length);
+                // yep, always i'm right
+                return true;
+            });
     },
     render: function() {
         var self = this,

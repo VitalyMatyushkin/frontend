@@ -7,6 +7,7 @@ const   Table           = require('module/ui/list/table'),
         React           = require('react'),
         If              = require('module/ui/if/if'),
         Lazy            = require('lazyjs'),
+        MoreartyHelper	= require('module/helpers/morearty_helper'),
         ListPageMixin   = require('module/mixins/list_page_mixin');
 
 const AdminRequest = React.createClass({
@@ -19,12 +20,47 @@ const AdminRequest = React.createClass({
     },
     setPageTitle:"New Requests",
     groupActionList:['Accept','Decline'],
-    filters:{include:['principal','school'],where:{status:'NEW'}},
+    // TODO shitty way
+    // pls see below to _getDataPromise
+    //filters:{include:['principal','school'],where:{status:'NEW'}},
     componentWillMount:function(){
         const self = this;
 
         self.updateSubMenu();
         self.getSchools();
+    },
+    // TODO shitty way
+    // yep, ListPageMixin use field "filters", which you see above, but server still doesn't understand filter
+    // so we should filter permissions by our hands
+    // let's go my friend
+    _getDataPromise: function() {
+        const self = this;
+
+        // About activeSchoolId pls look at comment from AdminRequest._getQuickEditActionFunctions
+        return window.Server.permissionRequests.get(MoreartyHelper.getActiveSchoolId(self), {
+                filter: {
+                    limit: 1000
+                }
+            })
+            .then(permissions => {
+                return permissions.filter(permission => permission.status === "NEW");
+            });
+    },
+    _getTotalCountPromise: function() {
+        const self = this;
+
+        // About activeSchoolId pls look at comment from AdminRequest._getQuickEditActionFunctions
+        return window.Server.permissionRequests.get(MoreartyHelper.getActiveSchoolId(self), {
+                filter: {
+                    limit: 1000
+                }
+            })
+            .then(permissions => {
+                return permissions.filter(permission => permission.status === "NEW");
+            })
+            .then(permissions => {
+                return permissions.length;
+            });
     },
     getSchools:function(){
         const 	self 	= this,
@@ -82,6 +118,13 @@ const AdminRequest = React.createClass({
 				} else {
 					confirmMsg = window.confirm("Are you sure you want to accept ?");
 					if(confirmMsg === true){
+                        // TODO Sweet Jesus! Where in the hell did that come from!
+                        // Hm, this component(AdminRequest) used on manager side and on admin side. WTF?! It's AdminRequest!
+                        // Yep, it's sad, but true.
+                        // Ok go to subject, for manager and for admin we have different service lists, with different routes, but with same route names.
+                        // For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
+                        // For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
+                        // So, for manager schoolId is required, for admin isn't required.
 						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'}).then(function(){
 							binding.update(function(permissions) {
 								return permissions.filter(function(permission) {
@@ -96,6 +139,8 @@ const AdminRequest = React.createClass({
             case 'Decline':
                 confirmMsg = window.confirm("Are you sure you want to decline ?");
                 if(confirmMsg === true){
+                    // TODO Ohhhh, same again
+                    // Pls look up at previous comment
                     window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'}).then(function(){
                         binding.update(function(permissions) {
                             return permissions.filter(function(permission) {
@@ -117,10 +162,15 @@ const AdminRequest = React.createClass({
         return (
             <If condition={!!schools}>
                 <div className="eTable_view">
-                    <Table title="Permissions" binding={binding} addQuickActions={true}
+                    <Table title="Permissions" binding={binding}
+                           addQuickActions={true}
+                           getDataPromise={self._getDataPromise}
                            quickEditActionsFactory={self._getQuickEditActionFunctions}
-                           quickEditActions={self.groupActionList} isPaginated={true} getDataPromise={self.getDataPromise}
-                           getTotalCountPromise={self.getTotalCountPromise} filter={self.filter} >
+                           quickEditActions={self.groupActionList}
+                           isPaginated={true}
+                           getTotalCountPromise={self._getTotalCountPromise}
+                           filter={self.filter}
+                    >
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
                         <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
                         <TableField dataField="requester" dataFieldKey="email">Email</TableField>
