@@ -11,7 +11,7 @@ const RoleSelectorComponent = React.createClass({
             admin:      'manager',
             manager:    'manager',
             teacher:    'manager',
-            coach:      'manager',
+            trainer:    'manager',
             parent:     'parents'
         };
         return roleMapper[roleName.toLowerCase()];
