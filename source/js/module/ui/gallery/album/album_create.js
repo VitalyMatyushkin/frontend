@@ -23,7 +23,7 @@ const AlbumCreate = React.createClass({
 			eventId: self.eventId,
 			ownerId: data.ownerId
 		}).then(function() {
-			self.isMounted() && window.history.back();
+			window.history.back();
 		});
 	},
 

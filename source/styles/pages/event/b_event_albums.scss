@@ -41,7 +41,7 @@
   display: flex;
   flex-wrap: wrap;
 }
-.eEventAlbums_album {
+.eAlbum {
   display: flex;
   margin: 10px;
   height: 80px;
@@ -72,7 +72,7 @@
 	  margin: auto;
 	}
   }
-  .eEventAlbums_albumEdit {
+  .eAlbumEdit {
 	width:15px;
 	height:15px;
 	margin: 5px;
@@ -85,12 +85,12 @@
 	align-self: flex-start;
 	cursor: pointer;
   }
-  .eEventAlbums_albumDelete{
-	@extend .eEventAlbums_albumEdit;
+  .eAlbumDelete{
+	@extend .eAlbumEdit;
 	background-image:	url('/images/icons/trash.svg');
   }
 }
-.bSchoolGallery .eEventAlbums_album {
+.bSchoolGallery .eAlbum {
 	display: flex;
 	margin: 10px;
 	height: 150px;
@@ -105,7 +105,7 @@
   	flex-direction: column;
   	position: relative;
 
-	.eEventAlbums_albumEdit {
+	.eAlbumEdit {
 		width:15px;
 		height:15px;
 		margin: 5px;
@@ -118,19 +118,19 @@
 		align-self: flex-start;
 		cursor: pointer;
 	}
-	.eEventAlbums_albumDelete{
-		@extend .eEventAlbums_albumEdit;
+	.eAlbumDelete{
+		@extend .eAlbumEdit;
 		background-image:	url('/images/icons/trash.svg');
 	}
 }
-.eEventAlbums_albumTitle, .eEventAlbums_albumDate{
+.eAlbumTitle, .eAlbumDate{
   width: 100%;
   text-align: center;
   font-size: 12px;
   font-weight: bold;
   margin-bottom: 5px;
 }
-.bSchoolGallery .eEventAlbums_albumTitle {
+.bSchoolGallery .eAlbumTitle {
 	display: flex;
 	width: 100%;
 	text-align: center;
@@ -141,7 +141,7 @@
   	color: #fff;
   	padding-top: 5px;
 }
-.bSchoolGallery .eEventAlbums_albumDate {
+.bSchoolGallery .eAlbumDate {
   display: flex;
   width: 100%;
   text-align: center;
@@ -150,7 +150,7 @@
   background: #333132;
   color: #7f7e7c;
 }
-.eEventAlbums_album {
+.eAlbum {
 	&:hover {
 		border-color: $MAIN_COLOR;
 	}

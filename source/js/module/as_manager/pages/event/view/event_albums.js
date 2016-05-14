@@ -5,6 +5,7 @@ const 	React 			= require('react'),
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],
     componentWillMount: function () {
+
     },
 	renderAlbum: function(album, index) {
 		const self = this,
@@ -39,12 +40,9 @@ const EventHeader = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		if (self.isMounted()) {
-			document.location.hash = 'albums/create/' + binding.get('model.id');
-		}
+        document.location.hash = 'albums/create/' + binding.get('model.id');
 
 		e.stopPropagation();
-
 	},
 	render: function() {
 		var self = this,
@@ -57,8 +55,8 @@ const EventHeader = React.createClass({
 				</div>
 				<div ref='albumsList' className='bEventAlbums'>
 					{binding.get('albums').map(self.renderAlbum)}
-					<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eEventAlbums_album mCreate'>
-						<span className='eEventAlbums_albumTitle'>Add...</span>
+					<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eAlbum mCreate'>
+						<span className='eAlbumTitle'>Add...</span>
 					</div>
 				</div>
 			</div>
