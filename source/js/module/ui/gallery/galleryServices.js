@@ -8,7 +8,7 @@ const   Immutable		= require('immutable');
 /**
  * General methods for the gallery.
  *
- * @param albumBinding {object} - Morearty default binding
+ * @param galleryBinding {object} - Morearty default binding
  * @param galleryServiceList {object} =
  * {
  *     albums:{Service},
@@ -27,15 +27,22 @@ const   Immutable		= require('immutable');
  *
  *
  */
-const galleryServices = function(albumBinding, galleryServiceList, params){
+const galleryServices = function(galleryBinding, galleryServiceList, params){
     const self = this;
 
-    self.binding = albumBinding;
+    self.binding = galleryBinding;
     self._serviceList = galleryServiceList;
     self._params = params;
 
     self.setAlbumId = function(albumId){
         self._params.albumId = albumId;
+    };
+    self.getParamsWithAlbumId = function(albumId){
+        const params = Object.assign({}, self._params);
+        if(albumId)
+            params.albumId = albumId;
+
+        return params;
     };
     self.albums = {
         "get":function(){
@@ -47,36 +54,38 @@ const galleryServices = function(albumBinding, galleryServiceList, params){
     };
     self.album = {
         "get":function(albumId){
-            const params = Object.assign({}, self._params);
-            params.albumId = albumId;
+            const params = self.getParamsWithAlbumId(albumId);
 
             return self._serviceList.album.get(params);
         },
         put:function(albumId, model){
-            const params = Object.assign({}, self._params);
-            params.albumId = albumId;
+            const params = self.getParamsWithAlbumId(albumId);
 
             return self._serviceList.album.put(params, model);
         },
         delete:function(albumId){
-            const params = Object.assign({}, self._params);
-            params.albumId = albumId;
+            const params = self.getParamsWithAlbumId(albumId);
 
             return self._serviceList.album.delete(params);
         }
     };
     self.photos = {
-        "get": function () {
-            return self._serviceList.photos.get(self._params);
+        "get": function (albumId) {
+            const params = self.getParamsWithAlbumId(albumId);
+
+            return self._serviceList.photos.get(params);
         },
-        post: function (newPhoto) {
-            return self._serviceList.photos.post(self._params, newPhoto);
+        post: function (albumId, newPhoto) {
+            const params = self.getParamsWithAlbumId(albumId);
+
+            return self._serviceList.photos.post(params, newPhoto);
         },
         /** Will upload given File and finally return promise which nobody cares */
         upload: function(file, isUploadingBinding){
             const   self        = this,
-                binding     = self.binding,
-                imgService  = window.Server.images;
+                    binding     = self.binding.sub('album'),
+                    albumId     = binding.get('id'),
+                    imgService  = window.Server.images;
 
             function startUploading(){
                 isUploadingBinding.set(true);
@@ -91,21 +100,22 @@ const galleryServices = function(albumBinding, galleryServiceList, params){
                 .then(res => {
                     binding.sub('photos').update(photos => photos.unshift(Immutable.fromJS(res)));
                     if(!binding.get('coverUrl'))
-                        return self.photo.pin(res.pic);
+                        return self.photo.pin(albumId, res.picUrl);
                 })
                 .finally(stopUploading);
         },
         /** will create new API Photo item and return promise of AJAX request
          * @private */
         _add:function(imgUrl) {
-            const   ownerId     = self.binding.get('ownerId'),
+            const   ownerId     = self.binding.get('album.ownerId'),
+                    albumId     = self.binding.get('album.id'),
                     model       = {
                     name:           "",
                     description:    "",
                     authorId:       ownerId,
                     picUrl:         imgUrl
                 };
-            return self.photos.post(model);
+            return self.photos.post(albumId, model);
         }
     };
     self.photo = {

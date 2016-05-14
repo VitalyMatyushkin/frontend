@@ -7,7 +7,8 @@ const AlbumPhoto = React.createClass({
 	propTypes: {
 		onPhotoClick: 	React.PropTypes.func,
 		onPhotoDelete: 	React.PropTypes.func,
-		onPhotoPin: 	React.PropTypes.func
+		onPhotoPin: 	React.PropTypes.func,
+        service:        React.PropTypes.object
 	},
 
 	getDefaultState: function() {
@@ -38,29 +39,24 @@ const AlbumPhoto = React.createClass({
                 photo 		= self.getDefaultBinding(),
                 photoId 	= photo.get('id'),
                 rootBinding = self.getMoreartyContext().getBinding(),
-                albumId 	= rootBinding.get('routing.pathParameters.1');
+                params      = rootBinding.toJS('routing.pathParameters'),
+                albumId 	= params && params.length ? params[params.length-1] : null;
+        
+        let path = window.location.hash.replace('#', '').split('/');
+        path.splice(path.length-2, 2);
+        path = path.join('/');
 
-		if (self.isMounted()) {
-			document.location.hash = `albums/${albumId}/photo-edit/${photoId}`;
-		}
+        document.location.hash = `${path}/${albumId}/photo-edit/${photoId}`;
 
 		e.stopPropagation();
 	},
 	onClickDeletePhoto: function(e) {
 		const 	self 		= this,
 				photo 		= self.getDefaultBinding(),
-				photoId 	= photo.get('id'),
-				rootBinding = self.getMoreartyContext().getBinding(),
-				albumId 	= rootBinding.get('routing.pathParameters.1'),
-                schoolId    = rootBinding.get('userRules.activeSchoolId'),
-                params      = {
-                    schoolId:schoolId,
-                    albumId:albumId,
-                    photoId:photoId
-                };
+				photoId 	= photo.get('id');
 
 		if(confirm("Delete this photo?"))
-			window.Server.schoolAlbumPhoto.delete(params).then(function() {
+			self.props.service.photo.delete(photoId).then(function() {
 				self.props.onPhotoDelete();
 			});
 
