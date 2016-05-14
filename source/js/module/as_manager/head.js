@@ -1,40 +1,39 @@
-const 	Logo 		= require('module/as_manager/head/logo'),
-		TopMenu 	= require('module/ui/menu/top_menu'),
-		UserBlock 	= require('module/shared_pages/head/user_block'),
-		If 			= require('module/ui/if/if'),
-		React 		= require('react');
+const	Logo		= require('module/as_manager/head/logo'),
+		TopMenu		= require('module/ui/menu/top_menu'),
+		UserBlock	= require('module/shared_pages/head/user_block'),
+		If			= require('module/ui/if/if'),
+		React		= require('react');
 
 const Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-        this.schoolExists();
+		const self = this;
+
+		self.schoolExists();
 	},
-    componentDidMount:function(){
-        const self = this,
-            binding = self.getDefaultBinding();
+	componentDidMount:function(){
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-        self.addBindingListener(binding, 'userRules.activeSchoolId', self.createTopMenu);
-        self.addBindingListener(binding, 'userData.authorizationInfo.role', self.schoolExists);
-    },
-    schoolExists:function(){
-        const self = this,
-            globalBinding   = self.getMoreartyContext().getBinding(),
-            activeSchoolId  = globalBinding.get('userRules.activeSchoolId'),
-            authorization   = globalBinding.get('userData.authorizationInfo.id');
+		self.addBindingListener(binding, 'userRules.activeSchoolId', self.createTopMenu);
+		self.addBindingListener(binding, 'userData.authorizationInfo.role', self.schoolExists);
+	},
+	schoolExists:function(){
+		const	self			= this,
+				globalBinding	= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= globalBinding.get('userRules.activeSchoolId'),
+				authorization	= globalBinding.get('userData.authorizationInfo.id');
 
-        if(activeSchoolId && authorization)
-            return window.Server.school.get(activeSchoolId).then(function (data) {
-                self.createTopMenu();
-            }).catch(() => {
-                globalBinding.set('userRules.activeSchoolId', '');
-            });
-    },
-	createTopMenu: function() {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = globalBinding.get('userRules.activeSchoolId'),
-		    menuItems = [
+		if(activeSchoolId && authorization) {
+			return window.Server.school.get(activeSchoolId)
+				.then(_ => self.createTopMenu())
+				.catch(_ => globalBinding.set('userRules.activeSchoolId', ''));
+		}
+	},
+	_createMenuItems: function() {
+		const self = this;
+
+		const menuItems = [
 			{
 				href: '/#school_admin/summary',
 				icon: '',
@@ -60,7 +59,14 @@ const Head = React.createClass({
 				routes: ['/invites', '/invites/:filter', '/invites/:inviteId/:mode'],
 				authorization: true,
 				verified: true
-			}, {
+			}
+		];
+
+		const role = self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
+
+		// show console only for admin and manager
+		if(role === "ADMIN" || role === "MANAGER") {
+			menuItems.push({
 				href: '/#school_console/users',
 				icon: '',
 				name: 'Console',
@@ -68,20 +74,31 @@ const Head = React.createClass({
 				routes: ['/school_console/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
 				authorization: true,
 				verified: true
-			}
-		];
+			});
+		}
 
-        if(activeSchoolId)
-            binding.set('topMenuItems', menuItems);
-        else binding.clear('topMenuItems');
+		return menuItems;
+	},
+	createTopMenu: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				globalBinding	= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= globalBinding.get('userRules.activeSchoolId');
+
+		if(activeSchoolId) {
+			binding.set('topMenuItems', self._createMenuItems());
+		} else {
+			binding.clear('topMenuItems');
+		}
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
 		return (
 			<div className="bTopPanel">
-				<Logo />
-                <TopMenu binding={{default: binding.sub('routing'), itemsBinding:binding.sub('topMenuItems')}}/>
+				<Logo/>
+				<TopMenu binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
 				<If condition={document.location.hash.indexOf('login') === -1}>
 					<UserBlock binding={binding.sub('userData')}/>
 				</If>
