@@ -27,7 +27,8 @@ const AlbumView = React.createClass({
 		const 	self 			= this,
 				rootBinding 	= self.getMoreartyContext().getBinding(),
                 binding 		= self.getDefaultBinding(),
-				albumId 		= rootBinding.get('routing.pathParameters.1'),
+				params      	= rootBinding.toJS('routing.pathParameters'),
+				albumId 		= params && params.length ? params[params.length-1] : null,
 				userId 			= rootBinding.get('userData.authorizationInfo.userId');
 
 		self.service = self.props.service;

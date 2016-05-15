@@ -10,9 +10,11 @@ const EventHeader = React.createClass({
 			binding = self.getDefaultBinding(),
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-			eventId = rootBinding.toJS('routing.pathParameters.0');
+			eventId = binding.get('model.id');
 
 		self.service = galleryServices(binding, activeSchoolId, eventId);
+		self.basePath = `event-albums/${eventId}`;
+		self.service.albums.get().then(res => binding.set('albums', Immutable.fromJS(res)));
     },
 	renderAlbum: function(album, index) {
 		const self = this,
@@ -20,28 +22,22 @@ const EventHeader = React.createClass({
 			albumSub = binding.sub('albums.' + index);
 
 		return (
-			<Album binding={albumSub} key={album.id} onView={self.onClickAlbum} onEdit={self.onClickEditAlbum}
+			<Album binding={albumSub} key={album.id} basePath={self.basePath}
 				   onDelete={self.onClickDeleteAlbum} />
 		);
 	},
 	onClickDeleteAlbum: function(album) {
 		const self = this,
-			binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			eventId = rootBinding.get('routing.pathParameters.0');
+			binding = self.getDefaultBinding();
 
-		window.Server.album.delete(album.id).then(function() {
-			window.Server.albumsByEvent.get(eventId)
-				.then(function (res) {
-					binding.set('albums', Immutable.fromJS(res));
-			});
+		self.service.album.delete(album.id).then(function() {
+			self.service.albums.get().then(res => binding.set('albums', Immutable.fromJS(res)));
 		});
 	},
 	onClickCreateAlbum: function(e) {
-		var self = this,
-			binding = self.getDefaultBinding();
+		var self = this;
 
-        document.location.hash = 'albums/create/' + binding.get('model.id');
+        document.location.hash = self.basePath + '/create';
 
 		e.stopPropagation();
 	},

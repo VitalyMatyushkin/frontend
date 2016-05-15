@@ -37,9 +37,9 @@ const PhotoList = React.createClass({
     },
 
     onPhotoPin: function(photo) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            albumId = binding.get('id');
+        const 	self 	= this,
+            	binding = self.getDefaultBinding(),
+            	albumId = binding.get('id');
 
         this.service.photo.pin(albumId, photo.picUrl).then(function() {
             alert('Album cover is changed!');
@@ -47,10 +47,9 @@ const PhotoList = React.createClass({
     },
 
     reloadPhotoList: function() {
-        const   self        = this,
-                rootBinding = self.getMoreartyContext().getBinding(),
-                albumId     = rootBinding.get('routing.pathParameters.1'),
-                binding     = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				albumId = binding.get('id');
 
         this.service.photos.get(albumId).then(function(res){
             binding

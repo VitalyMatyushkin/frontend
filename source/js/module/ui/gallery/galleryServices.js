@@ -69,8 +69,7 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
         },
         /** Will upload given File and finally return promise which nobody cares */
         upload: function(file, isUploadingBinding){
-            const   self        = this,
-                    binding     = self.binding.sub('album'),
+            const   binding     = self.binding.sub('album'),
                     albumId     = binding.get('id'),
                     imgService  = window.Server.images;
 
