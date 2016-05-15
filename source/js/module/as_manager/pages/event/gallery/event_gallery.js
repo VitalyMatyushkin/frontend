@@ -1,11 +1,18 @@
-const 	React 			= require('react'),
-		Immutable 		= require('immutable'),
-		Album			= require('module/ui/gallery/album/album_item');
+const 	React 				= require('react'),
+		Immutable 			= require('immutable'),
+		galleryServices     = require('module/as_manager/pages/event/gallery/eventGalleryServices'),
+		Album				= require('module/ui/gallery/album/album_item');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],
     componentWillMount: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+			eventId = rootBinding.toJS('routing.pathParameters.0');
 
+		self.service = galleryServices(binding, activeSchoolId, eventId);
     },
 	renderAlbum: function(album, index) {
 		const self = this,
@@ -16,12 +23,6 @@ const EventHeader = React.createClass({
 			<Album binding={albumSub} key={album.id} onView={self.onClickAlbum} onEdit={self.onClickEditAlbum}
 				   onDelete={self.onClickDeleteAlbum} />
 		);
-	},
-	onClickAlbum: function(album) {
-        document.location.hash = 'albums/view/' + album.id;
-	},
-	onClickEditAlbum: function(album) {
-        document.location.hash = 'albums/edit/' + album.id;
 	},
 	onClickDeleteAlbum: function(album) {
 		const self = this,
