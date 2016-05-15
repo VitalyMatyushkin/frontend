@@ -3,6 +3,9 @@ const 	AlbumEditForm 	= require('./album_edit_form'),
 
 const AlbumCreate = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes:{
+		service:React.PropTypes.object
+	},
 
 	componentWillMount: function() {
 		var self = this,
@@ -12,15 +15,11 @@ const AlbumCreate = React.createClass({
 	},
 
 	onFormSubmit: function(data) {
-		var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            eventId = rootBinding.get('routing.pathParameters.1'),
-            schoolId = rootBinding.get('userRules.activeSchoolId');
+		var self = this;
 
-		window.Server.schoolEventAlbums.post({schoolId:schoolId, eventId:eventId}, {
+		self.props.service.albums.post({
 			name: data.name,
 			description: data.name,
-			eventId: self.eventId,
 			ownerId: data.ownerId
 		}).then(function() {
 			window.history.back();
