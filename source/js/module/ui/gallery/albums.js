@@ -1,7 +1,19 @@
+/**
+ * Created by Anatoly on 09.02.2016.
+ */
+
 const  	RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
 		React		= require('react');
 
+/**
+ * The base component for routing the functions of the gallery.
+ *
+ * @param basePath {string} - Base path to the gallery. It depends on where the gallery is used.
+ * For example, 'event-album/:eventId'
+ *
+ * @param service {galleryServices} - service for the work gallery with the server-API.
+ * */
 const AlbumRoutes = React.createClass({
 	mixins: [Morearty.Mixin],
     propTypes:{

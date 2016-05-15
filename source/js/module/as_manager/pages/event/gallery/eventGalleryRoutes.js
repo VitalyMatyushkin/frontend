@@ -6,6 +6,9 @@ const   AlbumRoutes         = require('module/ui/gallery/albums'),
         galleryServices     = require('module/as_manager/pages/event/gallery/eventGalleryServices'),
         React		        = require('react');
 
+/**
+ * This component is required to initialize the base. We create here a necessary set of parameters for a event gallery.
+ * */
 const schoolGalleryRoutes = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {

@@ -7,7 +7,7 @@ const galleryServices     = require('module/ui/gallery/galleryServices');
 /**
  * General methods for the gallery.
  *
- * schoolGalleryServiceList {galleryServiceList} =
+ * eventGalleryServiceList {galleryServiceList} =
  * {
  *     albums:{Service},
  *     album:{Service},
