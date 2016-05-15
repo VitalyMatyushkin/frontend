@@ -27,18 +27,10 @@ const   Immutable		= require('immutable');
  */
 const galleryServices = function(galleryBinding, galleryServiceList, params){
     const self = this;
-
     self.binding = galleryBinding;
     self._serviceList = galleryServiceList;
     self._params = params;
 
-    self.getParamsWithAlbumId = function(albumId){
-        const params = Object.assign({}, self._params);
-        if(albumId)
-            params.albumId = albumId;
-
-        return params;
-    };
     self.albums = {
         "get":function(){
             return self._serviceList.albums.get(self._params);
@@ -49,29 +41,29 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
     };
     self.album = {
         "get":function(albumId){
-            const params = self.getParamsWithAlbumId(albumId);
+            const params = self._getParamsWithAlbumId(albumId);
 
             return self._serviceList.album.get(params);
         },
         put:function(albumId, model){
-            const params = self.getParamsWithAlbumId(albumId);
+            const params = self._getParamsWithAlbumId(albumId);
 
             return self._serviceList.album.put(params, model);
         },
         delete:function(albumId){
-            const params = self.getParamsWithAlbumId(albumId);
+            const params = self._getParamsWithAlbumId(albumId);
 
             return self._serviceList.album.delete(params);
         }
     };
     self.photos = {
         "get": function (albumId) {
-            const params = self.getParamsWithAlbumId(albumId);
+            const params = self._getParamsWithAlbumId(albumId);
 
             return self._serviceList.photos.get(params);
         },
         post: function (albumId, newPhoto) {
-            const params = self.getParamsWithAlbumId(albumId);
+            const params = self._getParamsWithAlbumId(albumId);
 
             return self._serviceList.photos.post(params, newPhoto);
         },
@@ -115,19 +107,19 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
     };
     self.photo = {
         "get":function(albumId, photoId){
-            const params = self.getParamsWithAlbumId(albumId);
+            const params = self._getParamsWithAlbumId(albumId);
             params.photoId = photoId;
 
             return self._serviceList.photo.get(params);
         },
         put:function(albumId, photoId, model){
-			const params = self.getParamsWithAlbumId(albumId);
+			const params = self._getParamsWithAlbumId(albumId);
             params.photoId = photoId;
 
             return self._serviceList.photo.put(params, model);
         },
         delete:function(albumId, photoId){
-			const params = self.getParamsWithAlbumId(albumId);
+			const params = self._getParamsWithAlbumId(albumId);
             params.photoId = photoId;
 
             return self._serviceList.photo.delete(params);
@@ -136,6 +128,14 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
             return self.album.put(albumId, {coverUrl:coverUrl});
         }
     };
+
+	self._getParamsWithAlbumId = function(albumId){
+		const params = Object.assign({}, self._params);
+		if(albumId)
+			params.albumId = albumId;
+
+		return params;
+	};
 };
 
 module.exports = galleryServices;
