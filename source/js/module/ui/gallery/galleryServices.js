@@ -24,8 +24,6 @@ const   Immutable		= require('immutable');
  *     ......
  *     albumId:{id}
  * }
- *
- *
  */
 const galleryServices = function(galleryBinding, galleryServiceList, params){
     const self = this;
@@ -34,9 +32,6 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
     self._serviceList = galleryServiceList;
     self._params = params;
 
-    self.setAlbumId = function(albumId){
-        self._params.albumId = albumId;
-    };
     self.getParamsWithAlbumId = function(albumId){
         const params = Object.assign({}, self._params);
         if(albumId)
