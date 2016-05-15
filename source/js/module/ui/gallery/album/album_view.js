@@ -30,9 +30,8 @@ const AlbumView = React.createClass({
 				albumId 		= rootBinding.get('routing.pathParameters.1'),
 				userId 			= rootBinding.get('userData.authorizationInfo.userId');
 
-		self.gallery = self.props.service;
-        self.gallery.setAlbumId(albumId);
-		self.gallery.album.get(albumId)
+		self.service = self.props.service;
+		self.service.album.get(albumId)
 		.then(function(res) {
 			const isOwner = (userId == res.ownerId);
 
@@ -69,7 +68,7 @@ const AlbumView = React.createClass({
 		const 	file 		= e.target.files[0],
 				isUploading = this.getDefaultBinding().sub('isUploading');
 
-		this.gallery.photos.upload(file, isUploading);
+		this.service.photos.upload(file, isUploading);
 	},
 
 	onPhotoClick: function(photo) {
@@ -112,7 +111,7 @@ const AlbumView = React.createClass({
 						<div className="bAlbum">
 							<h2 className="eAlbum_title">{binding.get('album.name')}</h2>
 							<PhotoList binding={{default: binding.sub('album'), isUploading: binding.sub('isUploading')}}
-									   onPhotoClick={self.onPhotoClick} service={self.gallery}
+									   onPhotoClick={self.onPhotoClick} service={self.service}
 							/>
 						</div>
 						</div>

@@ -1,6 +1,6 @@
 const 	Immutable 	= require('immutable'),
 		React 		= require('react'),
-		SVG 				= require('module/ui/svg');
+		SVG 		= require('module/ui/svg');
 
 const AlbumPhoto = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -10,13 +10,22 @@ const AlbumPhoto = React.createClass({
 		onPhotoPin: 	React.PropTypes.func,
         service:        React.PropTypes.object
 	},
-
 	getDefaultState: function() {
 		return Immutable.fromJS({
 			loaded: false
 		});
 	},
+	componentWillMount:function(){
+		const 	self 		= this,
+				photo 		= self.getDefaultBinding(),
+				photoId 	= photo.get('id'),
+				rootBinding = self.getMoreartyContext().getBinding(),
+				params      = rootBinding.toJS('routing.pathParameters'),
+				albumId 	= params && params.length ? params[params.length-1] : null;
 
+		self.albumId = albumId;
+		self.photoId = photoId;
+	},
 	onImageLoad: function() {
 		this.getDefaultBinding().set('loaded', true);
 	},
@@ -35,28 +44,21 @@ const AlbumPhoto = React.createClass({
 		e.stopPropagation();
 	},
 	onClickEditPhoto: function(e) {
-        const 	self 		= this,
-                photo 		= self.getDefaultBinding(),
-                photoId 	= photo.get('id'),
-                rootBinding = self.getMoreartyContext().getBinding(),
-                params      = rootBinding.toJS('routing.pathParameters'),
-                albumId 	= params && params.length ? params[params.length-1] : null;
-        
+        const self = this;
+
         let path = window.location.hash.replace('#', '').split('/');
         path.splice(path.length-2, 2);
         path = path.join('/');
 
-        document.location.hash = `${path}/${albumId}/photo-edit/${photoId}`;
+        document.location.hash = `${path}/${self.albumId}/photo-edit/${self.photoId}`;
 
 		e.stopPropagation();
 	},
 	onClickDeletePhoto: function(e) {
-		const 	self 		= this,
-				photo 		= self.getDefaultBinding(),
-				photoId 	= photo.get('id');
+		const 	self 		= this;
 
 		if(confirm("Delete this photo?"))
-			self.props.service.photo.delete(photoId).then(function() {
+			self.props.service.photo.delete(self.albumId, self.photoId).then(function() {
 				self.props.onPhotoDelete();
 			});
 

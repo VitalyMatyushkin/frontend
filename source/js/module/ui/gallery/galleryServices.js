@@ -119,20 +119,20 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
         }
     };
     self.photo = {
-        "get":function(photoId){
-            const params = Object.assign({}, self._params);
+        "get":function(albumId, photoId){
+            const params = self.getParamsWithAlbumId(albumId);
             params.photoId = photoId;
 
             return self._serviceList.photo.get(params);
         },
-        put:function(photoId, model){
-            const params = Object.assign({}, self._params);
+        put:function(albumId, photoId, model){
+			const params = self.getParamsWithAlbumId(albumId);
             params.photoId = photoId;
 
             return self._serviceList.photo.put(params, model);
         },
-        delete:function(photoId){
-            const params = Object.assign({}, self._params);
+        delete:function(albumId, photoId){
+			const params = self.getParamsWithAlbumId(albumId);
             params.photoId = photoId;
 
             return self._serviceList.photo.delete(params);

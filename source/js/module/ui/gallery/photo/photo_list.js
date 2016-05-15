@@ -12,7 +12,7 @@ const PhotoList = React.createClass({
     componentWillMount: function() {
         var self = this;
 
-        self.gallery = self.props.service;
+        self.service = self.props.service;
     },
     renderPhoto: function(photo, index) {
         var self = this,
@@ -26,7 +26,7 @@ const PhotoList = React.createClass({
                     onPhotoClick={self.onPhotoClick}
                     onPhotoDelete={self.reloadPhotoList}
                     onPhotoPin={self.onPhotoPin}
-                    service = {self.gallery}
+                    service = {self.service}
             />
         );
     },
@@ -41,7 +41,7 @@ const PhotoList = React.createClass({
             binding = self.getDefaultBinding(),
             albumId = binding.get('id');
 
-        this.gallery.photo.pin(albumId, photo.picUrl).then(function() {
+        this.service.photo.pin(albumId, photo.picUrl).then(function() {
             alert('Album cover is changed!');
         });
     },
@@ -52,7 +52,7 @@ const PhotoList = React.createClass({
                 albumId     = rootBinding.get('routing.pathParameters.1'),
                 binding     = self.getDefaultBinding();
 
-        this.gallery.photos.get(albumId).then(function(res){
+        this.service.photos.get(albumId).then(function(res){
             binding
                 .atomically()
                 .set('photos', Immutable.fromJS(res))
