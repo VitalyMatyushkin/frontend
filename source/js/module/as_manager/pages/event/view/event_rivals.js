@@ -1,6 +1,7 @@
 const	If 				= require('module/ui/if/if'),
 		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		Sport           = require('module/ui/icons/sport_icon'),
 		React			= require('react');
 
 const EventRival = React.createClass({
@@ -60,6 +61,9 @@ const EventRival = React.createClass({
 
 		return name;
 	},
+	getSportIcon:function(sport){
+		return <Sport name={sport} className="bIcon_invites" ></Sport>;
+	},
 	getCountPoint: function (order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -80,41 +84,50 @@ const EventRival = React.createClass({
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding(),
-				rivals	= binding.get('rivals');
-
+				rivals	= binding.get('rivals'),
+				sportName   = binding.get('sport.name'),
+				sportIcon = self.getSportIcon(sportName);
 		return (
-			<div className="bEventRivals">
-				<div className="bEventRival">
-					<div className="eEventRival_rival">{self.getPic(0)}</div>
-					<div className="eEventRival_name" title={self.getName(0)}>{self.getName(0)}</div>
-				</div>
-				<div className="bEventResult">
-					<If condition={binding.get('model.status') === "NOT_FINISHED" && binding.get('mode') !== 'closing'}>
-						<div className="eEventResult_score">
-							<span>Score</span>
-							<div className="eEventResult_point">
-								<span>-</span>
-								<span> : </span>
-								<span>-</span>
+				<div className="bEventInfo">
+					<div className="bEventRivals">
+						<div className="bEventRival">
+							<div className="eEventRival_rival">{self.getPic(0)}</div>
+							<div className="eEventRival_name" title={self.getName(0)}>{self.getName(0)}</div>
+						</div>
+						<div className="bEventResult">
+							<If condition={binding.get('model.status') === "NOT_FINISHED" && binding.get('mode') !== 'closing'}>
+								<div className="eEventResult_score">
+									<div className="eEventResult_point">
+										<span>-</span>
+										<span className="eEventResult_colon"> : </span>
+										<span>-</span>
+									</div>
+								</div>
+							</If>
+							<If condition={binding.get('model.status') === "FINISHED" || binding.get('mode') === 'closing'}>
+								<div className="eEventResult_score">
+									<div className="eEventResult_point">
+										<span>{self.getCountPoint(0)}</span>
+										<span className="eEventResult_colon"> : </span>
+										<span>{self.getCountPoint(1)}</span>
+									</div>
+								</div>
+							</If>
+
+							<div className="eEventSport">
+								<span className="eEventSport_icon">{sportIcon}</span>
+								<span className="eEventSport_name">{sportName}</span>
 							</div>
 						</div>
-					</If>
-					<If condition={binding.get('model.status') === "FINISHED" || binding.get('mode') === 'closing'}>
-						<div className="eEventResult_score">
-							<span>Score</span>
-							<div className="eEventResult_point">
-								<span>{self.getCountPoint(0)}</span>
-								<span> : </span>
-								<span>{self.getCountPoint(1)}</span>
-							</div>
+						<div className="bEventRival">
+							<div className="eEventRival_rival">{self.getPic(1)}</div>
+							<div className="eEventRival_name" title={self.getName(1)}>{self.getName(1)}</div>
 						</div>
-					</If>
+					</div>
+					<div className="eEventInfo_type">
+						{(binding.get('model.type') != undefined) ? binding.get('model.type') : "Event Type"}
+					</div>
 				</div>
-				<div className="bEventRival">
-					<div className="eEventRival_rival">{self.getPic(1)}</div>
-					<div className="eEventRival_name" title={self.getName(1)}>{self.getName(1)}</div>
-				</div>
-			</div>
 		);
 	}
 });

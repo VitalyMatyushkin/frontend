@@ -1,17 +1,17 @@
 .bEventTeams {
   display: flex;
   flex-direction: row;
-  width: 100%;
+  flex-wrap: wrap;
   justify-content: space-between;
   margin: 15px 0 10px;
+  border: $BORDER;
+  background: #fff;
+  padding: 0 25px;
 }
 
 .bEventTeams_team {
   display: flex;
   flex-direction: column;
-  width: 440px;
-  border: $BORDER;
-  background: #fff;
   box-sizing: border-box;
   padding: 20px;
 }

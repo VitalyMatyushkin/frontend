@@ -91,7 +91,7 @@ const EventTeams = React.createClass({
 						</span>
 					</If>
 					<span className="ePlayer_name">
-						<span>{player.get('firstName')}</span>
+						<span>{player.get('firstName')} </span>
 						<span>{player.get('lastName')}</span>
 					</span>
 					{
