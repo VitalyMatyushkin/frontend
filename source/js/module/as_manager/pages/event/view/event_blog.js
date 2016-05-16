@@ -218,7 +218,6 @@ const Blog = React.createClass({
         return(
             <div className="bBlogMain">
                 <div className="bEventHeader">
-                    <div className="eEventHeader_field mDate">Comments</div>
                     <div className="eEventHeader_field mName">Comments / Blog Section</div>
                     <div className="eEventHeader_field mSport">{binding.get('sport.name') + ' (' + binding.get('model.type') + ')'}</div>
                 </div>

@@ -1,20 +1,14 @@
 .bEventHeader {
   display: flex;
-  align-content: center;
-  width: 50%;
-  border: $BORDER;
-  background: #fff;
+  flex-direction: column;
+  align-items: flex-start;
   box-sizing: border-box;
-  min-width: 200px;
+  margin-top: 5px;
 }
 
 .eEventHeader_field {
-  font-size: 14px;
-  width: 200px;
-  text-transform: capitalize;
+  text-transform: none;
   text-align: center;
-  &:last-child {
-  }
 }
 
 .eEventHeader_field.mName {
@@ -27,26 +21,23 @@
   overflow: hidden;
 }
 .eEventHeader_field.mDate {
-  margin-bottom: 10px;
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 14px;
+  color: #959595;
+  margin: 5px 0;
 }
 .eEventHeader_field.mEvent{
-  margin-bottom: 10px;
-  font-weight: normal;
+  font-weight: bold;
+  color: $COLOR;
+  font-size: 20px;
 }
 .eEventHeader_field.mType{
-  border-bottom: $BORDER;
-  border-top: $BORDER;
-  margin-bottom: 15px;
   padding: 2px 0;
   min-height: 15px;
 }
 .bEventHeader_wrap {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 10px;
-  min-height: 120px;
+  flex-direction: column;
 }
 .eEventHeader_field_wrap{
   display: flex;
