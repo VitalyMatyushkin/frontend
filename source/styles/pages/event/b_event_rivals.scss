@@ -1,10 +1,8 @@
 .bEventRivals {
-  border: $BORDER;
-  background: #fff;
   display: flex;
-  width: 50%;
+  justify-content: center;
   box-sizing: border-box;
-  min-width: 200px;
+  flex-wrap: wrap;
 }
 
 .eEventRivals_rival {
@@ -33,19 +31,21 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  width: 40%;
+  min-width: 260px;
+  margin: 0 10px;
   align-items: center;
 }
 
 .eEventRival_name {
   border-top: $BORDER;
   border-bottom: $BORDER;
-  margin-bottom: 15px;
-  padding: 2px;
-  font-size: 15px;
+  font-size: 18px;
   width: 100%;
+  color: #535353;
+  font-weight: bold;
   text-align: center;
-  min-height: 15px;
+  //min-height: 30px;
+  padding: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
