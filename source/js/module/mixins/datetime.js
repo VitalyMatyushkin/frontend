@@ -1,6 +1,6 @@
-const   DateHelper = require('module/helpers/date_helper'),
+const   DateHelper = require('module/helpers/date_helper');
 
-DateTimeMixin = {
+const DateTimeMixin = {
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
 	monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
