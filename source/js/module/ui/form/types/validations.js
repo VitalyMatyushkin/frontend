@@ -103,7 +103,7 @@ var validationsSet = {
 		dataToCheck[self.props.field] = value;
 
 		clearTimeout(serverValidationTimer);
-
+		// to validate more appropriate method Debouncing
 		serverValidationTimer = setTimeout(function(){
 			$.ajax({
 				url: 			window.apiBase + '/' + self.props.service + '/check',
