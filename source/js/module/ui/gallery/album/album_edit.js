@@ -4,7 +4,9 @@ const 	AlbumEditForm 	= require('./album_edit_form'),
 
 const AlbumEdit = React.createClass({
 	mixins: [Morearty.Mixin],
-
+	propTypes:{
+		service:React.PropTypes.object
+	},
 	getInitialState: function() {
 		return {
 			albumData: null
@@ -12,30 +14,24 @@ const AlbumEdit = React.createClass({
 	},
 
 	componentWillMount: function() {
-		var self = this,
-		rootBinding = self.getMoreartyContext().getBinding(),
-		albumId = rootBinding.get('routing.pathParameters.1'),
-		binding = self.getDefaultBinding();
+		const 	self 			= this,
+				rootBinding 	= self.getMoreartyContext().getBinding(),
+				binding 		= self.getDefaultBinding(),
+				params      	= rootBinding.toJS('routing.pathParameters'),
+				albumId 		= params && params.length ? params[params.length-1] : null;
 
 		binding.clear();
-
-		window.Server.album.get(albumId).then(function(data) {
-			if (self.isMounted()) {
-				binding.set(Immutable.fromJS(data));
-			}
-		});
-
+		self.service = self.props.service;
 		self.albumId = albumId;
+
+		self.service.album.get(self.albumId).then(data => binding.set(Immutable.fromJS(data)));
+
 	},
 
 	onFormSubmit: function(data) {
 		var self = this;
 
-		window.Server.album.put(self.albumId, data).then(function() {
-			if (self.isMounted()) {
-				window.history.back();
-			}
-		});
+		self.service.album.put(self.albumId, data).then(res => window.history.back());
 	},
 
 	render: function() {
