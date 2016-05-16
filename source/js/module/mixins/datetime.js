@@ -1,5 +1,7 @@
 const   DateHelper = require('module/helpers/date_helper');
 
+
+/** Will mix in some useful date methods into React object */
 const DateTimeMixin = {
 	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
 	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
