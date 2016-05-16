@@ -52,8 +52,8 @@ const TabItemDetails = React.createClass({
                     <FormColumn type="column">
                         <FormField type="text" field="firstName" validation="required">First name</FormField>
                         <FormField type="text" field="lastName" validation="required">Surname</FormField>
-                        <FormField type="text" field="email" validation="required email server">Email</FormField>
-                        <FormField type="phone" field="phone" validation="required server" onPrePost={self.getPhone}>Mobile phone</FormField>
+                        <FormField type="text" field="email" validation="email server">Email</FormField>
+                        <FormField type="phone" field="phone" validation="server" onPrePost={self.getPhone}>Mobile phone</FormField>
                         <FormField type="dropdown" field="status" userActiveState="Active" userProvidedOptions={['Active','Blocked']}>Status</FormField>
                     </FormColumn>
                 </Form>
