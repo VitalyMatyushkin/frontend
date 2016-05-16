@@ -3,91 +3,138 @@
  */
 
 'use strict';
-const   FileUpload 		= require('module/ui/file_upload/file_upload'),
-        Immutable		= require('immutable');
+const   Immutable		= require('immutable');
 
-const galleryServices = function(albumBinding){
-    this.binding = albumBinding;
+/**
+ * General methods for the gallery.
+ *
+ * @param galleryBinding {object} - Morearty default binding
+ * @param galleryServiceList {object} =
+ * {
+ *     albums:{Service},
+ *     album:{Service},
+ *     photos:{Service},
+ *     photo:{Service}
+ * }
+ * @param params {object} =
+ * {
+ *     schoolId:{id},
+ *     eventId:{id},
+ *     newsId:{id},
+ *     ......
+ *     albumId:{id}
+ * }
+ */
+const galleryServices = function(galleryBinding, galleryServiceList, params){
+    const self = this;
+    self.binding = galleryBinding;
+    self._serviceList = galleryServiceList;
+    self._params = params;
 
-    this.createAlbum = function(model){
-        return window.Server.addAlbum.post(model);
-    };
-    this.loadAlbum = function(schoolId, albumId){
-        return window.Server.schoolAlbum.get({schoolId:schoolId, albumId:albumId});
-    };
-    this.loadAlbumWithPhotos = function(albumId){
-        return window.Server.album.get(albumId, {
-            filter: {
-                include: {
-                    relation: 'photos',
-                    scope: {
-                        order: 'meta.created DESC'
-                    }
-                }
-            }
-        });
-    };
-    this.getDefaultSchoolAlbum = function(schoolId, ownerId){
-        const self = this;
-
-        window.Server.school.get(schoolId).then(school => {
-            if(school.defaultAlbumId)
-                return self.loadAlbum(schoolId, school.defaultAlbumId);
-            else{
-                console.error('school.defaultAlbumId is undefined')
-                return null;
-            }
-        }).then(album => {
-            self.binding.set(album);
-        });
-    };
-
-    /** Will upload given File and finally return promise which nobody cares */
-    this.uploadPhoto = function(file, isUploadingBinding){
-        const   self        = this,
-                binding     = self.binding,
-                imgService  = window.Server.images;
-
-        function startUploading(){
-            isUploadingBinding.set(true);
+    self.albums = {
+        "get":function(){
+            return self._serviceList.albums.get(self._params);
+        },
+        post:function(newAlbum){
+            return self._serviceList.albums.post(self._params, newAlbum);
         }
-        function stopUploading(){
-            isUploadingBinding.set(false);
-        }
-
-        startUploading();
-        return imgService.upload(file)
-            .then(self._addPhoto.bind(this))
-            .then(res => {
-                binding.sub('photos').update(photos => photos.unshift(Immutable.fromJS(res)));
-                if(!binding.get('coverUrl'))
-                    return self.photoPin(res.pic);
-            })
-            .finally(stopUploading);
     };
+    self.album = {
+        "get":function(albumId){
+            const params = self._getParamsWithAlbumId(albumId);
 
-    /** will create new API Photo item and return promise of AJAX request */
-    this._addPhoto = function(imgUrl) {
-        const   albumId     = this.binding.get('id'),
-                ownerId     = this.binding.get('ownerId'),
-                schoolId    = this.binding.get('schoolId'),
-                params      = {schoolId:schoolId, albumId:albumId},
-                model       = {
+            return self._serviceList.album.get(params);
+        },
+        put:function(albumId, model){
+            const params = self._getParamsWithAlbumId(albumId);
+
+            return self._serviceList.album.put(params, model);
+        },
+        delete:function(albumId){
+            const params = self._getParamsWithAlbumId(albumId);
+
+            return self._serviceList.album.delete(params);
+        }
+    };
+    self.photos = {
+        "get": function (albumId) {
+            const params = self._getParamsWithAlbumId(albumId);
+
+            return self._serviceList.photos.get(params);
+        },
+        post: function (albumId, newPhoto) {
+            const params = self._getParamsWithAlbumId(albumId);
+
+            return self._serviceList.photos.post(params, newPhoto);
+        },
+        /** Will upload given File and finally return promise which nobody cares */
+        upload: function(file, isUploadingBinding){
+            const   binding     = self.binding.sub('album'),
+                    albumId     = binding.get('id'),
+                    imgService  = window.Server.images;
+
+            function startUploading(){
+                isUploadingBinding.set(true);
+            }
+            function stopUploading(){
+                isUploadingBinding.set(false);
+            }
+
+            startUploading();
+            return imgService.upload(file)
+                .then(self.photos._add.bind(this))
+                .then(res => {
+                    binding.sub('photos').update(photos => photos.unshift(Immutable.fromJS(res)));
+                    if(!binding.get('coverUrl'))
+                        return self.photo.pin(albumId, res.picUrl);
+                })
+                .finally(stopUploading);
+        },
+        /** will create new API Photo item and return promise of AJAX request
+         * @private */
+        _add:function(imgUrl) {
+            const   ownerId     = self.binding.get('album.ownerId'),
+                    albumId     = self.binding.get('album.id'),
+                    model       = {
                     name:           "",
                     description:    "",
                     authorId:       ownerId,
                     picUrl:         imgUrl
                 };
-        return window.Server.schoolAlbumPhotos.post(params, model);
+            return self.photos.post(albumId, model);
+        }
+    };
+    self.photo = {
+        "get":function(albumId, photoId){
+            const params = self._getParamsWithAlbumId(albumId);
+            params.photoId = photoId;
+
+            return self._serviceList.photo.get(params);
+        },
+        put:function(albumId, photoId, model){
+			const params = self._getParamsWithAlbumId(albumId);
+            params.photoId = photoId;
+
+            return self._serviceList.photo.put(params, model);
+        },
+        delete:function(albumId, photoId){
+			const params = self._getParamsWithAlbumId(albumId);
+            params.photoId = photoId;
+
+            return self._serviceList.photo.delete(params);
+        },
+        pin:function(albumId, coverUrl){
+            return self.album.put(albumId, {coverUrl:coverUrl});
+        }
     };
 
-    this.photoPin = function(coverUrl){
-        const   albumId     = this.binding.get('id'),
-                schoolId    = this.binding.get('schoolId'),
-                params      = {schoolId:schoolId, albumId:albumId};
+	self._getParamsWithAlbumId = function(albumId){
+		const params = Object.assign({}, self._params);
+		if(albumId)
+			params.albumId = albumId;
 
-        return window.Server.schoolAlbum.put(params, {coverUrl:coverUrl});
-    };
+		return params;
+	};
 };
 
 module.exports = galleryServices;

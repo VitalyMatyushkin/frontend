@@ -372,6 +372,7 @@ const EventManagerBase = React.createClass({
                         <If condition={type === 'inter-schools'} key={'if-choose-school'}>
                             <div>
                                 <Autocomplete
+									defaultItem={binding.toJS('rivals.1')}
                                     serviceFilter={services[type]}
                                     serverField="name"
                                     placeholderText={'enter school name'}
