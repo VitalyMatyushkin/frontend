@@ -1,43 +1,47 @@
 const 	React 			= require('react'),
 		noImage			= '/images/no-image.jpg',
-		SVG 				= require('module/ui/svg');
+		SVG 			= require('module/ui/svg');
 
 const AlbumItem = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onView: React.PropTypes.func.isRequired,
-		onEdit: React.PropTypes.func,
-		onDelete: React.PropTypes.func
+        basePath:React.PropTypes.string.isRequired,
+        onDelete:React.PropTypes.func
 	},
+    getDefaultProps: function() {
+        return {
+            basePath:'notFound'
+        };
+    },
 
+    componentWillMount: function () {
+    },
 	onClickAlbum: function(e) {
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
-				a 			= binding.toJS();
+                album 		= binding.toJS();
 
-		self.props.onView && self.props.onView(a);
+        document.location.hash = self.props.basePath + '/view/' + album.id;
 
 		e.stopPropagation();
 	},
 	onClickEditAlbum: function(e) {
 		const self = this,
 			binding = self.getDefaultBinding(),
-			a = binding.toJS();
+            album = binding.toJS();
 
-		self.props.onEdit && self.props.onEdit(a);
+        document.location.hash = self.props.basePath + '/edit/' + album.id;
 
 		e.stopPropagation();
 	},
 	onClickDeleteAlbum: function(e) {
 		const self = this,
 			binding = self.getDefaultBinding(),
-			a = binding.toJS();
+            album = binding.toJS();
 
-		self.props.onDelete && confirm("Delete this album?") && self.props.onDelete(a);
+		self.props.onDelete && confirm("Delete this album?") && self.props.onDelete(album);
 
 		e.stopPropagation();
-	},
-	componentDidMount: function () {
 	},
 	render: function() {
 		const 	self 	= this,
@@ -48,7 +52,7 @@ const AlbumItem = React.createClass({
 				styles 	= { backgroundImage: 'url(' + cover + ')'};
 
 		return (
-				<div onClick={self.onClickAlbum} className='eEventAlbums_album' style={styles}>
+				<div onClick={self.onClickAlbum} className='eAlbum' style={styles}>
 					<div className="eAlbumActions">
 						<span><SVG icon="icon_photo"/></span>
 						<span><SVG icon="icon_comments"/></span>
@@ -57,7 +61,7 @@ const AlbumItem = React.createClass({
 						<span onClick={self.onClickDeleteAlbum}><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
 					</div>
 					<div className="eAlbumInfo">
-						<span className='eEventAlbums_albumTitle'>{name}</span>
+						<span className='eAlbumTitle'>{name}</span>
 					</div>
 				</div>
 		);

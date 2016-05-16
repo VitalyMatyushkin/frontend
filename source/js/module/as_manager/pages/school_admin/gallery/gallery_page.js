@@ -1,9 +1,7 @@
 
 const   React       = require('react'),
         Immutable   = require('immutable'),
-        Popup       = require('module/ui/popup'),
-        Album	    = require('module/ui/gallery/album/album_item'),
-        Gallery 	= require('module/ui/gallery/galleryServices');
+        Album	    = require('module/ui/gallery/album/album_item');
 
 const GalleryListPage = React.createClass({
     mixins:[Morearty.Mixin],
@@ -19,11 +17,22 @@ const GalleryListPage = React.createClass({
             activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
             userId = rootBinding.get('userData.authorizationInfo.userId');
 
-        self.gallery = new Gallery(binding.sub('defaultAlbum'));
-        self.gallery.getDefaultSchoolAlbum(activeSchoolId, userId);
+        self.getDefaultSchoolAlbum(activeSchoolId);
     },
-    onClickAlbum: function(album) {
-            document.location.hash = 'albums/view/' + album.id;
+    getDefaultSchoolAlbum:function(schoolId){
+        var self = this,
+            binding = self.getDefaultBinding();
+
+        window.Server.school.get(schoolId).then(school => {
+            if(school.defaultAlbumId)
+                return window.Server.schoolAlbum.get({schoolId:schoolId, albumId:school.defaultAlbumId});
+            else{
+                console.error('school.defaultAlbumId is undefined')
+                return null;
+            }
+        }).then(album => {
+            binding.set('defaultAlbum', album);
+        });
     },
     render:function(){
         var self = this,
@@ -37,7 +46,7 @@ const GalleryListPage = React.createClass({
                     <h1 className="showAllPhoto">All</h1>
                 </div>
                 <div className="albums_wrap">
-                    <Album binding={binding.sub('defaultAlbum')} onView={self.onClickAlbum} />
+                    <Album binding={binding.sub('defaultAlbum')} basePath="school-albums" />
                 </div>
             </div>
         )

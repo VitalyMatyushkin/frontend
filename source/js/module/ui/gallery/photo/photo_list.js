@@ -1,19 +1,18 @@
 const   If          = require('module/ui/if/if'),
         Photo       = require('./photo_item'),
         React       = require('react'),
-        Immutable   = require('immutable'),
-        Gallery 	= require('../galleryServices');
+        Immutable   = require('immutable');
 
 const PhotoList = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {
-        onPhotoClick: React.PropTypes.func
+        onPhotoClick: React.PropTypes.func,
+        service:React.PropTypes.object
     },
     componentWillMount: function() {
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self = this;
 
-        self.gallery = new Gallery(binding);
+        self.service = self.props.service;
     },
     renderPhoto: function(photo, index) {
         var self = this,
@@ -23,10 +22,11 @@ const PhotoList = React.createClass({
         photoId = photoBinding.get("id");
 
         return (
-            <Photo binding={photoBinding} key={'photo-' + photoId}
+            <Photo  binding={photoBinding} key={'photo-' + photoId}
                     onPhotoClick={self.onPhotoClick}
                     onPhotoDelete={self.reloadPhotoList}
                     onPhotoPin={self.onPhotoPin}
+                    service = {self.service}
             />
         );
     },
@@ -37,24 +37,21 @@ const PhotoList = React.createClass({
     },
 
     onPhotoPin: function(photo) {
-        this.gallery.photoPin(photo.picUrl).then(function() {
+        const 	self 	= this,
+            	binding = self.getDefaultBinding(),
+            	albumId = binding.get('id');
+
+        this.service.photo.pin(albumId, photo.picUrl).then(function() {
             alert('Album cover is changed!');
         });
     },
 
     reloadPhotoList: function() {
-        const self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            albumId = rootBinding.get('routing.pathParameters.1'),
-            binding = self.getDefaultBinding(),
-            schoolId    = rootBinding.get('userRules.activeSchoolId'),
-            params      = {
-                schoolId:schoolId,
-                albumId:albumId
-            };
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				albumId = binding.get('id');
 
-
-        window.Server.schoolAlbumPhotos.get(params).then(function(res){
+        this.service.photos.get(albumId).then(function(res){
             binding
                 .atomically()
                 .set('photos', Immutable.fromJS(res))

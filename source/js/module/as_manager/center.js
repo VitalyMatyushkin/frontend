@@ -76,9 +76,13 @@ const Center = React.createClass({
 						   binding={binding.sub('events')}
 						   component="module/as_manager/pages/event/event"/>
 
-					<Route path="/albums /albums/:mode/:albumId /albums/:albumId/:mode/:photoId"
-						   binding={binding.sub('albums')}
-						   component="module/ui/gallery/albums"/>
+					<Route path="/school-albums /school-albums/:mode/:albumId /school-albums/:albumId/:mode/:photoId"
+						   binding={binding.sub('school-albums')}
+						   component="module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes"/>
+
+					<Route path="/event-albums/:eventId/:mode /event-albums/:eventId/:mode/:albumId /event-albums/:eventId/:albumId/:mode/:photoId"
+						   binding={binding.sub('event-albums')}
+						   component="module/as_manager/pages/event/gallery/eventGalleryRoutes"/>
 
 					<Route path="/invites /invites/:filter /invites/:inviteId/:mode"
 						   binding={binding.sub('invites')}
@@ -133,9 +137,13 @@ const Center = React.createClass({
 						   binding={binding.sub('events')}
 						   component="module/as_manager/pages/event/event"/>
 
-					<Route path="/albums /albums/:mode/:albumId /albums/:albumId/:mode/:photoId"
-						   binding={binding.sub('albums')}
-						   component="module/ui/gallery/albums"/>
+					<Route path="/school-albums /school-albums/:mode/:albumId /school-albums/:albumId/:mode/:photoId"
+						   binding={binding.sub('school-albums')}
+						   component="module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes"/>
+
+					<Route path="/event-albums/:eventId/:mode /event-albums/:eventId/:mode/:albumId /event-albums/:eventId/:albumId/:mode/:photoId"
+						   binding={binding.sub('event-albums')}
+						   component="module/as_manager/pages/event/gallery/eventGalleryRoutes"/>
 
 					<Route path="/invites /invites/:filter /invites/:inviteId/:mode"
 						   binding={binding.sub('invites')}
