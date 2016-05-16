@@ -1,8 +1,9 @@
-const 	React 		= require('react'),
-		SVG 		= require('module/ui/svg'),
-		Immutable 	= require('immutable'),
-        RoleList    = require('./role_list'),
-        classNames   = require('classnames');
+const 	React 			= require('react'),
+		SVG 			= require('module/ui/svg'),
+		Immutable 		= require('immutable'),
+		RoleList		= require('./role_list'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		classNames		= require('classnames');
 
 const UserBlock = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -25,16 +26,18 @@ const UserBlock = React.createClass({
 		});
 	},
 	componentWillMount: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			userInfoBinding = binding.sub('userInfo'),
-			userId = binding.get('authorizationInfo.userId');
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				userInfoBinding	= binding.sub('userInfo');
 
-		//userId && window.Server.user.get(userId).then(function(data) {
-		//	userInfoBinding.set(Immutable.fromJS(data));
-		//}, function() {
-		//	window.location.hash = 'logout';
-		//});
+		const	userId		= binding.get('authorizationInfo.userId'),
+				schoolId	= MoreartyHelper.getActiveSchoolId(self);
+
+		if(userId && schoolId) {
+			window.Server.user.get({schoolId: schoolId, userId: userId}).then(data => {
+				userInfoBinding.set(Immutable.fromJS(data));
+			});
+		}
 	},
 	render: function() {
 		var self = this,
