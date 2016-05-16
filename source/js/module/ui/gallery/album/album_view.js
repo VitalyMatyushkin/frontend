@@ -2,13 +2,14 @@ const 	If 				= require('module/ui/if/if'),
 		SubMenu 		= require('module/ui/menu/sub_menu'),
 		PhotoList 		= require('../photo/photo_list'),
 		FullScreenList 	= require('../photo/fullscreen_list'),
-		Gallery 		= require('../galleryServices'),
 		React			= require('react'),
 		Immutable		= require('immutable');
 
 const AlbumView = React.createClass({
 	mixins: [Morearty.Mixin],
-	displayName: 'AlbumPage',
+    propTypes:{
+        service:React.PropTypes.object
+    },
 	getMergeStrategy: function() {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -26,13 +27,12 @@ const AlbumView = React.createClass({
 		const 	self 			= this,
 				rootBinding 	= self.getMoreartyContext().getBinding(),
                 binding 		= self.getDefaultBinding(),
-				albumId 		= rootBinding.get('routing.pathParameters.1'),
-				userId 			= rootBinding.get('userData.authorizationInfo.userId'),
-                schoolId        = rootBinding.get('userRules.activeSchoolId');
+				params      	= rootBinding.toJS('routing.pathParameters'),
+				albumId 		= params && params.length ? params[params.length-1] : null,
+				userId 			= rootBinding.get('userData.authorizationInfo.userId');
 
-		self.gallery = new Gallery(binding.sub('album'));
-
-		self.gallery.loadAlbum(schoolId, albumId)
+		self.service = self.props.service;
+		self.service.album.get(albumId)
 		.then(function(res) {
 			const isOwner = (userId == res.ownerId);
 
@@ -69,7 +69,7 @@ const AlbumView = React.createClass({
 		const 	file 		= e.target.files[0],
 				isUploading = this.getDefaultBinding().sub('isUploading');
 
-		this.gallery.uploadPhoto(file, isUploading);
+		this.service.photos.upload(file, isUploading);
 	},
 
 	onPhotoClick: function(photo) {
@@ -112,7 +112,7 @@ const AlbumView = React.createClass({
 						<div className="bAlbum">
 							<h2 className="eAlbum_title">{binding.get('album.name')}</h2>
 							<PhotoList binding={{default: binding.sub('album'), isUploading: binding.sub('isUploading')}}
-									   onPhotoClick={self.onPhotoClick}
+									   onPhotoClick={self.onPhotoClick} service={self.service}
 							/>
 						</div>
 						</div>

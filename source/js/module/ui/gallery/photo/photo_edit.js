@@ -6,39 +6,33 @@ const 	Form 		= require('module/ui/form/form'),
 
 const PhotoEdit = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		service:React.PropTypes.object
+	},
 
 	componentWillMount: function() {
-		var self        = this,
-            binding     = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            photoId     = rootBinding.get('routing.pathParameters.2'),
-            albumId 	= rootBinding.get('routing.pathParameters.0'),
-            schoolId    = rootBinding.get('userRules.activeSchoolId'),
-            params      = {
-                schoolId:schoolId,
-                albumId:albumId,
-                photoId:photoId
-            };
+		const 	self 		= this,
+				binding		= self.getDefaultBinding(),
+				rootBinding = self.getMoreartyContext().getBinding(),
+				params      = rootBinding.toJS('routing.pathParameters'),
+				albumId 	= params && params.length ? params[params.length-3] : null,
+				photoId 	= params && params.length ? params[params.length-1] : null;
 
-
+		self.albumId = albumId;
+		self.photoId = photoId;
+		self.service = self.props.service;
         binding.clear();
 
-		window.Server.schoolAlbumPhoto.get(params).then(function(data) {
-			if (self.isMounted()) {
-				binding.set(Immutable.fromJS(data));
-			}
+		self.service.photo.get(self.albumId, self.photoId).then(function(data) {
+			binding.set(Immutable.fromJS(data));
 		});
-
-		self.params = params;
 	},
 
 	onFormSubmit: function(data) {
 		var self = this;
 
-		window.Server.schoolAlbumPhoto.put(self.params, data).then(function() {
-			if (self.isMounted()) {
-				window.history.back();
-			}
+		self.service.photo.put(self.albumId, self.photoId, data).then(function() {
+			window.history.back();
 		});
 	},
 
