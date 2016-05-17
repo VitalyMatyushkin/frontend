@@ -7,7 +7,10 @@ let serverValidationTimer = null;
 
 var validationsSet = {
 	phone: function(value) {
-        return false; // temporary validation lock!!!
+        if(value.length < 7)
+			return "Incorrect phone number!";
+		else
+			return false;
 
 		//if (!(/^[(]{0,1}[0-9]{3}[)]{0,1}[-\s\.]{0,1}[0-9]{3}[-\s\.]{0,1}[0-9]{4}$/.test(value))) {
 		//	return 'Should contain phone number';
