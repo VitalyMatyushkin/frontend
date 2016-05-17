@@ -3,7 +3,7 @@
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  max-width: 700px;
+  max-width: 770px;
   margin: 0 auto;
 }
 
@@ -187,8 +187,11 @@
   position:relative;
   border: $BORDER;
   background: #fff;
-  margin-top: 10px;
+  margin: 10px auto;
   padding: 10px 20px;
+  max-width: 700px;
+  width: 100%;
+  box-sizing: border-box;
 }
 .bBlogMain .bEventHeader{
   border: none;
