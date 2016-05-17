@@ -44,7 +44,7 @@ const TeamAddPage = React.createClass({
                 schoolData.forms = formsData;
 
                 // get sports data
-                return window.Server.public_sports.get();
+                return window.Server.sports.get();
             })
             .then(function (sportsData) {
                 !schoolData.forms && (schoolData.forms = []);
