@@ -3,6 +3,7 @@
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
 const 	$ 		= require('jquery');
+let serverValidationTimer = null;
 
 var validationsSet = {
 	phone: function(value) {
@@ -92,36 +93,41 @@ var validationsSet = {
 	server: function(value, defaultValue) {
 		const 	self = this,
 				dataToCheck = {};
-		let 	oldPhoneCheckVal;
 
 		if (value === '' || value === defaultValue) {
 			return false;
 		}
         if(self.props.onPrePost !== undefined){
-            oldPhoneCheckVal = value;
             value = self.props.onPrePost(value);
         }
 		dataToCheck[self.props.field] = value;
-		$.ajax({
-			url: 			window.apiBase + '/' + self.props.service + '/check',
-			type: 			'POST',
-			dataType: 		'json',
-			contentType: 	'application/json',
-			crossDomain: 	true,
-			data: 			JSON.stringify(dataToCheck), //prevents submitting form data which sometimes results in bad request and failure to check for availability
-			error: function(data, error, errorText) {
-				self.showError(`${self.props.name} has already been taken. Choose another or log in`);
-			},
-			success: function(data) {
-				const status = data[self.props.field];
 
-				if(status === true) {
-					self.showSuccess('V');
-				} else {
+		//The value has changed before sending the request to the server. We reset the timer and start it again.
+		clearTimeout(serverValidationTimer);
+		// to validate more appropriate method Debouncing
+		serverValidationTimer = setTimeout(function(){
+			$.ajax({
+				url: 			window.apiBase + '/' + self.props.service + '/check',
+				type: 			'POST',
+				dataType: 		'json',
+				contentType: 	'application/json',
+				crossDomain: 	true,
+				data: 			JSON.stringify(dataToCheck), //prevents submitting form data which sometimes results in bad request and failure to check for availability
+				error: function(data, error, errorText) {
 					self.showError(`${self.props.name} has already been taken. Choose another or log in`);
+				},
+				success: function(data) {
+					const status = data[self.props.field];
+
+					if(status === true) {
+						self.showSuccess('V');
+					} else {
+						self.showError(`${self.props.name} has already been taken. Choose another or log in`);
+					}
 				}
-			}
-		});
+			});
+
+		}, 400);
 	}
 };
 

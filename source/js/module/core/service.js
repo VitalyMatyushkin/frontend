@@ -1,5 +1,4 @@
-const 	$ 			= require('jquery'),
-		log 		= require('loglevel'),
+const 	log 		= require('loglevel'),
 		AJAX 		= require('module/core/AJAX'),
 		baseUrl 	= window.apiBase;	// using global vars is really bad practice
 
