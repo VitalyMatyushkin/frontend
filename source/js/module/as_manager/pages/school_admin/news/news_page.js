@@ -1,9 +1,8 @@
-var NewsPage,
-	RouterView = require('module/core/router'),
-	React = require('react'),
-	Route = require('module/core/route');
+const	RouterView 	= require('module/core/router'),
+		React 		= require('react'),
+		Route 		= require('module/core/route');
 
-NewsPage = React.createClass({
+const NewsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,

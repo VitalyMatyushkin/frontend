@@ -1,8 +1,7 @@
-var NewsForm = require('module/as_manager/pages/school_admin/news/news_form'),
-	React = require('react'),
-	NewsAddPage;
+const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'),
+		React 		= require('react');
 
-var NewsTitle = React.createClass({
+const NewsTitle = React.createClass({
 	render: function() {
 	return (
 			<div className="eSchoolMaster_wrap">
@@ -12,27 +11,28 @@ var NewsTitle = React.createClass({
 			</div>
 				)}
 });
-NewsAddPage = React.createClass({
+
+const NewsAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			globalBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+		const 	self = this,
+				globalBinding = self.getMoreartyContext().getBinding(),
+				activeSchoolId = globalBinding.get('userRules.activeSchoolId');
 
 		self.activeSchoolId = activeSchoolId;
 	},
 	submitAdd: function(data) {
-		var self = this;
+		const self = this;
 
 		data.schoolId = self.activeSchoolId;
 
-		self.activeSchoolId && window.Server.schoolNews.post(self.activeSchoolId, data).then(function() {
+		self.activeSchoolId && window.Server.schoolNews.post(self.activeSchoolId, data).then( () => {
 			document.location.hash = 'school_admin/news';
 		});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 				<div className="bNewsEdit">

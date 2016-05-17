@@ -5,7 +5,7 @@ const   Table			= require('module/ui/list/table'),
         React 			= require('react');
 
 const NewsListPage = React.createClass({
-	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
+	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],	// TODO: should DateTimeMixin should be really mixin? It doesn't affect React component anyhow
 	setPageTitle: 'News',
 	serviceName: 'schoolNews',
 	serviceCount:'schoolNewsCount',

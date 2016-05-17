@@ -8,11 +8,15 @@ const   DataPrototype   = require('module/data/data_prototype'),
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-    var self = this;
+    var self = this,
+		authorizationInfo = Helpers.cookie.get('authorizationInfo') || {};
+
+	// After reloading the page, you must configure the Ajax again
+	ajaxSetup(authorizationInfo);
 
     // Recovering authorization state info
     return {
-        authorizationInfo: Helpers.cookie.get('authorizationInfo') || {}
+        authorizationInfo: authorizationInfo
     };
 };
 
@@ -29,13 +33,20 @@ UserDataClass.initBind = function () {
             authorizationInfo = data ? data.toJS() : {};
 
         data && Helpers.cookie.set('authorizationInfo', authorizationInfo);
-        let h = authorizationInfo.adminId ? "asid" : "usid",
-            options = {headers:{}};
-        options.headers[h] = authorizationInfo.id;
-
-        // configuring ajax to perform all ajax requests from jquery with Authorization header
-        $.ajaxSetup(options);
-    });
+		ajaxSetup(authorizationInfo);
+	});
 };
+
+// configuring ajax to perform all ajax requests from jquery with Authorization header
+function ajaxSetup(authorizationInfo){
+
+	if(authorizationInfo){
+		const 	h 		= authorizationInfo.adminId ? "asid" : "usid",
+				options = {headers:{}};
+
+		options.headers[h] = authorizationInfo.id;
+		$.ajaxSetup(options);
+	}
+}
 
 module.exports = UserDataClass;
