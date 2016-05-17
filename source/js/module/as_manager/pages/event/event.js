@@ -364,8 +364,9 @@ const EventView = React.createClass({
 								</div>
 							</If>
 						</div>
+						<If condition={(binding.get('mode') === 'general')}>
 						<EventButtons binding={binding} />
-
+						</If>
 						<div className="bEventHeader_wrap">
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
@@ -377,6 +378,9 @@ const EventView = React.createClass({
 						<EventGallery binding={binding} />
 						<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
 							<Comments binding={binding}/>
+						</If>
+						<If condition={(binding.get('mode') !== 'general')}>
+						<EventButtons binding={binding} />
 						</If>
 					</div>
 				</If>
