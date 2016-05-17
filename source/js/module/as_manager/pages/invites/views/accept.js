@@ -64,7 +64,7 @@ const InviteAcceptView = React.createClass({
             .then(event => {
                 invite.event = event;
 
-                return window.Server.public_sport.get(event.sportId).then(sport => invite.event.sport = sport);
+                return window.Server.sport.get(event.sportId).then(sport => invite.event.sport = sport);
             });
         })
         .then(function (res) {

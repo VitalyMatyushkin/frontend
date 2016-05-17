@@ -49,7 +49,7 @@ const TeamEditPage = React.createClass({
                 schoolData.forms = formsData;
 
                 // get sports data
-                return window.Server.public_sports.get();
+                return window.Server.sports.get();
             })
             .then( _sportsData => {
                 sports = _sportsData;
