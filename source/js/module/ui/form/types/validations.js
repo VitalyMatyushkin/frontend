@@ -102,6 +102,7 @@ var validationsSet = {
         }
 		dataToCheck[self.props.field] = value;
 
+		//The value has changed before sending the request to the server. We reset the timer and start it again.
 		clearTimeout(serverValidationTimer);
 		// to validate more appropriate method Debouncing
 		serverValidationTimer = setTimeout(function(){
