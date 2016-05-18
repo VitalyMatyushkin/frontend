@@ -111,6 +111,7 @@ const serviceList = {
         serviceList.schoolAlbumPhoto = new Service('/i/schools/{schoolId}/albums/{albumId}/photos/{photoId}', binding);
 		serviceList.schoolEventAlbumPhotos = new Service('/i/schools/{schoolId}/events/{eventId}/albums/{albumId}/photos', binding);
 		serviceList.schoolEventAlbumPhoto = new Service('/i/schools/{schoolId}/events/{eventId}/albums/{albumId}/photos/{photoId}', binding);
+		serviceList.publicSchoolAlbumPhotos = new Service('/public/schools/{schoolId}/albums/{albumId}/photos', binding);
 
 
 
