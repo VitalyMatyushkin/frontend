@@ -47,9 +47,6 @@ const EventHeader = React.createClass({
 
 		return (
 			<div className='bEvent_media'>
-				<div className='bEventAlbums_header'>
-					<label className='eEventAlbums_title'>Media</label>
-				</div>
 				<div ref='albumsList' className='bEventAlbums'>
 					{binding.get('albums').map(self.renderAlbum)}
 					<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eAlbum mCreate'>

@@ -1,4 +1,27 @@
 .bEventButtons {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
+  max-width: 700px;
+  width: 100%;
+  margin: 0 auto;
+}
+.bEventButton {
+  color: $COLOR;
+  font-weight: bold;
+  padding: 8px 20px;
+  cursor: pointer;
+}
+.bEventButton:hover {
+ background: $MAIN_COLOR;
+}
+.bEventButton.mCancel{
+  color: #aaaaaa;
+}
+.bEventButton.mCancel:hover {
+  background: transparent;
+  color: $COLOR;
+}
+.bEventButtons_action {
+  position: absolute;
+  width: 100%;
 }
