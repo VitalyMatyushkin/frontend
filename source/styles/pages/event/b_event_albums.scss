@@ -6,8 +6,6 @@
 }
 
 .bEvent_media{
-  background: #fff;
-  border: $BORDER;
   display: flex;
 }
 .bEventAlbums_header {
@@ -43,9 +41,9 @@
 }
 .eAlbum {
   display: flex;
-  margin: 10px;
-  height: 80px;
-  width: 110px;
+  margin: 10px 15px;
+  height: 150px;
+  width: 160px;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;

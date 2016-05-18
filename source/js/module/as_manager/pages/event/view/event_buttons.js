@@ -134,7 +134,7 @@ const EventHeader = React.createClass({
 						className="bEditButton"
 						onClick={self.onClickReFormTeamMatch}
 					>
-						<SVG icon="icon_edit"/>Edit squad
+						<SVG icon="icon_edit"/>
 					</div>
 				</If>
 				<If condition={binding.get('mode') === 'general'}>
@@ -142,23 +142,23 @@ const EventHeader = React.createClass({
 						className={closeClasses}
 						onClick={self.isEnableClose() ? self.onClickCloseMatch : null}
 					>
-						Close match <SVG icon="icon_close_match"/>
-					</div>
-				</If>
-				<If condition={binding.get('mode') !== 'general'}>
-					<div
-						className="bButton"
-						onClick={self.onClickOk}
-					>
-						Ok
+						<SVG icon="icon_close_match"/>
 					</div>
 				</If>
 				<If condition={binding.get('mode') === 'closing'}>
 					<div
-						className="bButton mRed"
+						className="bEventButton mCancel"
 						onClick={self.onClickCancel}
 					>
 						Cancel
+					</div>
+				</If>
+				<If condition={binding.get('mode') !== 'general'}>
+					<div
+							className="bEventButton"
+							onClick={self.onClickOk}
+							>
+						Save
 					</div>
 				</If>
 			</div>

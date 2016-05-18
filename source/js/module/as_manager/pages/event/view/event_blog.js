@@ -226,10 +226,10 @@ const Blog = React.createClass({
                 </div>
                 <CommentBox currentUserHasChild={self.hasChild} blogData={dataBlog} binding={binding} />
                 <div>
-                    <Morearty.DOM.textarea ref="commentBox" className="eEvent_comment eEvent_commentBlog"/>
+                    <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment eEvent_commentBlog"/>
                 </div>
-                <div>
-                    <div onClick={self._commentButtonClick.bind(null,this)} className="bButton">Comment</div>
+                <div className="bEventButtons">
+                    <div onClick={self._commentButtonClick.bind(null,this)} className="bEventButton">Save</div>
                 </div>
             </div>
         )
