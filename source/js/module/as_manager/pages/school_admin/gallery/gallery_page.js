@@ -11,13 +11,15 @@ const GalleryListPage = React.createClass({
         });
     },
     componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
-            userId = rootBinding.get('userData.authorizationInfo.userId');
-
-        self.getDefaultSchoolAlbum(activeSchoolId);
+        var self 			= this,
+            rootBinding 	= self.getMoreartyContext().getBinding(),
+            activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
+            userId 			= rootBinding.get('userData.authorizationInfo.userId'),
+			role 			= rootBinding.get('userData.authorizationInfo.role');
+		if(role !== "ADMIN" && role !== "MANAGER")
+			document.location.hash = 'school_admin/summary';
+		else
+			self.getDefaultSchoolAlbum(activeSchoolId);
     },
     getDefaultSchoolAlbum:function(schoolId){
         var self = this,

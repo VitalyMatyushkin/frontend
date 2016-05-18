@@ -7,12 +7,11 @@ const 	RouterView 	= require('module/core/router'),
 const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-		const self         = this,
-			binding        = self.getDefaultBinding(),
-			globalBinding  = self.getMoreartyContext().getBinding(),
-            activeRoleName = globalBinding.get('userData.authorizationInfo.role');
+		const 	self 			= this,
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				role 			= globalBinding.get('userData.authorizationInfo.role');
 
-        if(!activeRoleName)
+        if(!role)
             document.location.hash = 'no_role';
 
 		// SubMenu items
@@ -40,11 +39,15 @@ const OneSchoolPage = React.createClass({
 			href: '/#school_admin/news',
 			name: 'News',
 			key: 'News'
-		},{
-            href:'/#school_admin/gallery',
-            name:'Gallery',
-            key:'Gallery'
-        }];
+		}];
+		if(role === "ADMIN" || role === "MANAGER"){
+			self.menuItems.push(
+			{
+				href:'/#school_admin/gallery',
+				name:'Gallery',
+				key:'Gallery'
+			});
+		}
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({

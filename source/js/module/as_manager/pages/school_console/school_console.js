@@ -27,7 +27,14 @@ const SchoolConsole = React.createClass({
         });
     },
     componentWillMount: function () {
-        this.createSubMenu();
+		var self 			= this,
+			rootBinding 	= self.getMoreartyContext().getBinding(),
+			role 			= rootBinding.get('userData.authorizationInfo.role');
+
+		if(role !== "ADMIN" && role !== "MANAGER")
+			document.location.hash = 'school_admin/summary';
+		else
+			self.createSubMenu();
     },
     componentDidMount: function(){
         const self = this,
