@@ -1,30 +1,34 @@
-const 	Form 			= require('module/ui/form/form'),
+const	Form			= require('module/ui/form/form'),
 		FormColumn 		= require('module/ui/form/form_column'),
-		FormField 		= require('module/ui/form/form_field'),
-		React 			= require('react'),
-		Immutable 		= require('immutable');
+		FormField		= require('module/ui/form/form_field'),
+		React			= require('react'),
+		Immutable		= require('immutable');
 
 const GeneralSettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const   self    = this,
-                binding = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-        window.Server.profile.get().then(function (data) {
-            binding.set(Immutable.fromJS(data));
-        });
+		window.Server.profile.get().then(function (data) {
+			binding.set(Immutable.fromJS(data));
+		});
 	},
 	submitEdit: function(data) {
-        if(!data.password)
-            delete data.password;
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		window.Server.profile.put(data).then(function() {
-            window.history.back();
+		if(!data.password)
+			delete data.password;
+
+		window.Server.profile.put(data).then(data => {
+			binding.set(Immutable.fromJS(data));
+			window.history.back();
 		});
 	},
 	render: function() {
-		var self = this,
-            binding = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return (
 			<Form formStyleClass="bSettingsForm" name="General settings" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving..." >
