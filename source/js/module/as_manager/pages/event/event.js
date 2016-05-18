@@ -5,6 +5,7 @@ const	classNames		= require('classnames'),
 		EventButtons	= require('./view/event_buttons'),
 		EventTeams		= require('./view/event_teams'),
 		EventGallery	= require('module/as_manager/pages/event/gallery/event_gallery'),
+		EventMenu     = require('./view/event_menu'),
 		React			= require('react'),
 		Comments		= require('./view/event_blog'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -371,6 +372,7 @@ const EventView = React.createClass({
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
 						</div>
+						<EventMenu />
 						<EventTeams binding={binding} />
 						<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
 							<div className="eEvent_shadowCommentText">{self.commentContent}</div>
