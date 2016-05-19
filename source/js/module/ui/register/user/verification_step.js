@@ -13,13 +13,17 @@ const VerificationStep = React.createClass({
     confirmEmail: function () {
         const   self            = this,
                 binding         = self.getDefaultBinding(),
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				verified		= rootBinding.sub('userData.authorizationInfo.verified'),
                 accountBinding  = self.getBinding('account');
+
 		window.Server.confirmUser.post({
             token: binding.get('emailCode')
         }).then( data => {
             if(data.confirmed === true) {
                 accountBinding.set('verified.email', true);
-                binding.set('emailConfirmationError',false);
+				verified.set('email', true);
+				binding.set('emailConfirmationError',false);
                 if (accountBinding.get('verified.phone')) {
                     self.props.onSuccess();
                 }
@@ -33,12 +37,15 @@ const VerificationStep = React.createClass({
     confirmPhone: function () {
         const   self            = this,
                 binding         = self.getDefaultBinding(),
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				verified		= rootBinding.sub('userData.authorizationInfo.verified'),
                 accountBinding  = self.getBinding('account');
 		window.Server.confirmUserPhone.post({
             token: binding.get('phoneCode')
         }).then( data => {
             if(data.confirmed === true) {
                 accountBinding.set('verified.phone', true);
+				verified.set('phone', true);
                 binding.set('phoneConfirmationError',false);
                 if (accountBinding.get('verified.email')) {
                     self.props.onSuccess();
