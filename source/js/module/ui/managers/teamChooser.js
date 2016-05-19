@@ -60,7 +60,7 @@ const	TeamChooser	= React.createClass({
 					if(team.ages.length <= model.ages.length) {
 						switch (model.type) {
 							case 'houses':
-								if(self._isAllPlayersFromHouse(rival.id, team.players)) {
+								if(rival.id === team.houseId) {
 									filteredTeams.push(team);
 								}
 								break;
@@ -73,25 +73,6 @@ const	TeamChooser	= React.createClass({
 
 				return filteredTeams;
 			});
-	},
-	/**
-	 *
-	 * @param houseId
-	 * @param players
-	 * @returns {boolean} true if all players from current house
-	 * @private
-	 */
-	_isAllPlayersFromHouse: function(houseId, players) {
-		let	isAllFromCurrentHouse = true;
-
-		for (let i = 0; i < players.length; i++) {
-			if(players[i].houseId != houseId) {
-				isAllFromCurrentHouse = false;
-				break;
-			}
-		}
-
-		return isAllFromCurrentHouse;
 	},
 	/**
 	 * Convert ages array to table view

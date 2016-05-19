@@ -22,25 +22,28 @@ const HomeHeader = React.createClass({
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 rootBinding     = self.getMoreartyContext().getBinding(),
-                currentSch      = Helpers.LocalStorage.get('activeSchoolData'),
-                defaultAlbumId  = currentSch.defaultAlbumId,
+                currentSchool   = Helpers.LocalStorage.get('activeSchoolData'),
+                defaultAlbumId  = currentSchool.defaultAlbumId,
                 activeSchoolId  = Helpers.LocalStorage.get('activeSchoolData').id;
+       
         rootBinding.set('activeSchoolId',Immutable.fromJS(activeSchoolId));
         //we already have current school data so lets use it - at least for the school details
-        binding.set('school',Immutable.fromJS(currentSch));
+        binding.set('school',Immutable.fromJS(currentSchool));
         if(defaultAlbumId){
             //if we have album id we do some logic here - TBC
             //TODO: Reuse code below when photos method and view has been implemented on server
-            // window.Server.photos.get(defaultAlbumId, {})
-            //     .then( photos => {
-            //         const photosToShow = Lazy(photos).map(photo => window.Server.images.getResizedToHeightUrl(photo.pic, 600)).toArray();
-            //         if(photosToShow.length != 0) {
-            //             binding.set('___photosToShow', Immutable.fromJS(photosToShow));
-            //         } else {
-            //             binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
-            //         }
-            //     });
-        }else{
+             window.Server.publicSchoolAlbumPhotos.get({
+                 schoolId:  activeSchoolId,
+                 albumId:   defaultAlbumId
+             })
+             .then(photos => {
+                 if(photos.length != 0) {
+                     binding.set('___photosToShow', Immutable.fromJS(photos.map(photo => photo.picUrl)));
+                 } else {
+                     binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
+                 }
+             });
+        } else {
             binding.set('___photosToShow', Immutable.fromJS(defaultPhotos));
         }
     },

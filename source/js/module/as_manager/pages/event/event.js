@@ -349,25 +349,11 @@ const EventView = React.createClass({
 			<div className="bEventContainer">
 				<If condition={binding.get('sync')=== true}>
 					<div className="bEvent">
-						<div className="eEvent_commentBox">
-							<If condition={(binding.get('mode') === 'closing') || false}>
-								<Morearty.DOM.textarea
-									placeholder="comments"
-									className="eEvent_comment"
-									onChange={Morearty.Callback.set(binding, 'model.comment')}
-									value={binding.get('model.comment')} id="commentTextArea"
-									/>
-							</If>
-							<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
-								<div>
-									<div className="eEvent_commentHeader" onClick={self.onToggleShowComment}>{binding.get('showingComment') ? 'hide' : 'show comment'}</div>
-									<div className={commentTextClasses}>{binding.get('model.result.comment')}</div>
-								</div>
-							</If>
-						</div>
 						<If condition={(binding.get('mode') === 'general')}>
-						<EventButtons binding={binding} />
-						</If>
+							<div className="bEventButtons_action">
+								<EventButtons binding={binding} />
+							</div>
+							</If>
 						<div className="bEventHeader_wrap">
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
@@ -378,9 +364,27 @@ const EventView = React.createClass({
 							<div className="eEvent_shadowCommentText">{self.commentContent}</div>
 						</If>
 						<EventGallery binding={binding} />
+						<div className="eEvent_commentBox">
+							<If condition={(binding.get('mode') === 'closing') || false}>
+								<Morearty.DOM.textarea
+										placeholder="Enter your first comment"
+										className="eEvent_comment"
+										onChange={Morearty.Callback.set(binding, 'model.comment')}
+										value={binding.get('model.comment')} id="commentTextArea"
+										/>
+							</If>
+							<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
+								<div className="bMainComment">
+									<span className="bMainComment_pic">
+										<img src={'http://placehold.it/400x400'}/>
+									</span>
+									<div>{binding.get('model.result.comment')}</div>
+								</div>
+							</If>
 						<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
 							<Comments binding={binding}/>
 						</If>
+					</div>
 						<If condition={(binding.get('mode') !== 'general')}>
 						<EventButtons binding={binding} />
 						</If>

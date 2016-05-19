@@ -81,7 +81,7 @@ const InboxView = React.createClass({
 						invite.event = event;
 
 						// inject sport to invite
-						return window.Server.public_sport.get(event.sportId).then(sport => {
+						return window.Server.sport.get(event.sportId).then(sport => {
 							invite.sport = sport;
 
 							return sport;

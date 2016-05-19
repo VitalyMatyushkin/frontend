@@ -10,8 +10,7 @@ var Logo = require('module/as_admin/head/logo'),
 Head = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
-        var self = this,
-            menuItems;
+        var self = this;
 
         self.menuItems = [{
             href: '/#admin_schools',
