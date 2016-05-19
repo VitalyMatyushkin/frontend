@@ -11,7 +11,7 @@ const   AutoComplete            = require('module/ui/autocomplete2/OldAutocomple
 const PermissionFields = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        onSuccess:      React.PropTypes.func.isRequired,
+        onSuccess:      React.PropTypes.func.isRequired
     },
     /**
      * school filter by schoolName

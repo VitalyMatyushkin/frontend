@@ -43,8 +43,7 @@ const RegistrationPermissions = React.createClass({
     render:function(){
         const   self        = this,
                 binding     = self.getDefaultBinding(),
-                currentType = binding.get('type'),
-                message     = self.schoolMessage();
+                currentType = binding.get('type');
         return(
             <div>
 				<PermissionFields binding={binding} extraFieldKey="studentExtra_1"></PermissionFields>
