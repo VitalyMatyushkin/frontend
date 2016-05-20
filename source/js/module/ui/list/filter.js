@@ -1,27 +1,31 @@
-
 const Immutable = require('immutable');
 
-const defaultPageLimit = 20;
+const defaultPageLimit = 20;    // TODO: surprize!!! :))
 
-const filter = function (binding) {
+/**
+ * Tiny wrapper on 
+ * @param binding
+ * @constructor
+ */
+const Filter = function (binding) {
     this._binding = binding;
 };
 
-filter.prototype.getFilters = function(){
+Filter.prototype.getFilters = function(){
     return this._binding.toJS();
 };
 
-filter.prototype.getWhere = function(){
-    const self = this,
-        filters = self.getFilters();
-    return filters ? filters.where: filters;
+Filter.prototype.getWhere = function(){
+    const   self    = this,
+            filters = self.getFilters();
+    return filters ? filters.where : filters;
 };
 
-filter.prototype.getPageLimit = function(){
+Filter.prototype.getPageLimit = function(){
     return this._binding.get('limit');
 };
 
-filter.prototype.setFilters = function(value){
+Filter.prototype.setFilters = function(value){
     const   self = this,
             transaction = self._binding.atomically();
 
@@ -31,7 +35,7 @@ filter.prototype.setFilters = function(value){
     transaction.commit({ notify: false });
 };
 
-filter.prototype.setPageLimit = function(pageLimit){
+Filter.prototype.setPageLimit = function(pageLimit){
     const self = this;
     let limit = self.getPageLimit();
 
@@ -43,16 +47,16 @@ filter.prototype.setPageLimit = function(pageLimit){
     self._binding.set('limit', limit);
 };
 
-filter.prototype.setPageNumber = function(pageNumber){
+Filter.prototype.setPageNumber = function(pageNumber){
     const self = this,
         limit = self.getPageLimit();
 
-    !limit && console.error('Please provide page limit');
+    !limit && console.error('Filter: Please provide page limit');
 
     self._binding.set('skip', (pageNumber-1)*limit);
 };
 
-filter.prototype.addFieldFilter = function(field, value){
+Filter.prototype.addFieldFilter = function(field, value){
     const self = this;
     let where = self._deleteLike(field);
 
@@ -62,7 +66,7 @@ filter.prototype.addFieldFilter = function(field, value){
     self.setWhere(where);
 };
 
-filter.prototype._addLike = function(where, field, value){
+Filter.prototype._addLike = function(where, field, value){
     let filter = {};
 
     filter[field] = {};
@@ -80,7 +84,7 @@ filter.prototype._addLike = function(where, field, value){
     return where;
 };
 
-filter.prototype._deleteLike = function(field){
+Filter.prototype._deleteLike = function(field){
     const self = this;
     let i,
         where = self.getWhere();
@@ -95,12 +99,12 @@ filter.prototype._deleteLike = function(field){
     }
     return where;
 };
-filter.prototype.setOrder = function(field, value){
+Filter.prototype.setOrder = function(field, value){
     this._binding.set('order', field + ' ' + value);
 };
 
-filter.prototype.setWhere = function(value){
+Filter.prototype.setWhere = function(value){
     this._binding.set('where', Immutable.fromJS(value));
 };
 
-module.exports = filter;
+module.exports = Filter;
