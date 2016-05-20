@@ -28,12 +28,14 @@ const RegistrationPermissions = React.createClass({
 
 		for(var i in fieldsAr){
 			let fields = fieldsAr[i];
-			dataToPost.schoolId = fields.schoolId;
-			if(currentType === 'parent') {
-				dataToPost.comment = "Student - " + fields.firstName + " " + fields.lastName + "." +
-					" Form - " + fields.formName + ". House - " + fields.houseName + ".";
+			if(fields.schoolId){
+				dataToPost.schoolId = fields.schoolId;
+				if(currentType === 'parent') {
+					dataToPost.comment = "Student - " + fields.firstName + " " + fields.lastName + "." +
+						" Form - " + fields.formName + ". House - " + fields.houseName + ".";
+				}
+				window.Server.profileRequests.post(dataToPost).then( _ => self.props.onSuccess());
 			}
-			window.Server.profileRequests.post(dataToPost).then( _ => self.props.onSuccess());
 		}
     },
 
