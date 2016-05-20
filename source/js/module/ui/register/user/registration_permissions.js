@@ -5,8 +5,8 @@ const   If                      = require('module/ui/if/if'),
 		PermissionFields 		= require('module/ui/register/user/permission_fields'),
         React                   = require('react');
 /*
- *
- *
+ * It is a component for registration permission requests
+ * It generates and sends a requests to the server
  */
 const RegistrationPermissions = React.createClass({
     mixins:[Morearty.Mixin],
@@ -26,8 +26,8 @@ const RegistrationPermissions = React.createClass({
                     preset:currentType
                 };
 
-		for(var i in fieldsAr){
-			let fields = fieldsAr[i];
+		for(let i in fieldsAr){
+			const fields = fieldsAr[i];
 			if(fields.schoolId){
 				dataToPost.schoolId = fields.schoolId;
 				if(currentType === 'parent') {

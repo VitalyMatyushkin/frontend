@@ -5,7 +5,7 @@ const   AutoComplete            = require('module/ui/autocomplete2/OldAutocomple
         If                      = require('module/ui/if/if'),
         React                   = require('react');
 /*
- *
+ * Form with fields for permission request
  *
  */
 const PermissionFields = React.createClass({
