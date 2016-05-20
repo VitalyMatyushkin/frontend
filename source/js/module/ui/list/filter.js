@@ -53,7 +53,7 @@ Filter.prototype.setPageNumber = function(pageNumber){
 	const self = this,
 		limit = self.getPageLimit();
 
-	!limit && console.error('Please provide page limit');
+	!limit && console.error('Filter: Please provide page limit');
 
 	self._binding.set('skip', (pageNumber-1)*limit);
 };
