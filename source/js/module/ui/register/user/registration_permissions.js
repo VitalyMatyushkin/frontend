@@ -21,23 +21,20 @@ const RegistrationPermissions = React.createClass({
         const   self        = this,
                 binding     = self.getDefaultBinding(),
                 currentType = binding.get('type'),
+				fieldsAr	= binding.toJS('fields'),
                 dataToPost  = {
-                    preset:     binding.get('type'),
-                    schoolId:   binding.get('schoolId')
+                    preset:currentType
                 };
-        if(currentType === 'parent') {
-            dataToPost.comment = "Student - " + binding.get('firstName') + " " + binding.get('lastName') + "." +
-                " Form - " + binding.get('formName') + ". House - " + binding.get('houseName') + ".";
-            if(binding.get('studentExtra_1')){
-                dataToPost.comment +="Student - "+binding.get('studentExtra_1').firstName+" "+binding.get('studentExtra_1').lastName+"."+
-                    " Form - "+binding.get('studentExtra_1').form+". House - "+binding.get('studentExtra_1').house+".";
-            }
-            if(binding.get('studentExtra_2')){
-                dataToPost.comment +="Student - "+binding.get('studentExtra_2').firstName+" "+binding.get('studentExtra_2').lastName+"."+
-                    " Form - "+binding.get('studentExtra_2').form+". House - "+binding.get('studentExtra_2').house+".";
-            }
-        }
-        window.Server.profileRequests.post(dataToPost).then( _ => self.props.onSuccess());
+
+		for(var i in fieldsAr){
+			let fields = fieldsAr[i];
+			dataToPost.schoolId = fields.schoolId;
+			if(currentType === 'parent') {
+				dataToPost.comment = "Student - " + fields.firstName + " " + fields.lastName + "." +
+					" Form - " + fields.formName + ". House - " + fields.houseName + ".";
+			}
+			window.Server.profileRequests.post(dataToPost).then( _ => self.props.onSuccess());
+		}
     },
 
     render:function(){
@@ -45,28 +42,21 @@ const RegistrationPermissions = React.createClass({
                 binding     = self.getDefaultBinding(),
                 currentType = binding.get('type');
         return(
-            <div>
-				<PermissionFields binding={binding} extraFieldKey="studentExtra_1"></PermissionFields>
+            <div className="eRegistration_permissionsField">
+				<PermissionFields binding={binding.sub('fields.0')} type={currentType} />
                 <If condition={self.props.fieldCounter > 1 && currentType ==='parent'}>
-                    <div className="eRegistration_permissionsField">
-                        <PermissionFields binding={binding} extraFieldKey="studentExtra_1"></PermissionFields>
-                    </div>
+					<PermissionFields binding={binding.sub('fields.1')} type={currentType} />
                 </If>
                 <If condition={self.props.fieldCounter > 2 && currentType ==='parent'}>
-                    <div className="eRegistration_permissionsField">
-                        <PermissionFields binding={binding} extraFieldKey="studentExtra_2"></PermissionFields>
-                    </div>
+					<PermissionFields binding={binding.sub('fields.2')} type={currentType} />
                 </If>
 				<If condition={self.props.showButtons == true}>
 					<div>
-						<If condition={self.props.isFormFilled && currentType ==='parent'}>
-							<div>
-								<div className="bButton bButton_reg" onClick={self.onSuccess}>Continue</div>
-								<div className="bButton bButton_reg" onClick={self.props.onAnother}>Add</div>
-							</div>
-						</If>
-						<If condition={self.props.isFormFilled && currentType !== 'parent'}>
+						<If condition={self.props.isFormFilled}>
 							<div className="bButton bButton_reg" onClick={self.onSuccess}>Continue</div>
+						</If>
+						<If condition={self.props.isFormFilled && currentType ==='parent'}>
+							<div className="bButton bButton_reg" onClick={self.props.onAnother}>Add child</div>
 						</If>
 					</div>
 				</If>

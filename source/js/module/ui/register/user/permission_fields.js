@@ -11,7 +11,7 @@ const   AutoComplete            = require('module/ui/autocomplete2/OldAutocomple
 const PermissionFields = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        onSuccess:      React.PropTypes.func.isRequired
+		type:		React.PropTypes.string.isRequired
     },
     /**
      * school filter by schoolName
@@ -128,52 +128,50 @@ const PermissionFields = React.createClass({
     render:function(){
         const   self        = this,
                 binding     = self.getDefaultBinding(),
-                currentType = binding.get('type'),
+                currentType = self.props.type,
                 message     = self.schoolMessage();
         return(
             <div>
-                <div className="eRegistration_permissionsField">
-                    <If condition={currentType !== null}>
-                        <div>
-                        <AutoComplete
-                            serviceFilter={self.serviceSchoolFilter}
-                            serverField="name"
-                            onSelect={self.onSelectSchool}
-                            binding={binding.sub('_schoolAutocomplete')}
-                            placeholderText="school's name"
-                            />
-                            {message}
-                        </div>
-                    </If>
-                    <If condition={binding.get('schoolId') !== null && currentType === 'parent'}>
-                        <AutoComplete
-                            serviceFilter={self.serviceHouseFilter}
-                            serverField="name"
-                            onSelect={self.onSelectHouse}
-                            binding={binding.sub('_houseAutocomplete')}
-                            placeholderText="house's name"
-                        />
-                    </If>
-                    <If condition={binding.get('houseId') !== null && currentType === 'parent'}>
-                        <AutoComplete
-                            serviceFilter={self.serviceFormFilter}
-                            serverField="name"
-                            onSelect={self.onSelectForm}
-                            placeholderText="form's name"
-                            binding={binding.sub('_formAutocomplete')}
-                        />
-                    </If>
-                    <If condition={binding.get('formId') !== null && currentType === 'parent'}>
-                        <div>
-                            <div className="eRegistration_input">
-                                <input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
-                            </div>
-                            <div className="eRegistration_input">
-                                <input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
-                            </div>
-                        </div>
-                    </If>
-                </div>
+				<If condition={!!currentType}>
+					<div>
+					<AutoComplete
+						serviceFilter={self.serviceSchoolFilter}
+						serverField="name"
+						onSelect={self.onSelectSchool}
+						binding={binding.sub('_schoolAutocomplete')}
+						placeholderText="school's name"
+						/>
+						{message}
+					</div>
+				</If>
+				<If condition={binding.get('schoolId') && currentType === 'parent'}>
+					<AutoComplete
+						serviceFilter={self.serviceHouseFilter}
+						serverField="name"
+						onSelect={self.onSelectHouse}
+						binding={binding.sub('_houseAutocomplete')}
+						placeholderText="house's name"
+					/>
+				</If>
+				<If condition={binding.get('houseId') && currentType === 'parent'}>
+					<AutoComplete
+						serviceFilter={self.serviceFormFilter}
+						serverField="name"
+						onSelect={self.onSelectForm}
+						placeholderText="form's name"
+						binding={binding.sub('_formAutocomplete')}
+					/>
+				</If>
+				<If condition={binding.get('formId') && currentType === 'parent'}>
+					<div>
+						<div className="eRegistration_input">
+							<input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
+						</div>
+						<div className="eRegistration_input">
+							<input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
+						</div>
+					</div>
+				</If>
             </div>
         )
     }

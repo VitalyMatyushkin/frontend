@@ -1,7 +1,6 @@
 const   RegistrationPermissions 	= require('module/ui/register/user/registration_permissions'),
         classNames                  = require('classnames'),
-        React                       = require('react'),
-        Immutable                   = require('immutable');
+        React                       = require('react');
 
 
 let multipleFields;
@@ -12,18 +11,6 @@ const PermissionsStep = React.createClass({
 	displayName: 'PermissionsList',
 	propTypes: {
 		onSuccess: React.PropTypes.func
-	},
-	getDefaultState: function () {
-		return Immutable.fromJS({
-			type: null,
-			schoolId: null,
-			formId: null,
-			formName: null,
-			houseId: null,
-			houseName: null,
-			firstName: null,
-			lastName: null
-		});
 	},
 	componentWillMount: function () {
 		const self = this,
@@ -42,13 +29,10 @@ const PermissionsStep = React.createClass({
 			if (descriptor.isValueChanged()) {
 				binding.sub('_houseAutocomplete').clear();
 				binding.sub('_formAutocomplete').clear();
-				binding
-					.atomically()
-					.set('formId', null)
-					.set('formName', null)
-					.set('houseId', null)
-					.set('houseName', null)
-					.commit();
+				binding.sub('formId').clear();
+				binding.sub('formName').clear();
+				binding.sub('houseId').clear();
+				binding.sub('houseName').clear();
 			}
 		});
 		multipleFields = 1;
@@ -98,13 +82,13 @@ const PermissionsStep = React.createClass({
 				(
 					currentType === 'admin' || currentType === 'manager' ||
 					currentType === 'teacher' || currentType === 'coach'
-				) && binding.get('schoolId') !== null
+				) && binding.get('fields.0.schoolId')
 			) ||
 			(
 				currentType === 'parent' &&
-				binding.get('schoolId') !== null && binding.get('houseId') !== null &&
-				binding.get('formId') !== null && binding.get('firstName') !== null &&
-				binding.get('lastName') !== null
+				binding.get('fields.0.schoolId') && binding.get('fields.0.houseId') &&
+				binding.get('fields.0.formId') && binding.get('fields.0.firstName') &&
+				binding.get('fields.0.lastName')
 			);
 	},
 	render: function () {
