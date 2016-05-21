@@ -16,16 +16,9 @@ const PermissionsStep = React.createClass({
 		const self = this,
 			binding = self.getDefaultBinding();
 
-		self.types = [
-			{name: 'parent'},
-			{name: 'admin'},
-			{name: 'manager'},
-			{name: 'teacher'},
-			{name: 'coach'}
-		];
+		self.types = ['parent', 'admin', 'manager', 'teacher', 'coach'];
 
-		binding.sub('schoolId').addListener(descriptor => {
-
+		binding.sub('fields.0.schoolId').addListener(descriptor => {
 			if (descriptor.isValueChanged()) {
 				binding.sub('_houseAutocomplete').clear();
 				binding.sub('_formAutocomplete').clear();
@@ -41,10 +34,7 @@ const PermissionsStep = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 
-		binding
-			.atomically()
-			.set('type', type)
-			.commit();
+		binding.set('type', type);
 	},
 	fieldsMultiplier: function () {
 		var self = this;
@@ -63,14 +53,14 @@ const PermissionsStep = React.createClass({
 			{self.types.map(function (type) {
 				var itemClasses = classNames({
 					eRegistration_chooserItem: true,
-					mActive: binding.get('type') === type.name
+					mActive: binding.get('type') === type
 				});
 
-				return <div className={itemClasses} onClick={self._onClickType.bind(null, type.name)}>
+				return <div key={type} className={itemClasses} onClick={self._onClickType.bind(null, type)}>
 					<div className="eChooserItem_wrap">
 						<div className="eChooserItem_inside"></div>
 					</div>
-					<span className="eRegistration_chooserTitle">{type.name}</span>
+					<span className="eRegistration_chooserTitle">{type}</span>
 				</div>;
 			})}
 		</div>
