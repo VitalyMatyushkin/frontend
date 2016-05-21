@@ -2,7 +2,6 @@
  * Created by wert on 16.01.16.
  */
 const   React           = require('react'),
-        RoleSelector    = require('./pages/RoleSelector'),
         RouterView      = require('module/core/router'),
         LoginRoute2     = require('module/core/routes/login_route2'),
         LogoutRoute     = require('module/core/routes/logout_route'),

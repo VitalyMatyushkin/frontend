@@ -1,6 +1,4 @@
-const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
-        RegisterForm        = require('module/ui/register/user/register_form'),
-        RegisterDone        = require('module/ui/register/user/register_done'),
+const   RegisterDone        = require('module/ui/register/user/register_done'),
         AccountForm         = require('module/ui/register/user/account_step'),
         PermissionsList     = require('module/ui/register/user/permissions_step'),
         VerificationStep    = require('module/ui/register/user/verification_step'),
@@ -211,6 +209,7 @@ const RegisterUserPage = React.createClass({
                 currentView = <VerificationStep
                     onSuccess={self.setStepFunction.bind(null, 'permissions')}
                     binding={{
+						default: binding.sub('verification'),
                         account: binding.sub('account')
 				    }}
                 />;

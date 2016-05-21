@@ -11,7 +11,7 @@ const   AutoComplete            = require('module/ui/autocomplete2/OldAutocomple
 const PermissionFields = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-		type:		React.PropTypes.string.isRequired
+		type:		React.PropTypes.string
     },
     /**
      * school filter by schoolName
@@ -144,7 +144,7 @@ const PermissionFields = React.createClass({
 						{message}
 					</div>
 				</If>
-				<If condition={binding.get('schoolId') && currentType === 'parent'}>
+				<If condition={!!binding.get('schoolId') && currentType === 'parent'}>
 					<AutoComplete
 						serviceFilter={self.serviceHouseFilter}
 						serverField="name"
@@ -153,7 +153,7 @@ const PermissionFields = React.createClass({
 						placeholderText="house's name"
 					/>
 				</If>
-				<If condition={binding.get('houseId') && currentType === 'parent'}>
+				<If condition={!!binding.get('houseId') && currentType === 'parent'}>
 					<AutoComplete
 						serviceFilter={self.serviceFormFilter}
 						serverField="name"
@@ -162,7 +162,7 @@ const PermissionFields = React.createClass({
 						binding={binding.sub('_formAutocomplete')}
 					/>
 				</If>
-				<If condition={binding.get('formId') && currentType === 'parent'}>
+				<If condition={!!binding.get('formId') && currentType === 'parent'}>
 					<div>
 						<div className="eRegistration_input">
 							<input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
