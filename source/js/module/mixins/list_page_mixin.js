@@ -61,7 +61,7 @@ const ListPageMixin = {
             return window.Server[self.serviceName].get({filter:filter});
     },
 
-    getTotalCountPromise: function(where){
+    getTotalCountPromise: function(filter){
         const self = this;
 
         if(!self.serviceCount) {
@@ -70,9 +70,9 @@ const ListPageMixin = {
         }
 
         if(self.activeSchoolId !== null && self.serviceCount)
-            return window.Server[self.serviceCount].get(self.activeSchoolId, { where: where });
+            return window.Server[self.serviceCount].get(self.activeSchoolId, { filter: filter });
 
-        return window.Server[self.serviceCount].get({where:where});
+        return window.Server[self.serviceCount].get({filter: filter});
     },
 	_getEditFunction: function() {
 		return function(data) {
