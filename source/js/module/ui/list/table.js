@@ -113,11 +113,11 @@ const Table = React.createClass({
     _getTotalCount:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            where = self.filter.getWhere();
-        //binding.set('pagination.totalCount', 10);
+			where = self.filter.getWhere(),
+			filter = where ? {where:where} : {};
 
         if(self.props.getTotalCountPromise) {
-            self.requestCount = self.props.getTotalCountPromise(where).then(function (data) {
+            self.requestCount = self.props.getTotalCountPromise(filter).then(function (data) {
                 if (data && data.count) {
                     binding.set('pagination.totalCount', data.count);
                 }
