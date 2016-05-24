@@ -1,5 +1,6 @@
 const	classNames		= require('classnames'),
 		If				= require('module/ui/if/if'),
+		Tabs			= require('module/ui/tabs/tabs'),
 		EventHeader		= require('./view/event_header'),
 		EventRivals		= require('./view/event_rivals'),
 		EventButtons	= require('./view/event_buttons'),
@@ -31,7 +32,8 @@ const EventView = React.createClass({
 			},
 			sync: false,
 			mode: 'general',
-			showingComment: false
+			showingComment: false,
+			activeTab:'teams'
 		});
 	},
 	componentWillMount: function () {
@@ -41,6 +43,7 @@ const EventView = React.createClass({
 				eventId		= rootBinding.get('routing.pathParameters.0');
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+		self.initTabs();
 
 		// TODO should decompose to functions
 		// TODO Houston, we need to refactor, urgently!
@@ -294,6 +297,35 @@ const EventView = React.createClass({
 			binding.set('mode', Immutable.fromJS(rootBinding.get('routing.pathParameters.1') || null))
 		});
 	},
+
+	/**Init model for Tabs component*/
+	initTabs:function(){
+		this.tabListModel = [
+			{
+				value:'teams',
+				text:'Teams',
+				isActive:true
+			},
+			{
+				value:'details',
+				text:'Details',
+				isActive:false
+			},
+			{
+				value:'gallery',
+				text:'Gallery',
+				isActive:false
+			},
+			{
+				value:'comments',
+				text:'Comments',
+				isActive:false
+			}
+		];
+	},
+	changeActiveTab:function(value){
+		this.getDefaultBinding().set('activeTab', value);
+	},
 	/**
 	 * Initialize data for menu items
 	 * @private
@@ -340,10 +372,12 @@ const EventView = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			showingComment = binding.get('showingComment'),
+			activeTab = binding.get('activeTab'),
 			commentTextClasses = classNames({
 				'eEvent_commentText': true,
 				mHide: !showingComment
-			});  self.onChange();
+			});
+		self.onChange();
 		return <div>
 			<div className="bEventContainer">
 				<If condition={binding.get('sync')=== true}>
@@ -357,32 +391,41 @@ const EventView = React.createClass({
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
 						</div>
-						<EventTeams binding={binding} />
-						<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
-							<div className="eEvent_shadowCommentText">{self.commentContent}</div>
+						<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+						<If condition={activeTab === 'teams'} >
+							<EventTeams binding={binding} />
 						</If>
-						<EventGallery binding={binding} />
-						<div className="eEvent_commentBox">
-							<If condition={(binding.get('mode') === 'closing') || false}>
-								<Morearty.DOM.textarea
-										placeholder="Enter your first comment"
-										className="eEvent_comment"
-										onChange={Morearty.Callback.set(binding, 'model.comment')}
-										value={binding.get('model.comment')} id="commentTextArea"
-										/>
+						<If condition={activeTab === 'details'} >
+							<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
+								<div className="eEvent_shadowCommentText">{self.commentContent}</div>
 							</If>
-							<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
-								<div className="bMainComment">
-									<span className="bMainComment_pic">
-										<img src={'http://placehold.it/400x400'}/>
-									</span>
-									<div>{binding.get('model.result.comment')}</div>
-								</div>
-							</If>
-						<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
-							<Comments binding={binding}/>
 						</If>
-					</div>
+						<If condition={activeTab === 'gallery'} >
+							<EventGallery binding={binding} />
+						</If>
+						<If condition={activeTab === 'comments'} >
+							<div className="eEvent_commentBox">
+								<If condition={(binding.get('mode') === 'closing') || false}>
+									<Morearty.DOM.textarea
+											placeholder="Enter your first comment"
+											className="eEvent_comment"
+											onChange={Morearty.Callback.set(binding, 'model.comment')}
+											value={binding.get('model.comment')} id="commentTextArea"
+											/>
+								</If>
+								<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
+									<div className="bMainComment">
+										<span className="bMainComment_pic">
+											<img src={'http://placehold.it/400x400'}/>
+										</span>
+										<div>{binding.get('model.result.comment')}</div>
+									</div>
+								</If>
+								<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
+									<Comments binding={binding}/>
+								</If>
+							</div>
+						</If>
 						<If condition={(binding.get('mode') !== 'general')}>
 						<EventButtons binding={binding} />
 						</If>
