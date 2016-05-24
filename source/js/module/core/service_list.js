@@ -113,6 +113,9 @@ const serviceList = {
 		serviceList.schoolEventAlbumPhoto = new Service('/i/schools/{schoolId}/events/{eventId}/albums/{albumId}/photos/{photoId}', binding);
 		serviceList.publicSchoolAlbumPhotos = new Service('/public/schools/{schoolId}/albums/{albumId}/photos', binding);
 
+		// children
+		serviceList.userChildren = new Service('/i/children', binding);
+		serviceList.userChildEvents = new Service('/i/children/{childId}/events', binding);
 
 
 
@@ -124,11 +127,6 @@ const serviceList = {
 
 
 
-
-
-
-        serviceList.userChildren = new Service('/users/{id}/children', binding);
-		serviceList.userChildrenEvents = new Service('/users/{id}/children/events', binding);
 		serviceList.userCoach = new Service('/users/{id}/coaches',binding);
 		serviceList.userManager = new Service('/users/{id}/managers',binding);
 		serviceList.userTeacher = new Service('/users/{id}/teachers',binding);
