@@ -297,6 +297,8 @@ const EventView = React.createClass({
 			binding.set('mode', Immutable.fromJS(rootBinding.get('routing.pathParameters.1') || null))
 		});
 	},
+
+	/**Init model for Tabs component*/
 	initTabs:function(){
 		this.tabListModel = [
 			{
