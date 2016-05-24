@@ -20,7 +20,7 @@ const RegisterUserPage = React.createClass({
     },
     componentWillMount: function () {
         const self = this;
-
+		console.log('registration start');
         self.steps = [
             {
                 name: 'account',
