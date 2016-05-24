@@ -136,7 +136,7 @@ const RouterView = React.createClass({
 			} else {
 				if (self.isAuthorized === false && self.loginRoute) {
 					self.setRoute(self.loginRoute);
-					//if latest routing is a login, then don't save it
+					//if latest routing(which is really current route) is a login, then don't save it
 					if(self.loginRoute.path !== route.path)
 						self.nextRoute = route;
 				} else if (self.isVerified === false && self.verifyRoute) {
