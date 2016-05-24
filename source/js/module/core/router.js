@@ -130,7 +130,7 @@ const RouterView = React.createClass({
 			self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));//set and remove parameters
 
 			// User will be redirected to login page when unauthorized.
-			// In this case latest routing is saved
+			// In this case latest routing is saved(which is really current route)
 			if (route.unauthorizedAccess === true) {
 				self.setRoute(route);
 			} else {
