@@ -65,8 +65,10 @@ const Tabs = React.createClass({
 					});
 
 		return (
-			<div className="bTabs">
+			<div>
+			<span className="bTabs">
 				{tabs}
+			</span>
 			</div>
 		);
 	}

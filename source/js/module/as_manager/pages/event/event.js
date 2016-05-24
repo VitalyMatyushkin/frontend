@@ -301,22 +301,22 @@ const EventView = React.createClass({
 		this.tabListModel = [
 			{
 				value:'teams',
-				text:'teams',
+				text:'Teams',
 				isActive:true
 			},
 			{
 				value:'details',
-				text:'details',
+				text:'Details',
 				isActive:false
 			},
 			{
 				value:'gallery',
-				text:'gallery',
+				text:'Gallery',
 				isActive:false
 			},
 			{
 				value:'comments',
-				text:'comments',
+				text:'Comments',
 				isActive:false
 			}
 		];
