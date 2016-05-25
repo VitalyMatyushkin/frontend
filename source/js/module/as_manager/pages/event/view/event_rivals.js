@@ -68,18 +68,30 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const eventResult = binding.toJS('model.result');
+		const event = binding.toJS('model');
 
 		let points;
 
-		if(eventResult) {
-			const eventSummary = EventHelper.getTeamsSummaryByEventResult(eventResult);
+		if(event.result) {
+			const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
 
 			// get event result by team id
-			points = eventSummary[binding.get(`participants.${order}.id`)];
+			const teamId = binding.get(`participants.${order}.id`);
+			points = eventSummary[teamId];
+			if(!points && self._isTeamHaveZeroPoints(teamId, event, eventSummary)) {
+				// event doesn't has points in resultObject if team has zero points in event
+				points = 0;
+			}
 		}
 
 		return points;
+	},
+	/**
+	 * Return TRUE if team has zero points in event
+	 * @private
+	 */
+	_isTeamHaveZeroPoints: function(teamId, event, eventSummary) {
+		return !eventSummary[teamId] && event.status === EventHelper.EVENT_STATUS.FINISHED;
 	},
 	render: function() {
 		const	self	= this,
