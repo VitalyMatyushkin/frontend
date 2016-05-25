@@ -14,7 +14,6 @@ const StudentAddPage = React.createClass({
     
     submitAdd: function(data){
         data.birthday = data.birthday.substr(0, data.birthday.indexOf('T'));    // TODO: hack
-		delete data.nextOfKin;
         return window.Server.schoolStudents.post(this.activeSchoolId, data).then(() => {
             document.location.hash = 'school_admin/students';   // TODO: holly cow!
         })
