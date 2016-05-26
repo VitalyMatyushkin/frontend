@@ -5,16 +5,12 @@
 const   React               = require('react'),
         AchievementModel    = require('module/as_parents/pages/events/achievement/achievement_model'),
 
-
 AchievementsAllChildren = React.createClass({
     mixins: [Morearty.Mixin],
-    componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-    },
     renderAllAchievements:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
         let result = <div className="eAchievement_row">{'no children'}</div>;
 
         if(binding.get('eventChild') && binding.get('eventChild').count()) {
@@ -41,8 +37,7 @@ AchievementsAllChildren = React.createClass({
         return result;
     },
     render: function () {
-        var self = this,
-            binding = self.getDefaultBinding();
+        const self = this;
 
         return (
             <div className="eAllAchievements_container">
