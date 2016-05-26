@@ -125,7 +125,7 @@ const UserAchievements = React.createClass({
             dates;
         if(dataFrom && dataFrom.gamesScoredIn){
             dates = dataFrom.gamesScoredIn.reduce(function(memo,val){
-                var date = Date.parse(val.startTime),
+                var date = Date.parse(val.startTime),N
                     any = memo.some(function(d){
                         return self.sameDay(date,d);
                     });
