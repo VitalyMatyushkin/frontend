@@ -1,8 +1,9 @@
 /**
  * Created by bridark on 25/04/15.
  */
-const   React       = require('react'),
-        Immutable   = require('immutable');
+const   React           = require('react'),
+        EventHelper		= require('module/helpers/eventHelper'),
+        Immutable        = require('immutable');
 
 const UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
@@ -50,7 +51,7 @@ const UserAchievements = React.createClass({
                 var eventDateTime = new Date(event.startTime),
                     hours = self.addZeroToFirst(eventDateTime.getHours()),
                     minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
-                    type = event.type,
+                    type = event.eventType,
                     firstName,
                     secondName,
                     firstPic,
@@ -58,30 +59,33 @@ const UserAchievements = React.createClass({
                     firstPoint,
                     comment,
                     secondPoint;
-                if(event.result && event.result.comment){
+
+                if (event.result && event.result.comment){
                     comment = event.result.comment;
-                }else{
+                } else {
                     comment = "There are no comments on this fixture";
                 }
-                if (type === 'inter-schools') {
+                if (type === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
                     firstName = event.participants[0].school.name;
                     secondName = !event.resultId ? event.invites[0].guest.name : event.participants[1].school.name;
                     firstPic = event.participants[0].school.pic;
                     secondPic = event.participants[1].school.pic || event.invites[1].guest.pic;
-                } else if (type === 'houses') {
+                } else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
                     firstName = event.participants[0].house.name;
                     secondName = event.participants[1].house.name;
                     firstPic = event.participants[0].school.pic;
                     secondPic = event.participants[1].school.pic;
-                } else if (type === 'internal') {
+                } else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['internal']) {
                     firstName = event.participants[0].name;
                     secondName = event.participants[1].name;
                     firstPic = event.participants[0].school.pic;
                     secondPic = event.participants[1].school.pic;
                 }
-                if (event.resultId && event.result.summary) {
-                    firstPoint = event.result.summary.byTeams[event.participants[0].id] || 0;
-                    secondPoint = event.result.summary.byTeams[event.participants[1].id] || 0;
+                if (event.status === EventHelper.EVENT_STATUS.FINISHED) {
+                    const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
+
+                    firstPoint = eventSummary[event.participants[0].id] || 0;
+                    secondPoint = eventSummary[event.participants[1].id] || 0;
                 }
                 //console.log(index+"  index");
                 return <div key={index} className="bAchievement"
@@ -95,8 +99,11 @@ const UserAchievements = React.createClass({
                         </div>
                         <div className="eAchievement_rivalInfo">
                             <div
-                                className={'eAchievement_results' + (event.resultId ? ' mDone' : '') }>{event.resultId ? [firstPoint, secondPoint].join(':') : '? : ?'}</div>
-                            <div className="eAchievement_info">{event.type}</div>
+                                className={'eAchievement_results' + (event.status === EventHelper.EVENT_STATUS.FINISHED ? ' mDone' : '') }
+                            >
+                                {event.status === EventHelper.EVENT_STATUS.FINISHED ? [firstPoint, secondPoint].join(':') : '? : ?'}
+                            </div>
+                            <div className="eAchievement_info">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
                         </div>
                         <div className="eAchievement_rivalName">
                             {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
