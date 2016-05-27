@@ -30,6 +30,10 @@ const AchievementOneChild = React.createClass({
         if(studentId && studentId !=='all'){
             return window.Server.userChild.get({childId: studentId}).then(child => {
                 leanerData = child;
+                leanerData.student = {
+                    firstName:  child.firstName,
+                    lastName:   child.lastName
+                };
                 return window.Server.schoolForm.get({schoolId: child.schoolId, formId: child.formId});
             })
             .then(classData => {
@@ -49,9 +53,9 @@ const AchievementOneChild = React.createClass({
                 return self._getWinChildEvents(leanerData.id);
             })
             .then(events => {
-                leanerData.schoolEvent = events;
-                leanerData.numberOfGamesPlayed = events.length;
-                self.numberOfGamesPlayed = events.length;
+                leanerData.schoolEvent = self._getPlayedGames(events);
+                leanerData.numberOfGamesPlayed = leanerData.schoolEvent.length;
+                self.numberOfGamesPlayed = leanerData.schoolEvent.length;
 
                 leanerData.gamesWon = self._getWinGames(leanerData.id, events);
                 leanerData.numOfGamesWon = leanerData.gamesWon.length;
@@ -64,6 +68,9 @@ const AchievementOneChild = React.createClass({
                 binding.atomically().set('achievements', Immutable.fromJS(leanerData)).commit();
             });
         }
+    },
+    _getPlayedGames: function(events) {
+       return events.filter(event => event.status === EventHelper.EVENT_STATUS.FINISHED);
     },
     _getScoredInEvents: function(childId, events) {
         const self = this;

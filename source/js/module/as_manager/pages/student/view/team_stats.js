@@ -71,9 +71,9 @@ const TeamStats = React.createClass({
                 }
                 if (type === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
                     firstName = event.participants[0].school.name;
-                    secondName = event.participants[1]!== undefined ?event.participants[1].school.name :'';
+                    secondName = event.participants[1].school.name;
                     firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1]!==undefined?event.participants[1].school.pic:'';
+                    secondPic = event.participants[1].school.pic;
                 } else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
                     firstName = event.participants[0].house.name;
                     secondName = event.participants[1].house.name;

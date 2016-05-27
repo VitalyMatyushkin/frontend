@@ -81,19 +81,13 @@ const UserFixtures = React.createClass({
                 }
                 if (type === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
                     firstName = event.participants[0].school.name;
-                    secondName = event.participants[1]!== undefined ?event.participants[1].school.name :'';
-                    firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1]!==undefined?event.participants[1].school.pic:'';
+                    secondName = event.participants[1].school.name;
                 } else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
                     firstName = event.participants[0].house.name;
                     secondName = event.participants[1].house.name;
-                    firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1].school.pic;
                 } else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['internal']) {
                     firstName = event.participants[0].name;
                     secondName = event.participants[1].name;
-                    firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1].school.pic;
                 }
                 if (event.status === EventHelper.EVENT_STATUS.FINISHED) {
                     const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
