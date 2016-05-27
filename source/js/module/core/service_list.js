@@ -80,6 +80,7 @@ const serviceList = {
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
         serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
+        serviceList.schoolEventTeams = new Service('/i/schools/{schoolId}/events/{eventId}/teams', binding);
         serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
         serviceList.addPointToSchoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result/points', binding);
         serviceList.finishSchoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/finish', binding);
