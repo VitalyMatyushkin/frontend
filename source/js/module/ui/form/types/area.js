@@ -24,7 +24,7 @@ const TypeArea = React.createClass({
 	serviceFilter: function(value) {
 		const	postCodeFilter = {
 					where: {
-						id: {
+						postcode: {
 							like: value,
 							options: 'i'
 						}
@@ -38,7 +38,7 @@ const TypeArea = React.createClass({
 		const 	self = this,
 				autocompleteProps = Object.assign({}, self.props, {		// merging current props with new one
 					serviceFilter: 	self.serviceFilter,
-					serverField: 	'id'
+					serverField: 	'postcode'
 				}),
 				AutocompleteProped = React.createElement(TypeAutocomplete, autocompleteProps);	// and creating new object
 
