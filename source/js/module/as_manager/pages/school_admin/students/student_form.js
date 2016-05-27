@@ -80,6 +80,7 @@ const StudentForm = React.createClass({
 						<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
 					</FormColumn>
 					<FormColumn type="column">
+						<h3>Next Of Kin</h3>
 						<FormField type="text" field="nok_relationship" validation="required" >Relationship</FormField>
 						<FormField type="text" field="nok_firstName" validation="required" >Name</FormField>
 						<FormField type="text" field="nok_lastName" validation="required" >Surname</FormField>
