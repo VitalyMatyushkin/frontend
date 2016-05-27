@@ -2,6 +2,7 @@ const 	Form		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		FormColumn 	= require('module/ui/form/form_column'),
 		Promise 	= require('bluebird'),
+		NextOfKin 	= require('./next_of_kin/next_of_kin'),
 		React 		= require('react');
 
 /** Tiny student-related Form wrapper */
@@ -62,22 +63,33 @@ const StudentForm = React.createClass({
 		return Promise.resolve(gendersArray);
 	},
 	render: function() {
-		const self = this;
+		const self = this,
+			binding = self.getDefaultBinding();
 
-		return ( <div className="editStudentForm">
-			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
-				<FormColumn type="column">
-					<FormField type="text" field="firstName" validation="required">Name</FormField>
-					<FormField type="text" field="lastName" validation="required">Surname</FormField>
-					<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
-					<FormField type="date" field="birthday" validation="date">Birthday</FormField>
-					<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" defaultItem={self.props.initialForm} validation="required">Form</FormField>
-					<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" defaultItem={self.props.initialHouse} validation="required">House</FormField>
-				</FormColumn>
-				<FormColumn type="column">
-					<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
-				</FormColumn>
-			</Form></div>
+		return (
+			<div className="editStudentForm">
+				<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} >
+					<FormColumn type="column">
+						<FormField type="text" field="firstName" validation="required">Name</FormField>
+						<FormField type="text" field="lastName" validation="required">Surname</FormField>
+						<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
+						<FormField type="date" field="birthday" validation="date">Birthday</FormField>
+						<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" defaultItem={self.props.initialForm} validation="required">Form</FormField>
+						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" defaultItem={self.props.initialHouse} validation="required">House</FormField>
+					</FormColumn>
+					<FormColumn type="column">
+						<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
+					</FormColumn>
+					<FormColumn type="column">
+						<FormField type="text" field="nok_relationship" validation="required" >Relationship</FormField>
+						<FormField type="text" field="nok_firstName" validation="required" >Name</FormField>
+						<FormField type="text" field="nok_lastName" validation="required" >Surname</FormField>
+						<FormField type="phone" field="nok_phone" validation="phone required" >Phone</FormField>
+						<FormField type="text" field="nok_email" validation="required email" >Email</FormField>
+					</FormColumn>
+				</Form>
+				<NextOfKin binding={binding.sub('nextOfKin')} />
+			</div>
 		)
 	}
 });
