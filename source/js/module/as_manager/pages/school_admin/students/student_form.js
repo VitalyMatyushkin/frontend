@@ -2,7 +2,6 @@ const 	Form		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		FormColumn 	= require('module/ui/form/form_column'),
 		Promise 	= require('bluebird'),
-		NextOfKin 	= require('./next_of_kin/next_of_kin'),
 		React 		= require('react');
 
 /** Tiny student-related Form wrapper */
@@ -88,7 +87,6 @@ const StudentForm = React.createClass({
 						<FormField type="text" field="nok_email" validation="required email" >Email</FormField>
 					</FormColumn>
 				</Form>
-				<NextOfKin binding={binding.sub('nextOfKin')} />
 			</div>
 		)
 	}
