@@ -68,9 +68,18 @@ const AchievementOneChild = React.createClass({
     _getScoredInEvents: function(childId, events) {
         const self = this;
 
-        return events.filter(event => {
+        const scoredInEvents = events.filter(event => {
             return self._isChildGetScores(childId, event);
         });
+
+        // Just inject child scores to events model
+        // Because on next steps of obtaining data(on user_achievements REACT component)
+        // We need childId
+        scoredInEvents.forEach(scoredInEvent => {
+            scoredInEvent.childScore = scoredInEvent.result.points[childId].score;
+        });
+
+        return scoredInEvents;
     },
     _isChildGetScores: function(childId, event) {
         return event.result && event.result.points[childId] ? true : false;

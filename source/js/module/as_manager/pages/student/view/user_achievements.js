@@ -87,35 +87,38 @@ const UserAchievements = React.createClass({
                     firstPoint = eventSummary[event.participants[0].id] || 0;
                     secondPoint = eventSummary[event.participants[1].id] || 0;
                 }
-                //console.log(index+"  index");
-                return <div key={index} className="bAchievement"
+
+                return (
+                    <div key={index} className="bAchievement"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                    <div className="eAchievement_in">
-                        <div className="eAchievement_rivalName">
-                            {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
-                            <span className="eAchievement_rival">{firstName}</span>
-                        </div>
-                        <div className="eAchievement_rivalInfo">
-                            <div
-                                className={'eAchievement_results' + (event.status === EventHelper.EVENT_STATUS.FINISHED ? ' mDone' : '') }
-                            >
-                                {event.status === EventHelper.EVENT_STATUS.FINISHED ? [firstPoint, secondPoint].join(':') : '? : ?'}
+                        <h4>{`Scored in this fixture:${event.childScore}`}</h4>
+                        <div className="eAchievement_in">
+                            <div className="eAchievement_rivalName">
+                                {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
+                                <span className="eAchievement_rival">{firstName}</span>
                             </div>
-                            <div className="eAchievement_info">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
+                            <div className="eAchievement_rivalInfo">
+                                <div
+                                    className={'eAchievement_results' + (event.status === EventHelper.EVENT_STATUS.FINISHED ? ' mDone' : '') }
+                                >
+                                    {event.status === EventHelper.EVENT_STATUS.FINISHED ? [firstPoint, secondPoint].join(':') : '? : ?'}
+                                </div>
+                                <div className="eAchievement_info">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
+                            </div>
+                            <div className="eAchievement_rivalName">
+                                {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
+                                <span className="eAchievement_rival">{secondName}</span>
+                            </div>
                         </div>
-                        <div className="eAchievement_rivalName">
-                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
-                            <span className="eAchievement_rival">{secondName}</span>
+                        <div className="eAchievement_com_container">
+                            <div className="eChallenge_comments">
+                                {comment}
+                            </div>
                         </div>
                     </div>
-                    <div className="eAchievement_com_container">
-                        <div className="eChallenge_comments">
-                            {comment}
-                        </div>
-                    </div>
-                </div>;
+                );
             });
         }
     },
@@ -125,7 +128,7 @@ const UserAchievements = React.createClass({
             dates;
         if(dataFrom && dataFrom.gamesScoredIn){
             dates = dataFrom.gamesScoredIn.reduce(function(memo,val){
-                var date = Date.parse(val.startTime),N
+                var date = Date.parse(val.startTime),
                     any = memo.some(function(d){
                         return self.sameDay(date,d);
                     });
@@ -140,7 +143,6 @@ const UserAchievements = React.createClass({
                     monthNames = [ "January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December" ];
                 return <div key={dateTimeIndex} className="bAchievementsDate">
-                    <h4>Scored in this fixture</h4>
                     <div className="eAchievementsDate_date">
                         {date.getDate() + ' ' +
                         monthNames[date.getMonth()] + ' ' +
