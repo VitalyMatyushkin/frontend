@@ -11,7 +11,6 @@
  *
  */
 const   React       = require('react'),
-        ReactDOM    = require('reactDom'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
         $           = require('jquery');
@@ -209,7 +208,6 @@ const Form = React.createClass({
                 keyCode = event.keyCode;
 
         if (keyCode === 13) {
-            ReactDOM.findDOMNode(self.refs.submitButton).focus();
             self.tryToSubmit();
         }
     },
@@ -240,7 +238,7 @@ const Form = React.createClass({
                     {bindedChildren}
 
                     <div className="eForm_savePanel">
-                        <div className="bButton mRight" tabIndex="-1" ref="submitButton"
+                        <div className="bButton mRight" tabIndex="-1"
                              onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
                     </div>
                 </div>
