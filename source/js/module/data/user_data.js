@@ -8,15 +8,9 @@ const   DataPrototype   = require('module/data/data_prototype'),
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-    var self = this,
-		authorizationInfo = Helpers.cookie.get('authorizationInfo') || {};
-
-	// After reloading the page, you must configure the Ajax again
-	ajaxSetup(authorizationInfo);
-
     // Recovering authorization state info
     return {
-        authorizationInfo: authorizationInfo
+        authorizationInfo: Helpers.cookie.get('authorizationInfo') || {}
     };
 };
 
@@ -24,29 +18,38 @@ UserDataClass.getDefaultState = function () {
  * Binding to data update in UserData
  */
 UserDataClass.initBind = function () {
-    var self = this,
+    const self = this,
         bindObject = self.bindObject;
 
+	self._ajaxSetup(bindObject);
     // Keeping authorization data
     bindObject.addListener('authorizationInfo', function () {
-        var data = bindObject.get('authorizationInfo'),
-            authorizationInfo = data ? data.toJS() : {};
+        const authorizationInfo = bindObject.toJS('authorizationInfo');
 
-        data && Helpers.cookie.set('authorizationInfo', authorizationInfo);
-		ajaxSetup(authorizationInfo);
+		authorizationInfo && Helpers.cookie.set('authorizationInfo', authorizationInfo);
+		self._ajaxSetup(bindObject);
 	});
 };
 
 // configuring ajax to perform all ajax requests from jquery with Authorization header
-function ajaxSetup(authorizationInfo){
+UserDataClass._ajaxSetup = function (binding){
+	const authorizationInfo = binding.toJS('authorizationInfo');
 
 	if(authorizationInfo){
 		const 	h 		= authorizationInfo.adminId ? "asid" : "usid",
 				options = {headers:{}};
 
 		options.headers[h] = authorizationInfo.id;
+
+		/**A function to be called when the request finishes (after success and error callbacks are executed). */
+		options.complete = function(jqXHR){
+			if(jqXHR.status === 401){
+				//if status request is unauthorized, then remove session information
+				binding.sub('authorizationInfo').clear();
+			}
+		};
 		$.ajaxSetup(options);
 	}
-}
+};
 
 module.exports = UserDataClass;

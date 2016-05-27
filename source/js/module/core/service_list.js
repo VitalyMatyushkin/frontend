@@ -220,8 +220,8 @@ const serviceList = {
 		serviceList.points = new Service('/points', binding);
 
 		// postcode
-		serviceList.postCode = new Service('/postcodes', binding);
-		serviceList.findPostCodeById = new Service('/postcodes/findOne?filter[where][id]={postCode}', binding);
+		serviceList.postCode = new Service('/public/postcodes', binding);
+		serviceList.findPostCodeById = new Service('/public/postcodes/{postCode}', binding);
 
 		// albums
 		serviceList.albumsByEvent = new Service('/events/{id}/albums');
