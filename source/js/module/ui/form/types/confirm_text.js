@@ -54,12 +54,13 @@ TypeConfirmText = React.createClass({
 		return (
 			<div className="eForm_confirmField">
 				<div className="eForm_fieldColumn">
+					<div className="eForm_fieldName">{self.props.name}</div>
 					<TypeText {...self.props} onSetValue={self.onSetValue} />
 				</div>
 
 				<div className="eForm_fieldColumn">
+					<div className="eForm_fieldName eForm_fieldSmallHelp">Confirm {self.props.name.toLowerCase()}</div>
 					<div className="eForm_fieldInput">
-						<div className="eForm_fieldName eForm_fieldSmallHelp">Confirm {self.props.name.toLowerCase()}</div>
 						<input ref="confInput" type={self.props.textType || 'text'} onBlur={self.setConfirmValue} onChange={self.changeConfirmValue} />
 					</div>
 				</div>
