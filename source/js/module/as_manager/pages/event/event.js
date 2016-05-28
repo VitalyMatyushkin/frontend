@@ -112,7 +112,6 @@ const EventView = React.createClass({
 
 		let	activeSchool,
 			event,
-			invites,
 			teams,
 			sport;
 
@@ -175,37 +174,29 @@ const EventView = React.createClass({
 		.then(_sport => {
 			sport = _sport;
 
-			// Get invite
+			// Get schools for inter-schools event
 			if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-				return window.Server.schoolEventInvite.get({
-					schoolId:	self.activeSchoolId,
-					eventId:	event.id
-				})
-				.then(_invite => {
-					invites = _invite;
+				return window.Server.publicSchool.get(
+					// it all depends on whether the school is inviting active or not
+					event.inviterSchoolId !== self.activeSchoolId ? event.inviterSchoolId : event.invitedSchoolId
+				)
+				.then(otherSchool => {
+					return window.Server.publicSchoolForms.get(otherSchool.id).then(forms => {
+						otherSchool.forms = forms;
 
-					return window.Server.publicSchool.get(
-						// it all depends on whether the school is inviting active or not
-						invites.inviterSchoolId !== self.activeSchoolId ? invites.inviterSchoolId : invites.invitedSchoolId
-					)
-					.then(otherSchool => {
-						return window.Server.publicSchoolForms.get(otherSchool.id).then(forms => {
-							otherSchool.forms = forms;
-
-							return otherSchool;
-						});
-					})
-					.then(otherSchool => {
-						// it all depends on whether the school is inviting active or not
-						invites.inviterSchool = invites.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
-						invites.invitedSchool = invites.invitedSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
-
-						return Promise.resolve(invites);
+						return otherSchool;
 					});
+				})
+				.then(otherSchool => {
+					// it all depends on whether the school is inviting active or not
+					event.inviterSchool = event.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+					event.invitedSchool = event.invitedSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+
+					// yes, i'm always right.
+					return true;
 				});
 			} else {
-				// TODO Hmmm...really?
-				return Promise.resolve(sport);
+				return sport;
 			}
 		})
 		.then(_ => {
@@ -238,7 +229,7 @@ const EventView = React.createClass({
 
 					// inject school to team
 					if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-						team.school = team.schoolId === invites.inviterSchoolId ? invites.inviterSchool : invites.invitedSchool;
+						team.school = team.schoolId === event.inviterSchoolId ? event.inviterSchool : event.invitedSchool;
 					} else {
 						team.school = activeSchool;
 					}
@@ -281,7 +272,6 @@ const EventView = React.createClass({
 				.set('sport',				Immutable.fromJS(sport))
 				.set('model',				Immutable.fromJS(event))
 				.set('model.sportModel',	Immutable.fromJS(sport))
-				.set('invites',				Immutable.fromJS(invites))
 				.set('participants',		Immutable.fromJS(teams))
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))

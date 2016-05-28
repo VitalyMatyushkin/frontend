@@ -9,6 +9,8 @@ const   AboutMe             = require('module/as_manager/pages/student/view/abou
         IndicatorView       = require('module/ui/progress_indicator/loading_prompt'),
         React               = require('react'),
         If                  = require('module/ui/if/if'),
+        EventHelper         = require('module/helpers/eventHelper'),
+        Lazy                = require('lazyjs'),
         Immutable           = require('immutable');
 
 const AchievementOneChild = React.createClass({
@@ -26,45 +28,141 @@ const AchievementOneChild = React.createClass({
             leanerData = {};
         if(studentId === undefined)document.location.hash = 'events/calendar/all';
         if(studentId && studentId !=='all'){
-            return window.Server.schoolStudent.get({studentId:studentId,
-                filter:{
-                    include:['form','house','school','parents']
-                }
-            }).then(function (data) {
-                leanerData = data;
-                return window.Server.schoolForm.get(data.formId).then(function (classData) {
-                    leanerData.classData = classData;
-                    return window.Server.schoolHouse.get(data.houseId).then(function (houseData) {
-                        leanerData.houseData = houseData;
-                        return window.Server.school.get(data.schoolId).then(function (schoolData) {
-                            leanerData.schoolData = schoolData;
-                            return window.Server.studentGamesWon.get({
-                                id: studentId,
-                                include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
-                            }).then(function (gamesWon) {
-                                leanerData.gamesWon = gamesWon;
-                                self.numOfGamesWon = gamesWon.length;
-                                leanerData.numOfGamesWon = gamesWon.length;
-                                return window.Server.studentGamesScored.get({
-                                    id: studentId,
-                                    include: JSON.stringify([{"invites": ["inviter", "guest"]}, {"participants": ["players", "house", "school"]}, {"result": "points"}])
-                                }).then(function (gamesScoredIn) {
-                                    leanerData.gamesScoredIn = gamesScoredIn;
-                                    self.numOfGamesScoredIn = gamesScoredIn.length;
-                                    leanerData.numOfGamesScoredIn = gamesScoredIn.length;
-                                    return window.Server.studentEvents.get({id: studentId}).then(function (gamesPlayed) {
-                                        leanerData.numberOfGamesPlayed = gamesPlayed.length;
-                                        self.numberOfGamesPlayed = gamesPlayed.length;
-                                        leanerData.schoolEvent = gamesPlayed;
-                                        binding.atomically().set('achievements', Immutable.fromJS(leanerData)).commit();
-                                    });
-                                });
-                            })
-                        });
-                    });
-                });
+            return window.Server.userChild.get({childId: studentId}).then(child => {
+                leanerData = child;
+                leanerData.student = {
+                    firstName:  child.firstName,
+                    lastName:   child.lastName
+                };
+                return window.Server.schoolForm.get({schoolId: child.schoolId, formId: child.formId});
+            })
+            .then(classData => {
+                leanerData.classData = classData;
+                return window.Server.schoolHouse.get({schoolId: leanerData.schoolId, houseId: leanerData.houseId});
+            })
+            .then(houseData => {
+                leanerData.houseData = houseData;
+                return window.Server.school.get({schoolId: leanerData.schoolId});
+            })
+            .then(schoolData => {
+                leanerData.schoolData = schoolData;
+                return window.Server.parentsChild.get({childId: leanerData.id});
+            })
+            .then(parents => {
+                leanerData.parents = parents;
+                return self._getWinChildEvents(leanerData.id);
+            })
+            .then(events => {
+                leanerData.schoolEvent = self._getPlayedGames(events);
+                leanerData.numberOfGamesPlayed = leanerData.schoolEvent.length;
+                self.numberOfGamesPlayed = leanerData.schoolEvent.length;
+
+                leanerData.gamesWon = self._getWinGames(leanerData.id, events);
+                leanerData.numOfGamesWon = leanerData.gamesWon.length;
+                self.numOfGamesWon = leanerData.gamesWon.length;
+
+                leanerData.gamesScoredIn = self._getScoredInEvents(leanerData.id, events);
+                leanerData.numOfGamesScoredIn = leanerData.gamesScoredIn.length;
+                self.numOfGamesScoredIn = leanerData.gamesScoredIn.length;
+
+                binding.atomically().set('achievements', Immutable.fromJS(leanerData)).commit();
             });
         }
+    },
+    _getPlayedGames: function(events) {
+       return events.filter(event => event.status === EventHelper.EVENT_STATUS.FINISHED);
+    },
+    _getScoredInEvents: function(childId, events) {
+        const self = this;
+
+        const scoredInEvents = events.filter(event => {
+            return self._isChildGetScores(childId, event);
+        });
+
+        // Just inject child scores to events model
+        // Because on next steps of obtaining data(on user_achievements REACT component)
+        // We need childId
+        scoredInEvents.forEach(scoredInEvent => {
+            scoredInEvent.childScore = scoredInEvent.result.points[childId].score;
+        });
+
+        return scoredInEvents;
+    },
+    _isChildGetScores: function(childId, event) {
+        return event.result && event.result.points[childId] ? true : false;
+    },
+    _isChildFromCurentTeam: function(childId, team) {
+        return Lazy(team.players).findWhere({userId:childId}) ? true : false;
+    },
+    _isChildTeamWin: function(childId, event) {
+        const self = this;
+
+        let isChildTeamWin = false;
+
+        if(event.status === EventHelper.EVENT_STATUS.FINISHED && event.result) {
+            const winnerId = EventHelper.getWinnerId(event.result);
+            winnerId && (isChildTeamWin = self._isChildFromCurentTeam(
+                childId,
+                Lazy(event.participants).findWhere({id: winnerId})
+            ));
+        }
+
+        return isChildTeamWin;
+    },
+    _getWinGames: function(childId, events) {
+        const self = this;
+
+        return events.filter(event => {
+            return self._isChildTeamWin(childId, event);
+        });
+    },
+    _getTeam: function(schoolId, teamId) {
+        let team;
+
+        return window.Server.team.get({schoolId: schoolId, teamId: teamId})
+            .then(_team => {
+                team = _team;
+
+                return window.Server.publicSchool.get({schoolId: team.schoolId});
+            })
+            .then(school => {
+                team.school = school;
+
+                if(team.houseId) {
+                    return window.Server.publicSchoolHouse.get({schoolId: team.schoolId, houseId: team.houseId})
+                        .then(house => {
+                            team.house = house;
+
+                            return team;
+                        });
+                } else {
+                    return team;
+                }
+            });
+    },
+    _getWinChildEvents: function(childId) {
+        const self = this;
+
+        return window.Server.userChildEvents.get({childId: childId})
+            .then(events => Promise.all(events.map(event =>
+                window.Server.sport.get({sportId:event.sportId}).then(sport => {
+                    event.sport = sport;
+
+                    return event;
+                })
+            )))
+            .then(events => {
+                return Promise.all(events.map(event => {
+                    return Promise.all(event.teams.map(teamId => {
+                            return self._getTeam(event.inviterSchoolId, teamId);
+                        }))
+                        .then(teams => {
+                            event.participants = teams;
+
+                            return event;
+                        });
+                }))
+            })
     },
     render: function () {
         var self = this,

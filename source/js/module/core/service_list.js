@@ -80,6 +80,7 @@ const serviceList = {
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
         serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
+        serviceList.schoolEventTeams = new Service('/i/schools/{schoolId}/events/{eventId}/teams', binding);
         serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
         serviceList.addPointToSchoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result/points', binding);
         serviceList.finishSchoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/finish', binding);
@@ -115,7 +116,9 @@ const serviceList = {
 
 		// children
 		serviceList.userChildren = new Service('/i/children', binding);
+		serviceList.userChild = new Service('/i/children/{childId}', binding);
 		serviceList.userChildEvents = new Service('/i/children/{childId}/events', binding);
+		serviceList.parentsChild = new Service('/i/children/{childId}/parents', binding);
 
 
 

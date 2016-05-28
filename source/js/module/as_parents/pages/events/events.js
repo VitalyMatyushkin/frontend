@@ -110,22 +110,68 @@ const EventView = React.createClass({
 								})
 							)
 						))
-						.then(events => {
-							return Promise.all(events.map(event => {
-								return Promise.all(event.teams.map(teamId => {
-									return window.Server.team.get({schoolId: self.activeSchoolId, teamId: teamId});
-								}))
-								.then(teams => {
-									event.participants = teams;
-
-									return event;
-								});
-							}))
-						})
+						.then(events => self._includeTeamsToEvents(events))
 						.then(events => self.processRequestData(events, child.id));
 				});
 				return self.request;
 			}
+		});
+	},
+	/**
+	 * Method include teams to each event
+	 * @private
+	 */
+	_includeTeamsToEvents: function(events) {
+		const self = this;
+
+		return Promise.all(events.map(event => self._includeTeamsToEvent(event)));
+	},
+	/**
+	 * Method include teams to event model
+	 * @private
+	 */
+	_includeTeamsToEvent: function(event) {
+		const self = this;
+
+		return self._getTeamsForEvent(event)
+			.then(teams => {
+				event.participants = teams;
+
+				return event;
+			});
+	},
+	/**
+	 * Method return teams for event.
+	 * Each team has school and house models.
+	 * @param event
+	 * @returns {*}
+	 * @private
+	 */
+	_getTeamsForEvent: function(event) {
+		const self = this;
+
+		return window.Server.schoolEventTeams.get({schoolId: event.inviterSchoolId, eventId: event.id})
+			.then(teams => Promise.all(teams.map(team => self._includeModelsToTeam(team))));
+	},
+	/**
+	 * Method include school and house models to team model.
+	 * Method modify input team.
+	 * @param team
+	 * @returns {*}
+	 * @private
+	 */
+	_includeModelsToTeam: function(team) {
+		return window.Server.publicSchool.get({schoolId: team.schoolId}).then(school => {
+			team.school = school;
+
+			if(team.houseId) {
+				return window.Server.publicSchoolHouse.get({schoolId: team.schoolId, houseId: team.houseId}).then(house => {
+					team.house = house;
+
+					return team;
+				});
+			}
+			return team;
 		});
 	},
 	filterEvents:function(){
