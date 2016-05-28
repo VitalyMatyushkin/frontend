@@ -39,8 +39,8 @@ function apiSelector(domainName) {
         case parsedDomain.rootDomain === 'squard':
             apiDomains = {
                 // TODO COMMENT THIS LINE BEFORE COMMIT. ONLY FOR LOCAL WORK.
-                main:   `//localhost:3000`,
-                //main:   `//api2.stage.squadintouch.com`,
+                //main:   `//localhost:3000`,
+                main:   `//api2.stage.squadintouch.com`,
                 img:    '//img.stage.squadintouch.com'
             };
             break;
