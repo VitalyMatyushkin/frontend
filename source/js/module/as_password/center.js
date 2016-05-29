@@ -1,12 +1,9 @@
 /**
- * Created by wert on 16.01.16.
+ * Created by Anatoly on 29.05.2016.
  */
 const   React           = require('react'),
         RouterView      = require('module/core/router'),
-        LoginRoute2     = require('module/core/routes/login_route2'),
-        LogoutRoute     = require('module/core/routes/logout_route'),
-        RegisterRoute   = require('module/core/routes/register_route'),
-        SettingsRoute   = require('module/core/routes/settings_route');
+		Route			= require('module/core/route');
 
 const Center = React.createClass({
     mixins: [Morearty.Mixin],
@@ -19,13 +16,20 @@ const Center = React.createClass({
             <div className={mainClass}>
                 <div className="bPageWrap">
                     <RouterView routes={ binding.sub('routing') } binding={binding}>
-                        <RegisterRoute binding={binding.sub('form.register')}	/>
-                        <LoginRoute2 binding={binding.sub('userData')}	/>
-                        <LogoutRoute binding={binding.sub('userData')}	/>
-                        <SettingsRoute binding={binding.sub('userData')} />
+
+						<Route path="/reset"
+							   binding={binding.sub('reset')}
+							   component="module/as_password/forgot_password/reset"
+							   unauthorizedAccess={true}/>
+
+						<Route path="/reset-request"
+							   binding={binding.sub('reset-request')}
+							   component="module/as_password/forgot_password/reset_request"
+							   unauthorizedAccess={true}/>
+
                     </RouterView>
-				</div>
-			</div>
+            </div>
+                </div>
         );
     }
 

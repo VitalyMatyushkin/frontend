@@ -21,7 +21,7 @@ const FormField = React.createClass({
 
 		/* collectin all own props and adding some more additional component-specific */
 		const inputProps = Object.assign({}, self.props, {
-			name: 		self.props.children,
+			name: 		self.props.children || self.props.field,
 			service: 	self.props.service,
 			binding: 	binding
 		});

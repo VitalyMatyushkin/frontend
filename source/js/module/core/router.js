@@ -205,7 +205,7 @@ const RouterView = React.createClass({
 
 		// Dirty ad-hoc solution. Router update required (wrote by somebody, I don't understand really)
 		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
-			document.location = '#login';
+			document.location = '#404';
 		}
 
 		return siteComponent ? React.createElement(siteComponent.View, siteComponent.routeComponent.props) : null;

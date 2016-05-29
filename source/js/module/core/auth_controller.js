@@ -1,8 +1,8 @@
-var authСontroller;
+const domainHelper = require('module/helpers/domain_helper');
 
-authСontroller = {
+const authСontroller = {
 	nextPage: '',
-	_publicPages:['register', 'login'],
+	_publicPages:['register', 'login', 'reset-request', 'reset'],
 	initialize: function(options) {
 		var self = this;
 		if (!options || !options.binding) {
@@ -56,10 +56,8 @@ authСontroller = {
 				avoids users getting stuck if the current hash string is the same as the next one but are presented
 				the login view because they are not authenticated.
 			 */
-			let subdomains = document.location.host.split('.');
-			subdomains[0] = subdomains[0] !=='admin' ? 'login': subdomains[0];
-			const domain = subdomains.join(".");
-			window.location.href = `http://${domain}/#login`;
+			console.log('auth_controller: redirected to login');
+			window.location.href = domainHelper.getLoginUrl();
 		}
 	}
 };
