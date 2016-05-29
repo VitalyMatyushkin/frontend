@@ -2,7 +2,7 @@ const domainHelper = require('module/helpers/domain_helper');
 
 const authСontroller = {
 	nextPage: '',
-	_publicPages:['register', 'login', 'reset-request', ''],
+	_publicPages:['register', 'login', 'reset-request', 'reset'],
 	initialize: function(options) {
 		var self = this;
 		if (!options || !options.binding) {
