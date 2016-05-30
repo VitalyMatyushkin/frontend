@@ -12,16 +12,22 @@
 
 .bForm h3{
   margin-bottom: 24px;
+  margin-top: 30px;
 }
 
 .bForm input[type="text"],
 .bForm input[type="password"]{
-  width: 200px;
+  width: 110px;
+  height: auto;
+  border: none;
+  border-bottom: solid #ccc 1px;
+  background: transparent;
 }
-
+.bForm input:hover{
+  border-bottom: solid #959595 1px;
+}
 .eForm_fieldInput {
   display: inline-block;
-
   position: relative;
 }
 .eForm_fieldInput textarea{
@@ -38,8 +44,7 @@
   select{
     border: none;
     position: absolute;
-    margin: 2px;
-    height: 27px;
+    height: 20px;
     background-color: transparent;
   }
   input{
@@ -53,7 +58,7 @@
 }
 
 .eForm_field {
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 .eForm_field p{
   font-size: 12px;
@@ -62,7 +67,10 @@
 
 .eForm_fieldName {
   font-size: 16px;
-  color: $COLOR;
+  color: #aaaaaa;
+  display: inline-block;
+  min-width: 150px;
+  margin-right: 10px;
 }
 
 .eForm_savePanel{
@@ -79,7 +87,6 @@
 }
 
 .eForm_fieldValidText{
-  padding: 5px;
   display: none;
   position: absolute;
   right: 0;
@@ -89,10 +96,10 @@
 }
 .eForm_fieldSet{
   position: relative;
+  display: inline-block;
 }
-.eForm_fieldSet input:focus {
-  border: 1px solid #bfce88;
-  box-shadow: inset 1px 1px #6e7848;
+.eForm_fieldSet input:focus{
+  border-color:#378258;
 }
 
 .eForm_fieldSet.mValid{
@@ -116,7 +123,7 @@
     display: block;
   }
   input{
-    border: 1px solid $INVALID_COLOR;
+    border-bottom: 1px solid $INVALID_COLOR;
     color: $INVALID_COLOR;
   }
 }
@@ -127,7 +134,7 @@
 
 .eForm_fieldColumn{
   display: inline-block;
-  margin-right: 60px;
+  margin: 0 25px;
   vertical-align: top;
 }
 
@@ -153,24 +160,24 @@
 }
 .bSettingEmailVerify{
   display: inline-block;
-  position:absolute;
-  left: 260px;
-  bottom: 199px;
   width: 100px;
   cursor: pointer;
+  margin: 0 0 10px 160px;
 }
 .bSettingPhoneVerify{
   display: inline-block;
-  position:absolute;
-  left: 260px;
-  bottom: 130px;
   width: 100px;
   cursor: pointer;
+  margin: 0 0 10px 160px;
 }
 .bSettingEmailVerify:hover, .bSettingPhoneVerify:hover{
   color: green;
 }
-
+.bVerificationText {
+  height: 35px;
+  width: 100%;
+  display: inline-block;
+}
 .eHouseForm .eForm_field{
   display: flex;
   align-items: center;
@@ -242,20 +249,24 @@
   margin-right: 50px;
 }
 .eForm_blazonUpload{
-  width: 200px;
-  height: 200px;
+  max-width: 170px;
+  max-height: 170px;
   position: relative;
+  margin-left: -160px;
+  margin-bottom: 65px;
 }
 .eForm_blazonPreview{
   width: 100%;
   height:100%;
 }
 .eForm_blazonPreview img{
-  width: 200px;
-  height:200px;
+  width: 170px;
+  height:170px;
+  border-radius: 5px;
+  border: solid 1px #959595;
 }
 .eForm_fileInput{
-  margin-top: 10px;
+  margin-bottom: 10px;
   position: relative;
 }
 .inputFile{
@@ -344,5 +355,17 @@
   margin: 0 0 5px 12px;
 }
 .eForm_confirmField {
-  max-width: 200px;
+  margin-left: -160px;
+  background: #eaeaea;
+  max-width: 340px;
+}
+.eForm_confirmField .eForm_fieldInput {
+  margin-top: 10px;
+}
+.eForm_confirmField .eForm_fieldColumn {
+  margin: 0 0 10px;;
+}
+.bLoginForm input[type="text"],
+.bLoginForm input[type="password"] {
+  width: 200px;
 }

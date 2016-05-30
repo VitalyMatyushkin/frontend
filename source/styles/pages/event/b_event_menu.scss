@@ -1,0 +1,16 @@
+.bEventMenu {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 375px;
+  margin: 20px 0 10px 50px;
+  border-bottom: $BORDER;
+}
+.bEventMenu_item {
+  margin: 0 15px;
+  padding: 0 5px;
+  border-bottom: solid 3px transparent;
+  cursor: pointer;
+}
+.bEventMenu_item:hover {
+  border-bottom: solid 3px #c2c2c2;
+}

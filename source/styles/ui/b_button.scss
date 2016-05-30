@@ -1,12 +1,13 @@
 .bButton{
   background: $MAIN_COLOR;
   font-size: 16px;
-  color: $COLOR;
-  padding: 5px 15px;
+  color: #fff;
+  padding: 10px 30px;
   display: inline-block;
   user-select: none;
   cursor: pointer;
   position: relative;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   &.mRevert{
     background-color: #759500;
   }
@@ -38,8 +39,8 @@
   width: 100%;
   height: 10px;
   box-sizing: border-box;
-  box-shadow: 0 2px 0 0 darken($MAIN_COLOR, 10%);
-  border-radius: 4px;
+  //box-shadow: 0 2px 0 0 darken($MAIN_COLOR, 10%);
+  //border-radius: 4px;
 }
 
 .bButton:active,

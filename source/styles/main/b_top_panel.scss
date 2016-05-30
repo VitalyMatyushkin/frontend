@@ -2,7 +2,7 @@
 $HEADER_HEIGHT: 60px;
 
 .bTopPanel {
-  height: $HEADER_HEIGHT;
+  min-height: $HEADER_HEIGHT;
   background: $MAIN_COLOR;
   color: $DarkGreen;
   font-size: 14px;

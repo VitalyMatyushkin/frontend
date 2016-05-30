@@ -26,7 +26,7 @@ const LoginUserForm = React.createClass({
 				binding = self.getDefaultBinding();
 
 		return (
-			<div>
+			<div className="bLoginForm">
 			<Form name={self.tmpFormName} service={Auth.login} binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				<FormField type="text" placeholder="E-mail" htmlId="login_input" field="email" validation="email required" />
 				<FormField type="text" textType="password" placeholder="Password" htmlId="password_input" field="password" validation="required" binding={binding}/>

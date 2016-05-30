@@ -1,0 +1,19 @@
+.bRoundBtn {
+  display: inline-block;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  text-align: center;
+  line-height: 45px;
+  background: $MAIN_COLOR;
+  color: #fff;
+  position: absolute;
+  top: -16px;
+  right: 10px;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+  font-size: 28px;
+  font-weight: bold;
+}
