@@ -69,7 +69,6 @@ const StudentEditPage = React.createClass({
 				globalBinding 	= self.getMoreartyContext().getBinding(),
 				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId');
 
-		data.birthday = data.birthday.substr(0, data.birthday.indexOf('T'));    // TODO: fix that hack
 		self.saveNextOfKin(data);
 		window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: self.studentId}, data).then( updResult => {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
