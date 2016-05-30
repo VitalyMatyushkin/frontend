@@ -1,5 +1,6 @@
 const	classNames		= require('classnames'),
 		If				= require('module/ui/if/if'),
+		Tabs			= require('module/ui/tabs/tabs'),
 		EventHeader		= require('./view/event_header'),
 		EventRivals		= require('./view/event_rivals'),
 		EventButtons	= require('./view/event_buttons'),
@@ -32,7 +33,8 @@ const EventView = React.createClass({
 			},
 			sync: false,
 			mode: 'general',
-			showingComment: false
+			showingComment: false,
+			activeTab:'teams'
 		});
 	},
 	componentWillMount: function () {
@@ -42,6 +44,7 @@ const EventView = React.createClass({
 				eventId		= rootBinding.get('routing.pathParameters.0');
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+		self.initTabs();
 
 		// TODO should decompose to functions
 		// TODO Houston, we need to refactor, urgently!
@@ -110,7 +113,6 @@ const EventView = React.createClass({
 
 		let	activeSchool,
 			event,
-			invites,
 			teams,
 			sport;
 
@@ -173,37 +175,29 @@ const EventView = React.createClass({
 		.then(_sport => {
 			sport = _sport;
 
-			// Get invite
+			// Get schools for inter-schools event
 			if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-				return window.Server.schoolEventInvite.get({
-					schoolId:	self.activeSchoolId,
-					eventId:	event.id
-				})
-				.then(_invite => {
-					invites = _invite;
+				return window.Server.publicSchool.get(
+					// it all depends on whether the school is inviting active or not
+					event.inviterSchoolId !== self.activeSchoolId ? event.inviterSchoolId : event.invitedSchoolId
+				)
+				.then(otherSchool => {
+					return window.Server.publicSchoolForms.get(otherSchool.id).then(forms => {
+						otherSchool.forms = forms;
 
-					return window.Server.publicSchool.get(
-						// it all depends on whether the school is inviting active or not
-						invites.inviterSchoolId !== self.activeSchoolId ? invites.inviterSchoolId : invites.invitedSchoolId
-					)
-					.then(otherSchool => {
-						return window.Server.publicSchoolForms.get(otherSchool.id).then(forms => {
-							otherSchool.forms = forms;
-
-							return otherSchool;
-						});
-					})
-					.then(otherSchool => {
-						// it all depends on whether the school is inviting active or not
-						invites.inviterSchool = invites.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
-						invites.invitedSchool = invites.invitedSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
-
-						return Promise.resolve(invites);
+						return otherSchool;
 					});
+				})
+				.then(otherSchool => {
+					// it all depends on whether the school is inviting active or not
+					event.inviterSchool = event.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+					event.invitedSchool = event.invitedSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
+
+					// yes, i'm always right.
+					return true;
 				});
 			} else {
-				// TODO Hmmm...really?
-				return Promise.resolve(sport);
+				return sport;
 			}
 		})
 		.then(_ => {
@@ -236,7 +230,7 @@ const EventView = React.createClass({
 
 					// inject school to team
 					if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-						team.school = team.schoolId === invites.inviterSchoolId ? invites.inviterSchool : invites.invitedSchool;
+						team.school = team.schoolId === event.inviterSchoolId ? event.inviterSchool : event.invitedSchool;
 					} else {
 						team.school = activeSchool;
 					}
@@ -279,7 +273,6 @@ const EventView = React.createClass({
 				.set('sport',				Immutable.fromJS(sport))
 				.set('model',				Immutable.fromJS(event))
 				.set('model.sportModel',	Immutable.fromJS(sport))
-				.set('invites',				Immutable.fromJS(invites))
 				.set('participants',		Immutable.fromJS(teams))
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))
@@ -294,6 +287,35 @@ const EventView = React.createClass({
 		rootBinding.addListener('routing.pathParameters', function () {
 			binding.set('mode', Immutable.fromJS(rootBinding.get('routing.pathParameters.1') || null))
 		});
+	},
+
+	/**Init model for Tabs component*/
+	initTabs:function(){
+		this.tabListModel = [
+			{
+				value:'teams',
+				text:'Teams',
+				isActive:true
+			},
+			{
+				value:'details',
+				text:'Details',
+				isActive:false
+			},
+			{
+				value:'gallery',
+				text:'Gallery',
+				isActive:false
+			},
+			{
+				value:'comments',
+				text:'Comments',
+				isActive:false
+			}
+		];
+	},
+	changeActiveTab:function(value){
+		this.getDefaultBinding().set('activeTab', value);
 	},
 	/**
 	 * Initialize data for menu items
@@ -341,10 +363,12 @@ const EventView = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			showingComment = binding.get('showingComment'),
+			activeTab = binding.get('activeTab'),
 			commentTextClasses = classNames({
 				'eEvent_commentText': true,
 				mHide: !showingComment
-			});  self.onChange();
+			});
+		self.onChange();
 		return <div>
 			<div className="bEventContainer">
 				<If condition={binding.get('sync')=== true}>
@@ -358,33 +382,41 @@ const EventView = React.createClass({
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
 						</div>
-						<EventMenu />
-						<EventTeams binding={binding} />
-						<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
-							<div className="eEvent_shadowCommentText">{self.commentContent}</div>
+						<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+						<If condition={activeTab === 'teams'} >
+							<EventTeams binding={binding} />
 						</If>
-						<EventGallery binding={binding} />
-						<div className="eEvent_commentBox">
-							<If condition={(binding.get('mode') === 'closing') || false}>
-								<Morearty.DOM.textarea
-										placeholder="Enter your first comment"
-										className="eEvent_comment"
-										onChange={Morearty.Callback.set(binding, 'model.comment')}
-										value={binding.get('model.comment')} id="commentTextArea"
-										/>
+						<If condition={activeTab === 'details'} >
+							<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
+								<div className="eEvent_shadowCommentText">{self.commentContent}</div>
 							</If>
-							<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
-								<div className="bMainComment">
-									<span className="bMainComment_pic">
-										<img src={'http://placehold.it/400x400'}/>
-									</span>
-									<div>{binding.get('model.result.comment')}</div>
-								</div>
-							</If>
-						<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
-							<Comments binding={binding}/>
 						</If>
-					</div>
+						<If condition={activeTab === 'gallery'} >
+							<EventGallery binding={binding} />
+						</If>
+						<If condition={activeTab === 'comments'} >
+							<div className="eEvent_commentBox">
+								<If condition={(binding.get('mode') === 'closing') || false}>
+									<Morearty.DOM.textarea
+											placeholder="Enter your first comment"
+											className="eEvent_comment"
+											onChange={Morearty.Callback.set(binding, 'model.comment')}
+											value={binding.get('model.comment')} id="commentTextArea"
+											/>
+								</If>
+								<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
+									<div className="bMainComment">
+										<span className="bMainComment_pic">
+											<img src={'http://placehold.it/400x400'}/>
+										</span>
+										<div>{binding.get('model.result.comment')}</div>
+									</div>
+								</If>
+								<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
+									<Comments binding={binding}/>
+								</If>
+							</div>
+						</If>
 						<If condition={(binding.get('mode') !== 'general')}>
 						<EventButtons binding={binding} />
 						</If>

@@ -35,7 +35,7 @@ const EditUser = React.createClass({
             binding = self.getDefaultBinding();
         return (
             <div className="bPopupEdit_container">
-                <div className="bPopupEdit_row eTab">
+                <div className="bPopupEdit_row mTab">
                     <span className={binding.get('tabDetail')?'bPopupEdit_tab bPopupEdit_active':'bPopupEdit_tab'} onClick={self._toggleTabMenu.bind(null,'detailTab')}>Detail</span>
                     <span className={binding.get('tabRole')?'bPopupEdit_tab bPopupEdit_active':'bPopupEdit_tab'} onClick={self._toggleTabMenu.bind(null,'roleTab')}>Permissions</span>
                 </div>

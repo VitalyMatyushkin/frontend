@@ -3,7 +3,7 @@ const 	React 				= require('react'),
 		galleryServices     = require('module/as_manager/pages/event/gallery/eventGalleryServices'),
 		Album				= require('module/ui/gallery/album/album_item');
 
-const EventHeader = React.createClass({
+const EventGallery = React.createClass({
 	mixins: [Morearty.Mixin],
     componentWillMount: function () {
 		var self = this,
@@ -59,4 +59,4 @@ const EventHeader = React.createClass({
 });
 
 
-module.exports = EventHeader;
+module.exports = EventGallery;

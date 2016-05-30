@@ -1,6 +1,4 @@
-const   ChooseTypeForm      = require('module/ui/register/user/choose_type'),
-        RegisterForm        = require('module/ui/register/user/register_form'),
-        RegisterDone        = require('module/ui/register/user/register_done'),
+const   RegisterDone        = require('module/ui/register/user/register_done'),
         AccountForm         = require('module/ui/register/user/account_step'),
         PermissionsList     = require('module/ui/register/user/permissions_step'),
         VerificationStep    = require('module/ui/register/user/verification_step'),
@@ -64,7 +62,24 @@ const RegisterUserPage = React.createClass({
                 mainTitle: 'Registration almost done'
             }
         ];
+
+		self.initStep();
     },
+	initStep:function(){
+		const   self            = this,
+			binding         = self.getDefaultBinding(),
+			rootBinding		= self.getMoreartyContext().getBinding(),
+			verified		= rootBinding.toJS('userData.authorizationInfo.verified'),
+			isAuthorized	= !!rootBinding.get('userData.authorizationInfo.userId'),
+			isVerified		= verified && verified.email && verified.phone;
+
+		if(isAuthorized)
+			if(isVerified)
+				binding.set('registerStep', 'permissions');
+			else
+				binding.set('registerStep', 'verification');
+
+	},
     setStepFunction: function (step, data) {
         const   self            = this,
                 binding         = self.getDefaultBinding(),
@@ -129,7 +144,7 @@ const RegisterUserPage = React.createClass({
                     bRegistrationTitle: true,
                     mActive: currentStep === step.name
             });
-                return <div className={stepClasses}>{step.mainTitle}</div>;
+                return <div key={step.name+'1'} className={stepClasses}>{step.mainTitle}</div>;
             })}
         </div>
     },
@@ -160,7 +175,7 @@ const RegisterUserPage = React.createClass({
                     mActive: currentStep === step.name
                 });
 
-                return <span className={stepClasses}>{step.title}</span>;
+                return <span key={step.name+'2'} className={stepClasses}>{step.title}</span>;
             })}
             </div>
             <div className ="bProgressStrip">
@@ -171,7 +186,7 @@ const RegisterUserPage = React.createClass({
                     eStepDescription: true,
                     mActive: currentStep === step.name
                 });
-                return <div className={descriptionClasses}>{step.description}</div>;
+                return <div key={step.name+'3'} className={descriptionClasses}>{step.description}</div>;
             })}
         </div>;
     },
@@ -194,9 +209,8 @@ const RegisterUserPage = React.createClass({
                 currentView = <VerificationStep
                     onSuccess={self.setStepFunction.bind(null, 'permissions')}
                     binding={{
-                        account: binding.sub('account'),
-                        formFields: binding.sub('formFields'),
-                        default: binding.sub('permissionsFields')
+						default: binding.sub('verification'),
+                        account: binding.sub('account')
 				    }}
                 />;
                 break;

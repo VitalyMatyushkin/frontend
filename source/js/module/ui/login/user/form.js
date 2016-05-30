@@ -13,6 +13,12 @@ const LoginUserForm = React.createClass({
 	componentWillMount:function(){
 		const self = this;
 		self.tmpFormName = self.props.customName === 'default'? self.props.customName = "Sign in or <a class='mHover' href='/#register'>join us for free</a>" : self.props.customName;
+
+		let subdomains = document.location.host.split('.');
+		subdomains[0] = "password";
+		const domain = subdomains.join(".");
+
+		self.forgotPassUrl = `http://${domain}/#reset-request`;
 	},
 
 	render: function() {
@@ -20,10 +26,13 @@ const LoginUserForm = React.createClass({
 				binding = self.getDefaultBinding();
 
 		return (
+			<div>
 			<Form name={self.tmpFormName} service={Auth.login} binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
 				<FormField type="text" placeholder="E-mail" htmlId="login_input" field="email" validation="email required" />
 				<FormField type="text" textType="password" placeholder="Password" htmlId="password_input" field="password" validation="required" binding={binding}/>
 			</Form>
+			<a href={self.forgotPassUrl} className="eForgotPass">Forgot password?</a>
+			</div>
 		)
 	}
 });

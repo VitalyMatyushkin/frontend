@@ -44,6 +44,7 @@ const GrantRole = React.createClass({
                 case 'parent':
                     body = {
                         preset:     model.preset,
+                        schoolId:   model.schoolId,
                         studentId:  model.studentId
                     };
                     break;

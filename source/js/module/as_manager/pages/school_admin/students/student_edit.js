@@ -27,6 +27,7 @@ const StudentEditPage = React.createClass({
 					// TODO: populate house and form details
 					studentUser.form 	= formAndHouseArray[0];
 					studentUser.house 	= formAndHouseArray[1];
+					self.initNextOfKin(studentUser);
 					self.isMounted() && binding.set(Immutable.fromJS(studentUser));
 					return studentUser;
 				});
@@ -39,13 +40,37 @@ const StudentEditPage = React.createClass({
 			self.studentId = studentId;
 		}
 	},
+	initNextOfKin:function(student){
+		const nok = student.nextOfKin;
 
+		if(nok && !nok.length){
+			nok.push({
+				relationship:   '',
+				firstName:      '',
+				lastName:       '',
+				phone:          '',
+				email:          ''
+			});
+		}
+
+		for(let key in nok[0]){
+			student['nok_'+key] = nok[0][key];
+		}
+	},
+	saveNextOfKin:function(student){
+		const nok = student.nextOfKin;
+
+		for(let key in nok[0]){
+			nok[0][key] = student['nok_'+key];
+		}
+	},
 	submitEdit: function(data) {
 		const 	self = this,
 				globalBinding 	= self.getMoreartyContext().getBinding(),
 				activeSchoolId 	= globalBinding.get('userRules.activeSchoolId');
 
 		data.birthday = data.birthday.substr(0, data.birthday.indexOf('T'));    // TODO: fix that hack
+		self.saveNextOfKin(data);
 		window.Server.schoolStudent.put({schoolId: activeSchoolId, studentId: self.studentId}, data).then( updResult => {
 			self.isMounted() && (document.location.hash = 'school_admin/students');
 			return;

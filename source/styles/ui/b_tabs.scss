@@ -1,0 +1,29 @@
+
+$TabColor:#959595;
+$TabActiveColor:#749500;
+
+
+.bTabs{
+  margin: 15px;
+  border-bottom: 1px solid $TabColor;
+  display: inline-block;
+  padding: 4px 0;
+
+  .eTab{
+    margin-right: 30px;
+    cursor: pointer;
+
+    &:last-of-type{
+      margin-right: 0;
+    }
+
+    &:hover{
+      border-bottom: 3px solid $TabColor;
+    }
+
+    &.mActive{
+      color:$TabActiveColor;
+      border-bottom: 3px solid $TabActiveColor;
+    }
+  }
+}
