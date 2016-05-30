@@ -365,3 +365,7 @@
 .eForm_confirmField .eForm_fieldColumn {
   margin: 0 0 10px;;
 }
+.bLoginForm input[type="text"],
+.bLoginForm input[type="password"] {
+  width: 200px;
+}

@@ -213,8 +213,8 @@ const  RoleList = React.createClass({
 					<div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
 						<div onClick={self.onToggle}>
 							{self.renderActiveRole()}
-							<div className="eArrow">
-								<SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
+							<div className="eArrow eCombobox_button">
+
 							</div>
 						</div>
 						<div className="eRolesList">

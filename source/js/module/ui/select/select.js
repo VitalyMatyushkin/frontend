@@ -103,7 +103,7 @@ const Select = React.createClass({
 		return (
 			<div className="bCombobox">
 				<input value={binding.get('selectedValue')} onClick={self.toggleList} type="text" readOnly />
-				<span onClick={self.toggleList} className="eCombobox_button">▾</span>
+				<span onClick={self.toggleList} className="eCombobox_button"></span>
 				<div className="eCombobox_list" style={listStyle}>
 					{dropDownNodes}
 				</div>
