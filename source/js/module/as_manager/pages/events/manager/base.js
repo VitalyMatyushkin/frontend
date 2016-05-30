@@ -92,7 +92,7 @@ const EventManagerBase = React.createClass({
                 limit: 10
             }
         };
-        return window.Server.getAllSchools.get(filter);
+        return window.Server.publicSchools.get(filter);
     },
     changeCompleteType: function (event) {
         const   self        = this,

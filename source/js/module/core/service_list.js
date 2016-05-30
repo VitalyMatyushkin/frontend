@@ -36,7 +36,8 @@ const serviceList = {
         serviceList.publicSchool = new Service('/public/schools/{schoolId}', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
 
-        // students
+
+		// students
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
         serviceList.schoolStudentsCount = new Service('/i/schools/{schoolId}/students/count', binding);
         serviceList.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
