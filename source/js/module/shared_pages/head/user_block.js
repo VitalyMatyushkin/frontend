@@ -30,11 +30,10 @@ const UserBlock = React.createClass({
 				binding			= self.getDefaultBinding(),
 				userInfoBinding	= binding.sub('userInfo');
 
-		const	userId		= binding.get('authorizationInfo.userId'),
-				schoolId	= MoreartyHelper.getActiveSchoolId(self);
+		const	userId		= binding.get('authorizationInfo.userId');
 
-		if(userId && schoolId) {
-			window.Server.user.get({schoolId: schoolId, userId: userId}).then(data => {
+		if(userId) {
+			window.Server.profile.get().then(data => {
 				userInfoBinding.set(Immutable.fromJS(data));
 			});
 		}
