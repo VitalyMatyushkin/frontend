@@ -41,7 +41,7 @@ function apiSelector(domainName) {
                 // TODO COMMENT THIS LINE BEFORE COMMIT. ONLY FOR LOCAL WORK.
                 //main:   `//localhost:3000`,
                 main:   `//api2.stage.squadintouch.com`,
-                img:    '//img.sta1ge.squadintouch.com'
+                img:    '//img.stage.squadintouch.com'
             };
             break;
         default:
