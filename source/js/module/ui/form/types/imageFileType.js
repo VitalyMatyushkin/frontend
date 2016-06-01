@@ -5,6 +5,7 @@
 
 const   TypeMixin   = require('module/ui/form/types/type_mixin'),
         className   = require('classnames'),
+        SVG         = require('module/ui/svg'),
         Immutable   = require('immutable'),
         React       = require('react');
 
@@ -61,7 +62,7 @@ const ImageFileTypeUpload = React.createClass({
                 </div>
                 <div className="eForm_fileInput">
                     <input className="inputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
-                    <label className="bRoundBtn" htmlFor="file">{self.props.labelText || 'Default'}</label>
+                    <label className="bRoundBtn" htmlFor="file"><SVG icon="icon_add_photo" /></label>
                 </div>
             </div>
         );

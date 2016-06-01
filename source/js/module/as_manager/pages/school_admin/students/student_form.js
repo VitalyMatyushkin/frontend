@@ -66,21 +66,26 @@ const StudentForm = React.createClass({
 			binding = self.getDefaultBinding();
 
 		return (
-			<div className="editStudentForm">
-				<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} >
+			<div className="eStudentForm">
+				<Form onSubmit={self.props.onFormSubmit} binding={binding} >
 					<FormColumn type="column">
+						<h3>SUMMARY</h3>
+						<FormField labelText="+" type="imageFile"/>
 						<FormField type="text" field="firstName" validation="required">Name</FormField>
 						<FormField type="text" field="lastName" validation="required">Surname</FormField>
 						<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
 						<FormField type="date" field="birthday" validation="date">Birthday</FormField>
 						<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId" defaultItem={self.props.initialForm} validation="required">Form</FormField>
 						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" defaultItem={self.props.initialHouse} validation="required">House</FormField>
+						<div className="eForm_field">
+							<label className="eForm_fieldName">Injured/Unwell</label>
+							<input className="eSwitch" type="checkbox"></input>
+							<label></label>
+						</div>
+						<FormField type="textarea" placeholder="Medical Information" field="medicalInfo"></FormField>
 					</FormColumn>
 					<FormColumn type="column">
-						<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
-					</FormColumn>
-					<FormColumn type="column">
-						<h3>Next Of Kin</h3>
+						<h3>NEXT OF KIN</h3>
 						<FormField type="text" field="nok_relationship" validation="required" >Relationship</FormField>
 						<FormField type="text" field="nok_firstName" validation="required" >Name</FormField>
 						<FormField type="text" field="nok_lastName" validation="required" >Surname</FormField>
