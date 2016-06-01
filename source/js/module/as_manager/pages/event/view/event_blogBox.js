@@ -1,15 +1,17 @@
 /**
  * Created by bridark on 14/07/15.
  */
-const React = require('react');
+const 	React 	= require('react'),
+		If		= require('module/ui/if/if');
 
 const CommentBox = React.createClass({
-	mixins:[Morearty.Mixin],
 	propTypes:{
 		blogData: React.PropTypes.array,
-		currentUserHasChild: React.PropTypes.bool
+		onReply: React.PropTypes.func.isRequired
 	},
 	_renderBlogComments: function(blogData){
+		const self = this;
+
 		return blogData && blogData.map( blog => {
 			return (
 				<div key={blog.id} className="bBlog_box">
@@ -22,11 +24,20 @@ const CommentBox = React.createClass({
 						<div className="bBlog_messageBox">
 							<span className="bBlog_username">
 								{`${blog.author.lastName} ${blog.author.firstName}`}
-								<span className="bBlog_timestamp"></span>
 							</span>
+							<If condition={!!(blog && blog.replyTo)}>
+								<span className="bBlog_username_reply">
+									{`${blog.replyTo && blog.replyTo.lastName} ${blog.replyTo && blog.replyTo.firstName}`}
+								</span>
+							</If>
 							<span className="bBlog_message">
 								{blog.text}
 							</span>
+							<div>
+								<a className="eLike">Like</a>
+								<a className="eReply" onClick={self.props.onReply.bind(null, blog)}>Reply</a>
+								<span className="eCommentDate">{blog.createdAt}</span>
+							</div>
 						</div>
 					</div>
 				</div>
