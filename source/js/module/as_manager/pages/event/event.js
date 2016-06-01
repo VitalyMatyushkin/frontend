@@ -153,13 +153,13 @@ const EventView = React.createClass({
 		.then(_school => {
 			activeSchool = _school;
 
-			// Get event
+			// Get forms
 			return window.Server.schoolForms.get(self.activeSchoolId);
 		})
 		.then(forms => {
 			activeSchool.forms = forms;
 
-			// Get forms
+			// Get event
 			return window.Server.schoolEvent.get({
 				schoolId: self.activeSchoolId,
 				eventId: eventId
@@ -371,7 +371,7 @@ const EventView = React.createClass({
 							<div className="bEventButtons_action">
 								<EventButtons binding={binding} />
 							</div>
-							</If>
+						</If>
 						<div className="bEventHeader_wrap">
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>

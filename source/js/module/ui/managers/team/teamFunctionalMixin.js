@@ -52,14 +52,14 @@ const TeamFunctionalMixin = {
 	 */
 	_deselectPlayer: function() {
 		const	self	= this,
-			binding	= self.getDefaultBinding();
+				binding	= self.getDefaultBinding();
 
 		binding.set('selectedPlayer', Immutable.fromJS(undefined));
 	},
 	_onSelectPosition: function(playerId, e) {
 		const	self	= this,
-			players	= self.getBinding('players').toJS(),
-			index	= Lazy(players).indexOf(Lazy(players).findWhere({id:playerId}));
+				players	= self.getBinding('players').toJS(),
+				index	= Lazy(players).indexOf(Lazy(players).findWhere({id:playerId}));
 
 		if(self.TEXT.POSITIONS.OPTIONS.NOT_SELECTED == e.target.value) {
 			players[index].position = undefined;
@@ -71,8 +71,8 @@ const TeamFunctionalMixin = {
 	},
 	_onCheckSub: function(playerId, e) {
 		const	self	= this,
-			players	= self.getBinding('players').toJS(),
-			index	= Lazy(players).indexOf(Lazy(players).findWhere({id:playerId}));
+				players	= self.getBinding('players').toJS(),
+				index	= Lazy(players).indexOf(Lazy(players).findWhere({id:playerId}));
 
 		players[index].sub = e.target.checked;
 
@@ -80,9 +80,9 @@ const TeamFunctionalMixin = {
 	},
 	_onRemovePlayer: function (playerId) {
 		const	self			= this,
-			players			= self.getBinding('players').toJS(),
-			findedPlayer	= Lazy(players).findWhere({id:playerId}),
-			index			= Lazy(players).indexOf(findedPlayer);
+				players			= self.getBinding('players').toJS(),
+				findedPlayer	= Lazy(players).findWhere({id:playerId}),
+				index			= Lazy(players).indexOf(findedPlayer);
 
 		players.splice(index, 1);
 
