@@ -39,7 +39,6 @@ const GeneralSettingsPage = React.createClass({
 					<FormField type="text" field="email" validation="required email">Email</FormField>
 					<span className="bSettingPhoneVerify">{binding.toJS('verified.phone') !== undefined && binding.toJS('verified.phone') === true ? <span className="bPopup_verified">v</span> : <span>verify phone</span>}</span>
 					<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
-					<FormField type="confirmText" textType="password" field="password" validation="password">Password</FormField>
 				</FormColumn>
 				<FormColumn type="column">
 					<FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
