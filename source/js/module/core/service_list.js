@@ -18,6 +18,7 @@ const serviceList = {
         serviceList.profilePermission = new Service('/i/permissions/{permissionId}', binding);
         serviceList.profileRequests = new Service('/i/permissions/requests', binding);
         serviceList.profileRequest = new Service('/i/permissions/requests/{prId}', binding);
+        serviceList.changePassword = new Service('/i/profile/password', binding);
 
         // users
         serviceList.confirmUser = new Service('/i/confirm/email',binding);
