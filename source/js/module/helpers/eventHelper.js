@@ -9,6 +9,10 @@ const EventHelper = {
 		'INTERNAL_HOUSES':	'houses',
 		'INTERNAL_TEAMS':	'internal'
 	},
+	EVENT_STATUS: {
+		FINISHED:		'FINISHED',
+		NOT_FINISHED:	'NOT_FINISHED'
+	},
 	/**
 	 * Create event summary object by event result object.
 	 * Method calculate scores for each team in event and return hashMap [firstTeamId:score, secondTeamId]
@@ -16,15 +20,48 @@ const EventHelper = {
 	getTeamsSummaryByEventResult: function(eventResult) {
 		const eventSummary = {};
 
-		for(let userId in eventResult.points) {
-			if(eventSummary[eventResult.points[userId].teamId]) {
-				eventSummary[eventResult.points[userId].teamId] += eventResult.points[userId].score;
-			} else {
-				eventSummary[eventResult.points[userId].teamId] = eventResult.points[userId].score;
+		if(eventResult && eventResult.points) {
+			for(let userId in eventResult.points) {
+				if(eventSummary[eventResult.points[userId].teamId]) {
+					eventSummary[eventResult.points[userId].teamId] += eventResult.points[userId].score;
+				} else {
+					eventSummary[eventResult.points[userId].teamId] = eventResult.points[userId].score;
+				}
 			}
 		}
 
 		return eventSummary;
+	},
+	/**
+	 * Method return ID of winner team from eventResult
+	 */
+	getWinnerId: function(eventResult) {
+		// Get event summary, it's hasMap teamId:score
+		// Need convert it to array[{teamId,score}]
+		const eventSummary = this.getTeamsSummaryByEventResult(eventResult);
+
+		// Convert
+		const arrayEventSummary = [];
+		for(let teamId in eventSummary) {
+			arrayEventSummary.push({
+				teamId:	teamId,
+				score:	eventSummary[teamId]
+			});
+		}
+
+		// if teams haven't scores, it's - 0:0, or in the event of a dead heat.
+		if(
+			arrayEventSummary.length === 0 ||
+			arrayEventSummary[0].score === (arrayEventSummary[1] && arrayEventSummary[1].score)
+		) {
+			return undefined;
+		} else if(arrayEventSummary.length === 1) {// if only team has scores, it's - teamOneSc
+			return arrayEventSummary[0].teamId;
+		} else {
+			return arrayEventSummary[0].score > arrayEventSummary[1].score ?
+				arrayEventSummary[0].teamId :
+				arrayEventSummary[1].teamId;
+		}
 	}
 };
 

@@ -11,9 +11,25 @@ const StudentAddPage = React.createClass({
 
 		self.activeSchoolId = activeSchoolId;
 	},
-    
+	saveNextOfKin:function(student){
+		const nok = [];
+
+		nok.push({
+			relationship:   '',
+			firstName:      '',
+			lastName:       '',
+			phone:          '',
+			email:          ''
+		});
+
+		for(let key in nok[0]){
+			nok[0][key] = student['nok_'+key];
+		}
+		student.nextOfKin = nok;
+	},
+
     submitAdd: function(data){
-        data.birthday = data.birthday.substr(0, data.birthday.indexOf('T'));    // TODO: hack
+		this.saveNextOfKin(data);
         return window.Server.schoolStudents.post(this.activeSchoolId, data).then(() => {
             document.location.hash = 'school_admin/students';   // TODO: holly cow!
         })

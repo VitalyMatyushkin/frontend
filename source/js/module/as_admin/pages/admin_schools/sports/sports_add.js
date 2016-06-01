@@ -3,7 +3,7 @@ const SportForm 	= require('module/as_admin/pages/admin_schools/sports/sports_fo
       React         = require('react'),
       Immutable 	= require('immutable');
 
-let SportsAdd = React.createClass({
+const SportsAdd = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
         var self = this,

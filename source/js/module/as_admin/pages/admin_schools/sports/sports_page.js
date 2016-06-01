@@ -3,7 +3,7 @@ const   RouterView  = require('module/core/router'),
         Route       = require('module/core/route'),
         Immutable	= require('immutable');
 
-let SportsPage = React.createClass({
+const SportsPage = React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultState: function () {
         return Immutable.fromJS({

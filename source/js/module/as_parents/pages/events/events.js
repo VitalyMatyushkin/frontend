@@ -1,11 +1,13 @@
-const   RouterView  = require('module/core/router'),
-		Route       = require('module/core/route'),
-		React       = require('react'),
-		SubMenu     = require('module/ui/menu/sub_menu'),
-		Immutable   = require('immutable');
+const   RouterView  	= require('module/core/router'),
+		Route       	= require('module/core/route'),
+		React       	= require('react'),
+		SubMenu     	= require('module/ui/menu/sub_menu'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Immutable   	= require('immutable');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
+	activeSchoolId: '',
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE
 	},
@@ -32,6 +34,8 @@ const EventView = React.createClass({
 			userId = rootBinding.get('userData.authorizationInfo.userId'),
 			binding = self.getDefaultBinding(),
 			sportsBinding = binding.sub('sports');
+
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		self.serviceChildrenFilter(userId);
 		self.setActiveChild();
@@ -91,24 +95,84 @@ const EventView = React.createClass({
 		}
 		binding.set('itemsBinding', Immutable.fromJS(menuItems));
 	},
-	loadEvents:function(userId){
+	loadEvents:function(){
 		const self = this;
 
-		return window.Server.userChildren.get({
-			id: userId
-		}).then(function (userChildren) {
+		return window.Server.userChildren.get().then(userChildren => {
 			//Set the requirement for an all children view here
 			if (userChildren && userChildren.length > 0) {
-				self.request = userChildren.map(function(child){
-					window.Server.studentEvents.get({id:child.id, filter:{include:'sport'}})
-						.then(function(events){
-							self.processRequestData(events,child.id);
-						});
+				self.request = userChildren.map(child => {
+					window.Server.userChildEvents.get({childId:child.id}).then(events => Promise.all(events.map(event =>
+							window.Server.sport.get({sportId:event.sportId}).then(sport => {
+									event.sport = sport;
+
+									return event;
+								})
+							)
+						))
+						.then(events => self._includeTeamsToEvents(events))
+						.then(events => self.processRequestData(events, child.id));
 				});
 				return self.request;
 			}
 		});
+	},
+	/**
+	 * Method include teams to each event
+	 * @private
+	 */
+	_includeTeamsToEvents: function(events) {
+		const self = this;
 
+		return Promise.all(events.map(event => self._includeTeamsToEvent(event)));
+	},
+	/**
+	 * Method include teams to event model
+	 * @private
+	 */
+	_includeTeamsToEvent: function(event) {
+		const self = this;
+
+		return self._getTeamsForEvent(event)
+			.then(teams => {
+				event.participants = teams;
+
+				return event;
+			});
+	},
+	/**
+	 * Method return teams for event.
+	 * Each team has school and house models.
+	 * @param event
+	 * @returns {*}
+	 * @private
+	 */
+	_getTeamsForEvent: function(event) {
+		const self = this;
+
+		return window.Server.schoolEventTeams.get({schoolId: event.inviterSchoolId, eventId: event.id})
+			.then(teams => Promise.all(teams.map(team => self._includeModelsToTeam(team))));
+	},
+	/**
+	 * Method include school and house models to team model.
+	 * Method modify input team.
+	 * @param team
+	 * @returns {*}
+	 * @private
+	 */
+	_includeModelsToTeam: function(team) {
+		return window.Server.publicSchool.get({schoolId: team.schoolId}).then(school => {
+			team.school = school;
+
+			if(team.houseId) {
+				return window.Server.publicSchoolHouse.get({schoolId: team.schoolId, houseId: team.houseId}).then(house => {
+					team.house = house;
+
+					return team;
+				});
+			}
+			return team;
+		});
 	},
 	filterEvents:function(){
 		const self = this,
@@ -141,23 +205,31 @@ const EventView = React.createClass({
 				.commit();
 		}
 	},
-	serviceChildrenFilter: function (userId) {
-		var self = this,
-			eventChild = [],
-			binding = self.getDefaultBinding();
-		return window.Server.userChildren.get(userId).then(function (children) {
-			//Initial API call only returns ids of the user's children
-			children.map(function (player) {
-				//Iterates and fetches all other details by making extra API calls
-				window.Server.user.get({id:player.userId}).then(function(user){
-					user.childId = player.id;
-					eventChild.push(user);
-					binding.set('eventChild',Immutable.fromJS(eventChild));
-					return player;
-				});
+	serviceChildrenFilter: function () {
+		const	self = this,
+				binding = self.getDefaultBinding();
+
+		return window.Server.userChildren.get()
+			//.then(children => {
+			//	return Promise.all(children.map(child => {
+			//		return window.Server.userChildEvents.get({childId:child.id})
+			//			.then(events => {
+			//				child.events = events;
+			//
+			//				return child;
+			//			});
+			//	}));
+			//})
+			.then(children => {
+				binding.set('eventChild',Immutable.fromJS(children.map(child => {
+					// TODO fix
+					child.childId = child.id
+
+					return child;
+				})));
+
+				return true;
 			});
-			return children;
-		});
 	},
 	render: function () {
 		var self = this,

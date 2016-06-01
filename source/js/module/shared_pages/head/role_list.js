@@ -8,6 +8,7 @@ const	React		= require('react'),
 		classNames	= require('classnames'),
 		If			= require('module/ui/if/if'),
 		RoleHelper	= require('module/helpers/role_helper'),
+		Lazy		= require('lazyjs'),
 		Auth		= require('module/core/services/AuthorizationServices');
 
 
@@ -44,10 +45,21 @@ const  RoleList = React.createClass({
 			if (roles && roles.length) {
 				const permissions = [];
 
+				let isAlreadyHaveParentPermission = false;
+
 				roles.forEach(role => {
 					role.permissions.forEach(permission => {
-						permission.role = role.name;
-						permissions.push(permission);
+						// Always add all permissions besides PARENT permissions.
+						// Add parent permissions only at once.
+						if(permission.preset !== 'PARENT' || permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
+							permission.role = role.name;
+							permissions.push(permission);
+						}
+
+						// If permissions array already has PARENT permission, set isAlreadyHaveParentPermission flag to true
+						if(permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
+							isAlreadyHaveParentPermission = true;
+						}
 					});
 				});
 				binding.set('permissions', permissions);
@@ -201,8 +213,8 @@ const  RoleList = React.createClass({
 					<div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
 						<div onClick={self.onToggle}>
 							{self.renderActiveRole()}
-							<div className="eArrow">
-								<SVG classes="dropbox_icon" icon="icon_dropbox_arrow" />
+							<div className="eArrow eCombobox_button">
+
 							</div>
 						</div>
 						<div className="eRolesList">

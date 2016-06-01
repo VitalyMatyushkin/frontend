@@ -4,7 +4,7 @@ const   Form        = require('module/ui/form/form'),
         Immutable 	= require('immutable'),
         React       = require('react');
 
-let SportsForm = React.createClass({
+const SportsForm = React.createClass({
     mixins: [Morearty.Mixin],
     propTypes: {
         title: React.PropTypes.string.isRequired,

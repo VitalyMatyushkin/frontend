@@ -63,8 +63,9 @@ h1{
 }
 
 h3{
-  color: #333132;
+  color: $MAIN_COLOR;
   font-size: 16px;
+  font-weight: normal;
 }
 
 .mClearFix:after {

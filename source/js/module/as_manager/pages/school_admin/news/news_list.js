@@ -23,9 +23,14 @@ const NewsListPage = React.createClass({
 				binding = self.getDefaultBinding();
 
 		return (
-			<Table title="News" binding={binding} onItemEdit={self._getEditFunction()}
-                   isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
-                   getTotalCountPromise={self.getTotalCountPromise}>
+			<Table 
+				title="News" 
+				binding={binding} 
+				onItemEdit={self._getEditFunction()}
+				isPaginated={true} 
+				filter={self.filter} 
+				getDataPromise={self.getDataPromise}
+				getTotalCountPromise={self.getTotalCountPromise}>
 				<TableField dataField="picUrl" filterType="none" parseFunction={self._getImageThumbnail}>Thumbnail</TableField>
 				<TableField dataField="title" width="30%">Title</TableField>
                 <TableField dataField="date" filterType="sorting" parseFunction={self.getDateFromIso}>Date</TableField>

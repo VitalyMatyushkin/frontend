@@ -31,19 +31,41 @@ const GeneralSettingsPage = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-			<Form formStyleClass="bSettingsForm" name="General settings" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving..." >
-				<FormColumn type="column">
-					<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
-					<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
-					<span className="bSettingEmailVerify">{binding.toJS('verified.email') !== undefined && binding.toJS('verified.email') === true ? <span className="bPopup_verified">v</span> : <span onClick={function(){console.log('click')}}>verify email</span>}</span>
-					<FormField type="text" field="email" validation="required email">Email</FormField>
-					<span className="bSettingPhoneVerify">{binding.toJS('verified.phone') !== undefined && binding.toJS('verified.phone') === true ? <span className="bPopup_verified">v</span> : <span>verify phone</span>}</span>
-					<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
-				</FormColumn>
-				<FormColumn type="column">
-					<FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
-				</FormColumn>
-			</Form>
+				<Form formStyleClass="bSettingsForm" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving..." >
+					<FormColumn type="column">
+						<h3>SUMMARY</h3>
+						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
+						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
+						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
+						<FormField type="date">Birthday</FormField>
+					</FormColumn>
+					<FormColumn type="column">
+						<h3>VERIFICATION INFORMATION</h3>
+						<FormField type="text" field="email" validation="required email">Email</FormField>
+						<span className="bSettingEmailVerify">{binding.toJS('verified.email') !== undefined && binding.toJS('verified.email') === true ? <span className="bPopup_verified">v</span> : <span onClick={function(){console.log('click')}}>verify email</span>}</span>
+						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
+						<span className="bSettingPhoneVerify">{binding.toJS('verified.phone') !== undefined && binding.toJS('verified.phone') === true ? <span className="bPopup_verified">v</span> : <span>verify phone</span>}</span>
+						<span className="bVerificationText"></span>
+					</FormColumn>
+					<FormColumn type="column">
+						<h3>CONFIGURING NOTIFICATIONS</h3>
+						<div className="eForm_field">
+							<label className="eForm_fieldName">Send me news</label>
+							<input className="eSwitch" type="checkbox"></input>
+							<label></label>
+						</div>
+						<div className="eForm_field">
+							<label className="eForm_fieldName">Information updates</label>
+							<input className="eSwitch" type="checkbox"></input>
+							<label></label>
+						</div>
+						<div className="eForm_field">
+							<label className="eForm_fieldName">Promotional offers</label>
+							<input className="eSwitch" type="checkbox"></input>
+							<label></label>
+						</div>
+					</FormColumn>
+				</Form>
 		)
 	}
 });

@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login', 'playground'],
+const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login', 'playground', 'password'],
         defaultModel    = 'school',
         apiVersion      = 1;
 
@@ -58,7 +58,7 @@ function apiSelector(domainName) {
 function startModuleSelector(domainName) {
     const   parsedDomain    = parseDomainName(domainName),
             model           = parsedDomain.model,
-            modelToStart    =  specialModels.indexOf(model) !== -1 ? model : defaultModel;
+            modelToStart    = specialModels.indexOf(model) !== -1 ? model : defaultModel;
 
     let startModule     = 'module/start_as_' + modelToStart;
 

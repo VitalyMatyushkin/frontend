@@ -52,8 +52,7 @@ const ServiceConstructor = (function() {
 			let 	self 				= this,
 					url 				= self.url,
 					filter 				= options && options.filter || data && data.filter || '',
-					where 				= options && options.where || data && data.where || '',
-					key 				= filter ? 'filter' : (where ? 'where' : ''),
+					key 				='filter',
 					authorizationInfo 	= self.binding ? self.binding.toJS() : undefined;
 
 			if (self.requredParams) {
@@ -65,8 +64,7 @@ const ServiceConstructor = (function() {
 			//Added condition to test for executions where there are no schoolId or other ids set for request
 			//Tests for options being equal to null
 			if (key) {
-				filter = filter ? filter : where;
-				filter = key +'=' + JSON.stringify(filter);
+				filter = key +'=' + encodeURIComponent(JSON.stringify(filter));
 				filter = url.indexOf('?') !== -1 ? '&' + filter : '?' + filter;
 				if (typeof options === 'object' && options !== null) {
 					delete options[key];

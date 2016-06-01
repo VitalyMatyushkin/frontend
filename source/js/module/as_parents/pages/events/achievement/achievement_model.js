@@ -2,6 +2,8 @@
  * Created by Anatoly on 17.03.2016.
  */
 
+const EventHelper = require('module/helpers/eventHelper');
+
 const AchievementModel = function(studentId, events){
     const self = this;
     self.studentId = studentId;
@@ -16,20 +18,22 @@ AchievementModel.prototype._calculate = function(events){
     const self = this;
 
     if(events && events.length){
-        events = events.filter(e => e.status == 'closed' && e.result);
+        events = events.filter(e => e.status == 'FINISHED');
         self.gamesPlayed = events.length;
         events.forEach(event => {
-            let winnerId = event.result.winner,
+            let winnerId = EventHelper.getWinnerId(event.result),
                 winner = event.participants.find(team => team.id === winnerId);
 
-            if(winner.players.find(p => p.id === self.studentId))
-                self.gamesWon++;
-            else
-                self.gamesLost++;
+            // In the event of a dead heat, winner is undefined
+            if(winner) {
+                if(winner.players.find(p => p.userId === self.studentId)) {
+                    self.gamesWon++;
+                } else {
+                    self.gamesLost++;
+                }
+            }
 
-            event.result.points.filter(p => p.studentId === self.studentId).forEach(point => {
-                self.goalsScored += point.score;
-            })
+            event.result && event.result.points[self.studentId] && (self.goalsScored += event.result.points[self.studentId].score);
         })
     }
 };
