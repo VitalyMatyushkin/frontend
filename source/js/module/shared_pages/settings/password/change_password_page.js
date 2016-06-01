@@ -9,10 +9,10 @@ const SecuritySettingsPage = React.createClass({
 			oldPassword: data.oldPassword,
 			newPassword: data.newPassword
 		})
-		.then(_ => {
+		.then(() => {
 			document.location.hash = '/settings/general';
 		})
-		.catch(_ => {
+		.catch(() => {
 			alert("Please enter correct old password.");
 		});
 	},
