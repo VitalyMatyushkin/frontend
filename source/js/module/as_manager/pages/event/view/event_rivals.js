@@ -95,10 +95,13 @@ const EventRival = React.createClass({
 	},
 	render: function() {
 		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				rivals	= binding.get('rivals'),
-				sportName   = binding.get('sport.name'),
-				sportIcon = self.getSportIcon(sportName);
+				binding	= self.getDefaultBinding();
+
+		const	rivals		= binding.get('rivals'),
+				sportName	= binding.get('sport.name'),
+				sportIcon	= self.getSportIcon(sportName),
+				eventType	= EventHelper.serverEventTypeToClientEventTypeMapping[binding.get('model.eventType')];
+
 		return (
 				<div className="bEventInfo">
 					<div className="bEventRivals">
@@ -137,7 +140,7 @@ const EventRival = React.createClass({
 						</div>
 					</div>
 					<div className="eEventInfo_type">
-						{(binding.get('model.type') != undefined) ? binding.get('model.type') : "Event Type"}
+						{eventType}
 					</div>
 				</div>
 		);

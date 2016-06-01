@@ -38,7 +38,7 @@ const EventHeader = React.createClass({
 				}
 			);
 		})
-		.then( result => {
+		.then(result => {
 			updEvent.result = result;
 
 			// add points
@@ -58,15 +58,19 @@ const EventHeader = React.createClass({
 				})
 			);
 		})
-		.then( _ => {
+		// get event from server after adding points
+		// because getting of event result faster than creating event result manually
+		.then(_ => window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } ) )
+		.then(event => {
 			binding
 				.atomically()
-				.set('model.result',	Immutable.fromJS({comment: updEvent.result.comment}))
-				.set('model.status',	Immutable.fromJS(updEvent.status))
+				.set('model.result',	Immutable.fromJS(event.result))
+				.set('model.status',	Immutable.fromJS(event.status))
 				.set('mode',			Immutable.fromJS('general'))
 				.commit();
 
-			return _;
+			// yep i'm always true
+			return true;
 		});
 	},
 	isOwner: function () {
