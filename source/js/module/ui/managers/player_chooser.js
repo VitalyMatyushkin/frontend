@@ -371,12 +371,15 @@ const	PlayerChooser	= React.createClass({
 	 * @private
 	 */
 	_onAddToTeamButtonClick: function() {
-		const	self	= this,
-				player	= self._getSelectedPlayer();
-		
-		self._addPlayerToTeam(player);
-		self._removeFromPlayerForSelect(player);
-		self._deselectPlayer();
+		const self = this;
+
+		const player = self._getSelectedPlayer();
+
+		if(player) {
+			self._addPlayerToTeam(player);
+			self._removeFromPlayerForSelect(player);
+			self._deselectPlayer();
+		}
 	},
 	render: function() {
 		const	self	= this;

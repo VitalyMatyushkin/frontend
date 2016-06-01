@@ -1,10 +1,11 @@
 const	React				= require('react'),
-	TeamName			= require('./../team_name'),
-	TeamFunctionalMixin	= require('./teamFunctionalMixin');
+		TeamName			= require('./../team_name'),
+		TeamFunctionalMixin	= require('./teamFunctionalMixin');
 
 const SkypeStyleTeam = React.createClass({
 	mixins: [Morearty.Mixin, TeamFunctionalMixin],
 	displayName: 'Team',
+	/*HANDLERS*/
 	/**
 	 * Handler for click on remove player button
 	 * @private
@@ -12,9 +13,14 @@ const SkypeStyleTeam = React.createClass({
 	_onRemoveButtonClick: function() {
 		const	self	= this;
 
-		self._onRemovePlayer(self._getSelectedPlayer().id);
-		self._deselectPlayer();
+		const selectedPlayer = self._getSelectedPlayer();
+
+		if(selectedPlayer) {
+			self._onRemovePlayer(selectedPlayer.id);
+			self._deselectPlayer();
+		}
 	},
+	/*RENDER FUNCTIONS*/
 	_renderPlayers: function () {
 		const	self		= this;
 		let		xmlPlayers	= [];
