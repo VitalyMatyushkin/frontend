@@ -43,7 +43,7 @@ const TypeTextArea =  React.createClass({
 
         return (
             <div className="eForm_fieldInput">
-                <textarea ref="fieldInput" type={self.props.textType || 'textarea'} onBlur={self.handeBlur} onChange={self.handleChange}></textarea>
+                <textarea ref="fieldInput" type={self.props.textType || 'textarea'} placeholder={self.props.placeholder} onBlur={self.handeBlur} onChange={self.handleChange}></textarea>
             </div>
         )
     }

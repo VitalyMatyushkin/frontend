@@ -21,6 +21,8 @@ const SchoolForm = React.createClass({
 		return (
 			<Form name={self.props.title} binding={self.getDefaultBinding()} onSubmit={self.props.onSubmit}>
 				<FormColumn type="column">
+					<FormField labelText="+" type="imageFile" typeOfFile="image" field="pic"/>
+
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="text" field="description" validation="required">Description</FormField>
 					<FormField type="phone" field="phone" validation="required">Phone</FormField>
@@ -37,9 +39,6 @@ const SchoolForm = React.createClass({
                 <FormColumn type="column">
                     <FormField type="dropdown" field="status">School Status</FormField>
                 </FormColumn>
-				<FormColumn type="column">
-					<FormField labelText="Upload School Blazon" type="imageFile" typeOfFile="image" field="pic"/>
-				</FormColumn>
 			</Form>
 		)
 	}

@@ -1,23 +1,11 @@
 .bCombobox {
   display: inline-block;
   position: relative;
+  vertical-align: bottom;
   font-size: 15px;
   line-height: 15px;
   cursor: pointer;
 }
-
-.eCombobox_inputContainer input {
-  display: none;
-}
-
-.eCombobox_inputContainer .eCombobox_input {
-  display: flex;
-  height: 37px;
-  min-width: 200px;
-  cursor: pointer;
-  background: #fff;
-}
-
 .bCombobox:hover .eCombobox_inputContainer {
   color: black;
 }
@@ -58,15 +46,18 @@
 .eCombobox_input {
   width: 100%;
   display: flex;
+  background: transparent;
   -moz-box-sizing: border-box;
   -ms-box-sizing: border-box;
   box-sizing: border-box;
+  border: none;
+  border-bottom: solid 1px #ccc;
 }
 
 .eCombobox_button {
   display: inline-block;
   outline: none;
-  top: 15px;
+  top: 8px;
   right: 6px;
   font-size: 14px;
   cursor: default;

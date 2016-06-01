@@ -1,19 +1,15 @@
 .bRoundBtn {
-  display: inline-block;
-  height: 40px;
-  width: 40px;
-  border-radius: 50%;
-  -moz-border-radius: 50%;
-  -webkit-border-radius: 50%;
-  text-align: center;
-  line-height: 45px;
-  background: $MAIN_COLOR;
-  color: #fff;
+
+}
+.bRoundBtn .bIcon {
   position: absolute;
   top: -16px;
   right: 10px;
+  height: 40px;
+  width: 40px;
   cursor: pointer;
-  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-  font-size: 28px;
-  font-weight: bold;
+  border-radius: 50%;
+  webkit-box-shadow:inset rgba(203, 203, 203, 0.7) 0 0 0 2px, rgba(203, 203, 203, 0.5) 0 0 0 2px;;
+  -moz-box-shadow:inset rgba(203, 203, 203, 0.7) 0 0 0 2px, rgba(203, 203, 203, 0.5) 0 0 0 2px;;
+  box-shadow:inset rgba(203, 203, 203, 0.7) 0 0 0 2px, rgba(203, 203, 203, 0.5) 0 0 0 2px;;
 }

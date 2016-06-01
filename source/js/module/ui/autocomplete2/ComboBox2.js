@@ -334,7 +334,7 @@ const ComboBox2 = React.createClass({
 
         const hintStyle = {
             position:   'absolute',
-            opacity:    1,
+            opacity:    0,
             color:      "#ccd6dd",
             tabIndex:   -1
         };
