@@ -10,7 +10,7 @@ const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
     /**
-     * Сервис фильтрации по дому
+     * House filtering service...
      * @param houseName
      * @returns {*}
      */
@@ -59,14 +59,14 @@ const EventManagerBase = React.createClass({
 		return otherHouseId;
 	},
     /**
-     * Сервис фильтрации по школе
+     * School filtering service
      * @param schoolName
      * @returns {*}
      */
     serviceSchoolFilter: function(schoolName) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            schoolId = binding.get('schoolInfo.id');
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                schoolId    = binding.get('schoolInfo.id');
 
 		//{
 		//	filter: {
@@ -84,14 +84,23 @@ const EventManagerBase = React.createClass({
 		//			limit: 10
 		//	}
 		//}
-        return window.Server.getAllSchools.get();
+        const filter = {
+            filter: {
+                where: {
+                    name: { like: schoolName }
+                },
+                limit: 10
+            }
+        };
+        return window.Server.publicSchools.get(filter);
     },
     changeCompleteType: function (event) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            type = event.target.value,
-            schoolInfo = binding.get('schoolInfo'),
-            rivals = Immutable.List();
+        const   self        = this,
+                binding     = self.getDefaultBinding(),
+                type        = event.target.value,
+                schoolInfo  = binding.get('schoolInfo');
+
+        let     rivals = Immutable.List();
 
 		switch (type) {
 			case 'inter-schools':
@@ -109,7 +118,7 @@ const EventManagerBase = React.createClass({
 					}
 				]);
 				break;
-		};
+		}
 
         binding
             .atomically()
@@ -242,17 +251,17 @@ const EventManagerBase = React.createClass({
         return new Date(date).toLocaleTimeString();
     },
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-            activeSchoolName = binding.get('schoolInfo.name'),
-			sportId = binding.get('model.sportId'),
-            services = {
-                'inter-schools': self.serviceSchoolFilter,
-                'houses': self.serviceHouseFilter,
-                'internal': self.serviceClassFilter
-            },
-            gender = binding.get('model.gender'),
-            type = binding.get('model.type');
+		const   self                = this,
+                binding             = self.getDefaultBinding(),
+                activeSchoolName    = binding.get('schoolInfo.name'),
+                sportId             = binding.get('model.sportId'),
+                services = {
+                    'inter-schools':    self.serviceSchoolFilter,
+                    'houses':           self.serviceHouseFilter,
+                    'internal':         self.serviceClassFilter
+                },
+                gender  = binding.get('model.gender'),
+                type    = binding.get('model.type');
 
 		return <div className="eManager_base">
             <div className="eManager_group">

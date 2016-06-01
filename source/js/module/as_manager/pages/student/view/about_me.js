@@ -12,12 +12,13 @@ const AboutMeBlock = React.createClass({
 		 */
 		var icons = ['icon_home', 'icon_library', 'icon_shot', 'icon_trophy', 'icon_score', 'icon_office'],
 			fields = ['houseData.name','classData.name','numOfGamesScoredIn','numOfGamesWon','numberOfGamesPlayed', 'schoolData.name'],
+			titles = ['House','Form','Count of games scored in','Count of won games','Count of played games', 'School'],
 			self = this,
 			binding = self.getDefaultBinding();
 		return icons.map(function(icon,i){
 			let bindingResult = binding.get(fields[i]);
 			if (bindingResult||bindingResult === 0) {
-				return <div key={i} title={fields[i]} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
+				return <div key={i} title={titles[i]} className="eAboutList_item"><SVG icon={icon} /> {bindingResult}</div>
 			}
 		});
 	},

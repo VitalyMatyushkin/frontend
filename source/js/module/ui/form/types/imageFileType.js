@@ -61,7 +61,7 @@ const ImageFileTypeUpload = React.createClass({
                 </div>
                 <div className="eForm_fileInput">
                     <input className="inputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
-                    <label className="bButton mCenteredText" htmlFor="file">{self.props.labelText || 'Default'}</label>
+                    <label className="bRoundBtn" htmlFor="file">{self.props.labelText || 'Default'}</label>
                 </div>
             </div>
         );

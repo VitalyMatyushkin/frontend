@@ -3,6 +3,7 @@ const   If          = require('module/ui/if/if'),
         GroupAction = require('module/ui/list/group_action'),
         SVG 		= require('module/ui/svg'),
         React       = require('react'),
+        Promise     = require('bluebird'),
         Immutable   = require('immutable');
 
 const ListPageMixin = {
@@ -19,12 +20,15 @@ const ListPageMixin = {
                 binding         = self.getDefaultBinding(),
                 activeSchoolId  = globalBinding.get('userRules.activeSchoolId');
 
-        self.serviceName = self.props.serviceName ? self.props.serviceName : self.serviceName;
-        self.serviceCount = self.props.serviceCount ? self.props.serviceCount : self.serviceCount;
-        self.addButton = self.props.addButton ? self.props.addButton : self.addButton;
-		!self.serviceName && console.error('Please provide service name');
+        /** picking right service names: it can be taken from props or from component. Props have precedence */
+        self.serviceName    = self.props.serviceName || self.serviceName;
+        self.serviceCount   = self.props.serviceCount || self.serviceCount;
+        self.addButton      = self.props.addButton || self.addButton;
+		!self.serviceName && console.error('ListPageMixin: Please provide service name. Program will continue, but everything is broken');
 		self.activeSchoolId = activeSchoolId;
 
+        /** doing some magic with filters.
+         * Note filter and filters are different things */
         metaBinding.set('isFiltersActive', false);
         self.filter = new Filter(binding.sub('filter'));
         self.filter.setFilters(self.filters);
@@ -41,21 +45,34 @@ const ListPageMixin = {
 
         binding.set('onReload',true);
     },
-    getDataPromise:function(filter){
+
+    /** will perform request to service with provided filter. If activeSchoolId set it will be also passed */
+    getDataPromise: function(filter){
         const self = this;
 
-        if(self.activeSchoolId !== null && self.serviceName)
+        if(!self.serviceName) {
+            console.warn('ListPageMixin: service name missed!');
+            return Promise.reject();
+        }
+
+        if(self.activeSchoolId !== null)
             return window.Server[self.serviceName].get(self.activeSchoolId, { filter: filter });
-
-        return window.Server[self.serviceName].get({filter:filter});
+        else
+            return window.Server[self.serviceName].get({filter:filter});
     },
-    getTotalCountPromise:function(where){
+
+    getTotalCountPromise: function(filter){
         const self = this;
+
+        if(!self.serviceCount) {
+            console.warn('ListPageMixin: service count missed!');
+            return Promise.reject();
+        }
 
         if(self.activeSchoolId !== null && self.serviceCount)
-            return window.Server[self.serviceCount].get(self.activeSchoolId, { where: where });
+            return window.Server[self.serviceCount].get(self.activeSchoolId, { filter: filter });
 
-        return window.Server[self.serviceCount].get({where:where});
+        return window.Server[self.serviceCount].get({filter: filter});
     },
 	_getEditFunction: function() {
 		return function(data) {
@@ -91,13 +108,13 @@ const ListPageMixin = {
         metaBinding.set('isFiltersActive', !isFiltersActive);
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-			isFiltersActive = binding.meta().get('isFiltersActive'),
-            currentPage = window.location.href.split('/'),
-            includeGroupAction = ['permissions','#admin_schools'],
-            listPageTitle;
+		const   self                = this,
+                binding             = self.getDefaultBinding(),
+                globalBinding       = self.getMoreartyContext().getBinding(),
+                isFiltersActive     = binding.meta().get('isFiltersActive'),
+                currentPage         = window.location.href.split('/'),
+                includeGroupAction = ['permissions','#admin_schools'];
+        let listPageTitle;
         if(currentPage[currentPage.length-1] ==='#admin_schools'){
             listPageTitle = 'Users & Permissions ( System Admin )';
         }else{

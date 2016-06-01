@@ -5,7 +5,8 @@ const 	If 					= require('module/ui/if/if'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		Team 				= require('module/ui/managers/team/defaultTeam'),
 		React				= require('react'),
-		Immutable			= require('immutable');
+		Immutable			= require('immutable'),
+		Lazy				= require('lazyjs');
 
 const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -26,29 +27,37 @@ const EventTeams = React.createClass({
 			});
 		});
 	},
-	getPointsByStudent: function (userId, teamId) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			points =  binding.sub('points'),
-			filtered = points.get().filter(function (point) {
-				return point.get('userId') === userId && point.get('teamId') === teamId;
-			});
+	getPointsByStudent: function (userId) {
+		const	self = this,
+				binding = self.getDefaultBinding(),
+				points =  binding.toJS('points');
 
-		return filtered.count();
+		const studentPoint = Lazy(points).findWhere({userId: userId});
+
+		return studentPoint ? studentPoint.score : 0;
 	},
 	addPoint: function (player) {
 		var self = this,
 			binding = self.getDefaultBinding(),
 			type = binding.get('event.type'),
-			pointsBinding =  binding.sub('points');
+			points =  binding.sub('points').toJS();
 
-		pointsBinding.update(points => points.push(
-			Immutable.fromJS({
+		let point = Lazy(points).findWhere({userId: player.get('id')});
+
+		// if points exist
+		if(point) {
+			point.score += 1;
+			const indexOfPoint = Lazy(points).indexOf(point);
+			points[indexOfPoint] = point;
+		} else {
+			points.push({
 				userId:	player.get('id'),
 				teamId:	player.get('teamId'),
 				score:	1
-			})
-		));
+			});
+		}
+
+		binding.set('points', Immutable.fromJS(points));
 	},
 	removePoint: function (order, userId) {
 		var self = this,
@@ -81,7 +90,7 @@ const EventTeams = React.createClass({
 
 		return players ? players.map(function (player,playerIndex) {
 			const	isMale	= player.get('gender') === 'male',
-					points	= self.getPointsByStudent(player.get('id'), participant.get('id')) || 0;
+					points	= self.getPointsByStudent(player.get('id'));
 
 			return(
 				<div key={playerIndex} className="_bPlayer _mMini">

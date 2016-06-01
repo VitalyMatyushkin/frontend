@@ -127,17 +127,18 @@ const RouterView = React.createClass({
 			var pathParameters = Array.prototype.slice.call(arguments, 0);
 
 			// Updating parametrized parts of path
-			//pathParameters.length && self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters)); //parameters are not removed!!!
 			self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));//set and remove parameters
 
 			// User will be redirected to login page when unauthorized.
-			// In this case latest routing is saved
+			// In this case latest routing is saved(which is really current route)
 			if (route.unauthorizedAccess === true) {
 				self.setRoute(route);
 			} else {
 				if (self.isAuthorized === false && self.loginRoute) {
 					self.setRoute(self.loginRoute);
-					self.nextRoute = route;
+					//if latest routing(which is really current route) is a login, then don't save it
+					if(self.loginRoute.path !== route.path)
+						self.nextRoute = route;
 				} else if (self.isVerified === false && self.verifyRoute) {
 					self.setRoute(self.verifyRoute);
 					self.nextRoute = route;
@@ -204,7 +205,7 @@ const RouterView = React.createClass({
 
 		// Dirty ad-hoc solution. Router update required (wrote by somebody, I don't understand really)
 		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {
-			document.location = '#login';
+			document.location = '#404';
 		}
 
 		return siteComponent ? React.createElement(siteComponent.View, siteComponent.routeComponent.props) : null;

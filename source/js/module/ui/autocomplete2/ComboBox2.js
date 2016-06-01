@@ -371,9 +371,9 @@ const ComboBox2 = React.createClass({
                     />
                     <img style={loaderStyle} src="/images/spinner.gif"/>
                 </div>
-                <span className="eCombobox_button"
+                <div className="eCombobox_button"
                       style     = {triangleStyle}
-                      onClick   = {self.onTriangleClick}><SVG classes="dropbox_icon" icon="icon_dropbox_arrow"/></span>
+                      onClick   = {self.onTriangleClick}></div>
                 {self.renderMenuItems()}
             </div>
         );

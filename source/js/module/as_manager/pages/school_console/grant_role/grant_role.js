@@ -40,7 +40,25 @@ const GrantRole = React.createClass({
         ids = ids && typeof ids === 'string' ? [ids] : ids;
 
         ids.forEach(function(currentId){
-            window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId},model)
+            let body;
+
+            switch(model.preset) {
+                case 'parent':
+                    body = {
+                        preset:     model.preset,
+                        schoolId:   model.schoolId,
+                        studentId:  model.studentId
+                    };
+                    break;
+                default:
+                    body = {
+                        preset:     model.preset,
+                        schoolId:   model.schoolId
+                    };
+                    break;
+            }
+
+            window.Server.userPermissions.post(currentId, body)
                 .then(function(result){
                     return self.props.onSuccess && self.props.onSuccess(result);
                 });

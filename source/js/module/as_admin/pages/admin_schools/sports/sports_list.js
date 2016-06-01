@@ -4,16 +4,16 @@ const 	Table         = require('module/ui/list/table'),
         React         = require('react'),
         Immutable 	  = require('immutable');
 
-let SportsList = React.createClass({
+const SportsList = React.createClass({
     mixins: [Morearty.Mixin, ListPageMixin],
     serviceName: 'sports',
-    _getDataPromise: function(){
-        return window.Server.sports.get();
+    _getDataPromise: function(filter){
+        return window.Server.sports.get({filter: filter});
     },
     _getItemRemoveFunction: function(model) {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            confirm = window.confirm("Do you really want to remove this sport?");
+        const   self = this,
+                binding = self.getDefaultBinding(),
+                confirm = window.confirm("Do you really want to remove this sport?");
 
         if(confirm === true){
             window.Server.sport.delete({sportId: model.id}).then(function() {
@@ -26,8 +26,8 @@ let SportsList = React.createClass({
         }
     },
     getTableView: function() {
-        const self = this,
-              binding = self.getDefaultBinding();
+        const self      = this,
+              binding   = self.getDefaultBinding();
 
         return (
             <Table title="Sports" binding={binding}

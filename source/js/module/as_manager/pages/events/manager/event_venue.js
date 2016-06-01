@@ -82,10 +82,13 @@ EventVenue = React.createClass({
                 <span>Change Venue</span>
                 <If condition={self.props.sportType === 'inter-schools'}>
                     <div style={{marginBottom:10+'px',marginTop:10+'px'}}>
-                        <input type="checkbox" checked={radio === 'home'} onChange={function(){self.onRadioButtonChange('home')}}/>
-                        <label style={{marginRight:4+'px'}}>Home</label>
+						<input type="checkbox" checked={radio === 'tbc'} onChange={function(){self.onRadioButtonChange('tbc')}}/>
+						<label style={{marginRight:4+'px'}}>tbc</label>
 
-                        <input type="checkbox" checked={radio === 'away'} onChange={function(){self.onRadioButtonChange('away')}}/>
+						<input type="checkbox" checked={radio === 'home'} onChange={function(){self.onRadioButtonChange('home')}}/>
+						<label style={{marginRight:4+'px'}}>Home</label>
+
+						<input type="checkbox" checked={radio === 'away'} onChange={function(){self.onRadioButtonChange('away')}}/>
                         <label style={{marginRight:4+'px'}}>Away</label>
 
                         <input type="checkbox" checked={radio === 'neutral'} onChange={function(){self.onRadioButtonChange('neutral')}}/>
@@ -97,9 +100,9 @@ EventVenue = React.createClass({
                         <FormField type="area" field="postcodeId" defaultItem={self.currentPostcode} binding={binding.sub('postcode')} />
                     </div>
                 </If>
-                <div>
+                <If condition={radio !== 'tbc'}>
                     <Map binding={binding} point={point} customStylingClass="eEvents_venue_map"/>
-                </div>
+                </If>
             </div>
         )
     }

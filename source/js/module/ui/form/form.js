@@ -11,7 +11,6 @@
  *
  */
 const   React       = require('react'),
-        ReactDOM    = require('reactDom'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
         $           = require('jquery');
@@ -131,7 +130,7 @@ const Form = React.createClass({
 
             // TODO: Зарефакторить эту кашицу
             if (['object', 'function'].indexOf(typeOfService) !== -1) {
-                const userService = typeOfService === 'object' ? self.props.service.post : self.props.service;
+                const userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
                 userService(dataToPost).then(self._onServiceSucces, self._onServiceError); // React told we don't need .bind()
             } else {
                 var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
@@ -209,7 +208,6 @@ const Form = React.createClass({
                 keyCode = event.keyCode;
 
         if (keyCode === 13) {
-            ReactDOM.findDOMNode(self.refs.submitButton).focus();
             self.tryToSubmit();
         }
     },
@@ -240,7 +238,7 @@ const Form = React.createClass({
                     {bindedChildren}
 
                     <div className="eForm_savePanel">
-                        <div className="bButton mRight" tabIndex="-1" ref="submitButton"
+                        <div className="bButton mRight" tabIndex="-1"
                              onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
                     </div>
                 </div>

@@ -16,9 +16,9 @@ const EventRival = React.createClass({
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 				if(order === 0) {
-					pic = binding.get('invites.inviterSchool.pic');
+					pic = binding.get('model.inviterSchool.pic');
 				} else if(order === 1) {
-					pic = binding.get('invites.invitedSchool.pic');
+					pic = binding.get('model.invitedSchool.pic');
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
@@ -46,9 +46,9 @@ const EventRival = React.createClass({
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 				if(order === 0) {
-					name = binding.get('invites.inviterSchool.name');
+					name = binding.get('model.inviterSchool.name');
 				} else if(order === 1) {
-					name = binding.get('invites.invitedSchool.name');
+					name = binding.get('model.invitedSchool.name');
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
@@ -68,18 +68,30 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const eventResult = binding.toJS('model.result');
+		const event = binding.toJS('model');
 
 		let points;
 
-		if(eventResult) {
-			const eventSummary = EventHelper.getTeamsSummaryByEventResult(eventResult);
+		if(event.result) {
+			const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
 
 			// get event result by team id
-			points = eventSummary[binding.get(`participants.${order}.id`)];
+			const teamId = binding.get(`participants.${order}.id`);
+			points = eventSummary[teamId];
+			if(!points && self._isTeamHaveZeroPoints(teamId, event, eventSummary)) {
+				// event doesn't has points in resultObject if team has zero points in event
+				points = 0;
+			}
 		}
 
 		return points;
+	},
+	/**
+	 * Return TRUE if team has zero points in event
+	 * @private
+	 */
+	_isTeamHaveZeroPoints: function(teamId, event, eventSummary) {
+		return !eventSummary[teamId] && event.status === EventHelper.EVENT_STATUS.FINISHED;
 	},
 	render: function() {
 		const	self	= this,

@@ -65,15 +65,19 @@
 
 .eCombobox_button {
   display: inline-block;
-  position: absolute;
-  cursor: default;
   outline: none;
-  top: 10px;
+  top: 15px;
   right: 6px;
   font-size: 14px;
   cursor: default;
-  color: black;
   text-align: right;
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  border-width: 6px 6px 0 6px;
+  border-style: solid;
+  border-color: $COLOR transparent;
 }
 
 .eCombobox_button:active {
