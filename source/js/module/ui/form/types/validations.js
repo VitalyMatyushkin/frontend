@@ -7,7 +7,7 @@ let serverValidationTimer = null;
 
 var validationsSet = {
 	phone: function(value) {
-        if(value.length < 7)
+        if(value && value.length < 7)
 			return "Incorrect phone number!";
 		else
 			return false;
