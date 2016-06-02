@@ -70,7 +70,7 @@ const StudentForm = React.createClass({
 				<Form onSubmit={self.props.onFormSubmit} binding={binding} >
 					<FormColumn type="column">
 						<h3>SUMMARY</h3>
-						<FormField labelText="+" type="imageFile"/>
+						<FormField labelText="+" type="imageFile" field="avatar"/>
 						<FormField type="text" field="firstName" validation="required">Name</FormField>
 						<FormField type="text" field="lastName" validation="required">Surname</FormField>
 						<FormField type="radio" field="gender"  sourcePromise={self.getGender} validation="required">Gender</FormField>
@@ -79,10 +79,10 @@ const StudentForm = React.createClass({
 						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId" defaultItem={self.props.initialHouse} validation="required">House</FormField>
 						<div className="eForm_field">
 							<label className="eForm_fieldName">Injured/Unwell</label>
-							<input className="eSwitch" type="checkbox"></input>
-							<label></label>
+							<input className="eSwitch" type="checkbox"/>
+							<label/>
 						</div>
-						<FormField type="textarea" placeholder="Medical Information" field="medicalInfo"></FormField>
+						<FormField type="textarea" placeholder="Medical Information" field="medicalInfo" />
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>NEXT OF KIN</h3>
