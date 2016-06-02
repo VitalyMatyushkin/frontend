@@ -13,31 +13,31 @@ const CommentBox = React.createClass({
 		const self = this;
 
 		return blogData && blogData.map( blog => {
+
+			if(blog.replyTo && !blog.reply){
+				blog.reply = blogData.find(b => b.authorId === blog.replyTo).author;
+			}
+
 			return (
 				<div key={blog.id} className="bBlog_box">
-					<div className="bBlog_parent_comment">
-						<div className="bBlog_picBox">
-							<span className="bBlog_pic">
-								<img src={'http://placehold.it/400x400'}/>
+					<div className="ePicBox">
+						<img src={'http://placehold.it/400x400'}/>
+					</div>
+					<div className="eMessageBox">
+						<span className="eUsername">
+							{`${blog.author.lastName} ${blog.author.firstName}`}
+						</span>
+						<If condition={!!(blog && blog.replyTo)}>
+							<span className="eUsernameReply">
+								{`${blog.replyTo && blog.reply.lastName} ${blog.replyTo && blog.reply.firstName}`}
 							</span>
-						</div>
-						<div className="bBlog_messageBox">
-							<span className="bBlog_username">
-								{`${blog.author.lastName} ${blog.author.firstName}`}
-							</span>
-							<If condition={!!(blog && blog.replyTo)}>
-								<span className="bBlog_username_reply">
-									{`${blog.replyTo && blog.replyTo.lastName} ${blog.replyTo && blog.replyTo.firstName}`}
-								</span>
-							</If>
-							<span className="bBlog_message">
-								{blog.text}
-							</span>
-							<div>
-								<a className="eLike">Like</a>
-								<a className="eReply" onClick={self.props.onReply.bind(null, blog)}>Reply</a>
-								<span className="eCommentDate">{blog.createdAt}</span>
-							</div>
+						</If>
+						<span className="eMessage">
+							{blog.text}
+						</span>
+						<div>
+							<a className="eReply" onClick={self.props.onReply.bind(null, blog)}>Reply</a>
+							<span className="eCommentDate">{new Date(blog.createdAt).toLocaleString('en-GB')}</span>
 						</div>
 					</div>
 				</div>

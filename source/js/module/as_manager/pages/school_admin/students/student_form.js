@@ -86,11 +86,11 @@ const StudentForm = React.createClass({
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>NEXT OF KIN</h3>
-						<FormField type="text" field="nok_relationship" validation="required" >Relationship</FormField>
-						<FormField type="text" field="nok_firstName" validation="required" >Name</FormField>
-						<FormField type="text" field="nok_lastName" validation="required" >Surname</FormField>
-						<FormField type="phone" field="nok_phone" validation="phone required" >Phone</FormField>
-						<FormField type="text" field="nok_email" validation="required email" >Email</FormField>
+						<FormField type="text" field="nok_relationship"  >Relationship</FormField>
+						<FormField type="text" field="nok_firstName" >Name</FormField>
+						<FormField type="text" field="nok_lastName" >Surname</FormField>
+						<FormField type="phone" field="nok_phone" validation="phone" >Phone</FormField>
+						<FormField type="text" field="nok_email" validation="email" >Email</FormField>
 					</FormColumn>
 				</Form>
 			</div>

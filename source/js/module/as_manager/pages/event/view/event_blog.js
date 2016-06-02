@@ -5,11 +5,7 @@ const   CommentBox      = require('./event_blogBox'),
         React           = require('react'),
         ReactDOM        = require('reactDom'),
         Immutable       = require('immutable'),
-        MoreartyHelper  = require('module/helpers/morearty_helper'),
-        convertPostIdToInt = function(comment){
-            comment.postId = parseInt(comment.postId, 10);
-            return comment;
-        };
+        MoreartyHelper  = require('module/helpers/morearty_helper');
 
 const Blog = React.createClass({
     mixins:[Morearty.Mixin],
@@ -110,18 +106,25 @@ const Blog = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             eventId = binding.get('eventId'),
-            comments = ReactDOM.findDOMNode(self.refs.commentBox).value;
+            comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
+			replyTo = binding.get('replyTo'),
+			replyStr = replyTo ? `${replyTo.lastName} ${replyTo.firstName}` : null,
+			postData = {text: comments};
 
         ReactDOM.findDOMNode(self.refs.commentBox).value = "";
+		binding.sub('replyTo').clear();
+
+		if(replyTo && comments.indexOf(replyStr) >= 0){
+			postData.text = comments.replace(replyStr, '').trim();
+			postData.replyTo = replyTo.id;
+		}
 
         return window.Server.schoolEventComments.post(
             {
                 schoolId: self.activeSchoolId,
                 eventId: binding.get('eventId')
             },
-            {
-                text: comments
-            }
+			postData
         )
         .then(function(comment){
             const   blogs       = binding.toJS('blogs'),
@@ -141,8 +144,8 @@ const Blog = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 		binding.set('replyTo', blog.author);
-		
-		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.lastName} ${blog.author.firstName}, `;
+
+		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.lastName} ${blog.author.firstName} `;
 	},
     render:function(){
         var self = this,
