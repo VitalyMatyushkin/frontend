@@ -87,53 +87,29 @@ const PermissionAcceptPage = React.createClass({
 
 		binding.set('houseId', houseId);
 	},
-	serviceStudentsFilter: function(name) {
-		var self = this,
-			binding = self.getDefaultBinding();
+	serviceStudentsFilter: function(lastName) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		let foundStudents;
-
-		//	Why we send two same requests?
-		//	User can search students by first name or by last name. We don't know.
-		//	Since the server does not support filter by last name and first name at the same time,
-		//	we have to make two requests, concat result arrays and filter it by id for unique.
 		return window.Server.schoolStudents.get(binding.get('schoolId'),{
 			filter: {
 				where: {
 					formId: binding.get('formId'),
 					houseId: binding.get('houseId'),
 					lastName: {
-						like: name,
+						like: lastName,
 						options:'i'
 					}
 				}
 			}
 		})
-		.then(foundStudentsByLastName => {
-			foundStudents = foundStudentsByLastName;
-
-			return window.Server.schoolStudents.get(binding.get('schoolId'),{
-				filter: {
-					where: {
-						formId: binding.get('formId'),
-						houseId: binding.get('houseId'),
-						firstName: {
-							like: name,
-							options:'i'
-						}
-					}
-				}
-			})
-		})
 		.then(
-			foundStudentsByFirstName => {
-				foundStudents = Lazy(foundStudents.concat(foundStudentsByFirstName)).uniq('id').toArray();
-				// need for view
-				foundStudents.forEach(student => {
+			students => {
+				students.forEach(student => {
 					student.name = student.firstName + " " + student.lastName;
 				});
 
-				return foundStudents;
+				return students;
 			},
 			error => {
 				console.log(error);
