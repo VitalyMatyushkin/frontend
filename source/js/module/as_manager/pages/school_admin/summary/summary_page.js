@@ -45,18 +45,23 @@ const SchoolSummary = React.createClass({
 				binding			= self.getDefaultBinding(),
 				schoolPicture	= binding.get('schoolData.pic') ? binding.get('schoolData.pic'):'images/no-image.jpg',
 				siteLink		= binding.get('schoolData.domain') ? `${binding.get('schoolData.domain')}.stage2.squadintouch.com`:'',
-				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined;
+				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined,
+				rootBinding 	= self.getMoreartyContext().getBinding(),
+				role 			= rootBinding.get('userData.authorizationInfo.role');
+		;
 		return (
 			<div>
 				<div className="eSchoolMaster_summary">
 					<div className="summary_inside">
-						<div className="editSchool">
-							<a href={'/#schools/edit?id=' + self.activeSchoolId}>
-								<div className="bEditButton">
-									<SVG icon="icon_edit"/>
-								</div>
-							</a>
-						</div>
+						<If condition={role === "ADMIN"}>
+							<div className="editSchool">
+								<a href={'/#schools/edit?id=' + self.activeSchoolId}>
+									<div className="bEditButton">
+										<SVG icon="icon_edit"/>
+									</div>
+								</a>
+							</div>
+						</If>
 						<div>
 							{schoolPicture ? <div className="eSchoolMaster_flag"><img src={schoolPicture}/></div> : ''}
 							<h1 className="eSchoolMaster_title">
