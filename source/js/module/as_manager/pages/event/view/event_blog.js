@@ -35,6 +35,11 @@ const Blog = React.createClass({
             {
                 schoolId:   self.activeSchoolId,
                 eventId:    binding.get('eventId')
+            },
+            {
+                filter: {
+                    limit: 100
+                }
             }
         ).then(function(blogs){
             Promise.all(
