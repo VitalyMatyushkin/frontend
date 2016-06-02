@@ -61,14 +61,14 @@ const Tabs = React.createClass({
 		const 	self 	= this,
 				model 	= self.props.tabListModel,
 				tabs	= model && model.map(item => {
-						return <TabItem tabModel={item} onClick={self.onClickTab} />
+						return <TabItem key={item.value} tabModel={item} onClick={self.onClickTab} />
 					});
 
 		return (
 			<div>
-			<span className="bTabs">
-				{tabs}
-			</span>
+				<span className="bTabs">
+					{tabs}
+				</span>
 			</div>
 		);
 	}
