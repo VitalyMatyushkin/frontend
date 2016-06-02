@@ -15,6 +15,7 @@ const CommentBox = React.createClass({
 		return blogData && blogData.map( blog => {
 
 			if(blog.replyTo && !blog.reply){
+				// find reply object
 				blog.reply = blogData.find(b => b.authorId === blog.replyTo).author;
 			}
 

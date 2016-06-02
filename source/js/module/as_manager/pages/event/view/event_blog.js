@@ -108,15 +108,16 @@ const Blog = React.createClass({
             eventId = binding.get('eventId'),
             comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
 			replyTo = binding.get('replyTo'),
-			replyStr = replyTo ? `${replyTo.lastName} ${replyTo.firstName}` : null,
+			replyName = replyTo ? `${replyTo.lastName} ${replyTo.firstName}` : null,
 			postData = {text: comments};
 
         ReactDOM.findDOMNode(self.refs.commentBox).value = "";
 		binding.sub('replyTo').clear();
 
-		if(replyTo && comments.indexOf(replyStr) >= 0){
-			postData.text = comments.replace(replyStr, '').trim();
-			postData.replyTo = replyTo.id;
+		/**if reply and a comment contains the name*/
+		if(replyTo && comments.indexOf(replyName) >= 0){
+			postData.text = comments.replace(replyName, '').trim(); // remove reply name from comment
+			postData.replyTo = replyTo.id;// set replyId in postData
 		}
 
         return window.Server.schoolEventComments.post(
