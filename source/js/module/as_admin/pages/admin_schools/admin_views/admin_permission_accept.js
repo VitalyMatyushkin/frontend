@@ -1,7 +1,8 @@
-const 	If 				= require('module/ui/if/if'),
+const	If 				= require('module/ui/if/if'),
 		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		React 			= require('react'),
-		Immutable 		= require('immutable');
+		React			= require('react'),
+		Lazy			= require('lazyjs'),
+		Immutable		= require('immutable');
 
 const PermissionAcceptPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -86,23 +87,58 @@ const PermissionAcceptPage = React.createClass({
 
 		binding.set('houseId', houseId);
 	},
-	serviceStudentsFilter: function() {
+	serviceStudentsFilter: function(name) {
 		var self = this,
 			binding = self.getDefaultBinding();
 
+		let foundStudents;
+
+		//	Why we send two same requests?
+		//	User can search students by first name or by last name. We don't know.
+		//	Since the server does not support filter by last name and first name at the same time,
+		//	we have to make two requests, concat result arrays and filter it by id for unique.
 		return window.Server.schoolStudents.get(binding.get('schoolId'),{
 			filter: {
 				where: {
 					formId: binding.get('formId'),
-					houseId: binding.get('houseId')
+					houseId: binding.get('houseId'),
+					lastName: {
+						like: name,
+						options:'i'
+					}
 				}
 			}
-		}).then(function(students) {
-			students.forEach(function(student) {
-				student.name = student.firstName + " " + student.lastName;
-			});
-			return students;
-		},function(error){console.log(error)});
+		})
+		.then(foundStudentsByLastName => {
+			foundStudents = foundStudentsByLastName;
+
+			return window.Server.schoolStudents.get(binding.get('schoolId'),{
+				filter: {
+					where: {
+						formId: binding.get('formId'),
+						houseId: binding.get('houseId'),
+						firstName: {
+							like: name,
+							options:'i'
+						}
+					}
+				}
+			})
+		})
+		.then(
+			foundStudentsByFirstName => {
+				foundStudents = Lazy(foundStudents.concat(foundStudentsByFirstName)).uniq('id').toArray();
+				// need for view
+				foundStudents.forEach(student => {
+					student.name = student.firstName + " " + student.lastName;
+				});
+
+				return foundStudents;
+			},
+			error => {
+				console.log(error);
+			}
+		);
 	},
 	onSelectStudent: function(studentId) {
 		var self = this,
