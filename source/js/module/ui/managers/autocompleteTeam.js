@@ -48,42 +48,29 @@ const AutocompleteTeam = React.createClass({
             return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
         });
     },
-    serviceStudentFullData: function (searchText) {
-        const self = this,
-            binding = self.getDefaultBinding();
+    serviceStudentFullData: function (lastName) {
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         //TODO fix me
         if(binding.get('schoolInfo.forms')) {
-            const ages = binding.get('model.ages'),
-                gender = binding.get('model.gender'),
-                forms = self._getFilteredForms(ages),
-                type = binding.get('model.type'),
-                schoolId = binding.get('schoolInfo.id'),
+            const   ages        = binding.get('model.ages'),
+                    gender      = binding.get('model.gender'),
+                    forms       = self._getFilteredForms(ages),
+                    type        = binding.get('model.type'),
+                    schoolId    = binding.get('schoolInfo.id');
 
-                filter = {
-                    where: {
-                        formId: {
-                            inq: forms.map(function (form) {
-                                return form.get('id');
-                            }).toJS()
-                        },
-                        or: [
-                                {
-                                    'userInfo.lastName': {
-                                        like:       searchText,
-                                        options:    'i'
-                                    }
-                                },
-                                {
-                                    'userInfo.firstName': {
-                                        like:       searchText,
-                                        options:    'i'
-                                    }
-                                }
-                            ]
-                    },
-                    include:["user","form"]
-                };
+            const   filter = {
+                        where: {
+                            formId: {
+                                $in: forms.map(form => form.get('id')).toJS()
+                            },
+                            lastName: {
+                                like:       lastName,
+                                options:    'i'
+                            }
+                        }
+                    };
 
             if (type === 'houses') {
                 filter.where.houseId = self.getBinding('rival').get('id');
