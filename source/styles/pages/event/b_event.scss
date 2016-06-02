@@ -55,79 +55,51 @@
   }
 }
 .bBlog_box{
+  $LinkColor:#749500;
+
   width: 100%;
   border-bottom: 1px solid #e0e0e0;
   margin-bottom: 10px;
   height:auto;
   overflow: hidden;
-}
-.bBlog_parent_comment{
   position:relative;
-  height: auto;
   display: flex;
+
+  .ePicBox{
+    width:50px;
+
+    img{
+      width:inherit;
+      height: 50px;
+      border-radius: 50%;
+    }
+  }
+
+  .eMessageBox{
+    font-size: 14px;
+    width: 100%;
+    padding-left: 10px;
+
+    .eUsername, .eMessage, .eUsernameReply{
+      display: inline-block;
+      padding: 10px 10px 10px 0;
+    }
+    .eUsername, .eUsernameReply, .eReply{
+      color: $COLOR;
+    }
+    .eReply{
+      margin-right: 20px;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
 }
-.bBlog_box_reply{
-  width: 80%;
-  margin:auto;
-  position:relative;
-  height: auto;
-  display: flex;
-}
-.bBlog_picBox{
-  width:50px;
-}
-.bBlog_picBox_reply{
-  width:50px;
-  float:left;
-}
-.bBlog_picBox_reply img{
-  width:inherit;
-  height: 50px;
-}
-.bBlog_pic{
-  width:50px;
-  display: block;
-  margin-right: 50px;
-}
-.bBlog_pic img{
-  width:inherit;
-  height: 50px;
-  border-radius: 50%;
-}
-.bBlog_messageBox{
-  font-size: 14px;
-  width: 85%;
-}
-.bBlog_messageBox_reply{
-  height: auto;
-  font-size: 14px;
-  width: 100%;
-}
-.bBlog_username,.bBlog_message,.bBlog_replyButton{
-  display: block;
-  padding: 10px 0px 10px 10px;
-}
-.bBlog_username_reply, .bBlog_message_reply,.bBlog_replyButton_reply{
-  display: block;
-  padding: 0 0 10px 10px;
-}
-.bBlog_username, .bBlog_username_reply{
-  color: $COLOR;
-}
-.bBlog_replyButton, .bBlog_replyButton_reply{
-  color: #919191;
-}
+
 .eEvent_commentBlog{
   resize: none;
   width: 100%;
   margin-bottom: 10px;
-}
-.eBlog_replyTextArea{
-  width: 100%;
-}
-.bReplyButton{
-  width: 40px !important;
-  margin-right: 10px;
 }
 .cancel{
   background-color:#cccccc;
@@ -189,6 +161,11 @@
   max-width: 700px;
   width: 100%;
   box-sizing: border-box;
+
+  .bEventButtons{
+    justify-content: flex-start;
+    padding-left: 60px;
+  }
 }
 .bBlogMain .bEventHeader{
   border: none;
@@ -276,13 +253,9 @@
 }
 .eEvent_commentBox textarea {
   border-width: 0 0 1px;
-  max-width: 300px;
-  margin: 20px auto;
+  max-width: 558px;
+  margin: 10px 0 10px 60px;
   display: block;
-  -webkit-transition: border-color 0.5s;
-  -moz-transition: border-color 0.5s;
-  -ms-transition: border-color 0.5s;
-  -o-transition: border-color 0.5s;
   transition: border-color 0.5s;
 }
 .eEvent_commentBox textarea:hover {

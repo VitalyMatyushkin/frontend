@@ -26,7 +26,7 @@ const TabItem = React.createClass({
 				});
 
 		return (
-			<span key={model.value} className={classes} onClick={self.props.onClick.bind(null, model.value)}>{model.text}
+			<span className={classes} onClick={self.props.onClick.bind(null, model.value)}>{model.text}
 			</span>
 		);
 	}
