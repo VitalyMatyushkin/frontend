@@ -310,6 +310,11 @@ const EventView = React.createClass({
 				value:'comments',
 				text:'Comments',
 				isActive:false
+			},
+			{
+				value:'report',
+				text:'Match Report',
+				isActive:false
 			}
 		];
 	},
@@ -341,12 +346,6 @@ const EventView = React.createClass({
 			}
 		];
 	},
-	onToggleShowComment: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
-
-		binding.set('showingComment', !binding.get('showingComment'));
-	},
 	//A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
 	//This avoids the manager having to reload the screen to see what they just entered.
 	onChange:function(){
@@ -362,11 +361,7 @@ const EventView = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			showingComment = binding.get('showingComment'),
-			activeTab = binding.get('activeTab'),
-			commentTextClasses = classNames({
-				'eEvent_commentText': true,
-				mHide: !showingComment
-			});
+			activeTab = binding.get('activeTab');
 		self.onChange();
 		return <div>
 			<div className="bEventContainer">
@@ -386,34 +381,39 @@ const EventView = React.createClass({
 							<EventTeams binding={binding} />
 						</If>
 						<If condition={activeTab === 'details'} >
-							<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0') || false}>
-								<div className="eEvent_shadowCommentText">{self.commentContent}</div>
-							</If>
+							{null}
 						</If>
 						<If condition={activeTab === 'gallery'} >
 							<EventGallery binding={binding} />
 						</If>
 						<If condition={activeTab === 'comments'} >
 							<div className="eEvent_commentBox">
-								<If condition={(binding.get('mode') === 'closing') || false}>
-									<Morearty.DOM.textarea
+								<Comments binding={binding}/>
+							</div>
+						</If>
+						<If condition={activeTab === 'report'} >
+							<div>
+								<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
+									<div className="eEvent_shadowCommentText">{self.commentContent}</div>
+								</If>
+								<div className="eEvent_commentBox">
+									<If condition={binding.get('mode') === 'closing'}>
+										<Morearty.DOM.textarea
 											placeholder="Enter your first comment"
 											className="eEvent_comment"
 											onChange={Morearty.Callback.set(binding, 'model.comment')}
 											value={binding.get('model.comment')} id="commentTextArea"
-											/>
-								</If>
-								<If condition={(binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined) || false}>
-									<div className="bMainComment">
-										<span className="bMainComment_pic">
-											<img src={'http://placehold.it/400x400'}/>
-										</span>
-										<div>{binding.get('model.result.comment')}</div>
-									</div>
-								</If>
-								<If condition={((binding.get('mode') === 'general') && (binding.get('model.status') === "FINISHED")) || false}>
-									<Comments binding={binding}/>
-								</If>
+										/>
+									</If>
+									<If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined}>
+										<div className="bMainComment">
+											<span className="bMainComment_pic">
+												<img src={'http://placehold.it/400x400'}/>
+											</span>
+											<div>{binding.get('model.result.comment')}</div>
+										</div>
+									</If>
+								</div>
 							</div>
 						</If>
 						<If condition={(binding.get('mode') !== 'general')}>

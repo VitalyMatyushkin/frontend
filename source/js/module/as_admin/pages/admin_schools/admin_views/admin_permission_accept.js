@@ -1,7 +1,8 @@
-const 	If 				= require('module/ui/if/if'),
+const	If 				= require('module/ui/if/if'),
 		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		React 			= require('react'),
-		Immutable 		= require('immutable');
+		React			= require('react'),
+		Lazy			= require('lazyjs'),
+		Immutable		= require('immutable');
 
 const PermissionAcceptPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -86,23 +87,34 @@ const PermissionAcceptPage = React.createClass({
 
 		binding.set('houseId', houseId);
 	},
-	serviceStudentsFilter: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+	serviceStudentsFilter: function(lastName) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return window.Server.schoolStudents.get(binding.get('schoolId'),{
 			filter: {
 				where: {
 					formId: binding.get('formId'),
-					houseId: binding.get('houseId')
+					houseId: binding.get('houseId'),
+					lastName: {
+						like: lastName,
+						options:'i'
+					}
 				}
 			}
-		}).then(function(students) {
-			students.forEach(function(student) {
-				student.name = student.firstName + " " + student.lastName;
-			});
-			return students;
-		},function(error){console.log(error)});
+		})
+		.then(
+			students => {
+				students.forEach(student => {
+					student.name = student.firstName + " " + student.lastName;
+				});
+
+				return students;
+			},
+			error => {
+				console.log(error);
+			}
+		);
 	},
 	onSelectStudent: function(studentId) {
 		var self = this,

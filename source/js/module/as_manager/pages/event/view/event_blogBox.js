@@ -1,32 +1,44 @@
 /**
  * Created by bridark on 14/07/15.
  */
-const React = require('react');
+const 	React 	= require('react'),
+		If		= require('module/ui/if/if');
 
 const CommentBox = React.createClass({
-	mixins:[Morearty.Mixin],
 	propTypes:{
 		blogData: React.PropTypes.array,
-		currentUserHasChild: React.PropTypes.bool
+		onReply: React.PropTypes.func.isRequired
 	},
 	_renderBlogComments: function(blogData){
+		const self = this;
+
 		return blogData && blogData.map( blog => {
+
+			if(blog.replyTo && !blog.reply){
+				// find reply object
+				blog.reply = blogData.find(b => b.authorId === blog.replyTo).author;
+			}
+
 			return (
 				<div key={blog.id} className="bBlog_box">
-					<div className="bBlog_parent_comment">
-						<div className="bBlog_picBox">
-							<span className="bBlog_pic">
-								<img src={'http://placehold.it/400x400'}/>
+					<div className="ePicBox">
+						<img src={'http://placehold.it/400x400'}/>
+					</div>
+					<div className="eMessageBox">
+						<span className="eUsername">
+							{`${blog.author.lastName} ${blog.author.firstName}`}
+						</span>
+						<If condition={!!(blog && blog.replyTo)}>
+							<span className="eUsernameReply">
+								{`${blog.replyTo && blog.reply.lastName} ${blog.replyTo && blog.reply.firstName}`}
 							</span>
-						</div>
-						<div className="bBlog_messageBox">
-							<span className="bBlog_username">
-								{`${blog.author.lastName} ${blog.author.firstName}`}
-								<span className="bBlog_timestamp"></span>
-							</span>
-							<span className="bBlog_message">
-								{blog.text}
-							</span>
+						</If>
+						<span className="eMessage">
+							{blog.text}
+						</span>
+						<div>
+							<a className="eReply" onClick={self.props.onReply.bind(null, blog)}>Reply</a>
+							<span className="eCommentDate">{new Date(blog.createdAt).toLocaleString('en-GB')}</span>
 						</div>
 					</div>
 				</div>
