@@ -1,11 +1,12 @@
-const React = require('react');
+const React = require('react'),
+	  SVG = require('module/ui/svg');
 
 const Logo = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		return (
 			<div className="bTopLogo">
-			<img src = "images/logo.png"></img>
+			<SVG icon="icon_logo" />
 			</div>
 		)
 	}

@@ -31,7 +31,6 @@
 .eEvent_commentText {
   padding: 6px 0;
   box-sizing: border-box;
-  background: #eee;
   transition: height .3s ease-out;
   &.mHide {
     height: 0;
@@ -58,48 +57,44 @@
   $LinkColor:#749500;
 
   width: 100%;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid #d7d7d7;
   margin-bottom: 10px;
+  padding-bottom: 10px;
   height:auto;
-  overflow: hidden;
   position:relative;
   display: flex;
-
-  .ePicBox{
-    width:50px;
-
-    img{
-      width:inherit;
-      height: 50px;
-      border-radius: 50%;
-    }
-  }
 
   .eMessageBox{
     font-size: 14px;
     width: 100%;
-    padding-left: 10px;
-
-    .eUsername, .eMessage, .eUsernameReply{
+    margin-left: 20px;
+    .eUsername {
+      font-weight: bold;
+    }
+    .eUsername{
+      display: block;
+    }
+    .eMessage, .eUsernameReply{
       display: inline-block;
       padding: 10px 10px 10px 0;
+      line-height: 16px;
     }
-    .eUsername, .eUsernameReply, .eReply{
-      color: $COLOR;
-    }
-    .eReply{
-      margin-right: 20px;
-      &:hover{
-        text-decoration: underline;
-      }
+    .eUsername, .eUsernameReply{
+      color: $MAIN_COLOR;
     }
   }
 }
+.bBlog_box.mNewComment {
+  border: none;
+}
+.ePicBox{
+  width:45px;
 
-.eEvent_commentBlog{
-  resize: none;
-  width: 100%;
-  margin-bottom: 10px;
+  img{
+    width:inherit;
+    height: 45px;
+    border-radius: 50%;
+  }
 }
 .cancel{
   background-color:#cccccc;
@@ -133,7 +128,6 @@
   box-shadow: 0px -2px 0 0 darken(#cccccc, 10%);
 }
 .eEvent_blog{
-  background: #FFFFFF;
   position: relative;
   -webkit-transition: height 3s;
   -moz-transition: height 3s;
@@ -156,15 +150,13 @@
 }
 .bBlogMain{
   position:relative;
-  margin: 10px auto;
-  padding: 10px 20px;
   max-width: 700px;
   width: 100%;
   box-sizing: border-box;
 
   .bEventButtons{
     justify-content: flex-start;
-    padding-left: 60px;
+    padding-left: 65px;
   }
 }
 .bBlogMain .bEventHeader{
@@ -215,11 +207,9 @@
 .eEvent_commentBox{
   color: #333132;
   text-transform: capitalize;
-  background: #ffffff;
   max-width: 700px;
-  margin: 10px auto;
-  border: $BORDER;
-  padding: 10px 20px;
+  margin: 0 auto;
+  padding: 0 50px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -252,14 +242,40 @@
   border-radius: 50%;
 }
 .eEvent_commentBox textarea {
-  border-width: 0 0 1px;
-  max-width: 558px;
-  margin: 10px 0 10px 60px;
-  display: block;
-  transition: border-color 0.5s;
+  display: inline-block;
+  padding: 10px;
+  max-width: 515px;
+  resize: none;
 }
-.eEvent_commentBox textarea:hover {
-  border-color: $COLOR;
+.eEvent_commentBlog {
+  margin-left: 20px;
+  width: 100%;
+  position: relative;
+}
+.eEvent_commentBlog:before, .eEvent_commentBlog:after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  border-width: 7px 7px 7px 0;
+  border-style: solid;
+  border-color: transparent #ccc ;
+  z-index: 300;
+  margin-left: -7px;
 }
 
+.eEvent_commentBlog:after {
+  border-color: transparent #fff;
+  margin-left: -5px;
+}
+.eCommentDate, .eCommentLike, .eReply {
+  color: #959595;
+  margin-right: 20px;
+  cursor: pointer;
+}
+.eCommentLike:hover, .eReply:hover {
+  color: $MAIN_COLOR;
+}
 

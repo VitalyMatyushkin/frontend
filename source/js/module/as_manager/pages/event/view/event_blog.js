@@ -160,8 +160,13 @@ const Blog = React.createClass({
         return(
             <div className="bBlogMain">
                 <CommentBox onReply={self.onReply} blogData={dataBlog} />
-                <div>
-                    <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment eEvent_commentBlog"/>
+                <div className="bBlog_box mNewComment">
+                    <div className="ePicBox">
+                        <img src={'http://placehold.it/400x400'}/>
+                    </div>
+                    <div className="eEvent_commentBlog">
+                        <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>
+                    </div>
                 </div>
                 <div className="bEventButtons">
                     <div onClick={self._commentButtonClick.bind(null,this)} className="bEventButton">Send</div>
