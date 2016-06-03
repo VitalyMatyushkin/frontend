@@ -5,24 +5,13 @@ const   DataPrototype   = require('module/data/data_prototype'),
 
 
 /**
+ * This component is used to store information about the authorization only in the domain login.
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-	let authorizationInfo = Helpers.SessionStorage.get('authorizationInfo');
-
-	if(!authorizationInfo){
-		/**If this is the first request after the login page, the data will be in cookies.*/
-		authorizationInfo = Helpers.cookie.get('authorizationInfo'); //getting data
-
-		/**init session storage */
-		authorizationInfo && Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
-		/**and remove data from cookies.*/
-		authorizationInfo && Helpers.cookie.remove('authorizationInfo');
-	}
-
     // Recovering authorization state info
     return {
-        authorizationInfo: authorizationInfo || {}
+        authorizationInfo: Helpers.cookie.get('authorizationInfo') || {}
     };
 };
 
@@ -38,7 +27,7 @@ UserDataClass.initBind = function () {
     bindObject.addListener('authorizationInfo', function () {
         const authorizationInfo = bindObject.toJS('authorizationInfo');
 
-		authorizationInfo && Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
+		authorizationInfo && Helpers.cookie.set('authorizationInfo', authorizationInfo);
 		self._ajaxSetup(bindObject);
 	});
 };

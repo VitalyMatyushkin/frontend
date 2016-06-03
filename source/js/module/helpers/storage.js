@@ -2,7 +2,8 @@
  * Created by wert on 19.11.15.
  */
 
-const localStorage    = window.localStorage;
+const 	localStorage 	= window.localStorage,
+		sessionStorage 	= window.sessionStorage;
 
 let Helpers = {};
 
@@ -13,57 +14,79 @@ let Helpers = {};
 *  getSize();
 *  remove(key);
 *  clear();
-*  cleanSubstringContains(subkey);
 * }
-**/
+ **/
 Helpers.LocalStorage = {
-    set: function (key, value) {
-        value = typeof value === 'string' ? String(value) : JSON.stringify(value);
+	set: function (key, value) {
+		value = typeof value === 'string' ? String(value) : JSON.stringify(value);
 
-        try {
-            localStorage.setItem(key, value);
-            return true;
-        } catch (error_text) {
-            console.error('Out of local store');
-            return false;
-        }
-    },
-    get: function (key) {
-        const value = localStorage.getItem(key);
+		try {
+			localStorage.setItem(key, value);
+			return true;
+		} catch (error_text) {
+			console.error('Out of local store');
+			return false;
+		}
+	},
+	get: function (key) {
+		const value = localStorage.getItem(key);
 
-        if (value !== null) {
-            return (value.indexOf('{') !== -1 || value.indexOf('[') !== -1 ? JSON.parse(value) : value);
-        } else {
-            return undefined;
-        }
-    },
-    getSize: function () {
-        return unescape(encodeURIComponent(JSON.stringify(localStorage))).length;
-    },
-    remove: function (key) {
-        return localStorage.removeItem(key);
-    },
-    clear: function () {
-        localStorage.clear();
-    },
-    cleanSubstringContains: function (name_substring) {
-        var self = this,
-            fields_to_remove = [];
+		if (value !== null) {
+			return (value.indexOf('{') !== -1 || value.indexOf('[') !== -1 ? JSON.parse(value) : value);
+		} else {
+			return undefined;
+		}
+	},
+	getSize: function () {
+		return unescape(encodeURIComponent(JSON.stringify(localStorage))).length;
+	},
+	remove: function (key) {
+		return localStorage.removeItem(key);
+	},
+	clear: function () {
+		localStorage.clear();
+	}
+};
 
-        // Filling fields_to_remove array
-        for (var i = 0, ii = localStorage.length; i < ii; i++) {
-            var field_name = localStorage.key(i);
+/** Helper to deal easier with sessionStorage
+ * SessionStorage {
+*  set(key, value);
+*  get(key);
+*  getSize();
+*  remove(key);
+*  clear();
+* }
+ **/
+Helpers.SessionStorage = {
+	set: function (key, value) {
+		value = typeof value === 'string' ? String(value) : JSON.stringify(value);
 
-            if (field_name && field_name.indexOf(name_substring) !== -1) {
-                fields_to_remove.push(field_name);
-            }
-        }
+		try {
+			sessionStorage.setItem(key, value);
+			return true;
+		} catch (error_text) {
+			console.error('Out of session store');
+			return false;
+		}
+	},
+	get: function (key) {
+		const value = sessionStorage.getItem(key);
 
-        // Deleting entries from localStorage
-        for (var j = 0, jj = fields_to_remove.length; j < jj; j++) {
-            self.remove(fields_to_remove[j]);
-        }
-    }
+		if (value !== null) {
+			return (value.indexOf('{') !== -1 || value.indexOf('[') !== -1 ? JSON.parse(value) : value);
+		} else {
+			return undefined;
+		}
+	},
+	getSize: function () {
+		return unescape(encodeURIComponent(JSON.stringify(sessionStorage))).length;
+	},
+	remove: function (key) {
+		return sessionStorage.removeItem(key);
+	},
+	clear: function () {
+		sessionStorage.clear();
+	}
 };
 
 
