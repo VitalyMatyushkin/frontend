@@ -2,14 +2,14 @@
  * Created by Anatoly on 30.03.2016.
  */
 
-const	React		= require('react'),
-		SVG			= require('module/ui/svg'),
-		Immutable	= require('immutable'),
-		classNames	= require('classnames'),
-		If			= require('module/ui/if/if'),
-		RoleHelper	= require('module/helpers/role_helper'),
-		Lazy		= require('lazyjs'),
-		Auth		= require('module/core/services/AuthorizationServices');
+const	React			= require('react'),
+		SVG				= require('module/ui/svg'),
+		Immutable		= require('immutable'),
+		classNames		= require('classnames'),
+		If				= require('module/ui/if/if'),
+		DomainHelper 	= require('module/helpers/domain_helper'),
+		Lazy			= require('lazyjs'),
+		Auth			= require('module/core/services/AuthorizationServices');
 
 
 const  RoleList = React.createClass({
@@ -94,41 +94,9 @@ const  RoleList = React.createClass({
 		self.roleBecome(roleName);
 	},
 	roleBecome:function(roleName){
-		const self = this;
-
 		Auth.become(roleName).then(() => {
-			self.redirectToStartPage(roleName);
+			DomainHelper.redirectToStartPage(roleName);
 		});
-	},
-	getRoleSubdomain: function(roleName) {
-		return RoleHelper.roleMapper[roleName.toLowerCase()];
-	},
-	redirectToStartPage: function(roleName) {
-		const self = this;
-
-		const roleSubdomain = self.getRoleSubdomain(roleName);
-
-		if(roleSubdomain) {
-			let subdomains = document.location.host.split('.');
-			subdomains[0] = roleSubdomain;
-			const domain = subdomains.join(".");
-			let newUrl = window.location.href;
-			switch (roleSubdomain) {
-				case 'manager':
-					newUrl = `http://${domain}/#school_admin/summary`;
-					break;
-				case 'parents':
-					newUrl = `http://${domain}/#events/calendar/all`;
-					break;
-			}
-			if(newUrl === window.location.href)
-				window.location.reload();
-			else
-				window.location.href = newUrl;
-
-		} else {
-			alert('unknown role: ' + roleName);
-		}
 	},
 	getMySchools:function(){
 		const 	self 	= this,
