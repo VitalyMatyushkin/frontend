@@ -10,7 +10,7 @@ const   DataPrototype   = require('module/data/data_prototype'),
 UserDataClass.getDefaultState = function () {
     // Recovering authorization state info
     return {
-        authorizationInfo: Helpers.cookie.get('authorizationInfo') || {}
+        authorizationInfo: Helpers.SessionStorage.get('authorizationInfo') || {}
     };
 };
 
@@ -26,7 +26,7 @@ UserDataClass.initBind = function () {
     bindObject.addListener('authorizationInfo', function () {
         const authorizationInfo = bindObject.toJS('authorizationInfo');
 
-		authorizationInfo && Helpers.cookie.set('authorizationInfo', authorizationInfo);
+		authorizationInfo && Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
 		self._ajaxSetup(bindObject);
 	});
 };
