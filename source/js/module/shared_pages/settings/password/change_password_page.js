@@ -30,8 +30,19 @@ const SecuritySettingsPage = React.createClass({
 					defaultButton="Change"
 					loadingButton="Saving..."
 				>
-					<FormField type="text" field="oldPassword" validation="required">Old Password</FormField>
-					<FormField type="confirmText" field="newPassword" validation="required">New Password</FormField>
+					<FormField	type="text"
+								field="oldPassword"
+								validation="required"
+					>
+						Old Password
+					</FormField>
+					<FormField	type="confirmText"
+								textType="password"
+								field="newPassword"
+								validation="required password"
+					>
+						New Password
+					</FormField>
 				</Form>
 			</div>
 		)
