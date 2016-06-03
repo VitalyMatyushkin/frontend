@@ -2,7 +2,7 @@
  * Created by wert on 16.01.16.
  */
 const   ApplicationView     = require('module/as_login/application'),
-        userDataInstance    = require('module/data/user_data'),
+        userDataLogin 		= require('module/data/user_data_login'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
         serviceList         = require('module/core/service_list'),
@@ -13,7 +13,7 @@ function runLoginMode() {
 // Create Morearty context
     const MoreartyContext = Morearty.createContext({
         initialState: {
-            userData: userDataInstance.getDefaultState(),
+            userData: userDataLogin.getDefaultState(),
             userRules: userRulesInstance.getDefaultState(),
             routing: {
                 currentPath: '',
@@ -86,7 +86,7 @@ function runLoginMode() {
     window.Server = serviceList;
 
     // Передача связывания контекста в классы данных
-    userDataInstance.setBinding(binding.sub('userData'));
+    userDataLogin.setBinding(binding.sub('userData'));
     userRulesInstance.setBinding(binding.sub('userRules'));
 
     // Enable servises
