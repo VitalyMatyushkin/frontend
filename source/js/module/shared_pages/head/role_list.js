@@ -35,11 +35,7 @@ const  RoleList = React.createClass({
 	},
 	getMyRoles:function(){
 		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				rootBinding		= self.getMoreartyContext().getBinding();
-
-		const	activeRoleName	= rootBinding.get('userData.authorizationInfo.role'),
-				activeSchoolId	= rootBinding.get('userRules.activeSchoolId');
+				binding			= self.getDefaultBinding();
 
 		window.Server.roles.get().then(roles => {
 			if (roles && roles.length) {

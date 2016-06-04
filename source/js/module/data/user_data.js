@@ -10,7 +10,7 @@ const   DataPrototype   = require('module/data/data_prototype'),
 UserDataClass.getDefaultState = function () {
 	let authorizationInfo = Helpers.SessionStorage.get('authorizationInfo');
 
-	if(!authorizationInfo){
+	if(!authorizationInfo || !authorizationInfo.id){
 		/**If this is the first request after the login page, the data will be in cookies.*/
 		authorizationInfo = Helpers.cookie.get('authorizationInfo'); //getting data
 
@@ -22,7 +22,7 @@ UserDataClass.getDefaultState = function () {
 
     // Recovering authorization state info
     return {
-        authorizationInfo: authorizationInfo || {}
+        authorizationInfo: authorizationInfo
     };
 };
 
