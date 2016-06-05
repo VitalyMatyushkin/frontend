@@ -2,12 +2,10 @@ const	SVG					= require('module/ui/svg'),
 		Map					= require('module/ui/map/map'),
 		React				= require('react'),
 		If					= require('module/ui/if/if'),
-		ActiveUserHelper	= require('module/helpers/activeUser_helper'),
 		Immutable			= require('immutable');
 
 const SchoolSummary = React.createClass({
 	mixins: [Morearty.Mixin],
-	activeSchoolId: undefined,
 	getDefaultState:function(){
 		return Immutable.fromJS({
 			countOfSchools:0,
@@ -16,29 +14,27 @@ const SchoolSummary = React.createClass({
 	},
 	componentWillMount: function() {
 		const	self			= this,
-				globalBinding	= self.getMoreartyContext().getBinding();
+				rootBinding	= self.getMoreartyContext().getBinding();
 
-		self.activeSchoolId = globalBinding.get('userRules.activeSchoolId');
+		const 	activePermission 	= rootBinding.get('userData.roleList.activePermission');
 
-        if(self.activeSchoolId)
+        if(activePermission)
             self.loadSchool();
-        else
-            self.addBindingListener(globalBinding, 'userRules.activeSchoolId', self.loadSchool);
-
-		//ActiveUserHelper.howManySchools(self).then(function(count){
-		//	binding.set('countOfSchools',Immutable.fromJS(count));
-		//	return count;
-		//});
+        else {
+			self.addBindingListener(rootBinding, 'userData.roleList.activePermission', self.loadSchool);
+		}
 	},
     loadSchool:function(){
         const	self	= this,
-                binding	= self.getDefaultBinding();
+                binding	= self.getDefaultBinding(),
+				rootBinding	= self.getMoreartyContext().getBinding(),
+				activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
-        window.Server.school.get(self.activeSchoolId, {filter: {include: 'postcode'}})
-            .then(function(schoolData) {
-                binding.set('schoolData',Immutable.fromJS(schoolData));
-                return schoolData;
-            });
+		window.Server.school.get(activeSchoolId, {filter: {include: 'postcode'}})
+			.then(function(schoolData) {
+				binding.set('schoolData',Immutable.fromJS(schoolData));
+				return schoolData;
+			});
     },
 	render: function() {
 		const	self			= this,
@@ -47,15 +43,16 @@ const SchoolSummary = React.createClass({
 				siteLink		= binding.get('schoolData.domain') ? `${binding.get('schoolData.domain')}.stage2.squadintouch.com`:'',
 				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined,
 				rootBinding 	= self.getMoreartyContext().getBinding(),
+				activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 				role 			= rootBinding.get('userData.authorizationInfo.role');
-		;
+
 		return (
 			<div>
 				<div className="eSchoolMaster_summary">
 					<div className="summary_inside">
 						<If condition={role === "ADMIN"}>
 							<div className="editSchool">
-								<a href={'/#schools/edit?id=' + self.activeSchoolId}>
+								<a href={'/#schools/edit?id=' + activeSchoolId}>
 									<div className="bEditButton">
 										<SVG icon="icon_edit"/>
 									</div>

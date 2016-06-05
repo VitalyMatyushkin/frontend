@@ -106,10 +106,10 @@ const  RoleList = React.createClass({
 		const   self 	    = this,
 				binding     = self.getDefaultBinding(),
 				schoolId    = permission ? permission.schoolId : null,
-				schools     = binding.get('schools'),
-				school      = schools.length ? schools.find(s => s.id === schoolId) : null,
-				schoolName  = school ? school.name : null,
 				role        = permission ? permission.role : 'NO ROLE',
+				schools     = binding.get('schools'),
+				school      = schools.length && role !== 'PARENT' ? schools.find(s => s.id === schoolId) : null,
+				schoolName  = school ? school.name : null,
 				id          = permission ? permission.id : null;
 
 		return (
