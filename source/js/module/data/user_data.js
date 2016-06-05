@@ -8,21 +8,19 @@ const   DataPrototype   = require('module/data/data_prototype'),
  * Getting initial state of UserData
  */
 UserDataClass.getDefaultState = function () {
-	let authorizationInfo = Helpers.SessionStorage.get('authorizationInfo');
+	/**If this is the first request after the login page, the data will be in cookies.*/
+	const cookieData = Helpers.cookie.get('authorizationInfo'); //getting data
 
-	if(!authorizationInfo || !authorizationInfo.id){
-		/**If this is the first request after the login page, the data will be in cookies.*/
-		authorizationInfo = Helpers.cookie.get('authorizationInfo'); //getting data
-
+	if(cookieData && cookieData.id){
 		/**init session storage */
-		authorizationInfo && Helpers.SessionStorage.set('authorizationInfo', authorizationInfo);
+		Helpers.SessionStorage.set('authorizationInfo', cookieData);
 		/**and remove data from cookies.*/
-		authorizationInfo && Helpers.cookie.remove('authorizationInfo');
+		Helpers.cookie.remove('authorizationInfo');
 	}
 
     // Recovering authorization state info
     return {
-        authorizationInfo: authorizationInfo
+        authorizationInfo: Helpers.SessionStorage.get('authorizationInfo')
     };
 };
 

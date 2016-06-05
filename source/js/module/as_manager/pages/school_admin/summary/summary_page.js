@@ -16,14 +16,12 @@ const SchoolSummary = React.createClass({
 		const	self			= this,
 				rootBinding	= self.getMoreartyContext().getBinding();
 
-		const 	activeSchoolId 		= rootBinding.get('userRules.activeSchoolId'),
-				activePermission 	= rootBinding.get('userData.roleList.activePermission');
+		const 	activePermission 	= rootBinding.get('userData.roleList.activePermission');
 
-        if(activeSchoolId && activePermission)
+        if(activePermission)
             self.loadSchool();
         else {
-			self.addBindingListener(rootBinding, 'userRules.activeSchoolId', self.loadSchool);
-			//self.addBindingListener(rootBinding, 'userData.roleList.activePermission', self.loadSchool);
+			self.addBindingListener(rootBinding, 'userData.roleList.activePermission', self.loadSchool);
 		}
 	},
     loadSchool:function(){
@@ -32,15 +30,11 @@ const SchoolSummary = React.createClass({
 				rootBinding	= self.getMoreartyContext().getBinding(),
 				activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
-		if(!self.schoolLoading){
-			self.schoolLoading = true;
-			window.Server.school.get(activeSchoolId, {filter: {include: 'postcode'}})
-				.then(function(schoolData) {
-					self.schoolLoading = false;
-					binding.set('schoolData',Immutable.fromJS(schoolData));
-					return schoolData;
-				});
-		}
+		window.Server.school.get(activeSchoolId, {filter: {include: 'postcode'}})
+			.then(function(schoolData) {
+				binding.set('schoolData',Immutable.fromJS(schoolData));
+				return schoolData;
+			});
     },
 	render: function() {
 		const	self			= this,

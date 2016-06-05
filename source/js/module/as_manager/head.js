@@ -8,27 +8,12 @@ const Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		const self = this;
-
-		self.schoolExists();
 	},
 	componentDidMount:function(){
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		self.addBindingListener(binding, 'userRules.activeSchoolId', self.createTopMenu);
-		self.addBindingListener(binding, 'userData.authorizationInfo.role', self.schoolExists);
-	},
-	schoolExists:function(){
-		const	self			= this,
-				globalBinding	= self.getMoreartyContext().getBinding(),
-				activeSchoolId	= globalBinding.get('userRules.activeSchoolId'),
-				authorization	= globalBinding.get('userData.authorizationInfo.id');
-
-		if(activeSchoolId && authorization) {
-			return window.Server.school.get(activeSchoolId)
-				.then(_ => self.createTopMenu())
-				.catch(_ => globalBinding.set('userRules.activeSchoolId', ''));
-		}
+		self.createTopMenu();
 	},
 	_createMenuItems: function() {
 		const self = this;
@@ -81,15 +66,9 @@ const Head = React.createClass({
 	},
 	createTopMenu: function() {
 		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				globalBinding	= self.getMoreartyContext().getBinding(),
-				activeSchoolId	= globalBinding.get('userRules.activeSchoolId');
+				binding			= self.getDefaultBinding();
 
-		if(activeSchoolId) {
-			binding.set('topMenuItems', self._createMenuItems());
-		} else {
-			binding.clear('topMenuItems');
-		}
+		binding.set('topMenuItems', self._createMenuItems());
 	},
 	render: function() {
 		const	self	= this,
