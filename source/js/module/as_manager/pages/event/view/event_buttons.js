@@ -1,9 +1,11 @@
-const   If              = require('module/ui/if/if'),
-		InvitesMixin    = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		classNames      = require('classnames'),
-		React           = require('react'),
-		Immutable       = require('immutable'),
+const	If				= require('module/ui/if/if'),
+		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		classNames		= require('classnames'),
+		React			= require('react'),
+		Immutable		= require('immutable'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		EventHelper		= require('module/helpers/eventHelper'),
+		RoleHelper		= require('module/helpers/role_helper'),
 		SVG 			= require('module/ui/svg');
 
 const EventHeader = React.createClass({
@@ -121,52 +123,53 @@ const EventHeader = React.createClass({
 			.commit();
 	},
 	render: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				rootBinding		= self.getMoreartyContext().getBinding(),
-				isManager		= !!rootBinding.get('userRules.activeSchoolId'),
-				closeClasses	= classNames({
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	isUserSchoolWorker	= RoleHelper.isUserSchoolWorker(self),
+				closeClasses		= classNames({
 					mClose:		true,
 					mRed:		self.isEnableClose(),
 					mDisable:	!self.isEnableClose()
 				});
+
 		return (
-		<If condition={binding.get('model.status') === "NOT_FINISHED" && isManager}>
-			<div className="bEventButtons">
-				<If condition={binding.get('mode') === 'general'}>
-					<div
-						className="bEditButton"
-						onClick={self.onClickReFormTeamMatch}
-					>
-						<SVG icon="icon_edit"/>
-					</div>
-				</If>
-				<If condition={binding.get('mode') === 'general'}>
-					<div
-						className={closeClasses}
-						onClick={self.isEnableClose() ? self.onClickCloseMatch : null}
-					>
-						<SVG icon="icon_close_match"/>
-					</div>
-				</If>
-				<If condition={binding.get('mode') === 'closing'}>
-					<div
-						className="bEventButton mCancel"
-						onClick={self.onClickCancel}
-					>
-						Cancel
-					</div>
-				</If>
-				<If condition={binding.get('mode') !== 'general'}>
-					<div
-							className="bEventButton"
-							onClick={self.onClickOk}
-							>
-						Save
-					</div>
-				</If>
-			</div>
-		</If>
+			<If condition={binding.get('model.status') === EventHelper.EVENT_STATUS.NOT_FINISHED && isUserSchoolWorker}>
+				<div className="bEventButtons">
+					<If condition={binding.get('mode') === 'general'}>
+						<div
+							className="bEditButton"
+							onClick={self.onClickReFormTeamMatch}
+						>
+							<SVG icon="icon_edit"/>
+						</div>
+					</If>
+					<If condition={binding.get('mode') === 'general'}>
+						<div
+							className={closeClasses}
+							onClick={self.isEnableClose() ? self.onClickCloseMatch : null}
+						>
+							<SVG icon="icon_close_match"/>
+						</div>
+					</If>
+					<If condition={binding.get('mode') === 'closing'}>
+						<div
+							className="bEventButton mCancel"
+							onClick={self.onClickCancel}
+						>
+							Cancel
+						</div>
+					</If>
+					<If condition={binding.get('mode') !== 'general'}>
+						<div
+								className="bEventButton"
+								onClick={self.onClickOk}
+						>
+							Save
+						</div>
+					</If>
+				</div>
+			</If>
 		);
 	}
 });
