@@ -20,6 +20,8 @@
   max-height: 75px;
   margin-top: 10px;
   max-width: 75px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .eEventRivals_name {
@@ -51,3 +53,10 @@
   text-overflow: ellipsis;
 }
 
+.eEventRivals_text {
+  max-width: 200px;
+  margin-top: 10px;
+  overflow: hidden;
+  text-align: center;
+  word-wrap: break-word;
+}
