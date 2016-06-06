@@ -3,12 +3,10 @@
  */
 
 const	React			= require('react'),
-		SVG				= require('module/ui/svg'),
 		Immutable		= require('immutable'),
 		classNames		= require('classnames'),
 		If				= require('module/ui/if/if'),
 		DomainHelper 	= require('module/helpers/domain_helper'),
-		Lazy			= require('lazyjs'),
 		Auth			= require('module/core/services/AuthorizationServices');
 
 
