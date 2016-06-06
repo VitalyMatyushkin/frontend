@@ -1,9 +1,9 @@
-const Table = require('module/ui/list/table'),
-	TableField = require('module/ui/list/table_field'),
-	DateTimeMixin = require('module/mixins/datetime'),
-	SVG = require('module/ui/svg'),
-	ListPageMixin = require('module/mixins/list_page_mixin'),
-	React = require('react');
+const 	Table 			= require('module/ui/list/table'),
+		TableField 		= require('module/ui/list/table_field'),
+		DateTimeMixin 	= require('module/mixins/datetime'),
+		SVG 			= require('module/ui/svg'),
+		ListPageMixin 	= require('module/mixins/list_page_mixin'),
+		React 			= require('react');
 
 const StudentsListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin, DateTimeMixin],
@@ -13,8 +13,18 @@ const StudentsListPage = React.createClass({
 	onView: function(data) {
 		document.location.hash = 'school_admin/student?id='+data.id;
 	},
-	onRemove: function(data) {
-		alert('not implemented!!!');
+	onRemove: function(student) {
+		const 	self 		= this,
+				rootBinding = self.getMoreartyContext().getBinding(),
+				schoolId 	= rootBinding.get('userRules.activeSchoolId'),
+				cf 			= confirm(`Are you sure you want to remove student ${student.firstName} ${student.lastName}?`);
+
+		if(cf === true){
+			window.Server.schoolStudent.delete({schoolId:schoolId, studentId:student.id})
+				.then(function(){
+					self.reloadData();
+				});
+		}
 	},
 	getGender: function (gender) {
 		var icon = gender === 'male' ? 'icon_man': 'icon_woman';
@@ -50,7 +60,7 @@ const StudentsListPage = React.createClass({
 			binding = self.getDefaultBinding();
 		return (
 			<Table title="Students" binding={binding} onItemView={self.onView} onItemEdit={self._getEditFunction()}
-				   isPaginated={true} filter={self.filter}
+				   onItemRemove={self.onRemove} isPaginated={true} filter={self.filter}
 				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
 				<TableField dataField="firstName" >Name</TableField>
