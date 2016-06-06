@@ -49,6 +49,9 @@ const serviceList = {
         serviceList.schoolStudents = new Service('/superadmin/schools/{schoolId}/students', binding);
         serviceList.schoolStudent = new Service('/superadmin/schools/{schoolId}/students/{studentId}', binding);
 
+		// activity logs
+		serviceList.logs = new Service('/superadmin/logs', binding);
+		serviceList.logsCount = new Service('/superadmin/logs/count', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
