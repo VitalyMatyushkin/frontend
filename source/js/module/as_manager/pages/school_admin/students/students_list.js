@@ -10,16 +10,11 @@ const StudentsListPage = React.createClass({
 	setPageTitle: 'Students',
 	serviceName: 'schoolStudents',
     serviceCount:'schoolStudentsCount',
-	_getViewFunction: function() {
-		var self = this;
-
-		return function(data) {
-			//var pageBinding = self.getMoreartyContext().getBinding().sub(page);
-
-			//pageBinding.set('data', Immutable.fromJS(data));
-			document.location.hash = 'school_admin/student?id='+data.id;
-			//document.location.hash = page + '?&schoolId='+data.schoolId+'&id='+data.id;
-		}
+	onView: function(data) {
+		document.location.hash = 'school_admin/student?id='+data.id;
+	},
+	onRemove: function(data) {
+		alert('not implemented!!!');
 	},
 	getGender: function (gender) {
 		var icon = gender === 'male' ? 'icon_man': 'icon_woman';
@@ -54,14 +49,14 @@ const StudentsListPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
-			<Table title="Students" binding={binding} onItemView={self._getViewFunction()}
-				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
+			<Table title="Students" binding={binding} onItemView={self.onView} onItemEdit={self._getEditFunction()}
+				   isPaginated={true} filter={self.filter}
 				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
 				<TableField dataField="firstName" >Name</TableField>
 				<TableField dataField="lastName" >Surname</TableField>
 				<TableField dataField="form" dataFieldKey="name" filterType="none" >Form</TableField>
-				<TableField dataField="house" dataFieldKey="name" filterType="none" >Form</TableField>
+				<TableField dataField="house" dataFieldKey="name" filterType="none" >House</TableField>
 				<TableField dataField="birthday" filterType="none" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
 				<TableField dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
