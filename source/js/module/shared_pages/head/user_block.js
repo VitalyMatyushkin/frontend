@@ -41,8 +41,7 @@ const UserBlock = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			authBinding = binding.get('authorizationInfo'),
-			authData = authBinding.toJS(),
+			authData = binding.toJS('authorizationInfo'),
 			UserButton = null,
             userClasses = classNames({
                 eTopMenu_photo:true,
