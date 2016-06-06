@@ -10,9 +10,9 @@ var ActivityLogPage,
     ListPageMixin = require('module/mixins/list_page_mixin');
 ActivityLogPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin, DateTimeMixin],
-    serviceName:'activityLogs',
+    serviceName:'logs',
     filters: {order:'meta.created DESC'},
-    serviceCount:'logCount',
+    serviceCount:'logsCount',
     getPrincipal: function(principal) {
         return [principal.firstName, principal.lastName].join(' ') + '\r\n[' + principal.email + ']';
     },
