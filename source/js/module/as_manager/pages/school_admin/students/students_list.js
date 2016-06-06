@@ -10,9 +10,6 @@ const StudentsListPage = React.createClass({
 	setPageTitle: 'Students',
 	serviceName: 'schoolStudents',
     serviceCount:'schoolStudentsCount',
-	filters: {
-		include: ['user','form','parents']
-	},
 	_getViewFunction: function() {
 		var self = this;
 
@@ -28,12 +25,6 @@ const StudentsListPage = React.createClass({
 		var icon = gender === 'male' ? 'icon_man': 'icon_woman';
 
 		return <SVG icon={icon} />;
-	},
-	getBirthday: function(user) {
-		var self = this;
-        if(user !== undefined){
-            return self.getAgeFromBirthday(user.birthday);
-        }
 	},
 	getAgeFromBirthday: function(value) {
 		var self = this;
@@ -67,11 +58,12 @@ const StudentsListPage = React.createClass({
 				   onItemEdit={self._getEditFunction()} isPaginated={true} filter={self.filter}
 				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
-				<TableField width="15%" dataField="firstName" >Name</TableField>
-				<TableField width="15%" dataField="lastName" >Surname</TableField>
-				<TableField width="5%" dataField="form" dataFieldKey="name" filterType="none" >Form</TableField>
-				<TableField width="15%" dataField="birthday" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
-				<TableField width="20%" dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
+				<TableField dataField="firstName" >Name</TableField>
+				<TableField dataField="lastName" >Surname</TableField>
+				<TableField dataField="form" dataFieldKey="name" filterType="none" >Form</TableField>
+				<TableField dataField="house" dataFieldKey="name" filterType="none" >Form</TableField>
+				<TableField dataField="birthday" filterType="none" parseFunction={self.getAgeFromBirthday}>Birthday</TableField>
+				<TableField dataField="parents" filterType="none" parseFunction={self.getParents}>Parents</TableField>
 			</Table>
 		)
 	}
