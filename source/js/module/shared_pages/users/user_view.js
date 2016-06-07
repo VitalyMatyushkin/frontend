@@ -35,37 +35,17 @@ const UserDetail= React.createClass({
         //Parameters services for the super-administrator and managers
         self.params = {schoolId:schoolId, userId:userId};
 
-        binding.set('selectedUser',{userId:userId});
         binding.set('popup',false);
         self.request = window.Server.user.get(self.params)
             .then(function(user){
-                user.roles = {};
-                self.props.userPermissionsService.get(self.params,{
-                        filter: {
-                            include:['school',{student:'user'}]
-                        }
-                    }).then(function(data){
-                    user.roles = data;
-                    binding.set('userWithPermissionDetail',Immutable.fromJS(user));
-                    binding.set('selectedUser',{userId:userId, role:data});
-                    return data;
-                });
+				binding.set('userWithPermissionDetail',Immutable.fromJS(user));
                 return user;
             });
         self.addBindingListener(binding, 'popup', function(){
             if(binding.get('popup')===false){
                 window.Server.user.get(self.params)
                 .then(function(user){
-                    user.roles = {};
-                    self.props.userPermissionsService.get(self.params, {
-                        filter: {
-                            include:['school',{student:'user'}]
-                        }
-                    }).then(function(data){
-                        user.roles = data;
-                        binding.set('userWithPermissionDetail',Immutable.fromJS(user));
-                        return data;
-                    });
+					binding.set('userWithPermissionDetail',Immutable.fromJS(user));
                     return user;
                 });
             }
@@ -114,7 +94,7 @@ const UserDetail= React.createClass({
             email = selectedUserData.email;
             phone = selectedUserData.phone;
             gender = selectedUserData.gender;
-            listItems = self._getRelatedSchool(binding.toJS('userWithPermissionDetail').roles);
+            listItems = self._getRelatedSchool(binding.toJS('userWithPermissionDetail.permissions'));
         }
         return (
             <div>
