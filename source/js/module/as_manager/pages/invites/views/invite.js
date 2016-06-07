@@ -3,7 +3,7 @@ const   InvitesMixin = require('../mixins/invites_mixin'),
         React       = require('react'),
         SVG         = require('module/ui/svg'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-        Sport       = require('module/ui/icons/sport_icon');
+        Sport       = require('module/ui/icons/sport_icon'),
 
 InviteView = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
