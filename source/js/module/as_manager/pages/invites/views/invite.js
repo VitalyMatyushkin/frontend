@@ -3,7 +3,7 @@ const   InvitesMixin = require('../mixins/invites_mixin'),
         React       = require('react'),
         SVG         = require('module/ui/svg'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-        Sport       = require('module/ui/icons/sport_icon'),
+        Sport       = require('module/ui/icons/sport_icon');
 
 InviteView = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
@@ -68,7 +68,7 @@ InviteView = React.createClass({
 			isOutBox = self.props.type === 'outbox',
 			isArchive = binding.get('accepted') !== "NOT_READY",
             schoolPicture = self.getParticipantEmblem(rival),
-            sport = self.getSportIcon(binding.get('event.sport.name')),
+            sport = self.getSportIcon(binding.get('sport.name')),
             ages = binding.get('event.ages'),
             gender = self.getGenderIcon(binding.get('event.gender')),
             message = binding.get('message') || '',
