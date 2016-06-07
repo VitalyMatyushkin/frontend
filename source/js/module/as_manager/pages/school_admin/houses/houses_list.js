@@ -30,7 +30,7 @@ const HousesListPage = React.createClass({
 				   getDataPromise={self.getDataPromise} onItemRemove={self._getItemRemoveFunction}>
 				<TableField dataField="name" width="180px">House name</TableField>
 				<TableField dataField="description" >Description</TableField>
-				<TableField dataField="colors" filterType="none">Color</TableField>
+				<TableField dataField="colors" type="colors" filterType="none">Color</TableField>
 			</Table>
 		);
 	}
