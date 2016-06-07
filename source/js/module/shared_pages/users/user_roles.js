@@ -7,16 +7,17 @@ const 	SVG 	= require('module/ui/svg'),
 const UserRole = React.createClass({
     mixins:[Morearty.Mixin],
 	revokeRole: function (permissionId) {
-		const 	self 	= this,
-				binding = self.getDefaultBinding(),
-				userId 	= binding.toJS('userWithPermissionDetail.id'),
-				cf 		= confirm("Are you sure you want to revoke this permission?");
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				userId 			= binding.toJS('userWithPermissionDetail.id'),
+				subPermissions 	= binding.sub('userWithPermissionDetail.permissions'),
+				newPermissions 	= subPermissions.toJS().filter(p => (p.id || p._id) !== permissionId),
+				cf 				= confirm("Are you sure you want to revoke this permission?");
 
 		if(cf === true){
 			window.Server.userPermission.delete({userId:userId, permissionId:permissionId})
-				.then(function(res){
-					console.log(res);
-					alert('Role successfully revoked');
+				.then(function(){
+					subPermissions.set(newPermissions);
 				});
 		}
 	},
