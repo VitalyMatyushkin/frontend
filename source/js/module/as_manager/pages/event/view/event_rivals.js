@@ -28,11 +28,14 @@ const EventRival = React.createClass({
 
 		return (
 			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['internal'] ?
-				<img	className="eEventRivals_pic"
-						src={pic}
-						alt={participant.get('name')}
-						title={participant.get('name')}
-				/>
+				pic !== undefined ?
+					<img className="eEventRivals_pic"
+						 src={pic}
+						 alt={participant.get('name')}
+						 title={participant.get('name')}
+						/>
+					:
+					<div className="eEventRivals_text">{participant.get('name')}</div>
 				: null
 		);
 	},

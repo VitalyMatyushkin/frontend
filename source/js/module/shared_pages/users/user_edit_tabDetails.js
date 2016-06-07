@@ -13,7 +13,7 @@ const TabItemDetails = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             globalBinding = self.getMoreartyContext().getBinding(),
-            userId = binding.get('selectedUser').userId,
+            userId = binding.get('userWithPermissionDetail.id'),
             schoolId = globalBinding.get('userRules.activeSchoolId');
 
         self.params = {schoolId:schoolId, userId:userId};

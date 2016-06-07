@@ -6,6 +6,7 @@ const TableField = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		dataField: React.PropTypes.string.isRequired,
+		type: React.PropTypes.string,
 		parseFunction: React.PropTypes.func,
 		inputParseFunction: React.PropTypes.func,
         onChange: React.PropTypes.func,
@@ -47,7 +48,7 @@ const TableField = React.createClass({
 			cellStyle.width = self.props.width;
 		}
 
-		if (self.props.filterType !== 'colors' && self.props.filterType !== 'range' && self.props.filterType !== 'none' && self.props.filterType !== 'sorting') {
+		if (self.props.type !== 'colors' && self.props.filterType !== 'range' && self.props.filterType !== 'none' && self.props.filterType !== 'sorting') {
 			filterBlock =  <div className="eDataList_filter">
 				<input className="eDataList_filterInput" onChange={self.onChange}  placeholder={'filter by '
 					+ (self.props.dataFieldKey !== undefined? self.props.dataFieldKey : self.props.children.toLowerCase())
