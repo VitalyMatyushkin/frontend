@@ -42,6 +42,8 @@ const serviceList = {
         serviceList.schoolStudents = new Service('/i/schools/{schoolId}/students', binding);
         serviceList.schoolStudentsCount = new Service('/i/schools/{schoolId}/students/count', binding);
         serviceList.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
+        serviceList.schoolStudentParents = new Service('/i/schools/{schoolId}/students/{studentId}/parents', binding);
+        serviceList.schoolStudentEvents = new Service('/i/schools/{schoolId}/students/{studentId}/events', binding);
 
         // forms
         serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);

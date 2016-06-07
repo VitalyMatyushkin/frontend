@@ -93,7 +93,7 @@ const UserAchievements = React.createClass({
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                        <h4>{`Scored in this fixture:${event.childScore}`}</h4>
+                        <h4>{`Scored in this fixture:${event.studentScore}`}</h4>
                         <div className="eAchievement_in">
                             <div className="eAchievement_rivalName">
                                 {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
