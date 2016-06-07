@@ -27,9 +27,9 @@ const StudentsListPage = React.createClass({
 		}
 	},
 	getGender: function (gender) {
-		var icon = gender === 'male' ? 'icon_man': 'icon_woman';
+		var icon = gender === 'MALE' ? 'icon_man': 'icon_woman';
 
-		return <SVG icon={icon} />;
+		return <SVG classes="bIcon-gender" icon={icon} />;
 	},
 	getAgeFromBirthday: function(value) {
 		var self = this;

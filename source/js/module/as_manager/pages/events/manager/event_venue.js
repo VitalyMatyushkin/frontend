@@ -79,10 +79,11 @@ EventVenue = React.createClass({
             point = venuePoint ? venuePoint.point : {"lat": 50.832949, "lng": -0.246722};
         return(
             <div>
-                <span>Change Venue</span>
                 <If condition={self.props.sportType === 'inter-schools'}>
                     <div style={{marginBottom:10+'px',marginTop:10+'px'}}>
-						<input type="checkbox" checked={radio === 'tbc'} onChange={function(){self.onRadioButtonChange('tbc')}}/>
+                        <div style={{marginBottom:10+'px'}}>Change Venue</div>
+
+                        <input type="checkbox" checked={radio === 'tbc'} onChange={function(){self.onRadioButtonChange('tbc')}}/>
 						<label style={{marginRight:4+'px'}}>tbc</label>
 
 						<input type="checkbox" checked={radio === 'home'} onChange={function(){self.onRadioButtonChange('home')}}/>
@@ -97,6 +98,7 @@ EventVenue = React.createClass({
                 </If>
                 <If condition={self.neutralVenue === true}>
                     <div style={{marginTop:10+'px', marginBottom:10+'px'}}>
+                        <span className="eEvents_venue">Change Venue</span>
                         <FormField type="area" field="postcodeId" defaultItem={self.currentPostcode} binding={binding.sub('postcode')} />
                     </div>
                 </If>
