@@ -68,7 +68,7 @@ InviteView = React.createClass({
 			isOutBox = self.props.type === 'outbox',
 			isArchive = binding.get('accepted') !== "NOT_READY",
             schoolPicture = self.getParticipantEmblem(rival),
-            sport = self.getSportIcon(binding.get('event.sport.name')),
+            sport = self.getSportIcon(binding.get('sport.name')),
             ages = binding.get('event.ages'),
             gender = self.getGenderIcon(binding.get('event.gender')),
             message = binding.get('message') || '',
