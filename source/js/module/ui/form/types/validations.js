@@ -53,7 +53,7 @@ var validationsSet = {
 	alphanumeric: function(value) {
 		var self = this;
         //old RegExp /[^a-zA-Z0-9\-\/]/
-		if (/[^a-zA-Z0-9\-\/]+$/.test(value)) {
+		if (/[^a-zA-Z0-9 \-\/]+$/.test(value)) { //Special symbols " " (space) and "-" (hyphen) should be allowed!
 			return 'Should contain only alphanumeric characters';
 		} else {
 			return false;

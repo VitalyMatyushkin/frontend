@@ -10,6 +10,7 @@ const   Table = require('module/ui/list/table'),
 const SchoolListPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],
     serviceName:'schools',
+	serviceCount:'schoolsCount',
     getSchoolLogo:function(logo){
         if(logo){
             return (
@@ -49,8 +50,9 @@ const SchoolListPage = React.createClass({
             binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
-                <Table title="Schools" binding={binding} onItemRemove={self._getItemRemoveFunction}
-                       getDataPromise={self.getDataPromise} 
+                <Table title="Schools" binding={binding} isPaginated={true} onItemRemove={self._getItemRemoveFunction}
+                       getDataPromise={self.getDataPromise}
+					   getTotalCountPromise={self.getTotalCountPromise}
                        onItemEdit={self._getAdminSchoolEditFunction} 
                        onItemSelect={self._getSelectItemFunction}>
                     <TableField dataField="pic" width="1%" filterType="none" parseFunction={self.getSchoolLogo}>Logo</TableField>

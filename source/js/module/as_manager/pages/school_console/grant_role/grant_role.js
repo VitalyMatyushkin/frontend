@@ -58,7 +58,7 @@ const GrantRole = React.createClass({
                     break;
             }
 
-            window.Server.userPermissions.post(currentId, body)
+            window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId}, body)
                 .then(function(result){
                     return self.props.onSuccess && self.props.onSuccess(result);
                 });
