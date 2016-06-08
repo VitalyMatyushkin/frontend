@@ -26,7 +26,8 @@ const serviceList = {
         serviceList.userPermission = new Service('/superadmin/users/{userId}/permissions/{permissionId}',binding);
 
         // schools
-        serviceList.schools = new Service('/superadmin/schools', binding);
+		serviceList.schools = new Service('/superadmin/schools', binding);
+		serviceList.schoolsCount = new Service('/superadmin/schools/count', binding);
         serviceList.school = new Service('/superadmin/schools/{schoolId}', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
 
