@@ -6,6 +6,7 @@ const	classNames		= require('classnames'),
 		EventButtons	= require('./view/event_buttons'),
 		EventTeams		= require('./view/event_teams'),
 		EventGallery	= require('module/as_manager/pages/event/gallery/event_gallery'),
+		EventDetails    = require('./view/event_details'),
 		React			= require('react'),
 		Comments		= require('./view/event_blog'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -381,7 +382,7 @@ const EventView = React.createClass({
 							<EventTeams binding={binding} />
 						</If>
 						<If condition={activeTab === 'details'} >
-							{null}
+							<EventDetails binding={binding}/>
 						</If>
 						<If condition={activeTab === 'gallery'} >
 							<EventGallery binding={binding} />
