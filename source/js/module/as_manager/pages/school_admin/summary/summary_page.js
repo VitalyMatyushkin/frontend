@@ -77,7 +77,7 @@ const SchoolSummary = React.createClass({
 							<p>
 								Site:
 								<a	href={'//' + siteLink}
-									  target="blank" title="binding.get('name') homepage"
+									  target="blank" title={siteLink}
 									  className="bSchoolLink">
 									<SVG icon="icon_sch_link" />
 								</a>

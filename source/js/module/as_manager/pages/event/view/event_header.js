@@ -8,12 +8,13 @@ const EventHeader = React.createClass({
 	},
 	render: function() {
 		const	self	= this,
-				binding	= self.getDefaultBinding();
-
+				binding	= self.getDefaultBinding(),
+				eventStartDate = new Date(binding.get('model.startTime')),
+				eventDate = eventStartDate.toLocaleString();
 		return (
 				<div className="bEventHeader">
 					<div className="eEventHeader_field mEvent">{binding.get('model.name')}</div>
-					<div className="eEventHeader_field mDate">{self.formatDate(binding.get('model.startTime'))}</div>
+					<div className="eEventHeader_field mDate">{eventDate}</div>
 				</div>
 		);
 	}
