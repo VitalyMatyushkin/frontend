@@ -29,6 +29,7 @@ const SecuritySettingsPage = React.createClass({
 					binding={binding}
 					defaultButton="Change"
 					loadingButton="Saving..."
+					autoupdateOff={true}
 				>
 					<FormField	type="text"
 								field="oldPassword"
