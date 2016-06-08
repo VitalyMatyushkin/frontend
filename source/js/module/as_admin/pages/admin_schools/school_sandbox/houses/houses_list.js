@@ -27,9 +27,9 @@ const HousesListPage = React.createClass({
 		return (
 			<Table title="Houses" binding={binding}  onItemEdit={self.onHouseEdit}
 				   getDataPromise={self._getDataPromise} filter={self.filter}>
-				<TableField dataField="name" filterType="none" width="180px">House name</TableField>
-				<TableField dataField="description" filterType="none">Description</TableField>
-				<TableField dataField="colors" filterType="colors">Color</TableField>
+				<TableField dataField="name" width="180px">House name</TableField>
+				<TableField dataField="description" >Description</TableField>
+				<TableField dataField="colors" type="colors"  filterType="none">Color</TableField>
 			</Table>
 		);
 	}
