@@ -125,13 +125,18 @@ $DarkRed:#a93e2f;
 }
 .bSchoolLink {
   margin-left: 5px;
+  color: #929496;
 }
 .bSchoolLink .bIcon {
   color: #929496;
-  height: 14px;
-  width: 14px;
+  height: 12px;
+  margin-left: 5px;
+  width: 12px;
   vertical-align: middle;
 }
-.bSchoolLink:hover .bIcon{
+.bSchoolLink:hover {
+  color: $COLOR;
+  .bIcon{
    color: $COLOR;
+ }
  }
