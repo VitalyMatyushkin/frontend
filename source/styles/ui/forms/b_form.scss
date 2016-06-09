@@ -58,8 +58,7 @@
 }
 
 .eForm_fieldSmallHelp{
-  height: 25px;
-  line-height: 32px;
+
 }
 
 .eForm_field {
@@ -75,8 +74,9 @@
   font-weight: bold;
   color: #aaaaaa;
   display: inline-block;
-  min-width: 150px;
+  width: 150px;
   margin-right: 10px;
+  vertical-align: bottom;
 }
 .eForm_fieldName:empty {
   display: none;
@@ -332,4 +332,7 @@
 }
 .eStudentForm .bCombobox {
   max-width: 138px;
+}
+.bForm .eCombobox_input{
+  width: 138px;
 }
