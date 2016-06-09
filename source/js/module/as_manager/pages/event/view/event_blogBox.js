@@ -2,6 +2,7 @@
  * Created by bridark on 14/07/15.
  */
 const 	React 	= require('react'),
+		Avatar 	= require('module/ui/avatar/avatar'),
 		If		= require('module/ui/if/if');
 
 const CommentBox = React.createClass({
@@ -22,7 +23,7 @@ const CommentBox = React.createClass({
 			return (
 				<div key={blog.id} className="bBlog_box">
 					<div className="ePicBox">
-						<img src={blog.author.avatar}/>
+						<Avatar pic={blog.author.avatar} />
 					</div>
 					<div className="eMessageBox">
 						<span className="eUsername">

@@ -5,6 +5,7 @@ const   CommentBox      = require('./event_blogBox'),
         React           = require('react'),
         ReactDOM        = require('reactDom'),
         Immutable       = require('immutable'),
+		Avatar 			= require('module/ui/avatar/avatar'),
         MoreartyHelper  = require('module/helpers/morearty_helper');
 
 const Blog = React.createClass({
@@ -158,7 +159,7 @@ const Blog = React.createClass({
                 <CommentBox onReply={self.onReply} blogData={dataBlog} />
                 <div className="bBlog_box mNewComment">
                     <div className="ePicBox">
-                        <img src={self.loggedUser && self.loggedUser.avatar}/>
+                        <Avatar pic={self.loggedUser && self.loggedUser.avatar} />
                     </div>
                     <div className="eEvent_commentBlog">
                         <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>
