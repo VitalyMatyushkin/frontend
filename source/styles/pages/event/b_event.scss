@@ -66,7 +66,7 @@
 
   .eMessageBox{
     font-size: 14px;
-    width: 100%;
+    width: 535px;
     margin-left: 20px;
     .eUsername {
       font-weight: bold;
@@ -89,12 +89,9 @@
 }
 .ePicBox{
   width:45px;
-
-  img{
-    width:inherit;
-    height: 45px;
-    border-radius: 50%;
-  }
+  height: 45px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 .cancel{
   background-color:#cccccc;
@@ -249,7 +246,7 @@
 }
 .eEvent_commentBlog {
   margin-left: 20px;
-  width: 100%;
+  width: 535px;
   position: relative;
 }
 .eEvent_commentBlog:before, .eEvent_commentBlog:after {
