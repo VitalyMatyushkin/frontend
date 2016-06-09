@@ -1,13 +1,19 @@
 const   Table           = require('module/ui/list/table'),
         TableField      = require('module/ui/list/table_field'),
         ListPageMixin   = require('module/mixins/list_page_mixin'),
+		SVG 			= require('module/ui/svg'),
         Sport           = require('module/ui/icons/sport_icon'),
         React           = require('react');
 
 const TeamsListPage = React.createClass({
     mixins: [Morearty.Mixin, ListPageMixin],
     serviceName: 'teams',
-    sandbox:true,
+	componentDidMount: function () {
+		const   self          = this,
+				binding       = self.getDefaultBinding();
+
+		window.Server.sports.get().then(sports => binding.set('sports', sports));
+	},
     _getDataPromise: function() {
         const  self = this;
 
@@ -49,22 +55,19 @@ const TeamsListPage = React.createClass({
 
         return result;
     },
-    _getGender: function (data) {
-        var result = '';
+	_getGender: function (gender) {
+		var icon = gender === 'MALE' ? 'icon_man': 'icon_woman';
 
-        if (data !== undefined) {
-            if (data === 'female') {
-                result = 'girls'
-            } else {
-                result = 'boys'
-            }
-        }
-        return result;
-    },
-    _getSport: function (sport) {
-        const name = sport ? sport.name : '';
+		return <SVG classes="bIcon-gender" icon={icon} />;
+	},
+    _getSport: function (sportId) {
+		const   self    = this,
+				binding = self.getDefaultBinding();
 
-        return <Sport name={name} className="bIcon_invites" ></Sport>;
+        const 	sports 	= binding.get('sports'),
+				name 	= sports ? sports.find(s => s.id === sportId).name : '';
+
+        return <Sport name={name} className="bIcon_invites" />;
     },
     getTableView: function() {
         var self = this,
@@ -77,7 +80,7 @@ const TeamsListPage = React.createClass({
                    getDataPromise={self._getDataPromise}
                    onItemRemove={self._removeTeam}
             >
-                <TableField dataField="sport"
+                <TableField dataField="sportId"
                             filterType="none"
                             parseFunction={self._getSport}>Sport</TableField>
                 <TableField dataField="name">Team Name</TableField>
