@@ -79,6 +79,7 @@ const SchoolSummary = React.createClass({
 								<a	href={'//' + siteLink}
 									  target="blank" title={siteLink}
 									  className="bSchoolLink">
+									{siteLink}
 									<SVG icon="icon_sch_link" />
 								</a>
 							</p>
