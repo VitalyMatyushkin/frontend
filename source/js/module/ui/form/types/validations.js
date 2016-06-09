@@ -62,7 +62,7 @@ var validationsSet = {
 	text: function(value) {
 		var self = this;
 
-		if (/[^a-zA-Z\-\/]/.test(value)) {
+		if (/[^a-zA-Z \-\/]/.test(value)) {//Special symbols " " (space) and "-" (hyphen) should be allowed!
 			return 'Should contain only text characters';
 		} else {
 			return false;
