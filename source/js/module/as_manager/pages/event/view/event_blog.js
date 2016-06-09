@@ -71,13 +71,9 @@ const Blog = React.createClass({
         self._setComments();
     },
     _setLoggedUser: function() {
-        const   self            = this,
-                loggedUserId    = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId');
+        const   self            = this;
 
-        window.Server.user.get({
-                schoolId:   self.activeSchoolId,
-                userId:     loggedUserId
-            })
+        window.Server.profile.get()
             .then(user => self.loggedUser = user)
     },
     // TODO HMMMMM???
@@ -162,7 +158,7 @@ const Blog = React.createClass({
                 <CommentBox onReply={self.onReply} blogData={dataBlog} />
                 <div className="bBlog_box mNewComment">
                     <div className="ePicBox">
-                        <img src={'http://placehold.it/400x400'}/>
+                        <img src={self.loggedUser && self.loggedUser.avatar}/>
                     </div>
                     <div className="eEvent_commentBlog">
                         <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>

@@ -22,7 +22,7 @@ const CommentBox = React.createClass({
 			return (
 				<div key={blog.id} className="bBlog_box">
 					<div className="ePicBox">
-						<img src={'http://placehold.it/400x400'}/>
+						<img src={blog.author.avatar}/>
 					</div>
 					<div className="eMessageBox">
 						<span className="eUsername">
