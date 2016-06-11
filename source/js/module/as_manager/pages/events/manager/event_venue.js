@@ -266,7 +266,7 @@ const EventVenue = React.createClass({
                 </If>
                 <If condition={self._isShowPostcodeField()}>
                     <div className="eVenue_postcode">
-                        <span className="eVenue_postcodeLabel">Change Venue</span>
+                        <span className="eVenue_postcodeLabel">Change Postcode</span>
                         <Autocomplete
                             serverField="postcode"
                             defaultItem={binding.toJS('venue')}
