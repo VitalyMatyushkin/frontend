@@ -26,6 +26,7 @@ const TypeDate =  React.createClass({
 		const self = this,
 			binding = self.getDefaultBinding();
 
+		self._forceNewValue(binding.get('value'));
 		// На случай, если форма заполняется асинхронно
         self.addBindingListener(binding, 'defaultValue', changes => self._forceNewValue(changes.getCurrentValue()));
         self.addBindingListener(binding, 'localValue', changes => self.setValue(self._toIso(changes.getCurrentValue())));
@@ -38,6 +39,7 @@ const TypeDate =  React.createClass({
 			dateStr = !self.fullValidate(value) ? new Date(value).toLocaleDateString(locales, options).replace(/[/]/g, '.'):'';
 
         binding.set('localValue', dateStr);
+		console.log('date localValue = ' + dateStr);
 	},
 	_toIso: function(dotString) {
 		const dateParts = dotString ? dotString.split('.'):[],
@@ -70,7 +72,7 @@ const TypeDate =  React.createClass({
             localValue = binding.get('localValue');
 
 		return (
-            <MaskedInput ref="fieldInput" title="Format date dd.mm.yyyy" value={localValue}
+            <MaskedInput title="Format date dd.mm.yyyy" value={localValue}
                          onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
 		)
 	}

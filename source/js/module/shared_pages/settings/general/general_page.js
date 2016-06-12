@@ -10,6 +10,7 @@ const GeneralSettingsPage = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		//binding.clear();
 		window.Server.profile.get().then(function (data) {
 			binding.set(Immutable.fromJS(data));
 		});
@@ -37,7 +38,7 @@ const GeneralSettingsPage = React.createClass({
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="date">Birthday</FormField>
+						<FormField type="date" field="birthday">Birthday</FormField>
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>VERIFICATION INFORMATION</h3>

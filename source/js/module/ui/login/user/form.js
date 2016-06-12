@@ -29,8 +29,8 @@ const LoginUserForm = React.createClass({
 		return (
 			<div className="bLoginForm">
 				<Form name={self.tmpFormName} service={Auth.login} binding={self.getDefaultBinding()} onSuccess={self.props.onSuccess} onError={self.props.onError}>
-					<FormField type="text" placeholder="E-mail" htmlId="login_input" field="email" validation="email required" />
-					<FormField type="text" textType="password" placeholder="Password" htmlId="password_input" field="password" validation="required" binding={binding}/>
+					<FormField type="text" placeholder="E-mail" field="email" validation="email required" />
+					<FormField type="text" textType="password" placeholder="Password" field="password" validation="required" binding={binding}/>
 				</Form>
 				<If condition={self.props.customName === 'default'}>
 					<a href={self.forgotPassUrl} className="eForgotPass">Forgot password?</a>
