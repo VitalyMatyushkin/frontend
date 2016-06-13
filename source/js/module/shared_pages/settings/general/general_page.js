@@ -43,10 +43,7 @@ const GeneralSettingsPage = React.createClass({
 					<FormColumn type="column">
 						<h3>VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email">Email</FormField>
-						<span className="bSettingEmailVerify">{binding.toJS('verified.email') !== undefined && binding.toJS('verified.email') === true ? <span className="bPopup_verified">v</span> : <span onClick={function(){console.log('click')}}>verify email</span>}</span>
 						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
-						<span className="bSettingPhoneVerify">{binding.toJS('verified.phone') !== undefined && binding.toJS('verified.phone') === true ? <span className="bPopup_verified">v</span> : <span>verify phone</span>}</span>
-						<span className="bVerificationText"></span>
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>CONFIGURING NOTIFICATIONS</h3>
