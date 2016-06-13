@@ -53,7 +53,7 @@ const TypeDate =  React.createClass({
             //ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
             isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
 
-        return !this.fullValidate(isoStr)? new Date(isoStr).toISOString().substr(0, 10):isoStr;
+        return isoStr;
 	},
 	handleBlur: function(e) {
 		const self = this,
