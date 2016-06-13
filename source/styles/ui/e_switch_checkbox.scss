@@ -1,19 +1,13 @@
 .eSwitch {
-  vertical-align: top;
-  margin: 0 3px 0 7px;
-  width: 17px;
-  height: 17px;
-}
-
-.eSwitch + label {
+  margin: -4px 3px 0 7px;
   cursor: pointer;
-}
-.eSwitch {
   position: absolute;
   opacity: 0;
   z-index: 999999;
-  width: 30px!important;
+  width: 25px !important;
+  height: 17px !important;
 }
+
 .eSwitch + label {
   position: relative;
   margin-left: 7px;
@@ -40,7 +34,8 @@
   transition: all .2s;
 }
 .eSwitch:checked + label:before {
-  background: $MAIN_COLOR
+  background: $MAIN_COLOR;
+  transition: all .2s;
 }
 .eSwitch:checked + label:after {
   left: 10px;

@@ -47,21 +47,9 @@ const GeneralSettingsPage = React.createClass({
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>CONFIGURING NOTIFICATIONS</h3>
-						<div className="eForm_field">
-							<label className="eForm_fieldName">Send me news</label>
-							<input className="eSwitch" type="checkbox"></input>
-							<label></label>
-						</div>
-						<div className="eForm_field">
-							<label className="eForm_fieldName">Information updates</label>
-							<input className="eSwitch" type="checkbox"></input>
-							<label></label>
-						</div>
-						<div className="eForm_field">
-							<label className="eForm_fieldName">Promotional offers</label>
-							<input className="eSwitch" type="checkbox"></input>
-							<label></label>
-						</div>
+						<FormField type="checkbox" field="notification.sendNews" >Send me news</FormField>
+						<FormField type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>
+						<FormField type="checkbox" field="notification.sendPromoOffers" >Promotional offers</FormField>
 					</FormColumn>
 				</Form>
 		)
