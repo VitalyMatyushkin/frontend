@@ -65,7 +65,7 @@ const EventRival = React.createClass({
 		return name;
 	},
 	getSportIcon:function(sport){
-		return <Sport name={sport} className="bIcon_invites" ></Sport>;
+		return <Sport name={sport} className="bIcon_invites" />;
 	},
 	getCountPoint: function (order) {
 		const	self	= this,
@@ -73,7 +73,7 @@ const EventRival = React.createClass({
 
 		const event = binding.toJS('model');
 
-		let points;
+		let points = 0;
 
 		if(event.result) {
 			const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
