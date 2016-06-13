@@ -1,6 +1,7 @@
 const 	TypeAutocomplete 	= require('module/ui/form/types/autocomplete'),
 		React 				= require('react');
 
+// TODO BURN IT IN HELL!!
 /**
  * Looks like this element helps to locate some geo area
  */
