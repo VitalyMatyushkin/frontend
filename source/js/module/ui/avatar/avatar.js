@@ -6,7 +6,7 @@ const 	React 			= require('react'),
 
 const Avatar = React.createClass({
 	propTypes:{
-		pic:React.PropTypes.string.isRequired
+		pic:React.PropTypes.string
 	},
 	render:function(){
 		let html;

@@ -23,36 +23,44 @@ const TypeDate =  React.createClass({
         });
     },
 	componentWillMount: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const self 			= this,
+			binding 		= self.getDefaultBinding();
 
-		// На случай, если форма заполняется асинхронно
-        self.addBindingListener(binding, 'defaultValue', changes => self._forceNewValue(changes.getCurrentValue()));
+		self._setDefaultValue();
+        self.addBindingListener(binding, 'defaultValue', self._setDefaultValue);
         self.addBindingListener(binding, 'localValue', changes => self.setValue(self._toIso(changes.getCurrentValue())));
 	},
-	_forceNewValue: function(value) {
-		const self = this,
-            binding = self.getDefaultBinding(),
-            locales = self.props.locales,
-            options = self.props.options,
-			dateStr = !self.fullValidate(value) ? new Date(value).toLocaleDateString(locales, options).replace(/[/]/g, '.'):'';
+	_setDefaultValue: function() {
+		const self 			= this,
+            binding 		= self.getDefaultBinding(),
+			value			= binding.get('defaultValue'),
+            locales 		= self.props.locales,
+            options 		= self.props.options,
+			isValid			= !!value && !self.fullValidate(value),
+			localeDate 		= isValid ? new Date(value).toLocaleDateString(locales, options).replace(/[/]/g, '.'):'',
+			isoValue 	 	= isValid ? new Date(value).toISOString().substr(0, 10) : value;
 
-        binding.set('localValue', dateStr);
+		if(isValid){
+			binding.atomically()
+				.set('defaultValue', isoValue)
+				.set('value', isoValue)
+				.set('localValue', localeDate)
+				.commit();
+		}
 	},
 	_toIso: function(dotString) {
 		const dateParts = dotString ? dotString.split('.'):[],
-            //ISO format date for locales == 'en-GB', format == 'yyyy.mm.dd'
+            //ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
             isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
 
-        return !this.fullValidate(isoStr)? new Date(isoStr).toISOString().substr(0, 10):isoStr;
+        return isoStr;
 	},
 	handleBlur: function(e) {
 		const self = this,
-            defaultValue = self.getDefaultBinding().get('defaultValue'),
 			inputValue = e.target.value;
 
         if(!inputValue || inputValue==='__.__.____')
-            self._forceNewValue(defaultValue);
+            self._setDefaultValue();
 
         e.stopPropagation();
 	},
@@ -70,7 +78,7 @@ const TypeDate =  React.createClass({
             localValue = binding.get('localValue');
 
 		return (
-            <MaskedInput ref="fieldInput" title="Format date dd.mm.yyyy" value={localValue}
+            <MaskedInput title="Format date dd.mm.yyyy" value={localValue}
                          onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
 		)
 	}
