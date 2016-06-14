@@ -56,6 +56,9 @@ const Form = React.createClass({
 		self.busy = false;
 	},
 
+	/**
+	 * Get only components FormFields (without FormColumn, h3, div, etc)
+	 * */
 	getFormFields: function () {
 		const self = this;
 
@@ -65,18 +68,18 @@ const Form = React.createClass({
 					processChildren(child); // processing all current child children
 				}
 				if (child.props.field) {
-					self.fieldList.push(child);
+					self._fieldList.push(child);
 				}
 			});
 		}
 
-		if (!self.fieldList) {
-			self.fieldList = [];
+		if (!self._fieldList) {
+			self._fieldList = [];
 
 			processChildren(self);
 		}
 
-		return self.fieldList;
+		return self._fieldList;
 	},
 	/**
 	 * TODO:
