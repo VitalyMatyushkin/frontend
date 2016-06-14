@@ -42,23 +42,13 @@ const Blog = React.createClass({
                     limit: 100
                 }
             }
-        ).then(function(blogs){
-            Promise.all(
-                blogs.map(blog =>
-                    window.Server.user.get({
-                        schoolId:   self.activeSchoolId,
-                        userId:     blog.authorId
-                    })
-                    .then(user => blog.author = user)
-                )
-            )
-            .then(_ => {
-                binding
-                    .atomically()
-                    .set('blogs',       Immutable.fromJS(blogs))
-                    .set('blogCount',   Immutable.fromJS(blogs.length))
-                    .commit();
-            });
+        )
+        .then(blogs => {
+            binding
+                .atomically()
+                .set('blogs',       Immutable.fromJS(blogs))
+                .set('blogCount',   Immutable.fromJS(blogs.length))
+                .commit();
         });
     },
     componentWillMount:function(){
@@ -72,15 +62,13 @@ const Blog = React.createClass({
         self._setComments();
     },
     _setLoggedUser: function() {
-        const   self            = this;
+        const self = this;
 
-        window.Server.profile.get()
-            .then(user => self.loggedUser = user)
+        window.Server.profile.get().then(user => self.loggedUser = user)
     },
     // TODO HMMMMM???
     componentDidMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self = this;
 
         self._tickerForNewComments();
     },
@@ -89,7 +77,11 @@ const Blog = React.createClass({
             binding = self.getDefaultBinding();
 
         self.intervalId = setInterval(function () {
-            window.Server.schoolEventCommentsCount.get({schoolId: self.activeSchoolId, eventId: binding.get('eventId')}).then(function(res){
+            window.Server.schoolEventCommentsCount.get({
+                schoolId:   self.activeSchoolId,
+                eventId:    binding.get('eventId')}
+            )
+            .then(function(res){
                 var oldCount = binding.get('blogCount');
                 if(oldCount && oldCount !== res.count) {
                     self._setComments();
@@ -101,6 +93,7 @@ const Blog = React.createClass({
     componentWillUnmount:function(){
         var self = this,
             binding = self.getDefaultBinding();
+
         binding.remove('blogs');
         clearInterval(self.intervalId);
     },
@@ -110,7 +103,7 @@ const Blog = React.createClass({
             eventId = binding.get('eventId'),
             comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
 			replyTo = binding.get('replyTo'),
-			replyName = replyTo ? `${replyTo.lastName} ${replyTo.firstName}` : null,
+			replyName = replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
 			postData = {text: comments};
 
         ReactDOM.findDOMNode(self.refs.commentBox).value = "";
@@ -118,8 +111,8 @@ const Blog = React.createClass({
 
 		/**if reply and a comment contains the name*/
 		if(replyTo && comments.indexOf(replyName) >= 0){
-			postData.text = comments.replace(replyName, '').trim(); // remove reply name from comment
-			postData.replyTo = replyTo.id;// set replyId in postData
+			postData.text = comments.replace(`${replyName},`, '').trim(); // remove reply name from comment
+			postData.replyToCommentId = replyTo.id;// set reply comment in postData
 		}
 
         return window.Server.schoolEventComments.post(
@@ -129,26 +122,26 @@ const Blog = React.createClass({
             },
 			postData
         )
-        .then(function(comment){
+        .then(function(comment) {
             const   blogs       = binding.toJS('blogs'),
                     blogCount   = binding.toJS('blogCount');
 
             comment.author = self.loggedUser;
             blogs.push(comment);
 
-            binding
-                .atomically()
-                .set('blogCount', Immutable.fromJS(blogCount + 1))
-                .set('blogs', Immutable.fromJS(blogs))
+            binding.atomically()
+                .set('blogCount',   Immutable.fromJS(blogCount + 1))
+                .set('blogs',       Immutable.fromJS(blogs))
                 .commit();
         });
     },
 	onReply:function(blog){
-		var self = this,
-			binding = self.getDefaultBinding();
-		binding.set('replyTo', blog.author);
+		var     self    = this,
+			    binding = self.getDefaultBinding();
 
-		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.lastName} ${blog.author.firstName} `;
+		binding.set('replyTo', blog);
+
+		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.lastName} ${blog.author.firstName}, `;
 	},
     render:function(){
         var self = this,
