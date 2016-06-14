@@ -38,7 +38,7 @@ const GeneralSettingsPage = React.createClass({
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="date" field="birthday">Birthday</FormField>
+						<FormField type="date" field="birthday" validation="required">Birthday</FormField>
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>VERIFICATION INFORMATION</h3>
