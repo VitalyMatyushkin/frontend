@@ -72,14 +72,20 @@ const Form = React.createClass({
             dataSet = binding.toJS();
 
         if (dataSet) {
-            for (var dataField in dataSet) {
-                if (dataSet.hasOwnProperty(dataField)) {
-                    binding.meta().merge(dataField, false, Immutable.Map({
-                        value: dataSet[dataField],
-                        defaultValue: dataSet[dataField]
-                    }));
-                }
-            }
+            //for (var dataField in dataSet) {
+            //    if (dataSet.hasOwnProperty(dataField)) {
+            //        binding.meta().merge(dataField, false, Immutable.Map({
+            //            value: dataSet[dataField],
+            //            defaultValue: dataSet[dataField]
+            //        }));
+            //    }
+            //}
+
+			React.Children.forEach(this.props.children, function (child) {
+				if(child.props.onPrePost !== undefined) {
+					dataToPost[child.props.field] = child.props.onPrePost(dataToPost[child.props.field]);
+				}
+			}.bind(self));
         }
     },
     tryToSubmit: function () {
