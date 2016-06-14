@@ -38,8 +38,7 @@ const AlbumView = React.createClass({
 
 			self.menuItems = [{
 				key: 'goback',
-				name: '← GO BACK',
-				href: '#'
+				name: '← Go back'
 			}];
 
 			 // not checking owning for a while. Any permitted user should be able to upload photo into
@@ -50,7 +49,6 @@ const AlbumView = React.createClass({
 				self.menuItems.push({
 					key: 		'file',
 					name: 		'Add Photo',
-					href: 		'#',
 					onChange: 	self.handleFile
 				});
 			//}

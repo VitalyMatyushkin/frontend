@@ -32,9 +32,8 @@ const SettingsPage = React.createClass({
 		},
 		{
 			key: 'goback',
-			name: '← Go Back',
-			href: '#'}
-		];
+			name: '← Go back'
+		}];
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({

@@ -17,22 +17,22 @@ RegiseterUserForm = React.createClass({
 			<Form name={"Joins us as " + binding.get('registerType')} updateBinding={true} service="users" binding={binding} onSuccess={self.props.onSuccess}>
 				<FormField type="text" field="username" validation="alphanumeric server">Username</FormField>
 
-				<FormColumn type="column">
+				<FormColumn>
 					<FormField type="text" field="firstName" validation="required alphanumeric">First name</FormField>
 				</FormColumn>
 
-				<FormColumn type="column">
+				<FormColumn>
 					<FormField type="text" field="lastName" validation="required alphanumeric">Last name</FormField>
 				</FormColumn>
 
 				<FormField type="confirmText" field="email" validation="required email server">Email</FormField>
 				<FormField type="confirmText" textType="password" field="password" validation="required">Password</FormField>
 
-				<FormColumn type="column">
+				<FormColumn>
 					<FormField type="phone" field="phone" validation="phone">Mobile phone</FormField>
 				</FormColumn>
 
-				<FormColumn type="column">
+				<FormColumn>
 					<FormField type="text" field="address" validation="alphanumeric">Address</FormField>
 				</FormColumn>
 

@@ -18,7 +18,7 @@ const NewsForm = React.createClass({
 				<FormField type="text" field="title" validation="required">Title</FormField>
 				<FormField type="date" field="date" validation="required">Date</FormField>
 				<FormField type="textarea" field="body" validation="required">Text</FormField>
-				<FormColumn type="column">
+				<FormColumn>
 					<FormField type="imageFile" labelText="+" typeOfFile="image" field="picUrl"/>
 				</FormColumn>
 			</Form>
