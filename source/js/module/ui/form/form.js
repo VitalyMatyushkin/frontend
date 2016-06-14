@@ -20,16 +20,16 @@ const   React       = require('react'),
 const Form = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onSubmit: React.PropTypes.func,
-		onSuccess: React.PropTypes.func,
-		onError: React.PropTypes.func,
-		name: React.PropTypes.string,
-		defaultButton: React.PropTypes.string,
-		loadingButton: React.PropTypes.string,
-		updateBinding: React.PropTypes.bool,
+		onSubmit: 		React.PropTypes.func,
+		onSuccess: 		React.PropTypes.func,
+		onError: 		React.PropTypes.func,
+		name: 			React.PropTypes.string,
+		defaultButton: 	React.PropTypes.string,
+		loadingButton: 	React.PropTypes.string,
+		updateBinding: 	React.PropTypes.bool,
 		// False by default, if true, then browser doesn't save data for this field.
 		// For example, browser doesn't autocomplete old password and new password fields in restore password form.
-		autoupdateOff: React.PropTypes.bool,
+		autoupdateOff: 	React.PropTypes.bool,
 		formStyleClass: React.PropTypes.string
 	},
 	getDefaultProps: function () {
