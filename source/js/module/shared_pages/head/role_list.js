@@ -113,7 +113,7 @@ const  RoleList = React.createClass({
 		return (
 			<div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, role, schoolId) : null}>
 				<p>{schoolName}</p>
-				<p>{role}</p>
+				<p className="eRole_name">{role}</p>
 			</div>
 		);
 	},

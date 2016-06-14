@@ -2,25 +2,23 @@
 $HEADER_HEIGHT: 60px;
 
 .bTopPanel {
-  min-height: $HEADER_HEIGHT;
   background: $MAIN_COLOR;
   color: $DarkGreen;
-  font-size: 14px;
   clear: both;
+  min-height: $HEADER_HEIGHT;
   position: relative;
+  padding: 0 130px;
   z-index: 1;
-  padding: 0 100px;
+
   .bDropdown {
 
     float: left;
     height: 60px;
     line-height: 60px;
     margin-right: 40px;
+    margin-left: 17px;
     text-transform: uppercase;
     text-align: center;
     padding: 0 20px;
-
-    margin-left: 17px;
-
   }
 }
