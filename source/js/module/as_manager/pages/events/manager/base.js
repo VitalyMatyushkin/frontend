@@ -19,21 +19,28 @@ const EventManagerBase = React.createClass({
 				binding		= self.getDefaultBinding(),
 				schoolId	= binding.get('schoolInfo.id');
 
+		const filter = {
+			where: {
+				name: {
+					like: houseName,
+					options: 'i'
+				}
+			},
+			order:'name ASC'
+		};
+
+		const otherHouseId = self._getOtherHouseId(order);
+
+		if(otherHouseId !== undefined && otherHouseId !== null) {
+			filter.where.id = {
+				nin: [otherHouseId]
+			};
+		}
+
 		return window.Server.schoolHouses.get(
 			{
 				schoolId: schoolId,
-				filter: {
-					where: {
-						id: {
-							nin: [self._getOtherHouseId(order)]
-						},
-						name: {
-							like: houseName,
-							options: 'i'
-						}
-					},
-					order:'name ASC'
-				}
+				filter: filter
 			}
 		);
     },
@@ -68,25 +75,12 @@ const EventManagerBase = React.createClass({
                 binding     = self.getDefaultBinding(),
                 schoolId    = binding.get('schoolInfo.id');
 
-		//{
-		//	filter: {
-		//		where: {
-		//			id: {
-		//				neq: schoolId
-		//			},
-		//			name: {
-		//				like: schoolName,
-		//					options: 'i'
-		//			}
-		//		},
-		//		include:'postcode',
-		//			order :'name ASC',
-		//			limit: 10
-		//	}
-		//}
         const filter = {
             filter: {
                 where: {
+					id: {
+						nin: schoolId
+					},
                     name: { like: schoolName }
                 },
                 limit: 10
