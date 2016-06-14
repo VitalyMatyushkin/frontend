@@ -101,24 +101,13 @@
   display: inline-block;
   height: 50px;
   width: 50px;
-  background-repeat: no-repeat;
-  background-size: cover;
+  overflow: hidden;
   cursor: pointer;
   position: relative;
   color: white;
   border-radius: 50%;
   margin-top: 5px;
   float: right;
-}
-
-.eTopMenu_avatar_plug_wrapper {
-  //margin: 15px 0px 0px 15px;
-  text-align: left;
-}
-.eTopMenu_avatar_plug_wrapper .bIcon{
-  width: 51px;
-  height: 51px;
-  margin-top: -4px;
 }
 .eTopMenu_photo:hover{
   color: white;

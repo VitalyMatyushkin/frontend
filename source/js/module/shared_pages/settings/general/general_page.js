@@ -10,6 +10,7 @@ const GeneralSettingsPage = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		//binding.clear();
 		window.Server.profile.get().then(function (data) {
 			binding.set(Immutable.fromJS(data));
 		});
@@ -37,15 +38,12 @@ const GeneralSettingsPage = React.createClass({
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="date">Birthday</FormField>
+						<FormField type="date" field="birthday">Birthday</FormField>
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email">Email</FormField>
-						<span className="bSettingEmailVerify">{binding.toJS('verified.email') !== undefined && binding.toJS('verified.email') === true ? <span className="bPopup_verified">v</span> : <span onClick={function(){console.log('click')}}>verify email</span>}</span>
 						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
-						<span className="bSettingPhoneVerify">{binding.toJS('verified.phone') !== undefined && binding.toJS('verified.phone') === true ? <span className="bPopup_verified">v</span> : <span>verify phone</span>}</span>
-						<span className="bVerificationText"></span>
 					</FormColumn>
 					<FormColumn type="column">
 						<h3>CONFIGURING NOTIFICATIONS</h3>

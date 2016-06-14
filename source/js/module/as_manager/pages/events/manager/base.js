@@ -122,8 +122,8 @@ const EventManagerBase = React.createClass({
 
         binding
             .atomically()
-            .set('rivals', rivals)
-            .set('model.type', type)
+            .set('rivals', Immutable.fromJS(rivals))
+            .set('model.type', Immutable.fromJS(type))
             .set('autocomplete', Immutable.Map())
             .commit();
     },
@@ -414,7 +414,7 @@ const EventManagerBase = React.createClass({
                         </If>
                     </div>
                     <div className="eManager_group">
-                        <EventVenue sportType={type} binding={binding}/>
+                        <EventVenue binding={binding}/>
                     </div>
                 </div>
             </If>

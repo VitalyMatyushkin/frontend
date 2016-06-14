@@ -2,7 +2,7 @@ const 	React 			= require('react'),
 		SVG 			= require('module/ui/svg'),
 		Immutable 		= require('immutable'),
 		RoleList		= require('./role_list'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Avatar 			= require('module/ui/avatar/avatar'),
 		classNames		= require('classnames');
 
 const UserBlock = React.createClass({
@@ -53,21 +53,11 @@ const UserBlock = React.createClass({
 		// TODO: Заменить данные кнопки на компонент типа Menu
 		if (authData && authData.id) {
 			// Кнопка перехода на страницу пользователя
-			const avatar = binding.get('userInfo.avatar');
-			if(avatar) {
-				const userButtonStyle = {
-					backgroundImage: `url(${binding.get('userInfo.avatar')})`
-				};
-				UserButton = <a href="/#settings/general" className={userClasses} style={userButtonStyle} />;
-			} else {
-				UserButton = (
-					<a href="/#settings/general" className={userClasses}>
-						<div className="eTopMenu_avatar_plug_wrapper">
-							<SVG icon="icon_avatar_plug"/>
-						</div>
-					</a>
-				);
-			}
+			UserButton = (
+				<a href="/#settings/general" className={userClasses}>
+					<Avatar pic={binding.get('userInfo.avatar')} />
+				</a>
+			);
 
             RolesList = <RoleList binding={binding.sub('roleList')} onlyLogout={self.props.asAdmin} />;
 		} else {

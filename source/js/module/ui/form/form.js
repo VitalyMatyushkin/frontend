@@ -27,7 +27,15 @@ const Form = React.createClass({
         defaultButton:  React.PropTypes.string,
         loadingButton:  React.PropTypes.string,
         updateBinding:  React.PropTypes.bool,
+        // False by default, if true, then browser doesn't save data for this field.
+        // For example, browser doesn't autocomplete old password and new password fields in restore password form.
+        autoupdateOff:  React.PropTypes.bool,
         formStyleClass: React.PropTypes.string
+    },
+    getDefaultProps: function() {
+        return {
+            autoupdateOff: false
+        };
     },
     componentWillMount: function () {
         const   self    = this,
@@ -228,10 +236,26 @@ const Form = React.createClass({
             bindedChildren = self._createBindedClones(self);
         }
 
+        let autoupdateOffElement;
+
+        if(self.props.autoupdateOff) {
+            autoupdateOffElement = (
+                <div style={{display: 'none'}}>
+                    <input
+                        id="PreventChromeAutocomplete"
+                        type="text"
+                        name="PreventChromeAutocomplete"
+                        autocomplete="address-level4"
+                    />
+                </div>
+            );
+        }
 
         return (
             <div className={classNames('bForm', self.props.formStyleClass)} onKeyDown={self._keyPress}>
                 <div className="eForm_atCenter">
+
+                    {autoupdateOffElement}
 
                     {Title}
 

@@ -74,16 +74,6 @@ const EventManager = React.createClass({
 			.then(forms => {
 				schoolData.forms = forms;
 
-				//TODO set postcodes
-				//TODO yes, it's fake postcodes. temp.
-				schoolData.postcode = {
-					"id": "AB101AA",
-					"point": {
-						"lat": 57.148231662050215,
-						"lng": -2.0966478976010827
-					}
-				};
-
 				// get avail ages
 				const ages = TeamHelper.getAges(schoolData);
 
