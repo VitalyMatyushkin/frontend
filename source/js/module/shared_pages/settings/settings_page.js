@@ -32,7 +32,7 @@ const SettingsPage = React.createClass({
 		},
 		{
 			key: 'goback',
-			name: '← GO BACK',
+			name: '← Go Back',
 			href: '#'}
 		];
 	},
