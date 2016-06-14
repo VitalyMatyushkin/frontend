@@ -14,12 +14,6 @@ const CommentBox = React.createClass({
 		const self = this;
 
 		return blogData && blogData.map( blog => {
-
-			if(blog.replyTo && !blog.reply){
-				// find reply object
-				blog.reply = blogData.find(b => b.authorId === blog.replyTo).author;
-			}
-
 			return (
 				<div key={blog.id} className="bBlog_box">
 					<div className="ePicBox">
@@ -29,9 +23,9 @@ const CommentBox = React.createClass({
 						<span className="eUsername">
 							{`${blog.author.lastName} ${blog.author.firstName}`}
 						</span>
-						<If condition={!!(blog && blog.replyTo)}>
+						<If condition={!!(blog && blog.replyToUser)}>
 							<span className="eUsernameReply">
-								{`${blog.replyTo && blog.reply.lastName} ${blog.replyTo && blog.reply.firstName}`}
+								{`${blog.replyToUser && blog.replyToUser.lastName} ${blog.replyToUser && blog.replyToUser.firstName}`}
 							</span>
 						</If>
 						<span className="eMessage">
@@ -47,13 +41,13 @@ const CommentBox = React.createClass({
 			);
 		});
 	},
-	render:function(){
+	render: function() {
 		const	self	= this,
 				blogs	= self._renderBlogComments(self.props.blogData);
 
 		return (
 			<div className="eEvent_commentText eEvent_blog">{blogs}</div>
-		)
+		);
 	}
 });
 
