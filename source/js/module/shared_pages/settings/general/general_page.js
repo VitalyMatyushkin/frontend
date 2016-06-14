@@ -33,19 +33,19 @@ const GeneralSettingsPage = React.createClass({
 
 		return (
 				<Form formStyleClass="bSettingsForm" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving..." >
-					<FormColumn type="column">
+					<FormColumn>
 						<h3>SUMMARY</h3>
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
 						<FormField type="date" field="birthday" validation="required">Birthday</FormField>
 					</FormColumn>
-					<FormColumn type="column">
+					<FormColumn>
 						<h3>VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email">Email</FormField>
 						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
 					</FormColumn>
-					<FormColumn type="column">
+					<FormColumn>
 						<h3>CONFIGURING NOTIFICATIONS</h3>
 						<FormField type="checkbox" field="notification.sendNews" >Send me news</FormField>
 						<FormField type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>

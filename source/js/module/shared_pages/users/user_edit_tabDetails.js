@@ -46,10 +46,10 @@ const TabItemDetails = React.createClass({
         return (
             <div style={{position:'relative',marginTop:60+'px'}}>
                 <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={self._onSubmit} defaultButton="Save">
-                    <FormColumn type="column">
+                    <FormColumn>
                         <FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
                     </FormColumn>
-                    <FormColumn type="column">
+                    <FormColumn>
                         <FormField type="text" field="firstName" validation="required">First name</FormField>
                         <FormField type="text" field="lastName" validation="required">Surname</FormField>
                         <FormField type="text" field="email" validation="email server">Email</FormField>

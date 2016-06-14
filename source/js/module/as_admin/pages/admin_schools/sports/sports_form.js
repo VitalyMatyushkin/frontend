@@ -85,7 +85,7 @@ const SportsForm = React.createClass({
         return (
             <div>
                 <Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} >
-                    <FormColumn type="column">
+                    <FormColumn>
                         <FormField type="text"
                                    field="name"
                                    validation="required">Sport name</FormField>
@@ -102,11 +102,11 @@ const SportsForm = React.createClass({
                                    userActiveState={self.getGenders()}
                                    type="dropdown">Genders</FormField>
                     </FormColumn>
-                    <FormColumn type="column">
+                    <FormColumn>
                         <div className="eForm_fieldName">Positions</div>
                         {self.getPositionFields()}
                     </FormColumn>
-                    <FormColumn type="column">
+                    <FormColumn>
                         <FormField labelText="Upload Game Field Picture" type="imageFile" typeOfFile="image" field="fieldPic"/>
                     </FormColumn>
                 </Form>

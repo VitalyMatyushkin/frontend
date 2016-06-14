@@ -1,7 +1,11 @@
-var FormColumn,
-	React = require('react');
+const React = require('react');
 
-FormColumn = React.createClass({
+const FormColumn = React.createClass({
+	getDefaultProps: function () {
+		return {
+			type: 'column'
+		};
+	},
 	render: function () {
 		var self = this;
 
