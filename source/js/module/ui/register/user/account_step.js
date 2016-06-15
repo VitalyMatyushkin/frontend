@@ -10,10 +10,6 @@ const RegiseterUserForm = React.createClass({
 		onSuccess: React.PropTypes.func,
         onError: React.PropTypes.func
 	},
-	getPhone: function(phone) {
-		//return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
-		return phone && phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
-	},
 	render: function() {
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
@@ -25,9 +21,10 @@ const RegiseterUserForm = React.createClass({
 					{/*@errorClassName prop: Provide a defined scss class to control how error message is displayed without having to change the current style*/}
 					<FormField type="text" field="firstName" validation="required text">Name</FormField>
 					<FormField type="text" field="lastName" validation="required text">Surname</FormField>
-					<FormField type="text" field="email" validation="required email server" errorClassName="eForm_errorMsgRight">Email</FormField>
-					<FormField type="phone" field="phone" validation="required server" errorClassName="eForm_errorMsgRight"
-										 onPrePost={self.getPhone}>Mobile phone</FormField>
+					<FormField type="text" field="email" validation="required email server"
+							   errorClassName="eForm_errorMsgRight">Email</FormField>
+					<FormField type="phone" field="phone" validation="required server" errorClassName="eForm_errorMsgRight">
+											Mobile phone</FormField>
 					<FormField type="confirmText" textType="password" field="password"
 										 validation="required password">Password</FormField>
 
