@@ -52,11 +52,8 @@ const TypePhone =  React.createClass({
         self.setValue(cc + phone);
     },
     clearPhone:function(phone){
-        //const res = phone.replace(/[^+#\d]/g, '');
-        //return res;
-
         //Stops error being thrown when phone is null and replace method is being invoked
-        return phone !== null? phone.replace(/[^+#\d]/g, ''):'';
+        return phone ? phone.replace(/[^+#\d]/g, ''):'';
     },
     ccChange: function(e) {
         const self = this,
