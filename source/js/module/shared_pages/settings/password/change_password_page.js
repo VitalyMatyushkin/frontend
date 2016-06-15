@@ -31,17 +31,19 @@ const SecuritySettingsPage = React.createClass({
 					loadingButton="Saving..."
 					autoupdateOff={true}
 				>
-					<FormField	type="text"
-								field="oldPassword"
-								validation="required"
-					>
+					<FormField type="text"
+							   field="oldPassword"
+							   validation="required"
+							   fieldClassName="mLarge"
+						>
 						Old Password
 					</FormField>
-					<FormField	type="confirmText"
-								textType="password"
-								field="newPassword"
-								validation="required password"
-					>
+					<FormField type="confirmText"
+							   textType="password"
+							   field="newPassword"
+							   validation="required password"
+							   fieldClassName="mLarge"
+						>
 						New Password
 					</FormField>
 				</Form>
