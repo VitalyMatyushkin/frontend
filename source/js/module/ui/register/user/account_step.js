@@ -12,7 +12,7 @@ const RegiseterUserForm = React.createClass({
 	},
 	getPhone: function(phone) {
 		//return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
-		return phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
+		return phone && phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
 	},
 	render: function() {
 		const 	self 	= this,
