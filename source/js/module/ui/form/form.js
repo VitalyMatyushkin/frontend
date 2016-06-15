@@ -44,7 +44,7 @@ const Form = React.createClass({
 		self.defaultButton = self.props.defaultButton || 'Continue';
 		self.loadingButton = self.props.loadingButton || 'Loading...';
 
-		binding.addListener('', ChangesDescriptor => {
+		self.listener = binding.addListener('', ChangesDescriptor => {
 			const data = binding.toJS();
 
 			data && ChangesDescriptor.isValueChanged() && self._setDefaultValues();
@@ -134,6 +134,7 @@ const Form = React.createClass({
 
 		dataToPost = metaToPost.toJS();
 		metaToPost.clear();
+		binding.removeListener(self.listener);
 
 		//TODO: not taken into account the presence of columns
 		React.Children.forEach(this.props.children, function (child) {
