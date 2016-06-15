@@ -56,7 +56,7 @@ const TeamsListPage = React.createClass({
         return result;
     },
 	_getGender: function (gender) {
-		var icon = gender === 'MALE' ? 'icon_man': 'icon_woman';
+		var icon = gender === 'male' ? 'icon_man': 'icon_woman';
 
 		return <SVG classes="bIcon-gender" icon={icon} />;
 	},
