@@ -12,9 +12,13 @@ const UserRole = React.createClass({
 				userId 			= binding.toJS('userWithPermissionDetail.id'),
 				subPermissions 	= binding.sub('userWithPermissionDetail.permissions'),
 				newPermissions 	= subPermissions.toJS().filter(p => (p.id || p._id) !== permissionId),
-				cf 				= confirm("Are you sure you want to revoke this permission?");
+				permission 		= subPermissions.toJS().find(p => (p.id || p._id) === permissionId);
 
-		if(cf === true){
+		if(permission.preset === 'STUDENT'){
+			alert("It is impossible to remove the role of student!");
+			return;
+		}
+		if(confirm("Are you sure you want to revoke this permission?")){
 			window.Server.userPermission.delete({userId:userId, permissionId:permissionId})
 				.then(function(){
 					subPermissions.set(newPermissions);

@@ -18,257 +18,287 @@ const   React       = require('react'),
 // TODO: do something with all this
 
 const Form = React.createClass({
-    mixins: [Morearty.Mixin],
-    propTypes: {
-        onSubmit:       React.PropTypes.func,
-        onSuccess:      React.PropTypes.func,
-        onError:        React.PropTypes.func,
-        name:           React.PropTypes.string,
-        defaultButton:  React.PropTypes.string,
-        loadingButton:  React.PropTypes.string,
-        updateBinding:  React.PropTypes.bool,
-        // False by default, if true, then browser doesn't save data for this field.
-        // For example, browser doesn't autocomplete old password and new password fields in restore password form.
-        autoupdateOff:  React.PropTypes.bool,
-        formStyleClass: React.PropTypes.string
-    },
-    getDefaultProps: function() {
-        return {
-            autoupdateOff: false
-        };
-    },
-    componentWillMount: function () {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+	mixins: [Morearty.Mixin],
+	propTypes: {
+		onSubmit: 		React.PropTypes.func,
+		onSuccess: 		React.PropTypes.func,
+		onError: 		React.PropTypes.func,
+		name: 			React.PropTypes.string,
+		defaultButton: 	React.PropTypes.string,
+		loadingButton: 	React.PropTypes.string,
+		updateBinding: 	React.PropTypes.bool,
+		// False by default, if true, then browser doesn't save data for this field.
+		// For example, browser doesn't autocomplete old password and new password fields in restore password form.
+		autoupdateOff: 	React.PropTypes.bool,
+		formStyleClass: React.PropTypes.string
+	},
+	getDefaultProps: function () {
+		return {
+			autoupdateOff: false
+		};
+	},
+	componentWillMount: function () {
+		const self = this,
+			binding = self.getDefaultBinding();
 
-        self.defaultButton = self.props.defaultButton || 'Continue';
-        self.loadingButton = self.props.loadingButton || 'Loading...';
+		self.defaultButton = self.props.defaultButton || 'Continue';
+		self.loadingButton = self.props.loadingButton || 'Loading...';
 
-        binding.addListener('', ChangesDescriptor => {
-            const data = binding.toJS();
+		self.listener = binding.addListener('', ChangesDescriptor => {
+			const data = binding.toJS();
 
-            data && ChangesDescriptor.isValueChanged() && self._setDefaultValues();
-        });
+			data && ChangesDescriptor.isValueChanged() && self._setDefaultValues();
+		});
 
-        binding.meta().clear();
-        self._setDefaultValues();
-        binding.meta().set('buttonText', self.defaultButton);
-        self.busy = false;
-    },
+		binding.meta().clear();
+		self._setDefaultValues();
+		binding.meta().set('buttonText', self.defaultButton);
+		self.busy = false;
+	},
 
-    /**
-     * TODO:
-     * Emhhh. I'm not sure what it really does even after reading russian description. So let russian comment will stay
-     * here for a while.
-     *
-     * Метод переносит значение из заданного поля в поле со значением по умочанию
-     * Такой подход необходим, т.к. данные могут прийти асинхронно, а значит поле value у node-элемента
-     * привязать к модели напрямую нелья
-     * @private
-     */
-    _setDefaultValues: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            dataSet = binding.toJS();
+	/**
+	 * Get only components FormFields (without FormColumn, h3, div, etc)
+	 * */
+	getFormFields: function () {
+		const self = this;
 
-        if (dataSet) {
-            for (var dataField in dataSet) {
-                if (dataSet.hasOwnProperty(dataField)) {
-                    binding.meta().merge(dataField, false, Immutable.Map({
-                        value: dataSet[dataField],
-                        defaultValue: dataSet[dataField]
-                    }));
-                }
-            }
-        }
-    },
-    tryToSubmit: function () {
-        const   self            = this,
-                token           = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo').get('userId'),
-                fields          = self.getDefaultBinding().meta().toJS(),
-                typeOfService   = typeof self.props.service;
+		function processChildren(parent) {
+			React.Children.forEach(parent.props.children, function (child) {
+				if (child.props.type === 'column') { // but we need to go deeper..
+					processChildren(child); // processing all current child children
+				}
+				if (child.props.field) {
+					self._fieldList.push(child);
+				}
+			});
+		}
 
-        let     hereIsError     = false,
-                dataToPost      = {};
+		if (!self._fieldList) {
+			self._fieldList = [];
 
-        if (self.busy === true) {
-            return false;
-        }
+			processChildren(self);
+		}
 
-        // checking data fields validness
-        for (var field in fields) {
-            dataToPost[field] = fields[field].value;
+		return self._fieldList;
+	},
+	/**
+	 * TODO:
+	 * Emhhh. I'm not sure what it really does even after reading russian description. So let russian comment will stay
+	 * here for a while.
+	 *
+	 * Метод переносит значение из заданного поля в поле со значением по умочанию
+	 * Такой подход необходим, т.к. данные могут прийти асинхронно, а значит поле value у node-элемента
+	 * привязать к модели напрямую нелья
+	 * @private
+	 */
+	_setDefaultValues: function () {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			fields = self.getFormFields();
 
-            if (fields[field].error) {
-                self.getDefaultBinding().meta().update(field, function (immutableValue) {
-                    hereIsError = true;
-                    return immutableValue.set('showError', true);
-                });
-            }
-        }
+		fields.forEach(child => {
+			const field = child.props.field;
 
-        React.Children.forEach(this.props.children, function (child) {
-            if(child.props.onPrePost !== undefined) {
-                dataToPost[child.props.field] = child.props.onPrePost(dataToPost[child.props.field]);
-            }
-        }.bind(self));
+			binding.meta().merge(field, false, Immutable.Map({
+				value: binding.get(field),
+				defaultValue: binding.get(field)
+			}));
+		});
+	},
+	tryToSubmit: function () {
+		const self = this,
+			binding = self.getDefaultBinding(),
+			token = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId'),
+			fields = self.getFormFields(),
+			metaToPost = binding.meta().sub('____metaToPost____'),
+			typeOfService = typeof self.props.service;
 
-        //TODO: Заменить dataToPost на Merge данных из statePath
-        //TODO: WTF??
-        dataToPost.ownerId = token;
+		let hereIsError = false,
+			dataToPost = {};
 
-        // if there is no errors, calling service
-        if (hereIsError === false) {
+		if (self.busy === true) {
+			return false;
+		}
 
-            self.busy = true;
-            self.getDefaultBinding().meta().set('buttonText', self.loadingButton);
+		// checking data fields validness
+		fields.forEach(child => {
+			const field = child.props.field;
 
-            // TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
-            if (typeof self.props.onSubmit === 'function') {
-                self.props.onSubmit(dataToPost);
+			metaToPost.set(field, binding.meta().get(`${field}.value`));
 
-                return false;
-            }
+			if (binding.meta().get(`${field}.error`)) {
+				hereIsError = true;
+				binding.meta().set(`${field}.showError`, true);
+			}
+		});
 
-            if (typeof self.props.onPreSubmit === 'function') {
-                dataToPost = self.props.onPreSubmit(dataToPost);
-            }
+		dataToPost = metaToPost.toJS();
+		metaToPost.clear();
+		binding.removeListener(self.listener);
 
-            self.postedData = dataToPost;
+		//TODO: not taken into account the presence of columns
+		React.Children.forEach(this.props.children, function (child) {
+			if (child.props.onPrePost !== undefined) {
+				dataToPost[child.props.field] = child.props.onPrePost(dataToPost[child.props.field]);
+			}
+		}.bind(self));
 
-            // TODO: Зарефакторить эту кашицу
-            if (['object', 'function'].indexOf(typeOfService) !== -1) {
-                const userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
-                userService(dataToPost).then(self._onServiceSucces, self._onServiceError); // React told we don't need .bind()
-            } else {
-                var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
-                var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) :(window.apiBase + '/' + self.props.service);
-                $.ajax({
-                    url: url,
-                    type: type,
-                    crossDomain: true,
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify(dataToPost),
-                    error: self._onServiceError,
-                    success: self._onServiceSucces
-                });
-            }
+		//TODO: Заменить dataToPost на Merge данных из statePath
+		//TODO: WTF??
+		dataToPost.ownerId = token;
 
-        }
-    },
-    _onServiceSucces: function (data) {
-        var self = this;
+		// if there is no errors, calling service
+		if (hereIsError === false) {
 
-        self.busy = false;
-        self.buttonText = self.defaultButton;
+			self.busy = true;
+			self.getDefaultBinding().meta().set('buttonText', self.loadingButton);
 
-        if (self.props.updateBinding === true) {
-            self.getDefaultBinding().set(self.postedData);
-        }
+			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
+			if (typeof self.props.onSubmit === 'function') {
+				self.props.onSubmit(dataToPost);
 
-        if (self.props.onSuccess) {
-            self.props.onSuccess(data);
-        }
-    },
-    _onServiceError: function (data) {
-        var self = this;
-        self.busy = false;
-        self.buttonText = self.defaultButton;
-        if (self.props.onError) {
-            self.props.onError(data);
-        }
-    },
+				return false;
+			}
 
-    _createBindedClones: function(parent) {
-        const    self    = this,
-                binding = self.getDefaultBinding();
+			if (typeof self.props.onPreSubmit === 'function') {
+				dataToPost = self.props.onPreSubmit(dataToPost);
+			}
 
-            /** recursively traversing all children and their children and their children....
-             * as setting binding to them
-             */
-            function processChildren(parent) {
-                return React.Children.map(parent.props.children, function(child){
-                    if(child.props.type === 'column') { // but we need to go deeper..
-                        var nestedChildren = processChildren(child); // processing all current child children
-                        return React.cloneElement(
-                            child,
-                            {
-                                binding: binding.meta(child.props.field),
-                                service: self.props.service
-                            },
-                            nestedChildren                            // and setting them back to clone.
-                        );
-                    } else {
-                        return React.cloneElement(child, {
-                            binding: binding.meta(child.props.field),
-                            service: self.props.service
-                        });
-                    }
-                });
-            }
+			self.postedData = dataToPost;
 
-        return processChildren(parent);
-    },
+			// TODO: Зарефакторить эту кашицу
+			if (['object', 'function'].indexOf(typeOfService) !== -1) {
+				const userService = typeOfService === 'object' ? self.props.service.post.bind(self.props.service) : self.props.service;
+				userService(dataToPost).then(self._onServiceSucces, self._onServiceError); // React told we don't need .bind()
+			} else {
+				var type = typeof dataToPost.id === 'string' ? 'PUT' : 'POST';
+				var url = type === 'PUT' ? (window.apiBase + '/' + self.props.service + '/' + dataToPost.id) : (window.apiBase + '/' + self.props.service);
+				$.ajax({
+					url: url,
+					type: type,
+					crossDomain: true,
+					dataType: 'json',
+					contentType: 'application/json',
+					data: JSON.stringify(dataToPost),
+					error: self._onServiceError,
+					success: self._onServiceSucces
+				});
+			}
 
-    _keyPress: function (event) {
-        const   self    = this,
-                keyCode = event.keyCode;
+		}
+	},
+	_onServiceSucces: function (data) {
+		var self = this;
 
-        if (keyCode === 13) {
-            self.tryToSubmit();
-        }
-    },
-    render: function () {
-        const   self    = this,
-                binding = self.getDefaultBinding();
-        let Title;
+		self.busy = false;
+		self.buttonText = self.defaultButton;
 
-        if (self.props.name !== undefined) {
-            Title = <h2 dangerouslySetInnerHTML={{__html: self.props.name}}/>;
-        }
+		if (self.props.updateBinding === true) {
+			self.getDefaultBinding().set(self.postedData);
+		}
 
-        // Making children with current binding in case if user not disabled this option.
-        var bindedChildren;
-        if(self.props.propagateBinding === false) {
-            bindedChildren = self.props.children;
-        } else {
-            bindedChildren = self._createBindedClones(self);
-        }
+		if (self.props.onSuccess) {
+			self.props.onSuccess(data);
+		}
+	},
+	_onServiceError: function (data) {
+		var self = this;
+		self.busy = false;
+		self.buttonText = self.defaultButton;
+		if (self.props.onError) {
+			self.props.onError(data);
+		}
+	},
 
-        let autoupdateOffElement;
+	_createBindedClones: function (parent) {
+		const self = this,
+			binding = self.getDefaultBinding();
 
-        if(self.props.autoupdateOff) {
-            autoupdateOffElement = (
-                <div style={{display: 'none'}}>
-                    <input
-                        id="PreventChromeAutocomplete"
-                        type="text"
-                        name="PreventChromeAutocomplete"
-                        autocomplete="address-level4"
-                    />
-                </div>
-            );
-        }
+		/** recursively traversing all children and their children and their children....
+		 * as setting binding to them
+		 */
+		function processChildren(parent) {
+			return React.Children.map(parent.props.children, function (child) {
+				if (child.props.type === 'column') { // but we need to go deeper..
+					var nestedChildren = processChildren(child); // processing all current child children
+					return React.cloneElement(
+						child,
+						{
+							binding: binding.meta(child.props.field),
+							service: self.props.service
+						},
+						nestedChildren                            // and setting them back to clone.
+					);
+				} else {
+					return React.cloneElement(child, {
+						binding: binding.meta(child.props.field),
+						service: self.props.service
+					});
+				}
+			});
+		}
 
-        return (
-            <div className={classNames('bForm', self.props.formStyleClass)} onKeyDown={self._keyPress}>
-                <div className="eForm_atCenter">
+		return processChildren(parent);
+	},
 
-                    {autoupdateOffElement}
+	_keyPress: function (event) {
+		const self = this,
+			keyCode = event.keyCode;
 
-                    {Title}
+		if (keyCode === 13) {
+			self.tryToSubmit();
+		}
+	},
+	render: function () {
+		const self = this,
+			binding = self.getDefaultBinding();
+		let Title;
 
-                    {bindedChildren}
+		if (self.props.name !== undefined) {
+			Title = <h2 dangerouslySetInnerHTML={{__html: self.props.name}}/>;
+		}
 
-                    <div className="eForm_savePanel">
-                        <div className="bButton mRight" tabIndex="-1"
-                             onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
-                    </div>
-                </div>
-            </div>
-        )
-    }
+		// Making children with current binding in case if user not disabled this option.
+		var bindedChildren;
+		if (self.props.propagateBinding === false) {
+			bindedChildren = self.props.children;
+		} else {
+			bindedChildren = self._createBindedClones(self);
+		}
+
+		let autoupdateOffElement;
+
+		if (self.props.autoupdateOff) {
+			autoupdateOffElement = (
+				<div style={{display: 'none'}}>
+					<input
+						id="PreventChromeAutocomplete"
+						type="text"
+						name="PreventChromeAutocomplete"
+						autocomplete="address-level4"
+					/>
+				</div>
+			);
+		}
+
+		return (
+			<div className={classNames('bForm', self.props.formStyleClass)} onKeyDown={self._keyPress}>
+				<div className="eForm_atCenter">
+
+					{autoupdateOffElement}
+
+					{Title}
+
+					{bindedChildren}
+
+					<div className="eForm_savePanel">
+						<div className="bButton mRight" tabIndex="-1"
+							 onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
+					</div>
+				</div>
+			</div>
+		)
+	}
 });
 
 module.exports = Form;

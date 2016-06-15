@@ -42,7 +42,7 @@ const RoleSelectorComponent = React.createClass({
 	renderRoleButton: function(roleName){
 		const self = this;
 
-		return <button onClick={self.onRoleSelected(roleName)}>{roleName}</button>
+		return <button key={roleName} onClick={self.onRoleSelected(roleName)}>{roleName}</button>
 	},
 	render: function(){
 		const self = this;

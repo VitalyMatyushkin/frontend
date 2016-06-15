@@ -42,7 +42,7 @@ const PhotoEdit = React.createClass({
 
 		return (
 				<Form name="Edit photo" onSubmit={self.onFormSubmit} binding={binding} >
-					<FormColumn type="column">
+					<FormColumn>
 						<FormField type="textarea" class="mDefault" field="description" >Description: </FormField>
 					</FormColumn>
 				</Form>
