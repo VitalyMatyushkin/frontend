@@ -63,7 +63,7 @@ const Form = React.createClass({
 		const self = this;
 
 		function processChildren(parent) {
-			parent.props.children.forEach(child => {
+			React.Children.forEach(parent.props.children, function (child) {
 				if (child.props.type === 'column') { // but we need to go deeper..
 					processChildren(child); // processing all current child children
 				}
