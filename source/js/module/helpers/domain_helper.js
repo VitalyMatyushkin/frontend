@@ -38,7 +38,7 @@ const DomainHelper = {
 			if(newUrl === window.location.href)
 				window.location.reload();
 			else
-				window.location.href = newUrl;
+				window.location = newUrl;
 
 		} else {
 			alert('unknown role: ' + roleName);

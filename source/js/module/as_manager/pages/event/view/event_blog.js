@@ -126,7 +126,6 @@ const Blog = React.createClass({
             const   blogs       = binding.toJS('blogs'),
                     blogCount   = binding.toJS('blogCount');
 
-            comment.author = self.loggedUser;
             blogs.push(comment);
 
             binding.atomically()
