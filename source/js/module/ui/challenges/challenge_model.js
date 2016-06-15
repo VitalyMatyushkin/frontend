@@ -22,7 +22,7 @@ ChallengeModel.prototype._getResultByTeam = function(event, order) {
     const self = this,
         participant = order < event.participants.length ? event.participants[order] : null;
 
-    let goal = '-';
+    let goal = event.status === 'FINISHED' ? 0 : '-';
 
     if (self.played) {
         const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
