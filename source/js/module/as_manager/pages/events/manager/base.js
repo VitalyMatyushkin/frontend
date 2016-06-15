@@ -33,7 +33,7 @@ const EventManagerBase = React.createClass({
 
 		if(otherHouseId !== undefined && otherHouseId !== null) {
 			filter.where.id = {
-				nin: [otherHouseId]
+				$nin: [otherHouseId]
 			};
 		}
 
@@ -79,7 +79,7 @@ const EventManagerBase = React.createClass({
             filter: {
                 where: {
 					id: {
-						nin: schoolId
+						$nin: [schoolId]
 					},
                     name: { like: schoolName }
                 },
