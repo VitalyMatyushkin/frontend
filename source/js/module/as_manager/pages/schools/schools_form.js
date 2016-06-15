@@ -33,8 +33,8 @@ const SchoolForm = React.createClass({
 					<FormField type="text" field="domain" validation="required">Domain</FormField>
 				</FormColumn>
                 <FormColumn type="column">
-                    <FormField type="text" field="email" validation="required">School Official Email</FormField>
-                    <FormField type="text" field="sportsDepartmentEmail" validation="required">Sports Department Email</FormField>
+                    <FormField type="text" field="email" validation="required" fieldClassName="mLarge">School Official Email</FormField>
+                    <FormField type="text" field="sportsDepartmentEmail" validation="required" fieldClassName="mLarge">Sports Department Email</FormField>
                 </FormColumn>
                 <FormColumn type="column">
                     <FormField type="dropdown" field="status">School Status</FormField>
