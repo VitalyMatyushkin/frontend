@@ -13,7 +13,8 @@ const   Table = require('module/ui/list/table'),
 const UsersList = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     propTypes:{
-        grantRole:React.PropTypes.func
+        grantRole:React.PropTypes.func,
+		permissionServiceName:React.PropTypes.string
     },
     serviceName:'users',
     serviceCount:'usersCount',
@@ -114,19 +115,27 @@ const UsersList = React.createClass({
         }
     },
     _revokeAllRoles:function(ids){
-        var self, binding, confirmAction;
-        self = this;
-        binding = self.getDefaultBinding();
-        confirmAction = window.confirm("Are you sure you want revoke all roles?");
-        if(ids !== undefined && ids.length >=1 ){
-            if(confirmAction === true){
-                ids.forEach(function(id){
-                    window.Server.Permissions.get({filter:{where:{principalId:id}}})
-                        .then(function(permission){
-                            permission.forEach(function(p){
-                                window.Server.Permission.delete({id:p.id}).then(function(){
-                                    self.reloadData();
-                                });
+		const   self            = this,
+				rootBinding 	= self.getMoreartyContext().getBinding(),
+				schoolId  		= rootBinding.get('userRules.activeSchoolId'),
+				permission 		= window.Server[self.props.permissionServiceName],
+				permissionList 	= window.Server[`${self.props.permissionServiceName}s`],
+				confirmAction 	= window.confirm("Are you sure you want revoke all roles?");
+
+        if(ids && ids.length > 0 ){
+            if(confirmAction){
+                ids.forEach(function(userId){
+					const params = {userId:userId, schoolId:schoolId};
+
+					permissionList.get(params)
+                        .then(function(data){
+                            data.forEach(function(p){
+								if(p.preset !== 'STUDENT'){
+									params.permissionId = p.id;
+									permission.delete(params).then(_ => {
+										self.reloadData();
+									});
+								}
                             });
                         });
                 });
