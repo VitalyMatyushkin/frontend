@@ -73,48 +73,42 @@ const	PlayerChooser	= React.createClass({
 		let		playersPromise	= undefined;
 
 		if (self._isFilterAvailable()) {
+			// prepare data
 			const	filter			= self.getDefaultBinding().toJS('filter'),
 					requestFilter	= {
-						where: {
-							formId: {
-								inq: filter.forms.map(form => form.id)
-							},
-							or: [
-								{
-									'userInfo.lastName': {
-										like:		searchText,
-										options:	'i'
-									}
-								},
-								{
-									'userInfo.firstName': {
-										like:		searchText,
-										options:	'i'
-									}
+						filter: {
+							where: {
+								lastName: {
+									like:		searchText,
+									options:	'i'
 								}
-							]
-						},
-						include:["user","form"]
+								// TODO
+								//,
+								//formId: {
+								//	inq: filter.forms.map(form => form.id)
+								//}
+							}
+						}
 					};
-
-			filter.houseId && (requestFilter.where.houseId = filter.houseId);
+			// TODO
+			//filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
 
 			let	forms;
 
+			// ok, data was prepared. let's do some requests
 			// get forms data. they will inject to users
+			// TODO doesn't include forms
 			playersPromise = window.Server.schoolForms.get(filter.schoolId)
 				.then( _forms => {
 					forms = _forms;
 
 					// get all avail students
-					return window.Server.schoolStudents.get(filter.schoolId);
+					return window.Server.schoolStudents.get(filter.schoolId, requestFilter);
 				})
-				.then( players => {
-					const updPlayers = TeamHelper.injectFormsToPlayers(players, forms);
-
+				.then(players => {
 					const filteredPlayers = [];
 
-					updPlayers.forEach((player) => {
+					players.forEach((player) => {
 						//filter by gender
 						if(!self._isSelectedPlayer(player) && player.gender === filter.gender.toUpperCase()) {
 							player.name = player.firstName + ' ' + player.lastName;
