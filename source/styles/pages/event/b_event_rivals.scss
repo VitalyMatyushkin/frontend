@@ -42,15 +42,15 @@
 .eEventRival_name {
   border-top: $BORDER;
   border-bottom: $BORDER;
-  font-size: 18px;
-  width: 100%;
   color: #535353;
+  font-size: 18px;
   font-weight: bold;
-  text-align: center;
-  //min-height: 30px;
-  padding: 5px;
+  max-width: 230px;
   overflow: hidden;
+  text-align: center;
   text-overflow: ellipsis;
+  padding: 5px;
+  width: 100%;
 }
 
 .eEventRivals_text {
