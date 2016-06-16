@@ -73,54 +73,34 @@ const	PlayerChooser	= React.createClass({
 		let		playersPromise	= undefined;
 
 		if (self._isFilterAvailable()) {
-			const	filter			= self.getDefaultBinding().toJS('filter'),
-					requestFilter	= {
-						where: {
-							formId: {
-								inq: filter.forms.map(form => form.id)
-							},
-							or: [
-								{
-									'userInfo.lastName': {
-										like:		searchText,
-										options:	'i'
-									}
+			const filter = self.getDefaultBinding().toJS('filter');
+
+			const requestFilter = {
+						filter: {
+							where: {
+								lastName: {
+									like:		searchText,
+									options:	'i'
 								},
-								{
-									'userInfo.firstName': {
-										like:		searchText,
-										options:	'i'
-									}
-								}
-							]
-						},
-						include:["user","form"]
+								formId: {
+									$in: filter.forms.map(form => form.id)
+								},
+								gender: filter.gender.toUpperCase()
+							}
+						}
 					};
 
-			filter.houseId && (requestFilter.where.houseId = filter.houseId);
+			// if event is house vs house
+			filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
 
-			let	forms;
-
-			// get forms data. they will inject to users
-			playersPromise = window.Server.schoolForms.get(filter.schoolId)
-				.then( _forms => {
-					forms = _forms;
-
-					// get all avail students
-					return window.Server.schoolStudents.get(filter.schoolId);
-				})
-				.then( players => {
-					const updPlayers = TeamHelper.injectFormsToPlayers(players, forms);
-
+			playersPromise = window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
 					const filteredPlayers = [];
 
-					updPlayers.forEach((player) => {
-						//filter by gender
-						if(!self._isSelectedPlayer(player) && player.gender === filter.gender.toUpperCase()) {
-							player.name = player.firstName + ' ' + player.lastName;
+					players.forEach(player => {
+						if(!self._isSelectedPlayer(player)) {
+							player.name = `${player.firstName}' '${player.lastName}`;
 							filteredPlayers.push(player);
 						}
-
 					});
 
 					return filteredPlayers;
