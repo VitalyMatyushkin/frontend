@@ -14,7 +14,7 @@ const AdminUsersList = React.createClass({
             binding = self.getDefaultBinding();
 
         return (
-            <UserList binding={binding} grantRole={GrantRole} />
+            <UserList binding={binding} grantRole={GrantRole} permissionServiceName="schoolUserPermission" />
         );
 
     }
