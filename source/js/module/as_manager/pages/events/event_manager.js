@@ -69,7 +69,7 @@ const EventManager = React.createClass({
 				schoolData = _schoolData;
 
 				// get forms data
-				return window.Server.schoolForms.get(self.activeSchoolId);
+				return window.Server.schoolForms.get(self.activeSchoolId, {filter: {limit: 1000}});
 			})
 			.then(forms => {
 				schoolData.forms = forms;
