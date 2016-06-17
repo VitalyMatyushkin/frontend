@@ -11,7 +11,7 @@ const DomainHelper = {
 		let subdomains = document.location.host.split('.');
 		subdomains[0] = subdomains[0] !=='admin' ? 'login': subdomains[0];
 		const domain = subdomains.join(".");
-		return `http://${domain}/#login`;
+		return `//${domain}/#login`;
 	},
 	redirectToStartPage: function(roleName) {
 		const roleSubdomain = RoleHelper.roleMapper[roleName.toLowerCase()];
@@ -29,17 +29,14 @@ const DomainHelper = {
 			let newUrl = window.location.href;
 			switch (roleSubdomain) {
 				case 'manager':
-					newUrl = `http://${domain}/#school_admin/summary`;
+					newUrl = `//${domain}/#school_admin/summary`;
 					break;
 				case 'parents':
-					newUrl = `http://${domain}/#events/calendar/all`;
+					newUrl = `//${domain}/#events/calendar/all`;
 					break;
 			}
-			if(newUrl === window.location.href)
-				window.location.reload();
-			else
-				window.location = newUrl;
-
+			window.location = newUrl;
+			window.location.reload();
 		} else {
 			alert('unknown role: ' + roleName);
 		}
