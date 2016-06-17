@@ -8,6 +8,7 @@ const ClassListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	setPageTitle: 'Forms',
 	serviceName: 'schoolForms',
+	filters:{limit:100},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();

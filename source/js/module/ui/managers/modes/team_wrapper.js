@@ -298,7 +298,7 @@ const TeamWrapper = React.createClass({
 					schoolData = _schoolData;
 
 					// get forms data. they will inject to school
-					return window.Server.schoolForms.get(self.activeSchoolId);
+					return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}});
 				})
 				.then( formsData => {
 					schoolData.forms = formsData;

@@ -8,7 +8,7 @@ const ClassListPage = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName: 'schoolForms',
     setPageTitle: 'forms',
-    filters:{include:{relation:'school'}},
+    filters:{include:{relation:'school'}, limit:1000},
     onClassEdit:function(data){
         const   self 			= this,
         	    globalBinding 	= self.getMoreartyContext().getBinding(),
