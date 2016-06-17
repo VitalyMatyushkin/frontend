@@ -30,7 +30,7 @@ const TeamModeView = React.createClass({
 
 		binding.set(`teamWrapper.${rivalIndex}.filter`, Immutable.fromJS({
 			gender:		model.gender,
-			houseId:	rival.id,
+			houseId:	model.type === 'houses' ? rival.id : undefined,
 			schoolId:	MoreartyHelper.getActiveSchoolId(self),
 			forms:		self._getFilteredAgesBySchoolForms(
 							model.ages,
