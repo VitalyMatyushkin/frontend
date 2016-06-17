@@ -102,7 +102,8 @@ const EventView = React.createClass({
 			//Set the requirement for an all children view here
 			if (userChildren && userChildren.length > 0) {
 				self.request = userChildren.map(child => {
-					window.Server.userChildEvents.get({childId:child.id}).then(events => Promise.all(events.map(event =>
+					window.Server.userChildEvents.get({childId:child.id})
+						.then(events => Promise.all(events.map(event =>
 							window.Server.sport.get({sportId:event.sportId}).then(sport => {
 									event.sport = sport;
 
@@ -110,7 +111,7 @@ const EventView = React.createClass({
 								})
 							)
 						))
-						.then(events => self._includeTeamsToEvents(events))
+						.then(events => self._includeTeamsToEvents(events, child.schoolId))
 						.then(events => self.processRequestData(events, child.id));
 				});
 				return self.request;
@@ -121,19 +122,19 @@ const EventView = React.createClass({
 	 * Method include teams to each event
 	 * @private
 	 */
-	_includeTeamsToEvents: function(events) {
+	_includeTeamsToEvents: function(events, schoolId) {
 		const self = this;
 
-		return Promise.all(events.map(event => self._includeTeamsToEvent(event)));
+		return Promise.all(events.map(event => self._includeTeamsToEvent(event, schoolId)));
 	},
 	/**
 	 * Method include teams to event model
 	 * @private
 	 */
-	_includeTeamsToEvent: function(event) {
+	_includeTeamsToEvent: function(event, schoolId) {
 		const self = this;
 
-		return self._getTeamsForEvent(event)
+		return self._getTeamsForEvent(event, schoolId)
 			.then(teams => {
 				event.participants = teams;
 
@@ -147,10 +148,10 @@ const EventView = React.createClass({
 	 * @returns {*}
 	 * @private
 	 */
-	_getTeamsForEvent: function(event) {
+	_getTeamsForEvent: function(event, schoolId) {
 		const self = this;
 
-		return window.Server.schoolEventTeams.get({schoolId: event.inviterSchoolId, eventId: event.id})
+		return window.Server.schoolEventTeams.get({schoolId: schoolId, eventId: event.id})
 			.then(teams => Promise.all(teams.map(team => self._includeModelsToTeam(team))));
 	},
 	/**
