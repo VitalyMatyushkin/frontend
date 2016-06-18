@@ -26,9 +26,12 @@
   margin: 5px 0;
 }
 .eEventHeader_field.mEvent{
-  font-weight: bold;
   color: $COLOR;
+  font-weight: bold;
   font-size: 20px;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .eEventHeader_field.mType{
   padding: 2px 0;
