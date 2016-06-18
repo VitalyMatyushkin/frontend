@@ -49,13 +49,13 @@ const InviteAcceptView = React.createClass({
             .then(currentSchool => {
                 invite.invitedSchool = currentSchool;
 
-                return window.Server.schoolForms.get(self.activeSchoolId).then(forms => currentSchool.forms = forms);
+                return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}}).then(forms => currentSchool.forms = forms);
             })
             .then(_ => {
                 return window.Server.publicSchool.get(invite.inviterSchoolId).then(inviterSchool => {
                     invite.inviterSchool = inviterSchool;
 
-                    return window.Server.publicSchoolForms.get(invite.inviterSchoolId).then(forms => inviterSchool.forms = forms);
+                    return window.Server.publicSchoolForms.get(invite.inviterSchoolId, {filter:{limit:1000}}).then(forms => inviterSchool.forms = forms);
                 });
             })
             .then(_ => {

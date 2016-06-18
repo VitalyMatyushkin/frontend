@@ -82,7 +82,7 @@ const AutocompleteTeam = React.createClass({
                 .then(_players => {
                     players = _players;
 
-                    return window.Server.schoolForms.get(schoolId);
+                    return window.Server.schoolForms.get(schoolId, {filter:{limit:1000}});
                 })
                 .then(forms => {
                     let playersWithForms = self.injectFormsToPlayers(players, forms);

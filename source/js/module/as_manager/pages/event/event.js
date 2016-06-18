@@ -155,7 +155,7 @@ const EventView = React.createClass({
 			activeSchool = _school;
 
 			// Get forms
-			return window.Server.schoolForms.get(self.activeSchoolId);
+			return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}});
 		})
 		.then(forms => {
 			activeSchool.forms = forms;
@@ -182,7 +182,7 @@ const EventView = React.createClass({
 					event.inviterSchoolId !== self.activeSchoolId ? event.inviterSchoolId : event.invitedSchoolId
 				)
 				.then(otherSchool => {
-					return window.Server.publicSchoolForms.get(otherSchool.id).then(forms => {
+					return window.Server.publicSchoolForms.get(otherSchool.id, {filter:{limit:1000}}).then(forms => {
 						otherSchool.forms = forms;
 
 						return otherSchool;

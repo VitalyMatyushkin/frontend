@@ -38,7 +38,7 @@ const TeamAddPage = React.createClass({
                 schoolData = _schoolData;
 
                 // get forms data
-                return window.Server.schoolForms.get(self.activeSchoolId);
+                return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}});
             })
             .then(formsData => {
                 schoolData.forms = formsData;
