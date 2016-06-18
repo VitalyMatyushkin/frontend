@@ -83,11 +83,66 @@ const EventHeader = React.createClass({
 			verifiedUser = self.getMoreartyContext().getBinding().get('userData.userInfo.verified');
 		return (userId === ownerId || (verifiedUser.get('email') && verifiedUser.get('phone') && verifiedUser.get('personal')));
 	},
-	isEnableClose: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+	/**
+	 * Return TRUE if event isn't finish and user is school worker
+	 * @returns {boolean|*}
+	 * @private
+	 */
+	_isShowEventButtons: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		return binding.get('participants').count() > 1;
+		return binding.get('model.status') === EventHelper.EVENT_STATUS.NOT_FINISHED &&
+			RoleHelper.isUserSchoolWorker(self);
+	},
+	/**
+	 * Return TRUE if participants count is two and event isn't close.
+	 * Note: participants count can be equal one, if event is "inter-schools" and opponent school
+	 * has not yet accepted invitation.
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isShowCloseEventButton: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return	binding.get('participants').count() === 2 &&
+				binding.get('model.status') === EventHelper.EVENT_STATUS.NOT_FINISHED &&
+				binding.get('mode') === 'general';
+	},
+	/**
+	 * Return TRUE if event edit mode is "closing".
+	 * It's mean step before event will close.
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isShowCancelEventEditButton: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.get('mode') === 'closing';
+	},
+	/**
+	 * Return TRUE if event edit mode is "general".
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isShowEditEventButton: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.get('mode') === 'general';
+	},
+	/**
+	 * Return TRUE if event edit mode is "general".
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isShowFinishEventEditingButton: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.get('mode') !== 'general';
 	},
 	onClickReFormTeamMatch: function () {
 		var self = this,
@@ -123,20 +178,12 @@ const EventHeader = React.createClass({
 			.commit();
 	},
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	isUserSchoolWorker	= RoleHelper.isUserSchoolWorker(self),
-				closeClasses		= classNames({
-					mClose:		true,
-					mRed:		self.isEnableClose(),
-					mDisable:	!self.isEnableClose()
-				});
+		const self = this;
 
 		return (
-			<If condition={binding.get('model.status') === EventHelper.EVENT_STATUS.NOT_FINISHED && isUserSchoolWorker}>
+			<If condition={self._isShowEventButtons()}>
 				<div className="bEventButtons">
-					<If condition={binding.get('mode') === 'general'}>
+					<If condition={self._isShowEditEventButton()}>
 						<div
 							className="bEditButton"
 							onClick={self.onClickReFormTeamMatch}
@@ -144,15 +191,15 @@ const EventHeader = React.createClass({
 							<SVG icon="icon_edit"/>
 						</div>
 					</If>
-					<If condition={binding.get('mode') === 'general'}>
+					<If condition={self._isShowCloseEventButton()}>
 						<div
-							className={closeClasses}
-							onClick={self.isEnableClose() ? self.onClickCloseMatch : null}
+							className='mClose mRed'
+							onClick={self.onClickCloseMatch}
 						>
 							<SVG icon="icon_close_match"/>
 						</div>
 					</If>
-					<If condition={binding.get('mode') === 'closing'}>
+					<If condition={self._isShowCancelEventEditButton()}>
 						<div
 							className="bEventButton mCancel"
 							onClick={self.onClickCancel}
@@ -160,7 +207,7 @@ const EventHeader = React.createClass({
 							Cancel
 						</div>
 					</If>
-					<If condition={binding.get('mode') !== 'general'}>
+					<If condition={self._isShowFinishEventEditingButton()}>
 						<div
 								className="bEventButton"
 								onClick={self.onClickOk}
