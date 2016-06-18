@@ -11,7 +11,7 @@ const LoginUserPage = React.createClass({
         let subdomains = document.location.host.split('.');
         subdomains[0] = subdomains[0] !=='admin' ? 'login': subdomains[0];
         const domain = subdomains.join(".");
-        window.location.href = `http://${domain}/#login`;
+        window.location.href = `//${domain}/#login`;
 
 		return null;
 	}

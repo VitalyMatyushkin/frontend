@@ -19,7 +19,7 @@ const LoginUserForm = React.createClass({
 		const domain = subdomains.join(".");
 
 		self.tmpFormName = self.props.customName === 'default' ? "Sign in or <a class='mHover' href='/#register'>join us for free</a>" : self.props.customName;
-		self.forgotPassUrl = `http://${domain}/#reset-request`;
+		self.forgotPassUrl = `//${domain}/#reset-request`;
 	},
 
 	render: function() {

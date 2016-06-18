@@ -2,7 +2,6 @@
  * Created by bridark on 04/08/15.
  */
 var PublicLogin,
-    SVG = require('module/ui/svg'),
     React = require('react');
 
 PublicLogin = React.createClass({
@@ -11,7 +10,7 @@ PublicLogin = React.createClass({
         let subdomains = document.location.host.split('.');
         subdomains[0] = "login";
         let domain = subdomains.join(".");
-        window.location.href = `http://${domain}`;
+        window.location.href = `//${domain}`;
     },
     render:function(){
         var self = this;
