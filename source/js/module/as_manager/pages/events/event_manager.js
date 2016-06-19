@@ -376,28 +376,30 @@ const EventManager = React.createClass({
                 error:              binding.sub('error')
             };
 
-		return <div>
-           	<div className="eManager_steps" >
-                <div className="eManager_step" >{step} </div>
-                <h3>{titles[step - 1]}</h3></div>
-            <div className={bManagerClasses}>
-                <If condition={step === 1}>
-                    <div className="eManager_dateTimePicker">
-                        <CalendarView
-                            binding={rootBinding.sub('events.calendar')}
-                            onSelect={self.onSelectDate} />
-                        {binding.get('model.startTime') ? <TimePicker binding={binding.sub('model.startTime')} /> : null}
-                    </div>
-                </If>
-                <If condition={step === 2}>
-                    <EventManagerBase binding={commonBinding} />
-                </If>
-                <If condition={step === 3}>
-                    <Manager binding={managerBinding} />
-                </If>
-            </div>
-			{self._renderStepButtons()}
-		</div>;
+		return (
+			<div>
+				<div className="eManager_steps" >
+					<div className="eManager_step" >{step} </div>
+					<h3>{titles[step - 1]}</h3></div>
+				<div className={bManagerClasses}>
+					<If condition={step === 1}>
+						<div className="eManager_dateTimePicker">
+							<CalendarView
+								binding={rootBinding.sub('events.calendar')}
+								onSelect={self.onSelectDate} />
+							{binding.get('model.startTime') ? <TimePicker binding={binding.sub('model.startTime')} /> : null}
+						</div>
+					</If>
+					<If condition={step === 2}>
+						<EventManagerBase binding={commonBinding} />
+					</If>
+					<If condition={step === 3}>
+						<Manager binding={managerBinding} />
+					</If>
+				</div>
+				{self._renderStepButtons()}
+			</div>
+		);
 	}
 });
 
