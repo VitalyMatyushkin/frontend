@@ -229,8 +229,6 @@ const Manager = React.createClass({
 					error:		binding.error
 				};
 
-		console.log(defaultBinding.toJS(`teamModeView.players`));
-
 			return (
 				<div className="eManager_container">
 					<div className="eManager_chooser">
