@@ -36,6 +36,10 @@ const Manager = React.createClass({
 			.set('teamModeView', Immutable.fromJS(
 				{
 					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
+					players: [
+						[],
+						[]
+					],
 					teamTable: [
 						{
 							selectedTeamId: undefined,
@@ -224,6 +228,8 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
+
+		console.log(defaultBinding.toJS(`teamModeView.players`));
 
 			return (
 				<div className="eManager_container">

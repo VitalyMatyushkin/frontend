@@ -66,10 +66,10 @@ const TeamWrapper = React.createClass({
 			case binding.toJS('selectedTeamId') !== undefined:
 				binding.set('creationMode', Immutable.fromJS(self.CREATION_MODE.BASED_ON_CREATED_TEAM));
 				break;
-			case binding.toJS('selectedTeamId') === undefined && binding.toJS('players').length !== 0:
+			case binding.toJS('selectedTeamId') === undefined && self._getPlayers().length !== 0:
 				binding.set('creationMode', Immutable.fromJS(self.CREATION_MODE.NEW_TEAM));
 				break;
-			case binding.toJS('selectedTeamId') === undefined && binding.toJS('players').length === 0:
+			case binding.toJS('selectedTeamId') === undefined && self._getPlayers().length === 0:
 				binding.set('creationMode', Immutable.fromJS(undefined));
 				break;
 		}
@@ -78,7 +78,7 @@ const TeamWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		self.playersListener = binding.sub('players').addListener((descriptor) => {
+		self.playersListener = self._getPlayersBinding().addListener((descriptor) => {
 			if(descriptor.getCurrentValue() !== undefined && descriptor.getPreviousValue() !== undefined) {
 				const	currPlayers	= descriptor.getCurrentValue().toJS(),
 						prevPlayers	= descriptor.getPreviousValue().toJS();
@@ -125,9 +125,9 @@ const TeamWrapper = React.createClass({
 
 		let findedRemovedPlayer = Lazy(removedPlayers).findWhere({id: player.id});
 		if(findedRemovedPlayer) {
-			let players = self.getDefaultBinding().toJS('players');
+			let players = self._getPlayers();
 			players[players.length - 1] = findedRemovedPlayer;
-			self.getDefaultBinding().sub('players').withDisabledListener(self.playersListener, () => {
+			self._getPlayersBinding().withDisabledListener(self.playersListener, () => {
 				self.getDefaultBinding().set('players', Immutable.fromJS(players));
 
 				const index = Lazy(removedPlayers).indexOf(findedRemovedPlayer);
@@ -332,6 +332,9 @@ const TeamWrapper = React.createClass({
 						.set('removedPlayers',			Immutable.fromJS([]))
 						.set('playerChooser.filter',	Immutable.fromJS(self._getPlayerChooserFilter(team, schoolData)))
 						.commit();
+
+					self._setPlayers(updatedPlayers);
+
 					return team;
 				});
 		} else {
@@ -343,7 +346,26 @@ const TeamWrapper = React.createClass({
 				.set('removedPlayers',			Immutable.fromJS([]))
 				.set('playerChooser.filter',	Immutable.fromJS(binding.toJS('filter')))
 				.commit();
+
+			self._setPlayers([]);
 		}
+	},
+	_setPlayers: function(players) {
+		const	self	= this,
+				playersBinding	= self.getBinding('players');
+
+		playersBinding.set(Immutable.fromJS(players));
+	},
+	_getPlayers: function() {
+		const	self			= this,
+				playersBinding	= self.getBinding('players');
+
+		return playersBinding.toJS();
+	},
+	_getPlayersBinding: function() {
+		const self= this;
+
+		return self.getBinding('players');
 	},
 	/**
 	 * Get team players from server by team ID
@@ -385,7 +407,7 @@ const TeamWrapper = React.createClass({
 			default:	binding.sub('teamTable'),
 			teamName:	binding.sub('teamName'),
 			rivalId:	binding.sub('rival.id'),
-			players:	binding.sub('players')
+			players:	self._getPlayersBinding()
 		};
 	},
 	_getPlayerChooserBinding: function() {
@@ -394,7 +416,8 @@ const TeamWrapper = React.createClass({
 
 		return {
 			default:			binding.sub('playerChooser'),
-			teamPlayers:		binding.sub('players')
+			otherTeamPlayers:	self.getBinding('otherTeamPlayers'),
+			teamPlayers:		self._getPlayersBinding()
 		};
 	},
 	_onRemovePlayer: function(player) {
@@ -477,16 +500,12 @@ const TeamWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.atomically()
-			.set(
-				'players',
-				binding.get('prevPlayers')
-			)
-			.set(
+		binding.set(
 				'teamName.name',
 				binding.get('prevTeamName')
-			)
-			.commit();
+			);
+
+		self._setPlayers(binding.get('prevPlayers'));
 	},
 	_onClickTypeRadioButton: function(mode) {
 		const	self	= this,
@@ -500,7 +519,7 @@ const TeamWrapper = React.createClass({
 	_isPlayersChanged: function() {
 		const self = this;
 
-		return !Immutable.is(self.getDefaultBinding().get('players'), self.getDefaultBinding().get('prevPlayers'));
+		return !Immutable.is(self._getPlayers(), self.getDefaultBinding().get('prevPlayers'));
 	},
 	_isShowTypeRadioButtons: function() {
 		const self = this;

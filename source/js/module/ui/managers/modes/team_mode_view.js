@@ -66,12 +66,8 @@ const TeamModeView = React.createClass({
 		}
 	},
 	_getAnotherRivalIndex: function(rivalIndex) {
-		let anotherRivalIndex = 0;
-		if(rivalIndex == 0) {
-			anotherRivalIndex = 1;
-		}
 
-		return anotherRivalIndex;
+		return rivalIndex === 0 ? 1 : 0;
 	},
 	_selectTeam: function(teamId, team) {
 		const self = this,
@@ -160,9 +156,11 @@ const TeamModeView = React.createClass({
 				binding				= self.getDefaultBinding(),
 				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
 				tableWrapperBinding	= {
-										default:	binding.sub(`teamWrapper.${selectedRivalIndex}`),
-										model:		self.getBinding().model,
-										rival:		self.getBinding().rivals.sub(selectedRivalIndex)
+										default:			binding.sub(`teamWrapper.${selectedRivalIndex}`),
+										model:				self.getBinding().model,
+										rival:				self.getBinding().rivals.sub(selectedRivalIndex),
+										players:			binding.sub(`players.${selectedRivalIndex}`),
+										otherTeamPlayers:	binding.sub(`players.${self._getAnotherRivalIndex(selectedRivalIndex)}`)
 									};
 
 		//TODO delete IF
