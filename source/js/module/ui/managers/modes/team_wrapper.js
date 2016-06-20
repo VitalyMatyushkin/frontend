@@ -327,7 +327,6 @@ const TeamWrapper = React.createClass({
 						.set('teamTable.model.players',	Immutable.fromJS(updatedPlayers))
 						.set('teamTable.model.ages',	Immutable.fromJS(team.ages))
 						.set('teamTable.schoolInfo',	Immutable.fromJS(schoolData))
-						.set('players',					Immutable.fromJS(updatedPlayers))
 						.set('prevPlayers',				Immutable.fromJS(updatedPlayers))
 						.set('removedPlayers',			Immutable.fromJS([]))
 						.set('playerChooser.filter',	Immutable.fromJS(self._getPlayerChooserFilter(team, schoolData)))
@@ -341,7 +340,6 @@ const TeamWrapper = React.createClass({
 			binding
 				.atomically()
 				.set('teamTable',				Immutable.fromJS(self._getDefTeamTableObject()))
-				.set('players',					Immutable.fromJS([]))
 				.set('prevPlayers',				Immutable.fromJS([]))
 				.set('removedPlayers',			Immutable.fromJS([]))
 				.set('playerChooser.filter',	Immutable.fromJS(binding.toJS('filter')))
