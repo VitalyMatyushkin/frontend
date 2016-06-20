@@ -63,6 +63,13 @@ const	PlayerChooser	= React.createClass({
 			binding.set('playersForSelect', Immutable.fromJS(players));
 		});
 	},
+	_getNinUserId: function() {
+		const self = this;
+
+		const otherTeamUsers = self.getBinding("otherTeamPlayers").toJS();
+
+		return otherTeamUsers.map(user => user.id);
+	},
 	/**
 	 * Search players by search text
 	 * @param searchText
@@ -78,6 +85,9 @@ const	PlayerChooser	= React.createClass({
 			const requestFilter = {
 						filter: {
 							where: {
+								_id: {
+									$nin: self._getNinUserId()
+								},
 								lastName: {
 									like:		searchText,
 									options:	'i'
@@ -362,7 +372,7 @@ const	PlayerChooser	= React.createClass({
 		}
 	},
 	render: function() {
-		const	self	= this;
+		const self = this;
 
 		return (
 			<div className="eTeamWrapper_autocompleteWrapper">
