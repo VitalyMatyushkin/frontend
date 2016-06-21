@@ -62,7 +62,12 @@ const OneSchoolPage = React.createClass({
                     href:'/#admin_schools/admin_views/logs',
                     name:'Activity Log',
                     key:'Log'
-                }];
+                },{
+                    href:'/#admin_schools/import_students',
+                    name:'Import Students',
+                    key:'import_students'
+                }
+            ];
             binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
         };
 
@@ -146,6 +151,11 @@ const OneSchoolPage = React.createClass({
                             path="/admin_schools/admin_views/sports /admin_schools/admin_views/sports/:mode"
                             binding={binding.sub('sports')}
                             component="module/as_admin/pages/admin_schools/sports/sports_page"
+                        />
+                        <Route
+                            path="/admin_schools/import_students"
+                            binding={binding}
+                            component="module/as_admin/pages/admin_schools/import_students_module"
                         />
                     </RouterView>
                 </div>
