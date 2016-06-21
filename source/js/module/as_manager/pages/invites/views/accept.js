@@ -21,6 +21,7 @@ const InviteAcceptView = React.createClass({
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
+		binding.clear();
         let invite;
         // TODO don't forget about filter
         //{
