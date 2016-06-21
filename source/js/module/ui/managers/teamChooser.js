@@ -1,5 +1,6 @@
 const	React			= require('react'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Lazy			= require('lazyjs'),
 		classNames		= require('classnames'),
 		Immutable		= require('immutable');
 
@@ -29,20 +30,20 @@ const	TeamChooser	= React.createClass({
 		});
 	},
 	_getTeams: function() {
-		const	self	= this,
-				model	= self.getBinding().model.toJS(),
-				rival	= self.getBinding().rival.toJS(),
-				//TODO use filter in future
-				filter	= {
-					where: {
-						schoolId:	MoreartyHelper.getActiveSchoolId(self),
-						gender:		model.gender,
-						sportId:	model.sportId,
-						tempTeam:	false,
-						ages:		{inq: model.ages}
-					},
-					include: ['sport','players']
-				};
+		const self = this,
+			model = self.getBinding().model.toJS(),
+			rival = self.getBinding().rival.toJS(),
+		//TODO use filter in future
+			filter = {
+				where: {
+					schoolId: MoreartyHelper.getActiveSchoolId(self),
+					gender: model.gender,
+					sportId: model.sportId,
+					tempTeam: false,
+					ages: {inq: model.ages}
+				},
+				include: ['sport', 'players']
+			};
 
 
 		return window.Server.teams.get(MoreartyHelper.getActiveSchoolId(self), {
@@ -52,15 +53,15 @@ const	TeamChooser	= React.createClass({
 			})
 			// filter removed and temp teams
 			.then(teams => Promise.resolve(teams.filter(team => team.removed === false && team.tempTeam === false)))
-			.then(teams  => {
+			.then(teams => {
 				// filter teams by age
-				let	filteredTeams = [];
+				let filteredTeams = [];
 
 				teams.forEach((team) => {
-					if(team.ages.length <= model.ages.length) {
+					if (Lazy(model.ages).intersection(team.ages).toArray().length === team.ages.length) {
 						switch (model.type) {
 							case 'houses':
-								if(rival.id === team.houseId) {
+								if (rival.id === team.houseId) {
 									filteredTeams.push(team);
 								}
 								break;
