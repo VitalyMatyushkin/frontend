@@ -7,6 +7,9 @@ const	React					= require('react'),
 
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		isInviteMode: 	React.PropTypes.bool
+	},
 	componentWillMount: function () {
 		const	self = this;
 
@@ -213,6 +216,19 @@ const Manager = React.createClass({
 			binding.get('model.type') === 'inter-schools'
 		);
 	},
+	_renderRivals: function() {
+		const self = this;
+
+		if(!self.props.isInviteMode) {
+			return (
+				<div className="eManager_chooser">
+					<div className="bChooserRival">
+						{self._getRivals()}
+					</div>
+				</div>
+			);
+		}
+	},
 	render: function() {
 		const	self				= this,
 				defaultBinding		= self.getDefaultBinding(),
@@ -231,11 +247,7 @@ const Manager = React.createClass({
 
 			return (
 				<div className="eManager_container">
-					<div className="eManager_chooser">
-						<div className="bChooserRival">
-							{self._getRivals()}
-						</div>
-					</div>
+					{self._renderRivals()}
 					<div className="eManager_containerTeam">
 						<TeamModeView binding={teamModeViewBinding}/>
 						<div className="eManager_gameFieldContainer">
