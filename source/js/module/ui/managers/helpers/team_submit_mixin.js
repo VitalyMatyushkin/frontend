@@ -59,7 +59,7 @@ const TeamSubmitMixin = {
 				// we need set userId to each player.
 				// it's need for server request
 				const updPlayers = self._preparePlayersToCommit(
-					binding.toJS(`players.${rivalIndex}`)
+					binding.toJS(`teamModeView.players.${rivalIndex}`)
 				);
 
 				promises.push( TeamHelper.commitPlayers(initialPlayers, updPlayers, teamId, self.activeSchoolId) );
@@ -121,7 +121,7 @@ const TeamSubmitMixin = {
 				// we need set userId to each player.
 				// it's need for server request
 				const updPlayers = self._preparePlayersToCommit(
-					binding.toJS(`players.${rivalIndex}`)
+					binding.toJS(`teamModeView.players.${rivalIndex}`)
 				);
 
 				const	teamData		= [ new Promise( resolve => resolve({teamId: team.id}) ) ],// this data need on finish of event creation
