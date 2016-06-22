@@ -149,13 +149,12 @@ const UsersList = React.createClass({
     },
     _accessRestriction:function(ids,block){
         const self = this,
-			blockService = self.props.blockService,
 			blockStr = block ? 'block': 'unblock';
 
         if(ids !== undefined && ids.length >=1){
             if(confirm(`Are you sure you want ${blockStr} user?`)){
                 ids.forEach(function(id){
-					blockService.post(id,{blocked: block }).then(function(){
+					self.props.blockService.post(id,{blocked: block }).then(function(){
                         self.reloadData();
                     });
                 });
