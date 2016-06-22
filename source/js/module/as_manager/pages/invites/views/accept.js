@@ -145,7 +145,7 @@ const InviteAcceptView = React.createClass({
             <div className="bInviteAccept">
                 <div className="bManager mTeamManager">
                     <If condition={!!binding.get('sync')}>
-                        <Manager binding={managerBinding} />
+                        <Manager isInviteMode={true} binding={managerBinding} />
                     </If>
                 </div>
                 <div className="eInviteAccept_footer">

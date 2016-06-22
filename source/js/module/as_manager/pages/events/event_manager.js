@@ -394,7 +394,7 @@ const EventManager = React.createClass({
 						<EventManagerBase binding={commonBinding} />
 					</If>
 					<If condition={step === 3}>
-						<Manager binding={managerBinding} />
+						<Manager isInviteMode={false} binding={managerBinding} />
 					</If>
 				</div>
 				{self._renderStepButtons()}
