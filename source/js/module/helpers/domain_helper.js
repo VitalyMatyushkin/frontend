@@ -17,10 +17,12 @@ const DomainHelper = {
 		const roleSubdomain = RoleHelper.roleMapper[roleName.toLowerCase()];
 
 		if(roleSubdomain) {
-			let subdomains = document.location.host.split('.');
+			let subdomains = document.location.host.split('.'),
+				needReload = true;
 
 			if(subdomains[0] !== roleSubdomain){
 				subdomains[0] = roleSubdomain;
+				needReload = false;
 				/** Save authorizationInfo in cookies */
 				let authorizationInfo = Storage.SessionStorage.get('authorizationInfo');
 				authorizationInfo && Storage.cookie.set('authorizationInfo', authorizationInfo);
@@ -36,7 +38,9 @@ const DomainHelper = {
 					break;
 			}
 			window.location = newUrl;
-			window.location.reload();
+			if(needReload) {
+				window.location.reload();
+			}
 		} else {
 			alert('unknown role: ' + roleName);
 		}
