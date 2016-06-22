@@ -14,6 +14,7 @@ const serviceList = {
 		serviceList.users = new Service('/superadmin/users', binding);
         serviceList.user = new Service('/superadmin/users/{userId}', binding);
         serviceList.usersCount = new Service('/superadmin/users/count', binding);
+		serviceList.userBlock = new Service('/superadmin/users/{userId}/block', binding);
 
         //Permission Requests
         serviceList.permissionRequests = new Service('/superadmin/users/permissions/requests',binding);

@@ -19,7 +19,7 @@ const AdminUsersList = React.createClass({
             addButton = <div className="bButtonAdd" onClick={self._adminCreateNewUser}><SVG icon="icon_add_men" /></div>;
 
         return (
-            <UserList binding={binding} grantRole={GrantRole} addButton={addButton} permissionServiceName="userPermission" />
+            <UserList binding={binding} grantRole={GrantRole} addButton={addButton} permissionServiceName="userPermission" blockService={window.Server.userBlock} />
         );
 
     }

@@ -14,8 +14,9 @@ const UsersList = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
     propTypes:{
         grantRole:React.PropTypes.func,
-		permissionServiceName:React.PropTypes.string
-    },
+		permissionServiceName:React.PropTypes.string,
+		blockService:React.PropTypes.object
+	},
     serviceName:'users',
     serviceCount:'usersCount',
     filters:{
@@ -24,10 +25,14 @@ const UsersList = React.createClass({
             scope: { include: {"relation": "school"}}
         }
     },
-    groupActionList:['Add Role','Revoke All Roles','Unblock','Block','View'],
+    groupActionList:['Add Role','Revoke All Roles','View'],
     setPageTitle:"Users & Permissions",
+	componentDidMount:function(){
+		const self = this;
+		if(self.props.blockService)
+			self.groupActionList = ['Add Role','Revoke All Roles','Unblock','Block','View']
+	},
     _getItemViewFunction:function(model){
-        var self = this;
         if(model.length === 1){
             window.location.hash = 'user/view?id='+model[0];
         }else{
@@ -54,10 +59,10 @@ const UsersList = React.createClass({
                 self._revokeAllRoles(idAutoComplete);
                 break;
             case 'Unblock':
-                self._accessRestriction(idAutoComplete,0);
+                self._accessRestriction(idAutoComplete,false);
                 break;
             case 'Block':
-                self._accessRestriction(idAutoComplete,1);
+                self._accessRestriction(idAutoComplete,true);
                 break;
             case 'View':
                 self._getItemViewFunction(idAutoComplete);
@@ -142,13 +147,15 @@ const UsersList = React.createClass({
             }
         }
     },
-    _accessRestriction:function(ids,action){
-        var self = this,
-            confirmAction= window.confirm("Are you sure you want block user?");
+    _accessRestriction:function(ids,block){
+        const self = this,
+			blockService = self.props.blockService,
+			blockStr = block ? 'block': 'unblock';
+
         if(ids !== undefined && ids.length >=1){
-            if(confirmAction === true){
+            if(confirm(`Are you sure you want ${blockStr} user?`)){
                 ids.forEach(function(id){
-                    window.Server.user.put({id:id},{blocked: action==1 }).then(function(){
+					blockService.post(id,{blocked: block }).then(function(){
                         self.reloadData();
                     });
                 });
