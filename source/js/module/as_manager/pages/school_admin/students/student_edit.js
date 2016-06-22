@@ -28,7 +28,7 @@ const StudentEditPage = React.createClass({
 					studentUser.form 	= formAndHouseArray[0];
 					studentUser.house 	= formAndHouseArray[1];
 					self.initNextOfKin(studentUser);
-					self.isMounted() && binding.set(Immutable.fromJS(studentUser));
+					binding.set(Immutable.fromJS(studentUser));
 					return studentUser;
 				});
 
@@ -58,11 +58,14 @@ const StudentEditPage = React.createClass({
 		}
 	},
 	saveNextOfKin:function(student){
-		const nok = student.nextOfKin;
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				nok 	= binding.toJS('nextOfKin');
 
 		for(let key in nok[0]){
 			nok[0][key] = student['nok_'+key];
 		}
+		student.nextOfKin = nok;
 	},
 	submitEdit: function(data) {
 		const 	self = this,
