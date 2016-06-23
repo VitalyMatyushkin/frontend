@@ -22,38 +22,49 @@ ChallengesView = React.createClass({
         return <Sport name={sport} className="bIcon_invites" ></Sport>;
     },
     getEvents: function (date) {
-        var self = this,
-            binding = this.getDefaultBinding(),
-            eventsByDate = binding.get('models').filter(function (event) {
+        const   self    = this,
+                binding = this.getDefaultBinding();
+
+        let result = [];
+
+        if(binding.toJS('sync')) {
+            const eventsByDate = binding.get('models').filter(function (event) {
                 return self.sameDay(
-                        new Date(event.get('startTime')),
-                        new Date(date));
+                    new Date(event.get('startTime')),
+                    new Date(date));
             });
 
-        return eventsByDate.map(function (event) {
-            const   activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+            result = eventsByDate.map(function (event) {
+                const   activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
                     model           = new ChallengeModel(event.toJS(), activeSchoolId),
                     sportIcon       = self.getSportIcon(model.sport);
 
-            return (
-                <div key={model.id} className="bChallenge" onClick={self.onClickChallenge.bind(null, model.id)}>
-                    <span className="eChallenge_sport">{sportIcon}</span>
-                    <span className="eChallenge_event" title={model.name}>{model.name}</span>
-                    <div className="eChallenge_hours">{model.time}</div>
-                    <div className="eChallenge_in">
-                        <span className="eChallenge_firstName" title={model.rivals[0]}>{model.rivals[0]}</span>
-                        <p>vs</p>
-                        <span className="eChallenge_secondName" title={model.rivals[1]}>{model.rivals[1]}</span>
+                return (
+                    <div key={model.id} className="bChallenge" onClick={self.onClickChallenge.bind(null, model.id)}>
+                        <span className="eChallenge_sport">{sportIcon}</span>
+                        <span className="eChallenge_event" title={model.name}>{model.name}</span>
+                        <div className="eChallenge_hours">{model.time}</div>
+                        <div className="eChallenge_in">
+                            <span className="eChallenge_firstName" title={model.rivals[0]}>{model.rivals[0]}</span>
+                            <p>vs</p>
+                            <span className="eChallenge_secondName" title={model.rivals[1]}>{model.rivals[1]}</span>
+                        </div>
+                        <div className={classNames({eChallenge_results:true, mDone:model.played})}>{model.score}</div>
                     </div>
-                    <div className={classNames({eChallenge_results:true, mDone:model.played})}>{model.score}</div>
-                </div>
-            );
-        }).toArray();
+                );
+            }).toArray();
+        }
+
+        return result;
     },
     getDates: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            dates = binding.get('models').reduce(function (memo, val) {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        let result;
+
+        if(binding.toJS('sync')) {
+            const dates = binding.get('models').reduce(function (memo, val) {
                 var date = Date.parse(val.get('startTime')),
                     any = memo.some(function (d) {
                         return self.sameDay(date, d);
@@ -65,18 +76,28 @@ ChallengesView = React.createClass({
 
                 return memo;
             }, Immutable.List());
-        return dates.count() !== 0 ? dates.sort().map(function (datetime,dtIndex) {
-            var date = DateHelper.getDate(datetime);
 
-            return (
-                <div key={dtIndex} className="bChallengeDate">
-                    <div className="eChallengeDate_wrap">
-                        <div className="eChallengeDate_date">{date}</div>
-                        <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
-                    </div>
-                </div>
-            );
-        }).toArray() : <div className="eUserFullInfo_block">No fixtures to report on this child</div>;
+            if(dates.count() === 0) {
+                result = (
+                    <div className="eUserFullInfo_block">No fixtures to report on this child</div>
+                );
+            } else {
+                result = dates.sort().map((datetime,dtIndex) => {
+                    const date = DateHelper.getDate(datetime);
+
+                    return (
+                        <div key={dtIndex} className="bChallengeDate">
+                            <div className="eChallengeDate_wrap">
+                                <div className="eChallengeDate_date">{date}</div>
+                                <div className="eChallengeDate_list">{self.getEvents(datetime)}</div>
+                            </div>
+                        </div>
+                    );
+                }).toArray();
+            }
+        }
+
+        return result;
     },
 	render: function () {
         var self = this,
