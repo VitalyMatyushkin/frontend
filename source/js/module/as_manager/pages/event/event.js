@@ -116,40 +116,6 @@ const EventView = React.createClass({
 			teams,
 			sport;
 
-		// TODO don't forget about filter
-		//filter: {
-		//    where: {
-		//        id: eventId
-		//    },
-		//    include: [
-		//        {
-		//            participants: [
-		//                {
-		//                    players: ['user', 'form']
-		//                },
-		//                {
-		//                    school: 'forms'
-		//                },
-		//                {
-		//                    exactlyPlayers: 'student'
-		//                },
-		//                'house'
-		//            ]
-		//        },
-		//        {
-		//            invites: ['guest', 'inviter']
-		//        },
-		//        {
-		//            result: 'points'
-		//        },
-		//        {
-		//            sport: ''
-		//        },
-		//        {
-		//            albums: 'photos'
-		//        }
-		//    ]
-		//}
 		window.Server.school.get(self.activeSchoolId)
 		.then(_school => {
 			activeSchool = _school;
@@ -291,11 +257,16 @@ const EventView = React.createClass({
 
 	/**Init model for Tabs component*/
 	initTabs:function(){
-		this.tabListModel = [
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				rootBinding	= self.getMoreartyContext().getBinding(),
+				tab 		= rootBinding.get('routing.parameters.tab');
+
+		self.tabListModel = [
 			{
 				value:'teams',
 				text:'Teams',
-				isActive:true
+				isActive:false
 			},
 			{
 				value:'details',
@@ -318,9 +289,19 @@ const EventView = React.createClass({
 				isActive:false
 			}
 		];
+
+		if(tab){
+			let item = self.tabListModel.find(t => t.value === tab);
+			item.isActive = true;
+			binding.set('activeTab', tab);
+		}
 	},
 	changeActiveTab:function(value){
+		const 	urlHash = document.location.hash,
+				hash 	= urlHash.indexOf('?') > 0 ? urlHash.substr(0,urlHash.indexOf('?')): urlHash;
+
 		this.getDefaultBinding().set('activeTab', value);
+		window.location.hash = hash + '?tab=' + value;
 	},
 	/**
 	 * Initialize data for menu items
