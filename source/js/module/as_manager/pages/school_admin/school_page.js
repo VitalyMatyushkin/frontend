@@ -12,7 +12,7 @@ const OneSchoolPage = React.createClass({
 				role 			= globalBinding.get('userData.authorizationInfo.role');
 
         if(!role)
-            document.location.hash = 'no_role';
+            document.location.hash = 'settings/general';
 
 		// SubMenu items
 		self.menuItems = [{

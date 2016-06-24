@@ -14,8 +14,7 @@ const AuthorizationServices ={
                 const authorizationInfo = {
                     id: authData.key,
                     expireAt: authData.expireAt,
-                    verified: {"email":true,"phone":true,"personal":true}//,
-                    //registerType: data.user.registerType
+                    verified: {"email":true,"phone":true,"personal":true}
                 };
                 if(authData.adminId)
                     authorizationInfo.adminId = authData.adminId;
@@ -52,8 +51,7 @@ const AuthorizationServices ={
                     isBecome:true,
                     userId:authData.userId,
                     expireAt: authData.expireAt,
-                    verified: {"email":true,"phone":true,"personal":true}//,
-                    //registerType: data.user.registerType
+                    verified: {"email":true,"phone":true,"personal":true}
                 };
 
                 binding.set(Immutable.fromJS(authorizationInfo));
