@@ -52,13 +52,12 @@ const serviceList = {
         serviceList.schoolStudent = new Service('/superadmin/schools/{schoolId}/students/{studentId}', binding);
 
 		// activity logs
-		serviceList.logs = new Service('/superadmin/logs', binding);
-		serviceList.logsCount = new Service('/superadmin/logs/count', binding);
+		serviceList.useractivity = new Service('/superadmin/useractivity', binding);
+		serviceList.useractivityCount = new Service('/superadmin/useractivity/count', binding);
 
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
         serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)
-
 	},
 	// Services which not require authorization
 	initializeOpenServices: function() {
