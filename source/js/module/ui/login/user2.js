@@ -56,8 +56,12 @@ const LoginUserPage = React.createClass({
 	},
 	showError: function() {
 		var self = this;
-
-		self.getDefaultBinding().set('showError', true);
+		if(!self._isAuthorized()) {
+			self.getDefaultBinding().set('showError', true);
+		}
+		else{
+			self._setPermissions();
+		}
 	},
 	hideError: function() {
 		var self = this;

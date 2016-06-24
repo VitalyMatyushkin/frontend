@@ -16,9 +16,10 @@ const Head = React.createClass({
 		self.createTopMenu();
 	},
 	_createMenuItems: function() {
-		const self = this;
+		const 	self = this,
+				role = self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
 
-		const menuItems = [
+		const menuItems = role ? [
 			{
 				href: '/#school_admin/summary',
 				icon: '',
@@ -45,9 +46,7 @@ const Head = React.createClass({
 				authorization: true,
 				verified: true
 			}
-		];
-
-		const role = self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
+		]:[];
 
 		// show console only for admin and manager
 		if(role === "ADMIN" || role === "MANAGER") {
