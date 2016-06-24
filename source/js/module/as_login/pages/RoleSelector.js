@@ -10,24 +10,26 @@ const RoleSelectorComponent = React.createClass({
 		return RoleHelper.roleMapper[roleName.toLowerCase()];
 	},
 	redirectToStartPage: function(roleName) {
-		const self = this;
+		const 	self 			= this,
+				roleSubdomain 	= self.getRoleSubdomain(roleName),
+				subdomains 		= document.location.host.split('.');
+		let defaultPage;
 
-		const roleSubdomain = self.getRoleSubdomain(roleName);
-		if(roleSubdomain) {
-			let subdomains = document.location.host.split('.');
-			subdomains[0] = roleSubdomain;
-			const domain = subdomains.join(".");
-			switch (roleSubdomain) {
-				case 'manager':
-					window.location.href = `//${domain}/#school_admin/summary`;
-					break;
-				case 'parents':
-					window.location.href = `//${domain}/#events/calendar/all`;
-					break;
-			}
-		} else {
-			alert('unknown role: ' + roleName);
+		subdomains[0] = roleSubdomain;
+		switch (roleSubdomain) {
+			case 'manager':
+				defaultPage = `school_admin/summary`;
+				break;
+			case 'parents':
+				defaultPage = `events/calendar/all`;
+				break;
+			default:
+				defaultPage = `settings/general`;
+				subdomains[0] = 'manager';
+				break;
 		}
+		const domain = subdomains.join(".");
+		window.location.href = `//${domain}/#${defaultPage}`;
 	},
 	onRoleSelected: function(roleName){
 		const self = this;
@@ -46,10 +48,13 @@ const RoleSelectorComponent = React.createClass({
 	},
 	render: function(){
 		const self = this;
-
 		const availableRoles = self.props.availableRoles;
+
 		if(availableRoles.length == 1) {
 			self.redirectToStartPage(availableRoles[0]);
+		}
+		if(availableRoles.length === 0){
+			self.redirectToStartPage('no_body');
 		}
 		return (
 			<div className="bRoleSelector">
