@@ -67,9 +67,9 @@ const OneSchoolPage = React.createClass({
                     name:'Import Students',
                     key:'import_students'
                 },{
-                    href:'/#admin_schools/logs',
-                    name:'Logs',
-                    key:'logs'
+                    href:'/#admin_schools/user_activity',
+                    name:'User Activity',
+                    key:'user_activity'
                 }
 
             ];
@@ -163,9 +163,9 @@ const OneSchoolPage = React.createClass({
                             component="module/as_admin/pages/admin_schools/import_students_module"
                         />
                         <Route
-                            path="/admin_schools/logs"
+                            path="/admin_schools/user_activity"
                             binding={binding}
-                            component="module/as_admin/pages/admin_schools/logs/logs"
+                            component="module/as_admin/pages/admin_schools/user_activity/user_activity"
                         />
                     </RouterView>
                 </div>
