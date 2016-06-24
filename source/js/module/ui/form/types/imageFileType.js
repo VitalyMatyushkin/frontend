@@ -48,17 +48,18 @@ const ImageFileTypeUpload = React.createClass({
 
         let coverImg;
         if(binding.get('defaultValue') !== undefined) {
-            coverImg = window.Server.images.getResizedToBoxUrl(binding.get('defaultValue'), 200, 200);
+            coverImg = window.Server.images.getResizedToBoxUrl(binding.get('defaultValue'), 300, 300);
         } else {
             coverImg= '/images/empty_pic_uploader_box.png';
         }
+		const style = {backgroundImage: `url(${coverImg})`};
         return (
             <div className="eForm_blazonUpload">
                 <div className="eForm_blazonPreview">
-                    <img src={coverImg}/>
-                    <div className={gifClasses}>
-                        <img src="images/spin-loader-black.gif"/>
-                    </div>
+					<div className="eImg" style={style}></div>
+					<div className={gifClasses}>
+						<img src="images/spin-loader-black.gif"/>
+					</div>
                 </div>
                 <div className="eForm_fileInput">
                     <input className="inputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>

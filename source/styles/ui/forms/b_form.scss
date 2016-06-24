@@ -200,14 +200,35 @@
   margin-bottom: 30px;
 }
 .eForm_blazonPreview{
-  width: 100%;
-  height:100%;
-}
-.eForm_blazonPreview img{
-  width: 170px;
-  height:170px;
+  width: 172px;
+  height:172px;
   border-radius: 5px;
   border: solid 1px #959595;
+  overflow: hidden;
+  box-sizing: border-box;
+
+
+  .eImg{
+    width: 100%;
+    height:100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    box-sizing: border-box;
+  }
+  .eLoader_gif{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 100%;
+    height:100%;
+    overflow: hidden;
+    border-radius: 5px;
+    border: solid 1px #959595;
+    img{
+      height: 170px;
+      margin-left: -25%;
+    }
+  }
 }
 .eForm_fileInput{
   margin-bottom: 10px;
@@ -228,10 +249,6 @@
   text-align: center;
   line-height: 40px;
   cursor: pointer;
-}
-.eLoader_gif{
-  position: absolute;
-  top:0;
 }
 .eLoader_gif_hide{
   display: none;
