@@ -42,7 +42,7 @@ const RoleSelectorComponent = React.createClass({
 	renderRoleButton: function(roleName){
 		const self = this;
 
-		return <button key={roleName} onClick={self.onRoleSelected(roleName)}>{roleName}</button>
+		return <div className="bButton" key={roleName} onClick={self.onRoleSelected(roleName)}>{roleName}</div>
 	},
 	render: function(){
 		const self = this;
@@ -52,7 +52,7 @@ const RoleSelectorComponent = React.createClass({
 			self.redirectToStartPage(availableRoles[0]);
 		}
 		return (
-			<div>
+			<div className="bRoleSelector">
 				{availableRoles.map(self.renderRoleButton)}
 			</div>
 		);
