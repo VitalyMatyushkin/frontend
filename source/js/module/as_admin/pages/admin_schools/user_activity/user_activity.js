@@ -7,6 +7,19 @@ const Logs = React.createClass({
 	mixins: [Morearty.Mixin,ListPageMixin],
 	serviceName:'useractivity',
 	serviceCount:'useractivityCount',
+	_getUserAvatar: function(user) {
+		let avatar = '';
+
+		if(user && user.avatar){
+			avatar = (
+				<span className="eChallenge_rivalPic">
+                    <img src={user.avatar}/>
+                </span>
+			)
+		}
+
+		return avatar;
+	},
 	_getUserName: function(user) {
 		let name = '';
 
@@ -25,6 +38,15 @@ const Logs = React.createClass({
 
 		return surname;
 	},
+	_getUserEmail: function(user) {
+		let email = '';
+
+		if(user) {
+			email = user.email;
+		}
+
+		return email;
+	},
 	_finishedAt: function(finishedAt) {
 		const date = new Date(finishedAt);
 
@@ -33,6 +55,8 @@ const Logs = React.createClass({
 	getTableView: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
+
+		console.log(binding.toJS());
 
 		return (
 			<div className="eTable_view">
@@ -43,6 +67,13 @@ const Logs = React.createClass({
 						getDataPromise={self.getDataPromise}
 						getTotalCountPromise={self.getTotalCountPromise}
 				>
+					<TableField	dataField="user"
+								width="1%"
+								filterType="none"
+								parseFunction={self._getUserAvatar}
+					>
+						Avatar
+					</TableField>
 					<TableField	dataField="user"
 								width="15%"
 								parseFunction={self._getUserName}
@@ -56,6 +87,11 @@ const Logs = React.createClass({
 								filterType="none"
 					>
 						Surname
+					</TableField>
+					<TableField	dataField="userEmail"
+								width="13%"
+					>
+						Email
 					</TableField>
 					<TableField	dataField="httpVerb"
 								width="17%"

@@ -25,7 +25,9 @@ const OneSchoolPage = React.createClass({
             },
             schoolInfo: '',
             schoolRouting: {},
-            sports: {}
+            sports: {},
+            userActivity: {},
+            importStudents: {}
         });
     },
     createSubMenu: function(){
@@ -52,16 +54,12 @@ const OneSchoolPage = React.createClass({
                 },
                 {
                     href: '/#admin_schools/admin_views/list',
-                    name: 'schools',
+                    name: 'Schools',
                     key: 'schools'
                 },{
                    href:'/#admin_schools/admin_views/sports',
                     name:'Sports',
                     key:'sports'
-                },{
-                    href:'/#admin_schools/admin_views/logs',
-                    name:'Activity Log',
-                    key:'Log'
                 },{
                     href:'/#admin_schools/import_students',
                     name:'Import Students',
@@ -143,11 +141,6 @@ const OneSchoolPage = React.createClass({
                             component="module/as_admin/pages/admin_schools/admin_views/admin_archive"
                         />
                         <Route
-                            path="/admin_schools/admin_views/logs"
-                            binding={binding.sub('logs')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_activityLogs"
-                        />
-                        <Route
                             path="/admin_schools/admin_views/create_user"
                             binding={binding.sub('userDetailPage')}
                             component="module/as_admin/pages/admin_add/user"
@@ -159,12 +152,12 @@ const OneSchoolPage = React.createClass({
                         />
                         <Route
                             path="/admin_schools/import_students"
-                            binding={binding}
+                            binding={binding.sub('importStudents')}
                             component="module/as_admin/pages/admin_schools/import_students_module"
                         />
                         <Route
                             path="/admin_schools/user_activity"
-                            binding={binding}
+                            binding={binding.sub('userActivity')}
                             component="module/as_admin/pages/admin_schools/user_activity/user_activity"
                         />
                     </RouterView>
