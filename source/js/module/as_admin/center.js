@@ -1,16 +1,15 @@
 /**
  * Created by bridark on 04/06/15.
  */
-var RouterView = require('module/core/router'),
-    Route = require('module/core/route'),
-    LoginRoute = require('module/core/routes/login_route'),
-    LogoutRoute = require('module/core/routes/logout_route'),
-    RegisterRoute = require('module/core/routes/register_route'),
-    SettingsRoute = require('module/core/routes/settings_route'),
-    React = require('react'),
-    Center;
+const   RouterView      = require('module/core/router'),
+        Route           = require('module/core/route'),
+        LoginRoute      = require('module/core/routes/login_route'),
+        LogoutRoute     = require('module/core/routes/logout_route'),
+        RegisterRoute   = require('module/core/routes/register_route'),
+        SettingsRoute   = require('module/core/routes/settings_route'),
+        React           = require('react');
 
-Center = React.createClass({
+const Center = React.createClass({
     mixins: [Morearty.Mixin],
     getMergeStrategy: function () {
         return Morearty.MergeStrategy.MERGE_REPLACE;

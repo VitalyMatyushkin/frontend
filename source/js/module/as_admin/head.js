@@ -1,13 +1,13 @@
 /**
  * Created by bridark on 04/06/15.
  */
-var Logo = require('module/as_admin/head/logo'),
-    TopMenu = require('module/ui/menu/top_menu'),
-    UserBlock = require('module/shared_pages/head/user_block'),
-    React = require('react'),
-    Head;
+const   Logo        = require('module/as_admin/head/logo'),
+        TopMenu     = require('module/ui/menu/top_menu'),
+        UserBlock   = require('module/shared_pages/head/user_block'),
+        React       = require('react');
+    
 
-Head = React.createClass({
+const Head = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
         var self = this;

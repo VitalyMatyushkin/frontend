@@ -4,7 +4,7 @@ const	React 			= require('react'),
 		ListPageMixin	= require('module/mixins/list_page_mixin');
 
 const Logs = React.createClass({
-	mixins: [Morearty.Mixin,ListPageMixin],
+	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName:'useractivity',
 	serviceCount:'useractivityCount',
 	_getUserAvatar: function(user) {
@@ -55,8 +55,6 @@ const Logs = React.createClass({
 	getTableView: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
-
-		console.log(binding.toJS());
 
 		return (
 			<div className="eTable_view">
