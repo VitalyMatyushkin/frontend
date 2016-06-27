@@ -314,13 +314,21 @@ const TeamWrapper = React.createClass({
 					team = _team;
 
 					// Get all students, because in next step we should inject users data to players
-					return window.Server.schoolStudents.get(self.activeSchoolId);
+					return window.Server.schoolStudents.get(
+						self.activeSchoolId,
+						{
+							filter : {
+								where: {
+									_id: {
+										$in: self._getUsersIdsFromTeam(team)
+									}
+								}
+							}
+						}
+					);
 				})
 				.then(users => {
 					let updatedPlayers = TeamHelper.getPlayersWithUserInfo(players, users);
-
-					// inject forms to players
-					updatedPlayers = TeamHelper.injectFormsToPlayers(updatedPlayers, schoolData.forms);
 
 					binding
 						.atomically()
@@ -347,6 +355,15 @@ const TeamWrapper = React.createClass({
 
 			self._setPlayers([]);
 		}
+	},
+	/**
+	 * Get user id array from team.
+	 * @param team
+	 * @returns {*}
+	 * @private
+	 */
+	_getUsersIdsFromTeam: function(team) {
+		return team.players.map(p => p.userId);
 	},
 	_setPlayers: function(players) {
 		const	self	= this,
