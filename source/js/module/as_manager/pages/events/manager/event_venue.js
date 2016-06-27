@@ -50,28 +50,16 @@ const EventVenue = React.createClass({
                 break;
         }
     },
-    _initPostCode: function(eventType) {
+    _initPostCode: function() {
         const   self = this,
-                binding = self.getDefaultBinding();
-
-        let postcode;
-
-        switch (eventType) {
-            case 'inter-schools':
-                postcode = self._getHomeSchoolPostCode();
-                break;
-            case 'houses':
-                postcode = self._getHomeSchoolPostCode();
-                break;
-            case 'internal':
-                postcode = self._getHomeSchoolPostCode();
-                break;
-        }
-
-        binding.atomically()
-            .set('venue',                Immutable.fromJS(postcode))
-            .set('model.venue.postcode', Immutable.fromJS(postcode.id))
-            .commit();
+                binding = self.getDefaultBinding(),
+				postcode = self._getHomeSchoolPostCode();
+		if(postcode) {
+			binding.atomically()
+				.set('venue',                Immutable.fromJS(postcode))
+				.set('model.venue.postcode', Immutable.fromJS(postcode.id))
+				.commit();
+		}
     },
     /**
      * Function set default postcode by venue type.
