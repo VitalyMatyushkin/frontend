@@ -101,6 +101,7 @@ const	PlayerChooser	= React.createClass({
 					};
 
 			// if event is house vs house
+			// TODO check eventType
 			filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
 
 			playersPromise = window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
