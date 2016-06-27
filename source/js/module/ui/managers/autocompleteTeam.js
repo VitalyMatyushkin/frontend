@@ -67,16 +67,27 @@ const AutocompleteTeam = React.createClass({
             }
 
             return window.Server.schoolStudents.get(schoolId, {filter: filter})
-                .then(players => players.map(player => {
-                        player.userId = player.id;
-                        player.name = player.firstName + ' ' + player.lastName;
-                    })
-                );
+                .then(players => self._preparePlayersModels(players));
         } else {
             return new Promise((resolve) => {
                 resolve([]);
             });
         }
+    },
+    _preparePlayersModels: function(players) {
+        const self = this;
+
+        return players.map(player => self._preparePlayerModel(player));
+    },
+	/**
+     * Inject some data to user model.
+     * This data need for view.
+     * @private
+     */
+    _preparePlayerModel: function(player) {
+        player.userId = player.id;
+        player.name = player.firstName + ' ' + player.lastName;
+        return player;
     },
 	/**
      * Return selected players ids.
