@@ -1,7 +1,8 @@
 const	React 			= require('react'),
 		Table			= require('module/ui/list/table'),
 		TableField		= require('module/ui/list/table_field'),
-		ListPageMixin	= require('module/mixins/list_page_mixin');
+		ListPageMixin	= require('module/mixins/list_page_mixin'),
+		Avatar 			= require('module/ui/avatar/avatar');
 
 const Logs = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
@@ -10,11 +11,11 @@ const Logs = React.createClass({
 	_getUserAvatar: function(user) {
 		let avatar = '';
 
-		if(user && user.avatar){
+		if(user){
 			avatar = (
-				<span className="eChallenge_rivalPic">
-                    <img src={user.avatar}/>
-                </span>
+				<div className="eUserAvatar">
+					<Avatar pic={user.avatar}/>
+				</div>
 			)
 		}
 
@@ -24,28 +25,17 @@ const Logs = React.createClass({
 		let name = '';
 
 		if(user) {
-			name = user.firstName;
+			name = user.firstName + ' ' + user.lastName;
 		}
 
 		return name;
 	},
-	_getUserSurname: function(user) {
-		let surname = '';
-
-		if(user) {
-			surname = user.lastName;
-		}
-
-		return surname;
-	},
-	_getUserEmail: function(user) {
-		let email = '';
-
-		if(user) {
-			email = user.email;
-		}
-
-		return email;
+	_getUrl: function(url) {
+		return (
+			<div className="eUrl" title={url}>
+				{url}
+			</div>
+		);
 	},
 	_finishedAt: function(finishedAt) {
 		const date = new Date(finishedAt);
@@ -66,52 +56,33 @@ const Logs = React.createClass({
 						getTotalCountPromise={self.getTotalCountPromise}
 				>
 					<TableField	dataField="user"
-								width="1%"
 								filterType="none"
 								parseFunction={self._getUserAvatar}
 					>
-						Avatar
 					</TableField>
 					<TableField	dataField="user"
-								width="15%"
 								parseFunction={self._getUserName}
 								filterType="none"
 					>
 						Name
 					</TableField>
-					<TableField	dataField="user"
-								width="13%"
-								parseFunction={self._getUserSurname}
-								filterType="none"
-					>
-						Surname
-					</TableField>
-					<TableField	dataField="userEmail"
-								width="13%"
-					>
+					<TableField	dataField="userEmail">
 						Email
 					</TableField>
-					<TableField	dataField="httpVerb"
-								width="17%"
-					>
-						Request Method
+					<TableField	dataField="httpVerb">
+						Method
 					</TableField>
-					<TableField	dataField="httpUrl"
-								width="20%"
-					>
-						Request Url
+					<TableField	dataField="httpUrl" parseFunction={self._getUrl}>
+						Url
 					</TableField>
-					<TableField	dataField="httpStatusCode"
-								width="15%"
-					>
-						Request Status
+					<TableField	dataField="httpStatusCode">
+						Status
 					</TableField>
 					<TableField	dataField="finishedAt"
-								width="20"
 								filterType="none"
 								parseFunction={self._finishedAt}
 					>
-						Finished At
+						Finished
 					</TableField>
 				</Table>
 			</div>
