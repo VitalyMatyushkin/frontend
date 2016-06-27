@@ -1,9 +1,8 @@
-const	React			= require('react'),
-		Immutable		= require('immutable'),
-		Promise			= require('bluebird'),
-		Lazy			= require('lazyjs'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		classNames		= require('classnames');
+const	React		= require('react'),
+		Immutable	= require('immutable'),
+		Promise		= require('bluebird'),
+		Lazy		= require('lazyjs'),
+		classNames	= require('classnames');
 
 const	PlayerChooser	= React.createClass({
 	mixins: [Morearty.Mixin],
@@ -101,7 +100,9 @@ const	PlayerChooser	= React.createClass({
 					};
 
 			// if event is house vs house
-			filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
+			if (filter.eventType === 'houses') {
+				filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
+			}
 
 			playersPromise = window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
 					const filteredPlayers = [];

@@ -29,6 +29,7 @@ const TeamModeView = React.createClass({
 				model	= self.getBinding('model').toJS();
 
 		binding.set(`teamWrapper.${rivalIndex}.filter`, Immutable.fromJS({
+			eventType:		model.type,
 			gender:		model.gender,
 			houseId:	model.type === 'houses' ? rival.id : undefined,
 			schoolId:	MoreartyHelper.getActiveSchoolId(self),
