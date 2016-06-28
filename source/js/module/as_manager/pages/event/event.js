@@ -260,7 +260,8 @@ const EventView = React.createClass({
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				rootBinding	= self.getMoreartyContext().getBinding(),
-				tab 		= rootBinding.get('routing.parameters.tab');
+				tabParam 	= rootBinding.get('routing.parameters.tab'),
+				tab 		= tabParam ? tabParam : 'teams';
 
 		self.tabListModel = [
 			{
@@ -290,11 +291,9 @@ const EventView = React.createClass({
 			}
 		];
 
-		if(tab){
-			let item = self.tabListModel.find(t => t.value === tab);
-			item.isActive = true;
-			binding.set('activeTab', tab);
-		}
+		let item = self.tabListModel.find(t => t.value === tab);
+		item.isActive = true;
+		binding.set('activeTab', tab);
 	},
 	changeActiveTab:function(value){
 		const 	urlHash = document.location.hash,
