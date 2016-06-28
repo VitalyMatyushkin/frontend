@@ -1,5 +1,4 @@
-const	classNames		= require('classnames'),
-		If				= require('module/ui/if/if'),
+const	If				= require('module/ui/if/if'),
 		Tabs			= require('module/ui/tabs/tabs'),
 		EventHeader		= require('./view/event_header'),
 		EventRivals		= require('./view/event_rivals'),
@@ -249,19 +248,13 @@ const EventView = React.createClass({
 				.set('sync',				Immutable.fromJS(true))
 				.commit();
 		});
-
-		rootBinding.addListener('routing.pathParameters', function () {
-			binding.set('mode', Immutable.fromJS(rootBinding.get('routing.pathParameters.1') || null))
-		});
 	},
-
 	/**Init model for Tabs component*/
-	initTabs:function(){
+	initTabs: function() {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				rootBinding	= self.getMoreartyContext().getBinding(),
-				tabParam 	= rootBinding.get('routing.parameters.tab'),
-				tab 		= tabParam ? tabParam : 'teams';
+				tab 		= rootBinding.get('routing.parameters.tab');
 
 		self.tabListModel = [
 			{
@@ -291,14 +284,25 @@ const EventView = React.createClass({
 			}
 		];
 
-		let item = self.tabListModel.find(t => t.value === tab);
-		item.isActive = true;
-		binding.set('activeTab', tab);
+		if(tab) {
+			let item = self.tabListModel.find(t => t.value === tab);
+			item.isActive = true;
+			binding.set('activeTab', tab);
+		} else {
+			self.tabListModel[0].isActive = true;
+			binding.set('activeTab', 'teams');
+		}
 	},
 	changeActiveTab:function(value){
-		const self = this;
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		self.getDefaultBinding().set('activeTab', value);
+		const	urlHash	= document.location.hash,
+				hash 	= urlHash.indexOf('?') > 0 ? urlHash.substr(0,urlHash.indexOf('?')): urlHash;
+
+		binding.set('activeTab', value);
+
+		window.location.hash = hash + '?tab=' + value;
 	},
 	/**
 	 * Initialize data for menu items
@@ -328,8 +332,9 @@ const EventView = React.createClass({
 	//A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
 	//This avoids the manager having to reload the screen to see what they just entered.
 	onChange:function(){
-		var self = this,
-			comment = document.getElementById('commentTextArea');
+		const	self	= this,
+				comment	= document.getElementById('commentTextArea');
+
 		if(comment){
 			self.commentContent = comment.value;
 		}else{
@@ -337,77 +342,78 @@ const EventView = React.createClass({
 		}
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			showingComment = binding.get('showingComment'),
-			activeTab = binding.get('activeTab');
-
-		console.log(activeTab);
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				showingComment	= binding.get('showingComment'),
+				activeTab		= binding.get('activeTab');
 
 		self.onChange();
-		return <div>
-			<div className="bEventContainer">
-				<If condition={binding.get('sync')=== true}>
-					<div className="bEvent">
-						<If condition={(binding.get('mode') === 'general')}>
-							<div className="bEventButtons_action">
-								<EventButtons binding={binding} />
-							</div>
-						</If>
-						<div className="bEventHeader_wrap">
-							<EventHeader binding={binding}/>
-							<EventRivals binding={binding}/>
-						</div>
-						<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
-						<If condition={activeTab === 'teams'} >
-							<EventTeams binding={binding} />
-						</If>
-						<If condition={activeTab === 'details'} >
-							<EventDetails binding={binding}/>
-						</If>
-						<If condition={activeTab === 'gallery'} >
-							<EventGallery binding={binding} />
-						</If>
-						<If condition={activeTab === 'comments'} >
-							<div className="eEvent_commentBox">
-								<Comments binding={binding}/>
-							</div>
-						</If>
-						<If condition={activeTab === 'report'} >
-							<div>
-								<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
-									<div className="eEvent_shadowCommentText">{self.commentContent}</div>
-								</If>
-								<div className="eEvent_commentBox">
-									<If condition={binding.get('mode') === 'closing'}>
-										<Morearty.DOM.textarea
-											placeholder="Enter your first comment"
-											className="eEvent_comment"
-											onChange={Morearty.Callback.set(binding, 'model.comment')}
-											value={binding.get('model.comment')} id="commentTextArea"
-										/>
-									</If>
-									<If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined}>
-										<div className="bMainComment">
-											<span className="bMainComment_pic">
-												<img src={'http://placehold.it/400x400'}/>
-											</span>
-											<div>{binding.get('model.result.comment')}</div>
-										</div>
-									</If>
+
+		return (
+			<div>
+				<div className="bEventContainer">
+					<If condition={binding.get('sync')=== true}>
+						<div className="bEvent">
+							<If condition={(binding.get('mode') === 'general')}>
+								<div className="bEventButtons_action">
+									<EventButtons binding={binding} />
 								</div>
+							</If>
+							<div className="bEventHeader_wrap">
+								<EventHeader binding={binding}/>
+								<EventRivals binding={binding}/>
 							</div>
-						</If>
-						<If condition={(binding.get('mode') !== 'general')}>
-						<EventButtons binding={binding} />
-						</If>
-					</div>
-				</If>
-				<If condition={!binding.get('sync')}>
-					<span>loading...</span>
-				</If>
+							<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+							<If condition={activeTab === 'teams'} >
+								<EventTeams binding={binding} />
+							</If>
+							<If condition={activeTab === 'details'} >
+								<EventDetails binding={binding}/>
+							</If>
+							<If condition={activeTab === 'gallery'} >
+								<EventGallery binding={binding} />
+							</If>
+							<If condition={activeTab === 'comments'} >
+								<div className="eEvent_commentBox">
+									<Comments binding={binding}/>
+								</div>
+							</If>
+							<If condition={activeTab === 'report'} >
+								<div>
+									<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
+										<div className="eEvent_shadowCommentText">{self.commentContent}</div>
+									</If>
+									<div className="eEvent_commentBox">
+										<If condition={binding.get('mode') === 'closing'}>
+											<Morearty.DOM.textarea
+												placeholder="Enter your first comment"
+												className="eEvent_comment"
+												onChange={Morearty.Callback.set(binding, 'model.comment')}
+												value={binding.get('model.comment')} id="commentTextArea"
+											/>
+										</If>
+										<If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined}>
+											<div className="bMainComment">
+												<span className="bMainComment_pic">
+													<img src={'http://placehold.it/400x400'}/>
+												</span>
+												<div>{binding.get('model.result.comment')}</div>
+											</div>
+										</If>
+									</div>
+								</div>
+							</If>
+							<If condition={(binding.get('mode') !== 'general')}>
+							<EventButtons binding={binding} />
+							</If>
+						</div>
+					</If>
+					<If condition={!binding.get('sync')}>
+						<span>loading...</span>
+					</If>
+				</div>
 			</div>
-		</div>;
+		);
 	}
 });
 

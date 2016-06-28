@@ -60,7 +60,7 @@ ChallengesList = React.createClass({
 		binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
 	},
 	_onClickEvent: function(eventId) {
-		document.location.hash = 'event/' + eventId;
+		document.location.hash = 'event/' + eventId + '?tab=teams';
 	},
 	_getSportIcon:function(sport){
 		return <Sport name={sport} className="bIcon_invites" ></Sport>;
