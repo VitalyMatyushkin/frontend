@@ -296,11 +296,9 @@ const EventView = React.createClass({
 		binding.set('activeTab', tab);
 	},
 	changeActiveTab:function(value){
-		const 	urlHash = document.location.hash,
-				hash 	= urlHash.indexOf('?') > 0 ? urlHash.substr(0,urlHash.indexOf('?')): urlHash;
+		const self = this;
 
-		this.getDefaultBinding().set('activeTab', value);
-		window.location.hash = hash + '?tab=' + value;
+		self.getDefaultBinding().set('activeTab', value);
 	},
 	/**
 	 * Initialize data for menu items
@@ -343,6 +341,9 @@ const EventView = React.createClass({
 			binding = self.getDefaultBinding(),
 			showingComment = binding.get('showingComment'),
 			activeTab = binding.get('activeTab');
+
+		console.log(activeTab);
+
 		self.onChange();
 		return <div>
 			<div className="bEventContainer">
