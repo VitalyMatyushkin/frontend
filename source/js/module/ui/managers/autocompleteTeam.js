@@ -1,17 +1,16 @@
 const   React           = require('react'),
-        Immutable 	    = require('immutable'),
+        Immutable       = require('immutable'),
         Promise         = require('bluebird'),
-        Lazy            = require('lazyjs'),
         Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
 const AutocompleteTeam = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'AutocompleteTeam',
     componentWillMount: function () {
-        const self       = this,
-            binding      = self.getDefaultBinding(),
-            type         = binding.get('model.type'),
-            rivalBinding = self.getBinding('rival');
+        const   self       = this,
+                binding      = self.getDefaultBinding(),
+                type         = binding.get('model.type'),
+                rivalBinding = self.getBinding('rival');
 
         rivalBinding
             .meta()
@@ -21,19 +20,6 @@ const AutocompleteTeam = React.createClass({
             })
             .commit();
     },
-    getIncludePlayersIds: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            players = binding.sub('players');
-
-        return players.get().reduce(function (memo, teamPlayers) {
-            var ids = teamPlayers.map(function (player) {
-                return player.get('id');
-            });
-
-            return memo.concat(ids);
-        }, Immutable.List());
-    },
     /**
      * Get school forms filtered by age
      * @param ages
@@ -41,14 +27,14 @@ const AutocompleteTeam = React.createClass({
      * @private
      */
     _getFilteredForms: function(ages) {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         return binding.get('schoolInfo.forms').filter(function (form) {
             return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
         });
     },
-    serviceStudentFullData: function (lastName) {
+    serviceStudentFullData: function (searchText) {
         const   self    = this,
                 binding = self.getDefaultBinding();
 
@@ -60,15 +46,19 @@ const AutocompleteTeam = React.createClass({
                     type        = binding.get('model.type'),
                     schoolId    = binding.get('schoolInfo.id');
 
-            const   filter = {
+            const filter = {
                         where: {
+                            _id: {
+                                $nin: self._getSelectedPlayersIds()
+                            },
                             formId: {
                                 $in: forms.map(form => form.get('id')).toJS()
                             },
                             lastName: {
-                                like:       lastName,
+                                like:       searchText,
                                 options:    'i'
-                            }
+                            },
+                            gender: gender.toUpperCase()
                         }
                     };
 
@@ -76,117 +66,44 @@ const AutocompleteTeam = React.createClass({
                 filter.where.houseId = self.getBinding('rival').get('id');
             }
 
-            let players;
-
             return window.Server.schoolStudents.get(schoolId, {filter: filter})
-                .then(_players => {
-                    players = _players;
-
-                    return window.Server.schoolForms.get(schoolId, {filter:{limit:1000}});
-                })
-                .then(forms => {
-                    let playersWithForms = self.injectFormsToPlayers(players, forms);
-
-                    var filteredPlayers = [];
-
-                    playersWithForms.forEach((player) => {
-                        //filter by gender
-                        if(player.gender === gender.toUpperCase()) {
-                            player.name = player.firstName + ' ' + player.lastName;
-                            filteredPlayers.push(player);
-                        }
-                    });
-
-                    return filteredPlayers;
-                });
+                .then(players => self._preparePlayersModels(players));
         } else {
             return new Promise((resolve) => {
                 resolve([]);
             });
         }
     },
-	/**
-     * Method inject form data to each player
-     * Method required until on the server becomes available "include" functional
-     */
-    injectFormsToPlayers: function(players, forms) {
-        const playersWithForms = [];
+    _preparePlayersModels: function(players) {
+        const self = this;
 
-        players.forEach(player => {
-            const form = Lazy(forms).findWhere( { id: player.formId } );
-            const tempPlayer = Object.assign({}, player);
-
-            tempPlayer.form = form;
-
-            playersWithForms.push(tempPlayer);
-        });
-
-        return playersWithForms;
+        return players.map(player => self._preparePlayerModel(player));
     },
-    /**
-     * Service for filtering learner
-     * @param schoolId
-     * @param learnerName
-     * @returns {*}
+	/**
+     * Inject some data to user model.
+     * This data need for view.
+     * @private
      */
-    //serviceLearnersFilter: function (learnerName) {
-    //    var self = this,
-    //        binding = self.getDefaultBinding(),
-    //        type = binding.get('model.type'),
-    //        ages = binding.get('model.ages'),
-    //        schoolId = binding.get('schoolInfo.id'),
-    //        forms = binding.get('schoolInfo.forms').filter(function (form) {
-    //            return ages.indexOf(parseInt(form.get('age'))) !== -1 || ages.indexOf(String(form.get('age'))) !== -1;
-    //        }),
-    //        filter = {
-    //            where: {
-    //                schoolId: schoolId,
-    //                id: {
-    //                    nin: self.getIncludePlayersIds().toJS()
-    //                },
-    //                formId: {
-    //                    inq: forms.map(function (form) {
-    //                        return form.get('id');
-    //                    }).toJS()
-    //                },
-		//			gender: binding.get('model.gender') || 'male',
-    //                or: [
-    //                    {
-    //                        firstName: {
-    //                            like: learnerName,
-    //                            options: 'i'
-    //                        }
-    //                    },
-    //                    {
-    //                        lastName: {
-    //                            like: learnerName,
-    //                            options: 'i'
-    //                        }
-    //                    }
-    //                ]
-    //            }
-    //        };
-    //
-    //
-    //    if (type === 'houses') {
-    //        filter.where.houseId = binding.get('id');
-    //    }
-    //
-    //    return window.Server.schoolStudents.get(schoolId, {
-    //        filter: filter
-    //    }).then(function (data) {
-    //        data.map(function (player) {
-    //            player.name = player.firstName + ' ' + player.lastName;
-    //
-    //            return player.name;
-    //        });
-    //
-    //        return data;
-    //    });
-    //},
+    _preparePlayerModel: function(player) {
+        player.userId = player.id;
+        player.name = player.firstName + ' ' + player.lastName;
+        return player;
+    },
+	/**
+     * Return selected players ids.
+     * Selected players mean - players who have already been selected.
+     * @private
+     */
+    _getSelectedPlayersIds: function() {
+        const self = this;
+
+        const players = self.getBinding('players').toJS();
+
+        return players.map(player => player.id);
+    },
     onSelectStudent: function (selectId, model) {
-        var self = this,
-            playersBinding = self.getBinding('players');
+        const   self            = this,
+                playersBinding  = self.getBinding('players');
 
         if (model) {
             playersBinding.update(function (data) {
@@ -206,10 +123,11 @@ const AutocompleteTeam = React.createClass({
         }
     },
     render: function() {
-        var self = this,
-            rivalBinding = self.getBinding('rival');
+        const   self            = this,
+                rivalBinding    = self.getBinding('rival');
 
-        return <div className="bTeamAutocomplete" key={'teamautocomplete-' + rivalBinding.get('id')}>
+        return (
+            <div className="bTeamAutocomplete" key={'teamautocomplete-' + rivalBinding.get('id')}>
             <Autocomplete
                 serviceFilter={self.serviceStudentFullData}
                 serverField="name"
@@ -218,7 +136,8 @@ const AutocompleteTeam = React.createClass({
                 onSelect={self.onSelectStudent}
                 binding={rivalBinding.meta().sub('autocomplete')}
             />
-        </div>
+            </div>
+        );
     }
 });
 

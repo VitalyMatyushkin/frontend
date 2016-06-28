@@ -1,15 +1,14 @@
-const	TeamForm             = require('module/as_manager/pages/school_admin/teams/team_form'),
-        React                = require('react'),
-        MoreartyHelper       = require('module/helpers/morearty_helper'),
-        TeamHelper           = require('module/ui/managers/helpers/team_helper'),
-        Immutable            = require('immutable'),
-        Lazy                 = require('lazyjs');
+const   TeamForm        = require('module/as_manager/pages/school_admin/teams/team_form'),
+        React           = require('react'),
+        MoreartyHelper  = require('module/helpers/morearty_helper'),
+        TeamHelper      = require('module/ui/managers/helpers/team_helper'),
+        Immutable       = require('immutable');
 
 const TeamEditPage = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        const   self          = this,
-                binding       = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         binding.clear();
 
@@ -18,8 +17,8 @@ const TeamEditPage = React.createClass({
         self._initFormBinding();
     },
     componentWillUnmount: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         binding.clear();
     },
@@ -76,15 +75,23 @@ const TeamEditPage = React.createClass({
                 // inject sport to team
                 team.sport = TeamHelper.getSportById(team.sportId, sports);
 
-                return window.Server.schoolStudents.get(self.activeSchoolId);
+                return window.Server.schoolStudents.get(
+                    self.activeSchoolId,
+                    {
+                        filter : {
+                            where: {
+                                _id: {
+                                    $in: self._getUsersIdsFromTeam(team)
+                                }
+                            }
+                        }
+                    }
+                );
             })
             .then(users => {
                 // inject users to players, because we need user info
                 // yep, ugly method name
                 let usersWithPlayerInfo = TeamHelper.getPlayersWithUserInfo(team.players, users);
-
-                // inject forms to players
-                usersWithPlayerInfo = TeamHelper.injectFormsToPlayers(usersWithPlayerInfo, schoolData.forms);
 
                 return binding
                     .atomically()
@@ -107,6 +114,15 @@ const TeamEditPage = React.createClass({
                     .set('teamForm.removedPlayers',         Immutable.fromJS([]))
                     .commit();
             });
+    },
+	/**
+     * Get user id array from team.
+     * @param team
+     * @returns {*}
+     * @private
+     */
+    _getUsersIdsFromTeam: function(team) {
+        return team.players.map(p => p.userId);
     },
     /**
      * Check status of house filter.
@@ -175,9 +191,9 @@ const TeamEditPage = React.createClass({
         return self.getMoreartyContext().getBinding().toJS('routing.parameters.id');
     },
     _submitEdit: function() {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            teamId = binding.get('teamForm.team.id');
+        const   self    = this,
+                binding = self.getDefaultBinding(),
+                teamId  = binding.get('teamForm.team.id');
 
         TeamHelper.validate(binding);
 
@@ -214,8 +230,8 @@ const TeamEditPage = React.createClass({
         }
     },
     render: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         return (
             <TeamForm title="Edit team..." onFormSubmit={self._submitEdit} binding={binding.sub('teamForm')} />
