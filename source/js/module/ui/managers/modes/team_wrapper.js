@@ -259,8 +259,8 @@ const TeamWrapper = React.createClass({
 			model: {
 				type:		type,
 				ages:		undefined,
-				gender:		model.gender,
-				sportModel:	model.sportModel
+				gender:		model ? model.gender : undefined,
+				sportModel:	model ? model.sportModel : {}
 			}
 	   };
 	},
@@ -285,8 +285,8 @@ const TeamWrapper = React.createClass({
 	 * @private
 	 */
 	_changeTeam: function(teamId) {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		if(teamId) {
 			let	schoolData,
