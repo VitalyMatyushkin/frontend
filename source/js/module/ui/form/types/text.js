@@ -15,10 +15,14 @@ const TypeText =  React.createClass({
 			self.fullValidate(binding.get('defaultValue'));
 		});
 	},
+	componentDidUpdate: function () {
+		this.refs.input.setSelectionRange(this.cursor,this.cursor);
+	},
 	handleBlur: function(event) {
 		this.setValue(event.target.value);
 	},
 	handleChange: function(event) {
+		this.cursor = event.target.selectionStart;
 		this.changeValue(event.target.value);
 	},
 	render: function () {
@@ -27,7 +31,7 @@ const TypeText =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput">
-				<input value={value} type={self.props.textType || 'text'} placeholder={self.props.placeholder}
+				<input ref="input" value={value} type={self.props.textType || 'text'} placeholder={self.props.placeholder}
 					   onBlur={self.handleBlur} onChange={self.handleChange} />
 			</div>
 		)

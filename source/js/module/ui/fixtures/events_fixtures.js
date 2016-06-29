@@ -16,7 +16,7 @@ ChallengesView = React.createClass({
             d1.getUTCDate() === d2.getUTCDate();
     },
     onClickChallenge: function (eventId) {
-        document.location.hash = 'event/' + eventId;
+        document.location.hash = 'event/' + eventId + '?tab=teams';
     },
     getSportIcon:function(sport){
         return <Sport name={sport} className="bIcon_invites" ></Sport>;

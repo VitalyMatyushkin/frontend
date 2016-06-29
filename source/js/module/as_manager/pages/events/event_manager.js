@@ -240,7 +240,7 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		document.location.hash = 'event/' + event.id;
+		document.location.hash = 'event/' + event.id + '?tab=teams';
 		binding.clear();
 		binding.meta().clear();
 	},
