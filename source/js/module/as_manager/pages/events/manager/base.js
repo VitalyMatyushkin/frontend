@@ -2,10 +2,8 @@ const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'
         If              = require('module/ui/if/if'),
         Multiselect     = require('module/ui/multiselect/multiselect'),
         React           = require('react'),
-        ReactDOM        = require('reactDom'),
         EventVenue      = require('./event_venue'),
-        Immutable       = require('immutable'),
-        SVG             = require('module/ui/svg');
+        Immutable       = require('immutable');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
