@@ -84,6 +84,12 @@ const EventManager = React.createClass({
 					.commit();
 			});
 	},
+	componentWillUnmount: function () {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.clear();
+	},
     onSelectDate: function (date) {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -318,8 +324,8 @@ const EventManager = React.createClass({
 				break;
 			case 3:
 				if(
-					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0.isError') || // for inter-schools
-					!binding.toJS('error.0.isError') && !binding.toJS('error.1.isError') // for other type of event
+					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || // for inter-schools
+					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError // for other type of event
 				) {
 					isStepComplete = true;
 				};
