@@ -94,6 +94,12 @@ const InviteAcceptView = React.createClass({
                 .commit();
         });
     },
+    componentWillUnmount: function () {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        binding.clear();
+    },
     onClickAccept: function () {
         var self = this;
 
