@@ -17,19 +17,16 @@ const TypeText =  React.createClass({
 	},
 	componentDidUpdate: function () {
 		if(this.cursor){
-			console.log(this.props.field + ': set cursor = '+this.cursor);
 			this.refs.input.setSelectionRange(this.cursor,this.cursor);
 		}
 	},
 	handleBlur: function(event) {
 		this.cursor = 0;
 		this.setValue(event.target.value);
-		console.log('onBlur...');
 	},
 	handleChange: function(event) {
 		this.cursor = event.target.selectionStart;
 		this.changeValue(event.target.value);
-		console.log('onChange: cursor = '+this.cursor);
 	},
 	render: function () {
 		const 	self 	= this,
