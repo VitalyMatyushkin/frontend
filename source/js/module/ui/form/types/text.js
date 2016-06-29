@@ -16,9 +16,12 @@ const TypeText =  React.createClass({
 		});
 	},
 	componentDidUpdate: function () {
-		this.refs.input.setSelectionRange(this.cursor,this.cursor);
+		if(this.cursor){
+			this.refs.input.setSelectionRange(this.cursor,this.cursor);
+		}
 	},
 	handleBlur: function(event) {
+		this.cursor = 0;
 		this.setValue(event.target.value);
 	},
 	handleChange: function(event) {
