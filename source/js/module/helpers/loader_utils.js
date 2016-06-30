@@ -32,7 +32,7 @@ function apiSelector(domainName) {
             break;
         case parsedDomain.rootDomain === 'squadintouch':
             apiDomains = {
-                main:   '//api' + (parsedDomain.env ? '.' + parsedDomain.env : '') + `.squadintouch.com/v${apiVersion}`,
+                main:   '//api' + (parsedDomain.env ? '.' + parsedDomain.env : '') + `.squadintouch.com`,
                 img:    '//img' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com'
             };
             break;
