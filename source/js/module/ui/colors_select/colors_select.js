@@ -1,6 +1,5 @@
 const 	ColorPicker 	= require('module/ui/colors_select/color_picker'),
 		React 			= require('react'),
-		ReactDOM		= require('reactDom'),
 		Immutable 		= require('immutable');
 
 const ColorsSelect =  React.createClass({
@@ -25,7 +24,7 @@ const ColorsSelect =  React.createClass({
 	componentDidMount: function() {
 		var self = this;
 
-		ColorPicker(ReactDOM.findDOMNode(self.refs.picker), function(hex, hsv, rgb) {
+		ColorPicker(self.refs.picker, function(hex, hsv, rgb) {
 			self.activeHex = hex;
 		});
 	},
@@ -115,7 +114,7 @@ const ColorsSelect =  React.createClass({
 
 					<div className="eColorsSelect_picker" style={binding.get('showPicker') ? {display: 'block'}: {display: 'none'}} >
 
-						<div className="eColorsSelect_plate" ref="picker"></div>
+						<div className="eColorsSelect_plate" height="200" ref="picker"></div>
 
 						<div className="eColorsSelect_buttons">
 							<div className="bButton" onClick={self.hidePicker}>Cancel</div>
