@@ -13,7 +13,9 @@ const TypePhone =  React.createClass({
         });
     },
 	componentDidUpdate: function () {
-		this.refs.input.setSelectionRange(this.cursor,this.cursor);
+		if(this.cursor){
+			this.refs.input.setSelectionRange(this.cursor,this.cursor);
+		}
 	},
     componentWillMount: function() {
         const self = this,
@@ -75,6 +77,9 @@ const TypePhone =  React.createClass({
         binding.set('phone', inputValue);
         self.saveValue();
     },
+	handleBlur: function(e) {
+		this.cursor = 0;
+	},
 	render: function () {
 		const self = this,
             binding = self.getDefaultBinding(),
@@ -87,7 +92,7 @@ const TypePhone =  React.createClass({
                     <option value="+44" >+44</option>
                     <option value="+7" >+7</option>
                 </select>
-                <input ref="input" type="text" value={phone} onChange={self.phoneChange} />
+                <input ref="input" type="text" value={phone} onChange={self.phoneChange} onBlur={self.handleBlur} />
 			</div>
 		)
 	}
