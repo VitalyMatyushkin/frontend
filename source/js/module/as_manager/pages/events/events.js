@@ -66,17 +66,7 @@ const EventView = React.createClass({
                     }
                 });
             })
-            .then(events => {
-                return events.filter(event => {
-                    // don't show inter-schools events if invited school not yet accept invitation and
-                    // if invited school is an active school.
-                    return !(
-                        event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-                        event.invitedSchoolId === self.activeSchoolId &&
-                        event.teams.length === 1 // if team count === 1 then opponent school not yet accept invitation
-                    );
-                });
-            })
+            .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
             .then(_events => {
                 events = _events;
 

@@ -42,12 +42,12 @@ const HomeFixtures = React.createClass({
 		//filter: {
 		//	order: 'startTime ASC'
 		//}
-		window.Server.publicSchoolEvents.get({schoolId: activeSchoolId}).then((events) => {
+		window.Server.publicSchoolEvents.get({schoolId: activeSchoolId}, {filter: {limit: 100}}).then((events) => {
 				const filteredEvents = events.filter((event) => {
 					const	eventDate	= new Date(event.startTime).toLocaleDateString(),
 							currentDate	= date.toLocaleDateString();
 
-					return currentDate == eventDate;
+					return currentDate == eventDate && EventHelper.isShowEventOnPublicSchoolCalendar(event);
 				});
 
 				return Promise.all(filteredEvents.map(event => {
