@@ -66,6 +66,7 @@ const EventView = React.createClass({
                     }
                 });
             })
+            .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
             .then(_events => {
                 events = _events;
 

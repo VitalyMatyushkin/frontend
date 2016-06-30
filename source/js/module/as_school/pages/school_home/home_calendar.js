@@ -4,7 +4,7 @@ const	CalendarView	= require('module/ui/calendar/calendar'),
 		DateTimeMixin	= require('module/mixins/datetime'),
 		Sport			= require('module/ui/icons/sport_icon'),
         ChallengeModel	= require('module/ui/challenges/challenge_model'),
-		Superuser		= require('module/helpers/superuser');
+		EventHelper		= require('module/helpers/eventHelper');
 
 const HomeCalender = React.createClass({
 	mixins:[Morearty.Mixin,DateTimeMixin],
@@ -13,7 +13,8 @@ const HomeCalender = React.createClass({
 				rootBinding		= self.getMoreartyContext().getBinding(),
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
-		window.Server.publicSchoolEvents.get({schoolId:activeSchoolId})
+		window.Server.publicSchoolEvents.get({schoolId:activeSchoolId}, {filter: {limit: 100}})
+			.then(events => events.filter(event => EventHelper.isShowEventOnPublicSchoolCalendar(event)))
 			.then(events => {
 				rootBinding.set('events.models',Immutable.fromJS(events));
 			});
