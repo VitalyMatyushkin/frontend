@@ -5,8 +5,15 @@
 const 	RoleHelper	= require('module/helpers/role_helper'),
 		Storage 	= require('module/helpers/storage');
 
-
+/**
+ * Helper to generate domain names, and cross-domain transitions.
+ * */
 const DomainHelper = {
+	/**
+	 * Get new subdomain name
+	 * @param {string} domainName - domain name, for ex. 'greatwalstead'
+	 * @return {string} new subdomain name, for ex. 'greatwalstead.squard.com:8080'
+	 * */
 	getSubDomain:function(domainName){
 		const subdomains = document.location.host.split('.');
 		subdomains[0] = domainName;
