@@ -3,31 +3,40 @@
   padding: 30px;
   text-align: center;
   position: relative;
+
+  h2, h3{
+    margin-bottom: 24px;
+    color: $MAIN_COLOR;
+  }
+
+  input[type="text"], input[type="password"],
+  textarea, select {
+    width: 300px;
+    height: auto;
+    border: none;
+    background: transparent;
+    border-radius: 0;
+    border-bottom: solid transparent 1px;
+
+    &:hover{
+      border-bottom: solid #959595 1px;
+    }
+    &:focus{
+      border-bottom: solid #378258 1px;
+    }
+  }
+  input[value]:not([value=""])
+  {
+    border-bottom: solid transparent 1px;
+  }
+
 }
 
-.bForm h2,
-.bForm h3{
-  margin-bottom: 24px;
-  color: $MAIN_COLOR;
-}
 
-.bForm input[type="text"],
-.bForm input[type="password"]{
-  width: 300px;
-  height: auto;
-  border: none;
-  background: transparent;
-  border-radius: 0;
-}
-.bForm input[value]:not([value=""]){
-  border-bottom: solid transparent 1px;
-}
-.bForm input:hover{
-  border-bottom: solid #959595 1px;
-}
 .eForm_fieldInput {
   display: inline-block;
   position: relative;
+  padding-top: 3px;
 }
 .eForm_fieldInput textarea{
   resize: vertical;
@@ -44,6 +53,7 @@
     border: none;
     position: absolute;
     height: 20px;
+    width: auto;
     background-color: transparent;
     top: 50%;
     margin-top: -10px;
@@ -108,9 +118,6 @@
 .eForm_fieldSet{
   position: relative;
   display: inline-block;
-}
-.eForm_fieldSet input:focus{
-  border-color:#378258;
 }
 
 .eForm_fieldSet.mValid{
