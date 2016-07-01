@@ -47,11 +47,13 @@
   width: 100%;
   display: flex;
   background: transparent;
-  -moz-box-sizing: border-box;
-  -ms-box-sizing: border-box;
   box-sizing: border-box;
   border: none;
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid transparent 1px;
+
+  &:hover{
+    border-bottom: solid #959595 1px;
+  }
 }
 
 .eCombobox_button {
