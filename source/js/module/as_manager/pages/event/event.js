@@ -1,5 +1,6 @@
 const	If				= require('module/ui/if/if'),
 		Tabs			= require('module/ui/tabs/tabs'),
+		EventHelper		= require('module/helpers/eventHelper'),
 		EventHeader		= require('./view/event_header'),
 		EventRivals		= require('./view/event_rivals'),
 		EventButtons	= require('./view/event_buttons'),
@@ -9,8 +10,8 @@ const	If				= require('module/ui/if/if'),
 		React			= require('react'),
 		Comments		= require('./view/event_blog'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		SVG 			= require('module/ui/svg'),
 		Immutable		= require('immutable'),
 		Lazy			= require('lazyjs');
 
@@ -341,6 +342,12 @@ const EventView = React.createClass({
 			self.commentContent = '0';
 		}
 	},
+	_onClickReFormTeamMatch: function () {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('mode', 'edit_squad');
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
@@ -363,7 +370,23 @@ const EventView = React.createClass({
 								<EventHeader binding={binding}/>
 								<EventRivals binding={binding}/>
 							</div>
-							<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+							<div className="bEventMiddleSideContainer">
+								<div className="bEventMiddleSideContainer_leftSide">
+									<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+								</div>
+								<div className="bEventMiddleSideContainer_rightSide">
+									<If condition={EventHelper._isShowEditEventButton(self)}>
+										<div className="bEditButtonWrapper">
+											<div
+												className="bEditButton"
+												onClick={self._onClickReFormTeamMatch}
+											>
+												<SVG icon="icon_edit"/>
+											</div>
+										</div>
+									</If>
+								</div>
+							</div>
 							<If condition={activeTab === 'teams'} >
 								<EventTeams binding={binding} />
 							</If>
@@ -404,7 +427,7 @@ const EventView = React.createClass({
 								</div>
 							</If>
 							<If condition={(binding.get('mode') !== 'general')}>
-							<EventButtons binding={binding} />
+								<EventButtons binding={binding} />
 							</If>
 						</div>
 					</If>
