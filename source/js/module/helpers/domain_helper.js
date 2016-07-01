@@ -19,12 +19,20 @@ const DomainHelper = {
 		subdomains[0] = domainName;
 		return subdomains.join(".");
 	},
+
+	/**
+	 * Get login Url for redirect after logout
+	 * */
 	getLoginUrl:function(){
 		let subdomains = document.location.host.split('.');
 		subdomains[0] = subdomains[0] !=='admin' ? 'login': subdomains[0];
 		const domain = subdomains.join(".");
 		return `//${domain}/#login`;
 	},
+
+	/**
+	 * Redirect to start page after login
+	 * */
 	redirectToStartPage: function(roleName) {
 		const roleSubdomain = RoleHelper.roleMapper[roleName.toLowerCase()];
 
