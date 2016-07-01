@@ -78,7 +78,7 @@ const TypeDate =  React.createClass({
             localValue = binding.get('localValue');
 
 		return (
-            <MaskedInput title="Format date dd.mm.yyyy" value={localValue}
+            <MaskedInput title="Format date dd.mm.yyyy" value={localValue} className="eDateInput"
                          onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999" />
 		)
 	}
