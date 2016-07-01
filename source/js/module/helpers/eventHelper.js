@@ -112,7 +112,8 @@ const EventHelper = {
 
 		return	binding.get('participants').count() === 2 &&
 				binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
-				binding.get('mode') === 'general';
+				binding.get('mode') === 'general' &&
+				RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "closing".
@@ -123,7 +124,7 @@ const EventHelper = {
 	_isShowCancelEventEditButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') === 'closing';
+		return binding.get('mode') === 'closing' && RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "general".
@@ -133,7 +134,7 @@ const EventHelper = {
 	_isShowEditEventButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') === 'general' && binding.get('activeTab') === 'teams';
+		return binding.get('mode') === 'general' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "general".
@@ -143,7 +144,7 @@ const EventHelper = {
 	_isShowFinishEventEditingButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') !== 'general' && binding.get('activeTab') === 'teams';
+		return binding.get('mode') !== 'general' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
 	}
 };
 
