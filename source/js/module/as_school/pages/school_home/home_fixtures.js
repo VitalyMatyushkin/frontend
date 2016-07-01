@@ -42,12 +42,12 @@ const HomeFixtures = React.createClass({
 		//filter: {
 		//	order: 'startTime ASC'
 		//}
-		window.Server.publicSchoolEvents.get({schoolId: activeSchoolId}).then((events) => {
+		window.Server.publicSchoolEvents.get({schoolId: activeSchoolId}, {filter: {limit: 100}}).then((events) => {
 				const filteredEvents = events.filter((event) => {
 					const	eventDate	= new Date(event.startTime).toLocaleDateString(),
 							currentDate	= date.toLocaleDateString();
 
-					return currentDate == eventDate;
+					return currentDate == eventDate && EventHelper.isShowEventOnPublicSchoolCalendar(event);
 				});
 
 				return Promise.all(filteredEvents.map(event => {
@@ -173,26 +173,29 @@ const HomeFixtures = React.createClass({
 
 		return participantEmblem;
 	},
-	getFixtureResults:function(event){
-		if(event.result !== undefined){
-			const	eventSummary	= EventHelper.getTeamsSummaryByEventResult(event.result),
-					firstPoint		= eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0,
-					secondPoint		= eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0;
+	getFixtureResults:function(event) {
+		// def values
+		let	firstPoint	= "?",
+			secondPoint	= "?";
 
-			return(
-				<div>
-					<div className="bFix_scoreText">{'Score'}</div>
-					<div className="bFix_scoreResult">{`${firstPoint} : ${secondPoint}`}</div>
-				</div>
-			);
-		}else{
-			return(
-				<div>
-					<div className="bFix_scoreText">{'Score'}</div>
-					<div className="bFix_scoreResult">{'? : ?'}</div>
-				</div>
-			);
+		if(event.result !== undefined && event.status === EventHelper.EVENT_STATUS.FINISHED){
+			const	eventSummary	= EventHelper.getTeamsSummaryByEventResult(event.result);
+
+			firstPoint		= eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0;
+			secondPoint		= eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0;
+		} else if (event.result === undefined && event.status === EventHelper.EVENT_STATUS.FINISHED) {
+			// if result === undef, but event is finished, then result of event is 0:0
+			// because teams doesn't have points
+			firstPoint = "0";
+			secondPoint  = "0";
 		}
+
+		return (
+			<div>
+				<div className="bFix_scoreText">{'Score'}</div>
+				<div className="bFix_scoreResult">{`${firstPoint} : ${secondPoint}`}</div>
+			</div>
+		);
 	},
 	renderFixtureLists:function(){
 		const	self		= this,

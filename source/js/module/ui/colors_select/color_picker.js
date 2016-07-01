@@ -231,6 +231,8 @@ function ColorPicker(slideElement, pickerElement, callback) {
 
 		var element = slideElement;
 		element.innerHTML = colorpickerHTMLSnippet;
+		var atrHeight = [].slice.call(element.attributes).find(a => a.name === 'height');
+		this.height = atrHeight ? atrHeight.value : 0;
 
 		this.slideElement = element.getElementsByClassName('slide')[0];
 		this.pickerElement = element.getElementsByClassName('picker')[0];
@@ -247,10 +249,10 @@ function ColorPicker(slideElement, pickerElement, callback) {
 		};
 
 	} else {
-
 		this.callback = callback;
 		this.pickerElement = pickerElement;
 		this.slideElement = slideElement;
+		this.height = pickerElement.offsetHeight;
 	}
 
 	if (type == 'SVG') {
@@ -287,6 +289,16 @@ function ColorPicker(slideElement, pickerElement, callback) {
 		this.slideElement.innerHTML = slide;
 		this.pickerElement.innerHTML = picker;
 	}
+
+	var mouse = {x:1,y:1};
+	var ctx = this;
+	ctx.h = mouse.y / ctx.height * 360 + hueOffset;
+	ctx.s = mouse.x / ctx.height;
+	ctx.v = (ctx.height - mouse.y) / ctx.height;
+	var pickerColor = hsv2rgb({ h: ctx.h, s: 1, v: 1 });
+	var c = hsv2rgb(ctx);
+	ctx.pickerElement.style.backgroundColor = pickerColor.hex;
+	ctx.callback && ctx.callback(c.hex, { h: ctx.h - hueOffset, s: ctx.s, v: ctx.v }, { r: c.r, g: c.g, b: c.b }, mouse, mouse);
 
 	addEventListener(this.slideElement, 'click', slideListener(this, this.slideElement, this.pickerElement));
 	addEventListener(this.pickerElement, 'click', pickerListener(this, this.pickerElement));

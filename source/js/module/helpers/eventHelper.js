@@ -62,6 +62,22 @@ const EventHelper = {
 				arrayEventSummary[0].teamId :
 				arrayEventSummary[1].teamId;
 		}
+	},
+	isShowEventOnCalendar: function(event, activeSchoolId) {
+		// don't show inter-schools events if invited school not yet accept invitation and
+		// if invited school is an active school.
+		return !(
+			event.eventType === this.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			event.invitedSchoolId === activeSchoolId &&
+			event.teams.length === 1 // if team count === 1 then opponent school not yet accept invitation
+		);
+	},
+	isShowEventOnPublicSchoolCalendar: function(event) {
+		// don't show inter-schools events if invited school not yet accept invitation and
+		return !(
+			event.eventType === this.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			event.teams.length === 1 // if team count === 1 then opponent school not yet accept invitation
+		);
 	}
 };
 
