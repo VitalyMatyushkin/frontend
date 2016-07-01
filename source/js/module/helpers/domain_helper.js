@@ -7,6 +7,11 @@ const 	RoleHelper	= require('module/helpers/role_helper'),
 
 
 const DomainHelper = {
+	getSubDomain:function(domainName){
+		const subdomains = document.location.host.split('.');
+		subdomains[0] = domainName;
+		return subdomains.join(".");
+	},
 	getLoginUrl:function(){
 		let subdomains = document.location.host.split('.');
 		subdomains[0] = subdomains[0] !=='admin' ? 'login': subdomains[0];

@@ -2,7 +2,8 @@ const	SVG					= require('module/ui/svg'),
 		Map					= require('module/ui/map/map'),
 		React				= require('react'),
 		If					= require('module/ui/if/if'),
-		Immutable			= require('immutable');
+		Immutable			= require('immutable'),
+		DomainHelper 		= require('module/helpers/domain_helper');
 
 const SchoolSummary = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -40,7 +41,7 @@ const SchoolSummary = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				schoolPicture	= binding.get('schoolData.pic') ? binding.get('schoolData.pic'):'images/no-image.jpg',
-				siteLink		= binding.get('schoolData.domain') ? `${binding.get('schoolData.domain')}.stage2.squadintouch.com`:'',
+				siteLink		= binding.get('schoolData.domain') ? DomainHelper.getSubDomain(binding.get('schoolData.domain')) :'',
 				geoPoint		= binding.get('schoolData.postcode') ? binding.toJS('schoolData').postcode.point : undefined,
 				rootBinding 	= self.getMoreartyContext().getBinding(),
 				activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
