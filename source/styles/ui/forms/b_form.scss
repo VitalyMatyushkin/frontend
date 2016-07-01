@@ -25,22 +25,15 @@
       border-bottom: solid #378258 1px;
     }
   }
-  input[value]:not([value=""])
-  {
-    border-bottom: solid transparent 1px;
-  }
-
 }
-
 
 .eForm_fieldInput {
   display: inline-block;
   position: relative;
-  padding-top: 3px;
 }
-.eForm_fieldInput textarea{
+.eForm_fieldSet textarea{
   resize: vertical;
-  min-height: 70px;
+  min-height: 50px;
   min-width: 300px;
 }
 
@@ -56,7 +49,7 @@
     width: auto;
     background-color: transparent;
     top: 50%;
-    margin-top: -10px;
+    margin-top: -11px;
   }
   input{
     padding-left: 51px;
@@ -64,7 +57,7 @@
 }
 
 .eForm_field {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .eForm_field p{
   font-size: 12px;
@@ -77,8 +70,9 @@
   color: #aaaaaa;
   display: inline-block;
   min-width: 150px;
-  padding: 7px 10px 0 0;
+  padding: 3px 10px 0 0;
   vertical-align: top;
+  margin-top: 10px;
 }
 .eForm_fieldName:empty {
   display: none;
@@ -118,6 +112,7 @@
 .eForm_fieldSet{
   position: relative;
   display: inline-block;
+  margin-top: 10px;
 }
 
 .eForm_fieldSet.mValid{
