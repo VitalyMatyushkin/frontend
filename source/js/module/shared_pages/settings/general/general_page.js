@@ -16,15 +16,21 @@ const GeneralSettingsPage = React.createClass({
 		});
 	},
 	submitEdit: function(data) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const 	self 	= this,
+				binding	= self.getDefaultBinding(),
+				role 	= self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
 
 		if(!data.password)
 			delete data.password;
 
 		window.Server.profile.put(data).then(data => {
 			binding.set(Immutable.fromJS(data));
-			window.history.back();
+			if(role){
+				window.history.back();
+			}
+			else {
+				window.location.reload();
+			}
 		});
 	},
 	render: function() {
@@ -44,8 +50,7 @@ const GeneralSettingsPage = React.createClass({
 						<h3>VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email">Email</FormField>
 						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
-					</FormColumn>
-					<FormColumn>
+						<br/>
 						<h3>CONFIGURING NOTIFICATIONS</h3>
 						<FormField type="checkbox" field="notification.sendNews" >Send me news</FormField>
 						<FormField type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>
