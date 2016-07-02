@@ -30,50 +30,28 @@ const	TeamChooser	= React.createClass({
 		});
 	},
 	_getTeams: function() {
-		const self = this,
-			model = self.getBinding().model.toJS(),
-			rival = self.getBinding().rival.toJS(),
-		//TODO use filter in future
-			filter = {
+		const	self	= this,
+				model	= self.getBinding().model.toJS(),
+				rival	= self.getBinding().rival.toJS();
+
+		const filter = {
+			filter: {
+				limit: 100,
 				where: {
-					schoolId: MoreartyHelper.getActiveSchoolId(self),
 					gender: model.gender,
 					sportId: model.sportId,
 					tempTeam: false,
-					ages: {inq: model.ages}
-				},
-				include: ['sport', 'players']
-			};
-
-
-		return window.Server.teams.get(MoreartyHelper.getActiveSchoolId(self), {
-				filter: {
-					limit: 100
+					removed: false
 				}
-			})
-			// filter removed and temp teams
-			.then(teams => Promise.resolve(teams.filter(team => team.removed === false && team.tempTeam === false)))
-			.then(teams => {
-				// filter teams by age
-				let filteredTeams = [];
+			}
+		};
 
-				teams.forEach((team) => {
-					if (Lazy(model.ages).intersection(team.ages).toArray().length === team.ages.length) {
-						switch (model.type) {
-							case 'houses':
-								if (rival.id === team.houseId) {
-									filteredTeams.push(team);
-								}
-								break;
-							default:
-								filteredTeams.push(team);
-								break;
-						}
-					}
-				});
+		if(model.type === "houses") {
+			filter.filter.where.houseId = rival.id;
+		}
 
-				return filteredTeams;
-			});
+		return window.Server.teams.get(MoreartyHelper.getActiveSchoolId(self), filter)
+			.then(teams => teams.filter(team => Lazy(model.ages).intersection(team.ages).toArray().length === team.ages.length));
 	},
 	/**
 	 * Convert ages array to table view
