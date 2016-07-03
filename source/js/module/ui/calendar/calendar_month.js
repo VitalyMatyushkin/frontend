@@ -1,5 +1,6 @@
 const	classNames	= require('classnames'),
 		React		= require('react'),
+		Immutable	= require('immutable'),
 		SVG			 = require('module/ui/svg');
 
 const CalendarMonthView = React.createClass({
@@ -117,9 +118,12 @@ const CalendarMonthView = React.createClass({
 				year		= date.getFullYear(),
 				month		= date.getMonth(),
 				prevYear	= month === 0 ? year -1 : year,
-				prevMonth	= month === 0 ? 11 : month -1;
+				prevMonth	= month === 0 ? 11 : month - 1;
 
-		binding.set('currentDate', new Date(prevYear, prevMonth, (binding.get('currentDayDate')!==0?binding.get('currentDayDate'):1)));
+		binding.atomically()
+			.set('currentDate', new Date(prevYear, prevMonth, (binding.get('currentDayDate')!==0 ? binding.get('currentDayDate'):1)))
+			.set('currentMonth', Immutable.fromJS(prevMonth))
+			.commit();
 	},
 	_onSelectDay: function (day) {
 		const	self		= this,
@@ -146,8 +150,11 @@ const CalendarMonthView = React.createClass({
 				nextMonth		= month === 11 ? 0 : month + 1,
 				currentDayDate	= date.getDate();
 		
-		binding.set('currentDate', new Date(nextYear, nextMonth, 1));
-		binding.set('currentDayDate', currentDayDate);
+		binding.atomically()
+			.set('currentDate', new Date(nextYear, nextMonth, 1))
+			.set('currentDayDate', currentDayDate)
+			.set('currentMonth', Immutable.fromJS(nextMonth))
+			.commit()
 	},
 	_renderRow: function (row, days) {
 		const	self			= this,

@@ -5,6 +5,7 @@ const   RouterView      = require('module/core/router'),
         MoreartyHelper  = require('module/helpers/morearty_helper'),
         EventHelper     = require('module/helpers/eventHelper'),
         Lazy            = require('lazyjs'),
+        DateHelper      = require('module/helpers/date_helper'),
         Immutable       = require('immutable');
 
 const EventView = React.createClass({
@@ -30,13 +31,38 @@ const EventView = React.createClass({
         });
     },
     componentWillMount: function () {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            sportsBinding = binding.sub('sports');
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initMenuItems();
+
+        const currentDate = binding.toJS('calendar.currentDate');
+
+        self._setEventsByDateRange(
+            DateHelper.getStartDateTimeOfMonth(currentDate),
+            DateHelper.getEndDateTimeOfMonth(currentDate)
+        );
+
+        // Listen changes of date in calendar
+        binding.addListener('calendar.currentMonth', () => {
+            const currentDate = binding.toJS('calendar.currentDate');
+
+            self._setEventsByDateRange(
+                DateHelper.getStartDateTimeOfMonth(currentDate),
+                DateHelper.getEndDateTimeOfMonth(currentDate)
+            );
+        });
+    },
+    _ifMonthHasBeenChanged: function(currentDate, prevDate) {
+        return  !prevDate ||
+                DateHelper.getMonthNumber(currentDate) !== DateHelper.getMonthNumber(prevDate);
+    },
+    _setEventsByDateRange: function(gteDate, ltDate) {
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                sportsBinding   = binding.sub('sports');
 
         let events, sports;
 
@@ -62,7 +88,13 @@ const EventView = React.createClass({
                 //}
                 return window.Server.events.get(self.activeSchoolId, {
                     filter: {
-                        limit: 100
+                        limit: 100,
+                        where: {
+                            startTime: {
+                                '$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
+                                '$lt':  ltDate// like this `2016-07-31T00:00:00.000Z`
+                            }
+                        }
                     }
                 });
             })
