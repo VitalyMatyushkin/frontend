@@ -31,19 +31,22 @@ const EventView = React.createClass({
         });
     },
     componentWillMount: function () {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+        const self = this;
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initMenuItems();
 
-        const currentDate = binding.toJS('calendar.currentDate');
+        // set data
+        self._setEvents();
+        self._setSports();
 
-        self._setEventsByDateRange(
-            DateHelper.getStartDateTimeOfMonth(currentDate),
-            DateHelper.getEndDateTimeOfMonth(currentDate)
-        );
+        // add listeners
+        self._addListeners();
+    },
+    _addListeners: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         // Listen changes of date in calendar
         binding.addListener('calendar.currentMonth', () => {
@@ -55,87 +58,60 @@ const EventView = React.createClass({
             );
         });
     },
+    _setEvents: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        const currentDate = binding.toJS('calendar.currentDate');
+
+        self._setEventsByDateRange(
+            DateHelper.getStartDateTimeOfMonth(currentDate),
+            DateHelper.getEndDateTimeOfMonth(currentDate)
+        );
+    },
     _ifMonthHasBeenChanged: function(currentDate, prevDate) {
         return  !prevDate ||
                 DateHelper.getMonthNumber(currentDate) !== DateHelper.getMonthNumber(prevDate);
     },
-    _setEventsByDateRange: function(gteDate, ltDate) {
-        const   self            = this,
-                binding         = self.getDefaultBinding(),
-                sportsBinding   = binding.sub('sports');
-
-        let events, sports;
+    _setSports: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         window.Server.sports.get({
-                filter: {
-                    limit: 100
-                }
-            })
-            .then(_sports => {
-                sports = _sports;
+            filter: {
+                limit: 100
+            }
+        })
+        .then(
+            sports => binding.atomically()
+                .set('sports.sync', true)
+                .set('sports.models', Immutable.fromJS(sports))
+                .commit()
+        );
+    },
+    _setEventsByDateRange: function(gteDate, ltDate) {
+        const   self            = this,
+                binding         = self.getDefaultBinding();
 
-                sportsBinding
-                    .atomically()
-                    .set('sync', true)
-                    .set('models', Immutable.fromJS(sports))
-                    .commit();
-
-                // TODO don't forget about include
-                //{
-                //    filter: {
-                //        include: 'sport'
-                //    }
-                //}
-                return window.Server.events.get(self.activeSchoolId, {
-                    filter: {
-                        limit: 100,
-                        where: {
-                            startTime: {
-                                '$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
-                                '$lt':  ltDate// like this `2016-07-31T00:00:00.000Z`
-                            }
-                        }
+        window.Server.events.get(self.activeSchoolId, {
+            filter: {
+                limit: 100,
+                where: {
+                    startTime: {
+                        '$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
+                        '$lt':  ltDate// like this `2016-07-31T00:00:00.000Z`
                     }
-                });
-            })
-            .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
-            .then(_events => {
-                events = _events;
-
-                // inject sport to events
-                // method modify events array
-                self._injectSportToEvents(events, sports);
-
-                // inject team models to event
-                return Promise.all(
-                    events.map(event => {
-                        // if event has inter-school type, then we should inject school model to each team from other school
-                        if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-                            return window.Server.publicSchool.get(event.inviterSchoolId !== self.activeSchoolId ? event.inviterSchoolId : event.invitedSchoolId)
-                                .then(school => {
-                                    return self._getEventTeams(event).then(teams => {
-                                        return teams.map(team => {
-                                            if(team.schoolId === school.id) {
-                                                team.school = school;
-                                            }
-
-                                            return team;
-                                        });
-                                    });
-                                })
-                        } else {
-                            return self._getEventTeams(event);
-                        }
-                    })
-                );
-            })
-            .then( _ => {
-                binding
-                    .atomically()
-                    .set('models', Immutable.fromJS(events))
-                    .set('sync', true)
-                    .commit();
-            });
+                }
+            }
+        })
+        .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
+        .then(events => {
+            binding
+                .atomically()
+                .set('models', Immutable.fromJS(events))
+                .set('sync', true)
+                .commit();
+        });
     },
     _getEventTeams: function(event) {
         const self = this;
