@@ -14,11 +14,14 @@ $border: solid 1px #c2c2c2;
     top: 2px;
   }
 }
-
+.bChallenge.mTitle {
+  border: none;
+}
 .eChallenge_in{
   display: flex;
-  width: 42%;
   justify-content: center;
+  padding-top: 5px;
+  width: 42%;
 }
 .bChallenge p{
   margin: auto;
@@ -47,10 +50,12 @@ $border: solid 1px #c2c2c2;
 }
 
 .eChallenge_hours{
+  padding-top: 5px;
   text-align: center;
   width: 10%;
 }
 .eChallenge_sport{
+  padding-top: 5px;
   width: 10%;
 }
 .eChallenge_sportIcon{
@@ -59,11 +64,12 @@ $border: solid 1px #c2c2c2;
 .eChallenge_event{
   max-width: 150px;
   overflow: hidden;
-  padding: 5px;
+  padding-top: 5px;
   text-overflow: ellipsis;
   width: 20%;
 }
 .eChallenge_results{
+  padding-top: 5px;
   width: 10%;
   text-align: center;
   margin: auto;
