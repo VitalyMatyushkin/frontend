@@ -112,9 +112,7 @@ const EventView = React.createClass({
 		self._initMenuItems();
 
 		let	activeSchool,
-			event,
-			teams,
-			sport;
+			event;
 
 		window.Server.school.get(self.activeSchoolId)
 		.then(_school => {
@@ -135,99 +133,33 @@ const EventView = React.createClass({
 		.then(_event => {
 			event = _event;
 
-			// Get sport
-			return window.Server.sport.get(event.sportId);
-		})
-		.then(_sport => {
-			sport = _sport;
-
-			// Get schools for inter-schools event
-			if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-				return window.Server.publicSchool.get(
-					// it all depends on whether the school is inviting active or not
-					event.inviterSchoolId !== self.activeSchoolId ? event.inviterSchoolId : event.invitedSchoolId
-				)
-				.then(otherSchool => {
-					return window.Server.publicSchoolForms.get(otherSchool.id, {filter:{limit:1000}}).then(forms => {
-						otherSchool.forms = forms;
-
-						return otherSchool;
-					});
-				})
-				.then(otherSchool => {
-					// it all depends on whether the school is inviting active or not
-					event.inviterSchool = event.inviterSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
-					event.invitedSchool = event.invitedSchoolId === self.activeSchoolId ? activeSchool : otherSchool;
-
-					// yes, i'm always right.
-					return true;
-				});
-			} else {
-				return sport;
-			}
-		})
-		.then(_ => {
-			return Promise.all(event.teams.map(
-				teamId => window.Server.team.get({schoolId: self.activeSchoolId, teamId: teamId})
-			));
-		})
-		.then(_teams => {
-			teams = _teams;
-
-			if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
-				return Promise.all(
-					teams.map(team => window.Server.schoolHouse.get(
-						{
-							schoolId: self.activeSchoolId,
-							houseId: team.houseId
-						}
-					).then(house => team.house = house))
-				);
-			} else {
-				return Promise.resolve(_teams);
-			}
-		})
-		.then(_ => {
 			// get all students
-			return Promise.all(teams.map(team => {
+			return Promise.all(event.participants.map(team => {
 				return window.Server.schoolTeamStudents.get({schoolId: team.schoolId, teamId: team.id}).then(users => {
 					// inject students to team
 					team.users = users;
-
-					// inject school to team
-					if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-						team.school = team.schoolId === event.inviterSchoolId ? event.inviterSchool : event.invitedSchool;
-					} else {
-						team.school = activeSchool;
-					}
-
 
 					return team;
 				});
 			}));
 		})
-		.then(_ => {
+		.then(() => {
 			const players = [];
 
 			players.push(
-				TeamHelper.injectFormsToPlayers( // inject forms to players
-					TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
-						TeamHelper.injectTeamIdToPlayers(teams[0].id, teams[0].players),
-						teams[0].users
-					),
-					teams[0].school.forms
+				TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
+					TeamHelper.injectTeamIdToPlayers(event.participants[0].id, event.participants[0].players),
+					event.participants[0].users
 				)
 			);
 
-			if(teams[1]) {
+			if(event.participants[1]) {
 				players.push(
-					TeamHelper.injectFormsToPlayers( // inject forms to players
-						TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
-							TeamHelper.injectTeamIdToPlayers(teams[1].id, teams[1].players), // player + teamId
-							teams[1].users
-						),
-						teams[1].school.forms
-					));
+					TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
+						TeamHelper.injectTeamIdToPlayers(event.participants[1].id, event.participants[1].players), // player + teamId
+						event.participants[1].users
+					)
+				)
 			}
 
 			// TODO remove plug and implement albums
@@ -236,10 +168,10 @@ const EventView = React.createClass({
 
 			binding
 				.atomically()
-				.set('sport',				Immutable.fromJS(sport))
+				.set('sport',				Immutable.fromJS(event.sport))
 				.set('model',				Immutable.fromJS(event))
-				.set('model.sportModel',	Immutable.fromJS(sport))
-				.set('participants',		Immutable.fromJS(teams))
+				.set('model.sportModel',	Immutable.fromJS(event.sport))
+				.set('participants',		Immutable.fromJS(event.participants))
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))
 				.set('players',				Immutable.fromJS(players))
