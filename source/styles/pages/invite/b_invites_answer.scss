@@ -1,0 +1,15 @@
+.eInvites_answer {
+  background: #fff;
+  border: $BORDER;
+  height: 5em;
+  margin: 10em auto;
+  max-width: 300px;
+  padding: 30px;
+  text-align: center;
+}
+.eAnswer_buttons {
+  margin-top: 30px;
+  .bButton{
+    margin: 0 10px;
+  }
+}
