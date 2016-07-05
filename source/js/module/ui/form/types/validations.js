@@ -26,7 +26,7 @@ var validationsSet = {
 		}
 	},
 	date:function(value){
-        const err = 'Please fill out this field';
+        const err = 'Incorrect date!';
 		if(!Date.parse(value)){
 			return err;
 		}else{

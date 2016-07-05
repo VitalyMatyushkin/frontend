@@ -33,10 +33,8 @@ const TypeText =  React.createClass({
 				value 	= self.getDefaultBinding().get('value');
 
 		return (
-			<div className="eForm_fieldInput">
-				<input ref="input" value={value} type={self.props.textType || 'text'} placeholder={self.props.placeholder}
-					   onBlur={self.handleBlur} onChange={self.handleChange} />
-			</div>
+			<input ref="input" value={value} type={self.props.textType || 'text'} placeholder={self.props.placeholder}
+				   onBlur={self.handleBlur} onChange={self.handleChange} />
 		)
 	}
 });

@@ -42,9 +42,7 @@ const TypeTextArea =  React.createClass({
             defaultValue = self.getDefaultBinding().get('defaultValue');
 
         return (
-            <div className="eForm_fieldInput">
-                <textarea ref="fieldInput" type={self.props.textType || 'textarea'} placeholder={self.props.placeholder} onBlur={self.handeBlur} onChange={self.handleChange}></textarea>
-            </div>
+			<textarea ref="fieldInput" type={self.props.textType || 'textarea'} placeholder={self.props.placeholder} onBlur={self.handeBlur} onChange={self.handleChange}></textarea>
         )
     }
 });
