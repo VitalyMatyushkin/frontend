@@ -19,15 +19,9 @@ const	TeamChooser	= React.createClass({
 		const	self = this,
 				binding	= self.getDefaultBinding();
 
-		binding.set('viewMode',	Immutable.fromJS('close'));
+		binding.set('viewMode', Immutable.fromJS('close'));
 
-		self._getTeams().then((teams) => {
-			binding
-				.atomically()
-				.set('isSelectedTeam',	Immutable.fromJS(false))
-				.set('teams',			Immutable.fromJS(teams))
-				.commit();
-		});
+		self._getTeams().then(teams => binding.set('teams', Immutable.fromJS(teams)));
 	},
 	_getTeams: function() {
 		const	self	= this,
@@ -96,10 +90,24 @@ const	TeamChooser	= React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				teams			= binding.toJS('teams'),
-				exceptionTeamId	= binding.toJS('exceptionTeamId');
+				exceptionTeamId	= binding.toJS('exceptionTeamId'),
+				selectedTeamId	= binding.toJS('selectedTeamId');
 		let		teamItems		= [];
 
-		if(teams && teams.length !== 0) {
+		if(
+			teams &&
+			(
+				teams.length === 0 ||
+				teams.length === 1 && teams[0].id === exceptionTeamId ||
+				teams.length === 1 && teams[0].id === selectedTeamId
+			)
+		) {
+			teamItems.push((
+				<div className='eTeamChooser_team mLast'>
+					There are no teams matching you criteria. To create a new team pick players from the list.
+				</div>
+			)) ;
+		} else if(teams && teams.length !== 0) {
 			teams.forEach((team, index) => {
 				if(exceptionTeamId != team.id) {
 					const	teamClass	= classNames({
@@ -112,15 +120,9 @@ const	TeamChooser	= React.createClass({
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>
-					)) ;
+					));
 				}
 			});
-		} else if(teams && teams.length === 0) {
-			teamItems.push((
-				<div className='eTeamChooser_team mLast'>
-					There are no teams matching you criteria. To create a new team pick players from the list.
-				</div>
-			)) ;
 		}
 
 		const	teamChooserClass	= classNames({
