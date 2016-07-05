@@ -95,10 +95,10 @@ const StudentHelper = {
 			return this._isStudentTeamWin(studentId, event);
 		});
 	},
-	_getTeam: function(schoolId, teamId) {
+	_getTeam: function(schoolId, eventId, teamId) {
 		let team;
 
-		return window.Server.team.get({schoolId: schoolId, teamId: teamId})
+		return window.Server.publicSchoolEventTeam.get({schoolId: schoolId, eventId: eventId, teamId: teamId})
 			.then(_team => {
 				team = _team;
 
@@ -133,7 +133,7 @@ const StudentHelper = {
 			.then(events => {
 				return Promise.all(events.map(event => {
 					return Promise.all(event.teams.map(teamId => {
-							return this._getTeam(event.inviterSchoolId, teamId);
+							return this._getTeam(event.inviterSchoolId, event.id, teamId);
 						}))
 						.then(teams => {
 							event.participants = teams;
