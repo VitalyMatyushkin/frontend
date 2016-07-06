@@ -205,63 +205,68 @@
   max-height: 170px;
   position: relative;
   margin-bottom: 30px;
-}
-.eForm_blazonPreview{
-  width: 172px;
-  height:172px;
-  border-radius: 5px;
-  border: solid 1px #959595;
-  overflow: hidden;
-  box-sizing: border-box;
 
-
-  .eImg{
-    width: 100%;
-    height:100%;
-    background-repeat: no-repeat;
-    background-size: cover;
-    box-sizing: border-box;
-  }
-  .eLoader_gif{
-    position: absolute;
-    top:0;
-    left: 0;
-    width: 100%;
-    height:100%;
-    overflow: hidden;
+  .eForm_blazonPreview{
+    width: 172px;
+    height:172px;
     border-radius: 5px;
     border: solid 1px #959595;
-    img{
-      height: 170px;
-      margin-left: -25%;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    .eImg{
+      width: 100%;
+      height:100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      box-sizing: border-box;
+    }
+    .eLoader_gif{
+      position: absolute;
+      top:0;
+      left: 0;
+      width: 100%;
+      height:100%;
+      overflow: hidden;
+      border-radius: 5px;
+      border: solid 1px #959595;
+      img{
+        height: 170px;
+        margin-left: -25%;
+      }
+    }
+  }
+
+  .eInputFile{
+    position: absolute;
+    visibility: hidden;
+  }
+  .eRoundBtn .bIcon {
+    position: absolute;
+    top: -16px;
+    right: 10px;
+    height: 40px;
+    width: 40px;
+    cursor: pointer;
+    border-radius: 50%;
+    webkit-box-shadow:inset rgba(203, 203, 203, 0.7) 0 0 0 2px, rgba(203, 203, 203, 0.5) 0 0 0 2px;;
+    -moz-box-shadow:inset rgba(203, 203, 203, 0.7) 0 0 0 2px, rgba(203, 203, 203, 0.5) 0 0 0 2px;;
+    box-shadow:inset rgba(203, 203, 203, 0.7) 0 0 0 2px, rgba(203, 203, 203, 0.5) 0 0 0 2px;;
+  }
+  .eTrash{
+    color:$MAIN_COLOR;
+    font-size: 10px;
+    cursor: pointer;
+    
+    .bIcon{
+      color:$MAIN_COLOR;
+      vertical-align: text-bottom;
     }
   }
 }
 .eForm_fileInput{
   margin-bottom: 10px;
   position: relative;
-}
-.inputFile{
-  position: absolute;
-  overflow: hidden;
-  opacity: 0;
-}
-.labelForInputFile{
-  display: inline-block;
-  background: #66952D;
-  color: #f0f0f0;
-  border-radius: 10px;
-  width: 200px;
-  height: 40px;
-  text-align: center;
-  line-height: 40px;
-  cursor: pointer;
-}
-.eLoader_gif_hide{
-  display: none;
-}
-.eLoader_gif_show{
-  display: block;
 }
 .eManager_select_wrap select {
   border: none;
