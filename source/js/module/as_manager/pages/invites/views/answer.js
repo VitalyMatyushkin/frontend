@@ -48,7 +48,7 @@ AnswerView = React.createClass({
 
         return <div className='eInvites_answer'>
 			<span>{message}</span>
-			<div className="eInvite_buttons">
+			<div className="eAnswer_buttons">
 				<span className="bButton" onClick={self.onClickYes.bind(null)}>Yes</span>
 				<span className="bButton mRed" onClick={self.onClickNo.bind(null)}>No</span>
 			</div>

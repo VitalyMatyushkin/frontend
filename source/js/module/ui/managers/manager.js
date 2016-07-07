@@ -20,12 +20,6 @@ const Manager = React.createClass({
 		self._validate(0);
 		self._validate(1);
 	},
-	componentWillUnmount: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.clear();
-	},
 	/**
 	 * Init main binding
 	 * @private

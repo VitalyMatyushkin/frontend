@@ -19,16 +19,19 @@
 
 .eTeamChooser_button {
   width: 120px;
-  height: 23px;
+  height: 35px;
   background: #759500;
-
+  color: #225412;
+  
   text-align: center;
-  padding-top: 12px;
 
   cursor: pointer;
 
   font-size: 16px;
   font-weight: bold;
+  font-family: Glober, sans-serif;
+
+  border: none;
 
   &.mActive {
     color: white;
@@ -101,6 +104,10 @@
 
   &.mLast {
     border-bottom: none;
+  }
+
+  &.mAlert {
+    background-color: inherit;
   }
 }
 
