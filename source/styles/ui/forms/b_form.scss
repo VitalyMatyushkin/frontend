@@ -1,22 +1,26 @@
 .bForm {
   margin: auto;
-  padding: 30px;
-  text-align: center;
+  padding: 0 130px;
   position: relative;
+  text-align: center;
 
   h2, h3{
-    margin-bottom: 24px;
     color: $MAIN_COLOR;
+    font-weight: normal;
+    margin: 25px 0;
   }
-
+  h3.mHigh{
+    margin-top: 85px;
+  }
   input[type="text"], input[type="password"],
   textarea, select {
-    width: 300px;
-    height: auto;
-    border: none;
     background: transparent;
     border-radius: 0;
-    border-bottom: solid transparent 1px;
+    border: solid transparent;
+    border-width: 0 0 1px;
+    height: auto;
+    padding: 0;
+    width: 300px;
 
     &:hover{
       border-bottom: solid #959595 1px;
@@ -24,6 +28,13 @@
     &:focus{
       border-bottom: solid #378258 1px;
     }
+  }
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background: url("/images/arrow_down.svg") no-repeat 98% center;
+    background-size: 10px;
   }
   input.eDateInput{
     width: 80px;
@@ -36,7 +47,7 @@
 }
 .eForm_fieldSet textarea{
   resize: vertical;
-  min-height: 50px;
+  min-height: 67px;
   min-width: 300px;
 }
 
@@ -50,17 +61,16 @@
     position: absolute;
     height: 20px;
     width: auto;
-    background-color: transparent;
-    top: 50%;
-    margin-top: -11px;
+    background: none;
+    margin-top: -1px;
   }
   input{
-    padding-left: 51px;
+    padding-left: 35px;
   }
 }
 
 .eForm_field {
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 .eForm_field p{
   font-size: 12px;
@@ -75,19 +85,20 @@
   min-width: 150px;
   padding: 3px 10px 0 0;
   vertical-align: top;
-  margin-top: 10px;
 }
 .eForm_fieldName:empty {
   display: none;
 }
 .eForm_field.mLarge {
+  max-width: 500px;
 
   .eForm_fieldName{
-    width: 190px;
     display: block;
+    width: 190px;
   }
-  .eForm_confirmField{
-    margin-left: -200px;
+  .eForm_fieldColumn{
+    margin: 0 0 25px 0;
+    padding: 0;
   }
 }
 .eForm_savePanel{
@@ -95,9 +106,11 @@
   width: 100%;
   justify-content: flex-end;
   box-sizing: border-box;
-  padding: 25px;
+  padding: 0 0 15px 0;
 }
-
+.mLeft .eForm_atCenter {
+  display: block;
+}
 .eForm_atCenter{
   display: inline-block;
   position: relative;
@@ -115,7 +128,6 @@
 .eForm_fieldSet{
   position: relative;
   display: inline-block;
-  margin-top: 10px;
 }
 
 .eForm_fieldSet.mValid{
@@ -128,7 +140,9 @@
     color: $MAIN_COLOR;
   }
 }
-
+.eForm_fieldSet.mEmpty{
+  border-bottom: solid 1px #ccc;
+}
 .eForm_fieldSet.mInvalid{
   color: $INVALID_COLOR;
   .mNotRequired{
@@ -149,7 +163,6 @@
 
 .eForm_fieldColumn{
   display: inline-block;
-  margin: 0 25px;
   vertical-align: top;
 }
 
@@ -204,7 +217,7 @@
   max-width: 170px;
   max-height: 170px;
   position: relative;
-  margin-bottom: 30px;
+  margin: 0 120px 45px 0;
 }
 .eForm_blazonPreview{
   width: 172px;
@@ -330,13 +343,12 @@
   margin: 0 0 5px 12px;
 }
 .eForm_confirmField {
-  margin-left: -160px;
-  background: #eaeaea;
-  max-width: 460px;
 
   .eForm_fieldColumn {
-    margin: 0;
-    padding-bottom: 20px;
+    display: inline-block;
+    float: right;
+    margin: -20px 0 20px;
+    padding-bottom: 25px;
   }
 
 }
@@ -347,9 +359,6 @@
 }
 .eStudentForm {
 
-  .bForm {
-    padding: 30px 100px;
-  }
   .eForm_atCenter {
     width: 100%;
   }
