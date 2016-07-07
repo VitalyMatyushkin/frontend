@@ -70,10 +70,18 @@ function startModuleSelector(domainName) {
     return startModule;
 }
 
+function isDeveloperEnvironment(domainName){
+	const parsedDomain = parseDomainName(domainName);
+
+	return parsedDomain.env === 'stage2' || parsedDomain.rootDomain === 'squard';
+}
+
+
 const loaderUtils = {
     parseDomainName:        parseDomainName,
     apiSelector:            apiSelector,
-    startModuleSelector:    startModuleSelector
+    startModuleSelector:    startModuleSelector,
+	isDeveloperEnvironment:	isDeveloperEnvironment
 };
 
 module.exports = loaderUtils;

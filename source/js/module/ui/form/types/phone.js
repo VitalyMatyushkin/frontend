@@ -1,6 +1,7 @@
 const   TypeMixin   = require('module/ui/form/types/type_mixin'),
 	    React       = require('react'),
-        Immutable 	= require('immutable');
+        Immutable 	= require('immutable'),
+		helper		= require('module/helpers/loader_utils');
 
 const TypePhone =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
@@ -80,17 +81,26 @@ const TypePhone =  React.createClass({
 	handleBlur: function(e) {
 		this.cursor = 0;
 	},
+	getAvailableCodes:function(){
+		const codes = ["+44"];
+
+		if(helper.isDeveloperEnvironment(window.location.hostname)){
+			codes.push("+7");
+		}
+
+		return codes;
+	},
 	render: function () {
 		const self = this,
             binding = self.getDefaultBinding(),
             cc = binding.get('cc'),
-            phone = binding.get('phone');
+            phone = binding.get('phone'),
+			codes = self.getAvailableCodes();
 
 		return (
 			<div className="eForm_fieldInput mPhone">
                 <select onChange={self.ccChange} value={cc} >
-                    <option value="+44" >+44</option>
-                    <option value="+7" >+7</option>
+					{codes.map(code => <option key={code} value={code} >{code}</option>)}
                 </select>
                 <input ref="input" type="text" value={phone} onChange={self.phoneChange} onBlur={self.handleBlur} />
 			</div>
