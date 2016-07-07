@@ -286,6 +286,7 @@ const	PlayerChooser	= React.createClass({
 				players.push(
 					<div	className={self._getPlayerClass(player.id)}
 							onClick={self._onPlayerClick.bind(self, index, player)}
+							onDoubleClick={self._onPlayerDoubleClick.bind(self, index, player)}
 					>
 						<div	className="ePlayerChooser_playerName">
 							{`${player.firstName} ${player.lastName}`}
@@ -347,15 +348,20 @@ const	PlayerChooser	= React.createClass({
 	 * @private
 	 */
 	_onPlayerClick: function (index, player) {
-		const	self	= this,
-				selectedPlayer = self._getSelectedPlayer();
+		const	self			= this,
+				selectedPlayer	= self._getSelectedPlayer();
 
 		if(selectedPlayer !== undefined && selectedPlayer.id === player.id ) {
 			self._deselectPlayer();
 		} else {
 			self._selectPlayer(player);
 		}
+	},
+	_onPlayerDoubleClick: function(index, player) {
+		const self = this;
 
+		self._addPlayerToTeam(player);
+		self._removeFromPlayerForSelect(player);
 	},
 	/**
 	 * Handler for select button click

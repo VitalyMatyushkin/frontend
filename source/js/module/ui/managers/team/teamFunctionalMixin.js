@@ -164,6 +164,11 @@ const TeamFunctionalMixin = {
 			self._selectPlayer(player);
 		}
 	},
+	_onPlayerDoubleClick: function(player) {
+		const self = this;
+
+		self._onRemovePlayer(player.id);
+	},
 	/**
 	 * Get binding for TeamName element
 	 * @returns {*|Binding|Object}
