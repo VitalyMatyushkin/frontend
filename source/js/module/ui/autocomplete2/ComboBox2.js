@@ -344,7 +344,7 @@ const ComboBox2 = React.createClass({
         // this will act instead of loader spinner for a while
         const loaderStyle = {
             position:    'absolute',
-            top:         '10px',
+            top:         '3px',
             right:       '3px',
             height:      '17px',
             display:      self.state.isLoading ? undefined : "none"
@@ -371,9 +371,12 @@ const ComboBox2 = React.createClass({
                     />
                     <img style={loaderStyle} src="/images/spinner.gif"/>
                 </div>
-                <div className="eCombobox_button"
-                      style     = {triangleStyle}
-                      onClick   = {self.onTriangleClick}></div>
+                <div
+                    className   = "eCombobox_button"
+                    style       = {triangleStyle}
+                    onClick     = {self.onTriangleClick}
+                >
+                </div>
                 {self.renderMenuItems()}
             </div>
         );

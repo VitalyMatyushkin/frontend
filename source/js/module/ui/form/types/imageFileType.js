@@ -6,6 +6,7 @@
 const   TypeMixin   = require('module/ui/form/types/type_mixin'),
         className   = require('classnames'),
         SVG         = require('module/ui/svg'),
+		If			= require('module/ui/if/if'),
         Immutable   = require('immutable'),
         React       = require('react');
 
@@ -29,26 +30,30 @@ const ImageFileTypeUpload = React.createClass({
         binding.set('fileLoading', true);
         window.Server.images.upload(imgFile)
             .then(imgUrl => {
-                binding.set('defaultValue', imgUrl);
+                //binding.set('defaultValue', imgUrl);
                 self.setValue(imgUrl);
             })
             .finally(() => {
                 binding.set('fileLoading',false);
             });
     },
+	clearValue:function(e){
+		this.setValue(null);
 
+		e.stopPropagation();
+	},
     render:function(){
         const   self        = this,
                 binding     = self.getDefaultBinding(),
+				noEmpty		= !!binding.get('value'),
                 gifClasses  = className({
-                    'eLoader_gif':      true,
-                    'eLoader_gif_hide': !binding.get('fileLoading'),
-                    'eLoader_gif_show': binding.get('fileLoading')
+                    eLoader_gif: 	true,
+					mHidden: 		!binding.get('fileLoading')
                 });
 
         let coverImg;
-        if(binding.get('defaultValue') !== undefined) {
-            coverImg = window.Server.images.getResizedToBoxUrl(binding.get('defaultValue'), 300, 300);
+        if(noEmpty) {
+            coverImg = window.Server.images.getResizedToBoxUrl(binding.get('value'), 300, 300);
         } else {
             coverImg= '/images/empty_pic_uploader_box.png';
         }
@@ -62,8 +67,13 @@ const ImageFileTypeUpload = React.createClass({
 					</div>
                 </div>
                 <div className="eForm_fileInput">
-                    <input className="inputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
-                    <label className="bRoundBtn" htmlFor="file"><SVG icon="icon_add_photo" /></label>
+                    <input className="eInputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
+                    <label className="eRoundBtn" htmlFor="file"><SVG icon="icon_add_photo" /></label>
+					<If condition={noEmpty}>
+						<span className="eTrash" onClick={self.clearValue}>
+							<SVG icon="icon_trash" /> Delete image
+						</span>
+					</If>
                 </div>
             </div>
         );

@@ -1,7 +1,6 @@
 .bDataList{
-  margin-bottom: 40px;
   max-width: 1060px;
-  margin: 0 auto;
+  padding: 0 130px;
   text-transform: none;
 }
 
@@ -22,9 +21,6 @@
   top: 0px;
 }
 
-.eDataList_list{
-}
-
 .eDataList_listItem{
   box-sizing: border-box;
 }
@@ -32,13 +28,12 @@
 .eDataList_listItem.mHead{
   cursor: default;
   position: relative;
-  font-size: 18px;
 }
 
 .eDataList_listItem.mHead .eDataList_listItemCell{
-  background: #66952e;
+  background: #e1e1e1;
+  border-bottom: solid 2px $MAIN_COLOR;
   color: $DarkGreen;
-  border: none;
   line-height: 30px;
 }
 
@@ -65,6 +60,7 @@
 }
 
 .eDataList_listItemCell{
+  box-sizing: border-box;
   display: table-cell;
   height: 38px;
   vertical-align: middle;

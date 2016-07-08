@@ -25,7 +25,7 @@ const RegisterUserPage = React.createClass({
             {
                 name: 'account',
                 title: 'Personal Details',
-                mainTitle: 'Register on Squadintouch',
+                mainTitle: 'Sign up for Squadintouch',
                 description: <div><p>Enter your contact details and choose a password you wish to use for logging in to
                     your account.</p>
 
@@ -41,14 +41,14 @@ const RegisterUserPage = React.createClass({
             {
                 name: 'verification',
                 title: 'User Verification',
-                mainTitle: 'Register on Squadintouch',
+                mainTitle: 'Sign up for Squadintouch',
                 description: <p>Activation codes were sent to your email address and mobile phone. Please, enter them
                     below to complete the registration.</p>
             },
             {
                 name: 'permissions',
                 title: 'Permissions Setup',
-                mainTitle: 'Register on Squadintouch',
+                mainTitle: 'Sign up for Squadintouch',
                 description: <p>
                     Please choose the role and school you would like to join. If you wish to get more than one role at
                     the same

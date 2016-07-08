@@ -49,7 +49,7 @@ const OneSchoolPage = React.createClass({
                 },
                 {
                     href:'/#admin_schools/admin_views/archive',
-                    name:'Request Archive',
+                    name:'Requests Archive',
                     key:'archive'
                 },
                 {
