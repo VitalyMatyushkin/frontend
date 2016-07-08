@@ -349,9 +349,6 @@ const EventView = React.createClass({
 										</If>
 										<If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined}>
 											<div className="bMainComment">
-												<span className="bMainComment_pic">
-													<img src={'http://placehold.it/400x400'}/>
-												</span>
 												<div>{binding.get('model.result.comment')}</div>
 											</div>
 										</If>
