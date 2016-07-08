@@ -136,7 +136,7 @@ const  RoleList = React.createClass({
 				binding     = self.getDefaultBinding(),
 				listOpen    = binding.toJS('listOpen');
 
-		binding.set('listOpen', !listOpen);
+		binding.set('listOpen', Immutable.fromJS(!listOpen));
 
 		e.stopPropagation();
 	},
@@ -144,7 +144,7 @@ const  RoleList = React.createClass({
 		const   self 	    = this,
 				binding     = self.getDefaultBinding();
 
-		binding.set('listOpen', false);
+		binding.set('listOpen', Immutable.fromJS(false));
 
 		e.stopPropagation();
 	},
@@ -153,7 +153,7 @@ const  RoleList = React.createClass({
 				binding     = self.getDefaultBinding();
 
 		self.setRole(roleName, schoolId);
-		binding.set('listOpen', false);
+		binding.set('listOpen', Immutable.fromJS(false));
 	},
 	logout:function(){
 		window.location.hash = 'logout';
