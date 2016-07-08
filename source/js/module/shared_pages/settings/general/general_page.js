@@ -38,23 +38,26 @@ const GeneralSettingsPage = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-				<Form formStyleClass="bSettingsForm" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving..." >
+				<Form formStyleClass="bSettingsForm mLeft" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving..." >
 					<FormColumn>
-						<h3>SUMMARY</h3>
+						<h3>YOUR PHOTO</h3>
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
-						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
-						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="date" field="birthday" validation="date required">Birthday</FormField>
-					</FormColumn>
-					<FormColumn>
-						<h3>VERIFICATION INFORMATION</h3>
-						<FormField type="text" field="email" validation="required email">Email</FormField>
-						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
-						<br/>
-						<h3>CONFIGURING NOTIFICATIONS</h3>
+						<h3>NOTIFICATION SETTINGS</h3>
 						<FormField type="checkbox" field="notification.sendNews" >Send me news</FormField>
 						<FormField type="checkbox" field="notification.sendInfoUpdates" >Information updates</FormField>
 						<FormField type="checkbox" field="notification.sendPromoOffers" >Promotional offers</FormField>
+					</FormColumn>
+					<FormColumn>
+					<h3>SUMMARY</h3>
+						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
+						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
+						<FormField type="date" field="birthday" validation="required">Birthday</FormField>
+						<h3 className="mHigh">VERIFICATION INFORMATION</h3>
+						<FormField type="text" field="email" validation="required email">Email</FormField>
+						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
+						<FormField type="text">Phone code</FormField>
+						<FormField type="text">Email code</FormField>
+						<br/>
 					</FormColumn>
 				</Form>
 		)

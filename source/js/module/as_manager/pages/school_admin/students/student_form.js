@@ -80,7 +80,7 @@ const StudentForm = React.createClass({
 						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId"
 								   defaultItem={self.props.initialHouse} validation="required">House</FormField>
 						<FormField type="checkbox" field="unwell" >Injured/Unwell</FormField>
-						<FormField type="textarea" placeholder="Medical Information" field="medicalInfo"/>
+						<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
 					</FormColumn>
 					<FormColumn>
 						<h3>NEXT OF KIN</h3>
