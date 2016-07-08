@@ -30,9 +30,10 @@ const SkypeStyleTeam = React.createClass({
 
 			xmlPlayers.push(playersData.map(player => {
 				return (
-					<div	className={self._getPlayerClass(player.id)}
-							onClick={self._onPlayerClick.bind(self, player)}
-							key={player.id}
+					<div	className=		{self._getPlayerClass(player.id)}
+							onClick=		{self._onPlayerClick.bind(self, player)}
+							onDoubleClick=	{self._onPlayerDoubleClick.bind(self, player)}
+							key=			{player.id}
 					>
 						<div className="eTeam_playerItem mName">
 							{`${player.firstName} ${player.lastName}`}

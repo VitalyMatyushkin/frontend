@@ -1,4 +1,5 @@
 const	React			= require('react'),
+		ReactDOM		= require('reactDom'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Lazy			= require('lazyjs'),
 		classNames		= require('classnames'),
@@ -103,7 +104,7 @@ const	TeamChooser	= React.createClass({
 			)
 		) {
 			teamItems.push((
-				<div className='eTeamChooser_team mLast'>
+				<div className='eTeamChooser_team mLast mAlert'>
 					There are no teams matching you criteria. To create a new team pick players from the list.
 				</div>
 			)) ;
@@ -116,7 +117,7 @@ const	TeamChooser	= React.createClass({
 					});
 
 					teamItems.push((
-						<div className={teamClass} onMouseDown={self._onTeamClick.bind(self, team.id, team)}>
+						<div className={teamClass} onClick={self._onTeamClick.bind(self, team.id, team)}>
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>
@@ -125,13 +126,13 @@ const	TeamChooser	= React.createClass({
 			});
 		}
 
-		const	teamChooserClass	= classNames({
+		const teamChooserClass = classNames({
 			eTeamChooser_teamListContainer:	true,
 			mDisable:						binding.toJS('viewMode') == 'close'
 		});
 
 		return (
-			<div className={teamChooserClass}>
+			<div className={teamChooserClass}  ref="teamList">
 				<div className="eTeamChooser_teamListHead"></div>
 				<div className="eTeamChooser_teamList">
 
@@ -203,12 +204,12 @@ const	TeamChooser	= React.createClass({
 				});
 
 		return (
-			<div	className={classNameTeamChooserButton}
+			<button	className={classNameTeamChooserButton}
 					onClick={self._onTeamChooserButtonClick}
 					onBlur={self._onTeamChooserButtonBlur}
 			>
 				Select Team
-			</div>
+			</button>
 		);
 	},
 	render: function() {
