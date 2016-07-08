@@ -61,12 +61,11 @@
     border: none;
     position: absolute;
     height: 20px;
-    width: auto;
-    background: none;
+    width: 50px;
     margin-top: -1px;
   }
   input{
-    padding-left: 35px;
+    padding-left: 55px;
   }
 }
 
@@ -319,8 +318,7 @@
   border-color: $COLOR transparent;
 }
 .eForm_conditions {
-  color: #a9a9a9;
-  margin-left: -35px;
+  color: #616161;
   position: relative;
 }
 .eRegisterMessage a,
@@ -344,9 +342,9 @@
   width: 200px;
 }
 .eRegisterMessage {
-  font-size: 10px;
-  color: #a9a9a9;
-  margin: 0 0 5px 12px;
+  font-size: 12px;
+  color: #616161;
+  margin: 0 2px 10px;
 }
 .eForm_confirmField {
 
