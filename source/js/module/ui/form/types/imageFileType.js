@@ -69,7 +69,7 @@ const ImageFileTypeUpload = React.createClass({
                 <div className="eForm_fileInput">
                     <input className="eInputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
                     <label className="eRoundBtn" htmlFor="file"><SVG icon="icon_add_photo" /></label>
-					<If condition={noEmpty}>
+					<If condition={noEmpty && false}>  {/* wait task #1087 */}
 						<span className="eTrash" onClick={self.clearValue}>
 							<SVG icon="icon_trash" /> Delete image
 						</span>
