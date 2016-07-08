@@ -57,7 +57,7 @@ const SchoolConsole = React.createClass({
                 num: '(' + count + ')'
             },{
                 href: '/#school_console/archive',
-                name: 'request archive',
+                name: 'Requests Archive',
                 key: 'archive'
             }];
             binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
