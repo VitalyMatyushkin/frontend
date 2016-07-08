@@ -8,10 +8,13 @@ const HousesListPage = React.createClass({
 	setPageTitle: 'Houses',
 	serviceName: 'schoolHouses',
 	_getItemRemoveFunction:function(data){
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 		= this,
+				rootBinding = self.getMoreartyContext().getBinding(),
+				schoolId 	= rootBinding.get('userRules.activeSchoolId'),
+				binding = self.getDefaultBinding();
+
 		if(data !== undefined){
-			window.Server.schoolHouse.delete({houseId:data.id}).then(function(res){
+			window.Server.schoolHouse.delete({schoolId:schoolId, houseId:data.id}).then(function(res){
 				binding.update('data',function(houses){
 					return houses.filter(function(house){
 						return house.get('id') !== data.id;
