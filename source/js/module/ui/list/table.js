@@ -194,7 +194,7 @@ const Table = React.createClass({
                 });
 
                 return (
-                    <div key={itemIndex} className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
+                    <div key={item.id ? item.id : itemIndex} className="eDataList_listItem" onClick={self.props.onItemView && getViewFunction()}>
                         {itemCells}
                         <If condition={self.props.hideActions !== true}>
                             <div className="eDataList_listItemCell mActions">
