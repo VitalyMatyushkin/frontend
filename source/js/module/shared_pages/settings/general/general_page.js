@@ -20,8 +20,8 @@ const GeneralSettingsPage = React.createClass({
 				binding	= self.getDefaultBinding(),
 				role 	= self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
 
-		if(!data.password)
-			delete data.password;
+		if(!data.birthday)
+			delete data.birthday;
 
 		window.Server.profile.put(data).then(data => {
 			binding.set(Immutable.fromJS(data));
@@ -51,16 +51,16 @@ const GeneralSettingsPage = React.createClass({
 					<h3>SUMMARY</h3>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="date" field="birthday" validation="required">Birthday</FormField>
+						<FormField type="date" field="birthday" >Birthday</FormField>
 						<h3 className="mHigh">VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email">Email</FormField>
 						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
-						<FormField type="text">Phone code</FormField>
-						<FormField type="text">Email code</FormField>
 						<br/>
 					</FormColumn>
 				</Form>
-		)
+		);
+		//	<FormField type="text">Phone code</FormField>
+		//<FormField type="text">Email code</FormField>
 	}
 });
 
