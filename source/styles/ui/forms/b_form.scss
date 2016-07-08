@@ -43,8 +43,9 @@
 
 .eForm_fieldInput {
   display: inline-block;
-  position: relative;
+  position: relative
 }
+
 .eForm_fieldSet textarea{
   resize: vertical;
   min-height: 67px;
@@ -368,11 +369,7 @@
     width: 100%;
   }
   textarea {
-    font-weight: bold;
     width: 300px;
-  }
-  .bCombobox {
-    max-width: 138px;
   }
 
 }
