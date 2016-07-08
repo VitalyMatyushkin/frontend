@@ -51,7 +51,7 @@ const GeneralSettingsPage = React.createClass({
 					<h3>SUMMARY</h3>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="date" field="birthday" >Birthday</FormField>
+						<FormField type="date" field="birthday" validation="date" >Birthday</FormField>
 						<h3 className="mHigh">VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email">Email</FormField>
 						<FormField type="phone" field="phone" validation="phone">Phone number</FormField>
