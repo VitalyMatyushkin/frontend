@@ -104,7 +104,9 @@ const SportsForm = React.createClass({
                     </FormColumn>
                     <FormColumn>
                         <div className="eForm_fieldName">Positions</div>
-                        {self.getPositionFields()}
+                        <div field="positions">
+                            {self.getPositionFields()}
+                        </div>
                     </FormColumn>
                     <FormColumn>
                         <FormField labelText="Upload Game Field Picture" type="imageFile" typeOfFile="image" field="fieldPic"/>
