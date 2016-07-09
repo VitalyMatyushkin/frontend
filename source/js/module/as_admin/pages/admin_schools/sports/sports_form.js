@@ -82,6 +82,14 @@ const SportsForm = React.createClass({
         const self    = this,
               binding = self.getDefaultBinding();
 
+
+        // This comment about field "positions"
+        // As you can see - container for this field is <div> instead <FormField>.
+        // Unfortunately, our Form Component can't handle <FormField> that is array.
+        // However, positions field  just so and is. So i use some dirty trick.
+        // I make position field as <div> element and implement changes handler by hands(see functions onChangePosition, onAddNewPosition).
+        // Also i add property "field" to this element - in this case Form Component read positions data and set this data to meta,
+        // but Form Component can't handle changes.
         return (
             <div>
                 <Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={binding} >
