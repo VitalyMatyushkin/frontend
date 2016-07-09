@@ -132,9 +132,13 @@ const EventHelper = {
 	 * @private
 	 */
 	_isShowEditEventButton: function(thiz) {
-		const binding = thiz.getDefaultBinding();
+		const	self	= this,
+				binding	= thiz.getDefaultBinding();
 
-		return binding.get('mode') === 'general' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
+		return	binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
+				binding.get('mode') === 'general' &&
+				binding.get('activeTab') === 'teams' &&
+				RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "general".
