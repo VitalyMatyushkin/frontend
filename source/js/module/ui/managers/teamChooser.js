@@ -117,7 +117,9 @@ const	TeamChooser	= React.createClass({
 					});
 
 					teamItems.push((
-						<div className={teamClass} onClick={self._onTeamClick.bind(self, team.id, team)}>
+						<div	className=	{teamClass}
+								onMouseDown={self._onTeamClick.bind(self, team.id, team)}
+						>
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>
