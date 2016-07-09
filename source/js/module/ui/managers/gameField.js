@@ -21,7 +21,7 @@ const GameField = React.createClass({
 
         return (
             <div className="bGameField">
-                <img src={self._getGameFieldImg()}/>
+                <img width="343px" height="503px" src={self._getGameFieldImg()}/>
             </div>
         );
     }
