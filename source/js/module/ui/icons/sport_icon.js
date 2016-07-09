@@ -4,17 +4,17 @@
 
 const   React   = require('react'),
         SVG     = require('module/ui/svg'),
-        If      = require('module/ui/if/if'),
+        If      = require('module/ui/if/if');
 
-SportIcon = React.createClass({
+const SportIcon = React.createClass({
     propTypes: {
         name: React.PropTypes.string.isRequired,
         className: React.PropTypes.string
     },
     getSportIcon:function(sport){
         let icon;
-        switch (sport){
-            case 'football':
+        switch (true){
+            case sport && sport.toLowerCase() === 'football':
                 icon = "ball";
                 break;
             default:
