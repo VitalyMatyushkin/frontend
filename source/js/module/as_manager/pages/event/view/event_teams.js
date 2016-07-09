@@ -157,14 +157,14 @@ const EventTeams = React.createClass({
 		);
 	},
 	_getPlayers: function(order) {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			eventType = binding.get('model.eventType'),
-			participant = binding.sub(['participants', order]),
-			activeSchoolId = self.getActiveSchoolId(),
-			isOwner = eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] ?
-				participant.get('schoolId') === activeSchoolId :
-				true;
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				eventType		= binding.get('model.eventType'),
+				participant		= binding.sub(['participants', order]),
+				activeSchoolId	= self.getActiveSchoolId(),
+				isOwner			= eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] ?
+									participant.get('schoolId') === activeSchoolId :
+									true;
 
 		return (
 			<div>
@@ -184,23 +184,70 @@ const EventTeams = React.createClass({
 			</div>
 		);
 	},
+	_getPlayersForLeftSide: function() {
+		const	self		= this,
+				binding		= self.getDefaultBinding();
+
+		const	eventType		= binding.get('model.eventType'),
+				participants	= binding.toJS('participants'),
+				activeSchoolId	= self.getActiveSchoolId();
+
+		if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId === activeSchoolId
+		) {
+			return self._getPlayers(0);
+		} else if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId === activeSchoolId
+		) {
+			return self._getPlayers(1);
+		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+			return self._getPlayers(0);
+		}
+	},
+	_getPlayersForRightSide: function() {
+		const	self		= this,
+				binding		= self.getDefaultBinding();
+
+		const	eventType		= binding.get('model.eventType'),
+				participants	= binding.toJS('participants'),
+				activeSchoolId	= self.getActiveSchoolId();
+		
+		if(
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId !== activeSchoolId
+		) {
+			return self._getPlayers(0);
+		} else if (
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId !== activeSchoolId
+		) {
+			return self._getPlayers(1);
+		} else if (
+			participants.length > 1 &&
+			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return self._getPlayers(1);
+		} else if(participants.length === 1) {
+			return (
+				<div className="bEventTeams_team">
+					<div className="eEventTeams_awaiting">
+						Awaiting opponent...
+					</div>
+				</div>
+			);
+		}
+	},
 	render: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const self = this;
 
 		return (
 			<div className="bEventTeams">
-				{self._getPlayers(0)}
-				<If condition={binding.get('participants').count() > 1}>
-					{self._getPlayers(1)}
-				</If>
-				<If condition={binding.get('participants').count() === 1}>
-					<div className="bEventTeams_team">
-						<div className="eEventTeams_awaiting">
-							Awaiting opponent...
-						</div>
-					</div>
-				</If>
+				{self._getPlayersForLeftSide()}
+				{self._getPlayersForRightSide()}
 			</div>
 		);
 	}

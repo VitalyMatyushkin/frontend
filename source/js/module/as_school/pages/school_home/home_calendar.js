@@ -4,7 +4,8 @@ const	CalendarView	= require('module/ui/calendar/calendar'),
 		DateTimeMixin	= require('module/mixins/datetime'),
 		Sport			= require('module/ui/icons/sport_icon'),
         ChallengeModel	= require('module/ui/challenges/challenge_model'),
-		EventHelper		= require('module/helpers/eventHelper');
+		EventHelper		= require('module/helpers/eventHelper'),
+		MoreartyHelper	= require('module/helpers/morearty_helper');
 
 const HomeCalender = React.createClass({
 	mixins:[Morearty.Mixin,DateTimeMixin],
@@ -43,12 +44,15 @@ const HomeCalender = React.createClass({
 				result = fixtures.map(function(event){
 					const	fixture	= new ChallengeModel(event, activeSchoolId);
 
+					const   leftSideRivalName   = self._getRivalNameLeftSide(event, fixture.rivals),
+							rightSideRivalName  = self._getRivalNameRightSide(event, fixture.rivals);
+
 					return (
 						<div key={fixture.id} className="eSchoolFixtureListItem">
 							<span className="eSchoolCalenderFixtureItem">{self.getSportIcon(fixture.sport)}</span>
 							<span className="eSchoolCalenderFixtureItem">{fixture.date}</span>
-							<span className="eSchoolCalenderFixtureItem">{`${fixture.rivals[0]} vs ${fixture.rivals[1]}`}</span>
-							<span className="eSchoolCalenderFixtureItem">{fixture.time+ ' '}</span>
+							<span className="eSchoolCalenderFixtureItem">{`${leftSideRivalName} vs ${rightSideRivalName}`}</span>
+							<span className="eSchoolCalenderFixtureItem">{fixture.time + ' '}</span>
 						</div>
 					);
 				});
@@ -68,6 +72,64 @@ const HomeCalender = React.createClass({
 		}
 
 		return result;
+	},
+	_getRivalNameLeftSide: function(event, rivals) {
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('activeSchoolId');
+
+		const	eventType       = event.eventType,
+				participants    = event.participants;
+
+		if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId === activeSchoolId
+		) {
+			return rivals.find(rival => rival.id === participants[0].id).name;
+		} else if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId === activeSchoolId
+		) {
+			return rivals.find(rival => rival.id === participants[1].id).name;
+		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+			return rivals.find(rival => rival.id === participants[0].id).name;
+		}
+	},
+	_getRivalNameRightSide: function(event, rivals) {
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('activeSchoolId');
+
+		const	eventType		= event.eventType,
+				participants	= event.participants;
+
+		// if inter school event and participant[0] is our school
+		if (
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId !== activeSchoolId
+		) {
+			return rivals.find(rival => rival.id === participants[0].id).name;
+			// if inter school event and participant[1] is our school
+		} else if (
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId !== activeSchoolId
+		) {
+			return rivals.find(rival => rival.id === participants[1].id).name;
+			// if inter school event and opponent school is not yet accept invitation
+		} else if(
+			participants.length === 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return rivals.find(rival => rival.id === null).name;
+			// if it isn't inter school event
+		} else if (
+			participants.length > 1 &&
+			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return rivals.find(rival => rival.id === participants[1].id).name;
+		}
 	},
 	render: function() {
 		const	self			= this,

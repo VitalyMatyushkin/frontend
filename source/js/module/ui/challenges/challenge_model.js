@@ -64,13 +64,20 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
         rivalName += '[' + goal + ']';
     }
 
-    return rivalName;
+    return {
+        id:     participant ? participant.id : participant,
+        name:   rivalName
+    };
 };
 
 ChallengeModel.prototype._getFirstIndex = function(event, activeSchoolId){
     const activeIndex = event.participants.findIndex(participant => participant.schoolId === activeSchoolId);
 
-    return event.type === 'inter-schools' && event.participants.length > 1 && activeIndex >= 0 ? activeIndex : 0;
+    return (
+        event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+        event.participants.length > 1 &&
+        activeIndex >= 0 ? activeIndex : 0
+    );
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
