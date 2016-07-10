@@ -59,7 +59,7 @@
 
 .eTeamChooser_teamListContainer {
   position: absolute;
-  width: 259px;
+  width: 394px;
   margin-top: 3px;
 
   z-index: 100;
@@ -119,14 +119,18 @@
   text-align: left;
 
   vertical-align: top;
+  word-wrap: break-word;
 }
 
 .eTeamChooser_teamAges {
   display: inline-block;
 
-  width: 50%;
+  width: 40%;
+  padding-left: 15px;
 
   text-align: right;
 
   vertical-align: top;
+
+  word-wrap: break-word;
 }

@@ -58,7 +58,7 @@ const	TeamChooser	= React.createClass({
 		if (ages !== undefined) {
 			result = ages.map(elem => {
 				return `Y${elem}`;
-			}).join(";");
+			}).join("; ");
 		}
 
 		return result;

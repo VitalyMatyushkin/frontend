@@ -72,7 +72,7 @@ const StudentHelper = {
 		return scoredInEvents;
 	},
 	_isStudentGetScores: function(studentId, event) {
-		return event.result && event.result.points[studentId] ? true : false;
+		return event.result && event.result.points && event.result.points[studentId] ? true : false;
 	},
 	_isStudentFromCurrentTeam: function(studentId, team) {
 		return Lazy(team.players).findWhere({userId:studentId}) ? true : false;
