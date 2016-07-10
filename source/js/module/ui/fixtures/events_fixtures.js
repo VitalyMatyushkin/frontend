@@ -161,8 +161,8 @@ const ChallengesView = React.createClass({
         return result;
     },
 	render: function () {
-        var self = this,
-            challenges = self.getDates();
+        const   self = this,
+                challenges = self.getDates();
 		return (
             <div>
                 <div className="bChallenges">
