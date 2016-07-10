@@ -13,12 +13,13 @@ const SportIcon = React.createClass({
     },
     getSportIcon:function(sport){
         let icon;
+        sport = sport ? sport.trim().toLowerCase() : '';
         switch (true){
-            case sport && sport.toLowerCase() === 'football':
+            case sport === 'football':
                 icon = "ball";
                 break;
             default:
-                icon = sport ? sport.trim().toLowerCase():'';
+                icon = sport;
                 break;
         }
         return ("icon_" + icon);
