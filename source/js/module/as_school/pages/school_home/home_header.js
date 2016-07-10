@@ -28,7 +28,10 @@ const HomeHeader = React.createClass({
        
         rootBinding.set('activeSchoolId',Immutable.fromJS(activeSchoolId));
         //we already have current school data so lets use it - at least for the school details
-        binding.set('school',Immutable.fromJS(currentSchool));
+        binding.set('school', Immutable.fromJS(currentSchool));
+		// setting empty photos to show. Will use them in render
+		binding.set('___photosToShow', Immutable.fromJS([]));
+
         if(defaultAlbumId){
             //if we have album id we do some logic here - TBC
             //TODO: Reuse code below when photos method and view has been implemented on server
@@ -48,10 +51,11 @@ const HomeHeader = React.createClass({
         }
     },
 
-    componentDidMount:function(){
+    componentDidMount: function(){
         const   self            = this,
                 headerSection   = self.refs.schoolMainBanner;
 
+        /** running timer which will switch images in header */
         self.intervalId = setInterval(() => {
             const   photos          = this.getDefaultBinding().get('___photosToShow').toArray() || [],  // there is possibility that on first call binding will be empty
                     randIndexPos    = Math.floor(Math.random() * photos.length);
@@ -64,12 +68,12 @@ const HomeHeader = React.createClass({
         },5000);
     },
 
-    componentWillUnmount:function(){
+    componentWillUnmount: function(){
         clearInterval(this.intervalId);
         this.getDefaultBinding().remove('___photosToShow'); // wiping out that shit
     },
 
-    render:function(){
+    render: function(){
         const   self                = this,
                 binding             = self.getDefaultBinding(),
                 schoolName          = binding.get('school.name') !== undefined ? binding.get('school.name'):'The peoples School',
@@ -79,7 +83,7 @@ const HomeHeader = React.createClass({
         return(
             <div className="eSchoolHeader">
                 <div className="eSchoolMainSlideOutBanner">
-                    <img ref="schoolMainBanner" className="transitionImage" src="http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG" />
+                    <img ref="schoolMainBanner" className="transitionImage" src="" />
                 </div>
                 <div className="eSchoolMastHead">
                     <div className="eSchoolMotto">
