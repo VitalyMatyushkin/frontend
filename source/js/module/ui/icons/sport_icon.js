@@ -18,7 +18,7 @@ const SportIcon = React.createClass({
                 icon = "ball";
                 break;
             default:
-                icon = sport ? sport.trim():'';
+                icon = sport ? sport.trim().toLowerCase():'';
                 break;
         }
         return ("icon_" + icon);
