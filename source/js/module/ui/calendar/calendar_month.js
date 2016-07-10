@@ -71,8 +71,9 @@ const CalendarMonthView = React.createClass({
 				days				= [];
 
 		// добиваем дни от начала
-		if (firstMonthDayOfWeek > 0) {
-			for (let i = 1; i <= (firstMonthDayOfWeek-1); i += 1) {
+		if (firstMonthDayOfWeek !== 1) {
+			const prevMonthDays = firstMonthDayOfWeek === 0 ? 6 : firstMonthDayOfWeek - 1;
+			for (let i = 1; i <= prevMonthDays; i += 1) {
 				days.unshift({
 					day:(i > 1 ? (daysInPrevMonth - 1):daysInPrevMonth),
 					date: new Date(month === 0 ? year - 1 : year, month === 0 ? 11 : month -1, daysInPrevMonth - i),
@@ -89,7 +90,7 @@ const CalendarMonthView = React.createClass({
 			}
 		} else {
 			// вливаем дни
-			for (let j = 2; j <= daysInMonth; j += 1) {
+			for (let j = 1; j <= daysInMonth; j += 1) {
 				days.push({
 					day: j,
 					date: new Date(year, month, j),
