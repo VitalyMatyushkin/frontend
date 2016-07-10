@@ -174,15 +174,17 @@ const HomeFixtures = React.createClass({
 		return participantEmblem;
 	},
 	getFixtureResults:function(event) {
+		const self = this;
+
 		// def values
 		let	firstPoint	= "?",
 			secondPoint	= "?";
 
 		if(event.result !== undefined && event.status === EventHelper.EVENT_STATUS.FINISHED){
-			const	eventSummary	= EventHelper.getTeamsSummaryByEventResult(event.result);
+			const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
 
-			firstPoint		= eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0;
-			secondPoint		= eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0;
+			firstPoint	= self._getLeftPoint(event, eventSummary);
+			secondPoint	= self._getRightPoint(event, eventSummary);
 		} else if (event.result === undefined && event.status === EventHelper.EVENT_STATUS.FINISHED) {
 			// if result === undef, but event is finished, then result of event is 0:0
 			// because teams doesn't have points
@@ -196,6 +198,134 @@ const HomeFixtures = React.createClass({
 				<div className="bFix_scoreResult">{`${firstPoint} : ${secondPoint}`}</div>
 			</div>
 		);
+	},
+	_getLeftPoint: function(event, eventSummary) {
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('activeSchoolId');
+
+		const	eventType		= event.eventType,
+				participants	= event.participants;
+
+		if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId === activeSchoolId
+		) {
+			return eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0
+		} else if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId === activeSchoolId
+		) {
+			return eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0
+		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+			return eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0
+		}
+	},
+	_getRightPoint: function(event, eventSummary) {
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('activeSchoolId');
+
+		const	eventType		= event.eventType,
+				participants	= event.participants;
+
+		// if inter school event and participant[0] is our school
+		if (
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId !== activeSchoolId
+		) {
+			return eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0
+			// if inter school event and participant[1] is our school
+		} else if (
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId !== activeSchoolId
+		) {
+			return eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0
+			// if it isn't inter school event
+		} else if (
+			participants.length > 1 &&
+			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0
+		}
+	},
+	_renderTeamLeftSide: function(event) {
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('activeSchoolId');
+
+		const	eventType		= event.eventType,
+				participants	= event.participants;
+
+		if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId === activeSchoolId
+		) {
+			return (
+				<div className="bFixtureOpponent bFixture_item no-margin">
+					{self.getParticipantEmblem(event.participants[0], event.eventType)}
+				</div>
+			);
+		} else if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId === activeSchoolId
+		) {
+			return (
+				<div className="bFixtureOpponent bFixture_item no-margin">
+					{self.getParticipantEmblem(event.participants[1], event.eventType)}
+				</div>
+			);
+		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+			return (
+				<div className="bFixtureOpponent bFixture_item no-margin">
+					{self.getParticipantEmblem(event.participants[0], event.eventType)}
+				</div>
+			);
+		}
+	},
+	_renderTeamRightSide: function(event) {
+		const	self			= this,
+				rootBinding		= self.getMoreartyContext().getBinding(),
+				activeSchoolId	= rootBinding.get('activeSchoolId');
+
+		const	eventType		= event.eventType,
+				participants	= event.participants;
+
+		// if inter school event and participant[0] is our school
+		if (
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[0].schoolId !== activeSchoolId
+		) {
+			return (
+				<div className="bFixtureOpponent bFixture_item no-margin">
+					{self.getParticipantEmblem(event.participants[0], event.eventType)}
+				</div>
+			);
+			// if inter school event and participant[1] is our school
+		} else if (
+			participants.length > 1 &&
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants[1].schoolId !== activeSchoolId
+		) {
+			return (
+				<div className="bFixtureOpponent bFixture_item no-margin">
+					{self.getParticipantEmblem(event.participants[1], event.eventType)}
+				</div>
+			);
+			// if it isn't inter school event
+		} else if (
+			participants.length > 1 &&
+			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return (
+				<div className="bFixtureOpponent bFixture_item no-margin">
+					{self.getParticipantEmblem(event.participants[1], event.eventType)}
+				</div>
+			);
+		}
 	},
 	renderFixtureLists:function(){
 		const	self		= this,
@@ -221,15 +351,11 @@ const HomeFixtures = React.createClass({
 							<div className="bFixtureInfo bFixture_item">
 								{self.getFixtureInfo(event)}
 							</div>
-							<div className="bFixtureOpponent bFixture_item no-margin">
-								{self.getParticipantEmblem(event.participants[0], event.eventType)}
-							</div>
+							{self._renderTeamLeftSide(event)}
 							<div className="bFixtureResult bFixture_item no-margin">
 								{self.getFixtureResults(event)}
 							</div>
-							<div className="bFixtureOpponent bFixture_item no-margin">
-								{self.getParticipantEmblem(event.participants[1], event.eventType)}
-							</div>
+							{self._renderTeamRightSide(event)}
 						</div>
 					);
 				});
