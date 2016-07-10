@@ -1,6 +1,6 @@
 {
   "name": "squad",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "SQUAD FOOTBALL MANAGER",
   "main": "index.js",
   "dependencies": {
