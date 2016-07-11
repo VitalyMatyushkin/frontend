@@ -9,20 +9,19 @@ const Avatar = React.createClass({
 		pic:React.PropTypes.string
 	},
 	render:function(){
-		let html;
+		let img = null;
 
 		if(this.props.pic) {
 			const style = {backgroundImage: `url(${window.Server.images.getResizedToBoxUrl(this.props.pic, 100, 100)})`};
-			html = <div className="eAvatar" style={style}></div>;
-		} else {
-			html = (
-					<div className="eAvatar">
-						<SVG icon="icon_avatar_plug"/>
-					</div>
-			);
+			img = <div className="eImg" style={style}></div>;
 		}
 
-		return html;
+		return (
+			<div className="eAvatar">
+				<SVG icon="icon_avatar_plug"/>
+				{img}
+			</div>
+		);
 	}
 });
 
