@@ -2,13 +2,14 @@
  * Created by Anatoly on 24.04.2016.
  */
 
-const   Table = require('module/ui/list/table'),
-        TableField = require('module/ui/list/table_field'),
-        UserModel = require('module/data/UserModel'),
-        DateTimeMixin = require('module/mixins/datetime'),
-        ListPageMixin = require('module/mixins/list_page_mixin'),
-        React = require('react'),
-        Popup = require('module/ui/popup');
+const   Table 			= require('module/ui/list/table'),
+        TableField 		= require('module/ui/list/table_field'),
+        UserModel 		= require('module/data/UserModel'),
+        DateTimeMixin 	= require('module/mixins/datetime'),
+        ListPageMixin 	= require('module/mixins/list_page_mixin'),
+        React 			= require('react'),
+		AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
+        Popup 			= require('module/ui/popup');
 
 const UsersList = React.createClass({
     mixins:[Morearty.Mixin, DateTimeMixin, ListPageMixin],
@@ -25,12 +26,12 @@ const UsersList = React.createClass({
             scope: { include: {"relation": "school"}}
         }
     },
-    groupActionList:['Add Role','Revoke All Roles','View'],
+    groupActionList:['View','Add Role','Revoke All Roles'],
     setPageTitle:"Users & Permissions",
 	componentDidMount:function(){
 		const self = this;
 		if(self.props.blockService)
-			self.groupActionList = ['Add Role','Revoke All Roles','Unblock','Block','View']
+			self.groupActionList = ['View','Block','Unblock','Add Role','Revoke All Roles']
 	},
     _getItemViewFunction:function(model){
         if(model.length === 1){
@@ -169,6 +170,41 @@ const UsersList = React.createClass({
         binding.set('popup',false);
         self.reloadData();
     },
+	getActions:function(item){
+		var self 			= this,
+			binding 		= self.getDefaultBinding(),
+			rootBinding 	= self.getMoreartyContext().getBinding(),
+			activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
+			actionList 		= [];
+
+		self.groupActionList.forEach(action =>{
+			actionList.push(action);
+		});
+
+		item.permissions.filter(p=> p.preset != 'STUDENT').forEach(p => {
+			let action = 'Revoke the role ';
+			if(p.preset === 'PARENT'){
+				action += `of ${p.student.firstName} parent`;
+			}
+			else{
+				action += p.preset;
+			}
+
+			if(!activeSchoolId){
+				action +=' for ' + p.school.name;
+			}
+
+			actionList.push(action);
+		});
+		return (
+			<AdminDropList key={item.id}
+						   binding={binding.sub('dropList'+item.id)}
+						   itemId={item.id}
+						   listItems={actionList}
+						   listItemFunction={self._getQuickEditActionsFactory}/>
+		);
+
+	},
     getTableView:function(){
         var self = this,
             binding = self.getDefaultBinding(),
@@ -176,18 +212,17 @@ const UsersList = React.createClass({
             GrantRole = self.props.grantRole;
         return (
             <div className="eTable_view">
-                <Table title="Permissions" binding={binding} quickEditActionsFactory={self._getQuickEditActionsFactory}
-                       quickEditActions={self.groupActionList} addQuickActions={true}
-                       isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
+                <Table title="Permissions" binding={binding} hideActions={true}
+					   isPaginated={true} filter={self.filter} getDataPromise={self.getDataPromise}
                        getTotalCountPromise={self.getTotalCountPromise} dataModel={UserModel}>
-                    <TableField dataField="checkBox" width="1%" filterType="none"/>
                     <TableField dataField="firstName" >Name</TableField>
                     <TableField dataField="lastName" >Surname</TableField>
                     <TableField dataField="email" >Email</TableField>
                     <TableField dataField="verified" filterType="none" >Status</TableField>
                     <TableField dataField="school" filterType="none" >School</TableField>
                     <TableField dataField="roles" filterType="none" >Role</TableField>
-                    <TableField dataField="blocked" filterType="none" >Access</TableField>
+					<TableField dataField="blocked" filterType="none" >Access</TableField>
+					<TableField dataField="" filterType="none" parseFunction={self.getActions} >Actions</TableField>
                 </Table>
                 <Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup} otherClass="bPopupGrant">
                     <GrantRole binding={binding.sub('grantRole')} userIdsBinding={rootBinding.sub('groupIds')}

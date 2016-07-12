@@ -42,7 +42,6 @@
   -ms-transition: all 0.3s ease-out;
   -o-transition: all 0.3s ease-out;
   transition: all 0.3s ease-out;
-  max-height: 0;
   display: none;
   //overflow: hidden;
   margin-top: 8px;
@@ -110,6 +109,5 @@
 
 .wrapper-dropdown-5.active .dropdown {
   border-bottom: 1px solid rgba(0,0,0,0.2);
-  max-height: 400px;
   display: block;
 }
