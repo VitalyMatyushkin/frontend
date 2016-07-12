@@ -43,10 +43,6 @@ const AccountRoles = React.createClass({
         }
         return (
             <div>
-                <div className="eSchoolMaster_wrap">
-                    <h1 className="eSchoolMaster_title">My Roles</h1>
-                    <div className="eStrip"></div>
-                </div>
                 <div className="bDataList">
                     <div className="eDataList_list mTable">
                         <div className="eDataList_listItem mHead">

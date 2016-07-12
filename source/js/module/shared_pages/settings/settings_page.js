@@ -1,40 +1,56 @@
 const 	RouterView = require('module/core/router'),
 		Route = require('module/core/route'),
 		React = require('react'),
-		SubMenu = require('module/ui/menu/sub_menu'),
+		Tabs			= require('module/ui/tabs/tabs'),
 		Immutable 	= require('immutable');
 
 const SettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
-		const self = this;
+		const self = this,
+			binding		= self.getDefaultBinding(),
+			rootBinding	= self.getMoreartyContext().getBinding(),
+			tab 		= rootBinding.get('routing.parameters.tab');
 
-		// menu subitems
-		self.menuItems = [{
-			href: '/#settings/general',
-			name: 'General',
-			key: 'General'
+		// tabListModel
+		self.tabListModel = [{
+			text: 'General',
+			value: 'general',
+			isActive:false
 		},
 		{
-			href:'/#settings/roles',
-			name:'Roles',
-			key:'Roles'
+			text:'Roles',
+			value:'roles',
+			isActive:false
 		},
 		{
-			href:'/#settings/requests',
-			name:'Requests',
-			key:'Requests'
+			text:'Requests',
+			value:'requests',
+			isActive:false
 		},
 		{
-			href:'/#settings/password',
-			name:'Change Password',
-			key:'Password'
-		},
-		{
-			key: 'goback',
-			name: '← Go back'
+			text:'Change Password',
+			value:'password',
+			isActive:false
 		}];
+		if(tab) {
+			let item = self.tabListModel.find(t => t.value === tab);
+			item.isActive = true;
+			binding.set('activeTab', tab);
+		} else {
+			self.tabListModel[0].isActive = true;
+			binding.set('activeTab', 'general');
+		}
 	},
+	changeActiveTab:function(item){
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
+		binding.set('activeTab', item);
+
+		window.location.hash = '#settings/' + item;
+	},
+
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			general: {
@@ -52,11 +68,16 @@ const SettingsPage = React.createClass({
 		var self = this,
 			binding = self.getDefaultBinding(),
 			globalBinding = self.getMoreartyContext().getBinding();
-
 		return (
 			<div>
-				<SubMenu binding={binding.sub('settingsRouting')} items={self.menuItems} />
-
+				<div className="bSettings_top">
+					<div className="bSettings_name">
+						{binding.get('userInfo.firstName')}
+						{binding.get('userInfo.lastName')}
+					</div>
+					<Tabs binding={binding.sub('settingsRouting')} tabListModel={self.tabListModel}
+						  onClick={self.changeActiveTab}/>
+				</div>
 				<div className="bSchoolMaster">
 					<RouterView routes={ binding.sub('settingsRouting') } binding={globalBinding}>
 						<Route
