@@ -83,7 +83,8 @@ const TeamEditPage = React.createClass({
                                 _id: {
                                     $in: self._getUsersIdsFromTeam(team)
                                 }
-                            }
+                            },
+                            limit: 100
                         }
                     }
                 );

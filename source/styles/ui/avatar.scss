@@ -3,11 +3,20 @@
   text-align: left;
   width: 100%;
   height: 100%;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-.eAvatar .bIcon{
-  width: 100%;
-  height: 100%;
-  margin-top: -4px;
+  position: relative;
+
+  .bIcon{
+    width: 100%;
+    height: 100%;
+    margin-top: -4px;
+  }
+
+  .eImg{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-repeat: no-repeat;
+    background-size: cover;
+    top:0;
+  }
 }

@@ -33,7 +33,7 @@ AchievementModel.prototype._calculate = function(events){
                 }
             }
 
-            event.result && event.result.points[self.studentId] && (self.goalsScored += event.result.points[self.studentId].score);
+            event.result && event.result.points && event.result.points[self.studentId] && (self.goalsScored += event.result.points[self.studentId].score);
         })
     }
 };
