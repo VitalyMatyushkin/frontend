@@ -101,29 +101,26 @@ const RouterView = React.createClass({
 
 		const req = require.context('../../', true, /^\.\/.*\.js$/);
 
-		// var p = './peep.js';
-		//
-		// const peep = req(p);
-		//
-		// peep();
+		console.log('setting route: ' + route.component);
 
 		// Loading path - related component
-		req('./' + route.component + '.js', ComponentView => {
-			self.siteComponents[route.path] = {
-				View: 				ComponentView,
-				routeComponent: 	route.routeComponent,
-				binding: 			route.binding
-			};
+		const component = req('./' + route.component + '.js');
 
-			self.currentPath = route.path;
-			self.RoutingBinding.atomically()
-				.set('currentPath', self.currentPath)
-				.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
-				.set('currentPageName', route.pageName)
-				.commit();
+		self.siteComponents[route.path] = {
+			View: 				component,
+			routeComponent: 	route.routeComponent,
+			binding: 			route.binding
+		};
 
-            self.isMounted() && self.forceUpdate();
-		});
+		self.currentPath = route.path;
+		self.RoutingBinding.atomically()
+			.set('currentPath', self.currentPath)
+			.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
+			.set('currentPageName', route.pageName)
+			.commit();
+
+		self.isMounted() && self.forceUpdate();
+
 	},
 	/**
 	 * Adding new route
