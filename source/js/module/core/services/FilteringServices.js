@@ -1,7 +1,7 @@
 /**
  * Created by Anatoly on 11.03.2016.
  */
-const   Lazy        = require('lazyjs');
+const   Lazy        = require('lazy.js');
 
 const FilteringServices = {
     allSchoolsFiltering: function (filter) {

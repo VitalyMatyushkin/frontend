@@ -8,7 +8,8 @@ module.exports = {
 			path.resolve('./source')
 		],
 		modulesDirectories: [
-			"node_modules"
+			'node_modules',
+			'source/js'
 		]
 	},
 	module: {

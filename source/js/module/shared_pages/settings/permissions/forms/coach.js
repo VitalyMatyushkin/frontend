@@ -1,11 +1,10 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	FormMixin = require('module/shared_pages/settings/permissions/forms/form_mixin'),
-	React = require('react'),
-	CoachPermissionForm;
+const 	Form 		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		FormMixin 	= require('module/shared_pages/settings/permissions/forms/form_mixin'),
+		React 		= require('react'),
+		Morearty	= require('morearty');
 
-CoachPermissionForm = React.createClass({
+const CoachPermissionForm = React.createClass({
 	mixins: [Morearty.Mixin, FormMixin],
 	render: function() {
 		var self = this;

@@ -1,5 +1,7 @@
 const 	Immutable 	= require('immutable'),
-		React 		= require('react');
+		React 		= require('react'),
+		Router		= require('director'),
+		Morearty	= require('morearty');
 
 const RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -95,33 +97,39 @@ const RouterView = React.createClass({
 	 * Setting route to be active
 	 */
 	setRoute: function(route) {
-		var self = this;
+		const self = this;
 
-		// Loading path - related component
-		window['require']([route.component], function (ComponentView) {
+		const req = require.context('../', true, /^\.\/.*\.js$/);
 
-			self.siteComponents[route.path] = {
-				View: ComponentView,
-				routeComponent: route.routeComponent,
-				binding: route.binding
-			};
+		const peep = req('./peep.js');
 
-			self.currentPath = route.path;
-			self.RoutingBinding.atomically()
-				.set('currentPath', self.currentPath)
-				.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
-				.set('currentPageName', route.pageName)
-				.commit();
+		peep();
 
-            self.isMounted() && self.forceUpdate();
-		});
+
+		// // Loading path - related component
+		// require('./source/' + route.component + '.js', ComponentView => {
+		// 	self.siteComponents[route.path] = {
+		// 		View: 				ComponentView,
+		// 		routeComponent: 	route.routeComponent,
+		// 		binding: 			route.binding
+		// 	};
+		//
+		// 	self.currentPath = route.path;
+		// 	self.RoutingBinding.atomically()
+		// 		.set('currentPath', self.currentPath)
+		// 		.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
+		// 		.set('currentPageName', route.pageName)
+		// 		.commit();
+		//
+         //    self.isMounted() && self.forceUpdate();
+		// });
 	},
 	/**
 	 * Adding new route
 	 * @param route
 	 */
 	addRoute: function(route) {
-		var self = this;
+		const self = this;
 
 		self.siteRoutes[route.path] = function(){
 			var pathParameters = Array.prototype.slice.call(arguments, 0);
@@ -166,13 +174,12 @@ const RouterView = React.createClass({
 			});
 		}
 
-		//console.log("self: " + self);
 		self.RoutingBinding.set('parameters', Immutable.fromJS(parametersResult));
 
 	},
 	componentWillMount: function() {
-		var self = this,
-			routes = self.getRouteFromChildren(self.props.children);
+		const 	self 	= this,
+				routes 	= self.getRouteFromChildren(self.props.children);
 
 		self.isAuthorized = false;
 		self.RoutingBinding = self.props.routes;
@@ -182,9 +189,7 @@ const RouterView = React.createClass({
 		self.siteComponents = {};
 
 		// Adding site routes
-		routes && routes.forEach(function(route){
-			self.addRoute(route);
-		});
+		routes && routes.forEach( route => self.addRoute(route) );
 
 		// Handling address(url) change
 		window.addEventListener('popstate', self.updateUrlParametrs);
@@ -195,13 +200,15 @@ const RouterView = React.createClass({
 		// router init
 		self.updateUrlParametrs();
 
-		self.routerInstance = window.Router(self.siteRoutes);
+
+		self.routerInstance = Router.Router(self.siteRoutes);
 		self.routerInstance.init();
+
 	},
 	render: function() {
-		var self = this,
-			currentPath = self.currentPath,
-			siteComponent = self.siteComponents[currentPath];
+		const 	self 			= this,
+				currentPath 	= self.currentPath,
+				siteComponent 	= self.siteComponents[currentPath];
 
 		// Dirty ad-hoc solution. Router update required (wrote by somebody, I don't understand really)
 		if (document.location.href.indexOf('#') === -1 || document.location.hash === '') {

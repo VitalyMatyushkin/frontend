@@ -1,15 +1,12 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	FormColumn = require('module/ui/form/form_column'),
-	FormMixin = require('module/shared_pages/settings/permissions/forms/form_mixin'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	ParentPermissionForm;
+const 	Form 		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		FormMixin 	= require('module/shared_pages/settings/permissions/forms/form_mixin'),
+		React 		= require('react');
 
-ParentPermissionForm = React.createClass({
+const ParentPermissionForm = React.createClass({
 	mixins: [Morearty.Mixin, FormMixin],
 	render: function() {
-		var self = this;
+		const self = this;
 
 		return (
 			<div>

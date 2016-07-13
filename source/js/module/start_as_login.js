@@ -6,10 +6,11 @@ const   ApplicationView     = require('module/as_login/application'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
         serviceList         = require('module/core/service_list'),
-        ReactDom            = require('reactDom'),
-        React               = require('react');
+        ReactDom            = require('react-dom'),
+        React               = require('react'),
+        Morearty            = require('morearty');
 
-function runLoginMode() {
+    function runLoginMode() {
 // Create Morearty context
     const MoreartyContext = Morearty.createContext({
         initialState: {

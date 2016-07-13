@@ -1,7 +1,7 @@
-var Route,
-	React = require('react');
+const	React 		= require('react'),
+		Morearty	= require('morearty');
 
-Route = React.createClass({
+const Route = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		path: React.PropTypes.string.isRequired,
