@@ -338,7 +338,7 @@ const EventView = React.createClass({
 									<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
 										<div className="eEvent_shadowCommentText">{self.commentContent}</div>
 									</If>
-									<div className="eEvent_commentBox">
+									<div>
 										<If condition={binding.get('mode') === 'closing'}>
 											<Morearty.DOM.textarea
 												placeholder="Enter your first comment"
