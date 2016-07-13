@@ -10,6 +10,7 @@
     "gulp": "^3.8.11"
   },
   "devDependencies": {
+    "babel-loader": "^6.2.4",
     "babel-plugin-check-es2015-constants": "^6.3.13",
     "babel-plugin-transform-es2015-arrow-functions": "^6.3.13",
     "babel-plugin-transform-es2015-block-scoping": "^6.3.13",
@@ -47,7 +48,8 @@
     "main-bower-files": "^2.4.1",
     "mocha": "^2.3.3",
     "requirejs": "^2.1.22",
-    "run-sequence": "^1.0.2"
+    "run-sequence": "^1.0.2",
+    "webpack": "^1.13.1"
   },
   "scripts": {
     "build": "gulp deploy",
