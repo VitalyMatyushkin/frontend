@@ -1,13 +1,14 @@
 /**
  * Created by bridark on 24/06/15.
  */
-var AdminArchive,
-    Table = require('module/ui/list/table'),
-    TableField = require('module/ui/list/table_field'),
-    DateTimeMixin = require('module/mixins/datetime'),
-    React = require('react'),
-    ListPageMixin = require('module/mixins/list_page_mixin');
-AdminArchive = React.createClass({
+const 	Table 			= require('module/ui/list/table'),
+		TableField 		= require('module/ui/list/table_field'),
+		DateTimeMixin 	= require('module/mixins/datetime'),
+		React 			= require('react'),
+		Morearty    	= require('morearty'),
+		ListPageMixin 	= require('module/mixins/list_page_mixin');
+
+const AdminArchive = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
     serviceName:'permissionRequests',
     serviceCount:'permissionRequestsCount',

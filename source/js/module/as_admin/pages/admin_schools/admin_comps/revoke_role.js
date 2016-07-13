@@ -1,10 +1,12 @@
 /**
  * Created by bridark on 29/06/15.
  */
-var RevokeAccess, React ,ReactDOM;
-React = require('react');
-ReactDOM = require('reactDom');
-RevokeAccess = React.createClass({
+
+const   React 		= require('react');
+        ReactDOM 	= require('react-dom'),
+        Morearty    = require('morearty');
+
+const RevokeAccess = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
         var self = this,
@@ -22,12 +24,10 @@ RevokeAccess = React.createClass({
                         principalId:binding.get('selectedUser').userId
                     }
                 }
-            }).then(function(permissions){
-                console.log(permissions);
+            }).then(permissions => {
                 //TODO:Better API method for this - for efficiency
                 permissions.forEach(function(p){
                     window.Server.Permission.delete({id:p.id}).then(function(response){
-                        console.log(response);
                         binding.set('popup',false);
                         binding.set('shouldUpdateList',true);
                     });

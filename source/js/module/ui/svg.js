@@ -1,7 +1,9 @@
 
 //<svg class="bIcon"><use xlink:href="#icon_key"></use></svg>
 const   React       = require('react'),
-	    ReactDOM    = require('reactDom');
+		ReactDOM	= require('react-dom');
+
+// TODO: okay, what it really does?
 
 const SVG = React.createClass({
 	propTypes: {

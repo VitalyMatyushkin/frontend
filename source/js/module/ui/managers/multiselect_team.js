@@ -1,6 +1,6 @@
 const   SVG         = require('module/ui/svg'),
         React       = require('react'),
-        ReactDOM    = require('reactDom'),
+        ReactDOM    = require('react-dom'),
         Immutable 	= require('immutable'),
         Multiselect = require('module/ui/multiselect/multiselect');
 

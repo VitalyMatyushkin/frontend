@@ -1,4 +1,5 @@
 const 	ComboBox2 	= require('./ComboBox2'),
+        Morearty    = require('morearty'),
         React 		= require('react');
 
 const OldAutocompleteWrapper = React.createClass({

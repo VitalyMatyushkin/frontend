@@ -1,5 +1,6 @@
 const 	ColorPicker 	= require('module/ui/colors_select/color_picker'),
 		React 			= require('react'),
+		Morearty		= require('morearty'),
 		Immutable 		= require('immutable');
 
 const ColorsSelect =  React.createClass({

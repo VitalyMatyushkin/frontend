@@ -21,8 +21,7 @@ const PermissionsSettingsPage = React.createClass({
 		}
 	},
 	submitEdit: function(data) {
-		var self = this;
-		data.id = self.userId;
+		data.id = this.userId;
 	},
 	render: function() {
 		const 	self 			= this,

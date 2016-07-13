@@ -3,7 +3,7 @@
  */
 const React = require('react'),
     Map = require('module/ui/map/map'),
-    ReactDOM = require('reactDom');
+    ReactDOM = require('react-dom');
 
 const VenuePreview = React.createClass({
     mixins:[Morearty.Mixin],

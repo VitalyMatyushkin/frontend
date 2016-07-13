@@ -1,7 +1,7 @@
 const 	ComboboxOption 			= require('./option'),
 		React 					= require('react'),
 		Immutable 				= require('immutable'),
-		Lazy					= require('lazyjs');
+		Lazy					= require('lazy.js');
 
 /** Component which acts like selects and display array of data passed as sourceArray property */
 const Select = React.createClass({

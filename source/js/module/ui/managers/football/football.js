@@ -1,6 +1,6 @@
 var FootballManager,
 	React = require('react'),
-	ReactDOM = require('reactDom'),
+	ReactDOM = require('react-dom'),
 	Team = require('./team');
 
 FootballManager = React.createClass({

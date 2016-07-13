@@ -4,7 +4,7 @@
 var GroupAction,
     requestName,
     React = require('react'),
-    ReactDOM = require('reactDom');
+    ReactDOM = require('react-dom');
 GroupAction = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{

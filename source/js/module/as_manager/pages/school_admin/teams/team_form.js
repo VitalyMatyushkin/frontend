@@ -7,7 +7,7 @@ const   Immutable			= require('immutable'),
 		If					= require('module/ui/if/if'),
 		Multiselect			= require('module/ui/multiselect/multiselect'),
 		EventHelper			= require('module/helpers/eventHelper'),
-		Lazy				= require('lazyjs');
+		Lazy				= require('lazy.js');
 
 const TeamForm = React.createClass({
 	mixins: [Morearty.Mixin],

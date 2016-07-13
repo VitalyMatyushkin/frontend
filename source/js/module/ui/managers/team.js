@@ -1,6 +1,6 @@
 const	React		= require('react'),
 		SVG			= require('module/ui/svg'),
-		Lazy		= require('lazyjs'),
+		Lazy		= require('lazy.js'),
 		Immutable	= require('immutable'),
 		TeamName	= require('./team_name'),
 		classNames	= require('classnames');

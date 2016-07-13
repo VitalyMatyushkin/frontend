@@ -1,10 +1,9 @@
 const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
+		Morearty    = require('morearty'),
 		React 		= require('react');
 
 const TypePassword =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
-	componentWillMount: function() {
-	},
 	handleBlur: function(event) {
 		this.setValue(event.target.value);
 	},

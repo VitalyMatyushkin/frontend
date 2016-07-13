@@ -4,7 +4,7 @@
     //TODO: refactor this component
 var IndicatorView,
     React = require('react'),
-    ReactDOM = require('reactDom');
+    ReactDOM = require('react-dom');
 IndicatorView = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{

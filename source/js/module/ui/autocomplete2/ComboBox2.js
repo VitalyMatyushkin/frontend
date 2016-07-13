@@ -5,7 +5,7 @@
 /** using bluebird promise cancellation here, though this is not cleaner way I believe */
 
 const   React   = require('react'),
-        Lazy    = require('lazyjs'),
+        Lazy    = require('lazy.js'),
         SVG 	= require('module/ui/svg');
 
 const ComboBox2 = React.createClass({

@@ -4,7 +4,7 @@ const   RouterView      = require('module/core/router'),
         SubMenu         = require('module/ui/menu/sub_menu'),
         MoreartyHelper  = require('module/helpers/morearty_helper'),
         EventHelper     = require('module/helpers/eventHelper'),
-        Lazy            = require('lazyjs'),
+        Lazy            = require('lazy.js'),
         DateHelper      = require('module/helpers/date_helper'),
         Immutable       = require('immutable');
 

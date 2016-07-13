@@ -1,5 +1,5 @@
 const 	React 		= require('react'),
-		ReactDOM 	= require('reactDom'),
+		ReactDOM 	= require('react-dom'),
 		Immutable 	= require('immutable'),
 		If 			= require('module/ui/if/if');
 

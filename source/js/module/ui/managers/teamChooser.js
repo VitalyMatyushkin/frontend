@@ -1,7 +1,7 @@
 const	React			= require('react'),
-		ReactDOM		= require('reactDom'),
+		ReactDOM		= require('react-dom'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		Lazy			= require('lazyjs'),
+		Lazy			= require('lazy.js'),
 		classNames		= require('classnames'),
 		Immutable		= require('immutable');
 

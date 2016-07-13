@@ -1,7 +1,8 @@
 const	React 			= require('react'),
 		Autocomplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		Promise			= require('bluebird'),
-		Lazy			= require('lazyjs'),
+		Lazy			= require('lazy.js'),
+		Morearty    	= require('morearty'),
 		Immutable		= require('immutable');
 
 const ImportStudentsModule = React.createClass({

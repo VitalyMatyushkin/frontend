@@ -1,6 +1,6 @@
 const 	SVG 			= require('module/ui/svg'),
 		React 			= require('react'),
-		ReactDOM 		= require('reactDom'),
+		ReactDOM 		= require('react-dom'),
 		Immutable 		= require('immutable'),
 		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper');
 

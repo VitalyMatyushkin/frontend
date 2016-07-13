@@ -1,4 +1,4 @@
-const	Lazy				= require('lazyjs'),
+const	Lazy				= require('lazy.js'),
 		Immutable			= require('immutable'),
 		classNames			= require('classnames');
 

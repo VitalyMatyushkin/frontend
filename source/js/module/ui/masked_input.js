@@ -5,11 +5,11 @@ var MASK_REGEX = {
 	},
 	MASK_CHARS = Object.keys(MASK_REGEX),
 	PTRN_REGEX = new RegExp('[' + MASK_CHARS.join(',') + ']', 'g'),
-	MaskedInput,
-	React = require('react'),
-	ReactDOM = require('reactDom');
+	React 		= require('react'),
+	Morearty	= require('morearty'),
+	ReactDOM 	= require('react-dom');
 
-var MaskedInput = React.createClass({
+const MaskedInput = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		this.mask = {
@@ -23,7 +23,7 @@ var MaskedInput = React.createClass({
 			empty: true,
 			cursorPrev: 0,
 			cursor: 0
-		}
+		};
 
 		if (this.props.value && this.props.mask) {
 			this.processValue(this.props.value)

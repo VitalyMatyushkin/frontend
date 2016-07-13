@@ -2,7 +2,8 @@ const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
 		ColorsSelect 	= require('module/ui/colors_select/colors_select'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
-		ReactDOM 		= require('reactDom');
+		Morearty		= require('morearty'),
+		ReactDOM 		= require('react-dom');
 
 const TypeColors =  React.createClass({
 	propTypes: {

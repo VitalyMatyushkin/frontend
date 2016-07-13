@@ -3,7 +3,7 @@ const 	ApplicationView 	= require('module/as_manager/application'),
 		userRulesInstance 	= require('module/data/user_rules'),
 		authController 		= require('module/core/auth_controller'),
 		serviceList 		= require('module/core/service_list'),
-		ReactDom 			= require('reactDom'),
+		ReactDom 			= require('react-dom'),
 		React 				= require('react');
 
 function runManagerMode() {

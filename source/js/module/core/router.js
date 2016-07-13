@@ -99,30 +99,31 @@ const RouterView = React.createClass({
 	setRoute: function(route) {
 		const self = this;
 
-		const req = require.context('../', true, /^\.\/.*\.js$/);
+		const req = require.context('../../', true, /^\.\/.*\.js$/);
 
-		const peep = req('./peep.js');
-
-		peep();
-
-
-		// // Loading path - related component
-		// require('./source/' + route.component + '.js', ComponentView => {
-		// 	self.siteComponents[route.path] = {
-		// 		View: 				ComponentView,
-		// 		routeComponent: 	route.routeComponent,
-		// 		binding: 			route.binding
-		// 	};
+		// var p = './peep.js';
 		//
-		// 	self.currentPath = route.path;
-		// 	self.RoutingBinding.atomically()
-		// 		.set('currentPath', self.currentPath)
-		// 		.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
-		// 		.set('currentPageName', route.pageName)
-		// 		.commit();
+		// const peep = req(p);
 		//
-         //    self.isMounted() && self.forceUpdate();
-		// });
+		// peep();
+
+		// Loading path - related component
+		req('./' + route.component + '.js', ComponentView => {
+			self.siteComponents[route.path] = {
+				View: 				ComponentView,
+				routeComponent: 	route.routeComponent,
+				binding: 			route.binding
+			};
+
+			self.currentPath = route.path;
+			self.RoutingBinding.atomically()
+				.set('currentPath', self.currentPath)
+				.set('currentPathParts', self.currentPath.split('/').filter(Boolean))
+				.set('currentPageName', route.pageName)
+				.commit();
+
+            self.isMounted() && self.forceUpdate();
+		});
 	},
 	/**
 	 * Adding new route

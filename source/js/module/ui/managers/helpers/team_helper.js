@@ -1,5 +1,5 @@
 const   TeamPlayersValidator = require('module/ui/managers/helpers/team_players_validator'),
-		Lazy                 = require('lazyjs'),
+		Lazy                 = require('lazy.js'),
 		Immutable            = require('immutable');
 
 /**

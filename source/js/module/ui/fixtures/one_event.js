@@ -1,10 +1,10 @@
-var OneEvent,
-	DateTimeMixin = require('module/mixins/datetime'),
-	If = require('module/ui/if/if'),
-	EventAlbums = require('module/as_manager/pages/event/view/event_albums'),
-	React = require('react');
+const 	DateTimeMixin 	= require('module/mixins/datetime'),
+		If 				= require('module/ui/if/if'),
+// EventAlbums 	= require('module/as_manager/pages/event/view/event_albums'),	//TODO: there is no such file, bro. What should I do?
+		Morearty		= require('morearty'),
+		React 			= require('react');
 
-OneEvent = React.createClass({
+const OneEvent = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	_getScore: function(participantId) {
 		var self = this,
