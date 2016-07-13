@@ -26,8 +26,9 @@ const   AdminDropList  =  React.createClass({
                 return(
                     <ul className="dropdown">
                         {self.props.listItems.map((item,index)=>{
+							const text = item.text ? item.text : item;
                             return(
-                                <li key={index}><span onClick={self._listItemClick.bind(null,item)}>{item}</span></li>
+                                <li key={index}><span onClick={self._listItemClick.bind(null,item)}>{text}</span></li>
                             )
                         })}
                     </ul>

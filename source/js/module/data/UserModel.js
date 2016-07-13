@@ -10,6 +10,7 @@ const UserModel = function(userData){
     self.firstName = userData.firstName;
     self.lastName = userData.lastName;
     self.email = userData.email;
+	self.permissions = userData.permissions;
     self.verified = um.getStatus(userData);
     self.roles = um.getRoles(userData);
     self.school = um.getSchool(userData);
