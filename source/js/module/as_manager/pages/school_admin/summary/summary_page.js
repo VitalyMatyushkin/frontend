@@ -3,6 +3,7 @@ const	SVG					= require('module/ui/svg'),
 		React				= require('react'),
 		If					= require('module/ui/if/if'),
 		Immutable			= require('immutable'),
+		Morearty			= require('morearty'),
 		DomainHelper 		= require('module/helpers/domain_helper');
 
 const SchoolSummary = React.createClass({

@@ -5,6 +5,7 @@ const	React			= require('react'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Lazy			= require('lazy.js'),
 		If				= require('module/ui/if/if'),
+		Morearty        = require('morearty'),
 		Immutable		= require('immutable');
 
 const TeamWrapper = React.createClass({

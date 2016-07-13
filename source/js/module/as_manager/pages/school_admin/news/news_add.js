@@ -1,4 +1,5 @@
 const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'),
+		Morearty	= require('morearty'),
 		React 		= require('react');
 
 const NewsTitle = React.createClass({

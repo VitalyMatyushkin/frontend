@@ -5,6 +5,7 @@ const   If              = require('module/ui/if/if'),
         TeamSubmitMixin = require('module/ui/managers/helpers/team_submit_mixin'),
         Promise         = require('bluebird'),
         MoreartyHelper	= require('module/helpers/morearty_helper'),
+        Morearty		= require('morearty'),
         Immutable       = require('immutable');
 
 const InviteAcceptView = React.createClass({

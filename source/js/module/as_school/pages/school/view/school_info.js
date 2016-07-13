@@ -1,6 +1,7 @@
-const 	SVG 	= require('module/ui/svg'),
-		If 		= require('module/ui/if/if'),
-		React 	= require('react');
+const 	SVG 		= require('module/ui/svg'),
+		If 			= require('module/ui/if/if'),
+		Morearty    = require('morearty'),
+		React 		= require('react');
 
 const SchoolInfo = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -7,6 +7,7 @@ const   classNames  = require('classnames'),
         If          = require('module/ui/if/if'),
         React       = require('react'),
         ReactDOM    = require('react-dom'),
+        Morearty    = require('morearty'),
         $           = require('jquery');
 
 // TODO: delete me

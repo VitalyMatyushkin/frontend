@@ -1,11 +1,12 @@
 /**
  * Created by Bright on 01/03/2016.
  */
-const React = require('react'),
-    Immutable = require('immutable'),
-    Form = require('module/ui/form/form'),
-    FormColumn 	= require('module/ui/form/form_column'),
-    FormField = require('module/ui/form/form_field');
+const   React       = require('react'),
+        Immutable   = require('immutable'),
+        Morearty    = require('morearty'),
+        Form        = require('module/ui/form/form'),
+        FormColumn 	= require('module/ui/form/form_column'),
+        FormField   = require('module/ui/form/form_field');
 
 const TabItemDetails = React.createClass({
     mixins:[Morearty.Mixin],

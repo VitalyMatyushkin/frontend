@@ -3,6 +3,7 @@ const   RouterView  	= require('module/core/router'),
 		React       	= require('react'),
 		SubMenu     	= require('module/ui/menu/sub_menu'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Morearty        = require('morearty'),
 		Immutable   	= require('immutable');
 
 const EventView = React.createClass({

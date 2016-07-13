@@ -2,6 +2,7 @@
  * Created by Anatoly on 29.05.2016.
  */
 const   React           = require('react'),
+		Morearty       	= require('morearty'),
         RouterView      = require('module/core/router'),
 		Route			= require('module/core/route');
 

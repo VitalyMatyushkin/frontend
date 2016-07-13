@@ -1,15 +1,16 @@
-var HousesPage,
-	RouterView = require('module/core/router'),
-	React = require('react'),
-	Route = require('module/core/route');
 
-HousesPage = React.createClass({
+const	RouterView 	= require('module/core/router'),
+		React 		= require('react'),
+		Morearty	= require('morearty'),
+		Route	 	= require('module/core/route');
+
+const HousesPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-		var self        = this,
-			binding     = self.getDefaultBinding(),
-            subBinding  = binding.sub('housesRouting'),
-			globalBinding = self.getMoreartyContext().getBinding();
+		const 	self        	= this,
+				binding     	= self.getDefaultBinding(),
+				subBinding  	= binding.sub('housesRouting'),
+				globalBinding 	= self.getMoreartyContext().getBinding();
 
 		return (
 			<RouterView routes={ subBinding.sub('routing') } binding={globalBinding}>

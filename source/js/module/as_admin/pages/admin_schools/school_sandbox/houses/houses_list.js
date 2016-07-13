@@ -1,6 +1,7 @@
 const   Table 			= require('module/ui/list/table'),
         TableField 		= require('module/ui/list/table_field'),
         ListPageMixin 	= require('module/mixins/list_page_mixin'),
+		Morearty		= require('morearty'),
         React 			= require('react');
 
 const HousesListPage = React.createClass({

@@ -1,5 +1,7 @@
-const SVG = require('module/ui/svg'),
-	React = require('react');
+const 	SVG 		= require('module/ui/svg'),
+		Morearty	= require('morearty'),
+		React 		= require('react');
+
 const AboutMeBlock = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {

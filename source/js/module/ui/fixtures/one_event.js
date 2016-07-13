@@ -1,6 +1,5 @@
 const 	DateTimeMixin 	= require('module/mixins/datetime'),
 		If 				= require('module/ui/if/if'),
-// EventAlbums 	= require('module/as_manager/pages/event/view/event_albums'),	//TODO: there is no such file, bro. What should I do?
 		Morearty		= require('morearty'),
 		React 			= require('react');
 

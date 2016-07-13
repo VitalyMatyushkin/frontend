@@ -1,6 +1,7 @@
 const   React           = require('react'),
         Sport           = require('module/ui/icons/sport_icon'),
         Immutable       = require('immutable'),
+        Morearty        = require('morearty'),
         ChallengeModel  = require('module/ui/challenges/challenge_model'),
         classNames      = require('classnames'),
         EventHelper     = require('module/helpers/eventHelper'),

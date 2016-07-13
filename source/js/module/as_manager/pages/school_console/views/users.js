@@ -4,6 +4,7 @@
 
 const   React       = require('react'),
         UserList    = require('module/shared_pages/users/user_list'),
+        Morearty	= require('morearty'),
         GrantRole   = require('module/as_manager/pages/school_console/grant_role/grant_role');
 
 const AdminUsersList = React.createClass({

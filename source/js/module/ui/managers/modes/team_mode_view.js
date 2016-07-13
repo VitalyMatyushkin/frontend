@@ -3,6 +3,7 @@ const	React				= require('react'),
 		TeamWrapper			= require('./team_wrapper'),
 		If					= require('module/ui/if/if'),
 		Immutable			= require('immutable'),
+		Morearty            = require('morearty'),
 		MoreartyHelper		= require('module/helpers/morearty_helper');
 
 const TeamModeView = React.createClass({

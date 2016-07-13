@@ -3,6 +3,7 @@ const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'
         Multiselect     = require('module/ui/multiselect/multiselect'),
         React           = require('react'),
         EventVenue      = require('./event_venue'),
+		Morearty		= require('morearty'),
         Immutable       = require('immutable');
 
 const EventManagerBase = React.createClass({

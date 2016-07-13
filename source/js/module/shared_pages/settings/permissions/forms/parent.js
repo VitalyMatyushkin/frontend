@@ -1,6 +1,7 @@
 const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		FormMixin 	= require('module/shared_pages/settings/permissions/forms/form_mixin'),
+		Morearty    = require('morearty'),
 		React 		= require('react');
 
 const ParentPermissionForm = React.createClass({

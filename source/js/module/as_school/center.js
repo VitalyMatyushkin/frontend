@@ -1,6 +1,7 @@
 const 	RouterView 		= require('module/core/router'),
 		Route 			= require('module/core/route'),
 		PublicLogin 	= require('module/ui/menu/public_login'),
+		Morearty        = require('morearty'),
 		React 			= require('react');
 
 const Center = React.createClass({

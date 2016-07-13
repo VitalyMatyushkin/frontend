@@ -3,6 +3,7 @@ const	React			= require('react'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Lazy			= require('lazy.js'),
 		classNames		= require('classnames'),
+		Morearty        = require('morearty'),
 		Immutable		= require('immutable');
 
 const	TeamChooser	= React.createClass({

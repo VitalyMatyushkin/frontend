@@ -5,6 +5,7 @@ const	CalendarView	= require('module/ui/calendar/calendar'),
 		Sport			= require('module/ui/icons/sport_icon'),
         ChallengeModel	= require('module/ui/challenges/challenge_model'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		Morearty        = require('morearty'),
 		MoreartyHelper	= require('module/helpers/morearty_helper');
 
 const HomeCalender = React.createClass({

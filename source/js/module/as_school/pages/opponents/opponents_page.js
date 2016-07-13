@@ -1,6 +1,7 @@
 const 	RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
 		SubMenu 	= require('module/ui/menu/sub_menu'),
+		Morearty    = require('morearty'),
 		React 		= require('react');
 
 const OpponentsPage = React.createClass({

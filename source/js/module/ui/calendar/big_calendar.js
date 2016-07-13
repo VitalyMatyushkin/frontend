@@ -1,10 +1,10 @@
-var BigCalendar,
-	DateTimeMixin = require('module/mixins/datetime'),
-	If = require('module/ui/if/if'),
-	React = require('react'),
-	ReactDOM = require('react-dom');
+const 	DateTimeMixin 	= require('module/mixins/datetime'),
+		If 				= require('module/ui/if/if'),
+		Morearty        = require('morearty'),
+		React 			= require('react'),
+		ReactDOM 		= require('react-dom');
 
-BigCalendar = React.createClass({
+const BigCalendar = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	componentWillMount: function() {
 		var self = this,

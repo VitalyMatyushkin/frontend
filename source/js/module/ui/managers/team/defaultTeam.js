@@ -1,5 +1,6 @@
 const	React				= require('react'),
 		SVG					= require('module/ui/svg'),
+		Morearty            = require('morearty'),
 		TeamFunctionalMixin	= require('./teamFunctionalMixin');
 
 const DefaultTeam = React.createClass({

@@ -3,6 +3,7 @@ const   Invite          = require('./invite'),
         React           = require('react'),
         InvitesMixin    = require('../mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Morearty		= require('morearty'),
         Immutable       = require('immutable');
 
 const InboxView = React.createClass({

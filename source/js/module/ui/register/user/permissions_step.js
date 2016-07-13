@@ -1,5 +1,6 @@
 const   RegistrationPermissions 	= require('module/ui/register/user/registration_permissions'),
         classNames                  = require('classnames'),
+		Morearty            		= require('morearty'),
         React                       = require('react');
 
 

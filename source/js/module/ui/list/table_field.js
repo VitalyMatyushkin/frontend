@@ -1,5 +1,6 @@
 const   If          = require('module/ui/if/if'),
         React       = require('react'),
+		Morearty    = require('morearty'),
         SortColumn  = require('module/ui/list/sort_column');
 
 const TableField = React.createClass({

@@ -3,6 +3,7 @@
  */
 const   React       = require('react'),
         ReactDOM    = require('react-dom'),
+        Morearty    = require('morearty'),
         Immutable   = require('immutable');
 
 

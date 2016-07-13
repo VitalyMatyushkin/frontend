@@ -5,6 +5,7 @@
 const   Table           = require('module/ui/list/table'),
         TableField      = require('module/ui/list/table_field'),
         React           = require('react'),
+        Morearty        = require('morearty'),
         If              = require('module/ui/if/if'),
         Lazy            = require('lazy.js'),
         Date            = require('module/helpers/date_helper'),

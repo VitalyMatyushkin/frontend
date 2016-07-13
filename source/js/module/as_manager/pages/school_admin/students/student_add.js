@@ -1,4 +1,5 @@
 const 	StudentForm = require('module/as_manager/pages/school_admin/students/student_form'),
+		Morearty	= require('morearty'),
 		React 		= require('react');
 
 /** Page to add new student to school */

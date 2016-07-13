@@ -4,6 +4,7 @@ const	If				= require('module/ui/if/if'),
 		Immutable		= require('immutable'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg');
 
 const EventHeader = React.createClass({

@@ -1,6 +1,7 @@
 const 	SVG 			= require('module/ui/svg'),
 		React 			= require('react'),
 		FixturesList 	= require('module/ui/fixtures/fixtures_list'),
+		Morearty        = require('morearty'),
 		Immutable 		= require('immutable');
 
 const FixturesPage = React.createClass({

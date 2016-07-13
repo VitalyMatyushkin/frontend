@@ -1,7 +1,8 @@
 const	classNames	= require('classnames'),
 		React		= require('react'),
 		Immutable	= require('immutable'),
-		SVG			 = require('module/ui/svg');
+		Morearty    = require('morearty'),
+		SVG			= require('module/ui/svg');
 
 const CalendarMonthView = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -1,6 +1,7 @@
 const 	StudentForm 	= require('module/as_manager/pages/school_admin/students/student_form'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
+		Morearty		= require('morearty'),
 		Promise			= require('bluebird');
 
 /** Page to edit student details */

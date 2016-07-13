@@ -13,6 +13,7 @@ const	If				= require('module/ui/if/if'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		SVG 			= require('module/ui/svg'),
 		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
 		Lazy			= require('lazy.js');
 
 const EventView = React.createClass({

@@ -4,6 +4,7 @@
 
 const   AlbumRoutes         = require('module/ui/gallery/albums'),
         galleryServices     = require('module/as_manager/pages/event/gallery/eventGalleryServices'),
+        Morearty		    = require('morearty'),
         React		        = require('react');
 
 /**

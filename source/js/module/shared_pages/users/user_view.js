@@ -15,6 +15,7 @@ const   EditUser    = require('./user_edit'),
         React       = require('react'),
         Popup       = require('module/ui/popup'),
         Immutable   = require('immutable'),
+        Morearty    = require('morearty'),
         If          = require('module/ui/if/if');
 
 const UserDetail= React.createClass({

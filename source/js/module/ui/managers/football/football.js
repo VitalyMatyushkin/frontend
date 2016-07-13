@@ -1,9 +1,9 @@
-var FootballManager,
-	React = require('react'),
-	ReactDOM = require('react-dom'),
-	Team = require('./team');
+const 	React 		= require('react'),
+		ReactDOM 	= require('react-dom'),
+		Morearty    = require('morearty'),
+		Team 		= require('./team');
 
-FootballManager = React.createClass({
+const FootballManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,

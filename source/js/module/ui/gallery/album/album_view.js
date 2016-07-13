@@ -3,6 +3,7 @@ const 	If 				= require('module/ui/if/if'),
 		PhotoList 		= require('../photo/photo_list'),
 		FullScreenList 	= require('../photo/fullscreen_list'),
 		React			= require('react'),
+		Morearty        = require('morearty'),
 		Immutable		= require('immutable');
 
 const AlbumView = React.createClass({

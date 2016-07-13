@@ -2,6 +2,7 @@ const 	Form		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		FormColumn 	= require('module/ui/form/form_column'),
 		Promise 	= require('bluebird'),
+		Morearty	= require('morearty'),
 		React 		= require('react');
 
 /** Tiny student-related Form wrapper */

@@ -1,5 +1,6 @@
 const 	AlbumEditForm 	= require('./album_edit_form'),
 		Immutable		= require('immutable'),
+		Morearty        = require('morearty'),
 		React			= require('react');
 
 const AlbumEdit = React.createClass({

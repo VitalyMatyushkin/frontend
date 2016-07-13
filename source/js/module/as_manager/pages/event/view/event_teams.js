@@ -6,6 +6,7 @@ const 	If 					= require('module/ui/if/if'),
 		Team 				= require('module/ui/managers/team/defaultTeam'),
 		React				= require('react'),
 		Immutable			= require('immutable'),
+		Morearty			= require('morearty'),
 		Lazy				= require('lazy.js');
 
 const EventTeams = React.createClass({

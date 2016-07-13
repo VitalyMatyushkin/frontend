@@ -1,7 +1,8 @@
-const 	RouterView = require('module/core/router'),
-		Route = require('module/core/route'),
-		React = require('react'),
-		Tabs			= require('module/ui/tabs/tabs'),
+const 	RouterView 	= require('module/core/router'),
+		Route 		= require('module/core/route'),
+		React 		= require('react'),
+		Tabs		= require('module/ui/tabs/tabs'),
+		Morearty	= require('morearty'),
 		Immutable 	= require('immutable');
 
 const SettingsPage = React.createClass({

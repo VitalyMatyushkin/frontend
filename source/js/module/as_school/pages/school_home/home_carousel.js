@@ -1,12 +1,14 @@
 /**
  * Created by bridark on 03/08/15.
  */
-var HomeBlog,
-    SVG = require('module/ui/svg'),
-    BlogCarousel = require('./blog_carousel'),
-    React = require('react'),
-    FixtureCarousel = require('./fixture_carousel');
-HomeBlog = React.createClass({
+const   SVG                 = require('module/ui/svg'),
+        BlogCarousel        = require('./blog_carousel'),
+        React               = require('react'),
+        Morearty            = require('morearty'),
+        FixtureCarousel     = require('./fixture_carousel');
+
+
+const HomeBlog = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
         var self = this,

@@ -3,6 +3,7 @@ const 	Table 			= require('module/ui/list/table'),
 		DateTimeMixin 	= require('module/mixins/datetime'),
 		SVG 			= require('module/ui/svg'),
 		ListPageMixin 	= require('module/mixins/list_page_mixin'),
+		Morearty		= require('morearty'),
 		React 			= require('react');
 
 const StudentsListPage = React.createClass({

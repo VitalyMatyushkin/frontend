@@ -1,6 +1,7 @@
 const 	React 				= require('react'),
 		Immutable 			= require('immutable'),
 		galleryServices     = require('module/as_manager/pages/event/gallery/eventGalleryServices'),
+		Morearty			= require('morearty'),
 		Album				= require('module/ui/gallery/album/album_item');
 
 const EventGallery = React.createClass({

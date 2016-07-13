@@ -3,6 +3,7 @@
  */
 const   AutoComplete            = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         If                      = require('module/ui/if/if'),
+		Morearty            	= require('morearty'),
         React                   = require('react');
 /*
  * Form with fields for permission request

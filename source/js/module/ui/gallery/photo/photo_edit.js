@@ -2,7 +2,8 @@ const 	Form 		= require('module/ui/form/form'),
 		FormColumn 	= require('module/ui/form/form_column'),
 		FormField 	= require('module/ui/form/form_field'),
 		React 		= require('react'),
-		Immutable 	= require('immutable');
+		Immutable 	= require('immutable'),
+		Morearty    = require('morearty');
 
 const PhotoEdit = React.createClass({
 	mixins: [Morearty.Mixin],

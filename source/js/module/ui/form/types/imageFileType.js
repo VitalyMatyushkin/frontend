@@ -8,6 +8,7 @@ const   TypeMixin   = require('module/ui/form/types/type_mixin'),
         SVG         = require('module/ui/svg'),
 		If			= require('module/ui/if/if'),
         Immutable   = require('immutable'),
+		Morearty    = require('morearty'),
         React       = require('react');
 
 /** Handles file upload to cloud. As result will return uploaded file url to form */

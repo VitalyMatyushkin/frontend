@@ -6,6 +6,7 @@ const   RouterView      = require('module/core/router'),
         EventHelper     = require('module/helpers/eventHelper'),
         Lazy            = require('lazy.js'),
         DateHelper      = require('module/helpers/date_helper'),
+        Morearty		= require('morearty'),
         Immutable       = require('immutable');
 
 const EventView = React.createClass({

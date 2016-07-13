@@ -1,6 +1,7 @@
 const 	React 		= require('react'),
 		Lazy		= require('lazy.js'),
 		Form 		= require('module/ui/form/form'),
+		Morearty	= require('morearty'),
 		FormField 	= require('module/ui/form/form_field');
 
 

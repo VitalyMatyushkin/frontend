@@ -1,5 +1,5 @@
-var UserName,
-	React = require('react');
+const 	Morearty    = require('morearty'),
+		React 		= require('react');
 
 UserName = React.createClass({
 	mixins: [Morearty.Mixin],

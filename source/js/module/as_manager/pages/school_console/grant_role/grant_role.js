@@ -6,6 +6,7 @@ const   Form        = require('module/ui/form/form'),
         FormField 	= require('module/ui/form/form_field'),
         React       = require('react'),
         classNames  = require('classnames'),
+        Morearty	= require('morearty'),
         roleList    = require('module/data/roles_data');
 
 const GrantRole = React.createClass({

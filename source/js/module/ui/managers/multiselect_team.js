@@ -2,6 +2,7 @@ const   SVG         = require('module/ui/svg'),
         React       = require('react'),
         ReactDOM    = require('react-dom'),
         Immutable 	= require('immutable'),
+        Morearty    = require('morearty'),
         Multiselect = require('module/ui/multiselect/multiselect');
 
 const MultiSelectTeam = React.createClass({

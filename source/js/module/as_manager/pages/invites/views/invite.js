@@ -1,11 +1,12 @@
-const   InvitesMixin = require('../mixins/invites_mixin'),
-        classNames  = require('classnames'),
-        React       = require('react'),
-        SVG         = require('module/ui/svg'),
+const   InvitesMixin =   require('../mixins/invites_mixin'),
+        classNames      = require('classnames'),
+        React           = require('react'),
+        SVG             = require('module/ui/svg'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-        Sport       = require('module/ui/icons/sport_icon'),
+        Morearty		= require('morearty'),
+        Sport           = require('module/ui/icons/sport_icon');
 
-InviteView = React.createClass({
+const InviteView = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
 	// ID of current school
 	// Will set on componentWillMount event

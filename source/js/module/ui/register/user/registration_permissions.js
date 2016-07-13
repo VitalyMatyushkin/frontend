@@ -3,6 +3,7 @@
  */
 const   If                      = require('module/ui/if/if'),
 		PermissionFields 		= require('module/ui/register/user/permission_fields'),
+		Morearty            	= require('morearty'),
         React                   = require('react');
 /*
  * It is a component for registration permission requests
