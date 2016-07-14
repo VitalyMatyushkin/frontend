@@ -53,7 +53,7 @@ const ImageFileTypeUpload = React.createClass({
 
         let coverImg;
         if(noEmpty) {
-            coverImg = window.Server.images.getResizedToBoxUrl(binding.get('value'), 300, 300);
+            coverImg = window.Server.images.getResizedToMinValueUrl(binding.get('value'), 170);
         } else {
             coverImg= '/images/empty_pic_uploader_box.png';
         }

@@ -151,7 +151,7 @@ const Blog = React.createClass({
                 <CommentBox onReply={self.onReply} blogData={dataBlog} />
                 <div className="bBlog_box mNewComment">
                     <div className="ePicBox">
-                        <Avatar pic={self.loggedUser && self.loggedUser.avatar} />
+                        <Avatar pic={self.loggedUser && self.loggedUser.avatar} minValue="45" />
                     </div>
                     <div className="eEvent_commentBlog">
                         <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>

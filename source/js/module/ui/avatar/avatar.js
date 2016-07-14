@@ -1,18 +1,24 @@
 /**
  * Created by Anatoly on 09.06.2016.
  */
-const 	React 			= require('react'),
-		SVG 			= require('module/ui/svg');
+const 	React 		= require('react'),
+		SVG 		= require('module/ui/svg');
 
 const Avatar = React.createClass({
 	propTypes:{
-		pic:React.PropTypes.string
+		pic:React.PropTypes.string,
+		minValue:React.PropTypes.number
+	},
+	getDefaultProps: function () {
+		return {
+			minValue: 50
+		};
 	},
 	render:function(){
 		let img = null;
 
 		if(this.props.pic) {
-			const style = {backgroundImage: `url(${window.Server.images.getResizedToBoxUrl(this.props.pic, 100, 100)})`};
+			const style = {backgroundImage: `url(${window.Server.images.getResizedToMinValueUrl(this.props.pic, this.props.minValue)})`};
 			img = <div className="eImg" style={style}></div>;
 		}
 
