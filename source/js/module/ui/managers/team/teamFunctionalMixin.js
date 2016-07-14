@@ -1,5 +1,6 @@
 const	Lazy				= require('lazy.js'),
 		Immutable			= require('immutable'),
+		React				= require('react'),
 		classNames			= require('classnames');
 
 const TeamFunctionalMixin = {

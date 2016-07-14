@@ -2,7 +2,7 @@
  * Created by bridark on 29/06/15.
  */
 
-const   React 		= require('react');
+const   React 		= require('react'),
         ReactDOM 	= require('react-dom'),
         Morearty    = require('morearty');
 

@@ -281,7 +281,7 @@ const EventManagerBase = React.createClass({
                     className="eManager_field"
                     type="text"
                     value={binding.get('model.name')}
-                    placeholder={'enter name'}F
+                    placeholder={'enter name'}
                     onChange={Morearty.Callback.set(binding.sub('model.name'))}
                     />
             </div>
