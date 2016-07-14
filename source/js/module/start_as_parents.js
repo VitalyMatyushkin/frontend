@@ -3,6 +3,7 @@ const  	ApplicationView 	= require('module/as_parents/application'),
 		userRulesInstance 	= require('module/data/user_rules'),
 		authController 		= require('module/core/auth_controller'),
 		serviceList 		= require('module/core/service_list'),
+		Morearty			= require('morearty'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react');
 

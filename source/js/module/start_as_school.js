@@ -4,6 +4,7 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		authController 		= require('module/core/auth_controller'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
+		Morearty			= require('morearty'),
 		Helpers				= require('module/helpers/storage');
 
 function initMainView(schoolId) {

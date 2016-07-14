@@ -11,6 +11,7 @@ const   ApplicationView     = require('module/as_login/application'),
         Morearty            = require('morearty');
 
     function runLoginMode() {
+
 // Create Morearty context
     const MoreartyContext = Morearty.createContext({
         initialState: {
@@ -90,16 +91,14 @@ const   ApplicationView     = require('module/as_login/application'),
     userDataLogin.setBinding(binding.sub('userData'));
     userRulesInstance.setBinding(binding.sub('userRules'));
 
-    // Enable servises
+    // Enable services
     serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
     // Связывания контроллера, отвечающего за контроль за авторизацией с данными
-    authController.initialize(
-        {
+    authController.initialize({
             binding: binding,
             defaultPath: 'login'
-        }
-    );
+	});
 
 
     // Инициализация приложения

@@ -14,13 +14,13 @@ const   Promise     = require('bluebird'),
         es6PonyFill = require('./module/helpers/ponyfill/es6_best_parts');
 
 
-const 	//asAdmin 	= require('./module/start_as_admin'),
-		//asManager	= require('./module/start_as_manager'),
-		//asWWW		= require('./module/start_as_www'),
-		asLogin		= require('./module/start_as_login');
-		//asParents	= require('./module/start_as_parents'),
-		//asPassword	= require('./module/start_as_password'),
-		//asSchool	= require('./module/start_as_school');
+const 	asAdmin 	= require('./module/start_as_admin'),
+		asManager	= require('./module/start_as_manager'),
+		asWWW		= require('./module/start_as_www'),
+		asLogin		= require('./module/start_as_login'),
+		asParents	= require('./module/start_as_parents'),
+		asPassword	= require('./module/start_as_password'),
+		asSchool	= require('./module/start_as_school');
 
 
 
@@ -50,8 +50,13 @@ window.apiImg   = api.img;
 
 window.logLevel = log; //Make this global for usage
 
-// TODO: add switch!!!
-asLogin();
 
-
-
+switch(startModule) {
+	case 'module/start_as_admin':		asAdmin(); 		break;
+	case 'module/start_as_manager':		asManager();	break;
+	case 'module/start_as_parents':		asParents();	break;
+	case 'module/start_as_www':			asWWW();		break;
+	case 'module/start_as_login':		asLogin();		break;
+	case 'module/start_as_password':	asPassword();	break;
+	default: asLogin();
+}
