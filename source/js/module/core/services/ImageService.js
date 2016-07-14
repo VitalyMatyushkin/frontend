@@ -36,7 +36,11 @@ ImageService.prototype.getResizedToHeightUrl = function(origUrl, height) {
 };
 
 ImageService.prototype.getResizedToBoxUrl = function(origUrl, height, width) {
-    return `${origUrl}?sizing=box&height=${height}&width=${width}`;
+	return `${origUrl}?sizing=box&height=${height}&width=${width}`;
+};
+
+ImageService.prototype.getResizedToMinValueUrl = function(origUrl, minValue) {
+	return `${origUrl}?sizing=minvalue&value=${minValue}`;
 };
 
 
