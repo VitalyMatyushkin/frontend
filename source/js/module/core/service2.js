@@ -6,7 +6,7 @@ const 	log 		= require('loglevel'),
 		AJAX 		= require('module/core/AJAX'),
 		baseUrl 	= window.apiBase;	// using global vars is really bad practice
 
-/** Build ServiceConstructor which is kind of accessor to given url.
+/**
  *  @param url {String} resource endpoint
  *  @param options.authHeader {String} header to store session
  *  @param options.authKey {String} user's session key
@@ -16,8 +16,6 @@ const 	log 		= require('loglevel'),
  *  var users = new Service('/users', options);
  *  users.get();
  **/
-const ServiceConstructor = (function() {
-
 	const Service = function(url, options) {	// service instance to return
 		this.url = url;
 		this.options = options;
@@ -144,7 +142,4 @@ const ServiceConstructor = (function() {
 		}
 	});
 
-	return Service;
-})();
-
-module.exports = ServiceConstructor;
+module.exports = Service;
