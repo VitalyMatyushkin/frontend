@@ -1,8 +1,8 @@
-var AuthRoutes,
-	React = require('react'),
-	Route = require('module/core/route');
+const 	Morearty    = require('morearty'),
+		React 		= require('react'),
+		Route 		= require('module/core/route');
 
-AuthRoutes = React.createClass({
+const AuthRoutes = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		path: React.PropTypes.string.isRequired,

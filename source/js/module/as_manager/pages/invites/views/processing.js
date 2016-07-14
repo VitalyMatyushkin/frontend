@@ -1,7 +1,7 @@
-var ProcessingView,
-    React = require('react');
+const 	Morearty	= require('morearty'),
+    	React 		= require('react');
 
-ProcessingView = React.createClass({
+const ProcessingView = React.createClass({
     mixins: [Morearty.Mixin],
     render: function() {
         var self = this,

@@ -3,8 +3,9 @@ const	React			= require('react'),
 		PlayerChooser	= require('./../player_chooser'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		Lazy			= require('lazyjs'),
+		Lazy			= require('lazy.js'),
 		If				= require('module/ui/if/if'),
+		Morearty        = require('morearty'),
 		Immutable		= require('immutable');
 
 const TeamWrapper = React.createClass({

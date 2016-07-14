@@ -1,8 +1,9 @@
-const Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	React = require('react'),
+const 	Form 		= require('module/ui/form/form'),
+		FormField 	= require('module/ui/form/form_field'),
+		Morearty    = require('morearty'),
+		React 		= require('react');
 
-UserForm = React.createClass({
+const UserForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onSuccess: React.PropTypes.func,

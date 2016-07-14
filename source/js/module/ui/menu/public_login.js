@@ -1,10 +1,10 @@
 /**
  * Created by bridark on 04/08/15.
  */
-var PublicLogin,
-    React = require('react');
+const   React       = require('react'),
+        Morearty    = require('morearty');
 
-PublicLogin = React.createClass({
+const PublicLogin = React.createClass({
     mixins:[Morearty.Mixin],
     handleSignInUpClick:function(){
         let subdomains = document.location.host.split('.');

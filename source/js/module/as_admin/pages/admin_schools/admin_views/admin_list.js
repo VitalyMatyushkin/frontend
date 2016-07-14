@@ -1,11 +1,12 @@
 /**
  * Created by bridark on 09/06/15.
  */
-const   Table = require('module/ui/list/table'),
-        TableField = require('module/ui/list/table_field'),
-        DateTimeMixin = require('module/mixins/datetime'),
-        ListPageMixin = require('module/mixins/list_page_mixin'),
-        React = require('react');
+const   Table           = require('module/ui/list/table'),
+        TableField      = require('module/ui/list/table_field'),
+        DateTimeMixin   = require('module/mixins/datetime'),
+        ListPageMixin   = require('module/mixins/list_page_mixin'),
+        Morearty        = require('morearty'),
+        React           = require('react');
 
 const SchoolListPage = React.createClass({
     mixins:[Morearty.Mixin,ListPageMixin,DateTimeMixin],

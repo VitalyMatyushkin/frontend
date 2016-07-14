@@ -7,7 +7,10 @@
  * @Path{bool} dialogShow - Visibility state of dialog box
  * @Path{Function} callbackFunc - A method to be called after confirm dialog returns true (optional) needs to be implemented and set by dialog owner
  * */
-const React = require('react');
+const   React       = require('react'),
+        Morearty    = require('morearty');
+
+
 const ConfirmDialog = React.createClass({
     mixins:[Morearty.Mixin],
     propType:{

@@ -2,10 +2,11 @@
  * Created by bright boahen on 03/06/15.
  */
     //TODO: refactor this component
-var IndicatorView,
-    React = require('react'),
-    ReactDOM = require('reactDom');
-IndicatorView = React.createClass({
+const   React       = require('react'),
+        ReactDOM    = require('react-dom'),
+        Morearty    = require('morearty');
+
+const IndicatorView = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         reDraw: React.PropTypes.bool

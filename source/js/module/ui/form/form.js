@@ -13,6 +13,7 @@
 const   React       = require('react'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
+		Morearty	= require('morearty'),
         $           = require('jquery');
 
 // TODO: do something with all this

@@ -1,9 +1,10 @@
 /**
  * Created by Bright on 02/02/2016.
  */
-const React = require('react'),
-    Map = require('module/ui/map/map'),
-    ReactDOM = require('reactDom');
+const   React       = require('react'),
+        Map         = require('module/ui/map/map'),
+        Morearty	= require('morearty'),
+        ReactDOM    = require('react-dom');
 
 const VenuePreview = React.createClass({
     mixins:[Morearty.Mixin],

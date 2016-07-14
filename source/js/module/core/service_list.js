@@ -7,8 +7,11 @@ const 	Service 		    = require('module/core/service'),
 const serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
+
+		console.log('initializing services with binding: ' + JSON.stringify(binding.toJS()));
+
         // authorization
-        serviceList._login = new Service('/i/login',binding);
+        serviceList._login = new Service('/i/login', binding);
         serviceList.roles = new Service('/i/roles', binding);
         serviceList._become = new Service('/i/roles/{roleName}/become', binding);
 

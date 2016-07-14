@@ -3,8 +3,9 @@
  */
 const   CommentBox      = require('./event_blogBox'),
         React           = require('react'),
-        ReactDOM        = require('reactDom'),
+        ReactDOM        = require('react-dom'),
         Immutable       = require('immutable'),
+        Morearty		= require('morearty'),
 		Avatar 			= require('module/ui/avatar/avatar'),
         MoreartyHelper  = require('module/helpers/morearty_helper');
 

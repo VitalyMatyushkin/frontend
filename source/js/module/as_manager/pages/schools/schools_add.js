@@ -1,5 +1,6 @@
 const 	SchoolForm 	= require('module/as_manager/pages/schools/schools_form'),
 		React 		= require('react'),
+		Morearty	= require('morearty'),
 		Immutable 	= require('immutable');
 
 const AddSchoolForm = React.createClass({

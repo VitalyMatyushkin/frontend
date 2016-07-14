@@ -9,6 +9,7 @@ const   CalendarView        = require('module/ui/calendar/calendar'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
+		Morearty			= require('morearty'),
 		Immutable           = require('immutable');
 
 const EventManager = React.createClass({

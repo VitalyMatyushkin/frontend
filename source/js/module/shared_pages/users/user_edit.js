@@ -3,6 +3,7 @@
  */
 const   React           = require('react'),
         Immutable       = require('immutable'),
+        Morearty        = require('morearty'),
         UserRole        = require('./user_roles'),
         If              = require('module/ui/if/if'),
         TabItemDetails  = require('./user_edit_tabDetails');

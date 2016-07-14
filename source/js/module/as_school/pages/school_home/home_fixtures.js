@@ -1,6 +1,7 @@
 const	DateTimeMixin	= require('module/mixins/datetime'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
+		Morearty        = require('morearty'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		Sport			= require('module/ui/icons/sport_icon');
 

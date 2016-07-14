@@ -1,6 +1,7 @@
 const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 		MaskedInput = require('module/ui/masked_input'),
 		React 		= require('react'),
+		Morearty	= require('morearty'),
     	Immutable 	= require('immutable');
 
 const TypeDate =  React.createClass({

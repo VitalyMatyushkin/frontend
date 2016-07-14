@@ -2,6 +2,8 @@
  * Created by Anatoly on 16.01.2016.
  */
 
+const React = require('react');
+
 const UserModel = function(userData){
     const self = this,
         um = UserModel;

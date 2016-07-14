@@ -2,6 +2,7 @@ const   React           = require('react'),
         Map             = require('module/ui/map/map'),
         Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         Immutable       = require('immutable'),
+        Morearty		= require('morearty'),
         If              = require('module/ui/if/if');
 
 const EventVenue = React.createClass({

@@ -5,7 +5,8 @@ const   Immutable 	= require('immutable'),
         React       = require('react'),
         Superuser   = require('module/helpers/superuser'),
         Helpers		= require('module/helpers/storage'),
-        Lazy        = require('lazyjs');
+        Morearty    = require('morearty'),
+        Lazy        = require('lazy.js');
 
 /** Array of default photos to show when there is no photos got from server side for any possible reason */
 const defaultPhotos = [

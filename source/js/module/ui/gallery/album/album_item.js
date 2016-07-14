@@ -1,4 +1,5 @@
 const 	React 			= require('react'),
+		Morearty        = require('morearty'),
 		noImage			= '/images/no-image.jpg',
 		SVG 			= require('module/ui/svg');
 

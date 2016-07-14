@@ -3,6 +3,7 @@
  */
 const   React       = require('react'),
         EventHelper = require('module/helpers/eventHelper'),
+        Morearty    = require('morearty'),
         Immutable   = require('immutable');
 
 

@@ -4,6 +4,7 @@
 
 const  	RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
+		Morearty    = require('morearty'),
 		React		= require('react');
 
 /**

@@ -1,11 +1,11 @@
-var UserButtons,
-	React = require('react');
+const 	Morearty    = require('morearty'),
+		React 		= require('react');
 
-UserButtons = React.createClass({
+const UserButtons = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self = this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<div className="bUserButtons">

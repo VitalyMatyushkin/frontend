@@ -1,5 +1,6 @@
 const 	React 		= require('react'),
-		ReactDOM 	= require('reactDom');
+		ReactDOM 	= require('react-dom'),
+		Morearty    = require('morearty');
 
 const MapView = React.createClass({
 	mixins: [Morearty.Mixin],

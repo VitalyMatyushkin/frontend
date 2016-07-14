@@ -6,6 +6,7 @@ const   HomeHeader      = require('./home_header'),
         HomeNews        = require('./home_news'),
         HomeCalender    = require('./home_calendar'),
         React           = require('react'),
+        Morearty        = require('morearty'),
         HomeBlog        = require('./home_carousel');
 
 const SchoolHomePage = React.createClass({

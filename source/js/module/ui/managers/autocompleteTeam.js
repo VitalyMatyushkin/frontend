@@ -1,6 +1,7 @@
 const   React           = require('react'),
         Immutable       = require('immutable'),
         Promise         = require('bluebird'),
+        Morearty        = require('morearty'),
         Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper');
 
 const AutocompleteTeam = React.createClass({

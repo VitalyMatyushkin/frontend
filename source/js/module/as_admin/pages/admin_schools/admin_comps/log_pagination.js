@@ -3,7 +3,8 @@
  */
     //TODO: Add filtering
 const   React       = require('react'),
-        ReactDOM    = require('reactDom'),
+        ReactDOM    = require('react-dom'),
+        Morearty    = require('morearty'),
         Immutable   = require('immutable');
 
 const LogPagination = React.createClass({

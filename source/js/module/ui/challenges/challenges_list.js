@@ -3,6 +3,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		Sport			= require('module/ui/icons/sport_icon'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		Morearty        = require('morearty'),
 		ChallengeModel	= require('module/ui/challenges/challenge_model');
 
 const ChallengesList = React.createClass({

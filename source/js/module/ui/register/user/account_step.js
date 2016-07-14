@@ -1,5 +1,6 @@
 const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
+		Morearty    = require('morearty'),
 		React 		= require('react');
 
 /** First registration step where user input email, password, firstname and lastname */

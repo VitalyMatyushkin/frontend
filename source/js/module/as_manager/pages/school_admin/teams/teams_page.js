@@ -1,6 +1,7 @@
-const RouterView = require('module/core/router'),
-    React = require('react'),
-    Route = require('module/core/route');
+const   RouterView  = require('module/core/router'),
+        React       = require('react'),
+        Morearty	= require('morearty'),
+        Route       = require('module/core/route');
 
 const TeamsPage = React.createClass({
     mixins: [Morearty.Mixin],

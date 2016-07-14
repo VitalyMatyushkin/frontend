@@ -1,17 +1,18 @@
-const 	SportForm 	  = require('module/as_admin/pages/admin_schools/sports/sports_form'),
-    	SportsHelpers = require('module/as_admin/pages/admin_schools/sports/sports_helpers'),
-        React 		  = require('react'),
-        Immutable 	  = require('immutable');
+const 	SportForm 	    = require('module/as_admin/pages/admin_schools/sports/sports_form'),
+    	SportsHelpers   = require('module/as_admin/pages/admin_schools/sports/sports_helpers'),
+        React 		    = require('react'),
+        Morearty        = require('morearty'),
+        Immutable 	    = require('immutable');
 
 
 const SportEdit = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            routingData = globalBinding.sub('routing.parameters').toJS(),
-            sportId = routingData.id;
+        const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				routingData 	= globalBinding.sub('routing.parameters').toJS(),
+				sportId 		= routingData.id;
 
         binding.clear();
         if (sportId) {

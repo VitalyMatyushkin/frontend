@@ -3,6 +3,7 @@ const   Table           = require('module/ui/list/table'),
         ListPageMixin   = require('module/mixins/list_page_mixin'),
 		SVG 			= require('module/ui/svg'),
         Sport           = require('module/ui/icons/sport_icon'),
+		Morearty		= require('morearty'),
         React           = require('react');
 
 const TeamsListPage = React.createClass({

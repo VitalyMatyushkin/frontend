@@ -3,7 +3,8 @@ const   ApplicationView     = require('module/as_admin/application'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
         serviceListAdmin    = require('module/core/service_list_admin'),
-        ReactDom            = require('reactDom'),
+        Morearty			= require('morearty'),
+        ReactDom            = require('react-dom'),
         React               = require('react');
 
 function runAdminMode() {

@@ -3,7 +3,8 @@
  */
 
 const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
-		React 		= require('react');
+		React 		= require('react'),
+		Morearty	= require('morearty');
 
 const TypeText =  React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],

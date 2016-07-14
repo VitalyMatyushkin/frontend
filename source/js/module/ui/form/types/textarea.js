@@ -2,6 +2,7 @@
  * Created by bridark on 04/08/15.
  */
 const   TypeMixin   = require('module/ui/form/types/type_mixin'),
+        Morearty    = require('morearty'),
         React       = require('react');
 
 const TypeTextArea =  React.createClass({

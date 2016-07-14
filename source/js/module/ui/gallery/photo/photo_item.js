@@ -1,5 +1,6 @@
 const 	Immutable 	= require('immutable'),
 		React 		= require('react'),
+		Morearty    = require('morearty'),
 		SVG 		= require('module/ui/svg');
 
 const AlbumPhoto = React.createClass({

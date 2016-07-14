@@ -1,9 +1,9 @@
-var TimePicker,
-    React = require('react'),
-    InviteMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
-    SVG = require('module/ui/svg');
+const   React       = require('react'),
+        InviteMixin = require('module/as_manager/pages/invites/mixins/invites_mixin'),
+        Morearty    = require('morearty'),
+        SVG         = require('module/ui/svg');
 
-TimePicker = React.createClass({
+const TimePicker = React.createClass({
 	mixins: [Morearty.Mixin, InviteMixin],
     displayName: 'TimePicker',
     componentWillMount: function () {

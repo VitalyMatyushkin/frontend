@@ -8,6 +8,7 @@ const   Table 			= require('module/ui/list/table'),
         DateTimeMixin 	= require('module/mixins/datetime'),
         ListPageMixin 	= require('module/mixins/list_page_mixin'),
         React 			= require('react'),
+		Morearty        = require('morearty'),
 		AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
         Popup 			= require('module/ui/popup');
 

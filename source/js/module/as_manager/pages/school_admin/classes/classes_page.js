@@ -1,5 +1,6 @@
 const 	React 		= require('react'),
 		RouterView 	= require('module/core/router'),
+		Morearty	= require('morearty'),
 		Route 		= require('module/core/route');
 
 const ClassesPage = React.createClass({

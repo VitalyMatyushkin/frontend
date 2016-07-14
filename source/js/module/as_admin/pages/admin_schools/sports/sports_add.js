@@ -1,7 +1,8 @@
-const SportForm 	= require('module/as_admin/pages/admin_schools/sports/sports_form'),
-      SportsHelpers = require('module/as_admin/pages/admin_schools/sports/sports_helpers'),
-      React         = require('react'),
-      Immutable 	= require('immutable');
+const   SportForm 		= require('module/as_admin/pages/admin_schools/sports/sports_form'),
+        SportsHelpers 	= require('module/as_admin/pages/admin_schools/sports/sports_helpers'),
+        React         	= require('react'),
+        Morearty		= require('morearty'),
+        Immutable 		= require('immutable');
 
 const SportsAdd = React.createClass({
     mixins: [Morearty.Mixin],

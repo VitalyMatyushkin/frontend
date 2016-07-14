@@ -6,6 +6,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		classNames		= require('classnames'),
 		If				= require('module/ui/if/if'),
+		Morearty        = require('morearty'),
 		DomainHelper 	= require('module/helpers/domain_helper'),
 		Auth			= require('module/core/services/AuthorizationServices');
 

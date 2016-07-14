@@ -1,11 +1,11 @@
 /**
  * Created by bridark on 30/07/15.
  */
-var PublicMenu,
-    React = require('react'),
-    SVG = require('module/ui/svg');
+const   Morearty    = require('morearty'),
+        React       = require('react'),
+        SVG         = require('module/ui/svg');
 
-PublicMenu = React.createClass({
+const PublicMenu = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         menuItems:React.PropTypes.array.isRequired

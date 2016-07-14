@@ -1,6 +1,7 @@
 const 	React 		= require('react'),
 		RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
+		Morearty	= require('morearty'),
 		Immutable 	= require('immutable');
 
 const PermissionsSettingsPage = React.createClass({
@@ -20,19 +21,12 @@ const PermissionsSettingsPage = React.createClass({
 		}
 	},
 	submitEdit: function(data) {
-		var self = this;
-
-		data.id = self.userId;
-		console.log(data)
-		     /*
-		self.userId && window.Server.user.put(self.userId, data).then(function() {
-
-		});*/
+		data.id = this.userId;
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding();
 
 		return (
 			<div>

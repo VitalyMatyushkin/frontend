@@ -1,5 +1,7 @@
-var React = require('react');
-var MultiSelectItem = React.createClass({
+const   React       = require('react'),
+        Morearty    = require('morearty');
+
+const MultiSelectItem = React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultProps: function() {
         return {

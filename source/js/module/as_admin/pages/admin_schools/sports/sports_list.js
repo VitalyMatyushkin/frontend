@@ -1,8 +1,9 @@
-const 	Table         = require('module/ui/list/table'),
-        TableField    = require('module/ui/list/table_field'),
-        ListPageMixin = require('module/mixins/list_page_mixin'),
-        React         = require('react'),
-        Immutable 	  = require('immutable');
+const 	Table           = require('module/ui/list/table'),
+        TableField      = require('module/ui/list/table_field'),
+        ListPageMixin   = require('module/mixins/list_page_mixin'),
+        React           = require('react'),
+        Morearty        = require('morearty'),
+        Immutable 	    = require('immutable');
 
 const SportsList = React.createClass({
     mixins: [Morearty.Mixin, ListPageMixin],

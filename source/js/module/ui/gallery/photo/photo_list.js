@@ -1,6 +1,7 @@
 const   If          = require('module/ui/if/if'),
         Photo       = require('./photo_item'),
         React       = require('react'),
+        Morearty    = require('morearty'),
         Immutable   = require('immutable');
 
 const PhotoList = React.createClass({

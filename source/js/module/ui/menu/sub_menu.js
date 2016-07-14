@@ -1,4 +1,5 @@
 const 	React 		= require('react'),
+		Morearty    = require('morearty'),
 		MenuMixin 	= require('module/ui/menu/menu_mixin');
 
 const SubMenu = React.createClass({

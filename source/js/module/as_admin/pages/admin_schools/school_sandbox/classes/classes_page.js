@@ -1,4 +1,5 @@
 const	React 		= require('react'),
+		Morearty	= require('morearty'),
 		RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route');
 

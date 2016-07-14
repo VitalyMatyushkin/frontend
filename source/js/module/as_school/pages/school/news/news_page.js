@@ -1,6 +1,7 @@
 const 	SVG 			= require('module/ui/svg'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
+		Morearty        = require('morearty'),
 		DateTimeMixin 	= require('module/mixins/datetime');
 
 const NewsPage = React.createClass({

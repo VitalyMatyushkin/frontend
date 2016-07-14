@@ -1,25 +1,21 @@
-var Form = require('module/ui/form/form'),
-	FormField = require('module/ui/form/form_field'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	ChoosePermissionType;
+const 	React 		= require('react'),
+		Morearty	= require('morearty');
 
-ChoosePermissionType = React.createClass({
+const ChoosePermissionType = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
 	getClickFunction: function(permissionType) {
-		var self = this;
+		const self = this;
 
 		return function() {
-
 			self.getDefaultBinding().set('permissionType', permissionType);
 			self.props.onSuccess();
 		}
 	},
 	render: function() {
-		var self = this;
+		const self = this;
 
 		return (
 			<div className="bForm mRegisterSteps">

@@ -5,6 +5,7 @@ const   AboutMe             = require('module/as_manager/pages/student/view/abou
         React               = require('react'),
 		TeamStats           = require('module/as_manager/pages/student/view/team_stats'),
         StudentHelper       = require('module/helpers/studentHelper'),
+        Morearty            = require('morearty'),
         Immutable           = require('immutable');
 
 const LeanerView = React.createClass({

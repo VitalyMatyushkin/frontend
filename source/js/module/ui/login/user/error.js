@@ -1,8 +1,8 @@
-var RegiseterUserDone,
-	React = require('react'),
-	ReactDOM = require('reactDom');
+const 	React 		= require('react'),
+		Morearty    = require('morearty'),
+		ReactDOM 	= require('react-dom');
 
-RegiseterUserDone = React.createClass({
+const RegiseterUserDone = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onOk: React.PropTypes.func,

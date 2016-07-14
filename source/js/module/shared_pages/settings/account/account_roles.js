@@ -2,7 +2,8 @@
  * Created by bridark on 08/07/15.
  */
 const   React       = require('react'),
-        ReactDOM    = require('reactDom'),
+        ReactDOM    = require('react-dom'),
+        Morearty    = require('morearty'),
         Immutable   = require('immutable');
 
 

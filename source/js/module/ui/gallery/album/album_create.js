@@ -1,4 +1,5 @@
 const 	AlbumEditForm 	= require('./album_edit_form'),
+		Morearty        = require('morearty'),
 		React 			= require('react');
 
 const AlbumCreate = React.createClass({

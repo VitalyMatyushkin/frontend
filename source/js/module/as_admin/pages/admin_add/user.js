@@ -1,5 +1,6 @@
 const 	RegisterForm 	= require('module/as_admin/pages/admin_add/user/form'),
 		React 			= require('react'),
+		Morearty    	= require('morearty'),
 		Immutable 		= require('immutable');
 
 const RegiseterUserPage = React.createClass({

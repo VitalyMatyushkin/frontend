@@ -2,6 +2,7 @@ const   Table			= require('module/ui/list/table'),
         TableField 		= require('module/ui/list/table_field'),
         DateTimeMixin 	= require('module/mixins/datetime'),
         ListPageMixin 	= require('module/mixins/list_page_mixin'),
+		Morearty		= require('morearty'),
         React 			= require('react');
 
 const NewsListPage = React.createClass({

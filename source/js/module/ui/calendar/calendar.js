@@ -1,7 +1,8 @@
 const 	CalendarYearView 	= require('./calendar_year'),
 		CalendarMonthView 	= require('./calendar_month'),
 		React 				= require('react'),
-		ReactDOM 			= require('reactDom'),
+		ReactDOM 			= require('react-dom'),
+		Morearty            = require('morearty'),
 		Immutable 			= require('immutable');
 
 

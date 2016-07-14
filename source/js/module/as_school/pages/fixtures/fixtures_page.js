@@ -2,6 +2,7 @@ const 	SubMenu 			= require('module/ui/menu/sub_menu'),
 		If 					= require('module/ui/if/if'),
 		React 				= require('react'),
 		Immutable 			= require('immutable'),
+		Morearty            = require('morearty'),
 		RadioGroup 			= require('module/ui/radiogroup/radiogroup'),
 		FixturesList 		= require('module/ui/fixtures/fixtures_list'),
 		FixturesStatistics 	= require('module/ui/fixtures/fixture_statics');

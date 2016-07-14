@@ -1,6 +1,7 @@
 
 const   React       = require('react'),
         Immutable   = require('immutable'),
+        Morearty	= require('morearty'),
         Album	    = require('module/ui/gallery/album/album_item');
 
 const GalleryListPage = React.createClass({

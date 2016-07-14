@@ -1,5 +1,6 @@
-const 	React 	= require('react'),
-		Helpers = require('module/helpers/storage');
+const 	React 		= require('react'),
+		Morearty    = require('morearty'),
+		Helpers 	= require('module/helpers/storage');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],

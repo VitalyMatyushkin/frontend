@@ -1,8 +1,9 @@
 /**
  * Created by bridark on 30/06/15.
  */
-const 	SVG 	= require('module/ui/svg'),
-    	React 	= require('react');
+const 	SVG 		= require('module/ui/svg'),
+		Morearty    = require('morearty'),
+    	React 		= require('react');
 
 const UserRole = React.createClass({
     mixins:[Morearty.Mixin],

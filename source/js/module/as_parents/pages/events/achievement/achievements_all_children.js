@@ -4,8 +4,9 @@
 
 const   React               = require('react'),
         AchievementModel    = require('module/as_parents/pages/events/achievement/achievement_model'),
+        Morearty            = require('morearty');
 
-AchievementsAllChildren = React.createClass({
+const AchievementsAllChildren = React.createClass({
     mixins: [Morearty.Mixin],
     renderAllAchievements:function(){
         const   self    = this,

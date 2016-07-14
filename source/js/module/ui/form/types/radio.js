@@ -1,5 +1,6 @@
 const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 		RadioGroup 	= require('module/ui/radiogroup/radiogroup'),
+		Morearty    = require('morearty'),
 		React 		= require('react');
 
 const TypeRadio = React.createClass({

@@ -3,6 +3,7 @@ const	React					= require('react'),
 		TeamPlayersValidator	= require('./helpers/team_players_validator'),
 		GameField				= require('./gameField'),
 		TeamModeView			= require('./modes/team_mode_view'),
+		Morearty            	= require('morearty'),
 		Immutable				= require('immutable');
 
 const Manager = React.createClass({

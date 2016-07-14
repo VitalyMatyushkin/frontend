@@ -2,8 +2,9 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		serviceList 		= require('module/core/service_list'),
 		userDataInstance 	= require('module/data/user_data'),
 		authController 		= require('module/core/auth_controller'),
-		ReactDom 			= require('reactDom'),
+		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
+		Morearty			= require('morearty'),
 		Helpers				= require('module/helpers/storage');
 
 function initMainView(schoolId) {

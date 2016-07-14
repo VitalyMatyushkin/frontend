@@ -1,8 +1,9 @@
-var MultiSelectItem = require('./multiselect_item'),
-    Immutable = require('immutable'),
-    React = require('react');
+const   MultiSelectItem = require('./multiselect_item'),
+        Immutable       = require('immutable'),
+        Morearty        = require('morearty'),
+        React           = require('react');
 
-var MultiSelect = React.createClass({
+const MultiSelect = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'MultiSelect',
     getDefaultProps: function() {

@@ -5,6 +5,7 @@
 const   Form        = require('module/ui/form/form'),
         FormField 	= require('module/ui/form/form_field'),
         React       = require('react'),
+        Morearty    = require('morearty'),
         classNames  = require('classnames'),
         roleList    = require('module/data/roles_data');
 

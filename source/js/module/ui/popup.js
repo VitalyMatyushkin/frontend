@@ -1,5 +1,6 @@
-const 	React 	= require('react'),
-		If		= require('module/ui/if/if');
+const 	React 		= require('react'),
+		Morearty    = require('morearty'),
+		If			= require('module/ui/if/if');
 
 const Popup = React.createClass({
 	mixins: [Morearty.Mixin],
