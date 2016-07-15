@@ -7,7 +7,7 @@ const 	React 		= require('react'),
 const Avatar = React.createClass({
 	propTypes:{
 		pic:React.PropTypes.string,
-		minValue:React.PropTypes.number
+		minValue:React.PropTypes.string
 	},
 	getDefaultProps: function () {
 		return {

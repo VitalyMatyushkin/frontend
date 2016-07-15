@@ -78,7 +78,7 @@ const AdminRequest = React.createClass({
             school = schools && permission ? schools.find(s => s.id === permission.schoolId) : null;
 
         if(school && school.pic){
-            return <span className="eChallenge_rivalPic"><img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/></span>;
+            return <img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/>;
         }
     },
     getSchoolName:function(permission){
@@ -91,6 +91,9 @@ const AdminRequest = React.createClass({
             return school.name;
         }
     },
+	getEmail:function(requester){
+		return requester && requester.email ? <div className="eEmail">{requester.email}</div> : null;
+	},
     updateSubMenu:function(){
         const   self            = this,
                 globalBinding   = self.getMoreartyContext().getBinding();
@@ -172,11 +175,13 @@ const AdminRequest = React.createClass({
                            getTotalCountPromise={self._getTotalCountPromise}
                            filter={self.filter}
                     >
-                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} >School</TableField>
-                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem}>Emblem</TableField>
-                        <TableField dataField="requester" dataFieldKey="email">Email</TableField>
-                        <TableField dataField="requestedPermission" dataFieldKey="preset" >Permission</TableField>
-                        <TableField dataField="requestedPermission" dataFieldKey="comment" width="240px" >Details</TableField>
+						<TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolEmblem} className="mHidden"/>
+                        <TableField dataField="requestedPermission" filterType="none" parseFunction={self.getSchoolName} className="mHidden" >School</TableField>
+						<TableField dataField="requester" dataFieldKey="firstName">Name</TableField>
+						<TableField dataField="requester" dataFieldKey="lastName">Surname</TableField>
+						<TableField dataField="requester" parseFunction={self.getEmail} >Email</TableField>
+						<TableField dataField="requestedPermission" dataFieldKey="preset" >Permission</TableField>
+                        <TableField dataField="requestedPermission" dataFieldKey="comment" >Details</TableField>
                     </Table>
                 </div>
             </If>
