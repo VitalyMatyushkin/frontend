@@ -15,12 +15,12 @@ const RouterView = React.createClass({
 			var data = authBinding.toJS();
 
 			// TODO: make check a bit easier. Add policy/rules check?
-			if (data && data.id && data.verified) {
-				self.isAuthorized = true;
+			if (data && data.id && data.verified) {		// if there is id and user is verified, consider user as authorized
+				self.isAuthorized = true;				// and setting flag about that.
 
 				// Redirecting to verification page
-				if (!data.verified.email ||  !data.verified.phone) {
-					self.isVerified = false;
+				if (!data.verified.email ||  !data.verified.phone) {	// if user don't have email or phone verified...
+					self.isVerified = false;							// setting flat about that
 				} else {
 					self.isVerified = true;
 					// in case of redirection resumption user will be redirected to expected page
@@ -34,7 +34,7 @@ const RouterView = React.createClass({
 			}
 		}
 
-		authBinding.addListener(updateAuth);
+		authBinding.addListener(updateAuth);	// subscribing on all auth info updates
 		updateAuth();
 	},
 	/**

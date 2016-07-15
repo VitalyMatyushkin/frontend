@@ -1,5 +1,6 @@
 const   Invite          = require('./invite'),
         ProcessingView  = require('./processing'),
+		If				= require('module/ui/if/if'),
         React           = require('react'),
         InvitesMixin    = require('../mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -123,35 +124,43 @@ const InboxView = React.createClass({
 		});
 	},
     getInvites: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            invites = binding.get('models');
+        const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = binding.get('models');
 
-        return invites.map(function (invite, index) {
-            var inviteBinding = {
-                    default: binding.sub(['models', index]),
-                    inviterSchool: binding.sub(['models', index, 'inviterSchool']),
-                    invitedSchool: binding.sub(['models', index, 'invitedSchool'])
-                };
+        return invites.map((invite, index) => {
+            const inviteBinding = {
+				default: 		binding.sub(['models', index]),
+				inviterSchool: 	binding.sub(['models', index, 'inviterSchool']),
+				invitedSchool: 	binding.sub(['models', index, 'invitedSchool'])
+			};
 
-            return <Invite type="inbox"  binding={inviteBinding} />;
+			const reactKey = inviteBinding.default.toJS().id;
+
+            return <Invite key={reactKey} type="inbox"  binding={inviteBinding} />;
         }).toArray();
     },
     render: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            invites = self.getInvites();
+        const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				isSync	= binding.get('sync'),
+				invites = self.getInvites();
 
-        return <div key="inboxView" className="eInvites_inboxContainer">
-          <div className="eSchoolMaster_wrap">
-            <h1 className="eSchoolMaster_title">Inbox</h1>
-            <div className="eStrip">
-            </div>
-          </div>
-            <div className="eInvites_filterPanel"></div>
-            <div className="eInvites_list" key="inboxViewList">{invites && invites.length ? invites : null}</div>
-			<ProcessingView binding={binding} />
-        </div>;
+        return (
+			<div key="inboxView" className="eInvites_inboxContainer">
+				<div className="eSchoolMaster_wrap">
+					<h1 className="eSchoolMaster_title">Inbox</h1>
+					<div className="eStrip"></div>
+				</div>
+				<If condition={isSync}>
+					<div>
+						<div className="eInvites_filterPanel"></div>
+						<div className="eInvites_list" key="inboxViewList">{invites && invites.length ? invites : null}</div>
+					</div>
+				</If>
+				<ProcessingView binding={binding} />
+        	</div>
+		);
     }
 });
 
