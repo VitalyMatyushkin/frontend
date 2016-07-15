@@ -37,7 +37,17 @@ function runPasswordMode() {
     userDataInstance.setBinding(binding.sub('userData'));
     userRulesInstance.setBinding(binding.sub('userRules'));
 
-    // Enable servises
+    // initializing all services (open too) only when we got all vars set in window.
+    // this is not too very brilliant idea, but there is no other way to fix it quick
+    // TODO: fix me
+    serviceList.initializeOpenServices();
+
+    // initializing all services (open too) only when we got all vars set in window.
+    // this is not too very brilliant idea, but there is no other way to fix it quick
+    // TODO: fix me
+    serviceList.initializeOpenServices();
+
+    // Enable services
     serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
     // Связывания контроллера, отвечающего за контроль за авторизацией с данными

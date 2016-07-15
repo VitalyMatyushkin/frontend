@@ -18,18 +18,18 @@ const  	RouterView 	= require('module/core/router'),
 const AlbumRoutes = React.createClass({
 	mixins: [Morearty.Mixin],
     propTypes:{
-        basePath:React.PropTypes.string,
-        service:React.PropTypes.object
+        basePath: React.PropTypes.string,
+        service: React.PropTypes.object
     },
     getDefaultProps: function() {
         return {
-            basePath:'gallery-not-found'
+            basePath: 'gallery-not-found'
         };
     },
 
 	render: function() {
-		var self = this,
-		binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<RouterView routes={ binding } binding={binding}>

@@ -10,7 +10,7 @@ const   AlbumRoutes         = require('module/ui/gallery/albums'),
 /**
  * This component is required to initialize the base. We create here a necessary set of parameters for a event gallery.
  * */
-const schoolGalleryRoutes = React.createClass({
+const eventGalleryRoutes = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function() {
         var self = this,
@@ -31,4 +31,4 @@ const schoolGalleryRoutes = React.createClass({
     }
 });
 
-module.exports = schoolGalleryRoutes;
+module.exports = eventGalleryRoutes;

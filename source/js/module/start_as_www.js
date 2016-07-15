@@ -31,6 +31,11 @@ function runWwwMode() {
 	// Передача связывания контекста в классы данных
 	userDataInstance.setBinding(binding.sub('userData'));
 
+	// initializing all services (open too) only when we got all vars set in window.
+	// this is not too very brilliant idea, but there is no other way to fix it quick
+	// TODO: fix me
+	serviceList.initializeOpenServices();
+
 	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 

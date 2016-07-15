@@ -32,7 +32,7 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
     self._params = params;
 
     self.albums = {
-        "get":function(){
+        get:function(){
             return self._serviceList.albums.get(self._params);
         },
         post:function(newAlbum){
@@ -40,7 +40,7 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
         }
     };
     self.album = {
-        "get":function(albumId){
+        get:function(albumId){
             const params = self._getParamsWithAlbumId(albumId);
 
             return self._serviceList.album.get(params);
@@ -57,7 +57,7 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
         }
     };
     self.photos = {
-        "get": function (albumId) {
+        get: function (albumId) {
             const params = self._getParamsWithAlbumId(albumId);
 
             return self._serviceList.photos.get(params);
