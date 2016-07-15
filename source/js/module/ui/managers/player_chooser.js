@@ -179,7 +179,7 @@ const	PlayerChooser	= React.createClass({
 		if(
 			playersForSelect !== undefined &&
 			playersForSelect !== null &&
-			Lazy(playersForSelect).findWhere({id: player.id})
+			Lazy(playersForSelect).findWhere({id: player.id}) === undefined
 		) {
 				playersForSelect.unshift(player);
 				binding.set('playersForSelect', Immutable.fromJS(playersForSelect));
