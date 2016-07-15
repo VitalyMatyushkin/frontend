@@ -3,7 +3,6 @@ const 	Table 			= require('module/ui/list/table'),
 		DateTimeMixin 	= require('module/mixins/datetime'),
 		SVG 			= require('module/ui/svg'),
 		ListPageMixin 	= require('module/mixins/list_page_mixin'),
-		Service 		= require('module/core/service2'),
 		Morearty		= require('morearty'),
 		React 			= require('react');
 
@@ -57,29 +56,13 @@ const StudentsListPage = React.createClass({
             }) : null;
         }
 	},
-	/**
-	 * only for service2 testing
-	 * */
-	_getDataPromise:function(filter){
-		const 	self 		= this,
-				rootBinding = self.getMoreartyContext().getBinding(),
-				sessionId 	= rootBinding.get('userData.authorizationInfo.id'),
-				options 	= 	{
-									authHeader:'usid',
-									authKey:sessionId,
-									timeout:3000
-								},
-				service 	= new Service('/i/schools/{schoolId}/students', options);
-		console.log('service2 started...');
-		return service.get(self.activeSchoolId, { filter: filter });
-	},
 	getTableView: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
 		return (
 			<Table title="Students" binding={binding} onItemView={self.onView} onItemEdit={self._getEditFunction()}
 				   onItemRemove={self.onRemove} isPaginated={true} filter={self.filter}
-				   getDataPromise={self._getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
+				   getDataPromise={self.getDataPromise} getTotalCountPromise={self.getTotalCountPromise} >
 				<TableField dataField="gender" filterType="none" parseFunction={self.getGender}>Gender</TableField>
 				<TableField dataField="firstName" >Name</TableField>
 				<TableField dataField="lastName" >Surname</TableField>
