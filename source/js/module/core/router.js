@@ -8,8 +8,8 @@ const RouterView = React.createClass({
 	isAuthorized: false,
 	isVerified: false,
 	bindToAuthorization: function() {
-		var self = this,
-			authBinding = self.getDefaultBinding().sub('userData.authorizationInfo');
+		const 	self 		= this,
+				authBinding = self.getDefaultBinding().sub('userData.authorizationInfo');
 
 		function updateAuth() {
 			var data = authBinding.toJS();

@@ -87,6 +87,9 @@ function runAdminMode() {
     userDataInstance.setBinding(binding.sub('userData'));
     userRulesInstance.setBinding(binding.sub('userRules'));
 
+
+	serviceListAdmin.initializeOpenServices();
+
 // Включение авторизации сервисов
     serviceListAdmin.initialize(binding.sub('userData.authorizationInfo'));
 
