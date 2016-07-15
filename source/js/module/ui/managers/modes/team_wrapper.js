@@ -76,10 +76,9 @@ const TeamWrapper = React.createClass({
 		}
 	},
 	_addPlayersListener: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const self = this;
 
-		self.playersListener = self._getPlayersBinding().addListener((descriptor) => {
+		self.playersListener = self._getPlayersBinding().addListener(descriptor => {
 			if(descriptor.getCurrentValue() !== undefined && descriptor.getPreviousValue() !== undefined) {
 				const	currPlayers	= descriptor.getCurrentValue().toJS(),
 						prevPlayers	= descriptor.getPreviousValue().toJS();

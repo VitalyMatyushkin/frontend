@@ -80,8 +80,9 @@ const TeamFunctionalMixin = {
 		self.getBinding('players').set(Immutable.fromJS(players));
 	},
 	_onRemovePlayer: function (playerId) {
-		const	self			= this,
-				players			= self.getBinding('players').toJS(),
+		const self = this;
+
+		const	players			= self.getBinding('players').toJS(),
 				findedPlayer	= Lazy(players).findWhere({id:playerId}),
 				index			= Lazy(players).indexOf(findedPlayer);
 
