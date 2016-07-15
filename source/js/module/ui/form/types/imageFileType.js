@@ -8,6 +8,7 @@ const   TypeMixin   = require('module/ui/form/types/type_mixin'),
         SVG         = require('module/ui/svg'),
 		If			= require('module/ui/if/if'),
         Immutable   = require('immutable'),
+		Morearty    = require('morearty'),
         React       = require('react');
 
 /** Handles file upload to cloud. As result will return uploaded file url to form */
@@ -53,7 +54,7 @@ const ImageFileTypeUpload = React.createClass({
 
         let coverImg;
         if(noEmpty) {
-            coverImg = window.Server.images.getResizedToBoxUrl(binding.get('value'), 300, 300);
+            coverImg = window.Server.images.getResizedToMinValueUrl(binding.get('value'), 170);
         } else {
             coverImg= '/images/empty_pic_uploader_box.png';
         }

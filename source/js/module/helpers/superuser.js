@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const   Lazy        = require('lazyjs'),
+const   Lazy        = require('lazy.js'),
         Immutable 	= require('immutable'),
         Promise     = require('bluebird');
 

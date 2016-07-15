@@ -2,6 +2,7 @@ const	If 				= require('module/ui/if/if'),
 		InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		Sport           = require('module/ui/icons/sport_icon'),
+		Morearty		= require('morearty'),
 		React			= require('react');
 
 const EventRival = React.createClass({

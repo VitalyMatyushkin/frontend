@@ -3,14 +3,15 @@
  */
 const 	HeadView 		= require('module/as_login/head'),
         CenterView 		= require('module/as_login/center'),
-        React 			= require('react');
+        React 			= require('react'),
+        Morearty        = require('morearty');
 
 const ApplicationView = React.createClass({
     mixins: [Morearty.Mixin],
 
     render: function() {
         const 	self 	= this,
-            binding = self.getDefaultBinding();
+            	binding = self.getDefaultBinding();
 
         return (
             <div>

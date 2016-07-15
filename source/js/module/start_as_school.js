@@ -2,8 +2,9 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		serviceList 		= require('module/core/service_list'),
 		userDataInstance 	= require('module/data/user_data'),
 		authController 		= require('module/core/auth_controller'),
-		ReactDom 			= require('reactDom'),
+		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
+		Morearty			= require('morearty'),
 		Helpers				= require('module/helpers/storage');
 
 function initMainView(schoolId) {
@@ -37,6 +38,11 @@ function initMainView(schoolId) {
 		defaultPath: 'home',
         asSchool:true //Flag for public school page
 	});
+
+	// initializing all services (open too) only when we got all vars set in window.
+	// this is not too very brilliant idea, but there is no other way to fix it quick
+	// TODO: fix me
+	serviceList.initializeOpenServices();
 
 	// Turning on authorization service
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));

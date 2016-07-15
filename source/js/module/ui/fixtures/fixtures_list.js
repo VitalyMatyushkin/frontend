@@ -1,9 +1,9 @@
-var FixturesList,
-	DateTimeMixin = require('module/mixins/datetime'),
-	If = require('module/ui/if/if'),
-	React = require('react');
+const 	DateTimeMixin 	= require('module/mixins/datetime'),
+		If 				= require('module/ui/if/if'),
+		Morearty        = require('morearty'),
+		React 			= require('react');
 
-FixturesList = React.createClass({
+const FixturesList = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	_getScore: function(fixture) {
 		var self = this,

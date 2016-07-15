@@ -6,6 +6,7 @@ const   RouterView      = require('module/core/router'),
         SubMenu         = require('module/ui/menu/sub_menu'),
         React           = require('react'),
         MoreartyHelper	= require('module/helpers/morearty_helper'),
+        Morearty	    = require('morearty'),
         Immutable       = require('immutable');
 
 let liveRequestCount;

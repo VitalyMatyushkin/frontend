@@ -1,16 +1,17 @@
 const 	Table 			= require('module/ui/list/table'),
 		TableField 		= require('module/ui/list/table_field'),
 		React 			= require('react'),
+		Morearty		= require('morearty'),
 		Immutable 		= require('immutable');
 
 
 const PermissionsList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding(),
-			userId = globalBinding.toJS('userData.authorizationInfo.userId');
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding(),
+				userId 			= globalBinding.toJS('userData.authorizationInfo.userId');
 
 		self.request && self.request.cancel();
 

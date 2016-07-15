@@ -1,9 +1,10 @@
 /**
  * Created by bridark on 27/07/15.
  */
-const   React = require('react'),
+const   React       = require('react'),
+        Morearty    = require('morearty');
 
-SortColumn = React.createClass({
+const SortColumn = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         onSort: React.PropTypes.func,

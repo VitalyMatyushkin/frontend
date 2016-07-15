@@ -1,6 +1,7 @@
 const   TypeMixin   = require('module/ui/form/types/type_mixin'),
 	    React       = require('react'),
         Immutable 	= require('immutable'),
+		Morearty    = require('morearty'),
 		helper		= require('module/helpers/loader_utils');
 
 const TypePhone =  React.createClass({

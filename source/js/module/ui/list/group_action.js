@@ -1,11 +1,13 @@
 /**
  * Created by bridark on 27/07/15.
  */
-var GroupAction,
-    requestName,
-    React = require('react'),
-    ReactDOM = require('reactDom');
-GroupAction = React.createClass({
+const 	Morearty            = require('morearty'),
+		React               = require('react'),
+		ReactDOM            = require('react-dom');
+
+let requestName;
+
+const GroupAction = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
         actionList:React.PropTypes.array,

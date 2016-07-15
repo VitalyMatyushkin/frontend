@@ -1,4 +1,4 @@
-const	Lazy			= require('lazyjs'),
+const	Lazy			= require('lazy.js'),
 		EventHelper		= require('module/helpers/eventHelper');
 
 const StudentHelper = {

@@ -4,6 +4,7 @@
 const   AchievementsAllChildren     = require('module/as_parents/pages/events/achievement/achievements_all_children'),
         AchievementOneChild         = require('module/as_parents/pages/events/achievement/achievement_one_child'),
         React                       = require('react'),
+        Morearty                    = require('morearty'),
         If                          = require('module/ui/if/if'),
 
 ParentChildAchievement = React.createClass({

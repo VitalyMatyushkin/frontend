@@ -1,5 +1,6 @@
-const 	React 		= require('react'),
-		ClassForm 	= require('./class_form');
+const 	React 			= require('react'),
+		Morearty		= require('morearty'),
+		ClassForm 		= require('./class_form');
 
 const ClassAddPage = React.createClass({
 	mixins: [Morearty.Mixin],

@@ -21,6 +21,7 @@ var SOURCE 			= './source',
 	git 			= require('gulp-git'),
 	fs 				= require('fs'),
 	babel 			= require("gulp-babel"),
+	webpack			= require('webpack-stream'),
 	karmaTools 		= require('./project/karma_tools');
 
 gulp.task('buildVersionFile', function(done){
@@ -113,6 +114,14 @@ gulp.task('amdScripts', function(){
 	return buildToAmdScripts(SOURCE + '/js/module/**/*.js', BUILD + '/js/module');
 });
 
+/** let it be here at least for a while. A bit later it can be removed */
+gulp.task('webpack', function() {
+	return gulp.src([SOURCE + '/*.js', SOURCE + '/**/*.js'])
+		.pipe(webpack( require('./webpack.config')))
+		.pipe(gulp.dest('dist/'));
+});
+
+
 /** compiles React's JSX to JS, wraps CommonJS modules to AMD, stores result to BUILD/js/modules */
 function buildToAmdScripts(srcPath, destPath){
 	return gulp.src(srcPath)					// picking everything from path
@@ -202,5 +211,5 @@ gulp.task('default', function (done) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'lint', 'styles', 'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts', 'svgSymbols', 'buildVersionFile', callback);
+    run('clean', 'lint', 'styles', /*'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts',*/ 'svgSymbols', 'buildVersionFile', 'webpack', callback);
 });

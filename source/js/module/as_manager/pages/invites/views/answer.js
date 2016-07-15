@@ -1,8 +1,8 @@
-var AnswerView,
-	MoreartyHelper	= require('module/helpers/morearty_helper'),
-	React = require('react');
+const 	MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Morearty		= require('morearty'),
+		React 			= require('react');
 
-AnswerView = React.createClass({
+const AnswerView = React.createClass({
     mixins: [Morearty.Mixin],
 	// ID of current school
 	// Will set on componentWillMount event

@@ -1,7 +1,8 @@
 const   Form        = require('module/ui/form/form'),
         FormField   = require('module/ui/form/form_field'),
-        FormColumn = require('module/ui/form/form_column'),
+        FormColumn  = require('module/ui/form/form_column'),
         Immutable 	= require('immutable'),
+        Morearty	= require('morearty'),
         React       = require('react');
 
 const SportsForm = React.createClass({

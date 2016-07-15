@@ -1,5 +1,6 @@
-const   SVG     = require('module/ui/svg'),
-        React   = require('react');
+const   SVG         = require('module/ui/svg'),
+        Morearty    = require('morearty'),
+        React       = require('react');
 
 /**
  * This component show two inputs with button each. First one takes email verification code, second one takes phone verification code

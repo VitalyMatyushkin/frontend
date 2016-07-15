@@ -2,6 +2,7 @@ const	React 			= require('react'),
 		Table			= require('module/ui/list/table'),
 		TableField		= require('module/ui/list/table_field'),
 		ListPageMixin	= require('module/mixins/list_page_mixin'),
+		Morearty		= require('morearty'),
 		Avatar 			= require('module/ui/avatar/avatar');
 
 const Logs = React.createClass({
@@ -14,7 +15,7 @@ const Logs = React.createClass({
 		if(user){
 			avatar = (
 				<div className="eUserAvatar">
-					<Avatar pic={user.avatar}/>
+					<Avatar pic={user.avatar} minValue="50"/>
 				</div>
 			)
 		}

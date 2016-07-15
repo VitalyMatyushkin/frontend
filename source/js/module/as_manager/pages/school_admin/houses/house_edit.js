@@ -1,6 +1,7 @@
-const 	HouseForm = require('module/as_manager/pages/school_admin/houses/house_form'),
-		React = require('react'),
-		Immutable = require('immutable');
+const 	HouseForm 	= require('module/as_manager/pages/school_admin/houses/house_form'),
+		React 		= require('react'),
+		Morearty	= require('morearty'),
+		Immutable 	= require('immutable');
 
 
 const HouseEditPage = React.createClass({

@@ -1,10 +1,11 @@
-const TypeText = require('module/ui/form/types/text'),
-	React = require('react'),
-	ReactDOM = require('reactDom'),
-	TypeMixin = require('module/ui/form/types/type_mixin'),
-    errorText = 'Values in both fields do not match',
+const 	TypeText 	= require('module/ui/form/types/text'),
+		React 		= require('react'),
+		ReactDOM 	= require('react-dom'),
+		Morearty	= require('morearty'),
+		TypeMixin 	= require('module/ui/form/types/type_mixin'),
+		errorText 	= 'Values in both fields do not match';
 
-TypeConfirmText = React.createClass({
+const TypeConfirmText = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
 		const self = this,

@@ -9,10 +9,11 @@
     To customise: provide your own array of options @userProvidedOptions:Array, and selected or active selected option
     @userActiveState:String
      */
-var TypeDrop,
-    React  = require('react'),
-    TypeMixin = require('module/ui/form/types/type_mixin');
-TypeDrop = React.createClass({
+const   React       = require('react'),
+        Morearty    = require('morearty'),
+        TypeMixin   = require('module/ui/form/types/type_mixin');
+
+const TypeDrop = React.createClass({
     mixins:[Morearty.Mixin, TypeMixin],
     propTypes:{
         userProvidedOptions:React.PropTypes.array,

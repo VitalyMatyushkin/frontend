@@ -6,7 +6,8 @@ const   Table           = require('module/ui/list/table'),
         DateTimeMixin   = require('module/mixins/datetime'),
         React           = require('react'),
         If              = require('module/ui/if/if'),
-        Lazy            = require('lazyjs'),
+        Lazy            = require('lazy.js'),
+        Morearty        = require('morearty'),
         MoreartyHelper	= require('module/helpers/morearty_helper'),
         ListPageMixin   = require('module/mixins/list_page_mixin');
 

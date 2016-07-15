@@ -6,6 +6,7 @@ const   RegisterDone        = require('module/ui/register/user/register_done'),
         React               = require('react'),
         Immutable 	        = require('immutable'),
         $                   = require('jquery'),
+        Morearty            = require('morearty'),
         Helpers             = require('module/helpers/storage');
 
 // TODO: remove jquery

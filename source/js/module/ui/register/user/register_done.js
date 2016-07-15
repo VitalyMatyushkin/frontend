@@ -1,9 +1,9 @@
-var RegiseterUserDone,
-	SVG = require('module/ui/svg'),
-	React = require('react'),
-	If = require('module/ui/if/if');
+const 	SVG 		= require('module/ui/svg'),
+		React 		= require('react'),
+		Morearty    = require('morearty'),
+		If 			= require('module/ui/if/if');
 
-RegiseterUserDone = React.createClass({
+const RegiseterUserDone = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onSuccess: React.PropTypes.func

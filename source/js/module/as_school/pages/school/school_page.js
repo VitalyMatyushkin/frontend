@@ -4,6 +4,7 @@ const 	RouterView 	= require('module/core/router'),
 		SchoolInfo 	= require('module/as_school/pages/school/view/school_info'),
 		React 		= require('react'),
 		Immutable 	= require('immutable'),
+		Morearty    = require('morearty'),
 		SchoolName 	= require('module/as_school/pages/school/view/school_name');
 
 const OneSchoolPage = React.createClass({

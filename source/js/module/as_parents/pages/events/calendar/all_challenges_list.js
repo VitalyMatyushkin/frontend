@@ -1,6 +1,7 @@
 const	React			= require('react'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		Immutable		= require('immutable'),
+		Morearty      	= require('morearty'),
 		Sport			= require('module/ui/icons/sport_icon');
 
 const AllChallengesList = React.createClass({

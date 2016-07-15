@@ -6,10 +6,12 @@ const   ApplicationView     = require('module/as_login/application'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
         serviceList         = require('module/core/service_list'),
-        ReactDom            = require('reactDom'),
-        React               = require('react');
+        ReactDom            = require('react-dom'),
+        React               = require('react'),
+        Morearty            = require('morearty');
 
-function runLoginMode() {
+    function runLoginMode() {
+
 // Create Morearty context
     const MoreartyContext = Morearty.createContext({
         initialState: {
@@ -89,16 +91,18 @@ function runLoginMode() {
     userDataLogin.setBinding(binding.sub('userData'));
     userRulesInstance.setBinding(binding.sub('userRules'));
 
-    // Enable servises
+	// initializing all services (open too) only when we got all vars set in window.
+	// this is not too very brilliant idea, but there is no other way to fix it quick
+	// TODO: fix me
+	serviceList.initializeOpenServices();
+    // Enable services
     serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
     // Связывания контроллера, отвечающего за контроль за авторизацией с данными
-    authController.initialize(
-        {
+    authController.initialize({
             binding: binding,
             defaultPath: 'login'
-        }
-    );
+	});
 
 
     // Инициализация приложения

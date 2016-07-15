@@ -3,6 +3,7 @@
  */
 const   SVG         = require('module/ui/svg'),
         Immutable 	= require('immutable'),
+        Morearty    = require('morearty'),
         React       = require('react');
 
 const BlogCarousel = React.createClass({

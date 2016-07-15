@@ -1,7 +1,8 @@
 const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Promise		= require('bluebird'),
-		Lazy		= require('lazyjs'),
+		Lazy		= require('lazy.js'),
+		Morearty    = require('morearty'),
 		classNames	= require('classnames');
 
 const	PlayerChooser	= React.createClass({

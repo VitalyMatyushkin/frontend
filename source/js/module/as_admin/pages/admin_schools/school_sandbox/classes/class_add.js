@@ -1,5 +1,6 @@
 
 const 	React 			= 	require('react'),
+		Morearty		= require('morearty'),
 		ClassForm 		= 	require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form');
 
 const ClassAddPage = React.createClass({

@@ -3,7 +3,8 @@ const 	ApplicationView 	= require('module/as_manager/application'),
 		userRulesInstance 	= require('module/data/user_rules'),
 		authController 		= require('module/core/auth_controller'),
 		serviceList 		= require('module/core/service_list'),
-		ReactDom 			= require('reactDom'),
+		Morearty			= require('morearty'),
+		ReactDom 			= require('react-dom'),
 		React 				= require('react');
 
 function runManagerMode() {
@@ -87,6 +88,10 @@ function runManagerMode() {
 	userDataInstance.setBinding(binding.sub('userData'));
 	userRulesInstance.setBinding(binding.sub('userRules'));
 
+	// initializing all services (open too) only when we got all vars set in window.
+	// this is not too very brilliant idea, but there is no other way to fix it quick
+	// TODO: fix me
+	serviceList.initializeOpenServices();
 	// Enable servises
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 

@@ -1,8 +1,9 @@
 /**
  * Created by bridark on 24/06/15.
  */
-const   React   = require('react'),
-        SVG     = require('module/ui/svg');
+const   React       = require('react'),
+        Morearty	= require('morearty'),
+        SVG         = require('module/ui/svg');
 
 // TODO: WTF binding is here ????
 

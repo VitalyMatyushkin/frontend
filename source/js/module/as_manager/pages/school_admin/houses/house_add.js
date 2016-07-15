@@ -1,8 +1,8 @@
-var HouseForm = require('module/as_manager/pages/school_admin/houses/house_form'),
-	React = require('react'),
-	HouseAddPage;
+const 	HouseForm 	= require('module/as_manager/pages/school_admin/houses/house_form'),
+		Morearty	= require('morearty'),
+		React 		= require('react');
 
-HouseAddPage = React.createClass({
+const HouseAddPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		var self = this,

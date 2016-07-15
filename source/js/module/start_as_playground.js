@@ -4,7 +4,7 @@
 
 
 const
-        ReactDom        = require('reactDom'),
+        ReactDom        = require('react-dom'),
         React           = require('react'),
         Promise         = require('bluebird'),
         ComboBox        = require('module/ui/autocomplete2/ComboBox2');

@@ -1,5 +1,6 @@
 const 	InvitesMixin 	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		DateTimeMixin 	= require('module/mixins/datetime'),
+		Morearty		= require('morearty'),
 		React 			= require('react');
 
 const EventHeader = React.createClass({

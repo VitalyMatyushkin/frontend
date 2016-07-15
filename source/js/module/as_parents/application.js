@@ -1,9 +1,9 @@
-var HeadView = require('module/as_parents/head'),
-	CenterView = require('module/as_parents/center'),
-	React = require('react'),
-	ApplicationView;
+const 	HeadView 	= require('module/as_parents/head'),
+		CenterView 	= require('module/as_parents/center'),
+		React 		= require('react'),
+		Morearty    = require('morearty');
 
-ApplicationView = React.createClass({
+const ApplicationView = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,

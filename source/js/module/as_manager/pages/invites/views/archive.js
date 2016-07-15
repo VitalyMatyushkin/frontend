@@ -3,6 +3,7 @@ const 	ProcessingView 	= require('./processing'),
 		React 			= require('react'),
 		InvitesMixin 	= require('../mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Morearty		= require('morearty'),
 		Immutable		= require('immutable');
 
 const ArchiveView = React.createClass({

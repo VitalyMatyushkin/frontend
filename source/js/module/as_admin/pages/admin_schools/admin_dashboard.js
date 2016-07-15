@@ -2,6 +2,7 @@ const   RouterView  = require('module/core/router'),
         Route       = require('module/core/route'),
         React       = require('react'),
         SubMenu     = require('module/ui/menu/sub_menu'),
+        Morearty    = require('morearty'),
         Immutable   = require('immutable');
 
 const OneSchoolPage = React.createClass({

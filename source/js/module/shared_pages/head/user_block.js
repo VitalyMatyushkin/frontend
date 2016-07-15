@@ -1,6 +1,7 @@
 const 	React 			= require('react'),
 		SVG 			= require('module/ui/svg'),
 		Immutable 		= require('immutable'),
+		Morearty        = require('morearty'),
 		RoleList		= require('./role_list'),
 		Avatar 			= require('module/ui/avatar/avatar'),
 		classNames		= require('classnames');
@@ -55,7 +56,7 @@ const UserBlock = React.createClass({
 			// Кнопка перехода на страницу пользователя
 			UserButton = (
 				<a href="/#settings/general" className={userClasses}>
-					<Avatar pic={binding.get('userInfo.avatar')} />
+					<Avatar pic={binding.get('userInfo.avatar')} minValue="50" />
 				</a>
 			);
 

@@ -1,5 +1,6 @@
 
 const 	HouseForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/houses/house_form'),
+		Morearty	= require('morearty'),
 		React 		= require('react');
 
 const HouseAddPage = React.createClass({

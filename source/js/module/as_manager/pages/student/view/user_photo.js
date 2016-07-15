@@ -1,7 +1,7 @@
-var UserPhoto,
-	React = require('react');
+const 	Morearty	= require('morearty'),
+		React 		= require('react');
 
-UserPhoto = React.createClass({
+const UserPhoto = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,

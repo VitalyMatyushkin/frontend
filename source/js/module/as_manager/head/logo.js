@@ -1,5 +1,6 @@
-const React = require('react'),
-	  SVG = require('module/ui/svg');
+const 	React 		= require('react'),
+		Morearty	= require('morearty'),
+	  	SVG 		= require('module/ui/svg');
 
 const Logo = React.createClass({
 	mixins: [Morearty.Mixin],

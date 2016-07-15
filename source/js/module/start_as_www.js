@@ -2,7 +2,8 @@ const  	ApplicationView 	= require('module/as_www/application'),
 		serviceList 		= require('module/core/service_list'),
 		userDataInstance 	= require('module/data/user_data'),
 		authController 		= require('module/core/auth_controller'),
-		ReactDom 			= require('reactDom'),
+		Morearty			= require('morearty'),
+		ReactDom 			= require('react-dom'),
 		React 				= require('react');
 
 function runWwwMode() {
@@ -29,6 +30,11 @@ function runWwwMode() {
 
 	// Передача связывания контекста в классы данных
 	userDataInstance.setBinding(binding.sub('userData'));
+
+	// initializing all services (open too) only when we got all vars set in window.
+	// this is not too very brilliant idea, but there is no other way to fix it quick
+	// TODO: fix me
+	serviceList.initializeOpenServices();
 
 	// Включение авторизации сервисов
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));

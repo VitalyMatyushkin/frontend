@@ -2,6 +2,7 @@
  * Created by Bright on 07/04/2016.
  */
 const   React       =   require('react'),
+        Morearty    = require('morearty'),
         Immutable   =   require('immutable');
 
 const   AdminDropList  =  React.createClass({

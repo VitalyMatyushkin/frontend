@@ -1,4 +1,5 @@
-const   React       = require('react');
+const   React       = require('react'),
+        Morearty    = require('morearty');
 
 const Pagination = React.createClass({
     mixins:[Morearty.Mixin],

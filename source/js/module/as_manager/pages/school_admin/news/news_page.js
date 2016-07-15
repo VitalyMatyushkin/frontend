@@ -1,5 +1,6 @@
 const	RouterView 	= require('module/core/router'),
 		React 		= require('react'),
+		Morearty	= require('morearty'),
 		Route 		= require('module/core/route');
 
 const NewsPage = React.createClass({

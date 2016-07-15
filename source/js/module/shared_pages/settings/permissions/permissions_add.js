@@ -3,7 +3,7 @@ const 	CoachForm 		= require('module/shared_pages/settings/permissions/forms/coa
 		ParentForm 		= require('module/shared_pages/settings/permissions/forms/parent'),
 		ChooseType 		= require('module/shared_pages/settings/permissions/forms/type'),
 		React 			= require('react'),
-		ReactDOM 		= require('reactDom'),
+		Morearty		= require('morearty'),
 		Immutable 		= require('immutable');
 
 

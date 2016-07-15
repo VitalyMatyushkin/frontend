@@ -1,10 +1,11 @@
 /**
  * Created by Bright on 17/02/2016.
  */
-const   TypeMixin = require('module/ui/form/types/type_mixin'),
-        className = require('classnames'),
-        Immutable = require('immutable'),
-        React = require('react');
+const   TypeMixin   = require('module/ui/form/types/type_mixin'),
+        className   = require('classnames'),
+        Immutable   = require('immutable'),
+        Morearty    = require('morearty'),
+        React       = require('react');
 
 const TermsCheckbox = React.createClass({
     mixins:[Morearty.Mixin, TypeMixin],

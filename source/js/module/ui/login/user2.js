@@ -2,6 +2,7 @@ const 	LoginForm 		= require('module/ui/login/user/form'),
 		LoginError 		= require('module/ui/login/user/error'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
+		Morearty        = require('morearty'),
 		RoleSelector	= require('module/as_login/pages/RoleSelector'),
 		SVG 		    = require('module/ui/svg');
 

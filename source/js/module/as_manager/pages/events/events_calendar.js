@@ -1,5 +1,6 @@
 const	ChallengesList	= require('module/ui/challenges/challenges_list'),
 		CalendarView	= require('module/ui/calendar/calendar'),
+		Morearty		= require('morearty'),
 		React			= require('react');
 
 const EventsCalendar = React.createClass({

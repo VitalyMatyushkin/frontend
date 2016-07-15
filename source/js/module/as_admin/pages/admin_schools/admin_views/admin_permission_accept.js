@@ -1,7 +1,8 @@
 const	If 				= require('module/ui/if/if'),
 		Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		React			= require('react'),
-		Lazy			= require('lazyjs'),
+		Lazy			= require('lazy.js'),
+		Morearty   	 	= require('morearty'),
 		Immutable		= require('immutable');
 
 const PermissionAcceptPage = React.createClass({

@@ -2,6 +2,7 @@ const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
 		If			= require('module/ui/if/if'),
 		React 		= require('react'),
+		Morearty    = require('morearty'),
         Auth        = require('module/core/services/AuthorizationServices');
 
 const LoginUserForm = React.createClass({

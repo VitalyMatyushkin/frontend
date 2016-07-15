@@ -1,9 +1,9 @@
-var StudentPage,
-	RouterView = require('module/core/router'),
-	React = require('react'),
-	Route = require('module/core/route');
+const 	RouterView 	= require('module/core/router'),
+		React 		= require('react'),
+		Morearty	= require('morearty'),
+		Route 	= require('module/core/route');
 
-StudentPage = React.createClass({
+const StudentPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this,

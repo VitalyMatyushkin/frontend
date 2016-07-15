@@ -4,6 +4,7 @@
 
 const 	HeadView 		= require('./head'),
         CenterView 		= require('./center'),
+		Morearty       	= require('morearty'),
         React 			= require('react');
 
 const ApplicationView = React.createClass({

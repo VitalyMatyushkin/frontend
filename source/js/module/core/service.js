@@ -1,6 +1,15 @@
 const 	log 		= require('loglevel'),
-		AJAX 		= require('module/core/AJAX'),
-		baseUrl 	= window.apiBase;	// using global vars is really bad practice
+		AJAX 		= require('module/core/AJAX');
+
+
+/**
+ * using global vars is really bad practice. And that's why:
+ * it is intentionally made as function to be called only when window.apiBase is really set.
+ * This is a bit hacky, but we will drop this shit soon
+ */
+const baseUrl = () => window.apiBase;
+
+
 
 /** Build ServiceConstructor which is kind of accessor to given url.
  *  Example:
@@ -76,7 +85,7 @@ const ServiceConstructor = (function() {
 			}
 
 			return AJAX({
-				url: 			baseUrl + url + filter,
+				url: 			baseUrl() + url + filter,
 				type: 			type,
 				crossDomain: 	true,
 				data: 			JSON.stringify(data),

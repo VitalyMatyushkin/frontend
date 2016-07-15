@@ -1,5 +1,6 @@
 const	React			= require('react'),
 		Immutable 		= require('immutable'),
+		Morearty        = require('morearty'),
 		DateTimeMixin	= require('module/mixins/datetime'),
 		Superuser		= require('module/helpers/superuser');
 

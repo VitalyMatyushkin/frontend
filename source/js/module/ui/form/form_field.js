@@ -1,5 +1,6 @@
 const 	React 		= require('react'),
         classNames  = require('classnames'),
+		Morearty    = require('morearty'),
 		typeList 	= require('module/ui/form/types/type_list');
 
 const FormField = React.createClass({

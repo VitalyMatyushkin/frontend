@@ -9,6 +9,7 @@ const   AboutMe             = require('module/as_manager/pages/student/view/abou
         IndicatorView       = require('module/ui/progress_indicator/loading_prompt'),
         React               = require('react'),
         StudentHelper       = require('module/helpers/studentHelper'),
+        Morearty            = require('morearty'),
         Immutable           = require('immutable');
 
 const AchievementOneChild = React.createClass({

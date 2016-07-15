@@ -2,7 +2,8 @@
  * Created by Anatoly on 29.05.2016.
  */
 
-const 	React 	= require('react');
+const 	React 	    = require('react'),
+        Morearty    = require('morearty');
 
 
 const Head = React.createClass({

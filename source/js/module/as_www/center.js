@@ -5,6 +5,7 @@ const 	RouterView 		= require('module/core/router'),
 		RegisterRoute 	= require('module/core/routes/register_route'),
 		VerifyRoute 	= require('module/core/routes/verify_route'),
 		SettingsRoute 	= require('module/core/routes/settings_route'),
+		Morearty        = require('morearty'),
 		React 			= require('react');
 
 const Center = React.createClass({

@@ -35,6 +35,7 @@ source/js/module/test
 
 #Build
 build
+dist
 
 #VERSION file
 VERSION.txt

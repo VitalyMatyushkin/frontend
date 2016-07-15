@@ -1,4 +1,5 @@
 const	React		= require('react'),
+		Morearty    = require('morearty'),
 		Immutable	= require('immutable');
 
 /**

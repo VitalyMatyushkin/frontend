@@ -2,6 +2,7 @@ const   If              = require('module/ui/if/if'),
         Pagination      = require('module/ui/list/pagination'),
         Filter          = require('module/ui/list/filter'),
         React           = require('react'),
+        Morearty        = require('morearty'),
         SVG 		    = require('module/ui/svg'),
         AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
         Immutable       = require('immutable');

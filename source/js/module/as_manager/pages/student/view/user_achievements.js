@@ -3,7 +3,8 @@
  */
 const   React           = require('react'),
         EventHelper		= require('module/helpers/eventHelper'),
-        Immutable        = require('immutable');
+        Morearty        = require('morearty'),
+        Immutable       = require('immutable');
 
 const UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],

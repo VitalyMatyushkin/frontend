@@ -1,4 +1,5 @@
 const 	TypeAutocomplete 	= require('module/ui/form/types/autocomplete'),
+		Morearty			= require('morearty'),
 		React 				= require('react');
 
 // TODO BURN IT IN HELL!!

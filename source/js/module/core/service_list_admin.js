@@ -69,7 +69,5 @@ const serviceList = {
 	}
 };
 
-serviceList.initializeOpenServices();
-
 
 module.exports = serviceList;

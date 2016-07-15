@@ -1,12 +1,12 @@
 /**
  * Created by bridark on 08/06/15.
  */
-var TypeMixin = require('module/ui/form/types/type_mixin'),
-    React = require('react'),
-    ReactDOM = require('reactDom'),
-    TypeHidden;
+const   TypeMixin 	= require('module/ui/form/types/type_mixin'),
+        React 		= require('react'),
+        ReactDOM 	= require('react-dom'),
+        Morearty 	= require('morearty');
 
-TypeHidden =  React.createClass({
+const TypeHidden =  React.createClass({
     propTypes: {
         textType: React.PropTypes.string
     },

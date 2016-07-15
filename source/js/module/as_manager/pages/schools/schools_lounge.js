@@ -1,16 +1,12 @@
 /**
  * Created by bridark on 02/09/15.
  */
-var SchoolLounge,
-    React = require('react');
-SchoolLounge = React.createClass({
+const   Morearty	= require('morearty'),
+        React       = require('react');
+
+const SchoolLounge = React.createClass({
     mixins:[Morearty.Mixin],
-    componentWillMount:function(){
-        //Some logic
-        //var self = this,
-        //    globalBinding = self.getMoreartyContext().getBinding();
-        //console.log(globalBinding.toJS());
-    },
+
     render:function(){
         return(
             <div className="eSchoolLounge">

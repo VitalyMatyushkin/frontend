@@ -3,6 +3,7 @@ const	ProcessingView 	= require('./processing'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Morearty		= require('morearty'),
 		InvitesMixin 	= require('../mixins/invites_mixin');
 
 const OutboxView = React.createClass({

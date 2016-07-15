@@ -1,7 +1,8 @@
-const   React                = require('react'),
-        MoreartyHelper       = require('module/helpers/morearty_helper'),
-        TeamHelper           = require('module/ui/managers/helpers/team_helper'),
-        Immutable            = require('immutable');
+const   React               = require('react'),
+        MoreartyHelper      = require('module/helpers/morearty_helper'),
+        TeamHelper          = require('module/ui/managers/helpers/team_helper'),
+        Immutable           = require('immutable'),
+        Morearty            = require('morearty');
 
 const TeamViewer = React.createClass({
     mixins: [Morearty.Mixin],

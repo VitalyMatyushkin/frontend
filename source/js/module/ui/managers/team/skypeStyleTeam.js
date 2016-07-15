@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		TeamName			= require('./../team_name'),
-		TeamFunctionalMixin	= require('./teamFunctionalMixin');
+		TeamFunctionalMixin	= require('./teamFunctionalMixin'),
+		Morearty            = require('morearty');
 
 const SkypeStyleTeam = React.createClass({
 	mixins: [Morearty.Mixin, TeamFunctionalMixin],

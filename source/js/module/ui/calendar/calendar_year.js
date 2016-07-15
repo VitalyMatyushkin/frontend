@@ -1,7 +1,7 @@
-var CalendarYearView,
-	React = require('react');
+const 	Morearty    = require('morearty'),
+		React 		= require('react');
 
-CalendarYearView = React.createClass({
+const CalendarYearView = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		var self = this;

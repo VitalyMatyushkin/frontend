@@ -1,5 +1,6 @@
 const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
 		Autocomplete2	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Morearty		= require('morearty'),
 		React 			= require('react');
 
 const TypeAutocomplete = React.createClass({

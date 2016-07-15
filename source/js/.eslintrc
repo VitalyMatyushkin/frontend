@@ -23,7 +23,6 @@
     "globals": {  // global variables allowed by 'no-undef' rule. true is read-write for var, false is read-only
         "require":      false,
         "module":       true,
-        "Morearty":     false,   // yeah f*cking Morearty is global
         "Map":          true,         // this is really Map component, which overrides ES6 Map
         "Promise":      true,          // hardly used with bluebird
         "requirejs":    true,

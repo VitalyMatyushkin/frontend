@@ -3,8 +3,9 @@
  */
 const   CommentBox      = require('./event_blogBox'),
         React           = require('react'),
-        ReactDOM        = require('reactDom'),
+        ReactDOM        = require('react-dom'),
         Immutable       = require('immutable'),
+        Morearty		= require('morearty'),
 		Avatar 			= require('module/ui/avatar/avatar'),
         MoreartyHelper  = require('module/helpers/morearty_helper');
 
@@ -151,7 +152,7 @@ const Blog = React.createClass({
                 <CommentBox onReply={self.onReply} blogData={dataBlog} />
                 <div className="bBlog_box mNewComment">
                     <div className="ePicBox">
-                        <Avatar pic={self.loggedUser && self.loggedUser.avatar} />
+                        <Avatar pic={self.loggedUser && self.loggedUser.avatar} minValue="45" />
                     </div>
                     <div className="eEvent_commentBlog">
                         <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>

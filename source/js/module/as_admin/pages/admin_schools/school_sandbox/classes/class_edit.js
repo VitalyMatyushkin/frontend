@@ -1,5 +1,6 @@
 const 	ClassForm 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_form'),
 		React 		= require('react'),
+		Morearty	= require('morearty'),
 		Immutable 	= require('immutable');
 
 const ClassEditPage = React.createClass({

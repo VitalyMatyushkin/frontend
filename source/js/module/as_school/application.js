@@ -1,5 +1,6 @@
 const 	HeadView 	= require('module/as_school/head'),
 		CenterView 	= require('module/as_school/center'),
+		Morearty    = require('morearty'),
 		React 		= require('react');
 
 const ApplicationView = React.createClass({

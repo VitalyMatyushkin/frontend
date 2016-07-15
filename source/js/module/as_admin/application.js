@@ -3,6 +3,7 @@
  */
 const   HeadView    = require('module/as_admin/head'),
         CenterView  = require('module/as_admin/center'),
+        Morearty    = require('morearty'),
         React       = require('react');
 
 const ApplicationView = React.createClass({
