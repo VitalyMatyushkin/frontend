@@ -145,24 +145,6 @@ const EventView = React.createClass({
 			}));
 		})
 		.then(() => {
-			const players = [];
-
-			players.push(
-				TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
-					TeamHelper.injectTeamIdToPlayers(event.participants[0].id, event.participants[0].players),
-					event.participants[0].users
-				)
-			);
-
-			if(event.participants[1]) {
-				players.push(
-					TeamHelper.getPlayersWithUserInfo( // result [user + playerInfo]
-						TeamHelper.injectTeamIdToPlayers(event.participants[1].id, event.participants[1].players), // player + teamId
-						event.participants[1].users
-					)
-				)
-			}
-
 			// TODO remove plug and implement albums
 			const	albums	= [], // res.albums,
 					points	= event.result && event.result.points ? TeamHelper.convertPointsToClientModel(event.result.points) : [];
@@ -175,7 +157,11 @@ const EventView = React.createClass({
 				.set('participants',		Immutable.fromJS(event.participants))
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))
-				.set('players',				Immutable.fromJS(players))
+				.set('players',				Immutable.fromJS(
+												event.participants[1] ?
+													[event.participants[0].users, event.participants[1].users] :
+													[event.participants[0].users]
+				))
 				.set('schoolInfo',			Immutable.fromJS(activeSchool))
 				.set('eventId',				Immutable.fromJS(eventId))
 				.set('mode',				Immutable.fromJS('general'))
