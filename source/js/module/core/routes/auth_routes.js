@@ -5,16 +5,16 @@ const 	Morearty    = require('morearty'),
 const AuthRoutes = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		path: React.PropTypes.string.isRequired,
-		component: React.PropTypes.string.isRequired,
-		pageName: React.PropTypes.string,
-		loginRoute: React.PropTypes.bool,
-		verifyRoute: React.PropTypes.bool,
+		path: 				React.PropTypes.string.isRequired,
+		component: 			React.PropTypes.string.isRequired,
+		pageName: 			React.PropTypes.string,
+		loginRoute: 		React.PropTypes.bool,
+		verifyRoute: 		React.PropTypes.bool,
 		unauthorizedAccess: React.PropTypes.bool
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		return (
 			<span>

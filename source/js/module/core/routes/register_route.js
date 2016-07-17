@@ -1,8 +1,7 @@
-var RegisterRoute,
-	React = require('react'),
-	Route = require('module/core/route');
+const 	React = require('react'),
+		Route = require('module/core/route');
 
-RegisterRoute = React.createClass({
+const RegisterRoute = React.createClass({
 	getDefaultProps: function() {
 		return {
 			path: '/register',
@@ -11,8 +10,6 @@ RegisterRoute = React.createClass({
 		};
 	},
 	render: function() {
-		var self = this;
-
 		null
 	}
 });

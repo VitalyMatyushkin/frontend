@@ -1,18 +1,23 @@
 const 	Immutable 	= require('immutable'),
 		React 		= require('react'),
-		Router		= require('director'),
 		Morearty	= require('morearty');
 
 const RouterView = React.createClass({
 	mixins: [Morearty.Mixin],
-	isAuthorized: false,
-	isVerified: false,
+	isAuthorized: 	false,
+	isVerified: 	false,
+
+	/**
+	 * Connects this component to global state's authorization info.
+	 * Effectively it will set this.isAuthorized and this.isVerified properties on this and
+	 * do something strange with routing in case if user is authorized
+	 */
 	bindToAuthorization: function() {
 		const 	self 		= this,
 				authBinding = self.getDefaultBinding().sub('userData.authorizationInfo');
 
 		function updateAuth() {
-			var data = authBinding.toJS();
+			const data = authBinding.toJS();
 
 			// TODO: make check a bit easier. Add policy/rules check?
 			if (data && data.id && data.verified) {		// if there is id and user is verified, consider user as authorized
@@ -20,73 +25,86 @@ const RouterView = React.createClass({
 
 				// Redirecting to verification page
 				if (!data.verified.email ||  !data.verified.phone) {	// if user don't have email or phone verified...
-					self.isVerified = false;							// setting flat about that
+					self.isVerified = false;							// setting flag about that (should take use somewhere??)
 				} else {
-					self.isVerified = true;
+					self.isVerified = true;								// yes, user is both authorized and verified
 					// in case of redirection resumption user will be redirected to expected page
 					// TODO: does it really work????????????
-					self.nextRoute && self.setRoute(self.nextRoute);
-					self.nextRoute = false;
+					self.nextRoute && self.setRoute(self.nextRoute);	// then going to some route..
+					self.nextRoute = false;								// and then setting it to FALSE ?????
 				}
-			} else {
-				self.isAuthorized = false;
+			} else {													// if user not authorized..
+				self.isAuthorized = false;								// rising couple of flags, okay
 				self.isVerified = false;
 			}
 		}
 
 		authBinding.addListener(updateAuth);	// subscribing on all auth info updates
-		updateAuth();
+		updateAuth();							// and forcing first update
 	},
+
 	/**
-	 * Getting data from routing component
-	 * @param routeComponent
-	 * @returns {Array}
+	 * @typedef {Object} NormalizedRoute
+	 * @param {String} path
+	 * @param {String} component
+	 * TODO: finish me.
+	 * TODO: maybe it should be real class ?
+	 */
+
+	/**
+	 * Build normalized routing data from provided routing component and return array of normalize routes.
+	 * What is 'normalized'? Each {@see Route} have path property which effectively can contain space separated
+	 * paths. Normalized route is route where each path property contain only one path.
+	 *
+	 * It also can set some default properties if they was not provided by
+	 * @param {Route} routeComponent
+	 * @returns {Array.<NormalizeRoute>}
 	 * @private
 	 */
-	_getRouteFromComponent: function(routeComponent) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			routePath = routeComponent.props.path.split(' '),
-			routes = [];
+	normalizeRouteComponent: function(routeComponent) {
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				routePathList 	= routeComponent.props.path.split(' ');	// path can be space separated string of paths
 
-		routePath.forEach(function(currentRoute) {
+		const routes = routePathList.map( currentRoute => {
 			const routeData = {
-				path: currentRoute,
-				component: routeComponent.props.component,
-				pageName: routeComponent.props.pageName || '',
-				binding: routeComponent.props.binding || binding,
+				path: 				currentRoute,
+				component: 			routeComponent.props.component,
+				pageName: 			routeComponent.props.pageName || '',
+				binding: 			routeComponent.props.binding || binding,
 				unauthorizedAccess: routeComponent.props.unauthorizedAccess ? routeComponent.props.unauthorizedAccess : false,
-				routeComponent: routeComponent
+				routeComponent: 	routeComponent
 			};
-
-			routes.push(routeData);
-
-			if (routeComponent.props.loginRoute) {
-				self.loginRoute = routeData;
-			}
-
-			if (routeComponent.props.verifyRoute) {
-				self.verifyRoute = routeData;
-			}
+			return routeData;
 		});
+
+		// TODO: this is straaaange, bro
+		if(routeComponent.props.loginRoute) {	// if this is login route, storing it in special property TODO: why????
+			self.loginRoute = routes[0];		// this was part of original code. I'm not sure if this should work this way, so just refactored a bit
+		}
+
+		if (routeComponent.props.verifyRoute) {	// if this is verify route, storing it in special property TODO: why ?
+			self.verifyRoute = routes[0];		// this was part of original code. I'm not sure if this should work this way, so just refactored a bit
+		}
 
 		return routes;
 	},
 	/**
-	 * Handling for parent component
-	 * @param children
-	 * @returns {Array}
+	 * Extracts routing information from child routes. @see Route
+	 *
+	 * Will traverse all routes (with all nested sub-routes), normalize each route and return array of all normalized routes.
+	 * @param childRoutes {Array.<Route>}
+	 * @returns {Array.<NormalizedRoute>}
 	 */
-	getRouteFromChildren: function(children) {
-		var self = this,
-			routes = [];
+	normalizeAllRoutes: function(childRoutes) {
+		const 	self 	= this;
+		let 	routes 	= [];
 
-		children && children.forEach(function(route){
-			// Processing nested routes
-			if (route.props.children) {
-				routes = routes.concat(self.getRouteFromChildren(route.props.children));
+		childRoutes && childRoutes.forEach( route => {
+			if (route.props.children) {	// Processing nested routes
+				routes = routes.concat(self.normalizeAllRoutes(route.props.children));
 			} else {
-				routes = routes.concat(self._getRouteFromComponent(route));
+				routes = routes.concat(self.normalizeRouteComponent(route));
 			}
 
 		});
@@ -124,49 +142,54 @@ const RouterView = React.createClass({
 	},
 	/**
 	 * Adding new route
-	 * @param route
+	 * @param {NormalizedRoute} route
 	 */
 	addRoute: function(route) {
 		const self = this;
 
+		// setting handler function to this route
+		// handler function will be called with some arguments...
 		self.siteRoutes[route.path] = function(){
-			var pathParameters = Array.prototype.slice.call(arguments, 0);
+			const pathParameters = Array.prototype.slice.call(arguments, 0);	// turning function arguments to array
 
 			// Updating parametrized parts of path
+			// TODO: What the fucking fuck is RoutingBinding ???
 			self.RoutingBinding.set('pathParameters', Immutable.fromJS(pathParameters));//set and remove parameters
 
 			// User will be redirected to login page when unauthorized.
 			// In this case latest routing is saved(which is really current route)
-			if (route.unauthorizedAccess === true) {
-				self.setRoute(route);
-			} else {
-				if (self.isAuthorized === false && self.loginRoute) {
-					self.setRoute(self.loginRoute);
+
+			switch (true) {
+				case route.unauthorizedAccess === true:	// if this route not require auth - just switching
+					self.setRoute(route);
+					break;
+				case self.isAuthorized === false && self.loginRoute:	// if user not authorized (picked from binding) and there is login route...
+					self.setRoute(self.loginRoute);						// then going to login route.
 					//if latest routing(which is really current route) is a login, then don't save it
 					if(self.loginRoute.path !== route.path)
 						self.nextRoute = route;
-				} else if (self.isVerified === false && self.verifyRoute) {
+					break;
+				case self.isVerified === false && self.verifyRoute:
 					self.setRoute(self.verifyRoute);
 					self.nextRoute = route;
-				} else {
+					break;
+				default:
 					self.setRoute(route);
-				}
-
-
 			}
 		}
 	},
 	updateUrlParametrs: function() {
-		var self = this,
-			urlHash = document.location.hash,
-			parametersIndex = urlHash.indexOf('?'),
-			parametersResult = {};
+		const 	self 				= this,
+				parametersIndex 	= urlHash.indexOf('?'),
+				parametersResult 	= {};
+
+		let urlHash = document.location.hash;
 
 
 		if (parametersIndex !== -1) {
 			urlHash = urlHash.substr(parametersIndex + 1);
 			urlHash.split('&').forEach(function(oneParameter) {
-				var parametrSplit = oneParameter.split('=');
+				const parametrSplit = oneParameter.split('=');
 
 				parametersResult[parametrSplit[0]] = decodeURIComponent(parametrSplit[1]);
 			});
@@ -177,16 +200,16 @@ const RouterView = React.createClass({
 	},
 	componentWillMount: function() {
 		const 	self 	= this,
-				routes 	= self.getRouteFromChildren(self.props.children);
+				routes 	= self.normalizeAllRoutes(self.props.children);
 
-		self.isAuthorized = false;
-		self.RoutingBinding = self.props.routes;
-		self.currentPath = undefined;
+		self.isAuthorized 		= false;
+		self.RoutingBinding 	= self.props.routes;
+		self.currentPath 		= undefined;
 
 		self.siteRoutes = {};
 		self.siteComponents = {};
 
-		// Adding site routes
+		// Building routing table. .addRoute will fill .siteRoutes with path -> handler pairs
 		routes && routes.forEach( route => self.addRoute(route) );
 
 		// Handling address(url) change
