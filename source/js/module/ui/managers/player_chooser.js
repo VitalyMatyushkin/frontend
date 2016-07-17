@@ -176,9 +176,13 @@ const	PlayerChooser	= React.createClass({
 				binding				= self.getDefaultBinding(),
 				playersForSelect	= binding.toJS('playersForSelect');
 
-		if(playersForSelect !== undefined && playersForSelect !== null) {
-			playersForSelect.unshift(player);
-			binding.set('playersForSelect', Immutable.fromJS(playersForSelect));
+		if(
+			playersForSelect !== undefined &&
+			playersForSelect !== null &&
+			Lazy(playersForSelect).findWhere({id: player.id}) === undefined
+		) {
+				playersForSelect.unshift(player);
+				binding.set('playersForSelect', Immutable.fromJS(playersForSelect));
 		}
 	},
 	/**

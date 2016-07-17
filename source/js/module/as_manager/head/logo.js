@@ -7,7 +7,7 @@ const Logo = React.createClass({
 	render: function() {
 		return (
 			<div className="bTopLogo">
-			<SVG icon="icon_logo" />
+				<img src="images/logo.png" />
 			</div>
 		)
 	}
