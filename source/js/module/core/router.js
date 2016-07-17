@@ -1,5 +1,6 @@
 const 	Immutable 	= require('immutable'),
 		React 		= require('react'),
+		Router		= require('director'),
 		Morearty	= require('morearty');
 
 const RouterView = React.createClass({
@@ -179,11 +180,12 @@ const RouterView = React.createClass({
 		}
 	},
 	updateUrlParametrs: function() {
+
+		let urlHash = document.location.hash;
+
 		const 	self 				= this,
 				parametersIndex 	= urlHash.indexOf('?'),
 				parametersResult 	= {};
-
-		let urlHash = document.location.hash;
 
 
 		if (parametersIndex !== -1) {
