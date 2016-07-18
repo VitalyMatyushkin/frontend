@@ -121,10 +121,20 @@ const EventHelper = {
 	 * @returns {boolean}
 	 * @private
 	 */
-	_isShowCancelEventEditButton: function(thiz) {
+	_isShowCancelEventCloseButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
 		return binding.get('mode') === 'closing' && RoleHelper.isUserSchoolWorker(thiz);
+	},
+	/**
+	 * Return TRUE if event edit mode is "edit_squad".
+	 * @returns {boolean}
+	 * @private
+	 */
+	_isShowCancelEventEditButton: function(thiz) {
+		const binding = thiz.getDefaultBinding();
+
+		return binding.get('mode') === 'edit_squad' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "general".

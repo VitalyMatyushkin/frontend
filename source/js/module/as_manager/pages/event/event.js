@@ -4,7 +4,7 @@ const	If				= require('module/ui/if/if'),
 		EventHeader		= require('./view/event_header'),
 		EventRivals		= require('./view/event_rivals'),
 		EventButtons	= require('./view/event_buttons'),
-		EventTeams		= require('./view/event_teams'),
+		EventTeams		= require('./view/teams/event_teams'),
 		EventGallery	= require('module/as_manager/pages/event/gallery/event_gallery'),
 		EventDetails    = require('./view/event_details'),
 		React			= require('react'),
@@ -13,8 +13,7 @@ const	If				= require('module/ui/if/if'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		SVG 			= require('module/ui/svg'),
 		Immutable		= require('immutable'),
-		Morearty		= require('morearty'),
-		Lazy			= require('lazy.js');
+		Morearty		= require('morearty');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -27,7 +26,6 @@ const EventView = React.createClass({
 			model: {},
 			participants: [],
 			eventId: null,
-			players: [],
 			points: [],
 			result: {
 				points: []
@@ -35,7 +33,8 @@ const EventView = React.createClass({
 			sync: false,
 			mode: 'general',
 			showingComment: false,
-			activeTab:'teams'
+			activeTab:'teams',
+			eventTeams: {}
 		});
 	},
 	componentWillMount: function () {
@@ -47,73 +46,9 @@ const EventView = React.createClass({
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 		self.initTabs();
 
-		// TODO should decompose to functions
-		// TODO Houston, we need to refactor, urgently!
-		binding.addListener('players', function (descriptor) {
-			var path = descriptor.getPath(),
-				previous = descriptor.getPreviousValue(),
-				current;
-
-			if (previous && previous.get(path[0])) {
-				previous = previous.get(path[0]).toJS();
-				current = binding.toJS(['players', path[0]]);
-
-				if (current.length > previous.length) {
-					const currentPlayer = current.pop();
-
-					const body = {
-						userId: currentPlayer.id
-					};
-
-					currentPlayer.position && (body.position = currentPlayer.position);
-					currentPlayer.sub && (body.sub = currentPlayer.sub);
-
-					TeamHelper.addPlayer(
-						self.activeSchoolId,
-						binding.get(['participants', path[0], 'id']),
-						body
-					);
-				} else if (current.length < previous.length) {
-					previous.filter(player => {
-						return !current.some(function (model) {
-							return model.id === player.id;
-						});
-					}).forEach(player => {
-						TeamHelper.deletePlayer(
-							self.activeSchoolId,
-							binding.get(['participants', path[0], 'id']),
-							player.id
-						);
-					});
-				} else {
-					let changedPlayer;
-					for(let prevIndex in previous) {
-						let findCurrPlayer = Lazy(current).findWhere({id:previous[prevIndex].id});
-						if(
-							findCurrPlayer.position !== previous[prevIndex].position ||
-							findCurrPlayer.sub !== previous[prevIndex].sub
-						) {
-							changedPlayer = findCurrPlayer;
-							break;
-						}
-					}
-					TeamHelper.changePlayer(
-						self.activeSchoolId,
-						binding.get(['participants', path[0], 'id']),
-						changedPlayer.playerModelId,
-						{
-							position:  changedPlayer.position,
-							sub:       changedPlayer.sub
-						}
-					);
-				}
-			}
-		});
-
 		self._initMenuItems();
 
-		let	activeSchool,
-			event;
+		let	activeSchool;
 
 		window.Server.school.get(self.activeSchoolId)
 		.then(_school => {
@@ -131,20 +66,7 @@ const EventView = React.createClass({
 				eventId: eventId
 			});
 		})
-		.then(_event => {
-			event = _event;
-
-			// get all students
-			return Promise.all(event.participants.map(team => {
-				return window.Server.schoolTeamStudents.get({schoolId: team.schoolId, teamId: team.id}).then(users => {
-					// inject students to team
-					team.users = users;
-
-					return team;
-				});
-			}));
-		})
-		.then(() => {
+		.then(event => {
 			// TODO remove plug and implement albums
 			const	albums	= [], // res.albums,
 					points	= event.result && event.result.points ? TeamHelper.convertPointsToClientModel(event.result.points) : [];
@@ -157,11 +79,6 @@ const EventView = React.createClass({
 				.set('participants',		Immutable.fromJS(event.participants))
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))
-				.set('players',				Immutable.fromJS(
-												event.participants[1] ?
-													[event.participants[0].users, event.participants[1].users] :
-													[event.participants[0].users]
-				))
 				.set('schoolInfo',			Immutable.fromJS(activeSchool))
 				.set('eventId',				Immutable.fromJS(eventId))
 				.set('mode',				Immutable.fromJS('general'))
@@ -220,6 +137,11 @@ const EventView = React.createClass({
 		const	urlHash	= document.location.hash,
 				hash 	= urlHash.indexOf('?') > 0 ? urlHash.substr(0,urlHash.indexOf('?')): urlHash;
 
+		// reload team players when open team tab
+		if(value === 'teams') {
+			binding.set('eventTeams.isSync', Immutable.fromJS(false));
+		}
+
 		binding.set('activeTab', value);
 
 		window.location.hash = hash + '?tab=' + value;
@@ -267,6 +189,18 @@ const EventView = React.createClass({
 
 		binding.set('mode', 'edit_squad');
 	},
+	_getEventTeamsBinding: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return {
+			default:	binding.sub('eventTeams'),
+			event:		binding.sub('model'),
+			points:		binding.sub('points'),
+			schoolInfo:	binding.sub('schoolInfo'),
+			mode:		binding.sub('mode')
+		};
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
@@ -307,7 +241,7 @@ const EventView = React.createClass({
 								</div>
 							</div>
 							<If condition={activeTab === 'teams'} >
-								<EventTeams binding={binding} />
+								<EventTeams binding={self._getEventTeamsBinding()} />
 							</If>
 							<If condition={activeTab === 'details'} >
 								<EventDetails binding={binding}/>

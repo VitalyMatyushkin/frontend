@@ -82,7 +82,7 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 					changePlayer(
 						schoolId,
 						teamId,
-						initialPlayer.playerModelId,
+						initialPlayer.id,
 						changes
 					)
 				);
