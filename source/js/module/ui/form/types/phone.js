@@ -14,11 +14,6 @@ const TypePhone =  React.createClass({
             defaultValue:'' //initial value
         });
     },
-	componentDidUpdate: function () {
-		if(this.cursor){
-			this.refs.input.setSelectionRange(this.cursor,this.cursor);
-		}
-	},
     componentWillMount: function() {
         const self = this,
             binding = self.getDefaultBinding();
@@ -27,6 +22,11 @@ const TypePhone =  React.createClass({
         self.addBindingListener(binding, 'defaultValue', changes => self._forceNewValue(changes.getCurrentValue()));
         self.addBindingListener(binding, 'value', changes => self.setValue(self.clearPhone(changes.getCurrentValue())));
     },
+	componentDidUpdate: function () {
+		if(this.cursor >= 0){
+			this.refs.input.setSelectionRange(this.cursor,this.cursor);
+		}
+	},
 	_forceNewValue: function(value) {
         const self = this,
             binding = self.getDefaultBinding();
@@ -80,7 +80,7 @@ const TypePhone =  React.createClass({
         self.saveValue();
     },
 	handleBlur: function(e) {
-		this.cursor = 0;
+		this.cursor = -1;
 	},
 	getAvailableCodes:function(){
 		const codes = ["+44"];
