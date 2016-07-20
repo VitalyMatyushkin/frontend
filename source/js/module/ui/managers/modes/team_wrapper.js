@@ -293,6 +293,7 @@ const TeamWrapper = React.createClass({
 				players,
 				team;
 
+			// TODO refactor
 			window.Server.school.get(self.activeSchoolId)
 				.then( _schoolData => {
 					schoolData = _schoolData;
@@ -313,23 +314,20 @@ const TeamWrapper = React.createClass({
 				.then((_team) => {
 					team = _team;
 
-					// Get all students, because in next step we should inject users data to players
-					return window.Server.schoolStudents.get(
-						self.activeSchoolId,
+					return window.Server.teamPlayers.get(
 						{
-							filter : {
-								where: {
-									_id: {
-										$in: self._getUsersIdsFromTeam(team)
-									}
-								},
+							schoolId:	team.schoolId,
+							teamId:		team.id
+						},
+						{
+							filter: {
 								limit: 100
 							}
 						}
-					);
+					)
 				})
 				.then(users => {
-					let updatedPlayers = TeamHelper.getPlayersWithUserInfo(players, users);
+					let updatedPlayers = users;
 
 					binding
 						.atomically()
