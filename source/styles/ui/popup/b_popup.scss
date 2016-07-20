@@ -221,15 +221,7 @@
 .bPopupEdit_active{
   background: #cccccc;
 }
-.bPopupEdit_active:after{
-  content:'';
-  position:absolute;
-  height: 1px;
-  width:123px;
-  background:white;
-  top:61px;
-  left: 0;
-}
+
 .bPopupEdit_field{
   float:left;
   width:200px;
