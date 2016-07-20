@@ -309,7 +309,7 @@ const TeamForm = React.createClass({
 
 					<div className="eManager_base">
 						<div className="eManager_group">
-							{'Team Name'}
+							<div className="eManager_label">{'Team Name'}</div>
 							<Morearty.DOM.input
 								className="eManager_field"
 								type="text"
@@ -320,7 +320,7 @@ const TeamForm = React.createClass({
 						</div>
 						<If condition={!!binding.get('name')}>
 							<div className="eManager_group">
-								{'Team Description'}
+								<div className="eManager_label">{'Team Description'}</div>
 								<Morearty.DOM.textarea
 									className="eManager_field mTextArea"
 									type="text"
@@ -332,7 +332,7 @@ const TeamForm = React.createClass({
 						</If>
 						<If condition={!!binding.get('name')}>
 							<div className="eManager_group">
-								{'Game'}
+								<div className="eManager_label">{'Game'}</div>
 								<select
 									className="eManager_select"
 									value={sportId}
@@ -349,7 +349,7 @@ const TeamForm = React.createClass({
 						</If>
 						<If condition={!!binding.get('sportId')}>
 							<div className="eManager_group">
-								{'Gender'}
+								<div className="eManager_label">{'Gender'}</div>
 								<div className="eManager_radiogroup">
 									{self._getGenders()}
 								</div>
@@ -357,7 +357,7 @@ const TeamForm = React.createClass({
 						</If>
 						<If condition={!!binding.get('sportId') && !!binding.get('gender')}>
 							<div className="eManager_group">
-								{'Ages'}
+								<div className="eManager_label">{'Ages'}</div>
 								<Multiselect
 									binding={binding}
 									items={self._getAgeItems()}
@@ -368,7 +368,7 @@ const TeamForm = React.createClass({
 						</If>
 						<If condition={!!binding.get('sportId')}>
 							<div className="eManager_group">
-								{'Filtered By House'}
+								<div className="eManager_label">{'Filtered By House'}</div>
 								<div className="eManager_radiogroup">
 									{self._getHouseFilterRadioButton()}
 								</div>
@@ -376,7 +376,7 @@ const TeamForm = React.createClass({
 						</If>
 						<If condition={!!binding.get('isHouseFilterEnable')}>
 							<div className="eManager_group">
-								{'House'}
+								<div className="eManager_label">{'House'}</div>
 								<div className="eManager_select_wrap">
 									{self._renderHouseAutocomplete()}
 								</div>
@@ -385,7 +385,7 @@ const TeamForm = React.createClass({
 						<If condition={self._isShowTeamManager()}>
 							<div>
 								<div className="eManager_group">
-									{'Add player'}
+									<div className="eManager_label">{'Add player'}</div>
 									<div className ="eManager_select_wrap">
 										<AutocompleteTeam binding={autocompleteTeamBinding}/>
 									</div>

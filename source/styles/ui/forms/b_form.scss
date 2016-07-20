@@ -282,42 +282,7 @@
   margin-bottom: 10px;
   position: relative;
 }
-.eManager_select_wrap select {
-  border: none;
-  width: 180px;
-  height: 37px;
-  color: #000000;
-  background: transparent;
-  padding: 5px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: $BORDER;
-  border-radius: 5%;
-}
-.eManager_select_wrap option{
-  height: 30px;
-  color: #333132;
-}
-.eManager_select_wrap option:hover{
-  background: $MAIN_COLOR;
-}
-.eManager_select_wrap {
-  position: relative;
-  background: #fff;
-  width: 180px;
-}
-.eManager_select_wrap:before {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 15px;
-  right: 6px;
-  border-width: 6px 6px 0 6px;
-  border-style: solid;
-  border-color: $COLOR transparent;
-}
+
 .eForm_conditions {
   color: #616161;
   position: relative;
