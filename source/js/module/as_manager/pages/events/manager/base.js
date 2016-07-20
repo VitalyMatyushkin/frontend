@@ -258,7 +258,7 @@ const EventManagerBase = React.createClass({
 
 		return <div className="eManager_base">
             <div className="eManager_group">
-                {'Date'}
+                <div className="eManager_label">{'Date'}</div>
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
@@ -267,7 +267,7 @@ const EventManagerBase = React.createClass({
                     />
             </div>
             <div className="eManager_group">
-                {'Time'}
+                <div className="eManager_label">{'Time'}</div>
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
@@ -276,7 +276,7 @@ const EventManagerBase = React.createClass({
                     />
             </div>
             <div className="eManager_group">
-                {'Event Name'}
+                <div className="eManager_label">{'Event Name'}</div>
                 <Morearty.DOM.input
                     className="eManager_field"
                     type="text"
@@ -287,7 +287,7 @@ const EventManagerBase = React.createClass({
             </div>
             <If condition={!!binding.get('model.name')}>
                 <div className="eManager_group">
-                    {'Event Description'}
+                    <div className="eManager_label">{'Event Description'}</div>
                     <Morearty.DOM.textarea
                         className="eManager_field mTextArea"
                         type="text"
@@ -299,8 +299,7 @@ const EventManagerBase = React.createClass({
             </If>
             <If condition={!!binding.get('model.name')}>
                 <div className="eManager_group">
-                    {'Game'}
-                    <div className="eManager_select_wrap">
+                    <div className="eManager_label">{'Game'}</div>
                         <select
                             className="eManager_select"
                             value={sportId}
@@ -313,12 +312,11 @@ const EventManagerBase = React.createClass({
                                 disabled="disabled">Please select</Morearty.DOM.option>
                             {self.getSports()}
                         </select>
-                    </div>
                 </div>
             </If>
             <If condition={!!binding.get('model.sportId')}>
                 <div className="eManager_group">
-                    {'Gender'}
+                    <div className="eManager_label">{'Gender'}</div>
                     <div className="eManager_radiogroup">
                         {self.getGenders()}
                     </div>
@@ -326,7 +324,7 @@ const EventManagerBase = React.createClass({
             </If>
             <If condition={!!binding.get('model.sportId') && !!binding.get('model.gender')}>
                 <div className="eManager_group">
-                    {'Ages'}
+                    <div className="eManager_label">{'Ages'}</div>
                     <Multiselect
                         binding={binding}
                         items={
@@ -346,8 +344,7 @@ const EventManagerBase = React.createClass({
             </If>
             <If condition={binding.get('model.ages').count() > 0}>
                 <div className="eManager_group">
-                    {'Game Type'}
-                    <div className="eManager_select_wrap">
+                    <div className="eManager_label">{'Game Type'}</div>
                         <select ref="gameType"
                                 className="eManager_select"
                                 defaultValue={null}
@@ -364,13 +361,12 @@ const EventManagerBase = React.createClass({
                             <Morearty.DOM.option key="anyway-type"
                                                  value="internal">internal</Morearty.DOM.option>
                         </select>
-                    </div>
                 </div>
             </If>
             <If condition={!!type}>
                 <div>
                     <div className="eManager_group">
-                        {type === 'inter-schools' ? 'Choose school' : null}
+                        {type === 'inter-schools' ? <div className="eManager_label">Choose school</div> : null}
                         <If condition={type === 'inter-schools'} key={'if-choose-school'}>
                             <div>
                                 <Autocomplete
@@ -383,7 +379,7 @@ const EventManagerBase = React.createClass({
                                 />
                             </div>
                         </If>
-                        {type === 'houses' ? 'Choose houses' : null}
+                        {type === 'houses' ? <div className="eManager_label">Choose houses</div> : null}
                         <If condition={type === 'houses'}>
                             <div className="eChooseHouses">
                                 <Autocomplete
