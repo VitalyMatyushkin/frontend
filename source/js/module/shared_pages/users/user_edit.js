@@ -4,8 +4,8 @@
 const   React           = require('react'),
         Immutable       = require('immutable'),
         Morearty        = require('morearty'),
+        classNames      = require('classnames'),
         UserRole        = require('./user_roles'),
-        If              = require('module/ui/if/if'),
         TabItemDetails  = require('./user_edit_tabDetails');
 
 const EditUser = React.createClass({
@@ -31,21 +31,51 @@ const EditUser = React.createClass({
                 break;
         }
     },
-    render:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+    _renderActiveTabContent: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        let result;
+
+        switch (true) {
+            case binding.get('tabDetail'):
+                result = <TabItemDetails binding={binding}/>;
+                break;
+            case binding.get('tabRole'):
+                result = <UserRole binding={binding} />;
+                break;
+        }
+
+        return result;
+    },
+    render: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        const   detailTabClass = classNames({
+                    bPopupEdit_tab: true,
+                    bPopupEdit_active: binding.get('tabDetail')
+                }),
+                permissionTabClass = classNames({
+                    bPopupEdit_tab: true,
+                    bPopupEdit_active: binding.get('tabRole')
+                });
+
         return (
             <div className="bPopupEdit_container">
                 <div className="bPopupEdit_row mTab">
-                    <span className={binding.get('tabDetail')?'bPopupEdit_tab bPopupEdit_active':'bPopupEdit_tab'} onClick={self._toggleTabMenu.bind(null,'detailTab')}>Detail</span>
-                    <span className={binding.get('tabRole')?'bPopupEdit_tab bPopupEdit_active':'bPopupEdit_tab'} onClick={self._toggleTabMenu.bind(null,'roleTab')}>Permissions</span>
+                    <div className={detailTabClass}
+                         onClick={self._toggleTabMenu.bind(self, 'detailTab')}
+                    >
+                        Detail
+                    </div>
+                    <div className={permissionTabClass}
+                         onClick={self._toggleTabMenu.bind(self, 'roleTab')}
+                    >
+                        Permissions
+                    </div>
                 </div>
-                <If condition={binding.get('tabDetail')}>
-                    <TabItemDetails binding={binding}/>
-                </If>
-                <If condition={binding.get('tabRole')}>
-                    <UserRole binding={binding} />
-                </If>
+                {self._renderActiveTabContent()}
             </div>
         );
     }
