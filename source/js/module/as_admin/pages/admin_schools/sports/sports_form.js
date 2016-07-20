@@ -13,9 +13,9 @@ const SportsForm = React.createClass({
     },
     getGenderArray: function() {
         return [
-            'male',
-            'female',
-            'female and male'
+            'boys',
+            'girls',
+            'girls and boys'
         ];
     },
     getGenders: function() {
