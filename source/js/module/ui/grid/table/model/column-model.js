@@ -40,3 +40,4 @@ ColumnModel.prototype = {
 
 
 module.exports = ColumnModel;
+
