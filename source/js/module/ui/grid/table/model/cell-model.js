@@ -6,7 +6,7 @@
  * CellModel
  * */
 const CellModel = function(options){
-	this.type = options.type;
+	this.type = options.type || 'string';
 	this.typeOptions = options.typeOptions;
 	this.dataField = options.dataField;
 };
