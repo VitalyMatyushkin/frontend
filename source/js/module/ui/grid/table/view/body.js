@@ -2,7 +2,7 @@
  * Created by Anatoly on 20.07.2016.
  */
 
-const   Row 	= require('./row/row'),
+const   Row 	= require('./body/row'),
 		React 	= require('react');
 
 const Body = React.createClass({
