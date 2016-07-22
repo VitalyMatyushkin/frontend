@@ -2,6 +2,10 @@
  * Created by Anatoly on 21.07.2016.
  */
 
+const 	DataLoader 	= require('./data-loader'),
+		FilterModel = require('./filter/model/filter-model'),
+		TableModel 	= require('./table/model/table-model');
+
 /**
  * GridModel
  *
@@ -9,16 +13,14 @@
  *
  * */
 const GridModel = function(options){
-	this.table = options.table;
-	this.filter = options.typeOptions;
-	this.dataField = options.dataField;
+	this.table = new TableModel(options.table);
+	this.filter = new FilterModel();
+	this.dataLoader = new DataLoader(options.dataLoader, this.table);
 };
 
 GridModel.prototype = {
-	getValue:function(dataItem){
-		return dataItem[this.dataField];
-	}
 };
 
 
 module.exports = GridModel;
+

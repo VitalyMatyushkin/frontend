@@ -1,0 +1,19 @@
+/**
+ * Created by Anatoly on 22.07.2016.
+ */
+
+
+/**
+ * FilterPanelModel
+ *
+ * @param {object} options
+ *
+ * */
+const FilterPanelModel = function(options){
+};
+
+FilterPanelModel.prototype = {
+};
+
+
+module.exports = FilterPanelModel;
