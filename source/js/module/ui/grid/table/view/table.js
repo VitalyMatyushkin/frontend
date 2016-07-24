@@ -6,7 +6,7 @@ const   Header	= require('./header'),
 		Body	= require('./body'),
         React 	= require('react');
 
-const TableView = React.createClass({
+const Table = React.createClass({
 	propTypes: {
 		data: 		React.PropTypes.array,
 		columns: 	React.PropTypes.array,
@@ -26,4 +26,4 @@ const TableView = React.createClass({
 	}
 });
 
-module.exports = TableView;
+module.exports = Table;
