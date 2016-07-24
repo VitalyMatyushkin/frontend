@@ -3,7 +3,7 @@
  */
 const   React 	= require('react');
 
-const Table = React.createClass({
+const Grid = React.createClass({
 	propTypes: {
 		data: 		React.PropTypes.array,
 		columns: 	React.PropTypes.array.isRequired,
@@ -24,4 +24,4 @@ const Table = React.createClass({
 	}
 });
 
-module.exports = Table;
+module.exports = Grid;
