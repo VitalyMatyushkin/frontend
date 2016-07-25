@@ -15,9 +15,9 @@ const Body = React.createClass({
 			data = self.props.data,
 			columns = self.props.columns;
 
-		return data.map((item, index) => {
+		return data && data.length ? data.map((item, index) => {
 			<Row key={item.id ? item.id : index} dataItem={item} columns={columns} />
-		});
+		}) : null;
 	}
 });
 

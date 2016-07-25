@@ -9,6 +9,11 @@ const FilterPanel = React.createClass({
 	componentWillMount: function() {
 	},
 	render: function() {
+		return (
+			<div className="bFilterPanel">
+				<h2>Filter Panel</h2>
+			</div>
+		);
 	}
 });
 

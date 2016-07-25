@@ -2,8 +2,7 @@
  * Created by Anatoly on 21.07.2016.
  */
 
-const 	DataLoader 	= require('./data-loader'),
-		FilterModel = require('./filter/model/filter-model'),
+const 	FilterModel = require('./filter/model/filter-model'),
 		TableModel 	= require('./table/model/table-model');
 
 /**
@@ -13,9 +12,11 @@ const 	DataLoader 	= require('./data-loader'),
  *
  * */
 const GridModel = function(options){
-	this.table = new TableModel(options.table);
-	this.filter = new FilterModel();
-	this.dataLoader = new DataLoader(options.dataLoader, this.table);
+	this.table = new TableModel(options);
+	this.filter = new FilterModel({limit:20});
+	this.filterPanel = null;
+	this.actionPanel = null;
+
 };
 
 GridModel.prototype = {

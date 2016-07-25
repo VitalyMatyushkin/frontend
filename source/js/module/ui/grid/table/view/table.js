@@ -8,18 +8,18 @@ const   Header	= require('./header'),
 
 const Table = React.createClass({
 	propTypes: {
-		data: 		React.PropTypes.array,
-		columns: 	React.PropTypes.array,
-		order: 		React.PropTypes.object
+		model: 		React.PropTypes.object
 	},
 	componentWillMount: function() {
 	},
 	render: function() {
+		const model = this.props.model;
+
 		return (
 		<div className="bDataList">
 			<div className="eDataList_list mTable">
-				<Header columns={this.props.columns} order={this.props.order} />
-				<Body columns={this.props.columns} data={this.props.data} />
+				<Header columns={model.columns} order={model.order} />
+				<Body columns={model.columns} data={model.data} />
 			</div>
 		</div>
 		)

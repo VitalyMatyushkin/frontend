@@ -9,6 +9,11 @@ const ActionPanel = React.createClass({
 	componentWillMount: function() {
 	},
 	render: function() {
+		return (
+			<div className="bActionPanel">
+				<h2>Action Panel</h2>
+			</div>
+		);
 	}
 });
 

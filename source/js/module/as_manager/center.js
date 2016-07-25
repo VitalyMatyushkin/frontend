@@ -24,6 +24,10 @@ const Center = React.createClass({
 
 				<SettingsRoute binding={binding.sub('userData')} />
 
+				<Route path="/new-users-grid"
+					   binding={binding.sub('newUsers')}
+					   component="module/ui/grid/test-pages/users"/>
+
 				<Route path="/student /student/:subPage /student/:subPage/:mode"
 					   binding={binding.sub('studentPage')}
 					   component="module/as_manager/pages/student/student_page"/>
