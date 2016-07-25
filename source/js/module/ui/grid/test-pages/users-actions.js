@@ -3,6 +3,7 @@
  */
 
 const 	DataLoader = require('module/ui/grid/data-loader'),
+	UserModel 		= require('module/data/UserModel'),
 	GridModel = require('module/ui/grid/grid-model');
 
 /**
@@ -19,6 +20,7 @@ const UsersActions = function(page){
 	this.grid = this.getGrid();
 	this.dataLoader = new DataLoader({
 		serviceName:'users',
+		dataModel: 	UserModel,
 		params:		{schoolId:activeSchoolId},
 		filter: 	this.grid.filter,
 		onLoad: 	this.getDataLoadedHandle()
