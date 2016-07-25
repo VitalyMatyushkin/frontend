@@ -47,6 +47,24 @@ UsersActions.prototype = {
 				cell:{
 					dataField:'email'
 				}
+			},
+			{
+				text:'School',
+				cell:{
+					dataField:'school'
+				}
+			},
+			{
+				text:'Role',
+				cell:{
+					dataField:'roles'
+				}
+			},
+			{
+				text:'Access',
+				cell:{
+					dataField:'blocked'
+				}
 			}
 		];
 
