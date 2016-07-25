@@ -402,8 +402,13 @@ const EventManager = React.createClass({
 						<div className="eManager_dateTimePicker">
 							<CalendarView
 								binding={rootBinding.sub('events.calendar')}
-								onSelect={self.onSelectDate} />
-							{binding.get('model.startTime') ? <TimePicker binding={binding.sub('model.startTime')} /> : null}
+								onSelect={self.onSelectDate}
+							/>
+							{
+								binding.get('model.startTime') ?
+									<TimePicker binding={binding.sub('model.startTime')}/>:
+									null
+							}
 						</div>
 					</If>
 					<If condition={step === 2}>
