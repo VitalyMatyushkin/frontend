@@ -1,6 +1,16 @@
-const   TeamPlayersValidator = require('module/ui/managers/helpers/team_players_validator'),
-		Lazy                 = require('lazy.js'),
-		Immutable            = require('immutable');
+const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_validator'),
+		EventHelper				= require('module/helpers/eventHelper'),
+		Lazy					= require('lazy.js'),
+		Immutable				= require('immutable');
+
+function isTeamEnableForEdit(activeSchoolId, event, team) {
+	switch (event.eventType){
+		case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+			return team.schoolId === activeSchoolId;
+		default:
+			return true;
+	}
+};
 
 /**
  * Reduce available students ages for game from school object
@@ -214,6 +224,7 @@ const TeamHelper = {
 	commitPlayers:				commitPlayers,
 	injectFormsToPlayers:		injectFormsToPlayers,
 	injectTeamIdToPlayers:		injectTeamIdToPlayers,
+	isTeamEnableForEdit:		isTeamEnableForEdit,
 	convertPointsToClientModel:	convertPointsToClientModel
 };
 
