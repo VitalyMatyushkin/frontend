@@ -11,7 +11,9 @@ const StringType = React.createClass({
 		dataItem:	React.PropTypes.object
 	},
 	render: function() {
-		return this.props.cell.getValue(this.props.dataItem);
+		const value = this.props.cell.getValue(this.props.dataItem),
+			result = value ? value : null;
+		return <span>{result}</span>;
 	}
 });
 

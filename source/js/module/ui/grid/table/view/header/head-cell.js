@@ -15,7 +15,7 @@ const HeadCell = React.createClass({
 	},
 	render: function() {
 		const 	column 		= this.props.column,
-				value		= this.props.order[this.props.column],
+				value		= this.props.order ? this.props.order[column.cell.dataField] : null,
 				cellStyle 	= column.width ? {width:column.width}:null;
 
 		return (

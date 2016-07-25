@@ -16,7 +16,7 @@ const Row = React.createClass({
 		return (
 			<div className="eDataList_listItem">
 				{this.props.columns.map((column, index) => {
-					<Cell key={index} column={column} dataItem={this.props.dataItem} />
+					return <Cell key={index} column={column} dataItem={this.props.dataItem} />
 				})}
 			</div>
 		);

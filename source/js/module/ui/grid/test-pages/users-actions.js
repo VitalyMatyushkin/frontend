@@ -21,7 +21,7 @@ const UsersActions = function(page){
 		serviceName:'users',
 		params:		{schoolId:activeSchoolId},
 		filter: 	this.grid.filter,
-		onLoad: 	this.onDataLoaded
+		onLoad: 	this.getDataLoadedHandle()
 	});
 };
 
@@ -52,11 +52,14 @@ UsersActions.prototype = {
 			columns:columns
 		});
 	},
-	onDataLoaded: function(data){
-		const binding = this.page.getDefaultBinding();
+	getDataLoadedHandle: function(data){
+		const self = this,
+			binding = self.page.getDefaultBinding();
 
-		this.grid.table.data = data;
-		binding.set('data', data);
+		return function(data){
+			self.grid.table.data = data;
+			binding.set('data', data);
+		};
 	}
 };
 

@@ -4,21 +4,16 @@
 const 	ActionPanel = require('./action-panel/action-panel'),
 		FilterPanel = require('./filter/filter-panel/filter-panel'),
 		Table 		= require('./table/view/table'),
-		GridModel 	= require('./grid-model'),
 		React 		= require('react');
 
 const Grid = React.createClass({
 	propTypes: {
-		data: 		React.PropTypes.array,
-		columns: 	React.PropTypes.array,
-		filters: 	React.PropTypes.object,
-		onChange:	React.PropTypes.func
+		model: 	React.PropTypes.object
 	},
 	componentWillMount: function() {
-		this.model = new GridModel(this.props);
 	},
 	render: function() {
-		const model = this.model;
+		const model = this.props.model;
 
 		return (
 			<div className="bGrid">

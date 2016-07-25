@@ -14,7 +14,7 @@ const Header = React.createClass({
 		return (
 			<div className="eDataList_listItem mHead">
 				{this.props.columns.map((column, index) => {
-					<HeadCell key={index} column={column} order={this.props.order} />
+					return <HeadCell key={index} column={column} order={this.props.order} />
 				})}
 			</div>
 		);
