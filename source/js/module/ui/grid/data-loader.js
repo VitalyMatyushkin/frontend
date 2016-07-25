@@ -14,8 +14,12 @@ const DataLoader = function(options){
 	this.dataModel = options.dataModel;
 	this.params = options.params;
 	this.filter = options.filter;
+	this.filter.onChange = this.onChangeFilter;
 
-	this.onLoaded = options.onLoaded;
+	this.onLoad = options.onLoad;
+
+	this.loadData();
+
 };
 
 DataLoader.prototype = {
@@ -48,10 +52,13 @@ DataLoader.prototype = {
 						return new self.dataModel(item);
 					});
 				}
-				self.onLoaded && self.onLoaded(res);
+				self.onLoad && self.onLoad(res);
 				return res;
 			});
 		}
+	},
+	onChangeFilter: function(filter){
+		this.loadData();
 	}
 };
 
