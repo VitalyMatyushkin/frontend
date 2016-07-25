@@ -1,9 +1,10 @@
 const	InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventTeamsView		= require('./event_teams_view'),
 		EventTeamsEdit		= require('./event_teams_edit'),
+		EventHelper			= require('module/helpers/eventHelper'),
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		React				= require('react'),
 		Immutable			= require('immutable'),
-		Lazy				= require('lazy.js'),
 		Morearty			= require('morearty');
 
 const EventTeams = React.createClass({
@@ -17,6 +18,7 @@ const EventTeams = React.createClass({
 				players: []
 			},
 			editPlayers: {
+				filter: {},
 				players: []
 			},
 			isSync: false
@@ -24,6 +26,8 @@ const EventTeams = React.createClass({
 	},
 	componentWillMount: function() {
 		const self = this;
+
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		self._loadPlayers();
 
@@ -65,11 +69,28 @@ const EventTeams = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const	editPlayers = [],
+				viewPlayers = [];
+
 		Promise
-			.all(event.participants.map(team => self._getTeamPLayers(team)))
-			.then(players => binding.atomically()
-								.set('viewPlayers.players',	Immutable.fromJS(players))
-								.set("editPlayers.players",	Immutable.fromJS(players))
+			.all(event.participants.map(team => {
+				return self._getTeamPLayers(team)
+					.then(players => {
+						viewPlayers.push(players);
+
+						switch (event.eventType) {
+							case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+								team.schoolId === self.activeSchoolId && editPlayers.push(players);
+								break;
+							default:
+								editPlayers.push(players);
+								break;
+						}
+					});
+			}))
+			.then(() => binding.atomically()
+								.set('viewPlayers.players',	Immutable.fromJS(viewPlayers))
+								.set("editPlayers.players",	Immutable.fromJS(editPlayers))
 								.set('isSync',				Immutable.fromJS(true))
 								.commit()
 			);

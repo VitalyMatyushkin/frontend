@@ -7,7 +7,8 @@
   color: #2a2a2a;
 
   &.mDefaultView {
-    border: $BORDER;
+    width: 406px;
+    height: 322px;
   }
 
   &.mSkypeStyleView {
@@ -27,7 +28,8 @@
 
   &.mHead {
     color: #939393;
-    background: #d7d7d7;
+    border-top: solid 1px #c2c2c2;
+    border-bottom: solid 1px #c2c2c2;
   }
 
   &.mSelected {
