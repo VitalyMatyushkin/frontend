@@ -24,7 +24,7 @@ const	PlayerChooser	= React.createClass({
 		const	self	= this;
 
 		// If selected team was been changed
-		self.getDefaultBinding().sub('filter').addListener(() => {
+		self.getBinding('filter').addListener(() => {
 			self._setPlayersBySearchRequest('');
 		});
 
@@ -66,9 +66,12 @@ const	PlayerChooser	= React.createClass({
 	_getNinUserId: function() {
 		const self = this;
 
-		const otherTeamUsers = self.getBinding("otherTeamPlayers").toJS();
+		const	otherTeamUsers	= self.getBinding('otherTeamPlayers').toJS(),
+				teamPlayers		= self.getBinding('teamPlayers').toJS();
 
-		return otherTeamUsers.map(user => user.id);
+		const players = otherTeamUsers ? teamPlayers.concat(otherTeamUsers) : teamPlayers;
+
+		return players.map(user => user.userId);
 	},
 	/**
 	 * Search players by search text
@@ -80,7 +83,7 @@ const	PlayerChooser	= React.createClass({
 		let		playersPromise	= undefined;
 
 		if (self._isFilterAvailable()) {
-			const filter = self.getDefaultBinding().toJS('filter');
+			const filter = self.getBinding('filter').toJS();
 
 			const requestFilter = {
 						filter: {
@@ -106,16 +109,12 @@ const	PlayerChooser	= React.createClass({
 			}
 
 			playersPromise = window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
-					const filteredPlayers = [];
+					return players.map(player => {
+						player.name		= `${player.firstName}' '${player.lastName}`;
+						player.userId	= player.id;
 
-					players.forEach(player => {
-						if(!self._isSelectedPlayer(player)) {
-							player.name = `${player.firstName}' '${player.lastName}`;
-							filteredPlayers.push(player);
-						}
+						return player;
 					});
-
-					return filteredPlayers;
 				});
 		} else {
 			playersPromise = new Promise((resolve) => {
@@ -152,19 +151,7 @@ const	PlayerChooser	= React.createClass({
 	_isFilterAvailable: function() {
 		const	self	= this;
 
-		return self.getDefaultBinding().toJS('filter') !== undefined;
-	},
-	/**
-	 * If players of current team contain current player then return TRUE
-	 * @param player
-	 * @returns {boolean}
-	 * @private
-	 */
-	_isSelectedPlayer: function(player) {
-		const	self	= this,
-				selectedPlayers = self.getBinding('teamPlayers').toJS();
-
-		return Lazy(selectedPlayers).findWhere({id: player.id}) !== undefined
+		return self.getBinding('filter') && self.getBinding('filter').toJS() !== undefined;
 	},
 	/**
 	 * Add current player to players for selection

@@ -431,7 +431,8 @@ const TeamWrapper = React.createClass({
 		return {
 			default:			binding.sub('playerChooser'),
 			otherTeamPlayers:	self.getBinding('otherTeamPlayers'),
-			teamPlayers:		self._getPlayersBinding()
+			teamPlayers:		self._getPlayersBinding(),
+			filter:				binding.sub('playerChooser.filter')
 		};
 	},
 	_onRemovePlayer: function(player) {
