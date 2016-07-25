@@ -269,45 +269,54 @@ const EventManager = React.createClass({
     },
 	_renderStepButtons: function() {
 		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				step		= binding.get('step');
-		let		stepButtons = [];
+				binding		= self.getDefaultBinding();
 
-		switch (step) {
-			case 1:
-				if(self._isStepComplete(1)) {
-					stepButtons.push(
-						<span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span>
-					);
-				}
-				break;
-			case 2:
-				stepButtons.push(
-					<span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span>
-				);
-				if(self._isStepComplete(2)) {
-					stepButtons.push(
-						<span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span>
-					);
-				}
-				break;
-			case 3:
-				stepButtons.push(
-					<span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span>
-				);
-				if(self._isStepComplete(3)) {
-					stepButtons.push(
-						<span className="eEvents_button mFinish" onClick={self.toFinish}>Finish</span>
-					);
-				}
-				break;
-		}
+		const step = binding.get('step');
 
 		return (
 			<div className="eEvents_buttons">
-				{stepButtons}
+				{self._renderBackStepButton(step)}
+				{self._renderNextStepButton(step)}
+				{self._renderFinishStepButton(step)}
 			</div>
 		);
+	},
+	_renderNextStepButton: function(step) {
+		const self = this;
+
+		if(
+			step === 1 && self._isStepComplete(1) ||
+			step === 2 && self._isStepComplete(2)
+		) {
+			return <span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span>;
+		} else {
+			return null;
+		}
+	},
+	_renderBackStepButton: function(step) {
+		const self = this;
+
+		if(
+			step === 2 ||
+			step === 3
+		) {
+			return (
+				<span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span>
+			);
+		} else {
+			return null;
+		}
+	},
+	_renderFinishStepButton: function(step) {
+		const self = this;
+
+		if(step === 3 && self._isStepComplete(3)) {
+			return (
+				<span className="eEvents_button mFinish" onClick={self.toFinish}>Finish</span>
+			);
+		} else {
+			return null;
+		}
 	},
 	_isStepComplete: function(step) {
 		const	self			= this,
