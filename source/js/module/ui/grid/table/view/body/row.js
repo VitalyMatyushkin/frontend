@@ -16,6 +16,7 @@ const Row = React.createClass({
 		return (
 			<div className="eDataList_listItem">
 				{this.props.columns.map((column, index) => {
+					/** why index? - for the column key number of sequence is sufficient. */
 					return <Cell key={index} column={column} dataItem={this.props.dataItem} />
 				})}
 			</div>
