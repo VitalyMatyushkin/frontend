@@ -2,10 +2,10 @@
  * Created by Anatoly on 21.07.2016.
  */
 
-const StringType = require('./string-type');
+const GeneralType = require('./general-type');
 
 const CellTypeList = {
-	'string':StringType
+	'general':GeneralType
 };
 
 module.exports = CellTypeList;

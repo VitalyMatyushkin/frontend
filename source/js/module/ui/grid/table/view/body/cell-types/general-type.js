@@ -5,7 +5,7 @@
 const   If              = require('module/ui/if/if'),
 	React           = require('react');
 
-const StringType = React.createClass({
+const GeneralType = React.createClass({
 	propTypes: {
 		cell: 		React.PropTypes.object,
 		dataItem:	React.PropTypes.object
@@ -13,8 +13,12 @@ const StringType = React.createClass({
 	render: function() {
 		const value = this.props.cell.getValue(this.props.dataItem),
 			result = value ? value : null;
-		return <span>{result}</span>;
+		return (
+			<div className="eDataList_listItemCell">
+				{result}
+			</div>
+		);
 	}
 });
 
-module.exports = StringType;
+module.exports = GeneralType;

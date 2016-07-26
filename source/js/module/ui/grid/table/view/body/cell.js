@@ -16,9 +16,7 @@ const Cell = React.createClass({
 			CellType = TypeList[cell.type];
 
 		return (
-			<div className="eDataList_listItemCell">
 				<CellType cell={cell} dataItem={self.props.dataItem} />
-			</div>
 		);
 	}
 });
