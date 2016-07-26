@@ -69,7 +69,10 @@ UsersActions.prototype = {
 		];
 
 		return new GridModel({
-			columns:columns
+			table:{
+				columns:columns
+			},
+			filters:{limit:20}
 		});
 	},
 	getDataLoadedHandle: function(data){

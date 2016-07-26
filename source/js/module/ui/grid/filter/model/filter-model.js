@@ -19,19 +19,20 @@ const FilterModel = function(options){
 
 FilterModel.prototype = {
 	getFilters: function () {
-		const result = {limit: this.limit};
+		const result = {filter:{}},
+			filter = result.filter;
 
 		if (this.where) {
-			result.where = this.where;
+			filter.where = this.where;
 		}
 		if (this.limit) {
-			result.limit = this.limit;
+			filter.limit = this.limit;
 		}
 		if (this.skip) {
-			result.skip = this.skip;
+			filter.skip = this.skip;
 		}
 		if (this.order) {
-			result.order = this.order;
+			filter.order = this.order;
 		}
 
 		return result;

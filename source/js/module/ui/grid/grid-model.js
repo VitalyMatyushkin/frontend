@@ -12,8 +12,8 @@ const 	FilterModel = require('./filter/model/filter-model'),
  *
  * */
 const GridModel = function(options){
-	this.table = new TableModel(options);
-	this.filter = new FilterModel({filter:{limit:20}});
+	this.table = new TableModel(options.table);
+	this.filter = new FilterModel(options.filters);
 	this.filterPanel = null;
 	this.actionPanel = null;
 
