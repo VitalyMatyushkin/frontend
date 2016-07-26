@@ -276,7 +276,8 @@ const	PlayerChooser	= React.createClass({
 		if(playersForSelectData) {
 			playersForSelectData.forEach((player, index) => {
 				players.push(
-					<div	className={self._getPlayerClass(player.id)}
+					<div	key={player.id}
+							className={self._getPlayerClass(player.id)}
 							onClick={self._onPlayerClick.bind(self, index, player)}
 							onDoubleClick={self._onPlayerDoubleClick.bind(self, index, player)}
 					>

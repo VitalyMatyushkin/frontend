@@ -166,12 +166,10 @@ const EventManagerBase = React.createClass({
 	},
     getSports: function () {
         var self = this,
-            binding = self.getDefaultBinding(),
             sportsBinding = self.getBinding('sports');
 
         return sportsBinding.get('models').map(function (sport) {
             return <Morearty.DOM.option
-				selected={sport.get('id') === binding.get('model.sportId')}
                 value={sport.get('id')}
 				key={sport.get('id') + '-sport'}
 			>{sport.get('name')}</Morearty.DOM.option>
@@ -302,13 +300,11 @@ const EventManagerBase = React.createClass({
                     <div className="eManager_label">{'Game'}</div>
                         <select
                             className="eManager_select"
-                            value={sportId}
-                            defaultValue={null}
+                            defaultValue={''}
                             onChange={self.changeCompleteSport}>
                             <Morearty.DOM.option
                                 key="nullable-type"
-                                value={null}
-                                selected="selected"
+                                value={''}
                                 disabled="disabled">Please select</Morearty.DOM.option>
                             {self.getSports()}
                         </select>
@@ -347,12 +343,10 @@ const EventManagerBase = React.createClass({
                     <div className="eManager_label">{'Game Type'}</div>
                         <select ref="gameType"
                                 className="eManager_select"
-                                defaultValue={null}
-                                value={type}
+                                defaultValue={''}
                                 onChange={self.changeCompleteType}>
                             <Morearty.DOM.option key="nullable-type"
-                                                 value={null}
-                                                 selected="selected"
+                                                 value={''}
                                                  disabled="disabled">Please select</Morearty.DOM.option>
                             <Morearty.DOM.option key="inter-schools-type"
                                                  value="inter-schools">inter-schools</Morearty.DOM.option>

@@ -118,7 +118,8 @@ const	TeamChooser	= React.createClass({
 					});
 
 					teamItems.push((
-						<div	className=	{teamClass}
+						<div	key={team.id}
+								className=	{teamClass}
 								onMouseDown={self._onTeamClick.bind(self, team.id, team)}
 						>
 							<div className="eTeamChooser_teamName">{team.name}</div>
