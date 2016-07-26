@@ -3,14 +3,11 @@ const	Lazy				= require('lazy.js'),
 		React				= require('react'),
 		classNames			= require('classnames');
 
+
+
 const TeamFunctionalMixin = {
-	TEXT: {
-		POSITIONS: {
-			OPTIONS: {
-				NOT_SELECTED: 'Not selected'
-			}
-		}
-	},
+	NOT_SELECTED_POSITION_TEXT:		"Not selected",
+	NOT_SELECTED_POSITION_VALUE:	"not-selected-position",
 	/**
 	 * Get CSS class for player item
 	 * @param playerId
@@ -62,7 +59,7 @@ const TeamFunctionalMixin = {
 				players	= self.getBinding('players').toJS(),
 				index	= Lazy(players).indexOf(Lazy(players).findWhere({id:playerId}));
 
-		if(self.TEXT.POSITIONS.OPTIONS.NOT_SELECTED == e.target.value) {
+		if(self.NOT_SELECTED_POSITION_TEXT == e.target.value) {
 			players[index].position = undefined;
 		} else {
 			players[index].position = e.target.value;
@@ -93,27 +90,31 @@ const TeamFunctionalMixin = {
 	},
 	_renderPositionOptions: function(player) {
 		const	self				= this,
-			positions			= self.getDefaultBinding().get('model.sportModel.limits.positions').toJS();
+				positions			= self.getDefaultBinding().get('model.sportModel.limits.positions').toJS();
+
 		let		renderedPosition	= [];
 
-		//Add NOT SELECTED option
-		//If player doesn't has position - set this option as selected
+		// Add NOT SELECTED option
+		// If player doesn't has position - set this option as not selected
 		if(player.position === undefined) {
 			renderedPosition.push(
-				<option key={'0_position'} selected="selected">{self.TEXT.POSITIONS.OPTIONS.NOT_SELECTED}</option>
+				<option key={'player-position-0'} value={self.NOT_SELECTED_POSITION_VALUE}>{self.NOT_SELECTED_POSITION_TEXT}</option>
 			);
 		} else {
-			renderedPosition.push(<option key={'0_position'}>Not selected</option>);
+			// if player has position, then it
+			renderedPosition.push(
+				<option key={'player-position-0'}>Not selected</option>
+			);
 		}
 
 		renderedPosition.push(
 			positions.map((position, i) => {
-				const key = `${i + 1}_position`;
+				const key = `player-position-${i + 1}`;
 
 				if(position === player.position) {
-					return (<option key={key} value={position} selected="selected">{position}</option>);
+					return <option key={key} value={position}>{position}</option>;
 				} else {
-					return (<option key={key} value={position}>{position}</option>);
+					return <option key={key} value={position}>{position}</option>;
 				}
 			})
 		);
