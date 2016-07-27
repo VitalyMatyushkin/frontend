@@ -5,6 +5,7 @@ const   React 	= require('react');
 
 const ActionPanel = React.createClass({
 	propTypes: {
+		model: React.PropTypes.object
 	},
 	componentWillMount: function() {
 	},

@@ -10,9 +10,14 @@
  *
  * */
 const ActionPanelModel = function(options){
-};
+	this.title = options.title;
+	this.btnAdd = options.btnAdd;
+	this.showStrip = !!options.showStrip;
+	this.showSearch = !!options.showSearch;
+	this.showBtnFilter = !!options.showBtnFilter;
+	this.showBtnPrint = !!options.showBtnPrint;
+	this.showBtnLoad = !!options.showBtnLoad;
 
-ActionPanelModel.prototype = {
 };
 
 
