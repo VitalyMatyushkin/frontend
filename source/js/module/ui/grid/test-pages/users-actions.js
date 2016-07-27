@@ -32,18 +32,21 @@ UsersActions.prototype = {
 		const columns = [
 			{
 				text:'Name',
+				isSorted:true,
 				cell:{
 					dataField:'firstName'
 				}
 			},
 			{
 				text:'Surname',
+				isSorted:true,
 				cell:{
 					dataField:'lastName'
 				}
 			},
 			{
 				text:'Email',
+				isSorted:true,
 				cell:{
 					dataField:'email'
 				}

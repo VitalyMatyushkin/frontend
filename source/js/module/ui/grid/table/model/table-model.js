@@ -2,7 +2,8 @@
  * Created by Anatoly on 18.07.2016.
  */
 
-const ColumnModel = require('./column-model');
+const 	ColumnModel = require('./column-model'),
+		SortModel 	= require('./sort-model');
 
 /**
  * TableModel
@@ -11,14 +12,17 @@ const ColumnModel = require('./column-model');
  * {
  * 		data:[],
  * 		columns:[],
- * 		order:{}
+ * 		sort:{}
  * }
  *
  * */
 const TableModel = function(options){
 	this.data = options.data || [];
-	this.columns = options.columns ? options.columns.map(c => new ColumnModel(c)) : [];
-	this.order = options.order;
+	this.sort = new SortModel(options.onSort);
+	this.columns = options.columns ? options.columns.map(c => {
+		c.sort = this.sort;
+		return new ColumnModel(c);
+	}) : [];
 };
 
 TableModel.prototype = {

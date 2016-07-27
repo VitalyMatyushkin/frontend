@@ -22,7 +22,7 @@ const HeadCell = React.createClass({
 			<div className="eDataList_listItemCell" style={cellStyle}>
 				{column.text}
 				<If condition={column.isSorted}>
-					<Sort dataField={column.cell.dataField} onSort={column.onSort} sortValue={value} />
+					<Sort dataField={column.cell.dataField} model={column.sort} />
 				</If>
 			</div>
 		)

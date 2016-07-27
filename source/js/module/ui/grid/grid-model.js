@@ -12,14 +12,12 @@ const 	FilterModel = require('./filter/model/filter-model'),
  *
  * */
 const GridModel = function(options){
-	this.table = new TableModel(options.table);
 	this.filter = new FilterModel(options.filters);
+	options.table.onSort = this.filter.setOrder.bind(this.filter);
+	this.table = new TableModel(options.table);
 	this.filterPanel = null;
 	this.actionPanel = null;
 
-};
-
-GridModel.prototype = {
 };
 
 

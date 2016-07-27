@@ -31,13 +31,7 @@ const ColumnModel = function(options){
 	this.width = options.width;
 	this.cell = new CellModel(options.cell);
 
-	this.onSort = options.onSort ? options.onSort : this.onSort;
-};
-
-ColumnModel.prototype = {
-	onSort:function(dataField, sortValue){
-		console.error('Method column.onSort not initialized! Field:' + dataField)
-	}
+	this.sort = options.sort;
 };
 
 

@@ -6,23 +6,25 @@ const   React       = require('react');
 
 const Sort = React.createClass({
     propTypes:{
-        onSort: React.PropTypes.func,
-		sortValue:React.PropTypes.string,
+        model: React.PropTypes.object,
         dataField:React.PropTypes.string
     },
     onClick:function(e){
 		const 	self 	= this,
-				value 	= self.props.sortValue,
+				model 	= self.props.model,
 				field 	= self.props.dataField;
 
-		self.props.onSort && self.props.onSort(field,value);
+		model.onSort && model.onSort(field);
 
         e.stopPropagation();
     },
     render: function () {
-        const self = this,
-			value = self.props.sortValue,
-			classes = value ? 'eSort m' + value : 'eSort';
+		const 	self 	= this,
+				model 	= self.props.model,
+				field 	= self.props.dataField,
+				value 	= model.dataField === field ? model.value : null,
+				classes = value ? 'eSort m' + value : 'eSort';
+
         return (
             <span className={classes} onClick={self.onClick}/>
         );

@@ -14,7 +14,7 @@ const DataLoader = function(options){
 	this.dataModel = options.dataModel;
 	this.params = options.params;
 	this.filter = options.filter;
-	this.filter.onChange = this.onChangeFilter;
+	this.filter.onChange = this.onChangeFilter.bind(this);
 
 	this.onLoad = options.onLoad;
 
@@ -57,7 +57,7 @@ DataLoader.prototype = {
 			});
 		}
 	},
-	onChangeFilter: function(filter){
+	onChangeFilter: function(){
 		this.loadData();
 	}
 };
