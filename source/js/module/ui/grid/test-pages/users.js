@@ -13,7 +13,9 @@ const Users = React.createClass({
 		this.actions = new Actions(this);
 	},
 	render: function() {
-		return <Grid model={this.actions.grid} />;
+		return (
+			<Grid model={this.actions.grid} />
+		);
 	}
 });
 

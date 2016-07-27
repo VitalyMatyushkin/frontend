@@ -2,9 +2,12 @@
  * Created by Anatoly on 25.07.2016.
  */
 
-const 	DataLoader = require('module/ui/grid/data-loader'),
-	UserModel 		= require('module/data/UserModel'),
-	GridModel = require('module/ui/grid/grid-model');
+const 	DataLoader 		= require('module/ui/grid/data-loader'),
+		UserModel 		= require('module/data/UserModel'),
+		React 			= require('react'),
+		Morearty		= require('morearty'),
+		AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
+		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
  * GridModel
@@ -28,6 +31,41 @@ const UsersActions = function(page){
 };
 
 UsersActions.prototype = {
+	getActions:function(item){
+		var self 			= this,
+			binding 		= self.page.getDefaultBinding(),
+			rootBinding 	= self.page.getMoreartyContext().getBinding(),
+			activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
+			actionList 		= ['View','Add Role','Revoke All Roles'];
+
+		item.permissions.filter(p=> p.preset != 'STUDENT').forEach(p => {
+			let action = 'Revoke the role ';
+			if(p.preset === 'PARENT'){
+				action += `of ${p.student.firstName} parent`;
+			}
+			else{
+				action += p.preset;
+
+				if(!activeSchoolId){
+					action +=' for ' + p.school.name;
+				}
+			}
+
+			actionList.push({
+				text: action,
+				key: 'revoke',
+				id: p.id
+			});
+		});
+		return (
+			<AdminDropList key={item.id}
+						   binding={binding.sub('dropList'+item.id)}
+						   itemId={item.id}
+						   listItems={actionList}
+						   listItemFunction={null}/>
+		);
+
+	},
 	getGrid: function(){
 		const columns = [
 			{
@@ -67,6 +105,15 @@ UsersActions.prototype = {
 				text:'Access',
 				cell:{
 					dataField:'blocked'
+				}
+			},
+			{
+				text:'Actions',
+				cell:{
+					type:'custom',
+					typeOptions:{
+						parseFunction:this.getActions.bind(this)
+					}
 				}
 			}
 		];

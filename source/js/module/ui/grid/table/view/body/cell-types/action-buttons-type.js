@@ -5,7 +5,7 @@
 const 	React 	= require('react'),
 		SVG 	= require('module/ui/svg');
 
-const CustomType = React.createClass({
+const ActionButtonsType = React.createClass({
 	propTypes: {
 		cell: 		React.PropTypes.object,
 		dataItem:	React.PropTypes.object
@@ -47,4 +47,4 @@ const CustomType = React.createClass({
 	}
 });
 
-module.exports = CustomType;
+module.exports = ActionButtonsType;
