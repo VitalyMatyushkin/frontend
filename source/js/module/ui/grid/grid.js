@@ -17,7 +17,6 @@ const Grid = React.createClass({
 
 		return (
 			<div className="bGrid">
-				<h1>New Grid</h1>
 				<ActionPanel model={model.actionPanel} />
 				<FilterPanel model={model.filterPanel} />
 				<Table model={model.table} />
