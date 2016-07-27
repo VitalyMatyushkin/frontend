@@ -2,8 +2,7 @@
  * Created by Anatoly on 21.07.2016.
  */
 
-const   If              = require('module/ui/if/if'),
-	React           = require('react');
+const React = require('react');
 
 const GeneralType = React.createClass({
 	propTypes: {
