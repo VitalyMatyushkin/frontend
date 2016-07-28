@@ -22,26 +22,25 @@ const UserDetail= React.createClass({
     mixins: [Morearty.Mixin],
     getDefaultProps: function() {
         return {
-            userPermissionsService: window.Server.userPermissions, //service for superadmin by default
+            //userPermissionsService: window.Server.userPermissions, //service for superadmin by default //TODO it actually not used. Remove it
             isEditable:true
         };
     },
     componentWillMount: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            userId = globalBinding.get('routing.parameters.id'),
-            schoolId = globalBinding.get('userRules.activeSchoolId');
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                globalBinding   = self.getMoreartyContext().getBinding(),
+                userId          = globalBinding.get('routing.parameters.id'),
+                schoolId        = globalBinding.get('userRules.activeSchoolId');
 
         //Parameters services for the super-administrator and managers
         self.params = {schoolId:schoolId, userId:userId};
 
         binding.set('popup',false);
-        self.request = window.Server.user.get(self.params)
-            .then(function(user){
-				binding.set('userWithPermissionDetail',Immutable.fromJS(user));
-                return user;
-            });
+        self.request = window.Server.user.get(self.params).then( user => {
+            binding.set('userWithPermissionDetail',Immutable.fromJS(user));
+            return user;
+        });
         self.addBindingListener(binding, 'popup', function(){
             if(binding.get('popup')===false){
                 window.Server.user.get(self.params)
@@ -53,11 +52,11 @@ const UserDetail= React.createClass({
         });
     },
     componentWillUnmount: function() {
-        var self = this;
+        const self = this;
         self.request && self.request.cancel();
     },
     onEditClick:function(evt){
-        const   self = this,
+        const   self    = this,
                 binding = self.getDefaultBinding();
 
         binding.set('popup',true);
