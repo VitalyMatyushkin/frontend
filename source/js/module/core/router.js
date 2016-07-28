@@ -94,14 +94,16 @@ const RouterView = React.createClass({
 	 * Extracts routing information from child routes. @see Route
 	 *
 	 * Will traverse all routes (with all nested sub-routes), normalize each route and return array of all normalized routes.
-	 * @param childRoutes {Array.<Route>}
+	 * @param childRouteOrRoutes {Array.<Route> | Route } it is usually taken from `this.props.children` which can be both Array of Routes and
+	 * the only Route without array wrapper in case of one route
 	 * @returns {Array.<NormalizedRoute>}
 	 */
-	normalizeAllRoutes: function(childRoutes) {
-		const 	self 	= this;
+	normalizeAllRoutes: function(childRouteOrRoutes) {
+		const 	self 		= this,
+				routeArray 	= Array.isArray(childRouteOrRoutes) ? childRouteOrRoutes : [childRouteOrRoutes];	// casting all to array. This is not very efficent, but still works.
 		let 	routes 	= [];
 
-		childRoutes && childRoutes.forEach( route => {
+		routeArray.forEach( route => {
 			if (route.props.children) {	// Processing nested routes
 				routes = routes.concat(self.normalizeAllRoutes(route.props.children));
 			} else {
@@ -118,12 +120,14 @@ const RouterView = React.createClass({
 	setRoute: function(route) {
 		const self = this;
 
-		const req = require.context('../../', true, /^\.\/.*\.js$/);
+		// const req = require.context('../../', true, /^\.\/.*\.js$/);
+		//
+		// console.log('setting route: ' + route.component);
+		//
+		// // Loading path - related component
+		// const component = req('./' + route.component + '.js');
 
-		console.log('setting route: ' + route.component);
-
-		// Loading path - related component
-		const component = req('./' + route.component + '.js');
+		const component = route.component;
 
 		self.siteComponents[route.path] = {
 			View: 				component,
