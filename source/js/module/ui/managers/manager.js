@@ -202,7 +202,7 @@ const Manager = React.createClass({
 			}
 
 			return (
-				<span className={teamClasses}
+				<span key={`team-index-${index}`} className={teamClasses}
 					  onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{text}
 				</span>
 			);

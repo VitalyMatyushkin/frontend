@@ -103,12 +103,12 @@ const MultiSelect = React.createClass({
         let   binding = self.getDefaultBinding(),
               count = self.props.selections.length;
         return (
-            <div key={self.props.key} className="bMultiSelect">
+            <div className="bMultiSelect">
                 <input onChange={this.handleFilterChange} value={binding.toJS('filter')} placeholder={this.props.placeholder} />
                 <ul>{this.props.items.map(this.createItem)}</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;
                 {count > 0 ?
-                    <button key={self.props.key + '-unselect'} onClick={this.selectNone}>{'Unselect all(' + count + ')'}</button>
+                    <button onClick={this.selectNone}>{'Unselect all(' + count + ')'}</button>
                 : null}
             </div>
         )
