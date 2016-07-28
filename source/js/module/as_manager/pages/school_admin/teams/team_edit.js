@@ -37,6 +37,7 @@ const TeamEditPage = React.createClass({
             team,
             players;
 
+        // TODO refactor
         //get school data
         window.Server.school.get(self.activeSchoolId)
             .then( _schoolData => {
@@ -76,24 +77,22 @@ const TeamEditPage = React.createClass({
                 // inject sport to team
                 team.sport = TeamHelper.getSportById(team.sportId, sports);
 
-                return window.Server.schoolStudents.get(
-                    self.activeSchoolId,
+                return window.Server.teamPlayers.get(
                     {
-                        filter : {
-                            where: {
-                                _id: {
-                                    $in: self._getUsersIdsFromTeam(team)
-                                }
-                            },
+                        schoolId:	team.schoolId,
+                        teamId:		team.id
+                    },
+                    {
+                        filter: {
                             limit: 100
                         }
                     }
-                );
+                )
             })
             .then(users => {
                 // inject users to players, because we need user info
                 // yep, ugly method name
-                let usersWithPlayerInfo = TeamHelper.getPlayersWithUserInfo(team.players, users);
+                let usersWithPlayerInfo = users;
 
                 return binding
                     .atomically()

@@ -38,15 +38,15 @@ const TabItemDetails = React.createClass({
         });
     },
     getPhone: function(phone) {
-        //return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
+        // return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
         return phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
     },
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
         return (
-            <div style={{position:'relative',marginTop:60+'px'}}>
-                <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={self._onSubmit} defaultButton="Save">
+            <div className="bDetails">
+                <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={self._onSubmit} defaultButton="Save" formStyleClass="mDetails">
                     <FormColumn>
                         <FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
                     </FormColumn>

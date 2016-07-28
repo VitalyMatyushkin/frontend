@@ -4,6 +4,7 @@ const	If				= require('module/ui/if/if'),
 		Immutable		= require('immutable'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg');
 
@@ -96,18 +97,41 @@ const EventHeader = React.createClass({
 		if (currentMode === 'closing') {
 			self.closeMatch();
 		} else {
-			binding.set('mode', 'general');
+			// [[players][players]]
+			const	teamPlayers			= binding.toJS('eventTeams.editPlayers.players'),
+					initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
+
+			Promise.all(teamPlayers.map(
+				(players, teamIndex) => TeamHelper.commitPlayers(
+											initialTeamPlayers[teamIndex],
+											players,
+											initialTeamPlayers[teamIndex][0].teamId, // yep, get teamId from player
+											MoreartyHelper.getActiveSchoolId(self)
+										)
+			))
+			.then(() => {
+				binding.atomically()
+						.set('mode', 'general')
+						.set('eventTeams.isSync', Immutable.fromJS(false))
+						.commit();
+			});
 		}
 	},
-	onClickCancel: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+	onClickCloseCancel: function () {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		binding
 			.atomically()
 			.set('points', Immutable.List())
 			.set('mode', 'general')
 			.commit();
+	},
+	onClickEditCancel: function () {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('mode', 'general');
 	},
 	render: function() {
 		const self = this;
@@ -123,10 +147,18 @@ const EventHeader = React.createClass({
 							<SVG icon="icon_close_match"/>
 						</div>
 					</If>
+					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>
+						<div
+							className="bEventButton mCancel"
+							onClick={self.onClickCloseCancel}
+						>
+							Cancel
+						</div>
+					</If>
 					<If condition={EventHelper._isShowCancelEventEditButton(self)}>
 						<div
 							className="bEventButton mCancel"
-							onClick={self.onClickCancel}
+							onClick={self.onClickEditCancel}
 						>
 							Cancel
 						</div>

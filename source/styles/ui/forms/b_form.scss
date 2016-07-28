@@ -16,7 +16,7 @@
   textarea, select {
     background: transparent;
     border-radius: 0;
-    border: solid transparent;
+    border: solid #d7d7d7;
     border-width: 0 0 1px;
     height: auto;
     padding: 0;
@@ -39,6 +39,10 @@
   input.eDateInput{
     width: 85px;
   }
+}
+
+.mDetails {
+  padding: 0px;
 }
 
 .eForm_fieldInput {
@@ -163,6 +167,7 @@
 
 .eForm_fieldColumn{
   display: inline-block;
+  margin-right: 90px;
   vertical-align: top;
 }
 
@@ -217,7 +222,7 @@
   max-width: 170px;
   max-height: 170px;
   position: relative;
-  margin: 0 120px 45px 0;
+  margin: 0 0 45px 0;
 
   .eForm_blazonPreview{
     width: 172px;
@@ -281,42 +286,7 @@
   margin-bottom: 10px;
   position: relative;
 }
-.eManager_select_wrap select {
-  border: none;
-  width: 180px;
-  height: 37px;
-  color: #000000;
-  background: transparent;
-  padding: 5px;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: $BORDER;
-  border-radius: 5%;
-}
-.eManager_select_wrap option{
-  height: 30px;
-  color: #333132;
-}
-.eManager_select_wrap option:hover{
-  background: $MAIN_COLOR;
-}
-.eManager_select_wrap {
-  position: relative;
-  background: #fff;
-  width: 180px;
-}
-.eManager_select_wrap:before {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 0;
-  top: 15px;
-  right: 6px;
-  border-width: 6px 6px 0 6px;
-  border-style: solid;
-  border-color: $COLOR transparent;
-}
+
 .eForm_conditions {
   color: #616161;
   position: relative;
@@ -363,6 +333,9 @@
 }
 .eStudentForm {
 
+  .eForm_fieldColumn{
+    margin: 0;
+  }
   .eForm_atCenter {
     width: 100%;
   }

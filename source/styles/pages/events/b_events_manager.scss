@@ -23,32 +23,33 @@
   align-items: center;
   margin-bottom: 10px;
 }
-.eManager_group span{
+.eManager_label{
   min-width: 150px;
-}
-.eManager_radiogroup {
-  display: flex;
-  justify-content: space-between;
 }
 .eManager_radiogroup input{
   height: auto;
 }
 
 .eManager_radiogroup label {
-  margin-left: 15px;
+  color: #000;
   cursor: pointer;
   display: inline-block;
-  color: #000;
+  margin-right: 15px;
 }
 
 .eManager_select {
-  width: 150px;
+  width: 200px;
   align-self: flex-end;
   height: 35px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: #fff url("/images/arrow_down.svg") no-repeat 98% center;
+  background-size: 10px;
 }
 
 .eManager_field {
-  width: 180px;
+  width: 200px;
   padding: 2px;
   display: inline-block;
   box-sizing: border-box;
@@ -123,6 +124,7 @@
   height: 37px;
   background: #fff;
   border: $BORDER;
+  width: 200px;
 }
 .eManager_group .eCombobox_button{
   top: 15px;

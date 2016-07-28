@@ -45,6 +45,7 @@ const SkypeStyleTeam = React.createClass({
 						<div className="eTeam_playerItem mSelector mPosition">
 							<select className="eTeam_positionSelector"
 									onChange={self._onSelectPosition.bind(self, player.id)}
+									value={player.position ? player.position : self.NOT_SELECTED_POSITION_VALUE}
 							>
 								{self._renderPositionOptions(player)}
 							</select>

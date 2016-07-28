@@ -6,7 +6,6 @@
   margin: 15px auto;
   border: $BORDER;
   background: #fff;
-  padding: 0 25px;
   max-width: 700px;
   box-sizing: border-box;
   width: 100%;
@@ -18,13 +17,54 @@
   box-sizing: border-box;
   padding: 20px;
 }
+
+.bEventTeams_header {
+  padding: 10px;
+}
+
+.bEventTeams_teamButton {
+  display: inline-block;
+
+  width:    110px;
+  height:   30px;
+  padding:  0px;
+  margin:   0px;
+
+  border:         solid 1px #959595;
+  border-radius:  2px;
+
+  font-size:    16px;
+  font-weight:  bold;
+  font-family:  Glober, sans-serif;
+  color:        #616161;
+
+  background-color: white;
+
+  overflow:       hidden;
+  text-overflow:  ellipsis;
+  white-space:    nowrap;
+
+  &.mRightMargin {
+    margin-right: 10px;
+  }
+
+  &.mSelected {
+    background-color: #d7d7d7;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: #d7d7d7;
+  }
+}
+
 .bEvents_venue_preview{
   width:100% !important;
   height:100% !important;
 }
 
 .eEventTeams_managerWrapper {
-  margin-top: 10px;
+  display: inline-block;
 }
 
 .eEventTeams_awaiting {

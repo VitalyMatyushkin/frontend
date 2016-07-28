@@ -8,15 +8,15 @@ const SportsHelpers = {
     },
     gendersMap: {
         male: {
-            formFormat:'male',
+            formFormat:'boys',
             serverFormat:['male']
         },
         female: {
-            formFormat:'female',
+            formFormat:'girls',
             serverFormat:['female']
         },
         all: {
-            formFormat:'female and male',
+            formFormat:'girls and boys',
             serverFormat:['female', 'male']
         }
     },
