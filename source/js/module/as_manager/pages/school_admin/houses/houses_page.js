@@ -1,29 +1,32 @@
-const 	RouterView 	= require('module/core/router'),
-		React 		= require('react'),
-		Morearty	= require('morearty'),
-		Route 		= require('module/core/route');
+const 	RouterView 			= require('module/core/router'),
+		React 				= require('react'),
+		Morearty			= require('morearty'),
+		Route 				= require('module/core/route'),
+		HousesListComponent = require("module/as_manager/pages/school_admin/houses/houses_list"),
+		HouseAddComponent 	= require("module/as_manager/pages/school_admin/houses/house_add"),
+		HouseEditComponent 	= require("module/as_manager/pages/school_admin/houses/house_edit");
 
 const HousesPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding();
 
 		return (
 			<RouterView routes={ binding.sub('housesRouting') } binding={globalBinding}>
 				<Route path="/school_admin/houses"
 					   binding={binding.sub('housesList')}
 					   formBinding={binding.sub('housesForm')}
-					   component="module/as_manager/pages/school_admin/houses/houses_list"/>
+					   component={HousesListComponent}/>
 
 				<Route path="/school_admin/houses/add"
 					   binding={binding.sub('housesAdd')}
-					   component="module/as_manager/pages/school_admin/houses/house_add"/>
+					   component={HouseAddComponent}/>
 
 				<Route path="/school_admin/houses/edit"
 					   binding={binding.sub('housesForm')}
-					   component="module/as_manager/pages/school_admin/houses/house_edit"/>
+					   component={HouseEditComponent}/>
 			</RouterView>
 		)
 	}

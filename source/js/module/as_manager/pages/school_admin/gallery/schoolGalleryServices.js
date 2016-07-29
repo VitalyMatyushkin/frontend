@@ -15,15 +15,17 @@ const galleryServices     = require('module/ui/gallery/galleryServices');
  *     photo:{Service}
  * }
  */
-const schoolGalleryServiceList = {
-   albums:null, // only one defaultAlbum
-   album:window.Server.schoolAlbum,
-   photos:window.Server.schoolAlbumPhotos,
-   photo:window.Server.schoolAlbumPhoto
-};
+
 
 function schoolGalleryServices(binding, schoolId){
+    const schoolGalleryServiceList = {
+        albums:	null, // only one defaultAlbum
+        album:	window.Server.schoolAlbum,
+        photos:	window.Server.schoolAlbumPhotos,
+        photo:	window.Server.schoolAlbumPhoto
+    };
+
     return new galleryServices(binding, schoolGalleryServiceList, {schoolId:schoolId});
-};
+}
 
 module.exports = schoolGalleryServices;
