@@ -15,6 +15,7 @@ const FilterModel = function(options){
 	this.order = options.order;
 
 	this.onChange = options.onChange;
+	this.lastPageIsLoaded = options.lastPageIsLoaded;
 };
 
 FilterModel.prototype = {
@@ -45,6 +46,11 @@ FilterModel.prototype = {
 			console.error('Filter: Please provide page limit');
 		}
 
+	},
+	setNumberOfLoadedRows:function(count){
+		if(count < this.limit){
+			this.lastPageIsLoaded && this.lastPageIsLoaded()
+		}
 	},
 	setOrder: function (field, value) {
 		this.order = field + ' ' + value;

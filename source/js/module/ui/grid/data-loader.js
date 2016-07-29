@@ -39,12 +39,12 @@ DataLoader.prototype = {
 	},
 	loadData:function(){
 		const self = this,
-			filter = self.filter.getFilters(),
+			filters = self.filter.getFilters(),
 			service = self.getService(self.serviceName);
 
 		console.log('Grid.DataLoader: load data started');
 		if(service) {
-			const promise = self.params ? service.get(self.params, filter): service.get(filter);
+			const promise = self.params ? service.get(self.params, filters): service.get(filters);
 			return promise.then(function (data) {
 				var res = data;
 				if(self.dataModel){
@@ -52,6 +52,7 @@ DataLoader.prototype = {
 						return new self.dataModel(item);
 					});
 				}
+				self.filter.setNumberOfLoadedRows(res.length);
 				self.onLoad && self.onLoad(res);
 				return res;
 			});

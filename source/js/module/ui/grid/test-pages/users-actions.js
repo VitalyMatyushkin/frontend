@@ -130,7 +130,7 @@ UsersActions.prototype = {
 			binding = self.page.getDefaultBinding();
 
 		return function(data){
-			self.grid.table.data = data;
+			self.grid.setData(data);
 			binding.set('data', data);
 		};
 	}

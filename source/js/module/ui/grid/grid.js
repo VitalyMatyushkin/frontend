@@ -4,6 +4,7 @@
 const 	ActionPanel = require('./action-panel/action-panel'),
 		FilterPanel = require('./filter/filter-panel/filter-panel'),
 		Table 		= require('./table/view/table'),
+		Pagination 	= require('./filter/pagination'),
 		React 		= require('react');
 
 const Grid = React.createClass({
@@ -20,6 +21,7 @@ const Grid = React.createClass({
 				<ActionPanel model={model.actionPanel} />
 				<FilterPanel model={model.filterPanel} />
 				<Table model={model.table} />
+				<Pagination model={model.pagination} />
 			</div>
 		);
 	}
