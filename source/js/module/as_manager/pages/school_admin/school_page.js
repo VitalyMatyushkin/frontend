@@ -1,9 +1,21 @@
-const 	RouterView 	= require('module/core/router'),
-		Route 		= require('module/core/route'),
-		React 		= require('react'),
-		Immutable 	= require('immutable'),
-		Morearty	= require('morearty'),
-		SubMenu 	= require('module/ui/menu/sub_menu');
+const 	RouterView 					= require('module/core/router'),
+		Route 						= require('module/core/route'),
+		React 						= require('react'),
+		Immutable 					= require('immutable'),
+		Morearty					= require('morearty'),
+		SubMenu 					= require('module/ui/menu/sub_menu'),
+		SummaryPageComponent 		= require('module/as_manager/pages/school_admin/summary/summary_page'),
+		AdminStudentsPageComponent 	= require('module/as_manager/pages/school_admin/students/students_page'),
+		ClassesPageComponent 		= require('module/as_manager/pages/school_admin/classes/classes_page'),
+		HousesPageComponent 		= require('module/as_manager/pages/school_admin/houses/houses_page'),
+		TeamsPageComponent 			= require('module/as_manager/pages/school_admin/teams/teams_page'),
+		NewsPageComponent 			= require('module/as_manager/pages/school_admin/news/news_page'),
+		GalleryPageComponent 		= require('module/as_manager/pages/school_admin/gallery/gallery_page'),
+		StudentPageComponent 		= require('module/as_manager/pages/student/student_page');
+
+
+
+
 
 const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -86,9 +98,9 @@ const OneSchoolPage = React.createClass({
 		});
 	},
 	render: function() {
-		const self        = this,
-			binding       = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
+		const 	self        = this,
+				binding       = self.getDefaultBinding(),
+				globalBinding = self.getMoreartyContext().getBinding();
 
 		return (
 			<div>
@@ -97,35 +109,35 @@ const OneSchoolPage = React.createClass({
 					<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
 						<Route path="/school_admin/summary"
 							   binding={binding.sub('summary')}
-							   component="module/as_manager/pages/school_admin/summary/summary_page"/>
+							   component={SummaryPageComponent}/>
 
 						<Route path="/school_admin/students /school_admin/students/:mode"
 							   binding={binding.sub('students')}
-							   component="module/as_manager/pages/school_admin/students/students_page"/>
+							   component={AdminStudentsPageComponent}/>
 
 						<Route path="/school_admin/forms /school_admin/forms/:mode"
 							   binding={binding.sub('classes')}
-							   component="module/as_manager/pages/school_admin/classes/classes_page"/>
+							   component={ClassesPageComponent}/>
 
 						<Route path="/school_admin/houses /school_admin/houses/:mode"
 							   binding={binding.sub('houses')}
-							   component="module/as_manager/pages/school_admin/houses/houses_page"/>
+							   component={HousesPageComponent}/>
 
 						<Route path="/school_admin/teams /school_admin/teams/:mode"
 							   binding={binding.sub('teams')}
-							   component="module/as_manager/pages/school_admin/teams/teams_page"/>
+							   component={TeamsPageComponent}/>
 
 						<Route path="/school_admin/news /school_admin/news/:mode"
 							   binding={binding.sub('news')}
-							   component="module/as_manager/pages/school_admin/news/news_page"/>
+							   component={NewsPageComponent}/>
 
                         <Route path="/school_admin/gallery /school_admin/gallery/:mode"
 							   binding={binding.sub('gallery')}
-							   component="module/as_manager/pages/school_admin/gallery/gallery_page"/>
+							   component={GalleryPageComponent}/>
 
 						<Route path="/school_admin/student"
 							   binding={binding}
-							   component="module/as_manager/pages/student/student_page"/>
+							   component={StudentPageComponent}/>
 					</RouterView>
 				</div>
 			</div>

@@ -1,8 +1,12 @@
-const   RouterView      = require('module/core/router'),
-        React           = require('react'),
-        Route           = require('module/core/route'),
-        Morearty		= require('morearty'),
-        Immutable	    = require('immutable');
+const   RouterView      	= require('module/core/router'),
+        React           	= require('react'),
+        Route           	= require('module/core/route'),
+        Morearty			= require('morearty'),
+        Immutable	    	= require('immutable'),
+		SportsListComponent = require('module/as_admin/pages/admin_schools/sports/sports_list'),
+		SportsAddComponent 	= require('module/as_admin/pages/admin_schools/sports/sports_add'),
+		SportsEditComponent = require('module/as_admin/pages/admin_schools/sports/sports_edit');
+
 
 const SportsPage = React.createClass({
     mixins: [Morearty.Mixin],
@@ -14,25 +18,25 @@ const SportsPage = React.createClass({
         });
     },
     render: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding();
+        const 	self = this,
+            	binding = self.getDefaultBinding(),
+            	globalBinding = self.getMoreartyContext().getBinding();
 
         return (
             <RouterView routes={binding.sub('sportsRouting')} binding={globalBinding}>
                 <Route
                     path="/admin_schools/admin_views/sports"
                     binding={binding.sub('sportsList')}
-                    component="module/as_admin/pages/admin_schools/sports/sports_list"
+                    component={SportsListComponent}
                     formBinding={binding.sub('sportsForm')}
                 />
                 <Route path="/admin_schools/admin_views/sports/add"
                        binding={binding.sub('sportsAdd')}
-                       component="module/as_admin/pages/admin_schools/sports/sports_add"
+                       component={SportsAddComponent}
                 />
                 <Route path="/admin_schools/admin_views/sports/edit"
                        binding={binding.sub('sportsForm')}
-                       component="module/as_admin/pages/admin_schools/sports/sports_edit"
+                       component={SportsEditComponent}
                 />
             </RouterView>
         )

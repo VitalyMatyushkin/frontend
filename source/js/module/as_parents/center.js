@@ -1,14 +1,20 @@
-const 	RouterView = 	require('module/core/router'),
-		Route = 		require('module/core/route'),
-		LoginRoute = 	require('module/core/routes/login_route'),
-		LogoutRoute = 	require('module/core/routes/logout_route'),
-		RegisterRoute = require('module/core/routes/register_route'),
-		VerifyRoute = 	require('module/core/routes/verify_route'),
-		SettingsRoute = require('module/core/routes/settings_route'),
-		Morearty        = require('morearty'),
-		React = 		require('react'),
+const 	RouterView 					= require('module/core/router'),
+		Route 						= require('module/core/route'),
+		LoginRoute 					= require('module/core/routes/login_route'),
+		LogoutRoute 				= require('module/core/routes/logout_route'),
+		RegisterRoute 				= require('module/core/routes/register_route'),
+		VerifyRoute 				= require('module/core/routes/verify_route'),
+		SettingsRoute 				= require('module/core/routes/settings_route'),
+		Morearty        			= require('morearty'),
+		React 						= require('react'),
+		StudentPageComponent 		= require("module/as_manager/pages/student/student_page"),
+		EventsComponent 			= require("module/as_parents/pages/events/events"),
+		EventComponent 				= require("module/as_manager/pages/event/event"),
+		GalleryRoutesComponent 		= require("module/as_manager/pages/event/gallery/eventGalleryRoutes");
 
-Center = React.createClass({
+
+
+const Center = React.createClass({
 	mixins: [Morearty.Mixin],
 	getMergeStrategy: function() {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
@@ -32,21 +38,21 @@ Center = React.createClass({
 						<SettingsRoute binding={binding.sub('userData')} />
 
 
-						<Route path="/student" binding={binding.sub('events')}
-							   component="module/as_manager/pages/student/student_page"/>
+						<Route path="/student"
+							   binding={binding.sub('events')}
+							   component={StudentPageComponent}/>
 
-						<Route path="/profile/:schoolID" binding={binding.sub('schoolProfile')}
-							   component="module/as_manager/pages/school_profile/school_profile_page"/>
+						<Route path="/events/calendar/:userId /events/fixtures/:userId /events/achievement/:userId"
+							   binding={binding.sub('events')}
+							   component={EventsComponent}/>
 
-						<Route path="/events/calendar/:userId /events/fixtures/:userId /events/achievement/:userId" binding={binding.sub('events')}
-							   component="module/as_parents/pages/events/events"/>
-
-						<Route path="/event /event/:eventId /event/:eventId/:mode" binding={binding.sub('events')}
-							   component="module/as_manager/pages/event/event"/>
+						<Route path="/event /event/:eventId /event/:eventId/:mode"
+							   binding={binding.sub('events')}
+							   component={EventComponent}/>
 
 						<Route path="/event-albums/:eventId/:mode /event-albums/:eventId/:mode/:albumId /event-albums/:eventId/:albumId/:mode/:photoId"
 							   binding={binding.sub('event-albums')}
-							   component="module/as_manager/pages/event/gallery/eventGalleryRoutes"/>
+							   component={GalleryRoutesComponent}/>
 
 					</RouterView>
 

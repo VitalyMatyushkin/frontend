@@ -1,9 +1,21 @@
-const   RouterView  = require('module/core/router'),
-        Route       = require('module/core/route'),
-        React       = require('react'),
-        SubMenu     = require('module/ui/menu/sub_menu'),
-        Morearty    = require('morearty'),
-        Immutable   = require('immutable');
+const   RouterView  					= require('module/core/router'),
+        Route       					= require('module/core/route'),
+        React       					= require('react'),
+        SubMenu     					= require('module/ui/menu/sub_menu'),
+        Morearty    					= require('morearty'),
+        Immutable   					= require('immutable'),
+        AdminUserListComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_users_list'),
+		UserViewComponent 				= require('module/shared_pages/users/user_view'),
+		AdminListComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_list'),
+		AdminAddComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_add'),
+		AdminEditComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_edit'),
+		AdminRequestsComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_requests'),
+		AdminPermissionAcceptComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
+		AdminArchiveComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_archive'),
+		UserComponent 					= require('module/as_admin/pages/admin_add/user'),
+		SportsPageComponent 			= require('module/as_admin/pages/admin_schools/sports/sports_page'),
+		ImportStudentsComponent 		= require('module/as_admin/pages/admin_schools/import_students_module'),
+		UserActivityComponent 			= require('module/as_admin/pages/admin_schools/user_activity/user_activity');
 
 const OneSchoolPage = React.createClass({
     mixins: [Morearty.Mixin],
@@ -11,8 +23,8 @@ const OneSchoolPage = React.createClass({
         this.createSubMenu();
     },
     componentDidMount: function(){
-        const self = this,
-            globalBinding = self.getMoreartyContext().getBinding();
+        const   self            = this,
+                globalBinding   = self.getMoreartyContext().getBinding();
         self.addBindingListener(globalBinding, 'submenuNeedsUpdate', self.createSubMenu);
     },
     getDefaultState: function () {
@@ -32,8 +44,8 @@ const OneSchoolPage = React.createClass({
         });
     },
     createSubMenu: function(){
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         const _createSubMenuData = function(count){
             let menuItems = [
@@ -81,7 +93,7 @@ const OneSchoolPage = React.createClass({
         // so we should filter and count permissions by our hands
         return window.Server.permissionRequests.get({
                 filter: {
-                    limit: 1000
+                    limit: 1000 //TODO: holy crap
                 }
             })
             .then(permissions => permissions.filter(permission => permission.status === "NEW"))
@@ -92,9 +104,9 @@ const OneSchoolPage = React.createClass({
             });
     },
     render: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding();
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                globalBinding   = self.getMoreartyContext().getBinding();
         return (
             <div>
                 <SubMenu binding={{default: binding.sub('schoolRouting'), itemsBinding: binding.sub('subMenuItems')}} />
@@ -103,63 +115,63 @@ const OneSchoolPage = React.createClass({
                         <Route
                             path="/admin_schools /admin_schools/users"
                             binding={binding.sub('schools')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_users_list"
+                            component={AdminUserListComponent}
                         />
                         <Route
                             path="/user/view"
                             binding={binding.sub('userDetailPage')}
-                            component="module/shared_pages/users/user_view"
+                            component={UserViewComponent}
                         />
                         <Route
                             path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode"
                             binding={binding.sub('schools')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_list"
+                            component={AdminListComponent}
                         />
                         <Route
                             path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode"
                             binding={binding.sub('addSchoolPage')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_add"
+                            component={AdminAddComponent}
                         />
                         <Route
                             path="/admin_schools/admin_views/edit /admin_schools/admin_views/edit:mode"
                             binding={binding.sub('editSchoolPage')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_edit"
+                            component={AdminEditComponent}
                         />
                         <Route
                             path="/admin_schools/admin_views/requests"
                             binding={binding.sub('schools')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_requests"
+                            component={AdminRequestsComponent}
                         />
                         <Route
                             path="/admin_schools/admin_views/requests/accept"
                             binding={binding.sub('parentPermission')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"
+                            component={AdminPermissionAcceptComponent}
                             afterSubmitPage="/admin_schools/admin_views/requests"
                         />
                         <Route
                             path="/admin_schools/admin_views/archive"
                             binding={binding.sub('schools')}
-                            component="module/as_admin/pages/admin_schools/admin_views/admin_archive"
+                            component={AdminArchiveComponent}
                         />
                         <Route
                             path="/admin_schools/admin_views/create_user"
                             binding={binding.sub('userDetailPage')}
-                            component="module/as_admin/pages/admin_add/user"
+                            component={UserComponent}
                         />
                         <Route
                             path="/admin_schools/admin_views/sports /admin_schools/admin_views/sports/:mode"
                             binding={binding.sub('sports')}
-                            component="module/as_admin/pages/admin_schools/sports/sports_page"
+                            component={SportsPageComponent}
                         />
                         <Route
                             path="/admin_schools/import_students"
                             binding={binding.sub('importStudents')}
-                            component="module/as_admin/pages/admin_schools/import_students_module"
+                            component={ImportStudentsComponent}
                         />
                         <Route
                             path="/admin_schools/user_activity"
                             binding={binding.sub('userActivity')}
-                            component="module/as_admin/pages/admin_schools/user_activity/user_activity"
+                            component={UserActivityComponent}
                         />
                     </RouterView>
                 </div>

@@ -2,7 +2,9 @@ const 	RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
 		SubMenu 	= require('module/ui/menu/sub_menu'),
 		Morearty    = require('morearty'),
-		React 		= require('react');
+		React 		= require('react'),
+		MapPageComponent 	= require("module/as_school/pages/opponents/map/map_page"),
+		ListPageComponent 	= require("module/as_school/pages/opponents/list/list_page");
 
 const OpponentsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -31,8 +33,8 @@ const OpponentsPage = React.createClass({
 				<SubMenu binding={binding.sub('opponentRouting')} items={self.menuItems} />
 
 				<RouterView routes={ binding.sub('opponentRouting') } binding={globalBinding}>
-					<Route path="/opponents/map" binding={binding} component="module/as_school/pages/opponents/map/map_page"  />
-					<Route path="/opponents/list" binding={binding} component="module/as_school/pages/opponents/list/list_page"  />
+					<Route path="/opponents/map" binding={binding} component={MapPageComponent}  />
+					<Route path="/opponents/list" binding={binding} component={ListPageComponent}  />
 				</RouterView>
 
 			</div>

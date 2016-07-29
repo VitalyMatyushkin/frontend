@@ -1,13 +1,16 @@
-const   RouterView      = require('module/core/router'),
-        Route           = require('module/core/route'),
-        React           = require('react'),
-        SubMenu         = require('module/ui/menu/sub_menu'),
-        MoreartyHelper  = require('module/helpers/morearty_helper'),
-        EventHelper     = require('module/helpers/eventHelper'),
-        Lazy            = require('lazy.js'),
-        DateHelper      = require('module/helpers/date_helper'),
-        Morearty		= require('morearty'),
-        Immutable       = require('immutable');
+const   RouterView      			= require('module/core/router'),
+        Route           			= require('module/core/route'),
+        React           			= require('react'),
+        SubMenu         			= require('module/ui/menu/sub_menu'),
+        MoreartyHelper  			= require('module/helpers/morearty_helper'),
+        EventHelper     			= require('module/helpers/eventHelper'),
+        Lazy            			= require('lazy.js'),
+        DateHelper      			= require('module/helpers/date_helper'),
+        Morearty					= require('morearty'),
+        Immutable       			= require('immutable'),
+        EventsCalendarComponent 	= require('module/as_manager/pages/events/events_calendar'),
+		EventManagerComponent 		= require('module/as_manager/pages/events/event_manager'),
+		EventFixturesComponent 		= require('module/ui/fixtures/events_fixtures');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -188,7 +191,7 @@ const EventView = React.createClass({
                         <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
                             <Route path='/events/calendar'
                                    binding={binding}
-                                   component='module/as_manager/pages/events/events_calendar'
+                                   component={EventsCalendarComponent}
                             />
                             <Route
                                 path='/events/manager'
@@ -199,15 +202,11 @@ const EventView = React.createClass({
                                         calendar: binding.sub('calendar')
                                     }
                                 }
-                                component='module/as_manager/pages/events/event_manager'
+                                component={EventManagerComponent}
                             />
                             <Route path='/events/fixtures'
                                    binding={binding}
-                                   component='module/ui/fixtures/events_fixtures'
-                            />
-                            <Route path='/events/invites'
-                                   binding={binding}
-                                   component='module/as_manager/pages/events/events_invites'
+                                   component={EventFixturesComponent}
                             />
                         </RouterView>
                     </div>

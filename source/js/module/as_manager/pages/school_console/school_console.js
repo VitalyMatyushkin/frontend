@@ -1,13 +1,17 @@
 /**
  * Created by bridark on 19/06/15.
  */
-const   RouterView      = require('module/core/router'),
-        Route           = require('module/core/route'),
-        SubMenu         = require('module/ui/menu/sub_menu'),
-        React           = require('react'),
-        MoreartyHelper	= require('module/helpers/morearty_helper'),
-        Morearty	    = require('morearty'),
-        Immutable       = require('immutable');
+const   RouterView      				= require('module/core/router'),
+        Route           				= require('module/core/route'),
+        SubMenu         				= require('module/ui/menu/sub_menu'),
+        React           				= require('react'),
+        MoreartyHelper					= require('module/helpers/morearty_helper'),
+        Morearty	    				= require('morearty'),
+        Immutable       				= require('immutable'),
+		UsersComponent 					= require('module/as_manager/pages/school_console/views/users'),
+		AdminRequestsComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_requests'),
+		AdminPermissionAcceptComponent 	= require("module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"),
+		RequestArchiveComponent 		= require('module/as_manager/pages/school_console/views/request_archive');
 
 let liveRequestCount;
 
@@ -90,10 +94,10 @@ const SchoolConsole = React.createClass({
             <SubMenu binding={{ default: binding.sub('consoleRouting'), itemsBinding: binding.sub('subMenuItems') }} />
             <div className='bSchoolMaster'>
                 <RouterView routes={ binding.sub('consoleRouting') } binding={globalBinding || {}}>
-                    <Route path='/school_console /school_console/users' binding={binding.sub('users')} component='module/as_manager/pages/school_console/views/users'  />
-                    <Route path='/school_console/requests' binding={binding.sub('requests')} component='module/as_admin/pages/admin_schools/admin_views/admin_requests'  />
-                    <Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component="module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"  afterSubmitPage="/school_console/requests"/>
-                    <Route path='/school_console/archive' binding={binding.sub('archives')} component='module/as_manager/pages/school_console/views/request_archive'  />
+                    <Route path='/school_console /school_console/users' binding={binding.sub('users')} component={UsersComponent}/>
+                    <Route path='/school_console/requests' binding={binding.sub('requests')} component={AdminRequestsComponent}/>
+                    <Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component={AdminPermissionAcceptComponent}  afterSubmitPage="/school_console/requests"/>
+                    <Route path='/school_console/archive' binding={binding.sub('archives')} component={RequestArchiveComponent}/>
                 </RouterView>
             </div>
         </div>;

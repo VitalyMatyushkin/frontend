@@ -1,7 +1,10 @@
-const	React 		= require('react'),
-		Morearty	= require('morearty'),
-		RouterView 	= require('module/core/router'),
-		Route 		= require('module/core/route');
+const	React 					= require('react'),
+		Morearty				= require('morearty'),
+		RouterView 				= require('module/core/router'),
+		Route 					= require('module/core/route'),
+		ClassesListComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes_list'),
+		ClassAddComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_add'),
+		ClassEditComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit"');
 
 const ClassesPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -13,9 +16,9 @@ const ClassesPage = React.createClass({
 
 		return (
 			<RouterView routes={ subBinding.sub('routing') } binding={globalBinding}>
-				<Route path="/school_sandbox/:schoolId/forms" binding={subBinding.sub('forms')} component="module/as_admin/pages/admin_schools/school_sandbox/classes/classes_list"  />
-				<Route path="/school_sandbox/:schoolId/forms/add"  binding={subBinding} component="module/as_admin/pages/admin_schools/school_sandbox/classes/class_add"  />
-				<Route path="/school_sandbox/:schoolId/forms/edit/:formId" binding={subBinding} component="module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit"  />
+				<Route path="/school_sandbox/:schoolId/forms" binding={subBinding.sub('forms')} component={ClassesListComponent}  />
+				<Route path="/school_sandbox/:schoolId/forms/add"  binding={subBinding} component={ClassAddComponent}  />
+				<Route path="/school_sandbox/:schoolId/forms/edit/:formId" binding={subBinding} component={ClassEditComponent}  />
 			</RouterView>
 		)
 	}
