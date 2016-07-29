@@ -16,15 +16,15 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
  *
  * */
 const UsersActions = function(page){
-	const   globalBinding   = page.getMoreartyContext().getBinding(),
-			activeSchoolId  = globalBinding.get('userRules.activeSchoolId');
-
 	this.page = page;
+	this.binding = page.getDefaultBinding();
+	this.rootBinding = page.getMoreartyContext().getBinding();
+	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 	this.grid = this.getGrid();
 	this.dataLoader = new DataLoader({
 		serviceName:'users',
 		dataModel: 	UserModel,
-		params:		{schoolId:activeSchoolId},
+		params:		{schoolId:this.activeSchoolId},
 		filter: 	this.grid.filter,
 		onLoad: 	this.getDataLoadedHandle()
 	});
@@ -33,9 +33,8 @@ const UsersActions = function(page){
 UsersActions.prototype = {
 	getActions:function(item){
 		var self 			= this,
-			binding 		= self.page.getDefaultBinding(),
-			rootBinding 	= self.page.getMoreartyContext().getBinding(),
-			activeSchoolId 	= rootBinding.get('userRules.activeSchoolId'),
+			binding 		= self.binding,
+			activeSchoolId 	= self.activeSchoolId,
 			actionList 		= ['View','Add Role','Revoke All Roles'];
 
 		item.permissions.filter(p=> p.preset != 'STUDENT').forEach(p => {
@@ -62,9 +61,52 @@ UsersActions.prototype = {
 						   binding={binding.sub('dropList'+item.id)}
 						   itemId={item.id}
 						   listItems={actionList}
-						   listItemFunction={null}/>
+						   listItemFunction={self._getQuickEditActionsFactory.bind(this)}/>
 		);
 
+	},
+	_getQuickEditActionsFactory:function(itemId,action){
+		const 	self = this,
+			binding = self.binding,
+			data = binding.sub('data'),
+			idAutoComplete = [],
+			ationKey = action.key ? action.key : action;
+		const user = data.get().find(function(item){
+			return item.id === itemId;
+		});
+		idAutoComplete.push(user.id);
+		switch (ationKey){
+			//case 'Add Role':
+			//	binding.atomically()
+			//		.set('groupIds',idAutoComplete)
+			//		.set('popup',true)
+			//		.commit();
+			//	break;
+			//case 'Revoke All Roles':
+			//	self._revokeAllRoles(idAutoComplete);
+			//	break;
+			//case 'Unblock':
+			//	self._accessRestriction(idAutoComplete,false);
+			//	break;
+			//case 'Block':
+			//	self._accessRestriction(idAutoComplete,true);
+			//	break;
+			case 'View':
+				self._getItemViewFunction(idAutoComplete);
+				break;
+			//case 'revoke':
+			//	self._revokeRole(idAutoComplete, action);
+			//	break;
+			default :
+				break;
+		}
+	},
+	_getItemViewFunction:function(model){
+		if(model.length === 1){
+			window.location.hash = 'user/view?id='+model[0];
+		}else{
+			alert("You can only perform this action on one Item");
+		}
 	},
 	getGrid: function(){
 		const columns = [
@@ -131,7 +173,7 @@ UsersActions.prototype = {
 
 		return function(data){
 			self.grid.setData(data);
-			binding.set('data', data);
+			binding.set('data', self.grid.table.data);
 		};
 	}
 };

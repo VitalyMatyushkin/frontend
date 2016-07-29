@@ -15,7 +15,8 @@ const FilterModel = function(options){
 	this.order = options.order;
 
 	this.onChange = options.onChange;
-	this.lastPageIsLoaded = options.lastPageIsLoaded;
+	this.onPageLoaded = options.onPageLoaded;
+	this.onLastPageLoaded = options.onLastPageLoaded;
 };
 
 FilterModel.prototype = {
