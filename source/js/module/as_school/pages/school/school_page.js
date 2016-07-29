@@ -5,7 +5,12 @@ const 	RouterView 	= require('module/core/router'),
 		React 		= require('react'),
 		Immutable 	= require('immutable'),
 		Morearty    = require('morearty'),
-		SchoolName 	= require('module/as_school/pages/school/view/school_name');
+		SchoolName 	= require('module/as_school/pages/school/view/school_name'),
+		FixturesPageComponent 	= require("module/as_school/pages/school/fixtures/fixtures_page"),
+		ResultsPageComponent 	= require("module/as_school/pages/school/results/results_page"),
+		NewsPageComponent 		= require("module/as_school/pages/school/news/news_page"),
+		ContactsPageComponent 	= require("module/as_school/pages/school/contacts/contacts_page");
+
 
 const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -82,10 +87,10 @@ const OneSchoolPage = React.createClass({
 					<div className="eUserDataColumn_wrap" id="jsSubPage">
 
 						<RouterView routes={ binding.sub('schoolRouting') } binding={globalBinding}>
-							<Route path="/ /school /school/fixtures" binding={binding.sub('fixturesPage')} component="module/as_school/pages/school/fixtures/fixtures_page"  />
-							<Route path="/school/results" binding={binding.sub('results')} component="module/as_school/pages/school/results/results_page"  />
-							<Route path="/school/news" binding={binding.sub('news')} component="module/as_school/pages/school/news/news_page"  />
-							<Route path="/school/contacts" binding={binding} component="module/as_school/pages/school/contacts/contacts_page"  />
+							<Route path="/ /school /school/fixtures" binding={binding.sub('fixturesPage')} component={FixturesPageComponent}  />
+							<Route path="/school/results" binding={binding.sub('results')} component={ResultsPageComponent}  />
+							<Route path="/school/news" binding={binding.sub('news')} component={NewsPageComponent}  />
+							<Route path="/school/contacts" binding={binding} component={ContactsPageComponent}  />
 						</RouterView>
 
 					</div>
