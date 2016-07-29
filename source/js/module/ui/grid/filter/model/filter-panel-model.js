@@ -12,8 +12,5 @@
 const FilterPanelModel = function(options){
 };
 
-FilterPanelModel.prototype = {
-};
-
 
 module.exports = FilterPanelModel;
