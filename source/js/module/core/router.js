@@ -118,16 +118,8 @@ const RouterView = React.createClass({
 	 * Setting route to be active
 	 */
 	setRoute: function(route) {
-		const self = this;
-
-		// const req = require.context('../../', true, /^\.\/.*\.js$/);
-		//
-		// console.log('setting route: ' + route.component);
-		//
-		// // Loading path - related component
-		// const component = req('./' + route.component + '.js');
-
-		const component = route.component;
+		const 	self 		= this,
+				component 	= route.component;
 
 		self.siteComponents[route.path] = {
 			View: 				component,
