@@ -14,7 +14,8 @@ const BadgeModel = function(options){
 		name:options.field.name,
 		text:options.field.text
 	};
-	this.values = []; //an array of key-value pairs.
+	this.type = options.type;
+	this.values = null; //an array of key-value pairs.
 };
 
 

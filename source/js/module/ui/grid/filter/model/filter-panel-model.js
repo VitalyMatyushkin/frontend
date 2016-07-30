@@ -2,9 +2,8 @@
  * Created by Anatoly on 22.07.2016.
  */
 
-const FilterFieldModel = require(''),
-	BadgeAreaModel = require('');
-
+const 	FilterFieldModel 	= require('./filter-field-model'),
+		BadgeAreaModel 		= require('./badge-area-model');
 
 /**
  * FilterPanelModel

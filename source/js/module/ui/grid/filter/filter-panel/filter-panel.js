@@ -11,7 +11,7 @@ const FilterPanel = React.createClass({
 	render: function() {
 		return (
 			<div className="bFilterPanel">
-				<h2>Filter Panel</h2>
+				<div className="bFilterFields"></div>
 			</div>
 		);
 	}
