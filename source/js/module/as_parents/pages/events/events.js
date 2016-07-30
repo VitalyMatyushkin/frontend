@@ -1,10 +1,15 @@
-const   RouterView  	= require('module/core/router'),
-		Route       	= require('module/core/route'),
-		React       	= require('react'),
-		SubMenu     	= require('module/ui/menu/sub_menu'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		Morearty        = require('morearty'),
-		Immutable   	= require('immutable');
+const   RouterView  				= require('module/core/router'),
+		Route       				= require('module/core/route'),
+		React       				= require('react'),
+		SubMenu     				= require('module/ui/menu/sub_menu'),
+		MoreartyHelper				= require('module/helpers/morearty_helper'),
+		Morearty        			= require('morearty'),
+		Immutable   				= require('immutable'),
+		EventsCalendarComponent 	= require('module/as_parents/pages/events/events_calendar'),
+		EventsFixturesComponent 	= require('module/ui/fixtures/events_fixtures'),
+		EventsAchievementComponent 	= require("module/as_parents/pages/events/events_achievement");
+
+
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -248,20 +253,18 @@ const EventView = React.createClass({
 			<div className='bSchoolMaster'>
 				<div className='bEvents'>
 					<RouterView routes={binding.sub('eventsRouting')}
-								binding={rootBinging}
-					>
+								binding={rootBinging}>
 						<Route	path='/events/calendar/:userId'
 								binding={binding}
-								component='module/as_parents/pages/events/events_calendar'
-						/>
+								component={EventsCalendarComponent}/>
+
 						<Route	path='/events/fixtures/:userId'
 								binding={binding}
-								component='module/ui/fixtures/events_fixtures'
-						/>
+								component={EventsFixturesComponent}/>
+
 						<Route	path="/events/achievement/:userId"
 								binding={binding}
-								component="module/as_parents/pages/events/events_achievement"
-						/>
+								component={EventsAchievementComponent}/>
 					</RouterView>
 				</div>
 			</div>

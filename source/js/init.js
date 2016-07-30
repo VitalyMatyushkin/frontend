@@ -34,7 +34,6 @@ Promise.config({
 loadSVG();  // will add some svg resources to page
 
 window.Helpers = storage;
-// window.Router = Director;
 
 const   myDomain      = document.location.hostname,
 		api           = loaderUtils.apiSelector(myDomain),

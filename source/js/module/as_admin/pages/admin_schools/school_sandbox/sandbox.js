@@ -1,12 +1,14 @@
 /**
  * Created by Bright on 25/03/2016.
  */
-const   RouterView  = require('module/core/router'),
-        Route       = require('module/core/route'),
-        React       = require('react'),
-        SubMenu     = require('module/ui/menu/sub_menu'),
-        Morearty    = require('morearty'),
-        Immutable   = require('immutable');
+const   RouterView  			= require('module/core/router'),
+        Route       			= require('module/core/route'),
+        React       			= require('react'),
+        SubMenu     			= require('module/ui/menu/sub_menu'),
+        Morearty    			= require('morearty'),
+        Immutable   			= require('immutable'),
+        ClassesPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page'),
+		HousePageComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page');
 
 const SchoolSandbox = React.createClass({
     mixins:[Morearty.Mixin],
@@ -75,12 +77,12 @@ const SchoolSandbox = React.createClass({
                         <Route
                             path="/school_sandbox/:schoolId/forms /school_sandbox/:schoolId/forms/:mode /school_sandbox/:schoolId/forms/:mode/:id"
                             binding={subBinding}
-                            component="module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page"
+                            component={ClassesPageComponent}
                         />
                         <Route
                             path="/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
                             binding={subBinding}
-                            component="module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page"
+                            component={HousePageComponent}
                         />
                     </RouterView>
                 </div>

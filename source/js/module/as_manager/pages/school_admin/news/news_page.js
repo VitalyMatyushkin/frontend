@@ -1,7 +1,12 @@
-const	RouterView 	= require('module/core/router'),
-		React 		= require('react'),
-		Morearty	= require('morearty'),
-		Route 		= require('module/core/route');
+const	RouterView 			= require('module/core/router'),
+		React 				= require('react'),
+		Morearty			= require('morearty'),
+		Route 				= require('module/core/route'),
+		NewsListComponent 	= require("module/as_manager/pages/school_admin/news/news_list"),
+		NewsAddComponent 	= require("module/as_manager/pages/school_admin/news/news_add"),
+		NewsEditComponent 	= require("module/as_manager/pages/school_admin/news/news_edit");
+
+
 
 const NewsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -12,9 +17,9 @@ const NewsPage = React.createClass({
 
 		return (
 			<RouterView routes={ binding.sub('newsRouting') } binding={globalBinding}>
-				<Route path="/school_admin/news" binding={binding.sub('newsList')} formBinding={binding.sub('classesForm')} component="module/as_manager/pages/school_admin/news/news_list"  />
-				<Route path="/school_admin/news/add"  binding={binding.sub('newsAdd')} component="module/as_manager/pages/school_admin/news/news_add"  />
-				<Route path="/school_admin/news/edit" binding={binding.sub('newsForm')} component="module/as_manager/pages/school_admin/news/news_edit"  />
+				<Route path="/school_admin/news" binding={binding.sub('newsList')} formBinding={binding.sub('classesForm')} component={NewsListComponent} />
+				<Route path="/school_admin/news/add"  binding={binding.sub('newsAdd')} component={NewsAddComponent} />
+				<Route path="/school_admin/news/edit" binding={binding.sub('newsForm')} component={NewsEditComponent}  />
 			</RouterView>
 		)
 	}

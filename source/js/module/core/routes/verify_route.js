@@ -1,8 +1,8 @@
-var VerifyRoute,
-	React = require('react'),
-	Route = require('module/core/route');
+const 	React 					= require('react'),
+		Route 					= require('module/core/route'),
+		RegisterDoneComponent 	= require('module/ui/register/user/register_done');
 
-VerifyRoute = React.createClass({
+const VerifyRoute = React.createClass({
 	getDefaultProps: function() {
 		return {
 			path: 'verify',
@@ -11,9 +11,7 @@ VerifyRoute = React.createClass({
 		};
 	},
 	render: function() {
-		var self = this;
-
-		null
+		null;
 	}
 });
 

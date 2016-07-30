@@ -1,19 +1,17 @@
-var LogoutRoute,
-	React = require('react'),
-	Route = require('module/core/route');
+const 	React 			= require('react'),
+		Route 			= require('module/core/route'),
+		LogoutComponent = require('module/ui/logout/logout');
 
-LogoutRoute = React.createClass({
+const LogoutRoute = React.createClass({
 	getDefaultProps: function() {
 		return {
 			path: '/logout',
-			component: 'module/ui/logout/logout',
+			component: LogoutComponent,
 			unauthorizedAccess: true
 		};
 	},
 	render: function() {
-		var self = this;
-
-		null
+		null;
 	}
 });
 

@@ -3,7 +3,13 @@ const 	RouterView 	= require('module/core/router'),
 		React 		= require('react'),
 		Tabs		= require('module/ui/tabs/tabs'),
 		Morearty	= require('morearty'),
-		Immutable 	= require('immutable');
+		Immutable 	= require('immutable'),
+		GeneralPageComponent 			= require("module/shared_pages/settings/general/general_page"),
+		ChangePasswordPageComponent 	= require("module/shared_pages/settings/password/change_password_page"),
+		AccountRolesComponent 			= require("module/shared_pages/settings/account/account_roles"),
+		AccountRequestsComponent 		= require("module/shared_pages/settings/account/account_requests"),
+		PermissionsPageComponent 		= require("module/shared_pages/settings/permissions/permissions_page");
+
 
 const SettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -84,27 +90,27 @@ const SettingsPage = React.createClass({
 						<Route
 							path="/settings/general"
 							binding={binding.sub('userInfo')}
-							component="module/shared_pages/settings/general/general_page"
+							component={GeneralPageComponent}
 						/>
 						<Route
 							path="/settings/password"
 							binding={binding.sub('password')}
-							component="module/shared_pages/settings/password/change_password_page"
+							component={ChangePasswordPageComponent}
 						/>
 						<Route
 							path="/settings/roles"
 							binding={binding.sub('roles')}
-							component="module/shared_pages/settings/account/account_roles"
+							component={AccountRolesComponent}
 						/>
 						<Route
 							path="/settings/requests /settings/requests/:subPage"
 							binding={binding.sub('requests')}
-							component="module/shared_pages/settings/account/account_requests"
+							component={AccountRequestsComponent}
 						/>
 						<Route
 							path="/settings/permissions /settings/permissions/:subPage"
 							binding={binding.sub('permissions')}
-							component="module/shared_pages/settings/permissions/permissions_page"
+							component={PermissionsPageComponent}
 						/>
 					</RouterView>
 				</div>
