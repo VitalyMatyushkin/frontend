@@ -96,12 +96,10 @@ function runManagerMode() {
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
-	authController.initialize(
-		{
-			binding: binding,
-			defaultPath: 'school_admin/summary'
-		}
-	);
+	authController.initialize({
+		binding: binding,
+		defaultPath: 'school_admin/summary'
+	});
 
 
 	// Инициализация приложения

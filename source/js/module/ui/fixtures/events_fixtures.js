@@ -31,13 +31,13 @@ const ChallengesView = React.createClass({
         let result = [];
 
         if(binding.toJS('sync')) {
-            const eventsByDate = binding.get('models').filter(function (event) {
+            const eventsByDate = binding.get('models').filter(event => {
                 return self.sameDay(
                     new Date(event.get('startTime')),
                     new Date(date));
             });
 
-            result = eventsByDate.map(function (event) {
+            result = eventsByDate.map(event => {
                 const   activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
                         model           = new ChallengeModel(event.toJS(), activeSchoolId),
                         sportIcon       = self.getSportIcon(model.sport);

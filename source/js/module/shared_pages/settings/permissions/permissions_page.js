@@ -2,7 +2,10 @@ const 	React 		= require('react'),
 		RouterView 	= require('module/core/router'),
 		Route 		= require('module/core/route'),
 		Morearty	= require('morearty'),
-		Immutable 	= require('immutable');
+		Immutable 	= require('immutable'),
+		PermissionsListComponent = require("module/shared_pages/settings/permissions/permissions_list"),
+		PermissionsAddComponent = require("module/shared_pages/settings/permissions/permissions_add");
+
 
 const PermissionsSettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -31,8 +34,8 @@ const PermissionsSettingsPage = React.createClass({
 		return (
 			<div>
 				<RouterView routes={ binding.sub('permissionsRouting') } binding={globalBinding}>
-					<Route path="/settings/permissions" binding={binding.sub('permissionsList')} component="module/shared_pages/settings/permissions/permissions_list"  />
-					<Route path="/settings/permissions/add" binding={binding.sub('permissionsAdd')} component="module/shared_pages/settings/permissions/permissions_add"  />
+					<Route path="/settings/permissions" binding={binding.sub('permissionsList')} component={PermissionsListComponent} />
+					<Route path="/settings/permissions/add" binding={binding.sub('permissionsAdd')} component={PermissionsAddComponent} />
 				</RouterView>
 			</div>
 		)

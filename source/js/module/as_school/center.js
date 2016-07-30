@@ -2,7 +2,15 @@ const 	RouterView 		= require('module/core/router'),
 		Route 			= require('module/core/route'),
 		PublicLogin 	= require('module/ui/menu/public_login'),
 		Morearty        = require('morearty'),
-		React 			= require('react');
+		React 			= require('react'),
+		SchoolPageComponent 	= require("module/as_school/pages/school/school_page"),
+		FixturesPageComponent 	= require("module/as_school/pages/fixtures/fixtures_page"),
+		EventPageComponent 		= require("module/as_school/pages/event/event_page"),
+		CalendarPageComponent 	= require("module/as_school/pages/calendar/calendar_page"),
+		OpponentsPageComponent 	= require("module/as_school/pages/opponents/opponents_page"),
+		AlbumsComponent 		= require("module/ui/gallery/albums"),
+		HomeComponent 			= require("module/as_school/pages/school_home/home");
+
 
 const Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -22,31 +30,31 @@ const Center = React.createClass({
 					<RouterView routes={binding.sub('routing')} binding={binding}>
 						<Route path="/ /school /school/:subPage"
 							   binding={binding.sub('schoolProfile')}
-							   component="module/as_school/pages/school/school_page"/>
+							   component={SchoolPageComponent}/>
 
 						<Route path="/fixtures"
 							   binding={binding.sub('schoolFixtures')}
-							   component="module/as_school/pages/fixtures/fixtures_page"/>
+							   component={FixturesPageComponent}/>
 
 						<Route path="/event"
 							   binding={binding.sub('schoolEvent')}
-							   component="module/as_school/pages/event/event_page"/>
+							   component={EventPageComponent}/>
 
 						<Route path="/calendar"
 							   binding={binding.sub('schoolCalendar')}
-							   component="module/as_school/pages/calendar/calendar_page"/>
+							   component={CalendarPageComponent}/>
 
 						<Route path="/opponents/:subPage"
 							   binding={binding.sub('opponentsList')}
-							   component="module/as_school/pages/opponents/opponents_page"/>
+							   component={OpponentsPageComponent}/>
 
 						<Route path="/albums /albums/:albumId"
 							   binding={binding.sub('albums')}
-							   component="module/ui/gallery/albums"/>
+							   component={AlbumsComponent}/>
 
                         <Route path="/ /home"
 							   binding={binding.sub('schoolHomePage')}
-							   component="module/as_school/pages/school_home/home"/>
+							   component={HomeComponent}/>
                     </RouterView>
 				</div>
 			</div>

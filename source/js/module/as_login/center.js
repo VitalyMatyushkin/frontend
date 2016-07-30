@@ -20,10 +20,10 @@ const Center = React.createClass({
             <div className={mainClass}>
                 <div className="bPageWrap">
                     <RouterView routes={ binding.sub('routing') } binding={binding}>
-                        <RegisterRoute binding={binding.sub('form.register')}	/>
-                        <LoginRoute2 binding={binding.sub('userData')}	/>
-                        <LogoutRoute binding={binding.sub('userData')}	/>
-                        <SettingsRoute binding={binding.sub('userData')} />
+                        <RegisterRoute  binding={binding.sub('form.register')} />
+                        <LoginRoute2    binding={binding.sub('userData')} />
+                        <LogoutRoute    binding={binding.sub('userData')} />
+                        <SettingsRoute  binding={binding.sub('userData')} />
                     </RouterView>
 				</div>
 			</div>
