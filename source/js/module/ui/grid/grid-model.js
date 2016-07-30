@@ -23,7 +23,7 @@ const GridModel = function(options){
 		filter:this.filter,
 		columns:options.table.columns
 	});
-	this.actionPanel = new ActionPanelModel(options.actionPanel);
+	this.actionPanel = null;
 
 };
 

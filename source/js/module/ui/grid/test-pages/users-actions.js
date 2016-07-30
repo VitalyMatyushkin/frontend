@@ -115,6 +115,9 @@ UsersActions.prototype = {
 				isSorted:true,
 				cell:{
 					dataField:'firstName'
+				},
+				filter:{
+					type:'string'
 				}
 			},
 			{

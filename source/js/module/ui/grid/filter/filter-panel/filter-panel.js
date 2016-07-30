@@ -5,8 +5,7 @@ const   React 	= require('react');
 
 const FilterPanel = React.createClass({
 	propTypes: {
-	},
-	componentWillMount: function() {
+		model: 	React.PropTypes.object
 	},
 	render: function() {
 		return (

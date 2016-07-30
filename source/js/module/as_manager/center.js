@@ -15,7 +15,8 @@ const	RouterView		= require('module/core/router'),
 		EventGalleryRoutesComponent = require('module/as_manager/pages/event/gallery/eventGalleryRoutes'),
 		InvitesComponent = require('module/as_manager/pages/invites/invites'),
 		SchoolConsoleComponent = require('module/as_manager/pages/school_console/school_console'),
-		UserViewComponent = require('module/shared_pages/users/user_view');
+		UserViewComponent = require('module/shared_pages/users/user_view'),
+		GridTestPage = require('module/ui/grid/test-pages/users');
 
 
 const Center = React.createClass({
@@ -37,7 +38,7 @@ const Center = React.createClass({
 
 				<Route path="/new-users-grid"
 					   binding={binding.sub('newUsers')}
-					   component="module/ui/grid/test-pages/users"/>
+					   component={GridTestPage}/>
 
 				<Route path="/student /student/:subPage /student/:subPage/:mode"
 					   binding={binding.sub('studentPage')}
