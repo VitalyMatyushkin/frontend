@@ -1,6 +1,10 @@
-const React = require('react');
+const	React		= require('react'),
+		classNames	= require('classnames');
 
 const FormColumn = React.createClass({
+	propTypes: {
+		customStyle: React.PropTypes.string
+	},
 	getDefaultProps: function () {
 		return {
 			type: 'column'
@@ -10,7 +14,7 @@ const FormColumn = React.createClass({
 		var self = this;
 
 		return (
-			<div className="eForm_fieldColumn">
+			<div className={classNames('eForm_fieldColumn', self.props.customStyle)}>
 				{self.props.children}
 			</div>
 		)
