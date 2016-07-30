@@ -11,6 +11,11 @@
  * */
 const FilterFieldModel = function(options){
 	this.type = options.type;
+	this.typeOptions = options.typeOptions;
+	this.field = {
+		name:options.field.name,
+		text:options.field.text
+	};
 };
 
 
