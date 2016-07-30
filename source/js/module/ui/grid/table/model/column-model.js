@@ -19,6 +19,10 @@ const CellModel = require('./cell-model');
  *			typeOptions:{},
  *			dataField:''
  *		}
+ *		filter:{
+ *			type:'',
+ *			typeOptions:{},
+ *		}
  *	}
  *
  *
@@ -30,6 +34,7 @@ const ColumnModel = function(options){
 	this.hidden = !!options.hidden;
 	this.width = options.width;
 	this.cell = new CellModel(options.cell);
+	this.filter = options.filter;
 
 	this.sort = options.sort;
 };

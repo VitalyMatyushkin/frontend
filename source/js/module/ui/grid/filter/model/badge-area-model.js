@@ -9,8 +9,8 @@
  * @param {object} options
  *
  * */
-const BadgeAreaModel = function(options){
-	this.filter = options.filter;
+const BadgeAreaModel = function(filter){
+	this.filter = filter;
 	this.badges = {};
 };
 

@@ -10,12 +10,13 @@
  *
  * */
 const FilterFieldModel = function(options){
-	this.type = options.type;
-	this.typeOptions = options.typeOptions;
+	this.type = options.column.filter.type;
+	this.typeOptions = options.column.filter.typeOptions;
 	this.field = {
-		name:options.field.name,
-		text:options.field.text
+		name:options.column.cell.dataField,
+		text:options.column.text
 	};
+	this.badgeArea = options.badgeArea;
 };
 
 

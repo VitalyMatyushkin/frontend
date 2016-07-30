@@ -2,9 +2,11 @@
  * Created by Anatoly on 21.07.2016.
  */
 
-const 	FilterModel 	= require('./filter/model/filter-model'),
-		PaginationModel = require('./filter/model/pagination-model'),
-		TableModel 		= require('./table/model/table-model');
+const 	FilterModel 		= require('./filter/model/filter-model'),
+		FilterPanelModel 	= require('./filter/model/filter-panel-model'),
+		PaginationModel 	= require('./filter/model/pagination-model'),
+		ActionPanelModel 	= require('./action-panel/actions-panel-model'),
+		TableModel 			= require('./table/model/table-model');
 
 /**
  * GridModel
@@ -17,8 +19,11 @@ const GridModel = function(options){
 	options.table.onSort = this.filter.setOrder.bind(this.filter);
 	this.table = new TableModel(options.table);
 	this.pagination = new PaginationModel(this.filter);
-	this.filterPanel = null;
-	this.actionPanel = null;
+	this.filterPanel = new FilterPanelModel({
+		filter:this.filter,
+		columns:options.table.columns
+	});
+	this.actionPanel = new ActionPanelModel(options.actionPanel);
 
 };
 
