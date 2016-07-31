@@ -16,7 +16,7 @@ const FilterField = React.createClass({
 			<div className="bFilterField">
 				<div className="eField">
 					<span className="eText">{model.field.text}</span>
-					<span className="eArrow"></span>
+					<span className="eArrow">&#9207;</span>
 				</div>
 				<div className="eFilterContainer">
 					<FilterFieldType filterField={model} />
