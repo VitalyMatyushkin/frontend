@@ -17,6 +17,7 @@ const DataLoader = function(options){
 	this.filter.onChange = this.onChangeFilter.bind(this);
 
 	this.onLoad = options.onLoad;
+	this.loadDataTimer = null;
 
 	this.loadData();
 
@@ -59,7 +60,10 @@ DataLoader.prototype = {
 		}
 	},
 	onChangeFilter: function(){
-		this.loadData();
+		//The value has changed before sending the request to the server. We reset the timer and start it again.
+		clearTimeout(this.loadDataTimer);
+		// we use Debouncing method
+		this.loadDataTimer = setTimeout(this.loadData.bind(this),400);
 	}
 };
 

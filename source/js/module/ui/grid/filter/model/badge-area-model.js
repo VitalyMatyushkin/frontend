@@ -12,6 +12,8 @@
 const BadgeAreaModel = function(filter){
 	this.filter = filter;
 	this.badges = {};
+
+	this.onChange = null;
 };
 
 BadgeAreaModel.prototype.changeBadge = function(badge) {
@@ -23,6 +25,8 @@ BadgeAreaModel.prototype.changeBadge = function(badge) {
 		delete this.badges[badge.field.name];	// delete badge
 		this.deleteFilter(badge);
 	}
+
+	this.onChange && this.onChange();
 };
 BadgeAreaModel.prototype.setFilter = function(badge) {
 	switch (badge.type){

@@ -8,9 +8,13 @@ const FilterStringType = React.createClass({
 	propTypes: {
 		filterField: React.PropTypes.object
 	},
+	getInitialState: function() {
+		return {value: ''};
+	},
 	onChange:function(e){
 		const 	model = this.props.filterField;
 
+		this.setState({value: e.target.value});
 		model.onChange.bind(model, e)();
 	},
 	render: function() {
