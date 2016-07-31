@@ -125,6 +125,9 @@ UsersActions.prototype = {
 				isSorted:true,
 				cell:{
 					dataField:'lastName'
+				},
+				filter:{
+					type:'string'
 				}
 			},
 			{
@@ -132,6 +135,9 @@ UsersActions.prototype = {
 				isSorted:true,
 				cell:{
 					dataField:'email'
+				},
+				filter:{
+					type:'string'
 				}
 			},
 			{

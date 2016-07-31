@@ -20,9 +20,12 @@ const FilterStringType = React.createClass({
 	render: function() {
 		const 	model = this.props.filterField,
 				badge = model.getBadge(),
-				value = badge && badge.values ? badge.values[0] : '';
+				value = badge && badge.values ? badge.values[0] : '',
+				placeholder = 'Enter ' + model.field.text;
+
 		return (
-			<input type="text" className="eFilterTypeString" value={value} onChange={this.onChange} />
+			<input type="text" className="eFilterTypeString" value={value} placeholder={placeholder}
+				   onChange={this.onChange} />
 		);
 	}
 });
