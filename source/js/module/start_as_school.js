@@ -60,6 +60,9 @@ function init404View() {
 
 function runMainMode() {
 	let schoolId = Helpers.LocalStorage.get('schoolId');
+
+	serviceList.initializeOpenServices();
+
 	schoolId = 'undefined'; //set this to undefined string so we can perform a fresh call for school details - avoids cache problems
 	if (schoolId !== 'undefined') {
 		initMainView(schoolId);

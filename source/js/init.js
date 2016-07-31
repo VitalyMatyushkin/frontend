@@ -57,5 +57,6 @@ switch(startModule) {
 	case 'module/start_as_www':			asWWW();		break;
 	case 'module/start_as_login':		asLogin();		break;
 	case 'module/start_as_password':	asPassword();	break;
+	case 'module/start_as_school':  	asSchool();  	break;
 	default: asLogin();
 }

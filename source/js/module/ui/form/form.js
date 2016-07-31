@@ -152,13 +152,10 @@ const Form = React.createClass({
 		if (hereIsError === false) {
 
 			self.busy = true;
-			self.getDefaultBinding().meta().set('buttonText', self.loadingButton);
 
 			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
 			if (typeof self.props.onSubmit === 'function') {
 				self.props.onSubmit(dataToPost);
-
-				return false;
 			}
 
 			if (typeof self.props.onPreSubmit === 'function') {
@@ -298,7 +295,7 @@ const Form = React.createClass({
 					</div>
 				</div>
 			</div>
-		)
+		);
 	}
 });
 

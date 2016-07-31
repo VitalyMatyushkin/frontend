@@ -68,6 +68,13 @@ var validationsSet = {
 			return false;
 		}
 	},
+	number: function(value) {
+		if (/[0-9]/.test(value)) {
+			return 'Should be number';
+		} else {
+			return false;
+		}
+	},
 	any: function() {
 		return false;
 	},
