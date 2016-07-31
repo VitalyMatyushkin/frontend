@@ -14,10 +14,7 @@ const FilterField = React.createClass({
 
 		return (
 			<div className="bFilterField">
-				<div className="eField">
-					<span className="eText">{model.field.text}</span>
-					<span className="eArrow">&#9207;</span>
-				</div>
+				<div className="eField">{model.field.text}</div>
 				<div className="eFilterContainer">
 					<FilterFieldType filterField={model} />
 				</div>

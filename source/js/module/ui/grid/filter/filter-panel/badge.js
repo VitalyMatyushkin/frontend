@@ -14,8 +14,9 @@ const FilterField = React.createClass({
 
 		return (
 			<div className={classes} >
-				<span className="eText">{model.field.text}</span>
+				<span className="eField">{model.field.text}</span>
 				<span className="eValue">{value}</span>
+				<span className="eDelete">&#10060;</span>
 			</div>
 		);
 	},
