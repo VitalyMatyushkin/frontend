@@ -14,10 +14,15 @@ const   TypeMixin   = require('module/ui/form/types/type_mixin'),
 /** Handles file upload to cloud. As result will return uploaded file url to form */
 const ImageFileTypeUpload = React.createClass({
     mixins:[Morearty.Mixin, TypeMixin],
-    propTypes:{
-        typeOfFile:React.PropTypes.string,
+    id: '',
+	propTypes:{
         labelText: React.PropTypes.string
     },
+	componentWillMount: function() {
+		const self = this;
+
+		self.id = new Date().getTime();
+	},
     getDefaultState: function () {
         return Immutable.fromJS({
             fileLoading: false
@@ -66,10 +71,19 @@ const ImageFileTypeUpload = React.createClass({
 					<div className={gifClasses}>
 						<img src="images/spin-loader-black.gif"/>
 					</div>
-                </div>
-                <div className="eForm_fileInput">
-                    <input className="eInputFile" name="file" id="file" type="file" onChange={self._inputFileChange}/>
-                    <label className="eRoundBtn" htmlFor="file"><SVG icon="icon_add_photo" /></label>
+				</div>
+				<div className="eForm_fileInput">
+					<input	id={`image-file-${self.id}`}
+							name={`image-file-${self.id}`}
+							className="eInputFile"
+							type="file"
+							onChange={self._inputFileChange}
+					/>
+                    <label	className="eRoundBtn"
+							htmlFor={`image-file-${self.id}`}
+					>
+						<SVG icon="icon_add_photo" />
+					</label>
 					<If condition={noEmpty && false}>  {/* wait task #1087 */}
 						<span className="eTrash" onClick={self.clearValue}>
 							<SVG icon="icon_trash" /> Delete image

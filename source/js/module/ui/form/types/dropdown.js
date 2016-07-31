@@ -37,19 +37,18 @@ const TypeDrop = React.createClass({
     componentWillMount:function(){
         var self = this,
             binding = self.getDefaultBinding();
-        self.optionsToMap = self.props.defaultSelectOptions;
-        binding.addListener('defaultValue',function(){
-           self.isMounted()&&self.setState({activeValue:binding.get('defaultValue')});
-        });
-    },
-    componentDidMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+
         //If initial option list is provided
         if(self.props.userProvidedOptions !== undefined && self.props.userActiveState!==undefined){
             self.optionsToMap = self.props.userProvidedOptions;
             binding.set('defaultValue', self.props.userActiveState);
+        } else {
+            self.optionsToMap = self.props.defaultSelectOptions;
         }
+
+        binding.addListener('defaultValue',function(){
+           self.isMounted()&&self.setState({activeValue:binding.get('defaultValue')});
+        });
     },
     _renderChildOptions:function(){
         var self = this;

@@ -39,6 +39,10 @@
   input.eDateInput{
     width: 85px;
   }
+
+  &.mWide {
+    padding: 0px 70px;
+  }
 }
 
 .mDetails {
@@ -47,7 +51,41 @@
 
 .eForm_fieldInput {
   display: inline-block;
-  position: relative
+  position: relative;
+
+  &.mDisplayBlock {
+    display: block;
+  }
+
+  &.mLongWidth {
+    width: 265px;
+  }
+
+  &.mMarginBottom {
+    margin-bottom: 10px;
+  }
+
+  &.mMarginTop {
+    margin-top: 10px;
+  }
+}
+
+.eForm_addButtonWrapper {
+  display:  inline-block;
+}
+
+.eForm_addButton {
+  width:    40px;
+  height:   40px;
+}
+
+.eForm_placeholder {
+  padding:          5px;
+  border:           solid 1px #c2c2c2;
+  border-radius:    4px;
+  background-color: #e1e1e1;
+  margin-top:       5px;
+  margin-bottom:    5px;
 }
 
 .eForm_fieldSet textarea{
@@ -89,6 +127,14 @@
   min-width: 150px;
   padding: 3px 10px 0 0;
   vertical-align: top;
+
+  &.mMarginTop {
+    margin-top: 12px;
+  }
+
+  &.mMarginLeft {
+    margin-left: 23px;
+  }
 }
 .eForm_fieldName:empty {
   display: none;
@@ -167,8 +213,12 @@
 
 .eForm_fieldColumn{
   display: inline-block;
-  margin-right: 90px;
+  margin-right: 85px;
   vertical-align: top;
+
+  &.mWithoutMargin {
+    margin-right: 0px;
+  }
 }
 
 .eForm_fieldSelection{
