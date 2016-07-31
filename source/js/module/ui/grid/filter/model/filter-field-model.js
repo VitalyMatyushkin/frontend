@@ -17,25 +17,30 @@ const FilterFieldModel = function(options){
 		text:options.column.text
 	};
 	this.badgeArea = options.badgeArea;
-	this.badge = null;
 };
 
 FilterFieldModel.prototype.onChange = function(e){
-	this.badge = new BadgeModel(this);
-	this.badge.values = this.setValue(e);
-	this.badgeArea.changeBadge(this.badge);
+	const badge = new BadgeModel(this);
+	badge.values = this._setValue(e);
+	this.badgeArea.changeBadge(badge);
+
+	e.stopPropagation();
 };
-FilterFieldModel.prototype.setValue = function(e){
+FilterFieldModel.prototype.getBadge = function(){
+	return this.badgeArea.badges[this.field.name];
+};
+FilterFieldModel.prototype._setValue = function(e){
 	let res = null;
 
 	switch (this.type){
 		case 'string':
-			res = this.setStringValue(e);
+			res = this._setStringValue(e);
 			break;
 	}
+	return res;
 };
-FilterFieldModel.prototype.setStringValue = function(e){
-	return [e.target.value];
+FilterFieldModel.prototype._setStringValue = function(e){
+	return e.target.value ? [e.target.value] : null;
 };
 
 

@@ -28,7 +28,11 @@ const GridModel = function(options){
 };
 
 GridModel.prototype.setData = function(data){
-	this.table.data = this.table.data.concat(data);
+	if(this.filter.isChangePage){
+		this.table.data = this.table.data.concat(data);
+	} else {
+		this.table.data = data;
+	}
 };
 
 

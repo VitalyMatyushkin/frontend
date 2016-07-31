@@ -52,8 +52,8 @@ DataLoader.prototype = {
 						return new self.dataModel(item);
 					});
 				}
-				self.filter.setNumberOfLoadedRows(res.length);
 				self.onLoad && self.onLoad(res);
+				self.filter.setNumberOfLoadedRows(res.length);
 				return res;
 			});
 		}

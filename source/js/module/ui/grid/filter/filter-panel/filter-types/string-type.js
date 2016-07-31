@@ -6,15 +6,19 @@ const React = require('react');
 
 const FilterStringType = React.createClass({
 	propTypes: {
-		model: 		React.PropTypes.object
+		filterField: React.PropTypes.object
+	},
+	onChange:function(e){
+		const 	model = this.props.filterField;
+
+		model.onChange.bind(model, e)();
 	},
 	render: function() {
-		const value = this.props.cell.getValue(this.props.dataItem),
-			result = value ? value : null;
+		const 	model = this.props.filterField,
+				badge = model.getBadge(),
+				value = badge && badge.values ? badge.values[0] : '';
 		return (
-			<div className="eDataList_listItemCell">
-				{result}
-			</div>
+			<input type="text" className="eFilterTypeString" value={value} onChange={this.onChange} />
 		);
 	}
 });

@@ -6,18 +6,20 @@ const 	TypeList 	= require('./filter-types/filter-type-list'),
 
 const FilterField = React.createClass({
 	propTypes: {
-	},
-	componentWillMount: function() {
+		model: 	React.PropTypes.object
 	},
 	render: function() {
+		const 	model 			= this.props.model,
+				FilterFieldType = TypeList[model.type];
+
 		return (
 			<div className="bFilterField">
 				<div className="eField">
-					<span className="eText"></span>
+					<span className="eText">{model.field.text}</span>
 					<span className="eArrow"></span>
 				</div>
 				<div className="eFilterContainer">
-
+					<FilterFieldType filterField={model} />
 				</div>
 			</div>
 		);

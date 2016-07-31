@@ -11,12 +11,12 @@
 const FilterModel = function(options){
 	this.where = options.where;
 	this.limit = options.limit;
-	this.skip = options.skip;
+	this.skip = 0;
 	this.order = options.order;
+	this.isChangePage = false;
 
 	this.onChange = options.onChange;
 	this.onPageLoaded = options.onPageLoaded;
-	this.onLastPageLoaded = options.onLastPageLoaded;
 };
 
 FilterModel.prototype = {
@@ -42,16 +42,16 @@ FilterModel.prototype = {
 	setPageNumber: function (pageNumber) {
 		if(this.limit){
 			this.skip = (pageNumber - 1) * this.limit;
-			this._onChange();
+			this._onChangePage();
 		} else {
 			console.error('Filter: Please provide page limit');
 		}
 
 	},
 	setNumberOfLoadedRows:function(count){
-		if(count < this.limit){
-			this.lastPageIsLoaded && this.lastPageIsLoaded()
-		}
+		this.onPageLoaded && this.onPageLoaded(count);
+		this.skip = 0;
+		this.isChangePage = false;
 	},
 	setOrder: function (field, value) {
 		this.order = field + ' ' + value;
@@ -84,6 +84,10 @@ FilterModel.prototype = {
 	},
 	_onChange:function(){
 		this.onChange && this.onChange(this.getFilters());
+	},
+	_onChangePage:function(){
+		this.onChange && this.onChange(this.getFilters());
+		this.isChangePage = true;
 	}
 };
 
