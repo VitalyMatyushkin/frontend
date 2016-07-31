@@ -15,8 +15,14 @@ const BadgeModel = function(options){
 		text:options.field.text
 	};
 	this.type = options.type;
+	this.badgeArea = options.badgeArea;
 	this.values = null; //an array of key-value pairs.
 };
 
+
+BadgeModel.prototype.onDelete = function(){
+	this.values = null;
+	this.badgeArea.changeBadge(this);
+};
 
 module.exports = BadgeModel;

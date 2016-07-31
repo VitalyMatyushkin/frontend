@@ -16,7 +16,7 @@ const FilterField = React.createClass({
 			<div className={classes} >
 				<span className="eField">{model.field.text}</span>
 				<span className="eValue">{value}</span>
-				<span className="eDelete">&#10060;</span>
+				<span className="eDelete" onClick={model.onDelete.bind(model)}>&#10060;</span>
 			</div>
 		);
 	},
