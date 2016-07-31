@@ -2,6 +2,7 @@
  * Created by Anatoly on 24.07.2016.
  */
 const   FilterField = require('./filter-field'),
+		BadgeArea 	= require('./badge-area'),
 		React 		= require('react');
 
 const FilterPanel = React.createClass({
@@ -19,6 +20,7 @@ const FilterPanel = React.createClass({
 						return <FilterField key={index} model={field} />;
 					})}
 				</div>
+				<BadgeArea model={model.badgeArea} />
 			</div>
 		);
 	}

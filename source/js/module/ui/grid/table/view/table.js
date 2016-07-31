@@ -19,13 +19,11 @@ const Table = React.createClass({
 			columns = model.columns;
 
 		return (
-			<div className="bDataList">
-				<div className="eDataList_list mTable">
-					<Header columns={model.columns} order={model.order}/>
-					{data && data.length ? data.map((item, index) => {
-						return <Row key={item.id ? item.id : index} dataItem={item} columns={columns}/>
-					}) : null}
-				</div>
+			<div className="eDataList_list mTable">
+				<Header columns={model.columns} order={model.order}/>
+				{data && data.length ? data.map((item, index) => {
+					return <Row key={item.id ? item.id : index} dataItem={item} columns={columns}/>
+				}) : null}
 			</div>
 		)
 	}
