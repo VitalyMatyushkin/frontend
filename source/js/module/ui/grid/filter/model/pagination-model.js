@@ -10,7 +10,7 @@
  *
  * */
 const PaginationModel = function(filter){
-	this.lastPage = -1;
+	this.isLastPage = false;
 	this.currentPage = 1;
 	this.filter = filter;
 	this.filter.onPageLoaded = this.onPageLoaded.bind(this);
@@ -21,9 +21,7 @@ PaginationModel.prototype.nextPage = function(){
 	this.filter.setPageNumber(this.currentPage);
 };
 PaginationModel.prototype.onPageLoaded = function(rowLoaded){
-	if(this.filter.limit > rowLoaded){
-		this.lastPage = this.currentPage;
-	}
+	this.isLastPage = this.filter.limit > rowLoaded;
 };
 
 
