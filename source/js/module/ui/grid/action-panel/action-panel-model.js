@@ -14,10 +14,12 @@ const ActionPanelModel = function(options){
 	this.btnAdd = options.btnAdd;
 	this.showStrip = !!options.showStrip;
 	this.showSearch = !!options.showSearch;
-	this.showBtnFilter = !!options.showBtnFilter;
 	this.showBtnPrint = !!options.showBtnPrint;
 	this.showBtnLoad = !!options.showBtnLoad;
+	this.hideBtnFilter = !!options.hideBtnFilter;
+	this.isFilterActive = false;
 
+	this.onChange = null;
 };
 
 

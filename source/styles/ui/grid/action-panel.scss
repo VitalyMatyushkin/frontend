@@ -1,0 +1,19 @@
+.bActionPanel{
+  height: 80px;
+  display: flex;
+  align-items: center;
+
+  .eTitle{
+    display: flex;
+    color: $DarkGreen;
+    flex-shrink: 0;
+    margin: 0;
+  }
+  .eStrip{
+    width: 100%;
+    background: $DarkGreen;
+    height: 2px;
+    vertical-align: middle;
+    margin: 0 20px;
+  }
+}

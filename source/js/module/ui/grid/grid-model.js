@@ -5,7 +5,7 @@
 const 	FilterModel 		= require('./filter/model/filter-model'),
 		FilterPanelModel 	= require('./filter/model/filter-panel-model'),
 		PaginationModel 	= require('./filter/model/pagination-model'),
-		ActionPanelModel 	= require('./action-panel/actions-panel-model'),
+		ActionPanelModel 	= require('./action-panel/action-panel-model'),
 		TableModel 			= require('./table/model/table-model');
 
 /**
@@ -23,7 +23,7 @@ const GridModel = function(options){
 		filter:this.filter,
 		columns:options.table.columns
 	});
-	this.actionPanel = null;
+	this.actionPanel = new ActionPanelModel(options.header);
 
 };
 

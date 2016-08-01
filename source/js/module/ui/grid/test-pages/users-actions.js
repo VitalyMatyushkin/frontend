@@ -170,6 +170,10 @@ UsersActions.prototype = {
 		];
 
 		return new GridModel({
+			header:{
+				title:'Users & Permissions',
+				showStrip:true
+			},
 			table:{
 				columns:columns
 			},
