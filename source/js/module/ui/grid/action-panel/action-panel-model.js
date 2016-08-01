@@ -22,5 +22,10 @@ const ActionPanelModel = function(options){
 	this.onChange = null;
 };
 
+ActionPanelModel.prototype.toggleFilters = function() {
+	this.isFilterActive = !this.isFilterActive;
+	this.onChange && this.onChange();
+};
+
 
 module.exports = ActionPanelModel;

@@ -12,7 +12,7 @@ const ActionPanel = React.createClass({
 	toggleFilters: function(e) {
 		const model = this.props.model;
 
-		model.isFilterActive = !model.isFilterActive;
+		model.toggleFilters();
 		this.setState({isFilterActive: model.isFilterActive});
 
 		e.stopPropagation();

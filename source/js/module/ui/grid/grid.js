@@ -11,15 +11,22 @@ const Grid = React.createClass({
 	propTypes: {
 		model: 	React.PropTypes.object
 	},
-	componentWillMount: function() {
+	componentWillMount:function(){
+		this.props.model.actionPanel.onChange = this.onChange;
+	},
+	onChange:function(){
+		this.setState({isFilterActive: this.props.model.actionPanel.isFilterActive});
 	},
 	render: function() {
-		const model = this.props.model;
+		const model = this.props.model,
+			mHidden = !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
 			<div className="bGrid">
 				<ActionPanel model={model.actionPanel} />
-				<FilterPanel model={model.filterPanel} />
+				<div className={mHidden}>
+					<FilterPanel model={model.filterPanel} />
+				</div>
 				<Table model={model.table} />
 				<Pagination model={model.pagination} />
 			</div>
