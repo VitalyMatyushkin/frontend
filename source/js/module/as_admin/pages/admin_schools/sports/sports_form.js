@@ -468,6 +468,11 @@ const SportsForm = React.createClass({
                         >
                             Type of players
                         </FormField>
+                        <FormField  type="checkbox"
+                                    field="individualResultsAvailable"
+                        >
+                            Is individual results available
+                        </FormField>
                         <div className="eForm_fieldName">Limits</div>
                         <FormPlaceholder>
                             <FormField  type="text"
@@ -494,12 +499,12 @@ const SportsForm = React.createClass({
                         <div className="eForm_fieldName">Genders</div>
                         <FormPlaceholder>
                             <FormField  type="checkbox"
-                                        field="genders.boysOnly"
+                                        field="genders.maleOnly"
                             >
                                 Boys
                             </FormField>
                             <FormField  type="checkbox"
-                                        field="genders.girlsOnly"
+                                        field="genders.femaleOnly"
                             >
                                 Girls
                             </FormField>

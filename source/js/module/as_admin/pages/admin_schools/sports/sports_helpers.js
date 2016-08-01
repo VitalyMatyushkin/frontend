@@ -90,28 +90,29 @@ const SportsHelpers = {
         const self = this;
 
         return {
-            name:               undefined,
-            description:        undefined,
-            minPlayers:         undefined,
-            maxPlayers:         undefined,
-            maxSubs:            undefined,
-            genders:            {
-                                     girlsOnly:  true,
-                                     boysOnly:   true,
-                                     mixed:      true
-                                },
-            scoring:            self.getDefaultScoringClientValue(),
-            players:            self.getDefaultPlayersClientValue(),
-            field:              {
-                                    positions:  []
-                                },
-            icon:               undefined,
-            pointsName:         undefined,
-            pointsNamePlural:   undefined,
-            pointsStep:         undefined,
-            performance:        [],
-            discipline:         [],
-            fieldPic:           undefined
+            name:                           undefined,
+            description:                    undefined,
+            minPlayers:                     undefined,
+            maxPlayers:                     undefined,
+            maxSubs:                        undefined,
+            genders:                        {
+                                                 femaleOnly: true,
+                                                 maleOnly:   true,
+                                                 mixed:      true
+                                            },
+            scoring:                        self.getDefaultScoringClientValue(),
+            players:                        self.getDefaultPlayersClientValue(),
+            field:                          {
+                                                positions:  []
+                                            },
+            icon:                           undefined,
+            pointsName:                     undefined,
+            pointsNamePlural:               undefined,
+            pointsStep:                     undefined,
+            performance:                    [],
+            discipline:                     [],
+            fieldPic:                       undefined,
+            individualResultsAvailable:     true
         };
     },
     convertServerDataToFormData: function(serverData) {
@@ -121,23 +122,24 @@ const SportsHelpers = {
 
         console.log(self.getData(serverData, 'scoring'));
 
-        formData.name                   = self.getData(serverData, 'name');
-        formData.description            = self.getData(serverData, 'description');
-        formData.icon                   = self.getData(serverData, 'icon');
-        formData.minPlayers             = self.getData(serverData, 'defaultLimits.minPlayers');
-        formData.maxPlayers             = self.getData(serverData, 'defaultLimits.maxPlayers');
-        formData.minSubs                = self.getData(serverData, 'defaultLimits.minSubs');
-        formData.maxSubs                = self.getData(serverData, 'defaultLimits.maxSubs');
-        formData.pointsName             = self.getData(serverData, 'points.name');
-        formData.pointsNamePlural       = self.getData(serverData, 'points.namePlural');
-        formData.pointsStep             = self.getData(serverData, 'points.pointsStep');
-        formData.genders                = self.getData(serverData, 'genders');
-        formData.discipline             = self.getData(serverData, 'discipline');
-        formData.performance            = self.getData(serverData, 'performance');
-        formData.scoring                = self.scoringServerToClientMap[self.getData(serverData, 'scoring')];
-        formData.players                = self.playersServerToClientMap[self.getData(serverData, 'players')];
-        formData.field                  = self.getData(serverData, 'field');
-        formData.fieldPic               = self.getData(serverData, 'field.pic');
+        formData.name                       = self.getData(serverData, 'name');
+        formData.description                = self.getData(serverData, 'description');
+        formData.icon                       = self.getData(serverData, 'icon');
+        formData.minPlayers                 = self.getData(serverData, 'defaultLimits.minPlayers');
+        formData.maxPlayers                 = self.getData(serverData, 'defaultLimits.maxPlayers');
+        formData.minSubs                    = self.getData(serverData, 'defaultLimits.minSubs');
+        formData.maxSubs                    = self.getData(serverData, 'defaultLimits.maxSubs');
+        formData.pointsName                 = self.getData(serverData, 'points.name');
+        formData.pointsNamePlural           = self.getData(serverData, 'points.namePlural');
+        formData.pointsStep                 = self.getData(serverData, 'points.pointsStep');
+        formData.genders                    = self.getData(serverData, 'genders');
+        formData.discipline                 = self.getData(serverData, 'discipline');
+        formData.performance                = self.getData(serverData, 'performance');
+        formData.scoring                    = self.scoringServerToClientMap[self.getData(serverData, 'scoring')];
+        formData.players                    = self.playersServerToClientMap[self.getData(serverData, 'players')];
+        formData.field                      = self.getData(serverData, 'field');
+        formData.fieldPic                   = self.getData(serverData, 'field.pic');
+        formData.individualResultsAvailable = self.getData(serverData, 'individualResultsAvailable');
 
         return formData;
     },
@@ -145,33 +147,34 @@ const SportsHelpers = {
         const self = this;
 
         let dataToPost = {
-            name:           dataFromForm.name,
-            description:    dataFromForm.description,
-            defaultLimits:  {
-                                minPlayers:  dataFromForm.minPlayers,
-                                maxPlayers:  dataFromForm.maxPlayers,
-                                minSubs:     dataFromForm.minSubs,
-                                maxSubs:     dataFromForm.maxSubs
-                            },
-            scoring:        self.scoringClientToServerMap[dataFromForm.scoring],
-            players:        self.playersClientToServerMap[dataFromForm.players],
-            genders:        dataFromForm.genders,
-            points:         {
-                                name:       dataFromForm.pointsName,
-                                namePlural: dataFromForm.pointsNamePlural,
-                                pointsStep: dataFromForm.pointsStep
-                            },
-            discipline:     self.filterEmptyDisciplineItems(dataFromForm.discipline),
-            performance:    self.filterEmptyPerformanceItems(dataFromForm.performance.map(item => {
-                                return {
-                                    name:       item.name,
-                                    //TODO remove this dirty magic
-                                    minValue:   item.minValue.trim() !== '' ? parseInt(item.minValue) : '',
-                                    maxValue:   item.maxValue.trim() !== '' ? parseInt(item.maxValue) : ''
-                                }
-                            })),
-            field:          dataFromForm.field,
-            icon:           dataFromForm.icon
+            name:                       dataFromForm.name,
+            description:                dataFromForm.description,
+            defaultLimits:              {
+                                            minPlayers:  dataFromForm.minPlayers,
+                                            maxPlayers:  dataFromForm.maxPlayers,
+                                            minSubs:     dataFromForm.minSubs,
+                                            maxSubs:     dataFromForm.maxSubs
+                                        },
+            scoring:                    self.scoringClientToServerMap[dataFromForm.scoring],
+            players:                    self.playersClientToServerMap[dataFromForm.players],
+            genders:                    dataFromForm.genders,
+            points:                     {
+                                            name:       dataFromForm.pointsName,
+                                            namePlural: dataFromForm.pointsNamePlural,
+                                            pointsStep: dataFromForm.pointsStep
+                                        },
+            discipline:                 self.filterEmptyDisciplineItems(dataFromForm.discipline),
+            performance:                self.filterEmptyPerformanceItems(dataFromForm.performance.map(item => {
+                                            return {
+                                                name:       item.name,
+                                                //TODO remove this dirty magic
+                                                minValue:   item.minValue.trim() !== '' ? parseInt(item.minValue) : '',
+                                                maxValue:   item.maxValue.trim() !== '' ? parseInt(item.maxValue) : ''
+                                            }
+                                        })),
+            field:                      dataFromForm.field,
+            icon:                       dataFromForm.icon,
+            individualResultsAvailable: dataFromForm.individualResultsAvailable
         };
 
         dataToPost.field.positions = self.filterEmptyPositionsItems(dataFromForm.field.positions);
