@@ -63,17 +63,19 @@ const TeamForm = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				sportsBinding	= binding.get('sports');
-		let		sportOptions	= '';
+
+		// init with def value
+		let sportOptions = [(
+			<option	key="not-selected-sport"
+					value={''}
+			>
+				not selected
+			</option>
+		)];
 
 		if(sportsBinding) {
 			let sports = sportsBinding.toJS();
-			sportOptions = sports.map(function (sport) {
-				return <Morearty.DOM.option
-					selected={sport.id === binding.get('sportId')}
-					value={sport.id}
-					key={sport.id + '-sport'}
-				>{sport.name}</Morearty.DOM.option>
-			});
+			sportOptions = sportOptions.concat(sports.map(sport => <option value={sport.id} key={`${sport.id}-sport`}>{sport.name}</option>));
 		}
 
 		return sportOptions;
@@ -92,35 +94,47 @@ const TeamForm = React.createClass({
 			.set('sportId',                  Immutable.fromJS(event.target.value))
 			.set('sportModel',               Immutable.fromJS(sports[sportIndex]))
 			.set('default.model.sportModel', Immutable.fromJS(sports[sportIndex]))
-			.set('gender',                   Immutable.fromJS(sports[sportIndex].limits.genders[0]))
-			.set('default.model.gender',     Immutable.fromJS(sports[sportIndex].limits.genders[0]))
+			.set('gender',                   Immutable.fromJS(undefined))
+			.set('default.model.gender',     Immutable.fromJS(undefined))
 			.commit();
 	},
 	_getGenders: function () {
 		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				sportModel	= binding.get('sportModel');
+				binding		= self.getDefaultBinding();
 
-		if (sportModel) {
-			return sportModel.toJS().limits.genders.map(function (gender, genInd) {
-				var names = {
-					male: 'boys',
-					female: 'girls'
-				};
+		const sportModel = binding.get('sportModel');
 
-				return <label key={genInd} onClick={self._changeCompleteGender}>
-					<Morearty.DOM.input
-						type="radio"
-						key={gender + '-gender'}
-						value={gender}
-						checked={gender === binding.get('gender')}
-					/>
-					{names[gender]}
-				</label>;
-			});
-		} else {
-			return null;
+		let genderOptions = [(
+			<option	key="not-selected-gender"
+					value={undefined}
+			>
+				not selected
+			</option>
+		)];
+
+		if(sportModel) {
+			const genders = sportModel.toJS().genders;
+
+			genderOptions = genderOptions.concat(Object.keys(genders)
+				.filter(genderType => genders[genderType])
+				.map((genderType, index) => {
+					const genderNames = {
+						femaleOnly:	'Female only',
+						maleOnly:	'Male only',
+						mixed:		'Mixed'
+					};
+
+					return (
+						<option	key={`${index}-gender`}
+								value={genderType}
+						>
+							{genderNames[genderType]}
+						</option>
+					);
+			}));
 		}
+
+		return genderOptions;
 	},
 	_changeCompleteGender: function (event) {
 		const binding = this.getDefaultBinding();
@@ -206,15 +220,8 @@ const TeamForm = React.createClass({
 
 		return ages ? ages : [];
 	},
-	_isShowTeamManager: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
-
-		if(!!binding.get('isHouseFilterEnable')) {
-			return !!binding.get('ages') && !!binding.get('isHouseSelected');
-		} else {
-			return !!binding.get('ages')
-		}
+	_handleChangeName: function(binding, descriptor) {
+		binding.set('name', Immutable.fromJS(descriptor.target.value));
 	},
 	_onRemovePlayer: function(player) {
 		const self = this;
@@ -278,10 +285,77 @@ const TeamForm = React.createClass({
 			);
 		}
 	},
+	_isShowDescription: function(binding) {
+		return !!binding.get('name');
+	},
+	_isShowSportDropdown: function(binding) {
+		return !!binding.get('name');
+	},
+	_isShowGenders: function(binding) {
+		const self = this;
+
+		return	self._isShowDescription(binding) &&
+				self._isShowSportDropdown(binding) &&
+				!!binding.get('sportId');
+	},
+	_isShowAges: function(binding) {
+		const self = this;
+
+		return	self._isShowDescription(binding) &&
+				self._isShowSportDropdown(binding) &&
+				self._isShowGenders(binding) &&
+				!!binding.get('gender')
+	},
+	_isShowHouseFilterRadioButton: function(binding) {
+		const self = this;
+
+		const	ages			= binding.get('ages');
+		let		isAgesSelected	= false;
+
+		if(ages && ages.length !== 0) {
+			isAgesSelected = true;
+		}
+
+		return	self._isShowDescription(binding) &&
+				self._isShowSportDropdown(binding) &&
+				self._isShowGenders(binding) &&
+				self._isShowAges(binding) &&
+				isAgesSelected;
+	},
+	_isShowHouseSelector: function(binding) {
+		const self = this;
+
+		return	self._isShowDescription(binding) &&
+				self._isShowSportDropdown(binding) &&
+				self._isShowGenders(binding) &&
+				self._isShowAges(binding) &&
+				self._isShowHouseFilterRadioButton(binding) &&
+				binding.get('isHouseFilterEnable');
+	},
+	_isShowTeamManager: function(binding) {
+		const self = this;
+
+		if(self._isShowHouseSelector(binding)) {
+			return	self._isShowDescription(binding) &&
+					self._isShowSportDropdown(binding) &&
+					self._isShowGenders(binding) &&
+					self._isShowAges(binding) &&
+					self._isShowHouseFilterRadioButton(binding) &&
+					!!binding.get('isHouseSelected');
+		} else {
+			return	self._isShowDescription(binding) &&
+					self._isShowSportDropdown(binding) &&
+					self._isShowGenders(binding) &&
+					self._isShowAges(binding) &&
+					self._isShowHouseFilterRadioButton(binding);
+		}
+	},
 	render: function() {
 		const	self					= this,
-				binding					= self.getDefaultBinding(),
-				sportId					= binding.get('sportId'),
+				binding					= self.getDefaultBinding();
+
+		const	sportId					= binding.get('sportId'),
+				gender					= binding.get('gender'),
 				autocompleteTeamBinding	= {
 					default:			binding.sub('default'),
 					selectedRivalIndex:	binding.sub('selectedRivalIndex'),
@@ -310,18 +384,18 @@ const TeamForm = React.createClass({
 					<div className="eManager_base">
 						<div className="eManager_group">
 							<div className="eManager_label">{'Team Name'}</div>
-							<Morearty.DOM.input
+							<input
 								className="eManager_field"
 								type="text"
 								value={binding.get('name')}
 								placeholder={'enter name'}
-								onChange={Morearty.Callback.set(binding.sub('name'))}
+								onChange={self._handleChangeName.bind(self, binding)}
 							/>
 						</div>
-						<If condition={!!binding.get('name')}>
+						<If condition={self._isShowDescription(binding)}>
 							<div className="eManager_group">
 								<div className="eManager_label">{'Team Description'}</div>
-								<Morearty.DOM.textarea
+								<textarea
 									className="eManager_field mTextArea"
 									type="text"
 									value={binding.get('description')}
@@ -330,32 +404,31 @@ const TeamForm = React.createClass({
 								/>
 							</div>
 						</If>
-						<If condition={!!binding.get('name')}>
+						<If condition={self._isShowSportDropdown(binding)}>
 							<div className="eManager_group">
 								<div className="eManager_label">{'Game'}</div>
-								<select
-									className="eManager_select"
-									value={sportId}
-									defaultValue={null}
-									onChange={self._changeCompleteSport}>
-									<Morearty.DOM.option
-										key="nullable-type"
-										value={null}
-										selected="selected"
-										disabled="disabled">not selected</Morearty.DOM.option>
+								<select	className="eManager_select"
+										defaultValue={''}
+										value={sportId}
+										onChange={self._changeCompleteSport}
+								>
 									{self._getSports()}
 								</select>
 							</div>
 						</If>
-						<If condition={!!binding.get('sportId')}>
+						<If condition={self._isShowGenders(binding)}>
 							<div className="eManager_group">
-								<div className="eManager_label">{'Gender'}</div>
-								<div className="eManager_radiogroup">
+								<div className="eManager_label">{'Genders'}</div>
+								<select	className="eManager_select"
+										defaultValue={undefined}
+										value={gender}
+										onChange={self._changeCompleteGender}
+								>
 									{self._getGenders()}
-								</div>
+								</select>
 							</div>
 						</If>
-						<If condition={!!binding.get('sportId') && !!binding.get('gender')}>
+						<If condition={self._isShowAges(binding)}>
 							<div className="eManager_group">
 								<div className="eManager_label">{'Ages'}</div>
 								<Multiselect
@@ -366,7 +439,7 @@ const TeamForm = React.createClass({
 								/>
 							</div>
 						</If>
-						<If condition={!!binding.get('sportId')}>
+						<If condition={self._isShowHouseFilterRadioButton(binding)}>
 							<div className="eManager_group">
 								<div className="eManager_label">{'Filtered By House'}</div>
 								<div className="eManager_radiogroup">
@@ -374,7 +447,7 @@ const TeamForm = React.createClass({
 								</div>
 							</div>
 						</If>
-						<If condition={!!binding.get('isHouseFilterEnable')}>
+						<If condition={self._isShowHouseSelector(binding)}>
 							<div className="eManager_group">
 								<div className="eManager_label">{'House'}</div>
 								<div className="eManager_select_wrap">
@@ -382,7 +455,7 @@ const TeamForm = React.createClass({
 								</div>
 							</div>
 						</If>
-						<If condition={self._isShowTeamManager()}>
+						<If condition={self._isShowTeamManager(binding)}>
 							<div>
 								<div className="eManager_group">
 									<div className="eManager_label">{'Add player'}</div>
