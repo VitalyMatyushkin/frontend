@@ -20,6 +20,8 @@ const UsersActions = function(page){
 	this.binding = page.getDefaultBinding();
 	this.rootBinding = page.getMoreartyContext().getBinding();
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
+	this.props = page.props;
+
 	this.grid = this.getGrid();
 	this.dataLoader = new DataLoader({
 		serviceName:'users',
@@ -31,6 +33,9 @@ const UsersActions = function(page){
 };
 
 UsersActions.prototype = {
+	reloadData:function(){
+		this.dataLoader.loadData();
+	},
 	getActions:function(item){
 		var self 			= this,
 			binding 		= self.binding,
@@ -76,15 +81,15 @@ UsersActions.prototype = {
 		});
 		idAutoComplete.push(user.id);
 		switch (ationKey){
-			//case 'Add Role':
-			//	binding.atomically()
-			//		.set('groupIds',idAutoComplete)
-			//		.set('popup',true)
-			//		.commit();
-			//	break;
-			//case 'Revoke All Roles':
-			//	self._revokeAllRoles(idAutoComplete);
-			//	break;
+			case 'Add Role':
+				binding.atomically()
+					.set('groupIds',idAutoComplete)
+					.set('popup',true)
+					.commit();
+				break;
+			case 'Revoke All Roles':
+				self._revokeAllRoles(idAutoComplete);
+				break;
 			//case 'Unblock':
 			//	self._accessRestriction(idAutoComplete,false);
 			//	break;
@@ -106,6 +111,68 @@ UsersActions.prototype = {
 			window.location.hash = 'user/view?id='+model[0];
 		}else{
 			alert("You can only perform this action on one Item");
+		}
+	},
+	_revokeAllRoles:function(ids){
+		const   self            = this,
+			rootBinding 	= self.rootBinding,
+			schoolId  		= self.activeSchoolId,
+			permission 		= window.Server[self.props.permissionServiceName],
+			permissionList 	= window.Server[`${self.props.permissionServiceName}s`],
+			confirmAction 	= window.confirm("Are you sure you want revoke all roles?");
+
+		if(ids && ids.length > 0 ){
+			if(confirmAction){
+				ids.forEach(function(userId){
+					const params = {userId:userId, schoolId:schoolId};
+
+					permissionList.get(params)
+						.then(function(data){
+							data.forEach(function(p){
+								if(p.preset !== 'STUDENT'){
+									params.permissionId = p.id;
+									permission.delete(params).then(_ => {
+										self.reloadData();
+									});
+								}
+							});
+						});
+				});
+			}
+		}
+	},
+	_revokeRole:function(ids, action){
+		const   self            = this,
+			rootBinding 	= self.getMoreartyContext().getBinding(),
+			schoolId  		= rootBinding.get('userRules.activeSchoolId'),
+			permission 		= window.Server[self.props.permissionServiceName];
+
+		if(ids && ids.length > 0 ){
+			if(window.confirm(`Are you sure you want ${action.text}?`)){
+				ids.forEach(function(userId){
+					const params = {userId:userId, schoolId:schoolId, permissionId:action.id};
+
+					permission.delete(params).then(_ => {
+						self.reloadData();
+					});
+				});
+			}
+		}
+	},
+	_accessRestriction:function(ids,block){
+		const self = this,
+			blockStr = block ? 'block': 'unblock';
+
+		if(ids !== undefined && ids.length >=1){
+			if(confirm(`Are you sure you want ${blockStr} user?`)){
+				ids.forEach(function(id){
+					self.props.blockService.post(id,{blocked: block }).then(function(){
+						self.reloadData();
+					});
+				});
+			}
+		}else{
+			alert('Please select at least 1 row');
 		}
 	},
 	getGrid: function(){

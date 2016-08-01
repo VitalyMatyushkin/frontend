@@ -2,6 +2,10 @@
  * Created by Anatoly on 22.07.2016.
  */
 
+
+/**the number of lines on the page by default, if you do not explicitly set a different value.*/
+const DEFAULT_PAGE_LIMIT = 20;
+
 /**
  * FilterModel
  *
@@ -10,7 +14,7 @@
  * */
 const FilterModel = function(options){
 	this.where = options.where;
-	this.limit = options.limit;
+	this.limit = options.limit || DEFAULT_PAGE_LIMIT;
 	this.skip = 0;
 	this.order = options.order;
 	this.isChangePage = false;

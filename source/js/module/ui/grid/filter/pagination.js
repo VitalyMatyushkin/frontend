@@ -1,8 +1,8 @@
 /**
  * Created by Anatoly on 28.07.2016.
  */
-const   React 	= require('react'),
-		classNames = require('classnames');
+const   React 		= require('react'),
+		classNames 	= require('classnames');
 
 const Pagination = React.createClass({
 	propTypes: {

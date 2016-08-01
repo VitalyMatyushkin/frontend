@@ -21,12 +21,6 @@ const UsersList = React.createClass({
 	},
     serviceName:'users',
     serviceCount:'usersCount',
-    filters:{
-        include: {
-            relation:"permissions",
-            scope: { include: {"relation": "school"}}
-        }
-    },
     groupActionList:['View','Add Role','Revoke All Roles'],
     setPageTitle:"Users & Permissions",
 	componentDidMount:function(){
