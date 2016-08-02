@@ -16,14 +16,16 @@ const 	FilterModel 		= require('./filter/model/filter-model'),
  * */
 const GridModel = function(options){
 	this.filter = new FilterModel(options.filters);
-	options.table.onSort = this.filter.setOrder.bind(this.filter);
-	this.table = new TableModel(options.table);
+	this.table = new TableModel({
+		columns:options.columns,
+		onSort:this.filter.setOrder.bind(this.filter)
+	});
 	this.pagination = new PaginationModel(this.filter);
 	this.filterPanel = new FilterPanelModel({
 		filter:this.filter,
 		columns:options.table.columns
 	});
-	this.actionPanel = new ActionPanelModel(options.header);
+	this.actionPanel = new ActionPanelModel(options.actionPanel);
 
 };
 

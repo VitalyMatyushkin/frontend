@@ -236,13 +236,11 @@ UsersActions.prototype = {
 		];
 
 		return new GridModel({
-			header:{
+			actionPanel:{
 				title:'Users & Permissions',
 				showStrip:true
 			},
-			table:{
-				columns:columns
-			},
+			columns:columns,
 			filters:{limit:20}
 		});
 	},

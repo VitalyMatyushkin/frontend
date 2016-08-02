@@ -8,22 +8,21 @@ const CellModel = require('./cell-model');
  * ColumnModel
  *
  * @param {object} options
- * 	{
- *		text:'',
- *		isSorted:false,
- *		hidden:false,
- *		onSort:null,
- *		width:null,
- *		cell:{
- *			type:'',
- *			typeOptions:{},
- *			dataField:''
- *		}
- *		filter:{
- *			type:'',
- *			typeOptions:{},
- *		}
- *	}
+ {
+ 	text:'',
+ 	isSorted:false,
+ 	hidden:false,
+ 	width:null,
+ 	cell:{
+ 		type:'',
+ 		typeOptions:{},
+ 		dataField:''
+ 	}
+ 	filter:{
+ 		type:'',
+ 		typeOptions:{},
+ 	}
+ }
  *
  *
  *
