@@ -40,7 +40,8 @@ UsersActions.prototype = {
 		var self 			= this,
 			binding 		= self.binding,
 			activeSchoolId 	= self.activeSchoolId,
-			actionList 		= ['View','Add Role','Revoke All Roles'];
+			actionList 		= self.props.blockService ? ['View','Block','Unblock','Add Role','Revoke All Roles']
+														: ['View','Add Role','Revoke All Roles'];
 
 		item.permissions.filter(p=> p.preset != 'STUDENT').forEach(p => {
 			let action = 'Revoke the role ';
@@ -90,18 +91,18 @@ UsersActions.prototype = {
 			case 'Revoke All Roles':
 				self._revokeAllRoles(idAutoComplete);
 				break;
-			//case 'Unblock':
-			//	self._accessRestriction(idAutoComplete,false);
-			//	break;
-			//case 'Block':
-			//	self._accessRestriction(idAutoComplete,true);
-			//	break;
+			case 'Unblock':
+				self._accessRestriction(idAutoComplete,false);
+				break;
+			case 'Block':
+				self._accessRestriction(idAutoComplete,true);
+				break;
 			case 'View':
 				self._getItemViewFunction(idAutoComplete);
 				break;
-			//case 'revoke':
-			//	self._revokeRole(idAutoComplete, action);
-			//	break;
+			case 'revoke':
+				self._revokeRole(idAutoComplete, action);
+				break;
 			default :
 				break;
 		}
@@ -115,11 +116,10 @@ UsersActions.prototype = {
 	},
 	_revokeAllRoles:function(ids){
 		const   self            = this,
-			rootBinding 	= self.rootBinding,
-			schoolId  		= self.activeSchoolId,
-			permission 		= window.Server[self.props.permissionServiceName],
-			permissionList 	= window.Server[`${self.props.permissionServiceName}s`],
-			confirmAction 	= window.confirm("Are you sure you want revoke all roles?");
+				schoolId  		= self.activeSchoolId,
+				permission 		= window.Server[self.props.permissionServiceName],
+				permissionList 	= window.Server[`${self.props.permissionServiceName}s`],
+				confirmAction 	= window.confirm("Are you sure you want revoke all roles?");
 
 		if(ids && ids.length > 0 ){
 			if(confirmAction){
@@ -143,9 +143,8 @@ UsersActions.prototype = {
 	},
 	_revokeRole:function(ids, action){
 		const   self            = this,
-			rootBinding 	= self.getMoreartyContext().getBinding(),
-			schoolId  		= rootBinding.get('userRules.activeSchoolId'),
-			permission 		= window.Server[self.props.permissionServiceName];
+				schoolId  		= self.activeSchoolId,
+				permission 		= window.Server[self.props.permissionServiceName];
 
 		if(ids && ids.length > 0 ){
 			if(window.confirm(`Are you sure you want ${action.text}?`)){

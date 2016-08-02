@@ -7,7 +7,7 @@ const   React 		= require('react'),
 		Actions 	= require('module/ui/grid/test-pages/users-actions'),
 		Grid 		= require('module/ui/grid/grid'),
 		GrantRole   = require('module/as_manager/pages/school_console/grant_role/grant_role'),
-		Popup 			= require('module/ui/popup');
+		Popup 		= require('module/ui/popup');
 
 const Users = React.createClass({
 	mixins: [Morearty.Mixin],
