@@ -4,7 +4,7 @@
 
 const   React 		= require('react'),
 		Morearty	= require('morearty'),
-		Actions 	= require('module/ui/grid/test-pages/users-actions'),
+		Actions 	= require('./users-actions'),
 		Grid 		= require('module/ui/grid/grid'),
 		GrantRole   = require('module/as_manager/pages/school_console/grant_role/grant_role'),
 		Popup 		= require('module/ui/popup');

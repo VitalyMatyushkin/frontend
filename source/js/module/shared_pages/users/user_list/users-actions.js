@@ -10,7 +10,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
- * GridModel
+ * UsersActions
  *
  * @param {object} page
  *
@@ -23,13 +23,13 @@ const UsersActions = function(page){
 	this.props = page.props;
 
 	this.grid = this.getGrid();
-	this.dataLoader = new DataLoader({
-		serviceName:'users',
-		dataModel: 	UserModel,
-		params:		{schoolId:this.activeSchoolId},
-		filter: 	this.grid.filter,
-		onLoad: 	this.getDataLoadedHandle()
-	});
+	this.dataLoader = 	new DataLoader({
+							serviceName:'users',
+							dataModel: 	UserModel,
+							params:		{schoolId:this.activeSchoolId},
+							grid:		this.grid,
+							onLoad: 	this.getDataLoadedHandle()
+						});
 };
 
 UsersActions.prototype = {
@@ -251,7 +251,6 @@ UsersActions.prototype = {
 			binding = self.page.getDefaultBinding();
 
 		return function(data){
-			self.grid.setData(data);
 			binding.set('data', self.grid.table.data);
 		};
 	}

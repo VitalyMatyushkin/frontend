@@ -13,14 +13,14 @@ const DataLoader = function(options){
 	this.serviceName = options.serviceName;
 	this.dataModel = options.dataModel;
 	this.params = options.params;
-	this.filter = options.filter;
+	this.grid = options.grid;
+	this.filter = this.grid.filter;
 	this.filter.onChange = this.onChangeFilter.bind(this);
 
 	this.onLoad = options.onLoad;
 	this.loadDataTimer = null;
 
 	this.loadData();
-
 };
 
 DataLoader.prototype = {
@@ -39,11 +39,11 @@ DataLoader.prototype = {
 		return service;
 	},
 	loadData:function(){
-		const self = this,
-			filters = self.filter.getFilters(),
-			service = self.getService(self.serviceName);
+		const 	self = this,
+				filters = self.filter.getFilters(),
+				service = self.getService(self.serviceName);
 
-		console.log('Grid.DataLoader: load data started');
+		console.log('DataLoader: load data started');
 		if(service) {
 			const promise = self.params ? service.get(self.params, filters): service.get(filters);
 			return promise.then(function (data) {
@@ -53,6 +53,7 @@ DataLoader.prototype = {
 						return new self.dataModel(item);
 					});
 				}
+				self.grid.setData(res);
 				self.onLoad && self.onLoad(res);
 				self.filter.setNumberOfLoadedRows(res.length);
 				return res;
