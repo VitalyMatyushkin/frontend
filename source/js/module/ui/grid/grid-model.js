@@ -23,7 +23,7 @@ const GridModel = function(options){
 	this.pagination = new PaginationModel(this.filter);
 	this.filterPanel = new FilterPanelModel({
 		filter:this.filter,
-		columns:options.table.columns
+		columns:options.columns
 	});
 	this.actionPanel = new ActionPanelModel(options.actionPanel);
 
