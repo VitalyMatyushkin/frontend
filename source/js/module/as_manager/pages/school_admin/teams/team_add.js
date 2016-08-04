@@ -56,18 +56,19 @@ const TeamAddPage = React.createClass({
                 // in the future, after refactoring that will be fixed
                 binding
                     .atomically()
-                    .set('teamForm.default',                Immutable.fromJS(self._getDefaultObject(schoolData)))
-                    .set('teamForm.sports',                 Immutable.fromJS(sportsData))
-                    .set('teamForm.gender',                 Immutable.fromJS('male'))
-                    .set('teamForm.players',                Immutable.fromJS([]))
-                    .set('teamForm.availableAges',          Immutable.fromJS(TeamHelper.getAges(schoolData)))
-                    .set('teamForm.selectedRivalIndex',     Immutable.fromJS(self._getFakeRivalIndex()))
-                    .set('teamForm.rival',                  Immutable.fromJS(self._getFakeRivalObject()))
-                    .set('teamForm.isHouseFilterEnable',    Immutable.fromJS(false))
-                    .set('teamForm.isHouseSelected',        Immutable.fromJS(false))
-                    .set('teamForm.isHouseAutocompleteInit',Immutable.fromJS(true))
-                    .set('teamForm.houses',                 Immutable.fromJS({}))
-                    .set('teamForm.error',                  Immutable.fromJS(self._getErrorObject()))
+                    .set('teamForm.default',                            Immutable.fromJS(self._getDefaultObject(schoolData)))
+                    .set('teamForm.sports',                             Immutable.fromJS(sportsData))
+                    .set('teamForm.gender',                             Immutable.fromJS('male'))
+                    .set('teamForm.players',                            Immutable.fromJS([]))
+                    .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
+                    .set('teamForm.selectedRivalIndex',                 Immutable.fromJS(self._getFakeRivalIndex()))
+                    .set('teamForm.rival',                              Immutable.fromJS(self._getFakeRivalObject()))
+                    .set('teamForm.isHouseFilterEnable',                Immutable.fromJS(false))
+                    .set('teamForm.isHouseSelected',                    Immutable.fromJS(false))
+                    .set('teamForm.isHouseAutocompleteInit',            Immutable.fromJS(true))
+                    .set('teamForm.___teamManagerBinding.teamStudents', Immutable.fromJS([]))
+                    .set('teamForm.houses',                             Immutable.fromJS({}))
+                    .set('teamForm.error',                              Immutable.fromJS(self._getErrorObject()))
                     .commit();
             });
     },
@@ -112,6 +113,9 @@ const TeamAddPage = React.createClass({
             text: ''
         };
     },
+    convertPlayersToServerValue: function(players) {
+        return players.map(p => TeamHelper.getBodyForAddPlayersRequest(p));
+    },
     _submitAdd: function() {
         const self = this,
             binding = self.getDefaultBinding();
@@ -120,41 +124,23 @@ const TeamAddPage = React.createClass({
 
         if(!binding.toJS('teamForm.error.isError')) {
             const team = {
-                name:           binding.get('teamForm.name'),
-                description:    binding.get('teamForm.description'),
-                sportId:        binding.get('teamForm.sportId'),
+                name:           binding.toJS('teamForm.name'),
+                description:    binding.toJS('teamForm.description'),
+                sportId:        binding.toJS('teamForm.sportId'),
                 schoolId:       self.activeSchoolId,
                 ages:           binding.toJS('teamForm.ages'),
-                gender:         binding.get('teamForm.gender'),
-                tempTeam:       false
+                gender:         TeamHelper.convertGenderToServerValue(binding.toJS('teamForm.gender')),
+                players:        self.convertPlayersToServerValue(binding.toJS('teamForm.___teamManagerBinding.teamStudents'))
             };
 
             // Set houseId if team is house team
             binding.get('teamForm.houseId') && (team.houseId = binding.get('teamForm.houseId'));
 
-            window.Server.teamsBySchoolId.post( self.activeSchoolId, team )
+            window.Server.teamsBySchoolId.post(self.activeSchoolId, team)
                 .then(team => {
-                    const players = binding.get('teamForm.players').toJS();
+                    document.location.hash = '/#school_admin/teams';
 
-                    return Promise.all(players.map( player => {
-                        const body = {
-                            userId:     player.id,
-                            sub:        player.sub ? player.sub : false,
-                            position:   player.position
-                        };
-
-                        return window.Server.teamPlayers.post(
-                            {
-                                schoolId:   self.activeSchoolId,
-                                teamId:     team.id
-                            },
-                            body
-                        );
-                    })).then( _ => {
-                        document.location.hash = '/#school_admin/teams';
-
-                        return team;
-                    });
+                    return team;
                 });
         }
     },

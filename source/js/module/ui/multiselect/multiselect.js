@@ -30,9 +30,11 @@ const MultiSelect = React.createClass({
         })
     },
     handleItemClick: function(item) {
-        const   self     =   this;
-        let     binding  =   self.getDefaultBinding(),
-                selected =   binding.toJS('selections').indexOf(item.id)!==-1;
+        const   self     =   this,
+                binding  =   self.getDefaultBinding();
+
+        const selected = binding.toJS('selections').indexOf(item.id)!==-1;
+
         self.setSelected(item, !selected);
     },
     handleFilterChange: function(event) {

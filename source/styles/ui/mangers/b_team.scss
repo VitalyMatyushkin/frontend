@@ -7,8 +7,9 @@
   color: #2a2a2a;
 
   &.mDefaultView {
-    width: 406px;
-    height: 322px;
+    width:        406px;
+    height:       322px;
+    border-left:  solid 1px #c2c2c2;
   }
 
   &.mSkypeStyleView {
@@ -26,10 +27,17 @@
 .eTeam_player {
   cursor: pointer;
 
+  padding: 5px;
+
   &.mHead {
     color: #939393;
     border-top: solid 1px #c2c2c2;
     border-bottom: solid 1px #c2c2c2;
+
+    &:hover {
+      background-color: #fff;
+      cursor: auto;
+    }
   }
 
   &.mSelected {

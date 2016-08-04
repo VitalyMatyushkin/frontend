@@ -39,7 +39,7 @@ function validate(binding) {
 	};
 
 	const result = TeamPlayersValidator.validate(
-		binding.toJS('teamForm.players'),
+		binding.toJS('teamForm.___teamManagerBinding.teamStudents'),
 		limits
 	);
 
@@ -76,18 +76,19 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 	let promises = [];
 
 	initialPlayers.forEach((initialPlayer) => {
-		let findedPlayer = Lazy(players).findWhere({id:initialPlayer.id});
+		let foundPlayer = Lazy(players).findWhere({id:initialPlayer.id});
 
-		if(findedPlayer) {
+		if(foundPlayer) {
 			//Mmm, check for modifications
 			let changes = {};
-			if(findedPlayer.position !== initialPlayer.position) {
-				changes.position = findedPlayer.position;
+			if(foundPlayer.positionId !== initialPlayer.positionId) {
+				changes.positionId = foundPlayer.positionId;
 			}
-			if(findedPlayer.sub !== initialPlayer.sub) {
-				changes.sub = findedPlayer.sub;
+			if(foundPlayer.sub !== initialPlayer.sub) {
+				changes.sub = foundPlayer.sub;
 			}
-			if(changes.position !== undefined || changes.sub !== undefined) {
+
+			if(changes.positionId !== undefined || changes.sub !== undefined) {
 				promises.push(
 					changePlayer(
 						schoolId,
@@ -97,10 +98,6 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 					)
 				);
 			}
-			players.splice(
-				Lazy(players).indexOf(findedPlayer),
-				1
-			);
 		} else {
 			//So, user delete player, let's delete player from server
 			promises.push(
@@ -112,29 +109,30 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 			);
 		}
 	});
-	if(players.length > 0) {
-		//Hmmm...new players!
-		players.forEach((player) => {
-			promises.push(
-				addPlayer(
-					schoolId,
-					teamId,
-					player
-				)
-			);
-		});
-	}
+
+	// Check new players
+	//TODO need comment
+	players.filter(p => !p.userId).forEach((player) => {
+		promises.push(
+			addPlayer(
+				schoolId,
+				teamId,
+				player
+			)
+		);
+	});
+
 
 	return promises;
 };
 
-function addPlayer(schoolId, teamId, body) {
+function addPlayer(schoolId, teamId, player) {
 	return window.Server.teamPlayers.post(
 		{
 			schoolId:  schoolId,
 			teamId:     teamId
 		},
-		body
+		getBodyForAddPlayersRequest(player)
 	);
 };
 
@@ -155,6 +153,29 @@ function changePlayer(schoolId, teamId, playerId, changes) {
 		},
 		changes
 	);
+};
+
+function convertGenderToServerValue(gender) {
+	switch (gender) {
+		case 'maleOnly':
+			return 'MALE_ONLY';
+		case 'femaleOnly':
+			return 'FEMALE_ONLY';
+		case 'mixed':
+			return 'MIXED';
+	}
+}
+
+function getBodyForAddPlayersRequest(player) {
+	const body = {
+		userId:         player.id,
+		permissionId:   player.permissionId
+	};
+
+	player.positionId	&&	(body.positionId = player.positionId);
+	player.sub 			&&	(body.sub = player.sub);
+
+	return body;
 };
 
 /**
@@ -213,19 +234,35 @@ function convertPointsToClientModel(serverPointsModel) {
 	return clientPointsModel;
 };
 
+/**
+ * Get school forms filtered by age
+ * @param ages
+ * @returns {*}
+ * @private
+ */
+function getFilteredAgesBySchoolForms(ages, schoolForms) {
+	return schoolForms.filter((form) => {
+		return	ages.indexOf(parseInt(form.age)) !== -1 ||
+			ages.indexOf(String(form.age)) !== -1;
+	});
+};
+
 const TeamHelper = {
-	getAges:					getAges,
-	validate:					validate,
-	getSportById:				getSportById,
-	getPlayersWithUserInfo:		getPlayersWithUserInfo,
-	addPlayer:					addPlayer,
-	changePlayer:				changePlayer,
-	deletePlayer:				deletePlayer,
-	commitPlayers:				commitPlayers,
-	injectFormsToPlayers:		injectFormsToPlayers,
-	injectTeamIdToPlayers:		injectTeamIdToPlayers,
-	isTeamEnableForEdit:		isTeamEnableForEdit,
-	convertPointsToClientModel:	convertPointsToClientModel
+	getAges:						getAges,
+	validate:						validate,
+	getSportById:					getSportById,
+	getPlayersWithUserInfo:			getPlayersWithUserInfo,
+	addPlayer:						addPlayer,
+	changePlayer:					changePlayer,
+	deletePlayer:					deletePlayer,
+	commitPlayers:					commitPlayers,
+	injectFormsToPlayers:			injectFormsToPlayers,
+	injectTeamIdToPlayers:			injectTeamIdToPlayers,
+	isTeamEnableForEdit:			isTeamEnableForEdit,
+	convertPointsToClientModel:		convertPointsToClientModel,
+	getFilteredAgesBySchoolForms:	getFilteredAgesBySchoolForms,
+	convertGenderToServerValue:		convertGenderToServerValue,
+	getBodyForAddPlayersRequest:	getBodyForAddPlayersRequest
 };
 
 module.exports = TeamHelper;

@@ -145,26 +145,12 @@ const TeamWrapper = React.createClass({
 		}));
 	},
 	_getPlayerChooserFilter: function(team, school) {
-		const	self = this;
-
 		return {
 			gender:		team.gender,
 			houseId:	team.houseId,
 			schoolId:	school.id,
-			forms:		self._getFilteredAgesBySchoolForms(team.ages, school.forms)
+			forms:		TeamHelper.getFilteredAgesBySchoolForms(team.ages, school.forms)
 		};
-	},
-	/**
-	 * Get school forms filtered by age
-	 * @param ages
-	 * @returns {*}
-	 * @private
-	 */
-	_getFilteredAgesBySchoolForms: function(ages, schoolForms) {
-		return schoolForms.filter((form) => {
-			return	ages.indexOf(parseInt(form.age)) !== -1 ||
-					ages.indexOf(String(form.age)) !== -1;
-		});
 	},
 	_initTeamSaveMode: function() {
 		const self = this;

@@ -1,5 +1,6 @@
 const   TeamForm        = require('module/as_manager/pages/school_admin/teams/team_form'),
         React           = require('react'),
+        Promise         = require('bluebird'),
         MoreartyHelper  = require('module/helpers/morearty_helper'),
         TeamHelper      = require('module/ui/managers/helpers/team_helper'),
         Morearty	    = require('morearty'),
@@ -34,8 +35,7 @@ const TeamEditPage = React.createClass({
 
         let schoolData,
             sports,
-            team,
-            players;
+            team;
 
         // TODO refactor
         //get school data
@@ -90,31 +90,38 @@ const TeamEditPage = React.createClass({
                 )
             })
             .then(users => {
-                // inject users to players, because we need user info
-                // yep, ugly method name
-                let usersWithPlayerInfo = users;
-
                 return binding
                     .atomically()
-                    .set('teamForm.team',                   Immutable.fromJS(team))
-                    .set('teamForm.name',                   Immutable.fromJS(team.name))
-                    .set('teamForm.description',            Immutable.fromJS(team.description))
-                    .set('teamForm.sportId',                Immutable.fromJS(team.sportId))
-                    .set('teamForm.sportModel',             Immutable.fromJS(team.sport))
-                    .set('teamForm.gender',                 Immutable.fromJS(team.gender))
-                    .set('teamForm.ages',                   Immutable.fromJS(team.ages))
-                    .set('teamForm.availableAges',          Immutable.fromJS(TeamHelper.getAges(schoolData)))
-                    .set('teamForm.rival',                  Immutable.fromJS(self._getFakeRival(team)))
-                    .set('teamForm.default',                Immutable.fromJS(self._getDefaultObject(schoolData, team)))
-                    .set('teamForm.sports',                 Immutable.fromJS(sports))
-                    .set('teamForm.players',                Immutable.fromJS(usersWithPlayerInfo))
-                    .set('initialPlayers',                  Immutable.fromJS(usersWithPlayerInfo))
-                    .set('teamForm.isHouseFilterEnable',    Immutable.fromJS(self._isHouseFilterEnable(team)))
-                    .set('teamForm.isHouseSelected',        Immutable.fromJS(self._isHouseSelected(team)))
-                    .set('teamForm.isHouseAutocompleteInit',Immutable.fromJS(!self._isHouseSelected(team)))
-                    .set('teamForm.removedPlayers',         Immutable.fromJS([]))
+                    .set('teamForm.team',                               Immutable.fromJS(team))
+                    .set('teamForm.name',                               Immutable.fromJS(team.name))
+                    .set('teamForm.description',                        Immutable.fromJS(team.description))
+                    .set('teamForm.sportId',                            Immutable.fromJS(team.sportId))
+                    .set('teamForm.sportModel',                         Immutable.fromJS(team.sport))
+                    .set('teamForm.gender',                             Immutable.fromJS(self.convertGenderToClientValue(team.gender)))
+                    .set('teamForm.ages',                               Immutable.fromJS(team.ages))
+                    .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
+                    .set('teamForm.rival',                              Immutable.fromJS(self._getFakeRival(team)))
+                    .set('teamForm.default',                            Immutable.fromJS(self._getDefaultObject(schoolData, team)))
+                    .set('teamForm.sports',                             Immutable.fromJS(sports))
+                    .set('teamForm.___teamManagerBinding.teamStudents', Immutable.fromJS(users))
+                    .set('teamForm.___teamManagerBinding.positions',    Immutable.fromJS(team.sport.field.positions))
+                    .set('initialPlayers',                              Immutable.fromJS(users))
+                    .set('teamForm.isHouseFilterEnable',                Immutable.fromJS(self._isHouseFilterEnable(team)))
+                    .set('teamForm.isHouseSelected',                    Immutable.fromJS(self._isHouseSelected(team)))
+                    .set('teamForm.isHouseAutocompleteInit',            Immutable.fromJS(!self._isHouseSelected(team)))
+                    .set('teamForm.removedPlayers',                     Immutable.fromJS([]))
                     .commit();
             });
+    },
+    convertGenderToClientValue: function(gender) {
+        switch (gender) {
+            case 'MALE_ONLY':
+                return 'maleOnly';
+            case 'FEMALE_ONLY':
+                return 'femaleOnly';
+            case 'MIXED':
+                return 'mixed';
+        }
     },
 	/**
      * Get user id array from team.
@@ -204,7 +211,7 @@ const TeamEditPage = React.createClass({
                 description: binding.get('teamForm.description'),
                 sportId:     binding.get('teamForm.sportId'),
                 ages:        binding.toJS('teamForm.ages'),
-                gender:      binding.get('teamForm.gender'),
+                gender:      TeamHelper.convertGenderToServerValue(binding.toJS('teamForm.gender')),
                 schoolId:    MoreartyHelper.getActiveSchoolId(self)
             };
 
@@ -216,8 +223,8 @@ const TeamEditPage = React.createClass({
                     teamId: teamId
                 },
                 updatedTeam
-            ).then( _ => {
-                const   players         = binding.get('teamForm.players').toJS(),
+            ).then( () => {
+                const   players         = binding.get('teamForm.___teamManagerBinding.teamStudents').toJS(),
                         initialPlayers  =  binding.get('initialPlayers').toJS();
 
                 Promise.all(
