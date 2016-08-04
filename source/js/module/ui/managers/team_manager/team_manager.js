@@ -1,8 +1,8 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
-		Promise			= require('bluebird'),
 		Immutable		= require('immutable'),
-		Team			= require('./new_team/defaultTeam'),
+		Promise			= require('bluebird'),
+		Team			= require('./team/team'),
 		PlayerChooser	= require('./player_chooser/player_chooser');
 
 const TeamManager = React.createClass({
