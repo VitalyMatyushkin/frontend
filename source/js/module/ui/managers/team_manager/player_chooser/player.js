@@ -35,7 +35,6 @@ const Player = React.createClass({
 		return (
 			<div	className={playerClass}
 					onClick={self.handleClickPlayer}
-					onDoubleClick={self.handleDoubleClickPlayer}
 			>
 				<div	className="ePlayerChooser_playerName">
 					{`${player.firstName} ${player.lastName}`}
