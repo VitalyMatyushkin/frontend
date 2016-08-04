@@ -9,7 +9,7 @@ const 	ActionPanel = require('./action-panel/action-panel'),
 
 const Grid = React.createClass({
 	propTypes: {
-		model: 	React.PropTypes.object
+		model: 	React.PropTypes.object.isRequired
 	},
 	componentWillMount:function(){
 		this.props.model.actionPanel.onChange = this.onChange;

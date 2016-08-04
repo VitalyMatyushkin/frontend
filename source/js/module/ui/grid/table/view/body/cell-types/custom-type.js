@@ -6,8 +6,8 @@ const React = require('react');
 
 const CustomType = React.createClass({
 	propTypes: {
-		cell: 		React.PropTypes.object,
-		dataItem:	React.PropTypes.object
+		cell: 		React.PropTypes.object.isRequired,
+		dataItem:	React.PropTypes.object.isRequired
 	},
 	render: function() {
 		const parseFunction = this.props.cell.typeOptions.parseFunction,

@@ -7,7 +7,7 @@ const   React 	= require('react'),
 
 const ActionPanel = React.createClass({
 	propTypes: {
-		model: React.PropTypes.object
+		model: React.PropTypes.object.isRequired
 	},
 	toggleFilters: function(e) {
 		const model = this.props.model;

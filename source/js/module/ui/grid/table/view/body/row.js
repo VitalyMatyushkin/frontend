@@ -7,8 +7,8 @@ const   Cell 	= require('./cell'),
 
 const Row = React.createClass({
 	propTypes: {
-		columns: 	React.PropTypes.array,
-		dataItem:	React.PropTypes.object
+		columns: 	React.PropTypes.array.isRequired,
+		dataItem:	React.PropTypes.object.isRequired
 	},
 	componentWillMount: function() {
 	},
