@@ -79,9 +79,7 @@ const TeamForm = React.createClass({
 			.set('sportId',							Immutable.fromJS(event.target.value))
 			.set('sportModel',						Immutable.fromJS(sports[sportIndex]))
 			.set('___teamManagerBinding.positions',	Immutable.fromJS(sports[sportIndex].field.positions))
-			.set('default.model.sportModel',		Immutable.fromJS(sports[sportIndex]))
 			.set('gender',							Immutable.fromJS(undefined))
-			.set('default.model.gender',			Immutable.fromJS(undefined))
 			.commit();
 	},
 	_getGenders: function () {
@@ -178,9 +176,6 @@ const TeamForm = React.createClass({
 		binding
 			.atomically()
 			.set('isHouseFilterEnable',	Immutable.fromJS(!binding.get('isHouseFilterEnable')))
-			.set('default.model.type',	Immutable.fromJS(!binding.get('isHouseFilterEnable') ? "houses" : null))
-			.set('default.players',		Immutable.fromJS([]))
-			.set('players',				Immutable.fromJS([]))
 			.commit();
 	},
 	_serviceHouseFilter: function() {
@@ -221,18 +216,16 @@ const TeamForm = React.createClass({
 		if(binding.get('isHouseAutocompleteInit')) {
 			binding
 				.atomically()
-				.set('default.model.type',	Immutable.fromJS('houses'))
-				.set('rival',				Immutable.fromJS(model))
+				.set('house',				Immutable.fromJS(model))
+				// TODO delete houseId, check house
 				.set('houseId',				Immutable.fromJS(id))
 				.set('isHouseSelected',		Immutable.fromJS(true))
-				.set('default.players',		Immutable.fromJS([]))
-				.set('players',				Immutable.fromJS([]))
 				.commit();
 		} else {
 			binding
 				.atomically()
-				.set('default.model.type',		Immutable.fromJS('houses'))
-				.set('rival',					Immutable.fromJS(model))
+				.set('house',					Immutable.fromJS(model))
+				// TODO delete houseId, check house
 				.set('houseId',					Immutable.fromJS(id))
 				.set('isHouseSelected',			Immutable.fromJS(true))
 				.set('isHouseAutocompleteInit',	Immutable.fromJS(true))
@@ -249,7 +242,7 @@ const TeamForm = React.createClass({
 		if(binding.get('isHouseSelected')) {
 			return (
 				<Autocomplete
-					defaultItem={binding.get('rival').toJS()}
+					defaultItem={binding.get('house').toJS()}
 					serviceFilter={self._serviceHouseFilter}
 					serverField="name"
 					placeholderText={'Select House'}
@@ -343,11 +336,11 @@ const TeamForm = React.createClass({
 		binding.set(
 			'___teamManagerBinding.filter',
 			Immutable.fromJS({
-				schoolId:	binding.toJS('default.schoolInfo.id'),
+				schoolId:	binding.toJS('school.id'),
 				houseId:	binding.toJS('houseId'),
 				forms:		TeamHelper.getFilteredAgesBySchoolForms(
 					binding.toJS('ages'),
-					binding.toJS('default.schoolInfo.forms') // default is school binding, yep, it is necessary rename
+					binding.toJS('school.forms') // default is school binding, yep, it is necessary rename
 				),
 				genders:	self.getFilterGender(binding.toJS('gender'))
 			})
