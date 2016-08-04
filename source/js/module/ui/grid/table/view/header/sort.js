@@ -7,7 +7,7 @@ const   React       = require('react');
 const Sort = React.createClass({
     propTypes:{
         model: React.PropTypes.object.isRequired,
-        dataField:React.PropTypes.string.isRequired
+        dataField:React.PropTypes.string
     },
     onClick:function(e){
 		const 	self 	= this,

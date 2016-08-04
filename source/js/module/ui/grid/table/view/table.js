@@ -20,7 +20,7 @@ const Table = React.createClass({
 
 		return (
 			<div className="eDataList_list mTable">
-				<Header columns={model.columns} order={model.order}/>
+				<Header columns={model.columns} />
 				{data && data.length ? data.map((item, index) => {
 					return <Row key={item.id ? item.id : index} dataItem={item} columns={columns}/>
 				}) : null}
