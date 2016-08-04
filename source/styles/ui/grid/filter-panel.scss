@@ -1,0 +1,59 @@
+.bFilterPanel{
+
+  .bFilterFields{
+    padding: 10px 10px 0;
+
+    .bFilterField{
+      display: inline-block;
+      position: relative;
+      margin-right: 15px;
+
+      .eField{
+        line-height: 30px;
+
+        &:after{
+          content: '⏷';
+        }
+      }
+      .eFilterContainer {
+        position: absolute;
+        padding: 10px 5px 5px;
+        background-color: white;
+        border-radius: 0 0 5px 5px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease-out;
+        display: none;
+      }
+
+      &:hover .eFilterContainer{
+        display: block;
+      }
+    }
+  }
+  .bBadgeArea{
+    background-color: white;
+    min-height: 36px;
+    margin-bottom: 5px;
+    box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.25);
+
+    .bBadge{
+      line-height: 27px;
+      margin: 5px;
+      display: inline-block;
+      background: $MAIN_COLOR;
+      padding: 0 5px;
+      color: white;
+
+      .eField:after {
+        content: ':';
+        margin-right: 5px;
+      }
+      .eDelete{
+        margin-left: 5px;
+        color: $COLOR;
+        font-size: 13px;
+        cursor: pointer;
+      }
+    }
+  }
+}
