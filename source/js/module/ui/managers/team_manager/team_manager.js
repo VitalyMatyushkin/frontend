@@ -92,7 +92,7 @@ const TeamManager = React.createClass({
 		}
 	},
 	getNinUserId: function(binding) {
-		return binding.toJS('teamStudents') && binding.toJS('teamStudents').map(p => p.id);
+		return binding.toJS('teamStudents') && binding.toJS('teamStudents').map(p => p.userId ? p.userId : p.id);
 	},
 	handleChangeSearchText: function(text) {
 		const	self	= this,
@@ -110,7 +110,7 @@ const TeamManager = React.createClass({
 		if(foundPlayerIndex === -1) {
 			selectedPlayerIds.push(playerId);
 		} else {
-			selectedPlayerIds.splice(selectedPlayerIds, 1);
+			selectedPlayerIds.splice(foundPlayerIndex, 1);
 		}
 
 		binding.set('selectedPlayerIds', Immutable.fromJS(selectedPlayerIds));
@@ -165,7 +165,7 @@ const TeamManager = React.createClass({
 			});
 
 			binding.atomically()
-				.set('selectedStudentIds',	Immutable.fromJS(selectedStudentIds))
+				.set('selectedStudentIds',	Immutable.fromJS([]))
 				.set('foundStudents',		Immutable.fromJS(foundStudents))
 				.set('teamStudents',		Immutable.fromJS(teamStudents))
 				.set('removedPlayers',		Immutable.fromJS(removedPlayers))
