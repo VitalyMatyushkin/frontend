@@ -10,11 +10,7 @@ const TeamsListPage = React.createClass({
     mixins: [Morearty.Mixin, ListPageMixin],
     serviceName: 'teams',
 	filters:{
-		limit: 100,
-		where: {
-			tempTeam: false,
-			removed: false
-		}
+		limit: 100
 	},
 	componentDidMount: function () {
 		const   self          = this,
