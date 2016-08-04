@@ -6,7 +6,7 @@ const   Badge = require('./badge'),
 
 const BadgeArea = React.createClass({
 	propTypes: {
-		model: 	React.PropTypes.object
+		model: 	React.PropTypes.object.isRequired
 	},
 	componentWillMount:function(){
 		const 	model 	= this.props.model;

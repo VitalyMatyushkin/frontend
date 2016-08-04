@@ -6,7 +6,7 @@ const 	TypeList 	= require('./filter-types/filter-type-list'),
 
 const FilterField = React.createClass({
 	propTypes: {
-		model: 	React.PropTypes.object
+		model: 	React.PropTypes.object.isRequired
 	},
 	render: function() {
 		const 	model 			= this.props.model,

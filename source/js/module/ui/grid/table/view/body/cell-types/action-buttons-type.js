@@ -7,8 +7,8 @@ const 	React 	= require('react'),
 
 const ActionButtonsType = React.createClass({
 	propTypes: {
-		cell: 		React.PropTypes.object,
-		dataItem:	React.PropTypes.object
+		cell: 		React.PropTypes.object.isRequired,
+		dataItem:	React.PropTypes.object.isRequired
 	},
 	getButtons:function(){
 		const 	self = this,

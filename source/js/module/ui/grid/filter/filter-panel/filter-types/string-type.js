@@ -6,7 +6,7 @@ const React = require('react');
 
 const FilterStringType = React.createClass({
 	propTypes: {
-		filterField: React.PropTypes.object
+		filterField: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
 		return {value: ''};

@@ -12,7 +12,7 @@ const AdminArchive = React.createClass({
     mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
     serviceName:'permissionRequests',
     serviceCount:'permissionRequestsCount',
-    filters:{include:['principal','school'],where:{status:{$neq:'NEW'}},order:'createdAt DESC'},
+    filters:{where:{status:{$neq:'NEW'}},order:'createdAt DESC'},
     setPageTitle:"Requests archive",
     componentWillMount:function(){
         const self = this;

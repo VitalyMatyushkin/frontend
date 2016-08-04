@@ -7,8 +7,8 @@ const   TypeList 	= require('./cell-types/cell-type-list'),
 
 const Cell = React.createClass({
 	propTypes: {
-		column: 	React.PropTypes.object,
-		dataItem:	React.PropTypes.object
+		column: 	React.PropTypes.object.isRequired,
+		dataItem:	React.PropTypes.object.isRequired
 	},
 	render: function() {
 		const self = this,

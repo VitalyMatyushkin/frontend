@@ -9,7 +9,7 @@ const   Header	= require('./header'),
 
 const Table = React.createClass({
 	propTypes: {
-		model: React.PropTypes.object
+		model: React.PropTypes.object.isRequired
 	},
 	componentWillMount: function () {
 	},

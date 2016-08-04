@@ -6,7 +6,7 @@ const   React 		= require('react'),
 
 const Pagination = React.createClass({
 	propTypes: {
-		model: 	React.PropTypes.object
+		model: 	React.PropTypes.object.isRequired
 	},
 	render: function() {
 		const model = this.props.model,
