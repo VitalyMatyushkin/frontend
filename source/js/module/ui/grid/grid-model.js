@@ -15,16 +15,16 @@ const 	FilterModel 		= require('./filter/model/filter-model'),
  * @param {object} 	options.actionPanel - options ActionPanel class
  * @param {func} 	options.actionPanel.btnAdd - react component for 'Add' button
  * @param {string} 	options.actionPanel.title - grid Title
- * @param {boolean} options.actionPanel.showStrip - show strip after title
- * @param {boolean} options.actionPanel.showSearch - show 'search' input
- * @param {boolean} options.actionPanel.showBtnPrint - show 'print' button
- * @param {boolean} options.actionPanel.showBtnLoad - show 'load' button
- * @param {boolean} options.actionPanel.hideBtnFilter - hide 'filter' button
+ * @param {boolean}	options.actionPanel.showStrip - show strip after title
+ * @param {boolean}	options.actionPanel.showSearch - show 'search' input
+ * @param {boolean}	options.actionPanel.showBtnPrint - show 'print' button
+ * @param {boolean}	options.actionPanel.showBtnLoad - show 'load' button
+ * @param {boolean}	options.actionPanel.hideBtnFilter - hide 'filter' button
  * @param {object[]} options.columns - array of columns
- * @param {string} 	options.columns[].text - the text in the column header
+ * @param {string}	options.columns[].text - the text in the column header
  * @param {boolean}	options.columns[].isSorted - adds sorting column
  * @param {boolean}	options.columns[].hidden - hidden column (if you need to add the ability to filter data without prompting)
- * @param {number} 	options.columns[].width - specifies the width of a column
+ * @param {number}	options.columns[].width - specifies the width of a column
  * @param {object} 	options.columns[].cell - cell parameters
  * @param {string} 	options.columns[].cell.type - specifies the type of cell variability rendering
  * @param {object} 	options.columns[].cell.typeOptions - additional options for rendering cells
