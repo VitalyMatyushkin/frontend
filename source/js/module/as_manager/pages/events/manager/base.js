@@ -120,11 +120,6 @@ const EventManagerBase = React.createClass({
             .set('autocomplete', Immutable.Map())
             .commit();
     },
-    changeCompleteGender: function (event) {
-        var binding = this.getDefaultBinding();
-
-        binding.set('model.gender', event.target.value);
-    },
 	changeCompleteSport: function (event) {
 		var self = this,
             binding = self.getDefaultBinding(),
@@ -175,51 +170,47 @@ const EventManagerBase = React.createClass({
 			>{sport.get('name')}</Morearty.DOM.option>
         }).toArray();
     },
-	getDefaultGender: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			sportId = binding.get('model.sportId'),
-			sportsBinding = self.getBinding('sports'),
-			sport = sportsBinding.get('models').find(function (sport) {
-				return sport.get('id') === sportId;
-			});
-
-		if (sport) {
-			return sport.toJS('limits.genders.0');
-		} else {
-			return null;
-		}
+	handleChangeGenderSelect: function(binding, eventDescriptor) {
+		binding.set('model.gender', Immutable.fromJS(eventDescriptor.target.value));
 	},
-    getGenders: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            sportId = binding.get('model.sportId'),
-            sportsBinding = self.getBinding('sports'),
-            sport = sportsBinding.get('models').find(function (sport) {
-                return sport.get('id') === sportId;
-            });
+	getGenderSelectOptions: function () {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-        if (sport) {
-            return sport.toJS().limits.genders.map(function (gender, genInd) {
-                var names = {
-                    male: 'boys',
-                    female: 'girls'
-                };
+		const sportModel = binding.get('model.sportModel');
 
-                return <label key={genInd} onClick={self.changeCompleteGender}>
-                            <Morearty.DOM.input
-                                type="radio"
-                                key={gender + '-gender'}
-                                value={gender}
-                                checked={gender === binding.get('model.gender')}
-                            />
-                            {names[gender]}
-                        </label>;
-            });
-        } else {
-            return null;
-        }
-    },
+		let genderOptions = [(
+			<option	key="not-selected-gender"
+					   value={undefined}
+			>
+				not selected
+			</option>
+		)];
+
+		if(sportModel) {
+			const genders = sportModel.toJS().genders;
+
+			genderOptions = genderOptions.concat(Object.keys(genders)
+				.filter(genderType => genders[genderType])
+				.map((genderType, index) => {
+					const genderNames = {
+						femaleOnly:	'Female only',
+						maleOnly:	'Male only',
+						mixed:		'Mixed'
+					};
+
+					return (
+						<option	key={`${index}-gender`}
+								value={genderType}
+						>
+							{genderNames[genderType]}
+						</option>
+					);
+				}));
+		}
+
+		return genderOptions;
+	},
     getAges: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -311,12 +302,16 @@ const EventManagerBase = React.createClass({
                 </div>
             </If>
             <If condition={!!binding.get('model.sportId')}>
-                <div className="eManager_group">
-                    <div className="eManager_label">{'Gender'}</div>
-                    <div className="eManager_radiogroup">
-                        {self.getGenders()}
-                    </div>
-                </div>
+				<div className="eManager_group">
+					<div className="eManager_label">{'Genders'}</div>
+					<select	className="eManager_select"
+							defaultValue={undefined}
+							value={gender}
+							onChange={self.handleChangeGenderSelect.bind(self, binding)}
+					>
+						{self.getGenderSelectOptions()}
+					</select>
+				</div>
             </If>
             <If condition={!!binding.get('model.sportId') && !!binding.get('model.gender')}>
                 <div className="eManager_group">
