@@ -10,42 +10,37 @@ const FilterBetweenDateType = React.createClass({
 		filterField: React.PropTypes.object.isRequired
 	},
 	getInitialState: function() {
-		return {
-			from: '',
-			to: ''
-		};
+		return {values:null};
 	},
 	onChangeFrom:function(value){
 		const 	model = this.props.filterField,
-				state = this.state;
+				badge = model.getBadge(),
+				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '',
+				values = [value, valueTo];
 
-		this.setState({
-			from: value,
-			to: state.to
-		});
-		model.onChange([value, state.to]);
+		this.setState({values:values});
+
+		model.onChange(values);
 	},
 	onChangeTo:function(value){
 		const 	model = this.props.filterField,
-				state = this.state;
+			badge = model.getBadge(),
+			valueFrom = badge && badge.values && badge.values.length > 0 ? badge.values[0] : '',
+			values = [valueFrom, value];
 
-		this.setState({
-			from: state.from,
-			to: value
-		});
-		model.onChange([state.from, value]);
+		this.setState({values:values});
+
+		model.onChange(values);
 	},
 	render: function() {
 		const 	model = this.props.filterField,
 				badge = model.getBadge(),
 				valueFrom = badge && badge.values && badge.values.length > 0 ? badge.values[0] : '',
 				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '';
-		console.log('FilterBetweenDateType.value = '+ valueTo);
 
 		return (
 			<div className="eBetweenDate">
-				{//	<label>from</label><Date value={valueFrom} onBlur={this.onChangeFrom} />
-					 }
+				<label>from</label><Date value={valueFrom} onBlur={this.onChangeFrom} />
 				<label>to</label><Date value={valueTo} onBlur={this.onChangeTo} />
 			</div>
 		);

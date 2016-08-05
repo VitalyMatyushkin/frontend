@@ -61,7 +61,6 @@ const MaskedDate =  React.createClass({
 	render: function () {
         const self = this,
 			date = self.state.date;
-		console.log('Date.value = '+date);
 
 		return (
             <MaskedInput title="Format date dd.mm.yyyy" value={date} className="eDateInput"
