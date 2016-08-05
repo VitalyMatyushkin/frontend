@@ -13,9 +13,12 @@ const 	React 		= require('react'),
 const MaskedInput = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
+		this.init(this.props);
+	},
+	init:function(props){
 		this.mask = {
 			props: {
-				value: this.props.value,
+				value: props.value,
 				onChange: this._onChange,
 				onKeyDown: this._onKeyDown,
 				onFocus: this._onFocus,
@@ -26,16 +29,18 @@ const MaskedInput = React.createClass({
 			cursor: 0
 		};
 
-		if (this.props.value && this.props.mask) {
-			this.processValue(this.props.value)
+		if (props.value && props.mask) {
+			this.processValue(props.value)
 		}
 	},
-
 	componentDidUpdate: function () {
 		ReactDOM.findDOMNode(this).setSelectionRange(
 			this.mask.cursor,
 			this.mask.cursor
 		)
+	},
+	componentWillReceiveProps:function(nextProps){
+		this.init(nextProps);
 	},
 
 	processValue: function (value) {
@@ -132,7 +137,7 @@ const MaskedInput = React.createClass({
 			var value = this.mask.props.value;
 
 			if (!this.mask.empty) {
-				//this.mask.props.value = value.substr(0, cursor) //wtf?
+				//this.mask.props.value = value.substr(0, cursor); //wtf?
 			} else {
 				this.mask.props.value = ''
 			}
@@ -171,6 +176,8 @@ const MaskedInput = React.createClass({
 		}
 	},
 	render: function () {
+		console.log('MaskedInput.value = '+ this.mask.props.value);
+
 		//Use placeholder to display old information we already have
 		//Easier this way to use the mask to edit or add new data
 		return <input type="text" {...this.props} {...this.mask.props} placeholder={this.props.value} />

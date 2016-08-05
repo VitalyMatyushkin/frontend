@@ -15,7 +15,9 @@ const FilterStringType = React.createClass({
 		const 	model = this.props.filterField;
 
 		this.setState({value: e.target.value});
-		model.onChange.bind(model, e)();
+		model.onChange.bind(model, e.target.value)();
+
+		e.stopPropagation();
 	},
 	render: function() {
 		const 	model = this.props.filterField,

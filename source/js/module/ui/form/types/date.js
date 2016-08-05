@@ -17,18 +17,25 @@ const MaskedDate =  React.createClass({
 	componentWillReceiveProps:function(nextProps){
 		const self = this;
 
-		self.setDefaultValue(nextProps.defaultValue || nextProps.value);
+		if(self.props.defaultValue !== nextProps.defaultValue)
+			self.setDefaultValue(nextProps);
+		if(self.props.value !== nextProps.value)
+			self.setDate(nextProps.value);
 	},
-	setDefaultValue: function(newValue) {
-		const self 			= this,
-			value			= newValue || self.props.defaultValue || self.props.value,
-			isValid			= value && DateHelper.isValid(value),
-			localeDate 		= isValid ? DateHelper.toLocal(value):'';
+	setDefaultValue: function(nextProps) {
+		const props	= nextProps || this.props;
+
+		return this.setDate(props.defaultValue);
+	},
+	setDate: function(date) {
+		const 	isValid			= date && DateHelper.isValid(date),
+				localeDate 		= isValid ? DateHelper.toLocal(date):'';
 
 		this.setState({date:localeDate});
 
 		return localeDate;
 	},
+
 	handleBlur: function(e) {
 		const self = this;
 		let value = e.target.value;
@@ -54,6 +61,7 @@ const MaskedDate =  React.createClass({
 	render: function () {
         const self = this,
 			date = self.state.date;
+		console.log('Date.value = '+date);
 
 		return (
             <MaskedInput title="Format date dd.mm.yyyy" value={date} className="eDateInput"
