@@ -12,37 +12,37 @@
   h3.mHigh{
     margin-top: 85px;
   }
-  input[type="text"], input[type="password"],
-  textarea, select {
-    background: transparent;
-    border-radius: 0;
-    border: solid #d7d7d7;
-    border-width: 0 0 1px;
-    height: auto;
-    padding: 0;
-    width: 300px;
-
-    &:hover{
-      border-bottom: solid #959595 1px;
-    }
-    &:focus{
-      border-bottom: solid #378258 1px;
-    }
-  }
-  select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background: url("/images/arrow_down.svg") no-repeat 98% center;
-    background-size: 10px;
-  }
-  input.eDateInput{
-    width: 85px;
-  }
 
   &.mWide {
     padding: 0px 70px;
   }
+}
+input[type="text"], input[type="password"],
+textarea, select {
+  background: transparent;
+  border-radius: 0;
+  border: solid #d7d7d7;
+  border-width: 0 0 1px;
+  height: auto;
+  padding: 0;
+  width: 300px;
+
+  &:hover{
+    border-bottom: solid #959595 1px;
+  }
+  &:focus{
+    border-bottom: solid #378258 1px;
+  }
+}
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url("/images/arrow_down.svg") no-repeat 98% center;
+  background-size: 10px;
+}
+input.eDateInput{
+  width: 85px;
 }
 
 .mDetails {

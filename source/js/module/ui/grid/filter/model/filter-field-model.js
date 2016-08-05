@@ -19,28 +19,32 @@ const FilterFieldModel = function(options){
 	this.badgeArea = options.badgeArea;
 };
 
-FilterFieldModel.prototype.onChange = function(e){
+FilterFieldModel.prototype.onChange = function(value){
 	const badge = new BadgeModel(this);
-	badge.values = this._setValue(e);
+	badge.values = this._setValue(value);
 	this.badgeArea.changeBadge(badge);
-
-	e.stopPropagation();
 };
 FilterFieldModel.prototype.getBadge = function(){
 	return this.badgeArea.badges[this.field.name];
 };
-FilterFieldModel.prototype._setValue = function(e){
+FilterFieldModel.prototype._setValue = function(value){
 	let res = null;
 
 	switch (this.type){
 		case 'string':
-			res = this._setStringValue(e);
+			res = this._setStringValue(value);
+			break;
+		case 'between-date':
+			res = this._setBetweenDateValue(value);
 			break;
 	}
 	return res;
 };
-FilterFieldModel.prototype._setStringValue = function(e){
-	return e.target.value ? [e.target.value] : null;
+FilterFieldModel.prototype._setStringValue = function(value){
+	return value ? [value] : null;
+};
+FilterFieldModel.prototype._setBetweenDateValue = function(value){
+	return value && value.length === 2 && (value[0] || value[1]) ? value : null;
 };
 
 

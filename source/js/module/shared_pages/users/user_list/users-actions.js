@@ -207,6 +207,16 @@ UsersActions.prototype = {
 				}
 			},
 			{
+				text:'Birthday',
+				isSorted:true,
+				cell:{
+					dataField:'birthday'
+				},
+				filter:{
+					type:'between-date'
+				}
+			},
+			{
 				text:'School',
 				cell:{
 					dataField:'school'

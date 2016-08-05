@@ -8,8 +8,7 @@ const   If              = require('module/ui/if/if'),
 
 const HeadCell = React.createClass({
 	propTypes: {
-		column: React.PropTypes.object,
-		order: React.PropTypes.object
+		column: React.PropTypes.object
 	},
 	componentWillMount: function() {
 	},

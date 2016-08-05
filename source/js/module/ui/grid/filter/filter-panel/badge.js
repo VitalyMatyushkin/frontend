@@ -1,7 +1,8 @@
 /**
  * Created by Anatoly on 31.07.2016.
  */
-const 	React 		= require('react');
+const 	React 		= require('react'),
+		DateHelper 	= require('module/helpers/date_helper');
 
 const FilterField = React.createClass({
 	propTypes: {
@@ -21,9 +22,13 @@ const FilterField = React.createClass({
 		);
 	},
 	getValue: function(){
+		const 	model = this.props.model;
 		let res = null;
 
-		switch (this.type){
+		switch (model.type){
+			case 'between-date':
+				res = this._getBetweenDateValue();
+				break;
 			default:
 				res = this._getDefaultValue();
 				break;
@@ -32,6 +37,15 @@ const FilterField = React.createClass({
 	},
 	_getDefaultValue:function(){
 		return this.props.model.values[0];
+	},
+	_getBetweenDateValue:function(){
+		const values = this.props.model.values;
+		let result = '';
+
+		result += values[0] ? 'from ' + DateHelper.toLocal(values[0]) + ' ' : '';
+		result += values[1] ? 'to ' + DateHelper.toLocal(values[1]) : '';
+
+		return result;
 	}
 });
 

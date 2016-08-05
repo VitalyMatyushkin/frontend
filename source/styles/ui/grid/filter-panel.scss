@@ -23,6 +23,11 @@
         border: 1px solid rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease-out;
         display: none;
+        line-height: 30px;
+
+        input[type="text"]{
+          max-width: 150px;
+        }
       }
 
       &:hover .eFilterContainer{
@@ -55,5 +60,14 @@
         cursor: pointer;
       }
     }
+  }
+}
+
+.eBetweenDate{
+  width:130px;
+
+  label {
+    width: 40px;
+    display: inline-block;
   }
 }
