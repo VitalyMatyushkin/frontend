@@ -24,13 +24,16 @@ const TeamForm = React.createClass({
 		binding.set('___multiselect', Immutable.fromJS({}));
 
 		binding.sub('gender').addListener(() => {
-			self.isFilterAvailable(binding) && self.updateTeamManagerByFilter();
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
+		});
+		binding.sub('isHouseFilterEnable').addListener(() => {
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
 		});
 		binding.sub('houseId').addListener(() => {
-			self.isFilterAvailable(binding) && self.updateTeamManagerByFilter();
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
 		});
 		binding.sub('ages').addListener(() => {
-			self.isFilterAvailable(binding) && self.updateTeamManagerByFilter();
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
 		});
 	},
 	componentWillUnmount: function() {
@@ -79,9 +82,7 @@ const TeamForm = React.createClass({
 			.set('sportId',							Immutable.fromJS(event.target.value))
 			.set('sportModel',						Immutable.fromJS(sports[sportIndex]))
 			.set('___teamManagerBinding.positions',	Immutable.fromJS(sports[sportIndex].field.positions))
-			.set('default.model.sportModel',		Immutable.fromJS(sports[sportIndex]))
 			.set('gender',							Immutable.fromJS(undefined))
-			.set('default.model.gender',			Immutable.fromJS(undefined))
 			.commit();
 	},
 	_getGenders: function () {
@@ -157,31 +158,31 @@ const TeamForm = React.createClass({
 
 		return ageItems;
 	},
-	_getHouseFilterRadioButton: function () {
+	renderHouseFilterCheckbox: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		return (
-			<label onClick={self._changeHouseFilter}>
-				<Morearty.DOM.input
+			<input	onChange={self.changeHouseFilter.bind(self, binding)}
 					type="checkbox"
-					value={binding.get('isHouseFilterEnable')}
-					checked={binding.get('isHouseFilterEnable')}
-				/>
-			</label>
+					checked={self.getHouseFilterCheckboxValue(binding)}
+			/>
 		);
 	},
-	_changeHouseFilter: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	changeHouseFilter: function(binding) {
+		const self = this;
 
-		binding
-			.atomically()
-			.set('isHouseFilterEnable',	Immutable.fromJS(!binding.get('isHouseFilterEnable')))
-			.set('default.model.type',	Immutable.fromJS(!binding.get('isHouseFilterEnable') ? "houses" : null))
-			.set('default.players',		Immutable.fromJS([]))
-			.set('players',				Immutable.fromJS([]))
-			.commit();
+		self.clearTeamPlayers(binding);
+		binding.set('isHouseFilterEnable', Immutable.fromJS(!self.getHouseFilterCheckboxValue(binding)));
+	},
+	getHouseFilterCheckboxValue: function(binding) {
+		return !!binding.toJS('isHouseFilterEnable');
+	},
+	isHouseSelected: function(binding) {
+		return !!binding.toJS('isHouseSelected');
+	},
+	isHouseAutocompleteInit: function(binding) {
+		return !!binding.toJS('isHouseAutocompleteInit');
 	},
 	_serviceHouseFilter: function() {
 		const self = this;
@@ -216,25 +217,24 @@ const TeamForm = React.createClass({
 		const	self = this,
 				binding = self.getDefaultBinding();
 
-		// TODO change filter
-		self.clearTeamPlayers(binding);
-		if(binding.get('isHouseAutocompleteInit')) {
+		// TODO need comment
+		if(self.isHouseAutocompleteInit(binding)) {
+			self.clearTeamPlayers(binding);
 			binding
 				.atomically()
-				.set('default.model.type',	Immutable.fromJS('houses'))
-				.set('rival',				Immutable.fromJS(model))
+				.set('house',				Immutable.fromJS(model))
+				// TODO delete houseId, check house
 				.set('houseId',				Immutable.fromJS(id))
 				.set('isHouseSelected',		Immutable.fromJS(true))
-				.set('default.players',		Immutable.fromJS([]))
-				.set('players',				Immutable.fromJS([]))
 				.commit();
 		} else {
 			binding
 				.atomically()
-				.set('default.model.type',		Immutable.fromJS('houses'))
-				.set('rival',					Immutable.fromJS(model))
+				.set('house',					Immutable.fromJS(model))
+				// TODO delete houseId, check house
 				.set('houseId',					Immutable.fromJS(id))
 				.set('isHouseSelected',			Immutable.fromJS(true))
+				// TODO need comment
 				.set('isHouseAutocompleteInit',	Immutable.fromJS(true))
 				.commit();
 		}
@@ -249,12 +249,12 @@ const TeamForm = React.createClass({
 		if(binding.get('isHouseSelected')) {
 			return (
 				<Autocomplete
-					defaultItem={binding.get('rival').toJS()}
+					defaultItem={binding.toJS('house')}
 					serviceFilter={self._serviceHouseFilter}
 					serverField="name"
 					placeholderText={'Select House'}
 					onSelect={self._onSelectHouse}
-					binding={binding.sub('houses')}
+					binding={binding.sub('___houseAutocompleteBinding')}
 				/>
 			);
 		} else {
@@ -264,7 +264,7 @@ const TeamForm = React.createClass({
 					serverField="name"
 					placeholderText={'Select House'}
 					onSelect={self._onSelectHouse}
-					binding={binding.sub('houses')}
+					binding={binding.sub('___houseAutocompleteBinding')}
 				/>
 			);
 		}
@@ -276,23 +276,12 @@ const TeamForm = React.createClass({
 		return !!binding.get('name');
 	},
 	_isShowGenders: function(binding) {
-		const self = this;
-
-		return	self._isShowDescription(binding) &&
-				self._isShowSportDropdown(binding) &&
-				!!binding.get('sportId');
+		return	!!binding.get('sportId');
 	},
 	_isShowAges: function(binding) {
-		const self = this;
-
-		return	self._isShowDescription(binding) &&
-				self._isShowSportDropdown(binding) &&
-				self._isShowGenders(binding) &&
-				!!binding.get('gender')
+		return !!binding.get('gender');
 	},
-	_isShowHouseFilterRadioButton: function(binding) {
-		const self = this;
-
+	_isShowHouseFilterCheckbox: function(binding) {
 		const	ages			= binding.toJS('ages');
 		let		isAgesSelected	= false;
 
@@ -300,41 +289,24 @@ const TeamForm = React.createClass({
 			isAgesSelected = true;
 		}
 
-		return	self._isShowDescription(binding) &&
-				self._isShowSportDropdown(binding) &&
-				self._isShowGenders(binding) &&
-				self._isShowAges(binding) &&
-				isAgesSelected;
+		return isAgesSelected;
 	},
 	_isShowHouseSelector: function(binding) {
 		const self = this;
 
-		return	self._isShowDescription(binding) &&
-				self._isShowSportDropdown(binding) &&
-				self._isShowGenders(binding) &&
-				self._isShowAges(binding) &&
-				self._isShowHouseFilterRadioButton(binding) &&
-				binding.get('isHouseFilterEnable');
+		// show if house filter is enable
+		return self.getHouseFilterCheckboxValue(binding)
 	},
 	_isShowTeamManager: function(binding) {
 		const self = this;
 
 		if(self._isShowHouseSelector(binding)) {
-			return	self._isShowDescription(binding) &&
-					self._isShowSportDropdown(binding) &&
-					self._isShowGenders(binding) &&
-					self._isShowAges(binding) &&
-					self._isShowHouseFilterRadioButton(binding) &&
-					!!binding.get('isHouseSelected');
+			return self.isHouseSelected(binding)
 		} else {
-			return	self._isShowDescription(binding) &&
-					self._isShowSportDropdown(binding) &&
-					self._isShowGenders(binding) &&
-					self._isShowAges(binding) &&
-					self._isShowHouseFilterRadioButton(binding);
+			return self._isShowHouseFilterCheckbox(binding);
 		}
 	},
-	updateTeamManagerByFilter: function() {
+	updateTeamManagerFilter: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -343,11 +315,11 @@ const TeamForm = React.createClass({
 		binding.set(
 			'___teamManagerBinding.filter',
 			Immutable.fromJS({
-				schoolId:	binding.toJS('default.schoolInfo.id'),
-				houseId:	binding.toJS('houseId'),
+				schoolId:	binding.toJS('school.id'),
+				houseId:	self.getHouseFilterCheckboxValue(binding) ? binding.toJS('houseId') : undefined,
 				forms:		TeamHelper.getFilteredAgesBySchoolForms(
 					binding.toJS('ages'),
-					binding.toJS('default.schoolInfo.forms') // default is school binding, yep, it is necessary rename
+					binding.toJS('school.forms') // default is school binding, yep, it is necessary rename
 				),
 				genders:	self.getFilterGender(binding.toJS('gender'))
 			})
@@ -461,11 +433,11 @@ const TeamForm = React.createClass({
 								/>
 							</div>
 						</If>
-						<If condition={self._isShowHouseFilterRadioButton(binding)}>
+						<If condition={self._isShowHouseFilterCheckbox(binding)}>
 							<div className="eManager_group">
 								<div className="eManager_label">{'Filtered By House'}</div>
 								<div className="eManager_radiogroup">
-									{self._getHouseFilterRadioButton()}
+									{self.renderHouseFilterCheckbox()}
 								</div>
 							</div>
 						</If>

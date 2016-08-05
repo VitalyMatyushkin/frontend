@@ -25,6 +25,37 @@ const TeamEditPage = React.createClass({
         binding.clear();
     },
     /**
+     * Check status of house filter.
+     * If houseId undefined then house filter disabled
+     * @param team
+     * @returns {boolean}
+     * @private
+     */
+    _isHouseFilterEnable: function(team) {
+        return !!team.houseId;
+    },
+    /**
+     /**
+     * Get id of current team
+     * @returns {*}
+     * @private
+     */
+    _getTeamId: function() {
+        const self = this;
+
+        return self.getMoreartyContext().getBinding().toJS('routing.parameters.id');
+    },
+    convertGenderToClientValue: function(gender) {
+        switch (gender) {
+            case 'MALE_ONLY':
+                return 'maleOnly';
+            case 'FEMALE_ONLY':
+                return 'femaleOnly';
+            case 'MIXED':
+                return 'mixed';
+        }
+    },
+    /**
      * Initialize binding for team from
      * @private
      */
@@ -92,116 +123,31 @@ const TeamEditPage = React.createClass({
             .then(users => {
                 return binding
                     .atomically()
-                    .set('teamForm.team',                               Immutable.fromJS(team))
+                    .set('teamForm.school',                             Immutable.fromJS(schoolData))
                     .set('teamForm.name',                               Immutable.fromJS(team.name))
                     .set('teamForm.description',                        Immutable.fromJS(team.description))
                     .set('teamForm.sportId',                            Immutable.fromJS(team.sportId))
                     .set('teamForm.sportModel',                         Immutable.fromJS(team.sport))
-                    .set('teamForm.gender',                             Immutable.fromJS(self.convertGenderToClientValue(team.gender)))
-                    .set('teamForm.ages',                               Immutable.fromJS(team.ages))
-                    .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
-                    .set('teamForm.rival',                              Immutable.fromJS(self._getFakeRival(team)))
-                    .set('teamForm.default',                            Immutable.fromJS(self._getDefaultObject(schoolData, team)))
                     .set('teamForm.sports',                             Immutable.fromJS(sports))
+                    .set('teamForm.gender',                             Immutable.fromJS(self.convertGenderToClientValue(team.gender)))
+                    .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
+                    .set('teamForm.ages',                               Immutable.fromJS(team.ages))
+                    .set('teamForm.isHouseFilterEnable',                Immutable.fromJS(self._isHouseFilterEnable(team)))
+                    .set('teamForm.isHouseSelected',                    Immutable.fromJS(self._isHouseFilterEnable(team)))
+                    // TODO need comment
+                    .set('teamForm.isHouseAutocompleteInit',            Immutable.fromJS(!self._isHouseFilterEnable(team)))
+                    .set('teamForm.house',                              Immutable.fromJS(team.house))
                     .set('teamForm.___teamManagerBinding.teamStudents', Immutable.fromJS(users))
                     .set('teamForm.___teamManagerBinding.positions',    Immutable.fromJS(team.sport.field.positions))
+                    .set('teamForm.___houseAutocompleteBinding',        Immutable.fromJS({}))
                     .set('initialPlayers',                              Immutable.fromJS(users))
-                    .set('teamForm.isHouseFilterEnable',                Immutable.fromJS(self._isHouseFilterEnable(team)))
-                    .set('teamForm.isHouseSelected',                    Immutable.fromJS(self._isHouseSelected(team)))
-                    .set('teamForm.isHouseAutocompleteInit',            Immutable.fromJS(!self._isHouseSelected(team)))
-                    .set('teamForm.removedPlayers',                     Immutable.fromJS([]))
                     .commit();
             });
-    },
-    convertGenderToClientValue: function(gender) {
-        switch (gender) {
-            case 'MALE_ONLY':
-                return 'maleOnly';
-            case 'FEMALE_ONLY':
-                return 'femaleOnly';
-            case 'MIXED':
-                return 'mixed';
-        }
-    },
-	/**
-     * Get user id array from team.
-     * @param team
-     * @returns {*}
-     * @private
-     */
-    _getUsersIdsFromTeam: function(team) {
-        return team.players.map(p => p.userId);
-    },
-    /**
-     * Check status of house filter.
-     * If houseId undefined then house filter disabled
-     * @param team
-     * @returns {boolean}
-     * @private
-     */
-    _isHouseFilterEnable: function(team) {
-        return !!team.houseId;
-    },
-    /**
-     * Similar house filter
-     * @param team
-     * @returns {boolean}
-     * @private
-     */
-    _isHouseSelected: function(team) {
-        return !!team.houseId;
-    },
-    /**
-     * Get object for default binding
-     * @param schoolData - school instance
-     * @returns {{schoolInfo: *, model: {}, players: Array}}
-     * @private
-     */
-    _getDefaultObject: function(schoolData, team) {
-        let type = '';
-
-        if(team.houseId) {
-            type = 'houses';
-        }
-
-        return {
-            schoolInfo: schoolData,
-            model: {
-                type: type,
-                ages: team.ages,
-                gender: team.gender,
-                sportModel: team.sport
-            },
-            players: []
-        };
-    },
-    /**
-     * Get fake rival object, fake - because team manager element require rival object.
-     * @private
-     */
-    _getFakeRival: function(team) {
-        let rival = { id: 0 };
-
-        if(team.houseId) {
-            rival = team.house;
-        }
-
-        return rival;
-    },
-    /**
-     * Get id of current team
-     * @returns {*}
-     * @private
-     */
-    _getTeamId: function() {
-        const self = this;
-
-        return self.getMoreartyContext().getBinding().toJS('routing.parameters.id');
     },
     _submitEdit: function() {
         const   self    = this,
                 binding = self.getDefaultBinding(),
-                teamId  = binding.get('teamForm.team.id');
+                teamId  = self._getTeamId();
 
         TeamHelper.validate(binding);
 
@@ -219,8 +165,8 @@ const TeamEditPage = React.createClass({
 
             window.Server.team.put(
                 {
-                    schoolId: self.activeSchoolId,
-                    teamId: teamId
+                    schoolId:   self.activeSchoolId,
+                    teamId:     self._getTeamId()
                 },
                 updatedTeam
             ).then( () => {
