@@ -59,11 +59,8 @@ const TeamAddPage = React.createClass({
                     .set('teamForm.school',                             Immutable.fromJS(schoolData))
                     .set('teamForm.sports',                             Immutable.fromJS(sportsData))
                     .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
-                    .set('teamForm.isHouseFilterEnable',                Immutable.fromJS(false))
-                    .set('teamForm.isHouseSelected',                    Immutable.fromJS(false))
-                    .set('teamForm.isHouseAutocompleteInit',            Immutable.fromJS(true))
                     .set('teamForm.___teamManagerBinding.teamStudents', Immutable.fromJS([]))
-                    .set('teamForm.houses',                             Immutable.fromJS({}))
+                    .set('teamForm.___houseAutocompleteBinding',        Immutable.fromJS({}))
                     .set('teamForm.error',                              Immutable.fromJS(self._getErrorObject()))
                     .commit();
             });

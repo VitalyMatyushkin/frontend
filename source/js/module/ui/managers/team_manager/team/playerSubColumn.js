@@ -15,16 +15,10 @@ const PlayerSubColumn = React.createClass({
 
 		return (
 			<div className="eTeam_playerItem mSub">
-				{
-					self.props.isChecked ?
-						<input	onClick={self.handleCheckBoxClick}
-								type="checkbox"
-								checked
-						/> :
-						<input	onClick={self.handleCheckBoxClick}
-								type="checkbox"
-						/>
-				}
+				<input	onClick={self.handleCheckBoxClick}
+						type="checkbox"
+						checked={self.props.isChecked}
+				/>
 			</div>
 		);
 	}
