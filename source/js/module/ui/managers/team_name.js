@@ -1,86 +1,35 @@
-const	React		= require('react'),
-		Morearty    = require('morearty'),
-		Immutable	= require('immutable');
+const React = require('react');
 
-/**
- * TeamName element has two modes:
- * 1) Show current team name
- * 2) Edit current team name or new team name
- */
 const TeamName = React.createClass({
-	mixins: [Morearty.Mixin],
-	MODES: {
-		EDIT: 'edit',
-		SHOW: 'show'
+	propTypes: {
+		isEditMode:			React.PropTypes.bool,
+		handleChangeName:	React.PropTypes.func,
+		name:				React.PropTypes.string
 	},
-	/*HELPERS*/
-	_setNewTeamName: function(name) {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
+	handleChangeTeamName: function(eventDescriptor) {
+		const self = this;
 
-		binding.set('name', Immutable.fromJS(name));
-	},
-
-	/*RENDER*/
-	_renderTeamName: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
-		let		result = '';
-
-		if(binding !== undefined && binding !== null) {
-			switch (binding.toJS('mode')) {
-				case self.MODES.SHOW:
-					result = self._renderShowMode();
-					break;
-				case self.MODES.EDIT:
-					result = self._renderEditMode();
-					break;
-			};
-		}
-
-		return result;
-	},
-	_renderShowMode: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
-
-		return (
-			<div className="eTeamName_nameContainer">
-				<div className="eTeamName_name">
-					{binding.toJS('name')}
-				</div>
-			</div>
-		);
-	},
-	_renderEditMode: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
-
-		return (
-			<div className="eTeamName_nameContainer">
-				<input	className="eTeamName_nameForm"
-						id={'team-name'}
-						type={'text'}
-						placeholder={'Enter new team name'}
-						onChange={self._onChangeTeamName}
-						value={binding.toJS('name')}
-				/>
-			</div>
-		);
-	},
-
-	/*HANDLERS*/
-	_onChangeTeamName: function(event) {
-		const	self	= this;
-
-		self._setNewTeamName(event.target.value);
+		self.props.handleChangeName(eventDescriptor.target.value);
 	},
 	render: function() {
-		const	self	= this;
+		const self = this;
 
 		return (
 			<div className="bTeamName">
-				{self._renderTeamName()}
+				<div className="eTeamName_nameContainer">
+					{
+						self.props.isEditMode ?
+							<input	className="eTeamName_nameForm"
+									type={'text'}
+									placeholder={'Enter team name'}
+									onChange={self.handleChangeTeamName}
+									value={self.props.name}
+							/>:
+							<div className="eTeamName_name">
+								{self.props.name}
+							</div>
+					}
+				</div>
 			</div>
 		);
 	}

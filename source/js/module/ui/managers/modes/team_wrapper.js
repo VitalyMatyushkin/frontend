@@ -1,5 +1,6 @@
 const	React			= require('react'),
 		TeamManager		= require('./../team_manager/team_manager'),
+		TeamName		= require('./../team_name'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Lazy			= require('lazy.js'),
@@ -325,6 +326,13 @@ const TeamWrapper = React.createClass({
 
 		self._setPlayers(binding.get('prevPlayers'));
 	},
+	handleChangeName: function(binding, newName) {
+		binding
+			.atomically()
+			.set('teamName.name',		Immutable.fromJS(newName))
+			.set('teamName.prevName',	Immutable.fromJS(binding.toJS('teamName.name')))
+			.commit();
+	},
 	isPlayersChanged: function() {
 		const self = this;
 
@@ -335,27 +343,33 @@ const TeamWrapper = React.createClass({
 
 		return self.isPlayersChanged();
 	},
+	isEditMode: function() {
+		const self = this;
+
+		return self.isPlayersChanged();
+	},
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				teamManagerBinding = self.getTeamManagerBinding(binding);
+		const	self				= this,
+				binding				= self.getDefaultBinding(),
+				teamManagerBinding	= self.getTeamManagerBinding(binding);
 
 		return (
 			<div className="bTeamWrapper mMarginTop">
+				<TeamName	name={binding.toJS('teamName.name')}
+							isEditMode={self.isEditMode()}
+							handleChangeName={self.handleChangeName.bind(self, binding)}
+				/>
 				<TeamManager binding={teamManagerBinding}/>
-				<div>
-					<If condition={self.isShowRevertChangesButton()}>
-						<div className="eTeamWrapper_modeContainer">
-							<div className="eTeamWrapper_revertButtonContainer">
-								<div className="bButton mRevert" onClick={self._onRevertChangesButtonClick}>
-									{'Revert changes'}
-								</div>
+				<If condition={self.isShowRevertChangesButton()}>
+					<div className="eTeamWrapper_modeContainer">
+						<div className="eTeamWrapper_revertButtonContainer">
+							<div className="bButton mRevert" onClick={self._onRevertChangesButtonClick}>
+								{'Revert changes'}
 							</div>
 						</div>
-					</If>
-				</div>
+					</div>
+				</If>
 			</div>
-
 		);
 	}
 });
