@@ -92,7 +92,18 @@ const TeamManager = React.createClass({
 		}
 	},
 	getNinUserId: function(binding) {
-		return binding.toJS('teamStudents') && binding.toJS('teamStudents').map(p => p.userId ? p.userId : p.id);
+		const self = this;
+
+		return	self.getPlayerIdsFromPlayerStore(binding, 'teamStudents').concat(self.getPlayerIdsFromPlayerStore(binding, 'blackList'));
+	},
+	getPlayerIdsFromPlayerStore: function(binding, playerStoreName) {
+		const playerStore = binding.toJS(playerStoreName);
+
+		if(playerStore) {
+			return playerStore.map(p => p.userId ? p.userId : p.id);
+		} else {
+			return [];
+		}
 	},
 	handleChangeSearchText: function(text) {
 		const	self	= this,

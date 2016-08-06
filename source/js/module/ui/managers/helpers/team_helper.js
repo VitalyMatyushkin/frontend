@@ -247,6 +247,19 @@ function getFilteredAgesBySchoolForms(ages, schoolForms) {
 	});
 };
 
+function getFilterGender(gender) {
+	switch (gender) {
+		case 'maleOnly':
+			return ['MALE'];
+		case 'femaleOnly':
+			return ['FEMALE'];
+		case 'mixed':
+			return ['MALE', 'FEMALE'];
+		default:
+			return [];
+	}
+};
+
 const TeamHelper = {
 	getAges:						getAges,
 	validate:						validate,
@@ -262,7 +275,8 @@ const TeamHelper = {
 	convertPointsToClientModel:		convertPointsToClientModel,
 	getFilteredAgesBySchoolForms:	getFilteredAgesBySchoolForms,
 	convertGenderToServerValue:		convertGenderToServerValue,
-	getBodyForAddPlayersRequest:	getBodyForAddPlayersRequest
+	getBodyForAddPlayersRequest:	getBodyForAddPlayersRequest,
+	getFilterGender:				getFilterGender
 };
 
 module.exports = TeamHelper;

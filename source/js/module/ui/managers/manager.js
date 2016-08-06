@@ -62,6 +62,11 @@ const Manager = React.createClass({
 							teamName: {
 								name: undefined,
 								mode: 'show'
+							},
+							___teamManagerBinding: {
+								teamStudents: [],
+								blackList: [],
+								positions: defaultBinding.get('model.sportModel.field.positions')
 							}
 						},
 						{
@@ -71,6 +76,11 @@ const Manager = React.createClass({
 							teamName: {
 								name: undefined,
 								mode: 'show'
+							},
+							___teamManagerBinding: {
+								teamStudents: [],
+								blackList: [],
+								positions: defaultBinding.get('model.sportModel.field.positions')
 							}
 						}
 					]

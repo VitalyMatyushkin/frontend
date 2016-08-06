@@ -1,9 +1,9 @@
 const	React			= require('react'),
-		ReactDOM		= require('react-dom'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Lazy			= require('lazy.js'),
 		classNames		= require('classnames'),
-		Morearty        = require('morearty'),
+		Morearty		= require('morearty'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		Immutable		= require('immutable');
 
 const	TeamChooser	= React.createClass({
@@ -34,10 +34,10 @@ const	TeamChooser	= React.createClass({
 			filter: {
 				limit: 100,
 				where: {
-					gender: model.gender,
-					sportId: model.sportId,
-					tempTeam: false,
-					removed: false
+					gender:		TeamHelper.convertGenderToServerValue(model.gender),
+					sportId:	model.sportId,
+					teamType:	"PROTOTYPE",
+					removed:	false
 				}
 			}
 		};
