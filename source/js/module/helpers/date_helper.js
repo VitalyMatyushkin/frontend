@@ -11,8 +11,39 @@ const DateHelper = {
             year: 'numeric',
             month: '2-digit',
             day: '2-digit'
-        }).replace(/\./g, '/');
+        });
     },
+
+	/** convert date from UTC-string to 'dd.mm.yyyy' format */
+	toLocal:function(dotStr){
+		return this.getDate(dotStr).replace(/[/]/g, '.');
+	},
+
+	/** convert local date format 'dd.mm.yyyy' to ISO-string */
+	toIso: function(dotString) {
+		const dateParts = dotString ? dotString.split('.'):[],
+		//ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
+			isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
+
+		return this.isValid(isoStr) ? isoStr : '';
+	},
+
+	/** validation date ISO-format or 'yyyy-mm-dd' */
+	isValid:function(value){
+		let result = false;
+		
+		if(Date.parse(value)){
+			const 	date = new Date(value),
+					valueArray = value.split('-'),
+					day = valueArray[2].split('T')[0]*1,
+					month = valueArray[1]*1,
+					year = valueArray[0];
+
+			result = date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == day;
+		}
+
+		return result;
+	},
 
     /** Extracts time from date string.
      * @param string {String} any date string which can be parsed by `new Date(...)` constructor
