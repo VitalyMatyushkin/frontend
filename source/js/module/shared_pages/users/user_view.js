@@ -82,6 +82,16 @@ const UserDetail= React.createClass({
             binding = self.getDefaultBinding();
         binding.set('popup',false);
     },
+    _getGender: function (gender) {
+        switch (gender) {
+            case 'MALE':
+                return 'Boys';
+            case 'FEMALE':
+                return 'Girls';
+            default:
+                return '';
+        }
+    },
     render: function() {
         var self, binding, profilePicture, username, name, email, gender, phone, selectedUserData, listItems;
         self = this;
@@ -115,7 +125,7 @@ const UserDetail= React.createClass({
                             Name: {name}
                         </div>
                         <div style={{padding:10+'px'}}>
-                            Gender: {gender}
+                            Gender: {self._getGender(gender)}
                         </div>
                         <div style={{padding:10+'px'}}>
                             Email: {email}
