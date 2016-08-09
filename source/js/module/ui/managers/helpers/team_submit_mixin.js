@@ -1,144 +1,98 @@
 const	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		EventHelper			= require('module/helpers/eventHelper'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		Promise				= require('bluebird');
+		MoreartyHelper		= require('module/helpers/morearty_helper');
 
 const TeamSubmitMixin = {
-	_submitRival: function(event, rival, rivalIndex) {
-		const	self = this;
-
-		return self._submitTeam(event, rival, rivalIndex);
-	},
-	_submitTeam: function(event, rival, rivalIndex) {
+	addIndividualPlayersToEvent: function(savedEvent) {
 		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				mode	= binding.get(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode`);
-		let		promise;
+				binding	= self.getDefaultBinding();
 
-		switch (mode) {
-			case 'current':
-			case 'selectedTeam':
-				promise = self._submitOldTeam(event, rival, rivalIndex);
-				break;
-			case 'temp':
-				promise = self._submitNewTeam(event, rival, rivalIndex, true);
-				break;
-			case 'new':
-				promise = self._submitNewTeam(event, rival, rivalIndex, false);
-				break;
-		}
+		const players = binding.toJS(`teamModeView.teamWrapper`).reduce(
+			(players, teamWrapper) => players.concat(teamWrapper.___teamManagerBinding.teamStudents),
+			[]
+		);
 
-		return promise;
+		console.log(players);
+		return Promise.resolve('');
+		//return window.Server.schoolEventIndividualPlayers.post(
+		//	{
+		//		schoolId:	savedEvent.schoolId,
+		//		eventId:	savedEvent.id
+		//	},
+		//	{
+		//		players: players.map(p => {
+		//			return {
+		//				userId:			p.id,
+		//				permissionId:	p.permissionId
+		//			};
+		//		})
+		//	}
+		//);
 	},
-	_submitOldTeam: function(event, rival, rivalIndex) {
+	createTeams: function() {
 		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				teamId	= self.getDefaultBinding().toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
+				binding	= self.getDefaultBinding();
 
-		return window.Server.addTeamToschoolEvent.post(
-			{
-				schoolId:	self.activeSchoolId,
-				eventId:	event.id
-			},
-			{
-				teamId: teamId
+		const rivals = binding.toJS('rivals');
+
+		return rivals.map((rival, i) => {
+			const teamWrapper = binding.toJS(`teamModeView.teamWrapper.${i}`);
+
+			const teamBody = {};
+			switch (self.getTypeOfNewTeam(teamWrapper)) {
+				case "CLONE":
+					teamBody.name		= teamWrapper.teamName.name;
+					teamBody.players	= teamWrapper.___teamManagerBinding.teamStudents;
+
+					return self.createTeamByPrototype(
+						teamWrapper.selectedTeam,
+						teamBody
+					);
+				case "ADHOC":
+					const event = binding.toJS('model');
+
+					teamBody.name			= teamWrapper.teamName.name;
+					teamBody.ages			= event.ages;
+					teamBody.gender			= TeamHelper.convertGenderToServerValue(event.gender);
+					teamBody.sportId		= event.sportId;
+					teamBody.schoolId		= MoreartyHelper.getActiveSchoolId(self);
+					teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
+					teamBody.teamType		= "ADHOC";
+					event.houseId && (
+						teamBody.houseId	= event.houseId
+					);
+
+					return self.createAdhocTeam(teamBody);
 			}
-		).then( _ => {
-			let	promises	= [],
-				teamData	= {teamId: teamId};
-
-			if (event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
-				teamData.houseId = rival.id;
-			}
-			promises.push(new Promise(resolve => resolve(teamData)));
-
-			if (binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamsSaveMode` == 'current')) {
-				const	initialPlayers	= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.prevPlayers`),
-						teamId			= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.selectedTeamId`);
-
-				// we need set userId to each player.
-				// it's need for server request
-				const updPlayers = self._preparePlayersToCommit(
-					binding.toJS(`teamModeView.players.${rivalIndex}`)
-				);
-
-				promises.push( TeamHelper.commitPlayers(initialPlayers, updPlayers, teamId, self.activeSchoolId) );
-			}
-
-			return Promise.all(promises);
 		});
 	},
-	/**
-	 * Prepare players array for commit.
-	 * Add userId to each player
-	 * @param players
-	 * @returns {*}
-	 * @private
-	 */
-	_preparePlayersToCommit: function(players) {
-		return players.map(player => {
-			const updPlayer = Object.assign({}, { userId: player.id}, player);
-
-			return updPlayer;
-		});
-	},
-	_submitNewTeam: function(event, rival, rivalIndex, isTemp) {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				activeSchoolId	= binding.get('schoolInfo.id');
-		let		rivalModel		= {
-									name:		binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`),
-									ages:		binding.toJS('model.ages'),
-									gender:		binding.toJS('model.gender'),
-									sportId:	event.sportId,
-									schoolId:	activeSchoolId,
-									tempTeam:	isTemp
-								};
-
-		if(event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
-			rivalModel.houseId = rival.id;
+	getTypeOfNewTeam: function(teamWrapper) {
+		if(teamWrapper.selectedTeam) {
+			return "CLONE";
+		} else {
+			return "ADHOC";
 		}
-
-		let team;
-
-		// create new team
-		return window.Server.teams.post(self.activeSchoolId, rivalModel)
-			.then( _team => {
-				team = _team;
-
-				//add team to event
-				return window.Server.addTeamToschoolEvent.post(
-					{
-						schoolId:	self.activeSchoolId,
-						eventId:	event.id
-					},
-					{
-						teamId: team.id
-					}
-				);
-			})
-			.then( _ => {
-				// we need set userId to each player.
-				// it's need for server request
-				const updPlayers = self._preparePlayersToCommit(
-					binding.toJS(`teamModeView.players.${rivalIndex}`)
-				);
-
-				const	teamData		= [ new Promise( resolve => resolve({teamId: team.id}) ) ],// this data need on finish of event creation
-						playersPromises	= TeamHelper.commitPlayers([], updPlayers, team.id, self.activeSchoolId);
-
-				return Promise.all( playersPromises.concat( teamData ) );
-			});
 	},
-	_submitInvite: function(event, rival) {
-		const	self	= this;
-
-		window.Server.invitesByEvent.post({eventId: event.id}, {
-			eventId:	event.id,
-			inviterId:	self.getDefaultBinding().get('schoolInfo.id'),
-			guestId:	rival.id,
-			message:	'message'
+	createTeamByPrototype: function(prototype, teamBody) {
+		return window.Server.cloneTeam.post(
+			{
+				schoolId:	prototype.schoolId,
+				teamId:		prototype.id
+			}
+		)
+		.then(team => {
+			return window.Server.team.put(
+				{
+					schoolId:	team.schoolId,
+					teamId:		team.id
+				}, {
+					name:		teamBody.name,
+					players:	TeamHelper.convertPlayersToServerValue(teamBody.players)
+				}
+			)
 		});
+	},
+	createAdhocTeam: function(body) {
+		return window.Server.teamsBySchoolId.post(body.schoolId, body);
 	}
 };
 

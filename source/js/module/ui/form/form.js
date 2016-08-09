@@ -155,7 +155,7 @@ const Form = React.createClass({
 
 			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
 			if (typeof self.props.onSubmit === 'function') {
-				self.props.onSubmit(dataToPost);
+				return self.props.onSubmit(dataToPost);
 			}
 
 			if (typeof self.props.onPreSubmit === 'function') {

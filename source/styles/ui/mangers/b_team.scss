@@ -65,10 +65,16 @@
     &.mDefaultView {
       width: 35%;
     }
+    &.mLong {
+      width: 50%;
+    }
   }
 
   &.mForm {
     width: 10%;
+    &.mLong {
+      width: 50%;
+    }
   }
 
   &.mPosition {

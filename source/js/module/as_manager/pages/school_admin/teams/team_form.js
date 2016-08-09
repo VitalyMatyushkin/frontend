@@ -321,21 +321,9 @@ const TeamForm = React.createClass({
 					binding.toJS('ages'),
 					binding.toJS('school.forms') // default is school binding, yep, it is necessary rename
 				),
-				genders:	self.getFilterGender(binding.toJS('gender'))
+				genders:	TeamHelper.getFilterGender(binding.toJS('gender'))
 			})
 		);
-	},
-	getFilterGender: function(gender) {
-		switch (gender) {
-			case 'maleOnly':
-				return ['MALE'];
-			case 'femaleOnly':
-				return ['FEMALE'];
-			case 'mixed':
-				return ['MALE', 'FEMALE'];
-			default:
-				return [];
-		}
 	},
 	renderTeamManager: function(binding, errorText) {
 		const self = this;

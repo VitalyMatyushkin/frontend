@@ -7,6 +7,14 @@ const	React			= require('react'),
 
 const TeamManager = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		isIndividualSport: React.PropTypes.bool
+	},
+	getDefaultProps: function() {
+		return {
+			isIndividualSport: false
+		};
+	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			filter:				undefined,
@@ -92,7 +100,18 @@ const TeamManager = React.createClass({
 		}
 	},
 	getNinUserId: function(binding) {
-		return binding.toJS('teamStudents') && binding.toJS('teamStudents').map(p => p.userId ? p.userId : p.id);
+		const self = this;
+
+		return	self.getPlayerIdsFromPlayerStore(binding, 'teamStudents').concat(self.getPlayerIdsFromPlayerStore(binding, 'blackList'));
+	},
+	getPlayerIdsFromPlayerStore: function(binding, playerStoreName) {
+		const playerStore = binding.toJS(playerStoreName);
+
+		if(playerStore) {
+			return playerStore.map(p => p.userId ? p.userId : p.id);
+		} else {
+			return [];
+		}
 	},
 	handleChangeSearchText: function(text) {
 		const	self	= this,
@@ -114,7 +133,6 @@ const TeamManager = React.createClass({
 		}
 
 		binding.set('selectedPlayerIds', Immutable.fromJS(selectedPlayerIds));
-		console.log(selectedPlayerIds);
 	},
 	handleClickStudent: function(studentId) {
 		const	self	= this,
@@ -130,7 +148,6 @@ const TeamManager = React.createClass({
 		}
 
 		binding.set('selectedStudentIds', Immutable.fromJS(selectedStudentIds));
-		console.log(selectedStudentIds);
 	},
 	/**
 	 * Add student to team
@@ -231,7 +248,8 @@ const TeamManager = React.createClass({
 
 		return (
 			<div>
-				<Team	players={binding.toJS('teamStudents')}
+				<Team	isIndividualSport={self.props.isIndividualSport}
+						players={binding.toJS('teamStudents')}
 						positions={binding.toJS('positions')}
 						handleClickPlayer={self.handleClickPlayer}
 						handleChangePlayerPosition={self.handleChangePlayerPosition}

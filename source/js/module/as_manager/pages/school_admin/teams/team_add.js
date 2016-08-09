@@ -45,7 +45,17 @@ const TeamAddPage = React.createClass({
                 schoolData.forms = formsData;
 
                 // get sports data
-                return window.Server.sports.get();
+                return window.Server.sports.get(
+                    {
+                        filter: {
+                            where: {
+                                players: {
+                                    $nin: ['1X1', 'INDIVIDUAL']
+                                }
+                            }
+                        }
+                    }
+                );
             })
             .then(function (sportsData) {
                 !schoolData.forms && (schoolData.forms = []);
@@ -90,9 +100,6 @@ const TeamAddPage = React.createClass({
             text: ''
         };
     },
-    convertPlayersToServerValue: function(players) {
-        return players.map(p => TeamHelper.getBodyForAddPlayersRequest(p));
-    },
     _submitAdd: function() {
         const self = this,
             binding = self.getDefaultBinding();
@@ -107,7 +114,7 @@ const TeamAddPage = React.createClass({
                 schoolId:       self.activeSchoolId,
                 ages:           binding.toJS('teamForm.ages'),
                 gender:         TeamHelper.convertGenderToServerValue(binding.toJS('teamForm.gender')),
-                players:        self.convertPlayersToServerValue(binding.toJS('teamForm.___teamManagerBinding.teamStudents'))
+                players:        TeamHelper.convertPlayersToServerValue(binding.toJS('teamForm.___teamManagerBinding.teamStudents'))
             };
 
             // Set houseId if team is house team

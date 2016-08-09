@@ -1,11 +1,11 @@
 const   CalendarView        = require('module/ui/calendar/calendar'),
-        EventManagerBase    = require('./manager/base'),
-        If                  = require('module/ui/if/if'),
-        TimePicker          = require('module/ui/timepicker/timepicker'),
-        Manager             = require('module/ui/managers/manager'),
-        classNames          = require('classnames'),
-        React               = require('react'),
-        TeamSubmitMixin     = require('module/ui/managers/helpers/team_submit_mixin'),
+		EventManagerBase    = require('./manager/base'),
+		If                  = require('module/ui/if/if'),
+		TimePicker          = require('module/ui/timepicker/timepicker'),
+		Manager             = require('module/ui/managers/manager'),
+		classNames          = require('classnames'),
+		React               = require('react'),
+		TeamSubmitMixin     = require('module/ui/managers/helpers/team_submit_mixin'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
@@ -14,46 +14,46 @@ const   CalendarView        = require('module/ui/calendar/calendar'),
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin, TeamSubmitMixin],
-    getMergeStrategy: function () {
-        return Morearty.MergeStrategy.MERGE_REPLACE;
-    },
+	getMergeStrategy: function () {
+		return Morearty.MergeStrategy.MERGE_REPLACE;
+	},
 	getDefaultState: function () {
-        var self = this,
-            rootBinding = self.getMoreartyContext().getBinding(),
-            activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+		var self = this,
+			rootBinding = self.getMoreartyContext().getBinding(),
+			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
-        return Immutable.fromJS({
-            model: {
-                name: '',
-                startTime: null,
-                type: null,
-                sportId: null,
-                gender: null,
-                ages: [],
-                description: ''
-            },
-            selectedRivalIndex: null,
-            schoolInfo: {},
-            inviteModel: {},
-            step: 1,
-            availableAges: [],
-            autocomplete: {
-                'inter-schools': [],
-                houses: [],
-                internal: []
-            },
-            rivals: [{id: activeSchoolId}],
-            players: [[],[]],
-            error: [
-                {
-                    isError: false,
-                    text:    ''
-                },
-                {
-                    isError: false,
-                    text:    ''
-                }
-            ]
+		return Immutable.fromJS({
+			model: {
+				name: '',
+				startTime: null,
+				type: null,
+				sportId: undefined,
+				gender: undefined,
+				ages: [],
+				description: ''
+			},
+			selectedRivalIndex: null,
+			schoolInfo: {},
+			inviteModel: {},
+			step: 1,
+			availableAges: [],
+			autocomplete: {
+				'inter-schools': [],
+				houses: [],
+				internal: []
+			},
+			rivals: [{id: activeSchoolId}],
+			players: [[],[]],
+			error: [
+				{
+					isError: false,
+					text:    ''
+				},
+				{
+					isError: false,
+					text:    ''
+				}
+			]
 		});
 	},
 	componentWillMount: function () {
@@ -65,7 +65,7 @@ const EventManager = React.createClass({
 		let schoolData;
 
 		//get school data
-        window.Server.school.get(self.activeSchoolId)
+		window.Server.school.get(self.activeSchoolId)
 			.then(_schoolData => {
 				schoolData = _schoolData;
 
@@ -91,104 +91,133 @@ const EventManager = React.createClass({
 
 		binding.clear();
 	},
-    onSelectDate: function (date) {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            time, minute = 0, hours = 10,
-            _date = new Date(date.toISOString());
+	onSelectDate: function (date) {
+		var self = this,
+			binding = self.getDefaultBinding(),
+			time, minute = 0, hours = 10,
+			_date = new Date(date.toISOString());
 
-        if (binding.get('model.startTime')) {
-            time = new Date(binding.get('model.startTime'));
-            minute = time.getMinutes();
-            hours = time.getHours();
-        }
+		if (binding.get('model.startTime')) {
+			time = new Date(binding.get('model.startTime'));
+			minute = time.getMinutes();
+			hours = time.getHours();
+		}
 
-        _date.setMinutes(minute);
-        _date.setHours(hours);
+		_date.setMinutes(minute);
+		_date.setHours(hours);
 
-        binding.set('model.startTime', _date.toISOString());
+		binding.set('model.startTime', _date.toISOString());
 		binding.set('model.startRegistrationTime', _date.toISOString());
 		binding.set('model.endRegistrationTime', _date.toISOString());
-    },
+	},
 	toNext: function () {
 		var self = this,
 			binding = self.getDefaultBinding();
 
-        binding.update('step', function (step) {
-            return step + 1;
-        });
+		binding.update('step', function (step) {
+			return step + 1;
+		});
 	},
 	toBack: function () {
 		var self = this,
 			binding = self.getDefaultBinding();
 
-        binding.update('step', function (step) {
-            return step - 1;
-        });
+		binding.update('step', function (step) {
+			return step - 1;
+		});
 	},
-    _changeRivalFocusToErrorForm: function() {
-        const self = this,
-            binding    = self.getDefaultBinding(),
-            eventType  = binding.toJS('model.type'),
-            sportModel = binding.toJS('model.sportModel');
+	_changeRivalFocusToErrorForm: function() {
+		const self = this,
+			binding    = self.getDefaultBinding(),
+			eventType  = binding.toJS('model.type'),
+			sportModel = binding.toJS('model.sportModel');
 
-        let incorrectRivalIndex = null;
+		let incorrectRivalIndex = null;
 
-        // for inter-schools event we can edit only one team - our team:)
-        if(eventType === 'inter-schools') {
-            incorrectRivalIndex = 0;
-        } else {
-            let errors = self.getDefaultBinding().toJS('error');
+		// for inter-schools event we can edit only one team - our team:)
+		if(eventType === 'inter-schools') {
+			incorrectRivalIndex = 0;
+		} else {
+			let errors = self.getDefaultBinding().toJS('error');
 
-            for (let errIndex in errors) {
-                if (errors[errIndex].isError) {
-                    incorrectRivalIndex = errIndex;
-                    break;
-                }
-            }
-        }
+			for (let errIndex in errors) {
+				if (errors[errIndex].isError) {
+					incorrectRivalIndex = errIndex;
+					break;
+				}
+			}
+		}
 
-        self.getDefaultBinding()
-            .atomically()
-            .set('selectedRivalIndex', incorrectRivalIndex)
-            .commit();
-    },
+		self.getDefaultBinding()
+			.atomically()
+			.set('selectedRivalIndex', incorrectRivalIndex)
+			.commit();
+	},
 	toFinish: function () {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            model = binding.toJS('model');
-
-        if(self._isEventDataCorrect()) {
-            self._submit();
-        } else {
-            //So, let's show form with incorrect data
-            self._changeRivalFocusToErrorForm();
-        }
+			model = binding.toJS('model');
+		
+		// TODO validation
+		if(self.isEventDataCorrect()) {
+			self.submit(model);
+		} else {
+		    //So, let's show form with incorrect data
+		    self._changeRivalFocusToErrorForm();
+		}
 	},
-    _submit: function() {
-        const self = this;
+	submit: function(eventModel) {
+		const self = this;
 
-        self._eventSubmit()
-            .then((event) => {
-                self.getMoreartyContext().getBinding().update('events.models', function (events) {
-                    return events.push(Immutable.fromJS(event));
-                });
+		let teams, savedEvent;
 
-                self._submitRivals(event);
+		switch (TeamHelper.getParticipantsType(eventModel)) {
+			case "INDIVIDUAL":
+				return self.submitEvent()
+						.then(_event => {
+							savedEvent = _event;
 
-                return event;
-            });
-    },
-    _eventSubmit: function() {
-        const	self	= this,
-				binding = self.getDefaultBinding(),
-				model	= binding.toJS('model');
+							return self.addIndividualPlayersToEvent(savedEvent);
+						})
+						.then(() => self._afterEventCreation(savedEvent));
+			case "TEAM":
+				return Promise.all(self.createTeams())
+					.then(_teams => {
+						teams = _teams;
 
+						return self.submitEvent();
+					})
+					.then(_event => {
+						savedEvent = _event;
+
+						return self.addTeamsToEvent(savedEvent, teams);
+					})
+					.then(() => self._afterEventCreation(savedEvent));
+		}
+	},
+	addTeamsToEvent: function(event, teams) {
+		const self = this;
+
+		return Promise.all(teams.map(t => window.Server.schoolEventTeams.post(
+			{
+				schoolId:	self.activeSchoolId,
+				eventId:	event.id
+			}, {
+				teamId:		t.id
+			}
+		)));
+	},
+	submitEvent: function() {
+		const	self	= this,
+				binding = self.getDefaultBinding();
+
+		const model = binding.toJS('model');
 
 		const body = {
 			name:					model.name,
 			description:			model.description,
-			gender:					model.gender,
+			gender:					TeamHelper.convertGenderToServerValue(model.gender),
+			// invited
 			// convert client event type const to server event type const
 			eventType:				EventHelper.clientEventTypeToServerClientTypeMapping[model.type],
 			ages:					model.ages,
@@ -198,45 +227,51 @@ const EventManager = React.createClass({
 			endRegistrationTime:	model.endRegistrationTime
 		};
 
+		self.setVenueToBody(body);
+
+		const rivals = binding.toJS('rivals');
 		switch (model.type) {
 			case 'inter-schools':
-				body.invitedSchoolId = binding.toJS('rivals.1.id');
+				body.invitedSchoolIds = [rivals[1].id];
 
 				break;
 			case 'houses':
-				body.invitedSchoolId = self.activeSchoolId;
+				body.invitedSchoolIds = [self.activeSchoolId];
 
-				body.houses = [
-					binding.toJS('rivals.0.id'),
-					binding.toJS('rivals.1.id')
-				];
+				body.houses = rivals.map(r => r.id);
 
 				break;
 			case 'internal':
-				body.invitedSchoolId = self.activeSchoolId;
+				body.invitedSchoolIds = [self.activeSchoolId];
 
 				break;
 		}
 
-        return window.Server.events.post(
+		return window.Server.events.post(
 			self.activeSchoolId,
-            body
-        );
-    },
-    _submitRivals: function(event) {
-        const self = this,
-            binding = self.getDefaultBinding(),
-            rivals = binding.toJS('rivals');
+			body
+		);
+	},
+	setVenueToBody: function(body) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-        let rivalPromises = [];
-        rivals.forEach((rival, rivalIndex) => {
-            rivalPromises.push(
-                self._submitRival(event, rival, rivalIndex)
-            );
-        });
+		const modelVenue = binding.toJS('model.venue');
+		body.venue = {
+			venueType: self.convertVenueTypeToServerValue(modelVenue.venueType)
+		};
+		modelVenue.postcode && (body.venue.postcodeId = modelVenue.postcode);
+	},
+	convertVenueTypeToServerValue: function(venueType) {
+		const map = {
+			'tbd':		"TBD",
+			'away':		"AWAY",
+			'neutral':	"CUSTOM",
+			'home':		"HOME"
+		};
 
-        Promise.all(rivalPromises).then(() => self._afterEventCreation(event));
-    },
+		return map[venueType];
+	},
 	/**
 	 * Actions that do after fully event creation
 	 * 1) Clear binding
@@ -247,26 +282,33 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		// TODO WOW!
+		self.getMoreartyContext().getBinding().update('events.models', function (events) {
+			return events.push(Immutable.fromJS(event));
+		});
+
 		document.location.hash = 'event/' + event.id + '?tab=teams';
 		binding.clear();
 		binding.meta().clear();
+
+		return true;
 	},
-	_isEventDataCorrect: function() {
-        const self = this,
-            binding    = self.getDefaultBinding(),
-            eventType  = binding.toJS('model.type');
+	isEventDataCorrect: function() {
+		const self = this,
+			binding    = self.getDefaultBinding(),
+			eventType  = binding.toJS('model.type');
 
-        let isError = false;
+		let isError = false;
 
-        // for inter-schools event we can edit only one team - our team:)
-        if(eventType === 'inter-schools') {
-            isError = binding.toJS('error.0').isError;
-        } else {
-            isError = !(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError);
-        }
+		// for inter-schools event we can edit only one team - our team:)
+		if(eventType === 'inter-schools') {
+			isError = binding.toJS('error.0').isError;
+		} else {
+			isError = !(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError);
+		}
 
-        return !isError;
-    },
+		return !isError;
+	},
 	_renderStepButtons: function() {
 		const	self		= this,
 				binding		= self.getDefaultBinding();
@@ -366,31 +408,31 @@ const EventManager = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
-            step = binding.get('step'),
-            titles = [
-                'Choose Date',
-                'Fixture Details',
+			rootBinding = self.getMoreartyContext().getBinding(),
+			step = binding.get('step'),
+			titles = [
+				'Choose Date',
+				'Fixture Details',
 				'Select from created teams'
-            ],
+			],
 			bManagerClasses = classNames({
 				bManager: true,
 				mDate: step === 1,
 				mBase: step === 2,
 				mTeamManager: step === 3
 			}),
-            commonBinding = {
-                default: binding,
-                sports: self.getBinding('sports'),
-                calendar: self.getBinding('calendar')
-            },
-            managerBinding = {
-                default:            binding,
-                selectedRivalIndex: binding.sub('selectedRivalIndex'),
-                rivals:             binding.sub('rivals'),
-                players:            binding.sub('players'),
-                error:              binding.sub('error')
-            };
+			commonBinding = {
+				default: binding,
+				sports: self.getBinding('sports'),
+				calendar: self.getBinding('calendar')
+			},
+			managerBinding = {
+				default:            binding,
+				selectedRivalIndex: binding.sub('selectedRivalIndex'),
+				rivals:             binding.sub('rivals'),
+				players:            binding.sub('players'),
+				error:              binding.sub('error')
+			};
 
 		return (
 			<div>

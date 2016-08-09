@@ -1,6 +1,7 @@
 const	React				= require('react'),
 		TeamChooser			= require('./../teamChooser'),
 		TeamWrapper			= require('./team_wrapper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		If					= require('module/ui/if/if'),
 		Immutable			= require('immutable'),
 		Morearty            = require('morearty'),
@@ -12,6 +13,7 @@ const TeamModeView = React.createClass({
 		const	self	= this;
 
 		self._initBinding();
+		self.addListeners();
 	},
 	_initBinding: function() {
 		const	self	= this;
@@ -29,16 +31,34 @@ const TeamModeView = React.createClass({
 				binding	= self.getDefaultBinding(),
 				model	= self.getBinding('model').toJS();
 
-		binding.set(`teamWrapper.${rivalIndex}.filter`, Immutable.fromJS({
-			eventType:		model.type,
-			gender:		model.gender,
-			houseId:	model.type === 'houses' ? rival.id : undefined,
-			schoolId:	MoreartyHelper.getActiveSchoolId(self),
-			forms:		self._getFilteredAgesBySchoolForms(
-							model.ages,
-							self.getBinding('schoolInfo').toJS().forms
-						)
+		binding.set(`teamWrapper.${rivalIndex}.___teamManagerBinding.filter`, Immutable.fromJS({
+			genders:		TeamHelper.getFilterGender(model.gender),
+			houseId:		model.type === 'houses' ? rival.id : undefined,
+			schoolId:		MoreartyHelper.getActiveSchoolId(self),
+			forms:			self._getFilteredAgesBySchoolForms(
+								model.ages,
+								self.getBinding('schoolInfo').toJS().forms
+							)
 		}));
+	},
+	addListeners: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const teamWrappers = binding.toJS('teamWrapper');
+		teamWrappers.forEach((_, index) => self.addTeamPlayersListenerByTeamIndex(binding, index));
+	},
+	addTeamPlayersListenerByTeamIndex: function(binding, index) {
+		const self = this;
+
+		// if players were change
+		// add players from one team to blacklist of other team
+		binding.sub(`teamWrapper.${index}.___teamManagerBinding.teamStudents`).addListener(descriptor => {
+			binding.set(
+				`teamWrapper.${self._getAnotherRivalIndex(index)}.___teamManagerBinding.blackList`,
+				descriptor.getCurrentValue()
+			)
+		});
 	},
 	/**
 	 * Get school forms filtered by age
@@ -84,6 +104,10 @@ const TeamModeView = React.createClass({
 				Immutable.fromJS(teamId)
 			)
 			.set(
+				`teamWrapper.${rivalIndex}.selectedTeam`,
+				Immutable.fromJS(team)
+			)
+			.set(
 				`teamWrapper.${rivalIndex}.prevTeamName`,
 				Immutable.fromJS(team.name)
 			)
@@ -114,6 +138,10 @@ const TeamModeView = React.createClass({
 				Immutable.fromJS(undefined)
 			)
 			.set(
+				`teamWrapper.${rivalIndex}.selectedTeam`,
+				Immutable.fromJS(undefined)
+			)
+			.set(
 				`teamWrapper.${rivalIndex}.teamName.name`,
 				Immutable.fromJS(undefined)
 			)
@@ -140,18 +168,24 @@ const TeamModeView = React.createClass({
 				model: self.getBinding().model,
 				rival: self.getBinding().rivals.sub(selectedRivalIndex)
 			};
-
-		return (
-			<div>
-				<If condition={selectedRivalIndex == 0}>
-					<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
-				</If>
-				<If condition={selectedRivalIndex == 1}>
-					<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
-				</If>
-				{self._renderErrorBox()}
-			</div>
-		);
+		switch (TeamHelper.getParticipantsType(self.getBinding('model').toJS())) {
+			case "INDIVIDUALS":
+				return (
+					<div>{self._renderErrorBox()}</div>
+				);
+			case "TEAM":
+				return (
+					<div>
+						<If condition={selectedRivalIndex == 0}>
+							<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
+						</If>
+						<If condition={selectedRivalIndex == 1}>
+							<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
+						</If>
+						{self._renderErrorBox()}
+					</div>
+				);
+		}
 	},
 	_renderTeamWrapper: function() {
 		const	self				= this,

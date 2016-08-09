@@ -5,6 +5,7 @@ const	React					= require('react'),
 
 const Player = React.createClass({
 	propTypes: {
+		isIndividualSport:			React.PropTypes.bool.isRequired,
 		player:						React.PropTypes.object.isRequired,
 		positions:					React.PropTypes.array,
 		handleClickPlayer:			React.PropTypes.func.isRequired,
@@ -34,33 +35,65 @@ const Player = React.createClass({
 
 		self.props.handleClickPlayerSub(self.props.player.id, isSub);
 	},
+	renderPositions: function() {
+		const self = this;
+
+		if(self.props.isIndividualSport) {
+			return null;
+		} else {
+			return (
+				<PlayerPositionsColumn	positions=					{self.props.positions}
+										selectedPositionId=			{self.props.positionId}
+										handleChangePlayerPosition=	{self.handleChangePlayerPosition}
+				/>
+			);
+		}
+	},
+	renderSub: function() {
+		const self = this;
+
+		if(self.props.isIndividualSport) {
+			return null;
+		} else {
+			return (
+				<PlayerSubColumn	isChecked=				{self.props.player.sub}
+									handleClickPlayerSub=	{self.handleClickPlayerSub}
+				/>
+			);
+		}
+	},
 	render: function() {
 		const self = this;
 
 		const player = self.props.player;
 
-		const playerClass = classNames({
-			eTeam_player:	true,
-			mSelected:		self.state.isSelected
-		});
+		const	playerClass	= classNames({
+					eTeam_player:	true,
+					mSelected:		self.state.isSelected
+				}),
+				playerNameClass = classNames({
+					eTeam_playerItem:	true,
+					mName:				true,
+					mLong:				self.props.isIndividualSport
+				}),
+				playerFormClass = classNames({
+					eTeam_playerItem:	true,
+					mForm:				true,
+					mLong:				self.props.isIndividualSport
+				});
 
 		return (
 			<div	className={playerClass}
 					onClick={self.handlePlayerClick}
 			>
-				<div className="eTeam_playerItem mName">
+				<div className={playerNameClass}>
 					{`${player.firstName} ${player.lastName}`}
 				</div>
-				<div className="eTeam_playerItem mForm">
+				<div className={playerFormClass}>
 					{player.form.name}
 				</div>
-				<PlayerPositionsColumn	positions=					{self.props.positions}
-										selectedPositionId=			{player.positionId}
-										handleChangePlayerPosition=	{self.handleChangePlayerPosition}
-				/>
-				<PlayerSubColumn	isChecked=				{self.props.player.sub}
-									handleClickPlayerSub=	{self.handleClickPlayerSub}
-				/>
+				{self.renderPositions()}
+				{self.renderSub()}
 			</div>
 		);
 	}

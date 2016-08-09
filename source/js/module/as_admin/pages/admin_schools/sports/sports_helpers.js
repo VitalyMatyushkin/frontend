@@ -120,8 +120,6 @@ const SportsHelpers = {
 
         let formData = self.getEmptyFromData();
 
-        console.log(self.getData(serverData, 'scoring'));
-
         formData.name                       = self.getData(serverData, 'name');
         formData.description                = self.getData(serverData, 'description');
         formData.icon                       = self.getData(serverData, 'icon');
