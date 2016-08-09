@@ -1,3 +1,7 @@
+/**
+ * Created by Anatoly on 08.08.2016.
+ */
+
 const   classNames  = require('classnames'),
         React 		= require('react');
 
@@ -7,8 +11,8 @@ const MultiSelectReact = React.createClass({
 		items: 			React.PropTypes.array,
 		selections: 	React.PropTypes.array,
 		placeholder: 	React.PropTypes.string,
-		onChange: 		React.PropTypes.func,
-		onFilter: 		React.PropTypes.func
+		onChange: 		React.PropTypes.func.isRequired,
+		onFilterChange: React.PropTypes.func
 	},
     getDefaultProps: function() {
         return {
@@ -17,32 +21,30 @@ const MultiSelectReact = React.createClass({
         }
     },
     componentWillMount:function(){
-        const   self    =   this;
-        let     binding =   self.getDefaultBinding(),
-                immutableData = binding.toJS();
-        immutableData.selections = self.props.selections;
-        binding.set(Immutable.fromJS(immutableData));
-    },
-    getInitialState:function(){
-        return {
-            selections: [],
-            filter: '',
-            count: 0
-        };
+        const   self   		= this,
+				items 		= self.props.items || [],
+				selections 	= self.props.selections || [];
+
+		self.setState({
+			items: 		items,
+			selections: selections,
+			filter:		'',
+			count: 		selections.length
+		});
     },
     handleItemClick: function(item) {
-        const   self     =   this;
-        let     binding  =   self.getDefaultBinding(),
-                selected =   binding.toJS('selections').indexOf(item.id)!==-1;
+        const   self     =   this,
+                selected =   self.state.selections.indexOf(item.id)!==-1;
+
         self.setSelected(item, !selected);
     },
     handleFilterChange: function(event) {
         // Keep track of every change to the filter input
-        const   self    = this;
-        let     binding = self.getDefaultBinding(),
-                immutableData = binding.toJS();
-                immutableData.filter = event.target.value;
-        binding.set(Immutable.fromJS(immutableData));
+        const   self    = this,
+				state 	= self.state;
+
+		state.filter = event.target.value;
+        self.setState(state);
     },
     escapeRegExp: function(str) {
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
@@ -70,39 +72,31 @@ const MultiSelectReact = React.createClass({
         // Accept an array or a single item
         if (!(items instanceof Array)) items = [items];
 
-        const   self     = this;
-        let     binding  = self.getDefaultBinding(),
-                selections  = binding.toJS('selections'),
-                immutableData = binding.toJS();
-        for (var i in items) {
-            if (selected && selections.indexOf(items[i].id) === -1) {
-                selections.push(items[i].id);
-                if (self.props.onItemSelected) {
-                    self.props.onItemSelected(items[i]);
-                }
-            } else if (!selected && selections.indexOf(items[i].id) !== -1) {
-                selections = selections.filter(function (itemId) {
-                    return itemId !== items[i].id;
+		const   self    = this,
+				state 	= self.state;
+
+		items.forEach(item => {
+            if (selected && state.selections.indexOf(item.id) === -1) {
+				state.selections.push(item.id);
+            } else if (!selected && state.selections.indexOf(item.id) !== -1) {
+				state.selections = state.selections.filter(function (itemId) {
+                    return itemId !== item.id;
                 });
-                if (self.props.onItemDeselected) {
-                    self.props.onItemDeselected(items[i]);
-                }
             }
-        }
-        //self.setState({ selections: selections });
-        immutableData.selections = selections;
-        binding.set(Immutable.fromJS(immutableData));
+        });
+
+		self.setState(state);
         self.props.onChange(selections);
     },
     render: function() {
-        const self = this;
-        let   binding = self.getDefaultBinding(),
-              count = self.props.selections.length;
+		const   self    = this,
+				state 	= self.state,
+              	count 	= state.selections.length;
         return (
             <div className="bMultiSelect">
-                <input onChange={this.handleFilterChange} value={binding.toJS('filter')} placeholder={this.props.placeholder} />
+                <input onChange={this.handleFilterChange} value={state.filter} placeholder={this.props.placeholder} />
                 <ul>
-					{this.props.items.map(this.createItem)}
+					{state.items.map(this.createItem)}
 				</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;
                 {count > 0 ?
