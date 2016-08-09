@@ -276,11 +276,6 @@ const TeamWrapper = React.createClass({
 		//}
 		return window.Server.team.get( { schoolId: self.activeSchoolId, teamId: teamId } );
 	},
-	getTeamManagerBinding: function(binding) {
-
-
-		return binding.sub("___teamManagerBinding");
-	},
 	_getPlayerChooserBinding: function() {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -321,7 +316,7 @@ const TeamWrapper = React.createClass({
 
 		binding.set(
 				'teamName.name',
-				binding.get('prevTeamName')
+				Immutable.fromJS(binding.toJS('prevTeamName'))
 			);
 
 		self._setPlayers(binding.get('prevPlayers'));
@@ -343,23 +338,41 @@ const TeamWrapper = React.createClass({
 
 		return self.isPlayersChanged();
 	},
-	isEditMode: function() {
+	renderTeamNameComponent: function(eventModel, teamName, binding) {
 		const self = this;
 
-		return self.isPlayersChanged();
+		switch (TeamHelper.getParticipantsType(eventModel)) {
+			case 'INDIVIDUAL':
+				return null;
+			case 'TEAM':
+				return (
+					<TeamName	name={teamName}
+								handleChangeName={self.handleChangeName.bind(self, binding)}
+					/>
+				);
+		}
+	},
+	isIndividualSport: function() {
+		const self = this;
+
+		return TeamHelper.getParticipantsType(self.getBinding('model').toJS()) === "INDIVIDUAL";
 	},
 	render: function() {
-		const	self				= this,
-				binding				= self.getDefaultBinding(),
-				teamManagerBinding	= self.getTeamManagerBinding(binding);
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return (
 			<div className="bTeamWrapper mMarginTop">
-				<TeamName	name={binding.toJS('teamName.name')}
-							isEditMode={self.isEditMode()}
-							handleChangeName={self.handleChangeName.bind(self, binding)}
+				{
+					self.renderTeamNameComponent(
+						self.getBinding('model').toJS(),
+						binding.toJS('teamName.name'),
+						binding
+					)
+				}
+				<TeamManager	isIndividualSport={self.isIndividualSport()}
+								binding={binding.sub("___teamManagerBinding")}
 				/>
-				<TeamManager binding={teamManagerBinding}/>
 				<If condition={self.isShowRevertChangesButton()}>
 					<div className="eTeamWrapper_modeContainer">
 						<div className="eTeamWrapper_revertButtonContainer">

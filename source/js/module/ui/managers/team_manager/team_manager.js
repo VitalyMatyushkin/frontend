@@ -7,6 +7,14 @@ const	React			= require('react'),
 
 const TeamManager = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		isIndividualSport: React.PropTypes.bool
+	},
+	getDefaultProps: function() {
+		return {
+			isIndividualSport: false
+		};
+	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			filter:				undefined,
@@ -125,7 +133,6 @@ const TeamManager = React.createClass({
 		}
 
 		binding.set('selectedPlayerIds', Immutable.fromJS(selectedPlayerIds));
-		console.log(selectedPlayerIds);
 	},
 	handleClickStudent: function(studentId) {
 		const	self	= this,
@@ -141,7 +148,6 @@ const TeamManager = React.createClass({
 		}
 
 		binding.set('selectedStudentIds', Immutable.fromJS(selectedStudentIds));
-		console.log(selectedStudentIds);
 	},
 	/**
 	 * Add student to team
@@ -242,7 +248,8 @@ const TeamManager = React.createClass({
 
 		return (
 			<div>
-				<Team	players={binding.toJS('teamStudents')}
+				<Team	isIndividualSport={self.props.isIndividualSport}
+						players={binding.toJS('teamStudents')}
 						positions={binding.toJS('positions')}
 						handleClickPlayer={self.handleClickPlayer}
 						handleChangePlayerPosition={self.handleChangePlayerPosition}

@@ -100,9 +100,6 @@ const TeamAddPage = React.createClass({
             text: ''
         };
     },
-    convertPlayersToServerValue: function(players) {
-        return players.map(p => TeamHelper.getBodyForAddPlayersRequest(p));
-    },
     _submitAdd: function() {
         const self = this,
             binding = self.getDefaultBinding();
@@ -117,7 +114,7 @@ const TeamAddPage = React.createClass({
                 schoolId:       self.activeSchoolId,
                 ages:           binding.toJS('teamForm.ages'),
                 gender:         TeamHelper.convertGenderToServerValue(binding.toJS('teamForm.gender')),
-                players:        self.convertPlayersToServerValue(binding.toJS('teamForm.___teamManagerBinding.teamStudents'))
+                players:        TeamHelper.convertPlayersToServerValue(binding.toJS('teamForm.___teamManagerBinding.teamStudents'))
             };
 
             // Set houseId if team is house team

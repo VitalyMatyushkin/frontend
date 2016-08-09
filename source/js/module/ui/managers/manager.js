@@ -1,6 +1,7 @@
 const	React					= require('react'),
 		classNames				= require('classnames'),
 		TeamPlayersValidator	= require('./helpers/team_players_validator'),
+		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		GameField				= require('./gameField'),
 		TeamModeView			= require('./modes/team_mode_view'),
 		Morearty            	= require('morearty'),
@@ -99,19 +100,10 @@ const Manager = React.createClass({
 		binding.sub('selectedRivalIndex').addListener(() => {
 			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
 		});
-		binding.sub('mode').addListener(() => {
-			self._validate(binding.toJS('selectedRivalIndex'));
-		});
-		binding.sub('teamModeView.teamWrapper.0.players').addListener(() => {
+		binding.sub('teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
 			self._validate(0);
 		});
-		binding.sub('teamModeView.teamWrapper.1.players').addListener(() => {
-			self._validate(1);
-		});
-		binding.sub('teamModeView.teamWrapper.0.creationMode').addListener(() => {
-			self._validate(0);
-		});
-		binding.sub('teamModeView.teamWrapper.1.creationMode').addListener(() => {
+		binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
 			self._validate(1);
 		});
 		binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
@@ -126,30 +118,37 @@ const Manager = React.createClass({
 				binding			= self.getDefaultBinding(),
 				errorBinding	= self.getBinding('error'),
 				limits			= {
-					maxPlayers: binding.toJS('model.sportModel.limits.maxPlayers'),
-					minPlayers: binding.toJS('model.sportModel.limits.minPlayers'),
-					maxSubs:    binding.toJS('model.sportModel.limits.maxSubs')
+					maxPlayers: binding.toJS('model.sportModel.defaultLimits.maxPlayers'),
+					minPlayers: binding.toJS('model.sportModel.defaultLimits.minPlayers'),
+					minSubs:    binding.toJS('model.sportModel.defaultLimits.minSubs'),
+					maxSubs:    binding.toJS('model.sportModel.defaultLimits.maxSubs')
 				};
-		let		result;
 
-		if(binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.creationMode`) === undefined) {
-			result = {
-				isError: true,
-				text: 'Please select team or create new team'
-			}
-		} else if (
-			binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-			binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
-		) {
-			result = {
-				isError:	true,
-				text:		'Please enter team name'
-			};
-		} else {
-			result = TeamPlayersValidator.validate(
-				binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`),
-				limits
-			);
+		let result;
+
+		switch (TeamHelper.getParticipantsType(binding.toJS('model'))) {
+			case 'INDIVIDUAL':
+				result = TeamPlayersValidator.validate(
+					binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+					limits
+				);
+				break;
+			case 'TEAM':
+				if (
+					binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+					binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
+				) {
+					result = {
+						isError:	true,
+						text:		'Please enter team name'
+					};
+				} else {
+					result = TeamPlayersValidator.validate(
+						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+						limits
+					);
+				}
+				break;
 		}
 
 		errorBinding.sub(rivalIndex).set(

@@ -160,15 +160,18 @@ const EventManagerBase = React.createClass({
 		}
 	},
     getSports: function () {
-        var self = this,
-            sportsBinding = self.getBinding('sports');
+        const	self	= this,
+        		sports	= self.getBinding('sports').toJS();
 
-        return sportsBinding.get('models').map(function (sport) {
-            return <Morearty.DOM.option
-                value={sport.get('id')}
-				key={sport.get('id') + '-sport'}
-			>{sport.get('name')}</Morearty.DOM.option>
-        }).toArray();
+        return sports.models.map(sport => {
+			return (
+				<option	value=	{sport.id}
+						key=	{sport.id}
+				>
+					{sport.name}
+				</option>
+			);
+        });
     },
 	handleChangeGenderSelect: function(binding, eventDescriptor) {
 		binding.set('model.gender', Immutable.fromJS(eventDescriptor.target.value));
@@ -181,9 +184,11 @@ const EventManagerBase = React.createClass({
 
 		let genderOptions = [(
 			<option	key="not-selected-gender"
-					   value={undefined}
+					value={undefined}
+					disabled="disabled"
+					selected="selected"
 			>
-				not selected
+				Please select
 			</option>
 		)];
 
@@ -245,6 +250,8 @@ const EventManagerBase = React.createClass({
                 gender  = binding.get('model.gender'),
                 type    = binding.get('model.type');
 
+		console.log(sportId);
+
 		return <div className="eManager_base">
             <div className="eManager_group">
                 <div className="eManager_label">{'Date'}</div>
@@ -289,14 +296,17 @@ const EventManagerBase = React.createClass({
             <If condition={!!binding.get('model.name')}>
                 <div className="eManager_group">
                     <div className="eManager_label">{'Game'}</div>
-                        <select
-                            className="eManager_select"
-                            defaultValue={''}
-                            onChange={self.changeCompleteSport}>
-                            <Morearty.DOM.option
-                                key="nullable-type"
-                                value={''}
-                                disabled="disabled">Please select</Morearty.DOM.option>
+                        <select	className="eManager_select"
+                            	value={sportId}
+                            	onChange={self.changeCompleteSport}
+						>
+                            <option	key="not-selected-sport"
+                                	value={undefined}
+                                	disabled="disabled"
+									selected="selected"
+							>
+								Please select
+							</option>
                             {self.getSports()}
                         </select>
                 </div>
@@ -305,7 +315,6 @@ const EventManagerBase = React.createClass({
 				<div className="eManager_group">
 					<div className="eManager_label">{'Genders'}</div>
 					<select	className="eManager_select"
-							defaultValue={undefined}
 							value={gender}
 							onChange={self.handleChangeGenderSelect.bind(self, binding)}
 					>
@@ -336,19 +345,31 @@ const EventManagerBase = React.createClass({
             <If condition={binding.get('model.ages').count() > 0}>
                 <div className="eManager_group">
                     <div className="eManager_label">{'Game Type'}</div>
-                        <select ref="gameType"
-                                className="eManager_select"
-                                defaultValue={''}
+                        <select	className="eManager_select"
+                                value={binding.toJS('model.type')}
                                 onChange={self.changeCompleteType}>
-                            <Morearty.DOM.option key="nullable-type"
-                                                 value={''}
-                                                 disabled="disabled">Please select</Morearty.DOM.option>
-                            <Morearty.DOM.option key="inter-schools-type"
-                                                 value="inter-schools">inter-schools</Morearty.DOM.option>
-                            <Morearty.DOM.option key="houses-type"
-                                                 value="houses">houses</Morearty.DOM.option>
-                            <Morearty.DOM.option key="anyway-type"
-                                                 value="internal">internal</Morearty.DOM.option>
+                            <option	key="not-selected-game-type"
+									value={undefined}
+									disabled="disabled"
+									selected="selected"
+							>
+								Please select
+							</option>
+                            <option	key="inter-schools-type"
+									value="inter-schools"
+							>
+								Inter-schools
+							</option>
+                            <option	key="houses-type"
+									value="houses"
+							>
+								Houses
+							</option>
+                            <option	key="anyway-type"
+									value="internal"
+							>
+								Internal
+							</option>
                         </select>
                 </div>
             </If>

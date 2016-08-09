@@ -63,6 +63,7 @@ const serviceList = {
         // teams
         serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.team = new Service('/i/schools/{schoolId}/teams/{teamId}', binding);
+        serviceList.cloneTeam = new Service('/i/schools/{schoolId}/teams/{teamId}/clone', binding);
         serviceList.schoolTeamStudents = new Service('/i/schools/{schoolId}/teams/{teamId}/students', binding);
         serviceList.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);
@@ -92,6 +93,7 @@ const serviceList = {
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
         serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
         serviceList.schoolEventTeams = new Service('/i/schools/{schoolId}/events/{eventId}/teams', binding);
+        serviceList.schoolEventIndividualPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/individuals', binding);
         serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
         serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
         serviceList.addPointToSchoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result/points', binding);

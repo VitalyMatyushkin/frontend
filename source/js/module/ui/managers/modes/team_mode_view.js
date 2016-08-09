@@ -104,6 +104,10 @@ const TeamModeView = React.createClass({
 				Immutable.fromJS(teamId)
 			)
 			.set(
+				`teamWrapper.${rivalIndex}.selectedTeam`,
+				Immutable.fromJS(team)
+			)
+			.set(
 				`teamWrapper.${rivalIndex}.prevTeamName`,
 				Immutable.fromJS(team.name)
 			)
@@ -134,6 +138,10 @@ const TeamModeView = React.createClass({
 				Immutable.fromJS(undefined)
 			)
 			.set(
+				`teamWrapper.${rivalIndex}.selectedTeam`,
+				Immutable.fromJS(undefined)
+			)
+			.set(
 				`teamWrapper.${rivalIndex}.teamName.name`,
 				Immutable.fromJS(undefined)
 			)
@@ -160,18 +168,24 @@ const TeamModeView = React.createClass({
 				model: self.getBinding().model,
 				rival: self.getBinding().rivals.sub(selectedRivalIndex)
 			};
-
-		return (
-			<div>
-				<If condition={selectedRivalIndex == 0}>
-					<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
-				</If>
-				<If condition={selectedRivalIndex == 1}>
-					<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
-				</If>
-				{self._renderErrorBox()}
-			</div>
-		);
+		switch (TeamHelper.getParticipantsType(self.getBinding('model').toJS())) {
+			case "INDIVIDUALS":
+				return (
+					<div>{self._renderErrorBox()}</div>
+				);
+			case "TEAM":
+				return (
+					<div>
+						<If condition={selectedRivalIndex == 0}>
+							<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
+						</If>
+						<If condition={selectedRivalIndex == 1}>
+							<TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>
+						</If>
+						{self._renderErrorBox()}
+					</div>
+				);
+		}
 	},
 	_renderTeamWrapper: function() {
 		const	self				= this,

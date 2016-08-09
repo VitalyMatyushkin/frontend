@@ -98,7 +98,9 @@ const InputTypeMixin = {
         else
 			self.hideError();
 
-        value = value || '';
+		if(typeof value === "undefined") {
+			value = '';
+		}
 
         self.getDefaultBinding().set('value', value);
         self.props.onSetValue && self.props.onSetValue(value);

@@ -168,7 +168,7 @@ function convertGenderToServerValue(gender) {
 
 function getBodyForAddPlayersRequest(player) {
 	const body = {
-		userId:         player.id,
+		userId:         player.userId ? player.userId : player.id,
 		permissionId:   player.permissionId
 	};
 
@@ -260,6 +260,21 @@ function getFilterGender(gender) {
 	}
 };
 
+function convertPlayersToServerValue(players) {
+	return players.map(p => this.getBodyForAddPlayersRequest(p));
+};
+
+function getParticipantsType(event) {
+	switch (event.sportModel.players) {
+		case '1X1':
+		case 'INDIVIDUAL':
+			return "INDIVIDUAL";
+		case '2X2':
+		case 'TEAM':
+			return "TEAM";
+	}
+};
+
 const TeamHelper = {
 	getAges:						getAges,
 	validate:						validate,
@@ -273,10 +288,12 @@ const TeamHelper = {
 	injectTeamIdToPlayers:			injectTeamIdToPlayers,
 	isTeamEnableForEdit:			isTeamEnableForEdit,
 	convertPointsToClientModel:		convertPointsToClientModel,
+	convertPlayersToServerValue:	convertPlayersToServerValue,
 	getFilteredAgesBySchoolForms:	getFilteredAgesBySchoolForms,
 	convertGenderToServerValue:		convertGenderToServerValue,
 	getBodyForAddPlayersRequest:	getBodyForAddPlayersRequest,
-	getFilterGender:				getFilterGender
+	getFilterGender:				getFilterGender,
+	getParticipantsType:			getParticipantsType
 };
 
 module.exports = TeamHelper;
