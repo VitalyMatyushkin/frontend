@@ -11,22 +11,20 @@ const TeamSubmitMixin = {
 			[]
 		);
 
-		console.log(players);
-		return Promise.resolve('');
-		//return window.Server.schoolEventIndividualPlayers.post(
-		//	{
-		//		schoolId:	savedEvent.schoolId,
-		//		eventId:	savedEvent.id
-		//	},
-		//	{
-		//		players: players.map(p => {
-		//			return {
-		//				userId:			p.id,
-		//				permissionId:	p.permissionId
-		//			};
-		//		})
-		//	}
-		//);
+		return window.Server.schoolEventIndividualsBatch.post(
+			{
+				schoolId:	savedEvent.inviterSchoolId,
+				eventId:	savedEvent.id
+			},
+			{
+				individuals: players.map(p => {
+					return {
+						userId:			p.id,
+						permissionId:	p.permissionId
+					};
+				})
+			}
+		);
 	},
 	createTeams: function() {
 		const	self	= this,
