@@ -93,6 +93,22 @@ FilterModel.prototype = {
 
 		this._onChange();
 	},
+	addIn:function(field, values){
+		if (!this.where) {
+			this.where = {};
+		}
+		if (!this.where[field]) {
+			this.where[field] = {};
+		}
+
+		if (values && values.length > 0){
+			this.where[field].$in = values;
+		} else if(this.where[field].$in ){
+			delete this.where[field].$in;
+		}
+
+		this._onChange();
+	},
 	deleteField: function (field) {
 		if (this.where && this.where[field]) {
 			delete this.where[field];

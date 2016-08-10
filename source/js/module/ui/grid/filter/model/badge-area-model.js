@@ -36,6 +36,9 @@ BadgeAreaModel.prototype.setFilter = function(badge) {
 		case 'between-date':
 			this.filter.addBetween(badge.field.name, badge.values);
 			break;
+		case 'multi-select':
+			this.filter.addIn(badge.field.name, badge.values.map(item => item.key));
+			break;
 	}
 };
 BadgeAreaModel.prototype.deleteFilter = function(badge) {

@@ -8,14 +8,6 @@ const BadgeArea = React.createClass({
 	propTypes: {
 		model: 	React.PropTypes.object.isRequired
 	},
-	componentWillMount:function(){
-		const 	model 	= this.props.model;
-
-		model.onChange = this.onChange;
-	},
-	onChange:function(){
-		this.setState({model:this.props.model});
-	},
 	render: function() {
 		const 	model 	= this.props.model,
 				badges 	= model.badges;
