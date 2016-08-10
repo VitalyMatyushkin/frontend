@@ -29,6 +29,9 @@ const FilterField = React.createClass({
 			case 'between-date':
 				res = this._getBetweenDateValue();
 				break;
+			case 'multi-select':
+				res = this._getKeyValuePairs();
+				break;
 			default:
 				res = this._getDefaultValue();
 				break;
@@ -46,6 +49,11 @@ const FilterField = React.createClass({
 		result += values[1] ? 'to ' + DateHelper.toLocal(values[1]) : '';
 
 		return result;
+	},
+	_getKeyValuePairs:function(){
+		const values = this.props.model.values;
+
+		return values.map(item => item.value).join(', ');
 	}
 });
 

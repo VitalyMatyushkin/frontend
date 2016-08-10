@@ -6,9 +6,9 @@ const   classNames  = require('classnames'),
         React 		= require('react');
 
 const MultiSelectReact = React.createClass({
-    displayName: 'MultiSelect react',
+    displayName: 'MultiSelectReact',
 	propTypes:{
-		items: 			React.PropTypes.array,
+		items: 			React.PropTypes.array.isRequired,
 		selections: 	React.PropTypes.array,
 		placeholder: 	React.PropTypes.string,
 		onChange: 		React.PropTypes.func.isRequired,
@@ -21,9 +21,15 @@ const MultiSelectReact = React.createClass({
         }
     },
     componentWillMount:function(){
-        const   self   		= this,
-				items 		= self.props.items || [],
-				selections 	= self.props.selections || [];
+		this.init(this.props);
+    },
+	componentWillReceiveProps:function(nextProps){
+		this.init(nextProps);
+	},
+	init:function(props){
+		const   self   		= this,
+				items 		= props.items || [],
+				selections 	= props.selections || [];
 
 		self.setState({
 			items: 		items,
@@ -31,10 +37,10 @@ const MultiSelectReact = React.createClass({
 			filter:		'',
 			count: 		selections.length
 		});
-    },
+	},
     handleItemClick: function(item) {
         const   self     =   this,
-                selected =   self.state.selections.indexOf(item.id)!==-1;
+                selected =   self.state.selections.indexOf(item.key)!==-1;
 
         self.setSelected(item, !selected);
     },
@@ -50,15 +56,15 @@ const MultiSelectReact = React.createClass({
         return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
     },
     createItem: function(item) {
-		const 	selected = this.state.selections.indexOf(item.id) !== -1,
+		const 	selected = this.state.selections.indexOf(item.key) !== -1,
 				classes = classNames({
 					eMultiSelect_item: true,
 					mSelected: selected
 				});
 
 		return (
-			<li key={item.id} className={classes} onClick={this.handleItemClick(item)}>
-				{this.props.text}
+			<li key={item.key} className={classes} onClick={this.handleItemClick.bind(null, item)}>
+				{item.value}
 			</li>
 		);
     },
@@ -76,17 +82,15 @@ const MultiSelectReact = React.createClass({
 				state 	= self.state;
 
 		items.forEach(item => {
-            if (selected && state.selections.indexOf(item.id) === -1) {
-				state.selections.push(item.id);
-            } else if (!selected && state.selections.indexOf(item.id) !== -1) {
-				state.selections = state.selections.filter(function (itemId) {
-                    return itemId !== item.id;
-                });
+            if (selected && state.selections.indexOf(item.key) === -1) {
+				state.selections.push(item.key);
+            } else if (!selected && state.selections.indexOf(item.key) !== -1) {
+				state.selections = state.selections.filter(key => key !== item.key);
             }
         });
 
 		self.setState(state);
-        self.props.onChange(selections);
+        self.props.onChange(state.selections);
     },
     render: function() {
 		const   self    = this,

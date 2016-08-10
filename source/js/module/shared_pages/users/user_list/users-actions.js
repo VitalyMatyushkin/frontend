@@ -220,6 +220,14 @@ UsersActions.prototype = {
 				text:'School',
 				cell:{
 					dataField:'school'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: window.Server.publicSchools.get(),
+						valueField:'name',
+						keyField:'id'
+					}
 				}
 			},
 			{

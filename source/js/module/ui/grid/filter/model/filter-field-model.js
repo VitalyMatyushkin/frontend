@@ -37,6 +37,9 @@ FilterFieldModel.prototype._setValue = function(value){
 		case 'between-date':
 			res = this._setBetweenDateValue(value);
 			break;
+		case 'multi-select':
+			res = this._setKeyValueArray(value);
+			break;
 	}
 	return res;
 };
@@ -45,6 +48,9 @@ FilterFieldModel.prototype._setStringValue = function(value){
 };
 FilterFieldModel.prototype._setBetweenDateValue = function(value){
 	return value && value.length === 2 && (value[0] || value[1]) ? value : null;
+};
+FilterFieldModel.prototype._setKeyValueArray = function(value){
+	return value && value.length > 0 ? value : null;
 };
 
 
