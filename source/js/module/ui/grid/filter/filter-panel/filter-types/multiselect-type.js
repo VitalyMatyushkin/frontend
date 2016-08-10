@@ -26,8 +26,6 @@ const FilterMultiSelectType = React.createClass({
 				items 		= model.items,
 				selections 	= model.getSelections();
 
-		console.log('FilterMultiSelectType.render: items.length='+items.length);
-
 		return (
 			<MultiSelect items={items} selections={selections} onChange={this.onChange} />
 		);

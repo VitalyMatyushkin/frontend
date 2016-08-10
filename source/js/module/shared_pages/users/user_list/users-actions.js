@@ -220,6 +220,13 @@ UsersActions.prototype = {
 				text:'School',
 				cell:{
 					dataField:'school'
+				}
+			},
+			{
+				text:'School',
+				hidden:true,
+				cell:{
+					dataField:'permissions.schoolId'
 				},
 				filter:{
 					type:'multi-select',
