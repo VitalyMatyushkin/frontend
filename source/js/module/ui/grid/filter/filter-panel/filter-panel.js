@@ -9,6 +9,14 @@ const FilterPanel = React.createClass({
 	propTypes: {
 		model: 	React.PropTypes.object.isRequired
 	},
+	componentWillMount:function(){
+		const 	model 	= this.props.model;
+
+		model.badgeArea.onChange = this.onChange;
+	},
+	onChange:function(){
+		this.setState({model:this.props.model});
+	},
 	render: function() {
 		const 	model 	= this.props.model,
 				fields 	= model.filterFields;

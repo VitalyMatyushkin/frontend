@@ -223,6 +223,21 @@ UsersActions.prototype = {
 				}
 			},
 			{
+				text:'School',
+				hidden:true,
+				cell:{
+					dataField:'permissions.schoolId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: window.Server.publicSchools.get(),
+						valueField:'name',
+						keyField:'id'
+					}
+				}
+			},
+			{
 				text:'Role',
 				cell:{
 					dataField:'roles'

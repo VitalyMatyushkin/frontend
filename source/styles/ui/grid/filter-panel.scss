@@ -28,6 +28,9 @@
         input[type="text"]{
           max-width: 150px;
         }
+        .bMultiSelect{
+          width: 200px;
+        }
       }
 
       &:hover .eFilterContainer{
@@ -35,6 +38,7 @@
       }
     }
   }
+
   .bBadgeArea{
     background-color: white;
     min-height: 36px;
