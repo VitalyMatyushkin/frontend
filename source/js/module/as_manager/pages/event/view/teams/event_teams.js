@@ -18,8 +18,18 @@ const EventTeams = React.createClass({
 				players: []
 			},
 			editPlayers: {
-				filter: {},
-				players: []
+				'teamManagerBindings': [
+					{
+						teamStudents: [],
+						positions: [],
+						blackList: []
+					},
+					{
+						teamStudents: [],
+						positions: [],
+						blackList: []
+					}
+				]
 			},
 			isSync: false
 		});
@@ -72,8 +82,7 @@ const EventTeams = React.createClass({
 		const	editPlayers = [],
 				viewPlayers = [];
 
-		Promise
-			.all(event.participants.map(team => {
+		Promise.all(event.teamsData.map(team => {
 				return self._getTeamPLayers(team)
 					.then(players => {
 						viewPlayers.push(players);
@@ -88,10 +97,24 @@ const EventTeams = React.createClass({
 						}
 					});
 			}))
+			// TODO not work for teams count great then 2
 			.then(() => binding.atomically()
-								.set('viewPlayers.players',	Immutable.fromJS(viewPlayers))
-								.set("editPlayers.players",	Immutable.fromJS(editPlayers))
-								.set('isSync',				Immutable.fromJS(true))
+								.set('viewPlayers.players',								Immutable.fromJS(viewPlayers))
+								.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(editPlayers[0]))
+								.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(editPlayers[1] ? editPlayers[1] : []))
+								.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
+									self.getBinding('event').toJS().sportModel.field.positions ?
+										self.getBinding('event').toJS().sportModel.field.positions :
+										[]
+								))
+								.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(editPlayers[1] ? editPlayers[1] : []))
+								.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(editPlayers[0]))
+								.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
+									self.getBinding('event').toJS().sportModel.field.positions ?
+										self.getBinding('event').toJS().sportModel.field.positions :
+										[]
+								))
+								.set('isSync',											Immutable.fromJS(true))
 								.commit()
 			);
 	},
@@ -160,7 +183,7 @@ const EventTeams = React.createClass({
 
 		return (
 			<div>
-				{self._renderTeams()};
+				{self._renderTeams()}
 			</div>
 		);
 	}

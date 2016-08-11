@@ -1,7 +1,6 @@
-const	InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		PlayerChooser 		= require('module/ui/managers/player_chooser'),
+const	TeamManager			= require('./../../../../../ui/managers/team_manager/team_manager'),
+		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		Team 				= require('module/ui/managers/team/defaultTeam'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		classNames			= require('classnames'),
 		React				= require('react'),
@@ -11,42 +10,71 @@ const	InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_m
 const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	componentWillMount: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const self = this;
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		self.initInitialPlayers();
+		self.initFilter();
+		self.initSelectedTeamIndex();
+
+		self.addTeamStudentsListeners();
+	},
+	initInitialPlayers: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+		
+		binding.set('initialPlayers', Immutable.fromJS(
+			[
+				binding.toJS('teamManagerBindings.0.teamStudents'),
+				binding.toJS('teamManagerBindings.1.teamStudents')
+			]
+		));
+	},
+	initFilter: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		const	school	= self.getBinding('schoolInfo').toJS(),
 				event	= self.getBinding('event').toJS();
 
+		const filter = self._getPlayerChooserFilters(event, school);
+
 		binding.atomically()
-			.set('initialPlayers',		Immutable.fromJS(binding.toJS('players')))
-			.set('selectedRivalIndex',	Immutable.fromJS(0))
-			// TODO need refactoring
-			// prepare data for team react component
-			// team react component data structure need refactoring
-			// so it's dirty trick
-			.set('schoolInfo',			Immutable.fromJS(school))
-			.set('model',				Immutable.fromJS(event))
-			.set('selectedTeamIndex',	Immutable.fromJS(0))
-			// TODO move filter to props of playerChooser
-			.set('filter',				Immutable.fromJS(self._getPlayerChooserFilters(event, school)))
+			.set('teamManagerBindings.0.filter', Immutable.fromJS(filter[0]))
+			.set('teamManagerBindings.1.filter', Immutable.fromJS(filter[1]))
 			.commit();
+	},
+	initSelectedTeamIndex: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+		
+		binding.set('selectedTeamIndex', Immutable.fromJS(0));
+	},
+	addTeamStudentsListeners: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.sub('teamManagerBindings.0.teamStudents').addListener(() => {
+			binding.set('teamManagerBindings.1.teamStudents.blackList', Immutable.fromJS('teamManagerBindings.0.teamStudents'));
+		});
+		binding.sub('teamManagerBindings.1.teamStudents').addListener(() => {
+			binding.set('teamManagerBindings.0.teamStudents.blackList', Immutable.fromJS('teamManagerBindings.1.teamStudents'));
+		});
 	},
 	_getPlayerChooserFilters: function(event, school) {
 		const self = this;
 
-		return event.participants.map(team => self._getPlayerChooserFilter(team, school));
+		return event.teamsData.map(team => self._getPlayerChooserFilter(team, school));
 	},
 	_getOtherTeamIndex: function(order) {
 		return order === 0 ? 1 : 0;
 	},
-	//TODO move to helpers
 	_getPlayerChooserFilter: function(team, school) {
 		const	self = this;
 
 		return {
-			gender:		team.gender,
+			genders:	TeamHelper.getFilterGender(team.gender),
 			houseId:	team.houseId,
 			schoolId:	school.id,
 			forms:		self._getFilteredAgesBySchoolForms(team.ages, school.forms)
@@ -58,62 +86,19 @@ const EventTeamsView = React.createClass({
 				ages.indexOf(String(form.age)) !== -1;
 		});
 	},
-	_getPlayersManager: function(order) {
+	handleTeamClick: function(order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const teamBinding = {
-				default: binding,
-				rivalId: self.getBinding('event').sub(`participants.${order}.id`),
-				players: binding.sub(['players', order])
-			};
-
-		return (
-			<Team binding={teamBinding} />
-		);
-	},
-	_onTeamClick: function(order) {
-		const	self	= this,
-			binding	= self.getDefaultBinding();
-
 		binding.set('selectedTeamIndex', Immutable.fromJS(order));
 	},
-	_renderPlayerChooser: function (order) {
-		const	self	= this,
-			binding	= self.getDefaultBinding();
-
-		const playerChooserBinding = {
-			default:			binding,
-			rival:				self.getBinding('event').sub(['participants', order]),
-			teamPlayers:		binding.sub(['players', order]),
-			selectedRivalIndex:	binding.sub('selectedRivalIndex'),
-			otherTeamPlayers:	binding.sub(['players', self._getOtherTeamIndex(order)]),
-			filter:				binding.sub(`filter.${order}`)
-		};
-
-		return (
-			<PlayerChooser binding={playerChooserBinding} />
-		);
-	},
-	_renderPlayerByOrder: function(order) {
-		const self = this;
-
-		return (
-			<div>
-				<div className="eEventTeams_managerWrapper">
-					{self._getPlayersManager(order)}
-				</div>
-				{self._renderPlayerChooser(order)}
-			</div>
-		);
-	},
-	_renderChooseTeamButtons: function() {
+	renderTeamChooser: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const event = self.getBinding('event').toJS();
 
-		return event.participants.filter(team => TeamHelper.isTeamEnableForEdit(self.activeSchoolId, event, team)).map((team, index) => {
+		return event.teamsData.filter(team => TeamHelper.isTeamEnableForEdit(self.activeSchoolId, event, team)).map((team, index) => {
 			const teamButtonClassName = classNames(
 				{
 					bEventTeams_teamButton:	true,
@@ -124,7 +109,7 @@ const EventTeamsView = React.createClass({
 
 			return (
 				<button	className={teamButtonClassName}
-						onClick={self._onTeamClick.bind(self, index)}
+						onClick={self.handleTeamClick.bind(self, index)}
 				>
 					{team.name}
 				</button>
@@ -136,15 +121,23 @@ const EventTeamsView = React.createClass({
 
 		return (
 			<div className="bEventTeams_header">
-				{self._renderChooseTeamButtons()}
+				{self.renderTeamChooser()}
 			</div>
 		);
 	},
-	_renderPlayers: function() {
+	renderTeamManager: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return self._renderPlayerByOrder(binding.toJS('selectedTeamIndex'));
+		return self.renderTeamManagerOrder(binding.toJS('selectedTeamIndex'));
+	},
+	renderTeamManagerOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return (
+			<TeamManager binding={binding.sub(`teamManagerBindings.${order}`)}/>
+		);
 	},
 	render: function() {
 		const self = this;
@@ -152,7 +145,7 @@ const EventTeamsView = React.createClass({
 		return (
 			<div className="bEventTeams">
 				{self._renderTeamEditHeader()}
-				{self._renderPlayers()}
+				{self.renderTeamManager()}
 			</div>
 		);
 	}

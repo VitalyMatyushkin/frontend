@@ -98,18 +98,23 @@ const EventHeader = React.createClass({
 			self.closeMatch();
 		} else {
 			// [[players][players]]
-			const	teamPlayers			= binding.toJS('eventTeams.editPlayers.players'),
+			const	teamPlayers			= [
+											binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents'),
+											binding.toJS('eventTeams.editPlayers.teamManagerBindings.1.teamStudents')
+										],
 					initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
 
-			Promise.all(teamPlayers.map(
+			const promises = teamPlayers.map(
 				(players, teamIndex) => TeamHelper.commitPlayers(
-											initialTeamPlayers[teamIndex],
-											players,
-											initialTeamPlayers[teamIndex][0].teamId, // yep, get teamId from player
-											MoreartyHelper.getActiveSchoolId(self)
-										)
-			))
-			.then(() => {
+					initialTeamPlayers[teamIndex],
+					players,
+					initialTeamPlayers[teamIndex][0].teamId, // yep, get teamId from player
+					MoreartyHelper.getActiveSchoolId(self)
+				)
+			);
+
+			Promise.all(promises[0].concat(promises[1]))
+			.then((r) => {
 				binding.atomically()
 						.set('mode', 'general')
 						.set('eventTeams.isSync', Immutable.fromJS(false))

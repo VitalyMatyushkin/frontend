@@ -80,7 +80,7 @@ const EventTeamsView = React.createClass({
 					event			= self.getBinding('event').toJS(),
 					type			= event.eventType,
 					activeSchoolId	= self.getActiveSchoolId(),
-					isOwner			= type === 'inter-schools' ? event.participants[order].get('schoolId') === activeSchoolId : true;
+					isOwner			= type === 'inter-schools' ? event.teamsData[order].get('schoolId') === activeSchoolId : true;
 
 			result = players.map((player, playerIndex) => {
 				const	isMale	= player.gender === 'male',
@@ -138,17 +138,17 @@ const EventTeamsView = React.createClass({
 
 		const	event			= self.getBinding('event').toJS(),
 				eventType		= event.eventType,
-				participants	= event.participants,
+				teamsData	= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
+			teamsData[0].schoolId === activeSchoolId
 		) {
 			return self._getPlayers(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
+			teamsData[1].schoolId === activeSchoolId
 		) {
 			return self._getPlayers(1);
 		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
@@ -160,27 +160,27 @@ const EventTeamsView = React.createClass({
 
 		const	event			= self.getBinding('event').toJS(),
 				eventType		= event.eventType,
-				participants	= event.participants,
+				teamsData		= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(
-			participants.length > 1 &&
+			teamsData.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
+			teamsData[0].schoolId !== activeSchoolId
 		) {
 			return self._getPlayers(0);
 		} else if (
-			participants.length > 1 &&
+			teamsData.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
+			teamsData[1].schoolId !== activeSchoolId
 		) {
 			return self._getPlayers(1);
 		} else if (
-			participants.length > 1 &&
+			teamsData.length > 1 &&
 			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._getPlayers(1);
-		} else if(participants.length === 1) {
+		} else if(teamsData.length === 1) {
 			return (
 				<div className="bEventTeams_team">
 					<div className="eEventTeams_awaiting">

@@ -75,7 +75,7 @@ function getPlayersWithUserInfo(players, users) {
 function commitPlayers(initialPlayers, players, teamId, schoolId) {
 	let promises = [];
 
-	initialPlayers.forEach((initialPlayer) => {
+	promises = promises.concat(initialPlayers.map((initialPlayer) => {
 		let foundPlayer = Lazy(players).findWhere({id:initialPlayer.id});
 
 		if(foundPlayer) {
@@ -89,39 +89,26 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 			}
 
 			if(changes.positionId !== undefined || changes.sub !== undefined) {
-				promises.push(
-					changePlayer(
+				return changePlayer(
 						schoolId,
 						teamId,
 						initialPlayer.id,
 						changes
-					)
-				);
+					);
 			}
 		} else {
 			//So, user delete player, let's delete player from server
-			promises.push(
-				deletePlayer(
+			return deletePlayer(
 					schoolId,
 					teamId,
 					initialPlayer.id
-				)
-			);
+				);
 		}
-	});
+	})).filter(p => p !== undefined);
 
 	// Check new players
 	//TODO need comment
-	players.filter(p => !p.userId).forEach((player) => {
-		promises.push(
-			addPlayer(
-				schoolId,
-				teamId,
-				player
-			)
-		);
-	});
-
+	promises = promises.concat(players.filter(p => !p.userId).map(player => addPlayer(schoolId, teamId, player)).filter(p => p !== undefined));
 
 	return promises;
 };

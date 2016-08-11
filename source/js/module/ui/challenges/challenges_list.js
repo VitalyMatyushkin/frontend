@@ -126,7 +126,7 @@ const ChallengesList = React.createClass({
 		const self = this;
 
 		const	eventType		= event.eventType,
-				participants	= event.participants,
+				participants	= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(
@@ -147,7 +147,7 @@ const ChallengesList = React.createClass({
 		const	self	= this;
 
 		const	eventType		= event.eventType,
-				participants	= event.participants,
+				participants	= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
 		// if inter school event and participant[0] is our school

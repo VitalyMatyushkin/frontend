@@ -11,7 +11,7 @@ const EventRival = React.createClass({
 		const	self = this,
 				binding = self.getDefaultBinding(),
 				eventType = binding.get('model.eventType'),
-				participant = binding.sub(['participants', order]);
+				participant = binding.sub(['teamsData', order]);
 		let		pic = null;
 
 		switch (eventType) {
@@ -44,7 +44,7 @@ const EventRival = React.createClass({
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				eventType	= binding.get('model.eventType'),
-				participant	= binding.sub(['participants', order]);
+				participant	= binding.sub(['teamsData', order]);
 		let		name		= null;
 
 		switch (eventType) {
@@ -80,7 +80,7 @@ const EventRival = React.createClass({
 			const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
 
 			// get event result by team id
-			const teamId = binding.get(`participants.${order}.id`);
+			const teamId = binding.get(`teamsData.${order}.id`);
 			points = eventSummary[teamId];
 			if(!points && self._isTeamHaveZeroPoints(teamId, event, eventSummary)) {
 				// event doesn't has points in resultObject if team has zero points in event
@@ -102,17 +102,17 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				participants	= binding.toJS('participants'),
+				teamsData	= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
+			teamsData[0].schoolId === activeSchoolId
 		) {
 			return self._renderTeamByOrder(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
+			teamsData[1].schoolId === activeSchoolId
 		) {
 			return self._renderTeamByOrder(1);
 		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
@@ -124,32 +124,32 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				participants	= binding.toJS('participants'),
+				teamsData	= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
 		// if inter school event and participant[0] is our school
 		if (
-			participants.length > 1 &&
+			teamsData.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
+			teamsData[0].schoolId !== activeSchoolId
 		) {
 			return self._renderTeamByOrder(0);
 		// if inter school event and participant[1] is our school
 		} else if (
-			participants.length > 1 &&
+			teamsData.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
+			teamsData[1].schoolId !== activeSchoolId
 		) {
 			return self._renderTeamByOrder(1);
 		// if inter school event and opponent school is not yet accept invitation
 		} else if(
-			participants.length === 1 &&
+			teamsData.length === 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
 		// if it isn't inter school event
 		} else if (
-			participants.length > 1 &&
+			teamsData.length > 1 &&
 			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
@@ -170,17 +170,17 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				participants	= binding.toJS('participants'),
+				teamsData	= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
+			teamsData[0].schoolId === activeSchoolId
 		) {
 			return self.getCountPoint(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
+			teamsData[1].schoolId === activeSchoolId
 		) {
 			return self.getCountPoint(1);
 		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
@@ -192,17 +192,17 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				participants	= binding.toJS('participants'),
+				teamsData	= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
+			teamsData[0].schoolId !== activeSchoolId
 		) {
 			return self.getCountPoint(0);
 		} else if (
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
+			teamsData[1].schoolId !== activeSchoolId
 		) {
 			return self.getCountPoint(1);
 		} else if (
