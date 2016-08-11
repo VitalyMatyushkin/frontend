@@ -9,7 +9,7 @@ const 	React 			= require('react'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
- * UsersActions
+ * StudentListModel
  *
  * @param {object} page
  *
