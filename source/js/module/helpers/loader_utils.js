@@ -9,7 +9,7 @@ const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage'
 /** Parses domain name to structure */
 function parseDomainName(domainName) {
     // http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
-    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
+    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
     return {
         fullName:   external[0],
         model:      external[1],
