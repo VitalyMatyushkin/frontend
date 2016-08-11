@@ -86,6 +86,12 @@
 .eManager_teamModeViewContainer {
   display: inline-block;
   vertical-align: top;
+
+  &.mIndividuals {
+    display: block;
+    width: 700px;
+    margin: 0 auto;
+  }
 }
 
 .eManager_eField {

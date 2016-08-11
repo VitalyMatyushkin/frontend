@@ -239,14 +239,26 @@ const Manager = React.createClass({
 			);
 		}
 	},
+	renderGameField: function() {
+		const	self			= this,
+				binding	= self.getDefaultBinding();
+
+		switch (TeamHelper.getParticipantsType(binding.toJS('model'))) {
+			case "INDIVIDUALS":
+				return null;
+			case "TEAM":
+				return (
+					<div className="eManager_gameFieldContainer">
+						<GameField binding={binding.sub('model.sportModel.field.pic')}/>
+					</div>
+				);
+		}
+	},
 	render: function() {
 		const	self				= this,
 				defaultBinding		= self.getDefaultBinding(),
 				binding				= self.getBinding(),
 				selectedRivalIndex	= self.getBinding('selectedRivalIndex').toJS(),
-				gameFieldBinding	= {
-					default:	defaultBinding.sub('model.sportModel.fieldPic')
-				},
 				teamModeViewBinding	= {
 					default:	defaultBinding.sub(`teamModeView`),
 					schoolInfo:	defaultBinding.sub('schoolInfo'),
@@ -260,9 +272,7 @@ const Manager = React.createClass({
 					{self._renderRivals()}
 					<div className="eManager_containerTeam">
 						<TeamModeView binding={teamModeViewBinding}/>
-						<div className="eManager_gameFieldContainer">
-							<GameField binding={gameFieldBinding}/>
-						</div>
+						{self.renderGameField()}
 					</div>
 				</div>
 			);
