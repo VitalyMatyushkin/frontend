@@ -20,7 +20,7 @@ const ChallengeModel = function(event, activeSchoolId){
 
 ChallengeModel.prototype._getResultByTeam = function(event, order) {
     const self = this,
-        participant = order < event.participants.length ? event.participants[order] : null;
+        participant = order < event.teamsData.length ? event.teamsData[order] : null;
 
     let goal = '-';
 
@@ -37,7 +37,7 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
     const self = this,
         eventType = event.eventType,
         played = self.played,
-        participant = order < event.participants.length ? event.participants[order] : null;
+        participant = order < event.teamsData.length ? event.teamsData[order] : null;
 
     let	rivalName = null;
 
@@ -71,11 +71,11 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
 };
 
 ChallengeModel.prototype._getFirstIndex = function(event, activeSchoolId){
-    const activeIndex = event.participants.findIndex(participant => participant.schoolId === activeSchoolId);
+    const activeIndex = event.teamsData.findIndex(participant => participant.schoolId === activeSchoolId);
 
     return (
         event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-        event.participants.length > 1 &&
+        event.teamsData.length > 1 &&
         activeIndex >= 0 ? activeIndex : 0
     );
 };

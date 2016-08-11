@@ -24,7 +24,7 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			model: {},
-			participants: [],
+			teamsData: [],
 			eventId: null,
 			points: [],
 			result: {
@@ -76,7 +76,7 @@ const EventView = React.createClass({
 				.set('sport',				Immutable.fromJS(event.sport))
 				.set('model',				Immutable.fromJS(event))
 				.set('model.sportModel',	Immutable.fromJS(event.sport))
-				.set('participants',		Immutable.fromJS(event.participants))
+				.set('teamsData',			Immutable.fromJS(event.teamsData))
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))
 				.set('schoolInfo',			Immutable.fromJS(activeSchool))

@@ -13,7 +13,8 @@ const EventHelper = {
 	},
 	EVENT_STATUS: {
 		FINISHED:		'FINISHED',
-		NOT_FINISHED:	'NOT_FINISHED'
+		NOT_FINISHED:	'NOT_FINISHED',
+		DRAFT:			'DRAFT'
 	},
 	/**
 	 * Create event summary object by event result object.
@@ -96,8 +97,11 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
-				RoleHelper.isUserSchoolWorker(thiz);
+		return	(
+				binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
+				binding.get('model.status') === self.EVENT_STATUS.DRAFT
+			) &&
+			RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if participants count is two and event isn't close.
@@ -110,8 +114,11 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	binding.get('participants').count() === 2 &&
-				binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
+		return	binding.get('teamsData').count() === 2 &&
+				(
+					binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
+					binding.get('model.status') === self.EVENT_STATUS.DRAFT
+				) &&
 				binding.get('mode') === 'general' &&
 				RoleHelper.isUserSchoolWorker(thiz);
 	},
@@ -145,7 +152,10 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
+		return	(
+					binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
+					binding.get('model.status') === self.EVENT_STATUS.DRAFT
+				)&&
 				binding.get('mode') === 'general' &&
 				binding.get('activeTab') === 'teams' &&
 				RoleHelper.isUserSchoolWorker(thiz);
