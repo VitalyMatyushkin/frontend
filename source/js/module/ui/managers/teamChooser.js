@@ -96,9 +96,8 @@ const	TeamChooser	= React.createClass({
 				selectedTeamId	= binding.toJS('selectedTeamId');
 		let		teamItems		= [];
 
-		if(
-			teams &&
-			(
+		if(!teams ||
+			teams && (
 				teams.length === 0 ||
 				teams.length === 1 && teams[0].id === exceptionTeamId ||
 				teams.length === 1 && teams[0].id === selectedTeamId
@@ -132,7 +131,7 @@ const	TeamChooser	= React.createClass({
 
 		const teamChooserClass = classNames({
 			eTeamChooser_teamListContainer:	true,
-			mDisable:						binding.toJS('viewMode') == 'close'
+			mDisable:						!self.isOpenTeamChooser()
 		});
 
 		return (
@@ -144,6 +143,19 @@ const	TeamChooser	= React.createClass({
 				</div>
 			</div>
 		);
+	},
+	isOpenTeamChooser: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		switch(binding.toJS('viewMode')) {
+			case 'open':
+				return true;
+			case 'close':
+				return false;
+			default:
+				return false;
+		}
 	},
 	_onTeamChooserButtonClick: function() {
 		const	self			= this,
