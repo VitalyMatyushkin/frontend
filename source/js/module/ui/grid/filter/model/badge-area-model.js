@@ -31,16 +31,18 @@ BadgeAreaModel.prototype.changeBadge = function(badge) {
 BadgeAreaModel.prototype.setFilter = function(badge) {
 	switch (badge.type){
 		case 'string':
-			this.filter.addFieldFilter(badge.field.name, badge.values[0]);
+			this.filter.addLike(badge.field.name, badge.values[0]);
+			break;
+		case 'between-date':
+			this.filter.addBetween(badge.field.name, badge.values);
+			break;
+		case 'multi-select':
+			this.filter.addIn(badge.field.name, badge.values.map(item => item.key));
 			break;
 	}
 };
 BadgeAreaModel.prototype.deleteFilter = function(badge) {
-	switch (badge.type){
-		case 'string':
-			this.filter.addFieldFilter(badge.field.name, null);
-			break;
-	}
+	this.filter.deleteField(badge.field.name);
 };
 
 

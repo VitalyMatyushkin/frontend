@@ -7,8 +7,7 @@ const   HeadCell 	= require('./header/head-cell'),
 
 const Header = React.createClass({
 	propTypes: {
-		columns: 	React.PropTypes.array.isRequired,
-		order:		React.PropTypes.object.isRequired
+		columns: 	React.PropTypes.array.isRequired
 	},
 	render: function() {
 		return (

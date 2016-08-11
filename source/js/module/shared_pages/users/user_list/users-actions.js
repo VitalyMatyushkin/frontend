@@ -207,9 +207,34 @@ UsersActions.prototype = {
 				}
 			},
 			{
+				text:'Birthday',
+				isSorted:true,
+				cell:{
+					dataField:'birthday'
+				},
+				filter:{
+					type:'between-date'
+				}
+			},
+			{
 				text:'School',
 				cell:{
 					dataField:'school'
+				}
+			},
+			{
+				text:'School',
+				hidden:true,
+				cell:{
+					dataField:'permissions.schoolId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: window.Server.publicSchools.get(),
+						valueField:'name',
+						keyField:'id'
+					}
 				}
 			},
 			{

@@ -61,15 +61,7 @@ FilterModel.prototype = {
 		this.order = field + ' ' + value;
 		this._onChange();
 	},
-	addFieldFilter: function (field, value) {
-		if (value)
-			this._addLike(field, value);
-		else
-			this._deleteLike(field);
-
-		this._onChange();
-	},
-	_addLike: function (field, value) {
+	addLike: function (field, value) {
 		if (!this.where) {
 			this.where = {};
 		}
@@ -78,13 +70,54 @@ FilterModel.prototype = {
 		this.where[field].like = value;
 		this.where[field].options = 'i';
 
-		return this.where;
+		this._onChange();
 	},
-	_deleteLike: function (field) {
+	addBetween: function (field, values) {
+		if (!this.where) {
+			this.where = {};
+		}
+		if (!this.where[field]) {
+			this.where[field] = {};
+		}
+
+		if (values[0]){
+			this.where[field].$gte = values[0];
+		} else if(this.where[field].$gte){
+			delete this.where[field].$gte;
+		}
+		if (values[1]){
+			this.where[field].$lte = values[1];
+		} else if(this.where[field].$lte){
+			delete this.where[field].$lte;
+		}
+
+		this._onChange();
+	},
+	addIn:function(field, values){
+		if (!this.where) {
+			this.where = {};
+		}
+		if (!this.where[field]) {
+			this.where[field] = {};
+		}
+
+		if (values && values.length > 0){
+			this.where[field].$in = values;
+		} else if(this.where[field].$in ){
+			delete this.where[field].$in;
+		}
+
+		this._onChange();
+	},
+	deleteField: function (field) {
 		if (this.where && this.where[field]) {
 			delete this.where[field];
 		}
-		return this.where;
+		if (this.where && Object.keys(this.where).length === 0) {
+			delete this.where;
+		}
+
+		this._onChange();
 	},
 	_onChange:function(){
 		this.onChange && this.onChange(this.getFilters());
