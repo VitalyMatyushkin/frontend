@@ -17,26 +17,27 @@ const ActionButtonsType = React.createClass({
 				options = self.props.cell.typeOptions;
 
 		options.onItemEdit && itemButtons.push(
-			<span key={item.id+'edit'} onClick={options.onItemEdit.bind(this, item)} className="bLinkLike">
+			<span key={item.id+'edit'} onClick={options.onItemEdit.bind(null, item)} className="bLinkLike">
 				<SVG icon="icon_edit"/>
 			</span>
 		);
 		options.onItemView && itemButtons.push(
-			<span key={item.id+'view'} onClick={options.onItemView.bind(this, item)} className="bLinkLike bViewBtn">
+			<span key={item.id+'view'} onClick={options.onItemView.bind(null, item)} className="bLinkLike bViewBtn">
 				<SVG icon="icon_eye"/>
 			</span>
 		);
 		options.onItemSelect && itemButtons.push(
-			<span key={item.id+'view'} onClick={options.onItemSelect.bind(this, item)} className="bLinkLike bViewBtn">
+			<span key={item.id+'view'} onClick={options.onItemSelect.bind(null, item)} className="bLinkLike bViewBtn">
 				<SVG icon="icon_menu"/>
 			</span>
 		);
 		options.onItemRemove && itemButtons.push(
-			<span key={item.id+'remove'} onClick={options.onItemRemove.bind(this, item)} className="bLinkLike delete_btn">
+			<span key={item.id+'remove'} onClick={options.onItemRemove.bind(null, item)} className="bLinkLike delete_btn">
 				<SVG icon="icon_delete"/>
 			</span>
 		);
 
+		return itemButtons.map(btn => btn);
 	},
 	render: function() {
 		return (

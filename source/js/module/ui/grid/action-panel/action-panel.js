@@ -33,6 +33,9 @@ const ActionPanel = React.createClass({
 						<SVG icon="icon_search"/> {model.isFilterActive ? '↑' : '↓'}
 					</div>
 				</If>
+				<If condition={!!model.btnAdd}>
+					{model.btnAdd}
+				</If>
 			</div>
 		);
 	}

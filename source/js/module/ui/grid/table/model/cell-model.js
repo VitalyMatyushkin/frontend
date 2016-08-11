@@ -13,7 +13,14 @@ const CellModel = function(options){
 
 CellModel.prototype = {
 	getValue:function(dataItem){
-		return dataItem[this.dataField];
+		const fieldParts = this.dataField.split('.');
+		let result = dataItem;
+
+		fieldParts.forEach(key => {
+			result = result[key];
+		});
+
+		return result;
 	}
 };
 
