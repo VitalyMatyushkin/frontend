@@ -19,7 +19,7 @@ const 	ColumnModel = require('./column-model'),
 const TableModel = function(options){
 	this.data = options.data || [];
 	this.sort = new SortModel(options.onSort);
-	this.columns = options.columns ? options.columns.map(c => {
+	this.columns = options.columns ? options.columns.filter(c => !c.hidden).map(c => {
 		c.sort = this.sort;
 		return new ColumnModel(c);
 	}) : [];

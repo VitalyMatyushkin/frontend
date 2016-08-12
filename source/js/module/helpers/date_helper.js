@@ -19,6 +19,19 @@ const DateHelper = {
 		return this.getDate(dotStr).replace(/[/]/g, '.');
 	},
 
+	/** convert date from UTC-string to 'dd mmm yyyy' format */
+	toLocalWithMonthName:function(utcStr){
+		var self = this;
+		if(utcStr){
+			var	birthday = new Date(utcStr),
+				date = self.zeroFill(birthday.getDate()),
+				month = birthday.getMonth(),
+				year = birthday.getFullYear();
+
+			return [date, self.getMonthName(month), year].join(' ');
+		}
+	},
+
 	/** convert local date format 'dd.mm.yyyy' to ISO-string */
 	toIso: function(dotString) {
 		const dateParts = dotString ? dotString.split('.'):[],
@@ -43,6 +56,31 @@ const DateHelper = {
 		}
 
 		return result;
+	},
+
+	daysOfWeek: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+	daysOfWeekMedium: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+	monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+
+	/** return month name based on provided index. Index starts from 0.
+	 * @param monthIndex month index. STARTS FROM 0
+	 * @returns {String} month name
+	 */
+	getMonthName: function(monthIndex) {
+		return this.monthNames[monthIndex];
+	},
+
+	/** return day of week name based on provided index. Index starts from 0.
+	 * @param dayOfWeekIndex day of week index. STARTS FROM 0
+	 * @returns {String} month name
+	 */
+	getDayOfWeekName: function(dayOfWeekIndex) {
+		return this.daysOfWeek[dayOfWeekIndex];
+	},
+
+	/** converts int with leading 0 if int is less than 10 */
+	zeroFill: function(i) {
+		return (i < 10 ? '0' : '') + i;
 	},
 
     /** Extracts time from date string.
