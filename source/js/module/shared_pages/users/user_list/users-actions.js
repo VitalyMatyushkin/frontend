@@ -7,7 +7,8 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
 		AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		GridModel 		= require('module/ui/grid/grid-model'),
+		RoleHelper 		= require('module/helpers/role_helper');
 
 /**
  * UsersActions
@@ -174,6 +175,18 @@ UsersActions.prototype = {
 			alert('Please select at least 1 row');
 		}
 	},
+	getRoleListPromise:function(){
+		const roles = [];
+
+		Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS).forEach(key => {
+			roles.push({
+				key: key,
+				value: RoleHelper.ALLOWED_PERMISSION_PRESETS[key].toLowerCase()
+			});
+		});
+
+		return Promise.resolve(roles);
+	},
 	getGrid: function(){
 		const columns = [
 			{
@@ -223,21 +236,6 @@ UsersActions.prototype = {
 				}
 			},
 			{
-				text:'School',
-				hidden:true,
-				cell:{
-					dataField:'permissions.schoolId'
-				},
-				filter:{
-					type:'multi-select',
-					typeOptions:{
-						getDataPromise: window.Server.publicSchools.get(),
-						valueField:'name',
-						keyField:'id'
-					}
-				}
-			},
-			{
 				text:'Role',
 				cell:{
 					dataField:'roles'
@@ -255,6 +253,21 @@ UsersActions.prototype = {
 					type:'custom',
 					typeOptions:{
 						parseFunction:this.getActions.bind(this)
+					}
+				}
+			},
+			{
+				text:'Role',
+				hidden:true,
+				cell:{
+					dataField:'permissions.preset'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getRoleListPromise(),
+						valueField:'value',
+						keyField:'key'
 					}
 				}
 			}
