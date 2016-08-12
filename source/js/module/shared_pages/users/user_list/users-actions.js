@@ -188,7 +188,7 @@ UsersActions.prototype = {
 		return Promise.resolve(roles);
 	},
 	getGrid: function(){
-		const columns = [
+		let columns = [
 			{
 				text:'Name',
 				isSorted:true,
@@ -223,16 +223,11 @@ UsersActions.prototype = {
 				text:'Birthday',
 				isSorted:true,
 				cell:{
-					dataField:'birthday'
+					dataField:'birthday',
+					type:'date'
 				},
 				filter:{
 					type:'between-date'
-				}
-			},
-			{
-				text:'School',
-				cell:{
-					dataField:'school'
 				}
 			},
 			{
@@ -272,6 +267,33 @@ UsersActions.prototype = {
 				}
 			}
 		];
+
+		if(this.props.blockService){
+			const additionalColumns = [
+				{
+					text:'School',
+					cell:{
+						dataField:'school'
+					}
+				},
+				{
+					text:'School',
+					hidden:true,
+					cell:{
+						dataField:'permissions.schoolId'
+					},
+					filter:{
+						type:'multi-select',
+						typeOptions:{
+							getDataPromise: window.Server.publicSchools.get(),
+							valueField:'name',
+							keyField:'id'
+						}
+					}
+				}
+			];
+			columns = additionalColumns.concat(columns);
+		}
 
 		return new GridModel({
 			actionPanel:{

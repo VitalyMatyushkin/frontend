@@ -9,8 +9,7 @@ $darkGrey: #959595;
     .bFilterField {
       display: inline-block;
       position: relative;
-      margin-right: 15px;
-      min-width: 10em;
+      margin-right: 45px;
 
       .eField {
         color: $darkGrey;
@@ -22,9 +21,9 @@ $darkGrey: #959595;
           border-width: 5px 4px 0 4px;
           content: "";
           height: 0;
-          margin-left: 8px;
+          margin-left: 6px;
           position: absolute;
-          top: 30%;
+          top: 20%;
           width: 0;
         }
       }
@@ -110,14 +109,11 @@ $darkGrey: #959595;
         .mSelected {
           background: #fff;
 
-          &:after {
-            background: url("/images/tick.png") no-repeat;
-            content: "";
-            height: 10px;
-            left: -28px;
-            position: absolute;
-            top: 8px;
-            width: 14px;
+          &:before{
+            content: "✓";
+            color:black;
+            font-size: 20px;
+            line-height: 14px;
           }
         }
       }
