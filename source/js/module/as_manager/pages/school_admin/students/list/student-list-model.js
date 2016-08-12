@@ -55,18 +55,27 @@ StudentListModel.prototype = {
 				});
 		}
 	},
-	getParents: function(parents) {
-		var self = this;
-		if(parents !== undefined){
-			return parents ? parents.map(function(parent) {
-				var iconGender = parent.gender === 'male' ? 'icon_man': 'icon_woman';
+	getParents: function(item) {
+		const parents = item.parents;
 
-				return (<div className="eDataList_parent">
-					<span className="eDataList_parentGender"><SVG icon={iconGender} /></span>
-					<span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
-				</div>);
+		if (parents) {
+			return parents ? parents.map(function (parent) {
+				var iconGender = parent.gender === 'male' ? 'icon_man' : 'icon_woman';
+
+				return (
+					<div className="eDataList_parent">
+						<span className="eDataList_parentGender"><SVG icon={iconGender}/></span>
+						<span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
+					</div>
+				);
 			}) : null;
 		}
+	},
+	getForms:function(){
+		return window.Server.schoolForms.get({schoolId:this.activeSchoolId},{filter:{limit:100}});
+	},
+	getHouses:function(){
+		return window.Server.schoolHouses.get({schoolId:this.activeSchoolId},{filter:{limit:100}});
 	},
 	getGrid: function(){
 		const columns = [
@@ -121,6 +130,16 @@ StudentListModel.prototype = {
 				}
 			},
 			{
+				text:'Parents',
+				cell:{
+					dataField:'parents',
+					type:'custom',
+					typeOptions:{
+						parseFunction:this.getParents.bind(this)
+					}
+				}
+			},
+			{
 				text:'Actions',
 				cell:{
 					type:'action-buttons',
@@ -128,6 +147,36 @@ StudentListModel.prototype = {
 						onItemEdit:		this.onEdit.bind(this),
 						onItemView:		this.onView.bind(this),
 						onItemRemove:	this.onRemove.bind(this)
+					}
+				}
+			},
+			{
+				text:'Form',
+				hidden:true,
+				cell:{
+					dataField:'formId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getForms(),
+						valueField:'name',
+						keyField:'id'
+					}
+				}
+			},
+			{
+				text:'House',
+				hidden:true,
+				cell:{
+					dataField:'houseId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getHouses(),
+						valueField:'name',
+						keyField:'id'
 					}
 				}
 			}
