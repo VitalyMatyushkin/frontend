@@ -12,9 +12,10 @@ const   React 		= require('react'),
 const Users = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		grantRole: React.PropTypes.func,
-		permissionServiceName: React.PropTypes.string,
-		blockService: React.PropTypes.object
+		grantRole: 				React.PropTypes.func,
+		permissionServiceName: 	React.PropTypes.string,
+		blockService: 			React.PropTypes.object,
+		addButton:				React.PropTypes.func
 	},
 	getDefaultProps: function () {
 		return {
