@@ -269,7 +269,7 @@ UsersActions.prototype = {
 		];
 
 		if(this.props.blockService){
-			const additionalColumns = [
+			columns.splice(4,0,
 				{
 					text:'School',
 					cell:{
@@ -291,14 +291,14 @@ UsersActions.prototype = {
 						}
 					}
 				}
-			];
-			columns = additionalColumns.concat(columns);
+			);
 		}
 
 		return new GridModel({
 			actionPanel:{
 				title:'Users & Permissions',
-				showStrip:true
+				showStrip:true,
+				btnAdd:this.props.addButton
 			},
 			columns:columns,
 			filters:{limit:20}
