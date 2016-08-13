@@ -21,6 +21,7 @@ PaginationModel.prototype.nextPage = function(){
 	this.filter.setPageNumber(this.currentPage);
 };
 PaginationModel.prototype.onPageLoaded = function(rowLoaded){
+	this.currentPage = this.filter.skip / this.filter.limit + 1;
 	this.isLastPage = this.filter.limit > rowLoaded;
 };
 
