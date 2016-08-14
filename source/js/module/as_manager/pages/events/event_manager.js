@@ -179,6 +179,7 @@ const EventManager = React.createClass({
 
 							return self.addIndividualPlayersToEvent(savedEvent);
 						})
+						.then(() => self.activateEvent(savedEvent))
 						.then(() => self._afterEventCreation(savedEvent));
 			case "TEAM":
 				return Promise.all(self.createTeams())
@@ -192,8 +193,17 @@ const EventManager = React.createClass({
 
 						return self.addTeamsToEvent(savedEvent, teams);
 					})
+					.then(() => self.activateEvent(savedEvent))
 					.then(() => self._afterEventCreation(savedEvent));
 		}
+	},
+	activateEvent: function(event) {
+		const self = this;
+
+		return window.Server.schoolEventActivate.post({
+			schoolId:	self.activeSchoolId,
+			eventId:	event.id
+		});
 	},
 	addTeamsToEvent: function(event, teams) {
 		const self = this;
@@ -282,11 +292,6 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		// TODO WOW!
-		self.getMoreartyContext().getBinding().update('events.models', function (events) {
-			return events.push(Immutable.fromJS(event));
-		});
-
 		document.location.hash = 'event/' + event.id + '?tab=teams';
 		binding.clear();
 		binding.meta().clear();
@@ -294,14 +299,15 @@ const EventManager = React.createClass({
 		return true;
 	},
 	isEventDataCorrect: function() {
-		const self = this,
-			binding    = self.getDefaultBinding(),
-			eventType  = binding.toJS('model.type');
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
 
 		let isError = false;
 
 		// for inter-schools event we can edit only one team - our team:)
-		if(eventType === 'inter-schools') {
+		if(event.type === 'inter-schools' || EventHelper.isEventWithOneIndividualTeam(event)) {
 			isError = binding.toJS('error.0').isError;
 		} else {
 			isError = !(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError);
@@ -376,8 +382,9 @@ const EventManager = React.createClass({
 				break;
 			case 3:
 				if(
-					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || // for inter-schools
-					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError // for other type of event
+					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 			// for any inter-schools events
+					EventHelper.isEventWithOneIndividualTeam(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL houses and individual internal
+					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError							// for any other type of event
 				) {
 					isStepComplete = true;
 				};

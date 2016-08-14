@@ -1,9 +1,9 @@
 const	React			= require('react'),
-		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
+		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		Sport			= require('module/ui/icons/sport_icon'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		Morearty        = require('morearty'),
 		ChallengeModel	= require('module/ui/challenges/challenge_model');
 
 const ChallengesList = React.createClass({
@@ -94,20 +94,13 @@ const ChallengesList = React.createClass({
 					const	model = new ChallengeModel(event, activeSchoolId),
 							sport = self._getSportIcon(model.sport);
 
-					const	leftSideRivalName	= self._getRivalNameLeftSide(event, model.rivals),
-							rightSideRivalName	= self._getRivalNameRightSide(event, model.rivals);
-
 					return (
 						<div key={'event-' + event.id} className='eChallenge' onClick={self._onClickEvent.bind(null, event.id)}>
 							<div className="eChallenge_sport">{sport}</div>
 							<div className="eChallenge_date">{model.date}</div>
 
 							<div className="eChallenge_name" title={model.name}>{model.name}</div>
-							<div className="eChallenge_rivals">
-								<span className="eChallenge_rivalName" title={leftSideRivalName}>{leftSideRivalName}</span>
-								<span>vs</span>
-								<span className="eChallenge_rivalName" title={rightSideRivalName}>{rightSideRivalName}</span>
-							</div>
+							{self.renderGameTypeColumn(event, model)}
 						</div>
 					);
 				});
@@ -118,6 +111,31 @@ const ChallengesList = React.createClass({
 					</div>
 				);
 			}
+		}
+
+		return result;
+	},
+	renderGameTypeColumn: function(event, model) {
+		const	self	= this;
+		let		result	= null;
+
+		if(EventHelper.isEventWithOneIndividualTeam(event)) {
+			result = (
+				<div className="eChallenge_rivals">
+					{"Individual Game"}
+				</div>
+			);
+		} else {
+			const	leftSideRivalName	= self._getRivalNameLeftSide(event, model.rivals),
+					rightSideRivalName	= self._getRivalNameRightSide(event, model.rivals);
+
+			result = (
+				<div className="eChallenge_rivals">
+					<span className="eChallenge_rivalName" title={leftSideRivalName}>{leftSideRivalName}</span>
+					<span>vs</span>
+					<span className="eChallenge_rivalName" title={rightSideRivalName}>{rightSideRivalName}</span>
+				</div>
+			);
 		}
 
 		return result;

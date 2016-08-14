@@ -1,4 +1,5 @@
-const RoleHelper		= require('module/helpers/role_helper');
+const	RoleHelper		= require('module/helpers/role_helper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper');
 
 const EventHelper = {
 	clientEventTypeToServerClientTypeMapping: {
@@ -14,7 +15,8 @@ const EventHelper = {
 	EVENT_STATUS: {
 		FINISHED:		'FINISHED',
 		NOT_FINISHED:	'NOT_FINISHED',
-		DRAFT:			'DRAFT'
+		DRAFT:			'DRAFT',
+		ACCEPTED:		'ACCEPTED'
 	},
 	/**
 	 * Create event summary object by event result object.
@@ -99,7 +101,8 @@ const EventHelper = {
 
 		return	(
 				binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
-				binding.get('model.status') === self.EVENT_STATUS.DRAFT
+				binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
+				binding.get('model.status') === self.EVENT_STATUS.ACCEPTED
 			) &&
 			RoleHelper.isUserSchoolWorker(thiz);
 	},
@@ -114,13 +117,27 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	binding.get('teamsData').count() === 2 &&
-				(
-					binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
-					binding.get('model.status') === self.EVENT_STATUS.DRAFT
-				) &&
-				binding.get('mode') === 'general' &&
+		return	self.isTeamCountRight(binding) &&
+				self.isNotFinishedEvent(binding) &&
+				self.isGeneralMode(binding) &&
 				RoleHelper.isUserSchoolWorker(thiz);
+	},
+	isTeamCountRight: function(binding) {
+		const self = this;
+
+		return self.isEventWithOneIndividualTeam(binding.toJS('model')) ? true : binding.get('teamsData').count() > 1
+	},
+	isNotFinishedEvent: function(binding) {
+		const self = this;
+
+		return (
+			binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
+			binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
+			binding.get('model.status') === self.EVENT_STATUS.ACCEPTED
+		);
+	},
+	isGeneralMode: function(binding) {
+		return binding.get('mode') === 'general';
 	},
 	/**
 	 * Return TRUE if event edit mode is "closing".
@@ -154,7 +171,8 @@ const EventHelper = {
 
 		return	(
 					binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
-					binding.get('model.status') === self.EVENT_STATUS.DRAFT
+					binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
+					binding.get('model.status') === self.EVENT_STATUS.ACCEPTED
 				)&&
 				binding.get('mode') === 'general' &&
 				binding.get('activeTab') === 'teams' &&
@@ -169,6 +187,17 @@ const EventHelper = {
 		const binding = thiz.getDefaultBinding();
 
 		return binding.get('mode') !== 'general' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
+	},
+	isEventWithOneIndividualTeam: function(event) {
+		const	eventType	= event.eventType ?  EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] : event.type,
+				sport		= event.sportModel ? event.sportModel : event.sport;
+
+		return (eventType === 'internal') && sport.players === 'INDIVIDUAL';
+	},
+	isShowScoreButtons: function(status, mode, isOwner) {
+		return	(status === "NOT_FINISHED" || status === "DRAFT" || status === "ACCEPTED") &&
+				mode === 'closing' &&
+				isOwner;
 	}
 };
 

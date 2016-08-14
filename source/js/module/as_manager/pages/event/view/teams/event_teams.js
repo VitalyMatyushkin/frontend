@@ -1,6 +1,7 @@
 const	InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventTeamsView		= require('./event_teams_view'),
 		EventTeamsEdit		= require('./event_teams_edit'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		React				= require('react'),
@@ -73,9 +74,36 @@ const EventTeams = React.createClass({
 
 		const event = self.getBinding('event').toJS();
 
-		event && self._setPlayersFromEventToBinding(event);
+		if(event && TeamHelper.isIndividualSport(event)) {
+			self._setIndividualPlayersFromEventToBinding(event);
+		} else {
+			self._setTeamPlayersFromEventToBinding(event);
+		}
 	},
-	_setPlayersFromEventToBinding: function(event) {
+	_setIndividualPlayersFromEventToBinding: function(event) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	editPlayers = [],
+				viewPlayers = [];
+
+		window.Server.schoolEvent.get(
+				{
+					schoolId:	self.activeSchoolId,
+					eventId:	event.id
+				}
+			)
+			.then(event => {
+				binding.atomically()
+					.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
+					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(event.individualsData))
+					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
+					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
+					.set('isSync',											Immutable.fromJS(true))
+					.commit();
+			});
+	},
+	_setTeamPlayersFromEventToBinding: function(event) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
