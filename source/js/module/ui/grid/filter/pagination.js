@@ -12,7 +12,7 @@ const Pagination = React.createClass({
 		const model = this.props.model,
 				classes = classNames({
 					bPagination:true,
-					mHidden:model.isLastPage
+					mInvisible:model.isLastPage
 				});
 
 		return (

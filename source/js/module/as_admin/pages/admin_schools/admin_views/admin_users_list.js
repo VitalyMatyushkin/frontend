@@ -4,7 +4,7 @@
 
 const   React       = require('react'),
         Morearty    = require('morearty'),
-        UserList    = require('module/shared_pages/users/user_list'),
+        UserList    = require('module/shared_pages/users/user_list/users'),
         GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
         SVG			= require('module/ui/svg');
 
