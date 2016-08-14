@@ -21,11 +21,50 @@
   margin: auto;
   text-align: center;
 }
-.eEventResult_point {
+.eEventResult_PointsWrapper {
+  width: 160px;
+  height: 30px;
+
   font-size: 26px;
   font-weight: bold;
 }
-.eEventResult_colon {
+
+.eEventResult_PointSideWrapper {
+  display: inline-block;
+}
+
+.eEventResult_Point {
+  display: inline-block;
+}
+
+.eEventResult_Colon {
+  display: inline-block;
+
   font-weight: normal;
   color: #878787;
 }
+
+.eEventResult_SignContainer {
+  display: inline-block;
+
+  width: 18px;
+  height: 18px;
+
+  margin: 0 5px;
+
+  cursor: pointer;
+  text-align: center;
+}
+
+.eEventResult_Sign {
+  display: block;
+
+  width: 11px;
+  height: 11px;
+
+  margin: 3px 3px 0px 4px;
+
+  color: black;
+}
+
+

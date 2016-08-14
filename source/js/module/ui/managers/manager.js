@@ -2,6 +2,7 @@ const	React					= require('react'),
 		classNames				= require('classnames'),
 		TeamPlayersValidator	= require('./helpers/team_players_validator'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
+		EventHelper				= require('./../../helpers/eventHelper'),
 		GameField				= require('./gameField'),
 		TeamModeView			= require('./modes/team_mode_view'),
 		Morearty            	= require('morearty'),
@@ -94,8 +95,10 @@ const Manager = React.createClass({
 	 * @private
 	 */
 	_addListeners: function() {
-		const	self			= this,
+		const	self	= this,
 				binding	= self.getDefaultBinding();
+
+		const event = self.getDefaultBinding().toJS('model');
 
 		binding.sub('selectedRivalIndex').addListener(() => {
 			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
@@ -103,15 +106,17 @@ const Manager = React.createClass({
 		binding.sub('teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
 			self._validate(0);
 		});
-		binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
-			self._validate(1);
-		});
 		binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
 			self._validate(0);
 		});
-		binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
-			self._validate(1);
-		});
+		if(!EventHelper.isEventWithOneIndividualTeam(event)) {
+			binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
+				self._validate(1);
+			});
+			binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
+				self._validate(1);
+			});
+		}
 	},
 	_validate: function(rivalIndex) {
 		const	self			= this,
@@ -229,7 +234,7 @@ const Manager = React.createClass({
 	_renderRivals: function() {
 		const self = this;
 
-		if(!self.props.isInviteMode) {
+		if(self.isShowRivals()) {
 			return (
 				<div className="eManager_chooser">
 					<div className="bChooserRival">
@@ -238,6 +243,13 @@ const Manager = React.createClass({
 				</div>
 			);
 		}
+	},
+	isShowRivals: function() {
+		const self = this;
+
+		const event = self.getDefaultBinding().toJS('model');
+
+		return !self.props.isInviteMode && !EventHelper.isEventWithOneIndividualTeam(event);
 	},
 	renderGameField: function() {
 		const	self			= this,

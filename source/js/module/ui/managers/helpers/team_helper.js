@@ -262,6 +262,12 @@ function getParticipantsType(event) {
 	}
 };
 
+function isIndividualSport(event) {
+	const sport = event.sportModel ? event.sportModel : event.sport;
+
+	return sport.players === 'INDIVIDUAL';
+}
+
 const TeamHelper = {
 	getAges:						getAges,
 	validate:						validate,
@@ -280,7 +286,8 @@ const TeamHelper = {
 	convertGenderToServerValue:		convertGenderToServerValue,
 	getBodyForAddPlayersRequest:	getBodyForAddPlayersRequest,
 	getFilterGender:				getFilterGender,
-	getParticipantsType:			getParticipantsType
+	getParticipantsType:			getParticipantsType,
+	isIndividualSport:				isIndividualSport
 };
 
 module.exports = TeamHelper;

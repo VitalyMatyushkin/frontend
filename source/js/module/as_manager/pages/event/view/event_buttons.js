@@ -12,56 +12,57 @@ const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	displayName: 'EventButtons',
 	closeMatch: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				points	= binding.toJS('points'),
-				event	= binding.toJS('model');
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				points		= binding.toJS('points'),
+				event		= binding.toJS('model'),
+				teamsData	= binding.toJS('teamsData');
 
 		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-		let updEvent;
-
-		// finish event
 		window.Server.finishSchoolEvent.post({
 			schoolId:	activeSchoolId,
 			eventId:	event.id
 		})
-		.then( _updEvent => {
-			updEvent = _updEvent;
+		.then(() => {
+			const body = event.results.teamScore.map(t => {
+				return {
+					teamId:	t.teamId,
+					score:	t.score
+				};
+			});
 
-			// set comment
-			return window.Server.schoolEventResult.put(
-				{
-					schoolId:	activeSchoolId,
-					eventId:	event.id
-				},
-				{
-					comment: binding.get('model.comment')
-				}
-			);
+			if(body.length < 2 ) {
+				const index = teamsData.findIndex(t => t.teamId !== body[0].teamId);
+				body.push({
+					teamId:	teamsData[index].id,
+					score:	0
+				});
+			}
+
+			if(body[0].score > body[1].score) {
+				body[0].isWinner = true;
+				body[1].isWinner = false;
+			} else if(body[0].score < body[1].score) {
+				body[0].isWinner = false;
+				body[1].isWinner = true;
+			}
+
+			return Promise.all(body.map(teamScoreData => window.Server.schoolEventResultTeamScore.post({ schoolId: activeSchoolId, eventId: event.id }, teamScoreData)));
 		})
-		.then(result => {
-			updEvent.result = result;
-
-			// add points
+		.then(_ => {
 			return Promise.all(
-				points.map(point => {
-					return window.Server.addPointToSchoolEventResult.post(
+				event.results.individualScore.map(
+					individualScoreData => window.Server.schoolEventResultIndividualsScore.post(
 						{
-							schoolId:	activeSchoolId,
-							eventId:	event.id
+							schoolId: activeSchoolId,
+							eventId: event.id
 						},
-						{
-							userId:	point.userId,
-							score:	point.score,
-							teamId:	point.teamId
-						}
-					);
-				})
+						individualScoreData
+					)
+				)
 			);
 		})
-		// get event from server after adding points
-		// because getting of event result faster than creating event result manually
 		.then(_ => window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } ) )
 		.then(event => {
 			binding

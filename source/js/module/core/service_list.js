@@ -92,8 +92,11 @@ const serviceList = {
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
         serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
+        serviceList.schoolEventActivate = new Service('/i/schools/{schoolId}/events/{eventId}/activate', binding);
         serviceList.schoolEventTeams = new Service('/i/schools/{schoolId}/events/{eventId}/teams', binding);
         serviceList.schoolEventIndividualsBatch = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/batch', binding);
+        serviceList.schoolEventResultTeamScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/teams/score', binding);
+        serviceList.schoolEventResultIndividualsScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score', binding);
         serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
         serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
         serviceList.addPointToSchoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result/points', binding);
