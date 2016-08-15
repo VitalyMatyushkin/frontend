@@ -30,7 +30,14 @@ const TeamSubmitMixin = {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const rivals = binding.toJS('rivals');
+		// for inter school event create team only for first rival
+		// because it's inter school event:)
+		let rivals;
+		if(binding.toJS('model.type') === "inter-schools") {
+			rivals = [binding.toJS(`rivals.0`)];
+		} else {
+			rivals = binding.toJS('rivals');
+		}
 
 		return rivals.map((rival, i) => {
 			const teamWrapper = binding.toJS(`teamModeView.teamWrapper.${i}`);
