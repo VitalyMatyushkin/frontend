@@ -11,6 +11,13 @@
   width: 100%;
 }
 
+.bEventTeams_TeamWrapper {
+
+  &.mDisabled {
+    display: none;
+  }
+}
+
 .bEventTeams_team {
   display: flex;
   flex-direction: column;

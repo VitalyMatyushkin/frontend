@@ -21,14 +21,18 @@ const EventTeams = React.createClass({
 			editPlayers: {
 				'teamManagerBindings': [
 					{
-						teamStudents: [],
-						positions: [],
-						blackList: []
+						teamStudents:	[],
+						foundStudents:	[],
+						removedPlayers:	[],
+						positions:		[],
+						blackList:		[]
 					},
 					{
-						teamStudents: [],
-						positions: [],
-						blackList: []
+						teamStudents:	[],
+						foundStudents:	[],
+						removedPlayers:	[],
+						positions:		[],
+						blackList:		[]
 					}
 				]
 			},
