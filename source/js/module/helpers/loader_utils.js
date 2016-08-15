@@ -79,7 +79,7 @@ function startModuleSelector(domainName) {
 function isDeveloperEnvironment(domainName){
 	const parsedDomain = parseDomainName(domainName);
 
-	return parsedDomain.env === 'stage2' || parsedDomain.rootDomain === 'squard';
+	return parsedDomain.env === 'stage2' || parsedDomain.env === 'stage1' || parsedDomain.rootDomain === 'squard';
 }
 
 
