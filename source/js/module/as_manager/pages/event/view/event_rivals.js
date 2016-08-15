@@ -21,7 +21,7 @@ const EventRival = React.createClass({
 				if(order === 0) {
 					pic = binding.get('model.inviterSchool.pic');
 				} else if(order === 1) {
-					pic = binding.get('model.invitedSchool.pic');
+					pic = binding.get('model.invitedSchools.0.pic');
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
@@ -54,7 +54,7 @@ const EventRival = React.createClass({
 				if(order === 0) {
 					name = binding.get('model.inviterSchool.name');
 				} else if(order === 1) {
-					name = binding.get('model.invitedSchool.name');
+					name = binding.get('model.invitedSchools.0.name');
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
