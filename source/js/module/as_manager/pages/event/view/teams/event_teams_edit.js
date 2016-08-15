@@ -125,27 +125,27 @@ const EventTeamsView = React.createClass({
 			</div>
 		);
 	},
-	renderTeamManager: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return self.renderTeamManagerOrder(binding.toJS('selectedTeamIndex'));
-	},
-	renderTeamManagerOrder: function(order) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return (
-			<TeamManager binding={binding.sub(`teamManagerBindings.${order}`)}/>
-		);
-	},
 	render: function() {
-		const self = this;
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return (
 			<div className="bEventTeams">
 				{self._renderTeamEditHeader()}
-				{self.renderTeamManager()}
+				{
+					binding.toJS('teamManagerBindings').map((_, index) => {
+						const teamWrapperClassName = classNames({
+							bEventTeams_TeamWrapper:	true,
+							mDisabled:					binding.toJS('selectedTeamIndex') === index
+						});
+
+						return (
+							<div className={teamWrapperClassName}>
+								<TeamManager binding={binding.sub(`teamManagerBindings.${index}`)}/>
+							</div>
+						);
+					})
+				}
 			</div>
 		);
 	}
