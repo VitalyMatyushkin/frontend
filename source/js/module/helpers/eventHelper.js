@@ -1,5 +1,4 @@
-const	RoleHelper		= require('module/helpers/role_helper'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper');
+const RoleHelper = require('module/helpers/role_helper');
 
 const EventHelper = {
 	clientEventTypeToServerClientTypeMapping: {
