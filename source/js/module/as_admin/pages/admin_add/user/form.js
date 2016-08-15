@@ -17,11 +17,11 @@ const UserForm = React.createClass({
 		const 	self = this,
 			gendersArray = [
 				{
-					value: 'Boys',
+					value: 'Male',
 					id: 'MALE'
 				},
 				{
-					value: 'Girls',
+					value: 'Female',
 					id: 'FEMALE'
 				}
 			];
