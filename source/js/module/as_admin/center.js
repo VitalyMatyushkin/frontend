@@ -17,7 +17,7 @@ const   RouterView      		= require('module/core/router'),
 		SchoolAddComponent		= require('module/as_manager/pages/schools/schools_add'),
 		AlbumsComponent			= require('module/ui/gallery/albums'),
 		AdminDashboardComponent	= require('module/as_admin/pages/admin_schools/admin_dashboard'),
-		SchoolSandboxComponent	= require('module/as_admin/pages/admin_schools/admin_dashboard');
+		SchoolSandboxComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/sandbox');
 
 const Center = React.createClass({
     mixins: [Morearty.Mixin],
