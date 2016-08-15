@@ -2,7 +2,9 @@
  * Раздичные виды валидации
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
-const 	$ 		= require('jquery');
+const 	$ 			= require('jquery'),
+		DateHelper 	= require('module/helpers/date_helper');
+
 let serverValidationTimer = null;
 
 var validationsSet = {
@@ -26,20 +28,11 @@ var validationsSet = {
 		}
 	},
 	date:function(value){
-        const err = 'Incorrect date!';
-		if(!Date.parse(value)){
-			return err;
-		}else{
-            const date = new Date(value),
-                valueArray = value.split('-'),
-                day = valueArray[2].split('T')[0]*1,
-                month = valueArray[1]*1,
-                year = valueArray[0];
-			if(date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == day)
-                return false;
-            else
-                return err;
+		if(!DateHelper.isValid(value)){
+			return 'Incorrect date!';
 		}
+
+		return false;
 	},
 	email: function(value) {
 		var self = this;

@@ -19,8 +19,9 @@ const MaskedDate =  React.createClass({
 
 		if(self.props.defaultValue !== nextProps.defaultValue)
 			self.setDefaultValue(nextProps);
-		if(self.props.value !== nextProps.value)
+		if(self.props.value !== nextProps.value){
 			self.setDate(nextProps.value);
+		}
 	},
 	setDefaultValue: function(nextProps) {
 		const props	= nextProps || this.props;
@@ -33,6 +34,7 @@ const MaskedDate =  React.createClass({
 
 		this.setState({date:localeDate});
 
+		this.props.onChange && this.props.onChange(DateHelper.toIso(localeDate));
 		return localeDate;
 	},
 
@@ -42,7 +44,6 @@ const MaskedDate =  React.createClass({
 
         if(!value || value==='__.__.____'){
 			value = self.setDefaultValue();
-			self.props.onChange && self.props.onChange(DateHelper.toIso(value));
 		}
 
 		self.props.onBlur && self.props.onBlur(DateHelper.toIso(value));

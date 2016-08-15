@@ -12,7 +12,7 @@ const TypeDate =  React.createClass({
 			defaultValue = binding.get('defaultValue');
 
 		return (
-            <Date defaultValue={defaultValue} value={value} onBlur={self.setValue} />
+            <Date defaultValue={defaultValue} value={value} onChange={self.changeValue} onBlur={self.setValue} />
 		)
 	}
 });
