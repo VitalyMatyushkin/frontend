@@ -189,6 +189,8 @@ StudentListModel.prototype = {
 			actionPanel:{
 				title:'Students',
 				showStrip:true,
+
+				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:addingAllowed ?
 				(
 					<div className="addButton" onClick={function(){document.location.hash += '/add';}}>
