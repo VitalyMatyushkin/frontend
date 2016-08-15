@@ -4,7 +4,7 @@ const	React 					= require('react'),
 		Route 					= require('module/core/route'),
 		ClassesListComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes_list'),
 		ClassAddComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_add'),
-		ClassEditComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit"');
+		ClassEditComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/classes/class_edit');
 
 const ClassesPage = React.createClass({
 	mixins: [Morearty.Mixin],
