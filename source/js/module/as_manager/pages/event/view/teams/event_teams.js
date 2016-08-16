@@ -21,6 +21,7 @@ const EventTeams = React.createClass({
 			editPlayers: {
 				'teamManagerBindings': [
 					{
+						teamId:			undefined,
 						teamStudents:	[],
 						foundStudents:	[],
 						removedPlayers:	[],
@@ -28,6 +29,7 @@ const EventTeams = React.createClass({
 						blackList:		[]
 					},
 					{
+						teamId:			undefined,
 						teamStudents:	[],
 						foundStudents:	[],
 						removedPlayers:	[],
@@ -111,44 +113,52 @@ const EventTeams = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	editPlayers = [],
-				viewPlayers = [];
-
 		Promise.all(event.teamsData.map(team => {
 				return self._getTeamPLayers(team)
+					// filter some players - not all players in event.teamsData available for edit
+					// players from another school not available for edit
 					.then(players => {
-						viewPlayers.push(players);
+						const result = {
+							teamId:			team.id,
+							viewPlayers:	players
+						};
 
 						switch (event.eventType) {
 							case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-								team.schoolId === self.activeSchoolId && editPlayers.push(players);
+								team.schoolId === self.activeSchoolId && (result.editPlayers = players);
 								break;
 							default:
-								editPlayers.push(players);
+								result.editPlayers = players;
 								break;
 						}
+
+						return result;
 					});
 			}))
 			// TODO not work for teams count great then 2
-			.then(() => binding.atomically()
-								.set('viewPlayers.players',								Immutable.fromJS(viewPlayers))
-								.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(editPlayers[0]))
-								.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(editPlayers[1] ? editPlayers[1] : []))
-								.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
-									self.getBinding('event').toJS().sportModel.field.positions ?
-										self.getBinding('event').toJS().sportModel.field.positions :
-										[]
-								))
-								.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(editPlayers[1] ? editPlayers[1] : []))
-								.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(editPlayers[0]))
-								.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
-									self.getBinding('event').toJS().sportModel.field.positions ?
-										self.getBinding('event').toJS().sportModel.field.positions :
-										[]
-								))
-								.set('isSync',											Immutable.fromJS(true))
-								.commit()
-			);
+			.then(teamPlayers => {
+				binding.atomically()
+					.set('viewPlayers.players',								Immutable.fromJS( [teamPlayers[0].viewPlayers, teamPlayers[1].viewPlayers] ))
+					.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(teamPlayers[0].teamId))
+					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(teamPlayers[0].editPlayers))
+					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].editPlayers : []))
+					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
+						self.getBinding('event').toJS().sportModel.field.positions ?
+							self.getBinding('event').toJS().sportModel.field.positions :
+							[]
+					))
+					// if event type is inter schools - second team can not exist
+					.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].teamId : undefined))
+					.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].editPlayers : []))
+					.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[0].editPlayers : []))
+					.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
+						self.getBinding('event').toJS().sportModel.field.positions ?
+							self.getBinding('event').toJS().sportModel.field.positions :
+							[]
+					))
+					.set('isSync',											Immutable.fromJS(true))
+					.commit();
+			});
 	},
 	_getTeamPLayers: function(team) {
 		return window.Server.teamPlayers.get(
