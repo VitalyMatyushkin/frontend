@@ -90,6 +90,9 @@ StudentListModel.prototype = {
 		];
 	},
 	getGrid: function(){
+		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+
 		const columns = [
 			{
 				text:'Gender',
@@ -164,9 +167,9 @@ StudentListModel.prototype = {
 				cell:{
 					type:'action-buttons',
 					typeOptions:{
-						onItemEdit:		this.onEdit.bind(this),
+						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
 						onItemView:		this.onView.bind(this),
-						onItemRemove:	this.onRemove.bind(this)
+						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}
 			},
@@ -202,16 +205,13 @@ StudentListModel.prototype = {
 			}
 		];
 
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
-				addingAllowed 	= role === "ADMIN" || role === "MANAGER";
-
 		return new GridModel({
 			actionPanel:{
 				title:'Students',
 				showStrip:true,
 
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
-				btnAdd:addingAllowed ?
+				btnAdd:changeAllowed ?
 				(
 					<div className="addButton" onClick={function(){document.location.hash += '/add';}}>
 						<SVG icon="icon_add_student" />
