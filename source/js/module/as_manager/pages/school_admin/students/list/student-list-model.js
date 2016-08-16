@@ -182,15 +182,21 @@ StudentListModel.prototype = {
 			}
 		];
 
+		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+				addingAllowed 	= role === "ADMIN" || role === "MANAGER";
+
 		return new GridModel({
 			actionPanel:{
 				title:'Students',
 				showStrip:true,
-				btnAdd:(
+
+				/**Only school admin and manager can add new students. All other users should not see that button.*/
+				btnAdd:addingAllowed ?
+				(
 					<div className="addButton" onClick={function(){document.location.hash += '/add';}}>
 						<SVG icon="icon_add_student" />
 					</div>
-				)
+				) : null
 			},
 			columns:columns,
 			filters:{limit:20}
