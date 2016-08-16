@@ -2,7 +2,7 @@ const 	React 					= require('react'),
 		RouterView 				= require('module/core/router'),
 		Morearty				= require('morearty'),
 		Route 					= require('module/core/route'),
-		ClassesListComponent 	= require("module/as_manager/pages/school_admin/classes/classes_list"),
+		ClassesListComponent 	= require("module/as_manager/pages/school_admin/classes/list/class-list"),
 		ClassAddComponent 		= require("module/as_manager/pages/school_admin/classes/class_add"),
 		ClassEditComponent 		= require("module/as_manager/pages/school_admin/classes/class_edit");
 
