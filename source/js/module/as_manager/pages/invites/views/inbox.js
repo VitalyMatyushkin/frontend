@@ -7,6 +7,7 @@ const   Invite          = require('./invite'),
 		Morearty		= require('morearty'),
         Immutable       = require('immutable');
 
+/** Component to show all inbox invites */
 const InboxView = React.createClass({
     mixins: [Morearty.Mixin, InvitesMixin],
 	// ID of current school
@@ -23,10 +24,10 @@ const InboxView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+		const 	self 			= this,
+				binding 		= self.getDefaultBinding(),
+				rootBinding 	= self.getMoreartyContext().getBinding(),
+				activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
@@ -52,22 +53,13 @@ const InboxView = React.createClass({
 		//		}
 		//	]
 		//}
-		window.Server.schoolInvites.get(self.activeSchoolId, {
-			filter: {
-				limit: 100
-			}
-		})
-		.then(function (allInvites) {
-			// About all invites - get all invites for our school.
-			// Then filter inbox invites
-			inboxInvites = allInvites.filter(invite => invite.inviterSchoolId !== self.activeSchoolId
-			&& invite.invitedSchoolId === self.activeSchoolId && invite.accepted === 'NOT_READY');
 
-			// get info about current school
+		window.Server.schoolInboxInvites.get(self.activeSchoolId, { filter: { limit: 100 }})
+		.then( allInvites => {
+			inboxInvites = allInvites;
 			return window.Server.school.get(self.activeSchoolId);
 		})
-		.then(activeSchool => {
-
+		.then(activeSchool => {				//TODO: optimize this. Move all this to server? Or just stay here, but make parallel?
 			return Promise.all(
 				inboxInvites.map(invite =>
 					// inject schoolInfo to invite
@@ -85,7 +77,6 @@ const InboxView = React.createClass({
 						// inject sport to invite
 						return window.Server.sport.get(event.sportId).then(sport => {
 							invite.sport = sport;
-
 							return sport;
 						})
 					})
@@ -93,25 +84,6 @@ const InboxView = React.createClass({
 			);
 		})
 		.then(_ => {
-			// TODO to deal with this shit
-			//var participants = inboxInvites.reduce(function (memo, invite) {
-             //   var foundInviter = memo.filter(function (model) {
-             //           return invite.inviter.id === model.id;
-             //       }),
-             //       foundGuest = memo.filter(function (model) {
-             //           return invite.guest.id === model.id;
-             //       });
-			//
-			//	if (foundInviter.length === 0) {
-			//		memo.push(invite.inviter);
-			//	}
-			//
-             //   if (foundGuest.length === 0) {
-             //       memo.push(invite.guest);
-             //   }
-			//
-			//	return memo;
-			//}, []);
 
             binding
                 .atomically()

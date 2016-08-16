@@ -23,45 +23,16 @@ const ArchiveView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		let invites;
 
-		// TODO Don't forget about filter
-		//{
-		//	filter: {
-		//		where: {
-		//			or: [
-		//				{
-		//					inviterId: activeSchoolId
-		//				},
-		//				{
-		//					guestId: activeSchoolId
-		//				}
-		//			],
-		//				accepted: {
-		//				inq: [true, false]
-		//			}
-		//		},
-		//		include: ['inviter', 'guest', {
-		//			event: 'sport'
-		//		}]
-		//	}
-		//}
-		window.Server.schoolInvites.get(self.activeSchoolId, {
-				filter: {
-					limit: 100
-				}
-			})
-			.then(function (_invites) {
-				// About all invites - get all invites for our school.
-				// Then filter accepted or decline invites
-				invites = _invites.filter(invite => invite.accepted !== 'NOT_READY');
-
-				// get info about current school
+		window.Server.schoolArchiveInvites.get(self.activeSchoolId, { filter: { limit: 100 }})
+			.then( archivedInvites => {
+				invites = archivedInvites;
 				return window.Server.school.get(self.activeSchoolId);
 			})
 			.then(activeSchool => {
@@ -106,11 +77,11 @@ const ArchiveView = React.createClass({
 			});
 	},
 	getInvites: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			invites = binding.get('models');
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = binding.get('models');
 
-		return invites.map(function (invite, index) {
+		return invites.map( (invite, index) => {
 			var inviteBinding = {
 					default: binding.sub(['models', index]),
 					inviterSchool: binding.sub(['models', index, 'inviterSchool']),
@@ -121,19 +92,21 @@ const ArchiveView = React.createClass({
 		}).toArray();
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			invites = self.getInvites();
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = self.getInvites();
 
-		return <div key="ArchiveView" className="eInvites_OutboxContainer">
-			<div className="eSchoolMaster_wrap">
-				<h1 className="eSchoolMaster_title">Archive</h1>
-				<div className="eStrip">
+		return (
+			<div key="ArchiveView" className="eInvites_OutboxContainer">
+				<div className="eSchoolMaster_wrap">
+					<h1 className="eSchoolMaster_title">Archive</h1>
+					<div className="eStrip">
+					</div>
 				</div>
+				<div className="eInvites_filterPanel"></div>
+				<div className="eInvites_list" key="ArchiveView_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
 			</div>
-			<div className="eInvites_filterPanel"></div>
-			<div className="eInvites_list" key="ArchiveView_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
-		</div>;
+		);
 	}
 });
 
