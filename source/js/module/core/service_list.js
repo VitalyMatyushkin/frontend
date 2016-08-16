@@ -110,10 +110,13 @@ const serviceList = {
 		serviceList.publicSchoolEventTeam = new Service('/public/schools/{schoolId}/events/{eventId}/teams/{teamId}', binding);
 
 		// invites
-		serviceList.schoolInvites = new Service('/i/schools/{schoolId}/invites', binding);
-		serviceList.schoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
-		serviceList.acceptSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
-		serviceList.declineSchoolInvite = new Service('/i/schools/{schoolId}/invites/{inviteId}/decline', binding);
+		serviceList.schoolInvites 			= new Service('/i/schools/{schoolId}/invites', binding);
+		serviceList.schoolInvite 			= new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
+		serviceList.schoolInboxInvites 		= new Service('/i/schools/{schoolId}/invites/inbox', binding);
+		serviceList.schoolOutboxInvites 	= new Service('/i/schools/{schoolId}/invites/outbox', binding);
+		serviceList.schoolArchiveInvites 	= new Service('/i/schools/{schoolId}/invites/archive', binding);
+		serviceList.acceptSchoolInvite 		= new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
+		serviceList.declineSchoolInvite 	= new Service('/i/schools/{schoolId}/invites/{inviteId}/decline', binding);
 
 		// event comments
 		serviceList.schoolEventComment = new Service('/i/schools/{schoolId}/events/{eventId}/comments/{commentId}', binding);
