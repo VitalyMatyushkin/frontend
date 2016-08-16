@@ -167,6 +167,10 @@ StudentListModel.prototype = {
 				cell:{
 					type:'action-buttons',
 					typeOptions:{
+						/**
+						 * Only school admin and manager can edit or delete students.
+						 * All other users should not see that button.
+						 * */
 						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
 						onItemView:		this.onView.bind(this),
 						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
