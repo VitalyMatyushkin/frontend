@@ -77,6 +77,18 @@ StudentListModel.prototype = {
 	getHouses:function(){
 		return window.Server.schoolHouses.get({schoolId:this.activeSchoolId},{filter:{limit:100}});
 	},
+	getGenders:function(){
+		return [
+			{
+				key:'MALE',
+				value:'Boy'
+			},
+			{
+				key:'FEMALE',
+				value:'Girl'
+			}
+		];
+	},
 	getGrid: function(){
 		const columns = [
 			{
@@ -84,6 +96,14 @@ StudentListModel.prototype = {
 				cell:{
 					dataField:'gender',
 					type:'gender'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						items: this.getGenders(),
+						hideFilter:true,
+						hideButtons:true
+					}
 				}
 			},
 			{

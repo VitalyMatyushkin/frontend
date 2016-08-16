@@ -175,7 +175,7 @@ UsersActions.prototype = {
 			alert('Please select at least 1 row');
 		}
 	},
-	getRoleListPromise:function(){
+	getRoleList:function(){
 		const roles = [];
 
 		Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS).forEach(key => {
@@ -185,10 +185,40 @@ UsersActions.prototype = {
 			});
 		});
 
-		return Promise.resolve(roles);
+		return roles;
+	},
+	getGenders:function(){
+		return [
+			{
+				key:'MALE',
+				value:'Male'
+			},
+			{
+				key:'FEMALE',
+				value:'Female'
+			},
+			{
+				value:'Not Available'
+			}
+		];
 	},
 	getGrid: function(){
 		let columns = [
+			{
+				text:'Gender',
+				hidden:true,
+				cell:{
+					dataField:'gender'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						items: this.getGenders(),
+						hideFilter:true,
+						hideButtons:true
+					}
+				}
+			},
 			{
 				text:'Name',
 				isSorted:true,
@@ -260,9 +290,8 @@ UsersActions.prototype = {
 				filter:{
 					type:'multi-select',
 					typeOptions:{
-						getDataPromise: this.getRoleListPromise(),
-						valueField:'value',
-						keyField:'key'
+						items: this.getRoleList(),
+						hideFilter:true
 					}
 				}
 			}
