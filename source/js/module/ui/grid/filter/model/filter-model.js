@@ -13,14 +13,14 @@ const DEFAULT_PAGE_LIMIT = 20;
  *
  * */
 const FilterModel = function(options){
-	this.where = options.where;
-	this.limit = options.limit || DEFAULT_PAGE_LIMIT;
+	this.where = options && options.where;
+	this.limit = options && options.limit || DEFAULT_PAGE_LIMIT;
 	this.skip = 0;
-	this.order = options.order;
+	this.order = options && options.order;
 	this.isChangePage = false;
 
-	this.onChange = options.onChange;
-	this.onPageLoaded = options.onPageLoaded;
+	this.onChange = options && options.onChange;
+	this.onPageLoaded = options && options.onPageLoaded;
 };
 
 FilterModel.prototype = {
