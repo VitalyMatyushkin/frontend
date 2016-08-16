@@ -49,7 +49,12 @@ const EventTeamsView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 		
-		binding.set('selectedTeamIndex', Immutable.fromJS(0));
+		binding.set(
+			'selectedTeamId',
+			Immutable.fromJS(
+				binding.toJS('teamManagerBindings.0.teamId')
+			)
+		);
 	},
 	addTeamStudentsListeners: function() {
 		const	self	= this,
@@ -86,11 +91,11 @@ const EventTeamsView = React.createClass({
 				ages.indexOf(String(form.age)) !== -1;
 		});
 	},
-	handleTeamClick: function(order) {
+	handleTeamClick: function(teamId) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.set('selectedTeamIndex', Immutable.fromJS(order));
+		binding.set('selectedTeamId', Immutable.fromJS(teamId));
 	},
 	renderTeamChooser: function() {
 		const	self	= this,
@@ -98,23 +103,36 @@ const EventTeamsView = React.createClass({
 
 		const event = self.getBinding('event').toJS();
 
-		return event.teamsData.filter(team => TeamHelper.isTeamEnableForEdit(self.activeSchoolId, event, team)).map((team, index) => {
-			const teamButtonClassName = classNames(
-				{
-					bEventTeams_teamButton:	true,
-					mRightMargin:			true,
-					mSelected:				binding.toJS('selectedTeamIndex') === index
-				}
-			);
+		return binding.toJS('teamManagerBindings').map(data => {
+			let result = null;
 
-			return (
-				<button	className={teamButtonClassName}
-						onClick={self.handleTeamClick.bind(self, index)}
-				>
-					{team.name}
-				</button>
-			);
-		})
+			const foundTeam = event.teamsData.find(t => t.id === data.teamId);
+			if(
+				typeof foundTeam !== 'undefined' &&
+				TeamHelper.isTeamEnableForEdit(self.activeSchoolId, event, foundTeam)
+			) {
+				result = (
+					<button	key			= {foundTeam.id}
+							className	= {self.getTeamButtonsClassName(foundTeam.id)}
+							onClick		= {self.handleTeamClick.bind(self, foundTeam.id)}
+					>
+						{foundTeam.name}
+					</button>
+				);
+			}
+
+			return result;
+		});
+	},
+	getTeamButtonsClassName: function(teamId) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return classNames({
+			bEventTeams_teamButton:	true,
+			mRightMargin:			true,
+			mSelected:				binding.toJS('selectedTeamId') === teamId
+		});
 	},
 	_renderTeamEditHeader: function() {
 		const self = this;
@@ -133,10 +151,10 @@ const EventTeamsView = React.createClass({
 			<div className="bEventTeams">
 				{self._renderTeamEditHeader()}
 				{
-					binding.toJS('teamManagerBindings').map((_, index) => {
+					binding.toJS('teamManagerBindings').map((data, index) => {
 						const teamWrapperClassName = classNames({
 							bEventTeams_TeamWrapper:	true,
-							mDisabled:					binding.toJS('selectedTeamIndex') === index
+							mDisabled:					binding.toJS('selectedTeamId') !== data.teamId
 						});
 
 						return (
