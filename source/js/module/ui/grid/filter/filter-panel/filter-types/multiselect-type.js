@@ -3,6 +3,7 @@
  */
 
 const 	React 		= require('react'),
+		classNames  = require('classnames'),
 		MultiSelect = require('module/ui/multiselect-react/multiselect');
 
 const FilterMultiSelectType = React.createClass({
@@ -24,10 +25,14 @@ const FilterMultiSelectType = React.createClass({
 	render: function() {
 		const 	model 		= this.model,
 				items 		= model.items,
-				selections 	= model.getSelections();
+				selections 	= model.getSelections(),
+				classes = classNames({
+					mHideFilter: model.hideFilter,
+					mHideButtons: model.hideButtons
+				});
 
 		return (
-			<MultiSelect items={items} selections={selections} onChange={this.onChange} />
+			<MultiSelect items={items} selections={selections} onChange={this.onChange} className={classes} />
 		);
 	}
 });
@@ -39,16 +44,17 @@ const MultiSelectModel = function(filterField){
 	this.getDataPromise = options.getDataPromise;
 	this.valueField = options.valueField;
 	this.keyField = options.keyField;
-
-	this.items = [];
+	this.items = options.items || [];
+	this.hideFilter = !!options.hideFilter;
+	this.hideButtons = !!options.hideButtons;
 
 	this.onLoad = null;
 };
 
-MultiSelectModel.prototype.loadData = function(){
+MultiSelectModel.prototype.loadData = function() {
 	const self = this;
 
-	this.getDataPromise.then(data => {
+	this.getDataPromise && this.getDataPromise.then(data => {
 		const result = [];
 		data && data.forEach(item => {
 			result.push({
