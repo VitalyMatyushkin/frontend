@@ -42,9 +42,9 @@ const Player = React.createClass({
 			return null;
 		} else {
 			return (
-				<PlayerPositionsColumn	positions=					{self.props.positions}
-										selectedPositionId=			{self.props.positionId}
-										handleChangePlayerPosition=	{self.handleChangePlayerPosition}
+				<PlayerPositionsColumn	positions					= {self.props.positions}
+										selectedPositionId			= {self.props.player.positionId}
+										handleChangePlayerPosition	= {self.handleChangePlayerPosition}
 				/>
 			);
 		}
@@ -56,8 +56,8 @@ const Player = React.createClass({
 			return null;
 		} else {
 			return (
-				<PlayerSubColumn	isChecked=				{self.props.player.sub}
-									handleClickPlayerSub=	{self.handleClickPlayerSub}
+				<PlayerSubColumn	isChecked				= {self.props.player.sub}
+									handleClickPlayerSub	= {self.handleClickPlayerSub}
 				/>
 			);
 		}
@@ -90,7 +90,7 @@ const Player = React.createClass({
 					{`${player.firstName} ${player.lastName}`}
 				</div>
 				<div className={playerFormClass}>
-					{player.form.name}
+					{player.form ? player.form.name : ""}
 				</div>
 				{self.renderPositions()}
 				{self.renderSub()}

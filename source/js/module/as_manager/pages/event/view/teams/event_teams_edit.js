@@ -23,13 +23,15 @@ const EventTeamsView = React.createClass({
 	initInitialPlayers: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
-		
-		binding.set('initialPlayers', Immutable.fromJS(
-			[
-				binding.toJS('teamManagerBindings.0.teamStudents'),
-				binding.toJS('teamManagerBindings.1.teamStudents')
-			]
-		));
+
+		const teamManagerBindings = binding.toJS('teamManagerBindings');
+
+		const initialPlayers = {};
+		teamManagerBindings.forEach(teamManagerBinding => {
+			initialPlayers[teamManagerBinding.teamId] = teamManagerBinding.teamStudents;
+		});
+
+		binding.set('initialPlayers', Immutable.fromJS(initialPlayers));
 	},
 	initFilter: function() {
 		const	self	= this,
@@ -48,13 +50,19 @@ const EventTeamsView = React.createClass({
 	initSelectedTeamIndex: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
-		
-		binding.set(
-			'selectedTeamId',
-			Immutable.fromJS(
-				binding.toJS('teamManagerBindings.0.teamId')
-			)
-		);
+
+		const event = self.getBinding('event').toJS();
+
+		if(!TeamHelper.isIndividualSport(event)) {
+			binding.set(
+				'selectedTeamId',
+				Immutable.fromJS(
+					event.teamsData.find(t => t.schoolId === self.activeSchoolId).id
+				)
+			);
+		} else {
+			binding.set('selectedTeamId',Immutable.fromJS(undefined));
+		}
 	},
 	addTeamStudentsListeners: function() {
 		const	self	= this,
@@ -147,25 +155,39 @@ const EventTeamsView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return (
-			<div className="bEventTeams">
-				{self._renderTeamEditHeader()}
-				{
-					binding.toJS('teamManagerBindings').map((data, index) => {
-						const teamWrapperClassName = classNames({
-							bEventTeams_TeamWrapper:	true,
-							mDisabled:					binding.toJS('selectedTeamId') !== data.teamId
-						});
+		const event = self.getBinding('event').toJS();
 
-						return (
-							<div className={teamWrapperClassName}>
-								<TeamManager binding={binding.sub(`teamManagerBindings.${index}`)}/>
-							</div>
-						);
-					})
-				}
-			</div>
-		);
+		if(TeamHelper.isIndividualSport(event)) {
+			return (
+				<div className="bEventTeams">
+					<div className="bEventTeams_TeamWrapper">
+						<TeamManager	isIndividualSport={true}
+										binding={binding.sub(`teamManagerBindings.0`)}
+						/>
+					</div>
+				</div>
+			);
+		} else {
+			return (
+				<div className="bEventTeams">
+					{self._renderTeamEditHeader()}
+					{
+						binding.toJS('teamManagerBindings').map((data, index) => {
+							const teamWrapperClassName = classNames({
+								bEventTeams_TeamWrapper:	true,
+								mDisabled:					binding.toJS('selectedTeamId') !== data.teamId
+							});
+
+							return (
+								<div className={teamWrapperClassName}>
+									<TeamManager binding={binding.sub(`teamManagerBindings.${index}`)}/>
+								</div>
+							);
+						})
+					}
+				</div>
+			);
+		}
 	}
 });
 

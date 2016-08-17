@@ -91,37 +91,85 @@ const EventHeader = React.createClass({
 		binding.set('mode', 'closing');
 	},
 	onClickOk: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			currentMode = binding.get('mode');
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		if (currentMode === 'closing') {
+		const currentMode = binding.get('mode');
+
+		if(currentMode === 'closing') {
 			self.closeMatch();
 		} else {
-			// [[players][players]]
-			const	teamPlayers			= [
-											binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents'),
-											binding.toJS('eventTeams.editPlayers.teamManagerBindings.1.teamStudents')
-										],
-					initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
+			const	teamPlayers			= self.getTeamsPlayersForCommit(binding.toJS('model')),
+					initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers'),
+					activeSchoolId		= MoreartyHelper.getActiveSchoolId(self);
 
-			const promises = teamPlayers.map(
-				(players, teamIndex) => TeamHelper.commitPlayers(
-					initialTeamPlayers[teamIndex],
-					players,
-					initialTeamPlayers[teamIndex][0].teamId, // yep, get teamId from player
-					MoreartyHelper.getActiveSchoolId(self)
+			let commitPlayersPromises = [];
+
+			Object.keys(teamPlayers).forEach(teamId => {
+				commitPlayersPromises = commitPlayersPromises.concat(
+					TeamHelper.commitPlayers(
+						initialTeamPlayers[teamId],
+						teamPlayers[teamId],
+						teamId,
+						activeSchoolId
+					)
 				)
-			);
+			});
 
-			Promise.all(promises[0].concat(promises[1]))
-			.then((r) => {
-				binding.atomically()
-						.set('mode', 'general')
-						.set('eventTeams.isSync', Immutable.fromJS(false))
-						.commit();
+			Promise.all(commitPlayersPromises)
+				.then(() => {
+					binding.atomically()
+							.set('mode', 'general')
+							.set('eventTeams.isSync', Immutable.fromJS(false))
+							.commit();
+				});
+		}
+	},
+	/**
+	 * Return player changes for commit, hash map - key:teamId, value:players
+	 * @param event
+	 * @returns {*}
+	 */
+	getTeamsPlayersForCommit: function(event) {
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
+
+		const teamManagerBindings = binding.toJS('eventTeams.editPlayers.teamManagerBindings');
+
+		const teamsForCommit = {};
+
+		if(EventHelper.isInterSchoolsEvent(event)) {
+			const	foundTeam				= event.teamsData.find(t => t.schoolId === activeSchoolId),
+					foundTeamManagerBinding	= teamManagerBindings.find(teamManagerBinding => teamManagerBinding.teamId === foundTeam.id);
+
+			teamsForCommit[foundTeamManagerBinding.teamId] = foundTeamManagerBinding.teamStudents;
+		} else {
+			teamManagerBindings.forEach(teamManagerBinding => {
+				teamsForCommit[teamManagerBinding.teamId] = teamManagerBinding.teamStudents;
 			});
 		}
+
+		return teamsForCommit;
+	},
+	/**
+	 * Return reverted team manager binding
+	 * Use if user doesn't save changes
+	 * @returns {*}
+	 */
+	getRevertedTeamManagerBindings: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
+
+		const	teamManagerBindings	= binding.toJS('eventTeams.editPlayers.teamManagerBindings'),
+				initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
+
+		teamManagerBindings.forEach(teamManagerBinding => {
+			teamManagerBinding.teamStudents	= initialTeamPlayers[teamManagerBinding.teamId];
+			teamManagerBinding.isSync		= false;
+		});
+
+		return teamManagerBindings;
 	},
 	onClickCloseCancel: function () {
 		const	self	= this,
@@ -137,7 +185,10 @@ const EventHeader = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.set('mode', 'general');
+		binding.atomically()
+			.set('eventTeams.editPlayers.teamManagerBindings', Immutable.fromJS(self.getRevertedTeamManagerBindings()))
+			.set('mode', 'general')
+			.commit();
 	},
 	render: function() {
 		const self = this;

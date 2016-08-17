@@ -104,7 +104,9 @@ const EventTeams = React.createClass({
 					.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
 					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(event.individualsData))
 					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
+					.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
 					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
+					.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
 					.set('isSync',											Immutable.fromJS(true))
 					.commit();
 			});
@@ -120,16 +122,14 @@ const EventTeams = React.createClass({
 					.then(players => {
 						const result = {
 							teamId:			team.id,
-							viewPlayers:	players
+							viewPlayers:	players,
+							editPlayers:	[]
 						};
 
-						switch (event.eventType) {
-							case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-								team.schoolId === self.activeSchoolId && (result.editPlayers = players);
-								break;
-							default:
-								result.editPlayers = players;
-								break;
+						if(EventHelper.isInterSchoolsEvent(event)) {
+							team.schoolId === self.activeSchoolId && (result.editPlayers = players);
+						} else {
+							result.editPlayers = players;
 						}
 
 						return result;
@@ -138,10 +138,12 @@ const EventTeams = React.createClass({
 			// TODO not work for teams count great then 2
 			.then(teamPlayers => {
 				binding.atomically()
-					.set('viewPlayers.players',								Immutable.fromJS( [teamPlayers[0].viewPlayers, teamPlayers[1].viewPlayers] ))
+					.set('viewPlayers.players',								Immutable.fromJS(teamPlayers.map(tp => tp.viewPlayers)))
 					.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(teamPlayers[0].teamId))
 					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(teamPlayers[0].editPlayers))
 					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].editPlayers : []))
+					.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
+					.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
 					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
 						self.getBinding('event').toJS().sportModel.field.positions ?
 							self.getBinding('event').toJS().sportModel.field.positions :
@@ -151,6 +153,8 @@ const EventTeams = React.createClass({
 					.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].teamId : undefined))
 					.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].editPlayers : []))
 					.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[0].editPlayers : []))
+					.set("editPlayers.teamManagerBindings.1.removedPlayers",Immutable.fromJS([]))
+					.set("editPlayers.teamManagerBindings.1.isSync",		Immutable.fromJS(false))
 					.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
 						self.getBinding('event').toJS().sportModel.field.positions ?
 							self.getBinding('event').toJS().sportModel.field.positions :

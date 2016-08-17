@@ -1,4 +1,5 @@
-const	TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+const	EventHelper			= require('./../../../helpers/eventHelper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper		= require('module/helpers/morearty_helper');
 
 const TeamSubmitMixin = {
@@ -26,15 +27,22 @@ const TeamSubmitMixin = {
 			}
 		);
 	},
+	/**
+	 * Create teams on step3 of event creation.
+	 * @returns {*}
+	 */
 	createTeams: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		// for inter school event create team only for first rival
-		// because it's inter school event:)
+		// For inter school event create team only for only one rival - active school
+		// There are two situations:
+		// 1) Create inter-schools event - create team only for inviter school
+		// 2) Acceptation event - create team for invited school
 		let rivals;
-		if(binding.toJS('model.type') === "inter-schools") {
-			rivals = [binding.toJS(`rivals.0`)];
+		if(
+			EventHelper.isInterSchoolsEvent(binding.toJS('model'))) {
+			rivals = [ binding.toJS(`rivals`).find(r => r.id === self.activeSchoolId) ];
 		} else {
 			rivals = binding.toJS('rivals');
 		}
@@ -69,6 +77,18 @@ const TeamSubmitMixin = {
 					return self.createAdhocTeam(teamBody);
 			}
 		});
+	},
+	addTeamsToEvent: function(event, teams) {
+		const self = this;
+
+		return Promise.all(teams.map(t => window.Server.schoolEventTeams.post(
+			{
+				schoolId:	self.activeSchoolId,
+				eventId:	event.id
+			}, {
+				teamId:		t.id
+			}
+		)));
 	},
 	getTypeOfNewTeam: function(teamWrapper) {
 		if(teamWrapper.selectedTeam) {

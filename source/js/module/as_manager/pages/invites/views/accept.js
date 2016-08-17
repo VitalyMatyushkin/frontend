@@ -22,27 +22,8 @@ const InviteAcceptView = React.createClass({
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-		binding.clear();
+        binding.clear();
         let invite;
-        // TODO don't forget about filter
-        //{
-        //    filter: {
-        //        where: {
-        //            id: inviteId
-        //        },
-        //        include: [
-        //            {
-        //                guest: ['forms']
-        //            },
-        //            {
-        //                event: 'sport'
-        //            },
-        //            {
-        //                inviter: ['forms']
-        //            }
-        //        ]
-        //    }
-        //}
         window.Server.schoolInvite.get({schoolId: self.activeSchoolId, inviteId: inviteId})
         .then(_invite => {
             invite = _invite;
@@ -109,27 +90,26 @@ const InviteAcceptView = React.createClass({
         }
     },
     _submit: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        Promise.all(
-            self._submitRival(
-                binding.toJS('model'),
-                binding.toJS('rivals.0'),
-                0
+        const event = binding.toJS('model');
+
+        // create new team
+        Promise.all(self.createTeams())
+            // add it to event
+            .then(teams => Promise.all(self.addTeamsToEvent(event, teams)))
+            // accept invite
+            .then(() => window.Server.acceptSchoolInvite.post({
+                            schoolId: self.activeSchoolId,
+                            inviteId: binding.get('invite.id')
+                        })
             )
-        )
-        .then(_ => {
-            return window.Server.acceptSchoolInvite.post({
-                schoolId: self.activeSchoolId,
-                inviteId: binding.get('invite.id')
-            });
-        })
-        .then(_ => {
-            document.location.hash = '#event/' + binding.get('model.id');
+            .then(() => {
+                document.location.hash = '#event/' + event.id;
 
-            return _;
-        });
+                return true;
+            });
     },
     _isEventDataCorrect: function() {
         const self = this;
