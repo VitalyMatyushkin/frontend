@@ -56,29 +56,41 @@ const InviteView = React.createClass({
         return result;
     },
     render: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-			inviterSchool = binding.toJS('inviterSchool'),
-			invitedSchool = binding.toJS('invitedSchool'),
-            rival = invitedSchool.id === self.activeSchoolId ? inviterSchool : invitedSchool,
-            inviteClasses = classNames({
-                bInvite: true,
-                mNotRedeemed: !binding.get('redeemed')
-            }),
-			isInbox = self.props.type === 'inbox',
-			isOutBox = self.props.type === 'outbox',
-			isArchive = binding.get('accepted') !== "NOT_READY",
-            schoolPicture = self.getParticipantEmblem(rival),
-            sport = self.getSportIcon(binding.get('sport.name')),
-            ages = binding.get('event.ages'),
-            gender = self.getGenderIcon(binding.get('event.gender')),
-            message = binding.get('message') || '',
-            accepted = binding.get('accepted') === "YES",
-            eventDate = (new Date(binding.get('event.startTime'))),
-            status = isArchive ? (accepted ? 'Accepted':'Refused'):'',
-            startDate = eventDate.toLocaleDateString(),
-            hours = self.addZeroToFirst(eventDate.getHours()),
-            minutes = self.addZeroToFirst(eventDate.getMinutes());
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+                inviterSchool   = binding.toJS('inviterSchool'),
+                invitedSchool   = binding.toJS('invitedSchool'),
+                rival           = invitedSchool.id === self.activeSchoolId ? inviterSchool : invitedSchool,
+                inviteClasses   = classNames({
+                    bInvite: true,
+                    mNotRedeemed: !binding.get('redeemed')
+                }),
+                isInbox         = self.props.type === 'inbox',
+                isOutBox        = self.props.type === 'outbox',
+                isArchive       = binding.get('status') !== "NOT_READY",
+                schoolPicture   = self.getParticipantEmblem(rival),
+                sport           = self.getSportIcon(binding.get('sport.name')),
+                ages            = binding.get('event.ages'),
+                gender          = self.getGenderIcon(binding.get('event.gender')),
+                message         = binding.get('message') || '',
+                accepted        = binding.get('status') === 'ACCEPTED',
+                eventDate       = (new Date(binding.get('event.startTime'))),
+                startDate       = eventDate.toLocaleDateString(),
+                hours           = self.addZeroToFirst(eventDate.getHours()),
+                minutes         = self.addZeroToFirst(eventDate.getMinutes());
+
+        let status;
+
+        switch (true) {
+            case isArchive && accepted:
+            	status = 'Accepted';
+				break;
+			case isArchive && !accepted:
+				status = 'Refused';
+				break;
+			default:
+				status = '';
+        }
 
         return (
         <div key={binding.get('id')} className={inviteClasses}>

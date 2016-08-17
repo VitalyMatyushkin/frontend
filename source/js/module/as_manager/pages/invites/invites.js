@@ -48,9 +48,9 @@ const InvitesView = React.createClass({
 		}];
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
+		const 	self 			= this,
+				binding	 		= self.getDefaultBinding(),
+				globalBinding 	= self.getMoreartyContext().getBinding();
 
 		return <div>
 			<SubMenu binding={binding.sub('invitesRouting')} items={self.menuItems} />

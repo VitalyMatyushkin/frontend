@@ -2,7 +2,7 @@ const 	RouterView 			= require('module/core/router'),
 		React 				= require('react'),
 		Morearty			= require('morearty'),
 		Route 				= require('module/core/route'),
-		HousesListComponent = require("module/as_manager/pages/school_admin/houses/houses_list"),
+		HousesListComponent = require("module/as_manager/pages/school_admin/houses/list/house-list"),
 		HouseAddComponent 	= require("module/as_manager/pages/school_admin/houses/house_add"),
 		HouseEditComponent 	= require("module/as_manager/pages/school_admin/houses/house_edit");
 
