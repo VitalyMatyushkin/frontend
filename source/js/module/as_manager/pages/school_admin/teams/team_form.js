@@ -106,8 +106,8 @@ const TeamForm = React.createClass({
 				.filter(genderType => genders[genderType])
 				.map((genderType, index) => {
 					const genderNames = {
-						femaleOnly:	'Female only',
-						maleOnly:	'Male only',
+						femaleOnly:	'Girls only',
+						maleOnly:	'Boys only',
 						mixed:		'Mixed'
 					};
 

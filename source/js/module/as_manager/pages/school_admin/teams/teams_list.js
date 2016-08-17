@@ -45,8 +45,22 @@ const TeamsListPage = React.createClass({
         return result;
     },
 	_getGender: function (gender) {
-		var icon = gender === 'male' ? 'icon_man': 'icon_woman';
-
+		//var icon = gender === 'MALE_ONLY' ? 'icon_man': 'icon_woman';
+        var icon;
+        switch (gender) {
+            case 'MALE_ONLY':
+                icon = 'icon_man';
+                break;
+            case 'FEMALE_ONLY':
+                icon = 'icon_woman';
+                break;
+            case 'MIXED':
+                icon = 'icon_mixed';
+                break;
+            default:
+                icon = '';
+                break;
+        }
 		return <SVG classes="bIcon-gender" icon={icon} />;
 	},
     _getSport: function (sportId) {
