@@ -39,20 +39,11 @@ HouseListModel.prototype = {
 		document.location.hash += '/edit?id=' + data.id;
 	},
 	onRemove:function(data){
-		const 	self 		= this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			schoolId 	= rootBinding.get('userRules.activeSchoolId'),
-			binding = self.getDefaultBinding();
+		const 	self = this;
 
 		if(data !== undefined){
-			window.Server.schoolHouse.delete({schoolId:schoolId, houseId:data.id}).then(function(res){
-				binding.update('data',function(houses){
-					return houses.filter(function(house){
-						return house.get('id') !== data.id;
-					});
-				});
-				return res;
-			});
+			window.Server.schoolHouse.delete({schoolId:self.activeSchoolId, houseId:data.id})
+				.then(_ => self.reloadData());
 		}
 	},
 	getGrid: function(){
