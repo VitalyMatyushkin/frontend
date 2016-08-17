@@ -29,18 +29,25 @@ const TeamModeView = React.createClass({
 	},
 	_initTeamWrapperFilterBinding: function(rivalIndex, rival) {
 		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				model	= self.getBinding('model').toJS();
+				binding	= self.getDefaultBinding();
 
-		binding.set(`teamWrapper.${rivalIndex}.___teamManagerBinding.filter`, Immutable.fromJS({
-			genders:		TeamHelper.getFilterGender(model.gender),
-			houseId:		model.type === 'houses' ? rival.id : undefined,
-			schoolId:		MoreartyHelper.getActiveSchoolId(self),
-			forms:			self._getFilteredAgesBySchoolForms(
-								model.ages,
-								self.getBinding('schoolInfo').toJS().forms
-							)
-		}));
+		const	school	= self.getBinding('schoolInfo').toJS(),
+				model	= self.getBinding('model').toJS(),
+				gender	= TeamHelper.getFilterGender(model.gender),
+				ages	= model.ages,
+				houseId	= model.type === 'houses' ? rival.id : undefined;
+
+		binding.set(
+			`teamWrapper.${rivalIndex}.___teamManagerBinding.filter`,
+			Immutable.fromJS(
+				TeamHelper.getTeamManagerSearchFilter(
+					school,
+					ages,
+					gender,
+					houseId
+				)
+			)
+		);
 	},
 	addListeners: function() {
 		const	self	= this,
@@ -59,18 +66,6 @@ const TeamModeView = React.createClass({
 				`teamWrapper.${self._getAnotherRivalIndex(index)}.___teamManagerBinding.blackList`,
 				descriptor.getCurrentValue()
 			)
-		});
-	},
-	/**
-	 * Get school forms filtered by age
-	 * @param ages
-	 * @returns {*}
-	 * @private
-	 */
-	_getFilteredAgesBySchoolForms: function(ages, schoolForms) {
-		return schoolForms.filter((form) => {
-			return	ages.indexOf(parseInt(form.age)) !== -1 ||
-				ages.indexOf(String(form.age)) !== -1;
 		});
 	},
 	/**

@@ -174,13 +174,13 @@ const EventManager = React.createClass({
 		switch (TeamHelper.getParticipantsType(eventModel)) {
 			case "INDIVIDUAL":
 				return self.submitEvent()
-						.then(_event => {
-							savedEvent = _event;
+					.then(_event => {
+						savedEvent = _event;
 
-							return self.addIndividualPlayersToEvent(savedEvent);
-						})
-						.then(() => self.activateEvent(savedEvent))
-						.then(() => self._afterEventCreation(savedEvent));
+						return self.addIndividualPlayersToEvent(savedEvent);
+					})
+					.then(() => self.activateEvent(savedEvent))
+					.then(() => self._afterEventCreation(savedEvent));
 			case "TEAM":
 				return Promise.all(self.createTeams())
 					.then(_teams => {
@@ -231,6 +231,7 @@ const EventManager = React.createClass({
 		switch (model.type) {
 			case 'inter-schools':
 				body.invitedSchoolIds = [rivals[1].id];
+				body.finishSchoolIds = 	[rivals[0].id, rivals[1].id];
 
 				break;
 			case 'houses':

@@ -72,6 +72,51 @@ function getPlayersWithUserInfo(players, users) {
 	});
 };
 
+function commitIndividualPlayers(schoolId, eventId, initialPlayers, players) {
+	const self = this;
+
+	const promises = [];
+
+	initialPlayers.forEach(initialPlayer =>
+		// If player wasn't find - add delete promise to promise array
+		!Lazy(players).findWhere({id:initialPlayer.id}) &&
+		promises.push(
+			self.deleteIndividualPlayer(
+				schoolId,
+				eventId,
+				initialPlayer.id
+			)
+		)
+	);
+
+	// Add new player promises to promise array.
+	// A little trick:
+	// user without userId - is a new user.
+	players.forEach(p => !p.userId && promises.push( self.addIndividualPlayer(schoolId, eventId, p) ));
+
+	return promises;
+};
+
+function addIndividualPlayer(schoolId, eventId, player) {
+	return window.Server.schoolEventIndividuals.post(
+		{
+			schoolId:	schoolId,
+			eventId:	eventId
+		}, {
+			userId:			player.id,
+			permissionId:	player.permissionId
+		}
+	);
+};
+
+function deleteIndividualPlayer(schoolId, eventId, individualId) {
+	return window.Server.schoolEventIndividual.delete({
+		schoolId:		schoolId,
+		eventId:		eventId,
+		individualId:	individualId
+	});
+};
+
 function commitPlayers(initialPlayers, players, teamId, schoolId) {
 	let promises = [];
 
@@ -221,19 +266,6 @@ function convertPointsToClientModel(serverPointsModel) {
 	return clientPointsModel;
 };
 
-/**
- * Get school forms filtered by age
- * @param ages
- * @returns {*}
- * @private
- */
-function getFilteredAgesBySchoolForms(ages, schoolForms) {
-	return schoolForms.filter((form) => {
-		return	ages.indexOf(parseInt(form.age)) !== -1 ||
-			ages.indexOf(String(form.age)) !== -1;
-	});
-};
-
 function getFilterGender(gender) {
 	switch (gender) {
 		case 'maleOnly':
@@ -245,6 +277,24 @@ function getFilterGender(gender) {
 		default:
 			return [];
 	}
+};
+
+function getTeamManagerSearchFilter(school, ages, gender, houseId) {
+	const self = this;
+
+	return {
+		genders:		gender,
+		houseId:		houseId ? houseId : undefined,
+		schoolId:		school.id,
+		forms:			self.getSchoolFormsFilteredByAges(
+							ages,
+							school.forms
+						)
+	}
+};
+
+function getSchoolFormsFilteredByAges(ages, schoolForms) {
+	return schoolForms.filter(form => ages.indexOf(parseInt(form.age)) !== -1 || ages.indexOf(String(form.age)) !== -1);
 };
 
 function convertPlayersToServerValue(players) {
@@ -265,7 +315,7 @@ function getParticipantsType(event) {
 function isIndividualSport(event) {
 	const sport = event.sportModel ? event.sportModel : event.sport;
 
-	return sport.players === 'INDIVIDUAL';
+	return sport.players === 'INDIVIDUAL' || sport.players === '1X1';
 }
 
 const TeamHelper = {
@@ -277,17 +327,21 @@ const TeamHelper = {
 	changePlayer:					changePlayer,
 	deletePlayer:					deletePlayer,
 	commitPlayers:					commitPlayers,
+	commitIndividualPlayers:		commitIndividualPlayers,
 	injectFormsToPlayers:			injectFormsToPlayers,
 	injectTeamIdToPlayers:			injectTeamIdToPlayers,
 	isTeamEnableForEdit:			isTeamEnableForEdit,
 	convertPointsToClientModel:		convertPointsToClientModel,
 	convertPlayersToServerValue:	convertPlayersToServerValue,
-	getFilteredAgesBySchoolForms:	getFilteredAgesBySchoolForms,
 	convertGenderToServerValue:		convertGenderToServerValue,
 	getBodyForAddPlayersRequest:	getBodyForAddPlayersRequest,
 	getFilterGender:				getFilterGender,
 	getParticipantsType:			getParticipantsType,
-	isIndividualSport:				isIndividualSport
+	isIndividualSport:				isIndividualSport,
+	getTeamManagerSearchFilter:		getTeamManagerSearchFilter,
+	getSchoolFormsFilteredByAges:	getSchoolFormsFilteredByAges,
+	addIndividualPlayer:			addIndividualPlayer,
+	deleteIndividualPlayer:			deleteIndividualPlayer
 };
 
 module.exports = TeamHelper;

@@ -3,6 +3,7 @@ const   If              = require('module/ui/if/if'),
         React           = require('react'),
         classNames      = require('classnames'),
         TeamSubmitMixin = require('module/ui/managers/helpers/team_submit_mixin'),
+        TeamHelper      = require('./../../../../ui/managers/helpers/team_helper'),
         Promise         = require('bluebird'),
         MoreartyHelper	= require('module/helpers/morearty_helper'),
         Morearty		= require('morearty'),
@@ -95,21 +96,37 @@ const InviteAcceptView = React.createClass({
 
         const event = binding.toJS('model');
 
-        // create new team
-        Promise.all(self.createTeams())
-            // add it to event
-            .then(teams => Promise.all(self.addTeamsToEvent(event, teams)))
-            // accept invite
-            .then(() => window.Server.acceptSchoolInvite.post({
-                            schoolId: self.activeSchoolId,
-                            inviteId: binding.get('invite.id')
-                        })
-            )
-            .then(() => {
-                document.location.hash = '#event/' + event.id;
+        if(TeamHelper.isIndividualSport(event)) {
+            // add new individuals
+            Promise.all(self.addIndividualPlayersToEvent(event))
+                // accept invite
+                .then(() => window.Server.acceptSchoolInvite.post({
+                        schoolId: self.activeSchoolId,
+                        inviteId: binding.get('invite.id')
+                    })
+                )
+                .then(() => {
+                    document.location.hash = '#event/' + event.id;
 
-                return true;
-            });
+                    return true;
+                });
+        } else {
+            // create new team
+            Promise.all(self.createTeams())
+                // add it to event
+                .then(teams => Promise.all(self.addTeamsToEvent(event, teams)))
+                // accept invite
+                .then(() => window.Server.acceptSchoolInvite.post({
+                        schoolId: self.activeSchoolId,
+                        inviteId: binding.get('invite.id')
+                    })
+                )
+                .then(() => {
+                    document.location.hash = '#event/' + event.id;
+
+                    return true;
+                });
+        }
     },
     _isEventDataCorrect: function() {
         const self = this;

@@ -2,6 +2,7 @@ const	TeamManager			= require('./../../../../../ui/managers/team_manager/team_ma
 		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		EventHelper			= require('module/helpers/eventHelper'),
 		classNames			= require('classnames'),
 		React				= require('react'),
 		Immutable			= require('immutable'),
@@ -24,28 +25,42 @@ const EventTeamsView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const teamManagerBindings = binding.toJS('teamManagerBindings');
+		const	event				= self.getBinding('event').toJS(),
+				teamManagerBindings	= binding.toJS('teamManagerBindings');
 
-		const initialPlayers = {};
-		teamManagerBindings.forEach(teamManagerBinding => {
-			initialPlayers[teamManagerBinding.teamId] = teamManagerBinding.teamStudents;
-		});
+		let initialPlayers;
+		if(TeamHelper.isIndividualSport(event)) {
+			// if individual sport - initialPlayers is array
+			initialPlayers = teamManagerBindings[0].teamStudents;
+		} else {
+			initialPlayers = {};
+			// if individual sport - initialPlayers is has map
+			teamManagerBindings.forEach(teamManagerBinding => {
+				initialPlayers[teamManagerBinding.teamId] = teamManagerBinding.teamStudents;
+			});
+		}
 
 		binding.set('initialPlayers', Immutable.fromJS(initialPlayers));
 	},
 	initFilter: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const self = this;
 
 		const	school	= self.getBinding('schoolInfo').toJS(),
 				event	= self.getBinding('event').toJS();
 
-		const filter = self._getPlayerChooserFilters(event, school);
-
-		binding.atomically()
-			.set('teamManagerBindings.0.filter', Immutable.fromJS(filter[0]))
-			.set('teamManagerBindings.1.filter', Immutable.fromJS(filter[1]))
-			.commit();
+		if(TeamHelper.isIndividualSport(event)) {
+			switch (EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]) {
+				case 'inter-schools':
+				case 'internal':
+					self.setPlayerChooserFilterForIndividuals(event, school);
+					break;
+				case 'houses':
+					event.housesData.forEach(house => self.setPlayerChooserFilterForHousesIndividualEvent(house, event, school));
+					break;
+			}
+		} else {
+			event.teamsData.forEach(team => self.setPlayerChooserFilterForTeam(team, school));
+		}
 	},
 	initSelectedTeamIndex: function() {
 		const	self	= this,
@@ -59,6 +74,11 @@ const EventTeamsView = React.createClass({
 				Immutable.fromJS(
 					event.teamsData.find(t => t.schoolId === self.activeSchoolId).id
 				)
+			);
+		} else if(TeamHelper.isIndividualSport(event) && EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] === 'houses') {
+			binding.set(
+				'selectedTeamId',
+				Immutable.fromJS(event.houses[0])
 			);
 		} else {
 			binding.set('selectedTeamId',Immutable.fromJS(undefined));
@@ -75,29 +95,71 @@ const EventTeamsView = React.createClass({
 			binding.set('teamManagerBindings.0.teamStudents.blackList', Immutable.fromJS('teamManagerBindings.1.teamStudents'));
 		});
 	},
-	_getPlayerChooserFilters: function(event, school) {
-		const self = this;
-
-		return event.teamsData.map(team => self._getPlayerChooserFilter(team, school));
-	},
 	_getOtherTeamIndex: function(order) {
 		return order === 0 ? 1 : 0;
 	},
-	_getPlayerChooserFilter: function(team, school) {
-		const	self = this;
+	/**
+	 * Create
+	 * @param event
+	 * @param school
+	 * @returns {{genders, houseId, schoolId, forms}|*}
+	 */
+	setPlayerChooserFilterForIndividuals: function(event, school) {
+		const	self	= this,
+				binding	=self.getDefaultBinding();
 
-		return {
-			genders:	TeamHelper.getFilterGender(team.gender),
-			houseId:	team.houseId,
-			schoolId:	school.id,
-			forms:		self._getFilteredAgesBySchoolForms(team.ages, school.forms)
-		};
+		const	gender	= TeamHelper.getFilterGender(event.gender),
+				ages	= event.ages,
+				houseId	= undefined;
+
+		const filter = TeamHelper.getTeamManagerSearchFilter(
+			school,
+			ages,
+			gender,
+			houseId
+		);
+
+		binding.set(`teamManagerBindings.0.filter`, Immutable.fromJS(filter))
 	},
-	_getFilteredAgesBySchoolForms: function(ages, schoolForms) {
-		return schoolForms.filter((form) => {
-			return	ages.indexOf(parseInt(form.age)) !== -1 ||
-				ages.indexOf(String(form.age)) !== -1;
-		});
+	setPlayerChooserFilterForHousesIndividualEvent: function(house, event, school) {
+		const	self	= this,
+				binding	=self.getDefaultBinding();
+
+		const	gender	= TeamHelper.getFilterGender(event.gender),
+				ages	= event.ages,
+				houseId	= house._id;
+
+		const filter = TeamHelper.getTeamManagerSearchFilter(
+			school,
+			ages,
+			gender,
+			houseId
+		);
+
+		const	teamManagerBindings	= binding.toJS('teamManagerBindings'),
+				foundIndex			= teamManagerBindings.findIndex(tmb => tmb.teamId === house._id);
+
+		binding.set(`teamManagerBindings.${foundIndex}.filter`, Immutable.fromJS(filter));
+	},
+	setPlayerChooserFilterForTeam: function(team, school) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	gender	= TeamHelper.getFilterGender(team.gender),
+				ages	= team.ages,
+				houseId	= team.houseId;
+
+		const filter = TeamHelper.getTeamManagerSearchFilter(
+			school,
+			ages,
+			gender,
+			houseId
+		);
+
+		const	teamManagerBindings	= binding.toJS('teamManagerBindings'),
+				foundIndex			= teamManagerBindings.findIndex(tmb => tmb.teamId === team.id);
+
+		binding.set(`teamManagerBindings.${foundIndex}.filter`, Immutable.fromJS(filter));
 	},
 	handleTeamClick: function(teamId) {
 		const	self	= this,
@@ -111,26 +173,39 @@ const EventTeamsView = React.createClass({
 
 		const event = self.getBinding('event').toJS();
 
-		return binding.toJS('teamManagerBindings').map(data => {
-			let result = null;
-
-			const foundTeam = event.teamsData.find(t => t.id === data.teamId);
-			if(
-				typeof foundTeam !== 'undefined' &&
-				TeamHelper.isTeamEnableForEdit(self.activeSchoolId, event, foundTeam)
-			) {
-				result = (
-					<button	key			= {foundTeam.id}
-							className	= {self.getTeamButtonsClassName(foundTeam.id)}
-							onClick		= {self.handleTeamClick.bind(self, foundTeam.id)}
+		if(EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] === 'houses' && TeamHelper.isIndividualSport(event)) {
+			return event.housesData.map(house => {
+				return (
+					<button	key			= {house._id}
+							className	= {self.getTeamButtonsClassName(house._id)}
+							onClick		= {self.handleTeamClick.bind(self, house._id)}
 					>
-						{foundTeam.name}
+						{house.name}
 					</button>
 				);
-			}
+			});
+		} else {
+			return binding.toJS('teamManagerBindings').map(data => {
+				let result = null;
 
-			return result;
-		});
+				const foundTeam = event.teamsData.find(t => t.id === data.teamId);
+				if(
+					typeof foundTeam !== 'undefined' &&
+					TeamHelper.isTeamEnableForEdit(self.activeSchoolId, event, foundTeam)
+				) {
+					result = (
+						<button	key			= {foundTeam.id}
+								className	= {self.getTeamButtonsClassName(foundTeam.id)}
+								onClick		= {self.handleTeamClick.bind(self, foundTeam.id)}
+						>
+							{foundTeam.name}
+						</button>
+					);
+				}
+
+				return result;
+			});
+		}
 	},
 	getTeamButtonsClassName: function(teamId) {
 		const	self	= this,
@@ -155,13 +230,20 @@ const EventTeamsView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const event = self.getBinding('event').toJS();
+		const	event				= self.getBinding('event').toJS(),
+				isIndividualSport	= TeamHelper.isIndividualSport(event);
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(
+			EventHelper.isEventWithOneIndividualTeam(event) ||
+			(
+				EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] === 'inter-schools' &&
+				isIndividualSport
+			)
+		) {
 			return (
 				<div className="bEventTeams">
 					<div className="bEventTeams_TeamWrapper">
-						<TeamManager	isIndividualSport={true}
+						<TeamManager	isIndividualSport={isIndividualSport}
 										binding={binding.sub(`teamManagerBindings.0`)}
 						/>
 					</div>
@@ -180,7 +262,8 @@ const EventTeamsView = React.createClass({
 
 							return (
 								<div className={teamWrapperClassName}>
-									<TeamManager binding={binding.sub(`teamManagerBindings.${index}`)}/>
+									<TeamManager	isIndividualSport={isIndividualSport}
+													binding={binding.sub(`teamManagerBindings.${index}`)}/>
 								</div>
 							);
 						})

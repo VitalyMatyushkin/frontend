@@ -4,12 +4,16 @@ const	React			= require('react'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		Sport			= require('module/ui/icons/sport_icon'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('./../../ui/managers/helpers/team_helper'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		ChallengeModel	= require('module/ui/challenges/challenge_model');
 
 const ChallengesList = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	componentWillMount: function() {
 		const	self = this;
+
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		self._initBinding();
 		self._addListeners();
@@ -68,12 +72,11 @@ const ChallengesList = React.createClass({
 		return <Sport name={sport} className="bIcon_invites" ></Sport>;
 	},
 	_getEvents: function () {
-		const	self		    = this,
-				binding		    = self.getDefaultBinding(),
-                activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				currentDate	    = binding.get('calendar.currentDate'),
-				selectDay	    = binding.get('calendar.selectDay'),
-				sync		    = binding.toJS('sync');
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				currentDate	= binding.get('calendar.currentDate'),
+				selectDay	= binding.get('calendar.selectDay'),
+				sync		= binding.toJS('sync');
 		let		result;
 
 		if(selectDay === undefined || selectDay === null) {
@@ -91,7 +94,7 @@ const ChallengesList = React.createClass({
 
 			if(events.length) {
 				result = events.map(function (event) {
-					const	model = new ChallengeModel(event, activeSchoolId),
+					const	model = new ChallengeModel(event, self.activeSchoolId),
 							sport = self._getSportIcon(model.sport);
 
 					return (
@@ -144,17 +147,25 @@ const ChallengesList = React.createClass({
 		const self = this;
 
 		const	eventType		= event.eventType,
-				participants	= event.teamsData,
-				activeSchoolId	= self.getActiveSchoolId();
+				participants	= event.teamsData;
 
-		if(
+		if(TeamHelper.isIndividualSport(event)) {
+			switch (eventType) {
+				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+					const foundRival = rivals.find(r => r.id === self.activeSchoolId);
+
+					return foundRival ? foundRival.name : 'n/a';
+				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+					return rivals[0].name;
+			}
+		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
+			participants[0].schoolId === self.activeSchoolId
 		) {
 			return rivals.find(rival => rival.id === participants[0].id).name;
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
+			participants[1].schoolId === self.activeSchoolId
 		) {
 			return rivals.find(rival => rival.id === participants[1].id).name;
 		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
@@ -165,31 +176,35 @@ const ChallengesList = React.createClass({
 		const	self	= this;
 
 		const	eventType		= event.eventType,
-				participants	= event.teamsData,
-				activeSchoolId	= self.getActiveSchoolId();
+				participants	= event.teamsData;
 
-		// if inter school event and participant[0] is our school
-		if (
+		if(TeamHelper.isIndividualSport(event)) {
+			switch (eventType) {
+				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+					const foundRival = rivals.find(r => r.id !== self.activeSchoolId);
+
+					return foundRival ? foundRival.name : 'n/a';
+				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+					return rivals[1].name;
+			}
+		} else if (// if inter school event and participant[0] is our school
 			participants.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
+			participants[0].schoolId !== self.activeSchoolId
 		) {
 			return rivals.find(rival => rival.id === participants[0].id).name;
-			// if inter school event and participant[1] is our school
-		} else if (
+		} else if (// if inter school event and participant[1] is our school
 			participants.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
+			participants[1].schoolId !== self.activeSchoolId
 		) {
 			return rivals.find(rival => rival.id === participants[1].id).name;
-			// if inter school event and opponent school is not yet accept invitation
-		} else if(
+		} else if(// if inter school event and opponent school is not yet accept invitation
 			participants.length === 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
-			return rivals.find(rival => rival.id === null).name;
-			// if it isn't inter school event
-		} else if (
+			return rivals.find(rival => rival.id === event.invitedSchools[0].id).name;
+		} else if (// if it isn't inter school event
 			participants.length > 1 &&
 			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {

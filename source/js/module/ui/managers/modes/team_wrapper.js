@@ -63,14 +63,6 @@ const TeamWrapper = React.createClass({
 			filter: binding.toJS('filter')
 		}));
 	},
-	_getPlayerChooserFilter: function(team, school) {
-		return {
-			gender:		TeamHelper.getFilterGender(team.gender),
-			houseId:	team.houseId,
-			schoolId:	school.id,
-			forms:		TeamHelper.getFilteredAgesBySchoolForms(team.ages, school.forms)
-		};
-	},
 	/**
 	 * Init removed players array.
 	 * Removed players is a array for players that was deleted from team.
