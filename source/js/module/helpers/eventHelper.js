@@ -12,6 +12,7 @@ const EventHelper = {
 		'INTERNAL_TEAMS':	'internal'
 	},
 	EVENT_STATUS: {
+		INVITES_SENT:	'INVITES_SENT',
 		FINISHED:		'FINISHED',
 		NOT_FINISHED:	'NOT_FINISHED',
 		DRAFT:			'DRAFT',
@@ -98,12 +99,7 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	(
-				binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
-				binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
-				binding.get('model.status') === self.EVENT_STATUS.ACCEPTED
-			) &&
-			RoleHelper.isUserSchoolWorker(thiz);
+		return self.isNotFinishedEvent(binding) && RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if participants count is two and event isn't close.
@@ -132,7 +128,8 @@ const EventHelper = {
 		return (
 			binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
 			binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
-			binding.get('model.status') === self.EVENT_STATUS.ACCEPTED
+			binding.get('model.status') === self.EVENT_STATUS.ACCEPTED ||
+			binding.get('model.status') === self.EVENT_STATUS.INVITES_SENT
 		);
 	},
 	isGeneralMode: function(binding) {
@@ -168,11 +165,7 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	(
-					binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
-					binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
-					binding.get('model.status') === self.EVENT_STATUS.ACCEPTED
-				)&&
+		return	self.isNotFinishedEvent(binding) &&
 				binding.get('mode') === 'general' &&
 				binding.get('activeTab') === 'teams' &&
 				RoleHelper.isUserSchoolWorker(thiz);
@@ -194,9 +187,16 @@ const EventHelper = {
 		return (eventType === 'internal') && sport.players === 'INDIVIDUAL';
 	},
 	isShowScoreButtons: function(status, mode, isOwner) {
-		return	(status === "NOT_FINISHED" || status === "DRAFT" || status === "ACCEPTED") &&
+		return	(status === "NOT_FINISHED" || status === "DRAFT" || status === "ACCEPTED" || status === "INVITES_SENT") &&
 				mode === 'closing' &&
 				isOwner;
+	},
+	isInterSchoolsEvent: function(event) {
+		const self = this;
+
+		return event.type ?
+			event.type === "inter-schools" :
+			self.serverEventTypeToClientEventTypeMapping[event.eventType] === "inter-schools";
 	}
 };
 

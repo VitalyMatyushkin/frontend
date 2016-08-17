@@ -205,18 +205,6 @@ const EventManager = React.createClass({
 			eventId:	event.id
 		});
 	},
-	addTeamsToEvent: function(event, teams) {
-		const self = this;
-
-		return Promise.all(teams.map(t => window.Server.schoolEventTeams.post(
-			{
-				schoolId:	self.activeSchoolId,
-				eventId:	event.id
-			}, {
-				teamId:		t.id
-			}
-		)));
-	},
 	submitEvent: function() {
 		const	self	= this,
 				binding = self.getDefaultBinding();

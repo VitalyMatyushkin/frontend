@@ -147,10 +147,12 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				teamsData	= binding.toJS('teamsData'),
+				teamsData		= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(
+		if(binding.toJS('model.sportModel.players') === "INDIVIDUAL") {
+			return self._renderTeamByOrder(0);
+		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 			teamsData[0].schoolId === activeSchoolId
 		) {
@@ -172,8 +174,10 @@ const EventRival = React.createClass({
 				teamsData	= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		// if inter school event and participant[0] is our school
-		if (
+		if(binding.toJS('model.sportModel.players') === "INDIVIDUAL") {
+			return self._renderTeamByOrder(1);
+			// if inter school event and participant[0] is our school
+		} else if (
 			teamsData.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 			teamsData[0].schoolId !== activeSchoolId

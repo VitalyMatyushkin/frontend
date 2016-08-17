@@ -19,15 +19,15 @@ const ChallengeModel = function(event, activeSchoolId){
 };
 
 ChallengeModel.prototype._getResultByTeam = function(event, order) {
-    const self = this,
-        participant = order < event.teamsData.length ? event.teamsData[order] : null;
+    const   self = this,
+            participant = order < event.teamsData.length ? event.teamsData[order] : null;
 
     let goal = '-';
 
     if (self.played) {
-        const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
+        const foundResult = event.results.teamScore.find(t => t.teamId === participant.id);
 
-        goal = eventSummary[participant.id] ? eventSummary[participant.id] : 0;
+        goal = foundResult ? foundResult.score : 0;
     }
 
     return goal;
@@ -52,7 +52,7 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
             if(participant && self.activeSchoolId == participant.schoolId && participant.name) {
                 rivalName = participant.name;
             } else {
-                rivalName = participant && participant.school ? participant.school.name : null;
+                rivalName = event.invitedSchools[0].name;
             }
             break;
     }

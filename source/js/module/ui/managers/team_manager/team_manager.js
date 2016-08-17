@@ -21,7 +21,8 @@ const TeamManager = React.createClass({
 			foundStudents:		[],
 			removedPlayers:		[],
 			selectedStudentIds:	[],
-			selectedPlayerIds:	[]
+			selectedPlayerIds:	[],
+			isSync:				true
 		});
 	},
 	componentWillMount: function() {
@@ -29,10 +30,40 @@ const TeamManager = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		self.searchAndSetStudents('', binding);
+		self.initTeamValues();
+		self.clearTeamValues();
 
 		binding.sub('filter').addListener(() => {
 			self.searchAndSetStudents('', binding);
 		});
+
+		binding.sub('isSync').addListener((descriptor) => {
+			if(!descriptor.getCurrentValue()) {
+				self.clearTeamValues();
+			}
+		});
+	},
+	clearTeamValues: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.atomically()
+			.set("selectedStudentIds",	Immutable.fromJS([]))
+			.set("selectedPlayerIds",	Immutable.fromJS([]))
+			.set("removedPlayers",		Immutable.fromJS([]))
+			.set("isSync",				Immutable.fromJS(true))
+			.commit()
+	},
+	initTeamValues: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.atomically()
+			.set("selectedStudentIds",	Immutable.fromJS([]))
+			.set("selectedPlayerIds",	Immutable.fromJS([]))
+			.set("removedPlayers",		Immutable.fromJS([]))
+			.set("isSync",				Immutable.fromJS(true))
+			.commit()
 	},
 	/**
 	 * Search students by last name and set these to binding
