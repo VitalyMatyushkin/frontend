@@ -2,7 +2,8 @@
  * Created by Anatoly on 28.03.2016.
  */
 const   DateHelper  = require('module/helpers/date_helper'),
-        EventHelper = require('module/helpers/eventHelper');
+        EventHelper = require('module/helpers/eventHelper'),
+        TeamHelper  = require('./../managers/helpers/team_helper');
 
 const ChallengeModel = function(event, activeSchoolId){
     const self = this;
@@ -34,40 +35,65 @@ ChallengeModel.prototype._getResultByTeam = function(event, order) {
 };
 
 ChallengeModel.prototype._getRivalName = function(event, order) {
-    const self = this,
-        eventType = event.eventType,
-        played = self.played,
-        participant = order < event.teamsData.length ? event.teamsData[order] : null;
+    const   self        = this,
+            eventType   = event.eventType,
+            played      = self.played,
+            participant = order < event.teamsData.length ? event.teamsData[order] : null;
 
-    let	rivalName = null;
+    const result = {};
 
+    // set name
+    // sport type is important
     switch(EventHelper.serverEventTypeToClientEventTypeMapping[eventType]) {
         case 'internal':
-            rivalName = participant ? participant.name : null;
+            result.id      = participant ? participant.id : null;
+            result.name    = participant ? participant.name : null;
             break;
         case 'houses':
-            rivalName = participant && participant.house ? participant.house.name : null;
+            if(TeamHelper.isIndividualSport(event)) {
+                result.id   = event.housesData[order].id;
+                result.name = event.housesData[order].name;
+            } else {
+                result.id   = participant ? participant.id : null;
+                result.name = participant && participant.house ? participant.house.name : null;
+            }
             break;
         case 'inter-schools':
-            if(participant && self.activeSchoolId == participant.schoolId && participant.name) {
-                rivalName = participant.name;
+            // TODO OMFG!
+            if(TeamHelper.isIndividualSport(event)) {
+                switch (order) {
+                    case 0:
+                        // i don't what is order, but let order 0 is active school and order 1 is invited school
+                        result.id   = event.inviterSchool.id;
+                        result.name = event.inviterSchool.name;
+                        break;
+                    case 1:
+                        result.id      = event.invitedSchools[0].id;
+                        result.name    = event.invitedSchools[0].name;
+                        break;
+                }
             } else {
-                rivalName = event.invitedSchools[0].name;
+                if(participant && self.activeSchoolId == participant.schoolId && participant.name) {
+                    result.id      = participant.id;
+                    result.name    = participant.name;
+                } else {
+                    result.id      = participant === null ? event.invitedSchools[0].id : participant.id;
+                    result.name    = event.invitedSchools[0].name;
+                }
             }
             break;
     }
-    if (!rivalName) {
-        rivalName = 'n/a';
+
+    // set scores
+    if (!result.name) {
+        result.name = 'n/a';
     }
-    else if (played && rivalName) {
+    else if (played && result.name && !TeamHelper.isIndividualSport(event)) {
         let goal = self._getResultByTeam(event, order);
-        rivalName += '[' + goal + ']';
+        result.name += '[' + goal + ']';
     }
 
-    return {
-        id:     participant ? participant.id : participant,
-        name:   rivalName
-    };
+    return result;
 };
 
 ChallengeModel.prototype._getFirstIndex = function(event, activeSchoolId){

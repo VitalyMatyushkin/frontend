@@ -13,68 +13,120 @@ const EventHeader = React.createClass({
 	displayName: 'EventButtons',
 	closeMatch: function () {
 		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				points		= binding.toJS('points'),
-				event		= binding.toJS('model'),
-				teamsData	= binding.toJS('teamsData');
+				binding		= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
+
+		if(TeamHelper.isIndividualSport(event)) {
+			self.closeMatchForIndividualSport();
+		} else {
+			self.closeMatchForTeamsSport();
+		}
+	},
+	closeMatchForTeamsSport: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
 
 		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		window.Server.finishSchoolEvent.post({
-			schoolId:	activeSchoolId,
-			eventId:	event.id
-		})
-		.then(() => {
-			const body = event.results.teamScore.map(t => {
-				return {
-					teamId:	t.teamId,
-					score:	t.score
-				};
-			});
+				schoolId:	activeSchoolId,
+				eventId:	event.id
+			})
+			.then(() => self.submitTeamResults(event))
+			.then(() => self.submitIndividualResults(event))
+			.then(() => self.doActionsAfterCloseEvent());
+	},
+	closeMatchForIndividualSport: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-			if(body.length < 2 ) {
-				const index = teamsData.findIndex(t => t.teamId !== body[0].teamId);
-				body.push({
-					teamId:	teamsData[index].id,
-					score:	0
-				});
-			}
+		const event = binding.toJS('model');
 
-			if(body[0].score > body[1].score) {
-				body[0].isWinner = true;
-				body[1].isWinner = false;
-			} else if(body[0].score < body[1].score) {
-				body[0].isWinner = false;
-				body[1].isWinner = true;
-			}
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-			return Promise.all(body.map(teamScoreData => window.Server.schoolEventResultTeamScore.post({ schoolId: activeSchoolId, eventId: event.id }, teamScoreData)));
-		})
-		.then(_ => {
-			return Promise.all(
-				event.results.individualScore.map(
-					individualScoreData => window.Server.schoolEventResultIndividualsScore.post(
-						{
-							schoolId: activeSchoolId,
-							eventId: event.id
-						},
-						individualScoreData
-					)
-				)
-			);
-		})
-		.then(_ => window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } ) )
-		.then(event => {
-			binding
-				.atomically()
-				.set('model.result',	Immutable.fromJS(event.result))
-				.set('model.status',	Immutable.fromJS(event.status))
-				.set('mode',			Immutable.fromJS('general'))
-				.commit();
+		window.Server.finishSchoolEvent.post({
+				schoolId:	activeSchoolId,
+				eventId:	event.id
+			})
+			.then(() => self.submitIndividualResults(event))
+			.then(() => self.doActionsAfterCloseEvent());
+	},
+	submitTeamResults: function(event) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-			// yep i'm always true
-			return true;
+		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
+				teamsData		= binding.toJS('teamsData');
+
+		const body = event.results.teamScore.map(t => {
+			return {
+				teamId:	t.teamId,
+				score:	t.score
+			};
 		});
+
+		if(body.length < 2 ) {
+			const index = teamsData.findIndex(t => t.teamId !== body[0].teamId);
+			body.push({
+				teamId:	teamsData[index].id,
+				score:	0
+			});
+		}
+
+		if(body[0].score > body[1].score) {
+			body[0].isWinner = true;
+			body[1].isWinner = false;
+		} else if(body[0].score < body[1].score) {
+			body[0].isWinner = false;
+			body[1].isWinner = true;
+		}
+
+		return Promise.all(body.map(teamScoreData => window.Server.schoolEventResultTeamScore.post({ schoolId: activeSchoolId, eventId: event.id }, teamScoreData)));
+	},
+	submitIndividualResults: function(event) {
+		const self = this;
+
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		return Promise.all(
+			event.results.individualScore.map(
+				individualScoreData => window.Server.schoolEventResultIndividualsScore.post(
+					{
+						schoolId:	activeSchoolId,
+						eventId:	event.id
+					},
+					individualScoreData
+				)
+			)
+		);
+	},
+	/**
+	 * Get updated event from server
+	 * And update result and status
+	 * Also got event editing page to GENERAL mode
+	 */
+	doActionsAfterCloseEvent: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
+
+		return window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } )
+			.then(event => {
+				binding
+					.atomically()
+					.set('model.result',	Immutable.fromJS(event.result))
+					.set('model.status',	Immutable.fromJS(event.status))
+					.set('mode',			Immutable.fromJS('general'))
+					.commit();
+
+				// yep i'm always true
+				return true;
+			});
 	},
 	isOwner: function () {
 		var self = this,
@@ -94,36 +146,75 @@ const EventHeader = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const currentMode = binding.get('mode');
+		const	currentMode	= binding.get('mode'),
+				event		= binding.toJS('model');
 
 		if(currentMode === 'closing') {
 			self.closeMatch();
 		} else {
-			const	teamPlayers			= self.getTeamsPlayersForCommit(binding.toJS('model')),
-					initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers'),
-					activeSchoolId		= MoreartyHelper.getActiveSchoolId(self);
-
-			let commitPlayersPromises = [];
-
-			Object.keys(teamPlayers).forEach(teamId => {
-				commitPlayersPromises = commitPlayersPromises.concat(
-					TeamHelper.commitPlayers(
-						initialTeamPlayers[teamId],
-						teamPlayers[teamId],
-						teamId,
-						activeSchoolId
-					)
-				)
-			});
-
-			Promise.all(commitPlayersPromises)
-				.then(() => {
-					binding.atomically()
-							.set('mode', 'general')
-							.set('eventTeams.isSync', Immutable.fromJS(false))
-							.commit();
-				});
+			if(TeamHelper.isIndividualSport(event)) {
+				self.commitIndividualPlayerChanges();
+			} else {
+				self.commitTeamPlayerChanges();
+			}
 		}
+	},
+	commitIndividualPlayerChanges: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
+
+		const	schoolId		= MoreartyHelper.getActiveSchoolId(self),
+				eventId			= event.id,
+				players			= self.getCommitPlayersForEndividualEvent(event),
+				initialPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
+
+		Promise.all(TeamHelper.commitIndividualPlayers(schoolId, eventId, initialPlayers, players)).then(() => self.doAfterCommitActions());
+	},
+	getCommitPlayersForEndividualEvent: function(event) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		if(EventHelper.isEventWithOneIndividualTeam(event)) {
+			return binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents');
+		} else {
+			return binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents')
+				.concat(binding.toJS('eventTeams.editPlayers.teamManagerBindings.1.teamStudents'));
+		}
+	},
+	commitTeamPlayerChanges: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	teamPlayers			= self.getTeamsPlayersForCommit(binding.toJS('model')),
+				initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers'),
+				activeSchoolId		= MoreartyHelper.getActiveSchoolId(self);
+
+		let commitPlayersPromises = [];
+
+		Object.keys(teamPlayers).forEach(teamId => {
+			commitPlayersPromises = commitPlayersPromises.concat(
+				TeamHelper.commitPlayers(
+					initialTeamPlayers[teamId],
+					teamPlayers[teamId],
+					teamId,
+					activeSchoolId
+				)
+			)
+		});
+
+		Promise.all(commitPlayersPromises)
+			.then(() => self.doAfterCommitActions());
+	},
+	doAfterCommitActions: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.atomically()
+			.set('mode', 'general')
+			.set('eventTeams.isSync', Immutable.fromJS(false))
+			.commit();
 	},
 	/**
 	 * Return player changes for commit, hash map - key:teamId, value:players
@@ -164,10 +255,16 @@ const EventHeader = React.createClass({
 		const	teamManagerBindings	= binding.toJS('eventTeams.editPlayers.teamManagerBindings'),
 				initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
 
-		teamManagerBindings.forEach(teamManagerBinding => {
-			teamManagerBinding.teamStudents	= initialTeamPlayers[teamManagerBinding.teamId];
-			teamManagerBinding.isSync		= false;
-		});
+		const event = binding.toJS('model');
+
+		if(TeamHelper.isIndividualSport(event)) {
+			teamManagerBindings[0].teamStudents = initialTeamPlayers;
+		} else {
+			teamManagerBindings.forEach(teamManagerBinding => {
+				teamManagerBinding.teamStudents	= initialTeamPlayers[teamManagerBinding.teamId];
+				teamManagerBinding.isSync		= false;
+			});
+		}
 
 		return teamManagerBindings;
 	},

@@ -100,15 +100,50 @@ const EventTeams = React.createClass({
 				}
 			)
 			.then(event => {
-				binding.atomically()
-					.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
-					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(event.individualsData))
-					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
-					.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
-					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
-					.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
-					.set('isSync',											Immutable.fromJS(true))
-					.commit();
+				switch (EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]) {
+					case 'inter-schools':
+					case 'internal':
+						binding.atomically()
+							.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
+							.set("editPlayers.teamManagerBindings.0.teamStudents",
+								Immutable.fromJS(
+									event.individualsData.filter(p => p.schoolId === self.activeSchoolId)
+								)
+							)
+							.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
+							.set('isSync',											Immutable.fromJS(true))
+							.commit();
+						break;
+					case 'houses':
+						binding.atomically()
+							.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
+							.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(event.houses[0]))
+							.set("editPlayers.teamManagerBindings.0.teamStudents",
+								Immutable.fromJS(
+									event.individualsData.filter(p => p.houseId === event.houses[0])
+								)
+							)
+							.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
+							.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(event.houses[1]))
+							.set("editPlayers.teamManagerBindings.1.teamStudents",
+								Immutable.fromJS(
+									event.individualsData.filter(p => p.houseId === event.houses[1])
+								)
+							)
+							.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.1.removedPlayers",Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.1.isSync",		Immutable.fromJS(false))
+							.set('isSync',											Immutable.fromJS(true))
+							.commit();
+						break;
+				}
 			});
 	},
 	_setTeamPlayersFromEventToBinding: function(event) {
