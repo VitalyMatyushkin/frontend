@@ -7,6 +7,7 @@ const 	GeneralType 		= require('./general-type'),
 		ColorsType 			= require('./colors-type'),
 		GenderType 			= require('./gender-type'),
 		DateType 			= require('./date-type'),
+		ImageType 			= require('./image-type'),
 		ActionButtonsType 	= require('./action-buttons-type');
 
 const CellTypeList = {
@@ -15,6 +16,7 @@ const CellTypeList = {
 	'colors': 			ColorsType,
 	'gender': 			GenderType,
 	'date': 			DateType,
+	'image': 			ImageType,
 	'action-buttons': 	ActionButtonsType
 };
 
