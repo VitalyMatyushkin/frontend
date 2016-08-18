@@ -102,7 +102,7 @@ HouseListModel.prototype = {
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 				(
-					<div className="addButton addHouse" onClick={function(){document.location.hash += '/add';}}>
+					<div className="addButton addHouse bTooltip" data-description="Add House" onClick={function(){document.location.hash += '/add';}}>
 					</div>
 				) : null
 			},

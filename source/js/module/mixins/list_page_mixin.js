@@ -126,7 +126,7 @@ const ListPageMixin = {
                 <div className="eSchoolMaster_wrap">
                     <h1 className="eSchoolMaster_title">{listPageTitle}</h1>
                     <div className="eStrip"></div>
-                    <div className="filter_btn" onClick={self.toggleFilters}>
+                    <div className="filter_btn bTooltip" data-description="Filter" onClick={self.toggleFilters}>
                         <SVG icon="icon_search"/> {isFiltersActive ? '↑' : '↓'}
                     </div>
                     <If condition={currentPage[currentPage.length-1] ==='students'}>
@@ -145,10 +145,10 @@ const ListPageMixin = {
                         <div className="bButtonAdd" onClick={self._addNewSport}><SVG icon="icon_add_sport" /></div>
                     </If>
                     <If condition={currentPage[currentPage.length-1] ==='teams'}>
-                        <div className="addButtonShort" onClick={self._addNewTeam}><SVG icon="icon_add_team" /></div>
+                        <div className="addButtonShort bTooltip" data-description="Create Team" onClick={self._addNewTeam}><SVG icon="icon_add_team" /></div>
                     </If>
                     <If condition={currentPage[currentPage.length-1] ==='news'}>
-                        <div className="addButtonShort" onClick={self._createNewsItem}><SVG icon="icon_add_news" /></div>
+                        <div className="addButtonShort bTooltip" data-description="Add News" onClick={self._createNewsItem}><SVG icon="icon_add_news" /></div>
                     </If>
                     <If condition={!!self.addButton}>
                         {self.addButton}

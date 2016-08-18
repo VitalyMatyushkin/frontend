@@ -29,7 +29,7 @@ const ActionPanel = React.createClass({
 					<div className="eStrip"></div>
 				</If>
 				<If condition={!model.hideBtnFilter}>
-					<div className="filter_btn" onClick={this.toggleFilters}>
+					<div className="filter_btn bTooltip" data-description="Filter" onClick={this.toggleFilters}>
 						<SVG icon="icon_search"/> {model.isFilterActive ? '↑' : '↓'}
 					</div>
 				</If>

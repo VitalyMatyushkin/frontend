@@ -217,7 +217,7 @@ StudentListModel.prototype = {
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 				(
-					<div className="addButton" onClick={function(){document.location.hash += '/add';}}>
+					<div className="addButton bTooltip" data-description="Add Student" onClick={function(){document.location.hash += '/add';}}>
 						<SVG icon="icon_add_student" />
 					</div>
 				) : null
