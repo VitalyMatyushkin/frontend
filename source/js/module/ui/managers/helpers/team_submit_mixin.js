@@ -14,7 +14,7 @@ const TeamSubmitMixin = {
 
 		return window.Server.schoolEventIndividualsBatch.post(
 			{
-				schoolId:	savedEvent.inviterSchoolId,
+				schoolId:	MoreartyHelper.getActiveSchoolId(self),
 				eventId:	savedEvent.id
 			},
 			{
@@ -70,9 +70,7 @@ const TeamSubmitMixin = {
 					teamBody.schoolId		= MoreartyHelper.getActiveSchoolId(self);
 					teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
 					teamBody.teamType		= "ADHOC";
-					event.houseId && (
-						teamBody.houseId	= event.houseId
-					);
+					event.type === 'houses' && (teamBody.houseId = rival.id);
 
 					return self.createAdhocTeam(teamBody);
 			}

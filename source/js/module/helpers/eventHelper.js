@@ -75,11 +75,16 @@ const EventHelper = {
 
 		// don't show inter-schools events if invited school not yet accept invitation and
 		// if invited school is an active school.
-		return !(
-			event.eventType === self.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			event.invitedSchoolId === activeSchoolId &&
-			event.teams.length === 1 // if team count === 1 then opponent school not yet accept invitation
-		);
+		switch (event.eventType) {
+			case self.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				if(event.invitedSchoolIds[0] === activeSchoolId) {
+					return event.status === "ACCEPTED" || event.status === "FINISHED";
+				} else {
+					return true;
+				}
+			default:
+				return true;
+		}
 	},
 	isShowEventOnPublicSchoolCalendar: function(event) {
 		const self = this;
@@ -112,15 +117,9 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	self.isTeamCountRight(binding) &&
-				self.isNotFinishedEvent(binding) &&
+		return	binding.toJS('model.status') === "ACCEPTED" &&
 				self.isGeneralMode(binding) &&
 				RoleHelper.isUserSchoolWorker(thiz);
-	},
-	isTeamCountRight: function(binding) {
-		const self = this;
-
-		return self.isEventWithOneIndividualTeam(binding.toJS('model')) ? true : binding.get('teamsData').count() > 1
 	},
 	isNotFinishedEvent: function(binding) {
 		const self = this;
@@ -184,7 +183,7 @@ const EventHelper = {
 		const	eventType	= event.eventType ?  EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] : event.type,
 				sport		= event.sportModel ? event.sportModel : event.sport;
 
-		return (eventType === 'internal') && sport.players === 'INDIVIDUAL';
+		return (eventType === 'internal') && (sport.players === 'INDIVIDUAL' || sport.players === '1X1');
 	},
 	isShowScoreButtons: function(status, mode, isOwner) {
 		return	(status === "NOT_FINISHED" || status === "DRAFT" || status === "ACCEPTED" || status === "INVITES_SENT") &&

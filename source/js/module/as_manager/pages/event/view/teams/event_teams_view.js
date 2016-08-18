@@ -64,19 +64,52 @@ const EventTeamsView = React.createClass({
 				teamsData		= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[0].schoolId === activeSchoolId
-		) {
-			return self.renderTeamPlayersByOrder(0);
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[1].schoolId === activeSchoolId
-		) {
-			return self.renderTeamPlayersByOrder(1);
-		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return self.renderTeamPlayersByOrder(0);
+		if(TeamHelper.isIndividualSport(event)) {
+			switch (eventType) {
+				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+					return self.renderIndividualPlayersBySchoolId(event.inviterSchool.id);
+				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+					return self.renderIndividualPlayersByHouseId(event.houses[0]);
+			}
+		} else {
+			if(
+				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+				teamsData[0].schoolId === activeSchoolId
+			) {
+				return self.renderTeamPlayersByOrder(0);
+			} else if(
+				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+				teamsData[1].schoolId === activeSchoolId
+			) {
+				return self.renderTeamPlayersByOrder(1);
+			} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+				return self.renderTeamPlayersByOrder(0);
+			}
 		}
+	},
+	renderIndividualPlayersBySchoolId: function(schoolId) {
+		const self = this;
+
+		const	event	= self.getBinding('event').toJS(),
+				players	= self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
+
+		return (
+			<div className="bEventTeams_team">
+				{self.renderPlayers(players, event.status, true)}
+			</div>
+		);
+	},
+	renderIndividualPlayersByHouseId: function(houseId) {
+		const self = this;
+
+		const	event	= self.getBinding('event').toJS(),
+				players	= self.getDefaultBinding().toJS('players').filter(p => p.houseId === houseId);
+
+		return (
+			<div className="bEventTeams_team">
+				{self.renderPlayers(players, event.status, true)}
+			</div>
+		);
 	},
 	renderPlayersForRightSide: function() {
 		const self = this;
@@ -86,31 +119,40 @@ const EventTeamsView = React.createClass({
 				teamsData		= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(
-			teamsData.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[0].schoolId !== activeSchoolId
-		) {
-			return self.renderTeamPlayersByOrder(0);
-		} else if (
-			teamsData.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[1].schoolId !== activeSchoolId
-		) {
-			return self.renderTeamPlayersByOrder(1);
-		} else if (
-			teamsData.length > 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return self.renderTeamPlayersByOrder(1);
-		} else if(teamsData.length === 1) {
-			return (
-				<div className="bEventTeams_team">
-					<div className="eEventTeams_awaiting">
-						Awaiting opponent...
+		if(TeamHelper.isIndividualSport(event)) {
+			switch (eventType) {
+				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+					return self.renderIndividualPlayersBySchoolId(event.invitedSchools[0].id);
+				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+					return self.renderIndividualPlayersByHouseId(event.houses[1]);
+			}
+		} else {
+			if(
+				teamsData.length > 1 &&
+				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+				teamsData[0].schoolId !== activeSchoolId
+			) {
+				return self.renderTeamPlayersByOrder(0);
+			} else if (
+				teamsData.length > 1 &&
+				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+				teamsData[1].schoolId !== activeSchoolId
+			) {
+				return self.renderTeamPlayersByOrder(1);
+			} else if (
+				teamsData.length > 1 &&
+				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+			) {
+				return self.renderTeamPlayersByOrder(1);
+			} else if(teamsData.length === 1) {
+				return (
+					<div className="bEventTeams_team">
+						<div className="eEventTeams_awaiting">
+							Awaiting opponent...
+						</div>
 					</div>
-				</div>
-			);
+				);
+			}
 		}
 	},
 	renderPlayers: function(players, eventStatus, isOwner) {
@@ -183,11 +225,13 @@ const EventTeamsView = React.createClass({
 			</div>
 		);
 	},
-	renderBody: function() {
+	render: function() {
 		const	self	= this;
 		let		result	= null;
 
-		if(TeamHelper.isIndividualSport(self.getBinding('event').toJS())) {
+		const event = self.getBinding('event').toJS();
+
+		if(EventHelper.isEventWithOneIndividualTeam(event)) {
 			result = (
 				<div className="bEventTeams">
 					{self.renderIndividuals()}
@@ -203,11 +247,6 @@ const EventTeamsView = React.createClass({
 		}
 
 		return result;
-	},
-	render: function() {
-		const self = this;
-
-		return self.renderBody();
 	}
 });
 

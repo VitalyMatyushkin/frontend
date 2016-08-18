@@ -2,6 +2,7 @@ const	If				= require('module/ui/if/if'),
 		SVG				= require('module/ui/svg'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('./../../../../ui/managers/helpers/team_helper'),
 		Sport			= require('module/ui/icons/sport_icon'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
@@ -11,9 +12,11 @@ const EventRival = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	getPic: function (order) {
 		const	self = this,
-				binding = self.getDefaultBinding(),
-				eventType = binding.get('model.eventType'),
-				participant = binding.sub(['teamsData', order]);
+				binding = self.getDefaultBinding();
+
+		const	event		= binding.toJS('model'),
+				eventType	= event.eventType,
+				participant	= binding.sub(['teamsData', order]);
 		let		pic = null;
 
 		switch (eventType) {
@@ -25,7 +28,12 @@ const EventRival = React.createClass({
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				pic = participant.get('house.pic');
+				if(TeamHelper.isIndividualSport(event)) {
+					pic = event.housesData[order].pic;
+				} else {
+					pic = participant.get('house.pic');
+				}
+
 				break;
 		};
 
@@ -45,9 +53,11 @@ const EventRival = React.createClass({
 	getName: function (order) {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
-				eventType	= binding.get('model.eventType'),
+				event		= binding.toJS('model'),
+				eventType	= event.eventType,
 				participant	= binding.sub(['teamsData', order]);
 		let		name		= null;
+
 
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
@@ -58,7 +68,11 @@ const EventRival = React.createClass({
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				name = participant.get('house.name');
+				if(TeamHelper.isIndividualSport(event)) {
+					name = event.housesData[order].name;
+				} else {
+					name = participant.get('house.name');
+				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 				name = participant.get('name');
@@ -150,7 +164,7 @@ const EventRival = React.createClass({
 				teamsData		= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(binding.toJS('model.sportModel.players') === "INDIVIDUAL") {
+		if(TeamHelper.isIndividualSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
@@ -171,10 +185,10 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				teamsData	= binding.toJS('teamsData'),
+				teamsData		= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(binding.toJS('model.sportModel.players') === "INDIVIDUAL") {
+		if(TeamHelper.isIndividualSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(1);
 			// if inter school event and participant[0] is our school
 		} else if (
@@ -264,29 +278,32 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	mode	= binding.toJS('mode'),
+		const	event	= binding.toJS('model'),
+				mode	= binding.toJS('mode'),
 				status	= binding.toJS('model.status');
 
-		if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
-			return (
-				<div className="eEventResult_score">
-					<div className="eEventResult_PointsWrapper">
-						<span>-</span>
-						<span className="eEventResult_colon"> : </span>
-						<span>-</span>
+		if(!TeamHelper.isIndividualSport(event)) {
+			if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
+				return (
+					<div className="eEventResult_score">
+						<div className="eEventResult_PointsWrapper">
+							<span>-</span>
+							<span className="eEventResult_colon"> : </span>
+							<span>-</span>
+						</div>
 					</div>
-				</div>
-			);
-		} else if(status === "FINISHED" || mode === 'closing') {
-			return (
-				<div className="eEventResult_score">
-					<div className="eEventResult_PointsWrapper">
-						{self._renderCountPointLeftSide()}
-						<div className="eEventResult_Colon"> : </div>
-						{self._renderCountPointRightSide()}
+				);
+			} else if(status === "FINISHED" || mode === 'closing') {
+				return (
+					<div className="eEventResult_score">
+						<div className="eEventResult_PointsWrapper">
+							{self._renderCountPointLeftSide()}
+							<div className="eEventResult_Colon"> : </div>
+							{self._renderCountPointRightSide()}
+						</div>
 					</div>
-				</div>
-			);
+				);
+			}
 		}
 	},
 	render: function() {

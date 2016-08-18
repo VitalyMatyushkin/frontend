@@ -256,7 +256,7 @@ const Manager = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		switch (TeamHelper.getParticipantsType(binding.toJS('model'))) {
-			case "INDIVIDUALS":
+			case "INDIVIDUAL":
 				return null;
 			case "TEAM":
 				return (

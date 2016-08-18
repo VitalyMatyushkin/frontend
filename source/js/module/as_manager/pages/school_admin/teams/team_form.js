@@ -310,19 +310,23 @@ const TeamForm = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const	school	= binding.toJS('school'),
+				gender	= TeamHelper.getFilterGender(binding.toJS('gender')),
+				ages	= binding.toJS('ages'),
+				houseId	= self.getHouseFilterCheckboxValue(binding) ? binding.toJS('houseId') : undefined;
+
 		// update team manager filter
 		// and delete players from team because filter was changed
 		binding.set(
 			'___teamManagerBinding.filter',
-			Immutable.fromJS({
-				schoolId:	binding.toJS('school.id'),
-				houseId:	self.getHouseFilterCheckboxValue(binding) ? binding.toJS('houseId') : undefined,
-				forms:		TeamHelper.getFilteredAgesBySchoolForms(
-					binding.toJS('ages'),
-					binding.toJS('school.forms') // default is school binding, yep, it is necessary rename
-				),
-				genders:	TeamHelper.getFilterGender(binding.toJS('gender'))
-			})
+			Immutable.fromJS(
+				TeamHelper.getTeamManagerSearchFilter(
+					school,
+					ages,
+					gender,
+					houseId
+				)
+			)
 		);
 	},
 	renderTeamManager: function(binding, errorText) {
