@@ -55,7 +55,7 @@ const SchoolSummary = React.createClass({
 						<If condition={role === "ADMIN"}>
 							<div className="editSchool">
 								<a href={'/#schools/edit?id=' + activeSchoolId}>
-									<div className="bEditButton">
+									<div className="bEditButton bTooltip" data-description="Edit">
 										<SVG icon="icon_edit"/>
 									</div>
 								</a>

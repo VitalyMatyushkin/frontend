@@ -155,10 +155,10 @@ const Table = React.createClass({
                     getRemoveFunction = function() { return function(event) { self.props.onItemRemove(item); event.stopPropagation();}},
                     getSelectItemFunction = function() { return function(event) { self.props.onItemSelect(item); event.stopPropagation();}};
 
-                self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike"><SVG icon="icon_edit"/></span>);
-                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike bViewBtn"><SVG icon="icon_eye"/></span>);
-                self.props.onItemSelect && itemButtons.push(<span key={item.id+'view'} onClick={getSelectItemFunction()} className="bLinkLike bViewBtn"><SVG icon="icon_menu"/></span>);
-                self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike delete_btn"><SVG icon="icon_delete"/></span>);
+                self.props.onItemEdit && itemButtons.push(<span key={item.id+'edit'} onClick={getEditFunction()} className="bLinkLike bTooltip" data-description="Edit"><SVG icon="icon_edit"/></span>);
+                self.props.onItemView && self.props.displayActionText && itemButtons.push(<span key={item.id+'view'} onClick={getViewFunction()} className="bLinkLike bViewBtn bTooltip" data-description="View"><SVG icon="icon_eye"/></span>);
+                self.props.onItemSelect && itemButtons.push(<span key={item.id+'view'} onClick={getSelectItemFunction()} className="bLinkLike bViewBtn bTooltip" data-description="View"><SVG icon="icon_menu"/></span>);
+                self.props.onItemRemove && itemButtons.push(<span key={item.id+'remove'} onClick={getRemoveFunction()} className="bLinkLike delete_btn bTooltip" data-description="Delete"><SVG icon="icon_delete"/></span>);
                 self.props.addQuickActions && itemButtons.push(
                     <AdminDropList key={item.id}
                                    binding={binding.sub('dropList'+item.id)}
