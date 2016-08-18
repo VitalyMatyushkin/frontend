@@ -1,161 +1,160 @@
 $grey: rgba(0, 0, 0, 0.2);
 $darkGrey: #959595;
 
-.bFilterPanel {
+.bFilterFields {
+  padding: 10px 10px 0;
 
-  .bFilterFields {
-    padding: 10px 10px 0;
+  .bFilterField {
+    display: inline-block;
+    position: relative;
+    margin-right: 35px;
+    padding-right: 20px;
 
-    .bFilterField {
-      display: inline-block;
-      position: relative;
-      margin-right: 45px;
+    .eField {
+      color: $darkGrey;
+      line-height: 23px;
+      cursor: default;
 
-      .eField {
-        color: $darkGrey;
-        padding: 0 0 5px;
-
-        &:after {
-          border-color: $COLOR transparent;
-          border-style: solid;
-          border-width: 5px 4px 0 4px;
-          content: "";
-          height: 0;
-          margin-left: 6px;
-          position: absolute;
-          top: 20%;
-          width: 0;
-        }
-      }
-      .eFilterContainer {
+      &:after {
+        border-color: $COLOR transparent;
+        border-style: solid;
+        border-width: 5px 4px 0 4px;
+        content: "";
+        height: 0;
+        margin-left: 6px;
         position: absolute;
-        padding: 15px 7px 7px;
-        background-color: white;
-        border-radius: 0 0 5px 5px;
-        border: 1px solid $grey;
-        transition: all 0.3s ease-out;
-        display: none;
-        z-index: 1;
-
-        &:before, &:after {
-          border-color: $grey transparent;
-          border-style: solid;
-          border-width: 0 8px 8px 8px;
-          content: "";
-          height: 0;
-          left: 2em;
-          margin-top: -8px;
-          position: absolute;
-          top: 0;
-          width: 0;
-          z-index: 1;
-        }
-
-        &:after {
-          border-color: #fff transparent;
-          margin-top: -7px;
-        }
-
-        input[type="text"] {
-          max-width: 140px;
-        }
-
-        .bMultiSelect {
-          width: 200px;
-
-          input {
-            border-width: 0 0 1px;
-            display: block;
-            margin: 0 auto;
-            width: 80%;
-          }
-          button {
-            background: #fff;
-            border: solid 1px $darkGrey;
-            border-radius: 2px;
-            box-sizing: border-box;
-            color: $darkGrey;
-            display: block;
-            font-size: 1em;
-            margin: 0 auto;
-            padding: 5px 25px;
-
-            &:hover {
-              background: #f1f1f1;
-              border-width: 1px 1px 2px;
-            }
-            &:active {
-              background: #d7d7d7;
-            }
-          }
-
-          &.mHideFilter input{
-            display: none;
-          }
-
-          &.mHideButtons button{
-            display: none;
-          }
-        }
-        .eMultiSelect_item {
-          margin-left: 30px;
-          padding: 8px 0;
-          position: relative;
-
-          &:before {
-            background: #fff;
-            border: solid 1px $MAIN_COLOR;
-            border-radius: 1px;
-            content: "";
-            height: 12px;
-            left: -30px;
-            position: absolute;
-            top: 6px;
-            width: 12px;
-          }
-        }
-        .mSelected {
-          background: #fff;
-
-          &:before{
-            content: "✓";
-            color:black;
-            font-size: 20px;
-            line-height: 14px;
-          }
-        }
-      }
-
-      &:hover .eFilterContainer{
-        display: block;
+        top: 30%;
+        width: 0;
       }
     }
+    .eFilterContainer {
+      position: absolute;
+      padding: 15px 7px 7px;
+      background-color: white;
+      border-radius: 0 0 5px 5px;
+      border: 1px solid $grey;
+      transition: all 0.3s ease-out;
+      display: none;
+      z-index: 1;
+
+      &:before, &:after {
+        border-color: $grey transparent;
+        border-style: solid;
+        border-width: 0 8px 8px 8px;
+        content: "";
+        height: 0;
+        left: 2em;
+        margin-top: -8px;
+        position: absolute;
+        top: 0;
+        width: 0;
+        z-index: 1;
+      }
+
+      &:after {
+        border-color: #fff transparent;
+        margin-top: -7px;
+      }
+
+      input[type="text"] {
+        max-width: 140px;
+      }
+
+      .bMultiSelect {
+        width: 200px;
+
+        input {
+          border-width: 0 0 1px;
+          display: block;
+          margin: 0 auto;
+          width: 80%;
+        }
+        button {
+          background: #fff;
+          border: solid 1px $darkGrey;
+          border-radius: 2px;
+          box-sizing: border-box;
+          color: $darkGrey;
+          display: block;
+          font-size: 1em;
+          margin: 0 auto;
+          padding: 5px 25px;
+
+          &:hover {
+            background: #f1f1f1;
+            border-width: 1px 1px 2px;
+          }
+          &:active {
+            background: #d7d7d7;
+          }
+        }
+
+        &.mHideFilter input{
+          display: none;
+        }
+
+        &.mHideButtons button{
+          display: none;
+        }
+      }
+      .eMultiSelect_item {
+        margin-left: 30px;
+        padding: 8px 0;
+        position: relative;
+
+        &:before {
+          background: #fff;
+          border: solid 1px $MAIN_COLOR;
+          border-radius: 1px;
+          content: "";
+          height: 12px;
+          left: -30px;
+          position: absolute;
+          top: 6px;
+          width: 12px;
+        }
+      }
+      .mSelected {
+        background: #fff;
+
+        &:before{
+          content: "✓";
+          color:black;
+          font-size: 20px;
+          line-height: 14px;
+        }
+      }
+    }
+
+    &:hover .eFilterContainer{
+      display: block;
+    }
   }
+}
 
-  .bBadgeArea {
-    background-color: white;
-    min-height: 36px;
-    margin-bottom: 5px;
-    box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.25);
+.bBadgeArea {
+  background-color: white;
+  min-height: 36px;
+  margin-bottom: 5px;
+  box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.25);
 
-    .bBadge {
-      line-height: 27px;
-      margin: 5px;
-      display: inline-block;
-      background: $MAIN_COLOR;
-      padding: 5px 5px 0;
-      color: white;
+  .bBadge {
+    line-height: 27px;
+    margin: 5px;
+    display: inline-block;
+    background: $MAIN_COLOR;
+    padding: 5px 5px 0;
+    color: white;
 
-      .eField:after {
-        content: ':';
-        margin-right: 5px;
-      }
-      .eDelete {
-        margin-left: 5px;
-        color: $COLOR;
-        font-size: 13px;
-        cursor: pointer;
-      }
+    .eField:after {
+      content: ':';
+      margin-right: 5px;
+    }
+    .eDelete {
+      margin-left: 5px;
+      color: $COLOR;
+      font-size: 13px;
+      cursor: pointer;
     }
   }
 }
