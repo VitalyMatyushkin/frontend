@@ -41,9 +41,13 @@ HouseListModel.prototype = {
 	onRemove:function(data){
 		const 	self = this;
 
-		if(data !== undefined){
+		if(data && confirm(`Are you sure you want to remove house ${data.name}?`)){
 			window.Server.schoolHouse.delete({schoolId:self.activeSchoolId, houseId:data.id})
-				.then(_ => self.reloadData());
+				.then(_ => self.reloadData())
+				.catch(error => {
+					error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details
+					&& alert(error.xhr.responseJSON.details.text);
+				});
 		}
 	},
 	getGrid: function(){
@@ -102,7 +106,8 @@ HouseListModel.prototype = {
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 				(
-					<div className="addButton addHouse bTooltip" data-description="Add House" onClick={function(){document.location.hash += '/add';}}>
+					<div className="addButton addHouse bTooltip" data-description="Add House"
+						 onClick={function(){document.location.hash += '/add';}}>
 					</div>
 				) : null
 			},
