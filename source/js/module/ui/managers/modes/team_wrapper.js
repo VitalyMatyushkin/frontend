@@ -352,6 +352,7 @@ const TeamWrapper = React.createClass({
 
 		return (
 			<div className="bTeamWrapper mMarginTop">
+
 				{
 					self.renderTeamNameComponent(
 						event,

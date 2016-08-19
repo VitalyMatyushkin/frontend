@@ -126,43 +126,47 @@ const Manager = React.createClass({
 
 		if(typeof event !== 'undefined') {
 			const	errorBinding	= self.getBinding('error'),
-					limits = {
-						maxPlayers: event.sportModel.defaultLimits.maxPlayers,
-						minPlayers: event.sportModel.defaultLimits.minPlayers,
-						minSubs:    event.sportModel.defaultLimits.minSubs,
-						maxSubs:    event.sportModel.defaultLimits.maxSubs
-					};
+					defaultLimits	= event.sportModel.defaultLimits;
 
-			let result;
+			if(defaultLimits) {
+				const limits = {
+					maxPlayers: defaultLimits.maxPlayers,
+					minPlayers: defaultLimits.minPlayers,
+					minSubs:    defaultLimits.minSubs,
+					maxSubs:    defaultLimits.maxSubs
+				};
 
-			switch (true) {
-				case TeamHelper.isNonTeamSport(event):
-					result = TeamPlayersValidator.validate(
-						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-						limits
-					);
-					break;
-				case TeamHelper.isTeamSport(event):
-					if (
-						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
-					) {
-						result = {
-							isError:	true,
-							text:		'Please enter team name'
-						};
-					} else {
+				let result;
+
+				switch (true) {
+					case TeamHelper.isNonTeamSport(event):
 						result = TeamPlayersValidator.validate(
 							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
 							limits
 						);
-					}
-					break;
-			}
+						break;
+					case TeamHelper.isTeamSport(event):
+						if (
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
+						) {
+							result = {
+								isError:	true,
+								text:		'Please enter team name'
+							};
+						} else {
+							result = TeamPlayersValidator.validate(
+								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+								limits
+							);
+						}
+						break;
+				}
 
-			errorBinding.sub(rivalIndex).set(
-				Immutable.fromJS(result)
-			);
+				errorBinding.sub(rivalIndex).set(
+					Immutable.fromJS(result)
+				);
+			}
 		}
 	},
 	_initRivalIndex: function() {
