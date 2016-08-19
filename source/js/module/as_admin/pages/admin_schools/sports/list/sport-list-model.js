@@ -62,7 +62,7 @@ SportListModel.prototype = {
 				text:'Description',
 				isSorted:true,
 				cell:{
-					dataField:'description',
+					dataField:'description'
 				},
 				filter:{
 					type:'string'
