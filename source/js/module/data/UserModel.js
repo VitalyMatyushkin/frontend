@@ -17,7 +17,7 @@ const UserModel = function(userData){
     self.verified = um.getStatus(userData);
     self.roles = um.getRoles(userData);
     self.school = um.getSchool(userData);
-    self.blocked = um.getAccess(userData);
+    self.status = userData.status;
 };
 UserModel.getFullName = function(user){
     if(user){

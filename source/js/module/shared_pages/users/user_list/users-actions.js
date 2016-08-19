@@ -267,21 +267,6 @@ UsersActions.prototype = {
 				}
 			},
 			{
-				text:'Access',
-				cell:{
-					dataField:'blocked'
-				}
-			},
-			{
-				text:'Actions',
-				cell:{
-					type:'custom',
-					typeOptions:{
-						parseFunction:this.getActions.bind(this)
-					}
-				}
-			},
-			{
 				text:'Role',
 				hidden:true,
 				cell:{
@@ -292,6 +277,43 @@ UsersActions.prototype = {
 					typeOptions:{
 						items: this.getRoleList(),
 						hideFilter:true
+					}
+				}
+			},
+			{
+				text:'Access',
+				isSorted:true,
+				cell:{
+					dataField:'status'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						items: [
+							{
+								key: 'ACTIVE',
+								value: 'Active'
+							},
+							{
+								key: 'BLOCKED',
+								value: 'Blocked'
+							},
+							{
+								key: 'DELETED',
+								value: 'Deleted'
+							}
+						],
+						hideFilter:true,
+						hideButtons:true
+					}
+				}
+			},
+			{
+				text:'Actions',
+				cell:{
+					type:'custom',
+					typeOptions:{
+						parseFunction:this.getActions.bind(this)
 					}
 				}
 			}
