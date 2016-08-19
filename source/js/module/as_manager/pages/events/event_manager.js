@@ -1,16 +1,16 @@
-const   CalendarView        = require('module/ui/calendar/calendar'),
-		EventManagerBase    = require('./manager/base'),
-		If                  = require('module/ui/if/if'),
-		TimePicker          = require('module/ui/timepicker/timepicker'),
-		Manager             = require('module/ui/managers/manager'),
-		classNames          = require('classnames'),
-		React               = require('react'),
-		TeamSubmitMixin     = require('module/ui/managers/helpers/team_submit_mixin'),
+const   CalendarView		= require('module/ui/calendar/calendar'),
+		EventManagerBase	= require('./manager/base'),
+		If					= require('module/ui/if/if'),
+		TimePicker			= require('module/ui/timepicker/timepicker'),
+		Manager				= require('module/ui/managers/manager'),
+		classNames			= require('classnames'),
+		React				= require('react'),
+		TeamSubmitMixin		= require('module/ui/managers/helpers/team_submit_mixin'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		Morearty			= require('morearty'),
-		Immutable           = require('immutable');
+		Immutable			= require('immutable');
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin, TeamSubmitMixin],
@@ -154,13 +154,18 @@ const EventManager = React.createClass({
 			.commit();
 	},
 	toFinish: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			model = binding.toJS('model');
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				validationData	= [
+					binding.toJS('error.0'),
+					binding.toJS('error.1')
+				]
 		
 		// TODO validation
-		if(self.isEventDataCorrect()) {
-			self.submit(model);
+		if(TeamHelper.isTeamDataCorrect(event, validationData)) {
+			self.submit(event);
 		} else {
 		    //So, let's show form with incorrect data
 		    self._changeRivalFocusToErrorForm();
@@ -287,23 +292,6 @@ const EventManager = React.createClass({
 
 		return true;
 	},
-	isEventDataCorrect: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const event = binding.toJS('model');
-
-		let isError = false;
-
-		// for inter-schools event we can edit only one team - our team:)
-		if(event.type === 'inter-schools' || EventHelper.isEventWithOneIndividualTeam(event)) {
-			isError = binding.toJS('error.0').isError;
-		} else {
-			isError = !(!binding.toJS('error.0').isError && !binding.toJS('error.1').isError);
-		}
-
-		return !isError;
-	},
 	_renderStepButtons: function() {
 		const	self		= this,
 				binding		= self.getDefaultBinding();
@@ -371,9 +359,9 @@ const EventManager = React.createClass({
 				break;
 			case 3:
 				if(
-					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 			// for any inter-schools events
-					EventHelper.isEventWithOneIndividualTeam(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL houses and individual internal
-					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError							// for any other type of event
+					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 							// for any INTER-SCHOOLS events
+					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL INTERNAL events
+					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError											// for any other type of event
 				) {
 					isStepComplete = true;
 				};

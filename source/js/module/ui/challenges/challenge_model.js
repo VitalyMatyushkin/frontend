@@ -50,7 +50,7 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
             result.name    = participant ? participant.name : null;
             break;
         case 'houses':
-            if(TeamHelper.isIndividualSport(event)) {
+            if(TeamHelper.isNonTeamSport(event)) {
                 result.id   = event.housesData[order].id;
                 result.name = event.housesData[order].name;
             } else {
@@ -60,7 +60,7 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
             break;
         case 'inter-schools':
             // TODO OMFG!
-            if(TeamHelper.isIndividualSport(event)) {
+            if(TeamHelper.isNonTeamSport(event)) {
                 switch (order) {
                     case 0:
                         // i don't what is order, but let order 0 is active school and order 1 is invited school
@@ -78,7 +78,9 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
                     result.name    = participant.name;
                 } else {
                     result.id      = participant === null ? event.invitedSchools[0].id : participant.id;
-                    result.name    = event.invitedSchools[0].name;
+                    result.name    = event.inviterSchool.id !== self.activeSchoolId ?
+                        event.inviterSchool.name :
+                        event.invitedSchools[0].name;
                 }
             }
             break;
@@ -88,7 +90,7 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
     if (!result.name) {
         result.name = 'n/a';
     }
-    else if (played && result.name && !TeamHelper.isIndividualSport(event)) {
+    else if (played && result.name && !TeamHelper.isNonTeamSport(event)) {
         let goal = self._getResultByTeam(event, order);
         result.name += '[' + goal + ']';
     }

@@ -11,7 +11,7 @@ const RoleHelper = {
 		ADMIN:		'ADMIN',
 		MANAGER:	'MANAGER',
 		TEACHER:	'TEACHER',
-		COACH:		'COACH',
+		COACH:		'TRAINER',
 		STUDENT:	'STUDENT',
 		PARENT:		'PARENT'
 	},

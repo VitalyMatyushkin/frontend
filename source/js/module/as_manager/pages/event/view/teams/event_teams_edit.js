@@ -8,7 +8,7 @@ const	TeamManager			= require('./../../../../../ui/managers/team_manager/team_ma
 		Immutable			= require('immutable'),
 		Morearty			= require('morearty');
 
-const EventTeamsView = React.createClass({
+const EventTeamsEdit = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	componentWillMount: function() {
 		const self = this;
@@ -29,7 +29,7 @@ const EventTeamsView = React.createClass({
 				teamManagerBindings	= binding.toJS('teamManagerBindings');
 
 		let initialPlayers;
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			// if individual sport - initialPlayers is array
 			initialPlayers = teamManagerBindings[0].teamStudents;
 		} else {
@@ -45,18 +45,26 @@ const EventTeamsView = React.createClass({
 	initFilter: function() {
 		const self = this;
 
-		const	school	= self.getBinding('schoolInfo').toJS(),
-				event	= self.getBinding('event').toJS();
+		const	school				= self.getBinding('schoolInfo').toJS(),
+				event				= self.getBinding('event').toJS();
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			switch (EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]) {
 				case 'inter-schools':
-				case 'internal':
 					self.setPlayerChooserFilterForIndividuals(event, school);
 					break;
 				case 'houses':
 					event.housesData.forEach(house => self.setPlayerChooserFilterForHousesIndividualEvent(house, event, school));
 					break;
+				case 'internal':
+					if(TeamHelper.isOneOnOneSport(event)) {
+						self.getDefaultBinding().toJS('teamManagerBindings').forEach(
+							(_, index) => self.setPlayerChooserFilterForInternalOneOnOneEvent(index, event, school)
+						);
+						break;
+					} else if(TeamHelper.isIndividualSport(event)) {
+						self.setPlayerChooserFilterForIndividuals(event, school);
+					}
 			}
 		} else {
 			event.teamsData.forEach(team => self.setPlayerChooserFilterForTeam(team, school));
@@ -68,20 +76,20 @@ const EventTeamsView = React.createClass({
 
 		const event = self.getBinding('event').toJS();
 
-		if(!TeamHelper.isIndividualSport(event)) {
+		if(!TeamHelper.isNonTeamSport(event)) {
 			binding.set(
 				'selectedTeamId',
 				Immutable.fromJS(
 					event.teamsData.find(t => t.schoolId === self.activeSchoolId).id
 				)
 			);
-		} else if(TeamHelper.isIndividualSport(event) && EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] === 'houses') {
+		} else if(TeamHelper.isNonTeamSport(event) && EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] === 'houses') {
 			binding.set(
 				'selectedTeamId',
 				Immutable.fromJS(event.houses[0])
 			);
 		} else {
-			binding.set('selectedTeamId',Immutable.fromJS(undefined));
+			binding.set('selectedTeamId',Immutable.fromJS(0));
 		}
 	},
 	addTeamStudentsListeners: function() {
@@ -98,12 +106,6 @@ const EventTeamsView = React.createClass({
 	_getOtherTeamIndex: function(order) {
 		return order === 0 ? 1 : 0;
 	},
-	/**
-	 * Create
-	 * @param event
-	 * @param school
-	 * @returns {{genders, houseId, schoolId, forms}|*}
-	 */
 	setPlayerChooserFilterForIndividuals: function(event, school) {
 		const	self	= this,
 				binding	=self.getDefaultBinding();
@@ -120,6 +122,23 @@ const EventTeamsView = React.createClass({
 		);
 
 		binding.set(`teamManagerBindings.0.filter`, Immutable.fromJS(filter))
+	},
+	setPlayerChooserFilterForInternalOneOnOneEvent: function(order, event, school) {
+		const	self	= this,
+				binding	=self.getDefaultBinding();
+
+		const	gender	= TeamHelper.getFilterGender(event.gender),
+				ages	= event.ages,
+				houseId	= undefined;
+
+		const filter = TeamHelper.getTeamManagerSearchFilter(
+			school,
+			ages,
+			gender,
+			houseId
+		);
+
+		binding.set(`teamManagerBindings.${order}.filter`, Immutable.fromJS(filter))
 	},
 	setPlayerChooserFilterForHousesIndividualEvent: function(house, event, school) {
 		const	self	= this,
@@ -171,9 +190,10 @@ const EventTeamsView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const event = self.getBinding('event').toJS();
+		const	event		= self.getBinding('event').toJS(),
+				eventType	= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
 
-		if(EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] === 'houses' && TeamHelper.isIndividualSport(event)) {
+		if(eventType === 'houses' && TeamHelper.isNonTeamSport(event)) {
 			return event.housesData.map(house => {
 				return (
 					<button	key			= {house._id}
@@ -181,6 +201,17 @@ const EventTeamsView = React.createClass({
 							onClick		= {self.handleTeamClick.bind(self, house._id)}
 					>
 						{house.name}
+					</button>
+				);
+			});
+		} else if(eventType === 'internal' && TeamHelper.isOneOnOneSport(event)) {
+			return binding.toJS('teamManagerBindings').map((_, index) => {
+				return (
+					<button	key			= {index}
+							className	= {self.getTeamButtonsClassName(index)}
+							onClick		= {self.handleTeamClick.bind(self, index)}
+					>
+						{`${index === 0 ? 'First' : 'Second'} Player`}
 					</button>
 				);
 			});
@@ -226,26 +257,39 @@ const EventTeamsView = React.createClass({
 			</div>
 		);
 	},
+	renderValidationText: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const validationData = binding.toJS(`validationData.${order}`);
+
+		if(validationData.isError) {
+			return (
+				<div className="eManager_group">
+					<div className="eTeam_errorBox">
+						{validationData.text}
+					</div>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const	event				= self.getBinding('event').toJS(),
-				isIndividualSport	= TeamHelper.isIndividualSport(event);
+				isNonTeamSport		= TeamHelper.isNonTeamSport(event);
 
-		if(
-			EventHelper.isEventWithOneIndividualTeam(event) ||
-			(
-				EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] === 'inter-schools' &&
-				isIndividualSport
-			)
-		) {
+		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForOneOnOneSport(event) || TeamHelper.isInterSchoolsEventForIndividualSport(event)) {
 			return (
 				<div className="bEventTeams">
 					<div className="bEventTeams_TeamWrapper">
-						<TeamManager	isIndividualSport={isIndividualSport}
+						<TeamManager	isNonTeamSport={isNonTeamSport}
 										binding={binding.sub(`teamManagerBindings.0`)}
 						/>
+						{self.renderValidationText(0)}
 					</div>
 				</div>
 			);
@@ -262,8 +306,9 @@ const EventTeamsView = React.createClass({
 
 							return (
 								<div className={teamWrapperClassName}>
-									<TeamManager	isIndividualSport={isIndividualSport}
+									<TeamManager	isNonTeamSport={isNonTeamSport}
 													binding={binding.sub(`teamManagerBindings.${index}`)}/>
+									{self.renderValidationText(index)}
 								</div>
 							);
 						})
@@ -274,4 +319,4 @@ const EventTeamsView = React.createClass({
 	}
 });
 
-module.exports = EventTeamsView;
+module.exports = EventTeamsEdit;

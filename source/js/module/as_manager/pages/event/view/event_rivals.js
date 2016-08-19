@@ -28,7 +28,7 @@ const EventRival = React.createClass({
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if(TeamHelper.isIndividualSport(event)) {
+				if(TeamHelper.isNonTeamSport(event)) {
 					pic = event.housesData[order].pic;
 				} else {
 					pic = participant.get('house.pic');
@@ -68,7 +68,7 @@ const EventRival = React.createClass({
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if(TeamHelper.isIndividualSport(event)) {
+				if(TeamHelper.isNonTeamSport(event)) {
 					name = event.housesData[order].name;
 				} else {
 					name = participant.get('house.name');
@@ -164,7 +164,7 @@ const EventRival = React.createClass({
 				teamsData		= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(TeamHelper.isIndividualSport(binding.toJS('model'))) {
+		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
@@ -188,7 +188,7 @@ const EventRival = React.createClass({
 				teamsData		= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(TeamHelper.isIndividualSport(binding.toJS('model'))) {
+		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(1);
 			// if inter school event and participant[0] is our school
 		} else if (
@@ -282,7 +282,7 @@ const EventRival = React.createClass({
 				mode	= binding.toJS('mode'),
 				status	= binding.toJS('model.status');
 
-		if(!TeamHelper.isIndividualSport(event)) {
+		if(!TeamHelper.isNonTeamSport(event)) {
 			if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
 				return (
 					<div className="eEventResult_score">

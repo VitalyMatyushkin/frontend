@@ -109,7 +109,7 @@ const Manager = React.createClass({
 		binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
 			self._validate(0);
 		});
-		if(!EventHelper.isEventWithOneIndividualTeam(event)) {
+		if(!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)) {
 			binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
 				self._validate(1);
 			});
@@ -249,7 +249,7 @@ const Manager = React.createClass({
 
 		const event = self.getDefaultBinding().toJS('model');
 
-		return !self.props.isInviteMode && !EventHelper.isEventWithOneIndividualTeam(event);
+		return !self.props.isInviteMode && !(TeamHelper.isIndividualSport(event) && event.type !== 'houses');
 	},
 	renderGameField: function() {
 		const	self			= this,

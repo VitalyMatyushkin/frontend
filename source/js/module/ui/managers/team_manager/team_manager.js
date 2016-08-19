@@ -8,11 +8,11 @@ const	React			= require('react'),
 const TeamManager = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		isIndividualSport: React.PropTypes.bool
+		isNonTeamSport: React.PropTypes.bool
 	},
 	getDefaultProps: function() {
 		return {
-			isIndividualSport: false
+			isNonTeamSport: false
 		};
 	},
 	getDefaultState: function () {
@@ -279,7 +279,7 @@ const TeamManager = React.createClass({
 
 		return (
 			<div>
-				<Team	isIndividualSport={self.props.isIndividualSport}
+				<Team	isNonTeamSport={self.props.isNonTeamSport}
 						players={binding.toJS('teamStudents')}
 						positions={binding.toJS('positions')}
 						handleClickPlayer={self.handleClickPlayer}

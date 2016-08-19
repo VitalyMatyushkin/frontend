@@ -9,7 +9,7 @@ const DefaultTeam = React.createClass({
 		handleChangePlayerPosition:		React.PropTypes.func.isRequired,
 		handleClickPlayerSub:			React.PropTypes.func.isRequired,
 		handleClickRemovePlayerButton:	React.PropTypes.func.isRequired,
-		isIndividualSport:				React.PropTypes.bool.isRequired
+		isNonTeamSport:				React.PropTypes.bool.isRequired
 	},
 	/**
 	 * Handler for click on remove player button
@@ -23,7 +23,7 @@ const DefaultTeam = React.createClass({
 	renderTableHead: function() {
 		const self = this;
 
-		if(self.props.isIndividualSport) {
+		if(self.props.isNonTeamSport) {
 			return (
 				<div className="eTeam_player mHead">
 					<div className="eTeam_playerItem mName mLong">Name</div>
@@ -49,7 +49,7 @@ const DefaultTeam = React.createClass({
 
 		return players.map(player =>
 			<Player	key={player.id}
-					isIndividualSport={self.props.isIndividualSport}
+					isNonTeamSport={self.props.isNonTeamSport}
 					player={player}
 					positions={positions}
 					handleClickPlayer={self.props.handleClickPlayer}
