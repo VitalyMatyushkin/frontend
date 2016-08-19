@@ -120,45 +120,50 @@ const Manager = React.createClass({
 	},
 	_validate: function(rivalIndex) {
 		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				errorBinding	= self.getBinding('error'),
-				limits			= {
-					maxPlayers: binding.toJS('model.sportModel.defaultLimits.maxPlayers'),
-					minPlayers: binding.toJS('model.sportModel.defaultLimits.minPlayers'),
-					minSubs:    binding.toJS('model.sportModel.defaultLimits.minSubs'),
-					maxSubs:    binding.toJS('model.sportModel.defaultLimits.maxSubs')
-				};
+				binding			= self.getDefaultBinding();
 
-		let result;
+		const event = binding.toJS('model');
 
-		switch (TeamHelper.getParticipantsType(binding.toJS('model'))) {
-			case 'INDIVIDUAL':
-				result = TeamPlayersValidator.validate(
-					binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-					limits
-				);
-				break;
-			case 'TEAM':
-				if (
-					binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-					binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
-				) {
-					result = {
-						isError:	true,
-						text:		'Please enter team name'
+		if(typeof event !== 'undefined') {
+			const	errorBinding	= self.getBinding('error'),
+					limits = {
+						maxPlayers: event.sportModel.defaultLimits.maxPlayers,
+						minPlayers: event.sportModel.defaultLimits.minPlayers,
+						minSubs:    event.sportModel.defaultLimits.minSubs,
+						maxSubs:    event.sportModel.defaultLimits.maxSubs
 					};
-				} else {
+
+			let result;
+
+			switch (true) {
+				case TeamHelper.isNonTeamSport(event):
 					result = TeamPlayersValidator.validate(
 						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
 						limits
 					);
-				}
-				break;
-		}
+					break;
+				case TeamHelper.isTeamSport(event):
+					if (
+						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
+					) {
+						result = {
+							isError:	true,
+							text:		'Please enter team name'
+						};
+					} else {
+						result = TeamPlayersValidator.validate(
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+							limits
+						);
+					}
+					break;
+			}
 
-		errorBinding.sub(rivalIndex).set(
-			Immutable.fromJS(result)
-		);
+			errorBinding.sub(rivalIndex).set(
+				Immutable.fromJS(result)
+			);
+		}
 	},
 	_initRivalIndex: function() {
 		const	self		= this,
@@ -255,10 +260,10 @@ const Manager = React.createClass({
 		const	self			= this,
 				binding	= self.getDefaultBinding();
 
-		switch (TeamHelper.getParticipantsType(binding.toJS('model'))) {
-			case "INDIVIDUAL":
+		switch (true) {
+			case TeamHelper.isNonTeamSport(binding.toJS('model')):
 				return null;
-			case "TEAM":
+			case TeamHelper.isTeamSport(binding.toJS('model')):
 				return (
 					<div className="eManager_gameFieldContainer">
 						<GameField binding={binding.sub('model.sportModel.field.pic')}/>

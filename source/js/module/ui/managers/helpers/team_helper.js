@@ -306,65 +306,86 @@ function convertPlayersToServerValue(players) {
 	return players.map(p => this.getBodyForAddPlayersRequest(p));
 };
 
-function getParticipantsType(event) {
-	const sport = event.sportModel ? event.sportModel : event.sport;
+function isInternalEventForIndividualSport(event) {
+	if(typeof event !== 'undefined') {
+		const self = this;
 
-	switch (sport.players) {
-		case '1X1':
-		case 'INDIVIDUAL':
-			return "INDIVIDUAL";
-		case '2X2':
-		case 'TEAM':
-			return "TEAM";
+		const eventType = event.eventType ?
+			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
+			event.type;
+
+		return (eventType === 'internal') && self.isIndividualSport(event);
+	} else if(typeof event === 'undefined') {
+		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
-function isInternalEventForIndividualSport(event) {
-	const self = this;
-
-	const eventType = event.eventType ?
-		EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
-		event.type;
-
-	return (eventType === 'internal') && self.isIndividualSport(event);
-};
-
 function isInterSchoolsEventForIndividualSport(event) {
-	const self = this;
+	if(typeof event !== 'undefined') {
+		const self = this;
 
-	const eventType = event.eventType ?
-		EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
-		event.type;
+		const eventType = event.eventType ?
+			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
+			event.type;
 
-	return (eventType === 'inter-schools') && self.isIndividualSport(event);
+		return (eventType === 'inter-schools') && self.isIndividualSport(event);
+	} else if(typeof event === 'undefined') {
+		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
+	}
 };
 
 function isInterSchoolsEventForOneOnOneSport(event) {
-	const self = this;
+	if(typeof event !== 'undefined') {
+		const self = this;
 
-	const eventType = event.eventType ?
-		EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
-		event.type;
+		const eventType = event.eventType ?
+			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
+			event.type;
 
-	return (eventType === 'inter-schools') && self.isOneOnOneSport(event);
+		return (eventType === 'inter-schools') && self.isOneOnOneSport(event);
+	} else if(typeof event === 'undefined') {
+		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
+	}
 };
 
 function isNonTeamSport(event) {
-	const sport = event.sportModel ? event.sportModel : event.sport;
+	if(typeof event !== 'undefined') {
+		const sport = event.sportModel ? event.sportModel : event.sport;
 
-	return sport.players === 'INDIVIDUAL' || sport.players === '1X1';
+		return sport.players === 'INDIVIDUAL' || sport.players === '1X1';
+	} else if(typeof event === 'undefined') {
+		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
+	}
+};
+
+function isTeamSport(event) {
+	if(typeof event !== 'undefined') {
+		const sport = event.sportModel ? event.sportModel : event.sport;
+
+		return sport.players === 'TEAM' || sport.players === '2X2';
+	} else if(typeof event === 'undefined') {
+		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
+	}
 };
 
 function isIndividualSport(event) {
-	const sport = event.sportModel ? event.sportModel : event.sport;
+	if(typeof event !== 'undefined') {
+		const sport = event.sportModel ? event.sportModel : event.sport;
 
-	return sport.players === 'INDIVIDUAL';
+		return sport.players === 'INDIVIDUAL';
+	} else if(typeof event === 'undefined') {
+		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
+	}
 };
 
 function isOneOnOneSport(event) {
-	const sport = event.sportModel ? event.sportModel : event.sport;
+	if(typeof event !== 'undefined') {
+		const sport = event.sportModel ? event.sportModel : event.sport;
 
-	return sport.players === '1X1';
+		return sport.players === '1X1';
+	} else if(typeof event === 'undefined') {
+		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
+	}
 };
 
 function isTeamDataCorrect(event, validationData) {
@@ -398,7 +419,6 @@ const TeamHelper = {
 	convertGenderToServerValue:				convertGenderToServerValue,
 	getBodyForAddPlayersRequest:			getBodyForAddPlayersRequest,
 	getFilterGender:						getFilterGender,
-	getParticipantsType:					getParticipantsType,
 	isIndividualSport:						isIndividualSport,
 	getTeamManagerSearchFilter:				getTeamManagerSearchFilter,
 	getSchoolFormsFilteredByAges:			getSchoolFormsFilteredByAges,
@@ -409,7 +429,8 @@ const TeamHelper = {
 	isInternalEventForIndividualSport:		isInternalEventForIndividualSport,
 	isInterSchoolsEventForIndividualSport:	isInterSchoolsEventForIndividualSport,
 	isInterSchoolsEventForOneOnOneSport:	isInterSchoolsEventForOneOnOneSport,
-	isTeamDataCorrect:						isTeamDataCorrect
+	isTeamDataCorrect:						isTeamDataCorrect,
+	isTeamSport:							isTeamSport
 };
 
 module.exports = TeamHelper;
