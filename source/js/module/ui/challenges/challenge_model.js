@@ -90,10 +90,6 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
     if (!result.name) {
         result.name = 'n/a';
     }
-    else if (played && result.name && !TeamHelper.isNonTeamSport(event)) {
-        let goal = self._getResultByTeam(event, order);
-        result.name += '[' + goal + ']';
-    }
 
     return result;
 };
