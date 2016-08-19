@@ -5,6 +5,7 @@ const   React           = require('react'),
         ChallengeModel  = require('module/ui/challenges/challenge_model'),
         classNames      = require('classnames'),
         EventHelper     = require('module/helpers/eventHelper'),
+        TeamHelper      = require('./../../ui/managers/helpers/team_helper'),
         DateHelper      = require('module/helpers/date_helper'),
         MoreartyHelper  = require('module/helpers/morearty_helper');
 
@@ -42,19 +43,12 @@ const ChallengesView = React.createClass({
                         model           = new ChallengeModel(event.toJS(), activeSchoolId),
                         sportIcon       = self.getSportIcon(model.sport);
 
-                const   leftSideRivalName   = self._getRivalNameLeftSide(event.toJS(), model.rivals),
-                        rightSideRivalName  = self._getRivalNameRightSide(event.toJS(), model.rivals);
-
                 return (
                     <div key={model.id} className="bChallenge" onClick={self.onClickChallenge.bind(null, model.id)}>
                         <span className="eChallenge_sport">{sportIcon}</span>
                         <span className="eChallenge_event" title={model.name}>{model.name}</span>
                         <div className="eChallenge_hours">{model.time}</div>
-                        <div className="eChallenge_in">
-                            <span className="eChallenge_firstName" title={leftSideRivalName}>{leftSideRivalName}</span>
-                            <p>vs</p>
-                            <span className="eChallenge_secondName" title={rightSideRivalName}>{rightSideRivalName}</span>
-                        </div>
+                        {self.renderGameTypeColumn(event.toJS(), model)}
                         <div className={classNames({eChallenge_results:true, mDone:model.played})}>{model.score}</div>
                     </div>
                 );
@@ -63,14 +57,48 @@ const ChallengesView = React.createClass({
 
         return result;
     },
+    renderGameTypeColumn: function(event, model) {
+        const	self	= this;
+        let		result	= null;
+
+        if(EventHelper.isEventWithOneIndividualTeam(event)) {
+            result = (
+                <div className="eChallenge_in">
+                    {"Individual Game"}
+                </div>
+            );
+        } else {
+            const   leftSideRivalName   = self._getRivalNameLeftSide(event, model.rivals),
+                    rightSideRivalName  = self._getRivalNameRightSide(event, model.rivals);
+
+            result = (
+                <div className="eChallenge_in">
+                    <span className="eChallenge_firstName" title={leftSideRivalName}>{leftSideRivalName}</span>
+                    <p>vs</p>
+                    <span className="eChallenge_secondName" title={rightSideRivalName}>{rightSideRivalName}</span>
+                </div>
+            );
+        }
+
+        return result;
+    },
     _getRivalNameLeftSide: function(event, rivals) {
         const self = this;
 
         const   eventType       = event.eventType,
-                participants    = event.participants,
+                participants    = event.teamsData,
                 activeSchoolId  = MoreartyHelper.getActiveSchoolId(self);
 
-        if(
+        if(TeamHelper.isNonTeamSport(event)) {
+            switch (eventType) {
+                case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+                    const foundRival = rivals.find(r => r.id === activeSchoolId);
+
+                    return foundRival ? foundRival.name : 'n/a';
+                case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+                    return rivals[0].name;
+            }
+        } else if(
             eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
             participants[0].schoolId === activeSchoolId
         ) {
@@ -88,11 +116,19 @@ const ChallengesView = React.createClass({
         const self = this;
 
         const   eventType		= event.eventType,
-                participants	= event.participants,
+                participants	= event.teamsData,
                 activeSchoolId  = MoreartyHelper.getActiveSchoolId(self);
 
-        // if inter school event and participant[0] is our school
-        if (
+        if(TeamHelper.isNonTeamSport(event)) {
+            switch (eventType) {
+                case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+                    const foundRival = rivals.find(r => r.id !== activeSchoolId);
+
+                    return foundRival ? foundRival.name : 'n/a';
+                case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+                    return rivals[1].name;
+            }
+        } else if ( // if inter school event and participant[0] is our school
             participants.length > 1 &&
             eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
             participants[0].schoolId !== activeSchoolId
@@ -110,7 +146,7 @@ const ChallengesView = React.createClass({
             participants.length === 1 &&
             eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
         ) {
-            return rivals.find(rival => rival.id === null).name;
+            return rivals.find(rival => rival.id === event.invitedSchools[0].id).name;
             // if it isn't inter school event
         } else if (
             participants.length > 1 &&

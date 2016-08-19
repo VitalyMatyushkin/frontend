@@ -32,20 +32,25 @@ function getAges(schoolData) {
  * Validate player objects
  */
 function validate(binding) {
-	const limits = {
-		maxPlayers: binding.get('teamForm.default.model.sportModel.limits.maxPlayers'),
-		minPlayers: binding.get('teamForm.default.model.sportModel.limits.minPlayers'),
-		maxSubs:    binding.get('teamForm.default.model.sportModel.limits.maxSubs')
-	};
+	const sport = binding.toJS('teamForm.sportModel');
 
-	const result = TeamPlayersValidator.validate(
-		binding.toJS('teamForm.___teamManagerBinding.teamStudents'),
-		limits
-	);
+	if(sport) {
+		const limits = {
+			maxPlayers: sport.defaultLimits.maxPlayers,
+			minPlayers: sport.defaultLimits.minPlayers,
+			minSubs:    sport.defaultLimits.minSubs,
+			maxSubs:    sport.defaultLimits.maxSubs
+		};
 
-	binding.set('teamForm.error',
-		Immutable.fromJS(result)
-	);
+		const result = TeamPlayersValidator.validate(
+			binding.toJS('teamForm.___teamManagerBinding.teamStudents'),
+			limits
+		);
+
+		binding.set('teamForm.error',
+			Immutable.fromJS(result)
+		);
+	}
 };
 
 /**
@@ -302,7 +307,9 @@ function convertPlayersToServerValue(players) {
 };
 
 function getParticipantsType(event) {
-	switch (event.sportModel.players) {
+	const sport = event.sportModel ? event.sportModel : event.sport;
+
+	switch (sport.players) {
 		case '1X1':
 		case 'INDIVIDUAL':
 			return "INDIVIDUAL";
@@ -312,36 +319,97 @@ function getParticipantsType(event) {
 	}
 };
 
-function isIndividualSport(event) {
+function isInternalEventForIndividualSport(event) {
+	const self = this;
+
+	const eventType = event.eventType ?
+		EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
+		event.type;
+
+	return (eventType === 'internal') && self.isIndividualSport(event);
+};
+
+function isInterSchoolsEventForIndividualSport(event) {
+	const self = this;
+
+	const eventType = event.eventType ?
+		EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
+		event.type;
+
+	return (eventType === 'inter-schools') && self.isIndividualSport(event);
+};
+
+function isInterSchoolsEventForOneOnOneSport(event) {
+	const self = this;
+
+	const eventType = event.eventType ?
+		EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
+		event.type;
+
+	return (eventType === 'inter-schools') && self.isOneOnOneSport(event);
+};
+
+function isNonTeamSport(event) {
 	const sport = event.sportModel ? event.sportModel : event.sport;
 
 	return sport.players === 'INDIVIDUAL' || sport.players === '1X1';
-}
+};
+
+function isIndividualSport(event) {
+	const sport = event.sportModel ? event.sportModel : event.sport;
+
+	return sport.players === 'INDIVIDUAL';
+};
+
+function isOneOnOneSport(event) {
+	const sport = event.sportModel ? event.sportModel : event.sport;
+
+	return sport.players === '1X1';
+};
+
+function isTeamDataCorrect(event, validationData) {
+	let isError = false;
+
+	// for inter-schools event we can edit only one team - our team:)
+	if(event.type === 'inter-schools' || EventHelper.isEventWithOneIndividualTeam(event)) {
+		isError = validationData[0].isError;
+	} else {
+		isError = !(!validationData[0].isError && !validationData[1].isError);
+	}
+
+	return !isError;
+};
 
 const TeamHelper = {
-	getAges:						getAges,
-	validate:						validate,
-	getSportById:					getSportById,
-	getPlayersWithUserInfo:			getPlayersWithUserInfo,
-	addPlayer:						addPlayer,
-	changePlayer:					changePlayer,
-	deletePlayer:					deletePlayer,
-	commitPlayers:					commitPlayers,
-	commitIndividualPlayers:		commitIndividualPlayers,
-	injectFormsToPlayers:			injectFormsToPlayers,
-	injectTeamIdToPlayers:			injectTeamIdToPlayers,
-	isTeamEnableForEdit:			isTeamEnableForEdit,
-	convertPointsToClientModel:		convertPointsToClientModel,
-	convertPlayersToServerValue:	convertPlayersToServerValue,
-	convertGenderToServerValue:		convertGenderToServerValue,
-	getBodyForAddPlayersRequest:	getBodyForAddPlayersRequest,
-	getFilterGender:				getFilterGender,
-	getParticipantsType:			getParticipantsType,
-	isIndividualSport:				isIndividualSport,
-	getTeamManagerSearchFilter:		getTeamManagerSearchFilter,
-	getSchoolFormsFilteredByAges:	getSchoolFormsFilteredByAges,
-	addIndividualPlayer:			addIndividualPlayer,
-	deleteIndividualPlayer:			deleteIndividualPlayer
+	getAges:								getAges,
+	validate:								validate,
+	getSportById:							getSportById,
+	getPlayersWithUserInfo:					getPlayersWithUserInfo,
+	addPlayer:								addPlayer,
+	changePlayer:							changePlayer,
+	deletePlayer:							deletePlayer,
+	commitPlayers:							commitPlayers,
+	commitIndividualPlayers:				commitIndividualPlayers,
+	injectFormsToPlayers:					injectFormsToPlayers,
+	injectTeamIdToPlayers:					injectTeamIdToPlayers,
+	isTeamEnableForEdit:					isTeamEnableForEdit,
+	convertPointsToClientModel:				convertPointsToClientModel,
+	convertPlayersToServerValue:			convertPlayersToServerValue,
+	convertGenderToServerValue:				convertGenderToServerValue,
+	getBodyForAddPlayersRequest:			getBodyForAddPlayersRequest,
+	getFilterGender:						getFilterGender,
+	getParticipantsType:					getParticipantsType,
+	isIndividualSport:						isIndividualSport,
+	getTeamManagerSearchFilter:				getTeamManagerSearchFilter,
+	getSchoolFormsFilteredByAges:			getSchoolFormsFilteredByAges,
+	addIndividualPlayer:					addIndividualPlayer,
+	deleteIndividualPlayer:					deleteIndividualPlayer,
+	isOneOnOneSport:						isOneOnOneSport,
+	isNonTeamSport:							isNonTeamSport,
+	isInternalEventForIndividualSport:		isInternalEventForIndividualSport,
+	isInterSchoolsEventForIndividualSport:	isInterSchoolsEventForIndividualSport,
+	isInterSchoolsEventForOneOnOneSport:	isInterSchoolsEventForOneOnOneSport,
+	isTeamDataCorrect:						isTeamDataCorrect
 };
 
 module.exports = TeamHelper;

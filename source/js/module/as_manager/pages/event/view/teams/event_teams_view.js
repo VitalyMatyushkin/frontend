@@ -56,6 +56,19 @@ const EventTeamsView = React.createClass({
 
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
+	renderInternalEventForOneOnOneEvent: function(order) {
+		const self = this;
+
+		const	event	= self.getBinding('event').toJS(),
+				player	= self.getDefaultBinding().toJS(`players.${order}`),
+				players	= player ? [ player ] : [];
+
+		return (
+			<div className="bEventTeams_team">
+				{self.renderPlayers(players, event.status, true)}
+			</div>
+		);
+	},
 	renderPlayersForLeftSide: function() {
 		const self = this;
 
@@ -64,12 +77,18 @@ const EventTeamsView = React.createClass({
 				teamsData		= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 					return self.renderIndividualPlayersBySchoolId(event.inviterSchool.id);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 					return self.renderIndividualPlayersByHouseId(event.houses[0]);
+				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+					if(TeamHelper.isOneOnOneSport(event)) {
+						return self.renderInternalEventForOneOnOneEvent(0);
+					} else {
+						return null;
+					}
 			}
 		} else {
 			if(
@@ -119,12 +138,18 @@ const EventTeamsView = React.createClass({
 				teamsData		= event.teamsData,
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 					return self.renderIndividualPlayersBySchoolId(event.invitedSchools[0].id);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 					return self.renderIndividualPlayersByHouseId(event.houses[1]);
+				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+					if(TeamHelper.isOneOnOneSport(event)) {
+						return self.renderInternalEventForOneOnOneEvent(1);
+					} else {
+						return null;
+					}
 			}
 		} else {
 			if(
@@ -231,7 +256,7 @@ const EventTeamsView = React.createClass({
 
 		const event = self.getBinding('event').toJS();
 
-		if(EventHelper.isEventWithOneIndividualTeam(event)) {
+		if(TeamHelper.isInternalEventForIndividualSport(event)) {
 			result = (
 				<div className="bEventTeams">
 					{self.renderIndividuals()}

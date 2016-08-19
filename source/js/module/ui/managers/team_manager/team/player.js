@@ -5,7 +5,7 @@ const	React					= require('react'),
 
 const Player = React.createClass({
 	propTypes: {
-		isIndividualSport:			React.PropTypes.bool.isRequired,
+		isNonTeamSport:			React.PropTypes.bool.isRequired,
 		player:						React.PropTypes.object.isRequired,
 		positions:					React.PropTypes.array,
 		handleClickPlayer:			React.PropTypes.func.isRequired,
@@ -38,7 +38,7 @@ const Player = React.createClass({
 	renderPositions: function() {
 		const self = this;
 
-		if(self.props.isIndividualSport) {
+		if(self.props.isNonTeamSport) {
 			return null;
 		} else {
 			return (
@@ -52,7 +52,7 @@ const Player = React.createClass({
 	renderSub: function() {
 		const self = this;
 
-		if(self.props.isIndividualSport) {
+		if(self.props.isNonTeamSport) {
 			return null;
 		} else {
 			return (
@@ -74,12 +74,12 @@ const Player = React.createClass({
 				playerNameClass = classNames({
 					eTeam_playerItem:	true,
 					mName:				true,
-					mLong:				self.props.isIndividualSport
+					mLong:				self.props.isNonTeamSport
 				}),
 				playerFormClass = classNames({
 					eTeam_playerItem:	true,
 					mForm:				true,
-					mLong:				self.props.isIndividualSport
+					mLong:				self.props.isNonTeamSport
 				});
 
 		return (

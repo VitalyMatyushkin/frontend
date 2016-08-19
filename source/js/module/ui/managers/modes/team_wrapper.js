@@ -344,7 +344,7 @@ const TeamWrapper = React.createClass({
 				);
 		}
 	},
-	isIndividualSport: function() {
+	isNonTeamSport: function() {
 		const self = this;
 
 		return TeamHelper.getParticipantsType(self.getBinding('model').toJS()) === "INDIVIDUAL";
@@ -362,7 +362,7 @@ const TeamWrapper = React.createClass({
 						binding
 					)
 				}
-				<TeamManager	isIndividualSport={self.isIndividualSport()}
+				<TeamManager	isNonTeamSport={self.isNonTeamSport()}
 								binding={binding.sub("___teamManagerBinding")}
 				/>
 				<If condition={self.isShowRevertChangesButton()}>

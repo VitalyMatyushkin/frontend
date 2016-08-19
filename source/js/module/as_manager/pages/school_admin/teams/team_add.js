@@ -8,18 +8,25 @@ const   TeamForm		= require('module/as_manager/pages/school_admin/teams/team_for
 const TeamAddPage = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         binding.clear();
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initFormBinding();
+
+        binding.sub('teamForm.___teamManagerBinding.teamStudents').addListener(() => {
+            TeamHelper.validate(binding);
+        });
+        binding.sub('teamForm.sportModel').addListener(() => {
+            TeamHelper.validate(binding);
+        });
     },
     componentWillUnmount: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         binding.clear();
     },
@@ -103,8 +110,6 @@ const TeamAddPage = React.createClass({
     _submitAdd: function() {
         const self = this,
             binding = self.getDefaultBinding();
-
-        TeamHelper.validate(binding);
 
         if(!binding.toJS('teamForm.error.isError')) {
             const team = {

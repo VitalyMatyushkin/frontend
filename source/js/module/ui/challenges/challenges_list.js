@@ -149,7 +149,7 @@ const ChallengesList = React.createClass({
 		const	eventType		= event.eventType,
 				participants	= event.teamsData;
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 					const foundRival = rivals.find(r => r.id === self.activeSchoolId);
@@ -178,7 +178,7 @@ const ChallengesList = React.createClass({
 		const	eventType		= event.eventType,
 				participants	= event.teamsData;
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 					const foundRival = rivals.find(r => r.id !== self.activeSchoolId);

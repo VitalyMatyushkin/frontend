@@ -1,12 +1,13 @@
-const	InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		EventTeamsView		= require('./event_teams_view'),
-		EventTeamsEdit		= require('./event_teams_edit'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		EventHelper			= require('module/helpers/eventHelper'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		React				= require('react'),
-		Immutable			= require('immutable'),
-		Morearty			= require('morearty');
+const	InvitesMixin			= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		EventTeamsView			= require('./event_teams_view'),
+		EventTeamsEdit			= require('./event_teams_edit'),
+		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
+		EventHelper				= require('module/helpers/eventHelper'),
+		MoreartyHelper			= require('module/helpers/morearty_helper'),
+		TeamPlayersValidator	= require('./../../../../../ui/managers/helpers/team_players_validator'),
+		React					= require('react'),
+		Immutable				= require('immutable'),
+		Morearty				= require('morearty');
 
 const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -36,6 +37,16 @@ const EventTeams = React.createClass({
 						positions:		[],
 						blackList:		[]
 					}
+				],
+				validationData: [
+					{
+						isError: false,
+						text: ''
+					},
+					{
+						isError: false,
+						text: ''
+					}
 				]
 			},
 			isSync: false
@@ -59,6 +70,43 @@ const EventTeams = React.createClass({
 		const self = this;
 
 		self._addSyncListener();
+		self.addTeamPlayersListener();
+	},
+	addTeamPlayersListener: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const event = self.getBinding('event').toJS();
+
+		binding.sub('editPlayers.teamManagerBindings.0.teamStudents').addListener(() => {
+			self.validate(0);
+		});
+		if(!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)) {
+			binding.sub('editPlayers.teamManagerBindings.1.teamStudents').addListener(() => {
+				self.validate(1);
+			});
+		}
+	},
+	validate: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const sport = self.getBinding('event').toJS('sport');
+
+		const	teamStudents	= binding.toJS(`editPlayers.teamManagerBindings.${order}.teamStudents`),
+				limits			= {
+					maxPlayers: sport.defaultLimits.maxPlayers,
+					minPlayers: sport.defaultLimits.minPlayers,
+					minSubs:    sport.defaultLimits.minSubs,
+					maxSubs:    sport.defaultLimits.maxSubs
+				};
+
+		const result = TeamPlayersValidator.validate(
+			teamStudents,
+			limits
+		);
+
+		binding.set(`editPlayers.validationData.${order}`, Immutable.fromJS(result));
 	},
 	/**
 	 * Add listener to isSync flag.
@@ -80,18 +128,20 @@ const EventTeams = React.createClass({
 
 		const event = self.getBinding('event').toJS();
 
-		if(event && TeamHelper.isIndividualSport(event)) {
-			self._setIndividualPlayersFromEventToBinding(event);
+		if(event && TeamHelper.isNonTeamSport(event)) {
+			self.setNonTeamPlayersToBinding(event);
 		} else {
 			self._setTeamPlayersFromEventToBinding(event);
 		}
 	},
-	_setIndividualPlayersFromEventToBinding: function(event) {
+	setNonTeamPlayersToBinding: function(event) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const	editPlayers = [],
 				viewPlayers = [];
+
+		const eventType = EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
 
 		window.Server.schoolEvent.get(
 				{
@@ -100,49 +150,65 @@ const EventTeams = React.createClass({
 				}
 			)
 			.then(event => {
-				switch (EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]) {
-					case 'inter-schools':
-					case 'internal':
-						binding.atomically()
-							.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
-							.set("editPlayers.teamManagerBindings.0.teamStudents",
-								Immutable.fromJS(
-									event.individualsData.filter(p => p.schoolId === self.activeSchoolId)
+				if(eventType === 'internal' && TeamHelper.isIndividualSport(event)) {
+					binding.atomically()
+						.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
+						.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(event.individualsData))
+						.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
+						.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
+						.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
+						.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
+						.set('isSync',											Immutable.fromJS(true))
+						.commit();
+				} else {
+					switch (eventType) {
+						case 'inter-schools':
+							binding.atomically()
+								.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
+								.set("editPlayers.teamManagerBindings.0.teamStudents",
+									Immutable.fromJS(
+										event.individualsData.filter(p => p.schoolId === self.activeSchoolId)
+									)
 								)
-							)
-							.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
-							.set('isSync',											Immutable.fromJS(true))
-							.commit();
-						break;
-					case 'houses':
-						binding.atomically()
-							.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
-							.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(event.houses[0]))
-							.set("editPlayers.teamManagerBindings.0.teamStudents",
-								Immutable.fromJS(
-									event.individualsData.filter(p => p.houseId === event.houses[0])
+								.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
+								.set('isSync',											Immutable.fromJS(true))
+								.commit();
+							break;
+						case 'houses':
+						case 'internal':
+							binding.atomically()
+								.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
+								.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(eventType === 'houses' ? event.houses[0] : 0))
+								.set("editPlayers.teamManagerBindings.0.teamStudents",
+									Immutable.fromJS(
+										eventType === 'houses' ?
+											event.individualsData.filter(p => p.houseId === event.houses[0]) :
+											[event.individualsData[0]]
+									)
 								)
-							)
-							.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
-							.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(event.houses[1]))
-							.set("editPlayers.teamManagerBindings.1.teamStudents",
-								Immutable.fromJS(
-									event.individualsData.filter(p => p.houseId === event.houses[1])
+								.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
+								.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(eventType === 'houses' ? event.houses[1] : 1))
+								.set("editPlayers.teamManagerBindings.1.teamStudents",
+									Immutable.fromJS(
+										eventType === 'houses' ?
+											event.individualsData.filter(p => p.houseId === event.houses[1]) :
+											[event.individualsData[1]]
+									)
 								)
-							)
-							.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.1.removedPlayers",Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS([]))
-							.set("editPlayers.teamManagerBindings.1.isSync",		Immutable.fromJS(false))
-							.set('isSync',											Immutable.fromJS(true))
-							.commit();
-						break;
+								.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.1.removedPlayers",Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS([]))
+								.set("editPlayers.teamManagerBindings.1.isSync",		Immutable.fromJS(false))
+								.set('isSync',											Immutable.fromJS(true))
+								.commit();
+							break;
+					}
 				}
 			});
 	},
@@ -261,6 +327,8 @@ const EventTeams = React.createClass({
 	},
 	render: function() {
 		const self = this;
+
+
 
 		return (
 			<div>

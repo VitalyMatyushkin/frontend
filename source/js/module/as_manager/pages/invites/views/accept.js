@@ -96,7 +96,7 @@ const InviteAcceptView = React.createClass({
 
         const event = binding.toJS('model');
 
-        if(TeamHelper.isIndividualSport(event)) {
+        if(TeamHelper.isNonTeamSport(event)) {
             // add new individuals
             Promise.all(self.addIndividualPlayersToEvent(event))
                 // accept invite

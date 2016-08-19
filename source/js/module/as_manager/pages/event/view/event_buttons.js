@@ -17,7 +17,7 @@ const EventHeader = React.createClass({
 
 		const event = binding.toJS('model');
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			self.closeMatchForIndividualSport();
 		} else {
 			self.closeMatchForTeamsSport();
@@ -146,17 +146,40 @@ const EventHeader = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	currentMode	= binding.get('mode'),
-				event		= binding.toJS('model');
+		const currentMode	= binding.get('mode');
 
-		if(currentMode === 'closing') {
-			self.closeMatch();
+		switch (currentMode) {
+			case 'closing':
+				self.closeMatch();
+				break;
+			default:
+				const event = binding.toJS('model');
+
+				if(TeamHelper.isTeamDataCorrect(event, self.getValidationData())) {
+					self.commitPlayers();
+				}
+				break;
+		}
+	},
+	getValidationData: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return [
+			binding.toJS('eventTeams.editPlayers.validationData.0'),
+			binding.toJS('eventTeams.editPlayers.validationData.1')
+		];
+	},
+	commitPlayers: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
+
+		if(TeamHelper.isNonTeamSport(event)) {
+			self.commitIndividualPlayerChanges();
 		} else {
-			if(TeamHelper.isIndividualSport(event)) {
-				self.commitIndividualPlayerChanges();
-			} else {
-				self.commitTeamPlayerChanges();
-			}
+			self.commitTeamPlayerChanges();
 		}
 	},
 	commitIndividualPlayerChanges: function() {
@@ -167,16 +190,16 @@ const EventHeader = React.createClass({
 
 		const	schoolId		= MoreartyHelper.getActiveSchoolId(self),
 				eventId			= event.id,
-				players			= self.getCommitPlayersForEndividualEvent(event),
+				players			= self.getCommitPlayersForIndividualEvent(event),
 				initialPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
 
 		Promise.all(TeamHelper.commitIndividualPlayers(schoolId, eventId, initialPlayers, players)).then(() => self.doAfterCommitActions());
 	},
-	getCommitPlayersForEndividualEvent: function(event) {
+	getCommitPlayersForIndividualEvent: function(event) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		if(EventHelper.isEventWithOneIndividualTeam(event)) {
+		if(TeamHelper.isInternalEventForIndividualSport(event)) {
 			return binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents');
 		} else {
 			return binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents')
@@ -257,7 +280,7 @@ const EventHeader = React.createClass({
 
 		const event = binding.toJS('model');
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(TeamHelper.isNonTeamSport(event)) {
 			teamManagerBindings[0].teamStudents = initialTeamPlayers;
 		} else {
 			teamManagerBindings.forEach(teamManagerBinding => {
