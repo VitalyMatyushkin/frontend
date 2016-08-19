@@ -333,10 +333,10 @@ const TeamWrapper = React.createClass({
 	renderTeamNameComponent: function(eventModel, teamName, binding) {
 		const self = this;
 
-		switch (TeamHelper.getParticipantsType(eventModel)) {
-			case 'INDIVIDUAL':
+		switch (true) {
+			case TeamHelper.isNonTeamSport(eventModel):
 				return null;
-			case 'TEAM':
+			case TeamHelper.isTeamSport(eventModel):
 				return (
 					<TeamName	name={teamName}
 								handleChangeName={self.handleChangeName.bind(self, binding)}
@@ -344,25 +344,22 @@ const TeamWrapper = React.createClass({
 				);
 		}
 	},
-	isNonTeamSport: function() {
-		const self = this;
-
-		return TeamHelper.getParticipantsType(self.getBinding('model').toJS()) === "INDIVIDUAL";
-	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
+
+		const event = self.getBinding('model').toJS();
 
 		return (
 			<div className="bTeamWrapper mMarginTop">
 				{
 					self.renderTeamNameComponent(
-						self.getBinding('model').toJS(),
+						event,
 						binding.toJS('teamName.name'),
 						binding
 					)
 				}
-				<TeamManager	isNonTeamSport={self.isNonTeamSport()}
+				<TeamManager	isNonTeamSport={TeamHelper.isNonTeamSport(event)}
 								binding={binding.sub("___teamManagerBinding")}
 				/>
 				<If condition={self.isShowRevertChangesButton()}>
@@ -379,4 +376,4 @@ const TeamWrapper = React.createClass({
 	}
 });
 
-module.exports = TeamWrapper;1111111
+module.exports = TeamWrapper;

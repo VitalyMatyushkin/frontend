@@ -161,8 +161,8 @@ const EventManager = React.createClass({
 				validationData	= [
 					binding.toJS('error.0'),
 					binding.toJS('error.1')
-				]
-		
+				];
+
 		// TODO validation
 		if(TeamHelper.isTeamDataCorrect(event, validationData)) {
 			self.submit(event);
@@ -176,8 +176,8 @@ const EventManager = React.createClass({
 
 		let teams, savedEvent;
 
-		switch (TeamHelper.getParticipantsType(eventModel)) {
-			case "INDIVIDUAL":
+		switch (true) {
+			case TeamHelper.isNonTeamSport(eventModel):
 				return self.submitEvent()
 					.then(_event => {
 						savedEvent = _event;
@@ -186,7 +186,7 @@ const EventManager = React.createClass({
 					})
 					.then(() => self.activateEvent(savedEvent))
 					.then(() => self._afterEventCreation(savedEvent));
-			case "TEAM":
+			case TeamHelper.isTeamSport(eventModel):
 				return Promise.all(self.createTeams())
 					.then(_teams => {
 						teams = _teams;

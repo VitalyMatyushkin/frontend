@@ -160,8 +160,10 @@ const TeamModeView = React.createClass({
 		const	self = this,
 				binding = self.getDefaultBinding();
 
-		switch (TeamHelper.getParticipantsType(self.getBinding('model').toJS())) {
-			case "TEAM":
+		const event = self.getBinding('model').toJS();
+
+		switch (true) {
+			case TeamHelper.isTeamSport(event):
 				const	selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
 						teamTableBinding	= {
 							default:	binding.sub(`teamTable.${selectedRivalIndex}`),
@@ -226,9 +228,11 @@ const TeamModeView = React.createClass({
 	render: function() {
 		const self = this;
 
+		const event = self.getBinding('model').toJS();
+
 		const teamModeViewClass = classNames({
 			eManager_teamModeViewContainer: true,
-			mIndividuals: TeamHelper.getParticipantsType(self.getBinding('model').toJS()) === "INDIVIDUAL"
+			mIndividuals: TeamHelper.isNonTeamSport(event)
 		});
 
 		return (
