@@ -76,6 +76,8 @@ const 	FilterModel 		= require('./filter/model/filter-model'),
  * */
 const GridModel = function(options){
 	this.filter = new FilterModel(options.filters);
+	this.filter.onChange.on(this.render.bind(this));
+
 	this.table = new TableModel({
 		columns:options.columns,
 		onSort:this.filter.setOrder.bind(this.filter)
@@ -86,7 +88,8 @@ const GridModel = function(options){
 		columns:options.columns
 	});
 	this.actionPanel = new ActionPanelModel(options.actionPanel);
-
+	this.actionPanel.onChange = this.render.bind(this);
+	this.onRender = null;
 };
 
 GridModel.prototype.setData = function(data){
@@ -95,6 +98,11 @@ GridModel.prototype.setData = function(data){
 	} else {
 		this.table.data = data;
 	}
+	this.filter.setNumberOfLoadedRows(data.length);
+	this.onRender && this.onRender();
+};
+GridModel.prototype.render = function(){
+	this.onRender && this.onRender();
 };
 
 

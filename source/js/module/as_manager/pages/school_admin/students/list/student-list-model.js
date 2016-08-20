@@ -136,9 +136,39 @@ StudentListModel.prototype = {
 				}
 			},
 			{
+				text:'Form',
+				hidden:true,
+				cell:{
+					dataField:'formId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getForms(),
+						valueField:'name',
+						keyField:'id'
+					}
+				}
+			},
+			{
 				text:'House',
 				cell:{
 					dataField:'house.name'
+				}
+			},
+			{
+				text:'House',
+				hidden:true,
+				cell:{
+					dataField:'houseId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getHouses(),
+						valueField:'name',
+						keyField:'id'
+					}
 				}
 			},
 			{
@@ -174,36 +204,6 @@ StudentListModel.prototype = {
 						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
 						onItemView:		this.onView.bind(this),
 						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
-					}
-				}
-			},
-			{
-				text:'Form',
-				hidden:true,
-				cell:{
-					dataField:'formId'
-				},
-				filter:{
-					type:'multi-select',
-					typeOptions:{
-						getDataPromise: this.getForms(),
-						valueField:'name',
-						keyField:'id'
-					}
-				}
-			},
-			{
-				text:'House',
-				hidden:true,
-				cell:{
-					dataField:'houseId'
-				},
-				filter:{
-					type:'multi-select',
-					typeOptions:{
-						getDataPromise: this.getHouses(),
-						valueField:'name',
-						keyField:'id'
 					}
 				}
 			}

@@ -12,10 +12,10 @@ const Grid = React.createClass({
 		model: 	React.PropTypes.object.isRequired
 	},
 	componentWillMount:function(){
-		this.props.model.actionPanel.onChange = this.onChange;
+		this.props.model.onRender = this.onRender;
 	},
-	onChange:function(){
-		this.setState({isFilterActive: this.props.model.actionPanel.isFilterActive});
+	onRender:function(){
+		this.setState({renderStart: new Date().toLocaleString()});
 	},
 	render: function() {
 		const model = this.props.model,
