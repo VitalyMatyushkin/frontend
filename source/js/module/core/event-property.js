@@ -10,9 +10,9 @@ const EventProperty = function(){
 };
 
 /**
- * subscribe for the event(add event listeners).
+ * subscribe for the event(add event listener).
  *
- * @param {function} fn - event listeners
+ * @param {function} fn - event listener
  * */
 EventProperty.prototype.on = function(fn){
 	fn && this._callBacks.push(fn);
@@ -21,7 +21,7 @@ EventProperty.prototype.on = function(fn){
 /**
  * Unsubscribe from the event.
  *
- * @param {function} fn - event listeners
+ * @param {function} fn - event listener
  * Pass nothing to remove all listeners on event.
  * */
 EventProperty.prototype.off = function(fn){
