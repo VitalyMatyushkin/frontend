@@ -163,11 +163,12 @@ const SportsHelpers = {
                                         },
             discipline:                 self.filterEmptyDisciplineItems(dataFromForm.discipline),
             performance:                self.filterEmptyPerformanceItems(dataFromForm.performance.map(item => {
+
                                             return {
                                                 name:       item.name,
                                                 //TODO remove this dirty magic
-                                                minValue:   item.minValue.trim() !== '' ? parseInt(item.minValue) : '',
-                                                maxValue:   item.maxValue.trim() !== '' ? parseInt(item.maxValue) : ''
+                                                minValue:   parseInt(item.minValue) !== NaN ? parseInt(item.minValue) : '',
+                                                maxValue:   parseInt(item.maxValue) !== NaN ? parseInt(item.maxValue) : ''
                                             }
                                         })),
             field:                      dataFromForm.field,
