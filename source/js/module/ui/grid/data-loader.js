@@ -15,7 +15,7 @@ const DataLoader = function(options){
 	this.params = options.params;
 	this.grid = options.grid;
 	this.filter = this.grid.filter;
-	this.filter.onChange = this.onChangeFilter.bind(this);
+	this.filter.onChange.on(this.onChangeFilter.bind(this));
 
 	this.onLoad = options.onLoad;
 	this.loadDataTimer = null;
@@ -55,7 +55,6 @@ DataLoader.prototype = {
 				}
 				self.grid.setData(res);
 				self.onLoad && self.onLoad(res);
-				self.filter.setNumberOfLoadedRows(res.length);
 				return res;
 			});
 		}
