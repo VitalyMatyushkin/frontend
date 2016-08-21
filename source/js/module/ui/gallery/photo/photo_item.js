@@ -81,8 +81,8 @@ const AlbumPhoto = React.createClass({
 		return (
 				<div onClick={self.onImageClick} className={imgClasses}>
 					<div className='ePhotoActions'>
-						<span onClick={self.onClickPinPhoto}><SVG icon="icon_pencil"/></span>
-						<span ><SVG icon="icon_user"/></span>
+						<span onClick={self.onClickPinPhoto}><SVG icon="icon_pin"/></span>
+						<span ></span>
 						<span ></span>
 						<span onClick={self.onClickEditPhoto}><SVG icon="icon_edit"/></span>
 						<span onClick={self.onClickDeletePhoto}><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
