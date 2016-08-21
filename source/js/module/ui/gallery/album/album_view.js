@@ -63,7 +63,11 @@ const AlbumView = React.createClass({
 		});
 	},
 
-	/** Will trigger on submenu 'Add Photo' click */
+	/** Will trigger on submenu 'Add Photo' click
+	 * TODO: Какого хрена? этот обработчик перестает вызываться после удаления последней фотографии в альбоме
+	 * как и почему это происходит - тайна покрытая мраком.
+	 * Bug #1281 Add photo. http://tracker.squadintouch.com/issues/1281
+	 * */
 	handleFile: function(e) {
 		const 	file 		= e.target.files[0],
 				isUploading = this.getDefaultBinding().sub('isUploading');
