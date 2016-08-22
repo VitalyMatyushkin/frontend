@@ -4,7 +4,8 @@ const 	React 					= require('react'),
 		Route 					= require('module/core/route'),
 		ClassesListComponent 	= require("module/as_manager/pages/school_admin/classes/list/class-list"),
 		ClassAddComponent 		= require("module/as_manager/pages/school_admin/classes/class_add"),
-		ClassEditComponent 		= require("module/as_manager/pages/school_admin/classes/class_edit");
+		ClassEditComponent 		= require("module/as_manager/pages/school_admin/classes/class_edit"),
+		ClassStudentsComponent 	= require("module/as_manager/pages/school_admin/classes/class-students");
 
 const ClassesPage = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -18,6 +19,7 @@ const ClassesPage = React.createClass({
 				<Route path="/school_admin/forms" binding={binding.sub('classesList')} formBinding={binding.sub('classesForm')} component={ClassesListComponent} />
 				<Route path="/school_admin/forms/add"  binding={binding.sub('classesAdd')} component={ClassAddComponent} />
 				<Route path="/school_admin/forms/edit" binding={binding.sub('classesForm')} component={ClassEditComponent} />
+				<Route path="/school_admin/forms/students" binding={binding.sub('classStudents')} component={ClassStudentsComponent} />
 			</RouterView>
 		)
 	}
