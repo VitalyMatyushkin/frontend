@@ -20,9 +20,11 @@ const TeamListModel = function(page){
 	this.getMoreartyContext = page.getMoreartyContext;
 	this.props = page.props;
 	this.state = page.state;
-
 	this.rootBinding = this.getMoreartyContext().getBinding();
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
+
+	const binding = this.getDefaultBinding();
+	window.Server.sports.get().then(sports => binding.set('sports', sports));
 
 	this.grid = this.getGrid();
 	this.dataLoader = 	new DataLoader({
@@ -41,7 +43,7 @@ TeamListModel.prototype = {
 		document.location.hash += '/edit?id=' + data.id;
 	},
 	onChildren: function(data) {
-		document.location.hash += '/students?id=' + data.id;
+		document.location.hash += `/players?id=${data.id}&name=${data.name}`;
 	},
 	onRemove: function(team) {
 		const 	self 		= this,
@@ -110,9 +112,6 @@ TeamListModel.prototype = {
 				name 	= sports ? sports.find(s => s.id === sportId).name : '';
 
 		return <Sport name={name} className="bIcon_invites" />;
-	},
-	getForms:function(){
-		return window.Server.schoolForms.get({schoolId:this.activeSchoolId},{filter:{limit:100}});
 	},
 	getGrid: function(){
 		const columns = [

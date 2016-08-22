@@ -9,11 +9,6 @@ const   React 			= require('react'),
 const TeamList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const   self          = this,
-				binding       = self.getDefaultBinding();
-
-		window.Server.sports.get().then(sports => binding.set('sports', sports));
-
 		this.model = new TeamListModel(this);
 	},
 	render: function () {
