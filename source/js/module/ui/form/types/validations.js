@@ -46,6 +46,19 @@ var validationsSet = {
 
 		return false;
 	},
+	birthday:function(value){
+		let result = validationsSet.date(value);
+		if(!result){
+			const date = new Date(value),
+				maxDate = new Date();
+
+			if(date >= maxDate){
+				result = 'Birthday must be less than the current date.';
+			}
+		}
+
+		return result;
+	},
 	email: function(value) {
 		var self = this;
 
