@@ -1,5 +1,5 @@
 /**
- * Created by Anatoly on 11.08.2016.
+ * Created by Anatoly on 22.08.2016.
  */
 
 const 	React 			= require('react'),
@@ -41,7 +41,7 @@ TeamListModel.prototype = {
 		document.location.hash += '/edit?id=' + data.id;
 	},
 	onChildren: function(data) {
-		document.location.hash += '/children?id=' + data.id;
+		document.location.hash += '/students?id=' + data.id;
 	},
 	onRemove: function(team) {
 		const 	self 		= this,

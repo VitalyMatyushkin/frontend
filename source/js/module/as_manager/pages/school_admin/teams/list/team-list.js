@@ -1,5 +1,5 @@
 /**
- * Created by Anatoly on 11.08.2016.
+ * Created by Anatoly on 22.08.2016.
  */
 const   React 			= require('react'),
 		Morearty		= require('morearty'),
