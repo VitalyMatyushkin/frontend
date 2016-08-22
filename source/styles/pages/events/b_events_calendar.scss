@@ -43,7 +43,7 @@ $border-color: #c2c2c2;
   justify-content: space-between;
 }
 .eChallenge_rivals {
-  width: 45%;
+  width: 44%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -52,7 +52,7 @@ $border-color: #c2c2c2;
 .eChallenge_date{
   color: $COLOR;
   padding-top: 5px;
-  width: 20%;
+  width: 16%;
 }
 
 .eChallenge_name{
@@ -79,6 +79,10 @@ $border-color: #c2c2c2;
   margin: auto;
 
   vertical-align: top;
+}
+.eChallenge_score {
+  text-align: center;
+  width: 10%;
 }
 .eChallenge_title{
   align-items: center;
