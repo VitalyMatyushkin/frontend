@@ -23,13 +23,9 @@ const StudentListModel = function(page){
 	this.rootBinding = this.getMoreartyContext().getBinding();
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 
-	this.grid = this.getGrid();
-	this.dataLoader = 	new DataLoader({
-		serviceName:'schoolStudents',
-		params:		{schoolId:this.activeSchoolId},
-		grid:		this.grid,
-		onLoad: 	this.getDataLoadedHandle()
-	});
+	this.title = 'Students';
+	this.filters = {limit:20};
+	this.setColumns();
 };
 
 StudentListModel.prototype = {
@@ -89,11 +85,11 @@ StudentListModel.prototype = {
 			}
 		];
 	},
-	getGrid: function(){
+	setColumns: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 
-		const columns = [
+		this.columns = [
 			{
 				text:'Gender',
 				cell:{
@@ -208,23 +204,36 @@ StudentListModel.prototype = {
 				}
 			}
 		];
+	},
+	init: function(){
+		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 
-		return new GridModel({
+		this.grid = new GridModel({
 			actionPanel:{
-				title:'Students',
+				title:this.title,
 				showStrip:true,
 
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
-				(
-					<div className="addButton bTooltip" data-description="Add Student" onClick={function(){document.location.hash += '/add';}}>
-						<SVG icon="icon_add_student" />
-					</div>
-				) : null
+					(
+						<div className="addButton bTooltip" data-description="Add Student" onClick={function(){document.location.hash += '/add';}}>
+							<SVG icon="icon_add_student" />
+						</div>
+					) : null
 			},
-			columns:columns,
-			filters:{limit:20}
+			columns: this.columns,
+			filters: this.filters
 		});
+
+		this.dataLoader = new DataLoader({
+			serviceName:'schoolStudents',
+			params:		{schoolId:this.activeSchoolId},
+			grid:		this.grid,
+			onLoad: 	this.getDataLoadedHandle()
+		});
+
+		return this;
 	},
 	getDataLoadedHandle: function(data){
 		const self = this,
