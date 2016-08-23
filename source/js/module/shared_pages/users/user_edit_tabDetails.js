@@ -70,7 +70,6 @@ const TabItemDetails = React.createClass({
 						<FormField type="radio" field="gender" sourcePromise={self.getGender}>Gender</FormField>
                         <FormField type="text" field="email" validation="email server">Email</FormField>
                         <FormField type="phone" field="phone" validation="server" onPrePost={self.getPhone}>Mobile phone</FormField>
-                        <FormField type="dropdown" field="status" userActiveState="Active" userProvidedOptions={['Active','Blocked']}>Status</FormField>
                     </FormColumn>
                 </Form>
             </div>

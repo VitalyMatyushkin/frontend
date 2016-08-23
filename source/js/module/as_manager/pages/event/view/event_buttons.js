@@ -8,7 +8,7 @@ const	If				= require('module/ui/if/if'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg');
 
-const EventHeader = React.createClass({
+const EventButtons = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	displayName: 'EventButtons',
 	closeMatch: function () {
@@ -436,4 +436,4 @@ const EventHeader = React.createClass({
 	}
 });
 
-module.exports = EventHeader;
+module.exports = EventButtons;

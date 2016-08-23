@@ -104,6 +104,7 @@ const ChallengesList = React.createClass({
 
 							<div className="eChallenge_name" title={model.name}>{model.name}</div>
 							{self.renderGameTypeColumn(event, model)}
+							<div className="eChallenge_score">{model.score}</div>
 						</div>
 					);
 				});
@@ -263,6 +264,7 @@ const ChallengesList = React.createClass({
 					<span className="eChallenge_date">Date</span>
 					<span className="eChallenge_name">Event Name</span>
 					<span className="eChallenge_rivals">Game Type</span>
+					<div className="eChallenge_score">Score</div>
 				</div>
 				{self._getEvents()}
 			</div>

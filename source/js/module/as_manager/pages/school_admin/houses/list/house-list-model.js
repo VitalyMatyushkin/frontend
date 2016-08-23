@@ -38,6 +38,9 @@ HouseListModel.prototype = {
 	onEdit: function(data) {
 		document.location.hash += '/edit?id=' + data.id;
 	},
+	onChildren: function(data) {
+		document.location.hash += `/students?id=${data.id}&name=${data.name}`;
+	},
 	onRemove:function(data){
 		const 	self = this;
 
@@ -92,6 +95,7 @@ HouseListModel.prototype = {
 						 * All other users should not see that button.
 						 * */
 						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
+						onItemSelect:	this.onChildren.bind(this),
 						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}

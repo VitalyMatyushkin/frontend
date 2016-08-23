@@ -108,7 +108,7 @@ const EventView = React.createClass({
 			//Set the requirement for an all children view here
 			if (userChildren && userChildren.length > 0) {
 				self.request = userChildren.map(child => {
-					window.Server.userChildEvents.get({childId:child.id})
+					window.Server.userChildEvents.get({childId:child.id}, { filter: { limit: 100 } })
 						.then(events => Promise.all(events.map(event =>
 							window.Server.sport.get({sportId:event.sportId}).then(sport => {
 									event.sport = sport;

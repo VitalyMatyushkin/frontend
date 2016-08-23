@@ -1,7 +1,7 @@
 /**
  * Created by Anatoly on 22.07.2016.
  */
-
+const EventProperty = require('module/core/event-property');
 
 /**the number of lines on the page by default, if you do not explicitly set a different value.*/
 const DEFAULT_PAGE_LIMIT = 20;
@@ -19,8 +19,10 @@ const FilterModel = function(options){
 	this.order = options && options.order;
 	this.isChangePage = false;
 
-	this.onChange = options && options.onChange;
-	this.onPageLoaded = options && options.onPageLoaded;
+	this.onChange = new EventProperty();
+	options && this.onChange.on(options.onChange);
+	this.onPageLoaded = new EventProperty();
+	options && this.onPageLoaded.on(options.onPageLoaded);
 };
 
 FilterModel.prototype = {
@@ -44,16 +46,11 @@ FilterModel.prototype = {
 		return result;
 	},
 	setPageNumber: function (pageNumber) {
-		if(this.limit){
-			this.skip = (pageNumber - 1) * this.limit;
-			this._onChangePage();
-		} else {
-			console.error('Filter: Please provide page limit');
-		}
-
+		this.skip = (pageNumber - 1) * this.limit;
+		this._onChangePage();
 	},
 	setNumberOfLoadedRows:function(count){
-		this.onPageLoaded && this.onPageLoaded(count);
+		this.onPageLoaded.trigger(count);
 		this.skip = 0;
 		this.isChangePage = false;
 	},
@@ -120,11 +117,11 @@ FilterModel.prototype = {
 		this._onChange();
 	},
 	_onChange:function(){
-		this.onChange && this.onChange(this.getFilters());
+		this.onChange.trigger(this.getFilters());
 	},
 	_onChangePage:function(){
-		this.onChange && this.onChange(this.getFilters());
 		this.isChangePage = true;
+		this._onChange();
 	}
 };
 
