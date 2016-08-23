@@ -104,7 +104,17 @@ const ChallengesList = React.createClass({
 
 							<div className="eChallenge_name" title={model.name}>{model.name}</div>
 							{self.renderGameTypeColumn(event, model)}
-							<div className="eChallenge_score">{model.score}</div>
+							<div className="eChallenge_score">
+								{
+									`${TeamHelper.callFunctionForLeftContext(
+										self.activeSchoolId, event, self.getScore.bind(self, event)
+									)}
+									-
+									${TeamHelper.callFunctionForRightContext(
+										self.activeSchoolId, event, self.getScore.bind(self, event)
+									)}`
+								}
+							</div>
 						</div>
 					);
 				});
@@ -118,6 +128,9 @@ const ChallengesList = React.createClass({
 		}
 
 		return result;
+	},
+	getScore: function(event, teamBundleName, order) {
+		return TeamHelper.getCountPoints(event, teamBundleName, order);
 	},
 	renderGameTypeColumn: function(event, model) {
 		const	self	= this;

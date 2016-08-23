@@ -23,13 +23,13 @@ ChallengeModel.prototype._getResultByTeam = function(event, order) {
     const   self = this,
             participant = order < event.teamsData.length ? event.teamsData[order] : null;
 
-    let goal = '-';
+    let goal = '';
 
-    if (self.played) {
-        //const foundResult = event.results.teamScore.find(t => t.teamId === participant.id);
-
-        //goal = foundResult ? foundResult.score : 0;
-    }
+    //if (self.played) {
+    //    const foundResult = event.results.teamScore.find(t => t.teamId === participant.id);
+	//
+    //    goal = foundResult ? foundResult.score : 0;
+    //}
 
     return goal;
 };
@@ -90,10 +90,10 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
     if (!result.name) {
         result.name = 'n/a';
     }
-    else if (played && result.name && !TeamHelper.isNonTeamSport(event)) {
-        //let goal = self._getResultByTeam(event, order);
-        //result.name += '[' + goal + ']';
-    }
+    //else if (played && result.name && !TeamHelper.isNonTeamSport(event)) {
+    //    let goal = self._getResultByTeam(event, order);
+    //    result.name += '[' + goal + ']';
+    //}
 
     return result;
 };
