@@ -401,7 +401,6 @@ const EventRival = React.createClass({
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 				return self.getCountPoint('teamsData', 0);
-				break;
 		}
 	},
 	renderCountPointRightSide: function() {
@@ -435,7 +434,6 @@ const EventRival = React.createClass({
 							schoolsData[0].id !== activeSchoolId ? 0 : 1
 						);
 					}
-					return self.getCountPoint(order);
 				} else if(teamsData.length === 2) {
 					return self.getCountPoint(
 						'teamsData',
