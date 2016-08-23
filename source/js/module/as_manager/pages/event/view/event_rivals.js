@@ -146,12 +146,8 @@ const EventRival = React.createClass({
 				scoreData	= event.results[scoreBundleName].find(r => r[idFieldName] === dataBundle[order].id);
 
 		let points = 0;
-		if(scoreData) {
+		if(typeof scoreData !== 'undefined') {
 			points = scoreData.score;
-		} else {
-			// TODO Uooops, rerender.
-			event.results[scoreBundleName][idFieldName]	= dataBundle[order].id;
-			event.results[scoreBundleName].score		= 0;
 		}
 
 		const	mode	= binding.toJS('mode'),
@@ -355,107 +351,17 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	eventType		= binding.get('model.eventType'),
-				schoolsData		= binding.toJS('schoolsData'),
-				housesData		= binding.toJS('housesData'),
-				teamsData		= binding.toJS('teamsData'),
-				activeSchoolId	= self.getActiveSchoolId();
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-		switch(eventType) {
-			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if(teamsData.length === 0) {
-					// Render 'active school' on the left.
-					return self.getCountPoint(
-						'schoolsData',
-						schoolsData[0].id === activeSchoolId ? 0 : 1
-					);
-				} else if (teamsData.length === 1) {
-					// Render 'active school' on the left.
-					// Check - Has 'active school' team?
-					// If not - send order from schoolsData
-					// If yes - send order from teamsData
-					if(teamsData[0].schoolId === activeSchoolId) {
-						return self.getCountPoint('teamsData', 0);
-					} else {
-						return self.getCountPoint(
-							'schoolsData',
-							schoolsData[0].id === activeSchoolId ? 0 : 1
-						);
-					}
-				} else if(teamsData.length === 2) {
-					return self.getCountPoint(
-						'teamsData',
-						teamsData[0].schoolId === activeSchoolId ? 0 : 1
-					);
-				}
-				break;
-			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if(teamsData.length === 0) {
-					return self.getCountPoint('housesData', 0);
-				} else if (
-					teamsData.length === 1 ||
-					teamsData.length === 2
-				) {
-					return self.getCountPoint('teamsData', 0);
-				}
-				break;
-			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				return self.getCountPoint('teamsData', 0);
-		}
+		return TeamHelper.callFunctionForLeftContext(activeSchoolId, binding, self.getCountPoint.bind(self));
 	},
 	renderCountPointRightSide: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	eventType		= binding.get('model.eventType'),
-				schoolsData		= binding.toJS('schoolsData'),
-				housesData		= binding.toJS('housesData'),
-				teamsData		= binding.toJS('teamsData'),
-				activeSchoolId	= self.getActiveSchoolId();
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-		switch(eventType) {
-			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if(teamsData.length === 0) {
-					// render 'not active school' on the left.
-					return self.getCountPoint(
-						'schoolsData',
-						schoolsData[0].id !== activeSchoolId ? 0 : 1
-					);
-				} else if (teamsData.length === 1) {
-					// render 'not active school' on the right
-					// check - Has 'not active school' team?
-					// if not - send order from schoolsData
-					// if yes - send order from teamsData
-					if(teamsData[0].schoolId !== activeSchoolId) {
-						return self.getCountPoint('teamsData', 0);
-					} else {
-						return self.getCountPoint(
-							'schoolsData',
-							schoolsData[0].id !== activeSchoolId ? 0 : 1
-						);
-					}
-				} else if(teamsData.length === 2) {
-					return self.getCountPoint(
-						'teamsData',
-						teamsData[0].schoolId !== activeSchoolId ? 0 : 1
-					);
-				}
-				break;
-			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if(teamsData.length === 0) {
-					return self.getCountPoint('housesData', 0);
-				} else if (teamsData.length === 1) {
-					return self.getCountPoint(
-						'housesData',
-						teamsData[0].id === housesData[0].id ? 0 : 1
-					);
-				} if(teamsData.length === 2) {
-					return self.getCountPoint('teamsData', 1);
-				}
-				break;
-			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				return self.getCountPoint('teamsData', 1);
-		}
+		return TeamHelper.callFunctionForRightContext(activeSchoolId, binding, self.getCountPoint.bind(self));
 	},
 	_renderPoints: function() {
 		const	self	= this,
