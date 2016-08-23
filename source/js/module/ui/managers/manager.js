@@ -117,56 +117,66 @@ const Manager = React.createClass({
 				self._validate(1);
 			});
 		}
+		binding.sub('teamModeView.teamWrapper.0.isSetTeamLater').addListener(() => {
+			self._validate(0);
+		});
+		binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
+			self._validate(1);
+		});
 	},
 	_validate: function(rivalIndex) {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
-		const event = binding.toJS('model');
+		const	isSetTeamLater	= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
+				errorBinding	= self.getBinding('error');
 
-		if(typeof event !== 'undefined') {
-			const	errorBinding	= self.getBinding('error'),
-					defaultLimits	= event.sportModel.defaultLimits;
+		if(isSetTeamLater) {
+			errorBinding.sub(rivalIndex).set(
+				Immutable.fromJS({
+					isError:	false,
+					text:		''
+				})
+			);
+		} else {
+			const	event	= binding.toJS('model'),
+					limits	= event && event.sportModel && event.sportModel.defaultLimits ? {
+						maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
+						minPlayers:	event.sportModel.defaultLimits.minPlayers,
+						minSubs:	event.sportModel.defaultLimits.minSubs,
+						maxSubs:	event.sportModel.defaultLimits.maxSubs
+					} : {};
 
-			if(defaultLimits) {
-				const limits = {
-					maxPlayers: defaultLimits.maxPlayers,
-					minPlayers: defaultLimits.minPlayers,
-					minSubs:    defaultLimits.minSubs,
-					maxSubs:    defaultLimits.maxSubs
-				};
+			let result;
 
-				let result;
-
-				switch (true) {
-					case TeamHelper.isNonTeamSport(event):
+			switch (true) {
+				case TeamHelper.isNonTeamSport(event):
+					result = TeamPlayersValidator.validate(
+						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+						limits
+					);
+					break;
+				case TeamHelper.isTeamSport(event):
+					if (
+						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
+					) {
+						result = {
+							isError:	true,
+							text:		'Please enter team name'
+						};
+					} else {
 						result = TeamPlayersValidator.validate(
 							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
 							limits
 						);
-						break;
-					case TeamHelper.isTeamSport(event):
-						if (
-							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
-						) {
-							result = {
-								isError:	true,
-								text:		'Please enter team name'
-							};
-						} else {
-							result = TeamPlayersValidator.validate(
-								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-								limits
-							);
-						}
-						break;
-				}
-
-				errorBinding.sub(rivalIndex).set(
-					Immutable.fromJS(result)
-				);
+					}
+					break;
 			}
+
+			errorBinding.sub(rivalIndex).set(
+				Immutable.fromJS(result)
+			);
 		}
 	},
 	_initRivalIndex: function() {

@@ -161,6 +161,17 @@ const ChallengesList = React.createClass({
 			}
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants.length === 0
+		) {
+			return 'n/a';
+		} else if (
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants.length === 1 &&
+			participants[0].schoolId !== self.activeSchoolId
+		) {
+			return 'n/a';
+		} else if (
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 			participants[0].schoolId === self.activeSchoolId
 		) {
 			return rivals.find(rival => rival.id === participants[0].id).name;
@@ -169,6 +180,19 @@ const ChallengesList = React.createClass({
 			participants[1].schoolId === self.activeSchoolId
 		) {
 			return rivals.find(rival => rival.id === participants[1].id).name;
+		} else if (
+			participants.length === 1 &&
+			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return rivals.find(rival => rival.id === participants[0].id).name;
+		} else if (
+			(
+				participants.length === 0 ||
+				participants.length === 1
+			) &&
+			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return 'n/a';
 		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
 			return rivals.find(rival => rival.id === participants[0].id).name;
 		}
@@ -188,6 +212,11 @@ const ChallengesList = React.createClass({
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 					return rivals[1].name;
 			}
+		} else if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			participants.length === 0
+		) {
+			return rivals.find(rival => rival.id === event.invitedSchools[0].id).name;
 		} else if (// if inter school event and participant[0] is our school
 			participants.length > 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
@@ -210,6 +239,14 @@ const ChallengesList = React.createClass({
 			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return rivals.find(rival => rival.id === participants[1].id).name;
+		} else if (
+			(
+				participants.length === 0 ||
+				participants.length === 1
+			) &&
+			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		) {
+			return 'n/a';
 		}
 	},
 	_isSync: function() {

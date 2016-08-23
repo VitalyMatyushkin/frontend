@@ -35,6 +35,8 @@ const EventButtons = React.createClass({
 				schoolId:	activeSchoolId,
 				eventId:	event.id
 			})
+			.then(() => self.submitSchoolResults(event))
+			//.then(() => self.submitHouseResults(event))
 			.then(() => self.submitTeamResults(event))
 			.then(() => self.submitIndividualResults(event))
 			.then(() => self.doActionsAfterCloseEvent());
@@ -54,12 +56,84 @@ const EventButtons = React.createClass({
 			.then(() => self.submitIndividualResults(event))
 			.then(() => self.doActionsAfterCloseEvent());
 	},
-	submitTeamResults: function(event) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	submitSchoolResults: function(event) {
+		const self = this;
 
-		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
-				teamsData		= binding.toJS('teamsData');
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		const body = event.results.schoolScore.map(s => {
+			return {
+				schoolId:	s.schoolId,
+				score:		s.score
+			};
+		});
+
+		switch (true) {
+			case body.length === 1:
+				body[0].isWinner = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
+				break;
+			case body.length === 2:
+				switch (true) {
+					case body[0].score > body[1].score:
+						body[0].isWinner = true;
+						body[1].isWinner = false;
+						break;
+					case body[0].score < body[1].score:
+						body[0].isWinner = false;
+						body[1].isWinner = true;
+						break;
+				}
+				break;
+		}
+
+		if(body.length !== 0) {
+			return Promise.all(body.map(scoreData => window.Server.schoolEventResultSchoolScore.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData)));
+		} else {
+			return Promise.resolve(true);
+		}
+	},
+	submitHouseResults: function(event) {
+		const self = this;
+
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		const body = event.results.houseScore.map(h => {
+			return {
+				houseId:	h.houseId,
+				score:		h.score
+			};
+		});
+
+		switch (true) {
+			case body.length === 1:
+				body[0].isWinner = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
+				break;
+			case body.length === 2:
+				switch (true) {
+					case body[0].score > body[1].score:
+						body[0].isWinner = true;
+						body[1].isWinner = false;
+						break;
+					case body[0].score < body[1].score:
+						body[0].isWinner = false;
+						body[1].isWinner = true;
+						break;
+				}
+				break;
+		}
+
+		if(body.length !== 0) {
+			//return Promise.all(body.map(scoreData => window.Server.schoolEventResultTeamScore.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData)));
+			console.log(body);
+			return Promise.resolve(true);
+		} else {
+			return Promise.resolve(true);
+		}
+	},
+	submitTeamResults: function(event) {
+		const self = this;
+
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		const body = event.results.teamScore.map(t => {
 			return {
@@ -68,23 +142,29 @@ const EventButtons = React.createClass({
 			};
 		});
 
-		if(body.length < 2 ) {
-			const index = teamsData.findIndex(t => t.teamId !== body[0].teamId);
-			body.push({
-				teamId:	teamsData[index].id,
-				score:	0
-			});
+		switch (true) {
+			case body.length === 1:
+				body[0].isWinner = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
+				break;
+			case body.length === 2:
+				switch (true) {
+					case body[0].score > body[1].score:
+						body[0].isWinner = true;
+						body[1].isWinner = false;
+						break;
+					case body[0].score < body[1].score:
+						body[0].isWinner = false;
+						body[1].isWinner = true;
+						break;
+				}
+				break;
 		}
 
-		if(body[0].score > body[1].score) {
-			body[0].isWinner = true;
-			body[1].isWinner = false;
-		} else if(body[0].score < body[1].score) {
-			body[0].isWinner = false;
-			body[1].isWinner = true;
+		if(body.length !== 0) {
+			return Promise.all(body.map(scoreData => window.Server.schoolEventResultTeamScore.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData)));
+		} else {
+			return Promise.resolve(true);
 		}
-
-		return Promise.all(body.map(teamScoreData => window.Server.schoolEventResultTeamScore.post({ schoolId: activeSchoolId, eventId: event.id }, teamScoreData)));
 	},
 	submitIndividualResults: function(event) {
 		const self = this;
@@ -260,7 +340,9 @@ const EventButtons = React.createClass({
 			teamsForCommit[foundTeamManagerBinding.teamId] = foundTeamManagerBinding.teamStudents;
 		} else {
 			teamManagerBindings.forEach(teamManagerBinding => {
-				teamsForCommit[teamManagerBinding.teamId] = teamManagerBinding.teamStudents;
+				if(teamManagerBinding.teamId) {
+					teamsForCommit[teamManagerBinding.teamId] = teamManagerBinding.teamStudents;
+				}
 			});
 		}
 
@@ -316,7 +398,7 @@ const EventButtons = React.createClass({
 		return (
 			<If condition={EventHelper._isShowEventButtons(self)}>
 				<div className="bEventButtons">
-					<If condition={EventHelper._isShowCloseEventButton(self)}>
+					<If condition={TeamHelper.isShowCloseEventButton(self)}>
 						<div
 							className='mClose mRed'
 							onClick={self.onClickCloseMatch}

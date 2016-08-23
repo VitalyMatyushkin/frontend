@@ -1,4 +1,5 @@
-const RoleHelper = require('module/helpers/role_helper');
+const	RoleHelper		= require('module/helpers/role_helper'),
+		MoreartyHelper	= require('module/helpers/morearty_helper');
 
 const EventHelper = {
 	clientEventTypeToServerClientTypeMapping: {
@@ -106,21 +107,6 @@ const EventHelper = {
 
 		return self.isNotFinishedEvent(binding) && RoleHelper.isUserSchoolWorker(thiz);
 	},
-	/**
-	 * Return TRUE if participants count is two and event isn't close.
-	 * Note: participants count can be equal one, if event is "inter-schools" and opponent school
-	 * has not yet accepted invitation.
-	 * @returns {boolean}
-	 * @private
-	 */
-	_isShowCloseEventButton: function(thiz) {
-		const	self	= this,
-				binding	= thiz.getDefaultBinding();
-
-		return	binding.toJS('model.status') === "ACCEPTED" &&
-				self.isGeneralMode(binding) &&
-				RoleHelper.isUserSchoolWorker(thiz);
-	},
 	isNotFinishedEvent: function(binding) {
 		const self = this;
 
@@ -160,20 +146,6 @@ const EventHelper = {
 	 * @returns {boolean}
 	 * @private
 	 */
-	_isShowEditEventButton: function(thiz) {
-		const	self	= this,
-				binding	= thiz.getDefaultBinding();
-
-		return	self.isNotFinishedEvent(binding) &&
-				binding.get('mode') === 'general' &&
-				binding.get('activeTab') === 'teams' &&
-				RoleHelper.isUserSchoolWorker(thiz);
-	},
-	/**
-	 * Return TRUE if event edit mode is "general".
-	 * @returns {boolean}
-	 * @private
-	 */
 	_isShowFinishEventEditingButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
@@ -196,6 +168,20 @@ const EventHelper = {
 		return event.type ?
 			event.type === "inter-schools" :
 			self.serverEventTypeToClientEventTypeMapping[event.eventType] === "inter-schools";
+	},
+	isHousesEvent: function(event) {
+		const self = this;
+
+		return event.type ?
+		event.type === "houses" :
+		self.serverEventTypeToClientEventTypeMapping[event.eventType] === "houses";
+	},
+	isInternalEvent: function(event) {
+		const self = this;
+
+		return event.type ?
+		event.type === "internal" :
+		self.serverEventTypeToClientEventTypeMapping[event.eventType] === "internal";
 	}
 };
 

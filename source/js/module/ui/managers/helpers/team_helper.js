@@ -1,5 +1,7 @@
 const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_validator'),
 		EventHelper				= require('module/helpers/eventHelper'),
+		MoreartyHelper			= require('module/helpers/morearty_helper'),
+		RoleHelper				= require('module/helpers/role_helper'),
 		Lazy					= require('lazy.js'),
 		Immutable				= require('immutable');
 
@@ -315,8 +317,6 @@ function isInternalEventForIndividualSport(event) {
 			event.type;
 
 		return (eventType === 'internal') && self.isIndividualSport(event);
-	} else if(typeof event === 'undefined') {
-		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
@@ -329,8 +329,6 @@ function isInterSchoolsEventForIndividualSport(event) {
 			event.type;
 
 		return (eventType === 'inter-schools') && self.isIndividualSport(event);
-	} else if(typeof event === 'undefined') {
-		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
@@ -343,8 +341,6 @@ function isInterSchoolsEventForOneOnOneSport(event) {
 			event.type;
 
 		return (eventType === 'inter-schools') && self.isOneOnOneSport(event);
-	} else if(typeof event === 'undefined') {
-		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
@@ -353,8 +349,6 @@ function isNonTeamSport(event) {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
 		return sport.players === 'INDIVIDUAL' || sport.players === '1X1';
-	} else if(typeof event === 'undefined') {
-		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
@@ -363,8 +357,6 @@ function isTeamSport(event) {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
 		return sport.players === 'TEAM' || sport.players === '2X2';
-	} else if(typeof event === 'undefined') {
-		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
@@ -373,8 +365,6 @@ function isIndividualSport(event) {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
 		return sport.players === 'INDIVIDUAL';
-	} else if(typeof event === 'undefined') {
-		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
@@ -383,8 +373,6 @@ function isOneOnOneSport(event) {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
 		return sport.players === '1X1';
-	} else if(typeof event === 'undefined') {
-		throw new Error(`Event is undefined. ${arguments.callee.caller.toString()}`);
 	}
 };
 
@@ -399,6 +387,103 @@ function isTeamDataCorrect(event, validationData) {
 	}
 
 	return !isError;
+};
+/**
+ * Return TRUE if participants count is two and event isn't close.
+ * Note: participants count can be equal one, if event is "inter-schools" and opponent school
+ * has not yet accepted invitation.
+ * @returns {boolean}
+ * @private
+ */
+function isShowCloseEventButton(thiz) {
+	const	self	= this,
+			binding	= thiz.getDefaultBinding();
+
+	const event = binding.toJS('model');
+
+	return binding.toJS('model.status') === "ACCEPTED" &&
+		(
+			EventHelper.isInterSchoolsEvent(event) ?
+				(
+					self.isNonTeamSport(event) &&
+					self.isSchoolHaveIndividualPlayers(event, event.inviterSchool.id) &&
+					self.isSchoolHaveIndividualPlayers(event, event.invitedSchools[0].id)
+				) :
+				true
+		) && (
+			EventHelper.isHousesEvent(event) ?
+				(
+					self.isNonTeamSport(event) &&
+					self.isHouseHaveIndividualPlayers(event, event.housesData[0]._id) &&
+					self.isHouseHaveIndividualPlayers(event, event.housesData[1]._id)
+				) :
+				true
+		) && (
+			EventHelper.isHousesEvent(event) ?
+				!(
+					self.isTeamSport(event) &&
+					event.teamsData.length < 2
+				) :
+				true
+		) && (
+			EventHelper.isInternalEvent(event) ?
+				!(
+					self.isTeamSport(event) &&
+					event.teamsData.length < 2
+				) :
+				true
+		) && (
+			EventHelper.isInternalEvent(event) ?
+				!(
+					self.isOneOnOneSport(event) &&
+					event.individualsData.length < 2
+				) :
+				true
+		) &&
+		EventHelper.isGeneralMode(binding) &&
+		RoleHelper.isUserSchoolWorker(thiz);
+};
+
+/**
+ * Return TRUE if event edit mode is "general".
+ * @returns {boolean}
+ * @private
+ */
+function isShowEditEventButton(thiz) {
+	const	self	= this,
+			binding	= thiz.getDefaultBinding();
+
+	const event = binding.toJS('model');
+
+	return EventHelper.isNotFinishedEvent(binding) &&
+		// INTER-SCHOOLS
+		(
+			EventHelper.isInterSchoolsEvent(event) ?
+				!(
+					self.isTeamSport(event) &&
+					event.teamsData.length === 0
+				) :
+				true
+		) && (
+			EventHelper.isInterSchoolsEvent(event) ?
+				!(
+					self.isTeamSport(event) &&
+					event.teamsData.length === 1 &&
+					event.teamsData[0].schoolId !== MoreartyHelper.getActiveSchoolId(thiz)
+				) :
+				true
+		) &&
+		binding.get('mode') === 'general' &&
+		binding.get('activeTab') === 'teams' &&
+		RoleHelper.isUserSchoolWorker(thiz);
+};
+
+function isSchoolHaveIndividualPlayers(event, schoolId) {
+	return event.individualsData.filter(i => i.schoolId === schoolId).length > 0;
+};
+
+function isHouseHaveIndividualPlayers(event, houseId) {
+	return event.individualsData.filter(i => i.houseId === houseId).length > 0;
 };
 
 const TeamHelper = {
@@ -430,7 +515,11 @@ const TeamHelper = {
 	isInterSchoolsEventForIndividualSport:	isInterSchoolsEventForIndividualSport,
 	isInterSchoolsEventForOneOnOneSport:	isInterSchoolsEventForOneOnOneSport,
 	isTeamDataCorrect:						isTeamDataCorrect,
-	isTeamSport:							isTeamSport
+	isTeamSport:							isTeamSport,
+	isShowEditEventButton:					isShowEditEventButton,
+	isShowCloseEventButton:					isShowCloseEventButton,
+	isSchoolHaveIndividualPlayers:			isSchoolHaveIndividualPlayers,
+	isHouseHaveIndividualPlayers:			isHouseHaveIndividualPlayers
 };
 
 module.exports = TeamHelper;

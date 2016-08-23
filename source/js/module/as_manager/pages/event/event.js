@@ -68,6 +68,7 @@ const EventView = React.createClass({
 		})
 		.then(event => {
 			// TODO remove plug and implement albums
+			// TODO Is it still actual?
 			const	albums	= [], // res.albums,
 					points	= event.result && event.result.points ? TeamHelper.convertPointsToClientModel(event.result.points) : [];
 
@@ -76,7 +77,9 @@ const EventView = React.createClass({
 				.set('sport',				Immutable.fromJS(event.sport))
 				.set('model',				Immutable.fromJS(event))
 				.set('model.sportModel',	Immutable.fromJS(event.sport))
-				.set('teamsData',			Immutable.fromJS(event.teamsData))
+				.set('teamsData',			Immutable.fromJS(event.teamsData ? event.teamsData : []))
+				.set('housesData',			Immutable.fromJS(event.housesData ? event.housesData : []))
+				.set('schoolsData',			Immutable.fromJS(self.getSchoolsData(event)))
 				.set('points',				Immutable.fromJS(points))
 				.set('albums',				Immutable.fromJS(albums))
 				.set('schoolInfo',			Immutable.fromJS(activeSchool))
@@ -85,6 +88,16 @@ const EventView = React.createClass({
 				.set('sync',				Immutable.fromJS(true))
 				.commit();
 		});
+	},
+	getSchoolsData: function(event) {
+		const schoolsDara = [];
+
+		schoolsDara.push(event.inviterSchool);
+		event.invitedSchools.forEach((s) => {
+			schoolsDara.push(s);
+		});
+
+		return schoolsDara;
 	},
 	/**Init model for Tabs component*/
 	initTabs: function() {
@@ -228,7 +241,7 @@ const EventView = React.createClass({
 									<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 								</div>
 								<div className="bEventMiddleSideContainer_rightSide">
-									<If condition={EventHelper._isShowEditEventButton(self)}>
+									<If condition={TeamHelper.isShowEditEventButton(self)}>
 										<div className="bEditButtonWrapper">
 											<div
 												className="bEditButton"

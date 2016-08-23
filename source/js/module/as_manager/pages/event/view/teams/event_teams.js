@@ -91,15 +91,14 @@ const EventTeams = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const sport = self.getBinding('event').toJS('sport');
-
-		const	teamStudents	= binding.toJS(`editPlayers.teamManagerBindings.${order}.teamStudents`),
-				limits			= {
-					maxPlayers: sport.defaultLimits.maxPlayers,
-					minPlayers: sport.defaultLimits.minPlayers,
-					minSubs:    sport.defaultLimits.minSubs,
-					maxSubs:    sport.defaultLimits.maxSubs
-				};
+		const	defaultLimits	= self.getBinding('event').toJS('sport.defaultLimits'),
+				limits			= defaultLimits ? {
+									maxPlayers:	defaultLimits.maxPlayers,
+									minPlayers:	defaultLimits.minPlayers,
+									minSubs:	defaultLimits.minSubs,
+									maxSubs:	defaultLimits.maxSubs
+								} : {},
+				teamStudents	= binding.toJS(`editPlayers.teamManagerBindings.${order}.teamStudents`);
 
 		const result = TeamPlayersValidator.validate(
 			teamStudents,
@@ -150,6 +149,10 @@ const EventTeams = React.createClass({
 				}
 			)
 			.then(event => {
+				//const _event = self.getBinding('event').toJS();
+				//_event.individualsData = event.individualsData;
+				//self.getBinding('event').set(Immutable.fromJS(_event));
+
 				if(eventType === 'internal' && TeamHelper.isIndividualSport(event)) {
 					binding.atomically()
 						.set('viewPlayers.players',								Immutable.fromJS(event.individualsData))
@@ -186,7 +189,7 @@ const EventTeams = React.createClass({
 									Immutable.fromJS(
 										eventType === 'houses' ?
 											event.individualsData.filter(p => p.houseId === event.houses[0]) :
-											[event.individualsData[0]]
+											self.getIndividualsByOrder(event, 0)
 									)
 								)
 								.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS([]))
@@ -198,7 +201,7 @@ const EventTeams = React.createClass({
 									Immutable.fromJS(
 										eventType === 'houses' ?
 											event.individualsData.filter(p => p.houseId === event.houses[1]) :
-											[event.individualsData[1]]
+											self.getIndividualsByOrder(event, 1)
 									)
 								)
 								.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS([]))
@@ -211,6 +214,9 @@ const EventTeams = React.createClass({
 					}
 				}
 			});
+	},
+	getIndividualsByOrder: function(event, order) {
+		return event.individualsData[order] ? [event.individualsData[order]] : [];
 	},
 	_setTeamPlayersFromEventToBinding: function(event) {
 		const	self	= this,
@@ -236,34 +242,92 @@ const EventTeams = React.createClass({
 						return result;
 					});
 			}))
-			// TODO not work for teams count great then 2
 			.then(teamPlayers => {
-				binding.atomically()
-					.set('viewPlayers.players',								Immutable.fromJS(teamPlayers.map(tp => tp.viewPlayers)))
-					.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(teamPlayers[0].teamId))
-					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(teamPlayers[0].editPlayers))
-					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].editPlayers : []))
+				const event = self.getBinding('event').toJS();
+
+				binding
+					.atomically()
+					.set('viewPlayers.players',								Immutable.fromJS(
+						teamPlayers.map(tp => tp.viewPlayers)
+					))
+					// TEAM ID's
+					.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(
+						self.getTeamIdByOrder(teamPlayers, 0)
+					))
+					.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(
+						self.getTeamIdByOrder(teamPlayers, 1)
+					))
+					// TEAM STUDENTS
+					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(
+						self.getTeamStudentsByOrder(teamPlayers, 0)
+					))
+					.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(
+						self.getTeamStudentsByOrder(teamPlayers, 1)
+					))
+					// BLACKLIST
+					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(
+						self.getTeamStudentsByOrder(teamPlayers, 1)
+					))
+					.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(Immutable.fromJS(
+						self.getTeamStudentsByOrder(teamPlayers, 0)
+					))
+					// REMOVED PLAYERS
 					.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
-					.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
-					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
-						self.getBinding('event').toJS().sportModel.field.positions ?
-							self.getBinding('event').toJS().sportModel.field.positions :
-							[]
-					))
-					// if event type is inter schools - second team can not exist
-					.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].teamId : undefined))
-					.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(teamPlayers[1] ? teamPlayers[1].editPlayers : []))
-					.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(teamPlayers[1] ? teamPlayers[0].editPlayers : []))
 					.set("editPlayers.teamManagerBindings.1.removedPlayers",Immutable.fromJS([]))
+					// IS SYNC
+					.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
 					.set("editPlayers.teamManagerBindings.1.isSync",		Immutable.fromJS(false))
-					.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
-						self.getBinding('event').toJS().sportModel.field.positions ?
-							self.getBinding('event').toJS().sportModel.field.positions :
-							[]
+					// POSITIONS
+					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
+						self.getEventSportPositions(event))
 					))
+					.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
+						self.getEventSportPositions(event)
+					))
+					// GLOBAL SYNC
 					.set('isSync',											Immutable.fromJS(true))
 					.commit();
 			});
+	},
+	/**
+	 * Small helper function
+	 * Return positions from event
+	 */
+	getEventSportPositions: function(event) {
+		if(
+			event &&
+			event.sportModel &&
+			event.sportModel.field &&
+			event.sportModel.field.positions
+		) {
+			return event.sportModel.field.positions;
+		} else {
+			return [];
+		}
+	},
+	/**
+	 * Small helper function
+	 * Just replace not exist team by empty team,
+	 * or if team is exist then return team
+	 */
+	getTeamStudentsByOrder: function(teams, order) {
+		if(teams && teams[order]) {
+			return teams[order].editPlayers;
+		} else {
+			return [];
+		}
+	},
+	/**
+	 * Small helper function
+	 * Just replace id of not exist team by undefined,
+	 * or if team is exist then return teamId
+	 */
+	getTeamIdByOrder: function(teams, order) {
+		if(teams && teams[order]) {
+			return teams[order].teamId;
+		} else {
+			return undefined;
+		}
 	},
 	_getTeamPLayers: function(team) {
 		return window.Server.teamPlayers.get(
