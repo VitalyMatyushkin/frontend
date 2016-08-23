@@ -5,6 +5,8 @@ const   RouterView  				= require('module/core/router'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		Morearty        			= require('morearty'),
 		Immutable   				= require('immutable'),
+		EventHelper     			= require('module/helpers/eventHelper'),
+		DateHelper      			= require('module/helpers/date_helper'),
 		EventsCalendarComponent 	= require('module/as_parents/pages/events/events_calendar'),
 		EventsFixturesComponent 	= require('module/ui/fixtures/events_fixtures'),
 		EventsAchievementComponent 	= require("module/as_parents/pages/events/events_achievement");
@@ -13,16 +15,14 @@ const   RouterView  				= require('module/core/router'),
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
-	activeSchoolId: '',
+	activeSchoolId: undefined,
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE
 	},
 	getDefaultState: function () {
-		var self = this;
-
 		return Immutable.fromJS({
 			eventsRouting: {},
-			eventChild:[],
+			children:[],
 			teams: [],
 			sports: {
 				models: [],
@@ -35,15 +35,18 @@ const EventView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		const self = this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			userId = rootBinding.get('userData.authorizationInfo.userId'),
-			binding = self.getDefaultBinding(),
-			sportsBinding = binding.sub('sports');
+		const self 			= this,
+			binding 		= self.getDefaultBinding(),
+			sportsBinding 	= binding.sub('sports'),
+			currentDate 	= binding.toJS('calendar.currentDate');
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+		self._setFilterDateRange(
+			DateHelper.getStartDateTimeOfMonth(currentDate),
+			DateHelper.getEndDateTimeOfMonth(currentDate)
+		);
 
-		self.serviceChildrenFilter(userId);
+		self.getChildren();
 		self.setActiveChild();
 		self.eventModel = [];
 		window.Server.sports.get().then(function (data) {
@@ -52,7 +55,6 @@ const EventView = React.createClass({
 				.set('sync', true)
 				.set('models', Immutable.fromJS(data))
 				.commit();
-			return self.loadEvents(userId);
 		});
 
 	},
@@ -60,11 +62,37 @@ const EventView = React.createClass({
 		const self = this,
 			binding = self.getDefaultBinding();
 
-		self.addBindingListener(binding, 'eventChild', self.createSubMenu);
+		self.addBindingListener(binding, 'children', self.createSubMenu);
+		self.addBindingListener(binding, 'children', self.loadEvents);
+		self.addBindingListener(binding, 'sports.sync', self.loadEvents);
 		self.addBindingListener(binding, 'eventsRouting.currentPathParts', self.createSubMenu);
 		self.addBindingListener(binding, 'eventsRouting', self.setActiveChild);
 		self.addBindingListener(binding, 'activeChildId', self.filterEvents);
 		self.addBindingListener(binding, 'eventsOfAllChildren', self.filterEvents);
+		// Listen changes of date in calendar
+		self.addBindingListener(binding, 'calendar.currentMonth', () => {
+			const currentDate = binding.toJS('calendar.currentDate');
+
+			self._setEventsByDateRange(
+				DateHelper.getStartDateTimeOfMonth(currentDate),
+				DateHelper.getEndDateTimeOfMonth(currentDate)
+			);
+		});
+	},
+	_setFilterDateRange:function(gteDate, ltDate) {
+		this.filter = {
+			limit: 100,
+			where: {
+				startTime: {
+					'$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
+					'$lt': ltDate// like this `2016-07-31T00:00:00.000Z`
+				}
+			}
+		};
+	},
+	_setEventsByDateRange:function(gteDate, ltDate) {
+		this._setFilterDateRange(gteDate, ltDate);
+		this.loadEvents();
 	},
 	setActiveChild: function() {
 		const self = this,
@@ -77,7 +105,7 @@ const EventView = React.createClass({
 	createSubMenu: function(){
 		const self = this,
 			binding = self.getDefaultBinding(),
-			children = binding.toJS('eventChild'),
+			children = binding.toJS('children'),
 			partPath = binding.toJS('eventsRouting.currentPathParts'),
 			mainMenuItem = partPath && partPath.length > 1 ? '/#' + partPath[0] + '/' + partPath[1] : '',
 			menuItems = [];
@@ -85,7 +113,7 @@ const EventView = React.createClass({
 		children.forEach(user => {
 			menuItems.push({
 				icon: user.gender === 'female' ? 'icon_girl':'icon_boy',
-				href: mainMenuItem + '/' + user.childId,
+				href: mainMenuItem + '/' + user.id,
 				name: user.firstName + ' ' + user.lastName,
 				key: user.id
 			});
@@ -102,27 +130,20 @@ const EventView = React.createClass({
 		binding.set('itemsBinding', Immutable.fromJS(menuItems));
 	},
 	loadEvents:function(){
-		const self = this;
+		const self = this,
+			binding = self.getDefaultBinding(),
+			sportSync = binding.toJS('sports.sync'),
+			children = binding.toJS('children');
 
-		return window.Server.userChildren.get().then(userChildren => {
-			//Set the requirement for an all children view here
-			if (userChildren && userChildren.length > 0) {
-				self.request = userChildren.map(child => {
-					window.Server.userChildEvents.get({childId:child.id}, { filter: { limit: 100 } })
-						.then(events => Promise.all(events.map(event =>
-							window.Server.sport.get({sportId:event.sportId}).then(sport => {
-									event.sport = sport;
-
-									return event;
-								})
-							)
-						))
-						.then(events => self._includeTeamsToEvents(events, child.schoolId))
-						.then(events => self.processRequestData(events, child.id));
-				});
-				return self.request;
-			}
-		});
+		//Set the requirement for an all children view here
+		if (sportSync && children.length > 0) {
+			self.request = children.map(child => {
+				window.Server.userChildEvents.get({childId:child.id}, { filter: self.filter })
+					.then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
+					.then(events => self._includeTeamsToEvents(events, child.schoolId))
+					.then(events => self.processRequestData(events, child.id))
+			});
+		}
 	},
 	/**
 	 * Method include teams to each event
@@ -212,28 +233,13 @@ const EventView = React.createClass({
 				.commit();
 		}
 	},
-	serviceChildrenFilter: function () {
+	getChildren: function () {
 		const	self = this,
 				binding = self.getDefaultBinding();
 
 		return window.Server.userChildren.get()
-			//.then(children => {
-			//	return Promise.all(children.map(child => {
-			//		return window.Server.userChildEvents.get({childId:child.id})
-			//			.then(events => {
-			//				child.events = events;
-			//
-			//				return child;
-			//			});
-			//	}));
-			//})
 			.then(children => {
-				binding.set('eventChild',Immutable.fromJS(children.map(child => {
-					// TODO fix
-					child.childId = child.id
-
-					return child;
-				})));
+				binding.set('children',Immutable.fromJS(children));
 
 				return true;
 			});
