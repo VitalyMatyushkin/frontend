@@ -26,9 +26,9 @@ ChallengeModel.prototype._getResultByTeam = function(event, order) {
     let goal = '-';
 
     if (self.played) {
-        const foundResult = event.results.teamScore.find(t => t.teamId === participant.id);
+        //const foundResult = event.results.teamScore.find(t => t.teamId === participant.id);
 
-        goal = foundResult ? foundResult.score : 0;
+        //goal = foundResult ? foundResult.score : 0;
     }
 
     return goal;
@@ -91,8 +91,8 @@ ChallengeModel.prototype._getRivalName = function(event, order) {
         result.name = 'n/a';
     }
     else if (played && result.name && !TeamHelper.isNonTeamSport(event)) {
-        let goal = self._getResultByTeam(event, order);
-        result.name += '[' + goal + ']';
+        //let goal = self._getResultByTeam(event, order);
+        //result.name += '[' + goal + ']';
     }
 
     return result;

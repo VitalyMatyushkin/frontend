@@ -47,7 +47,13 @@ const TeamSubmitMixin = {
 			rivals = binding.toJS('rivals');
 		}
 
-		return rivals.map((rival, i) => {
+		return rivals
+			.filter((_, i) => {
+				const teamWrapper = binding.toJS(`teamModeView.teamWrapper.${i}`);
+
+				return !teamWrapper.isSetTeamLater;
+			})
+			.map((rival, i) => {
 			const teamWrapper = binding.toJS(`teamModeView.teamWrapper.${i}`);
 
 			const teamBody = {};

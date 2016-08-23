@@ -5,6 +5,7 @@ const	If				= require('module/ui/if/if'),
 		TeamHelper		= require('./../../../../ui/managers/helpers/team_helper'),
 		Sport			= require('module/ui/icons/sport_icon'),
 		Morearty		= require('morearty'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Immutable		= require('immutable'),
 		React			= require('react');
 
@@ -31,9 +32,8 @@ const EventRival = React.createClass({
 				if(TeamHelper.isNonTeamSport(event)) {
 					pic = event.housesData[order].pic;
 				} else {
-					pic = participant.get('house.pic');
+					pic = participant.get('house.pic') ? participant.get('house.pic') : event.housesData[order].pic;
 				}
-
 				break;
 		};
 
@@ -58,20 +58,28 @@ const EventRival = React.createClass({
 				participant	= binding.sub(['teamsData', order]);
 		let		name		= null;
 
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				const	inviterSchool = binding.toJS('model.inviterSchool'),
+						invitedSchool = binding.toJS('model.invitedSchools.0');
+
 				if(order === 0) {
-					name = binding.get('model.inviterSchool.name');
+					name = inviterSchool.id === activeSchoolId ?
+						inviterSchool.name :
+						invitedSchool.name;
 				} else if(order === 1) {
-					name = binding.get('model.invitedSchools.0.name');
+					name = inviterSchool.id !== activeSchoolId ?
+						inviterSchool.name :
+						invitedSchool.name;
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 				if(TeamHelper.isNonTeamSport(event)) {
 					name = event.housesData[order].name;
 				} else {
-					name = participant.get('house.name');
+					name = participant.toJS('house.name') ? participant.toJS('house.name') : event.housesData[order].name;
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
@@ -81,37 +89,8 @@ const EventRival = React.createClass({
 
 		return name;
 	},
-	getSportIcon:function(sport){
+	getSportIcon:function(sport) {
 		return <Sport name={sport} className="bIcon_invites" />;
-	},
-	getCountPoint: function (order) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	event	= binding.toJS('model');
-		let		points	= 0;
-
-		const currentTeamScoreData = event.results.teamScore.find(t => t.teamId === binding.toJS(`teamsData.${order}.id`));
-		currentTeamScoreData && (points = currentTeamScoreData.score);
-
-		const	mode	= binding.toJS('mode'),
-				status	= binding.toJS('model.status');
-
-		return (
-			<div className="eEventResult_PointSideWrapper">
-				<If condition={EventHelper.isShowScoreButtons(status, mode, true)}>
-					<div className="eEventResult_SignContainer" onClick={self.handleClickPointSign.bind(self, "minus", order)}>
-						<SVG classes={"eEventResult_Sign"} icon="icon_minus" />
-					</div>
-				</If>
-				<div className="eEventResult_Point">{points}</div>
-				<If condition={EventHelper.isShowScoreButtons(status, mode, true)}>
-					<div className="eEventResult_SignContainer" onClick={self.handleClickPointSign.bind(self, "plus", order)}>
-						<SVG classes={"eEventResult_Sign"} icon="icon_plus" />
-					</div>
-				</If>
-			</div>
-		);
 	},
 	/**
 	 * Return TRUE if team has zero points in event
@@ -120,14 +99,89 @@ const EventRival = React.createClass({
 	_isTeamHaveZeroPoints: function(teamId, event, eventSummary) {
 		return !eventSummary[teamId] && event.status === EventHelper.EVENT_STATUS.FINISHED;
 	},
-	handleClickPointSign: function(operation, order) {
+	handleClickPointSign: function(operation, teamBundleName, order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event	= binding.toJS('model'),
-				teamId	= binding.toJS(`teamsData.${order}.id`);
+		const event = binding.toJS('model');
 
-		const teamScoreDataIndex = event.results.teamScore.findIndex(t => t.teamId === teamId);
+		if(TeamHelper.isTeamSport(event)) {
+			switch (teamBundleName) {
+				case 'schoolsData':
+					self.changeSchoolPoints(operation, order);
+					break;
+				case 'housesData':
+					self.changeHousesPoints(operation, order);
+					break;
+				case 'teamsData':
+					self.changeTeamPoints(operation, order);
+					break;
+			}
+		}
+	},
+	getCountPoint: function (teamBundleName, order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		let	scoreBundleName,
+			idFieldName;
+
+		switch (teamBundleName) {
+			case 'schoolsData':
+				scoreBundleName	= 'schoolScore';
+				idFieldName		= 'schoolId';
+				break;
+			case 'housesData':
+				scoreBundleName	= 'houseScore';
+				idFieldName		= 'houseId';
+				break;
+			case 'teamsData':
+				scoreBundleName	= 'teamScore';
+				idFieldName		= 'teamId';
+				break;
+		}
+
+		const	event		= binding.toJS('model'),
+				dataBundle	= binding.toJS(`${teamBundleName}`),
+				scoreData	= event.results[scoreBundleName].find(r => r[idFieldName] === dataBundle[order].id);
+
+		let points = 0;
+		if(scoreData) {
+			points = scoreData.score;
+		} else {
+			// TODO Uooops, rerender.
+			event.results[scoreBundleName][idFieldName]	= dataBundle[order].id;
+			event.results[scoreBundleName].score		= 0;
+		}
+
+		const	mode	= binding.toJS('mode'),
+				status	= binding.toJS('model.status');
+
+		return (
+			<div className="eEventResult_PointSideWrapper">
+				<If condition={EventHelper.isShowScoreButtons(status, mode, true)}>
+					<div className="eEventResult_SignContainer" onClick={self.handleClickPointSign.bind(self, "minus", teamBundleName, order)}>
+						<SVG classes={"eEventResult_Sign"} icon="icon_minus" />
+					</div>
+				</If>
+
+				<div className="eEventResult_Point">{points}</div>
+
+				<If condition={EventHelper.isShowScoreButtons(status, mode, true)}>
+					<div className="eEventResult_SignContainer" onClick={self.handleClickPointSign.bind(self, "plus", teamBundleName, order)}>
+						<SVG classes={"eEventResult_Sign"} icon="icon_plus" />
+					</div>
+				</If>
+			</div>
+		);
+	},
+	changeTeamPoints: function(operation, order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	event				= binding.toJS('model'),
+				teamId				= binding.toJS(`teamsData.${order}.id`),
+				teamScoreDataIndex	= event.results.teamScore.findIndex(t => t.teamId === teamId);
 
 		switch (operation) {
 			case "plus":
@@ -156,6 +210,76 @@ const EventRival = React.createClass({
 
 		binding.set('model', Immutable.fromJS(event));
 	},
+	changeSchoolPoints: function(operation, order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	event					= binding.toJS('model'),
+				currentSchoolId			= binding.toJS(`schoolsData.${order}.id`),
+				schoolScoreDataIndex	= event.results.schoolScore.findIndex(s => s.schoolId === currentSchoolId);
+
+		switch (operation) {
+			case "plus":
+				if(schoolScoreDataIndex === -1) {
+					event.results.schoolScore.push({
+						schoolId:	currentSchoolId,
+						score:		1
+					});
+				} else {
+					event.results.schoolScore[schoolScoreDataIndex].score += 1;
+				}
+				break;
+			case "minus":
+				if(schoolScoreDataIndex === -1) {
+					event.results.schoolScore.push({
+						schoolId:	currentSchoolId,
+						score:		0
+					})
+				} else {
+					event.results.schoolScore[schoolScoreDataIndex].score > 0 ?
+						event.results.schoolScore[schoolScoreDataIndex].score -= 1 :
+						event.results.schoolScore[schoolScoreDataIndex].score = 0;
+				}
+				break;
+		};
+
+		binding.set('model', Immutable.fromJS(event));
+	},
+	changeHousesPoints: function(operation, order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	event					= binding.toJS('model'),
+				currentHouseId			= binding.toJS(`housesData.${order}.id`),
+				housesScoreDataIndex	= event.results.housesScore.findIndex(s => s.housesId === currentHouseId);
+
+		switch (operation) {
+			case "plus":
+				if(housesScoreDataIndex === -1) {
+					event.results.housesScore.push({
+						schoolId:	currentHouseId,
+						score:		1
+					});
+				} else {
+					event.results.housesScore[housesScoreDataIndex].score += 1;
+				}
+				break;
+			case "minus":
+				if(housesScoreDataIndex === -1) {
+					event.results.housesScore.push({
+						schoolId:	currentHouseId,
+						score:		0
+					})
+				} else {
+					event.results.housesScore[housesScoreDataIndex].score > 0 ?
+						event.results.housesScore[housesScoreDataIndex].score -= 1 :
+						event.results.housesScore[housesScoreDataIndex].score = 0;
+				}
+				break;
+		};
+
+		binding.set('model', Immutable.fromJS(event));
+	},
 	_renderTeamLeftSide: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -168,7 +292,17 @@ const EventRival = React.createClass({
 			return self._renderTeamByOrder(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			teamsData.length === 0
+		) {
+			return self._renderTeamByOrder(0);
+		} else if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 			teamsData[0].schoolId === activeSchoolId
+		) {
+			return self._renderTeamByOrder(0);
+		} else if(
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+			teamsData[0].schoolId !== activeSchoolId
 		) {
 			return self._renderTeamByOrder(0);
 		} else if(
@@ -190,31 +324,20 @@ const EventRival = React.createClass({
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(1);
+		} else if (
 			// if inter school event and participant[0] is our school
-		} else if (
 			teamsData.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[0].schoolId !== activeSchoolId
-		) {
-			return self._renderTeamByOrder(0);
-		// if inter school event and participant[1] is our school
-		} else if (
-			teamsData.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[1].schoolId !== activeSchoolId
+			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
-		// if inter school event and opponent school is not yet accept invitation
 		} else if(
+			// if inter school event and opponent school is not yet accept invitation
 			teamsData.length === 1 &&
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
-		// if it isn't inter school event
-		} else if (
-			teamsData.length > 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
+		} else {
+			// if it isn't inter school event
 			return self._renderTeamByOrder(1);
 		}
 	},
@@ -228,50 +351,112 @@ const EventRival = React.createClass({
 			</div>
 		);
 	},
-	_renderCountPointLeftSide: function() {
+	renderCountPointLeftSide: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				teamsData	= binding.toJS('teamsData'),
+				schoolsData		= binding.toJS('schoolsData'),
+				housesData		= binding.toJS('housesData'),
+				teamsData		= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[0].schoolId === activeSchoolId
-		) {
-			return self.getCountPoint(0);
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[1].schoolId === activeSchoolId
-		) {
-			return self.getCountPoint(1);
-		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return self.getCountPoint(0);
+		switch(eventType) {
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				if(teamsData.length === 0) {
+					// Render 'active school' on the left.
+					return self.getCountPoint(
+						'schoolsData',
+						schoolsData[0].id === activeSchoolId ? 0 : 1
+					);
+				} else if (teamsData.length === 1) {
+					// Render 'active school' on the left.
+					// Check - Has 'active school' team?
+					// If not - send order from schoolsData
+					// If yes - send order from teamsData
+					if(teamsData[0].schoolId === activeSchoolId) {
+						return self.getCountPoint('teamsData', 0);
+					} else {
+						return self.getCountPoint(
+							'schoolsData',
+							schoolsData[0].id === activeSchoolId ? 0 : 1
+						);
+					}
+				} else if(teamsData.length === 2) {
+					return self.getCountPoint(
+						'teamsData',
+						teamsData[0].schoolId === activeSchoolId ? 0 : 1
+					);
+				}
+				break;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+				if(teamsData.length === 0) {
+					return self.getCountPoint('housesData', 0);
+				} else if (
+					teamsData.length === 1 ||
+					teamsData.length === 2
+				) {
+					return self.getCountPoint('teamsData', 0);
+				}
+				break;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				return self.getCountPoint('teamsData', 0);
+				break;
 		}
 	},
-	_renderCountPointRightSide: function() {
+	renderCountPointRightSide: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				teamsData	= binding.toJS('teamsData'),
+				schoolsData		= binding.toJS('schoolsData'),
+				housesData		= binding.toJS('housesData'),
+				teamsData		= binding.toJS('teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
-		if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[0].schoolId !== activeSchoolId
-		) {
-			return self.getCountPoint(0);
-		} else if (
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[1].schoolId !== activeSchoolId
-		) {
-			return self.getCountPoint(1);
-		} else if (
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return self.getCountPoint(1);
+		switch(eventType) {
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				if(teamsData.length === 0) {
+					// render 'not active school' on the left.
+					return self.getCountPoint(
+						'schoolsData',
+						schoolsData[0].id !== activeSchoolId ? 0 : 1
+					);
+				} else if (teamsData.length === 1) {
+					// render 'not active school' on the right
+					// check - Has 'not active school' team?
+					// if not - send order from schoolsData
+					// if yes - send order from teamsData
+					if(teamsData[0].schoolId !== activeSchoolId) {
+						return self.getCountPoint('teamsData', 0);
+					} else {
+						return self.getCountPoint(
+							'schoolsData',
+							schoolsData[0].id !== activeSchoolId ? 0 : 1
+						);
+					}
+					return self.getCountPoint(order);
+				} else if(teamsData.length === 2) {
+					return self.getCountPoint(
+						'teamsData',
+						teamsData[0].schoolId !== activeSchoolId ? 0 : 1
+					);
+				}
+				break;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+				if(teamsData.length === 0) {
+					return self.getCountPoint('housesData', 0);
+				} else if (teamsData.length === 1) {
+					return self.getCountPoint(
+						'housesData',
+						teamsData[0].id === housesData[0].id ? 0 : 1
+					);
+				} if(teamsData.length === 2) {
+					return self.getCountPoint('teamsData', 1);
+				}
+				break;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				return self.getCountPoint('teamsData', 1);
 		}
 	},
 	_renderPoints: function() {
@@ -297,9 +482,9 @@ const EventRival = React.createClass({
 				return (
 					<div className="eEventResult_score">
 						<div className="eEventResult_PointsWrapper">
-							{self._renderCountPointLeftSide()}
+							{self.renderCountPointLeftSide()}
 							<div className="eEventResult_Colon"> : </div>
-							{self._renderCountPointRightSide()}
+							{self.renderCountPointRightSide()}
 						</div>
 					</div>
 				);

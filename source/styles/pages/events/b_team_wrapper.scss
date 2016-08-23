@@ -42,3 +42,16 @@
 .bTeamWrapper.mMarginTop{
   margin-top: 10px;
 }
+
+.eTeamWrapper_plug {
+  position: absolute;
+  width: 698px;
+  height: 413px;
+  z-index: 900;
+  background-color: grey;
+  opacity: 0.6;
+
+  &.mDisabled {
+    display: none;
+  }
+}

@@ -3,6 +3,7 @@ const	React			= require('react'),
 		TeamName		= require('./../team_name'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		classNames		= require('classnames'),
 		Lazy			= require('lazy.js'),
 		If				= require('module/ui/if/if'),
 		Morearty        = require('morearty'),
@@ -36,7 +37,8 @@ const TeamWrapper = React.createClass({
 			self._initPlayerChooserBinding();
 			self._initCreationModeBinding();
 			self._fillPlugBinding();
-			binding.set('isInit', Immutable.fromJS(true));
+			binding.set('isSetTeamLater',	Immutable.fromJS(false));
+			binding.set('isInit',			Immutable.fromJS(true));
 		}
 	},
 	_fillPlugBinding: function() {
@@ -344,15 +346,42 @@ const TeamWrapper = React.createClass({
 				);
 		}
 	},
+	isSetTeamLater: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.toJS('isSetTeamLater');
+	},
+	changeIsSetTeamLater: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.set('isSetTeamLater', Immutable.fromJS(!binding.toJS('isSetTeamLater')));
+	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const event = self.getBinding('model').toJS();
 
+		const plugClass = classNames({
+			eTeamWrapper_plug:	true,
+			mDisabled:			!self.isSetTeamLater()
+		});
+
 		return (
 			<div className="bTeamWrapper mMarginTop">
-
+				<div className="eManager_group">
+					<div className="eManager_label">{'Select Team Later'}</div>
+					<div className="eManager_radiogroup">
+						<input	onChange={self.changeIsSetTeamLater}
+								checked={self.isSetTeamLater()}
+								type="checkbox"
+						/>
+					</div>
+				</div>
+				<div className={plugClass}>
+				</div>
 				{
 					self.renderTeamNameComponent(
 						event,
