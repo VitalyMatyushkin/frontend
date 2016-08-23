@@ -119,36 +119,12 @@ const EventRival = React.createClass({
 			}
 		}
 	},
-	getCountPoint: function (teamBundleName, order) {
+	renderCountPoints: function (teamBundleName, order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		let	scoreBundleName,
-			idFieldName;
-
-		switch (teamBundleName) {
-			case 'schoolsData':
-				scoreBundleName	= 'schoolScore';
-				idFieldName		= 'schoolId';
-				break;
-			case 'housesData':
-				scoreBundleName	= 'houseScore';
-				idFieldName		= 'houseId';
-				break;
-			case 'teamsData':
-				scoreBundleName	= 'teamScore';
-				idFieldName		= 'teamId';
-				break;
-		}
-
-		const	event		= binding.toJS('model'),
-				dataBundle	= binding.toJS(`${teamBundleName}`),
-				scoreData	= event.results[scoreBundleName].find(r => r[idFieldName] === dataBundle[order].id);
-
-		let points = 0;
-		if(typeof scoreData !== 'undefined') {
-			points = scoreData.score;
-		}
+		const	event	= binding.toJS('model'),
+				points	= TeamHelper.getCountPoints(event, teamBundleName, order);
 
 		const	mode	= binding.toJS('mode'),
 				status	= binding.toJS('model.status');
@@ -351,17 +327,19 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
+				event			= binding.toJS('model');
 
-		return TeamHelper.callFunctionForLeftContext(activeSchoolId, binding, self.getCountPoint.bind(self));
+		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, self.renderCountPoints.bind(self));
 	},
 	renderCountPointRightSide: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
+				event			= binding.toJS('model');
 
-		return TeamHelper.callFunctionForRightContext(activeSchoolId, binding, self.getCountPoint.bind(self));
+		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints.bind(self));
 	},
 	_renderPoints: function() {
 		const	self	= this,

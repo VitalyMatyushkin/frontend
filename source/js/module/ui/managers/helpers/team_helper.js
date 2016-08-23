@@ -488,13 +488,14 @@ function isHouseHaveIndividualPlayers(event, houseId) {
 	return event.individualsData.filter(i => i.houseId === houseId).length > 0;
 };
 
-function callFunctionForLeftContext(activeSchoolId, binding, cb) {
+function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
-	const	eventType		= binding.get('model.eventType'),
-			schoolsData		= binding.toJS('schoolsData'),
-			housesData		= binding.toJS('housesData'),
-			teamsData		= binding.toJS('teamsData');
+	const	eventType	= event.eventType,
+			teamBundles	= self.getTeamBundles(event),
+			schoolsData	= teamBundles.schoolsData,
+			housesData	= teamBundles.housesData,
+			teamsData	= teamBundles.teamsData;
 
 	switch(eventType) {
 		case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
@@ -539,13 +540,14 @@ function callFunctionForLeftContext(activeSchoolId, binding, cb) {
 	}
 };
 
-function callFunctionForRightContext(activeSchoolId, binding, cb) {
+function callFunctionForRightContext(activeSchoolId, event, cb) {
 	const self = this;
 
-	const	eventType		= binding.get('model.eventType'),
-			schoolsData		= binding.toJS('schoolsData'),
-			housesData		= binding.toJS('housesData'),
-			teamsData		= binding.toJS('teamsData');
+	const	eventType	= event.eventType,
+			teamBundles	= self.getTeamBundles(event),
+			schoolsData	= teamBundles.schoolsData,
+			housesData	= teamBundles.housesData,
+			teamsData	= teamBundles.teamsData;
 
 	switch(eventType) {
 		case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
@@ -592,6 +594,60 @@ function callFunctionForRightContext(activeSchoolId, binding, cb) {
 	}
 };
 
+function getCountPoints(event, teamBundleName, order) {
+	const self = this;
+
+	let	scoreBundleName,
+		idFieldName;
+
+	switch (teamBundleName) {
+		case 'schoolsData':
+			scoreBundleName	= 'schoolScore';
+			idFieldName		= 'schoolId';
+			break;
+		case 'housesData':
+			scoreBundleName	= 'houseScore';
+			idFieldName		= 'houseId';
+			break;
+		case 'teamsData':
+			scoreBundleName	= 'teamScore';
+			idFieldName		= 'teamId';
+			break;
+	}
+
+	const	teamBundles	= self.getTeamBundles(event),
+			dataBundle	= teamBundles[teamBundleName],
+			scoreData	= event.results[scoreBundleName].find(r => r[idFieldName] === dataBundle[order].id);
+
+	let points = 0;
+	if(typeof scoreData !== 'undefined') {
+		points = scoreData.score;
+	}
+
+	return points;
+}
+
+function getSchoolsData(event) {
+	const schoolsDara = [];
+
+	schoolsDara.push(event.inviterSchool);
+	event.invitedSchools.forEach((s) => {
+		schoolsDara.push(s);
+	});
+
+	return schoolsDara;
+};
+
+function getTeamBundles(event) {
+	const self = this;
+
+	return {
+				schoolsData:	self.getSchoolsData(event),
+				housesData:		event.housesData,
+				teamsData:		event.teamsData
+			};
+};
+
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -627,7 +683,10 @@ const TeamHelper = {
 	isSchoolHaveIndividualPlayers:			isSchoolHaveIndividualPlayers,
 	isHouseHaveIndividualPlayers:			isHouseHaveIndividualPlayers,
 	callFunctionForRightContext:			callFunctionForRightContext,
-	callFunctionForLeftContext:				callFunctionForLeftContext
+	callFunctionForLeftContext:				callFunctionForLeftContext,
+	getCountPoints:							getCountPoints,
+	getSchoolsData:							getSchoolsData,
+	getTeamBundles:							getTeamBundles
 };
 
 module.exports = TeamHelper;

@@ -94,8 +94,16 @@ const EventView = React.createClass({
 			const updBinding = self.getDefaultBinding();
 
 			const event = updBinding.toJS('model');
-			event.results = TeamHelper.callFunctionForLeftContext(activeSchool, updBinding, self.getInitResults.bind(self, event));
-			event.results = TeamHelper.callFunctionForRightContext(activeSchool, updBinding, self.getInitResults.bind(self, event));
+			event.results = TeamHelper.callFunctionForLeftContext(
+				activeSchool,
+				event,
+				self.getInitResults.bind(self, event)
+			);
+			event.results = TeamHelper.callFunctionForRightContext(
+				activeSchool,
+				event,
+				self.getInitResults.bind(self, event)
+			);
 
 			updBinding.set('model', Immutable.fromJS(event));
 		});
