@@ -48,7 +48,6 @@ const EventView = React.createClass({
 
 		self.getChildren();
 		self.setActiveChild();
-		self.eventModel = [];
 		window.Server.sports.get().then(function (data) {
 			sportsBinding
 				.atomically()
@@ -135,6 +134,7 @@ const EventView = React.createClass({
 			sportSync = binding.toJS('sports.sync'),
 			children = binding.toJS('children');
 
+		self.eventModel = [];
 		//Set the requirement for an all children view here
 		if (sportSync && children.length > 0) {
 			self.request = children.map(child => {
