@@ -27,6 +27,10 @@ const SportsForm = React.createClass({
 
         return (data !== undefined && data.players !== undefined) ? data.players : null;
     },
+	getPointsDisplay: function(){
+    	const data = this.getDefaultBinding().toJS();
+		return (typeof data !== 'undefined' && typeof data.points !== 'undefined' && typeof data.points.display !== 'undefined') ? data.points.display : null;
+	},
     getPositionFields: function() {
         const self    = this,
               data = self.getDefaultBinding().meta().toJS();
@@ -534,6 +538,13 @@ const SportsForm = React.createClass({
                             >
                                 Points step
                             </FormField>
+							<FormField  field="pointsDisplay"
+										userProvidedOptions={SportsHelpers.clientPointDisplayArray}
+										userActiveState={self.getPointsDisplay()}
+										type="dropdown"
+							>
+								How to display points
+							</FormField>
                         </FormPlaceholder>
                         <div className="eForm_fieldName mMarginTop">Game Field Picture</div>
                         <FormField labelText="Upload Game Field Picture" type="imageFile" field="fieldPic"/>
