@@ -69,7 +69,7 @@ const ChallengesList = React.createClass({
 		document.location.hash = 'event/' + eventId + '?tab=teams';
 	},
 	_getSportIcon:function(sport){
-		return <Sport name={sport} className="bIcon_invites" ></Sport>;
+		return <Sport name={sport} className="bIcon_invites" />;
 	},
 	_getEvents: function () {
 		const	self		= this,

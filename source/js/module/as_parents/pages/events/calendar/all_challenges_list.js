@@ -65,7 +65,7 @@ const AllChallengesList = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				selectDay		= binding.get('calendar.selectDay'),
-				childrenOfUser	= binding.get('eventChild');
+				childrenOfUser	= binding.get('children');
 		let		result;
 
 		if(selectDay === undefined || selectDay === null) {
@@ -98,7 +98,7 @@ const AllChallengesList = React.createClass({
 				events	= binding.get('selectedDayFixtures');
 
 		child.event = events.filter(function(ev){
-			return ev.get('childId') === child.get('childId');
+			return ev.get('childId') === child.get('id');
 		});
 
 		if(child.event.count()) {
