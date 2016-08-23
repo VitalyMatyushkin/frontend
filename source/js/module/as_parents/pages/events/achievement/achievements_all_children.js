@@ -14,12 +14,12 @@ const AchievementsAllChildren = React.createClass({
 
         let result = <div className="eAchievement_row">{'no children'}</div>;
 
-        if(binding.get('eventChild') && binding.get('eventChild').count()) {
-            result = binding.get('eventChild').map(function (child, key) {
+        if(binding.get('children') && binding.get('children').count()) {
+            result = binding.get('children').map(function (child, key) {
                 child.events = (binding.get('models') && binding.get('models').count()) ? binding.get('models').filter(function (model) {
-                    return model.get('childId') === child.get('childId');
+                    return model.get('childId') === child.get('id');
                 }) : 0;
-                let model = new AchievementModel(child.get('childId'), child.events && child.events.toJS());
+                let model = new AchievementModel(child.get('id'), child.events && child.events.toJS());
                 model.childName = child.get('firstName') + ' ' + child.get('lastName');
                 return (
                     <div key={key} className="eAchievement_row">
