@@ -87,7 +87,53 @@ const EventView = React.createClass({
 				.set('mode',				Immutable.fromJS('general'))
 				.set('sync',				Immutable.fromJS(true))
 				.commit();
+
+			return event;
+		})
+		.then(() => {
+			const updBinding = self.getDefaultBinding();
+
+			const event = updBinding.toJS('model');
+			event.results = TeamHelper.callFunctionForLeftContext(activeSchool, updBinding, self.getInitResults.bind(self, event));
+			event.results = TeamHelper.callFunctionForRightContext(activeSchool, updBinding, self.getInitResults.bind(self, event));
+
+			updBinding.set('model', Immutable.fromJS(event));
 		});
+	},
+	getInitResults: function(event, teamBundleName, order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		let	scoreBundleName,
+			idFieldName;
+
+		switch (teamBundleName) {
+			case 'schoolsData':
+				scoreBundleName	= 'schoolScore';
+				idFieldName		= 'schoolId';
+				break;
+			case 'housesData':
+				scoreBundleName	= 'houseScore';
+				idFieldName		= 'houseId';
+				break;
+			case 'teamsData':
+				scoreBundleName	= 'teamScore';
+				idFieldName		= 'teamId';
+				break;
+		}
+
+		const	dataBundle	= binding.toJS(`${teamBundleName}`),
+				scoreData	= event.results[scoreBundleName].find(r => r[idFieldName] === dataBundle[order].id);
+
+		if(typeof scoreData == 'undefined') {
+			const newScoreData = {};
+			newScoreData[idFieldName]	= dataBundle[order].id;
+			newScoreData.score			= 0;
+
+			event.results[scoreBundleName].push(newScoreData);
+		}
+
+		return event.results;
 	},
 	getSchoolsData: function(event) {
 		const schoolsDara = [];
