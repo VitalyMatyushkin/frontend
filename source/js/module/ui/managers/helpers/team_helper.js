@@ -421,13 +421,6 @@ function isShowCloseEventButton(thiz) {
 				) :
 				true
 		) && (
-			EventHelper.isHousesEvent(event) ?
-				!(
-					self.isTeamSport(event) &&
-					event.teamsData.length < 2
-				) :
-				true
-		) && (
 			EventHelper.isInternalEvent(event) ?
 				!(
 					self.isTeamSport(event) &&

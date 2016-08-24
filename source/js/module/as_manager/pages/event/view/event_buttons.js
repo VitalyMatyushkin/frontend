@@ -36,7 +36,7 @@ const EventButtons = React.createClass({
 				eventId:	event.id
 			})
 			.then(() => self.submitSchoolResults(event))
-			//.then(() => self.submitHouseResults(event))
+			.then(() => self.submitHouseResults(event))
 			.then(() => self.submitTeamResults(event))
 			.then(() => self.submitIndividualResults(event))
 			.then(() => self.doActionsAfterCloseEvent());
@@ -106,7 +106,7 @@ const EventButtons = React.createClass({
 
 		switch (true) {
 			case body.length === 1:
-				body[0].isWinner = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
+				body[0].isWinner = event.results.houseScore[0].score > event.results.teamScore[0].score ? true : false;
 				break;
 			case body.length === 2:
 				switch (true) {
@@ -123,9 +123,7 @@ const EventButtons = React.createClass({
 		}
 
 		if(body.length !== 0) {
-			//return Promise.all(body.map(scoreData => window.Server.schoolEventResultTeamScore.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData)));
-			console.log(body);
-			return Promise.resolve(true);
+			return Promise.all(body.map(scoreData => window.Server.schoolEventResultHousesScore.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData)));
 		} else {
 			return Promise.resolve(true);
 		}
@@ -144,7 +142,11 @@ const EventButtons = React.createClass({
 
 		switch (true) {
 			case body.length === 1:
-				body[0].isWinner = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
+				const opponentScore = (event.results.schoolScore && event.results.schoolScore.length) ?
+					event.results.schoolScore[0].score :
+					event.results.houseScore[0].score;
+
+				body[0].isWinner = opponentScore > event.results.teamScore[0].score;
 				break;
 			case body.length === 2:
 				switch (true) {

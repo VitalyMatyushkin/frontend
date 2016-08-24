@@ -223,29 +223,29 @@ const EventRival = React.createClass({
 
 		const	event					= binding.toJS('model'),
 				currentHouseId			= binding.toJS(`housesData.${order}.id`),
-				housesScoreDataIndex	= event.results.housesScore.findIndex(s => s.housesId === currentHouseId);
+				housesScoreDataIndex	= event.results.houseScore.findIndex(s => s.houseId === currentHouseId);
 
 		switch (operation) {
 			case "plus":
 				if(housesScoreDataIndex === -1) {
-					event.results.housesScore.push({
-						schoolId:	currentHouseId,
+					event.results.houseScore.push({
+						houseId:	currentHouseId,
 						score:		1
 					});
 				} else {
-					event.results.housesScore[housesScoreDataIndex].score += 1;
+					event.results.houseScore[housesScoreDataIndex].score += 1;
 				}
 				break;
 			case "minus":
 				if(housesScoreDataIndex === -1) {
-					event.results.housesScore.push({
-						schoolId:	currentHouseId,
+					event.results.houseScore.push({
+						houseId:	currentHouseId,
 						score:		0
 					})
 				} else {
-					event.results.housesScore[housesScoreDataIndex].score > 0 ?
-						event.results.housesScore[housesScoreDataIndex].score -= 1 :
-						event.results.housesScore[housesScoreDataIndex].score = 0;
+					event.results.houseScore[housesScoreDataIndex].score > 0 ?
+						event.results.houseScore[housesScoreDataIndex].score -= 1 :
+						event.results.houseScore[housesScoreDataIndex].score = 0;
 				}
 				break;
 		};
