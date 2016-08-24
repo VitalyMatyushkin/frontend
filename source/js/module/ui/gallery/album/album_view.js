@@ -110,7 +110,6 @@ const AlbumView = React.createClass({
 							<div className="eSchoolMaster_wrap">
 								<h1 className="eSchoolMaster_title">Gallery</h1>
 								<div className="eStrip"></div>
-								<h1 className="showAllPhoto">All</h1>
 							</div>
 						<div className="bAlbum">
 							<h2 className="eAlbum_title">{binding.get('album.name')}</h2>

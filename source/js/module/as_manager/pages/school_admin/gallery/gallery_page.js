@@ -46,7 +46,6 @@ const GalleryListPage = React.createClass({
                 <div className="eSchoolMaster_wrap">
                     <h1 className="eSchoolMaster_title">Gallery</h1>
                     <div className="eStrip"></div>
-                    <h1 className="showAllPhoto">All</h1>
                 </div>
                 <div className="albums_wrap">
                     <Album binding={binding.sub('defaultAlbum')} basePath="school-albums" />
