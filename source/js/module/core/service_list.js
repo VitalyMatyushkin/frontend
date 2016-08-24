@@ -102,6 +102,7 @@ const serviceList = {
 
 		serviceList.schoolEventResultSchoolScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/schools/score', binding);
 		serviceList.schoolEventResultTeamScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/teams/score', binding);
+		serviceList.schoolEventResultHousesScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/houses/score', binding);
         serviceList.schoolEventResultIndividualsScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score', binding);
         serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
         serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
