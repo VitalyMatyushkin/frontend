@@ -84,11 +84,12 @@ const galleryServices = function(galleryBinding, galleryServiceList, params){
             return imgService.upload(file)
                 .then(self.photos._add.bind(this))
                 .then(res => {
+					stopUploading();
                     binding.sub('photos').update(photos => photos.unshift(Immutable.fromJS(res)));
                     if(!binding.get('coverUrl'))
                         return self.photo.pin(albumId, res.picUrl);
                 })
-                .finally(stopUploading);
+                .catch(stopUploading);
         },
         /** will create new API Photo item and return promise of AJAX request
          * @private */
