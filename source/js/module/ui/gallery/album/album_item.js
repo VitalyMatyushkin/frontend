@@ -58,8 +58,10 @@ const AlbumItem = React.createClass({
 						<span>{/*<SVG icon="icon_photo"/>*/}</span>
 						<span>{/*<SVG icon="icon_comments"/>*/}</span>
 						<span ></span>
-						<span onClick={self.onClickEditAlbum}><SVG icon="icon_edit"/></span>
-						<span onClick={self.onClickDeleteAlbum}><SVG classes="ePhotoDelete" icon="icon_delete"/></span>
+						<span onClick={self.onClickEditAlbum} className="bTooltip" data-description="Edit Album"><SVG
+							icon="icon_edit"/></span>
+						<span onClick={self.onClickDeleteAlbum} className="bTooltip" data-description="Delete Album"><SVG
+							classes="ePhotoDelete" icon="icon_delete"/></span>
 					</div>
 					<div className="eAlbumInfo">
 						<span className='eAlbumTitle'>{name}</span>

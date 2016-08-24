@@ -16,7 +16,7 @@
     position: absolute;
     opacity: 0;
     top: 50%;
-    transition: opacity .50s ease-in-out;
+    transition: opacity .90s ease-in-out;
     transform: translateY(-50%);
     z-index: -1;
   }
@@ -33,7 +33,7 @@
     position: absolute;
     top: 50%;
     width: 0;
-    transition: opacity .50s ease-in-out;
+    transition: opacity .90s ease-in-out;
     transform: translateY(-50%);
     opacity: 0;
     z-index: -1;
