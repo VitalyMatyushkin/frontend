@@ -31,8 +31,10 @@ const AllChallengesList = React.createClass({
 			self._setFixturesByDate(descriptor.getCurrentValue().date);
 		});
 
-		binding.sub('activeChildId').addListener((descriptor) => {
-			descriptor.getCurrentValue() == 'all' && self.isMounted() && self.forceUpdate();
+		binding.sub('models').addListener(() => {
+			const currentCalendarDate = binding.toJS('calendar.selectDay');
+
+			currentCalendarDate && self._setFixturesByDate(currentCalendarDate.date);
 		});
 	},
 	_setFixturesByDate:function(date) {
