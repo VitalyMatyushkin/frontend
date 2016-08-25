@@ -13,11 +13,13 @@ const EventHelper = {
 		'INTERNAL_TEAMS':	'internal'
 	},
 	EVENT_STATUS: {
-		INVITES_SENT:	'INVITES_SENT',
-		FINISHED:		'FINISHED',
-		NOT_FINISHED:	'NOT_FINISHED',
-		DRAFT:			'DRAFT',
-		ACCEPTED:		'ACCEPTED'
+		COLLECTING_INVITE_RESPONSE:	'COLLECTING_INVITE_RESPONSE',
+		INVITES_SENT:				'INVITES_SENT',
+		SENDING_INVITES:			'SENDING_INVITES',
+		FINISHED:					'FINISHED',
+		NOT_FINISHED:				'NOT_FINISHED',
+		DRAFT:						'DRAFT',
+		ACCEPTED:					'ACCEPTED'
 	},
 	/**
 	 * Create event summary object by event result object.
@@ -111,6 +113,8 @@ const EventHelper = {
 		const self = this;
 
 		return (
+			binding.get('model.status') === self.EVENT_STATUS.COLLECTING_INVITE_RESPONSE ||
+			binding.get('model.status') === self.EVENT_STATUS.SENDING_INVITES ||
 			binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
 			binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
 			binding.get('model.status') === self.EVENT_STATUS.ACCEPTED ||

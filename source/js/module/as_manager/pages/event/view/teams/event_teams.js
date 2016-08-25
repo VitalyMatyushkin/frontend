@@ -352,7 +352,8 @@ const EventTeams = React.createClass({
 			event:		self.getBinding('event'),
 			points:		self.getBinding('points'),
 			schoolInfo:	self.getBinding('schoolInfo'),
-			mode:		self.getBinding('mode')
+			mode:		self.getBinding('mode'),
+			isSync:		binding.sub('isSync')
 		};
 	},
 	_getViewPlayersBinding: function() {
@@ -363,7 +364,8 @@ const EventTeams = React.createClass({
 			default:	binding.sub('viewPlayers'),
 			event:		self.getBinding('event'),
 			points:		self.getBinding('points'),
-			mode:		self.getBinding('mode')
+			mode:		self.getBinding('mode'),
+			isSync:		binding.sub('isSync')
 		};
 	},
 	/* RENDERS */

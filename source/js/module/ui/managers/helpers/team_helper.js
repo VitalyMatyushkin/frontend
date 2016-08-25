@@ -324,6 +324,14 @@ function isHousesEventForNonTeamSport(event) {
 	}
 };
 
+function isHousesEventForTeamSport(event) {
+	if (typeof event !== 'undefined') {
+		const self = this;
+
+		return EventHelper.isHousesEvent(event) && self.isTeamSport(event);
+	}
+};
+
 function isInternalEventForOneOnOneSport(event) {
 	if (typeof event !== 'undefined') {
 		const self = this;
@@ -349,6 +357,14 @@ function isInternalEventForTeamSport(event) {
 		const self = this;
 
 		return EventHelper.isInternalEvent(event) && self.isTeamSport(event);
+	}
+};
+
+function isInterSchoolsEventForTeamSport(event) {
+	if(typeof event !== 'undefined') {
+		const self = this;
+
+		return EventHelper.isInterSchoolsEvent(event) && self.isTeamSport(event);
 	}
 };
 
@@ -466,22 +482,20 @@ function isShowEditEventButton(thiz) {
 	const event = binding.toJS('model');
 
 	return EventHelper.isNotFinishedEvent(binding) &&
-		// INTER-SCHOOLS
 		(
-			EventHelper.isInterSchoolsEvent(event) ?
-				!(
-					self.isTeamSport(event) &&
-					event.teamsData.length === 0
-				) :
-				true
-		) && (
-			EventHelper.isInterSchoolsEvent(event) ?
-				!(
-					self.isTeamSport(event) &&
-					event.teamsData.length === 1 &&
-					event.teamsData[0].schoolId !== MoreartyHelper.getActiveSchoolId(thiz)
-				) :
-				true
+			self.isInterSchoolsEventForTeamSport(event) ?
+				event.teamsData.length > 0
+				: true
+		) &&
+		(
+			self.isInterSchoolsEventForTeamSport(event) && event.teamsData.length === 1 ?
+				event.teamsData[0].schoolId === MoreartyHelper.getActiveSchoolId(thiz)
+				: true
+		) &&
+		(
+			self.isHousesEventForTeamSport(event) ?
+			event.teamsData.length > 0
+				: true
 		) &&
 		binding.get('mode') === 'general' &&
 		binding.get('activeTab') === 'teams' &&
@@ -587,7 +601,7 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 			if(teamsData.length === 0) {
-				return cb('housesData', 0);
+				return cb('housesData', 1);
 			} else if (teamsData.length === 1) {
 				return cb(
 					'housesData',
@@ -682,10 +696,12 @@ const TeamHelper = {
 	isOneOnOneSport:						isOneOnOneSport,
 	isNonTeamSport:							isNonTeamSport,
 	isInterSchoolsEventForNonTeamSport:		isInterSchoolsEventForNonTeamSport,
+	isHousesEventForTeamSport:				isHousesEventForTeamSport,
 	isHousesEventForNonTeamSport:			isHousesEventForNonTeamSport,
 	isInternalEventForOneOnOneSport:		isInternalEventForOneOnOneSport,
 	isInternalEventForIndividualSport:		isInternalEventForIndividualSport,
 	isInternalEventForTeamSport:			isInternalEventForTeamSport,
+	isInterSchoolsEventForTeamSport:		isInterSchoolsEventForTeamSport,
 	isInterSchoolsEventForIndividualSport:	isInterSchoolsEventForIndividualSport,
 	isInterSchoolsEventForOneOnOneSport:	isInterSchoolsEventForOneOnOneSport,
 	isTeamDataCorrect:						isTeamDataCorrect,
