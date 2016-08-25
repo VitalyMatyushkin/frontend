@@ -1,6 +1,6 @@
 .bDataList{
   max-width: 1060px;
-  padding: 0 130px;
+  padding: 0 11%;
   text-transform: none;
 }
 
@@ -65,7 +65,7 @@
   height: 38px;
   vertical-align: middle;
   border-bottom: solid 1px #c2c1c2;
-  padding: 1px 5px;
+  padding: 1px 3px;
 
   ul{
     li{
@@ -80,7 +80,7 @@
 
 .eDataList_listItemCell .bLinkLike{
   display: inline-block;
-  margin-left: 5px;
+  margin-left: 3px;
 }
 .bLinkLike.bViewBtn {
   vertical-align: middle;
@@ -91,6 +91,7 @@
 
 
 .eDataList_listItemCell.mActions{
+  min-width: 70px;
   text-align: center;
   overflow: visible;
 }
