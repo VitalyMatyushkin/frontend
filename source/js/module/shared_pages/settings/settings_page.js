@@ -7,8 +7,7 @@ const 	RouterView 	= require('module/core/router'),
 		GeneralPageComponent 			= require("module/shared_pages/settings/general/general_page"),
 		ChangePasswordPageComponent 	= require("module/shared_pages/settings/password/change_password_page"),
 		AccountRolesComponent 			= require("module/shared_pages/settings/account/account_roles"),
-		AccountRequestsComponent 		= require("module/shared_pages/settings/account/account_requests"),
-		PermissionsPageComponent 		= require("module/shared_pages/settings/permissions/permissions_page");
+		AccountRequestsComponent 		= require("module/shared_pages/settings/account/account_requests");
 
 
 const SettingsPage = React.createClass({
@@ -17,7 +16,7 @@ const SettingsPage = React.createClass({
 		const self = this,
 			binding		= self.getDefaultBinding(),
 			rootBinding	= self.getMoreartyContext().getBinding(),
-			tab 		= rootBinding.get('routing.parameters.tab');
+			tab 		= rootBinding.get('routing.pathParameters.0');
 
 		// tabListModel
 		self.tabListModel = [{
@@ -106,11 +105,6 @@ const SettingsPage = React.createClass({
 							path="/settings/requests /settings/requests/:subPage"
 							binding={binding.sub('requests')}
 							component={AccountRequestsComponent}
-						/>
-						<Route
-							path="/settings/permissions /settings/permissions/:subPage"
-							binding={binding.sub('permissions')}
-							component={PermissionsPageComponent}
 						/>
 					</RouterView>
 				</div>
