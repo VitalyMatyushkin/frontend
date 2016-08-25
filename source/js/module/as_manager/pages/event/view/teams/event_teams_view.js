@@ -279,9 +279,22 @@ const EventTeamsView = React.createClass({
 				player	= self.getDefaultBinding().toJS(`players.${order}`),
 				players	= player ? [ player ] : [];
 
+		if(players.length === 0) {
+			return self.renderPlayerTeamLater();
+		} else {
+			return (
+				<div className="bEventTeams_team">
+					{self.renderPlayers(players, event.status, true)}
+				</div>
+			);
+		}
+	},
+	renderPlayerTeamLater: function() {
 		return (
 			<div className="bEventTeams_team">
-				{self.renderPlayers(players, event.status, true)}
+				<div className="eEventTeams_awaiting">
+					{'Select players later...'}
+				</div>
 			</div>
 		);
 	},

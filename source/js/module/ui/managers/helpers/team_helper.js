@@ -429,11 +429,10 @@ function isShowCloseEventButton(thiz) {
 				true
 		) && (
 			EventHelper.isInternalEvent(event) ?
-				!(
-					self.isOneOnOneSport(event) &&
-					event.individualsData.length < 2
-				) :
-				true
+				self.isOneOnOneSport(event) ?
+					event.individualsData.length === 2 :
+					true
+				:true
 		) &&
 		EventHelper.isGeneralMode(binding) &&
 		RoleHelper.isUserSchoolWorker(thiz);
