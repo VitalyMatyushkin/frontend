@@ -152,6 +152,7 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	event				= binding.toJS('model'),
+				pointsStep			= event.sport.points.pointsStep,
 				teamId				= binding.toJS(`teamsData.${order}.id`),
 				teamScoreDataIndex	= event.results.teamScore.findIndex(t => t.teamId === teamId);
 
@@ -160,10 +161,10 @@ const EventRival = React.createClass({
 				if(teamScoreDataIndex === -1) {
 					event.results.teamScore.push({
 						teamId:	teamId,
-						score:	1
+						score:	pointsStep
 					})
 				} else {
-					event.results.teamScore[teamScoreDataIndex].score += 1;
+					event.results.teamScore[teamScoreDataIndex].score += pointsStep;
 				}
 				break;
 			case "minus":
@@ -174,7 +175,7 @@ const EventRival = React.createClass({
 					})
 				} else {
 					event.results.teamScore[teamScoreDataIndex].score > 0 ?
-						event.results.teamScore[teamScoreDataIndex].score -= 1 :
+						event.results.teamScore[teamScoreDataIndex].score -= pointsStep :
 						event.results.teamScore[teamScoreDataIndex].score = 0;
 				}
 				break;
@@ -187,6 +188,7 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	event					= binding.toJS('model'),
+				pointsStep				= event.sport.points.pointsStep,
 				currentSchoolId			= binding.toJS(`schoolsData.${order}.id`),
 				schoolScoreDataIndex	= event.results.schoolScore.findIndex(s => s.schoolId === currentSchoolId);
 
@@ -195,10 +197,10 @@ const EventRival = React.createClass({
 				if(schoolScoreDataIndex === -1) {
 					event.results.schoolScore.push({
 						schoolId:	currentSchoolId,
-						score:		1
+						score:		pointsStep
 					});
 				} else {
-					event.results.schoolScore[schoolScoreDataIndex].score += 1;
+					event.results.schoolScore[schoolScoreDataIndex].score += pointsStep;
 				}
 				break;
 			case "minus":
@@ -209,7 +211,7 @@ const EventRival = React.createClass({
 					})
 				} else {
 					event.results.schoolScore[schoolScoreDataIndex].score > 0 ?
-						event.results.schoolScore[schoolScoreDataIndex].score -= 1 :
+						event.results.schoolScore[schoolScoreDataIndex].score -= pointsStep :
 						event.results.schoolScore[schoolScoreDataIndex].score = 0;
 				}
 				break;
@@ -222,6 +224,7 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	event					= binding.toJS('model'),
+				pointsStep				= event.sport.points.pointsStep,
 				currentHouseId			= binding.toJS(`housesData.${order}.id`),
 				housesScoreDataIndex	= event.results.houseScore.findIndex(s => s.houseId === currentHouseId);
 
@@ -230,10 +233,10 @@ const EventRival = React.createClass({
 				if(housesScoreDataIndex === -1) {
 					event.results.houseScore.push({
 						houseId:	currentHouseId,
-						score:		1
+						score:		pointsStep
 					});
 				} else {
-					event.results.houseScore[housesScoreDataIndex].score += 1;
+					event.results.houseScore[housesScoreDataIndex].score += pointsStep;
 				}
 				break;
 			case "minus":
@@ -244,7 +247,7 @@ const EventRival = React.createClass({
 					})
 				} else {
 					event.results.houseScore[housesScoreDataIndex].score > 0 ?
-						event.results.houseScore[housesScoreDataIndex].score -= 1 :
+						event.results.houseScore[housesScoreDataIndex].score -= pointsStep :
 						event.results.houseScore[housesScoreDataIndex].score = 0;
 				}
 				break;
