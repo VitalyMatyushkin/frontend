@@ -149,9 +149,10 @@ const EventTeams = React.createClass({
 				}
 			)
 			.then(event => {
-				//const _event = self.getBinding('event').toJS();
-				//_event.individualsData = event.individualsData;
-				//self.getBinding('event').set(Immutable.fromJS(_event));
+				self.getBinding('event').set(
+					'individualsData',
+					Immutable.fromJS(event.individualsData)
+				);
 
 				if(eventType === 'internal' && TeamHelper.isIndividualSport(event)) {
 					binding.atomically()
