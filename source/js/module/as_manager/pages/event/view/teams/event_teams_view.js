@@ -390,6 +390,15 @@ const EventTeamsView = React.createClass({
 			</div>
 		);
 	},
+	renderOpponentSelectTeamLater: function() {
+		return (
+			<div className="bEventTeams_team">
+				<div className="eEventTeams_awaiting">
+					{'Opponent select team later...'}
+				</div>
+			</div>
+		);
+	},
 	renderIndividualPlayersByHouseId: function(houseId) {
 		const self = this;
 
@@ -418,12 +427,15 @@ const EventTeamsView = React.createClass({
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 					if(event.status === 'ACCEPTED' || event.status === 'FINISHED') {
-						if(event.individuals.length === 0) {
-							return self.renderAwaitingOpponentTeam();
+						const schoolId = event.inviterSchool.id !== activeSchoolId ?
+							event.inviterSchool.id :
+							event.invitedSchools[0].id;
+
+						const players = self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
+
+						if(players.length === 0) {
+							return self.renderOpponentSelectTeamLater();
 						} else {
-							const schoolId = event.inviterSchool.id !== activeSchoolId ?
-								event.inviterSchool.id :
-								event.invitedSchools[0].id;
 							return self.renderIndividualPlayersBySchoolId(schoolId);
 						}
 					} else {
@@ -443,7 +455,11 @@ const EventTeamsView = React.createClass({
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData.length === 0
 			) {
-				return self.renderAwaitingOpponentTeam();
+				if(event.status === EventHelper.ACCEPTED) {
+					return self.renderOpponentSelectTeamLater();
+				} else {
+					return self.renderAwaitingOpponentTeam();
+				}
 			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
@@ -471,7 +487,11 @@ const EventTeamsView = React.createClass({
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
-				return self.renderAwaitingOpponentTeam();
+				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
+					return self.renderOpponentSelectTeamLater();
+				} else {
+					return self.renderAwaitingOpponentTeam();
+				}
 			} else if (
 				(
 					teamsData.length === 0 ||
@@ -559,21 +579,27 @@ const EventTeamsView = React.createClass({
 		const	self	= this;
 		let		result	= null;
 
-		const event = self.getBinding('event').toJS();
+		const	event = self.getBinding('event').toJS(),
+				isSync = self.getBinding('isSync').toJS();
 
-		if(TeamHelper.isInternalEventForIndividualSport(event)) {
-			result = (
-				<div className="bEventTeams">
-					{self.renderIndividuals()}
-				</div>
-			);
-		} else {
-			result = (
-				<div className="bEventTeams">
-					{self.renderPlayersForLeftSide()}
-					{self.renderPlayersForRightSide()}
-				</div>
-			);
+		if(isSync) {
+			switch (true) {
+				case TeamHelper.isInternalEventForIndividualSport(event):
+					result = (
+						<div className="bEventTeams">
+							{self.renderIndividuals()}
+						</div>
+					);
+					break;
+				default:
+					result = (
+						<div className="bEventTeams">
+							{self.renderPlayersForLeftSide()}
+							{self.renderPlayersForRightSide()}
+						</div>
+					);
+					break;
+			}
 		}
 
 		return result;
