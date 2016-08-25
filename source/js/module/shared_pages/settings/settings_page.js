@@ -16,7 +16,7 @@ const SettingsPage = React.createClass({
 		const self = this,
 			binding		= self.getDefaultBinding(),
 			rootBinding	= self.getMoreartyContext().getBinding(),
-			tab 		= rootBinding.get('routing.parameters.tab');
+			tab 		= rootBinding.get('routing.pathParameters.0');
 
 		// tabListModel
 		self.tabListModel = [{
