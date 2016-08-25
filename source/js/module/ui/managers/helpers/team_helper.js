@@ -308,6 +308,30 @@ function convertPlayersToServerValue(players) {
 	return players.map(p => this.getBodyForAddPlayersRequest(p));
 };
 
+function isInterSchoolsEventForNonTeamSport(event) {
+	if (typeof event !== 'undefined') {
+		const self = this;
+
+		return EventHelper.isInterSchoolsEvent(event) && self.isNonTeamSport(event);
+	}
+};
+
+function isHousesEventForNonTeamSport(event) {
+	if (typeof event !== 'undefined') {
+		const self = this;
+
+		return EventHelper.isHousesEvent(event) && self.isNonTeamSport(event);
+	}
+};
+
+function isInternalEventForOneOnOneSport(event) {
+	if (typeof event !== 'undefined') {
+		const self = this;
+
+		return EventHelper.isInternalEvent(event) && self.isOneOnOneSport(event);
+	}
+};
+
 function isInternalEventForIndividualSport(event) {
 	if(typeof event !== 'undefined') {
 		const self = this;
@@ -317,6 +341,14 @@ function isInternalEventForIndividualSport(event) {
 			event.type;
 
 		return (eventType === 'internal') && self.isIndividualSport(event);
+	}
+};
+
+function isInternalEventForTeamSport(event) {
+	if(typeof event !== 'undefined') {
+		const self = this;
+
+		return EventHelper.isInternalEvent(event) && self.isTeamSport(event);
 	}
 };
 
@@ -403,37 +435,21 @@ function isShowCloseEventButton(thiz) {
 
 	return binding.toJS('model.status') === "ACCEPTED" &&
 		(
-			EventHelper.isInterSchoolsEvent(event) ?
+			self.isInterSchoolsEventForNonTeamSport(event) ?
 				(
-					self.isNonTeamSport(event) ? (
-						self.isSchoolHaveIndividualPlayers(event, event.inviterSchool.id) &&
-						self.isSchoolHaveIndividualPlayers(event, event.invitedSchools[0].id)
-					) : true
-				) :
-				true
-		) && (
-			EventHelper.isHousesEvent(event) ?
-				(
-					self.isNonTeamSport(event) ? (
-						self.isHouseHaveIndividualPlayers(event, event.housesData[0]._id) &&
-						self.isHouseHaveIndividualPlayers(event, event.housesData[1]._id)
-					) : true
-				) :
-				true
-		) && (
-			EventHelper.isInternalEvent(event) ?
-				!(
-					self.isTeamSport(event) &&
-					event.teamsData.length < 2
-				) :
-				true
-		) && (
-			EventHelper.isInternalEvent(event) ?
-				self.isOneOnOneSport(event) ?
-					event.individualsData.length === 2 :
-					true
-				:true
+					self.isSchoolHaveIndividualPlayers(event, event.inviterSchool.id) &&
+					self.isSchoolHaveIndividualPlayers(event, event.invitedSchools[0].id)
+				)
+				: true
 		) &&
+		(
+			self.isHousesEventForNonTeamSport(event) ?
+				self.isHouseHaveIndividualPlayers(event, event.housesData[0].id) &&
+				self.isHouseHaveIndividualPlayers(event, event.housesData[1].id)
+				: true
+		) &&
+		( self.isInternalEventForTeamSport(event) ? event.teamsData.length < 2 : true ) &&
+		( self.isInternalEventForOneOnOneSport(event) ? event.individualsData.length === 2 : true ) &&
 		EventHelper.isGeneralMode(binding) &&
 		RoleHelper.isUserSchoolWorker(thiz);
 };
@@ -665,7 +681,11 @@ const TeamHelper = {
 	deleteIndividualPlayer:					deleteIndividualPlayer,
 	isOneOnOneSport:						isOneOnOneSport,
 	isNonTeamSport:							isNonTeamSport,
+	isInterSchoolsEventForNonTeamSport:		isInterSchoolsEventForNonTeamSport,
+	isHousesEventForNonTeamSport:			isHousesEventForNonTeamSport,
+	isInternalEventForOneOnOneSport:		isInternalEventForOneOnOneSport,
 	isInternalEventForIndividualSport:		isInternalEventForIndividualSport,
+	isInternalEventForTeamSport:			isInternalEventForTeamSport,
 	isInterSchoolsEventForIndividualSport:	isInterSchoolsEventForIndividualSport,
 	isInterSchoolsEventForOneOnOneSport:	isInterSchoolsEventForOneOnOneSport,
 	isTeamDataCorrect:						isTeamDataCorrect,

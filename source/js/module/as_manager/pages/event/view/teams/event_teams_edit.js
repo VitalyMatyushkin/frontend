@@ -31,7 +31,7 @@ const EventTeamsEdit = React.createClass({
 		let initialPlayers;
 		if(TeamHelper.isNonTeamSport(event)) {
 			// if individual sport - initialPlayers is array
-			initialPlayers = teamManagerBindings[0].teamStudents;
+			initialPlayers = teamManagerBindings[0].teamStudents.concat(teamManagerBindings[1].teamStudents);
 		} else {
 			initialPlayers = {};
 			// if individual sport - initialPlayers is has map
