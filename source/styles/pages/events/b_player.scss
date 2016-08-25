@@ -29,6 +29,9 @@
   font-size: 16px;
   align-self: center;
   padding: 5px 0 0;
+  min-width: 45px;
+  display: inline-block;
+  text-align: center;
 }
 ._bPlayer._mMini:hover .ePlayer_score{
   color: $COLOR;
@@ -128,16 +131,20 @@
 
 .ePlayer_minus,
 .ePlayer_plus {
-  margin: 0 5px;
   cursor: pointer;
+  display: inline-block;
   text-align: center;
   border: solid 1px #fff;
   border-radius: 50%;
+  padding: 1px 0 0;
   width: 16px;
   height: 16px;
   &:hover{
     border: solid 1px #c2c2c2;
   }
+}
+.ePlayer_plus {
+  margin-right: 10px;
 }
 ._bPlayer:hover .ePlayer_minus .bIcon,
 ._bPlayer:hover .ePlayer_plus .bIcon{
