@@ -146,7 +146,7 @@ const EventTeamsEdit = React.createClass({
 
 		const	gender	= TeamHelper.getFilterGender(event.gender),
 				ages	= event.ages,
-				houseId	= house._id;
+				houseId	= house.id;
 
 		const filter = TeamHelper.getTeamManagerSearchFilter(
 			school,
@@ -156,7 +156,7 @@ const EventTeamsEdit = React.createClass({
 		);
 
 		const	teamManagerBindings	= binding.toJS('teamManagerBindings'),
-				foundIndex			= teamManagerBindings.findIndex(tmb => tmb.teamId === house._id);
+				foundIndex			= teamManagerBindings.findIndex(tmb => tmb.teamId === house.id);
 
 		binding.set(`teamManagerBindings.${foundIndex}.filter`, Immutable.fromJS(filter));
 	},
@@ -196,9 +196,9 @@ const EventTeamsEdit = React.createClass({
 		if(eventType === 'houses' && TeamHelper.isNonTeamSport(event)) {
 			return event.housesData.map(house => {
 				return (
-					<button	key			= {house._id}
-							className	= {self.getTeamButtonsClassName(house._id)}
-							onClick		= {self.handleTeamClick.bind(self, house._id)}
+					<button	key			= {house.id}
+							className	= {self.getTeamButtonsClassName(house.id)}
+							onClick		= {self.handleTeamClick.bind(self, house.id)}
 					>
 						{house.name}
 					</button>
