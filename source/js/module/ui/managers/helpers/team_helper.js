@@ -464,7 +464,7 @@ function isShowCloseEventButton(thiz) {
 				self.isHouseHaveIndividualPlayers(event, event.housesData[1].id)
 				: true
 		) &&
-		( self.isInternalEventForTeamSport(event) ? event.teamsData.length < 2 : true ) &&
+		( self.isInternalEventForTeamSport(event) ? event.teamsData.length === 2 : true ) &&
 		( self.isInternalEventForOneOnOneSport(event) ? event.individualsData.length === 2 : true ) &&
 		EventHelper.isGeneralMode(binding) &&
 		RoleHelper.isUserSchoolWorker(thiz);
@@ -494,6 +494,11 @@ function isShowEditEventButton(thiz) {
 		) &&
 		(
 			self.isHousesEventForTeamSport(event) ?
+			event.teamsData.length > 0
+				: true
+		) &&
+		(
+			self.isInternalEventForTeamSport(event) ?
 			event.teamsData.length > 0
 				: true
 		) &&
