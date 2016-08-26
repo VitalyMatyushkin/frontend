@@ -21,14 +21,8 @@ const StudentHelper = {
 					firstName:  student.firstName,
 					lastName:   student.lastName
 				};
-				return window.Server.schoolForm.get({schoolId: student.schoolId, formId: student.formId});
-			})
-			.then(classData => {
-				studentData.classData = classData;
-				return window.Server.schoolHouse.get({schoolId: studentData.schoolId, houseId: studentData.houseId});
-			})
-			.then(houseData => {
-				studentData.houseData = houseData;
+				studentData.classData = student.form;
+				studentData.houseData = student.house;
 				return window.Server.school.get({schoolId: studentData.schoolId});
 			})
 			.then(schoolData => {
@@ -39,7 +33,7 @@ const StudentHelper = {
 			})
 			.then(parents => {
 				studentData.parents = parents;
-				return this._getWinStudentEvents(studentId, schoolId);
+				return this._getStudentEvents(studentId, schoolId);
 			})
 			.then(events => {
 				studentData.schoolEvent = this._getPlayedGames(events);
@@ -123,13 +117,15 @@ const StudentHelper = {
 
 		//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
 		return this._getStudentEvents(studentId, schoolId)
-			.then(events => Promise.all(events.map(event =>
-				window.Server.sport.get({sportId:event.sportId}).then(sport => {
-					event.sport = sport;
-
-					return event;
-				})
-			)))
+			.then(events => {
+				return window.Server.sports.get({filter:{limit:100}})
+					.then(sports => {
+						return events.map(event => {
+							event.sport = sports.find(sport => sport.id === event.sportId);
+							return event;
+						});
+					});
+			})
 			.then(events => {
 				return Promise.all(events.map(event => {
 					return Promise.all(event.teams.map(teamId => {
@@ -154,7 +150,14 @@ const StudentHelper = {
 		if(schoolId) {
 			return window.Server.schoolStudentEvents.get( {schoolId: schoolId, studentId: studentId} );
 		} else {
-			return window.Server.userChildEvents.get( {childId: studentId} );
+			return window.Server.userChildrenEvents.get({filter:{
+				where:{
+					childIdList: [studentId],
+					winnersChildIdList: [studentId],
+					scoredChildIdList: [studentId]
+				},
+				limit:1000
+			}});
 		}
 	},
 	_getParents: function(studentId, schoolId) {

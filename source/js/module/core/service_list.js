@@ -144,6 +144,7 @@ const serviceList = {
 
 		// children
 		serviceList.userChildren = new Service('/i/children', binding);
+		serviceList.userChildrenEvents = new Service('/i/children/events', binding);
 		serviceList.userChild = new Service('/i/children/{childId}', binding);
 		serviceList.userChildEvents = new Service('/i/children/{childId}/events', binding);
 		serviceList.parentsChild = new Service('/i/children/{childId}/parents', binding);
