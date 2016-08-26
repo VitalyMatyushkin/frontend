@@ -10,6 +10,7 @@
     width:        406px;
     height:       322px;
     border-left:  solid 1px #c2c2c2;
+    box-sizing: border-box;
   }
 
   &.mSkypeStyleView {
@@ -19,7 +20,7 @@
 }
 
 .eTeam_playerList {
-  height: 233px;
+  height: 285px;
 
   overflow-y: auto;
 }
@@ -53,12 +54,13 @@
   display: inline-block;
   vertical-align: top;
 
-  height: 23px;
-  padding-top: 12px;
+  height: 20px;
+  padding-top: 5px;
 
   text-align: center;
   font-weight: bold;
   font-size: 16px;
+  line-height: 20px;
 
   &.mName {
     width: 40%;
@@ -85,7 +87,6 @@
     width: 40%;
 
     &.mSelector {
-      padding-top: 9px;
     }
   }
 
