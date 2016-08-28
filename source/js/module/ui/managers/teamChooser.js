@@ -42,7 +42,7 @@ const	TeamChooser	= React.createClass({
 			}
 		};
 
-		if(model.type === "houses") {
+		if(TeamHelper.getEventType(model) === "houses") {
 			filter.filter.where.houseId = rival.id;
 		}
 

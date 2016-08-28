@@ -2,7 +2,6 @@ const   If              = require('module/ui/if/if'),
         Manager         = require('module/ui/managers/manager'),
         React           = require('react'),
         classNames      = require('classnames'),
-        TeamSubmitMixin = require('module/ui/managers/helpers/team_submit_mixin'),
         TeamHelper      = require('./../../../../ui/managers/helpers/team_helper'),
         Promise         = require('bluebird'),
         MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -10,7 +9,7 @@ const   If              = require('module/ui/if/if'),
         Immutable       = require('immutable');
 
 const InviteAcceptView = React.createClass({
-    mixins: [Morearty.Mixin, TeamSubmitMixin],
+    mixins: [Morearty.Mixin],
     // ID of current school
     // Will set on componentWillMount event
     activeSchoolId: undefined,
@@ -98,7 +97,12 @@ const InviteAcceptView = React.createClass({
 
         if(TeamHelper.isNonTeamSport(event)) {
             // add new individuals
-            Promise.all(self.addIndividualPlayersToEvent(event))
+            Promise
+                .all(TeamHelper.addIndividualPlayersToEvent(
+                    self.activeSchoolId,
+                    event,
+                    binding.toJS(`teamModeView.teamWrapper`
+                )))
                 // accept invite
                 .then(() => window.Server.acceptSchoolInvite.post({
                         schoolId: self.activeSchoolId,
@@ -112,9 +116,15 @@ const InviteAcceptView = React.createClass({
                 });
         } else {
             // create new team
-            Promise.all(self.createTeams())
+            Promise
+                .all(TeamHelper.createTeams(
+                    self.activeSchoolId,
+                    binding.toJS('model'),
+                    binding.toJS(`rivals`),
+                    binding.toJS(`teamModeView.teamWrapper`)
+                ))
                 // add it to event
-                .then(teams => Promise.all(self.addTeamsToEvent(event, teams)))
+                .then(teams => Promise.all(TeamHelper.addTeamsToEvent(self.activeSchoolId, event, teams)))
                 // accept invite
                 .then(() => window.Server.acceptSchoolInvite.post({
                         schoolId: self.activeSchoolId,

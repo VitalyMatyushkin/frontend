@@ -94,6 +94,7 @@ const serviceList = {
         serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
         serviceList.schoolEventActivate = new Service('/i/schools/{schoolId}/events/{eventId}/activate', binding);
         serviceList.schoolEventTeams = new Service('/i/schools/{schoolId}/events/{eventId}/teams', binding);
+        serviceList.schoolEventTeam = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}', binding);
 
 		// event individuals
 		serviceList.schoolEventIndividual = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/{individualId}', binding);
