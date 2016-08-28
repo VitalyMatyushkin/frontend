@@ -1,8 +1,10 @@
-const	classNames	= require('classnames'),
-		React		= require('react'),
-		Immutable	= require('immutable'),
-		Morearty    = require('morearty'),
-		SVG			= require('module/ui/svg');
+const	classNames		= require('classnames'),
+		React			= require('react'),
+		Immutable		= require('immutable'),
+		Morearty    	= require('morearty'),
+		DaysOfWeekBar	= require('./days_of_week_bar'),
+		MonthNavBar		= require('./month_nav_bar'),
+		SVG				= require('module/ui/svg');
 
 const CalendarMonthView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -192,29 +194,18 @@ const CalendarMonthView = React.createClass({
 
 		return <div key={now.getMilliseconds()+row} className="eMonth_row">{renderedDays}</div>;
 	},
-	_renderDaysOfWeek: function () {
-		const	daysOfWeek	= ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-
-		return (
-			<div className="eMonth_row mWeeks">{
-				daysOfWeek.map((name, n) => {
-					return <span key={n} className="eMonth_day mWeekName">{name}</span>;
-				})
-			}
-			</div>);
-	},
 	_renderNavBar: function () {
 		const	self				= this,
 				binding				= this.getDefaultBinding(),
-				currentMonthName	= binding.get('monthNames.' + binding.get('currentDate').getMonth());
+				currentMonthName	= binding.get('monthNames.' + binding.get('currentDate').getMonth()),
+				currentYearName		= binding.get('currentDate').getFullYear();
 
-			return (
-				<div className="eCalendar_navBar">
-					<span className="eCalendar_item" onClick={self._onClickPrevButton}><SVG icon="icon_chevron_left"/></span>
-					<span className="eCalendar_item mNameMonth">{currentMonthName} - {binding.get('currentDate').getFullYear()}</span>
-					<span className="eCalendar_item" onClick={self._onClickNextButton}><SVG icon="icon_chevron_right"/></span>
-				</div>
-			);
+		return <MonthNavBar
+			onPrevClick={self._onClickPrevButton}
+			onNextClick={self._onClickNextButton}
+			monthName={currentMonthName}
+			yearName={currentYearName}
+		/>;
 	},
 	render: function() {
 		const	self		= this,
@@ -223,7 +214,7 @@ const CalendarMonthView = React.createClass({
 
 		return <div className="eCalendar_eMonth">
 			{self._renderNavBar()}
-			{self._renderDaysOfWeek()}
+			<DaysOfWeekBar/>
 			{self._range(countRows).map(function(row) {
 				return self._renderRow(row, days.slice(row * 7, row * 7 + 7));
 			})}
