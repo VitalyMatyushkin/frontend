@@ -4,6 +4,7 @@ const	classNames		= require('classnames'),
 		Morearty    	= require('morearty'),
 		DaysOfWeekBar	= require('./days_of_week_bar'),
 		MonthNavBar		= require('./month_nav_bar'),
+		DayPanel		= require('./day_panel'),
 		SVG				= require('module/ui/svg');
 
 const CalendarMonthView = React.createClass({
@@ -169,27 +170,18 @@ const CalendarMonthView = React.createClass({
 				today			= new Date(now.getFullYear(), now.getMonth(), now.getDate()),
 				renderedDays	= days.map((day, i) => {
 					const	isActive	= day.events && day.events.count() > 0,
-							isSelect	= selectDay && self._equalDates(day.date, selectDay.date),
-							isToday		= self._equalDates(day.date, today),
-							classes	= classNames({
-								eMonth_day:	true,
-								mToday:		isToday,
-								mPrev:		day.prev || false,
-								mNext:		day.next || false,
-								mFirst:		i === 0,
-								mActive:	isSelect ? false : isActive,
-								mSelect:	isSelect
-							});
-
-					return (
-						<span
-							className={classes}
-							key={i}
-							onClick={self._onSelectDay.bind(null, day)}
-						>
-							{day.day}
-						</span>
-					);
+							isSelected	= selectDay && self._equalDates(day.date, selectDay.date),
+							isToday		= self._equalDates(day.date, today);
+					/* checking here for true equality because all that var can be undefined, null and all this shit.
+					   And I don't understand why
+					 */
+					return <DayPanel
+						key={day.date.getTime()}
+						isActive={isActive === true}
+						isSelected={isSelected === true}
+						isToday={isToday === true}
+						onClick={self._onSelectDay.bind(null, day)}
+						dayName={day.day}/>;
 				});
 
 		return <div key={now.getMilliseconds()+row} className="eMonth_row">{renderedDays}</div>;

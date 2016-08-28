@@ -20,11 +20,14 @@ function MonthNavBar(props) {
 	);
 }
 
-MonthNavBar.propType = {
+MonthNavBar.propTypes = {
 	onPrevClick:	React.PropTypes.func,					// to call on previous button click
 	onNextClick:	React.PropTypes.func,					// to call on next button click
 	monthName:		React.PropTypes.string.isRequired,		// name of current month
-	yearName:		React.PropTypes.string.isRequired 		// name of current year
+	yearName:		React.PropTypes.oneOfType([				// name of current year
+		React.PropTypes.string,
+		React.PropTypes.number
+	]).isRequired
 };
 
 module.exports = MonthNavBar;
