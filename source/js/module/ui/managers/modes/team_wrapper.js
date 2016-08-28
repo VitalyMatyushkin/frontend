@@ -37,6 +37,8 @@ const TeamWrapper = React.createClass({
 			self._initPlayerChooserBinding();
 			self._initCreationModeBinding();
 			self._fillPlugBinding();
+			self._setPlayers(self.getBinding().players.toJS());
+			binding.set('prevPlayers',		Immutable.fromJS(self.getBinding().players.toJS()));
 			binding.set('isSetTeamLater',	Immutable.fromJS(false));
 			binding.set('isInit',			Immutable.fromJS(true));
 		}
