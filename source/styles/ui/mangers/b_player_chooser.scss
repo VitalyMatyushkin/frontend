@@ -1,9 +1,13 @@
 .bPlayerChooser {
+  height: 322px;
   width: 290px;
 
   border: solid 1px #c2c2c2;
+  border-bottom: none;
 
   background-color: white;
+
+  box-sizing: border-box;
 }
 
 .ePlayerChooser_playerSearchBox {
