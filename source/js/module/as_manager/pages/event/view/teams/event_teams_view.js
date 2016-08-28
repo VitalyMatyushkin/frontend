@@ -3,6 +3,8 @@ const	If					= require('module/ui/if/if'),
 		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		userConst			= require('module/helpers/consts/user'),
+		eventConst			= require('module/helpers/consts/events'),
 		React				= require('react'),
 		Immutable			= require('immutable'),
 		Morearty			= require('morearty');
@@ -426,7 +428,7 @@ const EventTeamsView = React.createClass({
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					if(event.status === 'ACCEPTED' || event.status === 'FINISHED') {
+					if(event.status === eventConst.EVENT_STATUS.ACCEPTED || event.status === eventConst.EVENT_STATUS.FINISHED) {
 						const schoolId = event.inviterSchool.id !== activeSchoolId ?
 							event.inviterSchool.id :
 							event.invitedSchools[0].id;
@@ -516,7 +518,7 @@ const EventTeamsView = React.createClass({
 		const self = this;
 
 		return players.map((player, playerIndex) => {
-			const isMale = player.gender === 'male';
+			const isMale = player.gender === userConst.GENDER.MALE;
 
 			const mode = self.getBinding('mode').toJS();
 
@@ -531,7 +533,7 @@ const EventTeamsView = React.createClass({
 						<span>{player.firstName} </span>
 						<span>{player.lastName}</span>
 					</span>
-					<If condition={eventStatus === "FINISHED" || mode === 'closing'}>
+					<If condition={eventStatus === eventConst.EVENT_STATUS.FINISHED || mode === 'closing'}>
 						{self.renderPlayerPoints(player, mode, eventStatus, isOwner)}
 					</If>
 				</div>
