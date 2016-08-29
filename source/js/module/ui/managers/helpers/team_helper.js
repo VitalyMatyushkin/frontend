@@ -128,7 +128,7 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 	let promises = [];
 
 	promises = promises.concat(initialPlayers.map((initialPlayer) => {
-		let foundPlayer = Lazy(players).findWhere({id:initialPlayer.id});
+		let foundPlayer = players.find(p => p.id === initialPlayer.id);
 
 		if(foundPlayer) {
 			//Mmm, check for modifications
@@ -158,8 +158,9 @@ function commitPlayers(initialPlayers, players, teamId, schoolId) {
 		}
 	})).filter(p => p !== undefined);
 
-	// Check new players
-	//TODO need comment
+	// Add new player promises to promise array.
+	// A little trick:
+	// user without userId - is a new user.
 	promises = promises.concat(players.filter(p => !p.userId).map(player => addPlayer(schoolId, teamId, player)).filter(p => p !== undefined));
 
 	return promises;
@@ -360,6 +361,7 @@ function isInternalEventForTeamSport(event) {
 	}
 };
 
+
 function isInterSchoolsEventForTeamSport(event) {
 	if(typeof event !== 'undefined') {
 		const self = this;
@@ -425,10 +427,12 @@ function isOneOnOneSport(event) {
 };
 
 function isTeamDataCorrect(event, validationData) {
+	const	self	= this;
+
 	let isError = false;
 
 	// for inter-schools event we can edit only one team - our team:)
-	if(event.type === 'inter-schools' || EventHelper.isEventWithOneIndividualTeam(event)) {
+	if(self.getEventType(event) === 'inter-schools' || EventHelper.isEventWithOneIndividualTeam(event)) {
 		isError = validationData[0].isError;
 	} else {
 		isError = !(!validationData[0].isError && !validationData[1].isError);
@@ -479,29 +483,7 @@ function isShowEditEventButton(thiz) {
 	const	self	= this,
 			binding	= thiz.getDefaultBinding();
 
-	const event = binding.toJS('model');
-
 	return EventHelper.isNotFinishedEvent(binding) &&
-		(
-			self.isInterSchoolsEventForTeamSport(event) ?
-				event.teamsData.length > 0
-				: true
-		) &&
-		(
-			self.isInterSchoolsEventForTeamSport(event) && event.teamsData.length === 1 ?
-				event.teamsData[0].schoolId === MoreartyHelper.getActiveSchoolId(thiz)
-				: true
-		) &&
-		(
-			self.isHousesEventForTeamSport(event) ?
-			event.teamsData.length > 0
-				: true
-		) &&
-		(
-			self.isInternalEventForTeamSport(event) ?
-			event.teamsData.length > 0
-				: true
-		) &&
 		binding.get('mode') === 'general' &&
 		binding.get('activeTab') === 'teams' &&
 		RoleHelper.isUserSchoolWorker(thiz);
@@ -675,6 +657,142 @@ function getTeamBundles(event) {
 			};
 };
 
+/**
+ * Create teams for TeamManager.
+ * @returns {*}
+ */
+function createTeams(schoolId, event, rivals, teamWrappers) {
+	const self = this;
+
+	// For inter school event create team only for only one rival - active school
+	// There are two situations:
+	// 1) Create inter-schools event - create team only for inviter school
+	// 2) Acceptation event - create team for invited school
+	let _rivals;
+	if(
+		EventHelper.isInterSchoolsEvent(event)) {
+		_rivals = [ rivals.find(r => r.id === schoolId) ];
+	} else {
+		_rivals = rivals;
+	}
+
+	return _rivals
+		.filter((_, i) => {
+			const teamWrapper = teamWrappers[i];
+
+			return !teamWrapper.isSetTeamLater;
+		})
+		.map((rival, i) => self.createTeam(schoolId, event, rival, teamWrappers[i]));
+};
+
+function createTeam(schoolId, event, rival, teamWrapper) {
+	const self = this;
+
+	const teamBody = {};
+	switch (self.getTypeOfNewTeam(teamWrapper)) {
+		case "CLONE":
+			teamBody.name		= teamWrapper.teamName.name;
+			teamBody.players	= teamWrapper.___teamManagerBinding.teamStudents;
+
+			return self.createTeamByPrototype(
+				teamWrapper.selectedTeam,
+				teamBody
+			);
+		case "ADHOC":
+			teamBody.name			= teamWrapper.teamName.name;
+			teamBody.ages			= event.ages;
+			teamBody.gender			= TeamHelper.convertGenderToServerValue(event.gender);
+			teamBody.sportId		= event.sportId;
+			teamBody.schoolId		=schoolId;
+			teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
+			teamBody.teamType		= "ADHOC";
+			self.getEventType(event) === 'houses' && (teamBody.houseId = rival.id);
+
+			return self.createAdhocTeam(teamBody);
+	}
+};
+
+function getTypeOfNewTeam(teamWrapper) {
+	if(teamWrapper.selectedTeam) {
+		return "CLONE";
+	} else {
+		return "ADHOC";
+	}
+};
+
+function createTeamByPrototype(prototype, teamBody) {
+	return window.Server.cloneTeam.post(
+		{
+			schoolId:	prototype.schoolId,
+			teamId:		prototype.id
+		}
+		)
+		.then(team => {
+			return window.Server.team.put(
+				{
+					schoolId:	team.schoolId,
+					teamId:		team.id
+				}, {
+					name:		teamBody.name,
+					players:	TeamHelper.convertPlayersToServerValue(teamBody.players)
+				}
+			)
+		});
+};
+
+function createAdhocTeam(body) {
+	return window.Server.teamsBySchoolId.post(body.schoolId, body);
+};
+
+function deleteTeamFromEvent(schoolId, eventId, teamId) {
+	return window.Server.schoolEventTeam.delete({
+		schoolId:	schoolId,
+		eventId:		eventId,
+		teamId:		teamId
+	});
+};
+
+function addIndividualPlayersToEvent(schoolId, event, teamWrapper) {
+	const players = teamWrapper.reduce(
+		(players, teamWrapper) => players.concat(teamWrapper.___teamManagerBinding.teamStudents),
+		[]
+	);
+
+	return window.Server.schoolEventIndividualsBatch.post(
+		{
+			schoolId:	schoolId,
+			eventId:	event.id
+		},
+		{
+			individuals: players.map(p => {
+				return {
+					userId:			p.id,
+					permissionId:	p.permissionId
+				};
+			})
+		}
+	);
+};
+
+function addTeamsToEvent(schoolId, event, teams) {
+	return Promise.all(teams.map(t => window.Server.schoolEventTeams.post(
+		{
+			schoolId:	schoolId,
+			eventId:	event.id
+		}, {
+			teamId:		t.id
+		}
+	)));
+};
+
+function getEventType(event) {
+	if(event.type) {
+		return event.type;
+	} else {
+		return EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
+	}
+};
+
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -719,7 +837,16 @@ const TeamHelper = {
 	callFunctionForLeftContext:				callFunctionForLeftContext,
 	getCountPoints:							getCountPoints,
 	getSchoolsData:							getSchoolsData,
-	getTeamBundles:							getTeamBundles
+	getTeamBundles:							getTeamBundles,
+	createTeams:							createTeams,
+	getTypeOfNewTeam:						getTypeOfNewTeam,
+	createTeamByPrototype:					createTeamByPrototype,
+	createAdhocTeam:						createAdhocTeam,
+	createTeam:								createTeam,
+	deleteTeamFromEvent:					deleteTeamFromEvent,
+	addTeamsToEvent:						addTeamsToEvent,
+	addIndividualPlayersToEvent:			addIndividualPlayersToEvent,
+	getEventType:							getEventType
 };
 
 module.exports = TeamHelper;

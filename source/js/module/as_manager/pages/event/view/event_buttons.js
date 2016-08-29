@@ -247,10 +247,18 @@ const EventButtons = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return [
-			binding.toJS('eventTeams.editPlayers.validationData.0'),
-			binding.toJS('eventTeams.editPlayers.validationData.1')
-		];
+		const event = binding.toJS('model');
+
+		if(EventHelper.isInterSchoolsEvent(event)) {
+			return [
+				binding.toJS('teamManagerWrapper.default.error.0')
+			];
+		} else {
+			return [
+				binding.toJS('teamManagerWrapper.default.error.0'),
+				binding.toJS('teamManagerWrapper.default.error.1')
+			];
+		}
 	},
 	commitPlayers: function() {
 		const	self	= this,
@@ -258,11 +266,72 @@ const EventButtons = React.createClass({
 
 		const event = binding.toJS('model');
 
+		let promises = [];
+
 		if(TeamHelper.isNonTeamSport(event)) {
-			self.commitIndividualPlayerChanges();
+			promises = promises.concat(self.commitIndividualPlayerChanges());
 		} else {
-			self.commitTeamPlayerChanges();
+			if(self.isTeamChangedByOrder(0)) {
+				promises = promises.concat(self.changeTeamByOrder(0));
+			} else {
+				promises = promises.concat(self.commitTeamPlayerChangesByOrder(0));
+			}
+
+			if(!EventHelper.isInterSchoolsEvent(event)) {
+				if(self.isTeamChangedByOrder(1)) {
+					promises = promises.concat(self.changeTeamByOrder(1));
+				} else {
+					promises = promises.concat(self.commitTeamPlayerChangesByOrder(1));
+				}
+			}
 		}
+
+		return Promise
+			.all(promises)
+			.then(() => self.doAfterCommitActions());
+	},
+	changeTeamByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return TeamHelper.createTeam(
+			MoreartyHelper.getActiveSchoolId(self),
+			binding.toJS('model'),
+			binding.toJS(`teamManagerWrapper.default.rivals.${order}`),
+			binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`)
+		)
+		.then(team => TeamHelper.addTeamsToEvent(
+			MoreartyHelper.getActiveSchoolId(self),
+			binding.toJS('model'),
+			[team]
+		))
+		.then(() => {
+			const prevPlayerId = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
+
+			if(typeof prevPlayerId !== 'undefined') {
+				return TeamHelper.deleteTeamFromEvent(
+					MoreartyHelper.getActiveSchoolId(self),
+					binding.toJS('model').id,
+					prevPlayerId
+				);
+			} else {
+				return Promise.resolve(true);
+			}
+		})
+
+	},
+	isTeamChangedByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return (
+			// if selected team undefined then player create addHoc team
+			typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`) === 'undefined'||
+			(
+				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`) !==
+				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`)
+			)
+		);
 	},
 	commitIndividualPlayerChanges: function() {
 		const	self	= this,
@@ -273,44 +342,47 @@ const EventButtons = React.createClass({
 		const	schoolId		= MoreartyHelper.getActiveSchoolId(self),
 				eventId			= event.id,
 				players			= self.getCommitPlayersForIndividualEvent(event),
-				initialPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
+				initialPlayers	= self.getInitPlayersForIndividualEvent(event);
 
-		Promise.all(TeamHelper.commitIndividualPlayers(schoolId, eventId, initialPlayers, players)).then(() => self.doAfterCommitActions());
+		return Promise.all(TeamHelper.commitIndividualPlayers(schoolId, eventId, initialPlayers, players));
+	},
+	getInitPlayersForIndividualEvent: function(event) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
+			return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers');
+		} else {
+			return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers')
+				.concat(binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.prevPlayers'));
+		}
 	},
 	getCommitPlayersForIndividualEvent: function(event) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		if(TeamHelper.isInternalEventForIndividualSport(event)) {
-			return binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents');
+		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
+			return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents');
 		} else {
-			return binding.toJS('eventTeams.editPlayers.teamManagerBindings.0.teamStudents')
-				.concat(binding.toJS('eventTeams.editPlayers.teamManagerBindings.1.teamStudents'));
+			return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents')
+				.concat(binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents'));
 		}
 	},
-	commitTeamPlayerChanges: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	commitTeamPlayerChangesByOrder: function(order) {
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
 
-		const	teamPlayers			= self.getTeamsPlayersForCommit(binding.toJS('model')),
-				initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers'),
-				activeSchoolId		= MoreartyHelper.getActiveSchoolId(self);
+		const tw = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`);
 
-		let commitPlayersPromises = [];
-
-		Object.keys(teamPlayers).forEach(teamId => {
-			commitPlayersPromises = commitPlayersPromises.concat(
+		return Promise.all(
 				TeamHelper.commitPlayers(
-					initialTeamPlayers[teamId],
-					teamPlayers[teamId],
-					teamId,
+					tw.prevPlayers,
+					tw.___teamManagerBinding.teamStudents,
+					tw.selectedTeamId,
 					activeSchoolId
 				)
-			)
-		});
-
-		Promise.all(commitPlayersPromises)
-			.then(() => self.doAfterCommitActions());
+			);
 	},
 	doAfterCommitActions: function() {
 		const	self	= this,
@@ -320,35 +392,6 @@ const EventButtons = React.createClass({
 			.set('mode', 'general')
 			.set('eventTeams.isSync', Immutable.fromJS(false))
 			.commit();
-	},
-	/**
-	 * Return player changes for commit, hash map - key:teamId, value:players
-	 * @param event
-	 * @returns {*}
-	 */
-	getTeamsPlayersForCommit: function(event) {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
-
-		const teamManagerBindings = binding.toJS('eventTeams.editPlayers.teamManagerBindings');
-
-		const teamsForCommit = {};
-
-		if(EventHelper.isInterSchoolsEvent(event)) {
-			const	foundTeam				= event.teamsData.find(t => t.schoolId === activeSchoolId),
-					foundTeamManagerBinding	= teamManagerBindings.find(teamManagerBinding => teamManagerBinding.teamId === foundTeam.id);
-
-			teamsForCommit[foundTeamManagerBinding.teamId] = foundTeamManagerBinding.teamStudents;
-		} else {
-			teamManagerBindings.forEach(teamManagerBinding => {
-				if(teamManagerBinding.teamId) {
-					teamsForCommit[teamManagerBinding.teamId] = teamManagerBinding.teamStudents;
-				}
-			});
-		}
-
-		return teamsForCommit;
 	},
 	/**
 	 * Return reverted team manager binding

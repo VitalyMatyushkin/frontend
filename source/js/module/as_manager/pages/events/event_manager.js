@@ -5,7 +5,6 @@ const   CalendarView		= require('module/ui/calendar/calendar'),
 		Manager				= require('module/ui/managers/manager'),
 		classNames			= require('classnames'),
 		React				= require('react'),
-		TeamSubmitMixin		= require('module/ui/managers/helpers/team_submit_mixin'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
@@ -13,7 +12,7 @@ const   CalendarView		= require('module/ui/calendar/calendar'),
 		Immutable			= require('immutable');
 
 const EventManager = React.createClass({
-	mixins: [Morearty.Mixin, TeamSubmitMixin],
+	mixins: [Morearty.Mixin],
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -172,7 +171,8 @@ const EventManager = React.createClass({
 		}
 	},
 	submit: function(eventModel) {
-		const self = this;
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		let teams, savedEvent;
 
@@ -182,12 +182,22 @@ const EventManager = React.createClass({
 					.then(_event => {
 						savedEvent = _event;
 
-						return self.addIndividualPlayersToEvent(savedEvent);
+						return TeamHelper.addIndividualPlayersToEvent(
+							self.activeSchoolId,
+							savedEvent,
+							binding.toJS(`teamModeView.teamWrapper`)
+						);
 					})
 					.then(() => self.activateEvent(savedEvent))
 					.then(() => self._afterEventCreation(savedEvent));
 			case TeamHelper.isTeamSport(eventModel):
-				return Promise.all(self.createTeams())
+				return Promise
+					.all(TeamHelper.createTeams(
+						self.activeSchoolId,
+						binding.toJS('model'),
+						binding.toJS(`rivals`),
+						binding.toJS(`teamModeView.teamWrapper`)
+					))
 					.then(_teams => {
 						teams = _teams;
 
@@ -196,7 +206,7 @@ const EventManager = React.createClass({
 					.then(_event => {
 						savedEvent = _event;
 
-						return self.addTeamsToEvent(savedEvent, teams);
+						return TeamHelper.addTeamsToEvent(self.activeSchoolId, savedEvent, teams);
 					})
 					.then(() => self.activateEvent(savedEvent))
 					.then(() => self._afterEventCreation(savedEvent));

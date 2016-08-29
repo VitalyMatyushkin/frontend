@@ -3,6 +3,7 @@ const	React					= require('react'),
 		TeamPlayersValidator	= require('./helpers/team_players_validator'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		EventHelper				= require('./../../helpers/eventHelper'),
+		MoreartyHelper			= require('./../../helpers/morearty_helper'),
 		GameField				= require('./gameField'),
 		TeamModeView			= require('./modes/team_mode_view'),
 		Morearty            	= require('morearty'),
@@ -42,10 +43,7 @@ const Manager = React.createClass({
 			.set('teamModeView', Immutable.fromJS(
 				{
 					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
-					players: [
-						[],
-						[]
-					],
+					players: self.getInitPlayers(),
 					teamTable: [
 						{
 							selectedTeamId: undefined,
@@ -59,10 +57,11 @@ const Manager = React.createClass({
 					teamWrapper: [
 						{
 							filter: undefined,
-							selectedTeamId: undefined,
+							prevSelectedTeamId: self.getTeamIdByOrder(0),
+							selectedTeamId: self.getTeamIdByOrder(0),
 							teamsSaveMode: undefined,
 							teamName: {
-								name: undefined,
+								name: self.getTeamNameByOrder(0),
 								mode: 'show'
 							},
 							___teamManagerBinding: {
@@ -73,10 +72,11 @@ const Manager = React.createClass({
 						},
 						{
 							filter: undefined,
-							selectedTeamId: undefined,
+							prevSelectedTeamId: self.getTeamIdByOrder(1),
+							selectedTeamId: self.getTeamIdByOrder(1),
 							teamsSaveMode: undefined,
 							teamName: {
-								name: undefined,
+								name: self.getTeamNameByOrder(1),
 								mode: 'show'
 							},
 							___teamManagerBinding: {
@@ -89,6 +89,49 @@ const Manager = React.createClass({
 				}
 			))
 			.commit();
+	},
+	getInitPlayers: function() {
+		const self = this;
+
+		return [
+			self.getInitPlayersByOrder(0),
+			self.getInitPlayersByOrder(1)
+		];
+	},
+	getInitPlayersByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getBinding();
+
+		return (
+			typeof binding.rivals !== "undefined" &&
+			typeof binding.rivals.toJS()[order] !== "undefined" &&
+			typeof binding.rivals.toJS()[order].players !== "undefined" ?
+				binding.rivals.toJS()[order].players :
+				[]
+		);
+	},
+	getTeamNameByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getBinding();
+
+		return (
+			typeof binding.rivals !== "undefined" &&
+			typeof binding.rivals.toJS()[order] !== "undefined" &&
+			typeof binding.rivals.toJS()[order].team !== "undefined" ?
+				binding.rivals.toJS()[order].team.name :
+				undefined
+		);
+	},
+	getTeamIdByOrder: function(order) {
+		const	self	= this,
+			 binding	= self.getBinding();
+
+		return (
+			typeof binding.rivals !== "undefined" &&
+			typeof binding.rivals.toJS()[order].team !== "undefined" ?
+				binding.rivals.toJS()[order].team.id :
+				undefined
+		);
 	},
 	/**
 	 * Add listeners on binding
@@ -181,10 +224,10 @@ const Manager = React.createClass({
 	},
 	_initRivalIndex: function() {
 		const	self		= this,
-				eventType	= self.getDefaultBinding().toJS('model.type');
+				event	= self.getDefaultBinding().toJS('model');
 		let		currentRivalIndex;
 
-		if(eventType === 'inter-schools') {
+		if(TeamHelper.getEventType(event) === 'inter-schools') {
 			let	activeSchoolId	= self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				rivals			= self.getBinding().rivals.toJS();
 
@@ -217,7 +260,7 @@ const Manager = React.createClass({
 						eChooser_item: true,
 						mDisable: disable
 					}),
-					eventType	= self.getDefaultBinding().toJS('model.type');
+					eventType	= TeamHelper.getEventType(self.getDefaultBinding().toJS('model'))
 			let		text		= '';
 
 			switch (eventType) {
@@ -245,9 +288,11 @@ const Manager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
 		return (
-			rival.get('id') !== binding.get('schoolInfo.id') &&
-			binding.get('model.type') === 'inter-schools'
+			rival.get('id') !== activeSchoolId &&
+			TeamHelper.getEventType(self.getDefaultBinding().toJS('model')) === 'inter-schools'
 		);
 	},
 	_renderRivals: function() {
@@ -268,7 +313,7 @@ const Manager = React.createClass({
 
 		const event = self.getDefaultBinding().toJS('model');
 
-		return !self.props.isInviteMode && !(TeamHelper.isIndividualSport(event) && event.type !== 'houses');
+		return !self.props.isInviteMode && !(TeamHelper.isIndividualSport(event) && TeamHelper.getEventType(self.getDefaultBinding().toJS('model')) !== 'houses');
 	},
 	renderGameField: function() {
 		const	self			= this,
