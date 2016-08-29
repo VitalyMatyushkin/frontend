@@ -272,7 +272,7 @@ const EventTeamsView = React.createClass({
 				break;
 		}
 
-		return result > 0 ? result : value;
+		return result >= 0 ? result : value;
 	},
 	renderInternalEventForOneOnOneEvent: function(order) {
 		const self = this;
