@@ -35,7 +35,7 @@ const TeamModeView = React.createClass({
 				model	= self.getBinding('model').toJS(),
 				gender	= TeamHelper.getFilterGender(model.gender),
 				ages	= model.ages,
-				houseId	= model.type === 'houses' ? rival.id : undefined;
+				houseId	= TeamHelper.getEventType(model) === 'houses' ? rival.id : undefined;
 
 		binding.set(
 			`teamWrapper.${rivalIndex}.___teamManagerBinding.filter`,
