@@ -197,7 +197,7 @@ const ManagerWrapper = React.createClass({
 		if(EventHelper.isInterSchoolsEvent(binding.toJS('model'))) {
 			if(order === 0) {
 				const t = teams.find(t => t.schoolId === MoreartyHelper.getActiveSchoolId(self));
-				return typeof t === 'undefined' ? [] : t;
+				return typeof t === 'undefined' ? [] : t.players;
 			} else {
 				return [];
 			}
