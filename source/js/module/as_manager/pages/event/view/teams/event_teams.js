@@ -223,72 +223,82 @@ const EventTeams = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		Promise.all(event.teamsData.map(team => {
-				return self._getTeamPLayers(team)
-					// filter some players - not all players in event.teamsData available for edit
-					// players from another school not available for edit
-					.then(players => {
-						const result = {
-							teamId:			team.id,
-							viewPlayers:	players,
-							editPlayers:	[]
-						};
+		window.Server.schoolEvent.get(
+			{
+				schoolId:	self.activeSchoolId,
+				eventId:	event.id
+			}
+		).then(updEvent => {
+			self.getBinding('event').set(
+				'teamsData',
+				Immutable.fromJS(updEvent.teamsData)
+			);
 
-						if(EventHelper.isInterSchoolsEvent(event)) {
-							team.schoolId === self.activeSchoolId && (result.editPlayers = players);
-						} else {
-							result.editPlayers = players;
-						}
+			return Promise.all(updEvent.teamsData.map(team => {
+					return self._getTeamPLayers(team)
+						// filter some players - not all players in event.teamsData available for edit
+						// players from another school not available for edit
+						.then(players => {
+							const result = {
+								teamId:			team.id,
+								viewPlayers:	players,
+								editPlayers:	[]
+							};
 
-						return result;
-					});
-			}))
-			.then(teamPlayers => {
-				const event = self.getBinding('event').toJS();
+							if(EventHelper.isInterSchoolsEvent(updEvent)) {
+								team.schoolId === self.activeSchoolId && (result.editPlayers = players);
+							} else {
+								result.editPlayers = players;
+							}
 
-				binding
-					.atomically()
-					.set('viewPlayers.players',								Immutable.fromJS(
-						teamPlayers.map(tp => tp.viewPlayers)
-					))
-					// TEAM ID's
-					.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(
-						self.getTeamIdByOrder(teamPlayers, 0)
-					))
-					.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(
-						self.getTeamIdByOrder(teamPlayers, 1)
-					))
-					// TEAM STUDENTS
-					.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(
-						self.getTeamStudentsByOrder(teamPlayers, 0)
-					))
-					.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(
-						self.getTeamStudentsByOrder(teamPlayers, 1)
-					))
-					// BLACKLIST
-					.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(
-						self.getTeamStudentsByOrder(teamPlayers, 1)
-					))
-					.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(Immutable.fromJS(
-						self.getTeamStudentsByOrder(teamPlayers, 0)
-					))
-					// REMOVED PLAYERS
-					.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
-					.set("editPlayers.teamManagerBindings.1.removedPlayers",Immutable.fromJS([]))
-					// IS SYNC
-					.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
-					.set("editPlayers.teamManagerBindings.1.isSync",		Immutable.fromJS(false))
-					// POSITIONS
-					.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
-						self.getEventSportPositions(event))
-					))
-					.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
-						self.getEventSportPositions(event)
-					))
-					// GLOBAL SYNC
-					.set('isSync',											Immutable.fromJS(true))
-					.commit();
-			});
+							return result;
+						});
+				}))
+				.then(teamPlayers => {
+					binding
+						.atomically()
+						.set('viewPlayers.players',								Immutable.fromJS(
+							teamPlayers.map(tp => tp.viewPlayers)
+						))
+						// TEAM ID's
+						.set("editPlayers.teamManagerBindings.0.teamId",		Immutable.fromJS(
+							self.getTeamIdByOrder(teamPlayers, 0)
+						))
+						.set("editPlayers.teamManagerBindings.1.teamId",		Immutable.fromJS(
+							self.getTeamIdByOrder(teamPlayers, 1)
+						))
+						// TEAM STUDENTS
+						.set("editPlayers.teamManagerBindings.0.teamStudents",	Immutable.fromJS(
+							self.getTeamStudentsByOrder(teamPlayers, 0)
+						))
+						.set("editPlayers.teamManagerBindings.1.teamStudents",	Immutable.fromJS(
+							self.getTeamStudentsByOrder(teamPlayers, 1)
+						))
+						// BLACKLIST
+						.set("editPlayers.teamManagerBindings.0.blackList",		Immutable.fromJS(
+							self.getTeamStudentsByOrder(teamPlayers, 1)
+						))
+						.set("editPlayers.teamManagerBindings.1.blackList",		Immutable.fromJS(Immutable.fromJS(
+							self.getTeamStudentsByOrder(teamPlayers, 0)
+							))
+							// REMOVED PLAYERS
+							.set("editPlayers.teamManagerBindings.0.removedPlayers",Immutable.fromJS([]))
+							.set("editPlayers.teamManagerBindings.1.removedPlayers",Immutable.fromJS([]))
+							// IS SYNC
+							.set("editPlayers.teamManagerBindings.0.isSync",		Immutable.fromJS(false))
+							.set("editPlayers.teamManagerBindings.1.isSync",		Immutable.fromJS(false))
+							// POSITIONS
+							.set("editPlayers.teamManagerBindings.0.positions",		Immutable.fromJS(
+								self.getEventSportPositions(updEvent))
+							))
+						.set("editPlayers.teamManagerBindings.1.positions",		Immutable.fromJS(
+							self.getEventSportPositions(updEvent)
+						))
+						// GLOBAL SYNC
+						.set('isSync',											Immutable.fromJS(true))
+						.commit();
+				});
+		})
 	},
 	/**
 	 * Small helper function

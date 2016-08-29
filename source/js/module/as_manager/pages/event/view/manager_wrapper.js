@@ -73,7 +73,7 @@ const ManagerWrapper = React.createClass({
 				break;
 			case EventHelper.isHousesEvent(event):
 				rival = {
-					id:			event.housesData[order]._id,
+					id:			event.housesData[order].id,
 					name:		event.housesData[order].name
 				};
 				break;

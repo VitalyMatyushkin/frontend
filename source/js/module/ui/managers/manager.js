@@ -61,6 +61,7 @@ const Manager = React.createClass({
 							selectedTeamId: self.getTeamIdByOrder(0),
 							teamsSaveMode: undefined,
 							teamName: {
+								initName: self.getTeamNameByOrder(0),
 								name: self.getTeamNameByOrder(0),
 								mode: 'show'
 							},
@@ -76,6 +77,7 @@ const Manager = React.createClass({
 							selectedTeamId: self.getTeamIdByOrder(1),
 							teamsSaveMode: undefined,
 							teamName: {
+								initName: self.getTeamNameByOrder(1),
 								name: self.getTeamNameByOrder(1),
 								mode: 'show'
 							},

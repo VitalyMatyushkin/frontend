@@ -740,6 +740,13 @@ function createTeamByPrototype(prototype, teamBody) {
 		});
 };
 
+function updateTeam(schoolId, teamId, body) {
+	return window.Server.team.put({
+		schoolId: schoolId,
+		teamId: teamId
+	}, body);
+};
+
 function createAdhocTeam(body) {
 	return window.Server.teamsBySchoolId.post(body.schoolId, body);
 };
@@ -846,7 +853,8 @@ const TeamHelper = {
 	deleteTeamFromEvent:					deleteTeamFromEvent,
 	addTeamsToEvent:						addTeamsToEvent,
 	addIndividualPlayersToEvent:			addIndividualPlayersToEvent,
-	getEventType:							getEventType
+	getEventType:							getEventType,
+	updateTeam:								updateTeam
 };
 
 module.exports = TeamHelper;
