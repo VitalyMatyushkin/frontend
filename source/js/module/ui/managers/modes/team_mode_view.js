@@ -192,24 +192,39 @@ const TeamModeView = React.createClass({
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
 				selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
-				tableWrapperBinding	= {
-										default:			binding.sub(`teamWrapper.${selectedRivalIndex}`),
-										model:				self.getBinding().model,
-										rival:				self.getBinding().rivals.sub(selectedRivalIndex),
-										players:			binding.sub(`players.${selectedRivalIndex}`),
-										otherTeamPlayers:	binding.sub(`players.${self._getAnotherRivalIndex(selectedRivalIndex)}`)
-									};
+				tableWrapperBindings= [
+										{
+											default:			binding.sub(`teamWrapper.${0}`),
+											model:				self.getBinding().model,
+											rival:				self.getBinding().rivals.sub(0),
+											players:			binding.sub(`players.${0}`),
+											otherTeamPlayers:	binding.sub(`players.${self._getAnotherRivalIndex(0)}`)
+										},{
+											default:			binding.sub(`teamWrapper.${1}`),
+											model:				self.getBinding().model,
+											rival:				self.getBinding().rivals.sub(1),
+											players:			binding.sub(`players.${1}`),
+											otherTeamPlayers:	binding.sub(`players.${self._getAnotherRivalIndex(1)}`)
+										}];
 
-		//TODO delete IF
-		//TODO merge two team wrappers tp one team wrapper
+		const _classNames = [
+			classNames({
+				bWrapperTeamWrapper: true,
+				mDisable: selectedRivalIndex !== 0
+			}),
+			classNames({
+				bWrapperTeamWrapper: true,
+				mDisable: selectedRivalIndex !== 1
+			})
+		];
 		return (
 			<div>
-				<If condition={selectedRivalIndex == 0}>
-					<TeamWrapper binding={tableWrapperBinding}/>
-				</If>
-				<If condition={selectedRivalIndex == 1}>
-					<TeamWrapper binding={tableWrapperBinding}/>
-				</If>
+				<div className={_classNames[0]}>
+					<TeamWrapper binding={tableWrapperBindings[0]}/>
+				</div>
+				<div className={_classNames[1]}>
+					<TeamWrapper binding={tableWrapperBindings[1]}/>
+				</div>
 			</div>
 		);
 	},

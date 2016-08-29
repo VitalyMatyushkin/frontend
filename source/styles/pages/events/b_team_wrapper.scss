@@ -1,3 +1,9 @@
+.bWrapperTeamWrapper {
+  &.mDisable {
+    display: none;
+  }
+}
+
 .bTeamWrapper {
   min-height: 300px;
 }
