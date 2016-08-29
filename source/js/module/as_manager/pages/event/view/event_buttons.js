@@ -238,7 +238,9 @@ const EventButtons = React.createClass({
 				const event = binding.toJS('model');
 
 				if(TeamHelper.isTeamDataCorrect(event, self.getValidationData())) {
-					self.changeTeamNames().then(() => self.commitPlayers());
+					self.changeTeamNames()
+						.then(() => self.commitPlayers())
+						.then(() => self.doAfterCommitActions());
 				}
 				break;
 		}
@@ -328,9 +330,7 @@ const EventButtons = React.createClass({
 			}
 		}
 
-		return Promise
-			.all(promises)
-			.then(() => self.doAfterCommitActions());
+		return Promise.all(promises);
 	},
 	isSetTeamLaterByOrder: function(order) {
 		const	self	= this,

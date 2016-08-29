@@ -17,7 +17,7 @@ const EventRival = React.createClass({
 
 		const	event		= binding.toJS('model'),
 				eventType	= event.eventType,
-				teamsData	= binding.toJS('teamsData');
+				teamsData	= event.teamsData;
 
 		let team, pic;
 
@@ -52,8 +52,7 @@ const EventRival = React.createClass({
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				event		= binding.toJS('model'),
-				eventType	= event.eventType,
-				participant	= binding.sub(['teamsData', order]);
+				eventType	= event.eventType;
 		let		name		= null;
 
 		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
@@ -77,11 +76,11 @@ const EventRival = React.createClass({
 				if(TeamHelper.isNonTeamSport(event)) {
 					name = event.housesData[order].name;
 				} else {
-					name = participant.toJS('house.name') ? participant.toJS('house.name') : event.housesData[order].name;
+					name = event.housesData[order].name ;
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				name = participant.get('name');
+				name = event.teamsData[order] ? event.teamsData[order].name : null;
 				break;
 		}
 
