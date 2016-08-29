@@ -210,11 +210,11 @@ const TeamModeView = React.createClass({
 		const _classNames = [
 			classNames({
 				bWrapperTeamWrapper: true,
-				mDisable: selectedRivalIndex !== 0
+				mDisable: parseInt(selectedRivalIndex, 10) !== 0
 			}),
 			classNames({
 				bWrapperTeamWrapper: true,
-				mDisable: selectedRivalIndex !== 1
+				mDisable: parseInt(selectedRivalIndex, 10) !== 1
 			})
 		];
 		return (
