@@ -31,12 +31,10 @@ const TeamManager = React.createClass({
 
 		self.searchAndSetStudents('', binding);
 		self.initTeamValues();
-		self.clearTeamValues();
 
 		binding.sub('filter').addListener(() => {
-			self.searchAndSetStudents('', binding);
+			!!binding.toJS('isSync') && self.searchAndSetStudents('', binding);
 		});
-
 		binding.sub('isSync').addListener((descriptor) => {
 			if(!descriptor.getCurrentValue()) {
 				self.clearTeamValues();
@@ -54,6 +52,9 @@ const TeamManager = React.createClass({
 			.set("isSync",				Immutable.fromJS(true))
 			.commit()
 	},
+	/**
+	 * Init some team stuff
+	 */
 	initTeamValues: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -104,7 +105,8 @@ const TeamManager = React.createClass({
 						formId: {
 							$in: filter.forms.map(form => form.id)
 						}
-					}
+					},
+					limit: 50
 				}
 			};
 
