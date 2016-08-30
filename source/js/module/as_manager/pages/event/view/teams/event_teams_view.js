@@ -457,7 +457,7 @@ const EventTeamsView = React.createClass({
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData.length === 0
 			) {
-				if(event.status === EventHelper.ACCEPTED) {
+				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
 					return self.renderOpponentSelectTeamLater();
 				} else {
 					return self.renderAwaitingOpponentTeam();
