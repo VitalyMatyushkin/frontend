@@ -7,6 +7,7 @@ const	React			= require('react'),
 
 const TeamManager = React.createClass({
 	mixins: [Morearty.Mixin],
+	listeners: [],
 	propTypes: {
 		isNonTeamSport: React.PropTypes.bool
 	},
@@ -32,14 +33,20 @@ const TeamManager = React.createClass({
 		self.searchAndSetStudents('', binding);
 		self.initTeamValues();
 
-		binding.sub('filter').addListener(() => {
-			!!binding.toJS('isSync') && self.searchAndSetStudents('', binding);
-		});
-		binding.sub('isSync').addListener((descriptor) => {
+		self.listeners.push(binding.sub('filter').addListener(() => {
+			self.searchAndSetStudents('', binding);
+		}));
+		self.listeners.push(binding.sub('isSync').addListener((descriptor) => {
 			if(!descriptor.getCurrentValue()) {
 				self.clearTeamValues();
 			}
-		});
+		}));
+	},
+	componentWillUnmount: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		self.listeners.forEach(l => binding.removeListener(l));
 	},
 	clearTeamValues: function() {
 		const	self	= this,
