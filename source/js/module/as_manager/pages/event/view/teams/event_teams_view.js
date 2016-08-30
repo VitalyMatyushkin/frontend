@@ -345,6 +345,18 @@ const EventTeamsView = React.createClass({
 				(
 					teamsData.length >= 1
 				) &&
+				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
+			) {
+				const t = teamsData.find(t => t.houseId === event.housesData[0].id);
+				if(typeof t !== 'undefined') {
+					return self.renderTeamPlayersByOrder(0);
+				} else {
+					return self.renderSelectTeamLater();
+				}
+			} else if (
+				(
+					teamsData.length >= 1
+				) &&
 				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
 				return self.renderTeamPlayersByOrder(0);
@@ -481,11 +493,6 @@ const EventTeamsView = React.createClass({
 			) {
 				return self.renderTeamPlayersByOrder(1);
 			} else if (
-				teamsData.length > 1 &&
-				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-			) {
-				return self.renderTeamPlayersByOrder(1);
-			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
@@ -495,11 +502,23 @@ const EventTeamsView = React.createClass({
 					return self.renderAwaitingOpponentTeam();
 				}
 			} else if (
-				(
-					teamsData.length === 0 ||
-					teamsData.length === 1
-				) &&
+				teamsData.length > 1 &&
 				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+			) {
+				return self.renderTeamPlayersByOrder(1);
+			} else if (
+				teamsData.length <= 1 &&
+				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
+			) {
+				const t = teamsData.find(t => t.houseId === event.housesData[1].id);
+				if(typeof t !== 'undefined') {
+					return self.renderTeamPlayersByOrder(0);
+				} else {
+					return self.renderSelectTeamLater();
+				}
+			} else if (
+				teamsData.length <= 1 &&
+				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']
 			) {
 				return self.renderSelectTeamLater();
 			}
