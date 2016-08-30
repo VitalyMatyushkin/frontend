@@ -33,7 +33,7 @@ const StudentHelper = {
 			})
 			.then(parents => {
 				studentData.parents = parents;
-				return this._getStudentEvents(studentId, schoolId);
+				return this._getWinStudentEvents(studentId, schoolId);
 			})
 			.then(events => {
 				studentData.schoolEvent = this._getPlayedGames(events);
@@ -114,30 +114,45 @@ const StudentHelper = {
 			});
 	},
 	_getWinStudentEvents: function(studentId, schoolId) {
-
-		//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
-		return this._getStudentEvents(studentId, schoolId)
-			.then(events => {
-				return window.Server.sports.get({filter:{limit:100}})
-					.then(sports => {
-						return events.map(event => {
-							event.sport = sports.find(sport => sport.id === event.sportId);
-							return event;
+		if(schoolId){
+			//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
+			return this._getStudentEvents(studentId, schoolId)
+				.then(events => {
+					return window.Server.sports.get({filter:{limit:100}})
+						.then(sports => {
+							return events.map(event => {
+								event.sport = sports.find(sport => sport.id === event.sportId);
+								return event;
+							});
 						});
+				})
+				.then(events => {
+					return Promise.all(events.map(event => {
+						return Promise.all(event.teams.map(teamId => {
+								return this._getTeam(event.inviterSchoolId, event.id, teamId);
+							}))
+							.then(teams => {
+								event.participants = teams;
+
+								return event;
+							});
+					}))
+				})
+		} else {
+			return this._getChildEvents(studentId)
+				.then(events =>{
+					return events.map(event => {
+						event.participants = event.teamsData.map(team => {
+							team.school = team.schoolId === event.inviterSchoolId ? event.inviterSchool :
+											event.invitedSchools.find(school => school.id === team.schoolId);
+							return team;
+						});
+
+						return event;
 					});
-			})
-			.then(events => {
-				return Promise.all(events.map(event => {
-					return Promise.all(event.teams.map(teamId => {
-							return this._getTeam(event.inviterSchoolId, event.id, teamId);
-						}))
-						.then(teams => {
-							event.participants = teams;
 
-							return event;
-						});
-				}))
-			})
+				})
+		}
 	},
 	_getStudent: function(studentId, schoolId) {
 		if(schoolId) {
@@ -147,18 +162,17 @@ const StudentHelper = {
 		}
 	},
 	_getStudentEvents: function(studentId, schoolId) {
-		if(schoolId) {
-			return window.Server.schoolStudentEvents.get( {schoolId: schoolId, studentId: studentId} );
-		} else {
-			return window.Server.userChildrenEvents.get({filter:{
-				where:{
-					childIdList: [studentId],
-					winnersChildIdList: [studentId],
-					scoredChildIdList: [studentId]
-				},
-				limit:1000
-			}});
-		}
+		return window.Server.schoolStudentEvents.get( {schoolId: schoolId, studentId: studentId} );
+	},
+	_getChildEvents: function(studentId) {
+		return window.Server.userChildrenEvents.get({filter:{
+			where:{
+				childIdList: [studentId],
+				winnersChildIdList: [studentId],
+				scoredChildIdList: [studentId]
+			},
+			limit:1000
+		}});
 	},
 	_getParents: function(studentId, schoolId) {
 		if(schoolId) {
