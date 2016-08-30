@@ -17,45 +17,42 @@ const EventRival = React.createClass({
 
 		const	event		= binding.toJS('model'),
 				eventType	= event.eventType,
-				participant	= binding.sub(['teamsData', order]);
-		let		pic = null;
+				teamsData	= event.teamsData;
+
+		let team, pic;
 
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				if(order === 0) {
-					pic = binding.get('model.inviterSchool.pic');
-				} else if(order === 1) {
-					pic = binding.get('model.invitedSchools.0.pic');
-				}
-				break;
+				let school = order === 0 ? binding.toJS('model.inviterSchool') : binding.toJS('model.invitedSchools.0');
+
+				pic = school.pic;
+				team = teamsData.find(t => t.schoolId === school.id);
+			break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if(TeamHelper.isNonTeamSport(event)) {
-					pic = event.housesData[order].pic;
-				} else {
-					pic = participant.get('house.pic') ? participant.get('house.pic') : event.housesData[order].pic;
-				}
-				break;
+				pic = event.housesData[order].pic;
+				team = teamsData.find(t => t.houseId === event.housesData[order].id);
+			break;
 		};
 
-		return (
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['internal'] ?
-				pic !== undefined ?
-					<img className="eEventRivals_pic"
-						 src={pic}
-						 alt={participant.get('name')}
-						 title={participant.get('name')}
-						/>
-					:
-					<div className="eEventRivals_text">{participant.get('name')}</div>
-				: null
-		);
+		if(typeof pic !== 'undefined') {
+			return (
+				<img	className="eEventRivals_pic"
+						src={pic}
+				/>
+			);
+		} else if(typeof team !== 'undefined') {
+			return (
+				<div className="eEventRivals_text">{team.name}</div>
+			);
+		} else {
+			return null;
+		}
 	},
 	getName: function (order) {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				event		= binding.toJS('model'),
-				eventType	= event.eventType,
-				participant	= binding.sub(['teamsData', order]);
+				eventType	= event.eventType;
 		let		name		= null;
 
 		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
@@ -79,11 +76,11 @@ const EventRival = React.createClass({
 				if(TeamHelper.isNonTeamSport(event)) {
 					name = event.housesData[order].name;
 				} else {
-					name = participant.toJS('house.name') ? participant.toJS('house.name') : event.housesData[order].name;
+					name = event.housesData[order].name ;
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				name = participant.get('name');
+				name = event.teamsData[order] ? event.teamsData[order].name : null;
 				break;
 		}
 

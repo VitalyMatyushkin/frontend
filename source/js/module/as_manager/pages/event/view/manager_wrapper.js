@@ -73,7 +73,7 @@ const ManagerWrapper = React.createClass({
 				break;
 			case EventHelper.isHousesEvent(event):
 				rival = {
-					id:			event.housesData[order]._id,
+					id:			event.housesData[order].id,
 					name:		event.housesData[order].name
 				};
 				break;
@@ -197,7 +197,7 @@ const ManagerWrapper = React.createClass({
 		if(EventHelper.isInterSchoolsEvent(binding.toJS('model'))) {
 			if(order === 0) {
 				const t = teams.find(t => t.schoolId === MoreartyHelper.getActiveSchoolId(self));
-				return typeof t === 'undefined' ? [] : t;
+				return typeof t === 'undefined' ? [] : t.players;
 			} else {
 				return [];
 			}
