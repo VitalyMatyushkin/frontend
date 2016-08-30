@@ -22,7 +22,7 @@ AchievementModel.prototype._calculate = function(events){
         self.gamesPlayed = events.length;
         events.forEach(event => {
             let winnerId = EventHelper.getWinnerId(event.result),
-                winner = event.participants.find(team => team.id === winnerId);
+                winner = event.teamsData.find(team => team.id === winnerId);
 
             // In the event of a dead heat, winner is undefined
             if(winner) {

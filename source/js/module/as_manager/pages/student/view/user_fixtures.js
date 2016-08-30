@@ -4,6 +4,8 @@
 
 const   React           = require('react'),
         EventHelper     = require('module/helpers/eventHelper'),
+		TeamHelper 		= require('module/ui/managers/helpers/team_helper'),
+		classNames 		= require('classnames'),
         Morearty        = require('morearty'),
         Immutable       = require('immutable');
 
@@ -54,9 +56,13 @@ const UserFixtures = React.createClass({
         }).count();
     },
     getEvents: function (date,theData) {
-        var self = this,
-            binding = this.getDefaultBinding(),
-            eventsByDate;
+		const   self 		= this,
+				binding 	= self.getDefaultBinding(),
+				rootBinding = self.getMoreartyContext().getBinding();
+
+		const activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+
+        let eventsByDate;
         if(theData && theData.schoolEvent) {
             eventsByDate = theData.schoolEvent.filter(function (event) {
                 return self.sameDay(
@@ -80,6 +86,8 @@ const UserFixtures = React.createClass({
                 }else{
                     comment = "There are no comments on this fixture";
                 }
+				firstName = TeamHelper.getRivalNameForLeftContext(event, activeSchoolId).value;
+				secondName = TeamHelper.getRivalNameForRightContext(event, activeSchoolId).value;
                 //if (type === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
                 //    firstName = event.participants[0].school.name;
                 //    secondName = event.participants[1].school.name;
@@ -104,8 +112,7 @@ const UserFixtures = React.createClass({
                         <div className="eChallenge_rivalName">
                             {firstName}
                         </div>
-                        <div
-                            className={'eChallenge_results' + (event.status === EventHelper.EVENT_STATUS.FINISHED ? ' mDone' : '') }
+                        <div className={'eChallenge_results' + (event.status === EventHelper.EVENT_STATUS.FINISHED ? ' mDone' : '') }
                         >
                             {event.status === EventHelper.EVENT_STATUS.FINISHED ? [firstPoint, secondPoint].join(':') : '- : -'}
                         </div>

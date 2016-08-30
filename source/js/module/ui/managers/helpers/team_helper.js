@@ -501,17 +501,99 @@ function isHouseHaveIndividualPlayers(event, houseId) {
 	return event.individualsData.filter(i => i.houseId === houseId).length > 0;
 };
 
-function getRivalNameForLeftContext(event, activeSchoolId, childrenIds){
+function getRivalName(event, activeSchoolId, forLeftContext){
 	const self = this;
 
-	const	eventType	= event.eventType,
-		teamBundles	= self.getTeamBundles(event),
-		schoolsData	= teamBundles.schoolsData,
-		housesData	= teamBundles.housesData,
-		teamsData	= teamBundles.teamsData;
+	const	teamBundles		= self.getTeamBundles(event),
+			schoolsData		= teamBundles.schoolsData,
+			housesData		= teamBundles.housesData,
+			teamsData		= teamBundles.teamsData,
+			individData 	= event.individualsData,
+			isTeam 			= self.isTeamSport(event),
+			isOneOnOne 		= self.isOneOnOneSport(event),
+			isIndividual 	= self.isIndividualSport(event),
+			index 			= forLeftContext ? 0 : 1,
+			isInterSchoolsEvent = EventHelper.isInterSchoolsEvent(event),
+			isHousesEvent 		= EventHelper.isHousesEvent(event),
+			isInternalEvent 	= EventHelper.isInternalEvent(event);
 
-};
+	let name = '',
+		from = '',
+		team, student;
 
+	/**get rival name (team or student)*/
+	switch(true){
+		case isTeam:
+			if(activeSchoolId){
+				team = forLeftContext ? teamsData.find(t => t.schoolId === activeSchoolId)
+					: teamsData.find(t => t.schoolId !== activeSchoolId);
+			} else{
+				team = index < teamsData.length ? teamsData[index] : null;
+			}
+			name = team ? team.name : '';
+			break;
+		case isOneOnOne:
+			if(activeSchoolId){
+				student = forLeftContext ? individData.find(t => t.schoolId === activeSchoolId)
+					: individData.find(t => t.schoolId !== activeSchoolId);
+			} else{
+				student = index < individData.length ? individData[index] : null;
+			}
+			name = student ? student.firstName + ' ' + student.lastName : '';
+			break;
+		case isIndividual:
+			/**not set name for individual sport type*/
+			break;
+	}
+
+	/**get rival 'from' (school or house)*/
+	switch (true){
+		case isInterSchoolsEvent:
+			let school;
+			if(activeSchoolId){
+				school = forLeftContext ? schoolsData.find(s => s.id === activeSchoolId)
+					: schoolsData.find(s => s.id !== activeSchoolId);
+			} else{
+				school = index < schoolsData.length ? schoolsData[index] : null;
+			}
+			from = school ? school.name : '';
+			break;
+		case isHousesEvent:
+			let house, houseId;
+			switch(true){
+				case isTeam:
+					houseId = team && team.houseId;
+					if(!houseId){
+						houseId = teamsData.length > 0 ? event.houses.find(id => id !== teamsData[0].houseId) : null;
+					}
+					break;
+				case isOneOnOne:
+					houseId = student && student.houseId;
+					if(!houseId){
+						houseId = individData.length > 0 ? event.houses.find(id => id !== individData[0].houseId) : null;
+					}
+					break;
+			}
+			house = houseId ? housesData.find(h => h.id === houseId) : housesData[index];
+			from = house ? house.name : '';
+			break;
+		case isInternalEvent:
+			from = name ? '' : isIndividual ? 'individual': 'n/a';
+			break;
+	}
+
+	return {
+		name:name,
+		from:from,
+		value: !name ? from : forLeftContext ? name : `${name} [${from}]`
+	};
+}
+function getRivalNameForLeftContext(event, activeSchoolId){
+	return this.getRivalName(event, activeSchoolId, true);
+}
+function getRivalNameForRightContext(event, activeSchoolId){
+	return this.getRivalName(event, activeSchoolId, false);
+}
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
@@ -869,6 +951,9 @@ const TeamHelper = {
 	addTeamsToEvent:						addTeamsToEvent,
 	addIndividualPlayersToEvent:			addIndividualPlayersToEvent,
 	getEventType:							getEventType,
+	getRivalName:							getRivalName,
+	getRivalNameForLeftContext:				getRivalNameForLeftContext,
+	getRivalNameForRightContext:			getRivalNameForRightContext,
 	updateTeam:								updateTeam
 };
 

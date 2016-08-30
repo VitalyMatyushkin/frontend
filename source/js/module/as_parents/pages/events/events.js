@@ -142,7 +142,7 @@ const EventView = React.createClass({
 				self.loading = true;
 				window.Server.userChildEvents.get({childId:child.id}, { filter: self.filter })
 					.then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
-					.then(events => self._includeTeamsToEvents(events, child.schoolId))
+					//.then(events => self._includeTeamsToEvents(events, child.schoolId))
 					.then(events => self.processRequestData(events, child.id))
 					.then(_ => {self.loading = false})
 			});
@@ -224,7 +224,6 @@ const EventView = React.createClass({
 			reqData.forEach(function(el){
 				if(el !== undefined){
 					el.childId = childId;
-					el.sport = sports.find(s => s.id === el.sportId);
 					self.eventModel.push(el);
 				}
 			});
