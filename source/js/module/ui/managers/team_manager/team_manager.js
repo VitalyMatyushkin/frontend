@@ -11,6 +11,7 @@ const TeamManager = React.createClass({
 	propTypes: {
 		isNonTeamSport: React.PropTypes.bool
 	},
+	currentSearchText: '',
 	getDefaultProps: function() {
 		return {
 			isNonTeamSport: false
@@ -34,7 +35,10 @@ const TeamManager = React.createClass({
 		self.initTeamValues();
 
 		self.listeners.push(binding.sub('filter').addListener(() => {
-			self.searchAndSetStudents('', binding);
+			self.searchAndSetStudents(self.currentSearchText, binding);
+		}));
+		self.listeners.push(binding.sub('blackList').addListener(() => {
+			self.searchAndSetStudents(self.currentSearchText, binding);
 		}));
 		self.listeners.push(binding.sub('isSync').addListener((descriptor) => {
 			if(!descriptor.getCurrentValue()) {
@@ -156,6 +160,8 @@ const TeamManager = React.createClass({
 	handleChangeSearchText: function(text) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
+
+		self.currentSearchText = text;
 
 		self.searchAndSetStudents(text, binding);
 	},
