@@ -94,7 +94,7 @@ const EventView = React.createClass({
 
         window.Server.events.get(self.activeSchoolId, {
             filter: {
-                limit: 100,
+                limit: 1000,
                 where: {
                     startTime: {
                         '$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
