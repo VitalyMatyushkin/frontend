@@ -4,8 +4,7 @@
 
 const   React           = require('react'),
         EventHelper     = require('module/helpers/eventHelper'),
-		TeamHelper 		= require('module/ui/managers/helpers/team_helper'),
-		classNames 		= require('classnames'),
+		GameType 		= require('module/ui/challenges/event-game-type'),
         Morearty        = require('morearty'),
         Immutable       = require('immutable');
 
@@ -86,8 +85,6 @@ const UserFixtures = React.createClass({
                 }else{
                     comment = "There are no comments on this fixture";
                 }
-				firstName = TeamHelper.getRivalNameForLeftContext(event, activeSchoolId).value;
-				secondName = TeamHelper.getRivalNameForRightContext(event, activeSchoolId).value;
                 //if (type === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
                 //    firstName = event.participants[0].school.name;
                 //    secondName = event.participants[1].school.name;
@@ -108,18 +105,7 @@ const UserFixtures = React.createClass({
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                    <div className="eChallenge_in">
-                        <div className="eChallenge_rivalName">
-                            {firstName}
-                        </div>
-                        <div className={'eChallenge_results' + (event.status === EventHelper.EVENT_STATUS.FINISHED ? ' mDone' : '') }
-                        >
-                            {event.status === EventHelper.EVENT_STATUS.FINISHED ? [firstPoint, secondPoint].join(':') : '- : -'}
-                        </div>
-                        <div className="eChallenge_rivalName">
-                            {secondName}
-                        </div>
-                    </div>
+                    <GameType event={event} activeSchoolId={activeSchoolId} />
                     <div className="eChallenge_type">
                         {EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}
                     </div>
