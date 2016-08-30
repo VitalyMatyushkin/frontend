@@ -501,6 +501,17 @@ function isHouseHaveIndividualPlayers(event, houseId) {
 	return event.individualsData.filter(i => i.houseId === houseId).length > 0;
 };
 
+function getRivalNameForLeftContext(event, activeSchoolId, childrenIds){
+	const self = this;
+
+	const	eventType	= event.eventType,
+		teamBundles	= self.getTeamBundles(event),
+		schoolsData	= teamBundles.schoolsData,
+		housesData	= teamBundles.housesData,
+		teamsData	= teamBundles.teamsData;
+
+};
+
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
