@@ -23,7 +23,19 @@ const EventRival = React.createClass({
 
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				let school = order === 0 ? binding.toJS('model.inviterSchool') : binding.toJS('model.invitedSchools.0');
+				let school;
+				switch (order) {
+					case 0:
+						school = binding.toJS('model.inviterSchool.id') === MoreartyHelper.getActiveSchoolId(self) ?
+							binding.toJS('model.inviterSchool') :
+							binding.toJS('model.invitedSchools.0');
+						break;
+					case 1:
+						school = binding.toJS('model.inviterSchool.id') !== MoreartyHelper.getActiveSchoolId(self) ?
+							binding.toJS('model.inviterSchool') :
+							binding.toJS('model.invitedSchools.0');
+						break;
+				}
 
 				pic = school.pic;
 				team = teamsData.find(t => t.schoolId === school.id);
