@@ -36,7 +36,11 @@ function getAges(schoolData) {
 function validate(binding) {
 	const sport = binding.toJS('teamForm.sportModel');
 
-	if(sport) {
+	if(
+		typeof sport !== 'undefined' &&
+		typeof sport.defaultLimits !== 'undefined'
+	) {
+
 		const limits = {
 			maxPlayers: sport.defaultLimits.maxPlayers,
 			minPlayers: sport.defaultLimits.minPlayers,
