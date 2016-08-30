@@ -162,7 +162,7 @@ const EventRival = React.createClass({
 
 		const	event				= binding.toJS('model'),
 				pointsStep			= event.sport.points.pointsStep,
-				teamId				= binding.toJS(`teamsData.${order}.id`),
+				teamId				= binding.toJS(`model.teamsData.${order}.id`),
 				teamScoreDataIndex	= event.results.teamScore.findIndex(t => t.teamId === teamId);
 
 		switch (operation) {
@@ -269,7 +269,7 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				teamsData		= binding.toJS('teamsData'),
+				teamsData		= binding.toJS('model.teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
@@ -303,7 +303,7 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-				teamsData		= binding.toJS('teamsData'),
+				teamsData		= binding.toJS('model.teamsData'),
 				activeSchoolId	= self.getActiveSchoolId();
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
