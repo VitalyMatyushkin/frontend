@@ -32,15 +32,15 @@ const MonthDaysPanel = React.createClass({
 
 		const firstMonthDay = firstMonthDayDate.getDay();								// 0 for Sunday, 1 for Monday...
 		if(firstMonthDay !== 1) {															// if first month day is not Monday(1) - adding some days from previous month
-			const 	daysToAdd 				= firstMonthDay === 0 ? 6 : firstMonthDay - 1,	// how much days from previous month to add. 0 is Sunday, so this is why we checking it explicitly
-				daysInPrevMonth			= daysInMonth(year, month - 1);					// how much days in previous month
+			const 	daysToAdd			= firstMonthDay === 0 ? 6 : firstMonthDay - 1,	// how much days from previous month to add. 0 is Sunday, so this is why we checking it explicitly
+					daysInPrevMonth		= this.daysInMonth(year, month - 1);			// how much days in previous month
 
 			for(let i = 0; i < daysToAdd; i++){											// adding some dates from previous month
 				datesToDraw[i] = new Date(year, month - 1, daysInPrevMonth - daysToAdd + i + 1);
 			}
 		}
 
-		const daysInThisMonth = daysInMonth(year, month);
+		const daysInThisMonth = this.daysInMonth(year, month);
 		for(let i = 0; i < daysInThisMonth; i++) {			// adding all dates from current month
 			datesToDraw.push( new Date(year, month, i+1));
 		}
