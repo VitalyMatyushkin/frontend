@@ -6,7 +6,7 @@ const 	React 		= require('react'),
 		TeamHelper 	= require('module/ui/managers/helpers/team_helper'),
 		classNames 	= require('classnames');
 
-function EventGameTypeWithScore(props){
+function EventRivals(props){
 	const 	event 				= props.event,
 			activeSchoolId 		= props.activeSchoolId,
 			isFinished 			= event.status === EventHelper.EVENT_STATUS.FINISHED,
@@ -66,4 +66,4 @@ function EventGameTypeWithScore(props){
 	}
 }
 
-module.exports = EventGameTypeWithScore;
+module.exports = EventRivals;
