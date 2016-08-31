@@ -7,9 +7,11 @@ const	React			= require('react'),
 
 const TeamManager = React.createClass({
 	mixins: [Morearty.Mixin],
+	listeners: [],
 	propTypes: {
 		isNonTeamSport: React.PropTypes.bool
 	},
+	currentSearchText: '',
 	getDefaultProps: function() {
 		return {
 			isNonTeamSport: false
@@ -32,14 +34,23 @@ const TeamManager = React.createClass({
 		self.searchAndSetStudents('', binding);
 		self.initTeamValues();
 
-		binding.sub('filter').addListener(() => {
-			!!binding.toJS('isSync') && self.searchAndSetStudents('', binding);
-		});
-		binding.sub('isSync').addListener((descriptor) => {
+		self.listeners.push(binding.sub('filter').addListener(() => {
+			self.searchAndSetStudents(self.currentSearchText, binding);
+		}));
+		self.listeners.push(binding.sub('blackList').addListener(() => {
+			self.searchAndSetStudents(self.currentSearchText, binding);
+		}));
+		self.listeners.push(binding.sub('isSync').addListener((descriptor) => {
 			if(!descriptor.getCurrentValue()) {
 				self.clearTeamValues();
 			}
-		});
+		}));
+	},
+	componentWillUnmount: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		self.listeners.forEach(l => binding.removeListener(l));
 	},
 	clearTeamValues: function() {
 		const	self	= this,
@@ -149,6 +160,8 @@ const TeamManager = React.createClass({
 	handleChangeSearchText: function(text) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
+
+		self.currentSearchText = text;
 
 		self.searchAndSetStudents(text, binding);
 	},

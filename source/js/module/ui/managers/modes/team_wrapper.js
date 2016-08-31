@@ -38,10 +38,17 @@ const TeamWrapper = React.createClass({
 			self._initCreationModeBinding();
 			self._fillPlugBinding();
 			self._setPlayers(self.getBinding().players.toJS());
+			self._setBlackList(self.getBinding().otherTeamPlayers.toJS());
 			binding.set('prevPlayers',		Immutable.fromJS(self.getBinding().players.toJS()));
 			binding.set('isSetTeamLater',	Immutable.fromJS(false));
 			binding.set('isInit',			Immutable.fromJS(true));
 		}
+	},
+	_setBlackList: function(players) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set("___teamManagerBinding.blackList", Immutable.fromJS(players));
 	},
 	_fillPlugBinding: function() {
 		const self = this;

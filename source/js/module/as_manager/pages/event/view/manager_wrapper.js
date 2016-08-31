@@ -192,12 +192,21 @@ const ManagerWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const event = binding.toJS('model');
 		const teams = binding.toJS('model.teamsData');
 
 		if(EventHelper.isInterSchoolsEvent(binding.toJS('model'))) {
 			if(order === 0) {
 				const t = teams.find(t => t.schoolId === MoreartyHelper.getActiveSchoolId(self));
 				return typeof t === 'undefined' ? [] : t.players;
+			} else {
+				return [];
+			}
+		} else if(EventHelper.isHousesEvent(binding.toJS('model'))) {
+			const t = teams.find(t => t.houseId === event.housesData[order].id);
+
+			if(typeof t !== 'undefined') {
+				return t.players;
 			} else {
 				return [];
 			}
@@ -223,8 +232,10 @@ const ManagerWrapper = React.createClass({
 					} else {
 						team = undefined;
 					}
+				} else if(EventHelper.isHousesEvent(binding.toJS('model'))) {
+					team = teams.find(t => t.houseId === event.housesData[order].id);
 				} else {
-					team = event.teamsData[order];;
+					team = teams ? teams[order] : undefined;
 				}
 				break;
 		}

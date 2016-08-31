@@ -773,13 +773,11 @@ function createTeams(schoolId, event, rivals, teamWrappers) {
 		_rivals = rivals;
 	}
 
-	return _rivals
-		.filter((_, i) => {
-			const teamWrapper = teamWrappers[i];
-
-			return !teamWrapper.isSetTeamLater;
-		})
-		.map((rival, i) => self.createTeam(schoolId, event, rival, teamWrappers[i]));
+	return _rivals.map((rival, i) => {
+		if(!teamWrappers[i].isSetTeamLater) {
+			return self.createTeam(schoolId, event, rival, teamWrappers[i]);
+		}
+	}).filter(p => typeof p !== 'undefined');
 };
 
 function createTeam(schoolId, event, rival, teamWrapper) {

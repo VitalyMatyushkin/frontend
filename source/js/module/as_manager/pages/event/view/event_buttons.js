@@ -398,17 +398,17 @@ const EventButtons = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-			if(self.isSetTeamLater(0)) {
+			if(self.isSetTeamLaterByOrder(0)) {
 				return [];
 			} else {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers');
 			}
 		} else {
-			if(self.isSetTeamLater(0) && self.isSetTeamLater(1)) {
+			if(self.isSetTeamLaterByOrder(0) && self.isSetTeamLaterByOrder(1)) {
 				return [];
-			} else if(self.isSetTeamLater(0)) {
+			} else if(self.isSetTeamLaterByOrder(0)) {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers');
-			} else if(self.isSetTeamLater(1)) {
+			} else if(self.isSetTeamLaterByOrder(1)) {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.prevPlayers');
 			} else {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers')
@@ -421,17 +421,17 @@ const EventButtons = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-			if(self.isSetTeamLater(0)) {
+			if(self.isSetTeamLaterByOrder(0)) {
 				return [];
 			} else {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents');
 			}
 		} else {
-			if(self.isSetTeamLater(0) && self.isSetTeamLater(1)) {
+			if(self.isSetTeamLaterByOrder(0) && self.isSetTeamLaterByOrder(1)) {
 				return [];
-			} else if(self.isSetTeamLater(0)) {
+			} else if(self.isSetTeamLaterByOrder(0)) {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents');
-			} else if(self.isSetTeamLater(1)) {
+			} else if(self.isSetTeamLaterByOrder(1)) {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents');
 			} else {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents')
