@@ -144,10 +144,12 @@ const serviceList = {
 		serviceList.publicSchoolAlbumPhotos = new Service('/public/schools/{schoolId}/albums/{albumId}/photos', binding);
 
 		// children
-		serviceList.userChildren = new Service('/i/children', binding);
-		serviceList.userChild = new Service('/i/children/{childId}', binding);
-		serviceList.userChildEvents = new Service('/i/children/{childId}/events', binding);
-		serviceList.parentsChild = new Service('/i/children/{childId}/parents', binding);
+		serviceList.children = new Service('/i/children', binding);
+		serviceList.childrenEvents = new Service('/i/children/events', binding);
+		serviceList.childrenEventsCount = new Service('/i/children/events/count', binding);
+		serviceList.child = new Service('/i/children/{childId}', binding);
+		serviceList.childEvents = new Service('/i/children/{childId}/events', binding);
+		serviceList.childParents = new Service('/i/children/{childId}/parents', binding);
 
 		// postcode
 		serviceList.postCode = new Service('/public/postcodes', binding);

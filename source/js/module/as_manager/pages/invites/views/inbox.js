@@ -2,14 +2,13 @@ const   Invite          = require('./invite'),
         ProcessingView  = require('./processing'),
 		If				= require('module/ui/if/if'),
         React           = require('react'),
-        InvitesMixin    = require('../mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Morearty		= require('morearty'),
         Immutable       = require('immutable');
 
 /** Component to show all inbox invites */
 const InboxView = React.createClass({
-    mixins: [Morearty.Mixin, InvitesMixin],
+    mixins: [Morearty.Mixin],
 	// ID of current school
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
@@ -32,27 +31,6 @@ const InboxView = React.createClass({
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		let inboxInvites;
-
-		// TODO Don't forget about filter
-		//filter: {
-		//	where: {
-		//		guestId: activeSchoolId,
-		//			accepted: {
-		//			nin: [true, false]
-		//		}
-		//	},
-		//	include: [
-		//		{
-		//			inviter: ['forms', 'houses']
-		//		},
-		//		{
-		//			event: 'sport'
-		//		},
-		//		{
-		//			guest: ['forms', 'houses']
-		//		}
-		//	]
-		//}
 
 		window.Server.schoolInboxInvites.get(self.activeSchoolId, { filter: { limit: 100 }})
 		.then( allInvites => {
@@ -89,7 +67,7 @@ const InboxView = React.createClass({
                 .atomically()
                 .set('sync', true)
                 .set('models', Immutable.fromJS(inboxInvites))
-                .set('participants', Immutable.fromJS([]))// TODO to deal with this shit
+                .set('findParticipantfindParticipant', Immutable.fromJS([]))// TODO to deal with this shit
                 .commit();
 
             return inboxInvites;
