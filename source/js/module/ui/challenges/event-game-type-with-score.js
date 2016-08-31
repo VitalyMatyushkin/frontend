@@ -6,7 +6,7 @@ const 	React 		= require('react'),
 		TeamHelper 	= require('module/ui/managers/helpers/team_helper'),
 		classNames 	= require('classnames');
 
-function EventGameType(props){
+function EventGameTypeWithScore(props){
 	const 	event = props.event,
 			activeSchoolId = props.activeSchoolId,
 			isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED,
@@ -20,19 +20,27 @@ function EventGameType(props){
 			secondPoint = TeamHelper.callFunctionForRightContext(activeSchoolId, event, TeamHelper.getCountPoints.bind(TeamHelper, event));
 
 
-	return (
-		<div className="eChallenge_in">
-			<div className="eChallenge_rivalName">
-				{firstName}
+	if(firstName === 'individual'){
+		return (
+			<div className="eChallenge_in">
+				{"Individual Game"}
 			</div>
-			<div className={classResults}>
-				{isFinished ? [firstPoint, secondPoint].join(':') : '- : -'}
+		)
+	}else {
+		return (
+			<div className="eChallenge_in">
+				<div className="eChallenge_rivalName">
+					{firstName}
+				</div>
+				<div className={classResults}>
+					{isFinished ? [firstPoint, secondPoint].join(':') : '- : -'}
+				</div>
+				<div className="eChallenge_rivalName">
+					{secondName}
+				</div>
 			</div>
-			<div className="eChallenge_rivalName">
-				{secondName}
-			</div>
-		</div>
-	)
+		)
+	}
 }
 
-module.exports = EventGameType;
+module.exports = EventGameTypeWithScore;

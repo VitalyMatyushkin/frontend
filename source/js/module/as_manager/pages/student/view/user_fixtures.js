@@ -4,7 +4,7 @@
 
 const   React           = require('react'),
         EventHelper     = require('module/helpers/eventHelper'),
-		GameType 		= require('module/ui/challenges/event-game-type'),
+		GameType 		= require('module/ui/challenges/event-game-type-with-score'),
         Morearty        = require('morearty'),
         Immutable       = require('immutable');
 
@@ -69,38 +69,13 @@ const UserFixtures = React.createClass({
                     new Date(date));
             });
             return eventsByDate.map(function (event, index) {
-                var eventDateTime = new Date(event.startTime),
-                    hours = self.addZeroToFirst(eventDateTime.getHours()),
-                    minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
-                    type = event.eventType,
-                    firstName,
-                    secondName,
-                    firstPic,
-                    secondPic,
-                    firstPoint,
-                    comment,
-                    secondPoint;
+                let comment;
+				
                 if(event.result && event.result.comment){
                     comment = event.result.comment;
                 }else{
                     comment = "There are no comments on this fixture";
                 }
-                //if (type === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-                //    firstName = event.participants[0].school.name;
-                //    secondName = event.participants[1].school.name;
-                //} else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
-                //    firstName = event.participants[0].house.name;
-                //    secondName = event.participants[1].house.name;
-                //} else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['internal']) {
-                //    firstName = event.participants[0].name;
-                //    secondName = event.participants[1].name;
-                //}
-                //if (event.status === EventHelper.EVENT_STATUS.FINISHED) {
-                //    const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
-				//
-                //    firstPoint = eventSummary[event.participants[0].id] || 0;
-                //    secondPoint = eventSummary[event.participants[1].id] || 0;
-                //}
                 return <div key={index} className="bChallenge"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
