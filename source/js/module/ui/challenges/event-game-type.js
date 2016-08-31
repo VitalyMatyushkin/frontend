@@ -16,8 +16,8 @@ function EventGameType(props){
 			}),
 			firstName 	= TeamHelper.getRivalNameForLeftContext(event, activeSchoolId).value,
 			secondName 	= TeamHelper.getRivalNameForRightContext(event, activeSchoolId).value,
-			firstPoint = TeamHelper.callFunctionForLeftContext(activeSchoolId, event, TeamHelper.getCountPoints.bind(TeamHelper)),
-			secondPoint = TeamHelper.callFunctionForRightContext(activeSchoolId, event, TeamHelper.getCountPoints.bind(TeamHelper));
+			firstPoint = TeamHelper.callFunctionForLeftContext(activeSchoolId, event, TeamHelper.getCountPoints.bind(TeamHelper, event)),
+			secondPoint = TeamHelper.callFunctionForRightContext(activeSchoolId, event, TeamHelper.getCountPoints.bind(TeamHelper, event));
 
 
 	return (

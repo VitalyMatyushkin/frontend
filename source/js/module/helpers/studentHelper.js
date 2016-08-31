@@ -140,18 +140,6 @@ const StudentHelper = {
 				})
 		} else {
 			return this._getChildEvents(studentId)
-				.then(events =>{
-					return events.map(event => {
-						event.participants = event.teamsData.map(team => {
-							team.school = team.schoolId === event.inviterSchoolId ? event.inviterSchool :
-											event.invitedSchools.find(school => school.id === team.schoolId);
-							return team;
-						});
-
-						return event;
-					});
-
-				})
 		}
 	},
 	_getStudent: function(studentId, schoolId) {
