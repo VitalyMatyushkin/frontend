@@ -5,6 +5,7 @@ const	classNames		= require('classnames'),
 		DaysOfWeekBar	= require('./days_of_week_bar'),
 		MonthNavBar		= require('./month_nav_bar'),
 		DayPanel		= require('./day_panel'),
+		MonthDaysPanel	= require('./month_days_panel'),
 		SVG				= require('module/ui/svg');
 
 const CalendarMonthView = React.createClass({
@@ -161,7 +162,14 @@ const CalendarMonthView = React.createClass({
 			.set('currentMonth', Immutable.fromJS(nextMonth))
 			.commit()
 	},
-	_renderRow: function (row, days) {
+	/**
+	 *
+	 * @param rowNumber number of row in calendar view starting from 0 end on 4. 5 rows totally
+	 * @param days
+	 * @returns {XML}
+	 * @private
+	 */
+	_renderRow: function (rowNumber, days) {
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				hoverDay		= binding.get('hoverDay'),
@@ -184,7 +192,7 @@ const CalendarMonthView = React.createClass({
 						dayName={day.day}/>;
 				});
 
-		return <div key={now.getMilliseconds()+row} className="eMonth_row">{renderedDays}</div>;
+		return <div key={now.getMilliseconds()+rowNumber} className="eMonth_row">{renderedDays}</div>;
 	},
 	_renderNavBar: function () {
 		const	self				= this,
@@ -192,12 +200,20 @@ const CalendarMonthView = React.createClass({
 				currentMonthName	= binding.get('monthNames.' + binding.get('currentDate').getMonth()),
 				currentYearName		= binding.get('currentDate').getFullYear();
 
-		return <MonthNavBar
+		/* TEMP */
+		const date = binding.get('currentDate');
+
+		/* END OF TEMP */
+
+		return <div>
+		<MonthNavBar
 			onPrevClick={self._onClickPrevButton}
 			onNextClick={self._onClickNextButton}
 			monthName={currentMonthName}
 			yearName={currentYearName}
-		/>;
+		/>
+			<MonthDaysPanel year={date.getFullYear()} month={date.getMonth()}/>;
+			</div>
 	},
 	render: function() {
 		const	self		= this,
