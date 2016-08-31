@@ -70,7 +70,7 @@ const UserFixtures = React.createClass({
             });
             return eventsByDate.map(function (event, index) {
                 let comment;
-				
+
                 if(event.result && event.result.comment){
                     comment = event.result.comment;
                 }else{

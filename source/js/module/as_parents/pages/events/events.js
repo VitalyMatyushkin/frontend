@@ -140,7 +140,7 @@ const EventView = React.createClass({
 			self.loading = true;
 			children.map(child => {
 				self.loading = true;
-				window.Server.userChildEvents.get({childId:child.id}, { filter: self.filter })
+				window.Server.childEvents.get({childId:child.id}, { filter: self.filter })
 					.then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
 					//.then(events => self._includeTeamsToEvents(events, child.schoolId))
 					.then(events => self.processRequestData(events, child.id))
@@ -239,7 +239,7 @@ const EventView = React.createClass({
 		const	self = this,
 				binding = self.getDefaultBinding();
 
-		return window.Server.userChildren.get()
+		return window.Server.children.get()
 			.then(children => {
 				binding.set('children',Immutable.fromJS(children));
 

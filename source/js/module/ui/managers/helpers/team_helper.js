@@ -585,7 +585,7 @@ function getRivalName(event, activeSchoolId, forLeftContext){
 	return {
 		name:name,
 		from:from,
-		value: !name ? from : forLeftContext ? name : `${name} [${from}]`
+		value: !name ? from : forLeftContext && activeSchoolId ? name : `${name} [${from}]`
 	};
 }
 function getRivalNameForLeftContext(event, activeSchoolId){

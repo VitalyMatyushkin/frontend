@@ -13,6 +13,13 @@ const StudentHelper = {
 	getStudentDataForPersonalStudentPage: function(studentId, schoolId) {
 		let studentData;
 
+		if(!schoolId){
+			this._getChildEventsCount(studentId).then(data => {
+				studentData.numberOfGamesPlayed = data.childEventCount[0];
+				studentData.numOfGamesWon = data.childWinnerEventCount[0];
+				studentData.numOfGamesScoredIn = data.childScoredEventCount[0];
+			});
+		}
 		//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
 		return this._getStudent(studentId, schoolId)
 			.then(student => {
@@ -37,13 +44,14 @@ const StudentHelper = {
 			})
 			.then(events => {
 				studentData.schoolEvent = this._getPlayedGames(events);
-				studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
-
 				studentData.gamesWon = this._getWinGames(studentId, events);
-				studentData.numOfGamesWon = studentData.gamesWon.length;
-
 				studentData.gamesScoredIn = this._getScoredInEvents(studentId, events);
-				studentData.numOfGamesScoredIn = studentData.gamesScoredIn.length;
+
+				if(schoolId){
+					studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
+					studentData.numOfGamesWon = studentData.gamesWon.length;
+					studentData.numOfGamesScoredIn = studentData.gamesScoredIn.length;
+				}
 
 				return studentData;
 			});
@@ -52,16 +60,14 @@ const StudentHelper = {
 		return events.filter(event => event.status === EventHelper.EVENT_STATUS.FINISHED);
 	},
 	_getScoredInEvents: function(studentId, events) {
-		const scoredInEvents = events.filter(event => {
-			return this._isStudentGetScores(studentId, event);
-		});
+		const scoredInEvents = events.filter(event => { return event.ascription && event.ascription.childrenScored.length > 0;});
 
-		// Just inject student scores to events model
-		// Because on next steps of obtaining data(on user_achievements REACT component)
-		// We need studentId
-		scoredInEvents.forEach(scoredInEvent => {
-			scoredInEvent.studentScore = scoredInEvent.result.points[studentId].score;
-		});
+		//// Just inject student scores to events model
+		//// Because on next steps of obtaining data(on user_achievements REACT component)
+		//// We need studentId
+		//scoredInEvents.forEach(scoredInEvent => {
+		//	scoredInEvent.studentScore = scoredInEvent.result.points[studentId].score;
+		//});
 
 		return scoredInEvents;
 	},
@@ -85,9 +91,7 @@ const StudentHelper = {
 		return isStudentTeamWin;
 	},
 	_getWinGames: function(studentId, events) {
-		return events.filter(event => {
-			return this._isStudentTeamWin(studentId, event);
-		});
+		return events.filter(event => {return event.ascription && event.ascription.childrenWin.length > 0;});
 	},
 	_getTeam: function(schoolId, eventId, teamId) {
 		let team;
@@ -146,18 +150,19 @@ const StudentHelper = {
 		if(schoolId) {
 			return window.Server.schoolStudent.get( {schoolId: schoolId, studentId: studentId} );
 		} else {
-			return window.Server.userChild.get( {childId: studentId} );
+			return window.Server.child.get( {childId: studentId} );
 		}
 	},
 	_getStudentEvents: function(studentId, schoolId) {
 		return window.Server.schoolStudentEvents.get( {schoolId: schoolId, studentId: studentId} );
 	},
 	_getChildEvents: function(studentId) {
-		return window.Server.userChildrenEvents.get({filter:{
+		return window.Server.childrenEvents.get({filter:{
 			where:{
 				childIdList: [studentId],
 				winnersChildIdList: [studentId],
-				scoredChildIdList: [studentId]
+				scoredChildIdList: [studentId],
+				status: EventHelper.EVENT_STATUS.FINISHED
 			},
 			limit:1000
 		}});
@@ -166,8 +171,18 @@ const StudentHelper = {
 		if(schoolId) {
 			return window.Server.schoolStudentParents.get( {schoolId: schoolId, studentId: studentId} );
 		} else {
-			return window.Server.parentsChild.get( {childId: studentId} );
+			return window.Server.childParents.get( {childId: studentId} );
 		}
+	},
+	_getChildEventsCount: function (studentId){
+		return window.Server.childrenEventsCount.get({filter:{
+			where:{
+				childIdList: [studentId],
+				winnersChildIdList: [studentId],
+				scoredChildIdList: [studentId],
+				status: EventHelper.EVENT_STATUS.FINISHED
+			}
+		}});
 	}
 };
 
