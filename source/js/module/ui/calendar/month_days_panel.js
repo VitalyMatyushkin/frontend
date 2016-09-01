@@ -3,17 +3,31 @@
  */
 
 
-const 	React		= require('react'),
-		DayPanel	= require('./day_panel');
+const 	React			= require('react'),
+		Immutable		= require('immutable'),
+		PureRenderMixin = require('react-addons-pure-render-mixin'),
+		DayPanel		= require('./day_panel');
 
+/**
+ * Component to draw grid with all days in month and some additional days.
+ * It takes a lot of parameters:
+ *  * year - current year to show
+ *  * month - current month to show
+ *  * todayDate - date which should be considered as today
+ *  * onClick - global click handler. Fired with date clicked (both active month and not-active)
+ *  * eventsData - Immutable Map where keys are date in following format: 2016-8-29. Month starts from 0. Both month and day number don't have leading zero: 2016-1-1. Value is object:
+ */
 const MonthDaysPanel = React.createClass({
 	propTypes: {
-		year:		React.PropTypes.number.isRequired,
-		month:		React.PropTypes.number.isRequired,	// month number starts from 0. Jan is 0, Feb is 1 and so on
-		todayDate:	React.PropTypes.instanceOf(Date),
-		eventsData:	React.PropTypes.object,	// date -> data dictionary: '2016-01-10': { isActive: true, isSelected: true, isToday: true,  }
-		onClick:	React.PropTypes.func 	// func to trigger on date
+		year:			React.PropTypes.number.isRequired,
+		month:			React.PropTypes.number.isRequired,			// month number starts from 0. Jan is 0, Feb is 1 and so on
+		todayDate:		React.PropTypes.instanceOf(Date),
+		selectedDate:	React.PropTypes.instanceOf(Date),
+		eventsData:		React.PropTypes.instanceOf(Immutable.Map),	// date -> data dictionary: '2016-01-10': { isActive: true, isSelected: true, isToday: true,  }
+		onClick:		React.PropTypes.func 						// func to trigger on date
 	},
+
+	mixins: [PureRenderMixin],	// yes, it is pure. I hope :)
 
 	/** How much days in given month of given year */
 	daysInMonth: function(year, month) {
@@ -23,6 +37,7 @@ const MonthDaysPanel = React.createClass({
 	/**
 	 * For given year and month return array of all dates visible in calendar.
 	 * It will add some days in begining from previous month and some days to end.
+	 * It is not too very complex, but it contain few steps.
 	 * @param {Number} year
 	 * @param {Number} month
 	 * @returns {Array<Date>}
@@ -56,23 +71,27 @@ const MonthDaysPanel = React.createClass({
 		return datesToDraw;
 	},
 
-	/** Return data for given date. If there is no data for this date - empty object will be returned */
 	getEventDataAtDate: function(date){
 		const 	eventsData	= this.props.eventsData || {},
 				strDate		= `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
 		// considering eventsData as JSON Object. Need some more labor for using immutable
-		const pulledData = eventsData[strDate] || {};
+		const pulledData = eventsData.get(strDate, false);
 
 		return pulledData;
 	},
 
+	noOp: function(){},	// most robust function ever
+
 	render: function(){
-		const 	year		= this.props.year,
-				month		= this.props.month,
-				datesToDraw	= this.visibleDays(year, month),
-				datesCount	= datesToDraw.length,
-				rows		= [];
+		const 	year			= this.props.year,
+				month			= this.props.month,
+				todayDate		= this.props.todayDate,
+				selectedDate	= this.props.selectedDate,
+				onClick			= this.props.onClick || this.noOp,
+				datesToDraw		= this.visibleDays(year, month),
+				datesCount		= datesToDraw.length,
+				rows			= [];
 
 		for(let i = 0; i < datesCount; i++){
 			const 	rowNumber 	= Math.floor(i/7),
@@ -81,17 +100,18 @@ const MonthDaysPanel = React.createClass({
 					dataAtDate	= this.getEventDataAtDate(date),
 					isNextMonth	= dateMonth === month + 1 ,
 					isPrevMonth	= dateMonth === month - 1 ,
-					isToday		= dataAtDate.isToday || date.getTime() === this.props.todayDate,
+					isToday		= todayDate ? date.getTime() === todayDate.getTime() : false,
+					isSelected	= selectedDate ? date.getTime() === selectedDate.getTime() : false,
 					row			= rows[rowNumber] || [];
 
 			const dayPanel = <DayPanel
 				key={`${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`}
-				isActive={dataAtDate.isActive}
-				isSelected={dataAtDate.isSelected}
+				isActive={dataAtDate}
+				isSelected={isSelected}
 				isToday={isToday}
 				isNextMonth={isNextMonth}
 				isPrevMonth={isPrevMonth}
-				onClick={dataAtDate.onClick}
+				onClick={ () => onClick(date) }
 				dayName={date.getDate()}
 			/>;
 			row.push(dayPanel);
