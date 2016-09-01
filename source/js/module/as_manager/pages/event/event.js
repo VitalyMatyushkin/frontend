@@ -180,6 +180,11 @@ const EventView = React.createClass({
 				isActive:false
 			},
 			{
+				value:'performance',
+				text:'Performance',
+				isActive:false
+			},
+			{
 				value:'details',
 				text:'Details',
 				isActive:false
@@ -275,6 +280,7 @@ const EventView = React.createClass({
 
 		return {
 			default:	binding.sub('eventTeams'),
+			activeTab:	binding.sub('activeTab'),
 			event:		binding.sub('model'),
 			points:		binding.sub('points'),
 			schoolInfo:	binding.sub('schoolInfo'),
@@ -346,7 +352,7 @@ const EventView = React.createClass({
 									</If>
 								</div>
 							</div>
-							<If condition={activeTab === 'teams'} >
+							<If condition={activeTab === 'teams' || activeTab === 'performance'} >
 								<EventTeams binding={self._getEventTeamsBinding()} />
 							</If>
 							<If condition={activeTab === 'details'} >

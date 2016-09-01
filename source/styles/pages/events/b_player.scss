@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+.bPlayer {
+
+}
+
 .ePlayer_remove .bIcon {
   width: 14px;
   height: 14px;
@@ -57,6 +61,20 @@
   &.mHead {
     color: #939393;
   }
+}
+
+.ePlayer_performance {
+  padding: 5px 0 5px 15px;
+}
+
+.ePlayer_performanceItemName {
+  display: inline-block;
+  width: 100px;
+}
+
+.ePlayer_performanceItemValueContainer {
+  display: inline-block;
+  width: 190px;
 }
 
 .ePlayer_form {

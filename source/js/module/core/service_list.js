@@ -101,6 +101,9 @@ const serviceList = {
         serviceList.schoolEventIndividuals = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/', binding);
         serviceList.schoolEventIndividualsBatch = new Service('/i/schools/{schoolId}/events/{eventId}/individuals/batch', binding);
 
+		// event individual performance
+		serviceList.schoolEventIndividualPerformance = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/performance', binding);
+
 		serviceList.schoolEventResultSchoolScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/schools/score', binding);
 		serviceList.schoolEventResultTeamScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/teams/score', binding);
 		serviceList.schoolEventResultHousesScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/houses/score', binding);

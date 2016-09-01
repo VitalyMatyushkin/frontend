@@ -5,7 +5,7 @@ const	React					= require('react'),
 
 const Player = React.createClass({
 	propTypes: {
-		isNonTeamSport:			React.PropTypes.bool.isRequired,
+		isNonTeamSport:				React.PropTypes.bool.isRequired,
 		player:						React.PropTypes.object.isRequired,
 		positions:					React.PropTypes.array,
 		handleClickPlayer:			React.PropTypes.func.isRequired,
