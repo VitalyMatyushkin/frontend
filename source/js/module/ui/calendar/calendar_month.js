@@ -188,6 +188,8 @@ const CalendarMonthView = React.createClass({
 						isActive={isActive === true}
 						isSelected={isSelected === true}
 						isToday={isToday === true}
+						isPrevMonth={day.prev || false }
+						isNextMonth={day.next || false }
 						onClick={self._onSelectDay.bind(null, day)}
 						dayName={day.day}/>;
 				});
@@ -200,20 +202,13 @@ const CalendarMonthView = React.createClass({
 				currentMonthName	= binding.get('monthNames.' + binding.get('currentDate').getMonth()),
 				currentYearName		= binding.get('currentDate').getFullYear();
 
-		/* TEMP */
-		const date = binding.get('currentDate');
 
-		/* END OF TEMP */
-
-		return <div>
-		<MonthNavBar
+		return <MonthNavBar
 			onPrevClick={self._onClickPrevButton}
 			onNextClick={self._onClickNextButton}
 			monthName={currentMonthName}
 			yearName={currentYearName}
-		/>
-			<MonthDaysPanel year={date.getFullYear()} month={date.getMonth()}/>;
-			</div>
+		/>;
 	},
 	render: function() {
 		const	self		= this,

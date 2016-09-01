@@ -10,9 +10,11 @@ function DayPanel(props) {
 
 	const classes	= classNames({
 		eMonth_day:	true,
-		mToday:		props.isToday,
+		mToday:		props.isToday === true,
 		mActive:	props.isSelected ? false : props.isActive,	// nobody care about day activity if day is selected
-		mSelect:	props.isSelected
+		mSelect:	props.isSelected === true,
+		mNext:		props.isNextMonth === true,
+		mPrev:		props.isPrevMonth === true
 	});
 
 	return <span className={classes} onClick={props.onClick}>{props.dayName}</span>;
@@ -20,9 +22,11 @@ function DayPanel(props) {
 }
 
 DayPanel.propTypes = {
-	isActive:		React.PropTypes.bool.isRequired,
-	isSelected:		React.PropTypes.bool.isRequired,
-	isToday:		React.PropTypes.bool.isRequired,
+	isActive:		React.PropTypes.bool,
+	isSelected:		React.PropTypes.bool,
+	isToday:		React.PropTypes.bool,
+	isNextMonth:	React.PropTypes.bool,
+	isPrevMonth:	React.PropTypes.bool,
 	onClick:		React.PropTypes.func,
 	dayName:		React.PropTypes.oneOfType([
 		React.PropTypes.number,

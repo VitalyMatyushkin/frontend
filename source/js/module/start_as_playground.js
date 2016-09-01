@@ -7,31 +7,35 @@ const
         ReactDom        = require('react-dom'),
         React           = require('react'),
         Promise         = require('bluebird'),
-        ComboBox        = require('module/ui/autocomplete2/ComboBox2');
+		MonthDays		= require('module/ui/calendar/month_days_panel');
 
 function runPlaygroundMode() {
 
-    //const defaultItme = {
-    //    id:     0,
-    //    name:   'DEFAULT'
-    //};
-    //const searchFunction = function(text) {
-    //    return {
-    //        sync: [],
-    //        async: Promise.resolve([
-    //            {id: 1, name: "Item1"},
-    //            {id: 2, name: "Item2"}
-    //        ])
-    //    }
-    //};
-    //
-    //const CB = <ComboBox />
-    //
+	const eventsData = {
+		'2016-8-1': {
+			isActive: true
+		},
+		'2016-8-2': {
+			isActive: true,
+			onClick: () => { console.log('hey'); }
+		},
+		'2016-8-10': {
+			isSelected: true
+		}
+	};
+
+	const MD = <MonthDays
+		year={2016}
+		month={8}
+		today={new Date()}
+		eventsData={eventsData}
+	/>;
+
     //// Init app
-    //ReactDom.render(
-    //    React.createElement(MyForm),
-    //    document.getElementById('jsMain')
-    //);
+    ReactDom.render(
+       MD,
+       document.getElementById('jsMain')
+    );
 }
 
 module.exports = runPlaygroundMode;
