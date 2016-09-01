@@ -65,7 +65,7 @@ const UserAchievements = React.createClass({
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                        <h4>{`Scored in this fixture:${event.studentScore}`}</h4>
+                        <h4>{`Scored in this fixture: ${event.studentScore}`}</h4>
 						<EventRivals event={event} activeSchoolId={activeSchoolId} />
                         <div className="eAchievement_com_container">
                             <div className="eChallenge_comments">

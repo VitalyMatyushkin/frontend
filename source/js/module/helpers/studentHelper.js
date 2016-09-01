@@ -62,12 +62,13 @@ const StudentHelper = {
 	_getScoredInEvents: function(studentId, events) {
 		const scoredInEvents = events.filter(event => { return event.ascription && event.ascription.childrenScored.length > 0;});
 
-		//// Just inject student scores to events model
-		//// Because on next steps of obtaining data(on user_achievements REACT component)
-		//// We need studentId
-		//scoredInEvents.forEach(scoredInEvent => {
-		//	scoredInEvent.studentScore = scoredInEvent.result.points[studentId].score;
-		//});
+		// Just inject student scores to events model
+		// Because on next steps of obtaining data(on user_achievements REACT component)
+		// We need studentId
+		scoredInEvents.forEach(scoredInEvent => {
+			const result = scoredInEvent.results.individualScore.find(r => r.userId === studentId);
+			scoredInEvent.studentScore = result ? result.score : "student's team got some scores";
+		});
 
 		return scoredInEvents;
 	},
