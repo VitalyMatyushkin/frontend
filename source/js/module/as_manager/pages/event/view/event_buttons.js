@@ -39,6 +39,7 @@ const EventButtons = React.createClass({
 			.then(() => self.submitHouseResults(event))
 			.then(() => self.submitTeamResults(event))
 			.then(() => self.submitIndividualResults(event))
+			.then(() => self.submitIndividualPerformance(event))
 			.then(() => self.doActionsAfterCloseEvent());
 	},
 	closeMatchForIndividualSport: function() {
@@ -54,6 +55,7 @@ const EventButtons = React.createClass({
 				eventId:	event.id
 			})
 			.then(() => self.submitIndividualResults(event))
+			.then(() => self.submitIndividualPerformance(event))
 			.then(() => self.doActionsAfterCloseEvent());
 	},
 	submitSchoolResults: function(event) {
@@ -181,6 +183,23 @@ const EventButtons = React.createClass({
 						eventId:	event.id
 					},
 					individualScoreData
+				)
+			)
+		);
+	},
+	submitIndividualPerformance: function(event) {
+		const self = this;
+
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		return Promise.all(
+			event.results.individualPerformance.map(
+				individualPerformanceData => window.Server.schoolEventIndividualPerformance.post(
+					{
+						schoolId:	activeSchoolId,
+						eventId:	event.id
+					},
+					individualPerformanceData
 				)
 			)
 		);

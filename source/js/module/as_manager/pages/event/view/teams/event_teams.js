@@ -1,5 +1,6 @@
 const	InvitesMixin			= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventTeamsView			= require('./event_teams_view'),
+		EventTeamsPerformance	= require('./event_teams_performance'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper			= require('module/helpers/morearty_helper'),
 		React					= require('react'),
@@ -98,7 +99,7 @@ const EventTeams = React.createClass({
 			);
 			binding
 				.atomically()
-				.set('viewPlayers.players',	Immutable.fromJS(updEvent.teamsData.map(tp => tp.viewPlayers)))
+				.set('viewPlayers.players',	Immutable.fromJS(updEvent.teamsData.map(tp => tp.players)))
 				.set('isSync',				Immutable.fromJS(true))
 				.commit();
 		});
@@ -115,33 +116,35 @@ const EventTeams = React.createClass({
 			isSync:		binding.sub('isSync')
 		};
 	},
-	/* RENDERS */
-	_renderTeams: function() {
-		const self = this;
+	getPlayerPerformanceBinding: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		const mode = self.getBinding('mode').toJS();
-
-		let result = null;
-
-		switch (mode) {
-			case 'general':
-			case 'closing':
-				result = (
-					<EventTeamsView binding={self.getViewPlayersBinding()} />
-				);
-				break;
-		}
-
-		return result;
+		return {
+			default:	binding.sub('viewPlayers'),
+			event:		self.getBinding('event'),
+			points:		self.getBinding('points'),
+			mode:		self.getBinding('mode'),
+			isSync:		binding.sub('isSync')
+		};
 	},
 	render: function() {
 		const self = this;
 
-		return (
-			<div>
-				{self._renderTeams()}
-			</div>
-		);
+		const activeTab = self.getBinding('activeTab').toJS();
+
+		switch (activeTab) {
+			case 'teams':
+				return (
+					<EventTeamsView binding={self.getViewPlayersBinding()} />
+				);
+			case 'performance':
+				return (
+					<EventTeamsPerformance binding={self.getPlayerPerformanceBinding()} />
+				);
+			default:
+				return null;
+		}
 	}
 });
 

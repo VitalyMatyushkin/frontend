@@ -1,0 +1,12 @@
+.bRatingStar {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url('/images/empty_star.png') no-repeat;
+  background-size: cover;
+
+  &.mChecked {
+    background: url('/images/star.png') no-repeat;
+    background-size: cover;
+  }
+}
