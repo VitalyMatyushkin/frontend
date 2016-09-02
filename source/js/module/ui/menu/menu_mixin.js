@@ -1,5 +1,8 @@
 const 	SVG 		= require('module/ui/svg'),
-		React 		= require('react');
+		React 		= require('react'),
+		GoBackItem		= require('./sub_menu_items/go_back_item'),
+		ChooseFileItem 	= require('./sub_menu_items/choose_file_item'),
+		DefaultItem		= require('./sub_menu_items/default_item');
 
 const MenuMixin = {
 	propTypes: {
@@ -10,39 +13,11 @@ const MenuMixin = {
 			items: []
 		};
 	},
-	__itemIcon: function(item){
-		return item.icon ? <SVG classes={item.className} icon={item.icon} /> : null;
-	},
-	/** function to render goback menu node */
-	__renderGoBackNode: function(item, className){
-		return 	<span onClick={function(){window.history.back();}} key={item.key} className={className}>
-                	{this.__itemIcon(item)} {item.name} {item.num || ''}
-				</span>;
-	},
-	/** function to render file menu node (for selecting file from computer) */
-	__renderFileNode: function(item, className){
-		return (
-			<span key={item.key} className={className}>
-				{item.name}
-				<input onChange={item.onChange} type='file' />
-			</span>
-		);
-	},
-	/** function to render default menu node */
-	__renderDefaultNode: function(item, className) {
-		return (
-			<a href={item.href} key={item.key} className={className}>
-				{this.__itemIcon(item)} {item.name} {item.num || ''}
-			</a>
-		);
-	},
 	__getMenuNode: function(item, globalBinding, authorization, currentPath, itemClassName) {
 		const 	itemPath 	= item.href && item.href.replace('#', ''),
 				itemRoutes 	= item.routes || [];
 
-		let 	className 	= itemClassName;
-
-		className += item.disabled ? 'mDisabled' : '';
+		let className 	= item.disabled ? itemClassName + 'mDisabled' : itemClassName;
 
 		// check permission
 		if ((item.requiredData && !globalBinding.get(item.requiredData) || (item.authorization && !authorization))) {
@@ -61,17 +36,17 @@ const MenuMixin = {
 
 		switch (item.key) {
 			case 'goback':
-				return this.__renderGoBackNode(item, className);
+				return <GoBackItem key={'goback' + item.name} name={item.name} icon={item.icon} className={item.className} num={item.num} className2={className}/>;
 			case 'file':
-				return this.__renderFileNode(item, className);
+				return <ChooseFileItem key={'file' + item.name} name={item.name} className={className} onChange={item.onChange}/>;
 			case 'Console':
 				//We don't want to show the console tab if the current user is not an admin
 				//if(userRole == 'admin')
 				if(userId !== undefined)
-						return this.__renderDefaultNode(item, className);
+						return <DefaultItem key={'console'} name={item.name} href={item.href} className={item.className} className2={className} num={item.num} icon={item.icon}/>;
 				return null;
 			default:
-				return this.__renderDefaultNode(item, className);
+				return <DefaultItem key={item.name} name={item.name} href={item.href} className={item.className} className2={className} num={item.num} icon={item.icon}/>;
 		}
 	},
 
