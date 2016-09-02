@@ -47,7 +47,7 @@ const EventGallery = React.createClass({
 		binding = self.getDefaultBinding();
 
 		return (
-			<div className='bEvent_media'>
+			<div className='bEvent_media bEventBottomContainer'>
 				<div ref='albumsList' className='bEventAlbums'>
 					{binding.get('albums').map(self.renderAlbum)}
 					<div onClick={self.onClickCreateAlbum} key={'album-create'} className='eAlbum mCreate'>
