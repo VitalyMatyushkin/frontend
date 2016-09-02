@@ -128,5 +128,10 @@ p {
 .mInvisible{
   visibility: hidden;
 }
-
-
+//Text styles
+.mBold {
+  font-weight: bold;
+}
+.mGreen {
+  color: $MAIN_COLOR!important;
+}

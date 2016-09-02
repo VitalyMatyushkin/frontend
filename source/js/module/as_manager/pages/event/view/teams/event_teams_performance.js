@@ -271,7 +271,7 @@ const EventTeamsPerformance = React.createClass({
 
 			return (
 				<div key={playerIndex} className="bPlayer">
-					<div className="ePlayer_name">
+					<div className="ePlayer_name mBold mGreen">
 						<span>{player.firstName} {player.lastName}</span>
 					</div>
 					<div className="ePlayer_performance">
