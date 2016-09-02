@@ -31,7 +31,8 @@ const EventView = React.createClass({
 			eventsOfAllChildren:[],
 			models: [],
 			sync: false,
-			newEvent: {}
+			newEvent: {},
+			achievements:null
 		});
 	},
 	componentWillMount: function () {
@@ -96,7 +97,8 @@ const EventView = React.createClass({
 	setActiveChild: function() {
 		const self = this,
 			binding = self.getDefaultBinding(),
-			params = binding.toJS('eventsRouting.pathParameters'),
+			rootBinding = self.getMoreartyContext().getBinding(),
+			params = rootBinding.toJS('routing.pathParameters'),
 			newValue = params && params.length > 0 ? params[0]:'all';
 
 		binding.set('activeChildId', newValue);
@@ -140,70 +142,13 @@ const EventView = React.createClass({
 			self.loading = true;
 			children.map(child => {
 				self.loading = true;
-				window.Server.userChildEvents.get({childId:child.id}, { filter: self.filter })
+				window.Server.childEvents.get({childId:child.id}, { filter: self.filter })
 					.then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
-					.then(events => self._includeTeamsToEvents(events, child.schoolId))
+					//.then(events => self._includeTeamsToEvents(events, child.schoolId))
 					.then(events => self.processRequestData(events, child.id))
 					.then(_ => {self.loading = false})
 			});
 		}
-	},
-	/**
-	 * Method include teams to each event
-	 * @private
-	 */
-	_includeTeamsToEvents: function(events, schoolId) {
-		const self = this;
-
-		return Promise.all(events.map(event => self._includeTeamsToEvent(event, schoolId)));
-	},
-	/**
-	 * Method include teams to event model
-	 * @private
-	 */
-	_includeTeamsToEvent: function(event, schoolId) {
-		const self = this;
-
-		return self._getTeamsForEvent(event, schoolId)
-			.then(teams => {
-				event.participants = teams;
-
-				return event;
-			});
-	},
-	/**
-	 * Method return teams for event.
-	 * Each team has school and house models.
-	 * @param event
-	 * @returns {*}
-	 * @private
-	 */
-	_getTeamsForEvent: function(event, schoolId) {
-		const self = this;
-
-		return window.Server.schoolEventTeams.get({schoolId: schoolId, eventId: event.id})
-			.then(teams => Promise.all(teams.map(team => self._includeModelsToTeam(team))));
-	},
-	/**
-	 * Method include school and house models to team model.
-	 * Method modify input team.
-	 * @param team
-	 * @returns {*}
-	 * @private
-	 */
-	_includeModelsToTeam: function(team) {
-		return window.Server.publicSchool.get({schoolId: team.schoolId}).then(school => {
-			team.school = school;
-
-			if(team.houseId) {
-				return window.Server.publicSchoolHouse.get({schoolId: team.schoolId, houseId: team.houseId}).then(house => {
-					team.house = house;
-
-					return team;
-				});
-			}
-			return team;
-		});
 	},
 	filterEvents:function(){
 		const self = this,
@@ -224,7 +169,6 @@ const EventView = React.createClass({
 			reqData.forEach(function(el){
 				if(el !== undefined){
 					el.childId = childId;
-					el.sport = sports.find(s => s.id === el.sportId);
 					self.eventModel.push(el);
 				}
 			});
@@ -240,7 +184,7 @@ const EventView = React.createClass({
 		const	self = this,
 				binding = self.getDefaultBinding();
 
-		return window.Server.userChildren.get()
+		return window.Server.children.get()
 			.then(children => {
 				binding.set('children',Immutable.fromJS(children));
 

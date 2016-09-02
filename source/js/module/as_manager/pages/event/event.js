@@ -367,7 +367,7 @@ const EventView = React.createClass({
 								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
-								<div>
+								<div className="bEventBottomContainer">
 									<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
 										<div className="eEvent_shadowCommentText">{self.commentContent}</div>
 									</If>

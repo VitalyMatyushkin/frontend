@@ -2,7 +2,7 @@
  * Created by bridark on 03/05/15.
  */
 const   React       = require('react'),
-        EventHelper = require('module/helpers/eventHelper'),
+		EventRivals 	= require('module/as_manager/pages/student/view/event-rivals'),
         Morearty    = require('morearty'),
         Immutable   = require('immutable');
 
@@ -44,75 +44,32 @@ const TeamStats = React.createClass({
         return tempAr;
     },
     getEvents: function (date,theData) {
-        var self = this,
-            binding = this.getDefaultBinding(),
-            eventsByDate;
-        if (theData && theData.gamesWon) {
+		const   self 		= this,
+			rootBinding = self.getMoreartyContext().getBinding();
+
+		const activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+
+		let eventsByDate;
+
+		if (theData && theData.gamesWon) {
             eventsByDate = theData.gamesWon.filter(function (event) {
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
             });
             return eventsByDate.map(function (event, index) {
-                var eventDateTime = new Date(event.startTime),
-                    hours = self.addZeroToFirst(eventDateTime.getHours()),
-                    minutes = self.addZeroToFirst(eventDateTime.getMinutes()),
-                    type = event.eventType,
-                    firstName,
-                    secondName,
-                    firstPic,
-                    secondPic,
-                    firstPoint,
-                    comment,
-                    secondPoint;
+				let comment;
                 if(event.result && event.result.comment){
                     comment = event.result.comment;
                 }else{
                     comment = "There are no comments on this fixture";
                 }
-                if (type === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-                    firstName = event.participants[0].school.name;
-                    secondName = event.participants[1].school.name;
-                    firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1].school.pic;
-                } else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['houses']) {
-                    firstName = event.participants[0].house.name;
-                    secondName = event.participants[1].house.name;
-                    firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1].school.pic;
-                } else if (type === EventHelper.clientEventTypeToServerClientTypeMapping['internal']) {
-                    firstName = event.participants[0].name;
-                    secondName = event.participants[1].name;
-                    firstPic = event.participants[0].school.pic;
-                    secondPic = event.participants[1].school.pic;
-                }
-                if (event.status === EventHelper.EVENT_STATUS.FINISHED) {
-                    const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
 
-                    firstPoint = eventSummary[event.participants[0].id] || 0;
-                    secondPoint = eventSummary[event.participants[1].id] || 0;
-                }
                 return <div key={index} className="bAchievement"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                    <div className="eAchievement_in">
-                        <div className="eAchievement_rivalName">
-                            {firstPic ? <span className="eChallenge_rivalPic"><img src={firstPic}/></span> : ''}
-                            <span className="eAchievement_rival">{firstName}</span>
-                        </div>
-                        <div className="eAchievement_rivalInfo">
-                            <div
-                                className={'eAchievement_results' + (event.status === EventHelper.EVENT_STATUS.FINISHED ? ' mDone' : '') }>
-                                {event.status === EventHelper.EVENT_STATUS.FINISHED ? [firstPoint, secondPoint].join(':') : '? : ?'}
-                            </div>
-                            <div className="eAchievement_info">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
-                        </div>
-                        <div className="eAchievement_rivalName">
-                            {secondPic ? <span className="eChallenge_rivalPic"><img src={secondPic}/></span> : ''}
-                            <span className="eAchievement_rival">{secondName}</span>
-                        </div>
-                    </div>
+					<EventRivals event={event} activeSchoolId={activeSchoolId} />
                     <div className="eAchievement_com_container">
                         <div className="eChallenge_comments">
                             {comment}
