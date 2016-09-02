@@ -31,7 +31,8 @@ const EventView = React.createClass({
 			eventsOfAllChildren:[],
 			models: [],
 			sync: false,
-			newEvent: {}
+			newEvent: {},
+			achievements:null
 		});
 	},
 	componentWillMount: function () {
