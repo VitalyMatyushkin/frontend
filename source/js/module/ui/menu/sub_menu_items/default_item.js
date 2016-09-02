@@ -2,7 +2,8 @@
  * Created by wert on 02.09.16.
  */
 
-const React = require('react');
+const 	React 	= require('react'),
+		SVG		= require('module/ui/svg');
 
 function DefaultItem(props) {
 	const icon = props.icon ? <SVG classes={props.className} icon={props.icon} /> : null;

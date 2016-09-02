@@ -2,7 +2,8 @@
  * Created by wert on 02.09.16.
  */
 
-const React = require('react');
+const 	React 	= require('react'),
+		SVG		= require('module/ui/svg');
 
 /** Menu Item which moves does `window.history.back()` when clicked */
 function GoBackItem(props){
