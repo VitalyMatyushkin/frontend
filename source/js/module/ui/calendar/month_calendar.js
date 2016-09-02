@@ -8,6 +8,22 @@ const 	React 			= require('react'),
 		DaysOfWeekBar	= require('./days_of_week_bar'),
 		MonthDaysPanel	= require('./month_days_panel');
 
+/**
+ * Calendar component. Here is schema:
+ *
+ * |------------------------------------------------------------------|
+ * |                 < September - 2016 >                             |			<- MonthNavBar
+ * |------------------------------------------------------------------|
+ * | Mon      Tue       Wed       Thu        Fri        Sat       Sun |  		<- DaysOfWeekBar
+ * | -----   -----     -----     -----                                |    ---|
+ * || 31  | |  1  |   |  2  |   |  3  |                               |       |
+ * | -----   -----     -----     -----                                |       | <- MonthDaysPanel
+ *         .......................................................            |
+ * |__________________________________________________________________|    ___|
+ * @param props
+ * @returns {XML}
+ * @constructor
+ */
 function MonthCalendar(props) {
 	const 	monthDate	= props.monthDate,
 			monthName 	= MonthCalendar.monthNames[monthDate.getMonth()];
@@ -33,13 +49,13 @@ function MonthCalendar(props) {
 
 
 MonthCalendar.propTypes = {
-	monthDate:			React.PropTypes.instanceOf(Date).isRequired,
-	todayDate:			React.PropTypes.instanceOf(Date),
-	selectedDate:		React.PropTypes.instanceOf(Date),
-	onNextMonthClick:	React.PropTypes.func,
-	onPrevMonthClick:	React.PropTypes.func,
-	onDateClick:		React.PropTypes.func,
-	eventsData:			React.PropTypes.instanceOf(Immutable.Map)
+	monthDate:			React.PropTypes.instanceOf(Date).isRequired,		// Date with month to display
+	todayDate:			React.PropTypes.instanceOf(Date),					// Date to be considered as today
+	selectedDate:		React.PropTypes.instanceOf(Date),					// Date to be considered as selected (highlighted)
+	onNextMonthClick:	React.PropTypes.func,								// Function to be called when user hit `next` in MonthNavBar
+	onPrevMonthClick:	React.PropTypes.func,								// Function to be called when user hit `prev` in MonthNavBar
+	onDateClick:		React.PropTypes.func,								// Function to be called when user hit any date panel. Function will receive one argument - date
+	eventsData:			React.PropTypes.instanceOf(Immutable.Map)			// Immutable map where keys are stringified dates (2016-1-9) and values are booleans, where true mean that date have events
 };
 
 MonthCalendar.monthNames = [
