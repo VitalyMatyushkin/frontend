@@ -153,7 +153,11 @@ const EventHelper = {
 	_isShowFinishEventEditingButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') !== 'general' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
+		return (
+			binding.get('mode') !== 'general' &&
+			(binding.get('activeTab') === 'teams' || binding.get('activeTab') === 'performance') &&
+			RoleHelper.isUserSchoolWorker(thiz)
+		);
 	},
 	isEventWithOneIndividualTeam: function(event) {
 		const	eventType	= event.eventType ?  EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] : event.type,
