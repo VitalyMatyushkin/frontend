@@ -8,7 +8,8 @@ const
         React           = require('react'),
         Promise         = require('bluebird'),
 		Immutable		= require('immutable'),
-		MonthDays		= require('module/ui/calendar/month_days_panel');
+		MonthDays		= require('module/ui/calendar/month_days_panel'),
+		Calendar		= require('module/ui/calendar/month_calendar');
 
 function runPlaygroundMode() {
 
@@ -17,22 +18,20 @@ function runPlaygroundMode() {
 		'2016-8-2': true
 	};
 
-	const clickHandler = function(date) {
-		console.log('date: ' + date);
-	};
 
-	const MD = <MonthDays
-		year={2016}
-		month={8}
-		today={new Date()}
-		selectedDate={new Date(2016, 8, 11)}
+	const calendar = <Calendar
+		monthDate={new Date(2016, 8)}
+		todayDate={new Date(2016, 8, 12)}
+		selectedDate={new Date(2016, 8, 1)}
+		onNextMonthClick={ () => console.log('Next Month Click') }
+		onPrevMonthClick={ () => console.log('Prev Month Click') }
+		onDateClick={ (date) => console.log('Date clicked: ' + date) }
 		eventsData={Immutable.fromJS(eventsData)}
-		onClick={clickHandler}
 	/>;
 
     //// Init app
     ReactDom.render(
-       MD,
+       calendar,
        document.getElementById('jsMain')
     );
 }

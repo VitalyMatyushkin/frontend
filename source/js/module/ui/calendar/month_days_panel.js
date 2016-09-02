@@ -15,12 +15,11 @@ const 	React			= require('react'),
  *  * month - current month to show
  *  * todayDate - date which should be considered as today
  *  * onClick - global click handler. Fired with date clicked (both active month and not-active)
- *  * eventsData - Immutable Map where keys are date in following format: 2016-8-29. Month starts from 0. Both month and day number don't have leading zero: 2016-1-1. Value is object:
+ *  * eventsData - Immutable Map where keys are date in following format: 2016-8-29. Month starts from 0. Both month and day number don't have leading zero: 2016-1-1. Value is boolean
  */
 const MonthDaysPanel = React.createClass({
 	propTypes: {
-		year:			React.PropTypes.number.isRequired,
-		month:			React.PropTypes.number.isRequired,			// month number starts from 0. Jan is 0, Feb is 1 and so on
+		monthDate:		React.PropTypes.instanceOf(Date).isRequired,			// like Date(2016, 7)
 		todayDate:		React.PropTypes.instanceOf(Date),
 		selectedDate:	React.PropTypes.instanceOf(Date),
 		eventsData:		React.PropTypes.instanceOf(Immutable.Map),	// date -> data dictionary: '2016-01-10': { isActive: true, isSelected: true, isToday: true,  }
@@ -84,8 +83,8 @@ const MonthDaysPanel = React.createClass({
 	noOp: function(){},	// most robust function ever
 
 	render: function(){
-		const 	year			= this.props.year,
-				month			= this.props.month,
+		const 	year			= this.props.monthDate.getFullYear(),
+				month			= this.props.monthDate.getMonth(),
 				todayDate		= this.props.todayDate,
 				selectedDate	= this.props.selectedDate,
 				onClick			= this.props.onClick || this.noOp,

@@ -213,7 +213,10 @@ const CalendarMonthView = React.createClass({
 	render: function() {
 		const	self		= this,
 				days		= self._getDays(),
-				countRows	= days.length / 7;
+				countRows	= days.length / 7,
+				binding		= this.getDefaultBinding();
+
+		console.log('binding: ' + JSON.stringify(binding.toJS(), null, 2));
 
 		return <div className="eCalendar_eMonth">
 			{self._renderNavBar()}
