@@ -13,34 +13,11 @@ const MenuMixin = {
 			items: []
 		};
 	},
-	__itemIcon: function(item){
-		return item.icon ? <SVG classes={item.className} icon={item.icon} /> : null;
-	},
-	/** function to render goback menu node */
-	__renderGoBackNode: function(item, className){
-		return <GoBackItem
-			name={item.name}
-			icon={item.icon}
-			className={item.className}
-			num={item.num}
-			className2={className}
-		/>;
-	},
-	/** function to render file menu node (for selecting file from computer) */
-	__renderFileNode: function(item, className){
-		return <ChooseFileItem name={item.name} className={className} onChange={item.onChange}/>;
-	},
-	/** function to render default menu node */
-	__renderDefaultNode: function(item, className) {
-		return <DefaultItem name={item.name} href={item.href} className={item.className} className2={className} num={item.num} icon={item.icon}/>;
-	},
 	__getMenuNode: function(item, globalBinding, authorization, currentPath, itemClassName) {
 		const 	itemPath 	= item.href && item.href.replace('#', ''),
 				itemRoutes 	= item.routes || [];
 
-		let 	className 	= itemClassName;
-
-		className += item.disabled ? 'mDisabled' : '';
+		let className 	= item.disabled ? itemClassName + 'mDisabled' : itemClassName;
 
 		// check permission
 		if ((item.requiredData && !globalBinding.get(item.requiredData) || (item.authorization && !authorization))) {
@@ -59,17 +36,17 @@ const MenuMixin = {
 
 		switch (item.key) {
 			case 'goback':
-				return this.__renderGoBackNode(item, className);
+				return <GoBackItem key={'goback' + item.name} name={item.name} icon={item.icon} className={item.className} num={item.num} className2={className}/>;
 			case 'file':
-				return this.__renderFileNode(item, className);
+				return <ChooseFileItem key={'file' + item.name} name={item.name} className={className} onChange={item.onChange}/>;
 			case 'Console':
 				//We don't want to show the console tab if the current user is not an admin
 				//if(userRole == 'admin')
 				if(userId !== undefined)
-						return this.__renderDefaultNode(item, className);
+						return <DefaultItem key={'console'} name={item.name} href={item.href} className={item.className} className2={className} num={item.num} icon={item.icon}/>;
 				return null;
 			default:
-				return this.__renderDefaultNode(item, className);
+				return <DefaultItem key={item.name} name={item.name} href={item.href} className={item.className} className2={className} num={item.num} icon={item.icon}/>;
 		}
 	},
 
