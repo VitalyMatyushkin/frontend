@@ -71,15 +71,24 @@ const MonthDaysPanel = React.createClass({
 	},
 
 	getEventDataAtDate: function(date){
-		const 	eventsData	= this.props.eventsData || {},
+		const 	eventsData	= this.props.eventsData,
 				strDate		= `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 
 		// considering eventsData as JSON Object. Need some more labor for using immutable
-		const pulledData = eventsData.get(strDate, false);
+		const pulledData = eventsData ? eventsData.get(strDate, false) : false;
 
 		return pulledData;
 	},
 
+	areDatesInSameDay: function(d1, d2){
+		return (
+			typeof d1 !== 'undefined' &&
+			typeof d2 !== 'undefined' &&
+			d1.getFullYear() === d2.getFullYear() &&
+			d1.getMonth() === d2.getMonth() &&
+			d1.getDate() === d2.getDate()
+		);
+	},
 	noOp: function(){},	// most robust function ever
 
 	render: function(){
@@ -99,8 +108,8 @@ const MonthDaysPanel = React.createClass({
 					dataAtDate	= this.getEventDataAtDate(date),
 					isNextMonth	= dateMonth === month + 1 ,
 					isPrevMonth	= dateMonth === month - 1 ,
-					isToday		= todayDate ? date.getTime() === todayDate.getTime() : false,
-					isSelected	= selectedDate ? date.getTime() === selectedDate.getTime() : false,
+					isToday		= this.areDatesInSameDay(date, todayDate),
+					isSelected	= this.areDatesInSameDay(date, selectedDate),
 					row			= rows[rowNumber] || [];
 
 			const dayPanel = <DayPanel
