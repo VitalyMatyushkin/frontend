@@ -146,17 +146,8 @@ const EventManagerBase = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		if (id !== undefined && model !== undefined) {
-			binding.update('rivals', function (rivals) {
-				var index = rivals.findIndex(function (rival) {
-					return rival.get('id') === id;
-				});
-				if (index === -1) {
-					return rivals.set(order, Immutable.fromJS(model));
-				} else {
-					return rivals;
-				}
-			});
+		if (typeof id !== 'undefined' && typeof model !== 'undefined') {
+			binding.set(`rivals.${order}`, Immutable.fromJS(model));
 		}
 	},
     getSports: function () {
