@@ -177,7 +177,7 @@ const EventTeamsView = React.createClass({
 		} else if(km === 0) {
 			return `${m}m ${cm}cm`;
 		} else {
-			return `${km}h ${m}m ${cm}cm`;
+			return `${km}km ${m}m ${cm}cm`;
 		}
 	},
 	handleClickPointSign: function(operation, pointType, userId, permissionId, teamId) {
