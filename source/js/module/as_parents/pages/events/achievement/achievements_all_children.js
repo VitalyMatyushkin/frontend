@@ -35,7 +35,7 @@ const AchievementsAllChildren = React.createClass({
 					status: EventHelper.EVENT_STATUS.FINISHED
 				}
 			}}).then(data => {
-				binding.set('achievements', Immutable.fromJS(data));
+				binding.set('allAchievements', Immutable.fromJS(data));
 			});
 		}
 	},
@@ -43,7 +43,7 @@ const AchievementsAllChildren = React.createClass({
         const   self    = this,
                 binding = self.getDefaultBinding(),
 				children = binding.toJS('children'),
-				achievements = binding.toJS('achievements');
+				achievements = binding.toJS('allAchievements');
 
         let result = <div className="eAchievement_row">{'no data'}</div>;
 
