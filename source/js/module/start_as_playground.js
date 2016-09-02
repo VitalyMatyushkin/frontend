@@ -7,31 +7,33 @@ const
         ReactDom        = require('react-dom'),
         React           = require('react'),
         Promise         = require('bluebird'),
-        ComboBox        = require('module/ui/autocomplete2/ComboBox2');
+		Immutable		= require('immutable'),
+		MonthDays		= require('module/ui/calendar/month_days_panel'),
+		Calendar		= require('module/ui/calendar/month_calendar');
 
 function runPlaygroundMode() {
 
-    //const defaultItme = {
-    //    id:     0,
-    //    name:   'DEFAULT'
-    //};
-    //const searchFunction = function(text) {
-    //    return {
-    //        sync: [],
-    //        async: Promise.resolve([
-    //            {id: 1, name: "Item1"},
-    //            {id: 2, name: "Item2"}
-    //        ])
-    //    }
-    //};
-    //
-    //const CB = <ComboBox />
-    //
+	const eventsData = {
+		'2016-8-1': true,
+		'2016-8-2': true
+	};
+
+
+	const calendar = <Calendar
+		monthDate={new Date(2016, 8)}
+		todayDate={new Date(2016, 8, 12)}
+		selectedDate={new Date(2016, 8, 1)}
+		onNextMonthClick={ () => console.log('Next Month Click') }
+		onPrevMonthClick={ () => console.log('Prev Month Click') }
+		onDateClick={ (date) => console.log('Date clicked: ' + date) }
+		eventsData={Immutable.fromJS(eventsData)}
+	/>;
+
     //// Init app
-    //ReactDom.render(
-    //    React.createElement(MyForm),
-    //    document.getElementById('jsMain')
-    //);
+    ReactDom.render(
+       calendar,
+       document.getElementById('jsMain')
+    );
 }
 
 module.exports = runPlaygroundMode;
