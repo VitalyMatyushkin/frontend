@@ -522,10 +522,7 @@ const EventButtons = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.atomically()
-			.set('eventTeams.editPlayers.teamManagerBindings', Immutable.fromJS(self.getRevertedTeamManagerBindings()))
-			.set('mode', 'general')
-			.commit();
+		binding.set('mode', 'general');
 	},
 	render: function() {
 		const self = this;

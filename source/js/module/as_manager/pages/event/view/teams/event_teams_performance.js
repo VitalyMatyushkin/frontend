@@ -306,7 +306,7 @@ const EventTeamsPerformance = React.createClass({
 								starCount={5}
 								value={value}
 								handleValueChanges={
-									(event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing') ?
+									mode === 'closing' ?
 										self.handleValueChange.bind(
 											self,
 											player,
