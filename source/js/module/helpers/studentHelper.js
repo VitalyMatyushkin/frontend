@@ -13,13 +13,6 @@ const StudentHelper = {
 	getStudentDataForPersonalStudentPage: function(studentId, schoolId) {
 		let studentData;
 
-		if(!schoolId){
-			this._getChildEventsCount(studentId).then(data => {
-				studentData.numberOfGamesPlayed = data.childEventCount[0];
-				studentData.numOfGamesWon = data.childWinnerEventCount[0];
-				studentData.numOfGamesScoredIn = data.childScoredEventCount[0];
-			});
-		}
 		//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
 		return this._getStudent(studentId, schoolId)
 			.then(student => {
@@ -30,6 +23,14 @@ const StudentHelper = {
 				};
 				studentData.classData = student.form;
 				studentData.houseData = student.house;
+				if(!schoolId){
+					this._getChildEventsCount(studentId).then(data => {
+						studentData.numberOfGamesPlayed = data.childEventCount[0];
+						studentData.numOfGamesWon = data.childWinnerEventCount[0];
+						studentData.numOfGamesScoredIn = data.childScoredEventCount[0];
+					});
+				}
+
 				return window.Server.school.get({schoolId: studentData.schoolId});
 			})
 			.then(schoolData => {

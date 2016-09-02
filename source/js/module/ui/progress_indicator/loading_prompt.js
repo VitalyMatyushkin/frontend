@@ -11,18 +11,12 @@ const IndicatorView = React.createClass({
     propTypes:{
         reDraw: React.PropTypes.bool
     },
-    componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-    },
     componentDidMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self = this;
         self._animateBar();
     },
     _animateBar:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        var self = this;
         var elProgress = ReactDOM.findDOMNode(self.refs.progressIndicator),
             elText = ReactDOM.findDOMNode(self.refs.progressText),
             eBar = ReactDOM.findDOMNode(self.refs.progressBar);
@@ -30,12 +24,12 @@ const IndicatorView = React.createClass({
             eBar.style.display = 'block';
             elProgress.value = 0;
             self.intervalId = setInterval(function(){
-                elProgress.value += 20;
+                elProgress.value += 1;
                 if(elProgress.value >= 100){
                     elText.innerText = 'Complete';
                     setTimeout(function(){eBar.style.display="none";clearInterval(self.intervalId);},800);
                 }
-            },100);
+            },150);
         }
     },
     componentDidUpdate:function(){
