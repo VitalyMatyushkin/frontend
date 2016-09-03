@@ -6,7 +6,8 @@ const	React			= require('react'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('./../../ui/managers/helpers/team_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		ChallengeModel	= require('module/ui/challenges/challenge_model');
+		ChallengeModel	= require('module/ui/challenges/challenge_model'),
+		NoResultItem	= require('./no_result_item');
 
 const ChallengesList = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -77,23 +78,18 @@ const ChallengesList = React.createClass({
 				currentDate	= binding.get('calendar.currentDate'),
 				selectDay	= binding.get('calendar.selectDay'),
 				sync		= binding.toJS('sync');
-		let		result;
 
-		if(selectDay === undefined || selectDay === null) {
-			result = (
-				<div className="eChallenge mNotFound">{"Please select day."}</div>
-			);
-		} else if(!self._isSync()) {
-			result = (
-				<div className="eChallenge mNotFound">
-					{"Loading..."}
-				</div>
-			);
-		} else {
-			const events = binding.toJS('selectedDayFixtures');
+		const events = binding.toJS('selectedDayFixtures');
 
-			if(events.length) {
-				result = events.map(function (event) {
+		switch (true) {
+			/* when no day selected */
+			case typeof selectDay === 'undefined' || selectDay === null:
+				return <NoResultItem text="Please select day"/>;
+			/* when data is still loading */
+			case !self._isSync():
+				return <NoResultItem text="Loading..."/>;
+			case Array.isArray(events) && events.length > 0:		// actually it shouldn't be an array, but Immutable.List instead... but this is what we get from binding
+				const result = events.map( event =>  {
 					const	model = new ChallengeModel(event, self.activeSchoolId),
 							sport = self._getSportIcon(model.sport);
 
@@ -118,16 +114,10 @@ const ChallengesList = React.createClass({
 						</div>
 					);
 				});
-			} else {
-				result = (
-					<div className="eChallenge mNotFound">
-						{"There are no events for selected day."}
-					</div>
-				);
-			}
+				return result;
+			default:
+				return <NoResultItem text="There are no events for selected day"/>;
 		}
-
-		return result;
 	},
 	getScore: function(event, teamBundleName, order) {
 		return TeamHelper.getCountPoints(event, teamBundleName, order);
