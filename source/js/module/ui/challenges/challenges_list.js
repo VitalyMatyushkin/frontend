@@ -7,7 +7,9 @@ const	React			= require('react'),
 		TeamHelper		= require('./../../ui/managers/helpers/team_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		ChallengeModel	= require('module/ui/challenges/challenge_model'),
-		NoResultItem	= require('./no_result_item');
+		ChallengeListTitle	= require('./challenge_list_title'),
+		ChallengeListItem	= require('./challenge_list_item'),
+		NoResultItem		= require('./no_result_item');
 
 const ChallengesList = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -69,9 +71,6 @@ const ChallengesList = React.createClass({
 	_onClickEvent: function(eventId) {
 		document.location.hash = 'event/' + eventId + '?tab=teams';
 	},
-	_getSportIcon:function(sport){
-		return <Sport name={sport} className="bIcon_invites" />;
-	},
 	_getEvents: function () {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
@@ -88,187 +87,25 @@ const ChallengesList = React.createClass({
 			/* when data is still loading */
 			case !self._isSync():
 				return <NoResultItem text="Loading..."/>;
+			/* when there are some events */
 			case Array.isArray(events) && events.length > 0:		// actually it shouldn't be an array, but Immutable.List instead... but this is what we get from binding
-				const result = events.map( event =>  {
-					const	model = new ChallengeModel(event, self.activeSchoolId),
-							sport = self._getSportIcon(model.sport);
-
-					return (
-						<div key={'event-' + event.id} className='eChallenge' onClick={self._onClickEvent.bind(null, event.id)}>
-							<div className="eChallenge_sport">{sport}</div>
-							<div className="eChallenge_date">{model.date}</div>
-
-							<div className="eChallenge_name" title={model.name}>{model.name}</div>
-							{self.renderGameTypeColumn(event, model)}
-							<div className="eChallenge_score">
-								{
-									`${TeamHelper.callFunctionForLeftContext(
-										self.activeSchoolId, event, self.getScore.bind(self, event)
-									)}
-									-
-									${TeamHelper.callFunctionForRightContext(
-										self.activeSchoolId, event, self.getScore.bind(self, event)
-									)}`
-								}
-							</div>
-						</div>
-					);
+				return events.map( event =>  {
+					const	model = new ChallengeModel(event, self.activeSchoolId);
+					return <ChallengeListItem key={event.id} event={event} model={model} activeSchoolId={this.activeSchoolId} onClick={this._onClickEvent}/>;
 				});
-				return result;
 			default:
 				return <NoResultItem text="There are no events for selected day"/>;
 		}
 	},
-	getScore: function(event, teamBundleName, order) {
-		return TeamHelper.getCountPoints(event, teamBundleName, order);
-	},
-	renderGameTypeColumn: function(event, model) {
-		const	self	= this;
-		let		result	= null;
-
-		if(EventHelper.isEventWithOneIndividualTeam(event)) {
-			result = (
-				<div className="eChallenge_rivals">
-					{"Individual Game"}
-				</div>
-			);
-		} else {
-			const	leftSideRivalName	= self._getRivalNameLeftSide(event, model.rivals),
-					rightSideRivalName	= self._getRivalNameRightSide(event, model.rivals);
-
-			result = (
-				<div className="eChallenge_rivals">
-					<span className="eChallenge_rivalName" title={leftSideRivalName}>{leftSideRivalName}</span>
-					<span>vs</span>
-					<span className="eChallenge_rivalName" title={rightSideRivalName}>{rightSideRivalName}</span>
-				</div>
-			);
-		}
-
-		return result;
-	},
-	_getRivalNameLeftSide: function(event, rivals) {
-		const self = this;
-
-		const	eventType		= event.eventType,
-				participants	= event.teamsData;
-
-		if(TeamHelper.isNonTeamSport(event)) {
-			switch (eventType) {
-				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					const foundRival = rivals.find(r => r.id === self.activeSchoolId);
-
-					return foundRival ? foundRival.name : 'n/a';
-				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return rivals[0].name;
-			}
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants.length === 0
-		) {
-			return 'n/a';
-		} else if (
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants.length === 1 &&
-			participants[0].schoolId !== self.activeSchoolId
-		) {
-			return 'n/a';
-		} else if (
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === self.activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === self.activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-		} else if (
-			participants.length === 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		} else if (
-			(
-				participants.length === 0 ||
-				participants.length === 1
-			) &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return 'n/a';
-		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		}
-	},
-	_getRivalNameRightSide: function(event, rivals) {
-		const	self	= this;
-
-		const	eventType		= event.eventType,
-				participants	= event.teamsData;
-
-		if(TeamHelper.isNonTeamSport(event)) {
-			switch (eventType) {
-				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					const foundRival = rivals.find(r => r.id !== self.activeSchoolId);
-
-					return foundRival ? foundRival.name : 'n/a';
-				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return rivals[1].name;
-			}
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants.length === 0
-		) {
-			return rivals.find(rival => rival.id === event.invitedSchools[0].id).name;
-		} else if (// if inter school event and participant[0] is our school
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== self.activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		} else if (// if inter school event and participant[1] is our school
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== self.activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-		} else if(// if inter school event and opponent school is not yet accept invitation
-			participants.length === 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return rivals.find(rival => rival.id === event.invitedSchools[0].id).name;
-		} else if (// if it isn't inter school event
-			participants.length > 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-		} else if (
-			(
-				participants.length === 0 ||
-				participants.length === 1
-			) &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return 'n/a';
-		}
-	},
 	_isSync: function() {
-		const	self	= this;
-
-		return self.getDefaultBinding().toJS('sync');
+		return this.getDefaultBinding().toJS('sync');
 	},
 	render: function() {
 		const	self	= this;
 
 		return (
 			<div className="eEvents_challenges mGeneral">
-				<div className="eChallenge_title">
-					<span className="eChallenge_sport">Sport</span>
-					<span className="eChallenge_date">Date</span>
-					<span className="eChallenge_name">Event Name</span>
-					<span className="eChallenge_rivals">Game Type</span>
-					<div className="eChallenge_score">Score</div>
-				</div>
+				<ChallengeListTitle/>
 				{self._getEvents()}
 			</div>
 		);
