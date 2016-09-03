@@ -17,6 +17,7 @@ const HouseStudents = React.createClass({
 		this.model.title = `Students of ${name} form`;
 		this.model.filters = {where:{formId:id}};
 		this.model.columns.splice(3, 2);
+		this.model.btnAdd = null;
 		this.model.init();
 	},
 	render: function () {
