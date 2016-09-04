@@ -82,74 +82,10 @@ const StudentHelper = {
 			event.ascription.isWin);
 		});
 	},
-	_isStudentGetScores: function(studentId, event) {
-		return event.result && event.result.points && event.result.points[studentId] ? true : false;
-	},
-	_isStudentFromCurrentTeam: function(studentId, team) {
-		return Lazy(team.players).findWhere({userId:studentId}) ? true : false;
-	},
-	_isStudentTeamWin: function(studentId, event) {
-		let isStudentTeamWin = false;
-
-		if(event.status === EventHelper.EVENT_STATUS.FINISHED && event.result) {
-			const winnerId = EventHelper.getWinnerId(event.result);
-			winnerId && (isStudentTeamWin = this._isStudentFromCurrentTeam(
-				studentId,
-				Lazy(event.participants).findWhere({id: winnerId})
-			));
-		}
-
-		return isStudentTeamWin;
-	},
-	_getTeam: function(schoolId, eventId, teamId) {
-		let team;
-
-		return window.Server.publicSchoolEventTeam.get({schoolId: schoolId, eventId: eventId, teamId: teamId})
-			.then(_team => {
-				team = _team;
-
-				return window.Server.publicSchool.get({schoolId: team.schoolId});
-			})
-			.then(school => {
-				team.school = school;
-
-				if(team.houseId) {
-					return window.Server.publicSchoolHouse.get({schoolId: team.schoolId, houseId: team.houseId})
-						.then(house => {
-							team.house = house;
-
-							return team;
-						});
-				} else {
-					return team;
-				}
-			});
-	},
 	_getWinStudentEvents: function(studentId, schoolId) {
 		if(schoolId){
 			//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
 			return this._getStudentEvents(studentId, schoolId);
-				//.then(events => {
-				//	return window.Server.sports.get({filter:{limit:100}})
-				//		.then(sports => {
-				//			return events.map(event => {
-				//				event.sport = sports.find(sport => sport.id === event.sportId);
-				//				return event;
-				//			});
-				//		});
-				//})
-				//.then(events => {
-				//	return Promise.all(events.map(event => {
-				//		return Promise.all(event.teams.map(teamId => {
-				//				return this._getTeam(event.inviterSchoolId, event.id, teamId);
-				//			}))
-				//			.then(teams => {
-				//				event.participants = teams;
-				//
-				//				return event;
-				//			});
-				//	}))
-				//})
 		} else {
 			return this._getChildEvents(studentId);
 		}
