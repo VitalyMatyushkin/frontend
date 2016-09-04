@@ -71,7 +71,6 @@ const ChallengesList = React.createClass({
 	_getEvents: function () {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
-				currentDate	= binding.get('calendar.currentDate'),
 				selectDay	= binding.get('calendar.selectDay'),
 				sync		= binding.toJS('sync');
 
