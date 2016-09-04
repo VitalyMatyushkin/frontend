@@ -82,19 +82,21 @@ const HomeCalender = React.createClass({
 		const	eventType       = event.eventType,
 				participants    = event.participants;
 
-		if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		}
+		// TODO: fix me
+		return 'n/a';
+		// if(
+		// 	eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+		// 	participants[0].schoolId === activeSchoolId
+		// ) {
+		// 	return rivals.find(rival => rival.id === participants[0].id).name;
+		// } else if(
+		// 	eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+		// 	participants[1].schoolId === activeSchoolId
+		// ) {
+		// 	return rivals.find(rival => rival.id === participants[1].id).name;
+		// } else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
+		// 	return rivals.find(rival => rival.id === participants[0].id).name;
+		// }
 	},
 	_getRivalNameRightSide: function(event, rivals) {
 		const	self			= this,
@@ -104,33 +106,36 @@ const HomeCalender = React.createClass({
 		const	eventType		= event.eventType,
 				participants	= event.participants;
 
+		// TODO: fix me
+		return 'n/a';
+
 		// if inter school event and participant[0] is our school
-		if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-			// if inter school event and participant[1] is our school
-		} else if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-			// if inter school event and opponent school is not yet accept invitation
-		} else if(
-			participants.length === 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return rivals.find(rival => rival.id === null).name;
-			// if it isn't inter school event
-		} else if (
-			participants.length > 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-		}
+		// if (
+		// 	participants.length > 1 &&
+		// 	eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+		// 	participants[0].schoolId !== activeSchoolId
+		// ) {
+		// 	return rivals.find(rival => rival.id === participants[0].id).name;
+		// 	// if inter school event and participant[1] is our school
+		// } else if (
+		// 	participants.length > 1 &&
+		// 	eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
+		// 	participants[1].schoolId !== activeSchoolId
+		// ) {
+		// 	return rivals.find(rival => rival.id === participants[1].id).name;
+		// 	// if inter school event and opponent school is not yet accept invitation
+		// } else if(
+		// 	participants.length === 1 &&
+		// 	eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		// ) {
+		// 	return rivals.find(rival => rival.id === null).name;
+		// 	// if it isn't inter school event
+		// } else if (
+		// 	participants.length > 1 &&
+		// 	eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		// ) {
+		// 	return rivals.find(rival => rival.id === participants[1].id).name;
+		// }
 	},
 	render: function() {
 		const	self			= this,
