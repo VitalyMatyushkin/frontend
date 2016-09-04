@@ -8,37 +8,34 @@ const   Morearty    = require('morearty'),
 const PublicMenu = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes:{
-        menuItems:React.PropTypes.array.isRequired
+        menuItems: React.PropTypes.array.isRequired
     },
     getInitialState:function(){
-        return {menuActive:false}
+        return {menuActive:true}
     },
     getMenuItems:function(){
-        var self = this,
-            items = self.props.menuItems;
-        if(items !== undefined){
-            return items.map(function(node){
-                return (
-                    <div className="bPublicMenu_item">{node}</div>
-                );
+        const items = this.props.menuItems;
+        if(typeof items !== 'undefined'){
+            return items.map( node => {
+                return (<div key={node} className="bPublicMenu_item">{node}</div>);
             });
         }
     },
     menuToggle:function(){
-        var self = this,
-            currentState = self.state.menuActive;
+        const currentState = this.state.menuActive;
+
         if(currentState === false){
-            self.setState({menuActive:true});
-            self.forceUpdate();
+            this.setState({menuActive:true});
+            this.forceUpdate();
         }else{
-            self.setState({menuActive:false});
-            self.forceUpdate();
+            this.setState({menuActive:false});
+            this.forceUpdate();
         }
     },
     render:function(){
-        var self = this,
-            menuNodes = self.getMenuItems(),
-            menuClasses = self.state.menuActive === true? 'bPublicMenu_tray bPublicMenu_show':'bPublicMenu_tray bPublicMenu_hide';
+        const 	self 		= this,
+				menuNodes 	= self.getMenuItems(),
+				menuClasses = self.state.menuActive === true ? 'bPublicMenu_tray bPublicMenu_show' : 'bPublicMenu_tray bPublicMenu_hide';
         return(
             <div className="bTopMenu bPublicMenu">
                 <span>Menu</span>
