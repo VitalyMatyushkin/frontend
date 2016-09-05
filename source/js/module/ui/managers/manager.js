@@ -46,12 +46,12 @@ const Manager = React.createClass({
 					players: self.getInitPlayers(),
 					teamTable: [
 						{
-							selectedTeamId: undefined,
-							exceptionTeamId: undefined
+							selectedTeamId: self.getTeamIdByOrder(0),
+							exceptionTeamId: self.getTeamIdByOrder(1),
 						},
 						{
-							selectedTeamId: undefined,
-							exceptionTeamId: undefined
+							selectedTeamId: self.getTeamIdByOrder(1),
+							exceptionTeamId: self.getTeamIdByOrder(0),
 						}
 					],
 					teamWrapper: [
@@ -126,7 +126,7 @@ const Manager = React.createClass({
 	},
 	getTeamIdByOrder: function(order) {
 		const	self	= this,
-			 binding	= self.getBinding();
+				binding	= self.getBinding();
 
 		return (
 			typeof binding.rivals !== "undefined" &&

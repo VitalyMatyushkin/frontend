@@ -10,7 +10,13 @@ const	TeamChooser	= React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onTeamClick:	React.PropTypes.func,
-		onTeamDeselect:	React.PropTypes.func
+		onTeamDeselect:	React.PropTypes.func,
+		isEnable:		React.PropTypes.bool
+	},
+	getDefaultProps: function() {
+		return {
+			isEnable: true
+		};
 	},
 	componentWillMount: function () {
 		const self = this;
@@ -109,23 +115,26 @@ const	TeamChooser	= React.createClass({
 				</div>
 			)) ;
 		} else if(teams && teams.length !== 0) {
-			teams.forEach((team, index) => {
-				if(exceptionTeamId != team.id) {
-					const	teamClass	= classNames({
+			console.log(selectedTeamId);
+			console.log(exceptionTeamId);
+			console.log(teams);
+			// it doesn't show selected team and team selected for opponent
+			teamItems = teams.filter(team => team.id !== selectedTeamId && team.id !== exceptionTeamId)
+				.map((team, index) => {
+					const teamClass = classNames({
 						eTeamChooser_team:	true,
 						mLast:				index == teams.length - 1
 					});
 
-					teamItems.push((
-						<div	key={team.id}
-								className=	{teamClass}
-								onMouseDown={self._onTeamClick.bind(self, team.id, team)}
+					return (
+						<div	key			= {team.id}
+								className	= {teamClass}
+								onMouseDown	= {self._onTeamClick.bind(self, team.id, team)}
 						>
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>
-					));
-				}
+					);
 			});
 		}
 
@@ -231,8 +240,13 @@ const	TeamChooser	= React.createClass({
 	render: function() {
 		const	self	= this;
 
+		const teamChooserClass = classNames({
+			bTeamChooser:	true,
+			mDisable:		!self.props.isEnable
+		});
+
 		return (
-			<div className="bTeamChooser">
+			<div className={teamChooserClass}>
 				<div className="eTeamChooser_leftSide">
 					{self._renderTeamChooserButton()}
 					{self._renderTeamList()}
