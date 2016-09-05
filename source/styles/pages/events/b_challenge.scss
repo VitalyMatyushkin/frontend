@@ -218,6 +218,15 @@ $border: solid 1px #c2c2c2;
 .bAchievement{
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  padding: 5px;
+
+  &:hover{
+    border: $MAIN_COLOR 1px solid;
+  }
+}
+.eAchievement_info{
+  text-align: center;
 }
 .eAchievement_in {
   display: flex;

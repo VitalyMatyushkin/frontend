@@ -79,9 +79,9 @@ const  RoleList = React.createClass({
 				activePermission = arr[0];
 				schoolId = activePermission.schoolId;
 			}
-			if(activePermission.preset === 'PARENT') {
-				schoolId = null;
-			}
+			//if(activePermission.preset === 'PARENT') {
+			//	schoolId = null; //TODO: event not open with activeSchoolId = null
+			//}
 			rootBinding.set('userRules.activeSchoolId', schoolId);
 			binding.set('activePermission', Immutable.fromJS(activePermission));
 		}

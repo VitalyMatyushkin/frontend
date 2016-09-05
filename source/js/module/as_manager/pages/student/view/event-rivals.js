@@ -4,6 +4,7 @@
 const 	React 		= require('react'),
 		EventHelper = require('module/helpers/eventHelper'),
 		TeamHelper 	= require('module/ui/managers/helpers/team_helper'),
+		Sport 		= require('module/ui/icons/sport_icon'),
 		classNames 	= require('classnames');
 
 function EventRivals(props){
@@ -11,6 +12,7 @@ function EventRivals(props){
 			activeSchoolId 		= props.activeSchoolId,
 			isFinished 			= event.status === EventHelper.EVENT_STATUS.FINISHED,
 			isInterSchoolsEvent = EventHelper.isInterSchoolsEvent(event),
+			sportName 			= event.sport && event.sport.name,
 			classResults 		= classNames({
 										eAchievement_results:true,
 										mDone: isFinished
@@ -52,6 +54,10 @@ function EventRivals(props){
 				<div className="eAchievement_rivalInfo">
 					<div className={classResults}>
 						{isFinished ? [firstPoint, secondPoint].join(':') : '? : ?'}
+					</div>
+					<div className="eEventSport">
+						<span className="eEventSport_icon"><Sport name={sportName} /></span>
+						<span className="eEventSport_name">{sportName}</span>
 					</div>
 					<div className="eAchievement_info">
 						{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}

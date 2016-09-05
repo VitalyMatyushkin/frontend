@@ -88,7 +88,7 @@ StudentListModel.prototype = {
 	},
 	setAddButton: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
-			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 
 		/**Only school admin and manager can add new students. All other users should not see that button.*/
 		this.btnAdd = changeAllowed ?

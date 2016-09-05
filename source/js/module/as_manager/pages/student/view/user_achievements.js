@@ -41,7 +41,9 @@ const UserAchievements = React.createClass({
 		const   self 		= this,
 			rootBinding = self.getMoreartyContext().getBinding();
 
-		const activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+		const 	role 		= rootBinding.get('userData.authorizationInfo.role'),
+				isParent 	= role === "PARENT";
+		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
 
 		let eventsByDate;
 
@@ -65,13 +67,15 @@ const UserAchievements = React.createClass({
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                        <h4>{`Scored in this fixture: ${event.studentScore}`}</h4>
+						<h4>{event.name}</h4>
+						<h6>{`Scored: ${event.studentScore}`}</h6>
 						<EventRivals event={event} activeSchoolId={activeSchoolId} />
-                        <div className="eAchievement_com_container">
+						{/*<div className="eAchievement_com_container">
                             <div className="eChallenge_comments">
                                 {comment}
                             </div>
-                        </div>
+                        </div>*/}
+						<br/>
                     </div>
                 );
             });

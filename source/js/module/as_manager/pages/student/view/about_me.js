@@ -30,7 +30,7 @@ const AboutMeBlock = React.createClass({
 			parents = binding.toJS('parents');
 		if(parents !== undefined && parents.length >= 1){
 			return parents.map(function(parent, i){
-				let icon = parent.gender === 'male'?'icon_dad':'icon_mom';
+				let icon = parent.gender === 'MALE'?'icon_dad':'icon_mom';
 				return(
 					<div key={i} className="eAboutList_item"><SVG icon={icon}/>{parent.firstName+' '+parent.lastName}</div>
 				)

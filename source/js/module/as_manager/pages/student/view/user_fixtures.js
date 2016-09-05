@@ -5,6 +5,7 @@
 const   React           = require('react'),
         EventHelper     = require('module/helpers/eventHelper'),
 		GameType 		= require('module/ui/challenges/event-game-type-with-score'),
+		Sport 			= require('module/ui/icons/sport_icon'),
         Morearty        = require('morearty'),
         Immutable       = require('immutable');
 
@@ -59,7 +60,9 @@ const UserFixtures = React.createClass({
 				binding 	= self.getDefaultBinding(),
 				rootBinding = self.getMoreartyContext().getBinding();
 
-		const activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+		const 	role 		= rootBinding.get('userData.authorizationInfo.role'),
+				isParent 	= role === "PARENT";
+		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
 
         let eventsByDate;
         if(theData && theData.schoolEvent) {
@@ -69,7 +72,9 @@ const UserFixtures = React.createClass({
                     new Date(date));
             });
             return eventsByDate.map(function (event, index) {
-                let comment;
+				const sportName = event.sport && event.sport.name;
+
+				let comment;
 
                 if(event.result && event.result.comment){
                     comment = event.result.comment;
@@ -80,15 +85,20 @@ const UserFixtures = React.createClass({
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-                    <GameType event={event} activeSchoolId={activeSchoolId} />
-                    <div className="eChallenge_type">
+					<div className="eChallenge_type">
+						<Sport name={sportName} />
+						<span>{sportName}</span>
+					</div>
+					<GameType event={event} activeSchoolId={activeSchoolId} />
+					<div className="eChallenge_type">{event.name}</div>
+					<div className="eChallenge_type">
                         {EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}
                     </div>
-                    <div className="eChallenge_com_container">
+					{/*<div className="eChallenge_com_container">
                         <div className="eChallenge_comments">
                             {comment}
                         </div>
-                    </div>
+                    </div>*/}
                 </div>;
 
             });
