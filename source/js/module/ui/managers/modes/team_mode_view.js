@@ -156,38 +156,6 @@ const TeamModeView = React.createClass({
 			)
 			.commit();
 	},
-	_renderTeamChooser: function() {
-		const	self = this,
-				binding = self.getDefaultBinding();
-
-		const event = self.getBinding('model').toJS();
-
-		switch (true) {
-			case TeamHelper.isTeamSport(event):
-				const	selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
-						teamTableBinding	= {
-							default:	binding.sub(`teamTable.${selectedRivalIndex}`),
-							model:		self.getBinding().model,
-							rival:		self.getBinding().rivals.sub(selectedRivalIndex)
-						};
-
-				//TODO shitty way
-				//one react element and many data bundles - that's what we need
-				//Need to go TeamChooser on react state, delete morearty
-				//problem is in my ugly realization of TeamChooser component
-				//some data init on componentWillMount function
-				//so we can't just send new data to TeamChooser in some point of TeamChooser lifecycle and
-				//and hope - everything will work good.
-				//NO!) All fall down, man. Sorrrry.
-				if(selectedRivalIndex == 0) {
-					return <TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>;
-				} else if(selectedRivalIndex == 1) {
-					return <TeamChooser onTeamClick={self._onTeamClick} onTeamDeselect={self._deselectTeam} binding={teamTableBinding}/>;
-				}
-			default:
-				return null;
-		}
-	},
 	_renderTeamWrapper: function() {
 		const	self				= this,
 				binding				= self.getDefaultBinding(),
@@ -241,7 +209,8 @@ const TeamModeView = React.createClass({
 		);
 	},
 	render: function() {
-		const self = this;
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		const event = self.getBinding('model').toJS();
 
@@ -250,9 +219,42 @@ const TeamModeView = React.createClass({
 			mIndividuals: TeamHelper.isNonTeamSport(event)
 		});
 
+		let teamChoosers = null;
+		if(TeamHelper.isTeamSport(event)) {
+			const	selectedRivalIndex	= binding.toJS('selectedRivalIndex'),
+					teamTableBindings	= [
+						{
+							default:	binding.sub(`teamTable.${0}`),
+							model:		self.getBinding().model,
+							rival:		self.getBinding().rivals.sub(0)
+						},
+						{
+							default:	binding.sub(`teamTable.${1}`),
+							model:		self.getBinding().model,
+							rival:		self.getBinding().rivals.sub(1)
+						}
+					];
+
+			//TODO shitty way
+			//one react element and many data bundles - that's what we need
+			//Need to go TeamChooser on react state, delete morearty
+			//problem is in my ugly realization of TeamChooser component
+			//some data init on componentWillMount function
+			//so we can't just send new data to TeamChooser in some point of TeamChooser lifecycle and
+			//and hope - everything will work good.
+			//NO!) All fall down, man. Sorrrry.
+			teamChoosers = teamTableBindings.map((binding, index) =>
+				<TeamChooser	onTeamClick={self._onTeamClick}
+								onTeamDeselect={self._deselectTeam}
+								binding={teamTableBindings[index]}
+								isEnable={selectedRivalIndex === index}
+				/>
+			);
+		}
+
 		return (
 			<div className={teamModeViewClass}>
-				{self._renderTeamChooser()}
+				{teamChoosers}
 				{self._renderErrorBox()}
 				{self._renderTeamWrapper()}
 			</div>

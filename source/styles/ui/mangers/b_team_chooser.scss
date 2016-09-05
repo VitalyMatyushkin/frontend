@@ -1,6 +1,10 @@
 .bTeamChooser {
   display: inline-block;
   vertical-align: top;
+
+  &.mDisable {
+    display: none;
+  }
 }
 
 .eTeamChooser_leftSide {

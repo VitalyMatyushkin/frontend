@@ -20,7 +20,7 @@ const TeamName = React.createClass({
 							type={'text'}
 							placeholder={'Enter team name'}
 							onChange={self.handleChangeTeamName}
-							value={self.props.name}
+							value={typeof self.props.name !== 'undefined' ? self.props.name : ''}
 					/>
 				</div>
 			</div>

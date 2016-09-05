@@ -207,6 +207,11 @@ function convertGenderToServerValue(gender) {
 			return 'FEMALE_ONLY';
 		case 'mixed':
 			return 'MIXED';
+		// it doesn't convert gender value if gender value has server type
+		case 'MALE_ONLY':
+		case 'FEMALE_ONLY':
+		case 'MIXED':
+			return gender;
 	}
 }
 
