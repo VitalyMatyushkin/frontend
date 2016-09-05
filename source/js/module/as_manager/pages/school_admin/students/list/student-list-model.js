@@ -25,6 +25,7 @@ const StudentListModel = function(page){
 
 	this.title = 'Students';
 	this.filters = {limit:20};
+	this.setAddButton();
 	this.setColumns();
 };
 
@@ -84,6 +85,18 @@ StudentListModel.prototype = {
 				value:'Girl'
 			}
 		];
+	},
+	setAddButton: function(){
+		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+
+		/**Only school admin and manager can add new students. All other users should not see that button.*/
+		this.btnAdd = changeAllowed ?
+			(
+				<div className="addButton bTooltip" data-description="Add Student" onClick={function(){document.location.hash += '/add';}}>
+					<SVG icon="icon_add_student" />
+				</div>
+			) : null
 	},
 	setColumns: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
@@ -206,21 +219,11 @@ StudentListModel.prototype = {
 		];
 	},
 	init: function(){
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
-				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
-
 		this.grid = new GridModel({
 			actionPanel:{
 				title:this.title,
 				showStrip:true,
-
-				/**Only school admin and manager can add new students. All other users should not see that button.*/
-				btnAdd:changeAllowed ?
-					(
-						<div className="addButton bTooltip" data-description="Add Student" onClick={function(){document.location.hash += '/add';}}>
-							<SVG icon="icon_add_student" />
-						</div>
-					) : null
+				btnAdd:this.btnAdd
 			},
 			columns: this.columns,
 			filters: this.filters

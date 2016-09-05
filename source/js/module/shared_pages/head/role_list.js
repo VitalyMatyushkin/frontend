@@ -72,12 +72,17 @@ const  RoleList = React.createClass({
 				permissions		= binding.toJS('permissions'),
 				arr				= permissions ? permissions.filter(p => p.role === activeRoleName):[];
 
+		let schoolId = activeSchoolId;
 		if(arr.length){
 			let activePermission = arr.find(p => p.schoolId === activeSchoolId);
 			if(!activePermission){
 				activePermission = arr[0];
-				rootBinding.set('userRules.activeSchoolId', activePermission.schoolId);
+				schoolId = activePermission.schoolId;
 			}
+			if(activePermission.preset === 'PARENT') {
+				schoolId = null;
+			}
+			rootBinding.set('userRules.activeSchoolId', schoolId);
 			binding.set('activePermission', Immutable.fromJS(activePermission));
 		}
 	},

@@ -583,7 +583,8 @@ function getRivalName(event, activeSchoolId, forLeftContext){
 			from = house ? house.name : '';
 			break;
 		case isInternalEvent:
-			from = name ? '' : isIndividual ? 'individual': 'n/a';
+			from = name && activeSchoolId ? '' : isIndividual ? 'individual':
+						schoolsData.length ? schoolsData[0].name : 'n/a';
 			break;
 	}
 
