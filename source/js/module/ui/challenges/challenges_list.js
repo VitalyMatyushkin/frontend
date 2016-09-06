@@ -3,10 +3,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		ChallengeModel	= require('module/ui/challenges/challenge_model'),
-		ChallengeListTitle	= require('./challenge_list_title'),
-		ChallengeListItem	= require('./challenge_list_item'),
-		NoResultItem		= require('./no_result_item');
+		Challenges			= require('./challenges');
 
 const ChallengesList = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -68,43 +65,20 @@ const ChallengesList = React.createClass({
 	_onClickEvent: function(eventId) {
 		document.location.hash = 'event/' + eventId + '?tab=teams';
 	},
-	_getEvents: function () {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				selectDay	= binding.get('calendar.selectDay'),
-				sync		= binding.toJS('sync');
-
-		const events = binding.toJS('selectedDayFixtures');
-
-		switch (true) {
-			/* when no day selected */
-			case typeof selectDay === 'undefined' || selectDay === null:
-				return <NoResultItem text="Please select day"/>;
-			/* when data is still loading */
-			case !self._isSync():
-				return <NoResultItem text="Loading..."/>;
-			/* when there are some events */
-			case Array.isArray(events) && events.length > 0:		// actually it shouldn't be an array, but Immutable.List instead... but this is what we get from binding
-				return events.map( event =>  {
-					const	model = new ChallengeModel(event, self.activeSchoolId);
-					return <ChallengeListItem key={event.id} event={event} model={model} activeSchoolId={this.activeSchoolId} onClick={this._onClickEvent}/>;
-				});
-			default:
-				return <NoResultItem text="There are no events for selected day"/>;
-		}
-	},
-	_isSync: function() {
-		return this.getDefaultBinding().toJS('sync');
-	},
 	render: function() {
-		const	self	= this;
+		const 	binding 		= this.getDefaultBinding(),
+				isSync			= binding.toJS('sync'),
+				selectedDay		= binding.get('calendar.selectDay'),
+				isDaySelected	= typeof selectedDay !== 'undefined' || selectedDay !== null,
+				events			= binding.toJS('selectedDayFixtures');
 
-		return (
-			<div className="eEvents_challenges mGeneral">
-				<ChallengeListTitle/>
-				{self._getEvents()}
-			</div>
-		);
+		return <Challenges
+			isSync={isSync}
+			isDaySelected={isDaySelected}
+			activeSchoolId={this.activeSchoolId}
+			onClick={this._onClickEvent}
+			events={events}
+		/>;
 	}
 });
 

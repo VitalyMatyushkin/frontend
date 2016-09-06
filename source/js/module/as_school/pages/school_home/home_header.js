@@ -15,6 +15,12 @@ const defaultPhotos = [
     'https://upload.wikimedia.org/wikipedia/commons/3/34/Powder_puff_football.jpg'
 ];
 
+/** Gallery slider with few overlay buttons
+ * TODO:
+ * Note, it does not load anything itself and only display data from binding, so it is good candidate for turning in
+ * pure react component.
+ *
+ **/
 const HomeHeader = React.createClass({
 
     mixins:[Morearty.Mixin],

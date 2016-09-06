@@ -1,14 +1,9 @@
 
-const 	React 		= require('react'),
-		Morearty    = require('morearty');
+const 	React 		= require('react');
 
-const Logo = React.createClass({
-	mixins: [Morearty.Mixin],
-	render: function() {
-		return (
-			<div className="bPublicLogo"></div>
-		)
-	}
-});
+function Logo(){
+	return <div className="bPublicLogo"></div>;
+}
+
 
 module.exports = Logo;
