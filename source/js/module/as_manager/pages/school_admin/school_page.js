@@ -10,8 +10,7 @@ const 	RouterView 					= require('module/core/router'),
 		HousesPageComponent 		= require('module/as_manager/pages/school_admin/houses/houses_page'),
 		TeamsPageComponent 			= require('module/as_manager/pages/school_admin/teams/teams_page'),
 		NewsPageComponent 			= require('module/as_manager/pages/school_admin/news/news_page'),
-		GalleryPageComponent 		= require('module/as_manager/pages/school_admin/gallery/gallery_page'),
-		StudentPageComponent 		= require('module/as_manager/pages/student/student_page');
+		GalleryPageComponent 		= require('module/as_manager/pages/school_admin/gallery/gallery_page');
 
 
 
@@ -134,10 +133,6 @@ const OneSchoolPage = React.createClass({
                         <Route path="/school_admin/gallery /school_admin/gallery/:mode"
 							   binding={binding.sub('gallery')}
 							   component={GalleryPageComponent}/>
-
-						<Route path="/school_admin/student"
-							   binding={binding}
-							   component={StudentPageComponent}/>
 					</RouterView>
 				</div>
 			</div>

@@ -6,7 +6,6 @@ const	RouterView		= require('module/core/router'),
 		SettingsRoute	= require('module/core/routes/settings_route'),
 		Morearty		= require('morearty'),
 		React			= require('react'),
-		StudentPageComponent = require('module/as_manager/pages/student/student_page'),
 		AdminSchoolPageComponent = require('module/as_manager/pages/school_admin/school_page'),
 		SchoolPageComponent = require('module/as_manager/pages/schools/schools_page'),
 		EventsComponent = require('module/as_manager/pages/events/events'),
@@ -34,10 +33,6 @@ const Center = React.createClass({
 				<LogoutRoute binding={binding.sub('userData')}/>
 
 				<SettingsRoute binding={binding.sub('userData')} />
-
-				<Route path="/student /student/:subPage /student/:subPage/:mode"
-					   binding={binding.sub('studentPage')}
-					   component={StudentPageComponent} />
 
 				<Route path="/school_admin/:subPage /school_admin/:subPage/:mode"
 					   binding={binding.sub('activeSchool')}
