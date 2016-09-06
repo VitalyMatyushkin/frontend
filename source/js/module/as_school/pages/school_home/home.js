@@ -7,19 +7,23 @@ const   HomeHeader      = require('./home_header'),
         HomeCalender    = require('./home_calendar'),
         React           = require('react'),
         Morearty        = require('morearty'),
+		Immutable		= require('immutable'),
         HomeBlog        = require('./home_carousel');
 
 const SchoolHomePage = React.createClass({
-    mixins:[Morearty.Mixin],
-    render:function(){
+    mixins: [Morearty.Mixin],
+
+    render: function(){
         const   self    = this,
                 binding = self.getDefaultBinding();
+
+
         return (
             <div className="eSchoolHomePage">
                 <HomeHeader binding={binding}/>
                 <div className="eSchoolBodyWrapper">
                     <HomeCalender binding={binding} />
-                    <HomeFixture binding={binding} />
+					{/*<HomeFixture binding={binding} /> */}
                     <HomeNews binding={binding}/>
                     <HomeBlog binding={binding}  />
                 </div>

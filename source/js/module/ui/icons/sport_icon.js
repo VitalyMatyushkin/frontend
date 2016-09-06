@@ -9,8 +9,8 @@ const   React   = require('react'),
 /** Renders sport icon as SVG: ball, bat, and so on */
 const SportIcon = React.createClass({
     propTypes: {
-        name: React.PropTypes.string.isRequired,
-        className: React.PropTypes.string
+        name:       React.PropTypes.string.isRequired,
+        className:  React.PropTypes.string
     },
 	/**
 	 * Picking proper sport icon by sport name
