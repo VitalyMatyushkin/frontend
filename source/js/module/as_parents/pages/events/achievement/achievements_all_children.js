@@ -4,6 +4,7 @@
 
 const   React 		= require('react'),
 		EventHelper	= require('module/helpers/eventHelper'),
+		Loader 		= require('module/ui/loader'),
 		Immutable   = require('immutable'),
         Morearty 	= require('morearty');
 
@@ -45,7 +46,11 @@ const AchievementsAllChildren = React.createClass({
 				children = binding.toJS('children'),
 				achievements = binding.toJS('allAchievements');
 
-        let result = <div className="eAchievement_row">{'no data'}</div>;
+        let result = (
+			<div className="eAchievement_row">
+				<Loader condition={true} />
+			</div>
+		);
 
         if(children && children.length && achievements) {
             result = children.map(function (child, i) {
