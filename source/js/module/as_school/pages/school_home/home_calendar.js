@@ -21,6 +21,8 @@ const HomeCalender = React.createClass({
 
 		/** Loading initial data for this month */
 		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
+
+		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
 	},
 
 	render: function(){
