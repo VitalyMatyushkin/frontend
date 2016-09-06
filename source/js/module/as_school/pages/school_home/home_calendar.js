@@ -4,6 +4,7 @@ const	CalendarView	= require('module/ui/calendar/calendar'),
 		DateTimeMixin	= require('module/mixins/datetime'),
 		Sport			= require('module/ui/icons/sport_icon'),
         ChallengeModel	= require('module/ui/challenges/challenge_model'),
+		// ChallengeList	= require('module/ui/challenges/chall')
 		EventHelper		= require('module/helpers/eventHelper'),
 		Morearty        = require('morearty'),
 		MoreartyHelper	= require('module/helpers/morearty_helper');
