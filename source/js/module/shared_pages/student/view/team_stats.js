@@ -1,13 +1,19 @@
 /**
- * Created by bridark on 25/04/15.
+ * Created by bridark on 03/05/15.
  */
-const   React           = require('react'),
-		EventRivals 	= require('module/as_manager/pages/student/view/event-rivals'),
-        Morearty        = require('morearty'),
-        Immutable       = require('immutable');
+const   React       = require('react'),
+		EventRivals = require('./event-rivals'),
+        Morearty    = require('morearty'),
+        Immutable   = require('immutable');
 
-const UserAchievements = React.createClass({
+
+const TeamStats = React.createClass({
     mixins: [Morearty.Mixin],
+    componentDidMount:function(){
+        var self = this,
+            binding = self.getDefaultBinding(),
+            globalBinding = self.getMoreartyContext().getBinding();
+    },
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
     },
@@ -37,7 +43,7 @@ const UserAchievements = React.createClass({
         }
         return tempAr;
     },
-    getEvents: function (date, theData) {
+    getEvents: function (date,theData) {
 		const   self 		= this,
 			rootBinding = self.getMoreartyContext().getBinding();
 
@@ -47,37 +53,33 @@ const UserAchievements = React.createClass({
 
 		let eventsByDate;
 
-        if (theData && theData.gamesScoredIn) {
-            eventsByDate = theData.gamesScoredIn.filter(function (event) {
+		if (theData && theData.gamesWon) {
+            eventsByDate = theData.gamesWon.filter(function (event) {
                 return self.sameDay(
                     new Date(event.startTime),
                     new Date(date));
             });
             return eventsByDate.map(function (event, index) {
-                let comment;
-
-                if (event.result && event.result.comment){
+				let comment;
+                if(event.result && event.result.comment){
                     comment = event.result.comment;
-                } else {
+                }else{
                     comment = "There are no comments on this fixture";
                 }
 
-                return (
-                    <div key={index} className="bAchievement"
+                return <div key={index} className="bAchievement"
                             onClick={self.onClickChallenge.bind(null, event.id)}
                             id={'challenge-' + event.id}
                     >
-						<h4>{event.name}</h4>
-						<h6>{`Scored: ${event.studentScore}`}</h6>
-						<EventRivals event={event} activeSchoolId={activeSchoolId} />
-						{/*<div className="eAchievement_com_container">
-                            <div className="eChallenge_comments">
-                                {comment}
-                            </div>
-                        </div>*/}
-						<br/>
-                    </div>
-                );
+					<h4>{event.name}</h4>
+					<EventRivals event={event} activeSchoolId={activeSchoolId} />
+					{/*<div className="eAchievement_com_container">
+                        <div className="eChallenge_comments">
+                            {comment}
+                        </div>
+                    </div>*/}
+                </div>;
+
             });
         }
     },
@@ -85,8 +87,8 @@ const UserAchievements = React.createClass({
         var self = this,
             binding = self.getDefaultBinding(),
             dates;
-        if(dataFrom && dataFrom.gamesScoredIn){
-            dates = dataFrom.gamesScoredIn.reduce(function(memo,val){
+        if(dataFrom && dataFrom.gamesWon){
+            dates = dataFrom.gamesWon.reduce(function(memo,val){
                 var date = Date.parse(val.startTime),
                     any = memo.some(function(d){
                         return self.sameDay(date,d);
@@ -109,7 +111,7 @@ const UserAchievements = React.createClass({
                     </div>
                     <div className="eChallengeDate_list">{self.getEvents(datetime,dataFrom)}</div>
                 </div>;
-            }).toArray() : (<div>Student hasn't achieved a goal yet!</div>);
+            }).toArray() : (<div>Looks like the team is having a bad run</div>);
         }
     },
     checkForWinner:function(data1,data2){
@@ -132,4 +134,4 @@ const UserAchievements = React.createClass({
         return (<div>{teamStats}</div>)
     }
 });
-module.exports = UserAchievements;
+module.exports = TeamStats;

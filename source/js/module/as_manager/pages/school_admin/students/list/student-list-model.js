@@ -37,7 +37,7 @@ StudentListModel.prototype = {
 		document.location.hash += '/edit?id=' + data.id;
 	},
 	onView: function(student) {
-		document.location.hash = 'school_admin/student?id='+student.id;
+		document.location.hash = 'school_admin/students/stats?id='+student.id;
 	},
 	onRemove: function(student) {
 		const 	self 		= this,
