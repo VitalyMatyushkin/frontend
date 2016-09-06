@@ -184,11 +184,11 @@ const EventView = React.createClass({
 				text:'Performance',
 				isActive:false
 			},
-			{
-				value:'details',
-				text:'Details',
-				isActive:false
-			},
+			//{
+			//	value:'details',
+			//	text:'Details',
+			//	isActive:false
+			//},
 			{
 				value:'gallery',
 				text:'Gallery',
