@@ -62,7 +62,18 @@ const InboxView = React.createClass({
 			);
 		})
 		.then(_ => {
+			inboxInvites = inboxInvites.sort((a,b) => {
+				const _a = a.event.startTime,
+					_b = b.event.startTime;
 
+				if(_a < _b){
+					return -1;
+				}
+				if(_a > _b){
+					return 1;
+				}
+				return 0;
+			});
             binding
                 .atomically()
                 .set('sync', true)
