@@ -3,8 +3,7 @@
  */
 
 const 	React		= require('react'),
-		SportIcon	= require('module/ui/icons/sport_icon'),
-		TeamHelper	= require('module/ui/managers/helpers/team_helper');
+		SportIcon	= require('module/ui/icons/sport_icon');
 
 /** Object to draw event details in challenge list.
  *  Have a lot of undocumented shit inside - it was just compiled from already existed code.
@@ -20,11 +19,11 @@ const ChallengeListItem = React.createClass({
 		onClick: 		React.PropTypes.func 	// first argument is eventId
 	},
 
-	renderGameTypeColumn: function(event, model) {
+	renderGameTypeColumn: function(model) {
 		const	leftSideRivalName	= model.rivals[0].value,
 				rightSideRivalName	= model.rivals[1].value;
 
-		if(TeamHelper.isIndividualSport(event)) {
+		if(model.isIndividualSport) {
 			return (
 				<div className="eChallenge_rivals">
 					{"Individual Game"}
@@ -51,7 +50,7 @@ const ChallengeListItem = React.createClass({
 				<div className="eChallenge_date">{model.date}</div>
 
 				<div className="eChallenge_name" title={model.name}>{model.name}</div>
-				{this.renderGameTypeColumn(event, model)}
+				{this.renderGameTypeColumn(model)}
 				<div className="eChallenge_score">{model.score}</div>
 			</div>
 		);
