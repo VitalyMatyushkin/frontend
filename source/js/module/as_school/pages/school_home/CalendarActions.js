@@ -33,6 +33,31 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 
 }
 
+function loadDailyEvents(date, activeSchoolId, eventsBinding) {
+	const 	dayStart	= new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
+			dayEnd		= new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0);
+
+	eventsBinding.set('selectedDateEventsData.isSync', false);
+
+	const filter = {
+		limit: 100,
+		where: {
+			startTime: {
+				$gte: dayStart,
+				$lt: dayEnd
+			},
+			status: {
+				$in: ['ACCEPTED', 'FINISHED']
+			}
+		}
+	};
+
+	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
+		eventsBinding.set('selectedDateEventsData.events', Immutable.fromJS(eventsData));
+		eventsBinding.set('selectedDateEventsData.isSync', true);
+	});
+}
+
 function setNextMonth(activeSchoolId, eventsBinding) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			nextMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1);
@@ -52,8 +77,9 @@ function setPrevMonth(activeSchoolId, eventsBinding) {
 }
 
 function setSelectedDate(date, activeSchoolId, eventsBinding) {
-
 	eventsBinding.set('selectedDate', date);
+
+	loadDailyEvents(date, activeSchoolId, eventsBinding);
 }
 
 module.exports.setNextMonth = setNextMonth;
