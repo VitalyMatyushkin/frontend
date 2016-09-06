@@ -13,33 +13,6 @@ const   HomeHeader      = require('./home_header'),
 const SchoolHomePage = React.createClass({
     mixins: [Morearty.Mixin],
 
-	loadMonthDistinctEventDatesToBinding: function(monthDate){
-		const 	eventsBinding	= this.getDefaultBinding().sub('events'),
-				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-				monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
-				monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
-
-		eventsBinding.set('distinctEventDatesData.isSync', false);
-
-		const filter = {
-			limit: 100,
-			where: {
-				startTime: {
-					$gte: 	monthStartDate,
-					$lt: 	monthEndDate
-				},
-				status: {
-					$in: ['ACCEPTED', 'FINISHED']
-				}
-			}
-		};
-
-		window.Server.publicSchoolEventDates.get({ schoolId: activeSchoolId}, { filter: filter }).then( events => {
-			eventsBinding.set('distinctEventDatesData.dates', Immutable.fromJS(events.dates));
-			eventsBinding.set('distinctEventDatesData.isSync', true);
-		});
-
-	},
     render: function(){
         const   self    = this,
                 binding = self.getDefaultBinding();
@@ -50,7 +23,7 @@ const SchoolHomePage = React.createClass({
                 <HomeHeader binding={binding}/>
                 <div className="eSchoolBodyWrapper">
                     <HomeCalender binding={binding} />
-                    <HomeFixture binding={binding} />
+					{/*<HomeFixture binding={binding} /> */}
                     <HomeNews binding={binding}/>
                     <HomeBlog binding={binding}  />
                 </div>
