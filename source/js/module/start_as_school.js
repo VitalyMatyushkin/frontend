@@ -4,10 +4,12 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		authController 		= require('module/core/auth_controller'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
-		Morearty			= require('morearty'),
-		Helpers				= require('module/helpers/storage');
+		Morearty			= require('morearty');
 
 function initMainView(schoolId) {
+
+	const today = new Date();
+
 	// creating morearty context
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
@@ -19,6 +21,21 @@ function initMainView(schoolId) {
 				currentPathParts: [],	// части текущего путии
 				pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
 				parameters: {}			// GET-параметры текущего пути
+			},
+			schoolHomePage: {			// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
+				events: {				// will keep all data related to showing events on main page here
+					todayDate: 			today,
+					monthDate:			new Date(today.getFullYear(), today.getMonth()),
+					selectedDate:		new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+					distinctEventDatesData: {
+						isSync: false,
+						dates: []
+					},
+					selectedDateEventsData: {
+						isSync: false,
+						events: []
+					}
+				}
 			}
 		},
 		options: {
