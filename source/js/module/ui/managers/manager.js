@@ -47,11 +47,11 @@ const Manager = React.createClass({
 					teamTable: [
 						{
 							selectedTeamId: self.getTeamIdByOrder(0),
-							exceptionTeamId: self.getTeamIdByOrder(1),
+							exceptionTeamId: self.getTeamIdByOrder(1)
 						},
 						{
 							selectedTeamId: self.getTeamIdByOrder(1),
-							exceptionTeamId: self.getTeamIdByOrder(0),
+							exceptionTeamId: self.getTeamIdByOrder(0)
 						}
 					],
 					teamWrapper: [
