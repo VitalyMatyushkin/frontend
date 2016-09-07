@@ -11,13 +11,13 @@ const   DateHelper  = require('module/helpers/date_helper'),
  * @param {object} event - event object
  * @param {string} activeSchoolId - activeSchoolId
  *
- * @property {string} activeSchoolId - activeSchoolId
  * @property {string} id - event id
  * @property {string} name - event name
  * @property {string} eventType - client event type ('inter-schools', 'houses' or 'internal')
  * @property {boolean} isFinished - event is finished
  * @property {boolean} isIndividualSport - event sport type is individual
  * @property {string} sport - sport name
+ * @property {string} sportPointsType - type of points
  * @property {string} date - event start date
  * @property {string} time - event start time
  * @property {array} rivals - array of event rivals. rivals[0] - left, rivals[1] - right context
@@ -30,17 +30,20 @@ const   DateHelper  = require('module/helpers/date_helper'),
  *
  * */
 const ChallengeModel = function(event, activeSchoolId){
-	this.activeSchoolId = activeSchoolId;
     this.id = event.id;
     this.name = event.name;
+	this.date = DateHelper.getDate(event.startTime);
+	this.time = DateHelper.getTime(event.startTime);
 	this.eventType = EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
     this.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
+
 	this.isIndividualSport = TeamHelper.isIndividualSport(event);
-    this.sport = event.sport ? event.sport.name : '';
-    this.date = DateHelper.getDate(event.startTime);
-    this.time = DateHelper.getTime(event.startTime);
+	this.sport = event.sport ? event.sport.name : '';
+	this.sportPointsType = event.sport && event.sport.points ? event.sport.points.display : '';
+
     this.rivals = this._getRivals(event, activeSchoolId);
-    this.score = this._getScore(event, activeSchoolId);
+	this.scoreAr = this._getScoreAr(event, activeSchoolId);
+	this.score = this._getScore(event, activeSchoolId);
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
@@ -52,13 +55,20 @@ ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
     return rivals;
 };
 
-ChallengeModel.prototype._getScore = function(event, activeSchoolId){
-    const firstPoint = TeamHelper.callFunctionForLeftContext(activeSchoolId, event,
-						TeamHelper.getCountPoints.bind(TeamHelper, event)),
-		secondPoint = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
-						TeamHelper.getCountPoints.bind(TeamHelper, event));
+ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
+	const points1 = TeamHelper.callFunctionForLeftContext(activeSchoolId, event,
+		TeamHelper.getCountPoints.bind(TeamHelper, event)),
+		points2 = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
+			TeamHelper.getCountPoints.bind(TeamHelper, event)),
+		result1 = TeamHelper.convertPoints(points1, this.sportPointsType).str,
+		result2 = TeamHelper.convertPoints(points2, this.sportPointsType).str;
 
-    return this.isFinished ? [firstPoint, secondPoint].join(' : ') : '- : -';
+	return [result1, result2];
+};
+
+ChallengeModel.prototype._getScore = function(){
+
+	return this.isFinished ? this.scoreAr.join(' : ') : '- : -';
 };
 
 module.exports = ChallengeModel;

@@ -527,6 +527,7 @@ function isHouseHaveIndividualPlayers(event, houseId) {
 
 /**
  * Get rival info for left or right context
+ * @private
  * @param {object} event - event object
  * @param {string} activeSchoolId - activeSchoolId
  * @param {boolean} forLeftContext - calculate for left context (true - left, false - right)
@@ -625,11 +626,9 @@ function getRival(event, activeSchoolId, forLeftContext){
 		value: !name ? from : forLeftContext && activeSchoolId && !isHousesEvent ? name : `${name} [${from}]`
 	};
 }
-
 function getRivalForLeftContext(event, activeSchoolId){
 	return getRival(event, activeSchoolId, true);
 }
-
 function getRivalForRightContext(event, activeSchoolId){
 	return getRival(event, activeSchoolId, false);
 }
@@ -864,6 +863,76 @@ function getCountPoints(event, teamBundleName, order) {
 	}
 
 	return points;
+}
+
+/**
+ * Convert count points to extended result
+ * @param {number} countPoints - count of points
+ * @param {string} pointsType - type of points
+ * @returns {object} result - extended result(points, distance or time info)
+ * 			{string} result.str - string result (f.e. - '1km 346m 21cm')
+ *			{number} result[km, m, cm, h, min, sec]
+ * */
+function convertPoints(countPoints, pointsType){
+	const getTimeResult = function(countPoints) {
+		const 	sec_in_hours 	= 3600,
+				sec_in_min 		= 60,
+				h 	= Math.floor(countPoints / sec_in_hours),
+				min	= Math.floor((countPoints - h * sec_in_hours) / sec_in_min),
+				sec	= countPoints - h * sec_in_hours - min * sec_in_min;
+		
+		let result = '';
+
+		result += h ? h + 'h ': '';
+		result += min ? min + 'min ': '';
+		result += sec ? sec + 'sec': '';
+		
+		return {
+			h:h,
+			min:min,
+			sec:sec,
+			str:result.trim()
+		};
+	},
+	getDistanceResult = function(countPoints) {
+		const	cm_in_km 	= 100000,
+				cm_in_m 	= 100,
+				km	= Math.floor(countPoints / cm_in_km),
+				m	= Math.floor((countPoints - km * cm_in_km) / cm_in_m),
+				cm	= countPoints - km * cm_in_km - m * cm_in_m;
+
+
+		let result = '';
+
+		result += km ? km + 'km ': '';
+		result += m ? m + 'm ': '';
+		result += cm ? cm + 'cm': '';
+
+		return {
+			km:km,
+			m:m,
+			cm:cm,
+			str:result.trim()
+		};
+
+	};
+	let result;
+
+	switch (pointsType) {
+		case SportConsts.SPORT_POINTS_TYPE.PLAIN:
+			result = {
+				str:countPoints
+			};
+			break;
+		case SportConsts.SPORT_POINTS_TYPE.TIME:
+			result = getTimeResult(countPoints);
+			break;
+		case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
+			result = getDistanceResult(countPoints);
+			break;
+	}
+
+	return result;
 }
 
 /** Return array of all schools taking part in event: `inviterSchool` + all 'invitedSchools' */
@@ -1144,6 +1213,7 @@ const TeamHelper = {
 	getEventType:							getEventType,
 	getRivalForLeftContext:					getRivalForLeftContext,
 	getRivalForRightContext:				getRivalForRightContext,
+	convertPoints:							convertPoints,
 	updateTeam:								updateTeam,
 	decByType:								decByType,
 	incByType:								incByType
