@@ -9,5 +9,13 @@ const SPORT_PLAYERS = {
 	'TEAM': 		'TEAM'			// team vs team. Like football
 };
 
+const SPORT_POINTS_TYPE = {
+	'PLAIN':	'PLAIN',
+	'TIME':		'TIME',
+	'DISTANCE':	'DISTANCE'
+};
 
 module.exports.SPORT_PLAYERS = SPORT_PLAYERS;
+module.exports.SPORT_POINTS_TYPE = SPORT_POINTS_TYPE;
+
+

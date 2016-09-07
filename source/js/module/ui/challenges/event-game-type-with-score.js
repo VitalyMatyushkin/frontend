@@ -40,4 +40,9 @@ function EventGameTypeWithScore(props){
 	}
 }
 
+EventGameTypeWithScore.propTypes = {
+	event: 			React.PropTypes.object.isRequired,
+	activeSchoolId: React.PropTypes.string
+};
+
 module.exports = EventGameTypeWithScore;

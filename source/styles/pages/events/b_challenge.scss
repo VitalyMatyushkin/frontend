@@ -230,17 +230,18 @@ $border: solid 1px #c2c2c2;
 }
 .eAchievement_in {
   display: flex;
-  flex-wrap: wrap;
 }
 .eAchievement_rivalInfo {
   font-size: 16px;
   font-weight: bold;
   margin: auto;
 }
-.eAchievement_results {
+.eResults {
   margin-bottom: 15px;
   text-align: center;
   font-size: 22px;
+  display: flex;
+  justify-content: center;
 }
 .eAchievement_com_container {
   border-bottom: $BORDER;

@@ -10,10 +10,6 @@ function EventRivals(props){
 	const 	event 				= props.event,
 			activeSchoolId 		= props.activeSchoolId,
 			model 				= new ChallengeModel(event, activeSchoolId),
-			classResults 		= classNames({
-										eAchievement_results:true,
-										mDone: model.isFinished
-									}),
 			firstName 		= model.rivals[0].value,
 			secondName 		= model.rivals[1].value,
 			firstPic 		= model.rivals[0].schoolPic,
@@ -21,7 +17,7 @@ function EventRivals(props){
 
 	if(firstName === 'individual'){
 		return (
-			<div className="eChallenge_in">
+			<div className="eAchievement_in">
 				{"Individual Game"}
 			</div>
 		)
@@ -33,9 +29,13 @@ function EventRivals(props){
 					<span className="eAchievement_rival">{firstName}</span>
 				</div>
 				<div className="eAchievement_rivalInfo">
-					<div className={classResults}>
-						{model.score}
-					</div>
+					{!model.isFinished ? <div className="eResults">- : -</div> : (
+						<div className="eResults">
+							<span className="eScore">{model.scoreAr[0]}</span>
+							<span className="eColon"> : </span>
+							<span className="eScore">{model.scoreAr[1]}</span>
+						</div>
+					)}
 					<div className="eEventSport">
 						<span className="eEventSport_icon"><Sport name={model.sport} /></span>
 						<span className="eEventSport_name">{model.sport}</span>
@@ -52,5 +52,10 @@ function EventRivals(props){
 		)
 	}
 }
+
+EventRivals.propTypes = {
+	event: 			React.PropTypes.object.isRequired,
+	activeSchoolId: React.PropTypes.string
+};
 
 module.exports = EventRivals;

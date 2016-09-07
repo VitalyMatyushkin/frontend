@@ -1,5 +1,7 @@
 const	React		= require('react'),
 		ScoreSign	= require('./score_sign'),
+		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
+		SportConsts	= require('module/helpers/consts/sport'),
 		SVG			= require('module/ui/svg');
 
 const Score = React.createClass({
@@ -14,86 +16,28 @@ const Score = React.createClass({
 			isChangeMode: false
 		};
 	},
-	getTimePoints: function(plainPoints) {
-		const	hour	= Math.floor(plainPoints / 3600),
-				min		= Math.floor((plainPoints - hour * 3600) / 60),
-				sec		= plainPoints - hour * 3600 - min * 60;
 
-		return {
-			hour:	hour,
-			min:	min,
-			sec:	sec
-		};
-	},
-	getStringTimePoints: function(plainPoints) {
-		const self = this;
-
-		const timePoints = self.getTimePoints(plainPoints);
-
-		if(timePoints.hour === 0 && timePoints.min === 0) {
-			return `${timePoints.sec}sec`;
-		} else if(timePoints.hour === 0) {
-			return `${timePoints.min}min ${timePoints.sec}sec`;
-		} else {
-			return `${timePoints.hour}h ${timePoints.min}min ${timePoints.sec}sec`;
-		}
-	},
- 	getDistancePoints: function(plainPoints) {
-		const	km	= Math.floor(plainPoints / 10000),
-				m	= Math.floor((plainPoints - km * 10000) / 100),
-				cm	= plainPoints - km * 10000 - m * 100;
-
-		return {
-			km:	km,
-			m:	m,
-			cm:	cm
-		}
-	},
-	getStringDistancePoints: function(plainPoints) {
-		const self = this;
-
-		const distancePoints = self.getDistancePoints(plainPoints);
-
-		if(distancePoints.km === 0 && distancePoints.m === 0) {
-			return `${distancePoints.cm}cm`;
-		} else if(distancePoints.km === 0) {
-			return `${distancePoints.m}m ${distancePoints.cm}cm`;
-		} else {
-			return `${distancePoints.km}km ${distancePoints.m}m ${distancePoints.cm}cm`;
-		}
-	},
 	renderScoreViewMode: function() {
-		const self = this;
-
-		let points;
-
-		switch (self.props.pointsType) {
-			case 'PLAIN':
-				points = self.props.plainPoints;
-				break;
-			case 'TIME':
-				points = self.getStringTimePoints(self.props.plainPoints);
-				break;
-			case 'DISTANCE':
-				points = self.getStringDistancePoints(self.props.plainPoints);
-				break;
-		}
-
-		return <div className="ePlayer_score">{points}</div>;
+		return (
+			<div className="ePlayer_score">
+				{TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType).str}
+			</div>
+		);
 	},
 	renderScoreChangeMode: function() {
 		const self = this;
 
 		// points type
 		switch (self.props.pointsType) {
-			case 'PLAIN':
+			case SportConsts.SPORT_POINTS_TYPE.PLAIN:
 				return self.renderPlayerPlainPointsInChangeMode();
-			case 'TIME':
+			case SportConsts.SPORT_POINTS_TYPE.TIME:
 				return self.renderPlayerTimePointsInChangeMode();
-			case 'DISTANCE':
+			case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
 				return self.renderPlayerDistancePointsInChangeMode();
 		}
 	},
+
 	renderPlayerPlainPointsInChangeMode: function() {
 		const self = this;
 
@@ -108,12 +52,12 @@ const Score = React.createClass({
 	renderPlayerTimePointsInChangeMode: function() {
 		const self = this;
 
-		const timePoints = self.getTimePoints(self.props.plainPoints);
+		const timePoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType);
 
 		return (
 			<div className="bScore">
 				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'h')}/>
-				<div className="eScore_Points">{`${timePoints.hour}h`}</div>
+				<div className="eScore_Points">{`${timePoints.h}h`}</div>
 				<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'h')}/>
 
 				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'min')}/>
@@ -126,11 +70,10 @@ const Score = React.createClass({
 			</div>
 		);
 	},
-
 	renderPlayerDistancePointsInChangeMode: function() {
 		const self = this;
 
-		const distancePoints = self.getDistancePoints(self.props.plainPoints);
+		const distancePoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType);
 
 		return (
 			<div className="bScore">
@@ -148,6 +91,7 @@ const Score = React.createClass({
 			</div>
 		);
 	},
+
 	render: function () {
 		const self = this;
 

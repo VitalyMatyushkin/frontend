@@ -5,6 +5,7 @@
 const 	React 	= require('react'),
 		SVG 	= require('module/ui/svg');
 
+/** animation loading. */
 function Loader(props) {
 	if (props.condition)
 		return (
@@ -17,5 +18,9 @@ function Loader(props) {
 
 	return null;
 }
+
+Loader.propTypes = {
+	condition: React.PropTypes.bool // if true - animation showed
+};
 
 module.exports = Loader;
