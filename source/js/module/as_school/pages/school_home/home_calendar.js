@@ -1,19 +1,13 @@
-const	CalendarView	= require('module/ui/calendar/calendar'),
-		React			= require('react'),
+const 	React			= require('react'),
 		Immutable		= require('immutable'),
-		DateTimeMixin	= require('module/mixins/datetime'),
-		Sport			= require('module/ui/icons/sport_icon'),
-        ChallengeModel	= require('module/ui/challenges/challenge_model'),
 		Challenges		= require('module/ui/challenges/challenges'),
-		EventHelper		= require('module/helpers/eventHelper'),
 		MonthCalendar	= require('module/ui/calendar/month_calendar'),
 		CalendarActions	= require('./CalendarActions'),
-		Morearty        = require('morearty'),
-		MoreartyHelper	= require('module/helpers/morearty_helper');
+		Morearty        = require('morearty');
 
-/** Block to show calendar block and list of events for selected day in calendar */
+/** Show calendar section: month calendar and events for selected date */
 const HomeCalender = React.createClass({
-	mixins:[Morearty.Mixin, DateTimeMixin],
+	mixins:[Morearty.Mixin ],
 
 	componentWillMount: function () {
 		const 	binding 				= this.getDefaultBinding().sub('events'),

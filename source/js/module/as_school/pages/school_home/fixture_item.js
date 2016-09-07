@@ -5,7 +5,8 @@
 const 	React 			= require('react'),
 		DateTimeMixin	= require('module/mixins/datetime'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		SportIcon		= require('module/ui/icons/sport_icon');
+		SportIcon		= require('module/ui/icons/sport_icon'),
+		ChallengeModel	= require('module/ui/challenges/challenge_model');
 
 const FixtureItem = React.createClass({
 
@@ -26,195 +27,35 @@ const FixtureItem = React.createClass({
 		)
 	},
 
-	_renderTeamLeftSide: function(event) {
-		const 	activeSchoolId	= this.props.activeSchoolId,
-				eventType		= event.eventType,
-				participants	= event.participants;
-
-		if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
-		) {
-			return (
-				<div className="bFixtureOpponent bFixture_item no-margin">
-					{this.getParticipantEmblem(event.participants[0], event.eventType)}
-				</div>
-			);
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
-		) {
-			return (
-				<div className="bFixtureOpponent bFixture_item no-margin">
-					{this.getParticipantEmblem(event.participants[1], event.eventType)}
-				</div>
-			);
-		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return (
-				<div className="bFixtureOpponent bFixture_item no-margin">
-					{this.getParticipantEmblem(event.participants[0], event.eventType)}
-				</div>
-			);
-		}
-	},
-	_renderTeamRightSide: function(event) {
-		const 	activeSchoolId	= this.props.activeSchoolId,
-				eventType		= event.eventType,
-				participants	= event.participants;
-
-		// if inter school event and participant[0] is our school
-		if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
-		) {
-			return (
-				<div className="bFixtureOpponent bFixture_item no-margin">
-					{this.getParticipantEmblem(event.participants[0], event.eventType)}
-				</div>
-			);
-			// if inter school event and participant[1] is our school
-		} else if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
-		) {
-			return (
-				<div className="bFixtureOpponent bFixture_item no-margin">
-					{this.getParticipantEmblem(event.participants[1], event.eventType)}
-				</div>
-			);
-			// if it isn't inter school event
-		} else if (
-			participants.length > 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return (
-				<div className="bFixtureOpponent bFixture_item no-margin">
-					{this.getParticipantEmblem(event.participants[1], event.eventType)}
-				</div>
-			);
-		}
-	},
-
-	getParticipantEmblem: function(participant, type){
-		const 	activeSchoolId		= this.props.activeSchoolId;
-		let		participantEmblem	= '';
-
-		if(typeof participant !== 'undefined'){
-			switch(type) {
-				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					let teamName;
-
-					if(activeSchoolId == participant.school.id) {
-						teamName = participant.name;
-					} else {
-						teamName = participant.school.name;
-					}
-
-					participantEmblem = (
-						<div>
-							<img src={participant.school.pic}/>
-							<span>{teamName}</span>
-						</div>
-					);
-					break;
-				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					participantEmblem = (
-						<div>
-							<img src={participant.school.pic}/>
-							<span>{participant.house.name}</span>
-						</div>
-					);
-					break;
-				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-					participantEmblem = (
-						<div>
-							<img src={participant.school.pic}/>
-							<span>{participant.name}</span>
-						</div>
-					);
-					break;
-			}
-		}
-
-		return participantEmblem;
-	},
-
-	getFixtureResults:function(event) {
-		let	firstPoint	= "?",
-			secondPoint	= "?";
-
-		if(typeof event.result !== 'undefined' && event.status === EventHelper.EVENT_STATUS.FINISHED){
-			const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
-
-			firstPoint	= this._getLeftPoint(event, eventSummary);
-			secondPoint	= this._getRightPoint(event, eventSummary);
-		} else if (typeof event.result === 'undefined' && event.status === EventHelper.EVENT_STATUS.FINISHED) {
-			// if result === undef, but event is finished, then result of event is 0:0
-			// because teams doesn't have points
-			firstPoint = "0";
-			secondPoint  = "0";
-		}
+	renderLeftOpponentSide: function (event, model) {
 
 		return (
-			<div>
-				<div className="bFix_scoreText">{'Score'}</div>
-				<div className="bFix_scoreResult">{`${firstPoint} : ${secondPoint}`}</div>
+			<div className="bFixtureOpponent bFixture_item no-margin">
+				<div>
+					<img src={model.rivals[0].schoolPic}/>
+					<span>{model.rivals[0].value}</span>
+				</div>
 			</div>
 		);
 	},
 
-	_getLeftPoint: function(event, eventSummary) {
-		const 	activeSchoolId	= this.props.activeSchoolId,
-				eventType		= event.eventType,
-				participants	= event.participants;
+	renderRightOpponentSide: function (event, model) {
 
-		if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
-		) {
-			return eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
-		) {
-			return eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0
-		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0
-		}
-	},
-	_getRightPoint: function(event, eventSummary) {
-		const 	activeSchoolId	= this.props.activeSchoolId,
-				eventType		= event.eventType,
-				participants	= event.participants;
-
-		// if inter school event and participant[0] is our school
-		if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
-		) {
-			return eventSummary[event.participants[0].id] !== undefined ? eventSummary[event.participants[0].id] : 0
-			// if inter school event and participant[1] is our school
-		} else if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
-		) {
-			return eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0
-			// if it isn't inter school event
-		} else if (
-			participants.length > 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return eventSummary[event.participants[1].id] !== undefined ? eventSummary[event.participants[1].id] : 0
-		}
+		return (
+			<div className="bFixtureOpponent bFixture_item no-margin">
+				<div>
+					<img src={model.rivals[1].schoolPic}/>
+					<span>{model.rivals[1].value}</span>
+				</div>
+			</div>
+		);
 	},
 
 	render: function() {
-		const 	event 		= this.props.event,
-				sportName	= event.sport.name;
+		const 	event 			= this.props.event,
+				sportName		= event.sport.name,
+				activeSchoolId	= this.props.activeSchoolId,
+				challengeModel	= new ChallengeModel(event, activeSchoolId);
 
 		return (
 			<div className="bFixtureContainer">
@@ -224,11 +65,14 @@ const FixtureItem = React.createClass({
 				<div className="bFixtureInfo bFixture_item">
 					{this.getFixtureInfo(event)}
 				</div>
-				{this._renderTeamLeftSide(event)}
+				{this.renderLeftOpponentSide(event, challengeModel)}
 				<div className="bFixtureResult bFixture_item no-margin">
-					{this.getFixtureResults(event)}
+					<div>
+						<div className="bFix_scoreText">{'Score'}</div>
+						<div className="bFix_scoreResult">{`${challengeModel.score}`}</div>
+					</div>
 				</div>
-				{this._renderTeamRightSide(event)}
+				{this.renderRightOpponentSide(event, challengeModel)}
 			</div>
 		)
 	}
