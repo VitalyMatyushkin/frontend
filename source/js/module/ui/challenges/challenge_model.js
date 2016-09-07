@@ -27,6 +27,7 @@ const   DateHelper  = require('module/helpers/date_helper'),
  * @property {string} rivals[i].value - the combination of the 'name' and 'from'. Depending on the context(left, right),
  * 				the type of sport and the presence of an active school ID.
  * @property {string} score - event score string, for example: "3 : 1"
+ * @property {array} scoreAr - array of event score strings. scoreAr[0] - left, scoreAr[1] - right context
  *
  * */
 const ChallengeModel = function(event, activeSchoolId){
