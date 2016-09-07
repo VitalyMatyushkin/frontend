@@ -26,7 +26,7 @@ const EventManager = React.createClass({
 			model: {
 				name: '',
 				startTime: null,
-				type: null,
+				type: undefined,
 				sportId: undefined,
 				gender: undefined,
 				ages: [],
@@ -373,7 +373,7 @@ const EventManager = React.createClass({
 			case 3:
 				if(
 					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 							// for any INTER-SCHOOLS events
-					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL INTERNAL events
+					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||		// for INDIVIDUAL INTERNAL events
 					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError											// for any other type of event
 				) {
 					isStepComplete = true;
@@ -386,12 +386,30 @@ const EventManager = React.createClass({
 	_isSecondStepIsComplete: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
+
+		return (
+				typeof binding.toJS('model.name')		!== 'undefined' &&
+				binding.toJS('model.name')				!== '' &&
+				typeof binding.toJS('model.sportId')	!== 'undefined' &&
+				binding.toJS('model.sportId')			!== '' &&
+				typeof binding.toJS('model.gender')		!== 'undefined' &&
+				binding.toJS('model.gender')			!== '' &&
+				typeof binding.toJS('model.ages')		!== 'undefined' &&
+				binding.toJS('model.ages').length		!== 0 &&
+				typeof binding.toJS('model.type')		!== 'undefined' &&
+				binding.toJS('model.type')				!== '' &&
+				self.isAllRivalsSelected()
+		);
+	},
+	isAllRivalsSelected: function() {
+		const	self			= this,
+				binding			= self.getDefaultBinding();
 		let		isStepComplete	= false;
 
 		switch (binding.toJS('model.type')) {
 			case 'inter-schools':
 			case 'houses':
-					if(binding.toJS('rivals').length === 2) {
+				if(binding.toJS('rivals').length === 2) {
 					isStepComplete = true;
 				}
 				break;
