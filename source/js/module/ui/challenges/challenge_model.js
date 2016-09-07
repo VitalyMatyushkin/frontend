@@ -3,8 +3,11 @@
  */
 const   DateHelper  = require('module/helpers/date_helper'),
         EventHelper = require('module/helpers/eventHelper'),
-        TeamHelper  = require('./../managers/helpers/team_helper');
+        TeamHelper  = require('module/ui/managers/helpers/team_helper');
 
+/**
+ * This component contains the necessary information to render header or the event list.
+ * */
 const ChallengeModel = function(event, activeSchoolId){
     const self = this;
 
