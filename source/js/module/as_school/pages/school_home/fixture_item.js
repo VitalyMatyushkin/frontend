@@ -5,7 +5,8 @@
 const 	React 			= require('react'),
 		DateTimeMixin	= require('module/mixins/datetime'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		SportIcon		= require('module/ui/icons/sport_icon');
+		SportIcon		= require('module/ui/icons/sport_icon'),
+		ChallengeModel	= require('module/ui/challenges/challenge_model');
 
 const FixtureItem = React.createClass({
 
@@ -99,46 +100,42 @@ const FixtureItem = React.createClass({
 
 	getParticipantEmblem: function(participant, type){
 		const 	activeSchoolId		= this.props.activeSchoolId;
-		let		participantEmblem	= '';
 
-		if(typeof participant !== 'undefined'){
-			switch(type) {
-				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					let teamName;
+		if( typeof participant === 'undefined' ) return '';
 
-					if(activeSchoolId == participant.school.id) {
-						teamName = participant.name;
-					} else {
-						teamName = participant.school.name;
-					}
+		switch(type) {
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				let teamName;
 
-					participantEmblem = (
-						<div>
-							<img src={participant.school.pic}/>
-							<span>{teamName}</span>
-						</div>
-					);
-					break;
-				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					participantEmblem = (
-						<div>
-							<img src={participant.school.pic}/>
-							<span>{participant.house.name}</span>
-						</div>
-					);
-					break;
-				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-					participantEmblem = (
-						<div>
-							<img src={participant.school.pic}/>
-							<span>{participant.name}</span>
-						</div>
-					);
-					break;
-			}
+				if(activeSchoolId == participant.school.id) {
+					teamName = participant.name;
+				} else {
+					teamName = participant.school.name;
+				}
+
+				return (
+					<div>
+						<img src={participant.school.pic}/>
+						<span>{teamName}</span>
+					</div>
+				);
+			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+				return (
+					<div>
+						<img src={participant.school.pic}/>
+						<span>{participant.house.name}</span>
+					</div>
+				);
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				return (
+					<div>
+						<img src={participant.school.pic}/>
+						<span>{participant.name}</span>
+					</div>
+				);
+			default:
+				return '';
 		}
-
-		return participantEmblem;
 	},
 
 	getFixtureResults:function(event) {
@@ -213,8 +210,13 @@ const FixtureItem = React.createClass({
 	},
 
 	render: function() {
-		const 	event 		= this.props.event,
-				sportName	= event.sport.name;
+		const 	event 			= this.props.event,
+				sportName		= event.sport.name,
+				activeSchoolId	= this.props.activeSchoolId,
+				challengeModel	= new ChallengeModel(event, activeSchoolId);
+
+		// console.log('rivals: ' + challengeModel.rivals);
+		console.log('score: ' + challengeModel.score);
 
 		return (
 			<div className="bFixtureContainer">
@@ -227,6 +229,10 @@ const FixtureItem = React.createClass({
 				{/*this._renderTeamLeftSide(event) */}
 				<div className="bFixtureResult bFixture_item no-margin">
 					{/*this.getFixtureResults(event)*/}
+					<div>
+						<div className="bFix_scoreText">{'Score'}</div>
+						<div className="bFix_scoreResult">{`${challengeModel.score}`}</div>
+					</div>
 				</div>
 				{/*this._renderTeamRightSide(event)*/}
 			</div>
