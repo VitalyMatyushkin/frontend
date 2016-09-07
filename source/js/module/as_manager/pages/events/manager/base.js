@@ -1,14 +1,21 @@
-const   Autocomplete 	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-        If              = require('module/ui/if/if'),
-        Multiselect     = require('module/ui/multiselect/multiselect'),
-        React           = require('react'),
-        EventVenue      = require('./event_venue'),
+const	React			= require('react'),
 		Morearty		= require('morearty'),
-        Immutable       = require('immutable');
+		Immutable		= require('immutable'),
+		If				= require('module/ui/if/if'),
+		Autocomplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Multiselect		= require('module/ui/multiselect/multiselect'),
+		EventVenue		= require('./event_venue'),
+		classNames		= require('classnames');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
-    /**
+    isSportSelected: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return !!binding.toJS('model.sportId');
+	},
+	/**
      * House filtering service...
      * @param houseName
      * @returns {*}
@@ -173,15 +180,30 @@ const EventManagerBase = React.createClass({
 
 		const sportModel = binding.get('model.sportModel');
 
-		let genderOptions = [(
-			<option	key="not-selected-gender"
-					value={undefined}
-					disabled="disabled"
-					selected="selected"
-			>
-				Please select
-			</option>
-		)];
+		let genderOptions = [];
+
+		//if sport was selected
+		if(self.isSportSelected()) {
+			genderOptions.push((
+				<option	key="not-selected-gender"
+						   value={undefined}
+						   disabled="disabled"
+						   selected="selected"
+				>
+					Please select
+				</option>
+			));
+		} else {
+			genderOptions.push((
+				<option	key="not-selected-gender"
+						   value={undefined}
+						   disabled="disabled"
+						   selected="selected"
+				>
+					At first, select game
+				</option>
+			));
+		}
 
 		if(sportModel) {
 			const genders = sportModel.toJS().genders;
@@ -271,98 +293,89 @@ const EventManagerBase = React.createClass({
 						onChange={Morearty.Callback.set(binding.sub('model.name'))}
 						/>
 				</div>
-				<If condition={!!binding.get('model.name')}>
-					<div className="eManager_group">
-						<div className="eManager_label">{'Event Description'}</div>
-						<Morearty.DOM.textarea
-							className="eManager_field mTextArea"
-							type="text"
-							value={binding.get('model.description')}
-							placeholder={'enter description'}
-							onChange={Morearty.Callback.set(binding.sub('model.description'))}
-						/>
-					</div>
-				</If>
-				<If condition={!!binding.get('model.name')}>
-					<div className="eManager_group">
-						<div className="eManager_label">{'Game'}</div>
-							<select	className="eManager_select"
-									value={sportId}
-									onChange={self.changeCompleteSport}
-							>
-								<option	key="not-selected-sport"
-										value={undefined}
-										disabled="disabled"
-										selected="selected"
-								>
-									Please select
-								</option>
-								{self.getSports()}
-							</select>
-					</div>
-				</If>
-				<If condition={!!binding.get('model.sportId')}>
-					<div className="eManager_group">
-						<div className="eManager_label">{'Genders'}</div>
+				<div className="eManager_group">
+					<div className="eManager_label">{'Event Description'}</div>
+					<Morearty.DOM.textarea
+						className="eManager_field mTextArea"
+						type="text"
+						value={binding.get('model.description')}
+						placeholder={'enter description'}
+						onChange={Morearty.Callback.set(binding.sub('model.description'))}
+					/>
+				</div>
+				<div className="eManager_group">
+					<div className="eManager_label">{'Game'}</div>
 						<select	className="eManager_select"
-								value={gender}
-								onChange={self.handleChangeGenderSelect.bind(self, binding)}
+								value={sportId}
+								onChange={self.changeCompleteSport}
 						>
-							{self.getGenderSelectOptions()}
+							<option	key="not-selected-sport"
+									value={undefined}
+									disabled="disabled"
+									selected="selected"
+							>
+								Please select
+							</option>
+							{self.getSports()}
 						</select>
-					</div>
-				</If>
-				<If condition={!!binding.get('model.sportId') && !!binding.get('model.gender')}>
-					<div className="eManager_group">
-						<div className="eManager_label">{'Ages'}</div>
-						<Multiselect
-							binding={binding}
-							items={
-								binding.get('availableAges').sort((f,l)=>{
-									return f - l;
-								}).map(function (age) {
-									return {
-										id: age,
-										text: 'Y' + age
-									};
-								}).toJS()
-							}
-							selections={binding.toJS('model.ages')}
-							onChange={self.changeCompleteAges}
-						/>
-					</div>
-				</If>
-				<If condition={binding.get('model.ages').count() > 0}>
-					<div className="eManager_group">
-						<div className="eManager_label">{'Game Type'}</div>
-							<select	className="eManager_select"
-									value={binding.toJS('model.type')}
-									onChange={self.changeCompleteType}>
-								<option	key="not-selected-game-type"
-										value={undefined}
-										disabled="disabled"
-										selected="selected"
-								>
-									Please select
-								</option>
-								<option	key="inter-schools-type"
-										value="inter-schools"
-								>
-									Inter-schools
-								</option>
-								<option	key="houses-type"
-										value="houses"
-								>
-									Houses
-								</option>
-								<option	key="anyway-type"
-										value="internal"
-								>
-									Internal
-								</option>
-							</select>
-					</div>
-				</If>
+				</div>
+				<div className="eManager_group">
+					<div className="eManager_label">{'Genders'}</div>
+					<select	className={classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
+							value={gender}
+							onChange={self.handleChangeGenderSelect.bind(self, binding)}
+							disabled={!self.isSportSelected()}
+					>
+						{self.getGenderSelectOptions()}
+					</select>
+				</div>
+				<div className="eManager_group">
+					<div className="eManager_label">{'Ages'}</div>
+					<Multiselect
+						binding={binding}
+						items={
+							binding.get('availableAges').sort((f,l)=>{
+								return f - l;
+							}).map(function (age) {
+								return {
+									id: age,
+									text: 'Y' + age
+								};
+							}).toJS()
+						}
+						selections={binding.toJS('model.ages')}
+						onChange={self.changeCompleteAges}
+					/>
+				</div>
+				<div className="eManager_group">
+					<div className="eManager_label">{'Game Type'}</div>
+						<select	className="eManager_select"
+								value={binding.toJS('model.type')}
+								onChange={self.changeCompleteType}>
+							<option	key="not-selected-game-type"
+									value={undefined}
+									disabled="disabled"
+									selected="selected"
+							>
+								Please select
+							</option>
+							<option	key="inter-schools-type"
+									value="inter-schools"
+							>
+								Inter-schools
+							</option>
+							<option	key="houses-type"
+									value="houses"
+							>
+								Houses
+							</option>
+							<option	key="anyway-type"
+									value="internal"
+							>
+								Internal
+							</option>
+						</select>
+				</div>
 				<If condition={!!type}>
 					<div>
 						<div className="eManager_group">
