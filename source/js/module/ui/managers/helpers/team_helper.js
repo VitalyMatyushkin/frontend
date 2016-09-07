@@ -518,6 +518,19 @@ function isHouseHaveIndividualPlayers(event, houseId) {
 	return event.individualsData.filter(i => i.houseId === houseId).length > 0;
 };
 
+/**
+ * Get rival info for left or right context
+ * @param {object} event - event object
+ * @param {string} activeSchoolId - activeSchoolId
+ * @param {boolean} forLeftContext - calculate for left context (true - left, false - right)
+ * @returns {object} rival info
+ * @returns {string} result.name - name team or player
+ * @returns {string} result.from - from school or house name
+ * @returns {string} result.schoolPic - school emblem
+ * @returns {string} result.value - the combination of the 'name' and 'from'. Depending on the context(left, right),
+ * 				the type of спорт and the presence of an active school ID.
+ *
+ * */
 function getRival(event, activeSchoolId, forLeftContext){
 	const self = this;
 
@@ -608,11 +621,12 @@ function getRival(event, activeSchoolId, forLeftContext){
 	};
 }
 function getRivalForLeftContext(event, activeSchoolId){
-	return this.getRivalName(event, activeSchoolId, true);
+	return this.getRival(event, activeSchoolId, true);
 }
 function getRivalForRightContext(event, activeSchoolId){
-	return this.getRivalName(event, activeSchoolId, false);
+	return this.getRival(event, activeSchoolId, false);
 }
+
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
@@ -1105,7 +1119,7 @@ const TeamHelper = {
 	addTeamsToEvent:						addTeamsToEvent,
 	addIndividualPlayersToEvent:			addIndividualPlayersToEvent,
 	getEventType:							getEventType,
-	getRivalName:							getRival,
+	getRival:								getRival,
 	getRivalForLeftContext:					getRivalForLeftContext,
 	getRivalForRightContext:				getRivalForRightContext,
 	updateTeam:								updateTeam,
