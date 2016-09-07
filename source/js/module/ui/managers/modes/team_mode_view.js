@@ -247,7 +247,7 @@ const TeamModeView = React.createClass({
 				<TeamChooser	onTeamClick={self._onTeamClick}
 								onTeamDeselect={self._deselectTeam}
 								binding={teamTableBindings[index]}
-								isEnable={selectedRivalIndex === index}
+								isEnable={parseInt(selectedRivalIndex, 10) === index}
 				/>
 			);
 		}
