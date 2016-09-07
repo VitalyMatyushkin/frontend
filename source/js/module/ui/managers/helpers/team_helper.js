@@ -530,15 +530,15 @@ function isHouseHaveIndividualPlayers(event, houseId) {
  * @param {object} event - event object
  * @param {string} activeSchoolId - activeSchoolId
  * @param {boolean} forLeftContext - calculate for left context (true - left, false - right)
- * @returns {object} rival info
- * @returns {string} result.name - name team or player
- * @returns {string} result.from - from school or house name
- * @returns {string} result.schoolPic - school emblem
- * @returns {string} result.value - the combination of the 'name' and 'from'. Depending on the context(left, right),
- * 				the type of sport‚ and the presence of an active school ID.
+ * @returns {object} result - rival info
+ * 			{string} result.name - name team or player
+ * 			{string} result.from - from school or house name
+ * 			{string} result.schoolPic - school emblem
+ * 			{string} result.value - the combination of the 'name' and 'from'. Depending on the context(left, right),
+ * 				the type of sport and the presence of an active school ID.
  *
  * */
-
+function getRival(event, activeSchoolId, forLeftContext){
 	const	teamBundles		= getTeamBundles(event),				// houseData + schoolData + teams in one object...
 			schoolsData		= teamBundles.schoolsData,
 			housesData		= teamBundles.housesData,
@@ -627,11 +627,11 @@ function isHouseHaveIndividualPlayers(event, houseId) {
 }
 
 function getRivalForLeftContext(event, activeSchoolId){
-	return getRivalName(event, activeSchoolId, true);
+	return getRival(event, activeSchoolId, true);
 }
 
 function getRivalForRightContext(event, activeSchoolId){
-	return getRivalName(event, activeSchoolId, false);
+	return getRival(event, activeSchoolId, false);
 }
 
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
@@ -1142,7 +1142,6 @@ const TeamHelper = {
 	addTeamsToEvent:						addTeamsToEvent,
 	addIndividualPlayersToEvent:			addIndividualPlayersToEvent,
 	getEventType:							getEventType,
-	getRivalName:							getRivalName,
 	getRivalForLeftContext:					getRivalForLeftContext,
 	getRivalForRightContext:				getRivalForRightContext,
 	updateTeam:								updateTeam,
