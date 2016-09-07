@@ -8,6 +8,7 @@ const   CalendarView		= require('module/ui/calendar/calendar'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
+		Loader				= require('./../../../ui/loader'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable');
 
@@ -52,7 +53,8 @@ const EventManager = React.createClass({
 					isError: false,
 					text:    ''
 				}
-			]
+			],
+			isSync: false
 		});
 	},
 	componentWillMount: function () {
@@ -79,8 +81,9 @@ const EventManager = React.createClass({
 
 				binding
 					.atomically()
-					.set('schoolInfo', Immutable.fromJS(schoolData))
-					.set('availableAges', Immutable.fromJS(ages))
+					.set('schoolInfo',		Immutable.fromJS(schoolData))
+					.set('availableAges',	Immutable.fromJS(ages))
+					.set('isSync',			Immutable.fromJS(true))
 					.commit();
 			});
 	},
@@ -428,35 +431,39 @@ const EventManager = React.createClass({
 				error:              binding.sub('error')
 			};
 
-		return (
-			<div>
-				<div className="eManager_steps" >
-					<div className="eManager_step" >{step} </div>
-					<h3>{titles[step - 1]}</h3></div>
-				<div className={bManagerClasses}>
-					<If condition={step === 1}>
-						<div className="eManager_dateTimePicker">
-							<CalendarView
-								binding={rootBinding.sub('events.calendar')}
-								onSelect={self.onSelectDate}
-							/>
-							{
-								binding.get('model.startTime') ?
-									<TimePicker binding={binding.sub('model.startTime')}/>:
-									null
-							}
-						</div>
-					</If>
-					<If condition={step === 2}>
-						<EventManagerBase binding={commonBinding} />
-					</If>
-					<If condition={step === 3}>
-						<Manager isInviteMode={false} binding={managerBinding} />
-					</If>
+		if(binding.toJS('isSync')) {
+			return (
+				<div>
+					<div className="eManager_steps" >
+						<div className="eManager_step" >{step} </div>
+						<h3>{titles[step - 1]}</h3></div>
+					<div className={bManagerClasses}>
+						<If condition={step === 1}>
+							<div className="eManager_dateTimePicker">
+								<CalendarView
+									binding={rootBinding.sub('events.calendar')}
+									onSelect={self.onSelectDate}
+								/>
+								{
+									binding.get('model.startTime') ?
+										<TimePicker binding={binding.sub('model.startTime')}/>:
+										null
+								}
+							</div>
+						</If>
+						<If condition={step === 2}>
+							<EventManagerBase binding={commonBinding} />
+						</If>
+						<If condition={step === 3}>
+							<Manager isInviteMode={false} binding={managerBinding} />
+						</If>
+					</div>
+					{self._renderStepButtons()}
 				</div>
-				{self._renderStepButtons()}
-			</div>
-		);
+			);
+		} else {
+			return <Loader condition={true} />;
+		}
 	}
 });
 
