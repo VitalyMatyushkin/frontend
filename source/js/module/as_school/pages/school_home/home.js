@@ -23,7 +23,7 @@ const SchoolHomePage = React.createClass({
                 <HomeHeader binding={binding}/>
                 <div className="eSchoolBodyWrapper">
                     <HomeCalender binding={binding} />
-					{/*<HomeFixture binding={binding} /> */}
+					<HomeFixture binding={binding} />
                     <HomeNews binding={binding}/>
                     <HomeBlog binding={binding}  />
                 </div>

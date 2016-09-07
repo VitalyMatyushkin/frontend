@@ -224,11 +224,11 @@ const FixtureItem = React.createClass({
 				<div className="bFixtureInfo bFixture_item">
 					{this.getFixtureInfo(event)}
 				</div>
-				{this._renderTeamLeftSide(event)}
+				{/*this._renderTeamLeftSide(event) */}
 				<div className="bFixtureResult bFixture_item no-margin">
-					{this.getFixtureResults(event)}
+					{/*this.getFixtureResults(event)*/}
 				</div>
-				{this._renderTeamRightSide(event)}
+				{/*this._renderTeamRightSide(event)*/}
 			</div>
 		)
 	}
