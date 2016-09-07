@@ -59,7 +59,8 @@ const TeamAddPage = React.createClass({
                                 players: {
                                     $nin: ['1X1', 'INDIVIDUAL']
                                 }
-                            }
+                            },
+							limit: 100
                         }
                     }
                 );
