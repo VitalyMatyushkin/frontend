@@ -1,9 +1,8 @@
-const	If				= require('module/ui/if/if'),
-		SVG				= require('module/ui/svg'),
-		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+const	InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('./../../../../ui/managers/helpers/team_helper'),
 		Sport			= require('module/ui/icons/sport_icon'),
+		Score			= require('./../../../../ui/score/score'),
 		Morearty		= require('morearty'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Immutable		= require('immutable'),
@@ -108,22 +107,25 @@ const EventRival = React.createClass({
 	_isTeamHaveZeroPoints: function(teamId, event, eventSummary) {
 		return !eventSummary[teamId] && event.status === EventHelper.EVENT_STATUS.FINISHED;
 	},
-	handleClickPointSign: function(operation, teamBundleName, order) {
+	handleClickPointSign: function(teamBundleName, order, operation, pointType) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const event = binding.toJS('model');
 
-		if(TeamHelper.isTeamSport(event)) {
+		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
 			switch (teamBundleName) {
 				case 'schoolsData':
-					self.changeSchoolPoints(operation, order);
+					self.changeSchoolPoints(operation, order, pointType);
 					break;
 				case 'housesData':
-					self.changeHousesPoints(operation, order);
+					self.changeHousesPoints(operation, order, pointType);
 					break;
 				case 'teamsData':
-					self.changeTeamPoints(operation, order);
+					self.changeTeamPoints(operation, order, pointType);
+					break;
+				case 'individualsData':
+					self.changeIndividualPoints(operation, order, pointType);
 					break;
 			}
 		}
@@ -140,23 +142,15 @@ const EventRival = React.createClass({
 
 		return (
 			<div className="eEventResult_PointSideWrapper">
-				<If condition={EventHelper.isShowScoreButtons(status, mode, true)}>
-					<div className="eEventResult_SignContainer" onClick={self.handleClickPointSign.bind(self, "minus", teamBundleName, order)}>
-						<SVG classes={"eEventResult_Sign"} icon="icon_minus" />
-					</div>
-				</If>
-
-				<div className="eEventResult_Point">{points}</div>
-
-				<If condition={EventHelper.isShowScoreButtons(status, mode, true)}>
-					<div className="eEventResult_SignContainer" onClick={self.handleClickPointSign.bind(self, "plus", teamBundleName, order)}>
-						<SVG classes={"eEventResult_Sign"} icon="icon_plus" />
-					</div>
-				</If>
+				<Score	isChangeMode			={EventHelper.isShowScoreButtons(status, mode, true)}
+						plainPoints				={points}
+						pointsType				={event.sport.points.display}
+						handleClickPointSign	={self.handleClickPointSign.bind(self, teamBundleName, order)}
+				/>
 			</div>
 		);
 	},
-	changeTeamPoints: function(operation, order) {
+	changeTeamPoints: function(operation, order, pointType) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -192,7 +186,7 @@ const EventRival = React.createClass({
 
 		binding.set('model', Immutable.fromJS(event));
 	},
-	changeSchoolPoints: function(operation, order) {
+	changeSchoolPoints: function(operation, order, pointType) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -206,29 +200,44 @@ const EventRival = React.createClass({
 				if(schoolScoreDataIndex === -1) {
 					event.results.schoolScore.push({
 						schoolId:	currentSchoolId,
-						score:		pointsStep
+						score:		TeamHelper.incByType(
+										0,
+										pointType,
+										pointsStep
+									)
 					});
 				} else {
-					event.results.schoolScore[schoolScoreDataIndex].score += pointsStep;
+					event.results.schoolScore[schoolScoreDataIndex].score = TeamHelper.incByType(
+						event.results.schoolScore[schoolScoreDataIndex].score,
+						pointType,
+						pointsStep
+					);
 				}
 				break;
 			case "minus":
 				if(schoolScoreDataIndex === -1) {
 					event.results.schoolScore.push({
 						schoolId:	currentSchoolId,
-						score:		0
+						score:		TeamHelper.decByType(
+										0,
+										pointType,
+										pointsStep
+									)
 					})
 				} else {
-					event.results.schoolScore[schoolScoreDataIndex].score > 0 ?
-						event.results.schoolScore[schoolScoreDataIndex].score -= pointsStep :
-						event.results.schoolScore[schoolScoreDataIndex].score = 0;
+					event.results.schoolScore[schoolScoreDataIndex].score = TeamHelper.decByType(
+						event.results.schoolScore[schoolScoreDataIndex].score,
+						pointType,
+						pointsStep
+					);
 				}
 				break;
 		};
 
+		console.log(event.results);
 		binding.set('model', Immutable.fromJS(event));
 	},
-	changeHousesPoints: function(operation, order) {
+	changeHousesPoints: function(operation, order, pointType) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -262,6 +271,60 @@ const EventRival = React.createClass({
 				break;
 		};
 
+		console.log(event.results);
+		binding.set('model', Immutable.fromJS(event));
+	},
+	changeIndividualPoints: function(operation, order, pointType) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	event						= binding.toJS('model'),
+				pointsStep					= event.sport.points.pointsStep,
+				currentPlayer				= event.individualsData[order],
+				individualScoreDataIndex	= event.results.individualScore.findIndex(s => s.userId === currentPlayer.userId);
+
+		switch (operation) {
+			case "plus":
+				if(individualScoreDataIndex === -1) {
+					event.results.individualScore.push({
+						userId:			currentPlayer.userId,
+						permissionId:	currentPlayer.permissionId,
+						score:			TeamHelper.incByType(
+											0,
+											pointType,
+											pointsStep
+										)
+					});
+				} else {
+					event.results.individualScore[individualScoreDataIndex].score = TeamHelper.incByType(
+						event.results.individualScore[individualScoreDataIndex].score,
+						pointType,
+						pointsStep
+					);
+				}
+				break;
+			case "minus":
+				if(individualScoreDataIndex === -1) {
+					event.results.individualScore.push({
+						userId:			currentPlayer.userId,
+						permissionId:	currentPlayer.permissionId,
+						score:			TeamHelper.decByType(
+											0,
+											pointType,
+											pointsStep
+										)
+					})
+				} else {
+					event.results.individualScore[individualScoreDataIndex].score = TeamHelper.decByType(
+						event.results.individualScore[individualScoreDataIndex].score,
+						pointType,
+						pointsStep
+					);
+				}
+				break;
+		};
+
+		console.log(event.results);
 		binding.set('model', Immutable.fromJS(event));
 	},
 	_renderTeamLeftSide: function() {
@@ -342,7 +405,7 @@ const EventRival = React.createClass({
 		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
 				event			= binding.toJS('model');
 
-		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, self.renderCountPoints.bind(self));
+		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, self.renderCountPoints);
 	},
 	renderCountPointRightSide: function() {
 		const	self	= this,
@@ -351,7 +414,7 @@ const EventRival = React.createClass({
 		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
 				event			= binding.toJS('model');
 
-		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints.bind(self));
+		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints);
 	},
 	_renderPoints: function() {
 		const	self	= this,
@@ -361,7 +424,7 @@ const EventRival = React.createClass({
 				mode	= binding.toJS('mode'),
 				status	= binding.toJS('model.status');
 
-		if(!TeamHelper.isNonTeamSport(event)) {
+		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
 			if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
 				return (
 					<div className="eEventResult_score">
@@ -398,6 +461,7 @@ const EventRival = React.createClass({
 
 		const isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 
+		console.log(sportIcon);
 		if(isEventWithOneIndividualTeam) {
 			body = (
 				<div className="bEventInfo">
@@ -418,7 +482,6 @@ const EventRival = React.createClass({
 					<div className="bEventRivals">
 						{self._renderTeamLeftSide()}
 						<div className="bEventResult">
-							{self._renderPoints()}
 							<div className="eEventSport">
 								<span className="eEventSport_icon">{sportIcon}</span>
 								<span className="eEventSport_name">{sportName}</span>
@@ -429,6 +492,7 @@ const EventRival = React.createClass({
 					<div className="eEventInfo_type">
 						{eventType}
 					</div>
+					{self._renderPoints()}
 				</div>
 			);
 		}

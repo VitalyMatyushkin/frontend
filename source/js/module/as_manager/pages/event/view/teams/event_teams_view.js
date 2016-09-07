@@ -5,186 +5,22 @@ const	If					= require('module/ui/if/if'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		userConst			= require('module/helpers/consts/user'),
 		eventConst			= require('module/helpers/consts/events'),
+		Score				= require('./../../../../../ui/score/score'),
 		React				= require('react'),
 		Immutable			= require('immutable'),
 		Morearty			= require('morearty');
 
 const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-	getPlainPointsByStudent: function(userId) {
-		const self = this;
-
-		const event = self.getBinding('event').toJS();
-
+	getPlainPointsByStudent: function(event, userId) {
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
 
 		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].score;
 	},
-	getPointsByStudent: function(userId) {
+	handleClickPointSign: function(event, userId, permissionId, teamId, operation, pointType) {
 		const self = this;
 
-		const	sport		= self.getBinding('event').toJS('sport'),
-				plainPoints	= self.getPlainPointsByStudent(userId);
-		let		viewPoints;
-
-		switch (sport.points.display) {
-			case 'PLAIN':
-				viewPoints = plainPoints;
-				break;
-			case 'TIME':
-				viewPoints = self.getTimePoints(plainPoints);
-				break;
-			case 'DISTANCE':
-				viewPoints = self.getDistancePoints(plainPoints);
-				break;
-		}
-
-		return viewPoints;
-	},
-	renderPlayersPointsWithScore: function(player, pointsType) {
-		const self = this;
-
-		switch (pointsType) {
-			case 'PLAIN':
-				return self.renderPlayerPlainPoints(player);
-			case 'TIME':
-				return self.renderPlayerTimePoints(player);
-			case 'DISTANCE':
-				return self.renderPlayerDistancePoints(player);
-		}
-	},
-	renderPlayerPlainPoints: function(player) {
-		const self = this;
-
-		const plainPoints = self.getPlainPointsByStudent(player.id);
-
-		return (
-			<span>
-				<span className="ePlayer_minus" onClick={self.handleClickPointSign.bind(self, 'minus', 'plain', player.id, player.permissionId, player.teamId)}>
-					<SVG icon="icon_minus" />
-				</span>
-					<span className="ePlayer_score">{plainPoints}</span>
-				<span className="ePlayer_plus" onClick={self.handleClickPointSign.bind(self, 'plus', 'plain', player.id, player.permissionId, player.teamId)}>
-					<SVG icon="icon_plus" />
-				</span>
-			</span>
-		);
-	},
-	renderPlayerTimePoints: function(player) {
-		const self = this;
-
-		const plainPoints = self.getPlainPointsByStudent(player.id);
-
-		const	hour	= Math.floor(plainPoints / 3600),
-				min		= Math.floor((plainPoints - hour * 3600) / 60),
-				sec		= plainPoints - hour * 3600 - min * 60;
-
-		return (
-			<span>
-					<span className="ePlayer_minus" onClick={self.handleClickPointSign.bind(self, 'minus', 'h', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_minus" />
-					</span>
-						<span className="ePlayer_score">{`${hour}h`}</span>
-					<span className="ePlayer_plus" onClick={self.handleClickPointSign.bind(self, 'plus', 'h', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_plus" />
-					</span>
-					<span className="ePlayer_minus" onClick={self.handleClickPointSign.bind(self, 'minus', 'min', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_minus" />
-					</span>
-						<span className="ePlayer_score">{`${min}min`}</span>
-					<span className="ePlayer_plus" onClick={self.handleClickPointSign.bind(self, 'plus', 'min', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_plus" />
-					</span>
-					<span className="ePlayer_minus" onClick={self.handleClickPointSign.bind(self, 'minus', 'sec', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_minus" />
-					</span>
-						<span className="ePlayer_score">{`${sec}sec`}</span>
-					<span className="ePlayer_plus" onClick={self.handleClickPointSign.bind(self, 'plus', 'sec', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_plus" />
-					</span>
-				</span>
-		);
-	},
-	renderPlayerDistancePoints: function(player) {
-		const self = this;
-
-		const plainPoints = self.getPlainPointsByStudent(player.id);
-
-		const	km	= Math.floor(plainPoints / 10000),
-				m	= Math.floor((plainPoints - km * 10000) / 100),
-				cm	= plainPoints - km * 10000 - m * 100;
-
-		return (
-			<span>
-					<span className="ePlayer_minus" onClick={self.handleClickPointSign.bind(self, 'minus', 'km', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_minus" />
-					</span>
-						<span className="ePlayer_score">{`${km}km`}</span>
-					<span className="ePlayer_plus" onClick={self.handleClickPointSign.bind(self, 'plus', 'km', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_plus" />
-					</span>
-					<span className="ePlayer_minus" onClick={self.handleClickPointSign.bind(self, 'minus', 'm', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_minus" />
-					</span>
-						<span className="ePlayer_score">{`${m}m`}</span>
-					<span className="ePlayer_plus" onClick={self.handleClickPointSign.bind(self, 'plus', 'm', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_plus" />
-					</span>
-					<span className="ePlayer_minus" onClick={self.handleClickPointSign.bind(self, 'minus', 'cm', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_minus" />
-					</span>
-						<span className="ePlayer_score">{`${cm}cm`}</span>
-					<span className="ePlayer_plus" onClick={self.handleClickPointSign.bind(self, 'plus', 'cm', player.id, player.permissionId, player.teamId)}>
-						<SVG icon="icon_plus" />
-					</span>
-				</span>
-		);
-	},
-	renderPlayerPoints: function(player, mode, eventStatus, isOwner) {
-		const self = this;
-
-		if(EventHelper.isShowScoreButtons(eventStatus, mode, isOwner)) {
-			const gameType = self.getBinding('event').toJS('sport.points.display');
-
-			return self.renderPlayersPointsWithScore(player, gameType);
-		} else {
-			return (
-				<span className="ePlayer_score">{self.getPointsByStudent(player.id)}</span>
-			);
-		}
-
-	},
-	getTimePoints: function(plainPoints) {
-		const	hour = Math.floor(plainPoints / 3600),
-				min = Math.floor((plainPoints - hour * 3600) / 60),
-				sec = plainPoints - hour * 3600 - min * 60;
-
-		if(hour === 0 && min === 0) {
-			return `${sec}sec`;
- 		} else if(hour === 0) {
-			return `${min}min ${sec}sec`;
-		} else {
-			return `${hour}h ${min}min ${sec}sec`;
-		}
-	},
-	getDistancePoints: function(plainPoints) {
-		const	km	= Math.floor(plainPoints / 10000),
-				m	= Math.floor((plainPoints - km * 10000) / 100),
-				cm	= plainPoints - km * 10000 - m * 100;
-
-		if(km === 0 && m === 0) {
-			return `${cm}cm`;
-		} else if(km === 0) {
-			return `${m}m ${cm}cm`;
-		} else {
-			return `${km}km ${m}m ${cm}cm`;
-		}
-	},
-	handleClickPointSign: function(operation, pointType, userId, permissionId, teamId) {
-		const self = this;
-
-		const	event		= self.getBinding('event').toJS(),
-			pointsStep	= event.sport.points.pointsStep;
+		const pointsStep = event.sport.points.pointsStep;
 
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
 
@@ -195,14 +31,14 @@ const EventTeamsView = React.createClass({
 						userId:			userId,
 						teamId:			teamId,
 						permissionId:	permissionId,
-						score:			self.incByType(
+						score:			TeamHelper.incByType(
 											0,
 											pointType,
 											pointsStep
 										)
 					})
 				} else {
-					event.results.individualScore[userScoreDataIndex].score = self.incByType(
+					event.results.individualScore[userScoreDataIndex].score = TeamHelper.incByType(
 						event.results.individualScore[userScoreDataIndex].score,
 						pointType,
 						pointsStep
@@ -215,14 +51,14 @@ const EventTeamsView = React.createClass({
 						userId:			userId,
 						permissionId:	permissionId,
 						teamId:			teamId,
-						score:			self.decByType(
+						score:			TeamHelper.decByType(
 											0,
 											pointType,
 											pointsStep
 										)
 					})
 				} else {
-					event.results.individualScore[userScoreDataIndex].score = self.decByType(
+					event.results.individualScore[userScoreDataIndex].score = TeamHelper.decByType(
 						event.results.individualScore[userScoreDataIndex].score,
 						pointType,
 						pointsStep
@@ -232,47 +68,6 @@ const EventTeamsView = React.createClass({
 		};
 
 		self.getBinding('event').set(Immutable.fromJS(event));
-	},
-	incByType:function(value, type, pointsStep) {
-		switch (type) {
-			case 'plain':
-			case 'sec':
-			case 'cm':
-				return value += pointsStep;
-			case 'min':
-				return value = value + 60;
-			case 'h':
-				return value = value + 3600;
-			case 'm':
-				return value = value + 100;
-			case 'km':
-				return value = value + 10000;
-		}
-	},
-	decByType:function(value, type, pointsStep) {
-		let result;
-
-		switch (type) {
-			case 'plain':
-			case 'sec':
-			case 'cm':
-				result = value - pointsStep;
-				break;
-			case 'min':
-				result = value - 60;
-				break;
-			case 'h':
-				result = value - 3600;
-				break;
-			case 'm':
-				result = value - 100;
-				break;
-			case 'km':
-				result = value - 10000;
-				break;
-		}
-
-		return result >= 0 ? result : value;
 	},
 	renderInternalEventForOneOnOneEvent: function(order) {
 		const self = this;
@@ -286,7 +81,7 @@ const EventTeamsView = React.createClass({
 		} else {
 			return (
 				<div className="bEventTeams_team">
-					{self.renderPlayers(players, event.status, true)}
+					{self.renderPlayers(players, true)}
 				</div>
 			);
 		}
@@ -377,7 +172,7 @@ const EventTeamsView = React.createClass({
 		} else {
 			return (
 				<div className="bEventTeams_team">
-					{self.renderPlayers(players, event.status, true)}
+					{self.renderPlayers(players, true)}
 				</div>
 			);
 		}
@@ -420,7 +215,7 @@ const EventTeamsView = React.createClass({
 		} else {
 			return (
 				<div className="bEventTeams_team">
-					{self.renderPlayers(players, event.status, true)}
+					{self.renderPlayers(players, true)}
 				</div>
 			);
 		}
@@ -525,13 +320,15 @@ const EventTeamsView = React.createClass({
 			</div>
 		);
 	},
-	renderPlayers: function(players, eventStatus, isOwner) {
+	renderPlayers: function(players, isOwner) {
 		const self = this;
 
 		return players.map((player, playerIndex) => {
 			const isMale = player.gender === userConst.GENDER.MALE;
 
 			const mode = self.getBinding('mode').toJS();
+
+			const event = self.getBinding('event').toJS();
 
 			return (
 				<div key={playerIndex} className="_bPlayer _mMini">
@@ -541,11 +338,15 @@ const EventTeamsView = React.createClass({
 						</span>
 					</If>
 					<span className="ePlayer_name">
-						<span>{player.firstName} </span>
+						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
 					</span>
-					<If condition={eventStatus === eventConst.EVENT_STATUS.FINISHED || mode === 'closing'}>
-						{self.renderPlayerPoints(player, mode, eventStatus, isOwner)}
+					<If condition={!TeamHelper.isOneOnOneSport(event) && (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')}>
+						<Score	isChangeMode			={EventHelper.isShowScoreButtons(event.status, mode, isOwner)}
+								plainPoints				={self.getPlainPointsByStudent(event, player.id)}
+								pointsType				={event.sport.points.display}
+								handleClickPointSign	={self.handleClickPointSign.bind(self, event, player.id, player.permissionId, player.teamId)}
+						/>
 					</If>
 				</div>
 			);
@@ -560,7 +361,7 @@ const EventTeamsView = React.createClass({
 		if(players.length === 0) {
 			return self.renderSelectPlayersLater();
 		} else {
-			return self.renderPlayers(players, event.status, true);
+			return self.renderPlayers(players, true);
 		}
 	},
 	renderTeamPlayersByOrder: function(order) {
@@ -577,7 +378,6 @@ const EventTeamsView = React.createClass({
 
 			players = self.renderPlayers(
 				playersBinding.toJS(),
-				event.status,
 				isOwner
 			);
 		}

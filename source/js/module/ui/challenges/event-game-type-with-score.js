@@ -1,23 +1,20 @@
 /**
  * Created by Anatoly on 30.08.2016.
  */
-const 	React 		= require('react'),
-		EventHelper = require('module/helpers/eventHelper'),
-		TeamHelper 	= require('module/ui/managers/helpers/team_helper'),
-		classNames 	= require('classnames');
+const 	React 			= require('react'),
+		ChallengeModel 	= require('module/ui/challenges/challenge_model'),
+		classNames 		= require('classnames');
 
 function EventGameTypeWithScore(props){
-	const 	event = props.event,
-			activeSchoolId = props.activeSchoolId,
-			isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED,
-			classResults = classNames({
-				eChallenge_results:true,
-				mDone: isFinished
-			}),
-			firstName 	= TeamHelper.getRivalNameForLeftContext(event, activeSchoolId).value,
-			secondName 	= TeamHelper.getRivalNameForRightContext(event, activeSchoolId).value,
-			firstPoint = TeamHelper.callFunctionForLeftContext(activeSchoolId, event, TeamHelper.getCountPoints.bind(TeamHelper, event)),
-			secondPoint = TeamHelper.callFunctionForRightContext(activeSchoolId, event, TeamHelper.getCountPoints.bind(TeamHelper, event));
+	const 	event 			= props.event,
+			activeSchoolId 	= props.activeSchoolId,
+			model 			= new ChallengeModel(event, activeSchoolId),
+			classResults 	= classNames({
+									eChallenge_results:true,
+									mDone: isFinished
+								}),
+			firstName 		= model.rivals[0].value,
+			secondName 		= model.rivals[1].value;
 
 
 	if(firstName === 'individual'){
@@ -33,7 +30,7 @@ function EventGameTypeWithScore(props){
 					{firstName}
 				</div>
 				<div className={classResults}>
-					{isFinished ? [firstPoint, secondPoint].join(':') : '- : -'}
+					{model.score}
 				</div>
 				<div className="eChallenge_rivalName">
 					{secondName}

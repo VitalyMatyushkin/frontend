@@ -98,7 +98,7 @@ const EventView = React.createClass({
 			const updBinding = self.getDefaultBinding();
 
 			const event = updBinding.toJS('model');
-			if(TeamHelper.isTeamSport(event)) {
+			if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
 				event.results = TeamHelper.callFunctionForLeftContext(
 					activeSchool,
 					event,
@@ -124,36 +124,53 @@ const EventView = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		let	scoreBundleName,
-			idFieldName;
+			resultIdFieldName,
+			dataBundleIdFieldName,
+			dataBundle;
 
 		switch (teamBundleName) {
 			case 'schoolsData':
-				scoreBundleName	= 'schoolScore';
-				idFieldName		= 'schoolId';
+				scoreBundleName			= 'schoolScore';
+				resultIdFieldName		= 'schoolId';
+				dataBundleIdFieldName	= 'id';
+				dataBundle				=  binding.toJS(`${teamBundleName}`);
 				break;
 			case 'housesData':
-				scoreBundleName	= 'houseScore';
-				idFieldName		= 'houseId';
+				scoreBundleName			= 'houseScore';
+				resultIdFieldName		= 'houseId';
+				dataBundleIdFieldName	= 'id';
+				dataBundle				=  binding.toJS(`${teamBundleName}`);
 				break;
 			case 'teamsData':
-				scoreBundleName	= 'teamScore';
-				idFieldName		= 'teamId';
+				scoreBundleName			= 'teamScore';
+				resultIdFieldName		= 'teamId';
+				dataBundleIdFieldName	= 'id';
+				dataBundle				=  binding.toJS(`${teamBundleName}`);
+				break;
+			case 'individualsData':
+				scoreBundleName			= 'individualScore';
+				resultIdFieldName		= 'userId';
+				dataBundleIdFieldName	= 'userId';
+				dataBundle				= event.individualsData;
 				break;
 		}
 
-		const dataBundle = binding.toJS(`${teamBundleName}`);
 		if(typeof dataBundle[order] !== 'undefined') {
-			const scoreData	= event.results[scoreBundleName].find(r => r[idFieldName] === dataBundle[order].id);
+			const scoreData = event.results[scoreBundleName].find(r => r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
 
 			if(typeof scoreData === 'undefined') {
 				const newScoreData = {};
-				newScoreData[idFieldName]	= dataBundle[order].id;
-				newScoreData.score			= 0;
+				newScoreData[resultIdFieldName]	= dataBundle[order][dataBundleIdFieldName];
+				newScoreData.score				= 0;
+				if(teamBundleName === 'individualsData') {
+					newScoreData.permissionId = dataBundle[order].permissionId;
+				}
 
 				event.results[scoreBundleName].push(newScoreData);
 			}
 		}
 
+		console.log(event);
 		return event.results;
 	},
 	getSchoolsData: function(event) {
@@ -184,11 +201,11 @@ const EventView = React.createClass({
 				text:'Performance',
 				isActive:false
 			},
-			{
-				value:'details',
-				text:'Details',
-				isActive:false
-			},
+			//{
+			//	value:'details',
+			//	text:'Details',
+			//	isActive:false
+			//},
 			{
 				value:'gallery',
 				text:'Gallery',

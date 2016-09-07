@@ -54,6 +54,8 @@ const EventButtons = React.createClass({
 				schoolId:	activeSchoolId,
 				eventId:	event.id
 			})
+			.then(() => self.submitSchoolResults(event))
+			.then(() => self.submitHouseResults(event))
 			.then(() => self.submitIndividualResults(event))
 			.then(() => self.submitIndividualPerformance(event))
 			.then(() => self.doActionsAfterCloseEvent());
@@ -72,7 +74,11 @@ const EventButtons = React.createClass({
 
 		switch (true) {
 			case body.length === 1:
-				body[0].isWinner = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
+				if(TeamHelper.isOneOnOneSport(event)) {
+					body[0].isWinner = event.results.schoolScore[0].score > event.results.individualScore[0].score ? true : false;
+				} else {
+					body[0].isWinner = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
+				}
 				break;
 			case body.length === 2:
 				switch (true) {
@@ -108,7 +114,11 @@ const EventButtons = React.createClass({
 
 		switch (true) {
 			case body.length === 1:
-				body[0].isWinner = event.results.houseScore[0].score > event.results.teamScore[0].score ? true : false;
+				if(TeamHelper.isOneOnOneSport(event)) {
+					body[0].isWinner = event.results.houseScore[0].score > event.results.individualScore[0].score ? true : false;
+				} else {
+					body[0].isWinner = event.results.houseScore[0].score > event.results.teamScore[0].score ? true : false;
+				}
 				break;
 			case body.length === 2:
 				switch (true) {
@@ -175,6 +185,18 @@ const EventButtons = React.createClass({
 
 		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
+		if(TeamHelper.isOneOnOneSport(event)) {
+			if(event.results.individualScore.length === 1 && EventHelper.isInterSchoolsEvent(event)) {
+				event.results.individualScore[0].isWinner = event.results.individualScore[0].score > event.results.schoolScore[0].score;
+			} else if(event.results.individualScore.length === 1 && EventHelper.isHousesEvent(event)) {
+				event.results.individualScore[0].isWinner = event.results.individualScore[0].score > event.results.houseScore[0].score;
+			} else if(event.results.individualScore.length === 2) {
+				event.results.individualScore[0].isWinner = event.results.individualScore[0].score > event.results.individualScore[1].score;
+				event.results.individualScore[1].isWinner = event.results.individualScore[1].score > event.results.individualScore[0].score;
+			}
+		}
+
+		console.log(event.results.individualScore);
 		return Promise.all(
 			event.results.individualScore.map(
 				individualScoreData => window.Server.schoolEventResultIndividualsScore.post(
