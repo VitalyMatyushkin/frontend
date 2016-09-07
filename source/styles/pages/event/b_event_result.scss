@@ -44,30 +44,3 @@
   font-weight: normal;
   color: #878787;
 }
-
-.eEventResult_SignContainer {
-  display: inline-block;
-
-  width: 18px;
-  height: 18px;
-
-
-  cursor: pointer;
-  text-align: center;
-}
-
-.eEventResult_Sign {
-  display: block;
-
-  width: 11px;
-  height: 11px;
-
-  margin: 4px 3px 0 3px;
-
-  color: #333132;
-  &:hover {
-    color: $COLOR;
-  }
-}
-
-

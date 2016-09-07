@@ -362,6 +362,18 @@ function isInternalEventForIndividualSport(event) {
 	}
 };
 
+function isHousesEventForIndividualSport(event) {
+	if(typeof event !== 'undefined') {
+		const self = this;
+
+		const eventType = event.eventType ?
+			EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] :
+			event.type;
+
+		return (eventType === 'houses') && self.isIndividualSport(event);
+	}
+};
+
 function isInternalEventForTeamSport(event) {
 	if(typeof event !== 'undefined') {
 		const self = this;
@@ -464,7 +476,7 @@ function isShowCloseEventButton(thiz) {
 
 	return binding.toJS('model.status') === "ACCEPTED" &&
 		(
-			self.isInterSchoolsEventForNonTeamSport(event) ?
+			self.isInterSchoolsEventForIndividualSport(event) ?
 				(
 					self.isSchoolHaveIndividualPlayers(event, event.inviterSchool.id) &&
 					self.isSchoolHaveIndividualPlayers(event, event.invitedSchools[0].id)
@@ -472,7 +484,7 @@ function isShowCloseEventButton(thiz) {
 				: true
 		) &&
 		(
-			self.isHousesEventForNonTeamSport(event) ?
+			self.isHousesEventForIndividualSport(event) ?
 				self.isHouseHaveIndividualPlayers(event, event.housesData[0].id) &&
 				self.isHouseHaveIndividualPlayers(event, event.housesData[1].id)
 				: true
@@ -612,40 +624,80 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 
 	switch(eventType) {
 		case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-			if(teamsData.length === 0) {
-				// Render 'active school' on the left.
-				return cb(
-					'schoolsData',
-					schoolsData[0].id === activeSchoolId ? 0 : 1
-				);
-			} else if (teamsData.length === 1) {
-				// Render 'active school' on the left.
-				// Check - Has 'active school' team?
-				// If not - send order from schoolsData
-				// If yes - send order from teamsData
-				if(teamsData[0].schoolId === activeSchoolId) {
-					return cb('teamsData', 0);
-				} else {
+			if(TeamHelper.isOneOnOneSport(event)) {
+				if(event.individualsData.length === 0) {
+					// Render 'active school' on the left.
 					return cb(
 						'schoolsData',
 						schoolsData[0].id === activeSchoolId ? 0 : 1
 					);
+				} else if(event.individualsData.length === 1) {
+					// Render 'active school' on the left.
+					// Check - 'active school' has player?
+					// If not - send order from schoolsData
+					// If yes - send order from individualsData
+					if(event.individualsData[0].schoolId === activeSchoolId) {
+						return cb('individualsData', 0);
+					} else {
+						return cb(
+							'schoolsData',
+							schoolsData[0].id === activeSchoolId ? 0 : 1
+						);
+					}
+				} else if(event.individualsData.length === 2) {
+					return cb(
+						'individualsData',
+						event.individualsData[0].schoolId === activeSchoolId ? 0 : 1
+					);
 				}
-			} else if(teamsData.length === 2) {
-				return cb(
-					'teamsData',
-					teamsData[0].schoolId === activeSchoolId ? 0 : 1
-				);
+			} else if (TeamHelper.isTeamSport(event)) {
+				if(teamsData.length === 0) {
+					// Render 'active school' on the left.
+					return cb(
+						'schoolsData',
+						schoolsData[0].id === activeSchoolId ? 0 : 1
+					);
+				} else if (teamsData.length === 1) {
+					// Render 'active school' on the left.
+					// Check - Has 'active school' team?
+					// If not - send order from schoolsData
+					// If yes - send order from teamsData
+					if(teamsData[0].schoolId === activeSchoolId) {
+						return cb('teamsData', 0);
+					} else {
+						return cb(
+							'schoolsData',
+							schoolsData[0].id === activeSchoolId ? 0 : 1
+						);
+					}
+				} else if(teamsData.length === 2) {
+					return cb(
+						'teamsData',
+						teamsData[0].schoolId === activeSchoolId ? 0 : 1
+					);
+				}
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-			if(teamsData.length === 0) {
-				return cb('housesData', 0);
-			} else if (
-				teamsData.length === 1 ||
-				teamsData.length === 2
-			) {
-				return cb('teamsData', 0);
+			if(TeamHelper.isOneOnOneSport(event)) {
+				if(event.individualsData.length === 0) {
+					// Render 'active school' on the left.
+					return cb('housesData', 0);
+				} else if(
+					event.individualsData.length === 1 ||
+					event.individualsData.length === 2
+				) {
+					return cb('individualsData', 0);
+				}
+			} else if(TeamHelper.isTeamSport(event)) {
+				if(teamsData.length === 0) {
+					return cb('housesData', 0);
+				} else if (
+					teamsData.length === 1 ||
+					teamsData.length === 2
+				) {
+					return cb('teamsData', 0);
+				}
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
@@ -664,7 +716,33 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 
 	switch(eventType) {
 		case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-			if(teamsData.length === 0) {
+			if(TeamHelper.isOneOnOneSport(event)) {
+				if(event.individualsData.length === 0) {
+					// Render 'active school' on the left.
+					return cb(
+						'schoolsData',
+						schoolsData[0].id !== activeSchoolId ? 0 : 1
+					);
+				} else if(event.individualsData.length === 1) {
+					// Render 'active school' on the left.
+					// Check - 'active school' has player?
+					// If not - send order from schoolsData
+					// If yes - send order from individualsData
+					if(event.individualsData[0].schoolId !== activeSchoolId) {
+						return cb('individualsData', 0);
+					} else {
+						return cb(
+							'schoolsData',
+							schoolsData[0].id !== activeSchoolId ? 0 : 1
+						);
+					}
+				} else if(event.individualsData.length === 2) {
+					return cb(
+						'individualsData',
+						event.individualsData[0].schoolId !== activeSchoolId ? 0 : 1
+					);
+				}
+			} else if(teamsData.length === 0) {
 				// render 'not active school' on the left.
 				return cb(
 					'schoolsData',
@@ -691,16 +769,30 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-			if(teamsData.length === 0) {
-				return cb('housesData', 1);
-			} else if (teamsData.length === 1) {
-				return cb(
-					'housesData',
-					teamsData[0].id === housesData[0].id ? 0 : 1
-				);
-			} if(teamsData.length === 2) {
-			return cb('teamsData', 1);
-		}
+			if(TeamHelper.isOneOnOneSport(event)) {
+				if(event.individualsData.length === 0) {
+					// Render 'active school' on the left.
+					return cb('housesData', 1);
+				} else if(event.individualsData.length === 1) {
+					return cb(
+						'housesData',
+						event.individualsData[0].houseId === housesData[0].id ? 0 : 1
+					);
+				} else if(event.individualsData.length === 2) {
+					return cb('individualsData', 1);
+				}
+			} else if(TeamHelper.isTeamSport(event)) {
+				if(teamsData.length === 0) {
+					return cb('housesData', 1);
+				} else if (teamsData.length === 1) {
+					return cb(
+						'housesData',
+						teamsData[0].id === housesData[0].id ? 0 : 1
+					);
+				} else if(teamsData.length === 2) {
+					return cb('teamsData', 1);
+				}
+			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 			return cb('teamsData', 1);
@@ -708,29 +800,42 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 };
 
 function getCountPoints(event, teamBundleName, order) {
-	const self = this;
+	const	self		= this,
+			teamBundles	= self.getTeamBundles(event);
 
 	let	scoreBundleName,
-		idFieldName;
+		resultIdFieldName,
+		dataBundleIdFieldName,
+		dataBundle;
 
 	switch (teamBundleName) {
 		case 'schoolsData':
-			scoreBundleName	= 'schoolScore';
-			idFieldName		= 'schoolId';
+			scoreBundleName			= 'schoolScore';
+			resultIdFieldName		= 'schoolId';
+			dataBundleIdFieldName	= 'id';
+			dataBundle				= teamBundles[teamBundleName];
 			break;
 		case 'housesData':
-			scoreBundleName	= 'houseScore';
-			idFieldName		= 'houseId';
+			scoreBundleName			= 'houseScore';
+			resultIdFieldName		= 'houseId';
+			dataBundleIdFieldName	= 'id';
+			dataBundle				= teamBundles[teamBundleName];
 			break;
 		case 'teamsData':
-			scoreBundleName	= 'teamScore';
-			idFieldName		= 'teamId';
+			scoreBundleName			= 'teamScore';
+			resultIdFieldName		= 'teamId';
+			dataBundleIdFieldName	= 'id';
+			dataBundle				= teamBundles[teamBundleName];
+			break;
+		case 'individualsData':
+			scoreBundleName			= 'individualScore';
+			resultIdFieldName		= 'userId';
+			dataBundleIdFieldName	= 'userId';
+			dataBundle				= event.individualsData;
 			break;
 	}
 
-	const	teamBundles	= self.getTeamBundles(event),
-			dataBundle	= teamBundles[teamBundleName],
-			scoreData	= event.results[scoreBundleName].find(r => r[idFieldName] === dataBundle[order].id);
+	const scoreData = event.results[scoreBundleName].find(r => r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
 
 	let points = 0;
 	if(typeof scoreData !== 'undefined') {
@@ -902,6 +1007,49 @@ function getEventType(event) {
 	}
 };
 
+function incByType(value, type, pointsStep) {
+	switch (type) {
+		case 'plain':
+		case 'sec':
+		case 'cm':
+			return value += pointsStep;
+		case 'min':
+			return value = value + 60;
+		case 'h':
+			return value = value + 3600;
+		case 'm':
+			return value = value + 100;
+		case 'km':
+			return value = value + 10000;
+	}
+};
+
+function decByType(value, type, pointsStep) {
+	let result;
+
+	switch (type) {
+		case 'plain':
+		case 'sec':
+		case 'cm':
+			result = value - pointsStep;
+			break;
+		case 'min':
+			result = value - 60;
+			break;
+		case 'h':
+			result = value - 3600;
+			break;
+		case 'm':
+			result = value - 100;
+			break;
+		case 'km':
+			result = value - 10000;
+			break;
+	}
+
+	return result >= 0 ? result : value;
+};
+
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -930,6 +1078,7 @@ const TeamHelper = {
 	isInterSchoolsEventForNonTeamSport:		isInterSchoolsEventForNonTeamSport,
 	isHousesEventForTeamSport:				isHousesEventForTeamSport,
 	isHousesEventForNonTeamSport:			isHousesEventForNonTeamSport,
+	isHousesEventForIndividualSport:		isHousesEventForIndividualSport,
 	isInternalEventForOneOnOneSport:		isInternalEventForOneOnOneSport,
 	isInternalEventForIndividualSport:		isInternalEventForIndividualSport,
 	isInternalEventForTeamSport:			isInternalEventForTeamSport,
@@ -959,7 +1108,9 @@ const TeamHelper = {
 	getRivalName:							getRival,
 	getRivalForLeftContext:					getRivalForLeftContext,
 	getRivalForRightContext:				getRivalForRightContext,
-	updateTeam:								updateTeam
+	updateTeam:								updateTeam,
+	decByType:								decByType,
+	incByType:								incByType
 };
 
 module.exports = TeamHelper;
