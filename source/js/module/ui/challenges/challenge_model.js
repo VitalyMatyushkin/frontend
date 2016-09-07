@@ -31,20 +31,20 @@ const   DateHelper  = require('module/helpers/date_helper'),
  *
  * */
 const ChallengeModel = function(event, activeSchoolId){
-    this.id = event.id;
-    this.name = event.name;
-	this.date = DateHelper.getDate(event.startTime);
-	this.time = DateHelper.getTime(event.startTime);
-	this.eventType = EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
+    this.id 		= event.id;
+    this.name 		= event.name;
+	this.date 		= DateHelper.getDate(event.startTime);
+	this.time 		= DateHelper.getTime(event.startTime);
+	this.eventType 	= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
     this.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
 
-	this.isIndividualSport = TeamHelper.isIndividualSport(event);
-	this.sport = event.sport ? event.sport.name : '';
-	this.sportPointsType = event.sport && event.sport.points ? event.sport.points.display : '';
+	this.sport 				= event.sport ? event.sport.name : '';
+	this.isIndividualSport 	= TeamHelper.isIndividualSport(event);
+	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
 
-    this.rivals = this._getRivals(event, activeSchoolId);
-	this.scoreAr = this._getScoreAr(event, activeSchoolId);
-	this.score = this._getScore(event, activeSchoolId);
+    this.rivals 	= this._getRivals(event, activeSchoolId);
+	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
+	this.score 		= this._getScore(event, activeSchoolId);
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
