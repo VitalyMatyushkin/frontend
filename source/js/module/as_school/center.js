@@ -1,8 +1,8 @@
-const 	RouterView 		= require('module/core/router'),
-		Route 			= require('module/core/route'),
-		PublicLogin 	= require('module/ui/menu/public_login'),
-		Morearty        = require('morearty'),
-		React 			= require('react'),
+const 	RouterView 				= require('module/core/router'),
+		Route 					= require('module/core/route'),
+		PublicLogin 			= require('module/ui/menu/public_login'),
+		Morearty        		= require('morearty'),
+		React 					= require('react'),
 		SchoolPageComponent 	= require("module/as_school/pages/school/school_page"),
 		FixturesPageComponent 	= require("module/as_school/pages/fixtures/fixtures_page"),
 		EventPageComponent 		= require("module/as_school/pages/event/event_page"),
@@ -18,10 +18,10 @@ const Center = React.createClass({
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			currentPage =  binding.get('routing.currentPageName') || '',
-			mainClass = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding(),
+				currentPage	=  binding.get('routing.currentPageName') || '',
+				mainClass 	= 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
 
 		return (
 			<div className={mainClass}>

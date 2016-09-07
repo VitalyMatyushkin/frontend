@@ -4,10 +4,7 @@ const   React           = require('react'),
         Morearty        = require('morearty'),
         ChallengeModel  = require('module/ui/challenges/challenge_model'),
         classNames      = require('classnames'),
-        EventHelper     = require('module/helpers/eventHelper'),
-        TeamHelper      = require('./../../ui/managers/helpers/team_helper'),
-        DateHelper      = require('module/helpers/date_helper'),
-        MoreartyHelper  = require('module/helpers/morearty_helper');
+        DateHelper      = require('module/helpers/date_helper');
 
 const ChallengesView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -41,25 +38,16 @@ const ChallengesView = React.createClass({
             result = eventsByDate.map(event => {
                 const   activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
                         model           = new ChallengeModel(event.toJS(), activeSchoolId),
-                        sportIcon       = self.getSportIcon(model.sport);
+                        sportIcon       = self.getSportIcon(model.sport),
+						scoreClasses 	= classNames({eChallenge_results:true, mDone:model.isFinished});
 
                 return (
                     <div key={model.id} className="bChallenge" onClick={self.onClickChallenge.bind(null, model.id)}>
                         <span className="eChallenge_sport">{sportIcon}</span>
                         <span className="eChallenge_event" title={model.name}>{model.name}</span>
                         <div className="eChallenge_hours">{model.time}</div>
-                        {self.renderGameTypeColumn(event.toJS(), model)}
-                        <div className={classNames({eChallenge_results:true, mDone:model.played})}>
-                            {
-                                `${TeamHelper.callFunctionForLeftContext(
-                                    activeSchoolId, event.toJS(), self.getScore.bind(self, event.toJS())
-                                )}
-									-
-									${TeamHelper.callFunctionForRightContext(
-                                    activeSchoolId, event.toJS(), self.getScore.bind(self, event.toJS())
-                                )}`
-                            }
-                        </div>
+                        {self.renderGameTypeColumn(model)}
+                        <div className={scoreClasses}>{model.score}</div>
                     </div>
                 );
             }).toArray();
@@ -67,142 +55,26 @@ const ChallengesView = React.createClass({
 
         return result;
     },
-    getScore: function(event, teamBundleName, order) {
-        return TeamHelper.getCountPoints(event, teamBundleName, order);
-    },
-    renderGameTypeColumn: function(event, model) {
-        const	self	= this;
-        let		result	= null;
+	renderGameTypeColumn: function(model) {
+		const	leftSideRivalName	= model.rivals[0].value,
+				rightSideRivalName	= model.rivals[1].value;
 
-        if(EventHelper.isEventWithOneIndividualTeam(event)) {
-            result = (
-                <div className="eChallenge_in">
-                    {"Individual Game"}
-                </div>
-            );
-        } else {
-            const   leftSideRivalName   = self._getRivalNameLeftSide(event, model.rivals),
-                    rightSideRivalName  = self._getRivalNameRightSide(event, model.rivals);
+		if(model.isIndividualSport) {
+			return (
+				<div className="eChallenge_rivals">
+					{"Individual Game"}
+				</div>
+			);
+		}
 
-            result = (
-                <div className="eChallenge_in">
-                    <span className="eChallenge_firstName" title={leftSideRivalName}>{leftSideRivalName}</span>
-                    <p>vs</p>
-                    <span className="eChallenge_secondName" title={rightSideRivalName}>{rightSideRivalName}</span>
-                </div>
-            );
-        }
-
-        return result;
-    },
-    _getRivalNameLeftSide: function(event, rivals) {
-        const self = this;
-
-        const   eventType       = event.eventType,
-                participants    = event.teamsData,
-                activeSchoolId  = MoreartyHelper.getActiveSchoolId(self);
-
-        if(TeamHelper.isNonTeamSport(event)) {
-            switch (eventType) {
-                case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-                    const foundRival = rivals.find(r => r.id === self.activeSchoolId);
-
-                    return foundRival ? foundRival.name : 'n/a';
-                case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-                    return rivals[0].name;
-            }
-        } else if(
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-            participants.length === 0
-        ) {
-            return 'n/a';
-        } else if (
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-            participants.length === 1 &&
-            participants[0].schoolId !== self.activeSchoolId
-        ) {
-            return 'n/a';
-        } else if (
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-            participants[0].schoolId === self.activeSchoolId
-        ) {
-            return rivals.find(rival => rival.id === participants[0].id).name;
-        } else if(
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-            participants[1].schoolId === self.activeSchoolId
-        ) {
-            return rivals.find(rival => rival.id === participants[1].id).name;
-        } else if (
-            participants.length === 1 &&
-            eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-        ) {
-            return rivals.find(rival => rival.id === participants[0].id).name;
-        } else if (
-            (
-                participants.length === 0 ||
-                participants.length === 1
-            ) &&
-            eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-        ) {
-            return 'n/a';
-        } else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-            return rivals.find(rival => rival.id === participants[0].id).name;
-        }
-    },
-    _getRivalNameRightSide: function(event, rivals) {
-        const self = this;
-
-        const   eventType		= event.eventType,
-                participants	= event.teamsData,
-                activeSchoolId  = MoreartyHelper.getActiveSchoolId(self);
-
-        if(TeamHelper.isNonTeamSport(event)) {
-            switch (eventType) {
-                case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-                    const foundRival = rivals.find(r => r.id !== self.activeSchoolId);
-
-                    return foundRival ? foundRival.name : 'n/a';
-                case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-                    return rivals[1].name;
-            }
-        } else if(
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-            participants.length === 0
-        ) {
-            return rivals.find(rival => rival.id === event.invitedSchools[0].id).name;
-        } else if (// if inter school event and participant[0] is our school
-            participants.length > 1 &&
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-            participants[0].schoolId !== self.activeSchoolId
-        ) {
-            return rivals.find(rival => rival.id === participants[0].id).name;
-        } else if (// if inter school event and participant[1] is our school
-            participants.length > 1 &&
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-            participants[1].schoolId !== self.activeSchoolId
-        ) {
-            return rivals.find(rival => rival.id === participants[1].id).name;
-        } else if(// if inter school event and opponent school is not yet accept invitation
-            participants.length === 1 &&
-            eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-        ) {
-            return rivals.find(rival => rival.id === event.invitedSchools[0].id).name;
-        } else if (// if it isn't inter school event
-            participants.length > 1 &&
-            eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-        ) {
-            return rivals.find(rival => rival.id === participants[1].id).name;
-        } else if (
-            (
-                participants.length === 0 ||
-                participants.length === 1
-            ) &&
-            eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-        ) {
-            return 'n/a';
-        }
-
-    },
+		return (
+			<div className="eChallenge_rivals">
+				<span className="eChallenge_rivalName" title={leftSideRivalName}>{leftSideRivalName}</span>
+				<span>vs</span>
+				<span className="eChallenge_rivalName" title={rightSideRivalName}>{rightSideRivalName}</span>
+			</div>
+		);
+	},
     getDates: function () {
         const   self    = this,
                 binding = self.getDefaultBinding();

@@ -203,7 +203,7 @@ $border: solid 1px #c2c2c2;
   padding: 40px 11%;
 }
 .bAchievementsDate {
-  max-width: 340px;
+  max-width: 470px;
   display: flex;
   flex-direction: column;
   color: #333132;
@@ -218,10 +218,18 @@ $border: solid 1px #c2c2c2;
 .bAchievement{
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  padding: 5px;
+
+  &:hover{
+    border: $MAIN_COLOR 1px solid;
+  }
+}
+.eAchievement_info{
+  text-align: center;
 }
 .eAchievement_in {
   display: flex;
-  max-width: 340px;
   flex-wrap: wrap;
 }
 .eAchievement_rivalInfo {

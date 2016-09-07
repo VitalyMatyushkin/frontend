@@ -4,21 +4,38 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		authController 		= require('module/core/auth_controller'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
-		Morearty			= require('morearty'),
-		Helpers				= require('module/helpers/storage');
+		Morearty			= require('morearty');
 
 function initMainView(schoolId) {
+
+	const today = new Date();
+
 	// creating morearty context
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
-			userData: userDataInstance.getDefaultState(),
-			activeSchoolId: schoolId,
+			userData: 			userDataInstance.getDefaultState(),
+			activeSchoolId: 	schoolId,
 			routing: {
 				currentPath: '',		// текущий путь
 				currentPageName: '',	// имя текущей страницы, если есть
 				currentPathParts: [],	// части текущего путии
 				pathParameters: [],		// параметры текущего пути (:someParam) в порядке объявления
 				parameters: {}			// GET-параметры текущего пути
+			},
+			schoolHomePage: {			// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
+				events: {				// will keep all data related to showing events on main page here
+					todayDate: 			today,
+					monthDate:			new Date(today.getFullYear(), today.getMonth()),
+					selectedDate:		new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+					distinctEventDatesData: {
+						isSync: false,
+						dates: []
+					},
+					selectedDateEventsData: {
+						isSync: false,
+						events: []
+					}
+				}
 			}
 		},
 		options: {
@@ -59,41 +76,24 @@ function init404View() {
 }
 
 function runMainMode() {
-	let schoolId = Helpers.LocalStorage.get('schoolId');
-
 	serviceList.initializeOpenServices();
 
-	schoolId = 'undefined'; //set this to undefined string so we can perform a fresh call for school details - avoids cache problems
-	if (schoolId !== 'undefined') {
-		initMainView(schoolId);
-	} else {
-		// TODO don't forget about filter
-		//{
-		//	filter: {
-		//		where: {
-		//			domain: document.location.host.split('.')[0]
-		//		}
-		//	}
-		//}
-		serviceList.publicSchools.get().then(function(data) {
-			/*TODO: Not the best solution - with this iteration but for now we can use to identify school(HACK)
-			* We can delete this once filtering is performed on the server 
-			* */
-			data.forEach((school)=>{
-				if(school.domain){
-					if(school.domain===document.location.host.split('.')[0]){
-						/*We store the school once we find it - saves querying for it again if we need to know
-						 * current school
-						  * */
-						Helpers.LocalStorage.set('activeSchoolData', school);
-					}
-				}
-			});
-			// let schoolId = data[0].id;
-			// Helpers.LocalStorage.set('schoolId', schoolId);
-			initMainView(schoolId);
-		}, init404View);
-	}
+	const schoolDomain = document.location.host.split('.')[0];
+
+	const filter = {
+		where: {
+			domain: schoolDomain
+		}
+	};
+
+	return serviceList.publicSchools.get({filter: filter}).then( schoolList => {
+		const optSchool = schoolList[0];
+		if(optSchool) {
+			initMainView(optSchool.id);
+		} else {
+			init404View();
+		}
+	});
 
 }
 

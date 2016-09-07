@@ -21,16 +21,13 @@ const CalendarMonthView = React.createClass({
 		});
 	},
 	_onClickPrevButton: function () {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				date		= binding.get('currentDate'),
-				year		= date.getFullYear(),
-				month		= date.getMonth(),
-				prevYear	= month === 0 ? year -1 : year,
-				prevMonth	= month === 0 ? 11 : month - 1;
+		const 	binding			= this.getDefaultBinding(),
+				date			= binding.get('currentDate'),
+				prevMonthDate 	= new Date(date.getFullYear(), date.getMonth() - 1, 1),
+				prevMonth		= prevMonthDate.getMonth();	// I'm not sure we need it
 
 		binding.atomically()
-			.set('currentDate', new Date(prevYear, prevMonth, (binding.get('currentDayDate')!==0 ? binding.get('currentDayDate'):1)))
+			.set('currentDate', prevMonthDate)
 			.set('currentMonth', Immutable.fromJS(prevMonth))
 			.commit();
 	},
@@ -38,14 +35,12 @@ const CalendarMonthView = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				date			= binding.get('currentDate'),
-				year			= date.getFullYear(),
-				month			= date.getMonth(),
-				nextYear		= month === 11 ? year + 1 : year,
-				nextMonth		= month === 11 ? 0 : month + 1,
-				currentDayDate	= date.getDate();
+				currentDayDate	= date.getDate(),
+				nextMonthDate	= new Date(date.getFullYear(), date.getMonth() + 1, 1),
+				nextMonth		= nextMonthDate.getMonth();
 		
 		binding.atomically()
-			.set('currentDate', new Date(nextYear, nextMonth, 1))
+			.set('currentDate', nextMonthDate)
 			.set('currentDayDate', currentDayDate)
 			.set('currentMonth', Immutable.fromJS(nextMonth))
 			.commit()

@@ -518,7 +518,7 @@ function isHouseHaveIndividualPlayers(event, houseId) {
 	return event.individualsData.filter(i => i.houseId === houseId).length > 0;
 };
 
-function getRivalName(event, activeSchoolId, forLeftContext){
+function getRival(event, activeSchoolId, forLeftContext){
 	const self = this;
 
 	const	teamBundles		= self.getTeamBundles(event),
@@ -536,6 +536,7 @@ function getRivalName(event, activeSchoolId, forLeftContext){
 
 	let name = '',
 		from = '',
+		school,
 		team, student;
 
 	/**get rival name (team or student)*/
@@ -566,7 +567,6 @@ function getRivalName(event, activeSchoolId, forLeftContext){
 	/**get rival 'from' (school or house)*/
 	switch (true){
 		case isInterSchoolsEvent:
-			let school;
 			if(activeSchoolId){
 				school = forLeftContext ? schoolsData.find(s => s.id === activeSchoolId)
 					: schoolsData.find(s => s.id !== activeSchoolId);
@@ -603,13 +603,14 @@ function getRivalName(event, activeSchoolId, forLeftContext){
 	return {
 		name:name,
 		from:from,
+		schoolPic: school ? school.pic : schoolsData.length ? schoolsData[0].pic : null,
 		value: !name ? from : forLeftContext && activeSchoolId && !isHousesEvent ? name : `${name} [${from}]`
 	};
 }
-function getRivalNameForLeftContext(event, activeSchoolId){
+function getRivalForLeftContext(event, activeSchoolId){
 	return this.getRivalName(event, activeSchoolId, true);
 }
-function getRivalNameForRightContext(event, activeSchoolId){
+function getRivalForRightContext(event, activeSchoolId){
 	return this.getRivalName(event, activeSchoolId, false);
 }
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
@@ -1104,9 +1105,9 @@ const TeamHelper = {
 	addTeamsToEvent:						addTeamsToEvent,
 	addIndividualPlayersToEvent:			addIndividualPlayersToEvent,
 	getEventType:							getEventType,
-	getRivalName:							getRivalName,
-	getRivalNameForLeftContext:				getRivalNameForLeftContext,
-	getRivalNameForRightContext:			getRivalNameForRightContext,
+	getRivalName:							getRival,
+	getRivalForLeftContext:					getRivalForLeftContext,
+	getRivalForRightContext:				getRivalForRightContext,
 	updateTeam:								updateTeam,
 	decByType:								decByType,
 	incByType:								incByType

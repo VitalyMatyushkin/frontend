@@ -54,7 +54,7 @@ const DateTimeMixin = {
 	 * @returns {number}
      */
 	daysInMonth: function(date) {
-		return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();	// TODO: why not just .getDate() ?
+		return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 	}
 };
 

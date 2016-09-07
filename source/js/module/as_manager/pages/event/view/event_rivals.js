@@ -405,7 +405,7 @@ const EventRival = React.createClass({
 		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
 				event			= binding.toJS('model');
 
-		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, self.renderCountPoints.bind(self));
+		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, self.renderCountPoints);
 	},
 	renderCountPointRightSide: function() {
 		const	self	= this,
@@ -414,7 +414,7 @@ const EventRival = React.createClass({
 		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
 				event			= binding.toJS('model');
 
-		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints.bind(self));
+		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints);
 	},
 	_renderPoints: function() {
 		const	self	= this,
