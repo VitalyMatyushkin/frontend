@@ -11,17 +11,17 @@ const   DateHelper  = require('module/helpers/date_helper'),
 const ChallengeModel = function(event, activeSchoolId){
     const self = this;
 
-    self.activeSchoolId = activeSchoolId;
-    self.id = event.id;
-    self.name = event.name;
-	self.eventType = EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
-    self.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
-	self.isIndividualSport = TeamHelper.isIndividualSport(event);
-    self.sport = event.sport ? event.sport.name : '';
-    self.date = DateHelper.getDate(event.startTime);
-    self.time = DateHelper.getTime(event.startTime);
-    self.rivals = self._getRivals(event, activeSchoolId);
-    self.score = self._getScore(event, activeSchoolId);
+    self.activeSchoolId 		= activeSchoolId;
+    self.id 					= event.id;
+    self.name 					= event.name;
+	self.eventType 				= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
+    self.isFinished 			= event.status === EventHelper.EVENT_STATUS.FINISHED;
+	self.isIndividualSport 		= TeamHelper.isIndividualSport(event);
+    self.sport 					= event.sport ? event.sport.name : '';
+    self.date 					= DateHelper.getDate(event.startTime);
+    self.time 					= DateHelper.getTime(event.startTime);
+    self.rivals 				= self._getRivals(event, activeSchoolId);
+    self.score 					= self._getScore(event, activeSchoolId);
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
