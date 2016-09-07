@@ -11,6 +11,7 @@ const ChallengeModel = function(event, activeSchoolId){
     self.activeSchoolId = activeSchoolId;
     self.id = event.id;
     self.name = event.name;
+	self.eventType = EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
     self.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
 	self.isIndividualSport = TeamHelper.isIndividualSport(event);
     self.sport = event.sport ? event.sport.name : '';
@@ -23,8 +24,8 @@ const ChallengeModel = function(event, activeSchoolId){
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
     const rivals = [];
 
-    rivals.push(TeamHelper.getRivalNameForLeftContext(event, activeSchoolId));
-    rivals.push(TeamHelper.getRivalNameForRightContext(event, activeSchoolId));
+    rivals.push(TeamHelper.getRivalForLeftContext(event, activeSchoolId));
+    rivals.push(TeamHelper.getRivalForRightContext(event, activeSchoolId));
 
     return rivals;
 };
