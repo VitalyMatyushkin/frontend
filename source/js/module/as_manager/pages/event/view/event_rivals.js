@@ -106,6 +106,7 @@ const EventRival = React.createClass({
 	_isTeamHaveZeroPoints: function(teamId, event, eventSummary) {
 		return !eventSummary[teamId] && event.status === EventHelper.EVENT_STATUS.FINISHED;
 	},
+	/**click handler on the '+' and '-' for result settings*/
 	handleClickPointSign: function(teamBundleName, order, operation, pointType) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -114,6 +115,7 @@ const EventRival = React.createClass({
 				pointsStep	= event.sport.points.pointsStep;
 		let scoreData;
 		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
+			/** get the correct object(scoreData) to store the result of the game */
 			switch (teamBundleName) {
 				case 'schoolsData':
 					scoreData = self.getSchoolScoreData(event, order);
@@ -129,6 +131,7 @@ const EventRival = React.createClass({
 					break;
 			}
 
+			/** set score */
 			scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType, pointsStep);
 			console.log(event.results);
 			binding.set('model', Immutable.fromJS(event));
