@@ -104,12 +104,13 @@ TeamListModel.prototype = {
 		];
 	},
 	_getSport: function (item) {
-		const   self    = this,
-				sportId = item.sportId,
-				binding = self.getDefaultBinding();
+		const	self	= this,
+				sportId	= item.sportId,
+				binding	= self.getDefaultBinding();
 
-		const 	sports 	= binding.get('sports'),
-				name 	= sports ? sports.find(s => s.id === sportId).name : '';
+		const	sports		= binding.get('sports'),
+				foundSport	= typeof sports !== 'undefined' ? sports.find(s => s.id === sportId) : undefined,
+				name		= typeof foundSport !== 'undefined' ? foundSport.name : '';
 
 		return <Sport name={name} className="bIcon_invites" />;
 	},
