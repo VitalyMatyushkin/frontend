@@ -31,7 +31,7 @@ const ActionButtonsType = React.createClass({
 		options.onItemSelect && itemButtons.push(
 			<span key={item.id+'view'} onClick={options.onItemSelect.bind(null, item)}
 				  className="bLinkLike bViewBtn bTooltip" data-description="View">
-				<SVG icon="icon_menu"/>
+				<SVG icon="icon_eye"/>
 			</span>
 		);
 		options.onItemRemove && itemButtons.push(
