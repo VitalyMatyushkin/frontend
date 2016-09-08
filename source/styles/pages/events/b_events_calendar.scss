@@ -62,8 +62,13 @@ $border-color: #c2c2c2;
   text-overflow: ellipsis;
 }
 .eChallenge_type{
-  width: 10%;
+  width: 15%;
   font-weight: bold;
+
+  .bIcon {
+    margin-right: 5px;
+    vertical-align: bottom;
+  }
 }
 .eChallenge_rivalName{
   width: 110px;
