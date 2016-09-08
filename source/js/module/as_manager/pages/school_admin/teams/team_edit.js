@@ -81,7 +81,16 @@ const TeamEditPage = React.createClass({
                 schoolData.forms = formsData;
 
                 // get sports data
-                return window.Server.sports.get();
+                return window.Server.sports.get({
+                    filter: {
+                        where: {
+                            players: {
+                                $nin: ['1X1', 'INDIVIDUAL']
+                            }
+                        },
+                        limit: 100
+                    }
+                });
             })
             .then( _sportsData => {
                 sports = _sportsData;

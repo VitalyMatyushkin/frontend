@@ -2,6 +2,7 @@ const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_va
 		EventHelper				= require('module/helpers/eventHelper'),
 		MoreartyHelper			= require('module/helpers/morearty_helper'),
 		RoleHelper				= require('module/helpers/role_helper'),
+		SportConsts				= require('module/helpers/consts/sport'),
 		Lazy					= require('lazy.js'),
 		Immutable				= require('immutable');
 
@@ -423,29 +424,35 @@ function isNonTeamSport(event) {
 	}
 };
 
+/** Checking if event's sport is TEAM or 2x2 */
 function isTeamSport(event) {
 	if(typeof event !== 'undefined') {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
-		return sport.players === 'TEAM' || sport.players === '2X2';
+		return sport.players === SportConsts.SPORT_PLAYERS.TEAM || sport.players === SportConsts.SPORT_PLAYERS['2X2'];
+	} else {
+		return false;
 	}
-};
+}
 
 function isIndividualSport(event) {
 	if(typeof event !== 'undefined') {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
-		return sport.players === 'INDIVIDUAL';
+		return sport.players === SportConsts.SPORT_PLAYERS.INDIVIDUAL;
+	} else {
+		return false;
 	}
-};
+}
 
 function isOneOnOneSport(event) {
 	if(typeof event !== 'undefined') {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
-		return sport.players === '1X1';
-	}
-};
+		return sport.players === SportConsts.SPORT_PLAYERS['1X1'];
+	} else
+		return false;
+}
 
 function isTeamDataCorrect(event, validationData) {
 	const	self	= this;
@@ -460,7 +467,7 @@ function isTeamDataCorrect(event, validationData) {
 	}
 
 	return !isError;
-};
+}
 /**
  * Return TRUE if participants count is two and event isn't close.
  * Note: participants count can be equal one, if event is "inter-schools" and opponent school
@@ -493,7 +500,7 @@ function isShowCloseEventButton(thiz) {
 		( self.isInternalEventForOneOnOneSport(event) ? event.individualsData.length === 2 : true ) &&
 		EventHelper.isGeneralMode(binding) &&
 		RoleHelper.isUserSchoolWorker(thiz);
-};
+}
 
 /**
  * Return TRUE if event edit mode is "general".
@@ -508,27 +515,39 @@ function isShowEditEventButton(thiz) {
 		binding.get('mode') === 'general' &&
 		binding.get('activeTab') === 'teams' &&
 		RoleHelper.isUserSchoolWorker(thiz);
-};
+}
 
 function isSchoolHaveIndividualPlayers(event, schoolId) {
 	return event.individualsData.filter(i => i.schoolId === schoolId).length > 0;
-};
+}
 
 function isHouseHaveIndividualPlayers(event, houseId) {
 	return event.individualsData.filter(i => i.houseId === houseId).length > 0;
-};
+}
 
+/**
+ * Get rival info for left or right context
+ * @private
+ * @param {object} event - event object
+ * @param {string} activeSchoolId - activeSchoolId
+ * @param {boolean} forLeftContext - calculate for left context (true - left, false - right)
+ * @returns {object} result - rival info
+ * 			{string} result.name - name team or player
+ * 			{string} result.from - from school or house name
+ * 			{string} result.schoolPic - school emblem
+ * 			{string} result.value - the combination of the 'name' and 'from'. Depending on the context(left, right),
+ * 				the type of sport and the presence of an active school ID.
+ *
+ * */
 function getRival(event, activeSchoolId, forLeftContext){
-	const self = this;
-
-	const	teamBundles		= self.getTeamBundles(event),
+	const	teamBundles		= getTeamBundles(event),				// houseData + schoolData + teams in one object...
 			schoolsData		= teamBundles.schoolsData,
 			housesData		= teamBundles.housesData,
 			teamsData		= teamBundles.teamsData,
 			individData 	= event.individualsData,
-			isTeam 			= self.isTeamSport(event),
-			isOneOnOne 		= self.isOneOnOneSport(event),
-			isIndividual 	= self.isIndividualSport(event),
+			isTeam 			= isTeamSport(event),				// include TEAM and 2x2
+			isOneOnOne 		= isOneOnOneSport(event),
+			isIndividual 	= isIndividualSport(event),
 			index 			= forLeftContext ? 0 : 1,
 			isInterSchoolsEvent = EventHelper.isInterSchoolsEvent(event),
 			isHousesEvent 		= EventHelper.isHousesEvent(event),
@@ -608,11 +627,12 @@ function getRival(event, activeSchoolId, forLeftContext){
 	};
 }
 function getRivalForLeftContext(event, activeSchoolId){
-	return this.getRivalName(event, activeSchoolId, true);
+	return getRival(event, activeSchoolId, true);
 }
 function getRivalForRightContext(event, activeSchoolId){
-	return this.getRivalName(event, activeSchoolId, false);
+	return getRival(event, activeSchoolId, false);
 }
+
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
@@ -797,7 +817,7 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 			return cb('teamsData', 1);
 	}
-};
+}
 
 function getCountPoints(event, teamBundleName, order) {
 	const	self		= this,
@@ -845,26 +865,99 @@ function getCountPoints(event, teamBundleName, order) {
 	return points;
 }
 
-function getSchoolsData(event) {
-	const schoolsDara = [];
+/**
+ * Convert count points to extended result
+ * @param {number} countPoints - count of points
+ * @param {string} pointsType - type of points
+ * @returns {object} result - extended result(points, distance or time info)
+ * 			{string} result.str - string result (f.e. - '1km 346m 21cm')
+ *			{number} result[km, m, cm, h, min, sec]
+ * */
+function convertPoints(countPoints, pointsType){
+	const getTimeResult = function(countPoints) {
+		const 	sec_in_hours 	= 3600,
+				sec_in_min 		= 60,
+				h 	= Math.floor(countPoints / sec_in_hours),
+				min	= Math.floor((countPoints - h * sec_in_hours) / sec_in_min),
+				sec	= countPoints - h * sec_in_hours - min * sec_in_min;
+		
+		let result = '';
 
-	schoolsDara.push(event.inviterSchool);
-	event.invitedSchools.forEach((s) => {
-		schoolsDara.push(s);
-	});
+		result += h ? h + 'h ': '';
+		result += min ? min + 'min ': '';
+		result += sec ? sec + 'sec': '';
+		
+		return {
+			h:h,
+			min:min,
+			sec:sec,
+			str:result.trim()
+		};
+	},
+	getDistanceResult = function(countPoints) {
+		const	cm_in_km 	= 100000,
+				cm_in_m 	= 100,
+				km	= Math.floor(countPoints / cm_in_km),
+				m	= Math.floor((countPoints - km * cm_in_km) / cm_in_m),
+				cm	= countPoints - km * cm_in_km - m * cm_in_m;
 
-	return schoolsDara;
-};
 
-function getTeamBundles(event) {
-	const self = this;
+		let result = '';
 
-	return {
-				schoolsData:	self.getSchoolsData(event),
-				housesData:		event.housesData,
-				teamsData:		event.teamsData
+		result += km ? km + 'km ': '';
+		result += m ? m + 'm ': '';
+		result += cm ? cm + 'cm': '';
+
+		return {
+			km:km,
+			m:m,
+			cm:cm,
+			str:result.trim()
+		};
+
+	};
+	let result;
+
+	switch (pointsType) {
+		case SportConsts.SPORT_POINTS_TYPE.PLAIN:
+			result = {
+				str:countPoints
 			};
-};
+			break;
+		case SportConsts.SPORT_POINTS_TYPE.TIME:
+			result = getTimeResult(countPoints);
+			break;
+		case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
+			result = getDistanceResult(countPoints);
+			break;
+	}
+
+	return result;
+}
+
+/** Return array of all schools taking part in event: `inviterSchool` + all 'invitedSchools' */
+function getSchoolsData(event) {
+	const schoolsData = [];
+
+	schoolsData.push(event.inviterSchool);
+	event.invitedSchools.forEach( s => schoolsData.push(s) );
+
+	return schoolsData;
+}
+
+/** Return bundle with all schools participated in event data, all houses data and all teams data.
+ *  I'm not sure (I'm not author) but I believe this method required for reviving teams: each team can be either
+ *  school team or house team. So somewhere you will need school/house data for doing somewhat with teams
+ * @param event
+ * @returns {{schoolsData, housesData: *, teamsData: (*|Array)}}
+ */
+function getTeamBundles(event) {
+	return {
+		schoolsData:	getSchoolsData(event),
+		housesData:		event.housesData,
+		teamsData:		event.teamsData
+	};
+}
 
 /**
  * Create teams for TeamManager.
@@ -890,7 +983,7 @@ function createTeams(schoolId, event, rivals, teamWrappers) {
 			return self.createTeam(schoolId, event, rival, teamWrappers[i]);
 		}
 	}).filter(p => typeof p !== 'undefined');
-};
+}
 
 function createTeam(schoolId, event, rival, teamWrapper) {
 	const self = this;
@@ -917,7 +1010,7 @@ function createTeam(schoolId, event, rival, teamWrapper) {
 
 			return self.createAdhocTeam(teamBody);
 	}
-};
+}
 
 function getTypeOfNewTeam(teamWrapper) {
 	if(teamWrapper.selectedTeam) {
@@ -925,7 +1018,7 @@ function getTypeOfNewTeam(teamWrapper) {
 	} else {
 		return "ADHOC";
 	}
-};
+}
 
 function createTeamByPrototype(prototype, teamBody) {
 	return window.Server.cloneTeam.post(
@@ -945,18 +1038,18 @@ function createTeamByPrototype(prototype, teamBody) {
 				}
 			)
 		});
-};
+}
 
 function updateTeam(schoolId, teamId, body) {
 	return window.Server.team.put({
 		schoolId: schoolId,
 		teamId: teamId
 	}, body);
-};
+}
 
 function createAdhocTeam(body) {
 	return window.Server.teamsBySchoolId.post(body.schoolId, body);
-};
+}
 
 function deleteTeamFromEvent(schoolId, eventId, teamId) {
 	return window.Server.schoolEventTeam.delete({
@@ -964,7 +1057,7 @@ function deleteTeamFromEvent(schoolId, eventId, teamId) {
 		eventId:		eventId,
 		teamId:		teamId
 	});
-};
+}
 
 function addIndividualPlayersToEvent(schoolId, event, teamWrapper) {
 	const players = teamWrapper.reduce(
@@ -986,7 +1079,7 @@ function addIndividualPlayersToEvent(schoolId, event, teamWrapper) {
 			})
 		}
 	);
-};
+}
 
 function addTeamsToEvent(schoolId, event, teams) {
 	return Promise.all(teams.map(t => window.Server.schoolEventTeams.post(
@@ -997,16 +1090,23 @@ function addTeamsToEvent(schoolId, event, teams) {
 			teamId:		t.id
 		}
 	)));
-};
+}
 
+/** Return client's event  type of event. Yes, there are client's and server's event type. Why? Who knows. */
 function getEventType(event) {
 	if(event.type) {
 		return event.type;
 	} else {
 		return EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
 	}
-};
+}
 
+/** Increment result value according to provided type
+ * @param {Number} value value to increment
+ * @param {String} type type of value: plain, seconds, hours, minutes, whatever
+ * @param {Number} pointsStep in case of plain/sec/cm - how much can be added in one step
+ * @returns {Number} updated value
+ */
 function incByType(value, type, pointsStep) {
 	switch (type) {
 		case 'plain':
@@ -1022,8 +1122,14 @@ function incByType(value, type, pointsStep) {
 		case 'km':
 			return value = value + 10000;
 	}
-};
+}
 
+/** Decrement result value according to provided type
+ * @param {Number} value value to increment
+ * @param {String} type type of value: plain, seconds, hours, minutes, whatever
+ * @param {Number} pointsStep in case of plain/sec/cm - how much can be removed in one step
+ * @returns {Number} updated value, but always non-negative
+ */
 function decByType(value, type, pointsStep) {
 	let result;
 
@@ -1048,7 +1154,7 @@ function decByType(value, type, pointsStep) {
 	}
 
 	return result >= 0 ? result : value;
-};
+}
 
 const TeamHelper = {
 	getAges:								getAges,
@@ -1105,9 +1211,9 @@ const TeamHelper = {
 	addTeamsToEvent:						addTeamsToEvent,
 	addIndividualPlayersToEvent:			addIndividualPlayersToEvent,
 	getEventType:							getEventType,
-	getRivalName:							getRival,
 	getRivalForLeftContext:					getRivalForLeftContext,
 	getRivalForRightContext:				getRivalForRightContext,
+	convertPoints:							convertPoints,
 	updateTeam:								updateTeam,
 	decByType:								decByType,
 	incByType:								incByType

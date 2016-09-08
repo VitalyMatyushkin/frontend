@@ -11,7 +11,7 @@ function EventGameTypeWithScore(props){
 			model 			= new ChallengeModel(event, activeSchoolId),
 			classResults 	= classNames({
 									eChallenge_results:true,
-									mDone: isFinished
+									mDone: model.isFinished
 								}),
 			firstName 		= model.rivals[0].value,
 			secondName 		= model.rivals[1].value;
@@ -39,5 +39,10 @@ function EventGameTypeWithScore(props){
 		)
 	}
 }
+
+EventGameTypeWithScore.propTypes = {
+	event: 			React.PropTypes.object.isRequired,
+	activeSchoolId: React.PropTypes.string
+};
 
 module.exports = EventGameTypeWithScore;
