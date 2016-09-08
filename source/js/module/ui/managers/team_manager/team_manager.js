@@ -109,17 +109,20 @@ const TeamManager = React.createClass({
 						_id: {
 							$nin: self.getNinUserId(binding)
 						},
-						lastName: {
-							like:		searchText,
-							options:	'i'
-						},
 						formId: {
 							$in: filter.forms.map(form => form.id)
 						}
 					},
-					limit: 50
+					limit: 200
 				}
 			};
+
+			if(typeof searchText !== 'undefined' && searchText !== null && searchText.length > 0) {
+				requestFilter.filter.where['$or'] = [
+					{ lastName: { like:	searchText, options: 'i'} },
+					{ firstName: { like: searchText, options: 'i'} }
+				];
+			}
 
 			self.setGenderToRequestFilter(filter.genders, requestFilter);
 
@@ -140,7 +143,7 @@ const TeamManager = React.createClass({
 		if(genders.length === 1) {
 			requestFilter.filter.where.gender = genders[0];
 		} else if(genders.length === 2) {
-			requestFilter.filter.where.$or = [{gender: genders[0]}, {gender: genders[1]}];
+			requestFilter.filter.where.gender = { $in: [genders[0], genders[1]] };
 		}
 	},
 	getNinUserId: function(binding) {
