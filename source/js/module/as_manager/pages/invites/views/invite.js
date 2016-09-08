@@ -1,5 +1,4 @@
-const   InvitesMixin =   require('../mixins/invites_mixin'),
-        classNames      = require('classnames'),
+const   classNames      = require('classnames'),
         React           = require('react'),
         SVG             = require('module/ui/svg'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -7,7 +6,7 @@ const   InvitesMixin =   require('../mixins/invites_mixin'),
         Sport           = require('module/ui/icons/sport_icon');
 
 const InviteView = React.createClass({
-    mixins: [Morearty.Mixin, InvitesMixin],
+    mixins: [Morearty.Mixin],
 	// ID of current school
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
@@ -93,7 +92,7 @@ const InviteView = React.createClass({
         }
 
         return (
-        <div key={binding.get('id')} className={inviteClasses}>
+        <div className={inviteClasses}>
             <div className="eInvite_img" style={schoolPicture}></div>
             <div className="eInviteWrap">
                 <div className="eInvite_header">
@@ -102,8 +101,6 @@ const InviteView = React.createClass({
                     </span>
                     <div className="eInviteSport">{sport}</div>
                 </div>
-                <span className="eInvite_eventDate"></span>
-
                 <div className="eInvite_info">
                     <div className="eInvite_gender">{gender}</div>
                     <div>{'Start date:'} {startDate}</div>

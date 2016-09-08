@@ -108,17 +108,15 @@ const InboxView = React.createClass({
 				invites = self.getInvites();
 
         return (
-			<div key="inboxView" className="eInvites_inboxContainer">
+			<div className="eInvites_inboxContainer">
 				<div className="eSchoolMaster_wrap">
 					<h1 className="eSchoolMaster_title">Inbox</h1>
 					<div className="eStrip"></div>
 				</div>
-				<If condition={isSync}>
-					<div>
-						<div className="eInvites_filterPanel"></div>
-						<div className="eInvites_list" key="inboxViewList">{invites && invites.length ? invites : null}</div>
-					</div>
-				</If>
+				<div>
+					<div className="eInvites_filterPanel"></div>
+					<div className="eInvites_list" >{invites && invites.length ? invites : null}</div>
+				</div>
 				<ProcessingView binding={binding} />
         	</div>
 		);
