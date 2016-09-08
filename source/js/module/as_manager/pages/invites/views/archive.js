@@ -1,13 +1,12 @@
 const 	ProcessingView 	= require('./processing'),
 		InviteOutbox 	= require('./invite'),
 		React 			= require('react'),
-		InvitesMixin 	= require('../mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable');
 
 const ArchiveView = React.createClass({
-	mixins: [Morearty.Mixin, InvitesMixin],
+	mixins: [Morearty.Mixin],
 	// ID of current school
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
