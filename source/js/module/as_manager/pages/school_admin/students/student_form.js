@@ -27,7 +27,8 @@ const StudentForm = React.createClass({
 							name: {
 								like: txt
 							}
-						}
+						},
+						limit: 100
 					}
 				});
 		}
@@ -43,7 +44,8 @@ const StudentForm = React.createClass({
 							name: {
 								like: txt
 							}
-						}
+						},
+						limit: 100
 					}
 				});
 		}
