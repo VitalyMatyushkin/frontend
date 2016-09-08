@@ -66,7 +66,18 @@ const ArchiveView = React.createClass({
 				);
 			})
 			.then(_ => {
+				invites = invites.sort((a,b) => {
+					const _a = a.event.startTime,
+						_b = b.event.startTime;
 
+					if(_a < _b){
+						return -1;
+					}
+					if(_a > _b){
+						return 1;
+					}
+					return 0;
+				});
 				binding
 					.atomically()
 					.set('sync', true)
@@ -88,7 +99,7 @@ const ArchiveView = React.createClass({
 					invitedSchool: binding.sub(['models', index, 'invitedSchool'])
 				};
 
-			return <InviteOutbox binding={inviteBinding} />;
+			return <InviteOutbox key={invite.get('id')} binding={inviteBinding} />;
 		}).toArray();
 	},
 	render: function() {
@@ -97,14 +108,15 @@ const ArchiveView = React.createClass({
 				invites = self.getInvites();
 
 		return (
-			<div key="ArchiveView" className="eInvites_OutboxContainer">
+			<div className="eInvites_OutboxContainer">
 				<div className="eSchoolMaster_wrap">
 					<h1 className="eSchoolMaster_title">Archive</h1>
 					<div className="eStrip">
 					</div>
 				</div>
 				<div className="eInvites_filterPanel"></div>
-				<div className="eInvites_list" key="ArchiveView_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
+				<div className="eInvites_list" >{invites && invites.length ? invites : null}</div>
+				<ProcessingView binding={binding} />
 			</div>
 		);
 	}
