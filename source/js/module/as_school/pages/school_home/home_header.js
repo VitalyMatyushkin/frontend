@@ -29,9 +29,9 @@ const HomeHeader = React.createClass({
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 rootBinding     = self.getMoreartyContext().getBinding(),
-                currentSchool   = Helpers.LocalStorage.get('activeSchoolData'),
-                defaultAlbumId  = currentSchool.defaultAlbumId,
-                activeSchoolId  = Helpers.LocalStorage.get('activeSchoolData').id;
+                currentSchool   = this.getMoreartyContext().getBinding().get('activeSchool'),
+                defaultAlbumId  = currentSchool.get('defaultAlbumId'),
+                activeSchoolId  = this.getMoreartyContext().getBinding().get('activeSchoolId');
        
         rootBinding.set('activeSchoolId',Immutable.fromJS(activeSchoolId));
         //we already have current school data so lets use it - at least for the school details
@@ -83,10 +83,11 @@ const HomeHeader = React.createClass({
     render: function(){
         const   self                = this,
                 binding             = self.getDefaultBinding(),
-                schoolName          = binding.get('school.name') !== undefined ? binding.get('school.name'):'The peoples School',
-                schoolMotto         = binding.get('school.description') !== undefined ? binding.get('school.description') :'Mens Sana in corpore sano - Healthy mind in a healthy body',
-                schoolBlazon        = binding.get('school.pic') !== undefined ? binding.get('school.pic'):'http://placehold.it/400x400',
-                backgroundImageUrl  = binding.get('school.home') !== undefined ? binding.get('school.home') :'http://www.isparis.edu/uploaded/images/home/sports/slideshow_cover.JPG';
+				activeSchool		= this.getMoreartyContext().getBinding().get('activeSchool'),
+                schoolName          = activeSchool.get('name'),
+                schoolMotto         = activeSchool.get('description'),
+                schoolBlazon        = activeSchool.get('pic');
+
         return(
             <div className="eSchoolHeader">
                 <div className="eSchoolMainSlideOutBanner">
@@ -96,10 +97,10 @@ const HomeHeader = React.createClass({
                     <div className="eSchoolMotto">
                         <div className="mottoWrapper">
                             <div className="eSchoolBlazon">
-                                <img src={schoolBlazon}/>
+                                <img src={schoolBlazon || 'http://placehold.it/400x400'}/>
                             </div>
                             <div className="eSchoolMottoText">
-                                {schoolMotto}
+                                {schoolMotto || ''}
                             </div>
                         </div>
                     </div>

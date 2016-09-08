@@ -1,19 +1,15 @@
-const	DateTimeMixin	= require('module/mixins/datetime'),
-		React			= require('react'),
-		Immutable		= require('immutable'),
+const 	React			= require('react'),
 		Morearty        = require('morearty'),
 		FixtureList		= require('./fixture_list');
 
 const HomeFixtures = React.createClass({
-	mixins:[Morearty.Mixin,DateTimeMixin],
+	mixins: [ Morearty.Mixin ],
 
 	render:function() {
 		const 	activeSchoolId 	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 				binding 		= this.getDefaultBinding().sub('events'),
 				events 			= binding.get('selectedDateEventsData.events').toJS(),
 				isSync 			= binding.get('selectedDateEventsData.isSync');
-
-		console.log('events: ' + JSON.stringify(events, null, 2));
 
 		return <FixtureList
 			activeSchoolId={activeSchoolId}

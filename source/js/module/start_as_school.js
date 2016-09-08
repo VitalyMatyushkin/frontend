@@ -2,19 +2,20 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		serviceList 		= require('module/core/service_list'),
 		userDataInstance 	= require('module/data/user_data'),
 		authController 		= require('module/core/auth_controller'),
+		Immutable			= require('immutable'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
 		Morearty			= require('morearty');
 
-function initMainView(schoolId) {
-
+function initMainView(school) {
 	const today = new Date();
 
 	// creating morearty context
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: 			userDataInstance.getDefaultState(),
-			activeSchoolId: 	schoolId,
+			activeSchoolId: 	school.id,
+			activeSchool:		Immutable.fromJS(school),
 			routing: {
 				currentPath: '',		// текущий путь
 				currentPageName: '',	// имя текущей страницы, если есть
@@ -89,7 +90,7 @@ function runMainMode() {
 	return serviceList.publicSchools.get({filter: filter}).then( schoolList => {
 		const optSchool = schoolList[0];
 		if(optSchool) {
-			initMainView(optSchool.id);
+			initMainView(optSchool);
 		} else {
 			init404View();
 		}
