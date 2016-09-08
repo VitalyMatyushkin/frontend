@@ -113,7 +113,7 @@ const TeamManager = React.createClass({
 							$in: filter.forms.map(form => form.id)
 						}
 					},
-					limit: 200
+					limit: 2000
 				}
 			};
 
