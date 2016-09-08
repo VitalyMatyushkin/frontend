@@ -110,23 +110,28 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const event = binding.toJS('model');
-
+		const 	event 		= binding.toJS('model'),
+				pointsStep	= event.sport.points.pointsStep;
+		let scoreData;
 		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
 			switch (teamBundleName) {
 				case 'schoolsData':
-					self.changeSchoolPoints(operation, order, pointType);
+					scoreData = self.getSchoolScoreData(event, order);
 					break;
 				case 'housesData':
-					self.changeHousesPoints(operation, order, pointType);
+					scoreData = self.getHouseScoreData(event, order);
 					break;
 				case 'teamsData':
-					self.changeTeamPoints(operation, order, pointType);
+					scoreData = self.getTeamScoreData(event, order);
 					break;
 				case 'individualsData':
-					self.changeIndividualPoints(operation, order, pointType);
+					scoreData = self.getIndividualScoreData(event, order);
 					break;
 			}
+
+			scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType, pointsStep);
+			console.log(event.results);
+			binding.set('model', Immutable.fromJS(event));
 		}
 	},
 	renderCountPoints: function (teamBundleName, order) {
@@ -149,16 +154,13 @@ const EventRival = React.createClass({
 			</div>
 		);
 	},
-	changeTeamPoints: function(operation, order, pointType) {
+	getTeamScoreData: function(event, order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event				= binding.toJS('model'),
-				pointsStep			= event.sport.points.pointsStep,
-				teamId				= binding.toJS(`model.teamsData.${order}.id`);
+		const	teamId	= binding.toJS(`model.teamsData.${order}.id`);
 
 		let scoreData = event.results.teamScore.find(t => t.teamId === teamId);
-
 		if(!scoreData) {
 			scoreData = {
 				teamId:	teamId,
@@ -166,18 +168,13 @@ const EventRival = React.createClass({
 			};
 			event.results.teamScore.push(scoreData);
 		}
-
-		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
-
-		binding.set('model', Immutable.fromJS(event));
+		return scoreData;
 	},
-	changeSchoolPoints: function(operation, order, pointType) {
+	getSchoolScoreData: function(event, order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event					= binding.toJS('model'),
-				pointsStep				= event.sport.points.pointsStep,
-				currentSchoolId			= binding.toJS(`schoolsData.${order}.id`);
+		const	currentSchoolId	= binding.toJS(`schoolsData.${order}.id`);
 
 		let scoreData= event.results.schoolScore.find(s => s.schoolId === currentSchoolId);
 
@@ -188,19 +185,13 @@ const EventRival = React.createClass({
 			};
 			event.results.schoolScore.push(scoreData);
 		}
-
-		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
-
-		console.log(event.results);
-		binding.set('model', Immutable.fromJS(event));
+		return scoreData;
 	},
-	changeHousesPoints: function(operation, order, pointType) {
+	getHouseScoreData: function(event, order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event					= binding.toJS('model'),
-				pointsStep				= event.sport.points.pointsStep,
-				currentHouseId			= binding.toJS(`housesData.${order}.id`);
+		const	currentHouseId = binding.toJS(`housesData.${order}.id`);
 
 		let scoreData= event.results.houseScore.find(s => s.houseId === currentHouseId);
 
@@ -211,19 +202,10 @@ const EventRival = React.createClass({
 			};
 			event.results.houseScore.push(scoreData);
 		}
-
-		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
-
-		console.log(event.results);
-		binding.set('model', Immutable.fromJS(event));
+		return scoreData;
 	},
-	changeIndividualPoints: function(operation, order, pointType) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	event						= binding.toJS('model'),
-				pointsStep					= event.sport.points.pointsStep,
-				currentPlayer				= event.individualsData[order];
+	getIndividualScoreData: function(event, order) {
+		const	currentPlayer = event.individualsData[order];
 		let scoreData = event.results.individualScore.find(s => s.userId === currentPlayer.userId);
 
 		if(!scoreData) {
@@ -234,11 +216,7 @@ const EventRival = React.createClass({
 			};
 			event.results.individualScore.push(scoreData);
 		}
-
-		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
-		
-		console.log(event.results);
-		binding.set('model', Immutable.fromJS(event));
+		return scoreData;
 	},
 	_renderTeamLeftSide: function() {
 		const	self	= this,
