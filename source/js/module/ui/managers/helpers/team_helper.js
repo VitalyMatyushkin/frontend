@@ -6,6 +6,11 @@ const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_va
 		Lazy					= require('lazy.js'),
 		Immutable				= require('immutable');
 
+const OPERATION_TYPE = 	{
+							plus:'plus',
+							minus:'minus'
+						};
+
 function isTeamEnableForEdit(activeSchoolId, event, team) {
 	switch (event.eventType){
 		case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
@@ -1101,6 +1106,38 @@ function getEventType(event) {
 	}
 }
 
+/** Operation with result value according to provided type
+ * @param {string} operation - operation type(['plus', 'minus'])
+ * @param {Number} value - value to increment
+ * @param {String} type - type of value: plain, seconds, hours, minutes, whatever
+ * @param {Number} pointsStep - in case of plain/sec/cm - how much can be added in one step
+ * @returns {Number} updated value
+ */
+function operationByType(operation, value, type, pointsStep){
+	const	step = 	{
+			plain:pointsStep,
+			sec:pointsStep,
+			cm:pointsStep,
+			km:100000,
+			m:100,
+			h:3600,
+			min:60
+		};
+
+	let result;
+
+	switch (operation){
+		case OPERATION_TYPE.plus:
+			result = value + step[type];
+			break;
+		case OPERATION_TYPE.minus:
+			result = value - step[type];
+			result = result < 0 ? value : result;
+			break;
+	}
+
+	return result;
+}
 /** Increment result value according to provided type
  * @param {Number} value value to increment
  * @param {String} type type of value: plain, seconds, hours, minutes, whatever
@@ -1108,20 +1145,7 @@ function getEventType(event) {
  * @returns {Number} updated value
  */
 function incByType(value, type, pointsStep) {
-	switch (type) {
-		case 'plain':
-		case 'sec':
-		case 'cm':
-			return value += pointsStep;
-		case 'min':
-			return value = value + 60;
-		case 'h':
-			return value = value + 3600;
-		case 'm':
-			return value = value + 100;
-		case 'km':
-			return value = value + 10000;
-	}
+	return operationByType(OPERATION_TYPE.plus, value, type, pointsStep);
 }
 
 /** Decrement result value according to provided type
@@ -1131,29 +1155,7 @@ function incByType(value, type, pointsStep) {
  * @returns {Number} updated value, but always non-negative
  */
 function decByType(value, type, pointsStep) {
-	let result;
-
-	switch (type) {
-		case 'plain':
-		case 'sec':
-		case 'cm':
-			result = value - pointsStep;
-			break;
-		case 'min':
-			result = value - 60;
-			break;
-		case 'h':
-			result = value - 3600;
-			break;
-		case 'm':
-			result = value - 100;
-			break;
-		case 'km':
-			result = value - 10000;
-			break;
-	}
-
-	return result >= 0 ? result : value;
+	return operationByType(OPERATION_TYPE.minus, value, type, pointsStep);
 }
 
 const TeamHelper = {
@@ -1215,6 +1217,7 @@ const TeamHelper = {
 	getRivalForRightContext:				getRivalForRightContext,
 	convertPoints:							convertPoints,
 	updateTeam:								updateTeam,
+	operationByType:						operationByType,
 	decByType:								decByType,
 	incByType:								incByType
 };

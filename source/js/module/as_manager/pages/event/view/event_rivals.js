@@ -1,5 +1,4 @@
-const	InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		EventHelper		= require('module/helpers/eventHelper'),
+const	EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('./../../../../ui/managers/helpers/team_helper'),
 		Sport			= require('module/ui/icons/sport_icon'),
 		Score			= require('./../../../../ui/score/score'),
@@ -9,7 +8,7 @@ const	InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mix
 		React			= require('react');
 
 const EventRival = React.createClass({
-	mixins: [Morearty.Mixin, InvitesMixin],
+	mixins: [Morearty.Mixin],
 	getPic: function (order) {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -156,33 +155,19 @@ const EventRival = React.createClass({
 
 		const	event				= binding.toJS('model'),
 				pointsStep			= event.sport.points.pointsStep,
-				teamId				= binding.toJS(`model.teamsData.${order}.id`),
-				teamScoreDataIndex	= event.results.teamScore.findIndex(t => t.teamId === teamId);
+				teamId				= binding.toJS(`model.teamsData.${order}.id`);
 
-		switch (operation) {
-			case "plus":
-				if(teamScoreDataIndex === -1) {
-					event.results.teamScore.push({
-						teamId:	teamId,
-						score:	pointsStep
-					})
-				} else {
-					event.results.teamScore[teamScoreDataIndex].score += pointsStep;
-				}
-				break;
-			case "minus":
-				if(teamScoreDataIndex === -1) {
-					event.results.teamScore.push({
-						teamId:	teamId,
-						score:	0
-					})
-				} else {
-					event.results.teamScore[teamScoreDataIndex].score > 0 ?
-						event.results.teamScore[teamScoreDataIndex].score -= pointsStep :
-						event.results.teamScore[teamScoreDataIndex].score = 0;
-				}
-				break;
-		};
+		let scoreData = event.results.teamScore.find(t => t.teamId === teamId);
+
+		if(!scoreData) {
+			scoreData = {
+				teamId:	teamId,
+				score:	0
+			};
+			event.results.teamScore.push(scoreData);
+		}
+
+		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
 
 		binding.set('model', Immutable.fromJS(event));
 	},
@@ -192,47 +177,19 @@ const EventRival = React.createClass({
 
 		const	event					= binding.toJS('model'),
 				pointsStep				= event.sport.points.pointsStep,
-				currentSchoolId			= binding.toJS(`schoolsData.${order}.id`),
-				schoolScoreDataIndex	= event.results.schoolScore.findIndex(s => s.schoolId === currentSchoolId);
+				currentSchoolId			= binding.toJS(`schoolsData.${order}.id`);
 
-		switch (operation) {
-			case "plus":
-				if(schoolScoreDataIndex === -1) {
-					event.results.schoolScore.push({
-						schoolId:	currentSchoolId,
-						score:		TeamHelper.incByType(
-										0,
-										pointType,
-										pointsStep
-									)
-					});
-				} else {
-					event.results.schoolScore[schoolScoreDataIndex].score = TeamHelper.incByType(
-						event.results.schoolScore[schoolScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
-				}
-				break;
-			case "minus":
-				if(schoolScoreDataIndex === -1) {
-					event.results.schoolScore.push({
-						schoolId:	currentSchoolId,
-						score:		TeamHelper.decByType(
-										0,
-										pointType,
-										pointsStep
-									)
-					})
-				} else {
-					event.results.schoolScore[schoolScoreDataIndex].score = TeamHelper.decByType(
-						event.results.schoolScore[schoolScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
-				}
-				break;
-		};
+		let scoreData= event.results.schoolScore.find(s => s.schoolId === currentSchoolId);
+
+		if(!scoreData) {
+			scoreData = {
+				schoolId:	currentSchoolId,
+				score:		0
+			};
+			event.results.schoolScore.push(scoreData);
+		}
+
+		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
 
 		console.log(event.results);
 		binding.set('model', Immutable.fromJS(event));
@@ -243,33 +200,19 @@ const EventRival = React.createClass({
 
 		const	event					= binding.toJS('model'),
 				pointsStep				= event.sport.points.pointsStep,
-				currentHouseId			= binding.toJS(`housesData.${order}.id`),
-				housesScoreDataIndex	= event.results.houseScore.findIndex(s => s.houseId === currentHouseId);
+				currentHouseId			= binding.toJS(`housesData.${order}.id`);
 
-		switch (operation) {
-			case "plus":
-				if(housesScoreDataIndex === -1) {
-					event.results.houseScore.push({
-						houseId:	currentHouseId,
-						score:		pointsStep
-					});
-				} else {
-					event.results.houseScore[housesScoreDataIndex].score += pointsStep;
-				}
-				break;
-			case "minus":
-				if(housesScoreDataIndex === -1) {
-					event.results.houseScore.push({
-						houseId:	currentHouseId,
-						score:		0
-					})
-				} else {
-					event.results.houseScore[housesScoreDataIndex].score > 0 ?
-						event.results.houseScore[housesScoreDataIndex].score -= pointsStep :
-						event.results.houseScore[housesScoreDataIndex].score = 0;
-				}
-				break;
-		};
+		let scoreData= event.results.houseScore.find(s => s.houseId === currentHouseId);
+
+		if(!scoreData) {
+			scoreData = {
+				houseId:	currentHouseId,
+				score:		0
+			};
+			event.results.houseScore.push(scoreData);
+		}
+
+		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
 
 		console.log(event.results);
 		binding.set('model', Immutable.fromJS(event));
@@ -280,50 +223,20 @@ const EventRival = React.createClass({
 
 		const	event						= binding.toJS('model'),
 				pointsStep					= event.sport.points.pointsStep,
-				currentPlayer				= event.individualsData[order],
-				individualScoreDataIndex	= event.results.individualScore.findIndex(s => s.userId === currentPlayer.userId);
+				currentPlayer				= event.individualsData[order];
+		let scoreData = event.results.individualScore.find(s => s.userId === currentPlayer.userId);
 
-		switch (operation) {
-			case "plus":
-				if(individualScoreDataIndex === -1) {
-					event.results.individualScore.push({
-						userId:			currentPlayer.userId,
-						permissionId:	currentPlayer.permissionId,
-						score:			TeamHelper.incByType(
-											0,
-											pointType,
-											pointsStep
-										)
-					});
-				} else {
-					event.results.individualScore[individualScoreDataIndex].score = TeamHelper.incByType(
-						event.results.individualScore[individualScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
-				}
-				break;
-			case "minus":
-				if(individualScoreDataIndex === -1) {
-					event.results.individualScore.push({
-						userId:			currentPlayer.userId,
-						permissionId:	currentPlayer.permissionId,
-						score:			TeamHelper.decByType(
-											0,
-											pointType,
-											pointsStep
-										)
-					})
-				} else {
-					event.results.individualScore[individualScoreDataIndex].score = TeamHelper.decByType(
-						event.results.individualScore[individualScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
-				}
-				break;
-		};
+		if(!scoreData) {
+			scoreData = {
+				userId:			currentPlayer.userId,
+				permissionId:	currentPlayer.permissionId,
+				score:			0
+			};
+			event.results.individualScore.push(scoreData);
+		}
 
+		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType,	pointsStep);
+		
 		console.log(event.results);
 		binding.set('model', Immutable.fromJS(event));
 	},
@@ -333,7 +246,7 @@ const EventRival = React.createClass({
 
 		const	eventType		= binding.get('model.eventType'),
 				teamsData		= binding.toJS('model.teamsData'),
-				activeSchoolId	= self.getActiveSchoolId();
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(0);
@@ -367,7 +280,7 @@ const EventRival = React.createClass({
 
 		const	eventType		= binding.get('model.eventType'),
 				teamsData		= binding.toJS('model.teamsData'),
-				activeSchoolId	= self.getActiveSchoolId();
+				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(1);

@@ -3,7 +3,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		Challenges			= require('./challenges');
+		Challenges		= require('./challenges');
 
 const ChallengesList = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
