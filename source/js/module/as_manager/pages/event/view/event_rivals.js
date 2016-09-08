@@ -106,7 +106,7 @@ const EventRival = React.createClass({
 	_isTeamHaveZeroPoints: function(teamId, event, eventSummary) {
 		return !eventSummary[teamId] && event.status === EventHelper.EVENT_STATUS.FINISHED;
 	},
-	/**click handler on the '+' and '-' for result settings*/
+	/** click handler on the '+' and '-' for result settings*/
 	handleClickPointSign: function(teamBundleName, order, operation, pointType) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
