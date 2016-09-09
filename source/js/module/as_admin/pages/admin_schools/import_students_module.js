@@ -84,7 +84,7 @@ const ImportStudentsModule = React.createClass({
 					return window.Server.schoolStudents.post(currentSchool.id, {
 						firstName:	student.Name,
 						lastName:	student.Surname,
-						gender:		student.Gender === 'boy' ? 'male' : 'female',
+						gender:		student.Gender,
 						birthday:	self._getBirthdayInServerFormat(student.DOB),
 						formId: 	formId,
 						houseId: 	houseId
