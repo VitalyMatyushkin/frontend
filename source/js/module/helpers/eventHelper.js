@@ -165,10 +165,15 @@ const EventHelper = {
 
 		return (eventType === 'internal') && (sport.players === 'INDIVIDUAL' || sport.players === '1X1');
 	},
-	isShowScoreButtons: function(status, mode, isOwner) {
-		return	(status === "NOT_FINISHED" || status === "DRAFT" || status === "ACCEPTED" || status === "INVITES_SENT") &&
-				mode === 'closing' &&
-				isOwner;
+	isShowScoreButtons: function(event, mode, isOwner) {
+		return (
+					event.status === "NOT_FINISHED" ||
+					event.status === "DRAFT" ||
+					event.status === "ACCEPTED" ||
+					event.status === "INVITES_SENT"
+			) &&
+			mode === 'closing' &&
+			isOwner;
 	},
 	isInterSchoolsEvent: function(event) {
 		const self = this;

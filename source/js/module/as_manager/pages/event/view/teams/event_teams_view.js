@@ -12,30 +12,39 @@ const	If					= require('module/ui/if/if'),
 
 const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-	getPlainPointsByStudent: function(event, userId) {
+	getPointsByStudent: function(event, userId) {
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
 
 		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].score;
 	},
-	handleClickPointSign: function(event, userId, permissionId, teamId, operation, pointType) {
+	handleClickPointSign: function(event, teamId, player, operation, pointType) {
+		const self = this;
+
+		self.changePointsForPlayer(event, player, operation, pointType);
+		// sum current player points with other player points = team points
+		// but only for team games
+		typeof teamId !== 'undefined' && self.changePointsForTeam(event, teamId, operation, pointType);
+	},
+	changePointsForPlayer: function(event, player, operation, pointType) {
 		const self = this;
 
 		const pointsStep = event.sport.points.pointsStep;
 
-		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
+		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === player.id);
+
 
 		switch (operation) {
 			case "plus":
 				if(userScoreDataIndex === -1) {
 					event.results.individualScore.push({
-						userId:			userId,
-						teamId:			teamId,
-						permissionId:	permissionId,
+						userId:			player.id,
+						teamId:			player.teamId,
+						permissionId:	player.permissionId,
 						score:			TeamHelper.incByType(
-											0,
-											pointType,
-											pointsStep
-										)
+							0,
+							pointType,
+							pointsStep
+						)
 					})
 				} else {
 					event.results.individualScore[userScoreDataIndex].score = TeamHelper.incByType(
@@ -48,14 +57,14 @@ const EventTeamsView = React.createClass({
 			case "minus":
 				if(userScoreDataIndex === -1) {
 					event.results.individualScore.push({
-						userId:			userId,
-						permissionId:	permissionId,
-						teamId:			teamId,
+						userId:			player.id,
+						permissionId:	player.teamId,
+						teamId:			player.permissionId,
 						score:			TeamHelper.decByType(
-											0,
-											pointType,
-											pointsStep
-										)
+							0,
+							pointType,
+							pointsStep
+						)
 					})
 				} else {
 					event.results.individualScore[userScoreDataIndex].score = TeamHelper.decByType(
@@ -69,7 +78,57 @@ const EventTeamsView = React.createClass({
 
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
-	renderInternalEventForOneOnOneEvent: function(order) {
+	changePointsForTeam: function(event, teamId, operation, pointType) {
+		const self = this;
+
+		const pointsStep = event.sport.points.pointsStep;
+
+		const teamScoreDataIndex = event.results.teamScore.findIndex(
+			teamScoreData => teamScoreData.teamId === teamId
+		);
+
+		switch (operation) {
+			case "plus":
+				if(teamScoreDataIndex === -1) {
+					event.results.teamScore.push({
+						teamId:	teamId,
+						score:	TeamHelper.incByType(
+							0,
+							pointType,
+							pointsStep
+						)
+					})
+				} else {
+					event.results.teamScore[teamScoreDataIndex].score = TeamHelper.incByType(
+						event.results.teamScore[teamScoreDataIndex].score,
+						pointType,
+						pointsStep
+					);
+				}
+				break;
+			case "minus":
+				if(teamScoreDataIndex === -1) {
+					event.results.teamScore.push({
+						teamId:	teamId,
+						score:	TeamHelper.decByType(
+							0,
+							pointType,
+							pointsStep
+						)
+					})
+				} else {
+					event.results.teamScore[teamScoreDataIndex].score = TeamHelper.decByType(
+						event.results.teamScore[teamScoreDataIndex].score,
+						pointType,
+						pointsStep
+					);
+				}
+				break;
+		};
+
+		self.getBinding('event').set(Immutable.fromJS(event));
+	},
+	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {
 		const self = this;
 
 		const	event	= self.getBinding('event').toJS(),
@@ -81,7 +140,7 @@ const EventTeamsView = React.createClass({
 		} else {
 			return (
 				<div className="bEventTeams_team">
-					{self.renderPlayers(players, true)}
+					{self.renderPlayers(undefined, players, true)}
 				</div>
 			);
 		}
@@ -114,9 +173,9 @@ const EventTeamsView = React.createClass({
 					return self.renderIndividualPlayersByHouseId(event.houses[0]);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
-						return self.renderInternalEventForOneOnOneEvent(0);
-					} else {
-						return null;
+						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(0);
+					} else if(TeamHelper.isIndividualSport(event)) {
+						return self.renderIndividualPlayersForInternalEventForIndividualSport();
 					}
 			}
 		} else {
@@ -172,7 +231,7 @@ const EventTeamsView = React.createClass({
 		} else {
 			return (
 				<div className="bEventTeams_team">
-					{self.renderPlayers(players, true)}
+					{self.renderPlayers(undefined, players, true)}
 				</div>
 			);
 		}
@@ -215,7 +274,7 @@ const EventTeamsView = React.createClass({
 		} else {
 			return (
 				<div className="bEventTeams_team">
-					{self.renderPlayers(players, true)}
+					{self.renderPlayers(undefined, players, true)}
 				</div>
 			);
 		}
@@ -250,7 +309,7 @@ const EventTeamsView = React.createClass({
 					return self.renderIndividualPlayersByHouseId(event.houses[1]);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
-						return self.renderInternalEventForOneOnOneEvent(1);
+						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(1);
 					} else {
 						return null;
 					}
@@ -320,7 +379,7 @@ const EventTeamsView = React.createClass({
 			</div>
 		);
 	},
-	renderPlayers: function(players, isOwner) {
+	renderPlayers: function(teamId, players, isOwner) {
 		const self = this;
 
 		return players.map((player, playerIndex) => {
@@ -342,17 +401,17 @@ const EventTeamsView = React.createClass({
 						<span>{player.lastName}</span>
 					</span>
 					<If condition={!TeamHelper.isOneOnOneSport(event) && (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')}>
-						<Score	isChangeMode			={EventHelper.isShowScoreButtons(event.status, mode, isOwner)}
-								plainPoints				={self.getPlainPointsByStudent(event, player.id)}
+						<Score	isChangeMode			={EventHelper.isShowScoreButtons(event, mode, isOwner)}
+								plainPoints				={self.getPointsByStudent(event, player.id)}
 								pointsType				={event.sport.points.display}
-								handleClickPointSign	={self.handleClickPointSign.bind(self, event, player.id, player.permissionId, player.teamId)}
+								handleClickPointSign	={self.handleClickPointSign.bind(self, event, teamId, player)}
 						/>
 					</If>
 				</div>
 			);
 		});
 	},
-	renderIndividuals: function() {
+	renderIndividualPlayersForInternalEventForIndividualSport: function() {
 		const self = this;
 
 		const	event	= self.getBinding('event').toJS(),
@@ -361,7 +420,7 @@ const EventTeamsView = React.createClass({
 		if(players.length === 0) {
 			return self.renderSelectPlayersLater();
 		} else {
-			return self.renderPlayers(players, true);
+			return self.renderPlayers(undefined, players, true);
 		}
 	},
 	renderTeamPlayersByOrder: function(order) {
@@ -377,6 +436,7 @@ const EventTeamsView = React.createClass({
 								true;
 
 			players = self.renderPlayers(
+				event.teamsData[order].id,
 				playersBinding.toJS(),
 				isOwner
 			);
@@ -389,33 +449,18 @@ const EventTeamsView = React.createClass({
 		);
 	},
 	render: function() {
-		const	self	= this;
-		let		result	= null;
+		const self = this;
 
-		const	event = self.getBinding('event').toJS(),
-				isSync = self.getBinding('isSync').toJS();
-
-		if(isSync) {
-			switch (true) {
-				case TeamHelper.isInternalEventForIndividualSport(event):
-					result = (
-						<div className="bEventTeams">
-							{self.renderIndividuals()}
-						</div>
-					);
-					break;
-				default:
-					result = (
-						<div className="bEventTeams">
-							{self.renderPlayersForLeftSide()}
-							{self.renderPlayersForRightSide()}
-						</div>
-					);
-					break;
-			}
+		if(self.getBinding('isSync').toJS()) {
+			return (
+				<div className="bEventTeams">
+					{self.renderPlayersForLeftSide()}
+					{self.renderPlayersForRightSide()}
+				</div>
+			);
+		} else {
+			return null;
 		}
-
-		return result;
 	}
 });
 
