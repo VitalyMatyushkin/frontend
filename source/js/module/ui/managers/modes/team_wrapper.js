@@ -12,9 +12,8 @@ const	React			= require('react'),
 const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 	playersListener: undefined,
-	CREATION_MODE: {
-		NEW_TEAM:				'newTeam',
-		BASED_ON_CREATED_TEAM:	'basedOnCreatedTeam'
+	propTypes: {
+		handleIsSelectTeamLater: React.PropTypes.func
 	},
 	componentWillMount: function () {
 		const self = this;
@@ -271,14 +270,7 @@ const TeamWrapper = React.createClass({
 	 */
 	_getTeamFromServer: function(teamId) {
 		const self = this;
-		// TODO Don't forget about filter when API will support includes
-		//filter: {
-		//	include: [
-		//		{'players': ['user', 'form']},
-		//		{'school': ['forms']},
-		//		'sport'
-		//	]
-		//}
+
 		return window.Server.team.get( { schoolId: self.activeSchoolId, teamId: teamId } );
 	},
 	_getPlayerChooserBinding: function() {
@@ -298,11 +290,6 @@ const TeamWrapper = React.createClass({
 		self.getDefaultBinding().set('removedPlayers', Immutable.fromJS(
 			self.getDefaultBinding().get('removedPlayers').push(player)
 		));
-	},
-	_isShowSelectedToCurrentTeamRadioButton: function() {
-		const	self	= this;
-
-		return self.getDefaultBinding().get('creationMode') === self.CREATION_MODE.BASED_ON_CREATED_TEAM;
 	},
 	_isShowNewTeamNameInput: function() {
 		const	self			= this,
@@ -367,7 +354,17 @@ const TeamWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return binding.set('isSetTeamLater', Immutable.fromJS(!binding.toJS('isSetTeamLater')));
+		typeof self.props.handleIsSelectTeamLater !== 'undefined' && self.props.handleIsSelectTeamLater();
+
+		binding
+			.atomically()
+			.set('teamName.name',						Immutable.fromJS(undefined))
+			.set('teamName.prevName',					Immutable.fromJS(undefined))
+			.set('prevPlayers',							Immutable.fromJS([]))
+			.set('___teamManagerBinding.teamStudents',	Immutable.fromJS([]))
+			.set('___teamManagerBinding.blackList',		Immutable.fromJS([]))
+			.set('isSetTeamLater',						Immutable.fromJS(!binding.toJS('isSetTeamLater')))
+			.commit();
 	},
 	render: function() {
 		const	self	= this,
