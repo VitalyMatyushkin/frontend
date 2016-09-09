@@ -123,10 +123,11 @@ const TeamModeView = React.createClass({
 			.commit();
 	},
 	_deselectTeam: function() {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			rivalIndex = binding.toJS('selectedRivalIndex'),
-			anotherRivalIndex = self._getAnotherRivalIndex(rivalIndex);
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	rivalIndex			= binding.toJS('selectedRivalIndex'),
+				anotherRivalIndex	= self._getAnotherRivalIndex(rivalIndex);
 
 		binding
 			.atomically()
@@ -188,13 +189,24 @@ const TeamModeView = React.createClass({
 		return (
 			<div>
 				<div className={_classNames[0]}>
-					<TeamWrapper binding={tableWrapperBindings[0]}/>
+					<TeamWrapper	binding={tableWrapperBindings[0]}
+									handleIsSelectTeamLater={self.handleIsSelectTeamLater.bind(self, 0)}
+					/>
 				</div>
 				<div className={_classNames[1]}>
-					<TeamWrapper binding={tableWrapperBindings[1]}/>
+					<TeamWrapper	binding={tableWrapperBindings[1]}
+									handleIsSelectTeamLater={self.handleIsSelectTeamLater.bind(self, 1)}
+					/>
 				</div>
 			</div>
 		);
+	},
+	handleIsSelectTeamLater: function(rivalIndex) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		self._deselectTeam();
+		binding.set(`teamTable.${rivalIndex}.isSelectedTeam`, Immutable.fromJS(false));
 	},
 	_renderErrorBox: function() {
 		const	self				= this,
