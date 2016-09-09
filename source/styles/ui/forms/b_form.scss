@@ -5,7 +5,7 @@
   text-align: center;
 
   h2, h3{
-    color: $MAIN_COLOR;
+    color: $blueColor;
     font-weight: normal;
     margin: 25px 0;
   }
@@ -31,7 +31,7 @@ textarea, select {
     border-bottom: solid #959595 1px;
   }
   &:focus{
-    border-bottom: solid #378258 1px;
+    border-bottom: solid $blueColor 1px;
   }
 }
 select {
@@ -181,13 +181,13 @@ input.eDateInput{
 }
 
 .eForm_fieldSet.mValid{
-  color: $MAIN_COLOR;
+  color: $blueColor;
 
   .eForm_fieldValidText{
     display: block;
   }
   input{
-    color: $MAIN_COLOR;
+    color: $blueColor;
   }
 }
 .eForm_fieldSet.mEmpty{
@@ -322,12 +322,12 @@ input.eDateInput{
     box-shadow:inset rgba(203, 203, 203, 0.7) 0 0 0 2px, rgba(203, 203, 203, 0.5) 0 0 0 2px;;
   }
   .eTrash{
-    color:$MAIN_COLOR;
+    color:$blueColor;
     font-size: 10px;
     cursor: pointer;
     
     .bIcon{
-      color:$MAIN_COLOR;
+      color:$blueColor;
       vertical-align: text-bottom;
     }
   }
@@ -344,7 +344,7 @@ input.eDateInput{
 .eRegisterMessage a,
 .eForm_message a,
 .eForm_conditions a{
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 .eRegisterMessage a:hover,
 .eForm_message a:hover,

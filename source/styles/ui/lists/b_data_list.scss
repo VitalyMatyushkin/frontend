@@ -31,9 +31,8 @@
 }
 
 .eDataList_listItem.mHead .eDataList_listItemCell{
-  background: #e1e1e1;
-  border-bottom: solid 2px $MAIN_COLOR;
-  color: $DarkGreen;
+  border-bottom: solid 2px $blueColor;
+  color: $blueColor;
   line-height: 30px;
 }
 
@@ -185,7 +184,7 @@
   padding: 4px;
 }
 .eLogDataList tr:hover{
-  background: $MAIN_COLOR;
+  background: $blueColor;
   cursor: pointer;
 }
 .eLogDataList table tr th{
@@ -199,7 +198,7 @@
   width: 25% !important;
 }
 .eLogDataList_header{
-  background: $MAIN_COLOR;
+  background: $blueColor;
   padding:10px 0 10px 0;
   border-top-right-radius: 12px;
   border-top-left-radius: 12px;
@@ -217,7 +216,7 @@
 }
 .eLogDataList_filtering span:hover{
   text-decoration: underline;
-  color:$MAIN_COLOR;
+  color:$blueColor;
 }
 .ePagination{
   margin-top: 10px;
@@ -235,11 +234,11 @@
 }
 .ePage_num span:hover{
   text-decoration: underline;
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 .perActive{
   text-decoration: underline;
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 .perInActive{
   text-decoration: none;

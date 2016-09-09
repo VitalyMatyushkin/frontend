@@ -29,10 +29,8 @@
     top: 100%;
     right: 0px;
     margin-top: -7px;
-    background-color: #eaeaea;
-    border-width: 0px 1px;
-    border-style: solid;
-    border-color: $MAIN_COLOR;
+    background-color: #ffffff;
+    border: $mainBorder;
     z-index: 100;
 
     .eScrollList{
@@ -41,10 +39,9 @@
 
     }
     .eRole{
-      padding: 10px;
-      border-bottom-width: 1px;
-      border-style: solid;
-      border-color: $MAIN_COLOR;
+      padding: 5px 10px;
+      border-bottom: $mainBorder;
+
 
       &.mLogout{
         text-align: center;
@@ -54,7 +51,7 @@
       }
 
       &:hover{
-        background-color: $MAIN_COLOR;
+        background-color: #fafafa;
       }
     }
   }

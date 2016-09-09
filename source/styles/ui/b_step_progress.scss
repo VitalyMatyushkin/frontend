@@ -19,7 +19,7 @@
   justify-content: center;
   &.mActive, &.mFinished {
     &:before, &:after {
-      background: $MAIN_COLOR;
+      background: $blueColor;
       color: white;
     }
     color: $COLOR;
@@ -43,7 +43,7 @@
   &:before {
     content: "";
     border: solid 1px transparent;
-    background: $MAIN_COLOR;
+    background: $blueColor;
     width: 10px;
     height: 10px;
     border-radius: 50% 50% 0 50%;
