@@ -15,7 +15,7 @@ const ProcessingView = React.createClass({
 
         return <div className='eInvites_processing'>
 			<Loader condition={!isSync} />
-			{isSync && !count? <span>You don\'t have invites</span> : null}
+			{isSync && !count? <span>You don't have invites</span> : null}
 		</div>
     }
 });
