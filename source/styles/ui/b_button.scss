@@ -1,5 +1,5 @@
 .bButton{
-  background: $MAIN_COLOR;
+  background: $blueColor;
   font-size: 16px;
   color: #fff;
   padding: 10px 30px;
@@ -10,7 +10,7 @@
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   text-align: center;
   &.mRevert{
-    background-color: #759500;
+    background-color: $blueColor;
   }
 }
 .bButton_reg{
@@ -19,7 +19,8 @@
   text-align:center !important;
 }
 .bButton:hover{
-  color: $COLOR;
+  background: $lightBlue;
+  color: #fff;
 }
 .bButton_hide{
   display:none;
@@ -40,13 +41,13 @@
   width: 100%;
   height: 10px;
   box-sizing: border-box;
-  //box-shadow: 0 2px 0 0 darken($MAIN_COLOR, 10%);
+  //box-shadow: 0 2px 0 0 darken($blueColor, 10%);
   //border-radius: 4px;
 }
 
 .bButton:active,
 .bButton.mActive{
-  background: $MAIN_COLOR;
+  background: $blueColor;
 }
 
 .bButton:active:before,
@@ -61,7 +62,7 @@
 
   bottom: auto;
   top: 2px;
-  box-shadow: 0px -2px 0 0 darken($MAIN_COLOR, 10%);
+  box-shadow: 0px -2px 0 0 darken($blueColor, 10%);
 }
 
 .bButton.mDisable {
@@ -125,7 +126,7 @@ $DarkRed:#a93e2f;
     color: #929496;
   }
   &:hover .bIcon{
-    color: $COLOR;
+    color: $textColor;
   }
 }
 .bViewBtn .bIcon{
@@ -144,8 +145,8 @@ $DarkRed:#a93e2f;
   vertical-align: middle;
 }
 .bSchoolLink:hover {
-  color: $COLOR;
+  color: $textColor;
   .bIcon{
-   color: $COLOR;
+   color: $textColor;
  }
  }
