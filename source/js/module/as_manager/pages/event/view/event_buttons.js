@@ -435,50 +435,42 @@ const EventButtons = React.createClass({
 		return Promise.all(TeamHelper.commitIndividualPlayers(schoolId, eventId, initialPlayers, players));
 	},
 	getInitPlayersForIndividualEvent: function(event) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const self = this;
 
 		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
 			if(self.isSetTeamLaterByOrder(0)) {
 				return [];
 			} else {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers');
+				return self.getInitialTeamPlayersByOrder(0);
 			}
 		} else {
-			if(self.isSetTeamLaterByOrder(0) && self.isSetTeamLaterByOrder(1)) {
-				return [];
-			} else if(self.isSetTeamLaterByOrder(0)) {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.prevPlayers');
-			} else if(self.isSetTeamLaterByOrder(1)) {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers');
-			} else {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers')
-					.concat(binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.prevPlayers'));
-			}
+			return self.getInitialTeamPlayersByOrder(0).concat(self.getInitialTeamPlayersByOrder(1));
 		}
 	},
 	getCommitPlayersForIndividualEvent: function(event) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const self = this;
 
 		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
 			if(self.isSetTeamLaterByOrder(0)) {
 				return [];
 			} else {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents');
+				return self.getTeamPlayersByOrder(0);
 			}
 		} else {
-			if(self.isSetTeamLaterByOrder(0) && self.isSetTeamLaterByOrder(1)) {
-				return [];
-			} else if(self.isSetTeamLaterByOrder(0)) {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents');
-			} else if(self.isSetTeamLaterByOrder(1)) {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents');
-			} else {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents')
-					.concat(binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents'));
-			}
+			return self.getTeamPlayersByOrder(0).concat(self.getTeamPlayersByOrder(1));
 		}
+	},
+	getTeamPlayersByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.___teamManagerBinding.teamStudents`);
+	},
+	getInitialTeamPlayersByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevPlayers`);
 	},
 	commitTeamPlayerChangesByOrder: function(order) {
 		const	self			= this,
