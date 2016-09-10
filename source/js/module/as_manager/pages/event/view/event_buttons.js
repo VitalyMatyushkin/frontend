@@ -438,11 +438,7 @@ const EventButtons = React.createClass({
 		const self = this;
 
 		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-			if(self.isSetTeamLaterByOrder(0)) {
-				return [];
-			} else {
-				return self.getInitialTeamPlayersByOrder(0);
-			}
+			return self.getInitialTeamPlayersByOrder(0);
 		} else {
 			return self.getInitialTeamPlayersByOrder(0).concat(self.getInitialTeamPlayersByOrder(1));
 		}
@@ -451,11 +447,7 @@ const EventButtons = React.createClass({
 		const self = this;
 
 		if(TeamHelper.isInternalEventForIndividualSport(event) || TeamHelper.isInterSchoolsEventForNonTeamSport(event)) {
-			if(self.isSetTeamLaterByOrder(0)) {
-				return [];
-			} else {
-				return self.getTeamPlayersByOrder(0);
-			}
+			return self.getTeamPlayersByOrder(0);
 		} else {
 			return self.getTeamPlayersByOrder(0).concat(self.getTeamPlayersByOrder(1));
 		}
