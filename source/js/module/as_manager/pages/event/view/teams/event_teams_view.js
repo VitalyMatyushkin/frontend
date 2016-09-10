@@ -400,7 +400,10 @@ const EventTeamsView = React.createClass({
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
 					</span>
-					<If condition={!TeamHelper.isOneOnOneSport(event) && (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')}>
+					<If condition={
+						!self.isNonInternalEventForOneOnOneSport(event) &&
+						(event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
+					}>
 						<Score	isChangeMode			={EventHelper.isShowScoreButtons(event, mode, isOwner)}
 								plainPoints				={self.getPointsByStudent(event, player.id)}
 								pointsType				={event.sport.points.display}
@@ -410,6 +413,9 @@ const EventTeamsView = React.createClass({
 				</div>
 			);
 		});
+	},
+	isNonInternalEventForOneOnOneSport: function(event) {
+		return TeamHelper.isOneOnOneSport(event) && !EventHelper.isInternalEvent(event);
 	},
 	renderIndividualPlayersForInternalEventForIndividualSport: function() {
 		const self = this;
