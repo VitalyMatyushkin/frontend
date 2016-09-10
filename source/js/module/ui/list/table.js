@@ -4,7 +4,7 @@ const   If              = require('module/ui/if/if'),
         React           = require('react'),
         Morearty        = require('morearty'),
         SVG 		    = require('module/ui/svg'),
-        AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
+        AdminDropList   = require('module/ui/action-drop-list'),
         Immutable       = require('immutable');
 
 const Table = React.createClass({

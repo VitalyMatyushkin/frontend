@@ -155,7 +155,7 @@ $border: solid 1px #c2c2c2;
 .eAchievement_header{
   position: relative;
   height: 65px;
-  background: $MAIN_COLOR;
+  background: $blueColor;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -180,7 +180,7 @@ $border: solid 1px #c2c2c2;
   display: flex;
   justify-content: space-around;
   &:hover {
-    background: lighten($MAIN_COLOR, 25%);
+    background: lighten($blueColor, 25%);
   }
 }
 
@@ -222,7 +222,7 @@ $border: solid 1px #c2c2c2;
   padding: 5px;
 
   &:hover{
-    border: $MAIN_COLOR 1px solid;
+    border: $blueColor 1px solid;
   }
 }
 .eAchievement_info{

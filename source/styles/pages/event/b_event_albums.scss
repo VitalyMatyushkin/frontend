@@ -67,7 +67,7 @@
 	  line-height: 26px;
 	  border: $BORDER;
 	  border-radius: 50%;
-	  background: $MAIN_COLOR;
+	  background: $blueColor;
 	  margin: auto;
 	}
   }
@@ -151,7 +151,7 @@
 }
 .eAlbum {
 	&:hover {
-		border-color: $MAIN_COLOR;
+		border-color: $blueColor;
 	}
 	&:hover {
 		& > .eAlbumActions {

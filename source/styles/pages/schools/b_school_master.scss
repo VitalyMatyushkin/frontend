@@ -6,12 +6,12 @@
   padding: 0;
 }
 .eSchoolMaster_titleName{
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 
 .eSchoolMaster_title{
   display: flex;
-  color: $DarkGreen;
+  color: $lightBlue;
   flex-shrink: 0;
 }
 .eSchoolMaster_title h1{
@@ -84,7 +84,7 @@
   cursor: pointer;
 }
 .applyAction:hover{
-  background: $MAIN_COLOR;
+  background: $blueColor;
 }
 .caret{
   position: absolute;
@@ -97,10 +97,10 @@
   cursor: pointer;
 }
 .caret_active_up{
-  border-color: transparent transparent $MAIN_COLOR transparent !important;
+  border-color: transparent transparent $blueColor transparent !important;
 }
 .caret_active_dwn{
-  border-color: $MAIN_COLOR transparent transparent transparent !important;
+  border-color: $blueColor transparent transparent transparent !important;
 }
 .caret_down{
   position: absolute;
@@ -114,7 +114,7 @@
   color: #c2c2c2;
 }
 .bLinkLike .bIcon:hover{
-  color: $COLOR;
+  color: $textColor;
 }
 .delete_btn .bIcon{
   height: 12px;
@@ -198,7 +198,7 @@
   left: -94px;
   top: 25px;
   height: auto;
-  background:lighten($MAIN_COLOR, 25%);
+  background:lighten($blueColor, 25%);
   z-index: 9999;
 }
 .eQuickAction_item{
@@ -285,7 +285,7 @@
 }
 .eStrip{
   width: 100%;
-  background: $DarkGreen;
+  background: $lightBlue;
   height: 2px;
   vertical-align: middle;
   margin: 0 20px;
@@ -302,10 +302,10 @@
 .addButton .bIcon{
   height: 50px;
   width: 50px;
-  color: $COLOR;
+  color: $lightBlue;
 }
 .addButton:hover .bIcon {
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 .addButtonShort{
   display: flex;
@@ -316,30 +316,30 @@
 .addButtonShort .bIcon{
   height: 40px;
   width: 40px;
-  color: $COLOR;
+  color: $lightBlue;
 }
 .addButtonShort:hover .bIcon {
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 
 .filter_btn {
   display: flex
 }
 .filter_btn span{
-  color: $COLOR;
+  color: $lightBlue;
   font-size: 25px;
   font-family: sans-serif;
 }
 .filter_btn:hover span{
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 .filter_btn .bIcon{
   height: 28px;
   width: 28px;
-  color: $COLOR;
+  color: $lightBlue;
 }
 .filter_btn:hover .bIcon{
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 
 .addNewForm{

@@ -104,7 +104,7 @@ $darkGrey: #959595;
 
         &:before {
           background: #fff;
-          border: solid 1px $MAIN_COLOR;
+          border: solid 1px $blueColor;
           border-radius: 1px;
           content: "";
           height: 12px;
@@ -142,7 +142,7 @@ $darkGrey: #959595;
     line-height: 27px;
     margin: 5px;
     display: inline-block;
-    background: $MAIN_COLOR;
+    background: $blueColor;
     padding: 5px 5px 0;
     color: white;
 
