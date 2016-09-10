@@ -328,7 +328,7 @@ const TeamWrapper = React.createClass({
 	isShowRevertChangesButton: function() {
 		const self = this;
 
-		return self.isPlayersChanged();
+		return !self.isSetTeamLater() && self.isPlayersChanged();
 	},
 	renderTeamNameComponent: function(eventModel, teamName, binding) {
 		const self = this;
@@ -360,7 +360,6 @@ const TeamWrapper = React.createClass({
 			.atomically()
 			.set('teamName.name',						Immutable.fromJS(undefined))
 			.set('teamName.prevName',					Immutable.fromJS(undefined))
-			.set('prevPlayers',							Immutable.fromJS([]))
 			.set('___teamManagerBinding.teamStudents',	Immutable.fromJS([]))
 			.set('___teamManagerBinding.blackList',		Immutable.fromJS([]))
 			.set('isSetTeamLater',						Immutable.fromJS(!binding.toJS('isSetTeamLater')))
