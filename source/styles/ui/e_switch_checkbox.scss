@@ -34,7 +34,7 @@
   transition: all .2s;
 }
 .eSwitch:checked + label:before {
-  background: $MAIN_COLOR;
+  background: $blueColor;
   transition: all .2s;
 }
 .eSwitch:checked + label:after {

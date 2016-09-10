@@ -17,21 +17,21 @@ $border-color: #c2c2c2;
 .eEvents_challenges .eChallenge {
   display: flex;
   cursor: pointer;
-  border-bottom: $BORDER;
+  border-bottom: solid 1px #d2d2d2;
   text-align: center;
   text-transform: none;
   font-size: 13px;
   min-height: 40px;
   align-items: center;
-  margin: 0 15px;
+  padding: 0 15px;
   &.mActive {
     color: #fff;
-    background: lighten($MAIN_COLOR, 10%);
+    background: lighten($blueColor, 10%);
   }
 }
 
 .eEvents_challenges.mGeneral .eChallenge:hover {
-  background: lighten($MAIN_COLOR, 25%);
+  background: lighten($blueColor, 25%);
 }
 .eChallenge_rivals {
   display: flex;
@@ -50,7 +50,6 @@ $border-color: #c2c2c2;
   padding-top: 5px;
 }
 .eChallenge_date{
-  color: $COLOR;
   padding-top: 5px;
   width: 16%;
 }
@@ -94,9 +93,8 @@ $border-color: #c2c2c2;
   display: flex;
   text-align: center;
   font-size: 16px;
-  color: $COLOR;
-  background: $MAIN_COLOR;
   height: 40px;
+  border-bottom: solid 1px #d2d2d2;
   padding: 0 15px;
 }
 .eChallenge_vs{

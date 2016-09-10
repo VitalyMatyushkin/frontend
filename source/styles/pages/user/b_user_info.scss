@@ -18,7 +18,7 @@
 
 .eUserFullInfo_date{
   display: inline-block;
-  background: $MAIN_COLOR;
+  background: $blueColor;
   vertical-align: top;
   color: #ffffff;
   padding: 3px 6px;
@@ -41,7 +41,7 @@
   top: 100%;
   margin-top: -4px;
   left: 40px;
-  background: $MAIN_COLOR;
+  background: $blueColor;
 }
 
 .bUserFullInfo.mDates .eUserFullInfo_text:last-child:after {

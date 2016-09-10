@@ -31,7 +31,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  color: $MAIN_COLOR;
+  color: $blueColor;
   font-size: 25px;
 }
 
@@ -88,7 +88,7 @@
       line-height: 16px;
     }
     .eUsername, .eUsernameReply {
-      color: $MAIN_COLOR;
+      color: $blueColor;
     }
   }
 }
@@ -284,6 +284,6 @@
   cursor: pointer;
 }
 .eCommentLike:hover, .eReply:hover {
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 
