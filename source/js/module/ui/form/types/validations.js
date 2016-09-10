@@ -68,6 +68,13 @@ var validationsSet = {
 			return false;
 		}
 	},
+	domain: function(value){
+		if (/[^a-z\-]/.test(value)) {//Special symbols "-" (hyphen) should be allowed!
+			return 'Should contain only lowercase characters';
+		} else {
+			return false;
+		}
+	},
 	alphanumeric: function(value) {
 		var self = this;
         //old RegExp /[^a-zA-Z0-9\-\/]/
@@ -78,8 +85,6 @@ var validationsSet = {
 		}
 	},
 	text: function(value) {
-		var self = this;
-
 		if (/[^a-zA-Z \-\/]/.test(value)) {//Special symbols " " (space) and "-" (hyphen) should be allowed!
 			return 'Should contain only text characters';
 		} else {

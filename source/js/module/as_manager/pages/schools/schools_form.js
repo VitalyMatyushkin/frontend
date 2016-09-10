@@ -39,7 +39,7 @@ const SchoolForm = React.createClass({
 					<FormField type="area" field="postcodeId" defaultItem={postcode}
 							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="required">Address</FormField>
-					<FormField type="text" field="domain" validation="required">Domain</FormField>
+					<FormField type="text" field="domain" validation="domain required">Domain</FormField>
 				</FormColumn>
 			</Form>
 		)
