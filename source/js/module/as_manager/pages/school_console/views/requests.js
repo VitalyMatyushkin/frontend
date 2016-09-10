@@ -2,7 +2,7 @@
  * Created by bridark on 19/06/15.
  */
 const   React       = require('react'),
-        LiveRequest = require('module/as_admin/pages/admin_schools/admin_views/admin_requests'),
+        LiveRequest = require('module/shared_pages/permission_requests/request-list'),
         Morearty	= require('morearty');
 
 const SchoolRequest = React.createClass({

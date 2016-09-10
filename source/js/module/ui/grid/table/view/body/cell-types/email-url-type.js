@@ -1,23 +1,23 @@
 /**
- * Created by Anatoly on 21.07.2016.
+ * Created by Anatoly on 09.09.2016.
  */
 
 const React = require('react');
 
-const GeneralType = function(props){
+const EmailUrlType = function(props){
 	const 	value 	= props.cell.getValue(props.dataItem),
 			result 	= value ? value : null;
 
 	return (
-		<div className="eDataList_listItemCell">
+		<div className="eDataList_listItemCell mBreakWord">
 			{result}
 		</div>
 	);
 };
 
-GeneralType.propTypes = {
+EmailUrlType.propTypes = {
 	cell: 		React.PropTypes.object.isRequired,
 	dataItem:	React.PropTypes.object.isRequired
 };
 
-module.exports = GeneralType;
+module.exports = EmailUrlType;

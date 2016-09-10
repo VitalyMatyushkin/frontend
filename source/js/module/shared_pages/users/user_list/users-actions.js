@@ -6,7 +6,6 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		UserModel 		= require('module/data/UserModel'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
-		AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
 		GridModel 		= require('module/ui/grid/grid-model'),
 		RoleHelper 		= require('module/helpers/role_helper');
 
@@ -39,7 +38,6 @@ UsersActions.prototype = {
 	},
 	getActions:function(item){
 		var self 			= this,
-			binding 		= self.binding,
 			activeSchoolId 	= self.activeSchoolId,
 			actionList 		= self.props.blockService ? ['View','Block','Unblock','Add Role','Revoke All Roles']
 														: ['View','Add Role','Revoke All Roles'];
@@ -63,13 +61,7 @@ UsersActions.prototype = {
 				id: p.id
 			});
 		});
-		return (
-			<AdminDropList key={item.id}
-						   binding={binding.sub('dropList'+item.id)}
-						   itemId={item.id}
-						   listItems={actionList}
-						   listItemFunction={self._getQuickEditActionsFactory.bind(this)}/>
-		);
+		return actionList;
 
 	},
 	_getQuickEditActionsFactory:function(itemId,action){
@@ -132,9 +124,7 @@ UsersActions.prototype = {
 							data.forEach(function(p){
 								if(p.preset !== 'STUDENT'){
 									params.permissionId = p.id;
-									permission.delete(params).then(_ => {
-										self.reloadData();
-									});
+									permission.delete(params).then(_ => self.reloadData());
 								}
 							});
 						});
@@ -311,9 +301,10 @@ UsersActions.prototype = {
 			{
 				text:'Actions',
 				cell:{
-					type:'custom',
+					type:'action-list',
 					typeOptions:{
-						parseFunction:this.getActions.bind(this)
+						getActionList:this.getActions.bind(this),
+						actionHandler:this._getQuickEditActionsFactory.bind(this)
 					}
 				}
 			}
