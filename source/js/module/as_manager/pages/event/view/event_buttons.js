@@ -448,9 +448,9 @@ const EventButtons = React.createClass({
 			if(self.isSetTeamLaterByOrder(0) && self.isSetTeamLaterByOrder(1)) {
 				return [];
 			} else if(self.isSetTeamLaterByOrder(0)) {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers');
-			} else if(self.isSetTeamLaterByOrder(1)) {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.prevPlayers');
+			} else if(self.isSetTeamLaterByOrder(1)) {
+				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers');
 			} else {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.prevPlayers')
 					.concat(binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.prevPlayers'));
@@ -471,9 +471,9 @@ const EventButtons = React.createClass({
 			if(self.isSetTeamLaterByOrder(0) && self.isSetTeamLaterByOrder(1)) {
 				return [];
 			} else if(self.isSetTeamLaterByOrder(0)) {
-				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents');
-			} else if(self.isSetTeamLaterByOrder(1)) {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents');
+			} else if(self.isSetTeamLaterByOrder(1)) {
+				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents');
 			} else {
 				return binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents')
 					.concat(binding.toJS('teamManagerWrapper.default.teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents'));
