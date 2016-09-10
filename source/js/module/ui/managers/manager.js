@@ -14,6 +14,7 @@ const Manager = React.createClass({
 	propTypes: {
 		isInviteMode: 	React.PropTypes.bool
 	},
+	listeners: [],
 	componentWillMount: function () {
 		const	self = this;
 
@@ -23,6 +24,12 @@ const Manager = React.createClass({
 
 		self._validate(0);
 		self._validate(1);
+	},
+	componentWillUnmount: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		self.listeners.forEach(l => binding.removeListener(l));
 	},
 	/**
 	 * Init main binding
@@ -145,29 +152,29 @@ const Manager = React.createClass({
 
 		const event = self.getDefaultBinding().toJS('model');
 
-		binding.sub('selectedRivalIndex').addListener(() => {
+		self.listeners.push(binding.sub('selectedRivalIndex').addListener(() => {
 			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
-		});
-		binding.sub('teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
+		}));
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
 			self._validate(0);
-		});
-		binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
+		}));
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
 			self._validate(0);
-		});
+		}));
 		if(!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)) {
-			binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
+			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
 				self._validate(1);
-			});
-			binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
+			}));
+			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
 				self._validate(1);
-			});
+			}));
 		}
-		binding.sub('teamModeView.teamWrapper.0.isSetTeamLater').addListener(() => {
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.isSetTeamLater').addListener(() => {
 			self._validate(0);
-		});
-		binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
+		}));
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
 			self._validate(1);
-		});
+		}));
 	},
 	_validate: function(rivalIndex) {
 		const	self			= this,
@@ -192,7 +199,10 @@ const Manager = React.createClass({
 						maxSubs:	event.sportModel.defaultLimits.maxSubs
 					} : {};
 
-			let result;
+			let result = {
+				isError:	false,
+				text:		''
+			};
 
 			switch (true) {
 				case TeamHelper.isNonTeamSport(event):
