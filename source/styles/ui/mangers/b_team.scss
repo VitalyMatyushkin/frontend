@@ -132,9 +132,9 @@
 .eTeam_removeButton {
   height: 40px;
 
-  background: #759500 url("/images/arrows_r.png") no-repeat center;
+  background: $blueColor url("/images/arrows_r.png") no-repeat center;
   &:hover {
-    background-color: #566D01;
+    background-color: $lightBlue;
   }
 }
 

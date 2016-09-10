@@ -58,7 +58,7 @@ $border-color: #c2c2c2;
   border: solid 1px #dddddd;
   border-radius: 10%;
   margin: 3px;
-  background: #f1f1f1;
+  background: #fff;
   color: #8c8c8c;
   font-size: 22px;
   &.mFirst {
@@ -73,15 +73,15 @@ $border-color: #c2c2c2;
     background: #fff
   }
   &.mToday {
-
+    background: #fff url('/images/today_calendar_day.png') center;
     &.mSelect {
       color: #fff;
-      background: #f26525 url('/images/today_calendar_day.png') center;
+      background: $blueColor url('/images/today_calendar_day.png') center;
     }
     &.mActive {
-
+      background: #fff url('/images/today_calendar_day.png') center;
       &:hover {
-
+      color: #8c8c8c;
       }
     }
   }
@@ -109,7 +109,6 @@ $border-color: #c2c2c2;
   }
   &:hover {
     border-color: #0079be;
-    color: #0079be;
   }
 }
 

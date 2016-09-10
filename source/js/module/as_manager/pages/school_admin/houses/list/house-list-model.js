@@ -5,6 +5,7 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
+		SVG				=	require('module/ui/svg'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
@@ -110,8 +111,9 @@ HouseListModel.prototype = {
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 				(
-					<div className="addButton addHouse bTooltip" data-description="Add House"
+					<div className="addButtonShort bTooltip" data-description="Add House"
 						 onClick={function(){document.location.hash += '/add';}}>
+						<SVG icon="icon_add_house" />
 					</div>
 				) : null
 			},

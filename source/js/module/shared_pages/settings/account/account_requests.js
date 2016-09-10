@@ -12,6 +12,7 @@ const   Table           = require('module/ui/list/table'),
         ListPageMixin   = require('module/mixins/list_page_mixin'),
         Popup           = require('module/ui/popup'),
         AddRequest      = require('module/shared_pages/settings/account/add_request'),
+        SVG 		    = require('module/ui/svg'),
         Immutable 	    = require('immutable');
 
 
@@ -23,7 +24,9 @@ const AccountRequests = React.createClass({
         const self = this;
 
         self.getSchools();
-        self.addButton = <span onClick={self.handleAddNewButtonClick} className="addButton addNewForm"/>;
+        self.addButton = <span onClick={self.handleAddNewButtonClick} className="addButtonShort">
+        <SVG icon="icon_add_form" />
+        </span>;
 
     },
     getSchools:function(){
