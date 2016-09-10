@@ -55,14 +55,12 @@ const HomeCalender = React.createClass({
 							eventsData={Immutable.fromJS(eventsData)}
 						/>
 					</div>
-					<div className="eSchoolCalenderFixtureList">
 						<Challenges
 							activeSchoolId={activeSchoolId}
 							isSync={isSelectedDateEventsInSync}
 							isDaySelected={true}
 							events={selectedDateEvents.toJS()}
 						/>
-					</div>
 
 				</div>
 			</div>
