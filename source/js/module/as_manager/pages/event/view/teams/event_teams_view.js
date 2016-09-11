@@ -435,7 +435,10 @@ const EventTeamsView = React.createClass({
 
 		const playersBinding = self.getDefaultBinding().get(['players', order]);
 
-		if(playersBinding) {
+		if(
+			typeof playersBinding !== 'undefined' &&
+			typeof playersBinding.toJS() !== 'undefined'
+		) {
 			const	event	= self.getBinding('event').toJS(),
 					isOwner	= event.eventType === 'inter-schools' ?
 								event.teamsData[order].schoolId === self.getActiveSchoolId() :

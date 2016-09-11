@@ -1059,7 +1059,7 @@ function createAdhocTeam(body) {
 function deleteTeamFromEvent(schoolId, eventId, teamId) {
 	return window.Server.schoolEventTeam.delete({
 		schoolId:	schoolId,
-		eventId:		eventId,
+		eventId:	eventId,
 		teamId:		teamId
 	});
 }
