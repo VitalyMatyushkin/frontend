@@ -280,7 +280,7 @@ const EventButtons = React.createClass({
 
 				if(TeamHelper.isTeamDataCorrect(event, self.getValidationData())) {
 					self.changeTeamNames()
-						.then(() => self.commitPlayers())
+						.then(() => self.commitChanges())
 						.then(() => self.doAfterCommitActions());
 				}
 				break;
@@ -341,7 +341,7 @@ const EventButtons = React.createClass({
 			];
 		}
 	},
-	commitPlayers: function() {
+	commitChanges: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -352,32 +352,58 @@ const EventButtons = React.createClass({
 		if(TeamHelper.isNonTeamSport(event)) {
 			promises = promises.concat(self.commitIndividualPlayerChanges());
 		} else {
-			if(!self.isSetTeamLaterByOrder(0)) {
-				if(self.isTeamChangedByOrder(0)) {
-					promises = promises.concat(self.changeTeamByOrder(0));
-				} else {
-					promises = promises.concat(self.commitTeamPlayerChangesByOrder(0));
-				}
-			}
-
-			if(!self.isSetTeamLaterByOrder(1)) {
-				if(!EventHelper.isInterSchoolsEvent(event)) {
-					if(self.isTeamChangedByOrder(1)) {
-						promises = promises.concat(self.changeTeamByOrder(1));
-					} else {
-						promises = promises.concat(self.commitTeamPlayerChangesByOrder(1));
-					}
-				}
-			}
+			promises = promises.concat(self.commitTeamChangesByOrder(0));
+			!EventHelper.isInterSchoolsEvent(event) && (promises = promises.concat(self.commitTeamChangesByOrder(1)));
 		}
 
 		return Promise.all(promises);
+	},
+	commitTeamChangesByOrder: function(order) {
+		const self = this;
+
+		let promises = [];
+
+		switch (true) {
+			case self.isSetTeamLaterByOrder(order) && self.isTeamWasDeletedByOrder(order):
+				promises = promises.concat(self.removePrevSelectedTeamFromEventByOrder(order));
+				break;
+			case !self.isSetTeamLaterByOrder(order):
+				if(self.isTeamChangedByOrder(order)) {
+					promises = promises.concat(self.changeTeamByOrder(order));
+				} else {
+					promises = promises.concat(self.commitTeamPlayerChangesByOrder(order));
+				}
+				break;
+		}
+
+		return promises;
 	},
 	isSetTeamLaterByOrder: function(order) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		return binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.isSetTeamLater`);
+	},
+	isTeamWasDeletedByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return (
+			typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`) !== 'undefined' &&
+			typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`) === 'undefined'
+		);
+	},
+	removePrevSelectedTeamFromEventByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const prevSelectedTeamId = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
+		
+		return TeamHelper.deleteTeamFromEvent(
+			MoreartyHelper.getActiveSchoolId(self),
+			binding.toJS('model').id,
+			prevSelectedTeamId
+		);
 	},
 	changeTeamByOrder: function(order) {
 		const	self	= this,
@@ -395,13 +421,13 @@ const EventButtons = React.createClass({
 			[team]
 		))
 		.then(() => {
-			const prevPlayerId = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
+			const prevSelectedTeamId = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
 
-			if(typeof prevPlayerId !== 'undefined') {
+			if(typeof prevSelectedTeamId !== 'undefined') {
 				return TeamHelper.deleteTeamFromEvent(
 					MoreartyHelper.getActiveSchoolId(self),
 					binding.toJS('model').id,
-					prevPlayerId
+					prevSelectedTeamId
 				);
 			} else {
 				return Promise.resolve(true);
@@ -413,7 +439,7 @@ const EventButtons = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-			// if selected team undefined then player create addHoc team
+			// if selected team undefined then player create addHoc team or team was deleted
 			typeof binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.selectedTeamId`) === 'undefined'||
 			(
 				binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`) !==
