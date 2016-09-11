@@ -42,6 +42,18 @@ ClassListModel.prototype = {
 	onChildren: function(data) {
 		document.location.hash += `/students?id=${data.id}&name=${data.name}`;
 	},
+	onRemove:function(data){
+		const 	self = this;
+
+		if(data && confirm(`Are you sure you want to remove form ${data.name}?`)){
+			window.Server.schoolForm.delete({schoolId:self.activeSchoolId, formId:data.id})
+				.then(_ => self.reloadData())
+				.catch(error => {
+					error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details
+					&& alert(error.xhr.responseJSON.details.text);
+				});
+		}
+	},
 	getGrid: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
@@ -78,7 +90,8 @@ ClassListModel.prototype = {
 						 * All other users should not see that button.
 						 * */
 						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
-						onItemSelect:	this.onChildren.bind(this)
+						onItemSelect:	this.onChildren.bind(this),
+						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}
 			}
