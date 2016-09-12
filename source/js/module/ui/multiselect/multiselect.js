@@ -110,7 +110,7 @@ const MultiSelect = React.createClass({
                 <ul>{this.props.items.map(this.createItem)}</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;
                 {count > 0 ?
-                    <button onClick={this.selectNone}>{'Unselect all(' + count + ')'}</button>
+                    <button onClick={this.selectNone}>{'Deselect all(' + count + ')'}</button>
                 : null}
             </div>
         )
