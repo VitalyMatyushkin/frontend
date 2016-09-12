@@ -77,7 +77,7 @@ const StudentForm = React.createClass({
 						<FormField type="text" field="firstName" validation="required">Name</FormField>
 						<FormField type="text" field="lastName" validation="required">Surname</FormField>
 						<FormField type="radio" field="gender" sourcePromise={self.getGender} validation="required">Gender</FormField>
-						<FormField type="date" field="birthday" validation="birthday">Birthday</FormField>
+						<FormField type="date" field="birthday" validation="birthday">Date of birth</FormField>
 						<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId"
 								   defaultItem={self.props.initialForm} validation="required">Form</FormField>
 						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId"

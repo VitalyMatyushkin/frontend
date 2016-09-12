@@ -10,6 +10,9 @@ $HEADER_HEIGHT: 59px;
   position: relative;
   padding: 0 130px;
   z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 
   .bDropdown {
 

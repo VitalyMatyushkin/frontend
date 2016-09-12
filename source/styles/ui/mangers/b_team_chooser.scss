@@ -24,8 +24,8 @@
 .eTeamChooser_button {
   width: 120px;
   height: 35px;
-  background: #759500;
-  color: #225412;
+  background: $blueColor;
+  color: #ffffff;
   
   text-align: center;
 
@@ -36,6 +36,9 @@
   font-family: Glober, sans-serif;
 
   border: none;
+  &:hover {
+    background: $lightBlue;
+  }
 
   &.mActive {
     color: white;

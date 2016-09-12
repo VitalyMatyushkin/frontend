@@ -68,10 +68,9 @@ a.mDisabled{
   padding: 0 0 0 10px ;
 }
 .bParentsPage .eSubMenu_item.mActive{
-  color: $blueColor;
-  border-bottom: solid $blueColor;
+  color: #fff;
   .bIcon {
-    color: $blueColor;
+    color: #fff;
   }
 }
 
@@ -80,7 +79,7 @@ a.mDisabled{
   width: 28px;
   vertical-align: middle;
   margin-right: 10px;
-  color: #6d6e7e;
+  color: #ffffff;
   -webkit-transition: color 0.2s;
   -moz-transition: color 0.2s;
   -o-transition: color 0.2s;

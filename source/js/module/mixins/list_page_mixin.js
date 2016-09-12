@@ -139,7 +139,7 @@ const ListPageMixin = {
                         <div className="addButtonShort" onClick={self._addNewClassFunction}><SVG icon="icon_add_form" /></div>
                     </If>
                     <If condition={currentPage[currentPage.length-1] ==='houses'}>
-                        <div className="addButton addHouse" onClick={self._addNewHouseFunction}></div>
+                        <div className="addButtonShort" onClick={self._addNewHouseFunction}><SVG icon="icon_add_house" /></div>
                     </If>
                     <If condition={currentPage[currentPage.length-1] ==='sports'}>
                         <div className="bButtonAdd" onClick={self._addNewSport}><SVG icon="icon_add_sport" /></div>

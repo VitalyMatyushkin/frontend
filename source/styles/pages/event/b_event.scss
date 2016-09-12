@@ -278,12 +278,12 @@
   border-color: transparent #fff;
   margin-left: -5px;
 }
-.eCommentDate, .eCommentLike, .eReply {
+.eCommentDate, .eReply {
   color: #959595;
   margin-right: 20px;
   cursor: pointer;
 }
-.eCommentLike:hover, .eReply:hover {
+.eReply:hover {
   color: $blueColor;
 }
 
