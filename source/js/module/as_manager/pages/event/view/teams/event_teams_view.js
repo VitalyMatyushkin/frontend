@@ -319,7 +319,10 @@ const EventTeamsView = React.createClass({
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData.length === 0
 			) {
-				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
+				if(
+					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
+					event.status === EventHelper.EVENT_STATUS.FINISHED
+				) {
 					return self.renderOpponentSelectTeamLater();
 				} else {
 					return self.renderAwaitingOpponentTeam();
@@ -346,7 +349,10 @@ const EventTeamsView = React.createClass({
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
-				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
+				if(
+					event.status === EventHelper.EVENT_STATUS.ACCEPTED ||
+					event.status === EventHelper.EVENT_STATUS.FINISHED
+				) {
 					return self.renderOpponentSelectTeamLater();
 				} else {
 					return self.renderAwaitingOpponentTeam();
