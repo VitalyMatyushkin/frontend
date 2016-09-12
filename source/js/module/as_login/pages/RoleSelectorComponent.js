@@ -6,6 +6,10 @@ const 	React 		= require('react'),
 		Immutable	= require('immutable'),
 		RoleButton	= require('./RoleButton');
 
+/**
+ * It just renders list of buttons with role names. When any button clicked, handler called with role name.
+ * 
+ */
 function RoleSelectorComponent(props) {
 	const 	onRoleSelected		= props.onRoleSelected,
 			availableRoles		= props.availableRoles;
