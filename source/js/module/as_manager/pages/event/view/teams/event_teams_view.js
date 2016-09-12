@@ -443,7 +443,8 @@ const EventTeamsView = React.createClass({
 
 		if(
 			typeof playersBinding !== 'undefined' &&
-			typeof playersBinding.toJS() !== 'undefined'
+			typeof playersBinding.toJS() !== 'undefined' &&
+			typeof playersBinding.toJS().length !== 'undefined'
 		) {
 			const	event	= self.getBinding('event').toJS(),
 					isOwner	= event.eventType === 'inter-schools' ?
