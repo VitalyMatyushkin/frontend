@@ -9,10 +9,10 @@ const 	Table 			= require('module/ui/list/table'),
 		ListPageMixin 	= require('module/mixins/list_page_mixin');
 
 const AdminArchive = React.createClass({
-    mixins:[Morearty.Mixin,DateTimeMixin,ListPageMixin],
+    mixins: [Morearty.Mixin, DateTimeMixin, ListPageMixin],
     serviceName:'permissionRequests',
     serviceCount:'permissionRequestsCount',
-    filters:{where:{status:{$neq:'NEW'}},order:'createdAt DESC'},
+    filters:{where:{status:{$ne:'NEW'}},order:'createdAt DESC'},
     setPageTitle:"Requests archive",
     componentWillMount:function(){
         const self = this;
@@ -37,8 +37,8 @@ const AdminArchive = React.createClass({
 		}
 	},
     getTableView:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        const 	self	= this,
+            	binding = self.getDefaultBinding();
         return (
             <div className="eTable_view">
                 <Table title="Permissions" binding={binding}  hideActions={true}
