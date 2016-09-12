@@ -31,41 +31,35 @@ const EventVenue = React.createClass({
 
         self._initVenueType(eventType);
         self._initPostCode(eventType);
-
-        //TODO WTF??
-        self.refs.home && (self.refs.home.checked = true);
     },
     _initVenueType: function(eventType) {
         const   self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+			value = binding.toJS('radio');
 
-        switch (eventType) {
-            case 'inter-schools':
-                binding.atomically()
-                    .set('radio',                   Immutable.fromJS('home'))
-                    .set('model.venue.venueType',   Immutable.fromJS('home'))
-                    .commit();
-                break;
-            case 'houses':
-                binding.atomically()
-                    .set('radio',                   Immutable.fromJS(undefined))
-                    .set('model.venue.venueType',   Immutable.fromJS('home'))
-                    .commit();
-                break;
-            case 'internal':
-                binding.atomically()
-                    .set('radio',                   Immutable.fromJS(undefined))
-                    .set('model.venue.venueType',   Immutable.fromJS('home'))
-                    .commit();
-                break;
-        }
+		if(!value)
+			switch (eventType) {
+				case 'inter-schools':
+					binding.atomically()
+						.set('radio',                   Immutable.fromJS('home'))
+						.set('model.venue.venueType',   Immutable.fromJS('home'))
+						.commit();
+					break;
+				default:
+					binding.atomically()
+						.set('radio',                   Immutable.fromJS(undefined))
+						.set('model.venue.venueType',   Immutable.fromJS('home'))
+						.commit();
+					break;
+			}
     },
     _initPostCode: function() {
         const   self = this,
                 binding = self.getDefaultBinding(),
+				value = binding.toJS('venue'),
 				postcode = self._getHomeSchoolPostCode();
 
-        if(postcode) {
+        if(!value && postcode) {
 			binding.atomically()
 				.set('venue',                Immutable.fromJS(postcode))
 				.set('model.venue.postcode', Immutable.fromJS(postcode.id))
