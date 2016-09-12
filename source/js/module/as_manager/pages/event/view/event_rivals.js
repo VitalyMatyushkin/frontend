@@ -133,7 +133,6 @@ const EventRival = React.createClass({
 
 			/** set score */
 			scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType, pointsStep);
-			console.log(event.results);
 			binding.set('model', Immutable.fromJS(event));
 		}
 	},
@@ -355,7 +354,6 @@ const EventRival = React.createClass({
 
 		const isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 
-		console.log(sportIcon);
 		if(isEventWithOneIndividualTeam) {
 			body = (
 				<div className="bEventInfo">
