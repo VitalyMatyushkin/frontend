@@ -3,7 +3,8 @@
  */
 const 	React 		= require('react'),
 		RoleHelper  = require('module/helpers/role_helper'),
-		Auth 		= require('module/core/services/AuthorizationServices');
+		Auth 		= require('module/core/services/AuthorizationServices'),
+		RSC			= require('./RoleSelectorComponent');
 
 const RoleSelectorComponent = React.createClass({
 	componentWillMount:function(){
@@ -43,28 +44,16 @@ const RoleSelectorComponent = React.createClass({
 		window.location.href = `//${domain}/#${defaultPage}`;
 	},
 	onRoleSelected: function(roleName){
-		const self = this;
-
-		return function(){
-			console.log(`Role selected: ${roleName}`);
-			Auth.become(roleName).then(data => {
-				return self.redirectToStartPage(roleName.toLowerCase());
-			});
-		}
-	},
-	renderRoleButton: function(roleName){
-		const self = this;
-
-		return <div className="bButton" key={roleName} onClick={self.onRoleSelected(roleName)}>{roleName}</div>
+		Auth.become(roleName).then(data => {
+			return this.redirectToStartPage(roleName.toLowerCase());
+		});
 	},
 	render: function(){
-		const self = this;
-
-		return (
-			<div className="bRoleSelector">
-				{self.props.availableRoles.map(self.renderRoleButton)}
-			</div>
-		);
+		const availableRoles = this.props.availableRoles;
+		if(availableRoles.length > 1) {
+			return <RSC availableRoles={availableRoles} onRoleSelected={this.onRoleSelected}/>;
+		} else
+			return null;
 	}
 });
 
