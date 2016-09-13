@@ -133,7 +133,6 @@ const EventRival = React.createClass({
 
 			/** set score */
 			scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType, pointsStep);
-			console.log(event.results);
 			binding.set('model', Immutable.fromJS(event));
 		}
 	},

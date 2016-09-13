@@ -196,7 +196,6 @@ const EventButtons = React.createClass({
 			}
 		}
 
-		console.log(event.results.individualScore);
 		return Promise.all(
 			event.results.individualScore.map(
 				individualScoreData => window.Server.schoolEventResultIndividualsScore.post(
