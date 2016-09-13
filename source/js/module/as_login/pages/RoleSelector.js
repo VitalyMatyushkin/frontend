@@ -50,7 +50,7 @@ const RoleSelector = React.createClass({
 	},
 	render: function(){
 		const availableRoles = this.props.availableRoles;
-		if(availableRoles.length > 1) {
+		if(availableRoles.length > 1) {	// not drawing roles if there is only one. It will be selected automatically
 			return <RSC availableRoles={availableRoles} onRoleSelected={this.onRoleSelected}/>;
 		} else
 			return null;
