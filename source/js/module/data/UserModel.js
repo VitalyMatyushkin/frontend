@@ -65,15 +65,3 @@ UserModel.getAccess = function(user){
 };
 
 module.exports = UserModel;
-
-const filter =
-{
-	"where": {
-		"email": {
-			"like": "lapshina+2",
-			"options": "i"
-		}
-	},
-	"limit": 20,
-	"order": "email DESC"
-};
