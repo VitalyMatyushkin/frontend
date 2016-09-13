@@ -196,9 +196,9 @@ UsersActions.prototype = {
 		let columns = [
 			{
 				text:'Gender',
-				hidden:true,
 				cell:{
-					dataField:'gender'
+					dataField:'gender',
+					type:'gender'
 				},
 				filter:{
 					type:'multi-select',

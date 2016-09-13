@@ -11,7 +11,8 @@ const UserModel = function(userData){
     self.id = userData.id;
     self.firstName = userData.firstName;
     self.lastName = userData.lastName;
-    self.email = userData.email;
+	self.email = userData.email;
+	self.gender = userData.gender;
 	self.birthday = userData.birthday;
 	self.permissions = userData.permissions;
     self.verified = um.getStatus(userData);
@@ -64,3 +65,15 @@ UserModel.getAccess = function(user){
 };
 
 module.exports = UserModel;
+
+const filter =
+{
+	"where": {
+		"email": {
+			"like": "lapshina+2",
+			"options": "i"
+		}
+	},
+	"limit": 20,
+	"order": "email DESC"
+};
