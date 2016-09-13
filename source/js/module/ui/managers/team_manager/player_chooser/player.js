@@ -3,8 +3,8 @@ const	React		= require('react'),
 
 const Player = React.createClass({
 	propTypes: {
-		player :			React.PropTypes.object.isRequired,
-		handleClickStudent:	React.PropTypes.func.isRequired
+		player				: React.PropTypes.object.isRequired,
+		handleClickStudent	: React.PropTypes.func.isRequired
 	},
 	getInitialState: function(){
 		return {

@@ -11,6 +11,7 @@ const TeamManager = React.createClass({
 	propTypes: {
 		isNonTeamSport: React.PropTypes.bool
 	},
+	currentSearchRequest: undefined,
 	currentSearchText: '',
 	getDefaultProps: function() {
 		return {
@@ -140,13 +141,17 @@ const TeamManager = React.createClass({
 
 			filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
 
-			return window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
+			// cancel prev request
+			typeof self.currentSearchRequest !== 'undefined' && self.currentSearchRequest.cancel();
+
+			self.currentSearchRequest = window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
 				return players.map(player => {
 					player.name = `${player.firstName}' '${player.lastName}`;
 
 					return player;
 				});
 			});
+			return self.currentSearchRequest;
 		} else {
 			return Promise.resolve([]);
 		}
@@ -320,7 +325,6 @@ const TeamManager = React.createClass({
 				/>
 				<PlayerChooser	students={binding.toJS('foundStudents')}
 								handleChangeSearchText={self.handleChangeSearchText}
-								handleClickStudent={self.handleClickStudent}
 								handleClickStudent={self.handleClickStudent}
 								handleClickAddTeamButton={self.handleClickAddStudentButton}
 				/>
