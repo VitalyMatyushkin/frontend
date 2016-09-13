@@ -258,9 +258,8 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	eventType		= binding.get('model.eventType'),
-				teamsData		= binding.toJS('model.teamsData'),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
+		const	eventType	= binding.get('model.eventType'),
+				teamsData	= binding.toJS('model.teamsData');
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(1);
