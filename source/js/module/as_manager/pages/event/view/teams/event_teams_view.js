@@ -27,7 +27,7 @@ const EventTeamsView = React.createClass({
 			typeof teamId !== 'undefined' &&
 			TeamHelper.isTeamSport(event)
 		) {
-			self.changePointsForTeam(event, teamId, operation, pointType);
+			self.changePointsForTeam(event, player, teamId, operation, pointType);
 		}
 	},
 	changePointsForPlayer: function(event, player, operation, pointType) {
@@ -82,7 +82,7 @@ const EventTeamsView = React.createClass({
 
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
-	changePointsForTeam: function(event, teamId, operation, pointType) {
+	changePointsForTeam: function(event, player, teamId, operation, pointType) {
 		const self = this;
 
 		const pointsStep = event.sport.points.pointsStep;
@@ -111,26 +111,35 @@ const EventTeamsView = React.createClass({
 				}
 				break;
 			case "minus":
-				if(teamScoreDataIndex === -1) {
-					event.results.teamScore.push({
-						teamId:	teamId,
-						score:	TeamHelper.decByType(
-							0,
+				if(self.isPlayerHasPoints(event, player)) {
+					if(teamScoreDataIndex === -1) {
+						event.results.teamScore.push({
+							teamId:	teamId,
+							score:	TeamHelper.decByType(
+								0,
+								pointType,
+								pointsStep
+							)
+						})
+					} else {
+						event.results.teamScore[teamScoreDataIndex].score = TeamHelper.decByType(
+							event.results.teamScore[teamScoreDataIndex].score,
 							pointType,
 							pointsStep
-						)
-					})
-				} else {
-					event.results.teamScore[teamScoreDataIndex].score = TeamHelper.decByType(
-						event.results.teamScore[teamScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
+						);
+					}
 				}
 				break;
 		};
 
 		self.getBinding('event').set(Immutable.fromJS(event));
+	},
+	isPlayerHasPoints: function(event, player) {
+		const userScoreData = event.results.individualScore.find(
+			userScoreData => userScoreData.userId === player.id
+		);
+
+		return typeof userScoreData !== 'undefined' && userScoreData.score !== 0;
 	},
 	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {
 		const self = this;
