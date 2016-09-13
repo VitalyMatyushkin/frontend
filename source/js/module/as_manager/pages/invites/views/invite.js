@@ -27,18 +27,26 @@ const InviteView = React.createClass({
         return <Sport name={sport} className="bIcon_invites" ></Sport>;
     },
     getGenderIcon:function(gender){
-        if(gender !== undefined){
-            var icon;
-            switch (gender){
-                case 'female':
-                    icon = <SVG classes="bIcon_invites" icon="icon_woman"></SVG>;
-                    break;
-                default:
-                    icon = <SVG classes="bIcon_invites" icon="icon_man"></SVG>;
-                    break;
-            }
-            return icon;
-        }
+		var icon;
+		console.log('gender: ' + gender);
+		switch (true){
+			case gender === 'FEMALE_ONLY':
+				icon = <SVG classes="bIcon_invites" icon="icon_woman"></SVG>;
+				break;
+			case gender === 'MALE_ONLY':
+				icon = <SVG classes="bIcon_invites" icon="icon_man"></SVG>;
+				break;
+			case gender === 'MIXED':
+				icon = [
+					<SVG classes="bIcon_invites" icon="icon_man"></SVG>,
+					<SVG classes="bIcon_invites" icon="icon_woman"></SVG>
+				];
+				break;
+			default:
+				icon = <SVG classes="bIcon_invites" icon="icon_man"></SVG>;
+				break;
+		}
+		return icon;
     },
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
