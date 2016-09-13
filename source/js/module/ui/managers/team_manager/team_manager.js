@@ -11,6 +11,7 @@ const TeamManager = React.createClass({
 	propTypes: {
 		isNonTeamSport: React.PropTypes.bool
 	},
+	currentSearchRequest: undefined,
 	currentSearchText: '',
 	getDefaultProps: function() {
 		return {
@@ -24,7 +25,9 @@ const TeamManager = React.createClass({
 			removedPlayers:		[],
 			selectedStudentIds:	[],
 			selectedPlayerIds:	[],
-			isSync:				true
+			isSync:				true,
+			// use this flag to command research users by current search text, see listeners
+			isNeedSearch:		false
 		});
 	},
 	componentWillMount: function() {
@@ -43,6 +46,15 @@ const TeamManager = React.createClass({
 		self.listeners.push(binding.sub('isSync').addListener((descriptor) => {
 			if(!descriptor.getCurrentValue()) {
 				self.clearTeamValues();
+			}
+		}));
+		self.listeners.push(binding.sub('isNeedSearch').addListener((descriptor) => {
+			// if prev === false and curr === true
+			if(
+				descriptor.getPreviousValue() !== descriptor.getCurrentValue() &&
+				descriptor.getCurrentValue()
+			) {
+				self.searchAndSetStudents(self.currentSearchText, binding);
 			}
 		}));
 	},
@@ -88,6 +100,7 @@ const TeamManager = React.createClass({
 			binding.atomically()
 				.set("selectedStudentIds",	Immutable.fromJS([]))
 				.set("foundStudents",		Immutable.fromJS(students))
+				.set("isNeedSearch",		Immutable.fromJS(false))
 				.commit()
 		});
 	},
@@ -128,13 +141,17 @@ const TeamManager = React.createClass({
 
 			filter.houseId && (requestFilter.filter.where.houseId = filter.houseId);
 
-			return window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
+			// cancel prev request
+			typeof self.currentSearchRequest !== 'undefined' && self.currentSearchRequest.cancel();
+
+			self.currentSearchRequest = window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
 				return players.map(player => {
 					player.name = `${player.firstName}' '${player.lastName}`;
 
 					return player;
 				});
 			});
+			return self.currentSearchRequest;
 		} else {
 			return Promise.resolve([]);
 		}
@@ -263,10 +280,11 @@ const TeamManager = React.createClass({
 
 			binding.atomically()
 				.set('selectedPlayerIds',	Immutable.fromJS([]))
-				.set('foundStudents',		Immutable.fromJS(foundStudents))
 				.set('teamStudents',		Immutable.fromJS(teamStudents))
 				.set('removedPlayers',		Immutable.fromJS(removedPlayers))
 				.commit();
+
+			self.searchAndSetStudents(self.currentSearchText, binding);
 		}
 	},
 	handleChangePlayerPosition: function(playerId, positionId) {
@@ -307,7 +325,6 @@ const TeamManager = React.createClass({
 				/>
 				<PlayerChooser	students={binding.toJS('foundStudents')}
 								handleChangeSearchText={self.handleChangeSearchText}
-								handleClickStudent={self.handleClickStudent}
 								handleClickStudent={self.handleClickStudent}
 								handleClickAddTeamButton={self.handleClickAddStudentButton}
 				/>

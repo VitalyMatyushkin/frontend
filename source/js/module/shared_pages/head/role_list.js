@@ -48,7 +48,7 @@ const  RoleList = React.createClass({
 						// Always add all permissions besides PARENT permissions.
 						// Add parent permissions only at once.
 						if(permission.preset !== 'PARENT' || permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
-							permission.role = RoleHelper.SERVER_ROLE_FOR_CLIENT[role.name];
+							permission.role = role.name;
 							permissions.push(permission);
 						}
 
@@ -111,7 +111,8 @@ const  RoleList = React.createClass({
 		const   self 	    = this,
 				binding     = self.getDefaultBinding(),
 				schoolId    = permission ? permission.schoolId : null,
-				role        = permission ? permission.role : 'NO ROLE',
+				role        = permission ? permission.role : null,
+				roleClient 	= permission ? RoleHelper.SERVER_ROLE_FOR_CLIENT[permission.role] : 'NO ROLE',
 				schools     = binding.toJS('schools'),
 				school      = schools.length && role !== 'PARENT' ? schools.find(s => s.id === schoolId) : null,
 				schoolName  = school ? school.name : null,
@@ -120,7 +121,7 @@ const  RoleList = React.createClass({
 		return (
 			<div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, role, schoolId) : null}>
 				<p>{schoolName}</p>
-				<p className="eRole_name">{role}</p>
+				<p className="eRole_name">{roleClient}</p>
 			</div>
 		);
 	},

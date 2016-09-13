@@ -3,7 +3,6 @@ const 	LoginForm 		= require('module/ui/login/user/form'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
 		Morearty        = require('morearty'),
-		RoleHelper 		= require('module/helpers/role_helper'),
 		RoleSelector	= require('module/as_login/pages/RoleSelector'),
 		SVG 		    = require('module/ui/svg');
 
@@ -81,7 +80,7 @@ const LoginUserPage = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return window.Server.roles.get().then(roleList => {
-			const presetList = roleList.map(r => RoleHelper.SERVER_ROLE_FOR_CLIENT[r.name]);
+			const presetList = roleList.map(r => r.name);
 
 			binding.set('__allPermissions', presetList);
             return null;

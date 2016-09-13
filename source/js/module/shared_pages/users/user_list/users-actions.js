@@ -232,8 +232,10 @@ UsersActions.prototype = {
 			{
 				text:'Email',
 				isSorted:true,
+				width:'100px',
 				cell:{
-					dataField:'email'
+					dataField:'email',
+					type:'email'
 				},
 				filter:{
 					type:'string'
@@ -311,7 +313,7 @@ UsersActions.prototype = {
 		];
 
 		if(this.props.blockService){
-			columns.splice(4,0,
+			columns.splice(5,0,
 				{
 					text:'School',
 					cell:{

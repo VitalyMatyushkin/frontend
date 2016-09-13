@@ -9,6 +9,13 @@ const PlayerSearchBox = React.createClass({
 
 		self.props.handleChangeSearchText(eventDescriptor.target.value);
 	},
+	handleKeyPress: function(eventDescriptor) {
+		const self = this;
+
+		if (eventDescriptor.key === 'Enter') {
+			self.props.handleChangeSearchText(eventDescriptor.target.value);
+		}
+	},
 	render: function() {
 		const self = this;
 
@@ -17,6 +24,7 @@ const PlayerSearchBox = React.createClass({
 				<input	className	="ePlayerChooser_playerSearchBoxInput"
 						placeholder	="Enter student name"
 						onChange	={self.handleChangeSearchText}
+						onKeyPress	={self.handleKeyPress}
 				/>
 			</div>
 		);

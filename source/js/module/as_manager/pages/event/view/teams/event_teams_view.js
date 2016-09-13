@@ -20,26 +20,34 @@ const EventTeamsView = React.createClass({
 	handleClickPointSign: function(event, teamId, player, operation, pointType) {
 		const self = this;
 
-		self.changePointsForPlayer(event, player, operation, pointType);
-		// sum current player points with other player points = team points
-		// but only for team games
-		typeof teamId !== 'undefined' && self.changePointsForTeam(event, teamId, operation, pointType);
+		// Order of score changes is important!
+		// 1) Team score
+		// 2) Individual score
+
+		// Sum current player points with other player points = team points
+		// But only for team games
+		if(
+			typeof teamId !== 'undefined' &&
+			TeamHelper.isTeamSport(event)
+		) {
+			self.changePointsForTeam(event, player, teamId, operation, pointType);
+		}
+		self.changePointsForPlayer(event, player, teamId, operation, pointType);
 	},
-	changePointsForPlayer: function(event, player, operation, pointType) {
+	changePointsForPlayer: function(event, player, teamId, operation, pointType) {
 		const self = this;
 
 		const pointsStep = event.sport.points.pointsStep;
 
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === player.id);
 
-
 		switch (operation) {
 			case "plus":
 				if(userScoreDataIndex === -1) {
 					event.results.individualScore.push({
 						userId:			player.id,
-						teamId:			player.teamId,
 						permissionId:	player.permissionId,
+						teamId:			teamId,
 						score:			TeamHelper.incByType(
 							0,
 							pointType,
@@ -58,8 +66,8 @@ const EventTeamsView = React.createClass({
 				if(userScoreDataIndex === -1) {
 					event.results.individualScore.push({
 						userId:			player.id,
-						permissionId:	player.teamId,
-						teamId:			player.permissionId,
+						permissionId:	player.permissionId,
+						teamId:			teamId,
 						score:			TeamHelper.decByType(
 							0,
 							pointType,
@@ -78,7 +86,7 @@ const EventTeamsView = React.createClass({
 
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
-	changePointsForTeam: function(event, teamId, operation, pointType) {
+	changePointsForTeam: function(event, player, teamId, operation, pointType) {
 		const self = this;
 
 		const pointsStep = event.sport.points.pointsStep;
@@ -107,26 +115,35 @@ const EventTeamsView = React.createClass({
 				}
 				break;
 			case "minus":
-				if(teamScoreDataIndex === -1) {
-					event.results.teamScore.push({
-						teamId:	teamId,
-						score:	TeamHelper.decByType(
-							0,
+				if(self.isPlayerHasPoints(event, player)) {
+					if(teamScoreDataIndex === -1) {
+						event.results.teamScore.push({
+							teamId:	teamId,
+							score:	TeamHelper.decByType(
+								0,
+								pointType,
+								pointsStep
+							)
+						})
+					} else {
+						event.results.teamScore[teamScoreDataIndex].score = TeamHelper.decByType(
+							event.results.teamScore[teamScoreDataIndex].score,
 							pointType,
 							pointsStep
-						)
-					})
-				} else {
-					event.results.teamScore[teamScoreDataIndex].score = TeamHelper.decByType(
-						event.results.teamScore[teamScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
+						);
+					}
 				}
 				break;
 		};
 
 		self.getBinding('event').set(Immutable.fromJS(event));
+	},
+	isPlayerHasPoints: function(event, player) {
+		const userScoreData = event.results.individualScore.find(
+			userScoreData => userScoreData.userId === player.id
+		);
+
+		return typeof userScoreData !== 'undefined' && userScoreData.score !== 0;
 	},
 	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {
 		const self = this;
