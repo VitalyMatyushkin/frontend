@@ -720,11 +720,13 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 			} else if(TeamHelper.isTeamSport(event)) {
 				if(teamsData.length === 0) {
 					return cb('housesData', 0);
-				} else if (
-					teamsData.length === 1 ||
-					teamsData.length === 2
-				) {
+				} else if (teamsData.length === 1) {
 					return cb('teamsData', 0);
+				} else if (teamsData.length === 2) {
+					return cb(
+						'teamsData',
+						teamsData.findIndex(t => t.houseId === housesData[0].id)
+					);
 				}
 			}
 			break;
@@ -817,8 +819,11 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 						'housesData',
 						teamsData[0].id === housesData[0].id ? 0 : 1
 					);
-				} else if(teamsData.length === 2) {
-					return cb('teamsData', 1);
+				} else if (teamsData.length === 2) {
+					return cb(
+						'teamsData',
+						teamsData.findIndex(t => t.houseId === housesData[1].id)
+					);
 				}
 			}
 			break;
