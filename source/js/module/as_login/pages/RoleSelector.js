@@ -6,7 +6,7 @@ const 	React 		= require('react'),
 		Auth 		= require('module/core/services/AuthorizationServices'),
 		RSC			= require('./RoleSelectorComponent');
 
-const RoleSelectorComponent = React.createClass({
+const RoleSelector = React.createClass({
 	componentWillMount:function(){
 		const self = this;
 		const availableRoles = self.props.availableRoles;
@@ -58,4 +58,4 @@ const RoleSelectorComponent = React.createClass({
 });
 
 
-module.exports = RoleSelectorComponent;
+module.exports = RoleSelector;
