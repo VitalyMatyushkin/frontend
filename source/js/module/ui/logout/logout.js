@@ -1,22 +1,15 @@
 const 	React 			= require('react'),
-		Morearty    	= require('morearty'),
-		StorageHelper 	= require('module/helpers/storage'),
+		Auth			= require('module/core/services/AuthorizationServices'),
 		DomainHelper 	= require('module/helpers/domain_helper');
 
-const Logout = React.createClass({
-	mixins: [Morearty.Mixin],
-	render: function() {
-		const binding = this.getDefaultBinding();
+const Logout = function() {
+	// clear authorizationInfo
+	Auth.clear();
+	
+	// redirect to login
+	window.location.href = DomainHelper.getLoginUrl();
 
-		// clear authorizationInfo
-		StorageHelper.cookie.remove('authorizationInfo');
-		binding.sub('authorizationInfo').clear();
-
-		// redirect to login
-        window.location.href = DomainHelper.getLoginUrl();
-
-		return null;
-	}
-});
+	return null;
+};
 
 module.exports = Logout;
