@@ -2,7 +2,8 @@
  * Created by Anatoly on 10.04.2016.
  */
 
-const   Immutable   = require('immutable');
+const   StorageHelper 	= require('module/helpers/storage'),
+		Immutable   	= require('immutable');
 
 const AuthorizationServices ={
     login: function(data){
@@ -59,7 +60,16 @@ const AuthorizationServices ={
 
             return authData;
         });
-    }
+    },
+	/** Clear authorization Info */
+	clear:function(){
+		const   service = window.Server._login,
+				binding = service.binding;
+
+		// clear authorizationInfo
+		StorageHelper.cookie.remove('authorizationInfo');
+		binding.sub('authorizationInfo').clear();
+	}
 };
 
 module.exports = AuthorizationServices;
