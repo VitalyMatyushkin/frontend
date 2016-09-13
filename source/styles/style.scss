@@ -129,6 +129,9 @@ p {
 .mInvisible{
   visibility: hidden;
 }
+.mBreakWord{
+  word-wrap: break-word;
+}
 //Text styles
 .mBold {
   font-weight: bold;
