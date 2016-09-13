@@ -8,6 +8,7 @@ const	React			= require('react'),
 		If				= require('module/ui/if/if'),
 		Morearty        = require('morearty'),
 		DomainHelper 	= require('module/helpers/domain_helper'),
+		RoleHelper 		= require('module/helpers/role_helper'),
 		Auth			= require('module/core/services/AuthorizationServices');
 
 
@@ -47,7 +48,7 @@ const  RoleList = React.createClass({
 						// Always add all permissions besides PARENT permissions.
 						// Add parent permissions only at once.
 						if(permission.preset !== 'PARENT' || permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
-							permission.role = role.name;
+							permission.role = RoleHelper.SERVER_ROLE_FOR_CLIENT[role.name];
 							permissions.push(permission);
 						}
 
