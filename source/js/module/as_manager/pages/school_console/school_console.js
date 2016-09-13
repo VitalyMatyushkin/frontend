@@ -9,7 +9,7 @@ const   RouterView      				= require('module/core/router'),
         Morearty	    				= require('morearty'),
         Immutable       				= require('immutable'),
 		UsersComponent 					= require('module/as_manager/pages/school_console/views/users'),
-		AdminRequestsComponent 			= require('module/shared_pages/permission_requests/request-list'),
+		AdminRequestsComponent 			= require('./views/requests'),
 		AdminPermissionAcceptComponent 	= require("module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"),
 		RequestArchiveComponent 		= require('module/as_manager/pages/school_console/views/request_archive');
 

@@ -28,13 +28,6 @@ const RequestActions = function(page){
 	this.getSchools();
 
 	this.setColumns();
-	this.grid = this.getGrid();
-	this.dataLoader = 	new DataLoader({
-							serviceName:'permissionRequests',
-							params:		{schoolId:this.activeSchoolId},
-							grid:		this.grid,
-							onLoad: 	this.getDataLoadedHandle()
-						});
 };
 
 RequestActions.prototype = {

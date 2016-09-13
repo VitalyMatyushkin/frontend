@@ -10,7 +10,7 @@ const   React 		= require('react'),
 const PermissionRequestList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		this.actions = new Actions(this);
+		this.actions = new Actions(this).init();
 	},
 	render: function () {
 		return <Grid model={this.actions.grid}/>;
