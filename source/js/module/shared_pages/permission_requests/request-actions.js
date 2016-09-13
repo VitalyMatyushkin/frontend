@@ -27,6 +27,7 @@ const RequestActions = function(page){
 	this.updateSubMenu();
 	this.getSchools();
 
+	this.setColumns();
 	this.grid = this.getGrid();
 	this.dataLoader = 	new DataLoader({
 							serviceName:'permissionRequests',
@@ -126,8 +127,11 @@ RequestActions.prototype = {
 				break;
 		}
 	},
-	getGrid: function(){
-		let columns = [
+	setColumns: function(){
+		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+
+		this.columns = [
 			{
 				cell:{
 					type:'custom',
@@ -244,15 +248,25 @@ RequestActions.prototype = {
 				}
 			}
 		];
-
-		return new GridModel({
+	},
+	init: function(){
+		this.grid = new GridModel({
 			actionPanel:{
 				title:'New Requests',
 				showStrip:true
 			},
-			columns:columns,
+			columns:this.columns,
 			filters:{where:{status:'NEW'},limit:20}
 		});
+
+		this.dataLoader = 	new DataLoader({
+			serviceName:'permissionRequests',
+			params:		{schoolId:this.activeSchoolId},
+			grid:		this.grid,
+			onLoad: 	this.getDataLoadedHandle()
+		});
+
+		return this;
 	},
 	getDataLoadedHandle: function(data){
 		const self = this,
