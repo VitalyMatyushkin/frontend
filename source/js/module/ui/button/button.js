@@ -9,7 +9,7 @@ const React = require('react');
  * so feel free to add if need.
  **/
 function Button(props) {
-	const 	extraStyleClasses = props.extraStyleClasses || '';
+	const 	extraStyleClasses = props.extraStyleClasses || '',
 			className = `bButton ${extraStyleClasses}`;
 
 	return <a className={className} href={props.href} onClick={props.onClick}>{props.text}</a>;
