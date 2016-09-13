@@ -1,21 +1,22 @@
-const 	React 		= require('react'),
-		Morearty    = require('morearty'),
-		Helpers 	= require('module/helpers/storage');
+const 	React 			= require('react'),
+		Morearty    	= require('morearty'),
+		StorageHelper 	= require('module/helpers/storage'),
+		DomainHelper 	= require('module/helpers/domain_helper');
 
-const LoginUserPage = React.createClass({
+const Logout = React.createClass({
 	mixins: [Morearty.Mixin],
 	render: function() {
 		const binding = this.getDefaultBinding();
 
-		Helpers.cookie.remove('authorizationInfo');
+		// clear authorizationInfo
+		StorageHelper.cookie.remove('authorizationInfo');
 		binding.sub('authorizationInfo').clear();
-        let subdomains = document.location.host.split('.');
-        subdomains[0] = subdomains[0] !=='admin' ? 'login': subdomains[0];
-        const domain = subdomains.join(".");
-        window.location.href = `//${domain}/#login`;
+
+		// redirect to login
+        window.location.href = DomainHelper.getLoginUrl();
 
 		return null;
 	}
 });
 
-module.exports = LoginUserPage;
+module.exports = Logout;
