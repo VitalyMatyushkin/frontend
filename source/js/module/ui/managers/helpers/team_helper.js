@@ -292,10 +292,13 @@ function convertPointsToClientModel(serverPointsModel) {
 function getFilterGender(gender) {
 	switch (gender) {
 		case 'maleOnly':
+		case 'MALE_ONLY':
 			return ['MALE'];
 		case 'femaleOnly':
+		case 'FEMALE_ONLY':
 			return ['FEMALE'];
 		case 'mixed':
+		case 'MIXED':
 			return ['MALE', 'FEMALE'];
 		default:
 			return [];
