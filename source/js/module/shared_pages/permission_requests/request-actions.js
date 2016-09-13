@@ -121,9 +121,6 @@ RequestActions.prototype = {
 		}
 	},
 	setColumns: function(){
-		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
-			changeAllowed 	= role === "ADMIN" || role === "MANAGER";
-
 		this.columns = [
 			{
 				cell:{
