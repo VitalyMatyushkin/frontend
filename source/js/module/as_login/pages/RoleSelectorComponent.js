@@ -4,7 +4,8 @@
 
 const 	React 		= require('react'),
 		Immutable	= require('immutable'),
-		Button		= require('module/ui/button/button');
+		Button		= require('module/ui/button/button'),
+		RoleHelper 	= require('module/helpers/role_helper');
 
 /**
  * It just renders list of buttons with role names. When any button clicked, handler called with role name.
@@ -16,7 +17,9 @@ function RoleSelectorComponent(props) {
 
 	return (
 		<div className="bRoleSelector">
-			{availableRoles.map( role => <Button key={role} text={role} onClick={() => onRoleSelected(role)}/>)}
+			{availableRoles.map( role =>
+				<Button key={role} text={RoleHelper.SERVER_ROLE_FOR_CLIENT[role]} onClick={() => onRoleSelected(role)}/>
+			)}
 		</div>
 	);
 
