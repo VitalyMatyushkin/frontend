@@ -4,7 +4,8 @@ const   classNames      = require('classnames'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
         Morearty		= require('morearty'),
 		Button			= require('module/ui/button/button'),
-        Sport           = require('module/ui/icons/sport_icon');
+        SportIcon		= require('module/ui/icons/sport_icon'),
+		GenderIcon		= require('module/ui/icons/gender_icon');
 
 const InviteView = React.createClass({
     mixins: [Morearty.Mixin],
@@ -25,22 +26,7 @@ const InviteView = React.createClass({
         }
     },
     getSportIcon:function(sport){
-        return <Sport name={sport} className="bIcon_invites" ></Sport>;
-    },
-    getGenderIcon:function(gender){
-		switch (true){
-			case gender === 'FEMALE_ONLY':
-				return <SVG classes="bIcon_invites" icon="icon_woman"></SVG>;
-			case gender === 'MALE_ONLY':
-				return <SVG classes="bIcon_invites" icon="icon_man"></SVG>;
-			case gender === 'MIXED':
-				return [
-					<SVG key={'man'}classes="bIcon_invites" icon="icon_man"></SVG>,
-					<SVG key={'woman'} classes="bIcon_invites" icon="icon_woman"></SVG>
-				];
-			default:
-				return <SVG classes="bIcon_invites" icon="icon_man"></SVG>;
-		}
+        return <SportIcon name={sport} className="bIcon_invites" />;
     },
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
@@ -72,7 +58,7 @@ const InviteView = React.createClass({
                 schoolPicture   = self.getParticipantEmblem(rival),
                 sport           = self.getSportIcon(binding.get('sport.name')),
                 ages            = binding.get('event.ages'),
-                gender          = self.getGenderIcon(binding.get('event.gender')),
+                gender          = <GenderIcon gender={binding.get('event.gender')}/>,
                 message         = binding.get('message') || '',
                 accepted        = binding.get('status') === 'ACCEPTED',
                 eventDate       = (new Date(binding.get('event.startTime'))),

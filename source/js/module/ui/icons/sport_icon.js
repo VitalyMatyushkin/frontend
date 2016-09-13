@@ -3,8 +3,7 @@
  */
 
 const   React   = require('react'),
-        SVG     = require('module/ui/svg'),
-        If      = require('module/ui/if/if');
+        SVG     = require('module/ui/svg');
 
 /** Renders sport icon as SVG: ball, bat, and so on */
 const SportIcon = React.createClass({
@@ -33,11 +32,11 @@ const SportIcon = React.createClass({
     render:function(){
         const icon = this.getSportIcon(this.props.name);
 
-        return(
-            <If condition={!!this.props.name}>
-                <SVG classes={this.props.className} icon={icon} ></SVG>
-            </If>
-        );
+        if(!!this.props.name) {
+            return <SVG classes={this.props.className} icon={icon} />;
+        } else {
+            return null;
+        }
     }
 });
 
