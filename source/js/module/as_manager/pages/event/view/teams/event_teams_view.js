@@ -20,17 +20,21 @@ const EventTeamsView = React.createClass({
 	handleClickPointSign: function(event, teamId, player, operation, pointType) {
 		const self = this;
 
-		self.changePointsForPlayer(event, player, operation, pointType);
-		// sum current player points with other player points = team points
-		// but only for team games
+		// Order of score changes is important!
+		// 1) Team score
+		// 2) Individual score
+
+		// Sum current player points with other player points = team points
+		// But only for team games
 		if(
 			typeof teamId !== 'undefined' &&
 			TeamHelper.isTeamSport(event)
 		) {
 			self.changePointsForTeam(event, player, teamId, operation, pointType);
 		}
+		self.changePointsForPlayer(event, player, teamId, operation, pointType);
 	},
-	changePointsForPlayer: function(event, player, operation, pointType) {
+	changePointsForPlayer: function(event, player, teamId, operation, pointType) {
 		const self = this;
 
 		const pointsStep = event.sport.points.pointsStep;
@@ -42,8 +46,8 @@ const EventTeamsView = React.createClass({
 				if(userScoreDataIndex === -1) {
 					event.results.individualScore.push({
 						userId:			player.id,
-						teamId:			player.teamId,
 						permissionId:	player.permissionId,
+						teamId:			teamId,
 						score:			TeamHelper.incByType(
 							0,
 							pointType,
@@ -62,8 +66,8 @@ const EventTeamsView = React.createClass({
 				if(userScoreDataIndex === -1) {
 					event.results.individualScore.push({
 						userId:			player.id,
-						permissionId:	player.teamId,
-						teamId:			player.permissionId,
+						permissionId:	player.permissionId,
+						teamId:			teamId,
 						score:			TeamHelper.decByType(
 							0,
 							pointType,
