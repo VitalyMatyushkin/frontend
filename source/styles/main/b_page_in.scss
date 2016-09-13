@@ -70,10 +70,11 @@
 }
 .eSchoolFixtureTab{
   width: 100%;
+  max-width: 1170px;
   height: 40px;
   position:relative;
   text-align: center;
-  margin-bottom: 30px;
+  margin: 30px auto;
 }
 .eSchoolFixtureTab h1{
   color: #293e6b;
@@ -87,7 +88,7 @@
   cursor: pointer;
   margin: 10px auto;
   position: relative;
-  min-height: 130px;
+  min-height: 160px;
   width: 900px;
   background: #fff;
   display: flex;
@@ -115,7 +116,7 @@
 }
 .bFixtureOpponent img{
   height: 70px;
-  margin: 10px 0;
+  padding: 23px 0;
   max-width: 150px;
 }
 .bFixtureOpponent span{
@@ -280,7 +281,7 @@
   padding-top: 20px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
 }
 .eSchoolCalendarWrapper .bCalendar{
   max-width: 400px;
