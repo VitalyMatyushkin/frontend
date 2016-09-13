@@ -111,6 +111,10 @@ const EventView = React.createClass({
 				);
 			}
 
+			// backup results
+			// we need default state of results for revert result changes when user click to cancel button(in close event mode)
+			event.initResults = event.results;
+
 			updBinding
 				.atomically()
 				.set('sync',	Immutable.fromJS(true))

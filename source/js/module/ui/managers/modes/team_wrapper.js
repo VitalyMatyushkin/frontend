@@ -306,12 +306,21 @@ const TeamWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.set(
+		// ORDER IS IMPORTANT!!!
+		// 1) set players
+		// 2) set isNeedSearch flag
+		self._setPlayers(binding.get('prevPlayers'));
+		binding
+			.atomically()
+			.set(
 				'teamName.name',
 				Immutable.fromJS(binding.toJS('prevTeamName'))
-			);
-
-		self._setPlayers(binding.get('prevPlayers'));
+			)
+			.set(
+				'___teamManagerBinding.isNeedSearch',
+				Immutable.fromJS(true)
+			)
+			.commit();
 	},
 	handleChangeName: function(binding, newName) {
 		binding

@@ -191,47 +191,53 @@ const Manager = React.createClass({
 				})
 			);
 		} else {
-			const	event	= binding.toJS('model'),
-					limits	= event && event.sportModel && event.sportModel.defaultLimits ? {
-						maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
-						minPlayers:	event.sportModel.defaultLimits.minPlayers,
-						minSubs:	event.sportModel.defaultLimits.minSubs,
-						maxSubs:	event.sportModel.defaultLimits.maxSubs
-					} : {};
+			const event = binding.toJS('model');
 
-			let result = {
-				isError:	false,
-				text:		''
-			};
+			if(
+				typeof event !== 'undefined' &&
+				typeof event.sportModel !== 'undefined'
+			) {
+				const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
+					maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
+					minPlayers:	event.sportModel.defaultLimits.minPlayers,
+					minSubs:	event.sportModel.defaultLimits.minSubs,
+					maxSubs:	event.sportModel.defaultLimits.maxSubs
+				} : {};
 
-			switch (true) {
-				case TeamHelper.isNonTeamSport(event):
-					result = TeamPlayersValidator.validate(
-						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
-						limits
-					);
-					break;
-				case TeamHelper.isTeamSport(event):
-					if (
-						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-						binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
-					) {
-						result = {
-							isError:	true,
-							text:		'Please enter team name'
-						};
-					} else {
+				let result = {
+					isError:	false,
+					text:		''
+				};
+
+				switch (true) {
+					case TeamHelper.isNonTeamSport(event):
 						result = TeamPlayersValidator.validate(
 							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
 							limits
 						);
-					}
-					break;
-			}
+						break;
+					case TeamHelper.isTeamSport(event):
+						if (
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
+						) {
+							result = {
+								isError:	true,
+								text:		'Please enter team name'
+							};
+						} else {
+							result = TeamPlayersValidator.validate(
+								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+								limits
+							);
+						}
+						break;
+				}
 
-			errorBinding.sub(rivalIndex).set(
-				Immutable.fromJS(result)
-			);
+				errorBinding.sub(rivalIndex).set(
+					Immutable.fromJS(result)
+				);
+			}
 		}
 	},
 	_initRivalIndex: function() {

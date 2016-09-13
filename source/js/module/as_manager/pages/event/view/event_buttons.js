@@ -545,15 +545,28 @@ const EventButtons = React.createClass({
 
 		binding
 			.atomically()
-			.set('points', Immutable.List())
 			.set('mode', 'general')
 			.commit();
+
+		self.revertScore();
 	},
 	onClickEditCancel: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		binding.set('mode', 'general');
+	},
+	/**
+	 * Set init state of score. See to component will mount function of Event React Component.
+	 */
+	revertScore: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const updEvent = binding.toJS('model');
+		updEvent.results = updEvent.initResults;
+
+		binding.set('model', Immutable.fromJS(updEvent));
 	},
 	render: function() {
 		const self = this;
