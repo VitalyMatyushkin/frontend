@@ -25,13 +25,6 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			model: {},
-			teamsData: [],
-			teamManagerWrapper: {},
-			eventId: null,
-			points: [],
-			result: {
-				points: []
-			},
 			sync: false,
 			mode: 'general',
 			showingComment: false,
@@ -42,90 +35,84 @@ const EventView = React.createClass({
 	componentWillMount: function () {
 		const	self		= this,
 				rootBinding	= self.getMoreartyContext().getBinding(),
-				binding		= self.getDefaultBinding(),
-				eventId		= rootBinding.get('routing.pathParameters.0');
-
+				binding		= self.getDefaultBinding();
+		
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+		
 		self.initTabs();
+		self.initMenuItems();
 
-		self._initMenuItems();
-
-		let	activeSchool;
-
-		window.Server.school.get(self.activeSchoolId)
-		.then(_school => {
-			activeSchool = _school;
-
-			// Get forms
-			return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}});
-		})
-		.then(forms => {
-			activeSchool.forms = forms;
-
-			// Get event
-			return window.Server.schoolEvent.get({
-				schoolId: self.activeSchoolId,
-				eventId: eventId
-			});
-		})
-		.then(event => {
-			// TODO remove plug and implement albums
-			// TODO Is it still actual?
-			const	albums	= [], // res.albums,
-					points	= event.result && event.result.points ? TeamHelper.convertPointsToClientModel(event.result.points) : [];
-
+		window.Server.schoolEvent.get({
+				schoolId:	self.activeSchoolId,
+				eventId:	rootBinding.get('routing.pathParameters.0')
+		}).then(event => {
 			event.schoolsData = TeamHelper.getSchoolsData(event);
+			event.teamsData = event.teamsData.sort((t1, t2) => {
+				if(t1.name < t2.name) {
+					return -1;
+				}
+				if(t1.name > t2.name) {
+					return 1;
+				}
+				if(t1.name === t2.name) {
+					return 0;
+				}
+			});
+			event.housesData = event.housesData.sort((h1, h2) => {
+				if(h1.name < h2.name) {
+					return -1;
+				}
+				if(h1.name > h2.name) {
+					return 1;
+				}
+				if(h1.name === h2.name) {
+					return 0;
+				}
+			});
+			// FUNCTION MODIFY EVENT OBJECT!!
+			self.initializeEventResults(event);
 
 			binding
 				.atomically()
-				.set('sport',									Immutable.fromJS(event.sport))
-				.set('model',									Immutable.fromJS(event))
-				.set('model.sportModel',						Immutable.fromJS(event.sport))
-				.set('teamsData',								Immutable.fromJS(event.teamsData ? event.teamsData : []))
-				.set('housesData',								Immutable.fromJS(event.housesData ? event.housesData : []))
-				.set('schoolsData',								Immutable.fromJS(self.getSchoolsData(event)))
-				.set('points',									Immutable.fromJS(points))
-				.set('albums',									Immutable.fromJS(albums))
-				.set('schoolInfo',								Immutable.fromJS(activeSchool))
-				.set('teamManagerWrapper.default.schoolInfo',	Immutable.fromJS(activeSchool))
-				.set('eventId',									Immutable.fromJS(eventId))
-				.set('mode',									Immutable.fromJS('general'))
+				.set('model',	Immutable.fromJS(event))
+				.set('albums',	Immutable.fromJS([]))
+				.set('mode',	Immutable.fromJS('general'))
+				.set('sync',	Immutable.fromJS(true))
 				.commit();
 
 			return event;
 		})
-		.then(() => {
-			const updBinding = self.getDefaultBinding();
+	},
+	/**
+	 * !! Function modify event object !!
+	 * Initialize event results.
+	 * It means:
+	 * 1) Set zero points to appropriate score bundle(schools score, teams score, houses score and etc.)
+	 * 2) Backup init state of results for revert changes in scores if it will be need.
+	 * @param event
+	 */
+	initializeEventResults: function(event) {
+		const self = this;
 
-			const event = updBinding.toJS('model');
-			if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
-				event.results = TeamHelper.callFunctionForLeftContext(
-					activeSchool,
-					event,
-					self.getInitResults.bind(self, event)
-				);
-				event.results = TeamHelper.callFunctionForRightContext(
-					activeSchool,
-					event,
-					self.getInitResults.bind(self, event)
-				);
-			}
-
-			// backup results
-			// we need default state of results for revert result changes when user click to cancel button(in close event mode)
-			event.initResults = event.results;
-
-			updBinding
-				.atomically()
-				.set('sync',	Immutable.fromJS(true))
-				.set('model',	Immutable.fromJS(event))
-				.commit();
-			;
-		});
+		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
+			event.results = TeamHelper.callFunctionForLeftContext(
+				self.activeSchoolId,
+				event,
+				self.getInitResults.bind(self, event)
+			);
+			event.results = TeamHelper.callFunctionForRightContext(
+				self.activeSchoolId,
+				event,
+				self.getInitResults.bind(self, event)
+			);
+		}
+		// backup results
+		// we need default state of results for revert event result changes
+		// when user click to cancel button(in close event mode)
+		event.initResults = event.results;
 	},
 	getInitResults: function(event, teamBundleName, order) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const self = this;
 
 		let	scoreBundleName,
 			resultIdFieldName,
@@ -137,19 +124,19 @@ const EventView = React.createClass({
 				scoreBundleName			= 'schoolScore';
 				resultIdFieldName		= 'schoolId';
 				dataBundleIdFieldName	= 'id';
-				dataBundle				=  binding.toJS(`${teamBundleName}`);
+				dataBundle				= event[teamBundleName];
 				break;
 			case 'housesData':
 				scoreBundleName			= 'houseScore';
 				resultIdFieldName		= 'houseId';
 				dataBundleIdFieldName	= 'id';
-				dataBundle				=  binding.toJS(`${teamBundleName}`);
+				dataBundle				= event[teamBundleName];
 				break;
 			case 'teamsData':
 				scoreBundleName			= 'teamScore';
 				resultIdFieldName		= 'teamId';
 				dataBundleIdFieldName	= 'id';
-				dataBundle				=  binding.toJS(`${teamBundleName}`);
+				dataBundle				= event[teamBundleName];
 				break;
 			case 'individualsData':
 				scoreBundleName			= 'individualScore';
@@ -174,18 +161,7 @@ const EventView = React.createClass({
 			}
 		}
 
-		console.log(event);
 		return event.results;
-	},
-	getSchoolsData: function(event) {
-		const schoolsDara = [];
-
-		schoolsDara.push(event.inviterSchool);
-		event.invitedSchools.forEach((s) => {
-			schoolsDara.push(s);
-		});
-
-		return schoolsDara;
 	},
 	/**Init model for Tabs component*/
 	initTabs: function() {
@@ -256,7 +232,7 @@ const EventView = React.createClass({
 	 * Initialize data for menu items
 	 * @private
 	 */
-	_initMenuItems: function() {
+	initMenuItems: function() {
 		const	self	= this,
 				eventId	= self.getMoreartyContext().getBinding().get('routing.pathParameters.0');
 
@@ -303,8 +279,6 @@ const EventView = React.createClass({
 			default:	binding.sub('eventTeams'),
 			activeTab:	binding.sub('activeTab'),
 			event:		binding.sub('model'),
-			points:		binding.sub('points'),
-			schoolInfo:	binding.sub('schoolInfo'),
 			mode:		binding.sub('mode')
 		};
 	},

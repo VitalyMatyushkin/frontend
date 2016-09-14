@@ -176,7 +176,7 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	currentSchoolId	= binding.toJS(`schoolsData.${order}.id`);
+		const	currentSchoolId	= binding.toJS(`model.schoolsData.${order}.id`);
 
 		let scoreData= event.results.schoolScore.find(s => s.schoolId === currentSchoolId);
 
@@ -193,7 +193,7 @@ const EventRival = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	currentHouseId = binding.toJS(`housesData.${order}.id`);
+		const	currentHouseId = binding.toJS(`model.housesData.${order}.id`);
 
 		let scoreData= event.results.houseScore.find(s => s.houseId === currentHouseId);
 
@@ -207,8 +207,8 @@ const EventRival = React.createClass({
 		return scoreData;
 	},
 	getIndividualScoreData: function(event, order) {
-		const	currentPlayer = event.individualsData[order];
-		let scoreData = event.results.individualScore.find(s => s.userId === currentPlayer.userId);
+		const	currentPlayer	= event.individualsData[order];
+		let		scoreData		= event.results.individualScore.find(s => s.userId === currentPlayer.userId);
 
 		if(!scoreData) {
 			scoreData = {
@@ -345,15 +345,13 @@ const EventRival = React.createClass({
 				binding	= self.getDefaultBinding();
 		let		body	= null;
 
-		const	rivals		= binding.get('rivals'),
-				sportName	= binding.get('sport.name'),
+		const	event		= binding.toJS('model'),
+				sportName	= event.sport.name,
 				sportIcon	= self.getSportIcon(sportName),
-				event		= binding.toJS('model'),
 				eventType	= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
 
 		const isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 
-		console.log(sportIcon);
 		if(isEventWithOneIndividualTeam) {
 			body = (
 				<div className="bEventInfo">
