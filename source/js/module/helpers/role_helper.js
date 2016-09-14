@@ -15,6 +15,14 @@ const RoleHelper = {
 		STUDENT:	'STUDENT',
 		PARENT:		'PARENT'
 	},
+	SERVER_ROLE_FOR_CLIENT:{
+		ADMIN:		'ADMIN',
+		MANAGER:	'MANAGER',
+		TEACHER:	'TEACHER',
+		TRAINER:	'COACH',
+		STUDENT:	'STUDENT',
+		PARENT:		'PARENT'
+	},
 	/**
 	 * Return role of logged in user
 	 * @param self

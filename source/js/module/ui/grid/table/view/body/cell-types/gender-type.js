@@ -2,29 +2,29 @@
  * Created by Anatoly on 21.07.2016.
  */
 
-const 	SVG 	= require('module/ui/svg'),
-		React 	= require('react');
+const 	React		= require('react'),
+		GenderIcon	= require('module/ui/icons/gender_icon');
 
-const GeneralType = React.createClass({
+const GenderType = React.createClass({
 	propTypes: {
 		cell: 		React.PropTypes.object.isRequired,
 		dataItem:	React.PropTypes.object.isRequired
 	},
 	getGender: function (gender) {
-		const icon = gender === 'MALE' ? 'icon_man': 'icon_woman';
-
-		return <SVG classes="bIcon-gender" icon={icon} />;
+		if(gender) {
+			return <GenderIcon classes="bIcon-gender" gender={gender}/>;
+		} else
+			return null;
 	},
 	render: function() {
-		const 	value 	= this.props.cell.getValue(this.props.dataItem),
-				result 	= value ? this.getGender(value) : null;
+		const 	value 	= this.props.cell.getValue(this.props.dataItem);
 
 		return (
 			<div className="eDataList_listItemCell">
-				{result}
+				{this.getGender(value)}
 			</div>
 		);
 	}
 });
 
-module.exports = GeneralType;
+module.exports = GenderType;

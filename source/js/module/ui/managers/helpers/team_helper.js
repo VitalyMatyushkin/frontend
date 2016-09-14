@@ -531,15 +531,15 @@ function isHouseHaveIndividualPlayers(event, houseId) {
  *
  * */
 function getRival(event, activeSchoolId, forLeftContext){
-	const	teamBundles		= getTeamBundles(event),				// houseData + schoolData + teams in one object...
-			schoolsData		= teamBundles.schoolsData,
-			housesData		= teamBundles.housesData,
-			teamsData		= teamBundles.teamsData,
-			individData 	= event.individualsData,
-			isTeam 			= isTeamSport(event),				// include TEAM and 2x2
-			isOneOnOne 		= isOneOnOneSport(event),
-			isIndividual 	= isIndividualSport(event),
-			index 			= forLeftContext ? 0 : 1,
+	const	teamBundles			= getTeamBundles(event),			// houseData + schoolData + teams in one object...
+			schoolsData			= teamBundles.schoolsData,
+			housesData			= teamBundles.housesData,
+			teamsData			= teamBundles.teamsData,
+			individData 		= event.individualsData,
+			isTeam 				= isTeamSport(event),				// include TEAM and 2x2
+			isOneOnOne 			= isOneOnOneSport(event),
+			isIndividual 		= isIndividualSport(event),
+			index 				= forLeftContext ? 0 : 1,
 			isInterSchoolsEvent = EventHelper.isInterSchoolsEvent(event),
 			isHousesEvent 		= EventHelper.isHousesEvent(event),
 			isInternalEvent 	= EventHelper.isInternalEvent(event);
@@ -552,7 +552,7 @@ function getRival(event, activeSchoolId, forLeftContext){
 	/**get rival name (team or student)*/
 	switch(true){
 		case isTeam:
-			if(activeSchoolId){
+			if(activeSchoolId && isInterSchoolsEvent){
 				team = forLeftContext ? teamsData.find(t => t.schoolId === activeSchoolId)
 					: teamsData.find(t => t.schoolId !== activeSchoolId);
 			} else{
@@ -561,7 +561,7 @@ function getRival(event, activeSchoolId, forLeftContext){
 			name = team ? team.name : '';
 			break;
 		case isOneOnOne:
-			if(activeSchoolId){
+			if(activeSchoolId && isInterSchoolsEvent){
 				student = forLeftContext ? individData.find(t => t.schoolId === activeSchoolId)
 					: individData.find(t => t.schoolId !== activeSchoolId);
 			} else{
@@ -605,16 +605,18 @@ function getRival(event, activeSchoolId, forLeftContext){
 			from = house ? house.name : '';
 			break;
 		case isInternalEvent:
-			from = name && activeSchoolId ? '' : isIndividual ? 'individual':
-						schoolsData.length ? schoolsData[0].name : 'n/a';
+			from = isIndividual ? 'individual':	schoolsData.length ? schoolsData[0].name : 'n/a';
 			break;
 	}
+
+	const 	onlyFrom = !name || isIndividual,
+			onlyName = activeSchoolId && (forLeftContext && isInterSchoolsEvent || isInternalEvent);
 
 	return {
 		name:name,
 		from:from,
 		schoolPic: school ? school.pic : schoolsData.length ? schoolsData[0].pic : null,
-		value: !name ? from : forLeftContext && activeSchoolId && !isHousesEvent ? name : `${name} [${from}]`
+		value: onlyFrom ? from : onlyName ? name : `${name} [${from}]`
 	};
 }
 function getRivalForLeftContext(event, activeSchoolId){

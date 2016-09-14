@@ -1,0 +1,25 @@
+/**
+ * Created by wert on 13.09.16.
+ */
+
+const React = require('react');
+
+/** Just Button. Buttons are clickable and have some text inside.
+ * Maybe it should also take children for displaying icons or something like that, but we don't use it now,
+ * so feel free to add if need.
+ **/
+function Button(props) {
+	const 	extraStyleClasses = props.extraStyleClasses || '',
+			className = `bButton ${extraStyleClasses}`;
+
+	return <a className={className} href={props.href} onClick={props.onClick}>{props.text}</a>;
+}
+
+Button.propTypes = {
+	text: 				React.PropTypes.string,		// text to display in button
+	onClick:			React.PropTypes.func,		// function to be called on click
+	href:				React.PropTypes.string,		// hyperlink if need
+	extraStyleClasses: 	React.PropTypes.string 		// if one need to add extra styles to button.
+};
+
+module.exports = Button;

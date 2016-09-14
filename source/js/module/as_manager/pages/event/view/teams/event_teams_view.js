@@ -1,5 +1,6 @@
 const	If					= require('module/ui/if/if'),
 		SVG					= require('module/ui/svg'),
+		GenderIcon			= require('module/ui/icons/gender_icon'),
 		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
@@ -406,17 +407,14 @@ const EventTeamsView = React.createClass({
 		const self = this;
 
 		return players.map((player, playerIndex) => {
-			const isMale = player.gender === userConst.GENDER.MALE;
-
-			const mode = self.getBinding('mode').toJS();
-
-			const event = self.getBinding('event').toJS();
+			const 	mode	= self.getBinding('mode').toJS(),
+					event	= self.getBinding('event').toJS();
 
 			return (
 				<div key={playerIndex} className="_bPlayer _mMini">
 					<If condition={mode !== 'closing' && isOwner}>
 						<span className="ePlayer_gender">
-							{isMale ? <SVG icon="icon_man" /> : <SVG icon="icon_woman" />}
+							<GenderIcon gender={player.gender}/>
 						</span>
 					</If>
 					<span className="ePlayer_name">

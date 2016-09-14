@@ -5,6 +5,7 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
+		GenderIcon		= require('module/ui/icons/gender_icon'),
 		Sport           = require('module/ui/icons/sport_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
 		GridModel 		= require('module/ui/grid/grid-model');
@@ -69,23 +70,7 @@ TeamListModel.prototype = {
 		return result;
 	},
 	_getGender: function (item) {
-		const gender = item.gender;
-		let icon;
-		switch (gender) {
-			case 'MALE_ONLY':
-				icon = 'icon_man';
-				break;
-			case 'FEMALE_ONLY':
-				icon = 'icon_woman';
-				break;
-			case 'MIXED':
-				icon = 'icon_mixed';
-				break;
-			default:
-				icon = '';
-				break;
-		}
-		return <SVG classes="bIcon-gender" icon={icon} />;
+		return <GenderIcon classes="bIcon-gender" gender={item.gender}/>;
 	},
 	getGenders:function(){
 		return [

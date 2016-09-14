@@ -3,7 +3,9 @@ const   classNames      = require('classnames'),
         SVG             = require('module/ui/svg'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
         Morearty		= require('morearty'),
-        Sport           = require('module/ui/icons/sport_icon');
+		Button			= require('module/ui/button/button'),
+        SportIcon		= require('module/ui/icons/sport_icon'),
+		GenderIcon		= require('module/ui/icons/gender_icon');
 
 const InviteView = React.createClass({
     mixins: [Morearty.Mixin],
@@ -24,21 +26,7 @@ const InviteView = React.createClass({
         }
     },
     getSportIcon:function(sport){
-        return <Sport name={sport} className="bIcon_invites" ></Sport>;
-    },
-    getGenderIcon:function(gender){
-        if(gender !== undefined){
-            var icon;
-            switch (gender){
-                case 'female':
-                    icon = <SVG classes="bIcon_invites" icon="icon_woman"></SVG>;
-                    break;
-                default:
-                    icon = <SVG classes="bIcon_invites" icon="icon_man"></SVG>;
-                    break;
-            }
-            return icon;
-        }
+        return <SportIcon name={sport} className="bIcon_invites" />;
     },
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
@@ -70,13 +58,14 @@ const InviteView = React.createClass({
                 schoolPicture   = self.getParticipantEmblem(rival),
                 sport           = self.getSportIcon(binding.get('sport.name')),
                 ages            = binding.get('event.ages'),
-                gender          = self.getGenderIcon(binding.get('event.gender')),
+                gender          = <GenderIcon classes='bIcon_invites' gender={binding.get('event.gender')}/>,
                 message         = binding.get('message') || '',
                 accepted        = binding.get('status') === 'ACCEPTED',
                 eventDate       = (new Date(binding.get('event.startTime'))),
                 startDate       = eventDate.toLocaleDateString(),
                 hours           = self.addZeroToFirst(eventDate.getHours()),
-                minutes         = self.addZeroToFirst(eventDate.getMinutes());
+                minutes         = self.addZeroToFirst(eventDate.getMinutes()),
+				inviteId		= binding.get('id');
 
         let status;
 
@@ -113,12 +102,9 @@ const InviteView = React.createClass({
                         {isArchive ? <span className={'m'+status}>{status}</span>: null}
                     </div>
                     <div className="eInvite_buttons">
-                        {isInbox ?
-                            <a href={'/#invites/' + binding.get('id') + '/accept'} className="bButton">Accept</a> : null}
-                        {isInbox ? <a href={'/#invites/' + binding.get('id') + '/decline'}
-                                      className="bButton mRed">Decline</a> : null}
-                        {isOutBox ? <a href={'/#invites/' + binding.get('id') + '/cancel'}
-                                       className="bButton mRed">Cancel</a> : null}
+                        {isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}/> : null }
+                        {isInbox ? <Button href={`/#invites/${inviteId}/decline`} text={'Decline'} extraStyleClasses={'mRed'}/> : null }
+                        {isOutBox ? <Button href={`/#invites/${inviteId}/cancel`} text={'Cancel'} extraStyleClasses={'mRed'}/> : null }
                     </div>
                 </div>
             </div>

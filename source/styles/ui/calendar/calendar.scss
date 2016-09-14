@@ -79,9 +79,9 @@ $border-color: #c2c2c2;
       background: $blueColor url('/images/today_calendar_day.png') center;
     }
     &.mActive {
-      background: #fff url('/images/today_calendar_day.png') center;
+      background: #b2d7ec url('/images/today_calendar_day.png') center;
       &:hover {
-      color: #8c8c8c;
+
       }
     }
   }
@@ -96,8 +96,8 @@ $border-color: #c2c2c2;
     }
   }
   &.mActive {
-    background: #ebebeb;
-    color: #8c8c8c;
+    background: #b2d7ec;;
+    color: $blueColor;
     &:hover {
       border-color: #0079be;
       color: #0079be;

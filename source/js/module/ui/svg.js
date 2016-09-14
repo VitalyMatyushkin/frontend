@@ -7,16 +7,16 @@ const   React       = require('react'),
 
 const SVG = React.createClass({
 	propTypes: {
-		icon: React.PropTypes.string.isRequired,
-        classes: React.PropTypes.string
+		icon: 		React.PropTypes.string.isRequired,
+        classes: 	React.PropTypes.string
 	},
 	componentDidMount: function() {
 		var self = this;
 		ReactDOM.findDOMNode(self).firstElementChild.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + self.props.icon);
 	},
 	render: function() {
-		var self = this,
-            classes = self.props.classes ? 'bIcon ' + self.props.classes : 'bIcon';
+		const 	self	= this,
+            	classes = self.props.classes ? 'bIcon ' + self.props.classes : 'bIcon';
 
 		return <svg className={classes}>{React.createElement('use')}</svg>;
 	}
