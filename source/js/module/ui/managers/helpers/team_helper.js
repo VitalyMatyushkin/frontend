@@ -272,23 +272,6 @@ function getSportById(sportId, sports) {
 	return Lazy(sports).findWhere({id: sportId});
 };
 
-/**
- * Convert server points model to client points model
- * Server points model [userId:{score, teamId}, userId:{score, teamId},...] - hash map
- * Client points model [{userId, score, teamId}, {userId, score, teamId}] - array
- */
-function convertPointsToClientModel(serverPointsModel) {
-	const clientPointsModel = [];
-
-	for(let key in serverPointsModel) {
-		clientPointsModel.push(
-			Object.assign({}, serverPointsModel[key], {userId: key})
-		);
-	}
-
-	return clientPointsModel;
-};
-
 function getFilterGender(gender) {
 	switch (gender) {
 		case 'maleOnly':
@@ -1181,7 +1164,6 @@ const TeamHelper = {
 	injectFormsToPlayers:					injectFormsToPlayers,
 	injectTeamIdToPlayers:					injectTeamIdToPlayers,
 	isTeamEnableForEdit:					isTeamEnableForEdit,
-	convertPointsToClientModel:				convertPointsToClientModel,
 	convertPlayersToServerValue:			convertPlayersToServerValue,
 	convertGenderToServerValue:				convertGenderToServerValue,
 	getBodyForAddPlayersRequest:			getBodyForAddPlayersRequest,

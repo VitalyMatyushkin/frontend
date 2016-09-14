@@ -101,9 +101,9 @@ const EventTeamsPerformance = React.createClass({
 		const self = this;
 
 		const	event			= self.getBinding('event').toJS(),
-			eventType		= event.eventType,
-			teamsData		= event.teamsData,
-			activeSchoolId	= self.getActiveSchoolId();
+				eventType		= event.eventType,
+				teamsData		= event.teamsData,
+				activeSchoolId	= self.getActiveSchoolId();
 
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
@@ -167,9 +167,9 @@ const EventTeamsPerformance = React.createClass({
 		const self = this;
 
 		const	event			= self.getBinding('event').toJS(),
-			eventType		= event.eventType,
-			teamsData		= event.teamsData,
-			activeSchoolId	= self.getActiveSchoolId();
+				eventType		= event.eventType,
+				teamsData		= event.teamsData,
+				activeSchoolId	= self.getActiveSchoolId();
 
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
@@ -378,8 +378,8 @@ const EventTeamsPerformance = React.createClass({
 		if(playersBinding) {
 			const	event	= self.getBinding('event').toJS(),
 					isOwner	= event.eventType === 'inter-schools' ?
-					event.teamsData[order].schoolId === self.getActiveSchoolId() :
-						true;
+						event.teamsData[order].schoolId === self.getActiveSchoolId() :
+							true;
 
 			players = self.renderPlayers(
 				playersBinding.toJS(),
