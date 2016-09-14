@@ -85,6 +85,7 @@ $border-color: #c2c2c2;
   vertical-align: top;
 }
 .eChallenge_score {
+  padding-top: 5px;
   text-align: center;
   width: 10%;
 }
@@ -102,6 +103,7 @@ $border-color: #c2c2c2;
 }
 
 .eChallenge_childName{
+  padding-top: 5px;
   width: 20%;
 }
 .eChildFixturesAll {
@@ -109,6 +111,10 @@ $border-color: #c2c2c2;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+
+  .eChallenge_name {
+    width: 35%;
+  }
 }
 .bParentsPage .eEvents_calendar,
 .bParentsPage .bChallenges {
