@@ -23,10 +23,7 @@ function GenderIcon(props) {
 			return <SVG classes={classes} icon="icon_man"/>;
 		case gender === ALLOWED_GENDERS.MIXED:
 			// it can be one icon, but we don't have such an icon
-			return <div>
-				<SVG classes={classes} icon="icon_man"/>
-				<SVG classes={classes} icon="icon_woman"/>
-			</div>;
+			return <SVG classes={classes} icon="icon_mixed"/>;
 		default:
 			return <SVG classes={classes} icon="icon_man"/>;
 	}

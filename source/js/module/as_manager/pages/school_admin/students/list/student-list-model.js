@@ -5,6 +5,7 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
+		GenderIcon		= require('module/ui/icons/gender_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
@@ -56,12 +57,10 @@ StudentListModel.prototype = {
 		const parents = item.parents;
 
 		if (parents) {
-			return parents ? parents.map(function (parent) {
-				var iconGender = parent.gender === 'male' ? 'icon_man' : 'icon_woman';
-
+			return parents ? parents.map( parent => {
 				return (
 					<div className="eDataList_parent">
-						<span className="eDataList_parentGender"><SVG icon={iconGender}/></span>
+						<span className="eDataList_parentGender"><GenderIcon gender={parent.gender}/></span>
 						<span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
 					</div>
 				);
