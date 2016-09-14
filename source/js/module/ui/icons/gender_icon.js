@@ -14,24 +14,27 @@ const 	React			= require('react'),
  * to show icons always right
  **/
 function GenderIcon(props) {
-	const gender = props.gender;
+	const 	gender 	= props.gender,
+			classes	= props.classes;
 	switch (true){
 		case gender === ALLOWED_GENDERS.FEMALE_ONLY || gender === GENDERS.FEMALE:
-			return <SVG classes="bIcon_invites" icon="icon_woman"/>;
+			return <SVG classes={classes} icon="icon_woman"/>;
 		case gender === ALLOWED_GENDERS.MALE_ONLY || gender === GENDERS.MALE:
-			return <SVG classes="bIcon_invites" icon="icon_man"/>;
+			return <SVG classes={classes} icon="icon_man"/>;
 		case gender === ALLOWED_GENDERS.MIXED:
+			// it can be one icon, but we don't have such an icon
 			return <div>
-				<SVG key={'man'} classes="bIcon_invites" icon="icon_man"/>
-				<SVG key={'woman'} classes="bIcon_invites" icon="icon_woman"/>
+				<SVG classes={classes} icon="icon_man"/>
+				<SVG classes={classes} icon="icon_woman"/>
 			</div>;
 		default:
-			return <SVG classes="bIcon_invites" icon="icon_man"/>;
+			return <SVG classes={classes} icon="icon_man"/>;
 	}
 }
 
 GenderIcon.propTypes = {
-	gender:	React.PropTypes.string.isRequired
+	gender:		React.PropTypes.string.isRequired,
+	classes:	React.PropTypes.string 				// css classes to pass to underlying SVG
 };
 
 

@@ -58,7 +58,7 @@ const InviteView = React.createClass({
                 schoolPicture   = self.getParticipantEmblem(rival),
                 sport           = self.getSportIcon(binding.get('sport.name')),
                 ages            = binding.get('event.ages'),
-                gender          = <GenderIcon gender={binding.get('event.gender')}/>,
+                gender          = <GenderIcon classes='bIcon_invites' gender={binding.get('event.gender')}/>,
                 message         = binding.get('message') || '',
                 accepted        = binding.get('status') === 'ACCEPTED',
                 eventDate       = (new Date(binding.get('event.startTime'))),
