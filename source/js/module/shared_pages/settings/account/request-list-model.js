@@ -1,5 +1,5 @@
 /**
- * Created by Anatoly on 13.09.2016.
+ * Created by Anatoly on 14.09.2016.
  */
 
 const 	DataLoader 		= require('module/ui/grid/data-loader'),
