@@ -36,8 +36,8 @@ const TypePhone =  React.createClass({
         if(!value)
             return;
 
-        if(value.indexOf('0') === 0)
-            value = value.replace('0', '');
+        if(value.indexOf('+440') === 0)
+            value = value.replace('+440', '+44');
 
         if(value.indexOf('+7') === 0)
             cc = '+7';

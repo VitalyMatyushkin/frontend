@@ -156,7 +156,7 @@ RequestListModel.prototype = {
 			actionPanel:{
 				title:'Profile Requests',
 				showStrip:true,
-				hideBtnFilter:true,
+				hideBtnFilter:true, 	//hide the filter button, because on the server for profileRequests does not include filters.
 				btnAdd:this.btnAdd
 			},
 			columns:this.columns,
