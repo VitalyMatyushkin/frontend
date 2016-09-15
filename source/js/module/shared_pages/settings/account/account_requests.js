@@ -95,7 +95,6 @@ const AccountRequests = React.createClass({
     getTableView:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            rootBinding = self.getMoreartyContext().getBinding(),
             schools = binding.get('schools');
 
         return (

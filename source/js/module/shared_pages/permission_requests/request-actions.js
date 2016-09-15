@@ -155,6 +155,17 @@ RequestActions.prototype = {
 				}
 			},
 			{
+				text:'Date',
+				isSorted:true,
+				cell:{
+					dataField:'createdAt',
+					type:'date'
+				},
+				filter:{
+					type:'between-date'
+				}
+			},
+			{
 				text:'Name',
 				isSorted:true,
 				cell:{
@@ -185,29 +196,22 @@ RequestActions.prototype = {
 					type:'string'
 				}
 			},
-			{
-				text:'Birthday',
-				hidden:true,
-				cell:{
-					dataField:'requester.birthday',
-					type:'date'
-				},
-				filter:{
-					type:'between-date'
-				}
-			},
+			//{
+			//	text:'Birthday',
+			//	hidden:true,
+			//	cell:{
+			//		dataField:'requester.birthday',
+			//		type:'date'
+			//	},
+			//	filter:{
+			//		type:'between-date'
+			//	}
+			//},
 			{
 				text:'Role',
 				isSorted:true,
 				cell:{
 					dataField:'requestedPermission.preset'
-				}
-			},
-			{
-				text:'Role',
-				hidden:true,
-				cell:{
-					dataField:'preset'
 				},
 				filter:{
 					type:'multi-select',
