@@ -25,6 +25,7 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			model: {},
+			albums: [],
 			sync: false,
 			mode: 'general',
 			showingComment: false,
@@ -75,7 +76,6 @@ const EventView = React.createClass({
 			binding
 				.atomically()
 				.set('model',	Immutable.fromJS(event))
-				.set('albums',	Immutable.fromJS([]))
 				.set('mode',	Immutable.fromJS('general'))
 				.set('sync',	Immutable.fromJS(true))
 				.commit();
