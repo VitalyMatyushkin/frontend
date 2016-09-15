@@ -12,7 +12,7 @@ const RoleSelector = React.createClass({
 		const availableRoles = self.props.availableRoles;
 
 		if(availableRoles.length == 1) {
-			self.redirectToStartPage(availableRoles[0]);
+			self.onRoleSelected(availableRoles[0]);
 		}
 		if(availableRoles.length === 0){
 			self.redirectToStartPage('no_body');
@@ -52,9 +52,6 @@ const RoleSelector = React.createClass({
 		const availableRoles = this.props.availableRoles;
 		if(availableRoles.length > 1) {	// not drawing roles if there is only one. It will be selected automatically
 			return <RSC availableRoles={availableRoles} onRoleSelected={this.onRoleSelected}/>;
-		}
-		if(availableRoles.length === 1) {
-			this.onRoleSelected(availableRoles[0])
 		}
 		return null;
 	}
