@@ -57,7 +57,7 @@ const TypePhone =  React.createClass({
     },
     clearPhone:function(phone){
 		/** remove 0 before phone number */
-		if(phone.indexOf('+440') === 0)
+		if(phone && phone.indexOf('+440') === 0)
 			phone = phone.replace('+440', '+44');
 
 		//Stops error being thrown when phone is null and replace method is being invoked
