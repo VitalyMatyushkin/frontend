@@ -703,10 +703,16 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 					return cb('individualsData', 0);
 				}
 			} else if(TeamHelper.isTeamSport(event)) {
+				// for team sport show house[0] or team for house[0] on left side - ALWAYS!
 				if(teamsData.length === 0) {
 					return cb('housesData', 0);
 				} else if (teamsData.length === 1) {
-					return cb('teamsData', 0);
+					const foundIndex = teamsData.findIndex(t => t.houseId === housesData[0].id);
+					if(foundIndex !== -1) {
+						return cb('teamsData', foundIndex);
+					} else {
+						return cb('housesData', 0);
+					}
 				} else if (teamsData.length === 2) {
 					return cb(
 						'teamsData',
@@ -797,13 +803,16 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 					return cb('individualsData', 1);
 				}
 			} else if(TeamHelper.isTeamSport(event)) {
+				// for team sport show house[1] or team for house[1] on right side - ALWAYS!
 				if(teamsData.length === 0) {
 					return cb('housesData', 1);
 				} else if (teamsData.length === 1) {
-					return cb(
-						'housesData',
-						teamsData[0].id === housesData[0].id ? 0 : 1
-					);
+					const foundIndex = teamsData.findIndex(t => t.houseId === housesData[1].id);
+					if(foundIndex !== -1) {
+						return cb('teamsData', foundIndex);
+					} else {
+						return cb('housesData', 1);
+					}
 				} else if (teamsData.length === 2) {
 					return cb(
 						'teamsData',
