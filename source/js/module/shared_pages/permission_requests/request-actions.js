@@ -123,6 +123,17 @@ RequestActions.prototype = {
 	setColumns: function(){
 		this.columns = [
 			{
+				text:'Date',
+				isSorted:true,
+				cell:{
+					dataField:'createdAt',
+					type:'date'
+				},
+				filter:{
+					type:'between-date'
+				}
+			},
+			{
 				cell:{
 					type:'custom',
 					typeOptions:{
@@ -152,17 +163,6 @@ RequestActions.prototype = {
 						valueField:'name',
 						keyField:'id'
 					}
-				}
-			},
-			{
-				text:'Date',
-				isSorted:true,
-				cell:{
-					dataField:'createdAt',
-					type:'date'
-				},
-				filter:{
-					type:'between-date'
 				}
 			},
 			{
@@ -196,17 +196,6 @@ RequestActions.prototype = {
 					type:'string'
 				}
 			},
-			//{
-			//	text:'Birthday',
-			//	hidden:true,
-			//	cell:{
-			//		dataField:'requester.birthday',
-			//		type:'date'
-			//	},
-			//	filter:{
-			//		type:'between-date'
-			//	}
-			//},
 			{
 				text:'Role',
 				isSorted:true,
