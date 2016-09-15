@@ -36,6 +36,7 @@ const TypePhone =  React.createClass({
         if(!value)
             return;
 
+		/** remove 0 before phone number */
         if(value.indexOf('+440') === 0)
             value = value.replace('+440', '+44');
 
