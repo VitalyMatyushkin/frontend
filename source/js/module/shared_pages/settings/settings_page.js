@@ -7,7 +7,7 @@ const 	RouterView 	= require('module/core/router'),
 		GeneralPageComponent 			= require("module/shared_pages/settings/general/general_page"),
 		ChangePasswordPageComponent 	= require("module/shared_pages/settings/password/change_password_page"),
 		AccountRolesComponent 			= require("module/shared_pages/settings/account/account_roles"),
-		AccountRequestsComponent 		= require("module/shared_pages/settings/account/account_requests");
+		AccountRequestsComponent 		= require("module/shared_pages/settings/account/request-list");
 
 
 const SettingsPage = React.createClass({
