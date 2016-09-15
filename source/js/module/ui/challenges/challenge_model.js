@@ -68,7 +68,6 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 };
 
 ChallengeModel.prototype._getScore = function(){
-
 	return !this.isFinished ?  '- : -' : !this.isIndividualSport? this.scoreAr.join(' : ') : '';
 };
 
