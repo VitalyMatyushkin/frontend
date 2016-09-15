@@ -5,6 +5,7 @@
 const   StorageHelper 	= require('module/helpers/storage'),
 		Immutable   	= require('immutable');
 
+/** Authorization Services */
 const AuthorizationServices ={
     login: function(data){
         const   service = window.Server._login,
@@ -42,8 +43,10 @@ const AuthorizationServices ={
                 };
             }
 
+			/** Server not allow profile request before become */
 			return window.Server.profile.get();
         }).then(profile => {
+			/** save verification status */
 			authInfo.verified = profile.verification && profile.verification.status;
 			binding.set(Immutable.fromJS(authInfo));
 			console.log(authInfo);
