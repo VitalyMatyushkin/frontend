@@ -22,7 +22,17 @@ const AuthorizationServices ={
                     authInfo.userId = authData.userId;
 
                 binding.set(Immutable.fromJS(authInfo));
-            }
+				if(authData.userId){
+					return window.Server.roles.get().then(roles => {
+						if(roles && roles.length == 1){
+							return AuthorizationServices.become(roles[0].name);
+						}
+						else
+							return AuthorizationServices.become('NOBODY');
+					});
+				}
+
+			}
 
             return authData;
         });
