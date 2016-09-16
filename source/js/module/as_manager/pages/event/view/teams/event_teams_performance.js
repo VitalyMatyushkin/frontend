@@ -354,7 +354,6 @@ const EventTeamsPerformance = React.createClass({
 			event.results.individualPerformance[pDataIndex].value = value;
 		}
 
-		console.log(event.results.individualPerformance);
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
 	renderIndividuals: function() {
