@@ -182,7 +182,7 @@ RequestListModel.prototype = {
 	},
 	setAddButton: function() {
 		const verified = this.rootBinding.get('userData.authorizationInfo.verified'),
-			changeAllowed = verified.email && verified.sms;
+			changeAllowed = verified && verified.email && verified.sms;
 
 		/** Only verified users can add new requests. All other users should not see that button.*/
 		this.btnAdd = changeAllowed ?

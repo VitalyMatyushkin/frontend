@@ -31,24 +31,26 @@ var validationsSet = {
 		const minValue = new Date('1900-01-01'),
 			maxValue = new Date('2100-01-01');
 
-		if(!DateHelper.isValid(value)){
-			return 'Incorrect date!';
-		}
+		if(value){
+			if(!DateHelper.isValid(value)){
+				return 'Incorrect date!';
+			}
 
-		const date = new Date(value);
+			const date = new Date(value);
 
-		if(date <= minValue){
-			return 'Date should be > "01/01/1900"';
-		}
-		if(date >= maxValue){
-			return 'Date should be < "01/01/2100"';
+			if(date <= minValue){
+				return 'Date should be > "01/01/1900"';
+			}
+			if(date >= maxValue){
+				return 'Date should be < "01/01/2100"';
+			}
 		}
 
 		return false;
 	},
 	birthday:function(value){
 		let result = validationsSet.date(value);
-		if(!result){
+		if(!result && value){
 			const date = new Date(value),
 				maxDate = new Date();
 
