@@ -100,7 +100,7 @@ const EventManager = React.createClass({
 
 		// just copy new date
 		// because we don't want modify arg
-		const	newDateCopy	= new Date(newDate);
+		const	newDateCopy	= new Date(newDate.toISOString());
 
 		// default start time values
 		let		hours			= 10,
@@ -122,9 +122,9 @@ const EventManager = React.createClass({
 		newDateCopy.setMinutes(minute);
 
 		binding.atomically()
-			.set('model.startTime',				newDateCopy)
-			.set('model.startRegistrationTime',	newDateCopy)
-			.set('model.endRegistrationTime',	newDateCopy)
+			.set('model.startTime',				newDateCopy.toISOString())
+			.set('model.startRegistrationTime',	newDateCopy.toISOString())
+			.set('model.endRegistrationTime',	newDateCopy.toISOString())
 			.commit();
 	},
 	toNext: function () {
