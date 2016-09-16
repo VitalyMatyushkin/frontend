@@ -215,8 +215,8 @@ RequestListModel.prototype = {
 		}
 	},
 	handleAddNewButtonClick:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
+
 		binding.set('popup',true);
 	},
 	_closePopup:function(){
