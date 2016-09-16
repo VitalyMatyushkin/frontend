@@ -892,7 +892,7 @@ function convertPoints(countPoints, pointsType){
 
 		result += h ? h + 'h ': '';
 		result += min ? min + 'min ': '';
-		result += sec ? sec + 'sec': '';
+		result += sec || countPoints === 0 ? sec + 'sec': '';
 		
 		return {
 			h:h,
@@ -913,7 +913,7 @@ function convertPoints(countPoints, pointsType){
 
 		result += km ? km + 'km ': '';
 		result += m ? m + 'm ': '';
-		result += cm ? cm + 'cm': '';
+		result += cm || countPoints === 0 ? cm + 'cm': '';
 
 		return {
 			km:km,
