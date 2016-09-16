@@ -156,7 +156,7 @@ RequestListModel.prototype = {
 			actionPanel:{
 				title:'Profile Requests',
 				showStrip:true,
-				hideBtnFilter:true,
+				hideBtnFilter:true, 	//hide the filter button, because on the server for profileRequests does not include filters.
 				btnAdd:this.btnAdd
 			},
 			columns:this.columns,
@@ -182,7 +182,7 @@ RequestListModel.prototype = {
 	},
 	setAddButton: function() {
 		const verified = this.rootBinding.get('userData.authorizationInfo.verified'),
-			changeAllowed = verified.email && verified.sms;
+			changeAllowed = verified && verified.email && verified.sms;
 
 		/** Only verified users can add new requests. All other users should not see that button.*/
 		this.btnAdd = changeAllowed ?
