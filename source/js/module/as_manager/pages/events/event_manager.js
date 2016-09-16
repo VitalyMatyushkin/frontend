@@ -93,24 +93,39 @@ const EventManager = React.createClass({
 
 		binding.clear();
 	},
-	onSelectDate: function (date) {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			time, minute = 0, hours = 10,
-			_date = new Date(date.toISOString());
+	onSelectDate: function (newDate) {
+		// TODO Why do we store date in ISO format?
+		const	self = this,
+				binding = self.getDefaultBinding();
 
-		if (binding.get('model.startTime')) {
-			time = new Date(binding.get('model.startTime'));
+		// just copy new date
+		// because we don't want modify arg
+		const	newDateCopy	= new Date(newDate);
+
+		// default start time values
+		let		hours			= 10,
+				minute			= 0;
+		const	currStartDate	= binding.toJS('model.startTime');
+		// get start time values(hours and minutes) from current start time if current start time isn't undefined
+		if (
+			typeof currStartDate !== 'undefined' &&
+			currStartDate !== null
+		) {
+			const	time	= new Date(currStartDate);
+
 			minute = time.getMinutes();
 			hours = time.getHours();
 		}
 
-		_date.setMinutes(minute);
-		_date.setHours(hours);
+		// set hours and minutes
+		newDateCopy.setHours(hours);
+		newDateCopy.setMinutes(minute);
 
-		binding.set('model.startTime', _date.toISOString());
-		binding.set('model.startRegistrationTime', _date.toISOString());
-		binding.set('model.endRegistrationTime', _date.toISOString());
+		binding.atomically()
+			.set('model.startTime',				newDateCopy)
+			.set('model.startRegistrationTime',	newDateCopy)
+			.set('model.endRegistrationTime',	newDateCopy)
+			.commit();
 	},
 	toNext: function () {
 		var self = this,
@@ -464,7 +479,7 @@ const EventManager = React.createClass({
 								/>
 								{
 									binding.get('model.startTime') ?
-										<TimePicker binding={binding.sub('model.startTime')}/>:
+										<TimePicker binding={binding.sub('model.startTime')}/> :
 										null
 								}
 							</div>

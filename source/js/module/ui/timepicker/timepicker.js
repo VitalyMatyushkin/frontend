@@ -47,6 +47,8 @@ const TimePicker = React.createClass({
             binding = self.getDefaultBinding(),
             startTime = new Date(binding.get());
 
+        //console.log(startTime);
+
         return (
             <div className="bTimePicker">
                 <div className="eTimePicker_box">

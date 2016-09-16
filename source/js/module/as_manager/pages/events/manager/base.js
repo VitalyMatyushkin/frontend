@@ -248,7 +248,7 @@ const EventManagerBase = React.createClass({
         return new Date(date).toLocaleDateString();
     },
     getEventTime: function(date) {
-        return new Date(date).toLocaleTimeString();
+		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
     },
 	render: function() {
 		const   self                = this,
