@@ -41,6 +41,20 @@ const TabItemDetails = React.createClass({
         // return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
         return phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
     },
+	getGender: function () {
+		const gendersArray = [
+			{
+				value: 'Male',
+				id: 'MALE'
+			},
+			{
+				value: 'Female',
+				id: 'FEMALE'
+			}
+		];
+
+		return Promise.resolve(gendersArray);
+	},
     render:function(){
         var self = this,
             binding = self.getDefaultBinding();
@@ -53,9 +67,9 @@ const TabItemDetails = React.createClass({
                     <FormColumn>
                         <FormField type="text" field="firstName" validation="required">First name</FormField>
                         <FormField type="text" field="lastName" validation="required">Surname</FormField>
+						<FormField type="radio" field="gender" sourcePromise={self.getGender}>Gender</FormField>
                         <FormField type="text" field="email" validation="email server">Email</FormField>
                         <FormField type="phone" field="phone" validation="server" onPrePost={self.getPhone}>Mobile phone</FormField>
-                        <FormField type="dropdown" field="status" userActiveState="Active" userProvidedOptions={['Active','Blocked']}>Status</FormField>
                     </FormColumn>
                 </Form>
             </div>

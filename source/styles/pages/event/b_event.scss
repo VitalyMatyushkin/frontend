@@ -3,7 +3,7 @@
   box-sizing: border-box;
   display: flex;
   justify-content: center;
-  max-width: 700px;
+  max-width: 1073px;
   margin: 30px auto 50px;
 }
 
@@ -18,13 +18,20 @@
   width: 100%;
 }
 
+.bEventBottomContainer {
+  box-sizing: border-box;
+  margin: 0 auto;
+  max-width: 700px;
+  width: 100%;
+}
+
 .eEvent_points {
   margin-top: 15px;
   width: 100%;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  color: $MAIN_COLOR;
+  color: $blueColor;
   font-size: 25px;
 }
 
@@ -38,9 +45,9 @@
     padding: 0;
   }
 }
-.eEvent_shadowCommentText{
+.eEvent_shadowCommentText {
   padding: 6px 0;
-  background:#eee;
+  background: #eee;
   transition: height .3s ease-out;
   box-sizing: border-box;
 }
@@ -53,51 +60,52 @@
     cursor: pointer;
   }
 }
-.bBlog_box{
-  $LinkColor:#749500;
+
+.bBlog_box {
+  $LinkColor: #749500;
 
   width: 100%;
   border-bottom: 1px solid #d7d7d7;
   margin-bottom: 10px;
   padding-bottom: 10px;
-  height:auto;
-  position:relative;
+  height: auto;
+  position: relative;
   display: flex;
 
-  .eMessageBox{
+  .eMessageBox {
     font-size: 14px;
     width: 535px;
     margin-left: 20px;
     .eUsername {
       font-weight: bold;
     }
-    .eUsername{
+    .eUsername {
       display: block;
     }
-    .eMessage, .eUsernameReply{
+    .eMessage, .eUsernameReply {
       display: inline-block;
       padding: 10px 10px 10px 0;
       line-height: 16px;
     }
-    .eUsername, .eUsernameReply{
-      color: $MAIN_COLOR;
+    .eUsername, .eUsernameReply {
+      color: $blueColor;
     }
   }
 }
 .bBlog_box.mNewComment {
   border: none;
 }
-.ePicBox{
-  width:45px;
+.ePicBox {
+  width: 45px;
   height: 45px;
   border-radius: 50%;
   overflow: hidden;
 }
-.cancel{
-  background-color:#cccccc;
+.cancel {
+  background-color: #cccccc;
   text-align: center;
 }
-.cancel:hover:before{
+.cancel:hover:before {
   content: '';
   position: absolute;
   left: 0;
@@ -108,10 +116,10 @@
   box-shadow: 0 2px 0 0 darken(#cccccc, 10%);
   border-radius: 4px;
 }
-.cancel:active{
-  background-color:#cccccc;
+.cancel:active {
+  background-color: #cccccc;
 }
-.cancel:active:before{
+.cancel:active:before {
   content: '';
   position: absolute;
   left: 0;
@@ -124,7 +132,7 @@
   top: 2px;
   box-shadow: 0px -2px 0 0 darken(#cccccc, 10%);
 }
-.eEvent_blog{
+.eEvent_blog {
   position: relative;
   -webkit-transition: height 3s;
   -moz-transition: height 3s;
@@ -133,11 +141,11 @@
   transition: height 3s;
   height: auto;
 }
-.bBlog_timestamp{
+.bBlog_timestamp {
   color: #919191;
   font-size: 11px;
 }
-.bBlog_textArea_container{
+.bBlog_textArea_container {
   -webkit-transition: display 13s;
   -moz-transition: display 3s;
   -ms-transition: display 3s;
@@ -145,42 +153,41 @@
   transition: display 13s;
   margin-bottom: 20px;
 }
-.bBlogMain{
-  position:relative;
+.bBlogMain {
+  position: relative;
   max-width: 700px;
   width: 100%;
   box-sizing: border-box;
 
-  .bEventButtons{
+  .bEventButtons {
     justify-content: flex-start;
     padding-left: 65px;
   }
 }
-.bBlogMain .bEventHeader{
+.bBlogMain .bEventHeader {
   border: none;
   background: transparent;
   color: $COLOR;
   height: auto;
   margin: 0;
 }
-.bBlogMain .eEventHeader_field.mDate{
+.bBlogMain .eEventHeader_field.mDate {
   font-size: 16px
 }
-.bBlogMain .eEventHeader_field{
+.bBlogMain .eEventHeader_field {
   width: auto;
 }
 .bBlogMain .eEventHeader_field.mName,
-.bBlogMain .eEventHeader_field.mSport
-{
+.bBlogMain .eEventHeader_field.mSport {
   display: none;
 }
-.eComment_notification{
+.eComment_notification {
   background: #c8cdd0;
   padding: 2px;
   text-align: center;
   display: none;
 }
-.cCollapse{
+.cCollapse {
   width: 100%;
   height: auto;
   float: left;
@@ -191,10 +198,10 @@
   color: #6A7989;
   cursor: pointer;
 }
-.bBlog_replyContainer{
+.bBlog_replyContainer {
   width: 100%;
   height: auto;
-  float:left;
+  float: left;
   -webkit-transition: height 3s;
   -moz-transition: height 3s;
   -ms-transition: height 3s;
@@ -204,18 +211,20 @@
 .eEvent_comment {
   width: 100%;
 }
-.eEvent_commentBox{
+.eEvent_commentBox {
   color: #333132;
   max-width: 700px;
   margin: 0 auto;
   padding: 0 50px;
   width: 100%;
   box-sizing: border-box;
+  .eEvent_comment {
+    background: #fff;
+    border: solid 1px #d7d7d7;
+    width: 100%;
+  }
 }
-.eEvent_commentBox .eEvent_comment{
-  width: 100%;
-}
-.bIcon_mSport{
+.bIcon_mSport {
   width: 60px;
   height: 60px;
   margin: auto;
@@ -260,7 +269,7 @@
   left: 0;
   border-width: 7px 7px 7px 0;
   border-style: solid;
-  border-color: transparent #ccc ;
+  border-color: transparent #ccc;
   z-index: 300;
   margin-left: -7px;
 }
@@ -269,12 +278,12 @@
   border-color: transparent #fff;
   margin-left: -5px;
 }
-.eCommentDate, .eCommentLike, .eReply {
+.eCommentDate, .eReply {
   color: #959595;
   margin-right: 20px;
   cursor: pointer;
 }
-.eCommentLike:hover, .eReply:hover {
-  color: $MAIN_COLOR;
+.eReply:hover {
+  color: $blueColor;
 }
 

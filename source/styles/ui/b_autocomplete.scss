@@ -7,7 +7,7 @@
   cursor: pointer;
 }
 .bCombobox:hover .eCombobox_inputContainer {
-  color: black;
+  color: $textColor;
 }
 
 .eCombobox_list {
@@ -23,13 +23,12 @@
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
   margin-top: 2px;
-  border: solid 1px $COLOR;
+  border: $mainBorder;
   & div {
     cursor: pointer;
     padding-left: 8px;
     &:hover {
-      background: $MAIN_COLOR;
-      color: $COLOR;
+      background: #fafafa;
     }
   }
 }
@@ -40,7 +39,7 @@
 
 .eCombobox_option:focus {
   outline: 0;
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 
 .eCombobox_input {
@@ -49,7 +48,7 @@
   background: transparent;
   box-sizing: border-box;
   border: none;
-  border-bottom: solid transparent 1px;
+  border-bottom: solid #d7d7d7 1px;
 
   &:hover{
     border-bottom: solid #959595 1px;
@@ -70,11 +69,11 @@
   position: absolute;
   border-width: 7px 5px 0 5px;
   border-style: solid;
-  border-color: $COLOR transparent;
+  border-color: $blueColor transparent;
 }
 
 .eCombobox_button:active {
-  color: $MAIN_COLOR;
+  color: $blueColor;
 }
 
 .eCombobox_option {
@@ -87,7 +86,7 @@
 }
 
 .eCombobox_option.mSelected {
-  background: $MAIN_COLOR !important;
+  background: $blueColor !important;
   color: #ffffff !important;
 }
 

@@ -6,6 +6,11 @@ const SportsHelpers = {
 
         document.location.hash = self.SPORTS_PAGE
     },
+    clientPointDisplayArray: [
+    	'plain',
+		'time',
+		'distance'
+	],
     clientScoringArray: [
         'More scores',
         'Less scores',
@@ -21,6 +26,16 @@ const SportsHelpers = {
         'Individual',
         'Team'
     ],
+	pointsDisplayServerToClientMap: {
+    	'PLAIN': 	'plain',
+		'TIME': 	'time',
+		'DISTANCE':	'distance'
+	},
+	pointsDisplayClientToServerMap: {
+		'plain': 	'PLAIN',
+		'time': 	'TIME',
+		'distance':	'DISTANCE'
+	},
     playersServerToClientMap: {
         '1X1':          '1x1',
         '2X2':          '2x2',
@@ -52,15 +67,14 @@ const SportsHelpers = {
         'First to n points':    'FIRST_TO_N_POINTS'
     },
     getDefaultScoringClientValue: function() {
-        const self = this;
-
-        return self.clientScoringArray[0];
+        return this.clientScoringArray[0];
     },
     getDefaultPlayersClientValue: function() {
-        const self = this;
-
-        return self.clientPlayersArray[0];
+        return this.clientPlayersArray[0];
     },
+	getDefaultDisplayPointsClientValue: function(){
+    	return this.clientPointDisplayArray[0];
+	},
     /**
      * Get data from object by path.
      * Function converts data to acceptable format for form.
@@ -109,6 +123,7 @@ const SportsHelpers = {
             pointsName:                     undefined,
             pointsNamePlural:               undefined,
             pointsStep:                     undefined,
+			pointsDisplay:					self.getDefaultDisplayPointsClientValue(),
             performance:                    [],
             discipline:                     [],
             fieldPic:                       undefined,
@@ -120,8 +135,6 @@ const SportsHelpers = {
 
         let formData = self.getEmptyFromData();
 
-        console.log(self.getData(serverData, 'scoring'));
-
         formData.name                       = self.getData(serverData, 'name');
         formData.description                = self.getData(serverData, 'description');
         formData.icon                       = self.getData(serverData, 'icon');
@@ -132,6 +145,7 @@ const SportsHelpers = {
         formData.pointsName                 = self.getData(serverData, 'points.name');
         formData.pointsNamePlural           = self.getData(serverData, 'points.namePlural');
         formData.pointsStep                 = self.getData(serverData, 'points.pointsStep');
+		formData.pointsDisplay 				= self.pointsDisplayServerToClientMap[self.getData(serverData, 'points.display')];
         formData.genders                    = self.getData(serverData, 'genders');
         formData.discipline                 = self.getData(serverData, 'discipline');
         formData.performance                = self.getData(serverData, 'performance');
@@ -161,15 +175,17 @@ const SportsHelpers = {
             points:                     {
                                             name:       dataFromForm.pointsName,
                                             namePlural: dataFromForm.pointsNamePlural,
-                                            pointsStep: dataFromForm.pointsStep
+                                            pointsStep: dataFromForm.pointsStep,
+											display:	self.pointsDisplayClientToServerMap[dataFromForm.pointsDisplay]
                                         },
             discipline:                 self.filterEmptyDisciplineItems(dataFromForm.discipline),
             performance:                self.filterEmptyPerformanceItems(dataFromForm.performance.map(item => {
+
                                             return {
                                                 name:       item.name,
                                                 //TODO remove this dirty magic
-                                                minValue:   item.minValue.trim() !== '' ? parseInt(item.minValue) : '',
-                                                maxValue:   item.maxValue.trim() !== '' ? parseInt(item.maxValue) : ''
+                                                minValue:   parseInt(item.minValue) !== NaN ? parseInt(item.minValue) : '',
+                                                maxValue:   parseInt(item.maxValue) !== NaN ? parseInt(item.maxValue) : ''
                                             }
                                         })),
             field:                      dataFromForm.field,

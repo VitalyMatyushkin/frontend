@@ -8,6 +8,7 @@ const	React			= require('react'),
 		If				= require('module/ui/if/if'),
 		Morearty        = require('morearty'),
 		DomainHelper 	= require('module/helpers/domain_helper'),
+		RoleHelper 		= require('module/helpers/role_helper'),
 		Auth			= require('module/core/services/AuthorizationServices');
 
 
@@ -72,12 +73,17 @@ const  RoleList = React.createClass({
 				permissions		= binding.toJS('permissions'),
 				arr				= permissions ? permissions.filter(p => p.role === activeRoleName):[];
 
+		let schoolId = activeSchoolId;
 		if(arr.length){
 			let activePermission = arr.find(p => p.schoolId === activeSchoolId);
 			if(!activePermission){
 				activePermission = arr[0];
-				rootBinding.set('userRules.activeSchoolId', activePermission.schoolId);
+				schoolId = activePermission.schoolId;
 			}
+			//if(activePermission.preset === 'PARENT') {
+			//	schoolId = null; //TODO: event not open with activeSchoolId = null
+			//}
+			rootBinding.set('userRules.activeSchoolId', schoolId);
 			binding.set('activePermission', Immutable.fromJS(activePermission));
 		}
 	},
@@ -105,7 +111,8 @@ const  RoleList = React.createClass({
 		const   self 	    = this,
 				binding     = self.getDefaultBinding(),
 				schoolId    = permission ? permission.schoolId : null,
-				role        = permission ? permission.role : 'NO ROLE',
+				role        = permission ? permission.role : null,
+				roleClient 	= permission ? RoleHelper.SERVER_ROLE_FOR_CLIENT[permission.role] : 'NO ROLE',
 				schools     = binding.toJS('schools'),
 				school      = schools.length && role !== 'PARENT' ? schools.find(s => s.id === schoolId) : null,
 				schoolName  = school ? school.name : null,
@@ -114,7 +121,7 @@ const  RoleList = React.createClass({
 		return (
 			<div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, role, schoolId) : null}>
 				<p>{schoolName}</p>
-				<p className="eRole_name">{role}</p>
+				<p className="eRole_name">{roleClient}</p>
 			</div>
 		);
 	},

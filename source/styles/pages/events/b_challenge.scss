@@ -21,7 +21,7 @@ $border: solid 1px #c2c2c2;
   display: flex;
   justify-content: center;
   padding-top: 5px;
-  width: 42%;
+  width: 65%;
 }
 .bChallenge p{
   margin: auto;
@@ -71,7 +71,7 @@ $border: solid 1px #c2c2c2;
 }
 .eChallenge_results{
   padding-top: 5px;
-  width: 10%;
+  width: 150px;
   text-align: center;
   margin: auto;
 }
@@ -138,7 +138,6 @@ $border: solid 1px #c2c2c2;
 }
 .eAchievement_name{
   width: 200px;
-  color: $COLOR;
 }
 .eAchievementGamesPlayed{
   width: 120px;
@@ -155,12 +154,12 @@ $border: solid 1px #c2c2c2;
 .eAchievement_header{
   position: relative;
   height: 65px;
-  background: $MAIN_COLOR;
+  background: $blueColor;
   display: flex;
   justify-content: space-around;
   align-items: center;
   padding: 0 30px;
-  color: $COLOR;
+  color: #fff;
   font-weight: bold;
 }
 .eAchievement_row{
@@ -180,7 +179,7 @@ $border: solid 1px #c2c2c2;
   display: flex;
   justify-content: space-around;
   &:hover {
-    background: lighten($MAIN_COLOR, 25%);
+    background: lighten($blueColor, 25%);
   }
 }
 
@@ -203,7 +202,7 @@ $border: solid 1px #c2c2c2;
   padding: 40px 11%;
 }
 .bAchievementsDate {
-  max-width: 340px;
+  max-width: 470px;
   display: flex;
   flex-direction: column;
   color: #333132;
@@ -218,21 +217,30 @@ $border: solid 1px #c2c2c2;
 .bAchievement{
   display: flex;
   flex-direction: column;
+  cursor: pointer;
+  padding: 5px;
+
+  &:hover{
+    border: $blueColor 1px solid;
+  }
+}
+.eAchievement_info{
+  text-align: center;
 }
 .eAchievement_in {
   display: flex;
-  max-width: 340px;
-  flex-wrap: wrap;
 }
 .eAchievement_rivalInfo {
   font-size: 16px;
   font-weight: bold;
   margin: auto;
 }
-.eAchievement_results {
+.eResults {
   margin-bottom: 15px;
   text-align: center;
   font-size: 22px;
+  display: flex;
+  justify-content: center;
 }
 .eAchievement_com_container {
   border-bottom: $BORDER;

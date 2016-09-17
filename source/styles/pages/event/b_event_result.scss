@@ -1,9 +1,10 @@
 .bEventResult {
+  align-items: center;
+  color: #333132;
   display: flex;
   flex-direction: column;
-  color: #333132;
   justify-content: center;
-  align-items: center;
+  width: 18%;
 }
 
 .eEventResult_time {
@@ -21,11 +22,25 @@
   margin: auto;
   text-align: center;
 }
-.eEventResult_point {
-  font-size: 26px;
+.eEventResult_PointsWrapper {
+  font-size: 24px;
   font-weight: bold;
+  height: 30px;
+  white-space: nowrap;
 }
-.eEventResult_colon {
+
+.eEventResult_PointSideWrapper {
+  display: inline-block;
+}
+
+.eEventResult_Point {
+  display: inline-block;
+  min-width: 25px;
+}
+
+.eEventResult_Colon {
+  display: inline-block;
+
   font-weight: normal;
   color: #878787;
 }

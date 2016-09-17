@@ -83,7 +83,7 @@
   cursor: pointer;
   font-size: 18px;
   letter-spacing: 0.7px;
-  color: $DarkGreen;
+  color: $textColor;
   vertical-align: top;
   position: relative;
   -webkit-transition: color 0.3s;
@@ -94,7 +94,8 @@
 
 .eTopMenu_item:hover,
 .eTopMenu_item.mActive{
-  color: white;
+  color: $textColor;
+  text-decoration: underline;
 }
 
 .eTopMenu_photo{
@@ -152,7 +153,7 @@
 }
 .eTray_item:hover,
 .eTray_item.mActive{
-  background: darken($MAIN_COLOR, 10% );
+  background: darken($blueColor, 10% );
   color: white;
 }
 .eTopMenu_trayActive{
@@ -223,6 +224,7 @@
 .bTopPanel.schoolPanel{
   background: transparent;
   height: 0;
+  display: none;
 }
 .bPublicLogin_wrap{
   position: absolute;

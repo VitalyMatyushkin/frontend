@@ -31,11 +31,13 @@ const Form = React.createClass({
 		// False by default, if true, then browser doesn't save data for this field.
 		// For example, browser doesn't autocomplete old password and new password fields in restore password form.
 		autoupdateOff: 	React.PropTypes.bool,
-		formStyleClass: React.PropTypes.string
+		formStyleClass: React.PropTypes.string,
+		submitOnEnter: 	React.PropTypes.bool
 	},
 	getDefaultProps: function () {
 		return {
-			autoupdateOff: false
+			autoupdateOff: false,
+			submitOnEnter: true
 		};
 	},
 	componentWillMount: function () {
@@ -155,7 +157,7 @@ const Form = React.createClass({
 
 			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
 			if (typeof self.props.onSubmit === 'function') {
-				self.props.onSubmit(dataToPost);
+				return self.props.onSubmit(dataToPost);
 			}
 
 			if (typeof self.props.onPreSubmit === 'function') {
@@ -243,7 +245,7 @@ const Form = React.createClass({
 		const self = this,
 			keyCode = event.keyCode;
 
-		if (keyCode === 13) {
+		if (keyCode === 13 && self.props.submitOnEnter) {
 			self.tryToSubmit();
 		}
 	},

@@ -76,7 +76,7 @@ const InputTypeMixin = {
 		const self = this;
 
 		self.hideError();
-		self._checkOneValid(value, 'alphanumeric') && self.showError();
+		self.fullValidate(value);
 		// just storing current input value
 		// this can trigger extra form validation, but... emh.. it works.
 		// anyway all that form shit should be dropped eventually
@@ -90,7 +90,6 @@ const InputTypeMixin = {
 	setValue: function(value) {
 		const 	self 			= this,
 				binding 		= self.getDefaultBinding(),
-				oldValue 		= binding.get('value'),
 				validateResult 	= self.fullValidate(value);
 
 		if (validateResult)
@@ -98,9 +97,11 @@ const InputTypeMixin = {
         else
 			self.hideError();
 
-        value = value || '';
+		if(typeof value === "undefined") {
+			value = '';
+		}
 
-        self.getDefaultBinding().set('value', value);
+		binding.set('value', value);
         self.props.onSetValue && self.props.onSetValue(value);
 	},
 	showError: function(text) {

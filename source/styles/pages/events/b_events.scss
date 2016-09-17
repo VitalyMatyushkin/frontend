@@ -6,7 +6,7 @@ $green-color: #00AE68;
 .bEvents {
   display: flex;
   flex-flow: column wrap;
-  width: 1060px;
+  width: 1075px;
   margin: 50px auto;
   font-size: 11px;
 }
@@ -29,7 +29,7 @@ $green-color: #00AE68;
   cursor: pointer;
 }
 .eEvents_button:hover {
-  color: $DarkGreen;
+  color: $blueColor;
 }
 
 .eEvents_back{

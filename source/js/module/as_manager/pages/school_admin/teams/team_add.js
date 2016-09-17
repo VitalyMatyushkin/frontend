@@ -8,18 +8,25 @@ const   TeamForm		= require('module/as_manager/pages/school_admin/teams/team_for
 const TeamAddPage = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         binding.clear();
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
         self._initFormBinding();
+
+        binding.sub('teamForm.___teamManagerBinding.teamStudents').addListener(() => {
+            TeamHelper.validate(binding);
+        });
+        binding.sub('teamForm.sportModel').addListener(() => {
+            TeamHelper.validate(binding);
+        });
     },
     componentWillUnmount: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
         binding.clear();
     },
@@ -45,7 +52,18 @@ const TeamAddPage = React.createClass({
                 schoolData.forms = formsData;
 
                 // get sports data
-                return window.Server.sports.get();
+                return window.Server.sports.get(
+                    {
+                        filter: {
+                            where: {
+                                players: {
+                                    $nin: ['1X1', 'INDIVIDUAL']
+                                }
+                            },
+							limit: 100
+                        }
+                    }
+                );
             })
             .then(function (sportsData) {
                 !schoolData.forms && (schoolData.forms = []);
@@ -56,36 +74,14 @@ const TeamAddPage = React.createClass({
                 // in the future, after refactoring that will be fixed
                 binding
                     .atomically()
-                    .set('teamForm.default',                Immutable.fromJS(self._getDefaultObject(schoolData)))
-                    .set('teamForm.sports',                 Immutable.fromJS(sportsData))
-                    .set('teamForm.gender',                 Immutable.fromJS('male'))
-                    .set('teamForm.players',                Immutable.fromJS([]))
-                    .set('teamForm.availableAges',          Immutable.fromJS(TeamHelper.getAges(schoolData)))
-                    .set('teamForm.selectedRivalIndex',     Immutable.fromJS(self._getFakeRivalIndex()))
-                    .set('teamForm.rival',                  Immutable.fromJS(self._getFakeRivalObject()))
-                    .set('teamForm.isHouseFilterEnable',    Immutable.fromJS(false))
-                    .set('teamForm.isHouseSelected',        Immutable.fromJS(false))
-                    .set('teamForm.isHouseAutocompleteInit',Immutable.fromJS(true))
-                    .set('teamForm.houses',                 Immutable.fromJS({}))
-                    .set('teamForm.error',                  Immutable.fromJS(self._getErrorObject()))
+                    .set('teamForm.school',                             Immutable.fromJS(schoolData))
+                    .set('teamForm.sports',                             Immutable.fromJS(sportsData))
+                    .set('teamForm.availableAges',                      Immutable.fromJS(TeamHelper.getAges(schoolData)))
+                    .set('teamForm.___teamManagerBinding.teamStudents', Immutable.fromJS([]))
+                    .set('teamForm.___houseAutocompleteBinding',        Immutable.fromJS({}))
+                    .set('teamForm.error',                              Immutable.fromJS(self._getErrorObject()))
                     .commit();
             });
-    },
-    /**
-     * Get fake rival object, fake - because team manager element require rival object.
-     * @returns {{id: number}}
-     * @private
-     */
-    _getFakeRivalObject: function() {
-        return {id:0};
-    },
-    /**
-     * Get fake rival index, fake - because team manager element require rival index.
-     * @returns {number}
-     * @private
-     */
-    _getFakeRivalIndex: function() {
-        return 0;
     },
     /**
      * Get object for default binding
@@ -116,45 +112,25 @@ const TeamAddPage = React.createClass({
         const self = this,
             binding = self.getDefaultBinding();
 
-        TeamHelper.validate(binding);
-
         if(!binding.toJS('teamForm.error.isError')) {
             const team = {
-                name:           binding.get('teamForm.name'),
-                description:    binding.get('teamForm.description'),
-                sportId:        binding.get('teamForm.sportId'),
+                name:           binding.toJS('teamForm.name'),
+                description:    binding.toJS('teamForm.description'),
+                sportId:        binding.toJS('teamForm.sportId'),
                 schoolId:       self.activeSchoolId,
                 ages:           binding.toJS('teamForm.ages'),
-                gender:         binding.get('teamForm.gender'),
-                tempTeam:       false
+                gender:         TeamHelper.convertGenderToServerValue(binding.toJS('teamForm.gender')),
+                players:        TeamHelper.convertPlayersToServerValue(binding.toJS('teamForm.___teamManagerBinding.teamStudents'))
             };
 
             // Set houseId if team is house team
             binding.get('teamForm.houseId') && (team.houseId = binding.get('teamForm.houseId'));
 
-            window.Server.teamsBySchoolId.post( self.activeSchoolId, team )
+            window.Server.teamsBySchoolId.post(self.activeSchoolId, team)
                 .then(team => {
-                    const players = binding.get('teamForm.players').toJS();
+                    document.location.hash = '/#school_admin/teams';
 
-                    return Promise.all(players.map( player => {
-                        const body = {
-                            userId:     player.id,
-                            sub:        player.sub ? player.sub : false,
-                            position:   player.position
-                        };
-
-                        return window.Server.teamPlayers.post(
-                            {
-                                schoolId:   self.activeSchoolId,
-                                teamId:     team.id
-                            },
-                            body
-                        );
-                    })).then( _ => {
-                        document.location.hash = '/#school_admin/teams';
-
-                        return team;
-                    });
+                    return team;
                 });
         }
     },

@@ -32,7 +32,7 @@ const SportEdit = React.createClass({
 		const dataForData = SportsHelpers.convertFormDataToServerData(data);
 
 		if(!SportsHelpers.isCustomFieldsError(dataForData)) {
-			window.Server.sport.put(self.sportId, SportsHelpers.convertFormDataToServerData(data)).then(function() {
+			window.Server.sport.put(self.sportId, SportsHelpers.convertFormDataToServerData(data)).then(() => {
 				self.isMounted() && SportsHelpers.redirectToSportsPage();
 			}).catch(function(err){
 				console.log(err);

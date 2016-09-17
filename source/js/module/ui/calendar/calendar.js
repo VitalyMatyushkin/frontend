@@ -1,5 +1,4 @@
-const 	CalendarYearView 	= require('./calendar_year'),
-		CalendarMonthView 	= require('./calendar_month'),
+const 	CalendarMonthView 	= require('./calendar_month'),
 		React 				= require('react'),
 		ReactDOM 			= require('react-dom'),
 		Morearty            = require('morearty'),
@@ -12,32 +11,23 @@ const CalendarView = React.createClass({
         onSelect: React.PropTypes.func
     },
 	getDefaultState: function () {
-		var date = new Date();
+		const date = new Date();
 
 		return Immutable.fromJS({
-			currentDate: date,
-            currentDayDate:0,
-			mode: 'month',
-			hoverDay: null,
-            selectDay: null,
+			currentDate: 	date,
+            currentDayDate:	0,
+			hoverDay: 		null,
+            selectDay: 		null,
             monthNames: [ "January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December" ]
 		});
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			currentMode = binding.get('mode'),
-			currentView;
-
-		if (currentMode === 'year') {
-			currentView = <CalendarYearView binding={binding} />
-		} else {
-			currentView = <CalendarMonthView binding={binding} onSelect={self.props.onSelect} />
-		}
+		const 	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return <div className="bCalendar">
-			{currentView}
+			<CalendarMonthView binding={binding} onSelect={self.props.onSelect} />
 		</div>;
 	}
 });

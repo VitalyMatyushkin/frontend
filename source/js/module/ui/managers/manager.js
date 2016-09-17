@@ -1,6 +1,9 @@
 const	React					= require('react'),
 		classNames				= require('classnames'),
 		TeamPlayersValidator	= require('./helpers/team_players_validator'),
+		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
+		EventHelper				= require('./../../helpers/eventHelper'),
+		MoreartyHelper			= require('./../../helpers/morearty_helper'),
 		GameField				= require('./gameField'),
 		TeamModeView			= require('./modes/team_mode_view'),
 		Morearty            	= require('morearty'),
@@ -11,6 +14,7 @@ const Manager = React.createClass({
 	propTypes: {
 		isInviteMode: 	React.PropTypes.bool
 	},
+	listeners: [],
 	componentWillMount: function () {
 		const	self = this;
 
@@ -20,6 +24,12 @@ const Manager = React.createClass({
 
 		self._validate(0);
 		self._validate(1);
+	},
+	componentWillUnmount: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		self.listeners.forEach(l => binding.removeListener(l));
 	},
 	/**
 	 * Init main binding
@@ -40,37 +50,48 @@ const Manager = React.createClass({
 			.set('teamModeView', Immutable.fromJS(
 				{
 					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
-					players: [
-						[],
-						[]
-					],
+					players: self.getInitPlayers(),
 					teamTable: [
 						{
-							selectedTeamId: undefined,
-							exceptionTeamId: undefined
+							selectedTeamId: self.getTeamIdByOrder(0),
+							exceptionTeamId: self.getTeamIdByOrder(1)
 						},
 						{
-							selectedTeamId: undefined,
-							exceptionTeamId: undefined
+							selectedTeamId: self.getTeamIdByOrder(1),
+							exceptionTeamId: self.getTeamIdByOrder(0)
 						}
 					],
 					teamWrapper: [
 						{
 							filter: undefined,
-							selectedTeamId: undefined,
+							prevSelectedTeamId: self.getTeamIdByOrder(0),
+							selectedTeamId: self.getTeamIdByOrder(0),
 							teamsSaveMode: undefined,
 							teamName: {
-								name: undefined,
+								initName: self.getTeamNameByOrder(0),
+								name: self.getTeamNameByOrder(0),
 								mode: 'show'
+							},
+							___teamManagerBinding: {
+								teamStudents: [],
+								blackList: [],
+								positions: defaultBinding.get('model.sportModel.field.positions')
 							}
 						},
 						{
 							filter: undefined,
-							selectedTeamId: undefined,
+							prevSelectedTeamId: self.getTeamIdByOrder(1),
+							selectedTeamId: self.getTeamIdByOrder(1),
 							teamsSaveMode: undefined,
 							teamName: {
-								name: undefined,
+								initName: self.getTeamNameByOrder(1),
+								name: self.getTeamNameByOrder(1),
 								mode: 'show'
+							},
+							___teamManagerBinding: {
+								teamStudents: [],
+								blackList: [],
+								positions: defaultBinding.get('model.sportModel.field.positions')
 							}
 						}
 					]
@@ -78,80 +99,153 @@ const Manager = React.createClass({
 			))
 			.commit();
 	},
+	getInitPlayers: function() {
+		const self = this;
+
+		return [
+			self.getInitPlayersByOrder(0),
+			self.getInitPlayersByOrder(1)
+		];
+	},
+	getInitPlayersByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getBinding();
+
+		return (
+			typeof binding.rivals !== "undefined" &&
+			typeof binding.rivals.toJS()[order] !== "undefined" &&
+			typeof binding.rivals.toJS()[order].players !== "undefined" ?
+				binding.rivals.toJS()[order].players :
+				[]
+		);
+	},
+	getTeamNameByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getBinding();
+
+		return (
+			typeof binding.rivals !== "undefined" &&
+			typeof binding.rivals.toJS()[order] !== "undefined" &&
+			typeof binding.rivals.toJS()[order].team !== "undefined" ?
+				binding.rivals.toJS()[order].team.name :
+				undefined
+		);
+	},
+	getTeamIdByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getBinding();
+
+		return (
+			typeof binding.rivals !== "undefined" &&
+			typeof binding.rivals.toJS()[order].team !== "undefined" ?
+				binding.rivals.toJS()[order].team.id :
+				undefined
+		);
+	},
 	/**
 	 * Add listeners on binding
 	 * @private
 	 */
 	_addListeners: function() {
-		const	self			= this,
+		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.sub('selectedRivalIndex').addListener(() => {
+		const event = self.getDefaultBinding().toJS('model');
+
+		self.listeners.push(binding.sub('selectedRivalIndex').addListener(() => {
 			binding.set('teamModeView.selectedRivalIndex', binding.toJS('selectedRivalIndex'))
-		});
-		binding.sub('mode').addListener(() => {
-			self._validate(binding.toJS('selectedRivalIndex'));
-		});
-		binding.sub('teamModeView.teamWrapper.0.players').addListener(() => {
+		}));
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.___teamManagerBinding.teamStudents').addListener(() => {
 			self._validate(0);
-		});
-		binding.sub('teamModeView.teamWrapper.1.players').addListener(() => {
-			self._validate(1);
-		});
-		binding.sub('teamModeView.teamWrapper.0.creationMode').addListener(() => {
+		}));
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
 			self._validate(0);
-		});
-		binding.sub('teamModeView.teamWrapper.1.creationMode').addListener(() => {
-			self._validate(1);
-		});
-		binding.sub('teamModeView.teamWrapper.0.teamName.name').addListener(() => {
+		}));
+		if(!EventHelper.isEventWithOneIndividualTeam(event) || TeamHelper.isOneOnOneSport(event)) {
+			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.___teamManagerBinding.teamStudents').addListener(() => {
+				self._validate(1);
+			}));
+			self.listeners.push(binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
+				self._validate(1);
+			}));
+		}
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.0.isSetTeamLater').addListener(() => {
 			self._validate(0);
-		});
-		binding.sub('teamModeView.teamWrapper.1.teamName.name').addListener(() => {
+		}));
+		self.listeners.push(binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
 			self._validate(1);
-		});
+		}));
 	},
 	_validate: function(rivalIndex) {
 		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				errorBinding	= self.getBinding('error'),
-				limits			= {
-					maxPlayers: binding.toJS('model.sportModel.limits.maxPlayers'),
-					minPlayers: binding.toJS('model.sportModel.limits.minPlayers'),
-					maxSubs:    binding.toJS('model.sportModel.limits.maxSubs')
-				};
-		let		result;
+				binding			= self.getDefaultBinding();
 
-		if(binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.creationMode`) === undefined) {
-			result = {
-				isError: true,
-				text: 'Please select team or create new team'
-			}
-		} else if (
-			binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
-			binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
-		) {
-			result = {
-				isError:	true,
-				text:		'Please enter team name'
-			};
-		} else {
-			result = TeamPlayersValidator.validate(
-				binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.players`),
-				limits
+		const	isSetTeamLater	= binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.isSetTeamLater`),
+				errorBinding	= self.getBinding('error');
+
+		if(isSetTeamLater) {
+			errorBinding.sub(rivalIndex).set(
+				Immutable.fromJS({
+					isError:	false,
+					text:		''
+				})
 			);
-		}
+		} else {
+			const event = binding.toJS('model');
 
-		errorBinding.sub(rivalIndex).set(
-			Immutable.fromJS(result)
-		);
+			if(
+				typeof event !== 'undefined' &&
+				typeof event.sportModel !== 'undefined'
+			) {
+				const limits = typeof event.sportModel.defaultLimits !== 'undefined' ? {
+					maxPlayers:	event.sportModel.defaultLimits.maxPlayers,
+					minPlayers:	event.sportModel.defaultLimits.minPlayers,
+					minSubs:	event.sportModel.defaultLimits.minSubs,
+					maxSubs:	event.sportModel.defaultLimits.maxSubs
+				} : {};
+
+				let result = {
+					isError:	false,
+					text:		''
+				};
+
+				switch (true) {
+					case TeamHelper.isNonTeamSport(event):
+						result = TeamPlayersValidator.validate(
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+							limits
+						);
+						break;
+					case TeamHelper.isTeamSport(event):
+						if (
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === undefined ||
+							binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.teamName.name`) === ''
+						) {
+							result = {
+								isError:	true,
+								text:		'Please enter team name'
+							};
+						} else {
+							result = TeamPlayersValidator.validate(
+								binding.toJS(`teamModeView.teamWrapper.${rivalIndex}.___teamManagerBinding.teamStudents`),
+								limits
+							);
+						}
+						break;
+				}
+
+				errorBinding.sub(rivalIndex).set(
+					Immutable.fromJS(result)
+				);
+			}
+		}
 	},
 	_initRivalIndex: function() {
 		const	self		= this,
-				eventType	= self.getDefaultBinding().toJS('model.type');
+				event	= self.getDefaultBinding().toJS('model');
 		let		currentRivalIndex;
 
-		if(eventType === 'inter-schools') {
+		if(TeamHelper.getEventType(event) === 'inter-schools') {
 			let	activeSchoolId	= self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				rivals			= self.getBinding().rivals.toJS();
 
@@ -184,7 +278,7 @@ const Manager = React.createClass({
 						eChooser_item: true,
 						mDisable: disable
 					}),
-					eventType	= self.getDefaultBinding().toJS('model.type');
+					eventType	= TeamHelper.getEventType(self.getDefaultBinding().toJS('model'))
 			let		text		= '';
 
 			switch (eventType) {
@@ -212,15 +306,17 @@ const Manager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
 		return (
-			rival.get('id') !== binding.get('schoolInfo.id') &&
-			binding.get('model.type') === 'inter-schools'
+			rival.get('id') !== activeSchoolId &&
+			TeamHelper.getEventType(self.getDefaultBinding().toJS('model')) === 'inter-schools'
 		);
 	},
 	_renderRivals: function() {
 		const self = this;
 
-		if(!self.props.isInviteMode) {
+		if(self.isShowRivals()) {
 			return (
 				<div className="eManager_chooser">
 					<div className="bChooserRival">
@@ -230,14 +326,33 @@ const Manager = React.createClass({
 			);
 		}
 	},
+	isShowRivals: function() {
+		const self = this;
+
+		const event = self.getDefaultBinding().toJS('model');
+
+		return !self.props.isInviteMode && !(TeamHelper.isIndividualSport(event) && TeamHelper.getEventType(self.getDefaultBinding().toJS('model')) !== 'houses');
+	},
+	renderGameField: function() {
+		const	self			= this,
+				binding	= self.getDefaultBinding();
+
+		switch (true) {
+			case TeamHelper.isNonTeamSport(binding.toJS('model')):
+				return null;
+			case TeamHelper.isTeamSport(binding.toJS('model')):
+				return (
+					<div className="eManager_gameFieldContainer">
+						<GameField binding={binding.sub('model.sportModel.field.pic')}/>
+					</div>
+				);
+		}
+	},
 	render: function() {
 		const	self				= this,
 				defaultBinding		= self.getDefaultBinding(),
 				binding				= self.getBinding(),
 				selectedRivalIndex	= self.getBinding('selectedRivalIndex').toJS(),
-				gameFieldBinding	= {
-					default:	defaultBinding.sub('model.sportModel.fieldPic')
-				},
 				teamModeViewBinding	= {
 					default:	defaultBinding.sub(`teamModeView`),
 					schoolInfo:	defaultBinding.sub('schoolInfo'),
@@ -251,9 +366,7 @@ const Manager = React.createClass({
 					{self._renderRivals()}
 					<div className="eManager_containerTeam">
 						<TeamModeView binding={teamModeViewBinding}/>
-						<div className="eManager_gameFieldContainer">
-							<GameField binding={gameFieldBinding}/>
-						</div>
+						{self.renderGameField()}
 					</div>
 				</div>
 			);

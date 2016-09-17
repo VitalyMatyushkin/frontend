@@ -12,7 +12,6 @@ const TypeAutocomplete = React.createClass({
 		field:				React.PropTypes.string,
 		defaultItem:		React.PropTypes.object
 	},
-
 	/** Setting component's value when it choosen */
 	onSelect: function(data, fullValue){
         const 	self 	= this,

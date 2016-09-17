@@ -31,31 +31,35 @@ const EventVenue = React.createClass({
 
         self._initVenueType(eventType);
         self._initPostCode(eventType);
-
-        //TODO WTF??
-        self.refs.home && (self.refs.home.checked = true);
     },
     _initVenueType: function(eventType) {
         const   self = this,
-            binding = self.getDefaultBinding();
+            binding = self.getDefaultBinding(),
+			value = binding.toJS('radio');
 
-        switch (eventType) {
-            case 'inter-schools':
-                binding.set('radio',    Immutable.fromJS('home'));
-                break;
-            case 'houses':
-                binding.set('radio',    Immutable.fromJS(undefined));
-                break;
-            case 'internal':
-                binding.set('radio',    Immutable.fromJS(undefined));
-                break;
-        }
+		if(!value)
+			switch (eventType) {
+				case 'inter-schools':
+					binding.atomically()
+						.set('radio',                   Immutable.fromJS('home'))
+						.set('model.venue.venueType',   Immutable.fromJS('home'))
+						.commit();
+					break;
+				default:
+					binding.atomically()
+						.set('radio',                   Immutable.fromJS(undefined))
+						.set('model.venue.venueType',   Immutable.fromJS('home'))
+						.commit();
+					break;
+			}
     },
     _initPostCode: function() {
         const   self = this,
                 binding = self.getDefaultBinding(),
+				value = binding.toJS('venue'),
 				postcode = self._getHomeSchoolPostCode();
-		if(postcode) {
+
+        if(!value && postcode) {
 			binding.atomically()
 				.set('venue',                Immutable.fromJS(postcode))
 				.set('model.venue.postcode', Immutable.fromJS(postcode.id))
@@ -79,12 +83,14 @@ const EventVenue = React.createClass({
                 .set('radio',                   Immutable.fromJS(venueType))
                 .set('venue',                   Immutable.fromJS(postcode))
                 .set('model.venue.postcode',    Immutable.fromJS(postcode.id))
+                .set('model.venue.venueType',   Immutable.fromJS(venueType))
                 .commit();
         } else {
             binding.atomically()
                 .set('radio',                   Immutable.fromJS(venueType))
                 .set('venue',                   Immutable.fromJS(undefined))
                 .set('model.venue.postcode',    Immutable.fromJS(undefined))
+                .set('model.venue.venueType',   Immutable.fromJS(venueType))
                 .commit();
         }
     },
@@ -94,7 +100,7 @@ const EventVenue = React.createClass({
         let postcode;
 
         switch (venueType) {
-            case 'tbc':
+            case 'tbd':
                 postcode = undefined;
                 break;
             case 'home':
@@ -103,7 +109,7 @@ const EventVenue = React.createClass({
             case 'away':
                 postcode = self._getOpponentSchoolPostCode();
                 break;
-            case 'neutral':
+            case 'custom':
                 postcode = self._getHomeSchoolPostCode();
                 break;
             default:
@@ -123,7 +129,7 @@ const EventVenue = React.createClass({
         const   self    = this,
                 binding = self.getDefaultBinding();
 
-        return !(binding.toJS('model.type') === 'inter-schools' && binding.toJS('radio') === 'tbc');
+        return !(binding.toJS('model.type') === 'inter-schools' && binding.toJS('radio') === 'tbd');
     },
 	/**
      * Get home school postcode
@@ -206,11 +212,11 @@ const EventVenue = React.createClass({
 
                 <div className="eVenue_venue_type_radio_buttons_container">
                     <input type="checkbox"
-                           checked={venueTypeRadioButtonValue === 'tbc'}
-                           onChange={() => self._onVenueTypeChange('tbc')}
+                           checked={venueTypeRadioButtonValue === 'tbd'}
+                           onChange={() => self._onVenueTypeChange('tbd')}
                     />
                     <label className="eVenue_venue_type_radio_button_label">
-                        TBC
+                        TBD
                     </label>
 
                     <input type="checkbox"
@@ -230,11 +236,11 @@ const EventVenue = React.createClass({
                     </label>
 
                     <input type="checkbox"
-                           checked={venueTypeRadioButtonValue === 'neutral'}
-                           onChange={() => self._onVenueTypeChange('neutral')}
+                           checked={venueTypeRadioButtonValue === 'custom'}
+                           onChange={() => self._onVenueTypeChange('custom')}
                     />
                     <label className="eVenue_venue_type_radio_button_label">
-                        Neutral
+                        Custom
                     </label>
                 </div>
             </div>
@@ -266,7 +272,7 @@ const EventVenue = React.createClass({
                         />
                     </div>
                 </If>
-                <If condition={venueType !== 'tbc'}>
+                <If condition={venueType !== 'tbd'}>
                     <Map binding={binding}
                          point={point}
                          customStylingClass="eEvents_venue_map"

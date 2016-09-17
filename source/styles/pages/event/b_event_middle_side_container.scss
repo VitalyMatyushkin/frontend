@@ -1,17 +1,18 @@
 .bEventMiddleSideContainer {
-
+  margin: 0 auto;
+  max-width: 700px;
 }
 
 .bEventMiddleSideContainer_leftSide {
   display: inline-block;
-  width: 430px;
+  width: 600px;
 
   vertical-align: top;
 }
 
 .bEventMiddleSideContainer_rightSide {
   display: inline-block;
-  width: 270px;
+  width: 100px;
   padding-top: 15px;
 
   vertical-align: top;

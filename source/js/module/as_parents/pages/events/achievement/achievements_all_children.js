@@ -2,37 +2,76 @@
  * Created by Anatoly on 17.03.2016.
  */
 
-const   React               = require('react'),
-        AchievementModel    = require('module/as_parents/pages/events/achievement/achievement_model'),
-        Morearty            = require('morearty');
+const   React 		= require('react'),
+		EventHelper	= require('module/helpers/eventHelper'),
+		Loader 		= require('module/ui/loader'),
+		Immutable   = require('immutable'),
+        Morearty 	= require('morearty');
 
 const AchievementsAllChildren = React.createClass({
     mixins: [Morearty.Mixin],
+	componentDidMount:function(){
+		const   self    = this,
+			binding = self.getDefaultBinding(),
+			children = binding.toJS('children');
+
+		if(children.length){
+			self.getData();
+		}else{
+			self.addBindingListener(binding, 'children', self.getData);
+		}
+	},
+	getData: function(){
+		const   self    = this,
+			binding = self.getDefaultBinding(),
+			children = binding.toJS('children'),
+			ids = children && children.map(ch => ch.id);
+
+		if(ids){
+			window.Server.childrenEventsCount.get({filter:{
+				where:{
+					childIdList: ids,
+					winnersChildIdList: ids,
+					scoredChildIdList: ids,
+					status: EventHelper.EVENT_STATUS.FINISHED
+				}
+			}}).then(data => {
+				binding.set('allAchievements', Immutable.fromJS(data));
+			});
+		}
+	},
     renderAllAchievements:function(){
         const   self    = this,
-                binding = self.getDefaultBinding();
+                binding = self.getDefaultBinding(),
+				children = binding.toJS('children'),
+				achievements = binding.toJS('allAchievements');
 
-        let result = <div className="eAchievement_row">{'no children'}</div>;
+        let result = (
+			<div className="eAchievement_row">
+				<Loader condition={true} />
+			</div>
+		);
 
-        if(binding.get('eventChild') && binding.get('eventChild').count()) {
-            result = binding.get('eventChild').map(function (child, key) {
-                child.events = (binding.get('models') && binding.get('models').count()) ? binding.get('models').filter(function (model) {
-                    return model.get('childId') === child.get('childId');
-                }) : 0;
-                let model = new AchievementModel(child.get('childId'), child.events && child.events.toJS());
-                model.childName = child.get('firstName') + ' ' + child.get('lastName');
+        if(children && children.length && achievements) {
+            result = children.map(function (child, i) {
+				const childName = child.firstName + ' ' + child.lastName,
+					gamesPlayed = achievements.childEventCount[i],
+					gamesWon = achievements.childWinnerEventCount[i],
+					gamesLost = gamesPlayed - gamesWon,
+					gamesScored = achievements.childScoredEventCount[i];
+
                 return (
-                    <div key={key} className="eAchievement_row">
+                    <div key={i} className="eAchievement_row">
                         <div
-                            className="eAchievement_common eAchievement_name">{model.childName}</div>
+                            className="eAchievement_common eAchievement_name">{childName}</div>
                         <div
-                            className="eAchievement_common eAchievementGamesPlayed">{model.gamesPlayed}</div>
-                        <div className="eAchievement_common eAchievementGamesWon">{model.gamesWon}</div>
-                        <div className="eAchievement_common eAchievementGamesLost">{model.gamesLost}</div>
-                        <div className="eAchievement_common eAchievementGoalsScored">{model.goalsScored}</div>
+                            className="eAchievement_common eAchievementGamesPlayed">{gamesPlayed}</div>
+                        <div className="eAchievement_common eAchievementGamesWon">{gamesWon}</div>
+                        <div className="eAchievement_common eAchievementGamesLost">{gamesLost}</div>
+                        <div className="eAchievement_common eAchievementGoalsScored">{gamesScored}</div>
                     </div>
                 )
-            }).toArray();
+            });
         }
 
         return result;
@@ -47,7 +86,7 @@ const AchievementsAllChildren = React.createClass({
                     <div className="eAchievement_common eAchievementGamesPlayed">Games Played</div>
                     <div className="eAchievement_common eAchievementGamesWon">Games Won</div>
                     <div className="eAchievement_common eAchievementGamesLost">Games Lost</div>
-                    <div className="eAchievement_common eAchievementGoalsScored">Goals Scored</div>
+                    <div className="eAchievement_common eAchievementGoalsScored">Games Scored</div>
                 </div>
                 {self.renderAllAchievements()}
             </div>

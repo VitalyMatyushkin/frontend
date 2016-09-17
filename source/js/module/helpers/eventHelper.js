@@ -1,4 +1,5 @@
-const RoleHelper		= require('module/helpers/role_helper');
+const	RoleHelper		= require('module/helpers/role_helper'),
+		MoreartyHelper	= require('module/helpers/morearty_helper');
 
 const EventHelper = {
 	clientEventTypeToServerClientTypeMapping: {
@@ -12,8 +13,13 @@ const EventHelper = {
 		'INTERNAL_TEAMS':	'internal'
 	},
 	EVENT_STATUS: {
-		FINISHED:		'FINISHED',
-		NOT_FINISHED:	'NOT_FINISHED'
+		COLLECTING_INVITE_RESPONSE:	'COLLECTING_INVITE_RESPONSE',
+		INVITES_SENT:				'INVITES_SENT',
+		SENDING_INVITES:			'SENDING_INVITES',
+		FINISHED:					'FINISHED',
+		NOT_FINISHED:				'NOT_FINISHED',
+		DRAFT:						'DRAFT',
+		ACCEPTED:					'ACCEPTED'
 	},
 	/**
 	 * Create event summary object by event result object.
@@ -72,11 +78,16 @@ const EventHelper = {
 
 		// don't show inter-schools events if invited school not yet accept invitation and
 		// if invited school is an active school.
-		return !(
-			event.eventType === self.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			event.invitedSchoolId === activeSchoolId &&
-			event.teams.length === 1 // if team count === 1 then opponent school not yet accept invitation
-		);
+		switch (event.eventType) {
+			case self.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				if(event.invitedSchoolIds[0] === activeSchoolId) {
+					return event.status === "ACCEPTED" || event.status === "FINISHED";
+				} else {
+					return true;
+				}
+			default:
+				return true;
+		}
 	},
 	isShowEventOnPublicSchoolCalendar: function(event) {
 		const self = this;
@@ -96,24 +107,22 @@ const EventHelper = {
 		const	self	= this,
 				binding	= thiz.getDefaultBinding();
 
-		return	binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
-				RoleHelper.isUserSchoolWorker(thiz);
+		return self.isNotFinishedEvent(binding) && RoleHelper.isUserSchoolWorker(thiz);
 	},
-	/**
-	 * Return TRUE if participants count is two and event isn't close.
-	 * Note: participants count can be equal one, if event is "inter-schools" and opponent school
-	 * has not yet accepted invitation.
-	 * @returns {boolean}
-	 * @private
-	 */
-	_isShowCloseEventButton: function(thiz) {
-		const	self	= this,
-				binding	= thiz.getDefaultBinding();
+	isNotFinishedEvent: function(binding) {
+		const self = this;
 
-		return	binding.get('participants').count() === 2 &&
-				binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
-				binding.get('mode') === 'general' &&
-				RoleHelper.isUserSchoolWorker(thiz);
+		return (
+			binding.get('model.status') === self.EVENT_STATUS.COLLECTING_INVITE_RESPONSE ||
+			binding.get('model.status') === self.EVENT_STATUS.SENDING_INVITES ||
+			binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED ||
+			binding.get('model.status') === self.EVENT_STATUS.DRAFT ||
+			binding.get('model.status') === self.EVENT_STATUS.ACCEPTED ||
+			binding.get('model.status') === self.EVENT_STATUS.INVITES_SENT
+		);
+	},
+	isGeneralMode: function(binding) {
+		return binding.get('mode') === 'general';
 	},
 	/**
 	 * Return TRUE if event edit mode is "closing".
@@ -141,24 +150,51 @@ const EventHelper = {
 	 * @returns {boolean}
 	 * @private
 	 */
-	_isShowEditEventButton: function(thiz) {
-		const	self	= this,
-				binding	= thiz.getDefaultBinding();
-
-		return	binding.get('model.status') === self.EVENT_STATUS.NOT_FINISHED &&
-				binding.get('mode') === 'general' &&
-				binding.get('activeTab') === 'teams' &&
-				RoleHelper.isUserSchoolWorker(thiz);
-	},
-	/**
-	 * Return TRUE if event edit mode is "general".
-	 * @returns {boolean}
-	 * @private
-	 */
 	_isShowFinishEventEditingButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') !== 'general' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
+		return (
+			binding.get('mode') !== 'general' &&
+			(binding.get('activeTab') === 'teams' || binding.get('activeTab') === 'performance') &&
+			RoleHelper.isUserSchoolWorker(thiz)
+		);
+	},
+	isEventWithOneIndividualTeam: function(event) {
+		const	eventType	= event.eventType ?  EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] : event.type,
+				sport		= event.sportModel ? event.sportModel : event.sport;
+
+		return (eventType === 'internal') && (sport.players === 'INDIVIDUAL' || sport.players === '1X1');
+	},
+	isShowScoreButtons: function(event, mode, isOwner) {
+		return (
+					event.status === "NOT_FINISHED" ||
+					event.status === "DRAFT" ||
+					event.status === "ACCEPTED" ||
+					event.status === "INVITES_SENT"
+			) &&
+			mode === 'closing' &&
+			isOwner;
+	},
+	isInterSchoolsEvent: function(event) {
+		const self = this;
+
+		return event.type ?
+			event.type === "inter-schools" :
+			self.serverEventTypeToClientEventTypeMapping[event.eventType] === "inter-schools";
+	},
+	isHousesEvent: function(event) {
+		const self = this;
+
+		return event.type ?
+		event.type === "houses" :
+		self.serverEventTypeToClientEventTypeMapping[event.eventType] === "houses";
+	},
+	isInternalEvent: function(event) {
+		const self = this;
+
+		return event.type ?
+		event.type === "internal" :
+		self.serverEventTypeToClientEventTypeMapping[event.eventType] === "internal";
 	}
 };
 

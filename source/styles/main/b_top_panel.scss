@@ -1,14 +1,18 @@
 /* .bTopPanel */
-$HEADER_HEIGHT: 60px;
+$HEADER_HEIGHT: 59px;
 
 .bTopPanel {
-  background: $MAIN_COLOR;
-  color: $DarkGreen;
+  background: #ffffff;
+  border-bottom: solid 1px #e6e6e6;
+  color: $textColor;
   clear: both;
   min-height: $HEADER_HEIGHT;
   position: relative;
   padding: 0 130px;
   z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 
   .bDropdown {
 

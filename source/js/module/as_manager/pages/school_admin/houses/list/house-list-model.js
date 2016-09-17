@@ -5,6 +5,7 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
+		SVG				=	require('module/ui/svg'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
@@ -38,21 +39,19 @@ HouseListModel.prototype = {
 	onEdit: function(data) {
 		document.location.hash += '/edit?id=' + data.id;
 	},
+	onChildren: function(data) {
+		document.location.hash += `/students?id=${data.id}&name=${data.name}`;
+	},
 	onRemove:function(data){
-		const 	self 		= this,
-			rootBinding = self.getMoreartyContext().getBinding(),
-			schoolId 	= rootBinding.get('userRules.activeSchoolId'),
-			binding = self.getDefaultBinding();
+		const 	self = this;
 
-		if(data !== undefined){
-			window.Server.schoolHouse.delete({schoolId:schoolId, houseId:data.id}).then(function(res){
-				binding.update('data',function(houses){
-					return houses.filter(function(house){
-						return house.get('id') !== data.id;
-					});
+		if(data && confirm(`Are you sure you want to remove house ${data.name}?`)){
+			window.Server.schoolHouse.delete({schoolId:self.activeSchoolId, houseId:data.id})
+				.then(_ => self.reloadData())
+				.catch(error => {
+					error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details
+					&& alert(error.xhr.responseJSON.details.text);
 				});
-				return res;
-			});
 		}
 	},
 	getGrid: function(){
@@ -97,6 +96,7 @@ HouseListModel.prototype = {
 						 * All other users should not see that button.
 						 * */
 						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
+						onItemSelect:	this.onChildren.bind(this),
 						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}
@@ -111,7 +111,9 @@ HouseListModel.prototype = {
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 				(
-					<div className="addButton addHouse" onClick={function(){document.location.hash += '/add';}}>
+					<div className="addButtonShort bTooltip" data-description="Add House"
+						 onClick={function(){document.location.hash += '/add';}}>
+						<SVG icon="icon_add_house" />
 					</div>
 				) : null
 			},

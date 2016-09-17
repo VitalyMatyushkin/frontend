@@ -31,8 +31,10 @@ const AllChallengesList = React.createClass({
 			self._setFixturesByDate(descriptor.getCurrentValue().date);
 		});
 
-		binding.sub('activeChildId').addListener((descriptor) => {
-			descriptor.getCurrentValue() == 'all' && self.isMounted() && self.forceUpdate();
+		binding.sub('models').addListener(() => {
+			const currentCalendarDate = binding.toJS('calendar.selectDay');
+
+			currentCalendarDate && self._setFixturesByDate(currentCalendarDate.date);
 		});
 	},
 	_setFixturesByDate:function(date) {
@@ -65,7 +67,7 @@ const AllChallengesList = React.createClass({
 		const	self			= this,
 				binding			= self.getDefaultBinding(),
 				selectDay		= binding.get('calendar.selectDay'),
-				childrenOfUser	= binding.get('eventChild');
+				childrenOfUser	= binding.get('children');
 		let		result;
 
 		if(selectDay === undefined || selectDay === null) {
@@ -98,7 +100,7 @@ const AllChallengesList = React.createClass({
 				events	= binding.get('selectedDayFixtures');
 
 		child.event = events.filter(function(ev){
-			return ev.get('childId') === child.get('childId');
+			return ev.get('childId') === child.get('id');
 		});
 
 		if(child.event.count()) {

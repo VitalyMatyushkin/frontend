@@ -5,6 +5,7 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
+		GenderIcon		= require('module/ui/icons/gender_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
@@ -23,13 +24,10 @@ const StudentListModel = function(page){
 	this.rootBinding = this.getMoreartyContext().getBinding();
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 
-	this.grid = this.getGrid();
-	this.dataLoader = 	new DataLoader({
-		serviceName:'schoolStudents',
-		params:		{schoolId:this.activeSchoolId},
-		grid:		this.grid,
-		onLoad: 	this.getDataLoadedHandle()
-	});
+	this.title = 'Students';
+	this.filters = {limit:20};
+	this.setAddButton();
+	this.setColumns();
 };
 
 StudentListModel.prototype = {
@@ -40,7 +38,7 @@ StudentListModel.prototype = {
 		document.location.hash += '/edit?id=' + data.id;
 	},
 	onView: function(student) {
-		document.location.hash = 'school_admin/student?id='+student.id;
+		document.location.hash = 'school_admin/students/stats?id='+student.id;
 	},
 	onRemove: function(student) {
 		const 	self 		= this,
@@ -59,12 +57,10 @@ StudentListModel.prototype = {
 		const parents = item.parents;
 
 		if (parents) {
-			return parents ? parents.map(function (parent) {
-				var iconGender = parent.gender === 'male' ? 'icon_man' : 'icon_woman';
-
+			return parents ? parents.map( parent => {
 				return (
 					<div className="eDataList_parent">
-						<span className="eDataList_parentGender"><SVG icon={iconGender}/></span>
+						<span className="eDataList_parentGender"><GenderIcon gender={parent.gender}/></span>
 						<span className="eDataList_parentName">{[parent.firstName, parent.lastName].join(' ')}</span>
 					</div>
 				);
@@ -89,11 +85,23 @@ StudentListModel.prototype = {
 			}
 		];
 	},
-	getGrid: function(){
+	setAddButton: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
 
-		const columns = [
+		/**Only school admin and manager can add new students. All other users should not see that button.*/
+		this.btnAdd = changeAllowed ?
+			(
+				<div className="addButton bTooltip" data-description="Add Student" onClick={function(){document.location.hash += '/add';}}>
+					<SVG icon="icon_add_student" />
+				</div>
+			) : null
+	},
+	setColumns: function(){
+		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
+				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
+
+		this.columns = [
 			{
 				text:'Gender',
 				cell:{
@@ -136,9 +144,39 @@ StudentListModel.prototype = {
 				}
 			},
 			{
+				text:'Form',
+				hidden:true,
+				cell:{
+					dataField:'formId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getForms(),
+						valueField:'name',
+						keyField:'id'
+					}
+				}
+			},
+			{
 				text:'House',
 				cell:{
 					dataField:'house.name'
+				}
+			},
+			{
+				text:'House',
+				hidden:true,
+				cell:{
+					dataField:'houseId'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getHouses(),
+						valueField:'name',
+						keyField:'id'
+					}
 				}
 			},
 			{
@@ -176,55 +214,28 @@ StudentListModel.prototype = {
 						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}
-			},
-			{
-				text:'Form',
-				hidden:true,
-				cell:{
-					dataField:'formId'
-				},
-				filter:{
-					type:'multi-select',
-					typeOptions:{
-						getDataPromise: this.getForms(),
-						valueField:'name',
-						keyField:'id'
-					}
-				}
-			},
-			{
-				text:'House',
-				hidden:true,
-				cell:{
-					dataField:'houseId'
-				},
-				filter:{
-					type:'multi-select',
-					typeOptions:{
-						getDataPromise: this.getHouses(),
-						valueField:'name',
-						keyField:'id'
-					}
-				}
 			}
 		];
-
-		return new GridModel({
+	},
+	init: function(){
+		this.grid = new GridModel({
 			actionPanel:{
-				title:'Students',
+				title:this.title,
 				showStrip:true,
-
-				/**Only school admin and manager can add new students. All other users should not see that button.*/
-				btnAdd:changeAllowed ?
-				(
-					<div className="addButton" onClick={function(){document.location.hash += '/add';}}>
-						<SVG icon="icon_add_student" />
-					</div>
-				) : null
+				btnAdd:this.btnAdd
 			},
-			columns:columns,
-			filters:{limit:20}
+			columns: this.columns,
+			filters: this.filters
 		});
+
+		this.dataLoader = new DataLoader({
+			serviceName:'schoolStudents',
+			params:		{schoolId:this.activeSchoolId},
+			grid:		this.grid,
+			onLoad: 	this.getDataLoadedHandle()
+		});
+
+		return this;
 	},
 	getDataLoadedHandle: function(data){
 		const self = this,

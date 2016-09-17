@@ -1,9 +1,13 @@
 .bPlayerChooser {
+  height: 322px;
   width: 290px;
 
   border: solid 1px #c2c2c2;
+  border-bottom: none;
 
   background-color: white;
+
+  box-sizing: border-box;
 }
 
 .ePlayerChooser_playerSearchBox {
@@ -57,8 +61,8 @@
 
 .ePlayerChooser_addToTeamButton {
   height: 40px;
-  background: #759500 url("/images/arrows_l.png") no-repeat center;
+  background: $blueColor url("/images/arrows_l.png") no-repeat center;
   &:hover {
-    background-color: #566D01;
+    background-color: $lightBlue;
   }
 }

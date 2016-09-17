@@ -1,10 +1,14 @@
 .bManager {
   display: flex;
   flex-direction: column;
-  width: 650px;
+  width: 700px;
   margin: 0 auto;
   color: $COLOR;
   font-size: 16px;
+
+  &.mTeamForm {
+    padding-top: 30px;
+  }
 }
 
 .eManager_dateTimePicker {
@@ -46,6 +50,10 @@
   appearance: none;
   background: #fff url("/images/arrow_down.svg") no-repeat 98% center;
   background-size: 10px;
+
+  &.mDisabled {
+    background-color: #c2c2c2;
+  }
 }
 
 .eManager_field {
@@ -86,6 +94,12 @@
 .eManager_teamModeViewContainer {
   display: inline-block;
   vertical-align: top;
+
+  &.mIndividuals {
+    display: block;
+    width: 700px;
+    margin: 0 auto;
+  }
 }
 
 .eManager_eField {

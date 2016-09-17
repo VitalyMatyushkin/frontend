@@ -120,9 +120,9 @@ const PermissionFields = React.createClass({
     schoolMessage: function () {
         return (
             <div className="eForm_message">
-                Haven’t found your school?
-				<a href="mailto:support@squadintouch.com?subject=Please add school">Email us</a>
-				and we will add it!
+                <span className="margin-right">Haven’t found your school?</span>
+				<a className="margin-right" href="mailto:support@squadintouch.com?subject=Please add school">Email us</a>
+				<span>and we will add it!</span>
             </div>)
     },
 

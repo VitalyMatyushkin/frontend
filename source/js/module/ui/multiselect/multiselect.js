@@ -30,9 +30,11 @@ const MultiSelect = React.createClass({
         })
     },
     handleItemClick: function(item) {
-        const   self     =   this;
-        let     binding  =   self.getDefaultBinding(),
-                selected =   binding.toJS('selections').indexOf(item.id)!==-1;
+        const   self     =   this,
+                binding  =   self.getDefaultBinding();
+
+        const selected = binding.toJS('selections').indexOf(item.id)!==-1;
+
         self.setSelected(item, !selected);
     },
     handleFilterChange: function(event) {
@@ -108,7 +110,7 @@ const MultiSelect = React.createClass({
                 <ul>{this.props.items.map(this.createItem)}</ul>
                 <button onClick={this.selectAll}>Select all</button>&nbsp;
                 {count > 0 ?
-                    <button onClick={this.selectNone}>{'Unselect all(' + count + ')'}</button>
+                    <button onClick={this.selectNone}>{'Deselect all(' + count + ')'}</button>
                 : null}
             </div>
         )

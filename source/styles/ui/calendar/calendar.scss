@@ -5,7 +5,6 @@ $border-color: #c2c2c2;
   flex-flow: column wrap;
   justify-content: center;
   align-self: flex-start;
-  border: solid 1px #c2c2c2;
   padding: 0 40px 40px 40px;
   background: #fff;
 }
@@ -19,19 +18,19 @@ $border-color: #c2c2c2;
 
 .eCalendar_item {
   display: flex;
-  color: $DarkGreen;
+  color: #333;
   cursor: pointer;
   margin: 0 7px;
   &.mNameMonth {
     font-weight: bold;
-    color: $DarkGreen;
+    color: #333;
     cursor: default;
     line-height: 20px;
     font-size: 16px;
   }
 }
 .eCalendar_item .bIcon {
-  color: #9B9B9B;
+  color: #0079be;
   width: 14px;
   height: 14px;
 }
@@ -59,7 +58,7 @@ $border-color: #c2c2c2;
   border: solid 1px #dddddd;
   border-radius: 10%;
   margin: 3px;
-  background: #f1f1f1;
+  background: #fff;
   color: #8c8c8c;
   font-size: 22px;
   &.mFirst {
@@ -74,19 +73,15 @@ $border-color: #c2c2c2;
     background: #fff
   }
   &.mToday {
-    background: url('/images/today_calendar_day.png') center;
+    background: #fff url('/images/today_calendar_day.png') center;
     &.mSelect {
       color: #fff;
-      background: #f26525 url('/images/today_calendar_day.png') center;
+      background: $blueColor url('/images/today_calendar_day.png') center;
     }
     &.mActive {
-      background: #66952D url('/images/today_calendar_day.png') center;
-      border-color: $DarkGreen;
-      color: $DarkGreen;
+      background: #b2d7ec url('/images/today_calendar_day.png') center;
       &:hover {
-        background: #66952D url('/images/today_calendar_day.png') center;
-        border-color: $DarkGreen;
-        color: $DarkGreen;
+
       }
     }
   }
@@ -101,21 +96,19 @@ $border-color: #c2c2c2;
     }
   }
   &.mActive {
-    background: #66952D;
-    color: $DarkGreen;
+    background: #b2d7ec;;
+    color: $blueColor;
     &:hover {
-      background: #66952D;
-      border-color: $DarkGreen;
-      color: $DarkGreen;
+      border-color: #0079be;
+      color: #0079be;
     }
   }
   &.mSelect {
     color: #fff;
-    background: #f26525;
+    background: #0079be;
   }
   &:hover {
-    border-color: $DarkGreen;
-    color: $DarkGreen;
+    border-color: #0079be;
   }
 }
 

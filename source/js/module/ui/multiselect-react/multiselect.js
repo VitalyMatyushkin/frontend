@@ -27,14 +27,14 @@ const MultiSelectReact = React.createClass({
 		this.init(nextProps);
 	},
 	init: function (props) {
-		const items = props.items || [],
-			selections = props.selections || [];
+		let items = props.items || [],
+			selections = props.selections || [],
+			filter = this.state && this.state.filter || '';
 
 		this.setState({
-			items: items,
+			items: items.filter(item => item.value.toLowerCase().indexOf(filter.toLowerCase()) !== -1),
 			selections: selections,
-			filter: '',
-			count: selections.length
+			filter: filter
 		});
 	},
 	handleItemClick: function (item) {
@@ -44,13 +44,13 @@ const MultiSelectReact = React.createClass({
 	},
 	handleFilterChange: function (event) {
 		// Keep track of every change to the filter input
-		const state = this.state;
+		const state = this.state,
+			val = event.target.value,
+			items = this.props.items.filter(item => item.value.toLowerCase().indexOf(val.toLowerCase()) !== -1);
 
-		state.filter = event.target.value;
+		state.filter = val;
+		state.items = items;
 		this.setState(state);
-	},
-	escapeRegExp: function (str) {
-		return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 	},
 	createItem: function (item) {
 		const selected = this.state.selections.indexOf(item.key) !== -1,
@@ -66,7 +66,7 @@ const MultiSelectReact = React.createClass({
 		);
 	},
 	selectAll: function () {
-		this.setSelected(this.props.items, true)
+		this.setSelected(this.state.items, true)
 	},
 	selectNone: function () {
 		this.setSelected(this.props.items, false)

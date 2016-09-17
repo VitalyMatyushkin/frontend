@@ -6,7 +6,6 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
 		UserModel 		= require('module/data/UserModel'),
 		React 			= require('react'),
 		Morearty		= require('morearty'),
-		AdminDropList   = require('module/ui/admin_dropList/admin_dropList'),
 		GridModel 		= require('module/ui/grid/grid-model'),
 		RoleHelper 		= require('module/helpers/role_helper');
 
@@ -39,7 +38,6 @@ UsersActions.prototype = {
 	},
 	getActions:function(item){
 		var self 			= this,
-			binding 		= self.binding,
 			activeSchoolId 	= self.activeSchoolId,
 			actionList 		= self.props.blockService ? ['View','Block','Unblock','Add Role','Revoke All Roles']
 														: ['View','Add Role','Revoke All Roles'];
@@ -63,13 +61,7 @@ UsersActions.prototype = {
 				id: p.id
 			});
 		});
-		return (
-			<AdminDropList key={item.id}
-						   binding={binding.sub('dropList'+item.id)}
-						   itemId={item.id}
-						   listItems={actionList}
-						   listItemFunction={self._getQuickEditActionsFactory.bind(this)}/>
-		);
+		return actionList;
 
 	},
 	_getQuickEditActionsFactory:function(itemId,action){
@@ -132,9 +124,7 @@ UsersActions.prototype = {
 							data.forEach(function(p){
 								if(p.preset !== 'STUDENT'){
 									params.permissionId = p.id;
-									permission.delete(params).then(_ => {
-										self.reloadData();
-									});
+									permission.delete(params).then(_ => self.reloadData());
 								}
 							});
 						});
@@ -206,9 +196,9 @@ UsersActions.prototype = {
 		let columns = [
 			{
 				text:'Gender',
-				hidden:true,
 				cell:{
-					dataField:'gender'
+					dataField:'gender',
+					type:'gender'
 				},
 				filter:{
 					type:'multi-select',
@@ -242,8 +232,10 @@ UsersActions.prototype = {
 			{
 				text:'Email',
 				isSorted:true,
+				width:'100px',
 				cell:{
-					dataField:'email'
+					dataField:'email',
+					type:'email'
 				},
 				filter:{
 					type:'string'
@@ -267,21 +259,6 @@ UsersActions.prototype = {
 				}
 			},
 			{
-				text:'Access',
-				cell:{
-					dataField:'blocked'
-				}
-			},
-			{
-				text:'Actions',
-				cell:{
-					type:'custom',
-					typeOptions:{
-						parseFunction:this.getActions.bind(this)
-					}
-				}
-			},
-			{
 				text:'Role',
 				hidden:true,
 				cell:{
@@ -294,11 +271,49 @@ UsersActions.prototype = {
 						hideFilter:true
 					}
 				}
+			},
+			{
+				text:'Access',
+				isSorted:true,
+				cell:{
+					dataField:'status'
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						items: [
+							{
+								key: 'ACTIVE',
+								value: 'Active'
+							},
+							{
+								key: 'BLOCKED',
+								value: 'Blocked'
+							},
+							{
+								key: 'DELETED',
+								value: 'Deleted'
+							}
+						],
+						hideFilter:true,
+						hideButtons:true
+					}
+				}
+			},
+			{
+				text:'Actions',
+				cell:{
+					type:'action-list',
+					typeOptions:{
+						getActionList:this.getActions.bind(this),
+						actionHandler:this._getQuickEditActionsFactory.bind(this)
+					}
+				}
 			}
 		];
 
 		if(this.props.blockService){
-			columns.splice(4,0,
+			columns.splice(5,0,
 				{
 					text:'School',
 					cell:{

@@ -1,4 +1,24 @@
 .bPagination{
   margin: 20px 0;
   text-align: center;
+  height: 60px;
+
+  .eLoader{
+    display: none;
+
+    svg{
+      height: 60px;
+      width: 60px;
+    }
+  }
+
+  &.mLoading .eLoader{
+    display: block;
+  }
+
+  &.mLast, &.mLoading{
+    .bButton{
+      display: none;
+    }
+  }
 }

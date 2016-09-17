@@ -6,6 +6,10 @@
   align-items: center;
 }
 
+.bPlayer {
+
+}
+
 .ePlayer_remove .bIcon {
   width: 14px;
   height: 14px;
@@ -29,6 +33,9 @@
   font-size: 16px;
   align-self: center;
   padding: 5px 0 0;
+  min-width: 45px;
+  display: inline-block;
+  text-align: center;
 }
 ._bPlayer._mMini:hover .ePlayer_score{
   color: $COLOR;
@@ -54,6 +61,23 @@
   &.mHead {
     color: #939393;
   }
+  span {
+    margin-right: 5px;
+  }
+}
+
+.ePlayer_performance {
+  padding: 0 0 15px 15px;
+}
+
+.ePlayer_performanceItemName {
+  display: inline-block;
+  width: 100px;
+}
+
+.ePlayer_performanceItemValueContainer {
+  display: inline-block;
+  width: 190px;
 }
 
 .ePlayer_form {
@@ -128,16 +152,20 @@
 
 .ePlayer_minus,
 .ePlayer_plus {
-  margin: 0 5px;
   cursor: pointer;
+  display: inline-block;
   text-align: center;
   border: solid 1px #fff;
   border-radius: 50%;
+  padding: 1px 0 0;
   width: 16px;
   height: 16px;
   &:hover{
     border: solid 1px #c2c2c2;
   }
+}
+.ePlayer_plus {
+  margin-right: 10px;
 }
 ._bPlayer:hover .ePlayer_minus .bIcon,
 ._bPlayer:hover .ePlayer_plus .bIcon{

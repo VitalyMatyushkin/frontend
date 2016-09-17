@@ -1,16 +1,22 @@
 const	React			= require('react'),
-		ReactDOM		= require('react-dom'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Lazy			= require('lazy.js'),
 		classNames		= require('classnames'),
-		Morearty        = require('morearty'),
+		Morearty		= require('morearty'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		Immutable		= require('immutable');
 
 const	TeamChooser	= React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
 		onTeamClick:	React.PropTypes.func,
-		onTeamDeselect:	React.PropTypes.func
+		onTeamDeselect:	React.PropTypes.func,
+		isEnable:		React.PropTypes.bool
+	},
+	getDefaultProps: function() {
+		return {
+			isEnable: true
+		};
 	},
 	componentWillMount: function () {
 		const self = this;
@@ -34,15 +40,15 @@ const	TeamChooser	= React.createClass({
 			filter: {
 				limit: 100,
 				where: {
-					gender: model.gender,
-					sportId: model.sportId,
-					tempTeam: false,
-					removed: false
+					gender:		TeamHelper.convertGenderToServerValue(model.gender),
+					sportId:	model.sportId,
+					teamType:	"PROTOTYPE",
+					removed:	false
 				}
 			}
 		};
 
-		if(model.type === "houses") {
+		if(TeamHelper.getEventType(model) === "houses") {
 			filter.filter.where.houseId = rival.id;
 		}
 
@@ -96,9 +102,8 @@ const	TeamChooser	= React.createClass({
 				selectedTeamId	= binding.toJS('selectedTeamId');
 		let		teamItems		= [];
 
-		if(
-			teams &&
-			(
+		if(!teams ||
+			teams && (
 				teams.length === 0 ||
 				teams.length === 1 && teams[0].id === exceptionTeamId ||
 				teams.length === 1 && teams[0].id === selectedTeamId
@@ -110,29 +115,32 @@ const	TeamChooser	= React.createClass({
 				</div>
 			)) ;
 		} else if(teams && teams.length !== 0) {
-			teams.forEach((team, index) => {
-				if(exceptionTeamId != team.id) {
-					const	teamClass	= classNames({
+			console.log(selectedTeamId);
+			console.log(exceptionTeamId);
+			console.log(teams);
+			// it doesn't show selected team and team selected for opponent
+			teamItems = teams.filter(team => team.id !== selectedTeamId && team.id !== exceptionTeamId)
+				.map((team, index) => {
+					const teamClass = classNames({
 						eTeamChooser_team:	true,
 						mLast:				index == teams.length - 1
 					});
 
-					teamItems.push((
-						<div	key={team.id}
-								className=	{teamClass}
-								onMouseDown={self._onTeamClick.bind(self, team.id, team)}
+					return (
+						<div	key			= {team.id}
+								className	= {teamClass}
+								onMouseDown	= {self._onTeamClick.bind(self, team.id, team)}
 						>
 							<div className="eTeamChooser_teamName">{team.name}</div>
 							<div className="eTeamChooser_teamAges">{self._geAgesView(team.ages)}</div>
 						</div>
-					));
-				}
+					);
 			});
 		}
 
 		const teamChooserClass = classNames({
 			eTeamChooser_teamListContainer:	true,
-			mDisable:						binding.toJS('viewMode') == 'close'
+			mDisable:						!self.isOpenTeamChooser()
 		});
 
 		return (
@@ -144,6 +152,19 @@ const	TeamChooser	= React.createClass({
 				</div>
 			</div>
 		);
+	},
+	isOpenTeamChooser: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		switch(binding.toJS('viewMode')) {
+			case 'open':
+				return true;
+			case 'close':
+				return false;
+			default:
+				return false;
+		}
 	},
 	_onTeamChooserButtonClick: function() {
 		const	self			= this,
@@ -219,8 +240,13 @@ const	TeamChooser	= React.createClass({
 	render: function() {
 		const	self	= this;
 
+		const teamChooserClass = classNames({
+			bTeamChooser:	true,
+			mDisable:		!self.props.isEnable
+		});
+
 		return (
-			<div className="bTeamChooser">
+			<div className={teamChooserClass}>
 				<div className="eTeamChooser_leftSide">
 					{self._renderTeamChooserButton()}
 					{self._renderTeamList()}

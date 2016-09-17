@@ -3,7 +3,7 @@ const   RouterView      	= require('module/core/router'),
         Route           	= require('module/core/route'),
         Morearty			= require('morearty'),
         Immutable	    	= require('immutable'),
-		SportsListComponent = require('module/as_admin/pages/admin_schools/sports/sports_list'),
+		SportsListComponent = require('module/as_admin/pages/admin_schools/sports/list/sport-list'),
 		SportsAddComponent 	= require('module/as_admin/pages/admin_schools/sports/sports_add'),
 		SportsEditComponent = require('module/as_admin/pages/admin_schools/sports/sports_edit');
 

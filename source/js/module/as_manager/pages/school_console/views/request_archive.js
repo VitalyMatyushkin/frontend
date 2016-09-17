@@ -1,18 +1,22 @@
 /**
- * Created by bridark on 19/06/15.
+ * Created by Anatoly on 13.09.2016.
  */
-const   AdminArchive    = require('module/as_admin/pages/admin_schools/admin_views/admin_archive'),
-        Morearty	    = require('morearty'),
-        React           = require('react');
+
+const   React 		= require('react'),
+		Morearty	= require('morearty'),
+		Model 		= require('module/shared_pages/permission_requests/request-archive-model'),
+		Grid 		= require('module/ui/grid/grid');
 
 const SchoolRequestArchive = React.createClass({
-    mixins:[Morearty.Mixin],
-    render:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-        return(
-            <AdminArchive binding={binding} serviceName="permissionRequests" serviceCount="permissionRequestsCount"/>
-        )
-    }
+	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.model = new Model(this);
+		this.model.columns.splice(5,2);
+		this.model.init();
+	},
+	render: function () {
+		return <Grid model={this.model.grid}/>;
+	}
 });
+
 module.exports = SchoolRequestArchive;

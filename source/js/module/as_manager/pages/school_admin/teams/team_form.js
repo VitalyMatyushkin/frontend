@@ -1,14 +1,13 @@
-const   Immutable			= require('immutable'),
-		AutocompleteTeam	= require('module/ui/managers/autocompleteTeam'),
+const	Immutable			= require('immutable'),
 		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		Team				= require('module/ui/managers/team/defaultTeam'),
+		TeamManager			= require('module/ui/managers/team_manager/team_manager'),
 		React				= require('react'),
 		If					= require('module/ui/if/if'),
 		Multiselect			= require('module/ui/multiselect/multiselect'),
-		EventHelper			= require('module/helpers/eventHelper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		Morearty			= require('morearty'),
-		Lazy				= require('lazy.js');
+		classNames			= require('classnames');
 
 const TeamForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -16,136 +15,207 @@ const TeamForm = React.createClass({
 		title:			React.PropTypes.string.isRequired,
 		onFormSubmit:	React.PropTypes.func
 	},
-	playersListener: undefined,
+	genderListener: undefined,
+	agesListener: undefined,
+	houseIdListener: undefined,
+
+	componentWillMount: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.set('___multiselect', Immutable.fromJS({}));
+
+		binding.sub('gender').addListener(() => {
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
+		});
+		binding.sub('isHouseFilterEnable').addListener(() => {
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
+		});
+		binding.sub('houseId').addListener(() => {
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
+		});
+		binding.sub('ages').addListener(() => {
+			self.isFilterAvailable(binding) && self.updateTeamManagerFilter();
+		});
+	},
 	componentWillUnmount: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		binding.clear();
 	},
-	_addPlayersListener: function() {
+
+	clearTeamPlayers: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		self.playersListener = binding.sub('players').addListener((descriptor) => {
-			if(descriptor.getCurrentValue() !== undefined && descriptor.getPreviousValue() !== undefined) {
-				const currPlayers = descriptor.getCurrentValue().toJS(),
-					prevPlayers = descriptor.getPreviousValue().toJS();
-
-				if(currPlayers.length > prevPlayers.length) {
-					self._checkRemovedPlayersCache(
-						currPlayers[currPlayers.length - 1]
-					);
-				}
-			}
-		});
+		binding.set('___teamManagerBinding.teamStudents', Immutable.fromJS([]));
 	},
-	_checkRemovedPlayersCache: function(player) {
-		const	self				= this,
-				removedPlayers		= self.getDefaultBinding().toJS('removedPlayers');
-		let		foundRemovedPlayer	= Lazy(removedPlayers).findWhere({id: player.id});
+	updateTeamManagerFilter: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		if(foundRemovedPlayer) {
-			let players = self.getDefaultBinding().toJS('players');
+		const	school	= binding.toJS('school'),
+				gender	= TeamHelper.getFilterGender(binding.toJS('gender')),
+				ages	= binding.toJS('ages'),
+				houseId	= self.getHouseFilterCheckboxValue() ? binding.toJS('houseId') : undefined;
 
-			players[players.length - 1] = foundRemovedPlayer;
-			self.getDefaultBinding().sub('players').withDisabledListener(self.playersListener, () => {
-				self.getDefaultBinding().set('players', Immutable.fromJS(players));
-
-				const index = Lazy(removedPlayers).indexOf(foundRemovedPlayer);
-
-				removedPlayers.splice(index, 1);
-				self.getDefaultBinding().set('removedPlayers', Immutable.fromJS(removedPlayers));
-			});
-		}
+		// update team manager filter
+		// and delete players from team because filter was changed
+		binding.set(
+			'___teamManagerBinding.filter',
+			Immutable.fromJS(
+				TeamHelper.getTeamManagerSearchFilter(
+					school,
+					ages,
+					gender,
+					houseId
+				)
+			)
+		);
 	},
-	_getSports: function () {
+
+	isFilterAvailable: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.toJS('gender') && binding.toJS('ages') && binding.toJS('ages').length !== 0;
+	},
+	isHouseSelected: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return !!binding.toJS('isHouseSelected');
+	},
+	isHouseAutocompleteInit: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return !!binding.toJS('isHouseAutocompleteInit');
+	},
+	isGenderSelected: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return typeof binding.toJS('gender') !== 'undefined' && binding.toJS('gender') !== '';
+	},
+	isAgesSelected: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return typeof binding.toJS('ages') !== 'undefined' && binding.toJS('ages').length !== 0;
+	},
+	isSportSelected: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
+		return	!!binding.get('sportId');
+	},
+	isShowTeamManager: function() {
+		const self = this;
+
+		return	self.isGenderSelected() &&
+				self.isAgesSelected() &&
+				(
+					self.getHouseFilterCheckboxValue() ?	// if filtered by house then house should be selected
+					self.isHouseSelected() :				// for show team manager
+					true
+				);
+	},
+
+	getSports: function () {
 		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				sportsBinding	= binding.get('sports');
-		let		sportOptions	= '';
+				binding			= self.getDefaultBinding();
 
+		const currentSportId = binding.get('sportId');
+
+		// init with def value
+		let sportOptions = [(
+			<option	key="not-selected-sport"
+					value={undefined}
+					disabled="disabled"
+					selected={typeof currentSportId === 'undefined'}
+			>
+				Please select
+			</option>
+		)];
+
+		const sportsBinding = binding.get('sports');
 		if(sportsBinding) {
-			let sports = sportsBinding.toJS();
-			sportOptions = sports.map(function (sport) {
-				return <Morearty.DOM.option
-					selected={sport.id === binding.get('sportId')}
-					value={sport.id}
-					key={sport.id + '-sport'}
-				>{sport.name}</Morearty.DOM.option>
-			});
+			sportOptions = sportOptions.concat(
+				sportsBinding.toJS().map(sport => {
+					return (
+						<option	value		={sport.id}
+								key			={`${sport.id}-sport`}
+								selected	={currentSportId === sport.id}
+						>
+							{sport.name}
+						</option>
+					);
+				})
+			);
 		}
 
 		return sportOptions;
 	},
-	_changeCompleteSport: function (event) {
+	getGenders: function () {
 		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				sports		= binding.toJS('sports'),
-				sportId		= event.target.value,
-				sportIndex	= sports.findIndex(function(model) {
-					return model.id === sportId;
-				});
+				binding		= self.getDefaultBinding();
 
-		binding
-			.atomically()
-			.set('sportId',                  Immutable.fromJS(event.target.value))
-			.set('sportModel',               Immutable.fromJS(sports[sportIndex]))
-			.set('default.model.sportModel', Immutable.fromJS(sports[sportIndex]))
-			.set('gender',                   Immutable.fromJS(sports[sportIndex].limits.genders[0]))
-			.set('default.model.gender',     Immutable.fromJS(sports[sportIndex].limits.genders[0]))
-			.commit();
-	},
-	_getGenders: function () {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				sportModel	= binding.get('sportModel');
+		const	currentGender	= binding.get('gender'),
+				sportModel		= binding.get('sportModel');
 
-		if (sportModel) {
-			return sportModel.toJS().limits.genders.map(function (gender, genInd) {
-				var names = {
-					male: 'boys',
-					female: 'girls'
-				};
+		let genderOptions = [];
 
-				return <label key={genInd} onClick={self._changeCompleteGender}>
-					<Morearty.DOM.input
-						type="radio"
-						key={gender + '-gender'}
-						value={gender}
-						checked={gender === binding.get('gender')}
-					/>
-					{names[gender]}
-				</label>;
-			});
+		//if sport was selected
+		if(self.isSportSelected()) {
+			genderOptions.push((
+				<option	key="not-selected-gender"
+						value={undefined}
+						disabled="disabled"
+						selected={typeof currentGender === 'undefined'}
+				>
+					Please select
+				</option>
+			));
 		} else {
-			return null;
+			genderOptions.push((
+				<option	key="not-selected-gender"
+						value={undefined}
+						disabled="disabled"
+						selected={typeof currentGender === 'undefined'}
+				>
+					At first, select game
+				</option>
+			));
 		}
-	},
-	_changeCompleteGender: function (event) {
-		const binding = this.getDefaultBinding();
 
-		binding
-			.atomically()
-			.set('gender',               Immutable.fromJS(event.target.value))
-			.set('default.model.gender', Immutable.fromJS(event.target.value))
-			.set('default.players',      Immutable.fromJS([]))
-			.set('players',              Immutable.fromJS([]))
-			.commit();
-	},
-	_changeCompleteAges: function (selections) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		if(sportModel) {
+			const genders = sportModel.toJS().genders;
 
-		binding
-			.atomically()
-			.set('ages',               Immutable.fromJS(selections))
-			.set('default.model.ages', Immutable.fromJS(selections))
-			.set('default.players',    Immutable.fromJS([]))
-			.set('players',            Immutable.fromJS([]))
-			.commit();
+			genderOptions = genderOptions.concat(Object.keys(genders)
+				.filter(genderType => genders[genderType])
+				.map((genderType, index) => {
+					const genderNames = {
+						femaleOnly:	'Girls only',
+						maleOnly:	'Boys only',
+						mixed:		'Mixed'
+					};
+
+					return (
+						<option	key		={`${index}-gender`}
+								value	={genderType}
+								selected={genderType === currentGender}
+						>
+							{genderNames[genderType]}
+						</option>
+					);
+				}));
+		}
+
+		return genderOptions;
 	},
-	_getAgeItems: function() {
+	getAgeItems: function() {
 		const	self			= this,
 				availableAges	= self.getDefaultBinding().toJS('availableAges');
 		let		ageItems		= [];
@@ -161,38 +231,98 @@ const TeamForm = React.createClass({
 
 		return ageItems;
 	},
-	_getHouseFilterRadioButton: function () {
+	getSelectedAges: function() {
 		const	self	= this,
-				binding	= self.getDefaultBinding();
+			ages	= self.getDefaultBinding().get('ages');
 
-		return (
-			<label onClick={self._changeHouseFilter}>
-				<Morearty.DOM.input
-					type="checkbox"
-					value={binding.get('isHouseFilterEnable')}
-					checked={binding.get('isHouseFilterEnable')}
-				/>
-			</label>
-		);
+		return ages ? ages : [];
 	},
-	_changeHouseFilter: function() {
+	getHouseFilterCheckboxValue: function() {
+		const	self = this,
+				binding = self.getDefaultBinding();
+
+		return !!binding.toJS('isHouseFilterEnable');
+	},
+
+	handleChangeName: function(descriptor) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		binding.set('name', Immutable.fromJS(descriptor.target.value));
+	},
+	handleSelectHouse: function(id, model) {
+		const	self = this,
+				binding = self.getDefaultBinding();
+
+		// TODO need comment
+		if(self.isHouseAutocompleteInit()) {
+			self.clearTeamPlayers();
+			binding
+				.atomically()
+				.set('house',				Immutable.fromJS(model))
+				// TODO delete houseId, check house
+				.set('houseId',				Immutable.fromJS(id))
+				.set('isHouseSelected',		Immutable.fromJS(true))
+				.commit();
+		} else {
+			binding
+				.atomically()
+				.set('house',					Immutable.fromJS(model))
+				// TODO delete houseId, check house
+				.set('houseId',					Immutable.fromJS(id))
+				.set('isHouseSelected',			Immutable.fromJS(true))
+				// TODO need comment
+				.set('isHouseAutocompleteInit',	Immutable.fromJS(true))
+				.commit();
+		}
+	},
+	handleChangeSport: function (event) {
+		const	self		= this,
+				binding		= self.getDefaultBinding();
+
+		const	sports		= binding.toJS('sports'),
+				sportId		= event.target.value,
+				sportIndex	= sports.findIndex(function(model) {
+					return model.id === sportId;
+				});
+
+		// TODO change filter
+		self.clearTeamPlayers();
 		binding
 			.atomically()
-			.set('isHouseFilterEnable',	Immutable.fromJS(!binding.get('isHouseFilterEnable')))
-			.set('default.model.type',	Immutable.fromJS(!binding.get('isHouseFilterEnable') ? "houses" : null))
-			.set('default.players',		Immutable.fromJS([]))
-			.set('players',				Immutable.fromJS([]))
+			.set('sportId',							Immutable.fromJS(event.target.value))
+			.set('sportModel',						Immutable.fromJS(sports[sportIndex]))
+			.set('___teamManagerBinding.positions',	Immutable.fromJS(sports[sportIndex].field.positions))
+			.set('gender',							Immutable.fromJS(undefined))
 			.commit();
 	},
-	_serviceHouseFilter: function() {
+	handleChangeGender: function (event) {
+		const	self	= this,
+				binding = self.getDefaultBinding();
+
+		//TODO need comment
+		self.clearTeamPlayers();
+		binding.set('gender', Immutable.fromJS(event.target.value));
+	},
+	handleChangeAges: function (selections) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		//TODO need comment
+		self.clearTeamPlayers();
+		binding.set('ages', Immutable.fromJS(selections));
+	},
+	handleChangeHouseFilter: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		self.clearTeamPlayers();
+		binding.set('isHouseFilterEnable', Immutable.fromJS(!self.getHouseFilterCheckboxValue()));
+	},
+
+	houseService: function() {
 		const self = this;
 
-		//filter:{
-		//	order:'name ASC' //Filter by name in ascending order
-		//}}
 		return window.Server.schoolHouses.get({
 			schoolId: MoreartyHelper.getActiveSchoolId(self),
 			filter: {
@@ -200,55 +330,19 @@ const TeamForm = React.createClass({
 			}
 		});
 	},
-	_getSelectedAges: function() {
+
+	renderHouseFilterCheckbox: function () {
 		const	self	= this,
-				ages	= self.getDefaultBinding().get('ages');
+				binding	= self.getDefaultBinding();
 
-		return ages ? ages : [];
+		return (
+			<input	onChange={self.handleChangeHouseFilter.bind(self, binding)}
+					  type="checkbox"
+					  checked={self.getHouseFilterCheckboxValue()}
+			/>
+		);
 	},
-	_isShowTeamManager: function() {
-		const self = this,
-			binding = self.getDefaultBinding();
-
-		if(!!binding.get('isHouseFilterEnable')) {
-			return !!binding.get('ages') && !!binding.get('isHouseSelected');
-		} else {
-			return !!binding.get('ages')
-		}
-	},
-	_onRemovePlayer: function(player) {
-		const self = this;
-
-		self.getDefaultBinding().set('removedPlayers', Immutable.fromJS(
-			self.getDefaultBinding().get('removedPlayers').push(player)
-		));
-	},
-	_onSelectHouse: function(id, model) {
-		const	self = this,
-				binding = self.getDefaultBinding();
-
-		if(binding.get('isHouseAutocompleteInit')) {
-			binding
-				.atomically()
-				.set('default.model.type',	Immutable.fromJS('houses'))
-				.set('rival',				Immutable.fromJS(model))
-				.set('houseId',				Immutable.fromJS(id))
-				.set('isHouseSelected',		Immutable.fromJS(true))
-				.set('default.players',		Immutable.fromJS([]))
-				.set('players',				Immutable.fromJS([]))
-				.commit();
-		} else {
-			binding
-				.atomically()
-				.set('default.model.type',		Immutable.fromJS('houses'))
-				.set('rival',					Immutable.fromJS(model))
-				.set('houseId',					Immutable.fromJS(id))
-				.set('isHouseSelected',			Immutable.fromJS(true))
-				.set('isHouseAutocompleteInit',	Immutable.fromJS(true))
-				.commit();
-		}
-	},
-	_renderHouseAutocomplete: function() {
+	renderHouseAutocomplete: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -258,153 +352,119 @@ const TeamForm = React.createClass({
 		if(binding.get('isHouseSelected')) {
 			return (
 				<Autocomplete
-					defaultItem={binding.get('rival').toJS()}
-					serviceFilter={self._serviceHouseFilter}
+					defaultItem={binding.toJS('house')}
+					serviceFilter={self.houseService}
 					serverField="name"
 					placeholderText={'Select House'}
-					onSelect={self._onSelectHouse}
-					binding={binding.sub('houses')}
+					onSelect={self.handleSelectHouse}
+					binding={binding.sub('___houseAutocompleteBinding')}
 				/>
 			);
 		} else {
 			return (
 				<Autocomplete
-					serviceFilter={self._serviceHouseFilter}
+					serviceFilter={self.houseService}
 					serverField="name"
 					placeholderText={'Select House'}
-					onSelect={self._onSelectHouse}
-					binding={binding.sub('houses')}
+					onSelect={self.handleSelectHouse}
+					binding={binding.sub('___houseAutocompleteBinding')}
 				/>
 			);
 		}
 	},
-	render: function() {
-		const	self					= this,
-				binding					= self.getDefaultBinding(),
-				sportId					= binding.get('sportId'),
-				autocompleteTeamBinding	= {
-					default:			binding.sub('default'),
-					selectedRivalIndex:	binding.sub('selectedRivalIndex'),
-					rival:				binding.sub('rival'),
-					players:			binding.sub('players')
-				},
-				teamBinding = {
-					default: binding.sub('default'),
-					rivalId: binding.sub('selectedRivalIndex'),
-					players: binding.sub('players')
-				};
+	renderTeamManager: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		let errorText;
-
-		binding.toJS('error') && (errorText = binding.get('error.text'));
-
-		if(!self.playersListener) {
-			self._addPlayersListener();
+		if(self.isShowTeamManager()) {
+			return (
+				<div>
+					<TeamManager binding={binding.sub('___teamManagerBinding')}/>
+					<div className="eManager_group">
+						<div className="eTeam_errorBox">
+							{typeof binding.toJS('error') !== 'undefined' ? binding.get('error.text') : ''}
+						</div>
+					</div>
+					<div className="eForm_savePanel">
+						<div className="bButton mRight" onClick={self.props.onFormSubmit}>Finish</div>
+					</div>
+				</div>
+			);
+		} else {
+			return null;
 		}
+	},
+	render: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return (
-			<div style={{paddingTop: 30}}>
-				<div className="bManager mBase">
-					<h2>{self.props.title}</h2>
+			<div className="bManager mTeamForm">
+				<h2>{self.props.title}</h2>
 
-					<div className="eManager_base">
-						<div className="eManager_group">
-							<div className="eManager_label">{'Team Name'}</div>
-							<Morearty.DOM.input
-								className="eManager_field"
-								type="text"
-								value={binding.get('name')}
-								placeholder={'enter name'}
-								onChange={Morearty.Callback.set(binding.sub('name'))}
-							/>
-						</div>
-						<If condition={!!binding.get('name')}>
-							<div className="eManager_group">
-								<div className="eManager_label">{'Team Description'}</div>
-								<Morearty.DOM.textarea
-									className="eManager_field mTextArea"
-									type="text"
-									value={binding.get('description')}
-									placeholder={'enter description'}
-									onChange={Morearty.Callback.set(binding.sub('description'))}
-								/>
-							</div>
-						</If>
-						<If condition={!!binding.get('name')}>
-							<div className="eManager_group">
-								<div className="eManager_label">{'Game'}</div>
-								<select
-									className="eManager_select"
-									value={sportId}
-									defaultValue={null}
-									onChange={self._changeCompleteSport}>
-									<Morearty.DOM.option
-										key="nullable-type"
-										value={null}
-										selected="selected"
-										disabled="disabled">not selected</Morearty.DOM.option>
-									{self._getSports()}
-								</select>
-							</div>
-						</If>
-						<If condition={!!binding.get('sportId')}>
-							<div className="eManager_group">
-								<div className="eManager_label">{'Gender'}</div>
-								<div className="eManager_radiogroup">
-									{self._getGenders()}
-								</div>
-							</div>
-						</If>
-						<If condition={!!binding.get('sportId') && !!binding.get('gender')}>
-							<div className="eManager_group">
-								<div className="eManager_label">{'Ages'}</div>
-								<Multiselect
-									binding={binding}
-									items={self._getAgeItems()}
-									selections={self._getSelectedAges()}
-									onChange={self._changeCompleteAges}
-								/>
-							</div>
-						</If>
-						<If condition={!!binding.get('sportId')}>
-							<div className="eManager_group">
-								<div className="eManager_label">{'Filtered By House'}</div>
-								<div className="eManager_radiogroup">
-									{self._getHouseFilterRadioButton()}
-								</div>
-							</div>
-						</If>
-						<If condition={!!binding.get('isHouseFilterEnable')}>
-							<div className="eManager_group">
-								<div className="eManager_label">{'House'}</div>
-								<div className="eManager_select_wrap">
-									{self._renderHouseAutocomplete()}
-								</div>
-							</div>
-						</If>
-						<If condition={self._isShowTeamManager()}>
-							<div>
-								<div className="eManager_group">
-									<div className="eManager_label">{'Add player'}</div>
-									<div className ="eManager_select_wrap">
-										<AutocompleteTeam binding={autocompleteTeamBinding}/>
-									</div>
-								</div>
-								<div className="eManager_group">
-									{''}
-									<Team onRemovePlayer={self._onRemovePlayer} binding={teamBinding}/>
-								</div>
-								<div className="eManager_group">
-									<div className="eTeam_errorBox">
-										{errorText}
-									</div>
-								</div>
-								<div className="eForm_savePanel">
-									<div className="bButton mRight" onClick={self.props.onFormSubmit}>Finish</div>
-								</div>
-							</div>
-						</If>
+				<div className="eManager_base">
+					<div className="eManager_group">
+						<div className="eManager_label">{'Team Name'}</div>
+						<input
+							className="eManager_field"
+							type="text"
+							value={binding.get('name')}
+							placeholder={'enter name'}
+							onChange={self.handleChangeName}
+						/>
 					</div>
+					<div className="eManager_group">
+						<div className="eManager_label">{'Team Description'}</div>
+						<textarea
+							className="eManager_field mTextArea"
+							type="text"
+							value={binding.get('description')}
+							placeholder={'enter description'}
+							onChange={Morearty.Callback.set(binding.sub('description'))}
+						/>
+					</div>
+					<div className="eManager_group">
+						<div className="eManager_label">{'Game'}</div>
+						<select	className="eManager_select"
+								value={binding.toJS('sportId')}
+								onChange={self.handleChangeSport}
+						>
+							{self.getSports()}
+						</select>
+					</div>
+					<div className="eManager_group">
+						<div className="eManager_label">{'Genders'}</div>
+						<select	className={classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
+								onChange={self.handleChangeGender}
+								disabled={!self.isSportSelected()}
+						>
+							{self.getGenders()}
+						</select>
+					</div>
+					<div className="eManager_group">
+						<div className="eManager_label">{'Ages'}</div>
+						<Multiselect
+							binding={binding.sub('___multiselect')}
+							items={self.getAgeItems()}
+							selections={self.getSelectedAges()}
+							onChange={self.handleChangeAges}
+						/>
+					</div>
+					<div className="eManager_group">
+						<div className="eManager_label">{'Filtered By House'}</div>
+						<div className="eManager_radiogroup">
+							{self.renderHouseFilterCheckbox()}
+						</div>
+					</div>
+					<If condition={self.getHouseFilterCheckboxValue()}>
+						<div className="eManager_group">
+							<div className="eManager_label">{'House'}</div>
+							<div className="eManager_select_wrap">
+								{self.renderHouseAutocomplete()}
+							</div>
+						</div>
+					</If>
+					{self.renderTeamManager()}
 				</div>
 			</div>
 		);

@@ -7,7 +7,10 @@ const 	GeneralType 		= require('./general-type'),
 		ColorsType 			= require('./colors-type'),
 		GenderType 			= require('./gender-type'),
 		DateType 			= require('./date-type'),
-		ActionButtonsType 	= require('./action-buttons-type');
+		ImageType 			= require('./image-type'),
+		ActionButtonsType 	= require('./action-buttons-type'),
+		ActionDropListType 	= require('./action-drop-list-type'),
+		EmailUrlType 		= require('./email-url-type');
 
 const CellTypeList = {
 	'general': 			GeneralType,
@@ -15,7 +18,11 @@ const CellTypeList = {
 	'colors': 			ColorsType,
 	'gender': 			GenderType,
 	'date': 			DateType,
-	'action-buttons': 	ActionButtonsType
+	'image': 			ImageType,
+	'action-buttons': 	ActionButtonsType,
+	'action-list':		ActionDropListType,
+	'email':			EmailUrlType,
+	'url': 				EmailUrlType
 };
 
 module.exports = CellTypeList;

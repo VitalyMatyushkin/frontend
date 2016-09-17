@@ -1,19 +1,22 @@
 /**
- * Created by bridark on 19/06/15.
+ * Created by Anatoly on 13.09.2016.
  */
-const   React       = require('react'),
-        LiveRequest = require('module/as_admin/pages/admin_schools/admin_views/admin_requests'),
-        Morearty	= require('morearty');
+
+const   React 		= require('react'),
+		Morearty	= require('morearty'),
+		Actions 	= require('module/shared_pages/permission_requests/request-actions'),
+		Grid 		= require('module/ui/grid/grid');
 
 const SchoolRequest = React.createClass({
-    mixins: [Morearty.Mixin],
-    render:function(){
-        const self = this,
-            binding = self.getDefaultBinding();
-
-        return (
-            <LiveRequest binding={binding} />
-        );
-    }
+	mixins: [Morearty.Mixin],
+	componentWillMount: function () {
+		this.actions = new Actions(this);
+		this.actions.columns.splice(1,3);
+		this.actions.init();
+	},
+	render: function () {
+		return <Grid model={this.actions.grid}/>;
+	}
 });
+
 module.exports = SchoolRequest;

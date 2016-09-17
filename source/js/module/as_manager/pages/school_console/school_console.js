@@ -9,9 +9,9 @@ const   RouterView      				= require('module/core/router'),
         Morearty	    				= require('morearty'),
         Immutable       				= require('immutable'),
 		UsersComponent 					= require('module/as_manager/pages/school_console/views/users'),
-		AdminRequestsComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_requests'),
-		AdminPermissionAcceptComponent 	= require("module/as_admin/pages/admin_schools/admin_views/admin_permission_accept"),
-		RequestArchiveComponent 		= require('module/as_manager/pages/school_console/views/request_archive');
+		AdminRequestsComponent 			= require('./views/requests'),
+		RequestArchiveComponent 		= require('./views/request_archive'),
+		AdminPermissionAcceptComponent 	= require("module/as_admin/pages/admin_schools/admin_views/admin_permission_accept");
 
 let liveRequestCount;
 

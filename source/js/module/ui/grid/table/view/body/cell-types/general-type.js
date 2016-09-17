@@ -4,20 +4,20 @@
 
 const React = require('react');
 
-const GeneralType = React.createClass({
-	propTypes: {
-		cell: 		React.PropTypes.object.isRequired,
-		dataItem:	React.PropTypes.object.isRequired
-	},
-	render: function() {
-		const value = this.props.cell.getValue(this.props.dataItem),
-			result = value ? value : null;
-		return (
-			<div className="eDataList_listItemCell">
-				{result}
-			</div>
-		);
-	}
-});
+const GeneralType = function(props){
+	const 	value 	= props.cell.getValue(props.dataItem),
+			result 	= value ? value : null;
+
+	return (
+		<div className="eDataList_listItemCell">
+			{result}
+		</div>
+	);
+};
+
+GeneralType.propTypes = {
+	cell: 		React.PropTypes.object.isRequired,
+	dataItem:	React.PropTypes.object.isRequired
+};
 
 module.exports = GeneralType;

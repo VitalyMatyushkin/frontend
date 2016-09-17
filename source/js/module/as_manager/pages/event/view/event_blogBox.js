@@ -32,7 +32,6 @@ const CommentBox = React.createClass({
 							{blog.text}
 						</span>
 						<div>
-							<span className="eCommentLike">Like</span>
 							<a className="eReply" onClick={self.props.onReply.bind(null, blog)}>Reply</a>
 							<span className="eCommentDate">{new Date(blog.createdAt).toLocaleString('en-GB')}</span>
 						</div>

@@ -3,9 +3,10 @@
  */
 const 	React 		= require('react'),
 		RoleHelper  = require('module/helpers/role_helper'),
-		Auth 		= require('module/core/services/AuthorizationServices');
+		Auth 		= require('module/core/services/AuthorizationServices'),
+		RSC			= require('./RoleSelectorComponent');
 
-const RoleSelectorComponent = React.createClass({
+const RoleSelector = React.createClass({
 	componentWillMount:function(){
 		const self = this;
 		const availableRoles = self.props.availableRoles;
@@ -43,30 +44,18 @@ const RoleSelectorComponent = React.createClass({
 		window.location.href = `//${domain}/#${defaultPage}`;
 	},
 	onRoleSelected: function(roleName){
-		const self = this;
-
-		return function(){
-			console.log(`Role selected: ${roleName}`);
-			Auth.become(roleName).then(data => {
-				return self.redirectToStartPage(roleName.toLowerCase());
-			});
-		}
-	},
-	renderRoleButton: function(roleName){
-		const self = this;
-
-		return <div className="bButton" key={roleName} onClick={self.onRoleSelected(roleName)}>{roleName}</div>
+		Auth.become(roleName).then(data => {
+			return this.redirectToStartPage(roleName.toLowerCase());
+		});
 	},
 	render: function(){
-		const self = this;
-
-		return (
-			<div className="bRoleSelector">
-				{self.props.availableRoles.map(self.renderRoleButton)}
-			</div>
-		);
+		const availableRoles = this.props.availableRoles;
+		if(availableRoles.length > 1) {	// not drawing roles if there is only one. It will be selected automatically
+			return <RSC availableRoles={availableRoles} onRoleSelected={this.onRoleSelected}/>;
+		}
+		return null;
 	}
 });
 
 
-module.exports = RoleSelectorComponent;
+module.exports = RoleSelector;

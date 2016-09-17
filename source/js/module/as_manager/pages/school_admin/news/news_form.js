@@ -15,9 +15,9 @@ const NewsForm = React.createClass({
 
 		return (
 				<div>
-			<Form onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
+			<Form onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} submitOnEnter={false} >
 				<FormField type="text" field="title" validation="required">Title</FormField>
-				<FormField type="date" field="date" validation="required">Date</FormField>
+				<FormField type="date" field="date" validation="date required">Date</FormField>
 				<FormField type="textarea" field="body" validation="required">Text</FormField>
 				<FormColumn>
 					<FormField type="imageFile" labelText="+" typeOfFile="image" field="picUrl"/>

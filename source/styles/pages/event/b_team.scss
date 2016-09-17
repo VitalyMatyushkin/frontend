@@ -6,9 +6,16 @@
   margin: 15px auto;
   border: $BORDER;
   background: #fff;
-  max-width: 700px;
+  max-width: 704px;
   box-sizing: border-box;
   width: 100%;
+}
+
+.bEventTeams_TeamWrapper {
+
+  &.mDisabled {
+    display: none;
+  }
 }
 
 .bEventTeams_team {

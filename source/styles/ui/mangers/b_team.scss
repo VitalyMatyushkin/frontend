@@ -7,8 +7,10 @@
   color: #2a2a2a;
 
   &.mDefaultView {
-    width: 406px;
-    height: 322px;
+    width:        406px;
+    height:       322px;
+    border-left:  solid 1px #c2c2c2;
+    box-sizing: border-box;
   }
 
   &.mSkypeStyleView {
@@ -18,7 +20,7 @@
 }
 
 .eTeam_playerList {
-  height: 233px;
+  height: 285px;
 
   overflow-y: auto;
 }
@@ -26,10 +28,17 @@
 .eTeam_player {
   cursor: pointer;
 
+  padding: 5px;
+
   &.mHead {
     color: #939393;
     border-top: solid 1px #c2c2c2;
     border-bottom: solid 1px #c2c2c2;
+
+    &:hover {
+      background-color: #fff;
+      cursor: auto;
+    }
   }
 
   &.mSelected {
@@ -45,22 +54,29 @@
   display: inline-block;
   vertical-align: top;
 
-  height: 23px;
-  padding-top: 12px;
+  height: 20px;
+  padding-top: 5px;
 
   text-align: center;
   font-weight: bold;
   font-size: 16px;
+  line-height: 20px;
 
   &.mName {
     width: 40%;
     &.mDefaultView {
       width: 35%;
     }
+    &.mLong {
+      width: 50%;
+    }
   }
 
   &.mForm {
     width: 10%;
+    &.mLong {
+      width: 50%;
+    }
   }
 
   &.mPosition {
@@ -71,7 +87,6 @@
     width: 40%;
 
     &.mSelector {
-      padding-top: 9px;
     }
   }
 
@@ -117,9 +132,9 @@
 .eTeam_removeButton {
   height: 40px;
 
-  background: #759500 url("/images/arrows_r.png") no-repeat center;
+  background: $blueColor url("/images/arrows_r.png") no-repeat center;
   &:hover {
-    background-color: #566D01;
+    background-color: $lightBlue;
   }
 }
 
@@ -128,10 +143,4 @@
   font-size: 14px;
   color: #FF0000;
   display: none;
-}
-.bPlayer.mHead {
-  background: #d7d7d7;
-}
-.bPlayer tr{
-  padding: 0 10px;
 }

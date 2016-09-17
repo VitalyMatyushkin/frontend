@@ -1,13 +1,12 @@
 const 	ProcessingView 	= require('./processing'),
 		InviteOutbox 	= require('./invite'),
 		React 			= require('react'),
-		InvitesMixin 	= require('../mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable');
 
 const ArchiveView = React.createClass({
-	mixins: [Morearty.Mixin, InvitesMixin],
+	mixins: [Morearty.Mixin],
 	// ID of current school
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
@@ -23,45 +22,16 @@ const ArchiveView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		let invites;
 
-		// TODO Don't forget about filter
-		//{
-		//	filter: {
-		//		where: {
-		//			or: [
-		//				{
-		//					inviterId: activeSchoolId
-		//				},
-		//				{
-		//					guestId: activeSchoolId
-		//				}
-		//			],
-		//				accepted: {
-		//				inq: [true, false]
-		//			}
-		//		},
-		//		include: ['inviter', 'guest', {
-		//			event: 'sport'
-		//		}]
-		//	}
-		//}
-		window.Server.schoolInvites.get(self.activeSchoolId, {
-				filter: {
-					limit: 100
-				}
-			})
-			.then(function (_invites) {
-				// About all invites - get all invites for our school.
-				// Then filter accepted or decline invites
-				invites = _invites.filter(invite => invite.accepted !== 'NOT_READY');
-
-				// get info about current school
+		window.Server.schoolArchiveInvites.get(self.activeSchoolId, { filter: { limit: 100 }})
+			.then( archivedInvites => {
+				invites = archivedInvites;
 				return window.Server.school.get(self.activeSchoolId);
 			})
 			.then(activeSchool => {
@@ -95,7 +65,18 @@ const ArchiveView = React.createClass({
 				);
 			})
 			.then(_ => {
+				invites = invites.sort((a,b) => {
+					const _a = a.event.startTime,
+						_b = b.event.startTime;
 
+					if(_a < _b){
+						return -1;
+					}
+					if(_a > _b){
+						return 1;
+					}
+					return 0;
+				});
 				binding
 					.atomically()
 					.set('sync', true)
@@ -106,34 +87,37 @@ const ArchiveView = React.createClass({
 			});
 	},
 	getInvites: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			invites = binding.get('models');
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = binding.get('models');
 
-		return invites.map(function (invite, index) {
+		return invites.map( (invite, index) => {
 			var inviteBinding = {
 					default: binding.sub(['models', index]),
 					inviterSchool: binding.sub(['models', index, 'inviterSchool']),
 					invitedSchool: binding.sub(['models', index, 'invitedSchool'])
 				};
 
-			return <InviteOutbox binding={inviteBinding} />;
+			return <InviteOutbox key={invite.get('id')} binding={inviteBinding} />;
 		}).toArray();
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			invites = self.getInvites();
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = self.getInvites();
 
-		return <div key="ArchiveView" className="eInvites_OutboxContainer">
-			<div className="eSchoolMaster_wrap">
-				<h1 className="eSchoolMaster_title">Archive</h1>
-				<div className="eStrip">
+		return (
+			<div className="eInvites_OutboxContainer">
+				<div className="eSchoolMaster_wrap">
+					<h1 className="eSchoolMaster_title">Archive</h1>
+					<div className="eStrip">
+					</div>
 				</div>
+				<div className="eInvites_filterPanel"></div>
+				<div className="eInvites_list" >{invites && invites.length ? invites : null}</div>
+				<ProcessingView binding={binding} />
 			</div>
-			<div className="eInvites_filterPanel"></div>
-			<div className="eInvites_list" key="ArchiveView_list">{invites && invites.length ? invites : 'You don\'t have invites'}</div>
-		</div>;
+		);
 	}
 });
 

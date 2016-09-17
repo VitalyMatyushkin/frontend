@@ -2,14 +2,14 @@ const   If              = require('module/ui/if/if'),
         Manager         = require('module/ui/managers/manager'),
         React           = require('react'),
         classNames      = require('classnames'),
-        TeamSubmitMixin = require('module/ui/managers/helpers/team_submit_mixin'),
+        TeamHelper      = require('./../../../../ui/managers/helpers/team_helper'),
         Promise         = require('bluebird'),
         MoreartyHelper	= require('module/helpers/morearty_helper'),
         Morearty		= require('morearty'),
         Immutable       = require('immutable');
 
 const InviteAcceptView = React.createClass({
-    mixins: [Morearty.Mixin, TeamSubmitMixin],
+    mixins: [Morearty.Mixin],
     // ID of current school
     // Will set on componentWillMount event
     activeSchoolId: undefined,
@@ -22,27 +22,8 @@ const InviteAcceptView = React.createClass({
 
         self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-		binding.clear();
+        binding.clear();
         let invite;
-        // TODO don't forget about filter
-        //{
-        //    filter: {
-        //        where: {
-        //            id: inviteId
-        //        },
-        //        include: [
-        //            {
-        //                guest: ['forms']
-        //            },
-        //            {
-        //                event: 'sport'
-        //            },
-        //            {
-        //                inviter: ['forms']
-        //            }
-        //        ]
-        //    }
-        //}
         window.Server.schoolInvite.get({schoolId: self.activeSchoolId, inviteId: inviteId})
         .then(_invite => {
             invite = _invite;
@@ -109,27 +90,53 @@ const InviteAcceptView = React.createClass({
         }
     },
     _submit: function() {
-        const self = this,
-            binding = self.getDefaultBinding();
+        const   self    = this,
+                binding = self.getDefaultBinding();
 
-        Promise.all(
-            self._submitRival(
-                binding.toJS('model'),
-                binding.toJS('rivals.0'),
-                0
-            )
-        )
-        .then(_ => {
-            return window.Server.acceptSchoolInvite.post({
-                schoolId: self.activeSchoolId,
-                inviteId: binding.get('invite.id')
-            });
-        })
-        .then(_ => {
-            document.location.hash = '#event/' + binding.get('model.id');
+        const event = binding.toJS('model');
 
-            return _;
-        });
+        if(TeamHelper.isNonTeamSport(event)) {
+            // add new individuals
+            Promise
+                .all(TeamHelper.addIndividualPlayersToEvent(
+                    self.activeSchoolId,
+                    event,
+                    binding.toJS(`teamModeView.teamWrapper`
+                )))
+                // accept invite
+                .then(() => window.Server.acceptSchoolInvite.post({
+                        schoolId: self.activeSchoolId,
+                        inviteId: binding.get('invite.id')
+                    })
+                )
+                .then(() => {
+                    document.location.hash = '#event/' + event.id;
+
+                    return true;
+                });
+        } else {
+            // create new team
+            Promise
+                .all(TeamHelper.createTeams(
+                    self.activeSchoolId,
+                    binding.toJS('model'),
+                    binding.toJS(`rivals`),
+                    binding.toJS(`teamModeView.teamWrapper`)
+                ))
+                // add it to event
+                .then(teams => Promise.all(TeamHelper.addTeamsToEvent(self.activeSchoolId, event, teams)))
+                // accept invite
+                .then(() => window.Server.acceptSchoolInvite.post({
+                        schoolId: self.activeSchoolId,
+                        inviteId: binding.get('invite.id')
+                    })
+                )
+                .then(() => {
+                    document.location.hash = '#event/' + event.id;
+
+                    return true;
+                });
+        }
     },
     _isEventDataCorrect: function() {
         const self = this;

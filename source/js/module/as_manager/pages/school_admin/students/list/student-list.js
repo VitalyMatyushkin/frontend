@@ -9,7 +9,7 @@ const   React 				= require('react'),
 const StudentList = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		this.model = new StudentListModel(this);
+		this.model = new StudentListModel(this).init();
 	},
 	render: function () {
 		return (

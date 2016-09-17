@@ -11,13 +11,14 @@ const UserModel = function(userData){
     self.id = userData.id;
     self.firstName = userData.firstName;
     self.lastName = userData.lastName;
-    self.email = userData.email;
+	self.email = userData.email;
+	self.gender = userData.gender;
 	self.birthday = userData.birthday;
 	self.permissions = userData.permissions;
     self.verified = um.getStatus(userData);
     self.roles = um.getRoles(userData);
     self.school = um.getSchool(userData);
-    self.blocked = um.getAccess(userData);
+    self.status = userData.status;
 };
 UserModel.getFullName = function(user){
     if(user){

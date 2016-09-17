@@ -2,7 +2,9 @@
  * Раздичные виды валидации
  * @type {{email: Function, alphanumeric: Function, any: Function, server: Function}}
  */
-const 	$ 		= require('jquery');
+const 	$ 			= require('jquery'),
+		DateHelper 	= require('module/helpers/date_helper');
+
 let serverValidationTimer = null;
 
 var validationsSet = {
@@ -26,26 +28,51 @@ var validationsSet = {
 		}
 	},
 	date:function(value){
-        const err = 'Incorrect date!';
-		if(!Date.parse(value)){
-			return err;
-		}else{
-            const date = new Date(value),
-                valueArray = value.split('-'),
-                day = valueArray[2].split('T')[0]*1,
-                month = valueArray[1]*1,
-                year = valueArray[0];
-			if(date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == day)
-                return false;
-            else
-                return err;
+		const minValue = new Date('1900-01-01'),
+			maxValue = new Date('2100-01-01');
+
+		if(value){
+			if(!DateHelper.isValid(value)){
+				return 'Incorrect date!';
+			}
+
+			const date = new Date(value);
+
+			if(date <= minValue){
+				return 'Date should be > "01/01/1900"';
+			}
+			if(date >= maxValue){
+				return 'Date should be < "01/01/2100"';
+			}
 		}
+
+		return false;
+	},
+	birthday:function(value){
+		let result = validationsSet.date(value);
+		if(!result && value){
+			const date = new Date(value),
+				maxDate = new Date();
+
+			if(date >= maxDate){
+				result = 'Birthday must be less than the current date.';
+			}
+		}
+
+		return result;
 	},
 	email: function(value) {
 		var self = this;
 
 		if (value && value.trim() && !(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value))) {
 			return 'Please enter a valid '+self.props.name;
+		} else {
+			return false;
+		}
+	},
+	domain: function(value){
+		if (/[^a-z\-]/.test(value)) {//Special symbols "-" (hyphen) should be allowed!
+			return 'Should contain only lowercase characters';
 		} else {
 			return false;
 		}
@@ -60,8 +87,6 @@ var validationsSet = {
 		}
 	},
 	text: function(value) {
-		var self = this;
-
 		if (/[^a-zA-Z \-\/]/.test(value)) {//Special symbols " " (space) and "-" (hyphen) should be allowed!
 			return 'Should contain only text characters';
 		} else {

@@ -9,7 +9,7 @@ const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage'
 /** Parses domain name to structure */
 function parseDomainName(domainName) {
     // http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
-    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
+    const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
     return {
         fullName:   external[0],
         model:      external[1],
@@ -30,18 +30,24 @@ function apiSelector(domainName) {
                 img:    '//img.stage.squadintouch.com'
             };
             break;
+        case parsedDomain.rootDomain === 'squadintouch' && parsedDomain.env === 'stage1':
+            apiDomains = {
+                main:   '//api.stage1.squadintouch.com',
+                img:    '//img.stage1.squadintouch.com'
+            };
+            break;
         case parsedDomain.rootDomain === 'squadintouch':
             apiDomains = {
-                main:   '//api' + (parsedDomain.env ? '.' + parsedDomain.env : '') + `.squadintouch.com`,
-                img:    '//img' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com'
+                main:   '//api2' + (parsedDomain.env ? '.' + parsedDomain.env : '') + `.squadintouch.com`,
+                img:    '//images' + (parsedDomain.env ? '.' + parsedDomain.env : '') + '.squadintouch.com'
             };
             break;
         case parsedDomain.rootDomain === 'squard':
             apiDomains = {
                 // TODO COMMENT THIS LINE BEFORE COMMIT. ONLY FOR LOCAL WORK.
                 //main:   `//localhost:3000`,
-                main:   `//api2.stage.squadintouch.com`,
-                img:    '//img.stage.squadintouch.com'
+                main:   `//api.stage1.squadintouch.com`,
+                img:    '//img.stage1.squadintouch.com'
             };
             break;
         default:
@@ -73,7 +79,7 @@ function startModuleSelector(domainName) {
 function isDeveloperEnvironment(domainName){
 	const parsedDomain = parseDomainName(domainName);
 
-	return parsedDomain.env === 'stage2' || parsedDomain.rootDomain === 'squard';
+	return parsedDomain.env === 'stage2' || parsedDomain.env === 'stage1' || parsedDomain.rootDomain === 'squard';
 }
 
 

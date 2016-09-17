@@ -1,24 +1,17 @@
-const	InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		EventTeamsView		= require('./event_teams_view'),
-		EventTeamsEdit		= require('./event_teams_edit'),
-		EventHelper			= require('module/helpers/eventHelper'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		React				= require('react'),
-		Immutable			= require('immutable'),
-		Morearty			= require('morearty');
+const	InvitesMixin			= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		EventTeamsView			= require('./event_teams_view'),
+		EventTeamsPerformance	= require('./event_teams_performance'),
+		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
+		MoreartyHelper			= require('module/helpers/morearty_helper'),
+		React					= require('react'),
+		Immutable				= require('immutable'),
+		Morearty				= require('morearty');
 
 const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-	propTypes: {
-		reload: 			React.PropTypes.func
-	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			viewPlayers: {
-				players: []
-			},
-			editPlayers: {
-				filter: {},
 				players: []
 			},
 			isSync: false
@@ -26,10 +19,9 @@ const EventTeams = React.createClass({
 	},
 	componentWillMount: function() {
 		const self = this;
-
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
-		self._loadPlayers();
+		self.loadPlayers();
 
 		self._addListeners();
 	},
@@ -41,86 +33,78 @@ const EventTeams = React.createClass({
 	_addListeners: function() {
 		const self = this;
 
-		self._addSyncListener();
+		self.addSyncListener();
 	},
 	/**
 	 * Add listener to isSync flag.
 	 * @private
 	 */
-	_addSyncListener: function() {
+	addSyncListener: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		// reload players from server if isSync is false.
-		binding.sub('isSync').addListener(descriptor => !descriptor.getCurrentValue() && self._loadPlayers());
+		binding.sub('isSync').addListener(descriptor => !descriptor.getCurrentValue() && self.loadPlayers());
 	},
 	/**
 	 * Load team players from server
 	 * @private
 	 */
-	_loadPlayers: function() {
+	loadPlayers: function() {
 		const self = this;
 
 		const event = self.getBinding('event').toJS();
 
-		event && self._setPlayersFromEventToBinding(event);
+		if(event && TeamHelper.isNonTeamSport(event)) {
+			self.setNonTeamPlayersToBinding(event);
+		} else {
+			self.setTeamPlayersFromEventToBinding(event);
+		}
 	},
-	_setPlayersFromEventToBinding: function(event) {
+	setNonTeamPlayersToBinding: function(event) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	editPlayers = [],
-				viewPlayers = [];
-
-		Promise
-			.all(event.participants.map(team => {
-				return self._getTeamPLayers(team)
-					.then(players => {
-						viewPlayers.push(players);
-
-						switch (event.eventType) {
-							case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-								team.schoolId === self.activeSchoolId && editPlayers.push(players);
-								break;
-							default:
-								editPlayers.push(players);
-								break;
-						}
-					});
-			}))
-			.then(() => binding.atomically()
-								.set('viewPlayers.players',	Immutable.fromJS(viewPlayers))
-								.set("editPlayers.players",	Immutable.fromJS(editPlayers))
-								.set('isSync',				Immutable.fromJS(true))
-								.commit()
-			);
-	},
-	_getTeamPLayers: function(team) {
-		return window.Server.teamPlayers.get(
-			{
-				schoolId:	team.schoolId,
-				teamId:		team.id
-			},
-			{
-				filter: {
-					limit: 100
+		window.Server.schoolEvent.get(
+				{
+					schoolId:	self.activeSchoolId,
+					eventId:	event.id
 				}
-			}
-		);
+			)
+			.then(event => {
+				self.getBinding('event').set(
+					'individualsData',
+					Immutable.fromJS(event.individualsData)
+				);
+				binding
+					.atomically()
+					.set('viewPlayers.players',	Immutable.fromJS(event.individualsData))
+					.set('isSync',				Immutable.fromJS(true))
+					.commit();
+			});
 	},
-	_getEditPlayersBinding: function() {
+	setTeamPlayersFromEventToBinding: function(event) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return {
-			default:	binding.sub('editPlayers'),
-			event:		self.getBinding('event'),
-			points:		self.getBinding('points'),
-			schoolInfo:	self.getBinding('schoolInfo'),
-			mode:		self.getBinding('mode')
-		};
+		window.Server.schoolEvent.get(
+			{
+				schoolId:	self.activeSchoolId,
+				eventId:	event.id
+			}
+		).then(updEvent => {
+			self.getBinding('event').set(
+				'teamsData',
+				Immutable.fromJS(updEvent.teamsData)
+			);
+			binding
+				.atomically()
+				.set('viewPlayers.players',	Immutable.fromJS(updEvent.teamsData.map(tp => tp.players)))
+				.set('isSync',				Immutable.fromJS(true))
+				.commit();
+		});
 	},
-	_getViewPlayersBinding: function() {
+	getViewPlayersBinding: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -128,41 +112,39 @@ const EventTeams = React.createClass({
 			default:	binding.sub('viewPlayers'),
 			event:		self.getBinding('event'),
 			points:		self.getBinding('points'),
-			mode:		self.getBinding('mode')
+			mode:		self.getBinding('mode'),
+			isSync:		binding.sub('isSync')
 		};
 	},
-	/* RENDERS */
-	_renderTeams: function() {
-		const self = this;
+	getPlayerPerformanceBinding: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-		const mode = self.getBinding('mode').toJS();
-
-		let result;
-
-		switch (mode) {
-			case 'edit_squad':
-				result = (
-					<EventTeamsEdit binding={self._getEditPlayersBinding()} />
-				);
-				break;
-			case 'general':
-			case 'closing':
-				result = (
-					<EventTeamsView binding={self._getViewPlayersBinding()} />
-				);
-				break;
-		}
-
-		return result;
+		return {
+			default:	binding.sub('viewPlayers'),
+			event:		self.getBinding('event'),
+			points:		self.getBinding('points'),
+			mode:		self.getBinding('mode'),
+			isSync:		binding.sub('isSync')
+		};
 	},
 	render: function() {
 		const self = this;
 
-		return (
-			<div>
-				{self._renderTeams()};
-			</div>
-		);
+		const activeTab = self.getBinding('activeTab').toJS();
+
+		switch (activeTab) {
+			case 'teams':
+				return (
+					<EventTeamsView binding={self.getViewPlayersBinding()} />
+				);
+			case 'performance':
+				return (
+					<EventTeamsPerformance binding={self.getPlayerPerformanceBinding()} />
+				);
+			default:
+				return null;
+		}
 	}
 });
 

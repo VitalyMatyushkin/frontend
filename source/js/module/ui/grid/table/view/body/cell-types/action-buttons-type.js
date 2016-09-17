@@ -17,22 +17,26 @@ const ActionButtonsType = React.createClass({
 				options = self.props.cell.typeOptions;
 
 		options.onItemEdit && itemButtons.push(
-			<span key={item.id+'edit'} onClick={options.onItemEdit.bind(null, item)} className="bLinkLike">
+			<span key={item.id+'edit'} onClick={options.onItemEdit.bind(null, item)} className="bLinkLike bTooltip"
+				  data-description="Edit">
 				<SVG icon="icon_edit"/>
 			</span>
 		);
 		options.onItemView && itemButtons.push(
-			<span key={item.id+'view'} onClick={options.onItemView.bind(null, item)} className="bLinkLike bViewBtn">
+			<span key={item.id+'view'} onClick={options.onItemView.bind(null, item)}
+				  className="bLinkLike bViewBtn bTooltip" data-description="View">
 				<SVG icon="icon_eye"/>
 			</span>
 		);
 		options.onItemSelect && itemButtons.push(
-			<span key={item.id+'view'} onClick={options.onItemSelect.bind(null, item)} className="bLinkLike bViewBtn">
-				<SVG icon="icon_menu"/>
+			<span key={item.id+'view'} onClick={options.onItemSelect.bind(null, item)}
+				  className="bLinkLike bViewBtn bTooltip" data-description="View">
+				<SVG icon="icon_eye"/>
 			</span>
 		);
 		options.onItemRemove && itemButtons.push(
-			<span key={item.id+'remove'} onClick={options.onItemRemove.bind(null, item)} className="bLinkLike delete_btn">
+			<span key={item.id+'remove'} onClick={options.onItemRemove.bind(null, item)}
+				  className="bLinkLike delete_btn bTooltip" data-description="Delete">
 				<SVG icon="icon_delete"/>
 			</span>
 		);

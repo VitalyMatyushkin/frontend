@@ -39,6 +39,21 @@ ClassListModel.prototype = {
 	onEdit: function(data) {
 		document.location.hash += '/edit?id=' + data.id;
 	},
+	onChildren: function(data) {
+		document.location.hash += `/students?id=${data.id}&name=${data.name}`;
+	},
+	onRemove:function(data){
+		const 	self = this;
+
+		if(data && confirm(`Are you sure you want to remove form ${data.name}?`)){
+			window.Server.schoolForm.delete({schoolId:self.activeSchoolId, formId:data.id})
+				.then(_ => self.reloadData())
+				.catch(error => {
+					error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details
+					&& alert(error.xhr.responseJSON.details.text);
+				});
+		}
+	},
 	getGrid: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
@@ -74,7 +89,9 @@ ClassListModel.prototype = {
 						 * Only school admin and manager can edit or delete students.
 						 * All other users should not see that button.
 						 * */
-						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null
+						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
+						onItemSelect:	this.onChildren.bind(this),
+						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}
 			}
@@ -88,7 +105,7 @@ ClassListModel.prototype = {
 				/**Only school admin and manager can add new students. All other users should not see that button.*/
 				btnAdd:changeAllowed ?
 				(
-					<div className="addButton" onClick={function(){document.location.hash += '/add';}}>
+					<div className="addButton bTooltip" data-description="Add Form" onClick={function(){document.location.hash += '/add';}}>
 						<SVG icon="icon_add_form" />
 					</div>
 				) : null

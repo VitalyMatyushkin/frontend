@@ -20,7 +20,8 @@ const 	asAdmin 	= require('./module/start_as_admin'),
 		asLogin		= require('./module/start_as_login'),
 		asParents	= require('./module/start_as_parents'),
 		asPassword	= require('./module/start_as_password'),
-		asSchool	= require('./module/start_as_school');
+		asSchool	= require('./module/start_as_school'),
+		asPlayGround = require('./module/start_as_playground');
 
 
 
@@ -58,5 +59,6 @@ switch(startModule) {
 	case 'module/start_as_login':		asLogin();		break;
 	case 'module/start_as_password':	asPassword();	break;
 	case 'module/start_as_school':  	asSchool();  	break;
+	case 'module/start_as_playground':	asPlayGround(); break;
 	default: asLogin();
 }

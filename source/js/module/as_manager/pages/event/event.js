@@ -6,7 +6,8 @@ const	If				= require('module/ui/if/if'),
 		EventButtons	= require('./view/event_buttons'),
 		EventTeams		= require('./view/teams/event_teams'),
 		EventGallery	= require('module/as_manager/pages/event/gallery/event_gallery'),
-		EventDetails    = require('./view/event_details'),
+		EventDetails	= require('./view/event_details'),
+		ManagerWrapper	= require('./view/manager_wrapper'),
 		React			= require('react'),
 		Comments		= require('./view/event_blog'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -24,12 +25,7 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			model: {},
-			participants: [],
-			eventId: null,
-			points: [],
-			result: {
-				points: []
-			},
+			albums: [],
 			sync: false,
 			mode: 'general',
 			showingComment: false,
@@ -40,51 +36,132 @@ const EventView = React.createClass({
 	componentWillMount: function () {
 		const	self		= this,
 				rootBinding	= self.getMoreartyContext().getBinding(),
-				binding		= self.getDefaultBinding(),
-				eventId		= rootBinding.get('routing.pathParameters.0');
-
+				binding		= self.getDefaultBinding();
+		
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+		
 		self.initTabs();
+		self.initMenuItems();
 
-		self._initMenuItems();
-
-		let	activeSchool;
-
-		window.Server.school.get(self.activeSchoolId)
-		.then(_school => {
-			activeSchool = _school;
-
-			// Get forms
-			return window.Server.schoolForms.get(self.activeSchoolId, {filter:{limit:1000}});
-		})
-		.then(forms => {
-			activeSchool.forms = forms;
-
-			// Get event
-			return window.Server.schoolEvent.get({
-				schoolId: self.activeSchoolId,
-				eventId: eventId
+		window.Server.schoolEvent.get({
+				schoolId:	self.activeSchoolId,
+				eventId:	rootBinding.get('routing.pathParameters.0')
+		}).then(event => {
+			event.schoolsData = TeamHelper.getSchoolsData(event);
+			event.teamsData = event.teamsData.sort((t1, t2) => {
+				if(t1.name < t2.name) {
+					return -1;
+				}
+				if(t1.name > t2.name) {
+					return 1;
+				}
+				if(t1.name === t2.name) {
+					return 0;
+				}
 			});
-		})
-		.then(event => {
-			// TODO remove plug and implement albums
-			const	albums	= [], // res.albums,
-					points	= event.result && event.result.points ? TeamHelper.convertPointsToClientModel(event.result.points) : [];
+			event.housesData = event.housesData.sort((h1, h2) => {
+				if(h1.name < h2.name) {
+					return -1;
+				}
+				if(h1.name > h2.name) {
+					return 1;
+				}
+				if(h1.name === h2.name) {
+					return 0;
+				}
+			});
+			// FUNCTION MODIFY EVENT OBJECT!!
+			self.initializeEventResults(event);
 
 			binding
 				.atomically()
-				.set('sport',				Immutable.fromJS(event.sport))
-				.set('model',				Immutable.fromJS(event))
-				.set('model.sportModel',	Immutable.fromJS(event.sport))
-				.set('participants',		Immutable.fromJS(event.participants))
-				.set('points',				Immutable.fromJS(points))
-				.set('albums',				Immutable.fromJS(albums))
-				.set('schoolInfo',			Immutable.fromJS(activeSchool))
-				.set('eventId',				Immutable.fromJS(eventId))
-				.set('mode',				Immutable.fromJS('general'))
-				.set('sync',				Immutable.fromJS(true))
+				.set('model',	Immutable.fromJS(event))
+				.set('mode',	Immutable.fromJS('general'))
+				.set('sync',	Immutable.fromJS(true))
 				.commit();
-		});
+
+			return event;
+		})
+	},
+	/**
+	 * !! Function modify event object !!
+	 * Initialize event results.
+	 * It means:
+	 * 1) Set zero points to appropriate score bundle(schools score, teams score, houses score and etc.)
+	 * 2) Backup init state of results for revert changes in scores if it will be need.
+	 * @param event
+	 */
+	initializeEventResults: function(event) {
+		const self = this;
+
+		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
+			event.results = TeamHelper.callFunctionForLeftContext(
+				self.activeSchoolId,
+				event,
+				self.getInitResults.bind(self, event)
+			);
+			event.results = TeamHelper.callFunctionForRightContext(
+				self.activeSchoolId,
+				event,
+				self.getInitResults.bind(self, event)
+			);
+		}
+		// backup results
+		// we need default state of results for revert event result changes
+		// when user click to cancel button(in close event mode)
+		event.initResults = event.results;
+	},
+	getInitResults: function(event, teamBundleName, order) {
+		const self = this;
+
+		let	scoreBundleName,
+			resultIdFieldName,
+			dataBundleIdFieldName,
+			dataBundle;
+
+		switch (teamBundleName) {
+			case 'schoolsData':
+				scoreBundleName			= 'schoolScore';
+				resultIdFieldName		= 'schoolId';
+				dataBundleIdFieldName	= 'id';
+				dataBundle				= event[teamBundleName];
+				break;
+			case 'housesData':
+				scoreBundleName			= 'houseScore';
+				resultIdFieldName		= 'houseId';
+				dataBundleIdFieldName	= 'id';
+				dataBundle				= event[teamBundleName];
+				break;
+			case 'teamsData':
+				scoreBundleName			= 'teamScore';
+				resultIdFieldName		= 'teamId';
+				dataBundleIdFieldName	= 'id';
+				dataBundle				= event[teamBundleName];
+				break;
+			case 'individualsData':
+				scoreBundleName			= 'individualScore';
+				resultIdFieldName		= 'userId';
+				dataBundleIdFieldName	= 'userId';
+				dataBundle				= event.individualsData;
+				break;
+		}
+
+		if(typeof dataBundle[order] !== 'undefined') {
+			const scoreData = event.results[scoreBundleName].find(r => r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
+
+			if(typeof scoreData === 'undefined') {
+				const newScoreData = {};
+				newScoreData[resultIdFieldName]	= dataBundle[order][dataBundleIdFieldName];
+				newScoreData.score				= 0;
+				if(teamBundleName === 'individualsData') {
+					newScoreData.permissionId = dataBundle[order].permissionId;
+				}
+
+				event.results[scoreBundleName].push(newScoreData);
+			}
+		}
+
+		return event.results;
 	},
 	/**Init model for Tabs component*/
 	initTabs: function() {
@@ -100,10 +177,15 @@ const EventView = React.createClass({
 				isActive:false
 			},
 			{
-				value:'details',
-				text:'Details',
+				value:'performance',
+				text:'Performance',
 				isActive:false
 			},
+			//{
+			//	value:'details',
+			//	text:'Details',
+			//	isActive:false
+			//},
 			{
 				value:'gallery',
 				text:'Gallery',
@@ -150,7 +232,7 @@ const EventView = React.createClass({
 	 * Initialize data for menu items
 	 * @private
 	 */
-	_initMenuItems: function() {
+	initMenuItems: function() {
 		const	self	= this,
 				eventId	= self.getMoreartyContext().getBinding().get('routing.pathParameters.0');
 
@@ -183,7 +265,7 @@ const EventView = React.createClass({
 			self.commentContent = '0';
 		}
 	},
-	_onClickReFormTeamMatch: function () {
+	handleClickChangeTeamsButtons: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -195,11 +277,33 @@ const EventView = React.createClass({
 
 		return {
 			default:	binding.sub('eventTeams'),
+			activeTab:	binding.sub('activeTab'),
 			event:		binding.sub('model'),
-			points:		binding.sub('points'),
-			schoolInfo:	binding.sub('schoolInfo'),
 			mode:		binding.sub('mode')
 		};
+	},
+	isShowTrobber: function() {
+		const self = this;
+
+		return !self.isSync();
+	},
+	isSync: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return binding.toJS('sync')=== true;
+	},
+ 	isShowMainMode: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return self.isSync() && !self.isShowChangeTeamMode();
+	},
+	isShowChangeTeamMode: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		return self.isSync()  && binding.toJS('mode') === 'edit_squad';
 	},
 	render: function() {
 		const	self			= this,
@@ -212,7 +316,10 @@ const EventView = React.createClass({
 		return (
 			<div>
 				<div className="bEventContainer">
-					<If condition={binding.get('sync')=== true}>
+					<If condition={self.isShowTrobber()}>
+						<span>loading...</span>
+					</If>
+					<If condition={self.isShowMainMode()}>
 						<div className="bEvent">
 							<If condition={(binding.get('mode') === 'general')}>
 								<div className="bEventButtons_action">
@@ -228,11 +335,11 @@ const EventView = React.createClass({
 									<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 								</div>
 								<div className="bEventMiddleSideContainer_rightSide">
-									<If condition={EventHelper._isShowEditEventButton(self)}>
+									<If condition={TeamHelper.isShowEditEventButton(self)}>
 										<div className="bEditButtonWrapper">
 											<div
 												className="bEditButton"
-												onClick={self._onClickReFormTeamMatch}
+												onClick={self.handleClickChangeTeamsButtons}
 											>
 												<SVG icon="icon_edit"/>
 											</div>
@@ -240,7 +347,7 @@ const EventView = React.createClass({
 									</If>
 								</div>
 							</div>
-							<If condition={activeTab === 'teams'} >
+							<If condition={activeTab === 'teams' || activeTab === 'performance'} >
 								<EventTeams binding={self._getEventTeamsBinding()} />
 							</If>
 							<If condition={activeTab === 'details'} >
@@ -255,7 +362,7 @@ const EventView = React.createClass({
 								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
-								<div>
+								<div className="bEventBottomContainer">
 									<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
 										<div className="eEvent_shadowCommentText">{self.commentContent}</div>
 									</If>
@@ -281,8 +388,11 @@ const EventView = React.createClass({
 							</If>
 						</div>
 					</If>
-					<If condition={!binding.get('sync')}>
-						<span>loading...</span>
+					<If condition={self.isShowChangeTeamMode()}>
+						<div>
+							<ManagerWrapper binding={binding} />
+							<EventButtons binding={binding} />
+						</div>
 					</If>
 				</div>
 			</div>

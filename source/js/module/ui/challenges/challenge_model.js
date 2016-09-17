@@ -2,104 +2,73 @@
  * Created by Anatoly on 28.03.2016.
  */
 const   DateHelper  = require('module/helpers/date_helper'),
-        EventHelper = require('module/helpers/eventHelper');
+        EventHelper = require('module/helpers/eventHelper'),
+        TeamHelper  = require('module/ui/managers/helpers/team_helper');
 
+/**
+ * This component contains the necessary information to render header or the event list.
+ * @class
+ * @param {object} event - event object
+ * @param {string} activeSchoolId - activeSchoolId
+ *
+ * @property {string} id - event id
+ * @property {string} name - event name
+ * @property {string} eventType - client event type ('inter-schools', 'houses' or 'internal')
+ * @property {boolean} isFinished - event is finished
+ * @property {boolean} isIndividualSport - event sport type is individual
+ * @property {string} sport - sport name
+ * @property {string} sportPointsType - type of points
+ * @property {string} date - event start date
+ * @property {string} time - event start time
+ * @property {array} rivals - array of event rivals. rivals[0] - left, rivals[1] - right context
+ * @property {string} rivals[i].name - name team or player
+ * @property {string} rivals[i].from - from school or house name
+ * @property {string} rivals[i].schoolPic - school emblem
+ * @property {string} rivals[i].value - the combination of the 'name' and 'from'. Depending on the context(left, right),
+ * 				the type of sport and the presence of an active school ID.
+ * @property {string} score - event score string, for example: "3 : 1"
+ * @property {array} scoreAr - array of event score strings. scoreAr[0] - left, scoreAr[1] - right context
+ *
+ * */
 const ChallengeModel = function(event, activeSchoolId){
-    const self = this;
+    this.id 		= event.id;
+    this.name 		= event.name;
+	this.date 		= DateHelper.getDate(event.startTime);
+	this.time 		= DateHelper.getTime(event.startTime);
+	this.eventType 	= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
+    this.isFinished = event.status === EventHelper.EVENT_STATUS.FINISHED;
 
-    self.activeSchoolId = activeSchoolId;
-    self.id = event.id;
-    self.name = event.name;
-    self.played = event.status === 'FINISHED';
-    self.sport = event.sport ? event.sport.name : '';
-    self.date = DateHelper.getDate(event.startTime);
-    self.time = DateHelper.getTime(event.startTime);
-    self.rivals = self._getRivals(event, activeSchoolId);
-    self.score = self._getScore(event, activeSchoolId);
-};
+	this.sport 				= event.sport ? event.sport.name : '';
+	this.isIndividualSport 	= TeamHelper.isIndividualSport(event);
+	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
 
-ChallengeModel.prototype._getResultByTeam = function(event, order) {
-    const self = this,
-        participant = order < event.participants.length ? event.participants[order] : null;
-
-    let goal = '-';
-
-    if (self.played) {
-        const eventSummary = EventHelper.getTeamsSummaryByEventResult(event.result);
-
-        goal = eventSummary[participant.id] ? eventSummary[participant.id] : 0;
-    }
-
-    return goal;
-};
-
-ChallengeModel.prototype._getRivalName = function(event, order) {
-    const self = this,
-        eventType = event.eventType,
-        played = self.played,
-        participant = order < event.participants.length ? event.participants[order] : null;
-
-    let	rivalName = null;
-
-    switch(EventHelper.serverEventTypeToClientEventTypeMapping[eventType]) {
-        case 'internal':
-            rivalName = participant ? participant.name : null;
-            break;
-        case 'houses':
-            rivalName = participant && participant.house ? participant.house.name : null;
-            break;
-        case 'inter-schools':
-            if(participant && self.activeSchoolId == participant.schoolId && participant.name) {
-                rivalName = participant.name;
-            } else {
-                rivalName = participant && participant.school ? participant.school.name : null;
-            }
-            break;
-    }
-    if (!rivalName) {
-        rivalName = 'n/a';
-    }
-    else if (played && rivalName) {
-        let goal = self._getResultByTeam(event, order);
-        rivalName += '[' + goal + ']';
-    }
-
-    return {
-        id:     participant ? participant.id : participant,
-        name:   rivalName
-    };
-};
-
-ChallengeModel.prototype._getFirstIndex = function(event, activeSchoolId){
-    const activeIndex = event.participants.findIndex(participant => participant.schoolId === activeSchoolId);
-
-    return (
-        event.eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-        event.participants.length > 1 &&
-        activeIndex >= 0 ? activeIndex : 0
-    );
+    this.rivals 	= this._getRivals(event, activeSchoolId);
+	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
+	this.score 		= this._getScore(event, activeSchoolId);
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
-    const self = this,
-        firstIndex = self._getFirstIndex(event, activeSchoolId),
-        secondIndex = 1-firstIndex,
-        rivals = [];
+    const rivals = [];
 
-    rivals.push(self._getRivalName(event, firstIndex));
-    rivals.push(self._getRivalName(event, secondIndex));
+    rivals.push(TeamHelper.getRivalForLeftContext(event, activeSchoolId));
+    rivals.push(TeamHelper.getRivalForRightContext(event, activeSchoolId));
 
     return rivals;
 };
 
-ChallengeModel.prototype._getScore = function(event, activeSchoolId){
-    const self = this,
-        firstIndex = self._getFirstIndex(event, activeSchoolId),
-        secondIndex = 1-firstIndex,
-        firstResult = self._getResultByTeam(event, firstIndex),
-        secondResult = self._getResultByTeam(event, secondIndex);
+ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
+	const points1 = TeamHelper.callFunctionForLeftContext(activeSchoolId, event,
+		TeamHelper.getCountPoints.bind(TeamHelper, event)),
+		points2 = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
+			TeamHelper.getCountPoints.bind(TeamHelper, event)),
+		result1 = TeamHelper.convertPoints(points1, this.sportPointsType).str,
+		result2 = TeamHelper.convertPoints(points2, this.sportPointsType).str;
 
-    return firstResult + " : " + secondResult;
+	return [result1, result2];
+};
+
+ChallengeModel.prototype._getScore = function(){
+	return !this.isFinished ?  '- : -' : !this.isIndividualSport? this.scoreAr.join(' : ') : '';
 };
 
 module.exports = ChallengeModel;

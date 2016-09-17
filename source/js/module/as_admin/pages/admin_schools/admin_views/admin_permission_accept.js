@@ -37,10 +37,10 @@ const PermissionAcceptPage = React.createClass({
 
 		if (prId) {
 			window.Server.permissionRequest.get({prId:prId, schoolId:schoolId}).then(function (data) {
-				self.isMounted() && binding
-										.atomically()
-										.set('comment', data.comment)
-										.commit();
+				binding
+					.atomically()
+					.set('comment', data.comment)
+					.commit();
 			});
 		}
 	},

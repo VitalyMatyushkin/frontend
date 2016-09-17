@@ -1,15 +1,16 @@
 const	React			= require('react'),
-		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
-		Sport			= require('module/ui/icons/sport_icon'),
-		EventHelper		= require('module/helpers/eventHelper'),
-		Morearty        = require('morearty'),
-		ChallengeModel	= require('module/ui/challenges/challenge_model');
+		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Challenges		= require('./challenges');
 
 const ChallengesList = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	componentWillMount: function() {
 		const	self = this;
+
+		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		self._initBinding();
 		self._addListeners();
@@ -64,139 +65,20 @@ const ChallengesList = React.createClass({
 	_onClickEvent: function(eventId) {
 		document.location.hash = 'event/' + eventId + '?tab=teams';
 	},
-	_getSportIcon:function(sport){
-		return <Sport name={sport} className="bIcon_invites" ></Sport>;
-	},
-	_getEvents: function () {
-		const	self		    = this,
-				binding		    = self.getDefaultBinding(),
-                activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				currentDate	    = binding.get('calendar.currentDate'),
-				selectDay	    = binding.get('calendar.selectDay'),
-				sync		    = binding.toJS('sync');
-		let		result;
-
-		if(selectDay === undefined || selectDay === null) {
-			result = (
-				<div className="eChallenge mNotFound">{"Please select day."}</div>
-			);
-		} else if(!self._isSync()) {
-			result = (
-				<div className="eChallenge mNotFound">
-					{"Loading..."}
-				</div>
-			);
-		} else {
-			const events = binding.toJS('selectedDayFixtures');
-
-			if(events.length) {
-				result = events.map(function (event) {
-					const	model = new ChallengeModel(event, activeSchoolId),
-							sport = self._getSportIcon(model.sport);
-
-					const	leftSideRivalName	= self._getRivalNameLeftSide(event, model.rivals),
-							rightSideRivalName	= self._getRivalNameRightSide(event, model.rivals);
-
-					return (
-						<div key={'event-' + event.id} className='eChallenge' onClick={self._onClickEvent.bind(null, event.id)}>
-							<div className="eChallenge_sport">{sport}</div>
-							<div className="eChallenge_date">{model.date}</div>
-
-							<div className="eChallenge_name" title={model.name}>{model.name}</div>
-							<div className="eChallenge_rivals">
-								<span className="eChallenge_rivalName" title={leftSideRivalName}>{leftSideRivalName}</span>
-								<span>vs</span>
-								<span className="eChallenge_rivalName" title={rightSideRivalName}>{rightSideRivalName}</span>
-							</div>
-						</div>
-					);
-				});
-			} else {
-				result = (
-					<div className="eChallenge mNotFound">
-						{"There are no events for selected day."}
-					</div>
-				);
-			}
-		}
-
-		return result;
-	},
-	_getRivalNameLeftSide: function(event, rivals) {
-		const self = this;
-
-		const	eventType		= event.eventType,
-				participants	= event.participants,
-				activeSchoolId	= self.getActiveSchoolId();
-
-		if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId === activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		} else if(
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId === activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-		}
-	},
-	_getRivalNameRightSide: function(event, rivals) {
-		const	self	= this;
-
-		const	eventType		= event.eventType,
-				participants	= event.participants,
-				activeSchoolId	= self.getActiveSchoolId();
-
-		// if inter school event and participant[0] is our school
-		if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[0].schoolId !== activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[0].id).name;
-			// if inter school event and participant[1] is our school
-		} else if (
-			participants.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			participants[1].schoolId !== activeSchoolId
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-			// if inter school event and opponent school is not yet accept invitation
-		} else if(
-			participants.length === 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return rivals.find(rival => rival.id === null).name;
-			// if it isn't inter school event
-		} else if (
-			participants.length > 1 &&
-			eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
-		) {
-			return rivals.find(rival => rival.id === participants[1].id).name;
-		}
-	},
-	_isSync: function() {
-		const	self	= this;
-
-		return self.getDefaultBinding().toJS('sync');
-	},
 	render: function() {
-		const	self	= this;
+		const 	binding 		= this.getDefaultBinding(),
+				isSync			= binding.toJS('sync'),
+				selectedDay		= binding.get('calendar.selectDay'),
+				isDaySelected	= typeof selectedDay !== 'undefined' || selectedDay !== null,
+				events			= binding.toJS('selectedDayFixtures');
 
-		return (
-			<div className="eEvents_challenges mGeneral">
-				<div className="eChallenge_title">
-					<span className="eChallenge_sport">Sport</span>
-					<span className="eChallenge_date">Date</span>
-					<span className="eChallenge_name">Event Name</span>
-					<span className="eChallenge_rivals">Game Type</span>
-				</div>
-				{self._getEvents()}
-			</div>
-		);
+		return <Challenges
+			isSync={isSync}
+			isDaySelected={isDaySelected}
+			activeSchoolId={this.activeSchoolId}
+			onClick={this._onClickEvent}
+			events={events}
+		/>;
 	}
 });
 

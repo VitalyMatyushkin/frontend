@@ -21,14 +21,16 @@ const StudentHelper = {
 					firstName:  student.firstName,
 					lastName:   student.lastName
 				};
-				return window.Server.schoolForm.get({schoolId: student.schoolId, formId: student.formId});
-			})
-			.then(classData => {
-				studentData.classData = classData;
-				return window.Server.schoolHouse.get({schoolId: studentData.schoolId, houseId: studentData.houseId});
-			})
-			.then(houseData => {
-				studentData.houseData = houseData;
+				studentData.classData = student.form;
+				studentData.houseData = student.house;
+				if(!schoolId){
+					this._getChildEventsCount(studentId).then(data => {
+						studentData.numberOfGamesPlayed = data.childEventCount[0];
+						studentData.numOfGamesWon = data.childWinnerEventCount[0];
+						studentData.numOfGamesScoredIn = data.childScoredEventCount[0];
+					});
+				}
+
 				return window.Server.school.get({schoolId: studentData.schoolId});
 			})
 			.then(schoolData => {
@@ -43,13 +45,14 @@ const StudentHelper = {
 			})
 			.then(events => {
 				studentData.schoolEvent = this._getPlayedGames(events);
-				studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
-
 				studentData.gamesWon = this._getWinGames(studentId, events);
-				studentData.numOfGamesWon = studentData.gamesWon.length;
-
 				studentData.gamesScoredIn = this._getScoredInEvents(studentId, events);
-				studentData.numOfGamesScoredIn = studentData.gamesScoredIn.length;
+
+				if(schoolId){
+					studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
+					studentData.numOfGamesWon = studentData.gamesWon.length;
+					studentData.numOfGamesScoredIn = studentData.gamesScoredIn.length;
+				}
 
 				return studentData;
 			});
@@ -59,110 +62,79 @@ const StudentHelper = {
 	},
 	_getScoredInEvents: function(studentId, events) {
 		const scoredInEvents = events.filter(event => {
-			return this._isStudentGetScores(studentId, event);
+			return event.ascription && (event.ascription.childrenScored && event.ascription.childrenScored.length ||
+				event.ascription.isScored);
 		});
 
 		// Just inject student scores to events model
 		// Because on next steps of obtaining data(on user_achievements REACT component)
 		// We need studentId
 		scoredInEvents.forEach(scoredInEvent => {
-			scoredInEvent.studentScore = scoredInEvent.result.points[studentId].score;
+			const result = scoredInEvent.results.individualScore.find(r => r.userId === studentId);
+			scoredInEvent.studentScore = result ? result.score : "student's team got some scores";
 		});
 
 		return scoredInEvents;
 	},
-	_isStudentGetScores: function(studentId, event) {
-		return event.result && event.result.points && event.result.points[studentId] ? true : false;
-	},
-	_isStudentFromCurrentTeam: function(studentId, team) {
-		return Lazy(team.players).findWhere({userId:studentId}) ? true : false;
-	},
-	_isStudentTeamWin: function(studentId, event) {
-		let isStudentTeamWin = false;
-
-		if(event.status === EventHelper.EVENT_STATUS.FINISHED && event.result) {
-			const winnerId = EventHelper.getWinnerId(event.result);
-			winnerId && (isStudentTeamWin = this._isStudentFromCurrentTeam(
-				studentId,
-				Lazy(event.participants).findWhere({id: winnerId})
-			));
-		}
-
-		return isStudentTeamWin;
-	},
 	_getWinGames: function(studentId, events) {
 		return events.filter(event => {
-			return this._isStudentTeamWin(studentId, event);
+			return event.ascription && (event.ascription.childrenWin && event.ascription.childrenWin.length ||
+			event.ascription.isWin);
 		});
 	},
-	_getTeam: function(schoolId, eventId, teamId) {
-		let team;
-
-		return window.Server.publicSchoolEventTeam.get({schoolId: schoolId, eventId: eventId, teamId: teamId})
-			.then(_team => {
-				team = _team;
-
-				return window.Server.publicSchool.get({schoolId: team.schoolId});
-			})
-			.then(school => {
-				team.school = school;
-
-				if(team.houseId) {
-					return window.Server.publicSchoolHouse.get({schoolId: team.schoolId, houseId: team.houseId})
-						.then(house => {
-							team.house = house;
-
-							return team;
-						});
-				} else {
-					return team;
-				}
-			});
-	},
 	_getWinStudentEvents: function(studentId, schoolId) {
-
-		//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
-		return this._getStudentEvents(studentId, schoolId)
-			.then(events => Promise.all(events.map(event =>
-				window.Server.sport.get({sportId:event.sportId}).then(sport => {
-					event.sport = sport;
-
-					return event;
-				})
-			)))
-			.then(events => {
-				return Promise.all(events.map(event => {
-					return Promise.all(event.teams.map(teamId => {
-							return this._getTeam(event.inviterSchoolId, event.id, teamId);
-						}))
-						.then(teams => {
-							event.participants = teams;
-
-							return event;
-						});
-				}))
-			})
+		if(schoolId){
+			//TODO Decorate this. Why? Look at getStudentDataForPersonalStudentPage function description.
+			return this._getStudentEvents(studentId, schoolId);
+		} else {
+			return this._getChildEvents(studentId);
+		}
 	},
 	_getStudent: function(studentId, schoolId) {
 		if(schoolId) {
 			return window.Server.schoolStudent.get( {schoolId: schoolId, studentId: studentId} );
 		} else {
-			return window.Server.userChild.get( {childId: studentId} );
+			return window.Server.child.get( {childId: studentId} );
 		}
 	},
 	_getStudentEvents: function(studentId, schoolId) {
-		if(schoolId) {
-			return window.Server.schoolStudentEvents.get( {schoolId: schoolId, studentId: studentId} );
-		} else {
-			return window.Server.userChildEvents.get( {childId: studentId} );
-		}
+		return window.Server.schoolStudentEvents.get(
+			{schoolId: schoolId, studentId: studentId},
+			{filter:{
+				where:{
+					status: EventHelper.EVENT_STATUS.FINISHED
+				},
+				limit:1000
+			}}
+		);
+	},
+	_getChildEvents: function(studentId) {
+		return window.Server.childrenEvents.get({filter:{
+			where:{
+				childIdList: [studentId],
+				winnersChildIdList: [studentId],
+				scoredChildIdList: [studentId],
+				status: EventHelper.EVENT_STATUS.FINISHED
+			},
+			limit:1000
+		}});
 	},
 	_getParents: function(studentId, schoolId) {
 		if(schoolId) {
 			return window.Server.schoolStudentParents.get( {schoolId: schoolId, studentId: studentId} );
 		} else {
-			return window.Server.parentsChild.get( {childId: studentId} );
+			return window.Server.childParents.get( {childId: studentId} );
 		}
+	},
+	_getChildEventsCount: function (studentId){
+		return window.Server.childrenEventsCount.get({filter:{
+			where:{
+				childIdList: [studentId],
+				winnersChildIdList: [studentId],
+				scoredChildIdList: [studentId],
+				status: EventHelper.EVENT_STATUS.FINISHED
+			}
+		}});
 	}
 };
 

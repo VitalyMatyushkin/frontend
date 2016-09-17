@@ -3,11 +3,10 @@ const	ProcessingView 	= require('./processing'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		Morearty		= require('morearty'),
-		InvitesMixin 	= require('../mixins/invites_mixin');
+		Morearty		= require('morearty');
 
 const OutboxView = React.createClass({
-	mixins: [Morearty.Mixin, InvitesMixin],
+	mixins: [Morearty.Mixin],
 	// ID of current school
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
@@ -22,47 +21,16 @@ const OutboxView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		let outboxInvites;
 		
-		// TODO Don't forget about filter
-		//{
-		//	filter: {
-		//		where: {
-		//			inviterId: activeSchoolId,
-		//				accepted: {
-		//				nin: [true, false]
-		//			}
-		//		},
-		//		include: [
-		//			{
-		//				inviter: ['forms', 'houses']
-		//			},
-		//			{
-		//				event: 'sport'
-		//			},
-		//			{
-		//				guest: ['forms', 'houses']
-		//			}
-		//		]
-		//	}
-		//}
-		window.Server.schoolInvites.get(self.activeSchoolId, {
-			filter: {
-				limit: 100
-			}
-		})
-		.then(function (allInvites) {
-			// About all invites - get all invites for our school.
-			// Then filter inbox invites
-			outboxInvites = allInvites.filter(invite => invite.inviterSchoolId === self.activeSchoolId
-			&& invite.invitedSchoolId !== self.activeSchoolId && invite.accepted === 'NOT_READY');
-
-			// get info about current school
+		window.Server.schoolOutboxInvites.get(self.activeSchoolId, { filter: { limit: 100 }})
+		.then( allInvites => {
+			outboxInvites = allInvites;
 			return window.Server.school.get(self.activeSchoolId);
 		})
 		.then(activeSchool => {
@@ -91,6 +59,18 @@ const OutboxView = React.createClass({
 			);
 		})
 		.then(_ => {
+			outboxInvites = outboxInvites.sort((a,b) => {
+				const _a = a.event.startTime,
+					_b = b.event.startTime;
+
+				if(_a < _b){
+					return -1;
+				}
+				if(_a > _b){
+					return 1;
+				}
+				return 0;
+			});
 			binding
 				.atomically()
 				.set('sync', true)
@@ -101,35 +81,37 @@ const OutboxView = React.createClass({
 		});
 	},
 	getInvites: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			invites = binding.get('models');
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = binding.get('models');
 
 		return invites.map(function (invite, index) {
 			const inviteBinding = {
-				default: binding.sub(['models', index]),
-				inviterSchool: binding.sub(['models', index, 'inviterSchool']),
-				invitedSchool: binding.sub(['models', index, 'invitedSchool'])
+				default: 		binding.sub(['models', index]),
+				inviterSchool: 	binding.sub(['models', index, 'inviterSchool']),
+				invitedSchool: 	binding.sub(['models', index, 'invitedSchool'])
 			};
 
-			return <Invite type="outbox" binding={inviteBinding} />;
+			return <Invite key={invite.get('id')} type="outbox" binding={inviteBinding} />;
 		}).toArray();
 	},
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			invites = self.getInvites();
+		const 	self 	= this,
+				binding = self.getDefaultBinding(),
+				invites = self.getInvites();
 
-		return <div key="OutboxView" className="eInvites_OutboxContainer">
-			<div className="eSchoolMaster_wrap">
-				<h1 className="eSchoolMaster_title">Outbox</h1>
-				<div className="eStrip">
+		return (
+			<div className="eInvites_OutboxContainer">
+				<div className="eSchoolMaster_wrap">
+					<h1 className="eSchoolMaster_title">Outbox</h1>
+					<div className="eStrip">
+					</div>
 				</div>
+				<div className="eInvites_filterPanel"></div>
+				<div className="eInvites_list" >{invites && invites.length ? invites : null}</div>
+				<ProcessingView binding={binding} />
 			</div>
-			<div className="eInvites_filterPanel"></div>
-			<div className="eInvites_list" key="OutboxViewList">{invites && invites.length ? invites : null}</div>
-			<ProcessingView binding={binding} />
-		</div>;
+		);
 	}
 });
 

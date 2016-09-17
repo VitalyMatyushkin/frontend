@@ -5,7 +5,7 @@ const EventDetails = React.createClass({
     mixins: [Morearty.Mixin],
     render: function () {
 
-        return (<div className="bEventDetails">
+        return (<div className="bEventDetails bEventBottomContainer">
 
             <div className="eForm_fieldName">Coach</div>
             <div className="eForm_fieldName">Members Of Staff</div>

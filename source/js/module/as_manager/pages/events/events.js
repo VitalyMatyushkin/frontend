@@ -4,7 +4,6 @@ const   RouterView      			= require('module/core/router'),
         SubMenu         			= require('module/ui/menu/sub_menu'),
         MoreartyHelper  			= require('module/helpers/morearty_helper'),
         EventHelper     			= require('module/helpers/eventHelper'),
-        Lazy            			= require('lazy.js'),
         DateHelper      			= require('module/helpers/date_helper'),
         Morearty					= require('morearty'),
         Immutable       			= require('immutable'),
@@ -73,10 +72,6 @@ const EventView = React.createClass({
             DateHelper.getEndDateTimeOfMonth(currentDate)
         );
     },
-    _ifMonthHasBeenChanged: function(currentDate, prevDate) {
-        return  !prevDate ||
-                DateHelper.getMonthNumber(currentDate) !== DateHelper.getMonthNumber(prevDate);
-    },
     _setSports: function() {
         const   self    = this,
                 binding = self.getDefaultBinding();
@@ -99,7 +94,7 @@ const EventView = React.createClass({
 
         window.Server.events.get(self.activeSchoolId, {
             filter: {
-                limit: 100,
+                limit: 1000,
                 where: {
                     startTime: {
                         '$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
@@ -116,48 +111,6 @@ const EventView = React.createClass({
                 .set('sync', true)
                 .commit();
         });
-    },
-    _getEventTeams: function(event) {
-        const self = this;
-
-        // Get event teams
-        return Promise.all(
-            event.teams.map(teamId => {
-                return window.Server.team.get(
-                    {
-                        schoolId:   self.activeSchoolId,
-                        teamId:     teamId
-                    }
-                    )
-                    .then(team => {
-                        if(team.houseId) {
-                            return window.Server.schoolHouse.get(
-                                {
-                                    schoolId:   self.activeSchoolId,
-                                    houseId:    team.houseId
-                                }
-                            ).then(house => {
-                                team.house = house;
-                                return Promise.resolve(team);
-                            });
-                        } else {
-                            return Promise.resolve(team);
-                        }
-                    });
-            })
-        )
-        // Set teams to event
-        .then(teams => event.participants = teams);
-    },
-    /**
-     * Methods inject sport model to each event by sportId from event.
-     * !!! Method modify events array.
-     * @param events
-     * @param sports
-     * @private
-     */
-    _injectSportToEvents: function(events, sports) {
-        events.map(event => event.sport = Lazy(sports).findWhere({id: event.sportId}));
     },
     _initMenuItems: function() {
         const self = this;
