@@ -36,9 +36,6 @@ const TypePhone =  React.createClass({
         if(!value)
             return;
 
-        if(value.indexOf('0') === 0)
-            value = value.replace('0', '');
-
         if(value.indexOf('+7') === 0)
             cc = '+7';
 
@@ -59,7 +56,11 @@ const TypePhone =  React.createClass({
         self.setValue(cc + phone);
     },
     clearPhone:function(phone){
-        //Stops error being thrown when phone is null and replace method is being invoked
+		/** remove 0 before phone number */
+		if(phone && phone.indexOf('+440') === 0)
+			phone = phone.replace('+440', '+44');
+
+		//Stops error being thrown when phone is null and replace method is being invoked
         return phone ? phone.replace(/[^+#\d]/g, ''):'';
     },
     ccChange: function(e) {

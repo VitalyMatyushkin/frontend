@@ -19,7 +19,7 @@ const Blog = React.createClass({
         const   self    = this,
                 binding = self.getDefaultBinding();
 
-        window.Server.schoolEventCommentsCount.get({schoolId: self.activeSchoolId, eventId: binding.get('eventId')})
+        window.Server.schoolEventCommentsCount.get({schoolId: self.activeSchoolId, eventId: binding.get('model.id')})
             .then(res => {
                 binding.set('blogCount', res.count);
                 return res;
@@ -36,7 +36,7 @@ const Blog = React.createClass({
         window.Server.schoolEventComments.get(
             {
                 schoolId:   self.activeSchoolId,
-                eventId:    binding.get('eventId')
+                eventId:    binding.get('model.id')
             },
             {
                 filter: {
@@ -80,7 +80,7 @@ const Blog = React.createClass({
         self.intervalId = setInterval(function () {
             window.Server.schoolEventCommentsCount.get({
                 schoolId:   self.activeSchoolId,
-                eventId:    binding.get('eventId')}
+                eventId:    binding.get('model.id')}
             )
             .then(function(res){
                 var oldCount = binding.get('blogCount');
@@ -101,7 +101,7 @@ const Blog = React.createClass({
     _commentButtonClick:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            eventId = binding.get('eventId'),
+            eventId = binding.get('model.id'),
             comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
 			replyTo = binding.get('replyTo'),
 			replyName = replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
@@ -119,7 +119,7 @@ const Blog = React.createClass({
         return window.Server.schoolEventComments.post(
             {
                 schoolId: self.activeSchoolId,
-                eventId: binding.get('eventId')
+                eventId: eventId
             },
 			postData
         )
@@ -144,9 +144,11 @@ const Blog = React.createClass({
 		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.lastName} ${blog.author.firstName}, `;
 	},
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            dataBlog = binding.toJS('blogs');
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        const   dataBlog = binding.toJS('blogs');
+
         return(
             <div className="bBlogMain">
                 <CommentBox onReply={self.onReply} blogData={dataBlog} />

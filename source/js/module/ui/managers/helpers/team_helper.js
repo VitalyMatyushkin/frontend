@@ -272,23 +272,6 @@ function getSportById(sportId, sports) {
 	return Lazy(sports).findWhere({id: sportId});
 };
 
-/**
- * Convert server points model to client points model
- * Server points model [userId:{score, teamId}, userId:{score, teamId},...] - hash map
- * Client points model [{userId, score, teamId}, {userId, score, teamId}] - array
- */
-function convertPointsToClientModel(serverPointsModel) {
-	const clientPointsModel = [];
-
-	for(let key in serverPointsModel) {
-		clientPointsModel.push(
-			Object.assign({}, serverPointsModel[key], {userId: key})
-		);
-	}
-
-	return clientPointsModel;
-};
-
 function getFilterGender(gender) {
 	switch (gender) {
 		case 'maleOnly':
@@ -720,10 +703,16 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 					return cb('individualsData', 0);
 				}
 			} else if(TeamHelper.isTeamSport(event)) {
+				// for team sport show house[0] or team for house[0] on left side - ALWAYS!
 				if(teamsData.length === 0) {
 					return cb('housesData', 0);
 				} else if (teamsData.length === 1) {
-					return cb('teamsData', 0);
+					const foundIndex = teamsData.findIndex(t => t.houseId === housesData[0].id);
+					if(foundIndex !== -1) {
+						return cb('teamsData', foundIndex);
+					} else {
+						return cb('housesData', 0);
+					}
 				} else if (teamsData.length === 2) {
 					return cb(
 						'teamsData',
@@ -814,13 +803,16 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 					return cb('individualsData', 1);
 				}
 			} else if(TeamHelper.isTeamSport(event)) {
+				// for team sport show house[1] or team for house[1] on right side - ALWAYS!
 				if(teamsData.length === 0) {
 					return cb('housesData', 1);
 				} else if (teamsData.length === 1) {
-					return cb(
-						'housesData',
-						teamsData[0].id === housesData[0].id ? 0 : 1
-					);
+					const foundIndex = teamsData.findIndex(t => t.houseId === housesData[1].id);
+					if(foundIndex !== -1) {
+						return cb('teamsData', foundIndex);
+					} else {
+						return cb('housesData', 1);
+					}
 				} else if (teamsData.length === 2) {
 					return cb(
 						'teamsData',
@@ -900,7 +892,7 @@ function convertPoints(countPoints, pointsType){
 
 		result += h ? h + 'h ': '';
 		result += min ? min + 'min ': '';
-		result += sec ? sec + 'sec': '';
+		result += sec || countPoints === 0 ? sec + 'sec': '';
 		
 		return {
 			h:h,
@@ -921,7 +913,7 @@ function convertPoints(countPoints, pointsType){
 
 		result += km ? km + 'km ': '';
 		result += m ? m + 'm ': '';
-		result += cm ? cm + 'cm': '';
+		result += cm || countPoints === 0 ? cm + 'cm': '';
 
 		return {
 			km:km,
@@ -1181,7 +1173,6 @@ const TeamHelper = {
 	injectFormsToPlayers:					injectFormsToPlayers,
 	injectTeamIdToPlayers:					injectTeamIdToPlayers,
 	isTeamEnableForEdit:					isTeamEnableForEdit,
-	convertPointsToClientModel:				convertPointsToClientModel,
 	convertPlayersToServerValue:			convertPlayersToServerValue,
 	convertGenderToServerValue:				convertGenderToServerValue,
 	getBodyForAddPlayersRequest:			getBodyForAddPlayersRequest,

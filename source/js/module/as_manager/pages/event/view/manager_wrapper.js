@@ -235,7 +235,6 @@ const ManagerWrapper = React.createClass({
 				} else if(EventHelper.isHousesEvent(binding.toJS('model'))) {
 					team = teams.find(t => t.houseId === event.housesData[order].id);
 				} else {
-					console.log(teams);
 					team = teams ? teams[order] : undefined;
 				}
 				break;

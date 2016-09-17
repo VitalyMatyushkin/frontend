@@ -5,36 +5,34 @@
 const   StorageHelper 	= require('module/helpers/storage'),
 		Immutable   	= require('immutable');
 
+/** Authorization Services */
 const AuthorizationServices ={
     login: function(data){
         const   service = window.Server._login,
                 binding = service.binding;
-
         return service.post(data).then(authData => {
             if(authData.key) {
-                const authorizationInfo = {
+                const authInfo = {
                     id: authData.key,
-                    expireAt: authData.expireAt,
-                    verified: {"email":true,"phone":true,"personal":true}
+                    expireAt: authData.expireAt
                 };
                 if(authData.adminId)
-                    authorizationInfo.adminId = authData.adminId;
+                    authInfo.adminId = authData.adminId;
                 else
-                    authorizationInfo.userId = authData.userId;
+                    authInfo.userId = authData.userId;
 
-                binding.set(Immutable.fromJS(authorizationInfo));
+                binding.set(Immutable.fromJS(authInfo));
+				if(authData.userId){
+					return window.Server.roles.get().then(roles => {
+						if(roles && roles.length == 1){
+							return AuthorizationServices.become(roles[0].name);
+						}
+						else
+							return AuthorizationServices.become('NOBODY');
+					});
+				}
 
-                if(authData.userId){
-                    return window.Server.roles.get().then(roles => {
-                        if(roles && roles.length == 1){
-                            return AuthorizationServices.become(roles[0].name);
-                        }
-                        else
-                            return AuthorizationServices.become('NOBODY');
-                    });
-
-                }
-            }
+			}
 
             return authData;
         });
@@ -42,24 +40,28 @@ const AuthorizationServices ={
     become:function(roleName){
         const   service = window.Server._become,
                 binding = service.binding;
+		let authInfo;
 
-
-        return service.post(roleName).then(authData => {
+		return service.post(roleName).then(authData => {
             if(authData.key) {
-                const authorizationInfo = {
+				authInfo = {
                     id: authData.key,
                     role:authData.role,
                     isBecome:true,
                     userId:authData.userId,
-                    expireAt: authData.expireAt,
-                    verified: {"email":true,"phone":true,"personal":true}
+                    expireAt: authData.expireAt
                 };
-
-                binding.set(Immutable.fromJS(authorizationInfo));
             }
 
-            return authData;
-        });
+			/** Server not allow profile request before become */
+			return window.Server.profile.get();
+        }).then(profile => {
+			/** save verification status */
+			authInfo.verified = profile.verification && profile.verification.status;
+			binding.set(Immutable.fromJS(authInfo));
+			console.log(authInfo);
+			return authInfo;
+		});
     },
 	/** Clear authorization Info */
 	clear:function(){
@@ -68,7 +70,7 @@ const AuthorizationServices ={
 
 		// clear authorizationInfo
 		StorageHelper.cookie.remove('authorizationInfo');
-		binding.sub('authorizationInfo').clear();
+		binding.clear();
 	}
 };
 

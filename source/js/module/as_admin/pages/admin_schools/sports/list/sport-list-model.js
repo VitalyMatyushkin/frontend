@@ -5,6 +5,7 @@
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg'),
+		Sport 			= require('module/ui/icons/sport_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
@@ -48,6 +49,14 @@ SportListModel.prototype = {
 	},
 	getGrid: function(){
 		const columns = [
+			{
+				cell:{
+					type:'custom',
+					typeOptions:{
+						parseFunction: item => <Sport name={item.name} />
+					}
+				}
+			},
 			{
 				text:'Name',
 				isSorted:true,
