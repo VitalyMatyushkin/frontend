@@ -15,7 +15,7 @@ const Grid = React.createClass({
 		this.props.model.onRender = this.onRender;
 	},
 	onRender:function(){
-		this.setState({renderStart: new Date().toLocaleString()});
+		this.setState({renderStart: new Date()});
 	},
 	render: function() {
 		const model = this.props.model,
