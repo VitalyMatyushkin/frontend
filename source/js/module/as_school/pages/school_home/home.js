@@ -3,6 +3,7 @@
  */
 const   HomeHeader      = require('./home_header'),
         HomeFixture     = require('./home_fixtures'),
+        HomeResults     = require('./home_results'),
         HomeNews        = require('./home_news'),
         HomeCalender    = require('./home_calendar'),
         React           = require('react'),
@@ -12,11 +13,31 @@ const   HomeHeader      = require('./home_header'),
 
 const SchoolHomePage = React.createClass({
     mixins: [Morearty.Mixin],
-
+    getDefaultState: function () {
+        return Immutable.fromJS({
+            events: {
+                distinctEventDatesData: {
+                    dates:  [],
+                    isSync: true
+                },
+                selectedDateEventsData: {
+                    events: [],
+                    isSync: true
+                },
+                nextSevenDaysEvents: {
+                    events:  [],
+                    isSync: true
+                },
+                prevSevenDaysFinishedEvents: {
+                    events:  [],
+                    isSync: true
+                }
+            }
+        });
+    },
     render: function(){
         const   self    = this,
                 binding = self.getDefaultBinding();
-
 
         return (
             <div className="eSchoolHomePage">
@@ -24,6 +45,7 @@ const SchoolHomePage = React.createClass({
                 <div className="eSchoolBodyWrapper">
                     <HomeCalender binding={binding} />
 					<HomeFixture binding={binding} />
+					<HomeResults binding={binding} />
                     <HomeNews binding={binding}/>
                     <HomeBlog binding={binding}  />
                 </div>

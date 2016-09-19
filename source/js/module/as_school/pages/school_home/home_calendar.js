@@ -10,13 +10,15 @@ const HomeCalender = React.createClass({
 	mixins:[Morearty.Mixin ],
 
 	componentWillMount: function () {
-		const 	binding 				= this.getDefaultBinding().sub('events'),
+		const	binding					= this.getDefaultBinding().sub('events'),
 				activeSchoolId			= this.getMoreartyContext().getBinding().get('activeSchoolId');
 
 		/** Loading initial data for this month */
 		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
-
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
+
+		CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
+		CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
 	},
 
 	render: function(){

@@ -6,12 +6,13 @@ const HomeFixtures = React.createClass({
 	mixins: [ Morearty.Mixin ],
 
 	render:function() {
-		const 	activeSchoolId 	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
+		const	activeSchoolId 	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 				binding 		= this.getDefaultBinding().sub('events'),
-				events 			= binding.get('selectedDateEventsData.events').toJS(),
-				isSync 			= binding.get('selectedDateEventsData.isSync');
+				events 			= binding.get('nextSevenDaysEvents.events').toJS(),
+				isSync 			= binding.get('nextSevenDaysEvents.isSync');
 
 		return <FixtureList
+			title="Fixtures"
 			activeSchoolId={activeSchoolId}
 			isDaySelected={true}
 			isSync={isSync}

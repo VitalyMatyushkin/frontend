@@ -67,6 +67,61 @@ function setNextMonth(activeSchoolId, eventsBinding) {
 	loadMonthDistinctEventDatesToBinding(nextMonthDate, activeSchoolId, eventsBinding);
 }
 
+function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
+	const dayStart = new Date(); // current day
+
+	// create end day = start day + 7 days
+	const dayEnd = new Date();
+	dayEnd.setDate(dayEnd.getDate() + 7)
+
+	eventsBinding.set('nextSevenDaysEvents.isSync', false);
+
+	const filter = {
+		limit: 100,
+		where: {
+			startTime: {
+				$gte:	dayStart,
+				$lt:	dayEnd
+			},
+			status: {
+				$in: ['ACCEPTED', 'FINISHED']
+			}
+		}
+	};
+
+	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
+		eventsBinding.set('nextSevenDaysEvents.events', Immutable.fromJS(eventsData));
+		eventsBinding.set('nextSevenDaysEvents.isSync', true);
+	});
+}
+
+function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
+	const	dayStart	= new Date(),
+			dayEnd		= new Date();
+
+	dayStart.setDate(dayStart.getDate() - 7)
+
+	eventsBinding.set('prevSevenDaysFinishedEvents.isSync', false);
+
+	const filter = {
+		limit: 100,
+		where: {
+			startTime: {
+				$gte:	dayStart,
+				$lt:	dayEnd
+			},
+			status: {
+				$in: ['FINISHED']
+			}
+		}
+	};
+
+	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
+		eventsBinding.set('prevSevenDaysFinishedEvents.events', Immutable.fromJS(eventsData));
+		eventsBinding.set('prevSevenDaysFinishedEvents.isSync', true);
+	});
+}
+
 function setPrevMonth(activeSchoolId, eventsBinding) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			prevMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1);
@@ -82,7 +137,9 @@ function setSelectedDate(date, activeSchoolId, eventsBinding) {
 	loadDailyEvents(date, activeSchoolId, eventsBinding);
 }
 
-module.exports.setNextMonth = setNextMonth;
-module.exports.setPrevMonth = setPrevMonth;
-module.exports.setSelectedDate = setSelectedDate;
-module.exports.setCurrentMonth = loadMonthDistinctEventDatesToBinding;
+module.exports.setNextMonth						= setNextMonth;
+module.exports.setPrevMonth						= setPrevMonth;
+module.exports.setSelectedDate					= setSelectedDate;
+module.exports.setCurrentMonth					= loadMonthDistinctEventDatesToBinding;
+module.exports.setNextSevenDaysEvents			= setNextSevenDaysEvents;
+module.exports.setPrevSevenDaysFinishedEvents	= setPrevSevenDaysFinishedEvents;
