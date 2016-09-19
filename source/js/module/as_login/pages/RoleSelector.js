@@ -12,7 +12,7 @@ const RoleSelector = React.createClass({
 		const availableRoles = self.props.availableRoles;
 
 		if(availableRoles.length == 1) {
-			self.onRoleSelected(availableRoles[0]);
+			self.redirectToStartPage(availableRoles[0]);
 		}
 		if(availableRoles.length === 0){
 			self.redirectToStartPage('no_body');

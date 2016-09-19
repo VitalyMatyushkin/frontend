@@ -181,7 +181,7 @@ RequestListModel.prototype = {
 		};
 	},
 	setAddButton: function() {
-		const verified = this.rootBinding.get('userData.authorizationInfo.verified'),
+		const verified = this.rootBinding.toJS('userData.authorizationInfo.verified'),
 			changeAllowed = verified && verified.email && verified.sms;
 
 		/** Only verified users can add new requests. All other users should not see that button.*/
@@ -215,8 +215,8 @@ RequestListModel.prototype = {
 		}
 	},
 	handleAddNewButtonClick:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
+
 		binding.set('popup',true);
 	},
 	_closePopup:function(){
