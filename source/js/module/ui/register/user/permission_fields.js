@@ -28,7 +28,8 @@ const PermissionFields = React.createClass({
                         like: schoolName,
                         options: 'i'
                     }
-                }
+                },
+				limit: 50
             }
         });
     },
