@@ -24,10 +24,10 @@ const SchoolForm = React.createClass({
 				<FormColumn>
 					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
-					<FormField type="text" field="email" validation="required email" fieldClassName="mLarge">
+					<FormField type="text" field="email" validation="email" fieldClassName="mLarge">
 						School Official Email
 					</FormField>
-					<FormField type="text" field="sportsDepartmentEmail" validation="required email" fieldClassName="mLarge">
+					<FormField type="text" field="sportsDepartmentEmail" validation="email" fieldClassName="mLarge">
 						Sports Department Email
 					</FormField>
 				</FormColumn>
@@ -35,11 +35,11 @@ const SchoolForm = React.createClass({
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
 					<FormField type="dropdown" field="status">School Status</FormField>
-					<FormField type="phone" field="phone" validation="required">Phone</FormField>
+					<FormField type="phone" field="phone" validation="">Phone</FormField>
 					<FormField type="area" field="postcodeId" defaultItem={postcode}
 							   validation="any">Postcode</FormField>
-					<FormField type="text" field="address" validation="required">Address</FormField>
-					<FormField type="text" field="domain" validation="domain required">Domain</FormField>
+					<FormField type="text" field="address" validation="">Address</FormField>
+					<FormField type="text" field="domain" validation="domain">Domain</FormField>
 				</FormColumn>
 			</Form>
 		)
