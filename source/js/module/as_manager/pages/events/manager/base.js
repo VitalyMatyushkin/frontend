@@ -5,6 +5,7 @@ const	React			= require('react'),
 		Autocomplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
 		Multiselect		= require('module/ui/multiselect/multiselect'),
 		EventVenue		= require('./event_venue'),
+		DateHelper		= require('./../../../../helpers/date_helper'),
 		classNames		= require('classnames');
 
 const EventManagerBase = React.createClass({
@@ -245,10 +246,10 @@ const EventManagerBase = React.createClass({
 
     },
     getEventDate: function(date) {
-        return new Date(date).toLocaleDateString();
+        return DateHelper.getDateStringFromDateObject(date);
     },
     getEventTime: function(date) {
-		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
+		return DateHelper.getTimeStringFromDateObject(date);
     },
 	render: function() {
 		const   self                = this,

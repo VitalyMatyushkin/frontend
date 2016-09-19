@@ -1,7 +1,8 @@
 const	React			= require('react'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		Immutable		= require('immutable'),
-		Morearty      	= require('morearty'),
+		Morearty		= require('morearty'),
+		DateHelper		= require('./../../../../helpers/date_helper'),
 		Sport			= require('module/ui/icons/sport_icon');
 
 const AllChallengesList = React.createClass({
@@ -47,8 +48,8 @@ const AllChallengesList = React.createClass({
 
 			if(allFixtures && allFixtures.length != 0) {
 				selectedDayFixture = allFixtures.filter((event) => {
-					const eventDate = new Date(event.startTime).toLocaleDateString(),
-						currentDate = date.toLocaleDateString();
+					const	eventDate	= DateHelper.getDateStringFromDateObject(new Date(event.startTime)),
+							currentDate	= DateHelper.getDateStringFromDateObject(date);
 
 					return currentDate == eventDate;
 				});
