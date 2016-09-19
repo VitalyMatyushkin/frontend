@@ -29,12 +29,20 @@ function initMainView(school) {
 					monthDate:			new Date(today.getFullYear(), today.getMonth()),
 					selectedDate:		new Date(today.getFullYear(), today.getMonth(), today.getDate()),
 					distinctEventDatesData: {
-						isSync: false,
-						dates: []
+						isSync:	false,
+						dates:	[]
 					},
 					selectedDateEventsData: {
-						isSync: false,
-						events: []
+						isSync:	false,
+						events:	[]
+					},
+					nextSevenDaysEvents: {
+						isSync:	false,
+						events:	[]
+					},
+					prevSevenDaysFinishedEvents: {
+						isSync:	false,
+						events:	[]
 					}
 				}
 			}
