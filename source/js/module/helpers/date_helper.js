@@ -5,13 +5,42 @@
 /** Some helpfull (??? I hope really helpfull) methods to deal with dates and time */
 const DateHelper = {
 
+	/**
+	 * Get date string dd.mm.yyyy from date object
+	 * Use it instead date.toLocaleDateString
+	 * Because we have problem with date.toLocaleDateString for some time zone
+	 * @param date
+	 * @returns {*}
+	 */
+	getDateStringFromDateObject: function(date) {
+		const copyDate = new Date(date);
+
+		const	day		= copyDate.getDate() < 10 ?
+						'0' + copyDate.getDate() :
+						copyDate.getDate(),
+				month	= (copyDate.getMonth() + 1) < 10 ?
+						'0' + (copyDate.getMonth() + 1) :
+						copyDate.getMonth() + 1,
+				year	= copyDate.getFullYear();
+
+		return `${day}.${month}.${year}`;
+	},
+
+	/**
+	 * Get time string dd.mm.yyyy from date object
+	 * Use it instead date.toLocaleTimeString
+	 * Because we have problem with date.toLocaleTimeString for some time zone
+	 * @param date
+	 * @returns {*}
+	 */
+	getTimeStringFromDateObject: function(date) {
+		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
+	},
+
+	// TODO rename it to getDateStringFromUTCDateString
     /** convert date from UTC-string to 'dd/mm/yyyy' format */
     getDate: function (string) {
-        return new Date(string).toLocaleDateString('en-GB', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        });
+        return this.getDateStringFromDateObject(new Date(string));
     },
 
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
@@ -159,6 +188,7 @@ const DateHelper = {
         const lastDayOfMonthDateTime = new Date(_date.getFullYear(), _date.getMonth() + 1, 0);
 
         return lastDayOfMonthDateTime.getDate();
+
     }
 };
 

@@ -1,4 +1,5 @@
 const   classNames      = require('classnames'),
+		DateHelper		= require('./../../../../helpers/date_helper'),
         React           = require('react'),
         SVG             = require('module/ui/svg'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -62,7 +63,7 @@ const InviteView = React.createClass({
                 message         = binding.get('message') || '',
                 accepted        = binding.get('status') === 'ACCEPTED',
                 eventDate       = (new Date(binding.get('event.startTime'))),
-                startDate       = eventDate.toLocaleDateString(),
+                startDate       = DateHelper.getDateStringFromDateObject(eventDate),
                 hours           = self.addZeroToFirst(eventDate.getHours()),
                 minutes         = self.addZeroToFirst(eventDate.getMinutes()),
 				inviteId		= binding.get('id');

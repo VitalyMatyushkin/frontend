@@ -3,6 +3,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		DateHelper		= require('./../../helpers/date_helper'),
 		Challenges		= require('./challenges');
 
 const ChallengesList = React.createClass({
@@ -52,8 +53,8 @@ const ChallengesList = React.createClass({
 			if(allFixtures && allFixtures.length != 0) {
 
 				selectedDayFixture = allFixtures.filter((event) => {
-					const eventDate = new Date(event.startTime).toLocaleDateString(),
-						currentDate = date.toLocaleDateString();
+					const eventDate = DateHelper.getDateStringFromDateObject(new Date(event.startTime)),
+						currentDate = DateHelper.getDateStringFromDateObject(date);
 
 					return currentDate == eventDate;
 				});

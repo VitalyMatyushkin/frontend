@@ -2,6 +2,7 @@ const	React 			= require('react'),
 		Table			= require('module/ui/list/table'),
 		TableField		= require('module/ui/list/table_field'),
 		ListPageMixin	= require('module/mixins/list_page_mixin'),
+		DateHelper		= require('./../../../../helpers/date_helper'),
 		Morearty		= require('morearty'),
 		Avatar 			= require('module/ui/avatar/avatar');
 
@@ -41,7 +42,7 @@ const Logs = React.createClass({
 	_finishedAt: function(finishedAt) {
 		const date = new Date(finishedAt);
 
-		return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+		return `${DateHelper.getDateStringFromDateObject(date)} ${DateHelper.getTimeStringFromDateObject(date)}`;
 	},
 	getTableView: function() {
 		const	self	= this,
