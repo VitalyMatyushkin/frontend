@@ -13,28 +13,6 @@ const   HomeHeader      = require('./home_header'),
 
 const SchoolHomePage = React.createClass({
     mixins: [Morearty.Mixin],
-    getDefaultState: function () {
-        return Immutable.fromJS({
-            events: {
-                distinctEventDatesData: {
-                    dates:  [],
-                    isSync: true
-                },
-                selectedDateEventsData: {
-                    events: [],
-                    isSync: true
-                },
-                nextSevenDaysEvents: {
-                    events:  [],
-                    isSync: true
-                },
-                prevSevenDaysFinishedEvents: {
-                    events:  [],
-                    isSync: true
-                }
-            }
-        });
-    },
     render: function(){
         const   self    = this,
                 binding = self.getDefaultBinding();
