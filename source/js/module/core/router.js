@@ -211,12 +211,15 @@ const RouterView = React.createClass({
 		// Building routing table. .addRoute will fill .siteRoutes with path -> handler pairs
 		routes && routes.forEach( route => self.addRoute(route) );
 
-		// Handling address(url) change
-		window.addEventListener('popstate', self.updateUrlParametrs);
-
-		/** IE & Edge do not fire the popstate event when the URL's hash value changes */
+		/**
+		 * Handling address(url) change
+		 * IE & Edge do not fire the popstate event when the URL's hash value changes
+		 * */
 		if(Bowser.msie ||Bowser.msedge){
 			window.addEventListener('hashchange', self.updateUrlParametrs);	// for Edge and IE
+		}
+		else{
+			window.addEventListener('popstate', self.updateUrlParametrs);	// other browsers
 		}
 
 		// Binding authorization info
