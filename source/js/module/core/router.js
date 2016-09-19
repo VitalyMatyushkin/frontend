@@ -212,6 +212,7 @@ const RouterView = React.createClass({
 
 		// Handling address(url) change
 		window.addEventListener('popstate', self.updateUrlParametrs);
+		window.addEventListener('hashchange', self.updateUrlParametrs);	// for Edge and IE
 
 		// Binding authorization info
 		self.bindToAuthorization();
