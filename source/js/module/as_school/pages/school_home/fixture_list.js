@@ -8,6 +8,7 @@ const 	React		= require('react'),
 
 const FixtureList = React.createClass({
 	propTypes: {
+		title:			React.PropTypes.string.isRequired,
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		isDaySelected:	React.PropTypes.bool.isRequired,
 		isSync:			React.PropTypes.bool.isRequired,
@@ -38,7 +39,7 @@ const FixtureList = React.createClass({
 		return (
 			<div className="eSchoolFixtures">
 				<div className="eSchoolFixtureTab">
-					<h1>Fixtures</h1><hr/>
+					<h1>{this.props.title}</h1><hr/>
 				</div>
 				{fixtures}
 			</div>
