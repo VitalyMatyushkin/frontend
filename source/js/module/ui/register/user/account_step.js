@@ -24,7 +24,7 @@ const RegiseterUserForm = React.createClass({
 					<FormField type="text" field="lastName" validation="required text">Surname</FormField>
 					<FormField type="text" field="email" validation="required email server"
 							   errorClassName="eForm_errorMsgRight">Email</FormField>
-					<FormField type="phone" field="phone" validation="required server" errorClassName="eForm_errorMsgRight">
+					<FormField type="phone" field="phone" validation="required phone server" errorClassName="eForm_errorMsgRight">
 											Mobile phone</FormField>
 					<FormField type="confirmText" textType="password" field="password"
 										 validation="required password">Password</FormField>
