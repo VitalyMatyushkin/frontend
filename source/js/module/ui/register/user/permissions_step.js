@@ -14,10 +14,11 @@ const PermissionsStep = React.createClass({
 		onSuccess: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const 	self = this,
+				binding = self.getDefaultBinding();
 
-		self.types = ['parent', 'admin', 'manager', 'teacher', 'coach'];
+		self.types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'];
+		self.visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];	// how to render values from self.types. HACK!! :)
 
 		binding.sub('fields.0.schoolId').addListener(descriptor => {
 			if (descriptor.isValueChanged()) {
@@ -32,27 +33,24 @@ const PermissionsStep = React.createClass({
 		multipleFields = 1;
 	},
 	_onClickType: function (type) {
-		var self = this,
-			binding = self.getDefaultBinding();
-
+		const binding = this.getDefaultBinding();
 		binding.set('type', type);
 	},
 	fieldsMultiplier: function () {
-		var self = this;
 		if (multipleFields <= 2) {
 			multipleFields += 1;
 		}
-		self.forceUpdate();
+		this.forceUpdate();
 	},
 
 	/** will render list with all available roles to join */
 	renderChooser: function () {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const 	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return <div className="eRegistration_chooser">
-			{self.types.map(function (type) {
-				var itemClasses = classNames({
+			{self.types.map( (type, i) => {
+				const itemClasses = classNames({
 					eRegistration_chooserItem: true,
 					mActive: binding.get('type') === type
 				});
@@ -61,7 +59,7 @@ const PermissionsStep = React.createClass({
 					<div className="eChooserItem_wrap">
 						<div className="eChooserItem_inside"></div>
 					</div>
-					<span className="eRegistration_chooserTitle">{type}</span>
+					<span className="eRegistration_chooserTitle">{self.visibleTypes[i]}</span>
 				</div>;
 			})}
 		</div>
