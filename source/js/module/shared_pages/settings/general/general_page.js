@@ -22,7 +22,7 @@ const GeneralSettingsPage = React.createClass({
 				role 	= self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
 
 		if(!data.birthday)
-			delete data.birthday;
+			data.birthday = null;
 
 		window.Server.profile.put(data).then(data => {
 			binding.set(Immutable.fromJS(data));

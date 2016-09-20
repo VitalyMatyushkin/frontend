@@ -8,11 +8,10 @@ const TypeDate =  React.createClass({
 	render: function () {
         const self = this,
             binding = self.getDefaultBinding(),
-			value = binding.get('value'),
-			defaultValue = binding.get('defaultValue');
+			value = binding.get('value');
 
 		return (
-            <Date defaultValue={defaultValue} value={value} onChange={self.changeValue} onBlur={self.setValue} />
+            <Date value={value} onChange={self.changeValue} onBlur={self.setValue} />
 		)
 	}
 });
