@@ -160,12 +160,30 @@ const SportsHelpers = {
     convertFormDataToServerData: function(dataFromForm) {
         const self = this;
 
+        // this is a little hack
+        // we ignore user min/maxPlayers value if players type 1x1 or 2x2
+        let minPlayers, maxPlayers;
+        switch (dataFromForm.players) {
+            case '1x1':
+                minPlayers = 1;
+                maxPlayers = 1;
+                break;
+            case '2x2':
+                minPlayers = 2;
+                maxPlayers = 2;
+                break;
+            default:
+                minPlayers = dataFromForm.minPlayers;
+                maxPlayers = dataFromForm.maxPlayers;
+                break;
+        }
+
         let dataToPost = {
             name:                       dataFromForm.name,
             description:                dataFromForm.description,
             defaultLimits:              {
-                                            minPlayers:  dataFromForm.minPlayers,
-                                            maxPlayers:  dataFromForm.maxPlayers,
+                                            minPlayers:  minPlayers,
+                                            maxPlayers:  maxPlayers,
                                             minSubs:     dataFromForm.minSubs,
                                             maxSubs:     dataFromForm.maxSubs
                                         },
