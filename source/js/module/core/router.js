@@ -1,6 +1,7 @@
 const 	Immutable 	= require('immutable'),
 		React 		= require('react'),
 		Router		= require('director'),
+		Bowser 		= require('bowser'),
 		Morearty	= require('morearty');
 
 const RouterView = React.createClass({
@@ -210,8 +211,16 @@ const RouterView = React.createClass({
 		// Building routing table. .addRoute will fill .siteRoutes with path -> handler pairs
 		routes && routes.forEach( route => self.addRoute(route) );
 
-		// Handling address(url) change
-		window.addEventListener('popstate', self.updateUrlParametrs);
+		/**
+		 * Handling address(url) change
+		 * IE & Edge do not fire the popstate event when the URL's hash value changes
+		 * */
+		if(Bowser.msie ||Bowser.msedge){
+			window.addEventListener('hashchange', self.updateUrlParametrs);	// for Edge and IE
+		}
+		else{
+			window.addEventListener('popstate', self.updateUrlParametrs);	// other browsers
+		}
 
 		// Binding authorization info
 		self.bindToAuthorization();
