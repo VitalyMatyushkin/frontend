@@ -18,10 +18,10 @@ const Center = React.createClass({
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
 	render: function() {
-		const 	self 		= this,
-				binding 	= self.getDefaultBinding(),
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
 				currentPage	=  binding.get('routing.currentPageName') || '',
-				mainClass 	= 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
+				mainClass	= 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
 
 		return (
 			<div className={mainClass}>
