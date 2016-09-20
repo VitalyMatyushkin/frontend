@@ -1,19 +1,18 @@
 const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
 		PopupMessage	= require('./../popup_message/popup_message');
 
 const CookiePopupMessage = React.createClass({
-	getInitialState: function(){
-		return {
-			isCookiePopupDisplaying: true
-		};
-	},
+	mixins: [Morearty.Mixin],
+
 	handleClickOkButton: function() {
-		this.setState( {'isCookiePopupDisplaying': false} );
+		this.getDefaultBinding().set('isCookiePopupDisplaying', Immutable.fromJS(false));
 	},
 	render: function() {
 
 		return (
-			<PopupMessage	isDisplaying		= { this.state.isCookiePopupDisplaying }
+			<PopupMessage	isDisplaying		= { this.getDefaultBinding().toJS('isCookiePopupDisplaying') }
 							handleClickOkButton	= { this.handleClickOkButton }
 			>
 				We use cookies to provide you the best experience on our Website.

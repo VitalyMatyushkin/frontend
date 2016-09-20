@@ -24,6 +24,7 @@ function initMainView(school) {
 				parameters: {}			// GET-параметры текущего пути
 			},
 			schoolHomePage: {			// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
+				isCookiePopupDisplaying: true,
 				events: {				// will keep all data related to showing events on main page here
 					todayDate: 			today,
 					monthDate:			new Date(today.getFullYear(), today.getMonth()),

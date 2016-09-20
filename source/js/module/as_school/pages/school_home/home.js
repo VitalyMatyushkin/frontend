@@ -13,6 +13,7 @@ const   HomeHeader          = require('./home_header'),
 
 const SchoolHomePage = React.createClass({
     mixins: [Morearty.Mixin],
+
     render: function(){
         const   self    = this,
                 binding = self.getDefaultBinding();
@@ -31,7 +32,7 @@ const SchoolHomePage = React.createClass({
                     <img src = "images/logo.png"/>
                     &copy;All Rights Reserved, SquadInTouch.com  SquadInTouch.com &trade;
                 </div>
-                <CookiePopupMessage />
+                <CookiePopupMessage binding={binding}/>
             </div>
         );
     }
