@@ -1,6 +1,5 @@
 const	React		= require('react'),
-		Button		= require('./../../ui/button/button'),
-		classNames	= require('classnames');
+		Button		= require('./../../ui/button/button');
 
 const PopupMessage = React.createClass({
 	propTypes: {
@@ -14,23 +13,22 @@ const PopupMessage = React.createClass({
 		};
 	},
 	render: function() {
-		const popupMessageClassName = classNames({
-			bPopupMessage:	true,
-			mDisable:		!this.props.isDisplaying
-		});
-
-		return (
-			<div className={popupMessageClassName}>
-				<div className='ePopupMessage_body'>
-					{this.props.children}
+		if(this.props.isDisplaying) {
+			return (
+				<div className="bPopupMessage">
+					<div className='ePopupMessage_body'>
+						{this.props.children}
+					</div>
+					<div className='ePopupMessage_footer'>
+						<Button	text={'Ok'}
+								onClick={this.props.handleClickOkButton}
+						/>
+					</div>
 				</div>
-				<div className='ePopupMessage_footer'>
-					<Button	text={'Ok'}
-							onClick={this.props.handleClickOkButton}
-					/>
-				</div>
-			</div>
-		);
+			);
+		} else {
+			return null;
+		}
 	}
 });
 
