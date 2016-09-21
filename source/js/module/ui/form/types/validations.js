@@ -94,10 +94,10 @@ var validationsSet = {
 		}
 	},
 	number: function(value) {
-		if (/[0-9]/.test(value)) {
-			return 'Should be number';
-		} else {
+		if(!isNaN(parseFloat(value)) && isFinite(value)) {
 			return false;
+		} else {
+			return 'Should be number';
 		}
 	},
 	any: function() {

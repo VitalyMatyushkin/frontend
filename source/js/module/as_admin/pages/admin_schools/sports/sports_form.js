@@ -534,7 +534,7 @@ const SportsForm = React.createClass({
                             </FormField>
                             <FormField  type="text"
                                         field="pointsStep"
-                                        validation="required"
+                                        validation="required number"
                             >
                                 Points step
                             </FormField>
