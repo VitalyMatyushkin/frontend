@@ -105,6 +105,7 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 
 	const filter = {
 		limit: 100,
+		order: "startTime DESC",
 		where: {
 			startTime: {
 				$gte:	dayStart,
