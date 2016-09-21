@@ -88,11 +88,9 @@ const SummaryPanel = React.createClass({
 						</div>
 						{this.renderSiteLink()}
 					</div>
-					<div>
 						<If condition={geoPoint !== undefined}>
 							<Map binding={this.props.binding} point={geoPoint}/>
 						</If>
-					</div>
 				</div>
 			</div>
 		);
