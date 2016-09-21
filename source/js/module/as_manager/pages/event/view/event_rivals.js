@@ -280,13 +280,46 @@ const EventRival = React.createClass({
 			return self._renderTeamByOrder(1);
 		}
 	},
-	_renderTeamByOrder: function(order) {
-		const self = this;
+	getTeamNameForInterSchoolsGameByOrder: function(order) {
+		const	self		= this,
+				binding		= self.getDefaultBinding();
 
+		const	event		= binding.toJS('model');
+		let		name		= '';
+
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		if(order === 0) {
+			const foundTeam = event.teamsData.find(t => t.schoolId === activeSchoolId);
+
+			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
+		} else if(order === 1) {
+			const foundTeam = event.teamsData.find(t => t.schoolId !== activeSchoolId);
+
+			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
+		}
+
+		return name;
+	},
+	_renderTeamByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
+
+		let teamName = '';
+		if(EventHelper.isInterSchoolsEvent(event)) {
+			teamName = self.getTeamNameForInterSchoolsGameByOrder(order);
+		}
+
+		// For internal and houses events show team name in eEventRival_name.
+		// For inter-schools events show SCHOOL name in eEventRival_name
+		// and show TEAM name in eEventRival_teamName.
 		return (
 			<div className="bEventRival">
 				<div className="eEventRival_rival">{self.getPic(order)}</div>
-				<div className="eEventRival_name" title={self.getName(order)}>{self.getName(order)}</div>
+				<div className="eEventRival_name">{self.getName(order)}</div>
+				<div className="eEventRival_teamName">{teamName}</div>
 			</div>
 		);
 	},
