@@ -329,7 +329,7 @@ UsersActions.prototype = {
 					filter:{
 						type:'multi-select',
 						typeOptions:{
-							getDataPromise: window.Server.publicSchools.get(),
+							getDataPromise: window.Server.publicSchools.get({filter:{limit:1000}}),
 							valueField:'name',
 							keyField:'id'
 						}
