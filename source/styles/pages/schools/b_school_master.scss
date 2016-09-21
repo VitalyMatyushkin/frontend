@@ -183,6 +183,8 @@
 .bSchoolMaster .bMapView {
   min-height: 315px;
   max-width: 500px;
+  display: inline-block;
+  width: 50%;
 }
 .groupActionList_show{
   display: block !important;

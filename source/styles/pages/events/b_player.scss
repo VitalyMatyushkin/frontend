@@ -6,10 +6,6 @@
   align-items: center;
 }
 
-.bPlayer {
-
-}
-
 .ePlayer_remove .bIcon {
   width: 14px;
   height: 14px;
@@ -35,7 +31,6 @@
   padding: 5px 0 0;
   min-width: 45px;
   display: inline-block;
-  text-align: center;
 }
 ._bPlayer._mMini:hover .ePlayer_score{
   color: $COLOR;
@@ -52,11 +47,12 @@
 }
 
 .ePlayer_name {
+  box-sizing: border-box;
   vertical-align: middle;
   text-align: left;
-  padding: 5px 5px 0 10px;
+  padding: 5px 5px 0 0;
   font-size: 16px;
-  width: 200px;
+  width: 140px;
   color: #2a2a2a;
   &.mHead {
     color: #939393;
