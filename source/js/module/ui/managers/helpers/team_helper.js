@@ -722,6 +722,9 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+			if(TeamHelper.isOneOnOneSport(event)){
+				return cb('individualsData', 0);
+			}
 			return cb('teamsData', 0);
 	}
 };
@@ -822,6 +825,9 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+			if(TeamHelper.isOneOnOneSport(event)){
+				return cb('individualsData', 1);
+			}
 			return cb('teamsData', 1);
 	}
 }
