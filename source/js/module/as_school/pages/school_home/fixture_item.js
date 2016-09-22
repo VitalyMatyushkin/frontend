@@ -32,7 +32,9 @@ const FixtureItem = React.createClass({
 		return (
 			<div className="bFixtureOpponent bFixture_item no-margin">
 				<div>
-					<img src={model.rivals[0].schoolPic}/>
+					<div className="bFixtureImgContainer">
+						<img src={model.rivals[0].schoolPic}/>
+					</div>
 					<span>{model.rivals[0].value}</span>
 				</div>
 			</div>
@@ -44,7 +46,9 @@ const FixtureItem = React.createClass({
 		return (
 			<div className="bFixtureOpponent bFixture_item no-margin">
 				<div>
-					<img src={model.rivals[1].schoolPic}/>
+					<div className="bFixtureImgContainer">
+						<img src={model.rivals[1].schoolPic}/>
+					</div>
 					<span>{model.rivals[1].value}</span>
 				</div>
 			</div>

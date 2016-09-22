@@ -20,7 +20,7 @@ const PublicLogin = React.createClass({
                 <div className="bPublicMenu_login">
                     <div onClick={self.handleSignInUpClick.bind(null,this)}
                          className="bPublicMenu_login_holder bPublicMenu_login_active">
-                        <span className="bPublicMenu_login_txt"> Sign In </span>
+                        <span>Sign In</span>
                     </div>
                 </div>
             </div>
