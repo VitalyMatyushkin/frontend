@@ -13,7 +13,7 @@ const FilteringServices = {
                         options: 'i'
                     }
                 },
-                limit: 10
+                limit: 400
             }
         });
     },
