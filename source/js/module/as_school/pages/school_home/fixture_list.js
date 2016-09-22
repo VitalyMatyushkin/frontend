@@ -14,6 +14,9 @@ const FixtureList = React.createClass({
 		isSync:			React.PropTypes.bool.isRequired,
 		events:			React.PropTypes.any
 	},
+	// this is count of showing event for case when state.isShowAllItems === false
+	EVENTS_COUNT: 3,
+
 	getInitialState: function() {
 		return {
 			isShowAllItems: false
@@ -22,36 +25,27 @@ const FixtureList = React.createClass({
 	handleClickShowAllItemsButton: function() {
 		this.setState( {isShowAllItems: !this.state.isShowAllItems} );
 	},
+	getFixtureListByEvents: function(events) {
+		return events.map( e => <FixtureItem key={ e.id } event={ e } activeSchoolId={ this.props.activeSchoolId } /> );
+	},
 	renderFixtureList: function(){
 		const	events			= this.props.events,
 				isDaySelected	= this.props.isDaySelected,
-				isSync			= this.props.isSync,
-				activeSchoolId	= this.props.activeSchoolId;
+				isSync			= this.props.isSync;
 
 		switch(true) {
 			case isDaySelected !== true:
 				return <div className="bFixtureMessage">{"Please select day."}</div>;
-			case isSync && Array.isArray(events) && events.length > 0:
-				let _events;
-				// just copy all events
-				// 1) when events count less or equal 5
-				// 2) when this.state.isShowAllItems is TRUE and events count more then 5
-				if(
-					events.length <= 5 ||
-					(
-						this.state.isShowAllItems &&
-						events.length > 5
-					)
-				) {
-					_events = events;
-				} else {
-					// show first five events
-					_events = events.slice(0, 5);
-				}
-
-				return _events.map( e => <FixtureItem key={e.id} event={e} activeSchoolId={activeSchoolId} />);
 			case isSync && Array.isArray(events) && events.length === 0:
 				return <div className="bFixtureMessage">{"There aren't fixtures for current date"}</div>;
+			// if  0 < events count <= 5
+			case isSync && Array.isArray(events) && (events.length > 0 && events.length <= this.EVENTS_COUNT):
+			// if events count > EVENTS_COUNT and isShowAllItems === true
+			case isSync && Array.isArray(events) && this.state.isShowAllItems:
+				return this.getFixtureListByEvents(events);
+			// if events count > EVENTS_COUNT and isShowAllItems === false
+			case isSync && Array.isArray(events) && !this.state.isShowAllItems:
+				return this.getFixtureListByEvents(events.slice(0, this.EVENTS_COUNT));
 			default:
 				return <div className="bFixtureMessage">{"Loading..."}</div>;
 		}
@@ -61,7 +55,7 @@ const FixtureList = React.createClass({
 				isSync = this.props.isSync;
 
 		// show when events counts more then five
-		if(isSync && Array.isArray(events) && events.length > 5) {
+		if(isSync && Array.isArray(events) && events.length > this.EVENTS_COUNT) {
 			return (
 				<FixtureShowAllItemsButton	isShowAllItems={this.state.isShowAllItems}
 											handleClick={this.handleClickShowAllItemsButton}
