@@ -1,10 +1,6 @@
-const	classNames		= require('classnames'),
-		React			= require('react'),
+const	React			= require('react'),
 		Immutable		= require('immutable'),
 		Morearty    	= require('morearty'),
-		DaysOfWeekBar	= require('./days_of_week_bar'),
-		MonthNavBar		= require('./month_nav_bar'),
-		DayPanel		= require('./day_panel'),
 		Calendar		= require('./month_calendar'),	// this is good pure React calendar. It wrapped by this shitty calendar to be morearty-friendly.
 		SVG				= require('module/ui/svg');
 
