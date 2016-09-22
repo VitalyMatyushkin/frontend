@@ -40,6 +40,7 @@ const FixtureList = React.createClass({
 				return <div className="bFixtureMessage">{"There aren't fixtures for current date"}</div>;
 			// if  0 < events count <= 5
 			case isSync && Array.isArray(events) && (events.length > 0 && events.length <= this.EVENTS_COUNT):
+				return this.getFixtureListByEvents(events);
 			// if events count > EVENTS_COUNT and isShowAllItems === true
 			case isSync && Array.isArray(events) && this.state.isShowAllItems:
 				return this.getFixtureListByEvents(events);
