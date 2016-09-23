@@ -2,7 +2,7 @@ const 	SVG 			= require('module/ui/svg'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
 		Morearty       	= require('morearty'),
-		FixturesList 	= require('module/ui/fixtures/fixtures_list');
+		FixturesList 	= require('../../fixtures/fixtures_list');
 
 const ResultsPage = React.createClass({
 	mixins: [Morearty.Mixin],

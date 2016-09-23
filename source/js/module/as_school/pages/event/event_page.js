@@ -1,5 +1,5 @@
 const 	SubMenu 	= require('module/ui/menu/sub_menu'),
-		OneEvent 	= require('module/ui/fixtures/one_event'),
+		OneEvent 	= require('./one_event'),
 		If 			= require('module/ui/if/if'),
 		Immutable 	= require('immutable'),
 		Morearty    = require('morearty'),
