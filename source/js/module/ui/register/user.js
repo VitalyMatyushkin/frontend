@@ -85,14 +85,18 @@ const RegisterUserPage = React.createClass({
         const   self            = this,
                 binding         = self.getDefaultBinding(),
                 currentStep     = binding.get('registerStep');
+
         if (currentStep === 'account') {
             const   service         = window.Server._login,
                     serveBinding    = service.binding;
-            service.post({
-                email: binding.get('formFields').email,
-                password: binding.get('formFields').password})
-                .then(function(loginData){
-                    if(loginData.key){
+
+            service.post(
+                {
+                    email:      binding.get('formFields').email,
+                    password:   binding.get('formFields').password
+                }
+            ).then(loginData => {
+                    if(loginData.key) {
                         const authorizationInfo = {
                             id: loginData.key,
                             userId:loginData.userId,
@@ -100,11 +104,16 @@ const RegisterUserPage = React.createClass({
                             verified: {"email":false,"phone":false,"personal":true}
                         };
                         serveBinding.set(Immutable.fromJS(authorizationInfo));
-                        binding
-                            .atomically()
-                            .set('account', Immutable.fromJS(authorizationInfo))
-                            .merge('formFields', Immutable.fromJS(data.user))
-                            .set('registerStep', step)
+                        binding.atomically()
+                            .set('account',                 Immutable.fromJS(authorizationInfo))
+                            .set('verification',            Immutable.fromJS({
+                                                                userData: {
+                                                                    email: binding.toJS('formFields').email,
+                                                                    phone: binding.toJS('formFields').phone
+                                                                }
+                                                            })
+                            )
+                            .set('registerStep',    step)
                             .commit();
                     }
                 });
@@ -200,20 +209,22 @@ const RegisterUserPage = React.createClass({
 
         switch (currentStep) {
             case 'account':
-                currentView = <AccountForm
-                    onSuccess={self.setStepFunction.bind(null, 'verification')}
-                    onError = {self.catchStepFunctionError.bind(null,'verification')}
-                    binding={binding.sub('formFields')}
-                />;
+                currentView = (
+                    <AccountForm    onSuccess   = {self.setStepFunction.bind(null, 'verification')}
+                                    onError     = {self.catchStepFunctionError.bind(null,'verification')}
+                                    binding     = {binding.sub('formFields')}
+                    />
+                );
                 break;
             case 'verification':
-                currentView = <VerificationStep
-                    onSuccess={self.setStepFunction.bind(null, 'permissions')}
-                    binding={{
-						default: binding.sub('verification'),
-                        account: binding.sub('account')
-				    }}
-                />;
+                currentView = (
+                    <VerificationStep   onSuccess   = {self.setStepFunction.bind(null, 'permissions')}
+                                        binding     = {{
+                                                        default:        binding.sub('verification'),
+                                                        account:        binding.sub('account')
+                                                    }}
+                    />
+                );
                 break;
             case 'permissions':
                 currentView = <PermissionsList

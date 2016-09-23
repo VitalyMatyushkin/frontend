@@ -1,10 +1,9 @@
-const   SVG         = require('module/ui/svg'),
-        Morearty    = require('morearty'),
-        React       = require('react');
+const   SVG                             = require('module/ui/svg'),
+        Popup                           = require('./../../../ui/new_popup'),
+        SendVerificationMessageModule   = require('./sendVerificationMessageModule'),
+        Morearty                        = require('morearty'),
+        React                           = require('react');
 
-/**
- * This component show two inputs with button each. First one takes email verification code, second one takes phone verification code
- */
 const VerificationStep = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'VerificationStep',
@@ -58,6 +57,30 @@ const VerificationStep = React.createClass({
             binding.set('phoneConfirmationError',true);
         });
     },
+    handleClickResendEmail: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        binding.set('isEmailResendPopupOpening', true);
+    },
+    handleClickResendPhone: function() {
+        const   self    = this,
+            binding = self.getDefaultBinding();
+
+        binding.set('isPhoneResendPopupOpening', true);
+    },
+    handleClickCloseResendEmailPopup: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        binding.set('isEmailResendPopupOpening', false);
+    },
+    handleClickCloseResendPhonePopup: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        binding.set('isPhoneResendPopupOpening', false);
+    },
     render: function () {
         const   self                = this,
                 binding             = self.getDefaultBinding(),
@@ -69,6 +92,7 @@ const VerificationStep = React.createClass({
                 phoneErrorCheck     = (binding.get('phoneConfirmationError') !== undefined && binding.get('phoneConfirmationError') == true)?'eRegistration_label':'bButton_hide',
                 isEmailCheck        = emailCheckClasses === 'bButton_hide'? 'bCheck_show':'bButton_hide',
                 isPhoneCheck        = phoneCheckClasses === 'bButton_hide'?'bCheck_show':'bButton_hide';
+
         return (
             <div className="eRegistration_verification">
                 <label className="eRegistration_label">
@@ -81,11 +105,16 @@ const VerificationStep = React.createClass({
                     <button ref="emailCheck" className={emailCheckClasses} onClick={self.confirmEmail}>Verify</button>
                     <span className={isEmailCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
                 </label>
+                <div className="eRegisterMessage">
+                    We sent your verification letter to <b>{binding.toJS('userData.email')}</b>.
+                    <a onClick={self.handleClickResendEmail}>
+                        Not receive/wrong email?
+                    </a>
+                </div>
                 <div className={emailErrorCheck}>
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
                 <label className="eRegistration_label">
-
                     <span className="eRegistration_labelField">Verification phone</span>
                     <input className='eRegistration_input'
                                         ref='phoneCodeField'
@@ -98,8 +127,36 @@ const VerificationStep = React.createClass({
                 <div className={phoneErrorCheck}>
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
-                <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:support@squadintouch.com?subject=Registration">Email
-                    us</a></div>
+                <div className="eRegisterMessage">
+                    We sent your verification sms to <b>{binding.toJS('userData.phone')}</b>.
+                    <a onClick={self.handleClickResendPhone}>
+                        Not receive/wrong phone number?
+                    </a>
+                </div>
+                <div className="eRegisterMessage">
+                    Having trouble signing up?
+                    <a href="mailto:support@squadintouch.com?subject=Registration">
+                        Email us
+                    </a>
+                </div>
+                <Popup  isOpened                = { !!binding.toJS('isEmailResendPopupOpening') }
+                        handleClickCloseButton  = { self.handleClickCloseResendEmailPopup }
+                >
+                    <SendVerificationMessageModule  text        = { "Your Email" }
+                                                    serviceName = { "profileEmail" }
+                                                    fieldName   = { "email" }
+                                                    data        = { binding.toJS('userData.email') }
+                    />
+                </Popup>
+                <Popup  isOpened                = { !!binding.toJS('isPhoneResendPopupOpening') }
+                        handleClickCloseButton  = { self.handleClickCloseResendPhonePopup }
+                >
+                    <SendVerificationMessageModule  text        = { "Your Phone" }
+                                                    serviceName = { "profilePhone" }
+                                                    fieldName   = { "phone" }
+                                                    data        = { binding.toJS('userData.phone') }
+                    />
+                </Popup>
             </div>
         );
     }

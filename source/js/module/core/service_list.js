@@ -21,6 +21,8 @@ const serviceList = {
 
         // profile
         serviceList.profile = new Service('/i/profile', binding);
+        serviceList.profileEmail = new Service('/i/profile/email', binding);
+        serviceList.profilePhone = new Service('/i/profile/phone', binding);
         serviceList.profilePermissions = new Service('/i/permissions', binding);
         serviceList.profilePermission = new Service('/i/permissions/{permissionId}', binding);
         serviceList.profileRequests = new Service('/i/permissions/requests', binding);
