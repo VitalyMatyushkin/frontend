@@ -4,72 +4,50 @@
 
 const 	React 		= require('react'),
 		DateHelper 	= require('module/helpers/date_helper'),
+		Lazy 		= require('lazy.js'),
 		FixtureItem = require('./fixture_item');
 
-const FixtureList = function(props) {
-	function sameDay(d1, d2) {
-		d1 = d1 instanceof Date ? d1 : new Date(d1);
-		d2 = d2 instanceof Date ? d2 : new Date(d2);
+const FixtureList = React.createClass({
+	propTypes: {
+		events: React.PropTypes.array.isRequired,
+		activeSchoolId: React.PropTypes.string.isRequired,
+		onClick: React.PropTypes.func
+	},
+	getEvents: function (date) {
+		const 	self = this,
+				eventsByDate = self.props.events.filter(e => DateHelper.getDate(e.startTime) === date);
 
-		return d1.getUTCFullYear() === d2.getUTCFullYear() &&
-			d1.getUTCMonth() === d2.getUTCMonth() &&
-			d1.getUTCDate() === d2.getUTCDate();
-	}
-	function getEvents(date) {
-		const eventsByDate = props.events.filter(event => {
-			return sameDay(
-				new Date(event.startTime),
-				new Date(date));
-		});
-
-		const result = eventsByDate.map(event => {
+		return eventsByDate.map(event => {
 			return (
-				<FixtureItem key={'item-'+event.id} event={event} activeSchoolId={props.activeSchoolId} />
+				<FixtureItem key={'item-'+event.id} event={event} activeSchoolId={self.props.activeSchoolId}
+								onClick={self.props.onClick} />
 			);
 		});
+	},
+	render: function() {
+		let result = null;
 
-		return result;
-	}
+		const dates = Lazy(this.props.events).map(e => DateHelper.getDate(e.startTime)).uniq().toArray();
 
-	let result = null;
-
-	const dates = props.events.reduce(function (memo, val) {
-		var date = Date.parse(val.startTime),
-			any = memo.some(function (d) {
-				return sameDay(date, d);
+		if (dates.length === 0) {
+			result = (
+				<div className="eUserFullInfo_block">No fixtures to report</div>
+			);
+		} else {
+			result = dates.sort().map((date, dtIndex) => {
+				return (
+					<div key={dtIndex} className="bChallengeDate">
+						<div className="eChallengeDate_wrap">
+							<div className="eChallengeDate_date">{date}</div>
+							<div className="eChallengeDate_list">{this.getEvents(date)}</div>
+						</div>
+					</div>
+				);
 			});
-
-		if (!any) {
-			memo.push(date);
 		}
 
-		return memo;
-	}, []);
-
-	if (dates.length === 0) {
-		result = (
-			<div className="eUserFullInfo_block">No fixtures to report on this child</div>
-		);
-	} else {
-		result = dates.sort().map((datetime, dtIndex) => {
-			const date = DateHelper.getDate(datetime);
-
-			return (
-				<div key={dtIndex} className="bChallengeDate">
-					<div className="eChallengeDate_wrap">
-						<div className="eChallengeDate_date">{date}</div>
-						<div className="eChallengeDate_list">{getEvents(datetime)}</div>
-					</div>
-				</div>
-			);
-		});
+		return <div>{result}</div>;
 	}
-
-	return <div>{result}</div>;
-};
-FixtureList.propTypes = {
-	events: React.PropTypes.array,
-	activeSchoolId: React.PropTypes.string
-};
+});
 
 module.exports = FixtureList;

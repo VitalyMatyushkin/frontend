@@ -7,12 +7,17 @@ const 	React 			= require('react'),
 		classNames      = require('classnames'),
 		ChallengeModel  = require('module/ui/challenges/challenge_model');
 
-function FixtureItem(props){
-	function renderGameTypeColumn(model) {
-		const	leftSideRivalName	= model.rivals[0].value,
-				rightSideRivalName	= model.rivals[1].value;
+const FixtureItem = React.createClass({
+	propTypes: {
+		event: React.PropTypes.object.isRequired,
+		activeSchoolId: React.PropTypes.string.isRequired,
+		onClick: React.PropTypes.func
+	},
+	renderGameTypeColumn: function (model) {
+		const leftSideRivalName = model.rivals[0].value,
+			rightSideRivalName = model.rivals[1].value;
 
-		if(model.isIndividualSport) {
+		if (model.isIndividualSport) {
 			return (
 				<div className="eChallenge_rivals">
 					{"Individual Game"}
@@ -27,25 +32,28 @@ function FixtureItem(props){
 				<span className="eChallenge_rivalName" title={rightSideRivalName}>{rightSideRivalName}</span>
 			</div>
 		);
-	}
-	function onClickChallenge(eventId) {
-		document.location.hash = 'event/' + eventId + '?tab=teams';
-	}
+	},
+	onClickChallenge: function (e) {
+		this.props.onClick && this.props.onClick(this.props.event.id);
+		e.stopPropagation();
+	},
+	render: function () {
+		const model = new ChallengeModel(this.props.event, this.props.activeSchoolId),
+			sportIcon = <Sport name={model.sport} className="bIcon_invites"/>,
+			scoreClasses = classNames({eChallenge_results: true, mDone: model.isFinished});
 
-	const   model           = new ChallengeModel(props.event, props.activeSchoolId),
-			sportIcon       = <Sport name={model.sport} className="bIcon_invites" />,
-			scoreClasses 	= classNames({eChallenge_results:true, mDone:model.isFinished});
+		return (
+			<div className="bChallenge" onClick={this.onClickChallenge}>
+				<div className="eChallenge_hours">{model.time}</div>
+				<div className="eChallenge_sport">{sportIcon}</div>
+				<div className="eChallenge_event" title={model.name}>{model.name}</div>
+				{this.renderGameTypeColumn(model)}
+				<div className={scoreClasses}>{model.score}</div>
+			</div>
+		);
+	}
+});
 
-	return (
-		<div className="bChallenge" onClick={onClickChallenge.bind(null, model.id)}>
-			<span className="eChallenge_sport">{sportIcon}</span>
-			<span className="eChallenge_event" title={model.name}>{model.name}</span>
-			<div className="eChallenge_hours">{model.time}</div>
-			{renderGameTypeColumn(model)}
-			<div className={scoreClasses}>{model.score}</div>
-		</div>
-	);
-}
 FixtureItem.propTypes = {
 	event: 			React.PropTypes.object,
 	activeSchoolId: React.PropTypes.string
