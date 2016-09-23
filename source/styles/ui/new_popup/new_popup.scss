@@ -1,7 +1,13 @@
 .bNewPopup {
   position: absolute;
 
-  top: 50%;
+
+  width: 500px;
+  min-height: 50px;
+  margin-left: -250px;
+  margin-top: -25px;
+
+  top: 25%;
   left: 50%;
 
   z-index: 10000;

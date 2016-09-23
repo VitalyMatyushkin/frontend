@@ -1,6 +1,6 @@
 const   SVG                             = require('module/ui/svg'),
         Popup                           = require('./../../../ui/new_popup'),
-        SendVerificationMessageModule   = require('./sendVerificationMessageModule'),
+        ChangeUserContactFieldModule    = require('./changeUserContactFieldModule'),
         Morearty                        = require('morearty'),
         React                           = require('react');
 
@@ -142,18 +142,16 @@ const VerificationStep = React.createClass({
                 <Popup  isOpened                = { !!binding.toJS('isEmailResendPopupOpening') }
                         handleClickCloseButton  = { self.handleClickCloseResendEmailPopup }
                 >
-                    <SendVerificationMessageModule  text        = { "Your Email" }
+                    <ChangeUserContactFieldModule   type        = { "email" }
                                                     serviceName = { "profileEmail" }
-                                                    fieldName   = { "email" }
                                                     data        = { binding.toJS('userData.email') }
                     />
                 </Popup>
                 <Popup  isOpened                = { !!binding.toJS('isPhoneResendPopupOpening') }
                         handleClickCloseButton  = { self.handleClickCloseResendPhonePopup }
                 >
-                    <SendVerificationMessageModule  text        = { "Your Phone" }
+                    <ChangeUserContactFieldModule   type        = { "phone" }
                                                     serviceName = { "profilePhone" }
-                                                    fieldName   = { "phone" }
                                                     data        = { binding.toJS('userData.phone') }
                     />
                 </Popup>
