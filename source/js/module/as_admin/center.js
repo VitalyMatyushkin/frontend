@@ -9,6 +9,11 @@ const   RouterView      		= require('module/core/router'),
         SettingsRoute   		= require('module/core/routes/settings_route'),
         Morearty        		= require('morearty'),
         React           		= require('react'),
+        SchoolPageComponent 	= require('module/as_school/pages/school/school_page'),
+		FixturePageComponent 	= require("module/as_school/pages/fixtures/fixtures_page"),
+		EventPageComponent 		= require('module/as_school/pages/event/event_page'),
+		CalendarPageComponent 	= require('module/as_school/pages/calendar/calendar_page'),
+		OpponentsPageComponent 	= require('module/as_school/pages/opponents/opponents_page'),
 		SchoolAddComponent		= require('module/as_manager/pages/schools/schools_add'),
 		AlbumsComponent			= require('module/ui/gallery/albums'),
 		AdminDashboardComponent	= require('module/as_admin/pages/admin_schools/admin_dashboard'),
@@ -29,6 +34,11 @@ const Center = React.createClass({
             <div className={mainClass}>
                 <div className="bPageWrap">
                     <RouterView routes={ binding.sub('routing') } binding={binding}>
+                        <Route path="/ /school /school/:subPage"    binding={binding.sub('schoolProfile')}      component={SchoolPageComponent}/>
+                        <Route path="/fixtures"                     binding={binding.sub('schoolFixtures')}     component={FixturePageComponent}/>
+                        <Route path="/event"                        binding={binding.sub('schoolEvent')}        component={EventPageComponent}/>
+                        <Route path="/calendar"                     binding={binding.sub('schoolCalendar')}     component={CalendarPageComponent}/>
+                        <Route path="/opponents/:subPage"           binding={binding.sub('opponentsList')}      component={OpponentsPageComponent}/>
                         <Route path="/schools/add "                 binding={binding.sub('schoolsPage')}        component={SchoolAddComponent}/>
                         <Route path="/albums /albums/:albumId"      binding={binding.sub('albums')}             component={AlbumsComponent} />
                         <Route path="/admin_schools /admin_schools/:subPage /admin_schools/:subFolder/:subPage /admin_schools/:subFolder/:subPage/:mode /user/view"
