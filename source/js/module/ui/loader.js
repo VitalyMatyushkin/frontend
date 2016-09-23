@@ -7,7 +7,7 @@ const 	React 	= require('react'),
 
 /** animation loading. */
 function Loader(props) {
-	if (props.condition)
+	if (props.condition || props.condition === undefined)
 		return (
 			<div className="bLoader">
 				<SVG icon="icon_spin-loader-black" />
@@ -19,7 +19,7 @@ function Loader(props) {
 }
 
 Loader.propTypes = {
-	condition: React.PropTypes.bool // if true - animation showed
+	condition: React.PropTypes.bool // if true or undefined - animation showed
 };
 
 module.exports = Loader;

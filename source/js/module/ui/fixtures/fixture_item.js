@@ -13,6 +13,11 @@ const FixtureItem = React.createClass({
 		activeSchoolId: React.PropTypes.string.isRequired,
 		onClick: React.PropTypes.func
 	},
+	/**
+	 * Render game type column
+	 * @param {ChallengeModel} model - ChallengeModel object
+	 * @returns {function} - React component of Game Type
+	 * */
 	renderGameTypeColumn: function (model) {
 		const leftSideRivalName = model.rivals[0].value,
 			rightSideRivalName = model.rivals[1].value;

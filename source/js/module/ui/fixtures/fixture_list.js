@@ -13,6 +13,11 @@ const FixtureList = React.createClass({
 		activeSchoolId: React.PropTypes.string.isRequired,
 		onClick: React.PropTypes.func
 	},
+	/**
+	 * Get event list by date
+	 * @param {string} date - date in string format "dd.mm.yyyy"
+	 * @returns {array} - array of FixtureItem components
+	 * */
 	getEvents: function (date) {
 		const 	self = this,
 				eventsByDate = self.props.events.filter(e => DateHelper.getDate(e.startTime) === date);
