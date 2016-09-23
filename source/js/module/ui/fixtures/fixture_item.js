@@ -59,10 +59,4 @@ const FixtureItem = React.createClass({
 	}
 });
 
-FixtureItem.propTypes = {
-	event: 			React.PropTypes.object,
-	activeSchoolId: React.PropTypes.string
-};
-
-
 module.exports = FixtureItem;
