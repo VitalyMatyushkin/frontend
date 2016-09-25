@@ -16,7 +16,18 @@ const RegisterUserPage = React.createClass({
     // TODO: вынести значение поля step в мета-данные
     getDefaultState: function () {
         return Immutable.Map({
-            registerStep: 'account'
+            registerStep:                       'account',
+
+            isSync:                             true,
+
+            canUserResendEmailVerification:     true,
+            canUserResendPhoneVerification:     true,
+
+            isErrorEmailVerification:           false,
+            isErrorPhoneVerification:           false,
+
+            isResentEmailPopupOpen:             false,
+            isResentPhonePopupOpen:             false
         });
     },
     componentWillMount: function () {
@@ -68,11 +79,11 @@ const RegisterUserPage = React.createClass({
     },
 	initStep:function(){
 		const   self            = this,
-			binding         = self.getDefaultBinding(),
-			rootBinding		= self.getMoreartyContext().getBinding(),
-			verified		= rootBinding.toJS('userData.authorizationInfo.verified'),
-			isAuthorized	= !!rootBinding.get('userData.authorizationInfo.userId'),
-			isVerified		= verified && verified.email && verified.phone;
+			    binding         = self.getDefaultBinding(),
+			    rootBinding		= self.getMoreartyContext().getBinding(),
+			    verified		= rootBinding.toJS('userData.authorizationInfo.verified'),
+			    isAuthorized	= !!rootBinding.get('userData.authorizationInfo.userId'),
+			    isVerified		= verified && verified.email && verified.phone;
 
 		if(isAuthorized)
 			if(isVerified)
@@ -101,18 +112,14 @@ const RegisterUserPage = React.createClass({
                             id: loginData.key,
                             userId:loginData.userId,
                             expireAt: loginData.expireAt,
-                            verified: {"email":false,"phone":false,"personal":true}
+                            verified: {"email":false,"phone":false,"personal":true},
+                            email: binding.toJS('formFields').email,
+                            phone: binding.toJS('formFields').phone
                         };
+
                         serveBinding.set(Immutable.fromJS(authorizationInfo));
                         binding.atomically()
-                            .set('account',                 Immutable.fromJS(authorizationInfo))
-                            .set('verification',            Immutable.fromJS({
-                                                                userData: {
-                                                                    email: binding.toJS('formFields').email,
-                                                                    phone: binding.toJS('formFields').phone
-                                                                }
-                                                            })
-                            )
+                            .set('account',         Immutable.fromJS(authorizationInfo))
                             .set('registerStep',    step)
                             .commit();
                     }
@@ -200,6 +207,132 @@ const RegisterUserPage = React.createClass({
             })}
         </div>;
     },
+
+    handleClickConfirmEmail: function (emailCode) {
+        const   self                = this,
+                binding             = self.getDefaultBinding(),
+                verificationBinding = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo.verified');
+
+        binding.set('isSync', false);
+
+        window.Server.confirmUser.post( {token: emailCode} ).then(data => {
+            if(data.confirmed) {
+                verificationBinding.set('email',        Immutable.fromJS(true));
+                binding.atomically()
+                    .set('isSync',                      true)
+                    .set('isErrorEmailVerification',    false)
+                    .commit();
+
+                verificationBinding.toJS('phone') && self.setStepFunction('permissions');
+            } else {
+                binding.set('isErrorEmailVerification', true);
+            }
+        }).catch(() => {
+            binding.set('isErrorEmailVerification', true);
+        });
+    },
+    handleClickConfirmPhone: function (phoneCode) {
+        const   self                = this,
+                binding             = self.getDefaultBinding(),
+                verificationBinding = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo.verified');
+
+        binding.set('isSync', false);
+
+        window.Server.confirmUserPhone.post( {token: phoneCode} ).then(data => {
+            if(data.confirmed) {
+                verificationBinding.set('phone', true);
+                binding.atomically()
+                    .set('isSync',                      true)
+                    .set('isErrorPhoneVerification',    false)
+                    .commit();
+
+                verificationBinding.toJS('email') && self.setStepFunction('permissions');
+            } else {
+                binding.set('isErrorPhoneVerification', true);
+            }
+        }).catch(() => {
+            binding.set('isErrorPhoneVerification', true);
+        });
+    },
+    handleClickResendEmail: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        window.Server.profileEmailResend.post()
+            .then(data => {
+                const interval = new Date(data.nextResendAt).getTime() - new Date().getTime();
+                binding.atomically()
+                    .set('canUserResendEmailVerification',  false)
+                    .set('isResentEmailPopupOpen',          !this.isResentEmailPopupOpen())
+                    .commit();
+                setTimeout(() => {binding.set('canUserResendEmailVerification', true)}, interval);
+            });
+    },
+    handleSuccessEmailChange: function(newEmail) {
+        const   self                        = this,
+                authorizationInfoBinding    = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
+
+        authorizationInfoBinding.set('email', Immutable.fromJS(newEmail));
+    },
+    handleClickResendPhone: function() {
+        const   self    = this,
+                binding = self.getDefaultBinding();
+
+        window.Server.profilePhoneResend.post()
+            .then(data => {
+                const interval = new Date(data.nextResendAt).getTime() - new Date().getTime();
+                binding.atomically()
+                    .set('canUserResendPhoneVerification',  false)
+                    .set('isResentPhonePopupOpen',          !this.isResentPhonePopupOpen())
+                    .commit();
+                setTimeout(() => {binding.set('canUserResendEmailVerification', true)}, interval);
+            });
+    },
+    handleSuccessPhoneChange: function(newPhone) {
+        const   self                        = this,
+                authorizationInfoBinding    = self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
+
+        authorizationInfoBinding.set('phone', Immutable.fromJS(newPhone));
+    },
+    getEmail: function() {
+        return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.email');
+    },
+    getPhone: function() {
+        return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.phone');
+    },
+
+    isEmailVerified: function() {
+        return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
+    },
+    isPhoneVerified: function() {
+        return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.phone');
+    },
+
+    isErrorEmailVerification: function() {
+        return this.getDefaultBinding().toJS('isErrorEmailVerification');
+    },
+    isErrorPhoneVerification: function() {
+        return this.getDefaultBinding().toJS('isErrorPhoneVerification');
+    },
+
+    canUserResendEmailVerification: function() {
+        return this.getDefaultBinding().toJS('canUserResendEmailVerification');
+    },
+    canUserResendPhoneVerification: function() {
+        return this.getDefaultBinding().toJS('canUserResendPhoneVerification');
+    },
+    isResentEmailPopupOpen: function() {
+        return this.getDefaultBinding().toJS('isResentEmailPopupOpen');
+    },
+    handleClickEmailPopupClose: function() {
+        return this.getDefaultBinding().set('isResentEmailPopupOpen', !this.isResentEmailPopupOpen());
+    },
+    isResentPhonePopupOpen: function() {
+        return this.getDefaultBinding().toJS('isResentPhonePopupOpen');
+    },
+    handleClickPhonePopupClose: function() {
+        return this.getDefaultBinding().set('isResentPhonePopupOpen', !this.isResentPhonePopupOpen());
+    },
     render: function () {
         const   self        = this,
                 binding     = self.getDefaultBinding(),
@@ -218,11 +351,24 @@ const RegisterUserPage = React.createClass({
                 break;
             case 'verification':
                 currentView = (
-                    <VerificationStep   onSuccess   = {self.setStepFunction.bind(null, 'permissions')}
-                                        binding     = {{
-                                                        default:        binding.sub('verification'),
-                                                        account:        binding.sub('account')
-                                                    }}
+                    <VerificationStep   email                           = { this.getEmail() }
+                                        isEmailVerified                 = { this.isEmailVerified() }
+                                        isErrorEmailVerification        = { this.isErrorEmailVerification() }
+                                        phone                           = { this.getPhone() }
+                                        isPhoneVerified                 = { this.isPhoneVerified() }
+                                        isErrorPhoneVerification        = { this.isErrorPhoneVerification() }
+                                        handleClickConfirmEmail         = { this.handleClickConfirmEmail }
+                                        handleClickConfirmPhone         = { this.handleClickConfirmPhone }
+                                        handleSuccessEmailChange        = { this.handleSuccessEmailChange }
+                                        handleSuccessPhoneChange        = { this.handleSuccessPhoneChange }
+                                        canUserResendEmailVerification  = { this.canUserResendEmailVerification() }
+                                        canUserResendPhoneVerification  = { this.canUserResendPhoneVerification() }
+                                        handleClickResendEmail          = { this.handleClickResendEmail }
+                                        handleClickResendPhone          = { this.handleClickResendPhone }
+                                        isResentEmailPopupOpen          = { this.isResentEmailPopupOpen() }
+                                        handleClickEmailPopupClose      = { this.handleClickEmailPopupClose }
+                                        isResentPhonePopupOpen          = { this.isResentPhonePopupOpen() }
+                                        handleClickPhonePopupClose      = { this.handleClickPhonePopupClose }
                     />
                 );
                 break;
