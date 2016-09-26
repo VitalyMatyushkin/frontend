@@ -24,6 +24,7 @@ const SettingsPage = React.createClass({
 				permissionsRouting: {}
 			},
 			verification: {
+				isSync:							true,
 				canUserResendEmailVerification:	true,
 				canUserResendPhoneVerification:	true,
 				isErrorEmailVerification:		false,
