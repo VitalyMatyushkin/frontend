@@ -19,7 +19,9 @@ const EventsCalendar = React.createClass({
 		/** Loading initial data for this month */
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
 	},
-
+	onEventClick:function(eventId){
+		document.location.hash = 'event/' + eventId + '?tab=teams';
+	},
 	render: function(){
 		const 	binding 					= this.getDefaultBinding().sub('calendar'),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
@@ -34,6 +36,7 @@ const EventsCalendar = React.createClass({
 					isSync={isSelectedDateEventsInSync}
 					isDaySelected={true}
 					events={selectedDateEvents}
+					onClick={this.onEventClick}
 				/>
 			</div>
 		);
