@@ -100,6 +100,7 @@ const Verification = React.createClass({
 				authorizationInfoBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
 
 		authorizationInfoBinding.set('email', Immutable.fromJS(newEmail));
+		this.forceUpdate();
 	},
 	handleClickResendPhone: function() {
 		const	self	= this,
@@ -120,6 +121,7 @@ const Verification = React.createClass({
 				authorizationInfoBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
 
 		authorizationInfoBinding.set('phone', Immutable.fromJS(newPhone));
+		this.forceUpdate();
 	},
 	isEmailVerified: function() {
 		return !!this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
