@@ -18,6 +18,7 @@ const Popup = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
+			// TODO WTF??!!
 			isOpened = self.props.initState !== undefined ? self.props.initState : !!binding.get(self.props.stateProperty),
 			popup_class_name = 'bPopup ' + (isOpened ? 'mAcitve' : '')+' '+(self.props.otherClass !== undefined ? self.props.otherClass:''),
 			popup_back_class_name = 'bPopupBack ' + (isOpened ? 'mAcitve' : '');
