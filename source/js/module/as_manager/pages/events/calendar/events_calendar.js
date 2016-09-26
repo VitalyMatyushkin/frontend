@@ -5,7 +5,7 @@
 const 	React			= require('react'),
 		Challenges		= require('module/ui/challenges/challenges'),
 		MonthCalendar	= require('module/ui/calendar/month_calendar'),
-		CalendarActions	= require('./CalendarActions'),
+		CalendarActions	= require('./calendar-actions'),
 		Morearty        = require('morearty');
 
 /** Show calendar section: month calendar and events for selected date */
