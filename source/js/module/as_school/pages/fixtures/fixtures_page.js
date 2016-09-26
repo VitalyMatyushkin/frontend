@@ -4,8 +4,8 @@ const 	SubMenu 			= require('module/ui/menu/sub_menu'),
 		Immutable 			= require('immutable'),
 		Morearty            = require('morearty'),
 		RadioGroup 			= require('module/ui/radiogroup/radiogroup'),
-		FixturesList 		= require('module/ui/fixtures/fixtures_list'),
-		FixturesStatistics 	= require('module/ui/fixtures/fixture_statics');
+		FixturesList 		= require('./fixtures_list'),
+		FixturesStatistics 	= require('./fixture_statics');
 
 const FixturesPage = React.createClass({
 	mixins: [Morearty.Mixin],

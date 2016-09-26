@@ -7,7 +7,7 @@ const   RouterView      			= require('module/core/router'),
         DateHelper      			= require('module/helpers/date_helper'),
         Morearty					= require('morearty'),
         Immutable       			= require('immutable'),
-        EventsCalendarComponent 	= require('module/as_manager/pages/events/events_calendar'),
+        EventsCalendarComponent 	= require('module/as_manager/pages/events/calendar/events_calendar'),
 		EventManagerComponent 		= require('module/as_manager/pages/events/event_manager'),
 		EventFixturesComponent 		= require('module/ui/fixtures/events_fixtures');
 
@@ -23,6 +23,7 @@ const EventView = React.createClass({
 
         return Immutable.fromJS({
             eventsRouting: {},
+			calendar:{},
             teams: [],
             sports: {
                 models: [],
@@ -30,7 +31,8 @@ const EventView = React.createClass({
             },
             models: [],
             sync: false,
-            newEvent: {}
+            newEvent: {},
+			fixtures:{}
         });
     },
     componentWillMount: function () {
@@ -41,36 +43,7 @@ const EventView = React.createClass({
         self._initMenuItems();
 
         // set data
-        self._setEvents();
         self._setSports();
-
-        // add listeners
-        self._addListeners();
-    },
-    _addListeners: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
-
-        // Listen changes of date in calendar
-        binding.addListener('calendar.currentMonth', () => {
-            const currentDate = binding.toJS('calendar.currentDate');
-
-            self._setEventsByDateRange(
-                DateHelper.getStartDateTimeOfMonth(currentDate),
-                DateHelper.getEndDateTimeOfMonth(currentDate)
-            );
-        });
-    },
-    _setEvents: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
-
-        const currentDate = binding.toJS('calendar.currentDate');
-
-        self._setEventsByDateRange(
-            DateHelper.getStartDateTimeOfMonth(currentDate),
-            DateHelper.getEndDateTimeOfMonth(currentDate)
-        );
     },
     _setSports: function() {
         const   self    = this,
@@ -87,30 +60,6 @@ const EventView = React.createClass({
                 .set('sports.models', Immutable.fromJS(sports))
                 .commit()
         );
-    },
-    _setEventsByDateRange: function(gteDate, ltDate) {
-        const   self            = this,
-                binding         = self.getDefaultBinding();
-
-        window.Server.events.get(self.activeSchoolId, {
-            filter: {
-                limit: 1000,
-                where: {
-                    startTime: {
-                        '$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
-                        '$lt':  ltDate// like this `2016-07-31T00:00:00.000Z`
-                    }
-                }
-            }
-        })
-        .then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
-        .then(events => {
-            binding
-                .atomically()
-                .set('models', Immutable.fromJS(events))
-                .set('sync', true)
-                .commit();
-        });
     },
     _initMenuItems: function() {
         const self = this;
@@ -158,7 +107,12 @@ const EventView = React.createClass({
                                 component={EventManagerComponent}
                             />
                             <Route path='/events/fixtures'
-                                   binding={binding}
+                                   binding={
+										{
+											default: binding.sub('fixtures'),
+											calendar: binding.sub('calendar')
+										}
+                                    }
                                    component={EventFixturesComponent}
                             />
                         </RouterView>

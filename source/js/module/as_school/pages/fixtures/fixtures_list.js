@@ -3,6 +3,7 @@ const 	DateTimeMixin 	= require('module/mixins/datetime'),
 		Morearty        = require('morearty'),
 		React 			= require('react');
 
+// TODO: Old! Don't use this class.
 const FixturesList = React.createClass({
 	mixins: [Morearty.Mixin, DateTimeMixin],
 	_getScore: function(fixture) {
