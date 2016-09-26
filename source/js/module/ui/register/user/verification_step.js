@@ -1,109 +1,225 @@
-const   SVG         = require('module/ui/svg'),
-        Morearty    = require('morearty'),
-        React       = require('react');
+const   React                           = require('react'),
+        classNames                      = require('classnames'),
+        SVG                             = require('module/ui/svg'),
+        Popup                           = require('./../../../ui/new_popup'),
+        ChangeUserProfileFieldModule    = require('./changeUserProfileFieldModule');
 
-/**
- * This component show two inputs with button each. First one takes email verification code, second one takes phone verification code
- */
 const VerificationStep = React.createClass({
-    mixins: [Morearty.Mixin],
-    displayName: 'VerificationStep',
     propTypes: {
-        onSuccess: React.PropTypes.func
+        email:                              React.PropTypes.string.isRequired,
+        isEmailVerified:                    React.PropTypes.bool.isRequired,
+        isErrorEmailVerification:           React.PropTypes.bool.isRequired,
+        phone:                              React.PropTypes.string.isRequired,
+        isPhoneVerified:                    React.PropTypes.bool.isRequired,
+        isErrorPhoneVerification:           React.PropTypes.bool.isRequired,
+        handleClickConfirmEmail:            React.PropTypes.func.isRequired,
+        handleClickConfirmPhone:            React.PropTypes.func.isRequired,
+        handleSuccessEmailChange:           React.PropTypes.func.isRequired,
+        handleSuccessPhoneChange:           React.PropTypes.func.isRequired,
+        canUserResendEmailVerification:     React.PropTypes.bool.isRequired,
+        canUserResendPhoneVerification:     React.PropTypes.bool.isRequired,
+        handleClickResendEmail:             React.PropTypes.func.isRequired,
+        handleClickResendPhone:             React.PropTypes.func.isRequired,
+        isResentEmailPopupOpen:             React.PropTypes.bool.isRequired,
+        handleClickEmailPopupClose:         React.PropTypes.func.isRequired,
+        isResentPhonePopupOpen:             React.PropTypes.bool.isRequired,
+        handleClickPhonePopupClose:         React.PropTypes.func.isRequired
     },
-    confirmEmail: function () {
-        const   self            = this,
-                binding         = self.getDefaultBinding(),
-				rootBinding		= self.getMoreartyContext().getBinding(),
-				verified		= rootBinding.sub('userData.authorizationInfo.verified'),
-                accountBinding  = self.getBinding('account');
 
-		window.Server.confirmUser.post({
-            token: binding.get('emailCode')
-        }).then( data => {
-            if(data.confirmed === true) {
-                accountBinding.set('verified.email', true);
-				verified.set('email', true);
-				binding.set('emailConfirmationError',false);
-                if (accountBinding.get('verified.phone')) {
-                    self.props.onSuccess();
-                }
-            } else {
-                binding.set('emailConfirmationError',true);
-            }
-        }).catch(() => {
-            binding.set('emailConfirmationError',true);
+    getInitialState: function(){
+        return {
+            isChangeEmailPopupOpen: false,
+            isChangePhonePopupOpen: false
+        };
+    },
+
+    handleClickWrongEmail: function() {
+        this.setState({'isChangeEmailPopupOpen': true});
+    },
+    handleClickWrongPhone: function() {
+        this.setState({'isChangePhonePopupOpen': true});
+    },
+    handleClickCloseChangeEmailPopup: function() {
+        this.setState({'isChangeEmailPopupOpen': false});
+    },
+    handleClickCloseChangePhonePopup: function() {
+        this.setState({'isChangePhonePopupOpen': false});
+    },
+    getEmailCodeCheckButtonClassName: function() {
+        return classNames({
+            bButton:        !this.props.isEmailVerified,
+            bButton_hide:   this.props.isEmailVerified
         });
     },
-    confirmPhone: function () {
-        const   self            = this,
-                binding         = self.getDefaultBinding(),
-				rootBinding		= self.getMoreartyContext().getBinding(),
-				verified		= rootBinding.sub('userData.authorizationInfo.verified'),
-                accountBinding  = self.getBinding('account');
-		window.Server.confirmUserPhone.post({
-            token: binding.get('phoneCode')
-        }).then( data => {
-            if(data.confirmed === true) {
-                accountBinding.set('verified.phone', true);
-				verified.set('phone', true);
-                binding.set('phoneConfirmationError',false);
-                if (accountBinding.get('verified.email')) {
-                    self.props.onSuccess();
-                }
-            } else {
-                binding.set('phoneConfirmationError',true);
-            }
-        }).catch(() => {
-            binding.set('phoneConfirmationError',true);
+    getPhoneCodeCheckButtonClassName: function() {
+        return classNames({
+            bButton:        !this.props.isPhoneVerified,
+            bButton_hide:   this.props.isPhoneVerified
         });
+    },
+    getEmailCheckSuccessIconClassName: function() {
+        return classNames({
+            bCheck_show:    this.props.isEmailVerified,
+            bButton_hide:   !this.props.isEmailVerified
+        });
+    },
+    getPhoneCheckSuccessIconClassName: function() {
+        return classNames({
+            bCheck_show:    this.props.isPhoneVerified,
+            bButton_hide:   !this.props.isPhoneVerified
+        });
+    },
+    getErrorEmailVerificationTextClassName: function() {
+        return classNames({
+            eRegistration_label:    this.props.isErrorEmailVerification,
+            bButton_hide:           !this.props.isErrorEmailVerification
+        });
+    },
+    getErrorPhoneVerificationTextClassName: function() {
+        return classNames({
+            eRegistration_label:    this.props.isErrorPhoneVerification,
+            bButton_hide:           !this.props.isErrorPhoneVerification
+        });
+    },
+    getEmailResendLinkClassName: function() {
+        return classNames({
+            bLink:      true,
+            mDisable:   !this.props.canUserResendEmailVerification
+        });
+    },
+    getPhoneResendLinkClassName: function() {
+        return classNames({
+            bLink:      true,
+            mDisable:   !this.props.canUserResendPhoneVerification
+        });
+    },
+    handleChangeEmailCode: function(eventDescriptor) {
+        this.setState( {emailCode: eventDescriptor.target.value} );
+    },
+    handleChangePhoneCode: function(eventDescriptor) {
+        this.setState( {phoneCode: eventDescriptor.target.value} );
+    },
+    handleClickConfirmEmail: function() {
+        this.props.handleClickConfirmEmail(this.state.emailCode);
+    },
+    handleClickConfirmPhone: function() {
+        this.props.handleClickConfirmPhone(this.state.phoneCode);
     },
     render: function () {
-        const   self                = this,
-                binding             = self.getDefaultBinding(),
-                accountBinding      = self.getBinding('account'),
-                //Append classes to cause the check button to be hidden or shown
-                phoneCheckClasses   = accountBinding !== undefined?(accountBinding.get('verified.phone')==true?'bButton_hide':'bButton'):'bButton',
-                emailCheckClasses   = accountBinding !== undefined?(accountBinding.get('verified.email')==true?'bButton_hide':'bButton'):'bButton',
-                emailErrorCheck     = (binding.get('emailConfirmationError')!== undefined && binding.get('emailConfirmationError') == true)? 'eRegistration_label':'bButton_hide',
-                phoneErrorCheck     = (binding.get('phoneConfirmationError') !== undefined && binding.get('phoneConfirmationError') == true)?'eRegistration_label':'bButton_hide',
-                isEmailCheck        = emailCheckClasses === 'bButton_hide'? 'bCheck_show':'bButton_hide',
-                isPhoneCheck        = phoneCheckClasses === 'bButton_hide'?'bCheck_show':'bButton_hide';
         return (
             <div className="eRegistration_verification">
                 <label className="eRegistration_label">
                     <span className="eRegistration_labelField">Verification email</span>
-                    <input className    ='eRegistration_input'
-                           ref          ='emailCodeField'
-                           value        ={ binding.get('emailCode') }
-                           placeholder  ="email code"
-                           onChange     ={ Morearty.Callback.set(binding, 'emailCode') }/>
-                    <button ref="emailCheck" className={emailCheckClasses} onClick={self.confirmEmail}>Verify</button>
-                    <span className={isEmailCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
+                    <input className    = 'eRegistration_input'
+                           ref          = 'emailCodeField'
+                           value        = { this.state.emailCode }
+                           placeholder  = "email code"
+                           onChange     = { this.handleChangeEmailCode }
+                    />
+                    <button     className   = { this.getEmailCodeCheckButtonClassName() }
+                                onClick     = { this.handleClickConfirmEmail }
+                    >
+                        Verify
+                    </button>
+                    <span className={ this.getEmailCheckSuccessIconClassName() }>
+                        <SVG icon="icon_check" classes="bButton_svg_check" />
+                    </span>
                 </label>
-                <div className={emailErrorCheck}>
+                <div className="eRegisterMessage">
+                    We sent your verification letter to <b>{ this.props.email }</b><br/>
+                    <a  className   = { this.getEmailResendLinkClassName() }
+                        onClick     = { this.props.handleClickResendEmail }
+                    >
+                        Not receive?
+                    </a><br/>
+                    <a onClick={ this.handleClickWrongEmail }>
+                        Wrong email? 
+                    </a><br/>
+                </div>
+                <div className={ this.getErrorEmailVerificationTextClassName() }>
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
                 <label className="eRegistration_label">
-
                     <span className="eRegistration_labelField">Verification phone</span>
-                    <input className='eRegistration_input'
-                                        ref='phoneCodeField'
-                                        value={ binding.get('phoneCode') }
-                                        placeholder="phone code"
-                                        onChange={ Morearty.Callback.set(binding, 'phoneCode') }/>
-                    <button ref="phoneCheck" className={phoneCheckClasses} onClick={self.confirmPhone}>Verify</button>
-                    <span className={isPhoneCheck}><SVG icon="icon_check" classes="bButton_svg_check" /></span>
+                    <input  className   = 'eRegistration_input'
+                            value       = { this.state.phoneCode }
+                            placeholder = "phone code"
+                            onChange    = { this.handleChangePhoneCode }
+                    />
+                    <button     className   = { this.getPhoneCodeCheckButtonClassName() }
+                                onClick     = { this.handleClickConfirmPhone }
+                    >
+                        Verify
+                    </button>
+                    <span className={ this.getPhoneCheckSuccessIconClassName() }>
+                        <SVG icon="icon_check" classes="bButton_svg_check" />
+                    </span>
                 </label>
-                <div className={phoneErrorCheck}>
+                <div className={ this.getErrorPhoneVerificationTextClassName() }>
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
-                <div className="eRegisterMessage">Having trouble signing up? <a href="mailto:support@squadintouch.com?subject=Registration">Email
-                    us</a></div>
+                <div className="eRegisterMessage">
+                    We sent your verification sms to <b>{ this.props.phone }</b><br/>
+                    <a  className   = { this.getPhoneResendLinkClassName() }
+                        onClick     = { this.props.handleClickResendPhone }
+                    >
+                        Not receive?
+                    </a><br/>
+                    <a onClick={ this.handleClickWrongPhone }>
+                        Wrong phone number?
+                    </a><br/>
+                </div>
+                <div className="eRegisterMessage">
+                    Having trouble signing up?
+                    <a href="mailto:support@squadintouch.com?subject=Registration">
+                        Email us
+                    </a>
+                </div>
+                <Popup  isOpened                = { this.props.isResentEmailPopupOpen }
+                        handleClickCloseButton  = { this.props.handleClickEmailPopupClose }
+                >
+                    Email verification letter was resent.
+                </Popup>
+                <Popup  isOpened                = { this.state.isChangeEmailPopupOpen }
+                        handleClickCloseButton  = { this.handleClickCloseChangeEmailPopup }
+                >
+                    <ChangeUserProfileFieldModule   labelText               = { "Your email" }
+                                                    successText             = {
+                                                                                "Your email was changed and " +
+                                                                                "letter with verification code " +
+                                                                                "was sent to new email."
+                                                                            }
+                                                    errorText               = { "This email already used" }
+                                                    serverFieldName         = { "email" }
+                                                    service                 = { window.Server.profileEmail }
+                                                    data                    = { this.props.email }
+                                                    handleSuccessDataChange = { this.props.handleSuccessEmailChange }
+                    />
+                </Popup>
+                <Popup  isOpened                = { this.props.isResentPhonePopupOpen }
+                        handleClickCloseButton  = { this.props.handleClickPhonePopupClose }
+                >
+                    Phone verification letter was resent.
+                </Popup>
+                <Popup  isOpened                = { this.state.isChangePhonePopupOpen }
+                        handleClickCloseButton  = { this.handleClickCloseChangePhonePopup }
+                >
+                    <ChangeUserProfileFieldModule   labelText               = { "Your phone" }
+                                                    successText             = {
+                                                                                "Your phone was changed and " +
+                                                                                "sms with verification code " +
+                                                                                "was sent to new phone."
+                                                                            }
+                                                    errorText               = { "This phone already used" }
+                                                    serverFieldName         = { "phone" }
+                                                    service                 = { window.Server.profilePhone }
+                                                    data                    = { this.props.phone }
+                                                    handleSuccessDataChange = { this.props.handleSuccessPhoneChange }
+                    />
+                </Popup>
             </div>
         );
     }
 });
-
 
 module.exports = VerificationStep;

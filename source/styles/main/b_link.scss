@@ -1,0 +1,8 @@
+.bLink {
+
+  &.mDisable {
+    pointer-events: none;
+    cursor: default;
+    color: #616161;
+  }
+}
