@@ -12,6 +12,8 @@ const serviceList = {
 
         // users
 		serviceList.users = new Service('/superadmin/users', binding);
+		serviceList.usersForceEmailVefication = new Service('/superadmin/users/{userId}/verification/status/email', binding);
+		serviceList.usersForcePhoneVefication = new Service('/superadmin/users/{userId}/verification/status/sms', binding);
         serviceList.user = new Service('/superadmin/users/{userId}', binding);
         serviceList.usersCount = new Service('/superadmin/users/count', binding);
 		serviceList.userBlock = new Service('/superadmin/users/{userId}/block', binding);
