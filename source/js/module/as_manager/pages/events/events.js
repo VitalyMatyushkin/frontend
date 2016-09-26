@@ -7,7 +7,7 @@ const   RouterView      			= require('module/core/router'),
         DateHelper      			= require('module/helpers/date_helper'),
         Morearty					= require('morearty'),
         Immutable       			= require('immutable'),
-        EventsCalendarComponent 	= require('module/as_manager/pages/events/events_calendar'),
+        EventsCalendarComponent 	= require('module/as_manager/pages/events/calendar/events_calendar'),
 		EventManagerComponent 		= require('module/as_manager/pages/events/event_manager'),
 		EventFixturesComponent 		= require('module/ui/fixtures/events_fixtures');
 

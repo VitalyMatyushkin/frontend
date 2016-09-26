@@ -8,6 +8,7 @@ const 	ApplicationView 	= require('module/as_manager/application'),
 		React 				= require('react');
 
 function runManagerMode() {
+	const today = new Date();
 
 // Create Morearty context
 	const MoreartyContext = Morearty.createContext({
@@ -52,8 +53,14 @@ function runManagerMode() {
 				sync: false,
 				models: [],
 				calendar: {
-					currentDate: new Date(),
-					mode: 'month'
+					todayDate: 			today,
+					monthDate:			new Date(today.getFullYear(), today.getMonth()),
+					selectedDate:		new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+					eventsData: {},
+					selectedDateEventsData: {
+						isSync:	false,
+						events:	[]
+					}
 				}
 			},
 			event: {
