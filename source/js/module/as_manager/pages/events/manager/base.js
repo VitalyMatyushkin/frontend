@@ -90,7 +90,7 @@ const EventManagerBase = React.createClass({
 					},
                     name: { like: schoolName }
                 },
-                limit: 10
+                limit: 400
             }
         };
         return window.Server.publicSchools.get(filter);
