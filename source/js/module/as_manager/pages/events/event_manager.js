@@ -1,4 +1,4 @@
-const   CalendarView		= require('module/ui/calendar/calendar'),
+const   CalendarView		= require('module/as_manager/pages/events/calendar/calendar'),
 		EventManagerBase	= require('./manager/base'),
 		If					= require('module/ui/if/if'),
 		TimePicker			= require('module/ui/timepicker/timepicker'),
@@ -464,39 +464,35 @@ const EventManager = React.createClass({
 				error:              binding.sub('error')
 			};
 
-		if(binding.toJS('isSync')) {
-			return (
-				<div>
-					<div className="eManager_steps" >
-						<div className="eManager_step" >{step} </div>
-						<h3>{titles[step - 1]}</h3></div>
-					<div className={bManagerClasses}>
-						<If condition={step === 1}>
-							<div className="eManager_dateTimePicker">
-								<CalendarView
-									binding={rootBinding.sub('events.calendar')}
-									onSelect={self.onSelectDate}
-								/>
-								{
-									binding.get('model.startTime') ?
-										<TimePicker binding={binding.sub('model.startTime')}/> :
-										null
-								}
-							</div>
-						</If>
-						<If condition={step === 2}>
-							<EventManagerBase binding={commonBinding} />
-						</If>
-						<If condition={step === 3}>
-							<Manager isInviteMode={false} binding={managerBinding} />
-						</If>
-					</div>
-					{self._renderStepButtons()}
+		return (
+			<div>
+				<div className="eManager_steps" >
+					<div className="eManager_step" >{step} </div>
+					<h3>{titles[step - 1]}</h3></div>
+				<div className={bManagerClasses}>
+					<If condition={step === 1}>
+						<div className="eManager_dateTimePicker">
+							<CalendarView
+								binding={rootBinding.sub('events.calendar')}
+								onSelect={self.onSelectDate}
+							/>
+							{
+								binding.get('model.startTime') ?
+									<TimePicker binding={binding.sub('model.startTime')}/> :
+									null
+							}
+						</div>
+					</If>
+					<If condition={step === 2}>
+						<EventManagerBase binding={commonBinding} />
+					</If>
+					<If condition={step === 3}>
+						<Manager isInviteMode={false} binding={managerBinding} />
+					</If>
 				</div>
-			);
-		} else {
-			return <Loader condition={true} />;
-		}
+				{self._renderStepButtons()}
+			</div>
+		);
 	}
 });
 

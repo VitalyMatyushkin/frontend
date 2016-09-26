@@ -24,7 +24,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 		}
 	};
 
-	return window.Server.publicSchoolEventDates.get({ schoolId: activeSchoolId}, { filter: filter }).then( data => {
+	return window.Server.schoolEventDates.get({ schoolId: activeSchoolId}, { filter: filter }).then( data => {
 		const dates = data.dates.map( dateStr => new Date(dateStr));
 
 		/** Converting array of dates to proper calendar format */
