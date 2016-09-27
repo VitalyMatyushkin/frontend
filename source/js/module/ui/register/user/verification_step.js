@@ -2,6 +2,7 @@ const   React                           = require('react'),
         classNames                      = require('classnames'),
         SVG                             = require('module/ui/svg'),
         Popup                           = require('./../../../ui/new_popup'),
+        If                              = require('./../../../ui/if/if'),
         ChangeUserProfileFieldModule    = require('./changeUserProfileFieldModule');
 
 const VerificationStep = React.createClass({
@@ -125,17 +126,19 @@ const VerificationStep = React.createClass({
                         <SVG icon="icon_check" classes="bButton_svg_check" />
                     </span>
                 </label>
-                <div className="eRegisterMessage">
-                    We sent your verification letter to <b>{ this.props.email }</b><br/>
-                    <a  className   = { this.getEmailResendLinkClassName() }
-                        onClick     = { this.props.handleClickResendEmail }
-                    >
-                        Not receive?
-                    </a><br/>
-                    <a onClick={ this.handleClickWrongEmail }>
-                        Wrong email? 
-                    </a><br/>
-                </div>
+                <If condition={!this.props.isEmailVerified}>
+                    <div className="eRegisterMessage">
+                        We sent your verification letter to <b>{ this.props.email }</b><br/>
+                        <a  className   = { this.getEmailResendLinkClassName() }
+                            onClick     = { this.props.handleClickResendEmail }
+                        >
+                            Not receive?
+                        </a><br/>
+                        <a onClick={ this.handleClickWrongEmail }>
+                            Wrong email?
+                        </a><br/>
+                    </div>
+                </If>
                 <div className={ this.getErrorEmailVerificationTextClassName() }>
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
@@ -158,17 +161,19 @@ const VerificationStep = React.createClass({
                 <div className={ this.getErrorPhoneVerificationTextClassName() }>
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
-                <div className="eRegisterMessage">
-                    We sent your verification sms to <b>{ this.props.phone }</b><br/>
-                    <a  className   = { this.getPhoneResendLinkClassName() }
-                        onClick     = { this.props.handleClickResendPhone }
-                    >
-                        Not receive?
-                    </a><br/>
-                    <a onClick={ this.handleClickWrongPhone }>
-                        Wrong phone number?
-                    </a><br/>
-                </div>
+                <If condition={!this.props.isPhoneVerified}>
+                    <div className="eRegisterMessage">
+                        We sent your verification sms to <b>{ this.props.phone }</b><br/>
+                        <a  className   = { this.getPhoneResendLinkClassName() }
+                            onClick     = { this.props.handleClickResendPhone }
+                        >
+                            Not receive?
+                        </a><br/>
+                        <a onClick={ this.handleClickWrongPhone }>
+                            Wrong phone number?
+                        </a><br/>
+                    </div>
+                </If>
                 <div className="eRegisterMessage">
                     Having trouble signing up?
                     <a href="mailto:support@squadintouch.com?subject=Registration">

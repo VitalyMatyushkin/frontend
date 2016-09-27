@@ -44,10 +44,15 @@ const Verification = React.createClass({
 				binding				= self.getDefaultBinding(),
 				verificationBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo.verified');
 
+		binding.set('isSync', false);
+
 		window.Server.confirmUser.post( {token: emailCode} ).then(data => {
 			if(data.confirmed) {
 				verificationBinding.set('email', true);
-				binding.set('isErrorEmailVerification', false);
+				binding.atomically()
+					.set('isSync',                      true)
+					.set('isErrorEmailVerification',    false)
+					.commit();
 			} else {
 				binding.set('isErrorEmailVerification', true);
 			}
@@ -60,12 +65,15 @@ const Verification = React.createClass({
 				binding				= self.getDefaultBinding(),
 				verificationBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo.verified');
 
+		binding.set('isSync', false);
+
 		window.Server.confirmUserPhone.post( {token: phoneCode} ).then(data => {
 			if(data.confirmed) {
 				verificationBinding.set('phone', true);
-				binding.set('isErrorPhoneVerification', false);
-
-				verificationBinding.toJS('email') && self.setStepFunction('permissions');
+				binding.atomically()
+					.set('isSync',                      true)
+					.set('isErrorPhoneVerification',    false)
+					.commit();
 			} else {
 				binding.set('isErrorPhoneVerification', true);
 			}
@@ -92,6 +100,7 @@ const Verification = React.createClass({
 				authorizationInfoBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
 
 		authorizationInfoBinding.set('email', Immutable.fromJS(newEmail));
+		this.forceUpdate();
 	},
 	handleClickResendPhone: function() {
 		const	self	= this,
@@ -112,6 +121,7 @@ const Verification = React.createClass({
 				authorizationInfoBinding	= self.getMoreartyContext().getBinding().sub('userData.authorizationInfo');
 
 		authorizationInfoBinding.set('phone', Immutable.fromJS(newPhone));
+		this.forceUpdate();
 	},
 	isEmailVerified: function() {
 		return !!this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
