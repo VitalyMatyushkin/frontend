@@ -1,5 +1,6 @@
 const 	Form 		= require('module/ui/form/form'),
 		FormField 	= require('module/ui/form/form_field'),
+		Promise 	= require('bluebird'),
 		Morearty    = require('morearty'),
 		React 		= require('react');
 
