@@ -1,6 +1,7 @@
 const   Invite          = require('./invite'),
         ProcessingView  = require('./processing'),
 		If				= require('module/ui/if/if'),
+		Promise 		= require('bluebird'),
         React           = require('react'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Morearty		= require('morearty'),

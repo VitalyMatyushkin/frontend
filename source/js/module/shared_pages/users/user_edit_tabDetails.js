@@ -4,7 +4,7 @@
 const   React       = require('react'),
         Immutable   = require('immutable'),
         Morearty    = require('morearty'),
-		Promise     = require('bluebird'),
+		Promise 	= require('bluebird'),
         Form        = require('module/ui/form/form'),
         FormColumn 	= require('module/ui/form/form_column'),
         FormField   = require('module/ui/form/form_field');

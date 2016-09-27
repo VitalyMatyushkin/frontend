@@ -1,5 +1,6 @@
 const	If				= require('module/ui/if/if'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		Promise 		= require('bluebird'),
 		React			= require('react'),
 		Immutable		= require('immutable'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),

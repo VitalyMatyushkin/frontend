@@ -1,6 +1,7 @@
 const 	ProcessingView 	= require('./processing'),
 		InviteOutbox 	= require('./invite'),
 		React 			= require('react'),
+		Promise 		= require('bluebird'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable');
