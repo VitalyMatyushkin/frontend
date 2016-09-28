@@ -190,9 +190,7 @@ const VerificationStep = React.createClass({
                 >
                     <ChangeUserProfileFieldModule   labelText               = { "Your email" }
                                                     successText             = {
-                                                                                "Your email was changed and " +
-                                                                                "letter with verification code " +
-                                                                                "was sent to new email."
+                                                                                `We have sent verification code to ${this.props.email}`
                                                                             }
                                                     errorText               = { "This email already used" }
                                                     serverFieldName         = { "email" }
@@ -211,9 +209,7 @@ const VerificationStep = React.createClass({
                 >
                     <ChangeUserProfileFieldModule   labelText               = { "Your phone" }
                                                     successText             = {
-                                                                                "Your phone was changed and " +
-                                                                                "sms with verification code " +
-                                                                                "was sent to new phone."
+                                                                                `We have sent verification code to ${this.props.phone}`
                                                                             }
                                                     errorText               = { "This phone already used" }
                                                     serverFieldName         = { "phone" }
