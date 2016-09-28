@@ -3,7 +3,7 @@ const 	React			= require('react'),
 		Challenges		= require('module/ui/challenges/challenges'),
 		MonthCalendar	= require('module/ui/calendar/month_calendar'),
 		CalendarActions	= require('./CalendarActions'),
-		Morearty        = require('morearty');
+		Morearty		= require('morearty');
 
 /** Show calendar section: month calendar and events for selected date */
 const HomeCalender = React.createClass({
@@ -19,6 +19,10 @@ const HomeCalender = React.createClass({
 
 		CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
 		CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
+	},
+
+	handleClickEvent: function(eventId) {
+		document.location.hash = 'event/' + eventId + '?tab=teams';
 	},
 
 	render: function(){
@@ -58,10 +62,11 @@ const HomeCalender = React.createClass({
 						/>
 					</div>
 						<Challenges
-							activeSchoolId={activeSchoolId}
-							isSync={isSelectedDateEventsInSync}
-							isDaySelected={true}
-							events={selectedDateEvents.toJS()}
+							activeSchoolId	= {activeSchoolId}
+							isSync			= {isSelectedDateEventsInSync}
+							isDaySelected	= {true}
+							events			= {selectedDateEvents.toJS()}
+							onClick			= {this.handleClickEvent}
 						/>
 
 				</div>
