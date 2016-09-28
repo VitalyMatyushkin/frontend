@@ -110,7 +110,7 @@ const VerificationStep = React.createClass({
         return (
             <div className="eRegistration_verification">
                 <label className="eRegistration_label">
-                    <span className="eRegistration_labelField">Verification email</span>
+                    <span className="eRegistration_labelField">Email Verification Code</span>
                     <input className    = 'eRegistration_input'
                            ref          = 'emailCodeField'
                            value        = { this.state.emailCode }
@@ -128,11 +128,11 @@ const VerificationStep = React.createClass({
                 </label>
                 <If condition={!this.props.isEmailVerified}>
                     <div className="eRegisterMessage">
-                        We sent your verification letter to <b>{ this.props.email }</b><br/>
+                        We have sent your verification letter to <b>{ this.props.email }</b><br/>
                         <a  className   = { this.getEmailResendLinkClassName() }
                             onClick     = { this.props.handleClickResendEmail }
                         >
-                            Not receive?
+                            Send code again.
                         </a><br/>
                         <a onClick={ this.handleClickWrongEmail }>
                             Wrong email?
@@ -143,7 +143,7 @@ const VerificationStep = React.createClass({
                     <span className="verify_error">An error occurred please try again</span>
                 </div>
                 <label className="eRegistration_label">
-                    <span className="eRegistration_labelField">Verification phone</span>
+                    <span className="eRegistration_labelField">Phone Verification Code</span>
                     <input  className   = 'eRegistration_input'
                             value       = { this.state.phoneCode }
                             placeholder = "phone code"
@@ -163,11 +163,11 @@ const VerificationStep = React.createClass({
                 </div>
                 <If condition={!this.props.isPhoneVerified}>
                     <div className="eRegisterMessage">
-                        We sent your verification sms to <b>{ this.props.phone }</b><br/>
+                        We have sent your verification sms to <b>{ this.props.phone }</b><br/>
                         <a  className   = { this.getPhoneResendLinkClassName() }
                             onClick     = { this.props.handleClickResendPhone }
                         >
-                            Not receive?
+                            Send code again.
                         </a><br/>
                         <a onClick={ this.handleClickWrongPhone }>
                             Wrong phone number?
@@ -183,14 +183,14 @@ const VerificationStep = React.createClass({
                 <Popup  isOpened                = { this.props.isResentEmailPopupOpen }
                         handleClickCloseButton  = { this.props.handleClickEmailPopupClose }
                 >
-                    Email verification letter was resent.
+                    We have sent the verification code again; please check your email.
                 </Popup>
                 <Popup  isOpened                = { this.state.isChangeEmailPopupOpen }
                         handleClickCloseButton  = { this.handleClickCloseChangeEmailPopup }
                 >
                     <ChangeUserProfileFieldModule   labelText               = { "Your email" }
                                                     successText             = {
-                                                                                `We have sent verification code to ${this.props.email}`
+                                                                                `We have sent the verification code to ${this.props.email}`
                                                                             }
                                                     errorText               = { "This email already used" }
                                                     serverFieldName         = { "email" }
@@ -202,14 +202,14 @@ const VerificationStep = React.createClass({
                 <Popup  isOpened                = { this.props.isResentPhonePopupOpen }
                         handleClickCloseButton  = { this.props.handleClickPhonePopupClose }
                 >
-                    Phone verification letter was resent.
+                    We have sent the verification code again; please check your text messages.
                 </Popup>
                 <Popup  isOpened                = { this.state.isChangePhonePopupOpen }
                         handleClickCloseButton  = { this.handleClickCloseChangePhonePopup }
                 >
                     <ChangeUserProfileFieldModule   labelText               = { "Your phone" }
                                                     successText             = {
-                                                                                `We have sent verification code to ${this.props.phone}`
+                                                                                `We have sent the verification code to ${this.props.phone}`
                                                                             }
                                                     errorText               = { "This phone already used" }
                                                     serverFieldName         = { "phone" }

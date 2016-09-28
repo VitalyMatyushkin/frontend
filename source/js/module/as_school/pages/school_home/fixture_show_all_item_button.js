@@ -10,7 +10,7 @@ const FixtureShowAllItemButton = React.createClass({
 	render: function() {
 		return (
 			<div	onClick		={ this.props.handleClick }
-					className	="bFixtureListShowAllItemsButton"
+					className	="bBigButton"
 			>
 				{ this.props.isShowAllItems ? "Hide Items" : "Show All Items" }
 			</div>

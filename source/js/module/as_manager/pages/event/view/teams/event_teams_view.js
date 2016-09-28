@@ -13,6 +13,11 @@ const	If					= require('module/ui/if/if'),
 
 const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+
+	propTypes: {
+		customCss:	React.PropTypes.string
+	},
+
 	getPointsByStudent: function(event, userId) {
 		const userScoreDataIndex = event.results.individualScore.findIndex(userScoreData => userScoreData.userId === userId);
 
@@ -448,9 +453,14 @@ const EventTeamsView = React.createClass({
 	render: function() {
 		const self = this;
 
+		let eventTeamsCss = 'bEventTeams ';
+		if(typeof this.props.customCss !== 'undefined') {
+			eventTeamsCss += this.props.customCss;
+		}
+
 		if(self.getBinding('isSync').toJS()) {
 			return (
-				<div className="bEventTeams">
+				<div className={eventTeamsCss}>
 					{self.renderPlayersForLeftSide()}
 					{self.renderPlayersForRightSide()}
 				</div>

@@ -152,7 +152,8 @@ const  RoleList = React.createClass({
 		const   self 	    = this,
 				binding     = self.getDefaultBinding();
 
-		binding.set('listOpen', Immutable.fromJS(false));
+		/**in IE11 onBlur is triggered faster than onClick, and onClick not triggered */
+		setTimeout(function(){binding.set('listOpen', Immutable.fromJS(false));}, 10);
 
 		e.stopPropagation();
 	},
