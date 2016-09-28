@@ -1,9 +1,11 @@
-const 	Form 		= require('module/ui/form/form'),
-		FormField 	= require('module/ui/form/form_field'),
-		FormColumn 	= require('module/ui/form/form_column'),
-		Morearty	= require('morearty'),
-		React 		= require('react');
-
+const 	Form 			= require('module/ui/form/form'),
+		FormField 		= require('module/ui/form/form_field'),
+		FormColumn 		= require('module/ui/form/form_column'),
+		SchoolConsts	= require('./../../../helpers/consts/schools'),
+		If				= require('./../../../ui/if/if'),
+		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
+		React 			= require('react');
 
 const SchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -13,6 +15,35 @@ const SchoolForm = React.createClass({
 	},
 	componentWillUnmount: function () {
 		this.getDefaultBinding().clear();
+		// if it need
+		this.setDefaultPublicSiteAccess();
+	},
+	getPublicSiteAccessTypes: function() {
+		return SchoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_VALUE_ARRAY;
+	},
+	getPublicSiteAccess: function() {
+		return this.getDefaultBinding().toJS('publicSite.status');
+	},
+	// if undefined then set def value
+	setDefaultPublicSiteAccess: function() {
+		const binding = this.getDefaultBinding();
+
+		if(typeof binding.toJS('publicSite.status') !== 'undefined') {
+			binding.set(
+				'publicSite.status',
+				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_CLIENT_VALUE)
+			);
+		}
+	},
+	getPublicSitePasswordCss: function() {
+		if(
+			this.getDefaultBinding().meta().toJS('publicSite.status.value') !==
+			SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE['PROTECTED']
+		) {
+			return 'mDisabled';
+		} else {
+			return '';
+		}
 	},
 	render: function () {
 		const 	self 		= this,
@@ -40,9 +71,22 @@ const SchoolForm = React.createClass({
 							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
 					<FormField type="text" field="domain" validation="domain">Domain</FormField>
+					<FormField	type="dropdown"
+								field="publicSite.status"
+								userActiveState={ self.getPublicSiteAccess() }
+								userProvidedOptions={ self.getPublicSiteAccessTypes() }
+					>
+						Public School Access
+					</FormField>
+					<FormField	type			= "password"
+								field			= "publicSite.password"
+								fieldClassName	= { this.getPublicSitePasswordCss() }
+					>
+						Public School Access Password
+					</FormField>
 				</FormColumn>
 			</Form>
-		)
+		);
 	}
 });
 

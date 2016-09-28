@@ -1,7 +1,9 @@
-const 	SchoolForm 	= require('module/as_manager/pages/schools/schools_form'),
-		React 		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable 	= require('immutable');
+const 	SchoolForm		= require('module/as_manager/pages/schools/schools_form'),
+		React 			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable 		= require('immutable'),
+
+		SchoolHelper	= require('./schools_helper');
 
 const EditSchoolForm = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -19,6 +21,9 @@ const EditSchoolForm = React.createClass({
 				if(data.postcode && data.postcode._id){
 					data.postcode.id = data.postcode._id;
 				}
+				// !!! Method modify schoolData !!!
+				// Side effect bro
+				SchoolHelper.setClientPublicAccessSchoolValue(data);
 				binding.set(Immutable.fromJS(data));
 			});
 
@@ -27,6 +32,11 @@ const EditSchoolForm = React.createClass({
 	},
 	submitEdit: function(schoolData) {
 		var self = this;
+
+		// !!! Method modify schoolData !!!
+		// Side effect bro
+		SchoolHelper.setServerPublicAccessSchoolValue(schoolData);
+		console.log(schoolData);
 		window.Server.school.put(self.schoolId, schoolData).then(function(res) {
 			document.location.hash = 'school_admin/summary';
 			return res;
