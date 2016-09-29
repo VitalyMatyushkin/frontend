@@ -51,7 +51,7 @@ const SchoolForm = React.createClass({
 				postcode 	= binding.toJS('postcode');
 
 		return (
-			<Form name={self.props.title} binding={self.getDefaultBinding()} onSubmit={self.props.onSubmit}>
+			<Form name={self.props.title} binding={self.getDefaultBinding()} service="i/schools/domains" onSubmit={self.props.onSubmit}>
 				<FormColumn>
 					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
@@ -70,7 +70,7 @@ const SchoolForm = React.createClass({
 					<FormField type="area" field="postcodeId" defaultItem={postcode}
 							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
-					<FormField type="text" field="domain" validation="domain">Domain</FormField>
+					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
 					<FormField	type="dropdown"
 								field="publicSite.status"
 								userActiveState={ self.getPublicSiteAccess() }

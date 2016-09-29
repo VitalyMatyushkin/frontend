@@ -128,7 +128,7 @@ input.eDateInput{
   font-weight: bold;
   color: #aaaaaa;
   display: inline-block;
-  width: 160px;
+  width: 150px;
   padding: 3px 10px 0 0;
   vertical-align: top;
 
@@ -153,6 +153,7 @@ input.eDateInput{
   .eForm_fieldColumn{
     margin: 0 0 25px 0;
     padding: 0;
+    float: none;
   }
 }
 .eForm_savePanel{

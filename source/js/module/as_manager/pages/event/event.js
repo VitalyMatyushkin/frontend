@@ -1,20 +1,21 @@
-const	If				= require('module/ui/if/if'),
-		Tabs			= require('module/ui/tabs/tabs'),
-		EventHelper		= require('module/helpers/eventHelper'),
-		EventHeader		= require('./view/event_header'),
-		EventRivals		= require('./view/event_rivals'),
-		EventButtons	= require('./view/event_buttons'),
-		EventTeams		= require('./view/teams/event_teams'),
-		EventGallery	= require('module/as_manager/pages/event/gallery/event_gallery'),
-		EventDetails	= require('./view/event_details'),
-		ManagerWrapper	= require('./view/manager_wrapper'),
-		React			= require('react'),
-		Comments		= require('./view/event_blog'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		SVG 			= require('module/ui/svg'),
+const	React			= require('react'),
+		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
-		Morearty		= require('morearty');
+
+		If					= require('module/ui/if/if'),
+		Tabs				= require('module/ui/tabs/tabs'),
+		EventHeader			= require('./view/event_header'),
+		EventRivals			= require('./view/event_rivals'),
+		EventButtons		= require('./view/event_buttons'),
+		EventTeams			= require('./view/teams/event_teams'),
+		EventGallery		= require('module/as_manager/pages/event/gallery/event_gallery'),
+		EventDetails		= require('./view/event_details'),
+		ManagerWrapper		= require('./view/manager_wrapper'),
+		Comments			= require('./view/event_blog'),
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		EventResultHelper	= require('./../../../helpers/event_result_helper'),
+		SVG 				= require('module/ui/svg');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -24,13 +25,13 @@ const EventView = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			model: {},
-			albums: [],
-			sync: false,
-			mode: 'general',
-			showingComment: false,
-			activeTab:'teams',
-			eventTeams: {}
+			model:			{},
+			albums:			[],
+			sync:			false,
+			mode:			'general',
+			showingComment:	false,
+			activeTab:		'teams',
+			eventTeams:		{}
 		});
 	},
 	componentWillMount: function () {
@@ -41,7 +42,6 @@ const EventView = React.createClass({
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 		
 		self.initTabs();
-		self.initMenuItems();
 
 		window.Server.schoolEvent.get({
 				schoolId:	self.activeSchoolId,
@@ -71,7 +71,7 @@ const EventView = React.createClass({
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
-			self.initializeEventResults(event);
+			EventResultHelper.initializeEventResults(event);
 
 			binding
 				.atomically()
@@ -82,86 +82,6 @@ const EventView = React.createClass({
 
 			return event;
 		})
-	},
-	/**
-	 * !! Function modify event object !!
-	 * Initialize event results.
-	 * It means:
-	 * 1) Set zero points to appropriate score bundle(schools score, teams score, houses score and etc.)
-	 * 2) Backup init state of results for revert changes in scores if it will be need.
-	 * @param event
-	 */
-	initializeEventResults: function(event) {
-		const self = this;
-
-		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
-			event.results = TeamHelper.callFunctionForLeftContext(
-				self.activeSchoolId,
-				event,
-				self.getInitResults.bind(self, event)
-			);
-			event.results = TeamHelper.callFunctionForRightContext(
-				self.activeSchoolId,
-				event,
-				self.getInitResults.bind(self, event)
-			);
-		}
-		// backup results
-		// we need default state of results for revert event result changes
-		// when user click to cancel button(in close event mode)
-		event.initResults = event.results;
-	},
-	getInitResults: function(event, teamBundleName, order) {
-		const self = this;
-
-		let	scoreBundleName,
-			resultIdFieldName,
-			dataBundleIdFieldName,
-			dataBundle;
-
-		switch (teamBundleName) {
-			case 'schoolsData':
-				scoreBundleName			= 'schoolScore';
-				resultIdFieldName		= 'schoolId';
-				dataBundleIdFieldName	= 'id';
-				dataBundle				= event[teamBundleName];
-				break;
-			case 'housesData':
-				scoreBundleName			= 'houseScore';
-				resultIdFieldName		= 'houseId';
-				dataBundleIdFieldName	= 'id';
-				dataBundle				= event[teamBundleName];
-				break;
-			case 'teamsData':
-				scoreBundleName			= 'teamScore';
-				resultIdFieldName		= 'teamId';
-				dataBundleIdFieldName	= 'id';
-				dataBundle				= event[teamBundleName];
-				break;
-			case 'individualsData':
-				scoreBundleName			= 'individualScore';
-				resultIdFieldName		= 'userId';
-				dataBundleIdFieldName	= 'userId';
-				dataBundle				= event.individualsData;
-				break;
-		}
-
-		if(typeof dataBundle[order] !== 'undefined') {
-			const scoreData = event.results[scoreBundleName].find(r => r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
-
-			if(typeof scoreData === 'undefined') {
-				const newScoreData = {};
-				newScoreData[resultIdFieldName]	= dataBundle[order][dataBundleIdFieldName];
-				newScoreData.score				= 0;
-				if(teamBundleName === 'individualsData') {
-					newScoreData.permissionId = dataBundle[order].permissionId;
-				}
-
-				event.results[scoreBundleName].push(newScoreData);
-			}
-		}
-
-		return event.results;
 	},
 	/**Init model for Tabs component*/
 	initTabs: function() {
@@ -227,31 +147,6 @@ const EventView = React.createClass({
 		binding.set('activeTab', value);
 
 		window.location.hash = hash + '?tab=' + value;
-	},
-	/**
-	 * Initialize data for menu items
-	 * @private
-	 */
-	initMenuItems: function() {
-		const	self	= this,
-				eventId	= self.getMoreartyContext().getBinding().get('routing.pathParameters.0');
-
-		self.menuItems = [
-			{
-				href: '/#event/' + eventId,
-				name: 'General',
-				key: 'General'
-			},{
-				href: '/#event/' + eventId + '/edit',
-				name: 'Edit',
-				key: 'Edit'
-			},
-			{
-				href: '/#event/' + eventId + '/finish',
-				name: 'Finish',
-				key: 'Finish'
-			}
-		];
 	},
 	//A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
 	//This avoids the manager having to reload the screen to see what they just entered.

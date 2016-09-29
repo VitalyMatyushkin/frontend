@@ -9,6 +9,10 @@
   max-width: 704px;
   box-sizing: border-box;
   width: 100%;
+
+  &.mWide {
+    max-width: 902px;
+  }
 }
 
 .bEventTeams_TeamWrapper {

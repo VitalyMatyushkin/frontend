@@ -103,7 +103,7 @@ const  RoleList = React.createClass({
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
 
-		window.Server.publicSchools.get().then(schools => {
+		window.Server.publicSchools.get({filter:{limit:1000}}).then(schools => {
 			binding.set('schools', Immutable.fromJS(schools));
 		});
 	},
@@ -152,7 +152,10 @@ const  RoleList = React.createClass({
 		const   self 	    = this,
 				binding     = self.getDefaultBinding();
 
-		binding.set('listOpen', Immutable.fromJS(false));
+		/**in IE11 onBlur is triggered faster than onClick, and onClick not triggered */
+		setTimeout(function(){
+			binding.set('listOpen', Immutable.fromJS(false));
+		}, 100);
 
 		e.stopPropagation();
 	},
@@ -183,9 +186,7 @@ const  RoleList = React.createClass({
 					<div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
 						<div onClick={self.onToggle}>
 							{self.renderActiveRole()}
-							<div className="eArrow eCombobox_button">
-
-							</div>
+							<div className="eArrow eCombobox_button"></div>
 						</div>
 						<div className="eRolesList">
 							<div className="eScrollList">

@@ -4,6 +4,7 @@ const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_va
 		RoleHelper				= require('module/helpers/role_helper'),
 		SportConsts				= require('module/helpers/consts/sport'),
 		Lazy					= require('lazy.js'),
+		Promise 				= require('bluebird'),
 		Immutable				= require('immutable');
 
 const OPERATION_TYPE = 	{

@@ -2,8 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const 	localStorage 	= window.localStorage,
-		sessionStorage 	= window.sessionStorage;
+const 	sessionStorage 	= window.sessionStorage;
 
 let Helpers = {};
 
@@ -21,7 +20,7 @@ Helpers.LocalStorage = {
 		value = typeof value === 'string' ? String(value) : JSON.stringify(value);
 
 		try {
-			localStorage.setItem(key, value);
+			window.localStorage.setItem(key, value);
 			return true;
 		} catch (error_text) {
 			console.error('Out of local store');
@@ -29,7 +28,7 @@ Helpers.LocalStorage = {
 		}
 	},
 	get: function (key) {
-		const value = localStorage.getItem(key);
+		const value = window.localStorage.getItem(key);
 
 		if (value !== null) {
 			return (value.indexOf('{') !== -1 || value.indexOf('[') !== -1 ? JSON.parse(value) : value);
@@ -38,13 +37,13 @@ Helpers.LocalStorage = {
 		}
 	},
 	getSize: function () {
-		return unescape(encodeURIComponent(JSON.stringify(localStorage))).length;
+		return unescape(encodeURIComponent(JSON.stringify(window.localStorage))).length;
 	},
 	remove: function (key) {
-		return localStorage.removeItem(key);
+		return window.localStorage.removeItem(key);
 	},
 	clear: function () {
-		localStorage.clear();
+		window.localStorage.clear();
 	}
 };
 
