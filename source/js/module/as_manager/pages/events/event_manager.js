@@ -10,6 +10,7 @@ const   CalendarView		= require('module/as_manager/pages/events/calendar/calenda
 		EventHelper			= require('module/helpers/eventHelper'),
 		Loader				= require('./../../../ui/loader'),
 		Morearty			= require('morearty'),
+		Promise 			= require('bluebird'),
 		Immutable			= require('immutable');
 
 const EventManager = React.createClass({
