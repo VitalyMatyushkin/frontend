@@ -16,7 +16,9 @@ const FixtureItem = React.createClass({
 		event:			React.PropTypes.any.isRequired,
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
-
+	handleClickFixtureItem: function() {
+		document.location.hash = `event/${this.props.event.id}`;
+	},
 	getFixtureInfo: function(event) {
 		return(
 			<div>
@@ -62,7 +64,7 @@ const FixtureItem = React.createClass({
 				challengeModel	= new ChallengeModel(event, activeSchoolId);
 
 		return (
-			<div className="bFixtureContainer">
+			<div className="bFixtureContainer" onClick={ this.handleClickFixtureItem }>
 				<div className="bFixtureIcon bFixture_item">
 					<SportIcon name={sportName || ''} className="bIcon_mSport" />
 				</div>
