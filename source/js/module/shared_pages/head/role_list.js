@@ -153,16 +153,21 @@ const  RoleList = React.createClass({
 				binding     = self.getDefaultBinding();
 
 		/**in IE11 onBlur is triggered faster than onClick, and onClick not triggered */
-		setTimeout(function(){binding.set('listOpen', Immutable.fromJS(false));}, 10);
+		setTimeout(function(){
+			console.log('onBlur: listOpen = false');
+			binding.set('listOpen', Immutable.fromJS(false));
+		}, 100);
 
 		e.stopPropagation();
 	},
 	onSetRole:function(roleName, schoolId){
 		const   self 	    = this,
 				binding     = self.getDefaultBinding();
+		console.log('onSetRole');
 
 		self.setRole(roleName, schoolId);
 		binding.set('listOpen', Immutable.fromJS(false));
+		console.log('onSetRole: listOpen = false');
 	},
 	logout:function(){
 		window.location.hash = 'logout';
