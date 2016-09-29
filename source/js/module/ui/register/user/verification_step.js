@@ -182,11 +182,13 @@ const VerificationStep = React.createClass({
                 </div>
                 <Popup  isOpened                = { this.props.isResentEmailPopupOpen }
                         handleClickCloseButton  = { this.props.handleClickEmailPopupClose }
+                        isShowCloseButton       = { true }
                 >
                     Email verification letter was resent.
                 </Popup>
                 <Popup  isOpened                = { this.state.isChangeEmailPopupOpen }
                         handleClickCloseButton  = { this.handleClickCloseChangeEmailPopup }
+                        isShowCloseButton       = { true }
                 >
                     <ChangeUserProfileFieldModule   labelText               = { "Your email" }
                                                     successText             = {
@@ -203,11 +205,13 @@ const VerificationStep = React.createClass({
                 </Popup>
                 <Popup  isOpened                = { this.props.isResentPhonePopupOpen }
                         handleClickCloseButton  = { this.props.handleClickPhonePopupClose }
+                        isShowCloseButton       = { true }
                 >
                     Phone verification letter was resent.
                 </Popup>
                 <Popup  isOpened                = { this.state.isChangePhonePopupOpen }
                         handleClickCloseButton  = { this.handleClickCloseChangePhonePopup }
+                        isShowCloseButton       = { true }
                 >
                     <ChangeUserProfileFieldModule   labelText               = { "Your phone" }
                                                     successText             = {

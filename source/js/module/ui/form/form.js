@@ -153,8 +153,6 @@ const Form = React.createClass({
 		// if there is no errors, calling service
 		if (hereIsError === false) {
 
-			self.busy = true;
-
 			// TODO: Привести передачу сервисов к общему виду => вынести работу с сервисами за форму
 			if (typeof self.props.onSubmit === 'function') {
 				return self.props.onSubmit(dataToPost);
@@ -163,6 +161,8 @@ const Form = React.createClass({
 			if (typeof self.props.onPreSubmit === 'function') {
 				dataToPost = self.props.onPreSubmit(dataToPost);
 			}
+
+			self.busy = true;
 
 			self.postedData = dataToPost;
 

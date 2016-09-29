@@ -1,4 +1,5 @@
-const React = require('react');
+const	React	= require('react'),
+		If		= require('./if/if');
 
 function Popup(props) {
 	//TODO rename css classes
@@ -6,7 +7,9 @@ function Popup(props) {
 		return (
 			<div>
 				<div className="bNewPopup">
-					<div className="ePopup_Close" onClick={props.handleClickCloseButton}></div>
+					<If condition={props.isShowCloseButton}>
+						<div className="ePopup_Close" onClick={props.handleClickCloseButton}></div>
+					</If>
 					{props.children}
 				</div>
 				<div className='bPopupBack mAcitve'></div>
@@ -19,6 +22,7 @@ function Popup(props) {
 
 Popup.propTypes = {
 	handleClickCloseButton:	React.PropTypes.func.isRequired,
+	isShowCloseButton:		React.PropTypes.bool.isRequired,
 	isOpened:				React.PropTypes.bool.isRequired
 };
 

@@ -16,7 +16,7 @@ const SchoolHelper = {
 	 */
 	setClientPublicAccessSchoolValue: function(dataToPost) {
 		dataToPost.publicSite.status = schoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE[dataToPost.publicSite.status];
-	},
+	}
 };
 
 module.exports = SchoolHelper;
