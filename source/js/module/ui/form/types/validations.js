@@ -152,7 +152,7 @@ var validationsSet = {
 					self.showError(`${self.props.name} has already been taken. Choose another or log in`);
 				},
 				success: function(data) {
-					const status = data[self.props.field];
+					const status = data[self.props.field] || data.isAvailable;
 
 					if(status === true) {
 						self.showSuccess('V');
