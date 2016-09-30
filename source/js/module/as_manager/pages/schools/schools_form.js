@@ -13,7 +13,7 @@ const SchoolForm = React.createClass({
 		title: 		React.PropTypes.string.isRequired,
 		onSubmit: 	React.PropTypes.func
 	},
-	componentWillUnmount: function () {
+	componentWillMount: function () {
 		this.getDefaultBinding().clear();
 		// if it need
 		this.setDefaultPublicSiteAccess();
@@ -28,7 +28,7 @@ const SchoolForm = React.createClass({
 	setDefaultPublicSiteAccess: function() {
 		const binding = this.getDefaultBinding();
 
-		if(typeof binding.toJS('publicSite.status') !== 'undefined') {
+		if(typeof binding.toJS('publicSite.status') === 'undefined') {
 			binding.set(
 				'publicSite.status',
 				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_CLIENT_VALUE)

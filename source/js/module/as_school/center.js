@@ -1,10 +1,11 @@
-const	Morearty			= require('morearty'),
-		React				= require('react'),
-		RouterView			= require('module/core/router'),
-		Route				= require('module/core/route'),
-		PublicLogin			= require('module/ui/menu/public_login'),
-		HomeComponent		= require("module/as_school/pages/school_home/home"),
-		EventPageComponent	= require("./pages/event/public_event_page");
+const	Morearty				= require('morearty'),
+		React					= require('react'),
+		RouterView				= require('module/core/router'),
+		Route					= require('module/core/route'),
+		PublicLogin				= require('module/ui/menu/public_login'),
+		HomeComponent			= require("module/as_school/pages/school_home/home"),
+		EventPageComponent		= require("./pages/event/public_event_page"),
+		LoginPublicSchoolPage	= require("./../as_school/pages/school_home/login_public_school_page");
 
 const Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -31,6 +32,10 @@ const Center = React.createClass({
 								binding		= {binding.sub('schoolEvent')}
 								component	= {EventPageComponent}
 						/>
+
+						<Route path			= "/ /loginPublicSchool"
+							   binding		= {binding.sub('loginPublicSchool')}
+							   component	= {LoginPublicSchoolPage}/>
 					</RouterView>
 				</div>
 			</div>
