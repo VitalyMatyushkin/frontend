@@ -3,7 +3,8 @@ const   React           = require('react'),
         Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         Immutable       = require('immutable'),
         Morearty		= require('morearty'),
-        If              = require('module/ui/if/if');
+        If              = require('module/ui/if/if'),
+        SimpleAlert     = require('./../../../../ui/simple_alert/simple_alert');
 
 const EventVenue = React.createClass({
     displayName:            'EventVenue',
@@ -31,6 +32,7 @@ const EventVenue = React.createClass({
 
         self._initVenueType(eventType);
         self._initPostCode(eventType);
+        self._initAlerts();
     },
     _initVenueType: function(eventType) {
         const   self = this,
@@ -65,6 +67,12 @@ const EventVenue = React.createClass({
 				.set('model.venue.postcode', Immutable.fromJS(postcode.id))
 				.commit();
 		}
+    },
+    _initAlerts: function() {
+        const   self = this,
+                binding = self.getDefaultBinding();
+
+        binding.set('isRivalSchoolAlertOpen',   false);
     },
     /**
      * Function set default postcode by venue type.
@@ -185,14 +193,16 @@ const EventVenue = React.createClass({
                 if(binding.toJS('rivals.1')) {
                     self._setPostCodeAndVenueType(venueType);
                 } else  {
-                    //TODO Alert isn't best practice for notice user about anything, it's like we are in 1995.
-                    alert('Please select rival school');
+                    binding.set('isRivalSchoolAlertOpen', true);
                 }
                 break;
             default:
                 self._setPostCodeAndVenueType(venueType);
                 break;
         }
+    },
+    handleClickOkButtonRivalSchoolsAlert: function() {
+        this.getDefaultBinding().set('isRivalSchoolAlertOpen', false);
     },
     _onChangeEventType: function() {
         const   self    = this,
@@ -278,6 +288,12 @@ const EventVenue = React.createClass({
                          customStylingClass="eEvents_venue_map"
                     />
                 </If>
+                <SimpleAlert    isOpen              = { binding.toJS('isRivalSchoolAlertOpen') }
+                                okButtonText        = { 'Ok' }
+                                handleClickOkButton = { this.handleClickOkButtonRivalSchoolsAlert }
+                >
+                    Please select rival school
+                </SimpleAlert>
             </div>
         );
     }
