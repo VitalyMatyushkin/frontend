@@ -9,6 +9,9 @@ const	If				= require('module/ui/if/if'),
 		Morearty		= require('morearty'),
 		SVG 			= require('module/ui/svg');
 
+/**
+ * This component displays the buttons close, save, cancel and contains methods save and close the event.
+ * */
 const EventButtons = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	displayName: 'EventButtons',
