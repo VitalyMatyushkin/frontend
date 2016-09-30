@@ -108,7 +108,6 @@ function runMainMode() {
 			init404View();
 		}
 	});
-
 }
 
 module.exports = runMainMode;

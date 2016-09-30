@@ -23,6 +23,9 @@ const LoginPublicSchoolPage = React.createClass({
 				// if it wasn't protected, we will redirect user to public page
 				document.location.hash = 'home';
 				break;
+			case SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['DISABLED']:
+				document.location.hash = '404';
+				break;
 		}
 	},
 	handleFormSubmit: function(data) {
