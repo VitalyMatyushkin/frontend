@@ -12,6 +12,7 @@ const	If				= require('module/ui/if/if'),
 const EventButtons = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	displayName: 'EventButtons',
+	/** event closing process started after click save button */
 	closeMatch: function () {
 		const	self		= this,
 				binding		= self.getDefaultBinding();
@@ -23,7 +24,10 @@ const EventButtons = React.createClass({
 		} else {
 			self.closeMatchForTeamsSport();
 		}
+		// match report save
+		self.submitMatchReport(event);
 	},
+	/** event closing process for team sport */
 	closeMatchForTeamsSport: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -43,6 +47,7 @@ const EventButtons = React.createClass({
 			.then(() => self.submitIndividualPerformance(event))
 			.then(() => self.doActionsAfterCloseEvent());
 	},
+	/** event closing process for individual sport */
 	closeMatchForIndividualSport: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -226,6 +231,22 @@ const EventButtons = React.createClass({
 			)
 		);
 	},
+	/**Save match report
+	 * @param {object} event
+	 * @returns {Promise} schoolEventReport promise
+	 * */
+	submitMatchReport: function(event){
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+
+		return window.Server.schoolEventReport.put({
+				schoolId:	activeSchoolId,
+				eventId:	event.id
+			},
+			{
+				content: event.matchReport
+			}
+		);
+	},
 	/**
 	 * Get updated event from server
 	 * And update result and status
@@ -251,20 +272,13 @@ const EventButtons = React.createClass({
 				return true;
 			});
 	},
-	isOwner: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			userId = self.getMoreartyContext().getBinding().get('userData.authorizationInfo.userId'),
-			ownerId = binding.get('participants.0.school.ownerId'),
-			verifiedUser = self.getMoreartyContext().getBinding().get('userData.userInfo.verified');
-		return (userId === ownerId || (verifiedUser.get('email') && verifiedUser.get('phone') && verifiedUser.get('personal')));
-	},
 	onClickCloseMatch: function () {
 		var self = this,
 			binding = self.getDefaultBinding();
 
 		binding.set('mode', 'closing');
 	},
+	/** The Save button handler */
 	onClickOk: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();

@@ -147,6 +147,7 @@ const EventHelper = {
 	},
 	/**
 	 * Return TRUE if event edit mode is "general".
+	 * And for tabs teams, performance, report
 	 * @returns {boolean}
 	 * @private
 	 */
@@ -154,9 +155,11 @@ const EventHelper = {
 		const binding = thiz.getDefaultBinding();
 
 		return (
-			binding.get('mode') !== 'general' &&
-			(binding.get('activeTab') === 'teams' || binding.get('activeTab') === 'performance') &&
-			RoleHelper.isUserSchoolWorker(thiz)
+			binding.get('mode') !== 'general'
+			&& (binding.get('activeTab') === 'teams'
+					|| binding.get('activeTab') === 'performance'
+					|| binding.get('activeTab') === 'report')
+			&& RoleHelper.isUserSchoolWorker(thiz)
 		);
 	},
 	isEventWithOneIndividualTeam: function(event) {
