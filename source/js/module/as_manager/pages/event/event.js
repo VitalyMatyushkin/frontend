@@ -35,52 +35,64 @@ const EventView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		const	self		= this,
-				rootBinding	= self.getMoreartyContext().getBinding(),
-				binding		= self.getDefaultBinding();
-		
+		const 	self 		= this,
+				rootBinding = self.getMoreartyContext().getBinding(),
+				binding 	= self.getDefaultBinding();
+
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-		
+		self.eventId = rootBinding.get('routing.pathParameters.0');
+
 		self.initTabs();
 
+		let eventData;
 		window.Server.schoolEvent.get({
-				schoolId:	self.activeSchoolId,
-				eventId:	rootBinding.get('routing.pathParameters.0')
+			schoolId: self.activeSchoolId,
+			eventId: self.eventId
 		}).then(event => {
 			event.schoolsData = TeamHelper.getSchoolsData(event);
 			event.teamsData = event.teamsData.sort((t1, t2) => {
-				if(t1.name < t2.name) {
+				if (t1.name < t2.name) {
 					return -1;
 				}
-				if(t1.name > t2.name) {
+				if (t1.name > t2.name) {
 					return 1;
 				}
-				if(t1.name === t2.name) {
+				if (t1.name === t2.name) {
 					return 0;
 				}
 			});
 			event.housesData = event.housesData.sort((h1, h2) => {
-				if(h1.name < h2.name) {
+				if (h1.name < h2.name) {
 					return -1;
 				}
-				if(h1.name > h2.name) {
+				if (h1.name > h2.name) {
 					return 1;
 				}
-				if(h1.name === h2.name) {
+				if (h1.name === h2.name) {
 					return 0;
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
 			EventResultHelper.initializeEventResults(event);
 
+			eventData = event;
+
+			// loading match report
+			return window.Server.schoolEventReport.get({
+				schoolId: self.activeSchoolId,
+				eventId: self.eventId
+			});
+		}).then(report => {
+			eventData.matchReport = report.content;
+
 			binding
 				.atomically()
-				.set('model',	Immutable.fromJS(event))
-				.set('mode',	Immutable.fromJS('general'))
-				.set('sync',	Immutable.fromJS(true))
+				.set('model', Immutable.fromJS(eventData))
+				.set('mode', Immutable.fromJS('general'))
+				.set('sync', Immutable.fromJS(true))
 				.commit();
 
-			return event;
+			return eventData;
 		})
 	},
 	/**Init model for Tabs component*/
@@ -148,18 +160,6 @@ const EventView = React.createClass({
 
 		window.location.hash = hash + '?tab=' + value;
 	},
-	//A function that shadows comment keystrokes in order to show the comments right after the manager has entered them
-	//This avoids the manager having to reload the screen to see what they just entered.
-	onChange:function(){
-		const	self	= this,
-				comment	= document.getElementById('commentTextArea');
-
-		if(comment){
-			self.commentContent = comment.value;
-		}else{
-			self.commentContent = '0';
-		}
-	},
 	handleClickChangeTeamsButtons: function () {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -205,8 +205,6 @@ const EventView = React.createClass({
 				binding			= self.getDefaultBinding(),
 				showingComment	= binding.get('showingComment'),
 				activeTab		= binding.get('activeTab');
-
-		self.onChange();
 
 		return (
 			<div>
@@ -266,13 +264,13 @@ const EventView = React.createClass({
 											<Morearty.DOM.textarea
 												placeholder="Enter your first comment"
 												className="eEvent_comment"
-												onChange={Morearty.Callback.set(binding, 'model.comment')}
-												value={binding.get('model.comment')} id="commentTextArea"
+												onChange={Morearty.Callback.set(binding, 'model.matchReport')}
+												value={binding.get('model.matchReport')} id="commentTextArea"
 											/>
 										</If>
-										<If condition={binding.get('mode') === 'general' && binding.get('model.result.comment')!==undefined}>
+										<If condition={binding.get('mode') === 'general' && binding.get('model.matchReport')!==undefined}>
 											<div className="bMainComment">
-												<div>{binding.get('model.result.comment')}</div>
+												<div>{binding.get('model.matchReport')}</div>
 											</div>
 										</If>
 									</div>
