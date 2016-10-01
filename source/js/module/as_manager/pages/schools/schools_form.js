@@ -76,7 +76,7 @@ const SchoolForm = React.createClass({
 								userActiveState={ self.getPublicSiteAccess() }
 								userProvidedOptions={ self.getPublicSiteAccessTypes() }
 					>
-						Public School Access
+						Public Site Access
 					</FormField>
 					<FormField	type			= "password"
 								field			= "publicSite.password"
