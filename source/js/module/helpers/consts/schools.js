@@ -5,13 +5,13 @@ const PUBLIC_SCHOOL_STATUS_SERVER = {
 };
 
 const PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE = {
-	"Public Available":	"PUBLIC_AVAILABLE",
+	"Allowed":			"PUBLIC_AVAILABLE",
 	"Protected":		"PROTECTED",
 	"Disabled":			"DISABLED"
 };
 
 const PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE = {
-	"PUBLIC_AVAILABLE":	"Public Available",
+	"PUBLIC_AVAILABLE":	"Allowed",
 	"PROTECTED":		"Protected",
 	"DISABLED":			"Disabled"
 };
@@ -23,7 +23,7 @@ const PUBLIC_SCHOOL_STATUS_SERVER_VALUE_ARRAY = [
 ];
 
 const PUBLIC_SCHOOL_STATUS_CLIENT_VALUE_ARRAY = [
-	"Public Available",
+	"Allowed",
 	"Protected",
 	"Disabled"
 ];
