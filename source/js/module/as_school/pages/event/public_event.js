@@ -4,7 +4,8 @@ const	React				= require('react'),
 		FixtureListItem		= require('./../school_home/fixture_item'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
-		PublicEventTeams	= require('./public_event_teams');
+		PublicEventTeams	= require('./public_event_teams'),
+		PublicMatchReport 	= require('./public_match_report');
 
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -79,6 +80,9 @@ const PublicEvent = React.createClass({
 		document.location.hash = 'home';
 	},
 	render: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
 		if(this.getDefaultBinding().toJS('sync')) {
 			return (
 				<div className="bPublicEvent">
@@ -87,10 +91,11 @@ const PublicEvent = React.createClass({
 					>
 						Go Back
 					</div>
-					<FixtureListItem	event			= { this.getDefaultBinding().toJS('model') }
+					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { this.props.activeSchoolId }
 					/>
 					<PublicEventTeams binding={ this._getEventTeamsBinding() } />
+					<PublicMatchReport binding={binding} activeSchoolId	= {this.props.activeSchoolId} />
 				</div>
 			);
 		} else {
