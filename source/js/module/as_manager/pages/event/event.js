@@ -256,24 +256,19 @@ const EventView = React.createClass({
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
-										<div className="eEvent_shadowCommentText">{self.commentContent}</div>
+									<If condition={binding.get('mode') === 'closing'}>
+										<Morearty.DOM.textarea
+											placeholder="Enter match report"
+											className="eEvent_comment"
+											onChange={Morearty.Callback.set(binding, 'model.matchReport')}
+											value={binding.get('model.matchReport')} id="commentTextArea"
+										/>
 									</If>
-									<div>
-										<If condition={binding.get('mode') === 'closing'}>
-											<Morearty.DOM.textarea
-												placeholder="Enter your first comment"
-												className="eEvent_comment"
-												onChange={Morearty.Callback.set(binding, 'model.matchReport')}
-												value={binding.get('model.matchReport')} id="commentTextArea"
-											/>
-										</If>
-										<If condition={binding.get('mode') === 'general' && binding.get('model.matchReport')!==undefined}>
-											<div className="bMainComment">
-												<div>{binding.get('model.matchReport')}</div>
-											</div>
-										</If>
-									</div>
+									<If condition={binding.get('mode') === 'general' && binding.get('model.matchReport')!==undefined}>
+										<div className="bMainComment">
+											<div>{binding.get('model.matchReport')}</div>
+										</div>
+									</If>
 								</div>
 							</If>
 							<If condition={(binding.get('mode') !== 'general')}>
