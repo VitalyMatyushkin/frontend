@@ -49,8 +49,9 @@ ClassListModel.prototype = {
 			window.Server.schoolForm.delete({schoolId:self.activeSchoolId, formId:data.id})
 				.then(_ => self.reloadData())
 				.catch(error => {
-					error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details
-					&& alert(error.xhr.responseJSON.details.text);
+					const text = error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details ? error.xhr.responseJSON.details.text : '';
+					console.log('Got error while trying to remove student: ' + text);
+					alert('Sorry! You cannot perform this action. Please contact support');
 				});
 		}
 	},
