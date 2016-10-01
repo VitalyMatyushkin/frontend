@@ -24,7 +24,7 @@ MatchReportActions.prototype.load = function() {
 		schoolId: this.activeSchoolId,
 		eventId: this.eventId
 	}).then(report => {
-		binding.set(Immutable.fromJS(report.content));
+		binding.set('model.matchReport', Immutable.fromJS(report.content));
 
 		return report.content;
 	});
@@ -67,9 +67,11 @@ MatchReportActions.prototype.onCancel = function(){
 
 MatchReportActions.prototype.onSave = function(){
 	const 	self 		= this,
-			binding 	= self.getDefaultBinding();
+			binding 	= self.getDefaultBinding(),
+			report 		= binding.toJS('model.matchReport');
 
-	return binding.set('mode', 'general');
+	this.save(report);
+	this.onCancel();
 };
 
 

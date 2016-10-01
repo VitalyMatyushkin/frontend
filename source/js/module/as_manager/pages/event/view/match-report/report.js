@@ -6,7 +6,8 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
 		If				= require('module/ui/if/if'),
-		Actions 		= require('./report-actions');
+		Actions 		= require('./report-actions'),
+		SVG 			= require('module/ui/svg');
 
 const MatchReport = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -14,7 +15,8 @@ const MatchReport = React.createClass({
 		eventId: React.PropTypes.string.isRequired
 	},
 	componentWillMount: function(){
-		this.actions = new Actions(this).load();
+		this.actions = new Actions(this);
+		this.actions.load();
 	},
 	render:function(){
 		const 	self 		= this,
@@ -25,7 +27,7 @@ const MatchReport = React.createClass({
 				<If condition={!this.actions.isEditMode()}>
 					<div>
 						<div className="bEditButtonWrapper">
-							<div className="bEditButton" onClick={this.actions.onEdit}>
+							<div className="bEditButton" onClick={this.actions.onEdit.bind(this.actions)}>
 								<SVG icon="icon_edit"/>
 							</div>
 						</div>
@@ -41,10 +43,10 @@ const MatchReport = React.createClass({
 							value={binding.get('model.matchReport')}
 						/>
 						<div className="bEventButtons">
-							<div className="bEventButton mCancel" onClick={this.actions.onCancel}>
+							<div className="bEventButton mCancel" onClick={this.actions.onCancel.bind(this.actions)}>
 								Cancel
 							</div>
-							<div className="bEventButton" onClick={this.actions.onSave}>
+							<div className="bEventButton" onClick={this.actions.onSave.bind(this.actions)}>
 								Save
 							</div>
 						</div>
