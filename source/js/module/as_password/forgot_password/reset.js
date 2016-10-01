@@ -38,7 +38,7 @@ const PasswordResetRequestForm = React.createClass({
 			<div className="bPageMessage">
 				<SVG classes="bLoginIcon" icon="icon_login"/>
 				<Form name="Change password" binding={binding} onSubmit={self.submitEdit}>
-					<FormField type="confirmText" textType="password" field="newPassword" validation="password required">Password</FormField>
+					<FormField type="confirmText" textType="password" field="newPassword" validation="password required" fieldClassName="mLarge">Password</FormField>
 				</Form>
 			</div>
 		);
