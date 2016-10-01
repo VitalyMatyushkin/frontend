@@ -125,6 +125,7 @@ const serviceList = {
 
 		serviceList.publicSchoolEvent = new Service('/public/schools/{schoolId}/events/{eventId}', binding);
 		serviceList.publicSchoolEvents = new Service('/public/schools/{schoolId}/events', binding);
+		serviceList.publicSchoolEventReport = new Service('/public/schools/{schoolId}/events/{eventId}/report', binding);
 		serviceList.publicSchoolEventTeams = new Service('/public/schools/{schoolId}/events/{eventId}/teams', binding);
 		serviceList.publicSchoolEventTeam = new Service('/public/schools/{schoolId}/events/{eventId}/teams/{teamId}', binding);
 		serviceList.publicSchoolEventDates = new Service('/public/schools/{schoolId}/events/dates/distinct', binding);
