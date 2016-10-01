@@ -66,7 +66,7 @@ const SchoolForm = React.createClass({
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
 					<FormField type="dropdown" field="status">School Status</FormField>
-					<FormField type="phone" field="phone" validation="phone">Phone</FormField>
+					<FormField type="phone" field="phone" validation="any">Phone</FormField>
 					<FormField type="area" field="postcodeId" defaultItem={postcode}
 							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
