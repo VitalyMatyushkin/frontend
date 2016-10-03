@@ -38,6 +38,7 @@ const FormField = React.createClass({
 		//If a specific class has been provided for styling error messages then use it
 		const errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);
 
+		/** props.condition === true or undefined */
 		if(self.props.condition || typeof self.props.condition === 'undefined'){
 			return (
 				<div className={classNames("eForm_field", self.props.fieldClassName)}>
@@ -49,6 +50,8 @@ const FormField = React.createClass({
 				</div>
 			)
 		}
+
+		/** props.condition === false */
 		return null;
 	}
 });
