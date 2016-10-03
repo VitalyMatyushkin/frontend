@@ -15,22 +15,6 @@ const SportsForm = React.createClass({
         title:          React.PropTypes.string.isRequired,
         onFormSubmit:   React.PropTypes.func
     },
-    getScoring: function() {
-        const self      = this,
-              data      = self.getDefaultBinding().toJS();
-
-        return (data !== undefined && data.scoring !== undefined) ? data.scoring : null;
-    },
-    getPlayers: function() {
-        const   self    = this,
-                data    = self.getDefaultBinding().toJS();
-
-        return (data !== undefined && data.players !== undefined) ? data.players : null;
-    },
-	getPointsDisplay: function(){
-    	const data = this.getDefaultBinding().toJS();
-		return (typeof data !== 'undefined' && typeof data.points !== 'undefined' && typeof data.points.display !== 'undefined') ? data.points.display : null;
-	},
     getPositionFields: function() {
         const self    = this,
               data = self.getDefaultBinding().meta().toJS();

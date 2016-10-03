@@ -28,9 +28,6 @@ const SchoolForm = React.createClass({
 		}
 		return result;
 	},
-	getPublicSiteAccess: function() {
-		return this.getDefaultBinding().toJS('publicSite.status');
-	},
 	// if undefined then set def value
 	setDefaultPublicSiteAccess: function() {
 		const binding = this.getDefaultBinding();
@@ -40,16 +37,6 @@ const SchoolForm = React.createClass({
 				'publicSite.status',
 				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_CLIENT_VALUE)
 			);
-		}
-	},
-	getPublicSitePasswordCss: function() {
-		if(
-			this.getDefaultBinding().meta().toJS('publicSite.status.value') !==
-			SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE['PROTECTED']
-		) {
-			return 'mDisabled';
-		} else {
-			return '';
 		}
 	},
 	render: function () {
