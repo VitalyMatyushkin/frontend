@@ -459,15 +459,13 @@ const SportsForm = React.createClass({
                             Description
                         </FormField>
                         <FormField  field="scoring"
-                                    userProvidedOptions={SportsHelpers.clientScoringArray}
-                                    userActiveState={self.getScoring()}
+                                    options={SportsHelpers.clientScoringArray}
                                     type="dropdown"
                         >
                             Scoring
                         </FormField>
                         <FormField  field="players"
-                                    userProvidedOptions={SportsHelpers.clientPlayersArray}
-                                    userActiveState={self.getPlayers()}
+                                    options={SportsHelpers.clientPlayersArray}
                                     type="dropdown"
                         >
                             Type of players
@@ -539,8 +537,7 @@ const SportsForm = React.createClass({
                                 Points step
                             </FormField>
 							<FormField  field="pointsDisplay"
-										userProvidedOptions={SportsHelpers.clientPointDisplayArray}
-										userActiveState={self.getPointsDisplay()}
+										options={SportsHelpers.clientPointDisplayArray}
 										type="dropdown"
 							>
 								How to display points
