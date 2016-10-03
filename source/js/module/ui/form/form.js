@@ -250,8 +250,8 @@ const Form = React.createClass({
 		}
 	},
 	render: function () {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const 	self = this,
+				binding = self.getDefaultBinding();
 		let Title;
 
 		if (self.props.name !== undefined) {

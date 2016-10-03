@@ -11,6 +11,7 @@ const FormField = React.createClass({
 		validation:			React.PropTypes.string,
         errorClassName:		React.PropTypes.string, //Error message specific class
         fieldClassName:		React.PropTypes.string,
+		condition:			React.PropTypes.bool, 	//false - field is not included in the form, true or undefined - included
 		binding:			React.PropTypes.any
 	},
 	render: function () {
@@ -36,16 +37,22 @@ const FormField = React.createClass({
                                 });
 		//If a specific class has been provided for styling error messages then use it
 		const errorClassName = classNames("eForm_fieldValidText", self.props.errorClassName);
-		return (
-			<div className={classNames("eForm_field", self.props.fieldClassName)}>
-				<div className="eForm_fieldName">{self.props.children}</div>
-				<div className={fieldStyleClass}>
-					{inputField}
-					<div className={errorClassName} title={binding.get('error') || ''} dangerouslySetInnerHTML={html} />
-				</div>
-			</div>
 
-		)
+		/** props.condition === true or undefined */
+		if(self.props.condition || typeof self.props.condition === 'undefined'){
+			return (
+				<div className={classNames("eForm_field", self.props.fieldClassName)}>
+					<div className="eForm_fieldName">{self.props.children}</div>
+					<div className={fieldStyleClass}>
+						{inputField}
+						<div className={errorClassName} title={binding.get('error') || ''} dangerouslySetInnerHTML={html} />
+					</div>
+				</div>
+			)
+		}
+
+		/** props.condition === false */
+		return null;
 	}
 });
 
