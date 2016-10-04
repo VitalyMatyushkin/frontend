@@ -11,8 +11,4 @@ function create(binding) {
 	};
 }
 
-const SimpleAlertFactory = {
-	create: create
-};
-
-module.exports = SimpleAlertFactory;
+module.exports.create = create;

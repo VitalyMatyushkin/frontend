@@ -13,8 +13,5 @@ function create(binding) {
 	};
 }
 
-const ConfirmAlertFactory = {
-	create: create
-};
 
-module.exports = ConfirmAlertFactory;
+module.exports.create = create;
