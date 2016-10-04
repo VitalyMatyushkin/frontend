@@ -51,7 +51,11 @@ ClassListModel.prototype = {
 				.catch(error => {
 					const text = error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details ? error.xhr.responseJSON.details.text : '';
 					console.log('Got error while trying to remove student: ' + text);
-					alert('Sorry! You cannot perform this action. Please contact support');
+					window.simpleAlert(
+						'Sorry! You cannot perform this action. Please contact support',
+						'Ok',
+						() => {}
+					);
 				});
 		}
 	},

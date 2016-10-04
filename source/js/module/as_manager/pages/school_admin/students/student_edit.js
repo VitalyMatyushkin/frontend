@@ -34,7 +34,11 @@ const StudentEditPage = React.createClass({
 				});
 
 			}).catch( err => {
-				alert(err.errorThrown + ' server error occurred while getting student data');
+				window.simpleAlert(
+					`${err.errorThrown} server error occurred while getting student data`,
+					'Ok',
+					() => {}
+				);
 			});
 
 			self.activeSchoolId = activeSchoolId;

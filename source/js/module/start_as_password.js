@@ -2,6 +2,8 @@
  * Created by wert on 16.01.16.
  */
 const   ApplicationView     = require('module/as_password/application'),
+        SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
+        ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
         userDataInstance    = require('module/data/user_data'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
@@ -13,6 +15,26 @@ const   ApplicationView     = require('module/as_password/application'),
 function runPasswordMode() {
 // Create Morearty context
     const MoreartyContext = Morearty.createContext({
+        simpleAlertData: {
+            isOpen:					false,
+
+            text:					'',
+
+            okButtonText:			'',
+
+            handleClickOkButton:	undefined
+        },
+        confirmAlertData: {
+            isOpen:						false,
+
+            text:						'',
+
+            okButtonText:				'',
+            cancelButtonText:			'',
+
+            handleClickOkButton:		undefined,
+            handleClickCancelButton:	undefined
+        },
         initialState: {
             userData: userDataInstance.getDefaultState(),
             userRules: userRulesInstance.getDefaultState(),
@@ -58,6 +80,8 @@ function runPasswordMode() {
         }
     );
 
+    window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
+    window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
     // Инициализация приложения
     ReactDom.render(

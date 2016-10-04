@@ -1,4 +1,5 @@
 const   ApplicationView     = require('module/as_admin/application'),
+        SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
         ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
         userDataInstance    = require('module/data/user_data'),
         userRulesInstance   = require('module/data/user_rules'),
@@ -14,6 +15,26 @@ function runAdminMode() {
         initialState: {
             userData: userDataInstance.getDefaultState(),
             userRules: userRulesInstance.getDefaultState(),
+            simpleAlertData: {
+                isOpen:					false,
+
+                text:					'',
+
+                okButtonText:			'',
+
+                handleClickOkButton:	undefined
+            },
+            confirmAlertData: {
+                isOpen:						false,
+
+                text:						'',
+
+                okButtonText:				'',
+                cancelButtonText:			'',
+
+                handleClickOkButton:		undefined,
+                handleClickCancelButton:	undefined
+            },
             routing: {
                 currentPath: '',		// текущий путь
                 currentPageName: '',	// имя текущей страницы, если есть
@@ -100,6 +121,7 @@ function runAdminMode() {
         defaultPath: 'admin_schools'
     });
 
+    window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
     window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 // Инициализация приложения

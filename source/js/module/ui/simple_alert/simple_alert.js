@@ -1,8 +1,10 @@
-const	React	= require('react'),
-		Button	= require('./../../ui/button/button');
+const	React		= require('react'),
+		Morearty	= require('morearty'),
+		Button		= require('./../../ui/button/button');
 
 const SimpleAlert = React.createClass({
 	mixins: [Morearty.Mixin],
+	
 	handleClickOkButton: function() {
 		const binding = this.getDefaultBinding();
 

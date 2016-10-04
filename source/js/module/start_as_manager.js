@@ -1,4 +1,5 @@
 const 	ApplicationView 	= require('module/as_manager/application'),
+		SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
 		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
 		userDataInstance 	= require('module/data/user_data'),
 		userRulesInstance 	= require('module/data/user_rules'),
@@ -23,7 +24,7 @@ function runManagerMode() {
 
 				okButtonText:			'',
 
-				handleClickOkButton:	undefined,
+				handleClickOkButton:	undefined
 			},
 			confirmAlertData: {
 				isOpen:						false,
@@ -129,8 +130,8 @@ function runManagerMode() {
 		defaultPath: 'school_admin/summary'
 	});
 
+	window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
-	window.simpleAlert = ConfirmAlertFactory.create(binding.sub('simpleAlertData'));
 
 	// Инициализация приложения
 	ReactDom.render(

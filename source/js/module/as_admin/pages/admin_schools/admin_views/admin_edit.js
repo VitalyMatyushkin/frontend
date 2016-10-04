@@ -23,8 +23,12 @@ const EditSchoolForm = React.createClass({
 					data.postcode.id = data.postcode._id;
 				}
                 binding.set(Immutable.fromJS(data));
-            }).catch(function(err){
-                alert(err.errorThrown+' server error');
+            }).catch(err => {
+                window.simpleAlert(
+                    `${err.errorThrown} server error`,
+                    'Ok',
+                    () => {}
+                );
             });
 
             self.schoolId = schoolId;

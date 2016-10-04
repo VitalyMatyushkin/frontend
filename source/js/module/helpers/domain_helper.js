@@ -62,7 +62,11 @@ const DomainHelper = {
 				window.location.reload();
 			}
 		} else {
-			alert('unknown role: ' + roleName);
+			window.simpleAlert(
+				`unknown role: ${roleName}`,
+				'Ok',
+				() => {}
+			);
 		}
 	}
 

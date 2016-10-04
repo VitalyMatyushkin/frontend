@@ -101,10 +101,14 @@ UsersActions.prototype = {
 		}
 	},
 	_getItemViewFunction:function(model){
-		if(model.length === 1){
+		if(model.length === 1) {
 			window.location.hash = 'user/view?id='+model[0];
-		}else{
-			alert("You can only perform this action on one Item");
+		} else {
+			window.simpleAlert(
+				"You can only perform this action on one Item.",
+				'Ok',
+				() => {}
+			);
 		}
 	},
 	_revokeAllRoles:function(ids){
@@ -168,7 +172,11 @@ UsersActions.prototype = {
 				});
 			}
 		}else{
-			alert('Please select at least 1 row');
+			window.simpleAlert(
+				'Please select at least 1 row',
+				'Ok',
+				() => {}
+			);
 		}
 	},
 	getRoleList:function(){
