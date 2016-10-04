@@ -1,6 +1,11 @@
 const Immutable = require('immutable');
 
 function create(binding) {
+	/**
+	 * text - alert text
+	 * okButtonText - text for ok button
+	 * handleClickOkButton - handler for click to ok button event
+	 */
 	return (text, okButtonText, handleClickOkButton) => {
 		binding.atomically()
 			.set('isOpen',					true)
