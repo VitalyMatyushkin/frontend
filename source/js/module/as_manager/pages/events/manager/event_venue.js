@@ -3,8 +3,7 @@ const   React           = require('react'),
         Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
         Immutable       = require('immutable'),
         Morearty		= require('morearty'),
-        If              = require('module/ui/if/if'),
-        SimpleAlert     = require('./../../../../ui/simple_alert/simple_alert');
+        If              = require('module/ui/if/if');
 
 const EventVenue = React.createClass({
     displayName:            'EventVenue',
@@ -32,7 +31,6 @@ const EventVenue = React.createClass({
 
         self._initVenueType(eventType);
         self._initPostCode(eventType);
-        self._initAlerts();
     },
     _initVenueType: function(eventType) {
         const   self = this,
@@ -67,12 +65,6 @@ const EventVenue = React.createClass({
 				.set('model.venue.postcode', Immutable.fromJS(postcode.id))
 				.commit();
 		}
-    },
-    _initAlerts: function() {
-        const   self = this,
-                binding = self.getDefaultBinding();
-
-        binding.set('isRivalSchoolAlertOpen',   false);
     },
     /**
      * Function set default postcode by venue type.
