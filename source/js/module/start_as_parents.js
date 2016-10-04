@@ -14,7 +14,7 @@ function runParentMode() {
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			userRules: userRulesInstance.getDefaultState(),
-			simpleAlertData: {
+			notificationAlertData: {
 				isOpen:					false,
 
 				text:					'',
@@ -80,7 +80,7 @@ function runParentMode() {
 		defaultPath: 'events/calendar/all'
 	});
 
-	window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
+	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 	ReactDom.render(

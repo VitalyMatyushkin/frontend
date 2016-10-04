@@ -15,7 +15,7 @@ const   ApplicationView     = require('module/as_password/application'),
 function runPasswordMode() {
 // Create Morearty context
     const MoreartyContext = Morearty.createContext({
-        simpleAlertData: {
+        notificationAlertData: {
             isOpen:					false,
 
             text:					'',
@@ -80,7 +80,7 @@ function runPasswordMode() {
         }
     );
 
-    window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
+    window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
     window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
     // Инициализация приложения

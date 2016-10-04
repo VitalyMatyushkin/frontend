@@ -19,7 +19,7 @@ const   ApplicationView     = require('module/as_login/application'),
         initialState: {
             userData: userDataLogin.getDefaultState(),
             userRules: userRulesInstance.getDefaultState(),
-            simpleAlertData: {
+            notificationAlertData: {
                 isOpen:					false,
 
                 text:					'',
@@ -127,7 +127,7 @@ const   ApplicationView     = require('module/as_login/application'),
 	});
 
 
-    window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
+    window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
     window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
     // Инициализация приложения

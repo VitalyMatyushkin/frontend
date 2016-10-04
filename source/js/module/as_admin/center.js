@@ -17,6 +17,7 @@ const   RouterView      		= require('module/core/router'),
 		AlbumsComponent			= require('module/ui/gallery/albums'),
 		AdminDashboardComponent	= require('module/as_admin/pages/admin_schools/admin_dashboard'),
 		SchoolSandboxComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/sandbox'),
+		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
 		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert');
 
 const Center = React.createClass({
@@ -49,6 +50,7 @@ const Center = React.createClass({
                         <SettingsRoute                              binding={binding.sub('userData')}/>
                         <RegisterRoute                              binding={binding.sub('form.register')}/>
                     </RouterView>
+					<NotificationAlert binding={binding.sub('notificationAlertData')} />
 					<ConfirmAlert binding={binding.sub('confirmAlertData')} />
                 </div>
             </div>

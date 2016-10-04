@@ -17,7 +17,7 @@ function runManagerMode() {
 		initialState: {
 			userData:	userDataInstance.getDefaultState(),
 			userRules:	userRulesInstance.getDefaultState(),
-			simpleAlertData: {
+			notificationAlertData: {
 				isOpen:					false,
 
 				text:					'',
@@ -130,7 +130,7 @@ function runManagerMode() {
 		defaultPath: 'school_admin/summary'
 	});
 
-	window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
+	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 	// Инициализация приложения

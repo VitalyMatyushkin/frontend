@@ -1,21 +1,22 @@
-const	RouterView		= require('module/core/router'),
-		Route			= require('module/core/route'),
-		LoginRoute		= require('module/core/routes/login_route'),
-		LogoutRoute		= require('module/core/routes/logout_route'),
-		RegisterRoute	= require('module/core/routes/register_route'),
-		SettingsRoute	= require('module/core/routes/settings_route'),
-		Morearty		= require('morearty'),
-		React			= require('react'),
-		AdminSchoolPageComponent = require('module/as_manager/pages/school_admin/school_page'),
-		SchoolPageComponent = require('module/as_manager/pages/schools/schools_page'),
-		EventsComponent = require('module/as_manager/pages/events/events'),
-		EventComponent = require('module/as_manager/pages/event/event'),
-		SchoolGalleryRoutesComponent = require('module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes'),
-		EventGalleryRoutesComponent = require('module/as_manager/pages/event/gallery/eventGalleryRoutes'),
-		InvitesComponent = require('module/as_manager/pages/invites/invites'),
-		SchoolConsoleComponent = require('module/as_manager/pages/school_console/school_console'),
-		UserViewComponent = require('module/shared_pages/users/user_view');
-
+const	RouterView						= require('module/core/router'),
+		Route							= require('module/core/route'),
+		LoginRoute						= require('module/core/routes/login_route'),
+		LogoutRoute						= require('module/core/routes/logout_route'),
+		RegisterRoute					= require('module/core/routes/register_route'),
+		SettingsRoute					= require('module/core/routes/settings_route'),
+		Morearty						= require('morearty'),
+		React							= require('react'),
+		AdminSchoolPageComponent		= require('module/as_manager/pages/school_admin/school_page'),
+		SchoolPageComponent				= require('module/as_manager/pages/schools/schools_page'),
+		EventsComponent					= require('module/as_manager/pages/events/events'),
+		EventComponent					= require('module/as_manager/pages/event/event'),
+		SchoolGalleryRoutesComponent	= require('module/as_manager/pages/school_admin/gallery/schoolGalleryRoutes'),
+		EventGalleryRoutesComponent		= require('module/as_manager/pages/event/gallery/eventGalleryRoutes'),
+		InvitesComponent				= require('module/as_manager/pages/invites/invites'),
+		SchoolConsoleComponent			= require('module/as_manager/pages/school_console/school_console'),
+		UserViewComponent				= require('module/shared_pages/users/user_view'),
+		NotificationAlert				= require('./../ui/notification_alert/notification_alert'),
+		ConfirmAlert					= require('./../ui/confirm_alert/confirm_alert');
 
 const Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -87,6 +88,8 @@ const Center = React.createClass({
 				<div className="bPageWrap">
 					{self._getRouter()}
 				</div>
+				<NotificationAlert binding={binding.sub('notificationAlertData')} />
+				<ConfirmAlert binding={binding.sub('confirmAlertData')} />
 			</div>
 		);
 	}

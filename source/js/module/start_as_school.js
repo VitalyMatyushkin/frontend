@@ -16,7 +16,7 @@ function initMainView(school) {
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: 			userDataInstance.getDefaultState(),
-			simpleAlertData: {
+			notificationAlertData: {
 				isOpen:					false,
 
 				text:					'',
@@ -100,7 +100,7 @@ function initMainView(school) {
 	// Turning on authorization service
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
 
-	window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
+	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
 	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 	ReactDom.render(

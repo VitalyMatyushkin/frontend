@@ -15,7 +15,7 @@ function runAdminMode() {
         initialState: {
             userData: userDataInstance.getDefaultState(),
             userRules: userRulesInstance.getDefaultState(),
-            simpleAlertData: {
+            notificationAlertData: {
                 isOpen:					false,
 
                 text:					'',
@@ -121,7 +121,7 @@ function runAdminMode() {
         defaultPath: 'admin_schools'
     });
 
-    window.simpleAlert = SimpleAlertFactory.create(binding.sub('simpleAlertData'));
+    window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
     window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 // Инициализация приложения
