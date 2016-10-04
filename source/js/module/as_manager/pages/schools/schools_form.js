@@ -46,10 +46,10 @@ const SchoolForm = React.createClass({
 				statusActive = !rootBinding.get('userRules.activeSchoolId'),
 				passActive 	= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
 				statusOptions = [
-					'Active',
-					'Inactive',
-					'Suspended',
-					'Email Notifications'
+					{ text: 'Active', value: 'ACTIVE' },
+					{ text: 'Inactive', value: 'INACTIVE' },
+					{ text: 'Suspended', value: 'SUSPENDED' },
+					{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
 				],
 				postcode 	= binding.toJS('postcode');
 
