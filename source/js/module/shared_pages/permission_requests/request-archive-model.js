@@ -46,7 +46,7 @@ RequestArchiveModel.prototype = {
 		const 	self 	= this,
 			binding = self.getDefaultBinding();
 
-		window.Server.publicSchools.get().then(schools => {
+		window.Server.publicSchools.get({filter:{limit:1000,order:"name ASC"}}).then(schools => {
 			binding.set('schools', schools);
 		});
 	},
@@ -123,7 +123,7 @@ RequestArchiveModel.prototype = {
 				filter:{
 					type:'multi-select',
 					typeOptions:{
-						getDataPromise: window.Server.publicSchools.get({filter:{limit:1000}}),
+						getDataPromise: window.Server.publicSchools.get({filter:{limit:1000,order:"name ASC"}}),
 						valueField:'name',
 						keyField:'id'
 					}
