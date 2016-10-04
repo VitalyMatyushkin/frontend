@@ -14,19 +14,18 @@ const ConsoleList = React.createClass({
             binding = self.getDefaultBinding();
         return data.map(function(item){
             var deleteEntry = function (entryId, entryName, state) {
-                return function(event){
-                        var act = state === false? 'block':'unblock';
-                        var del = confirm("Are you sure you want to "+act+ " "+entryName+" ?");
-                        if(del == true){
-                            window.Server.user.put({id:entryId},{blocked:!state})
-                                .then(function(res){
-                                    console.log(res);
-                                    binding.set('shouldUpdateList',true);
-                                });
-                        }
-                        event.stopPropagation();
-                    }
-                },
+                return function(event) {
+                    var act = state === false? 'block':'unblock';
+
+                    window.confirmAlert(
+                        "Are you sure you want to "+act+ " "+entryName+" ?",
+                        "Ok",
+                        "Cancel",
+                        () => window.Server.user.put( {id:entryId},{blocked:!state} ).then(res => binding.set('shouldUpdateList', true)),
+                        () => {}
+                    );
+                    event.stopPropagation();
+                }},
                 gotoUser = function(userId){
                     binding.set('selectedUser', {userId:userId});
                     document.location.hash = '/admin_schools/admin_views/user?id='+userId;

@@ -112,28 +112,34 @@ UsersActions.prototype = {
 		}
 	},
 	_revokeAllRoles:function(ids){
-		const   self            = this,
-				schoolId  		= self.activeSchoolId,
-				permission 		= window.Server[self.props.permissionServiceName],
-				permissionList 	= window.Server[`${self.props.permissionServiceName}s`],
-				confirmAction 	= window.confirm("Are you sure you want revoke all roles?");
+		const self = this;
 
 		if(ids && ids.length > 0 ){
-			if(confirmAction){
-				ids.forEach(function(userId){
-					const params = {userId:userId, schoolId:schoolId};
+			const	schoolId		= self.activeSchoolId,
+					permission		= window.Server[self.props.permissionServiceName],
+					permissionList	= window.Server[`${self.props.permissionServiceName}s`];
 
-					permissionList.get(params)
-						.then(function(data){
-							data.forEach(function(p){
-								if(p.preset !== 'STUDENT'){
-									params.permissionId = p.id;
-									permission.delete(params).then(_ => self.reloadData());
-								}
+			window.confirmAlert(
+				"Are you sure you want revoke all roles?",
+				"Ok",
+				"Cancel",
+				() => {
+					ids.forEach(function(userId){
+						const params = {userId:userId, schoolId:schoolId};
+
+						permissionList.get(params)
+							.then(function(data){
+								data.forEach(function(p){
+									if(p.preset !== 'STUDENT'){
+										params.permissionId = p.id;
+										permission.delete(params).then(_ => self.reloadData());
+									}
+								});
 							});
-						});
-				});
-			}
+					});
+				},
+				() => {}
+			);
 		}
 	},
 	_revokeRole:function(ids, action){

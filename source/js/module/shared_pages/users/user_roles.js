@@ -23,12 +23,18 @@ const UserRole = React.createClass({
 			);
 			return;
 		}
-		if(confirm("Are you sure you want to revoke this permission?")){
-			window.Server.userPermission.delete({userId:userId, permissionId:permissionId})
-				.then(function(){
-					subPermissions.set(newPermissions);
-				});
-		}
+		window.confirmAlert(
+			"Are you sure you want to revoke this permission?",
+			"Ok",
+			"Cancel",
+			() => {
+				window.Server.userPermission.delete({userId:userId, permissionId:permissionId})
+					.then(function(){
+						subPermissions.set(newPermissions);
+					});
+			},
+			() => {}
+		);
 	},
     getRoleData:function(){
         const 	self 		= this,

@@ -96,25 +96,35 @@ RequestActions.prototype = {
 				if(currentPr.requestedPermission.preset === "PARENT") {
 					document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`;
 				} else {
-					confirmMsg = window.confirm("Are you sure you want to accept ?");
-					if(confirmMsg === true){
-						// This component used on manager side and on admin side.
-						// For manager and for admin we have different service lists, with different routes, but with same route names.
-						// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
-						// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
-						// So, for manager schoolId is required, for admin isn't required.
-						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'ACCEPTED'})
-							.then(_ => self.refresh());
-					}
+					window.confirmAlert(
+						"Are you sure you want to accept?",
+						"Ok",
+						"Cancel",
+						() => {
+							// This component used on manager side and on admin side.
+							// For manager and for admin we have different service lists, with different routes, but with same route names.
+							// For admin we have statusPermissionRequest route with url - /superadmin/users/permissions/requests/{prId}/status
+							// For manager we have statusPermissionRequest route with url - /i/schools/{schoolId}/permissions/requests/{prId}/status
+							// So, for manager schoolId is required, for admin isn't required.
+							window.Server.statusPermissionRequest.put( {schoolId:schoolId, prId:prId},{status:'ACCEPTED'} )
+								.then(_ => self.refresh());
+						},
+						() => {}
+					);
 				}
 				break;
 			case 'Decline':
-				confirmMsg = window.confirm("Are you sure you want to decline ?");
-				if(confirmMsg === true){
-					// Pls look up at previous comment
-					window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'})
-						.then(_ => self.refresh());
-				}
+				window.confirmAlert(
+					"Are you sure you want to decline?",
+					"Ok",
+					"Cancel",
+					() => {
+						// Pls look up at previous comment
+						window.Server.statusPermissionRequest.put({schoolId:schoolId, prId:prId},{status:'REJECTED'})
+							.then(_ => self.refresh());
+					},
+					() => {}
+				);
 				break;
 			default :
 				break;
