@@ -43,8 +43,8 @@ const SchoolForm = React.createClass({
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
 				rootBinding = this.getMoreartyContext().getBinding(),
-				siteActive 		= !rootBinding.get('userRules.activeSchoolId'),
-				passActive 	= siteActive && binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
+				statusActive = !rootBinding.get('userRules.activeSchoolId'),
+				passActive 	= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
 				statusOptions = [
 					'Active',
 					'Inactive',
@@ -68,7 +68,7 @@ const SchoolForm = React.createClass({
 				<FormColumn>
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
-					<FormField type="dropdown" field="status" options={statusOptions}>
+					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
 						School Status
 					</FormField>
 					<FormField type="phone" field="phone" validation="any">Phone</FormField>
@@ -79,7 +79,6 @@ const SchoolForm = React.createClass({
 					<FormField	type="dropdown"
 								field="publicSite.status"
 								options={ self.getPublicSiteAccessTypes() }
-							  	condition={siteActive}
 					>
 						Public Site Access
 					</FormField>
