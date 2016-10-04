@@ -1,78 +1,46 @@
 /**
- * Created by bridark on 23/07/15.
+ * Created by Anatoly on 03.10.2016.
  */
-    /*
-    This select button can be reused in situations where you want to provide select options that are not based on
-    a collection in the database:
-    For example a school status in the database is represented by a string field but we want administrator to have
-    options that would enable them to change that string value.
-    To customise: provide your own array of options @userProvidedOptions:Array, and selected or active selected option
-    @userActiveState:String
-     */
+
 const   React       = require('react'),
-        Morearty    = require('morearty'),
-        TypeMixin   = require('module/ui/form/types/type_mixin');
+		Morearty    = require('morearty'),
+		TypeMixin   = require('module/ui/form/types/type_mixin');
 
-const TypeDrop = React.createClass({
-    mixins:[Morearty.Mixin, TypeMixin],
-    propTypes:{
-        userProvidedOptions:React.PropTypes.array,
-        userActiveState:React.PropTypes.string
-    },
-    getInitialState:function(){
-        return{
-            activeValue:'Active'
-        }
-    },
-    getDefaultProps:function(){
-        return{
-            defaultSelectOptions:[
-                'Active',
-                'Inactive',
-                'Suspended',
-                'Email Notifications'
-            ]
-        }
-    },
-    componentWillMount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+/**
+ * The select list form component
+ * @param {array} options - array of options (string or {value, text} object)
+ * */
+const TypeDropDown = React.createClass({
+	mixins:[Morearty.Mixin, TypeMixin],
+	propTypes:{
+		options:React.PropTypes.array.isRequired
+	},
+	renderOptions:function(){
+		return this.props.options.map(function(item, i){
+			if(typeof item === 'string')
+				/** string option */
+				return <option key={item+'-'+i} value={item}>{item}</option>;
 
-        //If initial option list is provided
-        if(self.props.userProvidedOptions !== undefined && self.props.userActiveState!==undefined){
-            self.optionsToMap = self.props.userProvidedOptions;
-            binding.set('defaultValue', self.props.userActiveState);
-        } else {
-            self.optionsToMap = self.props.defaultSelectOptions;
-        }
+			/** {value, text} object */
+			return <option key={item.value+'-'+i} value={item.value}>{item.text}</option>;
+		});
 
-        binding.addListener('defaultValue',function(){
-           self.isMounted()&&self.setState({activeValue:binding.get('defaultValue')});
-        });
-    },
-    _renderChildOptions:function(){
-        var self = this;
-        return self.optionsToMap.map(function(optionNode,i){
-            return(
-                <option key={i} value={optionNode}>{optionNode}</option>
-            )
-        });
-    },
-    _handleDropChange:function(e){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            value = e.currentTarget.value;
-        binding.set('defaultValue',value);
-        self.setValue(value);
-    },
-    render:function(){
-        var self = this,
-            options = self._renderChildOptions();
-        return (
-            <select value={self.state.activeValue} ref="dropSelect" onChange={self._handleDropChange}>
-                {options}
-            </select>
-        );
-    }
+	},
+	onChange:function(e){
+		this.setValue(e.currentTarget.value);
+		e.stopPropagation();
+	},
+	render:function(){
+		const 	self = this,
+				binding = self.getDefaultBinding(),
+				value = binding.get('value');
+
+		return (
+			<select value={value} onChange={self.onChange}>
+				{self.renderOptions()}
+			</select>
+		);
+	}
 });
-module.exports = TypeDrop;
+
+module.exports = TypeDropDown;
