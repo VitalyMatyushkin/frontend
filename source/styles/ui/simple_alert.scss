@@ -1,5 +1,5 @@
 .bSimpleAlert {
-  position: absolute;
+  position: fixed;
 
   width: 500px;
   min-height: 50px;
@@ -22,5 +22,5 @@
 }
 
 .eSimpleAlert_footer {
-
+  text-align: right;
 }
