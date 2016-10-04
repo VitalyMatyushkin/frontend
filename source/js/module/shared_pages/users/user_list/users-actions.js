@@ -137,16 +137,22 @@ UsersActions.prototype = {
 				schoolId  		= self.activeSchoolId,
 				permission 		= window.Server[self.props.permissionServiceName];
 
-		if(ids && ids.length > 0 ){
-			if(window.confirm(`Are you sure you want ${action.text}?`)){
-				ids.forEach(function(userId){
-					const params = {userId:userId, schoolId:schoolId, permissionId:action.id};
+		if(ids && ids.length > 0 ) {
+			window.confirmAlert(
+				`Are you sure you want ${action.text}?`,
+				"Ok",
+				"Cancel",
+				() => {
+					ids.forEach(function(userId){
+						const params = {userId:userId, schoolId:schoolId, permissionId:action.id};
 
-					permission.delete(params).then(_ => {
-						self.reloadData();
+						permission.delete(params).then(() => {
+							self.reloadData();
+						});
 					});
-				});
-			}
+				},
+				() => {}
+			);
 		}
 	},
 	_accessRestriction:function(ids,block){

@@ -2,22 +2,31 @@ const	React	= require('react'),
 		Button	= require('./../../ui/button/button');
 
 const SimpleAlert = React.createClass({
-	propTypes: {
-		okButtonText:			React.PropTypes.string.isRequired,
-		handleClickOkButton:	React.PropTypes.func.isRequired,
-		isOpen:					React.PropTypes.bool.isRequired
-	},
+	mixins: [Morearty.Mixin],
+	handleClickOkButton: function() {
+		const binding = this.getDefaultBinding();
 
+		const handleClickOkButton = binding.toJS('handleClickOkButton');
+
+		binding.set('isOpen', false);
+		handleClickOkButton();
+	},
 	render: function() {
-		if(this.props.isOpen) {
+		const binding = this.getDefaultBinding();
+
+		const	isOpen			= !!binding.toJS('isOpen'),
+				text			= binding.toJS('text'),
+				okButtonText	= binding.toJS('okButtonText');
+
+		if(isOpen) {
 			return (
 				<div className="bSimpleAlert">
 					<div className="eSimpleAlert_body">
-						{this.props.children}
+						{text}
 					</div>
 					<div className="eSimpleAlert_footer">
-						<Button	text	={ this.props.okButtonText }
-								onClick	={ this.props.handleClickOkButton }
+						<Button	text	={ okButtonText }
+								onClick	={ this.handleClickOkButton }
 						/>
 					</div>
 				</div>

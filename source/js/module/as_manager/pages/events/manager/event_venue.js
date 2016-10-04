@@ -193,16 +193,17 @@ const EventVenue = React.createClass({
                 if(binding.toJS('rivals.1')) {
                     self._setPostCodeAndVenueType(venueType);
                 } else  {
-                    binding.set('isRivalSchoolAlertOpen', true);
+                    window.simpleAlert(
+                        'Please select rival school',
+                        'Ok',
+                        () => {}
+                    );
                 }
                 break;
             default:
                 self._setPostCodeAndVenueType(venueType);
                 break;
         }
-    },
-    handleClickOkButtonRivalSchoolsAlert: function() {
-        this.getDefaultBinding().set('isRivalSchoolAlertOpen', false);
     },
     _onChangeEventType: function() {
         const   self    = this,
@@ -288,12 +289,6 @@ const EventVenue = React.createClass({
                          customStylingClass="eEvents_venue_map"
                     />
                 </If>
-                <SimpleAlert    isOpen              = { binding.toJS('isRivalSchoolAlertOpen') }
-                                okButtonText        = { 'Ok' }
-                                handleClickOkButton = { this.handleClickOkButtonRivalSchoolsAlert }
-                >
-                    Please select rival school
-                </SimpleAlert>
             </div>
         );
     }

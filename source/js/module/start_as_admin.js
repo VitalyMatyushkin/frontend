@@ -1,4 +1,5 @@
 const   ApplicationView     = require('module/as_admin/application'),
+        ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
         userDataInstance    = require('module/data/user_data'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
@@ -98,6 +99,8 @@ function runAdminMode() {
         binding: binding,
         defaultPath: 'admin_schools'
     });
+
+    window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 // Инициализация приложения
     ReactDom.render(

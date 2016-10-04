@@ -1,4 +1,5 @@
 const 	ApplicationView 	= require('module/as_manager/application'),
+		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
 		userDataInstance 	= require('module/data/user_data'),
 		userRulesInstance 	= require('module/data/user_rules'),
 		authController 		= require('module/core/auth_controller'),
@@ -13,8 +14,28 @@ function runManagerMode() {
 // Create Morearty context
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
-			userData: userDataInstance.getDefaultState(),
-			userRules: userRulesInstance.getDefaultState(),
+			userData:	userDataInstance.getDefaultState(),
+			userRules:	userRulesInstance.getDefaultState(),
+			simpleAlertData: {
+				isOpen:					false,
+
+				text:					'',
+
+				okButtonText:			'',
+
+				handleClickOkButton:	undefined,
+			},
+			confirmAlertData: {
+				isOpen:						false,
+
+				text:						'',
+
+				okButtonText:				'',
+				cancelButtonText:			'',
+
+				handleClickOkButton:		undefined,
+				handleClickCancelButton:	undefined
+			},
 			routing: {
 				currentPath: '',
 				currentPageName: '',	// current page name, if exist
@@ -108,6 +129,8 @@ function runManagerMode() {
 		defaultPath: 'school_admin/summary'
 	});
 
+	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
+	window.simpleAlert = ConfirmAlertFactory.create(binding.sub('simpleAlertData'));
 
 	// Инициализация приложения
 	ReactDom.render(
