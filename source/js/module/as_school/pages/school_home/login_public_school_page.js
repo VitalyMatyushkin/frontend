@@ -14,12 +14,18 @@ const LoginPublicSchoolPage = React.createClass({
 
 		const publicSchoolAccessType = this.getMoreartyContext().getBinding().toJS('activeSchool.publicSite.status');
 
-		if(publicSchoolAccessType === SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['PROTECTED']) {
-			// if it was protected, we will show popup
-			binding.set('isPasswordPopupOpen', true);
-		} else {
-			// if it wasn't protected, we will redirect user to public page
-			document.location.hash = 'home';
+		switch (publicSchoolAccessType) {
+			case SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['PROTECTED']:
+				// if it was protected, we will show popup
+				binding.set('isPasswordPopupOpen', true);
+				break;
+			case SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['PUBLIC_AVAILABLE']:
+				// if it wasn't protected, we will redirect user to public page
+				document.location.hash = 'home';
+				break;
+			case SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER['DISABLED']:
+				document.location.hash = '404';
+				break;
 		}
 	},
 	handleFormSubmit: function(data) {
@@ -40,8 +46,7 @@ const LoginPublicSchoolPage = React.createClass({
 		});
 	},
 	render: function(){
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
 				<Popup	isOpened				= { binding.toJS('isPasswordPopupOpen') }
@@ -50,8 +55,16 @@ const LoginPublicSchoolPage = React.createClass({
 				>
 					<div className="bPublicSchoolFormLogin">
 						<h2 className="ePublicSchoolFormLogin_header">Public School Site</h2>
-						<Form binding={ this.getDefaultBinding() } onSubmit={ this.handleFormSubmit }>
-							<FormField type="text" textType="password" placeholder="Password" field="password" validation="required" binding={binding}/>
+						<Form	binding		= { this.getDefaultBinding() }
+								onSubmit	= { this.handleFormSubmit }
+						>
+							<FormField	type		= "text"
+										textType	= "password"
+										placeholder	= "Password"
+										field		= "password"
+										validation	= "required"
+										binding		= { binding }
+							/>
 						</Form>
 					</div>
 				</Popup>

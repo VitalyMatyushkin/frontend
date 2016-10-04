@@ -2,7 +2,6 @@ const 	Form 			= require('module/ui/form/form'),
 		FormField 		= require('module/ui/form/form_field'),
 		FormColumn 		= require('module/ui/form/form_column'),
 		SchoolConsts	= require('./../../../helpers/consts/schools'),
-		If				= require('./../../../ui/if/if'),
 		Immutable		= require('immutable'),
 		Morearty		= require('morearty'),
 		React 			= require('react');
@@ -19,10 +18,15 @@ const SchoolForm = React.createClass({
 		this.setDefaultPublicSiteAccess();
 	},
 	getPublicSiteAccessTypes: function() {
-		return SchoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_VALUE_ARRAY;
-	},
-	getPublicSiteAccess: function() {
-		return this.getDefaultBinding().toJS('publicSite.status');
+		const result = [];
+		for(let key in SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE){
+			if(SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE.hasOwnProperty(key))
+				result.push({
+					value: key,
+					text: SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE[key]
+				});
+		}
+		return result;
 	},
 	// if undefined then set def value
 	setDefaultPublicSiteAccess: function() {
@@ -35,19 +39,18 @@ const SchoolForm = React.createClass({
 			);
 		}
 	},
-	getPublicSitePasswordCss: function() {
-		if(
-			this.getDefaultBinding().meta().toJS('publicSite.status.value') !==
-			SchoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE['PROTECTED']
-		) {
-			return 'mDisabled';
-		} else {
-			return '';
-		}
-	},
 	render: function () {
 		const 	self 		= this,
 				binding 	= self.getDefaultBinding(),
+				rootBinding = this.getMoreartyContext().getBinding(),
+				statusActive = !rootBinding.get('userRules.activeSchoolId'),
+				passActive 	= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
+				statusOptions = [
+					'Active',
+					'Inactive',
+					'Suspended',
+					'Email Notifications'
+				],
 				postcode 	= binding.toJS('postcode');
 
 		return (
@@ -65,22 +68,23 @@ const SchoolForm = React.createClass({
 				<FormColumn>
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
-					<FormField type="dropdown" field="status">School Status</FormField>
-					<FormField type="phone" field="phone" validation="phone">Phone</FormField>
+					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
+						School Status
+					</FormField>
+					<FormField type="phone" field="phone" validation="any">Phone</FormField>
 					<FormField type="area" field="postcodeId" defaultItem={postcode}
 							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
 					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
 					<FormField	type="dropdown"
 								field="publicSite.status"
-								userActiveState={ self.getPublicSiteAccess() }
-								userProvidedOptions={ self.getPublicSiteAccessTypes() }
+								options={ self.getPublicSiteAccessTypes() }
 					>
-						Public School Access
+						Public Site Access
 					</FormField>
 					<FormField	type			= "password"
 								field			= "publicSite.password"
-								fieldClassName	= { this.getPublicSitePasswordCss() }
+							  	condition={passActive}
 					>
 						Public School Access Password
 					</FormField>

@@ -147,7 +147,7 @@ const EventHelper = {
 	},
 	/**
 	 * Return TRUE if event edit mode is "general".
-	 * And for tabs teams, performance, report
+	 * And for tabs teams, performance
 	 * @returns {boolean}
 	 * @private
 	 */
@@ -157,8 +157,7 @@ const EventHelper = {
 		return (
 			binding.get('mode') !== 'general'
 			&& (binding.get('activeTab') === 'teams'
-					|| binding.get('activeTab') === 'performance'
-					|| binding.get('activeTab') === 'report')
+					|| binding.get('activeTab') === 'performance')
 			&& RoleHelper.isUserSchoolWorker(thiz)
 		);
 	},

@@ -15,22 +15,6 @@ const SportsForm = React.createClass({
         title:          React.PropTypes.string.isRequired,
         onFormSubmit:   React.PropTypes.func
     },
-    getScoring: function() {
-        const self      = this,
-              data      = self.getDefaultBinding().toJS();
-
-        return (data !== undefined && data.scoring !== undefined) ? data.scoring : null;
-    },
-    getPlayers: function() {
-        const   self    = this,
-                data    = self.getDefaultBinding().toJS();
-
-        return (data !== undefined && data.players !== undefined) ? data.players : null;
-    },
-	getPointsDisplay: function(){
-    	const data = this.getDefaultBinding().toJS();
-		return (typeof data !== 'undefined' && typeof data.points !== 'undefined' && typeof data.points.display !== 'undefined') ? data.points.display : null;
-	},
     getPositionFields: function() {
         const self    = this,
               data = self.getDefaultBinding().meta().toJS();
@@ -459,15 +443,13 @@ const SportsForm = React.createClass({
                             Description
                         </FormField>
                         <FormField  field="scoring"
-                                    userProvidedOptions={SportsHelpers.clientScoringArray}
-                                    userActiveState={self.getScoring()}
+                                    options={SportsHelpers.clientScoringArray}
                                     type="dropdown"
                         >
                             Scoring
                         </FormField>
                         <FormField  field="players"
-                                    userProvidedOptions={SportsHelpers.clientPlayersArray}
-                                    userActiveState={self.getPlayers()}
+                                    options={SportsHelpers.clientPlayersArray}
                                     type="dropdown"
                         >
                             Type of players
@@ -539,8 +521,7 @@ const SportsForm = React.createClass({
                                 Points step
                             </FormField>
 							<FormField  field="pointsDisplay"
-										userProvidedOptions={SportsHelpers.clientPointDisplayArray}
-										userActiveState={self.getPointsDisplay()}
+										options={SportsHelpers.clientPointDisplayArray}
 										type="dropdown"
 							>
 								How to display points

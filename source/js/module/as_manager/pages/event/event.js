@@ -15,6 +15,7 @@ const	React			= require('react'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
+		MatchReport 		= require('module/as_manager/pages/event/view/match-report/report'),
 		SVG 				= require('module/ui/svg');
 
 const EventView = React.createClass({
@@ -256,24 +257,7 @@ const EventView = React.createClass({
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<If condition={(binding.get('mode') === 'general') && (self.commentContent !=='0')}>
-										<div className="eEvent_shadowCommentText">{self.commentContent}</div>
-									</If>
-									<div>
-										<If condition={binding.get('mode') === 'closing'}>
-											<Morearty.DOM.textarea
-												placeholder="Enter your first comment"
-												className="eEvent_comment"
-												onChange={Morearty.Callback.set(binding, 'model.matchReport')}
-												value={binding.get('model.matchReport')} id="commentTextArea"
-											/>
-										</If>
-										<If condition={binding.get('mode') === 'general' && binding.get('model.matchReport')!==undefined}>
-											<div className="bMainComment">
-												<div>{binding.get('model.matchReport')}</div>
-											</div>
-										</If>
-									</div>
+								<MatchReport binding={binding} eventId={self.eventId} />
 								</div>
 							</If>
 							<If condition={(binding.get('mode') !== 'general')}>

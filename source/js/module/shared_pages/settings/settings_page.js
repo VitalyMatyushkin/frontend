@@ -96,13 +96,13 @@ const SettingsPage = React.createClass({
 		return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
 	},
 	isPhoneVerified: function() {
-		return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.phone');
+		return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.sms');
 	},
 
 	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			globalBinding = self.getMoreartyContext().getBinding();
+		const	self = this,
+				binding = self.getDefaultBinding(),
+				globalBinding = self.getMoreartyContext().getBinding();
 
 		return (
 			<div>
