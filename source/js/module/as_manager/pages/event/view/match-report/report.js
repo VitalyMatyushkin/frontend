@@ -4,7 +4,6 @@
 
 const	React			= require('react'),
 		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
 		If				= require('module/ui/if/if'),
 		Actions 		= require('./report-actions'),
 		SVG 			= require('module/ui/svg');
