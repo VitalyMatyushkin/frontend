@@ -13,6 +13,7 @@
 const   React       = require('react'),
         Immutable 	= require('immutable'),
         classNames  = require('classnames'),
+		If			= require('module/ui/if/if'),
 		Morearty	= require('morearty'),
         $           = require('jquery');
 
@@ -21,18 +22,20 @@ const   React       = require('react'),
 const Form = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		onSubmit: 		React.PropTypes.func,
-		onSuccess: 		React.PropTypes.func,
-		onError: 		React.PropTypes.func,
-		name: 			React.PropTypes.string,
-		defaultButton: 	React.PropTypes.string,
-		loadingButton: 	React.PropTypes.string,
-		updateBinding: 	React.PropTypes.bool,
+		onSubmit: 			React.PropTypes.func,
+		onSuccess: 			React.PropTypes.func,
+		onError: 			React.PropTypes.func,
+		onCancel: 			React.PropTypes.func,
+		name: 				React.PropTypes.string,
+		defaultButton: 		React.PropTypes.string,
+		loadingButton: 		React.PropTypes.string,
+		updateBinding: 		React.PropTypes.bool,
 		// False by default, if true, then browser doesn't save data for this field.
 		// For example, browser doesn't autocomplete old password and new password fields in restore password form.
-		autoupdateOff: 	React.PropTypes.bool,
-		formStyleClass: React.PropTypes.string,
-		submitOnEnter: 	React.PropTypes.bool
+		autoupdateOff: 		React.PropTypes.bool,
+		formStyleClass: 	React.PropTypes.string,
+		submitOnEnter: 		React.PropTypes.bool, 	//submitting the form by pressing the Enter key
+		hideCancelButton: 	React.PropTypes.bool
 	},
 	getDefaultProps: function () {
 		return {
@@ -107,6 +110,12 @@ const Form = React.createClass({
 				defaultValue: binding.get(field)
 			}));
 		});
+	},
+	onCancel:function(){
+		if(this.props.onCancel)
+			this.props.onCancel();
+		else
+			window.history.back();
 	},
 	tryToSubmit: function () {
 		const self = this,
@@ -249,51 +258,44 @@ const Form = React.createClass({
 			self.tryToSubmit();
 		}
 	},
+	getTitle: function(){
+		return this.props.name ? <h2 dangerouslySetInnerHTML={{__html: this.props.name}}/> : null;
+	},
+	getAutoupdateOffElement: function(){
+		return this.props.autoupdateOff ? (
+			<div style={{display: 'none'}}>
+				<input
+					id="PreventChromeAutocomplete"
+					type="text"
+					name="PreventChromeAutocomplete"
+					autocomplete="address-level4"
+				/>
+			</div>
+		) : null;
+	},
 	render: function () {
-		const 	self = this,
+		const 	self 	= this,
 				binding = self.getDefaultBinding();
-		let Title;
-
-		if (self.props.name !== undefined) {
-			Title = <h2 dangerouslySetInnerHTML={{__html: self.props.name}}/>;
-		}
-
-		// Making children with current binding in case if user not disabled this option.
-		var bindedChildren;
-		if (self.props.propagateBinding === false) {
-			bindedChildren = self.props.children;
-		} else {
-			bindedChildren = self._createBindedClones(self);
-		}
-
-		let autoupdateOffElement;
-
-		if (self.props.autoupdateOff) {
-			autoupdateOffElement = (
-				<div style={{display: 'none'}}>
-					<input
-						id="PreventChromeAutocomplete"
-						type="text"
-						name="PreventChromeAutocomplete"
-						autocomplete="address-level4"
-					/>
-				</div>
-			);
-		}
 
 		return (
 			<div className={classNames('bForm', self.props.formStyleClass)} onKeyDown={self._keyPress}>
 				<div className="eForm_atCenter">
 
-					{autoupdateOffElement}
+					{self.getAutoupdateOffElement()}
 
-					{Title}
+					{self.getTitle()}
 
-					{bindedChildren}
+					{self._createBindedClones(self)}
 
 					<div className="eForm_savePanel">
-						<div className="bButton mRight" tabIndex="-1"
-							 onClick={self.tryToSubmit}>{binding.meta().get('buttonText')}</div>
+						<If condition={!self.props.hideCancelButton}>
+							<div className="bButton mRight mCancel" tabIndex="-1" onClick={self.onCancel}>
+								Cancel
+							</div>
+						</If>
+						<div className="bButton mRight" tabIndex="-1" onClick={self.tryToSubmit}>
+							{binding.meta().get('buttonText')}
+						</div>
 					</div>
 				</div>
 			</div>
