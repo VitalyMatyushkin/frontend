@@ -39,7 +39,7 @@ const GeneralSettingsPage = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-				<Form formStyleClass="bSettingsForm mLeft" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving..." >
+				<Form formStyleClass="bSettingsForm mLeft" onSubmit={self.submitEdit} binding={binding} defaultButton="Save" loadingButton="Saving...">
 					<FormColumn>
 						<h3>YOUR PHOTO</h3>
 						<FormField labelText="+" type="imageFile" typeOfFile="image" field="avatar"/>
