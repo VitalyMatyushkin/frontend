@@ -43,7 +43,11 @@ const PhotoList = React.createClass({
             	albumId = binding.get('id');
 
         this.service.photo.pin(albumId, photo.picUrl).then(function() {
-            alert('Album cover is changed!');
+            window.simpleAlert(
+                'Album cover is changed!',
+                'Ok',
+                () => {}
+            );
         });
     },
 

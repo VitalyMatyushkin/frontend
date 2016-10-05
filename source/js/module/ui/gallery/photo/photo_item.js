@@ -58,11 +58,13 @@ const AlbumPhoto = React.createClass({
 	onClickDeletePhoto: function(e) {
 		const 	self 		= this;
 
-		if(confirm("Delete this photo?"))
-			self.props.service.photo.delete(self.albumId, self.photoId).then(function() {
-				self.props.onPhotoDelete();
-			});
-
+		window.confirmAlert(
+			"Delete this photo?",
+			"Ok",
+			"Cancel",
+			() => self.props.service.photo.delete(self.albumId, self.photoId).then( () => self.props.onPhotoDelete() ),
+			() => {}
+		);
 		e.stopPropagation();
 	},
 

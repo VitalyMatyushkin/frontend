@@ -135,11 +135,19 @@ const RegisterUserPage = React.createClass({
         switch (data){
             case 422:
                 message = data.responseJSON.details.text;
-                alert(message+' - so please try again!');
+                window.simpleAlert(
+                    `${message} - so please try again!`,
+                    'Ok',
+                    () => {}
+                );
                 break;
             default:
                 message = data.responseJSON.details.text;
-                alert(message);
+                window.simpleAlert(
+                    message,
+                    'Ok',
+                    () => {}
+                );
                 break;
         }
         $('.bButton').text('Continue →');   // TODO: remove that shit

@@ -94,10 +94,18 @@ const ImportStudentsModule = React.createClass({
 				}
 			}))
 			.then(() => {
-				alert("Students upload was finished");
+				window.simpleAlert(
+					'Students upload was finished',
+					'Ok',
+					() => {}
+				);
 			})
 			.catch(error => {
-				alert(`Something went wrong. Please show error text to your system administrator: \n${error}`);
+				window.simpleAlert(
+					`Something went wrong. Please show error text to your system administrator: \n${error}`,
+					'Ok',
+					() => {}
+				);
 			});
 	},
 	_renderUploadStudentsButton: function() {

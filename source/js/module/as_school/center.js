@@ -6,7 +6,9 @@ const	Morearty				= require('morearty'),
 		HomeComponent			= require("module/as_school/pages/school_home/home"),
 		EventPageComponent		= require("./pages/event/public_event_page"),
 		LoginPublicSchoolPage	= require("./../as_school/pages/school_home/login_public_school_page"),
-		Page404					= require("./../ui/404_page");
+		Page404					= require("./../ui/404_page"),
+		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
+		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert');
 
 const Center = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -43,6 +45,8 @@ const Center = React.createClass({
 							   component	= { Page404 }/>
 					</RouterView>
 				</div>
+				<NotificationAlert binding={binding.sub('notificationAlertData')} />
+				<ConfirmAlert binding={binding.sub('confirmAlertData')} />
 			</div>
 		)
 	}

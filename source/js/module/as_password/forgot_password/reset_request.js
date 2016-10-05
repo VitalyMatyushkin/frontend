@@ -15,7 +15,11 @@ const PasswordResetRequestForm = React.createClass({
 		self.tmpFormName = "Forgot password";
 	},
 	onSuccess:function(){
-		alert('The request to change the password was sent by email.');
+		window.simpleAlert(
+			'The request to change the password was sent by email.',
+			'Ok',
+			() => {}
+		);
 		window.location.href = domainHelper.getLoginUrl();
 	},
 	render: function() {

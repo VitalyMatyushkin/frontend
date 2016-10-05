@@ -3,8 +3,7 @@
  */
 
 
-const
-        ReactDom        = require('react-dom'),
+const	ReactDom        = require('react-dom'),
         React           = require('react'),
         Promise         = require('bluebird'),
 		Immutable		= require('immutable'),

@@ -21,9 +21,13 @@ const AddSchoolForm = React.createClass({
 				globalBinding.set('userRules.activeSchoolId', data.id);
 			}
 			return data;
-		}).catch((error)=>{
-			alert(error.errorThrown+' occurred while adding school to database');
-		});
+		}).catch(error =>
+			window.simpleAlert(
+				`${error.errorThrown} occurred while adding school to database`,
+				'Ok',
+				() => {}
+			)
+		);
 
 		// Добавление школы в списк
 		//What is this doing? //TODO: uncomment this if it gives problems but at the moment it causes issues as it is

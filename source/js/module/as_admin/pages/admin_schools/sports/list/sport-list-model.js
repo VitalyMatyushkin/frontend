@@ -39,13 +39,15 @@ SportListModel.prototype = {
 		document.location.hash += '/edit?id=' + data.id;
 	},
 	onRemove: function(data) {
-		const   self = this,
-			confirm = window.confirm("Do you really want to remove this sport?");
+		const self = this;
 
-		if(confirm === true){
-			window.Server.sport.delete({sportId: data.id})
-				.then(_ => self.reloadData());
-		}
+		window.confirmAlert(
+			"Do you really want to remove this sport?",
+			"Ok",
+			"Cancel",
+			() => window.Server.sport.delete({sportId: data.id}).then(_ => self.reloadData()),
+			() => {}
+		);
 	},
 	getGrid: function(){
 		const columns = [

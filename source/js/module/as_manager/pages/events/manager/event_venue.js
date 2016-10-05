@@ -185,8 +185,11 @@ const EventVenue = React.createClass({
                 if(binding.toJS('rivals.1')) {
                     self._setPostCodeAndVenueType(venueType);
                 } else  {
-                    //TODO Alert isn't best practice for notice user about anything, it's like we are in 1995.
-                    alert('Please select rival school');
+                    window.simpleAlert(
+                        'Please select rival school',
+                        'Ok',
+                        () => {}
+                    );
                 }
                 break;
             default:

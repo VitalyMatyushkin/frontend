@@ -9,8 +9,13 @@
   position: relative;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   text-align: center;
+
   &.mRevert{
     background-color: $blueColor;
+  }
+
+  &.mMarginRight {
+    margin-right: 10px;
   }
 }
 .bButton_reg{

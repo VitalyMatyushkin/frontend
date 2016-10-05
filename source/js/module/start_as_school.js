@@ -1,4 +1,6 @@
 const 	ApplicationView 	= require('module/as_school/application'),
+		SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
+		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
 		serviceList 		= require('module/core/service_list'),
 		userDataInstance 	= require('module/data/user_data'),
 		authController 		= require('module/core/auth_controller'),
@@ -14,6 +16,26 @@ function initMainView(school) {
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: 			userDataInstance.getDefaultState(),
+			notificationAlertData: {
+				isOpen:					false,
+
+				text:					'',
+
+				okButtonText:			'',
+
+				handleClickOkButton:	undefined
+			},
+			confirmAlertData: {
+				isOpen:						false,
+
+				text:						'',
+
+				okButtonText:				'',
+				cancelButtonText:			'',
+
+				handleClickOkButton:		undefined,
+				handleClickCancelButton:	undefined
+			},
 			activeSchoolId: 	school.id,
 			activeSchool:		Immutable.fromJS(school),
 			routing: {
@@ -77,6 +99,9 @@ function initMainView(school) {
 
 	// Turning on authorization service
 	serviceList.initialize(binding.sub('userData.authorizationInfo'));
+
+	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 	ReactDom.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),

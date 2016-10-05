@@ -1,4 +1,6 @@
 const  	ApplicationView 	= require('module/as_parents/application'),
+		SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
+		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
 		userDataInstance 	= require('module/data/user_data'),
 		userRulesInstance 	= require('module/data/user_rules'),
 		authController 		= require('module/core/auth_controller'),
@@ -12,6 +14,26 @@ function runParentMode() {
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
 			userRules: userRulesInstance.getDefaultState(),
+			notificationAlertData: {
+				isOpen:					false,
+
+				text:					'',
+
+				okButtonText:			'',
+
+				handleClickOkButton:	undefined
+			},
+			confirmAlertData: {
+				isOpen:						false,
+
+				text:						'',
+
+				okButtonText:				'',
+				cancelButtonText:			'',
+
+				handleClickOkButton:		undefined,
+				handleClickCancelButton:	undefined
+			},
 			routing: {
 				currentPath: '',
 				currentPageName: '',
@@ -57,6 +79,9 @@ function runParentMode() {
 		binding: binding,
 		defaultPath: 'events/calendar/all'
 	});
+
+	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+	window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
 	ReactDom.render(
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
