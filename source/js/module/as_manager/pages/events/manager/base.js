@@ -90,6 +90,7 @@ const EventManagerBase = React.createClass({
 					},
                     name: { like: schoolName }
                 },
+				order:"name ASC",
                 limit: 400
             }
         };

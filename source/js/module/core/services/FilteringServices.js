@@ -13,6 +13,7 @@ const FilteringServices = {
                         options: 'i'
                     }
                 },
+				order:"name ASC",
                 limit: 400
             }
         });
