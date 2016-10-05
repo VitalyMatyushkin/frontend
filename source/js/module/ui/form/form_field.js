@@ -40,6 +40,7 @@ const FormField = React.createClass({
 
 		/** props.condition === true or undefined */
 		if(self.props.condition || typeof self.props.condition === 'undefined'){
+			binding.set('active', true);
 			return (
 				<div className={classNames("eForm_field", self.props.fieldClassName)}>
 					<div className="eForm_fieldName">{self.props.children}</div>
@@ -48,7 +49,9 @@ const FormField = React.createClass({
 						<div className={errorClassName} title={binding.get('error') || ''} dangerouslySetInnerHTML={html} />
 					</div>
 				</div>
-			)
+			);
+		} else {
+			binding.set('active', false);
 		}
 
 		/** props.condition === false */

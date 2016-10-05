@@ -1,21 +1,31 @@
 const schoolConsts = require('./../../../helpers/consts/schools');
 
+const defaultPassValue = '**************';
+
 const SchoolHelper = {
 	/**
 	 * !!! Method modify arg !!!
-	 * Method replace client publicSite.status field value by server value
-	 * @param dataToPost
+	 * Method replace client publicSite.password field value by server value
+	 * @param data
 	 */
-	setServerPublicAccessSchoolValue: function(dataToPost) {
-		dataToPost.publicSite.status = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE[dataToPost.publicSite.status];
+	setServerPublicSiteAccessPasswordValue: function(data) {
+		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
+
+		if(data.publicSite.status === c.Protected && data.publicSite.password === defaultPassValue){
+			delete data.publicSite.password;
+		}
 	},
 	/**
 	 * !!! Method modify arg !!!
-	 * Method replace client publicSite.status field value by server value
-	 * @param dataToPost
+	 * Method replace server publicSite.password field value by client value
+	 * @param data
 	 */
-	setClientPublicAccessSchoolValue: function(dataToPost) {
-		dataToPost.publicSite.status = schoolConsts.PUBLIC_SCHOOL_STATUS_SERVER_TO_CLIENT_VALUE[dataToPost.publicSite.status];
+	setClientPublicSiteAccessPasswordValue: function(data) {
+		const c = schoolConsts.PUBLIC_SCHOOL_STATUS_CLIENT_TO_SERVER_VALUE;
+
+		if(data.publicSite.status === c.Protected){
+			data.publicSite.password = defaultPassValue;
+		}
 	}
 };
 

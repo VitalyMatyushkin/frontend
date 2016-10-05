@@ -85,8 +85,9 @@ const SchoolForm = React.createClass({
 					<FormField	type			= "password"
 								field			= "publicSite.password"
 							  	condition={passActive}
+							  	validation="required"
 					>
-						Public School Access Password
+						Public Site Access Password
 					</FormField>
 				</FormColumn>
 			</Form>

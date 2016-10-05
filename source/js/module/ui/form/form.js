@@ -136,11 +136,13 @@ const Form = React.createClass({
 		fields.forEach(child => {
 			const field = child.props.field;
 
-			metaToPost.set(field, binding.meta().get(`${field}.value`));
+			if(binding.meta().get(`${field}.active`)){
+				metaToPost.set(field, binding.meta().get(`${field}.value`));
 
-			if (binding.meta().get(`${field}.error`)) {
-				hereIsError = true;
-				binding.meta().set(`${field}.showError`, true);
+				if (binding.meta().get(`${field}.error`)) {
+					hereIsError = true;
+					binding.meta().set(`${field}.showError`, true);
+				}
 			}
 		});
 

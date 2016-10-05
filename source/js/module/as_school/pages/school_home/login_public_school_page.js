@@ -55,8 +55,9 @@ const LoginPublicSchoolPage = React.createClass({
 				>
 					<div className="bPublicSchoolFormLogin">
 						<h2 className="ePublicSchoolFormLogin_header">Public School Site</h2>
-						<Form	binding		= { this.getDefaultBinding() }
-								onSubmit	= { this.handleFormSubmit }
+						<Form	binding				= { this.getDefaultBinding() }
+								onSubmit			= { this.handleFormSubmit }
+								hideCancelButton 	= { true }
 						>
 							<FormField	type		= "text"
 										textType	= "password"
