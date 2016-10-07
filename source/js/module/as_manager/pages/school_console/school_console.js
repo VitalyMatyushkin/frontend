@@ -70,20 +70,25 @@ const SchoolConsole = React.createClass({
 
 
         //Get the total number of permissions (Notification badge) in submenu
-        // TODO shitty way
-        // server doesn't implement filters
-        // so we should filter and count permissions by our hands
-        return window.Server.permissionRequests.get(MoreartyHelper.getActiveSchoolId(self), {
-                filter: {
-                    limit: 1000
-                }
-            })
-            .then(permissions => permissions.filter(permission => permission.status === "NEW"))
-            .then(permissions => {
-                _createSubMenuData(permissions.length);
-                // yep, always i'm right
+        return window.Server.permissionRequests.get( MoreartyHelper.getActiveSchoolId(self), {filter:{limit: 1000}} )
+        .then(permissions => permissions.filter(p => p.status === "NEW" && this.filterByRole(p)))
+        .then(permissions => {
+            _createSubMenuData(permissions.length);
+            // yep, always i'm right
+            return true;
+        });
+    },
+    filterByRole: function(permission) {
+        const role = this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
+        console.log(permission);
+        switch (role) {
+            case "ADMIN":
                 return true;
-            });
+            case "MANAGER":
+                return permission.requestedPermission.preset !== "ADMIN";
+            default:
+                return false;
+        }
     },
     render: function() {
         var self = this,
