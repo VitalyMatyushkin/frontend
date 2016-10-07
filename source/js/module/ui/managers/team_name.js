@@ -16,11 +16,11 @@ const TeamName = React.createClass({
 		return (
 			<div className="bTeamName">
 				<div className="eTeamName_nameContainer">
-					<input	className="eTeamName_nameForm"
-							type={'text'}
-							placeholder={'Enter team name'}
-							onChange={self.handleChangeTeamName}
-							value={typeof self.props.name !== 'undefined' ? self.props.name : ''}
+					<input	className	= "eTeamName_nameForm"
+							type		= { 'text' }
+							placeholder	= { 'Enter team name' }
+							onChange	= { self.handleChangeTeamName }
+							value		= { typeof self.props.name !== 'undefined' ? self.props.name : '' }
 					/>
 				</div>
 			</div>

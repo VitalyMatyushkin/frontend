@@ -7,7 +7,8 @@ const	React					= require('react'),
 		GameField				= require('./gameField'),
 		TeamModeView			= require('./modes/team_mode_view'),
 		Morearty            	= require('morearty'),
-		Immutable				= require('immutable');
+		Immutable				= require('immutable'),
+		ManagerConsts			= require('./helpers/manager_consts');
 
 const Manager = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -76,7 +77,8 @@ const Manager = React.createClass({
 								teamStudents: [],
 								blackList: [],
 								positions: defaultBinding.get('model.sportModel.field.positions')
-							}
+							},
+							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES
 						},
 						{
 							filter: undefined,
@@ -92,7 +94,8 @@ const Manager = React.createClass({
 								teamStudents: [],
 								blackList: [],
 								positions: defaultBinding.get('model.sportModel.field.positions')
-							}
+							},
+							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES
 						}
 					]
 				}
