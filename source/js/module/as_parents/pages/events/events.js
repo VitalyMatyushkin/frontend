@@ -2,16 +2,11 @@ const   RouterView  				= require('module/core/router'),
 		Route       				= require('module/core/route'),
 		React       				= require('react'),
 		SubMenu     				= require('module/ui/menu/sub_menu'),
-		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		Morearty        			= require('morearty'),
 		Immutable   				= require('immutable'),
-		EventHelper     			= require('module/helpers/eventHelper'),
-		DateHelper      			= require('module/helpers/date_helper'),
 		EventsCalendarComponent 	= require('module/as_parents/pages/events/events_calendar'),
 		EventsFixturesComponent 	= require('module/ui/fixtures/events_fixtures'),
 		EventsAchievementComponent 	= require("module/as_parents/pages/events/events_achievement");
-
-
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -36,63 +31,16 @@ const EventView = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		const self 			= this,
-			binding 		= self.getDefaultBinding(),
-			sportsBinding 	= binding.sub('sports'),
-			currentDate 	= binding.toJS('calendar.currentDate');
-
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-		self._setFilterDateRange(
-			DateHelper.getStartDateTimeOfMonth(currentDate),
-			DateHelper.getEndDateTimeOfMonth(currentDate)
-		);
-
-		self.getChildren();
-		self.setActiveChild();
-		window.Server.sports.get().then(function (data) {
-			sportsBinding
-				.atomically()
-				.set('sync', true)
-				.set('models', Immutable.fromJS(data))
-				.commit();
-		});
-		self.loading = false;
+		this.getChildren();
+		this.setActiveChild();
 	},
 	componentDidMount:function(){
-		const self = this,
-			binding = self.getDefaultBinding();
+		const 	self 	= this,
+				binding = self.getDefaultBinding();
 
 		self.addBindingListener(binding, 'children', self.createSubMenu);
-		self.addBindingListener(binding, 'children', self.loadEvents);
-		self.addBindingListener(binding, 'sports.sync', self.loadEvents);
 		self.addBindingListener(binding, 'eventsRouting.currentPathParts', self.createSubMenu);
 		self.addBindingListener(binding, 'eventsRouting', self.setActiveChild);
-		self.addBindingListener(binding, 'activeChildId', self.filterEvents);
-		self.addBindingListener(binding, 'eventsOfAllChildren', self.filterEvents);
-		// Listen changes of date in calendar
-		self.addBindingListener(binding, 'calendar.currentMonth', () => {
-			const currentDate = binding.toJS('calendar.currentDate');
-
-			self._setEventsByDateRange(
-				DateHelper.getStartDateTimeOfMonth(currentDate),
-				DateHelper.getEndDateTimeOfMonth(currentDate)
-			);
-		});
-	},
-	_setFilterDateRange:function(gteDate, ltDate) {
-		this.filter = {
-			limit: 100,
-			where: {
-				startTime: {
-					'$gte': gteDate,// like this `2016-07-01T00:00:00.000Z`,
-					'$lt': ltDate// like this `2016-07-31T00:00:00.000Z`
-				}
-			}
-		};
-	},
-	_setEventsByDateRange:function(gteDate, ltDate) {
-		this._setFilterDateRange(gteDate, ltDate);
-		this.loadEvents();
 	},
 	setActiveChild: function() {
 		const self = this,
@@ -130,56 +78,6 @@ const EventView = React.createClass({
 		}
 		binding.set('itemsBinding', Immutable.fromJS(menuItems));
 	},
-	loadEvents:function(){
-		const self = this,
-			binding = self.getDefaultBinding(),
-			sportSync = binding.toJS('sports.sync'),
-			children = binding.toJS('children');
-
-		//Set the requirement for an all children view here
-		if (!self.loading && sportSync && children.length > 0) {
-			self.eventModel = [];
-			self.loading = true;
-			children.map(child => {
-				self.loading = true;
-				window.Server.childEvents.get({childId:child.id}, { filter: self.filter })
-					.then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
-					//.then(events => self._includeTeamsToEvents(events, child.schoolId))
-					.then(events => self.processRequestData(events, child.id))
-					.then(_ => {self.loading = false})
-			});
-		}
-	},
-	filterEvents:function(){
-		const self = this,
-			binding = self.getDefaultBinding(),
-			allEvents = binding.toJS('eventsOfAllChildren'),
-			childId = binding.get('activeChildId');
-
-		if(childId && allEvents && allEvents.length > 0){
-			let res = childId === 'all' ? allEvents : allEvents.filter(ev => ev.childId === childId);
-			binding.set('models', Immutable.fromJS(res));
-		}
-	},
-	processRequestData:function(reqData,childId){
-		var self = this,
-			binding = self.getDefaultBinding(),
-			sports = binding.toJS('sports.models');
-		if(reqData){
-			reqData.forEach(function(el){
-				if(el !== undefined){
-					el.childId = childId;
-					self.eventModel.push(el);
-				}
-			});
-			binding
-				.atomically()
-				.set('eventsOfAllChildren',Immutable.fromJS(self.eventModel))
-				.set('models',Immutable.fromJS(self.eventModel))
-				.set('sync',true)
-				.commit();
-		}
-	},
 	getChildren: function () {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -212,7 +110,12 @@ const EventView = React.createClass({
 								component={EventsCalendarComponent}/>
 
 						<Route	path='/events/fixtures/:userId'
-								binding={binding}
+								binding={
+										{
+											default: binding.sub('fixtures'),
+											calendar: binding.sub('calendar')
+										}
+                                    }
 								component={EventsFixturesComponent}/>
 
 						<Route	path="/events/achievement/:userId"

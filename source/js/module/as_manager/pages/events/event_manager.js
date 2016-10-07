@@ -1,4 +1,4 @@
-const   Calendar			= require('module/ui/calendar/calendar'),
+const   Calendar			= require('module/as_manager/pages/events/calendar/calendar'),
 		CalendarActions		= require('module/as_manager/pages/events/calendar/calendar-actions'),
 		EventManagerBase	= require('./manager/base'),
 		If					= require('module/ui/if/if'),
@@ -476,7 +476,6 @@ const EventManager = React.createClass({
 						<div className="eManager_dateTimePicker">
 							<Calendar
 								binding={rootBinding.sub('events.calendar')}
-								actions={CalendarActions}
 								onSelect={self.onSelectDate}
 							/>
 							{

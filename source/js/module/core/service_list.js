@@ -159,6 +159,7 @@ const serviceList = {
 		// children
 		serviceList.children = new Service('/i/children', binding);
 		serviceList.childrenEvents = new Service('/i/children/events', binding);
+		serviceList.childrenEventsDates = new Service('/i/children/events/dates/distinct', binding);
 		serviceList.childrenEventsCount = new Service('/i/children/events/count', binding);
 		serviceList.child = new Service('/i/children/{childId}', binding);
 		serviceList.childEvents = new Service('/i/children/{childId}/events', binding);

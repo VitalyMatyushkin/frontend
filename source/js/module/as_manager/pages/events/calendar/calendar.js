@@ -3,36 +3,35 @@
  */
 
 const 	React			= require('react'),
-		MonthCalendar	= require('./month_calendar'),
+		MonthCalendar	= require('module/ui/calendar/month_calendar'),
+		CalendarActions	= require('./calendar-actions'),
 		Morearty        = require('morearty');
 
 /** Show calendar section: month calendar and events for selected date */
 const Calendar = React.createClass({
 	mixins:[Morearty.Mixin ],
 	propType: {
-		onSelect: React.PropTypes.func,
-		actions: React.PropTypes.object.isRequired
+		onSelect: React.PropTypes.func
 	},
 	componentWillMount: function () {
 		const	binding			= this.getDefaultBinding(),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 
 		/** Loading initial data for this month */
-		this.props.actions.setCurrentMonth(new Date(), activeSchoolId, binding);
+		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
 	},
 
 	onSelect:function(date){
 		const 	binding 		= this.getDefaultBinding(),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 
-		this.props.actions.setSelectedDate(date, activeSchoolId, binding);
+		CalendarActions.setSelectedDate(date, activeSchoolId, binding);
 
 		if(typeof this.props.onSelect === 'function')
 			this.props.onSelect(date);
 	},
 	render: function(){
-		const 	self 			= this,
-				binding 		= this.getDefaultBinding(),
+		const 	binding 		= this.getDefaultBinding(),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				todayDate		= binding.get('todayDate'),
 				monthDate		= binding.get('monthDate'),
@@ -44,8 +43,8 @@ const Calendar = React.createClass({
 				monthDate={monthDate}
 				todayDate={todayDate}
 				selectedDate={selectedDate}
-				onNextMonthClick={ () => self.props.actions.setNextMonth(activeSchoolId, binding) }
-				onPrevMonthClick={ () => self.props.actions.setPrevMonth(activeSchoolId, binding) }
+				onNextMonthClick={ () => CalendarActions.setNextMonth(activeSchoolId, binding) }
+				onPrevMonthClick={ () => CalendarActions.setPrevMonth(activeSchoolId, binding) }
 				onDateClick={this.onSelect }
 				eventsData={eventsData}
 			/>

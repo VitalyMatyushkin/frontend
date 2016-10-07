@@ -4,7 +4,7 @@
 
 const 	React			= require('react'),
 		Challenges		= require('module/ui/challenges/challenges'),
-		Calendar		= require('module/ui/calendar/calendar'),
+		Calendar		= require('./calendar'),
 		CalendarActions	= require('./calendar-actions'),
 		Morearty        = require('morearty');
 
@@ -30,7 +30,7 @@ const EventsCalendar = React.createClass({
 
 		return (
 			<div className="eEvents_calendar">
-				<Calendar binding={binding} actions={CalendarActions} />
+				<Calendar binding={binding} />
 				<Challenges
 					activeSchoolId={activeSchoolId}
 					isSync={isSelectedDateEventsInSync}
