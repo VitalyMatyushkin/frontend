@@ -16,7 +16,11 @@ const Challenges = React.createClass({
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		events:			React.PropTypes.any
 	},
-
+	getDefaultProps: function () {
+		return {
+			isDaySelected: true
+		};
+	},
 	_getEvents: function () {
 		const 	isSync			= this.props.isSync,
 				events			= this.props.events,

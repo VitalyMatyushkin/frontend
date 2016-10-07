@@ -34,7 +34,6 @@ const EventsCalendar = React.createClass({
 				<Challenges
 					activeSchoolId={activeSchoolId}
 					isSync={isSelectedDateEventsInSync}
-					isDaySelected={true}
 					events={selectedDateEvents}
 					onClick={this.onEventClick}
 				/>
