@@ -315,18 +315,18 @@ const TeamManager = React.createClass({
 
 		return (
 			<div>
-				<Team	isNonTeamSport={self.props.isNonTeamSport}
-						players={binding.toJS('teamStudents')}
-						positions={binding.toJS('positions')}
-						handleClickPlayer={self.handleClickPlayer}
-						handleChangePlayerPosition={self.handleChangePlayerPosition}
-						handleClickPlayerSub={self.handleClickPlayerSub}
-						handleClickRemovePlayerButton={self.handleClickRemovePlayerButton}
+				<Team	isNonTeamSport					= { self.props.isNonTeamSport }
+						players							= { binding.toJS('teamStudents') }
+						positions						= { binding.toJS('positions') }
+						handleClickPlayer				= { self.handleClickPlayer }
+						handleChangePlayerPosition		= { self.handleChangePlayerPosition }
+						handleClickPlayerSub			= { self.handleClickPlayerSub }
+						handleClickRemovePlayerButton	= { self.handleClickRemovePlayerButton }
 				/>
-				<PlayerChooser	students={binding.toJS('foundStudents')}
-								handleChangeSearchText={self.handleChangeSearchText}
-								handleClickStudent={self.handleClickStudent}
-								handleClickAddTeamButton={self.handleClickAddStudentButton}
+				<PlayerChooser	students					= { binding.toJS('foundStudents') }
+								handleChangeSearchText		= { self.handleChangeSearchText }
+								handleClickStudent			= { self.handleClickStudent }
+								handleClickAddTeamButton	= { self.handleClickAddStudentButton }
 				/>
 			</div>
 		);

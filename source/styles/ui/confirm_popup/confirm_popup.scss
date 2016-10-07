@@ -1,5 +1,5 @@
-.bNewPopup {
-  position: absolute;
+.bConfirmPopup {
+  position: fixed;
 
   width: 500px;
   min-height: 50px;
@@ -13,4 +13,12 @@
 
   background: white;
   padding: 20px;
+}
+
+.eConfirmPopup_body {
+  margin-bottom: 10px;
+}
+
+.eConfirmPopup_footer {
+  text-align: right;
 }

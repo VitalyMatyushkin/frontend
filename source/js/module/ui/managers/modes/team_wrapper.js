@@ -1,13 +1,12 @@
-const	React			= require('react'),
-		TeamManager		= require('./../team_manager/team_manager'),
-		TeamName		= require('./../team_name'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		classNames		= require('classnames'),
-		Lazy			= require('lazy.js'),
-		If				= require('module/ui/if/if'),
-		Morearty        = require('morearty'),
-		Immutable		= require('immutable');
+const	React				= require('react'),
+		TeamManager			= require('./../team_manager/team_manager'),
+		TeamName			= require('./../team_name'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
+		classNames			= require('classnames'),
+		If					= require('module/ui/if/if'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable');
 
 const TeamWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -40,6 +39,7 @@ const TeamWrapper = React.createClass({
 			self._setBlackList(self.getBinding().otherTeamPlayers.toJS());
 			binding.set('prevPlayers',		Immutable.fromJS(self.getBinding().players.toJS()));
 			binding.set('isSetTeamLater',	Immutable.fromJS(false));
+			binding.set('isTeamChanged',	false);
 			binding.set('isInit',			Immutable.fromJS(true));
 		}
 	},
@@ -58,6 +58,8 @@ const TeamWrapper = React.createClass({
 		const self = this;
 
 		self._addTeamIdListener();
+		self._addTeamNameListener();
+		self._addPlayersListener();
 	},
 	_initCreationModeBinding: function() {
 		const	self	= this,
@@ -143,6 +145,42 @@ const TeamWrapper = React.createClass({
 
 		self.getDefaultBinding().sub('selectedTeamId').addListener((descriptor) => {
 			self._changeTeam(descriptor.getCurrentValue());
+		});
+	},
+	_addTeamNameListener: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.sub('teamName.name').addListener(() => {
+			// check team name only if selectedTeamId isn't undefined
+			// it's equal situation when we have selected team.
+			const	isTeamNameChanged	= (
+				typeof binding.toJS('selectedTeamId') !== 'undefined' &&
+				binding.toJS('teamName.name') !== binding.toJS('teamName.prevName')
+			),
+			isTeamPlayersChanged	= binding.toJS('isTeamPlayersChanged');
+
+			binding.atomically()
+				.set('isTeamNameChanged',	isTeamNameChanged)
+				.set('isTeamChanged',		isTeamNameChanged || isTeamPlayersChanged)
+				.commit();
+		});
+	},
+	_addPlayersListener: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.sub('___teamManagerBinding.teamStudents').addListener(() => {
+			const	isTeamPlayersChanged	= (
+												typeof binding.toJS('selectedTeamId') !== 'undefined' &&
+												!Immutable.is(self._getPlayers(), binding.get('prevPlayers'))
+											),
+					isTeamNameChanged		= binding.toJS('isTeamNameChanged');
+
+			binding.atomically()
+				.set('isTeamPlayersChanged',	isTeamPlayersChanged)
+				.set('isTeamChanged',			isTeamPlayersChanged || binding.toJS('isTeamNameChanged'))
+				.commit();
 		});
 	},
 	/**
@@ -322,33 +360,25 @@ const TeamWrapper = React.createClass({
 			)
 			.commit();
 	},
-	handleChangeName: function(binding, newName) {
-		binding
-			.atomically()
-			.set('teamName.name',		Immutable.fromJS(newName))
-			.set('teamName.prevName',	Immutable.fromJS(binding.toJS('teamName.name')))
-			.commit();
-	},
-	isPlayersChanged: function() {
-		const self = this;
-
-		return !Immutable.is(self._getPlayers(), self.getDefaultBinding().get('prevPlayers'));
+	handleChangeName: function(newName) {
+		this.getDefaultBinding().set('teamName.name', Immutable.fromJS(newName));
 	},
 	isShowRevertChangesButton: function() {
-		const self = this;
+		const binding = this.getDefaultBinding();
 
-		return !self.isSetTeamLater() && self.isPlayersChanged();
+		// show button if isSetTeamLater === false and team was selected and team was changed(name or players)
+		return !this.isSetTeamLater() && binding.toJS('selectedTeamId') !== 'undefined' && binding.toJS('isTeamChanged');
 	},
-	renderTeamNameComponent: function(eventModel, teamName, binding) {
-		const self = this;
+	renderTeamNameComponent: function() {
+		const event = this.getBinding('model').toJS();
 
 		switch (true) {
-			case TeamHelper.isNonTeamSport(eventModel):
+			case TeamHelper.isNonTeamSport(event):
 				return null;
-			case TeamHelper.isTeamSport(eventModel):
+			case TeamHelper.isTeamSport(event):
 				return (
-					<TeamName	name={teamName}
-								handleChangeName={self.handleChangeName.bind(self, binding)}
+					<TeamName	name				= { this.getDefaultBinding().toJS('teamName.name') }
+								handleChangeName	= { this.handleChangeName.bind(this) }
 					/>
 				);
 		}
@@ -398,13 +428,7 @@ const TeamWrapper = React.createClass({
 				</div>
 				<div className={plugClass}>
 				</div>
-				{
-					self.renderTeamNameComponent(
-						event,
-						binding.toJS('teamName.name'),
-						binding
-					)
-				}
+				{ self.renderTeamNameComponent() }
 				<TeamManager	isNonTeamSport={TeamHelper.isNonTeamSport(event)}
 								binding={binding.sub("___teamManagerBinding")}
 				/>

@@ -69,6 +69,7 @@ const serviceList = {
         serviceList.teams = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.team = new Service('/i/schools/{schoolId}/teams/{teamId}', binding);
         serviceList.cloneTeam = new Service('/i/schools/{schoolId}/teams/{teamId}/clone', binding);
+        serviceList.cloneAsPrototypeTeam = new Service('/i/schools/{schoolId}/teams/{teamId}/copyAsPrototype', binding);
         serviceList.schoolTeamStudents = new Service('/i/schools/{schoolId}/teams/{teamId}/students', binding);
         serviceList.teamsBySchoolId = new Service('/i/schools/{schoolId}/teams', binding);
         serviceList.teamPlayers = new Service('/i/schools/{schoolId}/teams/{teamId}/players', binding);

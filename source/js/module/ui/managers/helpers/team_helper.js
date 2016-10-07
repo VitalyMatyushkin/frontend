@@ -1017,7 +1017,7 @@ function createTeam(schoolId, event, rival, teamWrapper) {
 			teamBody.ages			= event.ages;
 			teamBody.gender			= TeamHelper.convertGenderToServerValue(event.gender);
 			teamBody.sportId		= event.sportId;
-			teamBody.schoolId		=schoolId;
+			teamBody.schoolId		= schoolId;
 			teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
 			teamBody.teamType		= "ADHOC";
 			self.getEventType(event) === 'houses' && (teamBody.houseId = rival.id);
