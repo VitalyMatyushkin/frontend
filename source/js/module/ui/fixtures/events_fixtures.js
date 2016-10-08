@@ -24,7 +24,7 @@ const EventFixtures = React.createClass({
 	},
 	_setEvents: function() {
 		const   self    = this,
-			binding = self.getBinding('calendar');
+				binding = self.getBinding('calendar');
 
 		const currentDate = binding.toJS('monthDate');
 

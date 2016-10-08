@@ -14,7 +14,6 @@ const HomeResults = React.createClass({
 		return <FixtureList
 			title="Results"
 			activeSchoolId={activeSchoolId}
-			isDaySelected={true}
 			isSync={isSync}
 			events={events}
 		/>;

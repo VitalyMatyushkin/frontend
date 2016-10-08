@@ -1,5 +1,5 @@
 /**
- * Created by Anatoly on 26.09.2016.
+ * Created by Anatoly on 07.10.2016.
  */
 
 const 	React			= require('react'),
