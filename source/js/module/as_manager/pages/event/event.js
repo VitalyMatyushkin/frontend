@@ -8,7 +8,7 @@ const	React			= require('react'),
 		EventRivals			= require('./view/event_rivals'),
 		EventButtons		= require('./view/event_buttons'),
 		EventTeams			= require('./view/teams/event_teams'),
-		EventGallery		= require('module/as_manager/pages/event/gallery/event_gallery'),
+		EventGallery		= require('./new_gallery/event_gallery'),
 		EventDetails		= require('./view/event_details'),
 		ManagerWrapper		= require('./view/manager_wrapper'),
 		Comments			= require('./view/event_blog'),
@@ -27,7 +27,17 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			model:			{},
-			albums:			[],
+			gallery: {
+				photos: [
+					{
+						id:		'123',
+						picUrl:	"https://pp.vk.me/c637426/v637426292/b704/pVa9voZLKpA.jpg"
+					}, {
+						id:		'456',
+						picUrl:	"https://pp.vk.me/c637426/v637426292/b75e/2IgSkVlQBLc.jpg"
+					}
+				]
+			},
 			sync:			false,
 			mode:			'general',
 			showingComment:	false,
@@ -248,7 +258,7 @@ const EventView = React.createClass({
 								<EventDetails binding={binding}/>
 							</If>
 							<If condition={activeTab === 'gallery'} >
-								<EventGallery binding={binding} />
+								<EventGallery binding={binding.sub('gallery')} />
 							</If>
 							<If condition={activeTab === 'comments'} >
 								<div className="eEvent_commentBox">
@@ -257,7 +267,7 @@ const EventView = React.createClass({
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-								<MatchReport binding={binding} eventId={self.eventId} />
+									<MatchReport binding={binding} eventId={self.eventId} />
 								</div>
 							</If>
 							<If condition={(binding.get('mode') !== 'general')}>
