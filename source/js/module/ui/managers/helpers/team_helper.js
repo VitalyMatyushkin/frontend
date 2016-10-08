@@ -715,10 +715,19 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 						return cb('housesData', 0);
 					}
 				} else if (teamsData.length === 2) {
-					return cb(
-						'teamsData',
-						teamsData.findIndex(t => t.houseId === housesData[0].id)
-					);
+					let foundIndex = teamsData.findIndex(t => t.houseId === housesData[0].id);
+					if(foundIndex !== -1) {
+						return cb('teamsData', foundIndex);
+					} else {
+						console.error('No team for house! houseId: ' + housesData[0].id + ', event: ');
+						console.info(event);
+						foundIndex = teamsData.findIndex(t => t.houseId === housesData[1].id);
+						if(foundIndex !== -1) {
+							return cb('teamsData', 1-foundIndex);
+						} else {
+							return cb('teamsData', 0);
+						}
+					}
 				}
 			}
 			break;
@@ -818,10 +827,19 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 						return cb('housesData', 1);
 					}
 				} else if (teamsData.length === 2) {
-					return cb(
-						'teamsData',
-						teamsData.findIndex(t => t.houseId === housesData[1].id)
-					);
+					let foundIndex = teamsData.findIndex(t => t.houseId === housesData[1].id);
+					if(foundIndex !== -1) {
+						return cb('teamsData', foundIndex);
+					} else {
+						console.error('No team for house! houseId: ' + housesData[1].id + ', event: ');
+						console.info(event);
+						foundIndex = teamsData.findIndex(t => t.houseId === housesData[0].id);
+						if(foundIndex !== -1) {
+							return cb('teamsData', 1-foundIndex);
+						} else {
+							return cb('teamsData', 1);
+						}
+					}
 				}
 			}
 			break;
@@ -1017,7 +1035,7 @@ function createTeam(schoolId, event, rival, teamWrapper) {
 			teamBody.ages			= event.ages;
 			teamBody.gender			= TeamHelper.convertGenderToServerValue(event.gender);
 			teamBody.sportId		= event.sportId;
-			teamBody.schoolId		=schoolId;
+			teamBody.schoolId		= schoolId;
 			teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
 			teamBody.teamType		= "ADHOC";
 			self.getEventType(event) === 'houses' && (teamBody.houseId = rival.id);

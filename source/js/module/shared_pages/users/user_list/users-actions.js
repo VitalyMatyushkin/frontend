@@ -101,35 +101,45 @@ UsersActions.prototype = {
 		}
 	},
 	_getItemViewFunction:function(model){
-		if(model.length === 1){
+		if(model.length === 1) {
 			window.location.hash = 'user/view?id='+model[0];
-		}else{
-			alert("You can only perform this action on one Item");
+		} else {
+			window.simpleAlert(
+				"You can only perform this action on one Item.",
+				'Ok',
+				() => {}
+			);
 		}
 	},
 	_revokeAllRoles:function(ids){
-		const   self            = this,
-				schoolId  		= self.activeSchoolId,
-				permission 		= window.Server[self.props.permissionServiceName],
-				permissionList 	= window.Server[`${self.props.permissionServiceName}s`],
-				confirmAction 	= window.confirm("Are you sure you want revoke all roles?");
+		const self = this;
 
 		if(ids && ids.length > 0 ){
-			if(confirmAction){
-				ids.forEach(function(userId){
-					const params = {userId:userId, schoolId:schoolId};
+			const	schoolId		= self.activeSchoolId,
+					permission		= window.Server[self.props.permissionServiceName],
+					permissionList	= window.Server[`${self.props.permissionServiceName}s`];
 
-					permissionList.get(params)
-						.then(function(data){
-							data.forEach(function(p){
-								if(p.preset !== 'STUDENT'){
-									params.permissionId = p.id;
-									permission.delete(params).then(_ => self.reloadData());
-								}
+			window.confirmAlert(
+				"Are you sure you want revoke all roles?",
+				"Ok",
+				"Cancel",
+				() => {
+					ids.forEach(function(userId){
+						const params = {userId:userId, schoolId:schoolId};
+
+						permissionList.get(params)
+							.then(function(data){
+								data.forEach(function(p){
+									if(p.preset !== 'STUDENT'){
+										params.permissionId = p.id;
+										permission.delete(params).then(_ => self.reloadData());
+									}
+								});
 							});
-						});
-				});
-			}
+					});
+				},
+				() => {}
+			);
 		}
 	},
 	_revokeRole:function(ids, action){
@@ -137,16 +147,22 @@ UsersActions.prototype = {
 				schoolId  		= self.activeSchoolId,
 				permission 		= window.Server[self.props.permissionServiceName];
 
-		if(ids && ids.length > 0 ){
-			if(window.confirm(`Are you sure you want ${action.text}?`)){
-				ids.forEach(function(userId){
-					const params = {userId:userId, schoolId:schoolId, permissionId:action.id};
+		if(ids && ids.length > 0 ) {
+			window.confirmAlert(
+				`Are you sure you want ${action.text}?`,
+				"Ok",
+				"Cancel",
+				() => {
+					ids.forEach(function(userId){
+						const params = {userId:userId, schoolId:schoolId, permissionId:action.id};
 
-					permission.delete(params).then(_ => {
-						self.reloadData();
+						permission.delete(params).then(() => {
+							self.reloadData();
+						});
 					});
-				});
-			}
+				},
+				() => {}
+			);
 		}
 	},
 	_accessRestriction:function(ids,block){
@@ -162,7 +178,11 @@ UsersActions.prototype = {
 				});
 			}
 		}else{
-			alert('Please select at least 1 row');
+			window.simpleAlert(
+				'Please select at least 1 row',
+				'Ok',
+				() => {}
+			);
 		}
 	},
 	getRoleList:function(){
@@ -329,7 +349,7 @@ UsersActions.prototype = {
 					filter:{
 						type:'multi-select',
 						typeOptions:{
-							getDataPromise: window.Server.publicSchools.get({filter:{limit:1000}}),
+							getDataPromise: window.Server.publicSchools.get({filter:{limit:1000,order:"name ASC"}}),
 							valueField:'name',
 							keyField:'id'
 						}

@@ -29,19 +29,25 @@ const SchoolListPage = React.createClass({
     },
     _getItemRemoveFunction:function(model){
         var self = this,
-            binding = self.getDefaultBinding(),
-            confirm = window.confirm("Do you really want to remove this item?");
-        if(confirm === true){
-            window.Server.school.delete(model.id).then(function(){
-                    binding.update(function(result) {
-                        return result.filter(function(res) {
-                            return res.get('id') !== model.id;
+            binding = self.getDefaultBinding();
+
+        window.confirmAlert(
+            "Do you really want to remove this item?",
+            "Ok",
+            "Cancel",
+            () => {
+                window.Server.school.delete(model.id).then(function(){
+                        binding.update(function(result) {
+                            return result.filter(function(res) {
+                                return res.get('id') !== model.id;
+                            });
                         });
-                    });
-                    self.reloadData();
-                }
-            );
-        }
+                        self.reloadData();
+                    }
+                );
+            },
+            () => {}
+        );
     },
     _getSelectItemFunction:function(model){
         document.location.hash = `school_sandbox/${model.id}/forms`;

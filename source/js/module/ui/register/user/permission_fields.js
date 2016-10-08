@@ -29,7 +29,8 @@ const PermissionFields = React.createClass({
                         options: 'i'
                     }
                 },
-				limit: 50
+				limit:1000,
+				order:"name ASC"
             }
         });
     },

@@ -16,9 +16,9 @@ const Center = React.createClass({
                 mainClass       = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
 
         return (
-            <div className={mainClass}>
-                <div className="bPageWrap">
-                    <RouterView routes={ binding.sub('routing') } binding={binding}>
+			<div className={mainClass}>
+				<div className="bPageWrap">
+					<RouterView routes={ binding.sub('routing') } binding={binding}>
 
 						<Route path="/reset"
 							   binding={binding.sub('reset')}
@@ -30,9 +30,11 @@ const Center = React.createClass({
 							   component={PasswordResetRequestComponent}
 							   unauthorizedAccess={true}/>
 
-                    </RouterView>
-            </div>
-                </div>
+					</RouterView>
+				</div>
+				<NotificationAlert binding={binding.sub('notificationAlertData')} />
+				<ConfirmAlert binding={binding.sub('confirmAlertData')} />
+			</div>
         );
     }
 

@@ -74,10 +74,11 @@ const TeamModeView = React.createClass({
 	 * @private
 	 */
 	_onTeamClick: function(teamId, team) {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			rivalIndex = binding.toJS('selectedRivalIndex'),
-			prevSelectedTeamId = binding.toJS(`teamWrapper.${rivalIndex}.selectedTeamId`);
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	rivalIndex			= binding.toJS('selectedRivalIndex'),
+				prevSelectedTeamId	= binding.toJS(`teamWrapper.${rivalIndex}.selectedTeamId`);
 
 		if(prevSelectedTeamId !== teamId) {
 			self._selectTeam(teamId, team);
@@ -110,6 +111,10 @@ const TeamModeView = React.createClass({
 			)
 			.set(
 				`teamWrapper.${rivalIndex}.teamName.name`,
+				Immutable.fromJS(team.name)
+			)
+			.set(
+				`teamWrapper.${rivalIndex}.teamName.prevName`,
 				Immutable.fromJS(team.name)
 			)
 			.set(

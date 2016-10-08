@@ -26,7 +26,11 @@ const PasswordResetRequestForm = React.createClass({
 			newPassword :	data.newPassword,
 			secretKey :		binding.get('secretKey')
 		}).then(() => {
-			alert('Password is changed.');
+			window.simpleAlert(
+				'Password is changed.',
+				'Ok',
+				() => {}
+			);
 			window.location.href = domainHelper.getLoginUrl();
 		});
 	},

@@ -36,12 +36,17 @@ const AlbumItem = React.createClass({
 		e.stopPropagation();
 	},
 	onClickDeleteAlbum: function(e) {
-		const self = this,
-			binding = self.getDefaultBinding(),
-            album = binding.toJS();
+		const	self	= this,
+				binding	= self.getDefaultBinding(),
+				album	= binding.toJS();
 
-		self.props.onDelete && confirm("Delete this album?") && self.props.onDelete(album);
-
+		window.confirmAlert(
+			"Delete this album?",
+			"Ok",
+			"Cancel",
+			() => self.props.onDelete && self.props.onDelete(album),
+			() => {}
+		);
 		e.stopPropagation();
 	},
 	render: function() {

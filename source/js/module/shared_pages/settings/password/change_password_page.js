@@ -14,7 +14,11 @@ const SecuritySettingsPage = React.createClass({
 			document.location.hash = '/settings/general';
 		})
 		.catch(() => {
-			alert("Please enter correct old password.");
+			window.simpleAlert(
+				"Please enter correct old password.",
+				'Ok',
+				() => {}
+			);
 		});
 	},
 	render: function() {

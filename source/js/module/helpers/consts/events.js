@@ -14,5 +14,4 @@ const EVENT_STATUS = {
 	'CANCELED'					: 'CANCELED'						// event canceled because of some reason
 };
 
-
 module.exports.EVENT_STATUS = EVENT_STATUS;

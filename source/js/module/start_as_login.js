@@ -2,6 +2,8 @@
  * Created by wert on 16.01.16.
  */
 const   ApplicationView     = require('module/as_login/application'),
+        SimpleAlertFactory	= require('./helpers/simple_alert_factory'),
+        ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
         userDataLogin 		= require('module/data/user_data_login'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
@@ -17,6 +19,26 @@ const   ApplicationView     = require('module/as_login/application'),
         initialState: {
             userData: userDataLogin.getDefaultState(),
             userRules: userRulesInstance.getDefaultState(),
+            notificationAlertData: {
+                isOpen:					false,
+
+                text:					'',
+
+                okButtonText:			'',
+
+                handleClickOkButton:	undefined
+            },
+            confirmAlertData: {
+                isOpen:						false,
+
+                text:						'',
+
+                okButtonText:				'',
+                cancelButtonText:			'',
+
+                handleClickOkButton:		undefined,
+                handleClickCancelButton:	undefined
+            },
             routing: {
                 currentPath: '',
                 currentPageName: '',	// current page name, if exist
@@ -104,6 +126,9 @@ const   ApplicationView     = require('module/as_login/application'),
             defaultPath: 'login'
 	});
 
+
+    window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));
+    window.confirmAlert = ConfirmAlertFactory.create(binding.sub('confirmAlertData'));
 
     // Инициализация приложения
     ReactDom.render(
