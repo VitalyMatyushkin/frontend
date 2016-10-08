@@ -527,7 +527,7 @@ const EventManager = React.createClass({
 		return (
 			<div className="bSavingChangesBlock">
 				<div className="eSavingChangesBlock_text">
-					You change selected team. What to do with the changes?
+					Team have been changed. Please select one of the following options:
 				</div>
 				{ savingPlayerChangesModePanels }
 			</div>

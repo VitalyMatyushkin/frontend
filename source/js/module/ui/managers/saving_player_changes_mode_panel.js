@@ -18,15 +18,15 @@ const TeamSaveModePanel = React.createClass({
 					{ this.props.teamName }
 				</h3>
 				<div className="eSavingPlayerChangesModePanel_radioButtons">
-					<RadioButton	text		= { 'Save changes to selected prototype team' }
+					<RadioButton	text		= { 'Update original team' }
 									isChecked	= { this.isChecked(ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_PROTOTYPE_TEAM) }
 									onClick		= { this.props.handleChange.bind(null, ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_PROTOTYPE_TEAM) }
 					/>
-					<RadioButton	text		= { 'Save changes to new prototype team' }
+					<RadioButton	text		= { 'Save as new team' }
 									isChecked	= { this.isChecked(ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM) }
 									onClick		= { this.props.handleChange.bind(null, ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM) }
 					/>
-					<RadioButton	text		= { 'Doesn\'t save changes' }
+					<RadioButton	text		= { 'Use team only for this event' }
 									isChecked	= { this.isChecked(ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES) }
 									onClick		= { this.props.handleChange.bind(null, ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES) }
 					/>
