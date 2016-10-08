@@ -84,7 +84,12 @@ const EventView = React.createClass({
 
 		return window.Server.children.get()
 			.then(children => {
-				binding.set('children',Immutable.fromJS(children));
+				const ids = children.map(c => c.id);
+
+				binding.atomically()
+					.set('children',Immutable.fromJS(children))
+					.set('childrenIds',Immutable.fromJS(ids))
+					.commit();
 
 				return true;
 			});
