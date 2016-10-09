@@ -2,9 +2,13 @@ const	React		= require('react'),
 		Morearty	= require('morearty'),
 		Button		= require('./../../ui/button/button');
 
+/**
+ * Alert window used for confirmation dialogue.
+ * Will show some text with Ok|Cancel buttons
+ */
 const ConfirmAlert = React.createClass({
 	mixins: [Morearty.Mixin],
-	handleClickCancelButton: function() {
+	onCancelButtonClick: function() {
 		const binding = this.getDefaultBinding();
 
 		const handleClickCancelButton = binding.toJS('handleClickCancelButton');
@@ -12,14 +16,19 @@ const ConfirmAlert = React.createClass({
 		binding.set('isOpen', false);
 		handleClickCancelButton();
 	},
-	render: function() {
-		const binding = this.getDefaultBinding();
+	onOkButtonClick: function() {
+		const 	binding			= this.getDefaultBinding(),
+				okButtonHandler	= binding.toJS('handleClickOkButton');
 
-		const	isOpen				= !!binding.toJS('isOpen'),
+		binding.set('isOpen', false);
+		okButtonHandler();
+	},
+	render: function() {
+		const 	binding				= this.getDefaultBinding(),
+				isOpen				= !!binding.toJS('isOpen'),
 				text				= binding.toJS('text'),
 				okButtonText		= binding.toJS('okButtonText'),
-				cancelButtonText	= binding.toJS('cancelButtonText'),
-				handleClickOkButton	= binding.toJS('handleClickOkButton');
+				cancelButtonText	= binding.toJS('cancelButtonText');
 
 		if(isOpen) {
 			return (
@@ -29,11 +38,11 @@ const ConfirmAlert = React.createClass({
 					</div>
 					<div className="eSimpleAlert_footer">
 						<Button	text				= { okButtonText }
-								onClick				= { handleClickOkButton }
+								onClick				= { this.onOkButtonClick }
 								extraStyleClasses	= { 'mMarginRight' }
 						/>
 						<Button	text	= { cancelButtonText }
-								onClick	= { this.handleClickCancelButton }
+								onClick	= { this.onCancelButtonClick }
 						/>
 					</div>
 				</div>
