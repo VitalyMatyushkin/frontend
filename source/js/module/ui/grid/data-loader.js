@@ -30,7 +30,7 @@ DataLoader.prototype = {
 			return null;
 		}
 
-		const service = window.Server[serviceName];
+		const service = window.Server[serviceName];		// TODO: why you getting services by their names instead of passing service itself ?
 
 		if(!service){
 			console.error('Grid.DataLoader: service not found!');
@@ -40,16 +40,16 @@ DataLoader.prototype = {
 	},
 	loadData:function(){
 		const 	self = this,
-				filters = self.filter.getFilters(),
-				service = self.getService(self.serviceName);
+				filters = this.filter.getFilters(),
+				service = this.getService(self.serviceName);
 
 		console.log('DataLoader: load data started');
 		if(service) {
-			const promise = self.params ? service.get(self.params, filters): service.get(filters);
-			return promise.then(function (data) {
+			const promise = self.params ? service.get(this.params, filters): service.get(filters);
+			return promise.then(data => {
 				var res = data;
 				if(self.dataModel){
-					res = data.map(function(item){
+					res = data.map( item => {
 						return new self.dataModel(item);
 					});
 				}
