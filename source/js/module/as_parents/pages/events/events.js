@@ -5,7 +5,7 @@ const   RouterView  				= require('module/core/router'),
 		Morearty        			= require('morearty'),
 		Immutable   				= require('immutable'),
 		EventsCalendarComponent 	= require('module/as_parents/pages/events/events_calendar'),
-		EventsFixturesComponent 	= require('module/ui/fixtures/events_fixtures'),
+		EventsFixturesComponent 	= require('./events_fixtures'),
 		EventsAchievementComponent 	= require("module/as_parents/pages/events/events_achievement");
 
 const EventView = React.createClass({
@@ -18,15 +18,14 @@ const EventView = React.createClass({
 		return Immutable.fromJS({
 			eventsRouting: {},
 			children:[],
+			childrenIds:[],
 			teams: [],
 			sports: {
 				models: [],
 				sync: false
 			},
-			eventsOfAllChildren:[],
 			models: [],
 			sync: false,
-			newEvent: {},
 			achievements:null
 		});
 	},
@@ -115,12 +114,7 @@ const EventView = React.createClass({
 								component={EventsCalendarComponent}/>
 
 						<Route	path='/events/fixtures/:userId'
-								binding={
-										{
-											default: binding.sub('fixtures'),
-											calendar: binding.sub('calendar')
-										}
-                                    }
+							  	binding={binding}
 								component={EventsFixturesComponent}/>
 
 						<Route	path="/events/achievement/:userId"

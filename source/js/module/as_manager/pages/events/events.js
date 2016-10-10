@@ -9,7 +9,7 @@ const   RouterView      			= require('module/core/router'),
         Immutable       			= require('immutable'),
         EventsCalendarComponent 	= require('module/as_manager/pages/events/calendar/events_calendar'),
 		EventManagerComponent 		= require('module/as_manager/pages/events/event_manager'),
-		EventFixturesComponent 		= require('module/ui/fixtures/events_fixtures');
+		EventFixturesComponent 		= require('./events_fixtures');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -107,7 +107,7 @@ const EventView = React.createClass({
                                 component={EventManagerComponent}
                             />
                             <Route path='/events/fixtures'
-                                   binding={
+								   binding={
 										{
 											default: binding.sub('fixtures'),
 											calendar: binding.sub('calendar')

@@ -7,9 +7,7 @@ const   React           = require('react'),
 		Immutable       = require('immutable'),
 		DateHelper 		= require('module/helpers/date_helper'),
 		EventHelper     = require('module/helpers/eventHelper'),
-		Loader 			= require('module/ui/loader'),
-		FixtureTitle 	= require('./fixture_title'),
-		FixtureList 	= require('./fixture_list');
+		Fixtures 		= require('module/ui/fixtures/fixtures');
 
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -60,30 +58,15 @@ const EventFixtures = React.createClass({
 	onClickChallenge: function (eventId) {
 		document.location.hash = 'event/' + eventId + '?tab=teams';
 	},
-    getFixtures: function () {
-        const   self    		= this,
-				activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-                binding 		= self.getDefaultBinding();
-
-        let result = <div><br /><br /><Loader /></div>;
-
-        if(binding.toJS('sync')) {
-			result = (
-				<FixtureList events={binding.toJS('models')} activeSchoolId={activeSchoolId} onClick={self.onClickChallenge} />
-			);
-        }
-
-        return result;
-    },
 	render: function () {
-        const   challenges = this.getFixtures();
+		const   self    		= this,
+				activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				binding 		= self.getDefaultBinding();
 
-		return (
-			<div className="bChallenges">
-				<FixtureTitle />
-				{challenges}
-			</div>
-        );
+		return <Fixtures events={binding.toJS('models')}
+						 activeSchoolId={activeSchoolId}
+						 sync={binding.toJS('sync')}
+						 onClick={self.onClickChallenge} />;
 	}
 });
 
