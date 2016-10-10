@@ -1,4 +1,5 @@
-const   CalendarView		= require('module/as_manager/pages/events/calendar/calendar'),
+const   Calendar			= require('module/as_manager/pages/events/calendar/calendar'),
+		CalendarActions		= require('module/as_manager/pages/events/calendar/calendar-actions'),
 		EventManagerBase	= require('./manager/base'),
 		If					= require('module/ui/if/if'),
 		TimePicker			= require('module/ui/timepicker/timepicker'),
@@ -587,7 +588,7 @@ const EventManager = React.createClass({
 				<div className={bManagerClasses}>
 					<If condition={step === 1}>
 						<div className="eManager_dateTimePicker">
-							<CalendarView
+							<Calendar
 								binding={rootBinding.sub('events.calendar')}
 								onSelect={self.onSelectDate}
 							/>
