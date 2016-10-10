@@ -16,13 +16,16 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
  *
  * */
 const RequestActions = function(page){
-	this.getDefaultBinding = page.getDefaultBinding;
-	this.getMoreartyContext = page.getMoreartyContext;
+	this.getDefaultBinding = page.getDefaultBinding;		// TODO: are you sure this is really good to miss original 'this'?
+	this.getMoreartyContext = page.getMoreartyContext;		// TODO: are you sure this is really good to miss original 'this'?
 	this.props = page.props;
 	this.state = page.state;
 
 	this.rootBinding = this.getMoreartyContext().getBinding();
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
+
+	// getting viewer role, because MANAGER will not obtain ADMIN's requests
+	this.viewerRole	= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
 
 	this.updateSubMenu();
 	this.getSchools();
@@ -37,7 +40,9 @@ RequestActions.prototype = {
 	getRoleList:function(){
 		const roles = [];
 
-		Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS).forEach(key => {
+		Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS)
+			.filter( key => !(this.viewerRole === 'MANAGER' && key === 'ADMIN')) 		// MANAGER cannot use ADMIN filter
+			.forEach(key => {
 			roles.push({
 				key: key,
 				value: RoleHelper.ALLOWED_PERMISSION_PRESETS[key].toLowerCase()
@@ -48,17 +53,17 @@ RequestActions.prototype = {
 	},
 	getSchools:function(){
 		const 	self 	= this,
-			binding = self.getDefaultBinding();
+				binding = self.getDefaultBinding();
 
 		window.Server.publicSchools.get({filter:{limit:1000,order:"name ASC"}}).then(schools => {
 			binding.set('schools', schools);
 		});
 	},
 	getSchoolEmblem:function(item){
-		const self = this,
-			binding = self.getDefaultBinding(),
-			schools = binding.get('schools'),
-			school = schools && item.requestedPermission ? schools.find(s => s.id === item.requestedPermission.schoolId) : null;
+		const 	self = this,
+				binding = self.getDefaultBinding(),
+				schools = binding.get('schools'),
+				school = schools && item.requestedPermission ? schools.find(s => s.id === item.requestedPermission.schoolId) : null;
 
 		if(school && school.pic){
 			return <img src={window.Server.images.getResizedToBoxUrl(school.pic, 60, 60)}/>;
@@ -243,18 +248,30 @@ RequestActions.prototype = {
 		];
 	},
 	init: function(){
+
+		let defaultFilter = {
+			where: {
+				status: 'NEW'
+			},
+			limit: 20
+		};
+
+		if(this.viewerRole === 'MANAGER') {
+			defaultFilter.where['requestedPermission.preset'] = { $ne: 'ADMIN'};
+		}
+
 		this.grid = new GridModel({
 			actionPanel:{
-				title:'New Requests',
-				showStrip:true
+				title: 'New Requests',
+				showStrip: true
 			},
-			columns:this.columns,
-			filters:{where:{status:'NEW'},limit:20}
+			columns: this.columns,
+			filters: defaultFilter
 		});
 
 		this.dataLoader = 	new DataLoader({
 			serviceName:'permissionRequests',
-			params:		{schoolId:this.activeSchoolId},
+			params:		{ schoolId: this.activeSchoolId },
 			grid:		this.grid,
 			onLoad: 	this.getDataLoadedHandle()
 		});
