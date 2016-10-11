@@ -107,7 +107,8 @@ const Form = React.createClass({
 
 			binding.meta().merge(field, false, Immutable.Map({
 				value: binding.get(field),
-				defaultValue: binding.get(field)
+				defaultValue: binding.get(field),
+				active: true 	//form field is active by default. (if (FormField.props.condition === false) then active = false)
 			}));
 		});
 	},
