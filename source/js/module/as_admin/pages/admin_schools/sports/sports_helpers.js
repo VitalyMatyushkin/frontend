@@ -322,7 +322,7 @@ const SportsHelpers = {
             case (isRequired && _value === ''):
                 return `Please enter your ${name}`;
             case ((!isRequired || isRequired) && _value !== ''):
-                if (/[^a-zA-Z0-9 \-\/]+$/.test(_value)) {
+                if (/[^a-zA-Z0-9,\.\(\) \-\/]+$/.test(_value)) {
                     return 'Should contain only alphanumeric characters';
                 } else {
                     return false;

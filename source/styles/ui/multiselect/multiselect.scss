@@ -1,5 +1,22 @@
 .bMultiSelect {
   width: 400px;
+
+  button {
+    background: #fff;
+    border: solid 1px $darkGrey;
+    border-radius: 2px;
+    color: $textColor;
+    display: inline-block;
+    font-size: 1em;
+    padding: 5px 25px;
+
+    &:hover {
+      background: #f1f1f1;
+    }
+    &:active {
+      background: #d7d7d7;
+    }
+  }
 }
 
 .bMultiSelect ul {
@@ -13,6 +30,7 @@
 }
 
 .bMultiSelect input {
+  background: #fff;
   width: 100%;
 }
 
