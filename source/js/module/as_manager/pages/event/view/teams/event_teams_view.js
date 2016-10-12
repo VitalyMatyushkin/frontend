@@ -398,6 +398,7 @@ const EventTeamsView = React.createClass({
 					}>
 						<Score	isChangeMode			={EventHelper.isShowScoreButtons(event, mode, isOwner)}
 								plainPoints				={self.getPointsByStudent(event, player.userId)}
+								pointsStep 				={event.sport.points.pointsStep}
 								pointsType				={event.sport.points.display}
 								handleClickPointSign	={self.handleClickPointSign.bind(self, event, teamId, player)}
 						/>

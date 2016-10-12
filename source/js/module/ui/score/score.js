@@ -8,6 +8,7 @@ const Score = React.createClass({
 	propTypes: {
 		isChangeMode:			React.PropTypes.bool,
 		plainPoints:			React.PropTypes.number.isRequired,
+		pointsStep:				React.PropTypes.number.isRequired,
 		pointsType:				React.PropTypes.string.isRequired,
 		handleClickPointSign:	React.PropTypes.func.isRequired
 	},
@@ -52,7 +53,7 @@ const Score = React.createClass({
 	renderPlayerTimePointsInChangeMode: function() {
 		const self = this;
 
-		const timePoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType);
+		const timePoints = TeamHelper.convertPoints(this.props.plainPoints);
 
 		return (
 			<div className="bScore">
