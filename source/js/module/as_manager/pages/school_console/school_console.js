@@ -32,23 +32,22 @@ const SchoolConsole = React.createClass({
         });
     },
     componentWillMount: function () {
-		var self 			= this,
-			rootBinding 	= self.getMoreartyContext().getBinding(),
-			role 			= rootBinding.get('userData.authorizationInfo.role');
+		const 	rootBinding 	= this.getMoreartyContext().getBinding(),
+				role 			= rootBinding.get('userData.authorizationInfo.role');
 
 		if(role !== "ADMIN" && role !== "MANAGER")
 			document.location.hash = 'school_admin/summary';
 		else
-			self.createSubMenu();
+			this.createSubMenu();
     },
     componentDidMount: function(){
-        const self = this,
-            globalBinding = self.getMoreartyContext().getBinding();
-        self.addBindingListener(globalBinding, 'submenuNeedsUpdate', self.createSubMenu);
+        const globalBinding = this.getMoreartyContext().getBinding();
+        this.addBindingListener(globalBinding, 'submenuNeedsUpdate', this.createSubMenu);
     },
     createSubMenu: function(){
-        const self = this,
-            binding = self.getDefaultBinding();
+        const 	binding		= this.getDefaultBinding(),
+				viewerRole	= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
+
 
         const _createSubMenuData = function(count){
             let menuItems = [{
@@ -68,32 +67,29 @@ const SchoolConsole = React.createClass({
             binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
         };
 
+        let requestFilter = {
+			status: 'NEW'
+		};
+
+		// Manager cannot see admin permission requests
+		if(viewerRole === 'MANAGER') {
+			requestFilter['requestedPermission.preset'] = { $ne: 'ADMIN'}
+		}
+
+		_createSubMenuData('*');	// drawing placeholder
 
         //Get the total number of permissions (Notification badge) in submenu
-        return window.Server.permissionRequests.get( MoreartyHelper.getActiveSchoolId(self), {filter:{limit: 1000}} )
-        .then(permissions => permissions.filter(p => p.status === "NEW" && this.filterByRole(p)))
-        .then(permissions => {
-            _createSubMenuData(permissions.length);
-            // yep, always i'm right
-            return true;
-        });
-    },
-    filterByRole: function(permission) {
-        const role = this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
-        console.log(permission);
-        switch (role) {
-            case "ADMIN":
+        return window.Server.permissionRequests.get( MoreartyHelper.getActiveSchoolId(this), {filter:{limit: 1000, where: requestFilter}} )
+            .then(permissions => {
+                _createSubMenuData(permissions.length);
+                // yep, always i'm right
                 return true;
-            case "MANAGER":
-                return permission.requestedPermission.preset !== "ADMIN";
-            default:
-                return false;
-        }
+            });
     },
+
     render: function() {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding();
+        const 	binding			= this.getDefaultBinding(),
+            	globalBinding	= this.getMoreartyContext().getBinding();
 
         return <div>
             <SubMenu binding={{ default: binding.sub('consoleRouting'), itemsBinding: binding.sub('subMenuItems') }} />

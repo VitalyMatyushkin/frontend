@@ -1,11 +1,11 @@
 /**
- * Created by Anatoly on 26.09.2016.
+ * Created by Anatoly on 07.10.2016.
  */
 
 const Immutable = require('immutable');
 
 /** Load in binding data for all dates which have events */
-function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsBinding){
+function loadMonthDistinctEventDatesToBinding(monthDate, childIdList, eventsBinding){
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
@@ -20,11 +20,12 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 			},
 			status: {
 				$in: ['ACCEPTED', 'FINISHED']
-			}
+			},
+			childIdList: childIdList
 		}
 	};
 
-	return window.Server.schoolEventDates.get({ schoolId: activeSchoolId}, { filter: filter }).then( data => {
+	return window.Server.childrenEventsDates.get({ filter: filter }).then( data => {
 		const dates = data.dates.map( dateStr => new Date(dateStr));
 
 		/** Converting array of dates to proper calendar format */
@@ -41,7 +42,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 
 }
 
-function loadDailyEvents(date, activeSchoolId, eventsBinding) {
+function loadDailyEvents(date, childIdList, eventsBinding) {
 	const 	dayStart	= new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0),
 			dayEnd		= new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1, 0, 0, 0);
 
@@ -56,11 +57,12 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 			},
 			status: {
 				$in: ['ACCEPTED', 'FINISHED']
-			}
+			},
+			childIdList: childIdList
 		}
 	};
 
-	return window.Server.events.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
+	return window.Server.childrenEvents.get({ filter: filter}).then( eventsData => {
 		eventsBinding.atomically()
 			.set('selectedDateEventsData.events', Immutable.fromJS(eventsData))
 			.set('selectedDateEventsData.isSync', true)
@@ -68,28 +70,28 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 	});
 }
 
-function setNextMonth(activeSchoolId, eventsBinding) {
+function setNextMonth(childIdList, eventsBinding) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			nextMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() + 1);
 
 	eventsBinding.set('monthDate', nextMonthDate);
 
-	loadMonthDistinctEventDatesToBinding(nextMonthDate, activeSchoolId, eventsBinding);
+	loadMonthDistinctEventDatesToBinding(nextMonthDate, childIdList, eventsBinding);
 }
 
-function setPrevMonth(activeSchoolId, eventsBinding) {
+function setPrevMonth(childIdList, eventsBinding) {
 	const 	currentMonthDate 	= eventsBinding.get('monthDate'),
 			prevMonthDate		= new Date(currentMonthDate.getFullYear(), currentMonthDate.getMonth() - 1);
 
 	eventsBinding.set('monthDate', prevMonthDate);
 
-	loadMonthDistinctEventDatesToBinding(prevMonthDate, activeSchoolId, eventsBinding);
+	loadMonthDistinctEventDatesToBinding(prevMonthDate, childIdList, eventsBinding);
 }
 
-function setSelectedDate(date, activeSchoolId, eventsBinding) {
+function setSelectedDate(date, childIdList, eventsBinding) {
 	eventsBinding.set('selectedDate', date);
 
-	loadDailyEvents(date, activeSchoolId, eventsBinding);
+	loadDailyEvents(date, childIdList, eventsBinding);
 }
 
 module.exports.setNextMonth						= setNextMonth;

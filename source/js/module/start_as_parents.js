@@ -10,6 +10,8 @@ const  	ApplicationView 	= require('module/as_parents/application'),
 		React 				= require('react');
 
 function runParentMode() {
+	const today = new Date();
+
 	const MoreartyContext = Morearty.createContext({
 		initialState: {
 			userData: userDataInstance.getDefaultState(),
@@ -48,8 +50,14 @@ function runParentMode() {
 				sync: false,
 				models: [],
 				calendar: {
-					currentDate: new Date(),
-					mode: 'month'
+					todayDate: 			today,
+					monthDate:			new Date(today.getFullYear(), today.getMonth()),
+					selectedDate:		new Date(today.getFullYear(), today.getMonth(), today.getDate()),
+					eventsData: {},
+					selectedDateEventsData: {
+						isSync:	false,
+						events:	[]
+					}
 				}
 			},
 			event: {

@@ -15,7 +15,6 @@ const ChallengeListItem = React.createClass({
 	propTypes: {
 		event: 			React.PropTypes.any,
 		model:			React.PropTypes.any,
-		activeSchoolId: React.PropTypes.string.isRequired,
 		onClick: 		React.PropTypes.func 	// first argument is eventId
 	},
 

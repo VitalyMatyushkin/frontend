@@ -35,7 +35,7 @@ const SchoolForm = React.createClass({
 		if(typeof binding.toJS('publicSite.status') === 'undefined') {
 			binding.set(
 				'publicSite.status',
-				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_CLIENT_VALUE)
+				Immutable.fromJS(SchoolConsts.DEFAULT_PUBLIC_ACCESS_SCHOOL_SERVER_VALUE)
 			);
 		}
 	},

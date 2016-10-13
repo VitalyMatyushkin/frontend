@@ -150,6 +150,7 @@ const EventRival = React.createClass({
 			<div className="eEventResult_PointSideWrapper">
 				<Score	isChangeMode			={teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
 						plainPoints				={points}
+						pointsStep 				={event.sport.points.pointsStep}
 						pointsType				={event.sport.points.display}
 						handleClickPointSign	={self.handleClickPointSign.bind(self, teamBundleName, order)}
 				/>
