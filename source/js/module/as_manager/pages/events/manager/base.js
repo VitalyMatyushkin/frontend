@@ -165,8 +165,8 @@ const EventManagerBase = React.createClass({
 
         return sports.models.map(sport => {
 			return (
-				<option	value=	{sport.id}
-						key=	{sport.id}
+				<option	value	= { sport.id }
+						key		= { sport.id }
 				>
 					{sport.name}
 				</option>
@@ -187,20 +187,18 @@ const EventManagerBase = React.createClass({
 		//if sport was selected
 		if(self.isSportSelected()) {
 			genderOptions.push((
-				<option	key="not-selected-gender"
-						   value={undefined}
-						   disabled="disabled"
-						   selected="selected"
+				<option	key			= "not-selected-gender"
+						value		= "not-selected-gender"
+						disabled	= "disabled"
 				>
 					Please select
 				</option>
 			));
 		} else {
 			genderOptions.push((
-				<option	key="not-selected-gender"
-						   value={undefined}
-						   disabled="disabled"
-						   selected="selected"
+				<option	key			= "not-selected-gender"
+						value		= "not-selected-gender"
+						disabled	= "disabled"
 				>
 					At first, select game
 				</option>
@@ -274,7 +272,7 @@ const EventManagerBase = React.createClass({
 						type="text"
 						value={self.getEventDate(binding.get('model.startTime'))}
 						disabled={'disabled'}
-						/>
+					/>
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Time'}</div>
@@ -283,7 +281,7 @@ const EventManagerBase = React.createClass({
 						type="text"
 						value={self.getEventTime(binding.get('model.startTime'))}
 						disabled={'disabled'}
-						/>
+					/>
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Event Name'}</div>
@@ -293,7 +291,7 @@ const EventManagerBase = React.createClass({
 						value={binding.get('model.name')}
 						placeholder={'enter name'}
 						onChange={Morearty.Callback.set(binding.sub('model.name'))}
-						/>
+					/>
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Event Description'}</div>
@@ -307,14 +305,14 @@ const EventManagerBase = React.createClass({
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Game'}</div>
-						<select	className="eManager_select"
-								value={sportId}
-								onChange={self.changeCompleteSport}
+						<select	className		= "eManager_select"
+								defaultValue	= "not-selected-sport"
+								value			= {sportId}
+								onChange		= {self.changeCompleteSport}
 						>
-							<option	key="not-selected-sport"
-									value={undefined}
-									disabled="disabled"
-									selected="selected"
+							<option	key			= "not-selected-sport"
+									value		= "not-selected-sport"
+									disabled	= "disabled"
 							>
 								Please select
 							</option>
@@ -323,10 +321,11 @@ const EventManagerBase = React.createClass({
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Genders'}</div>
-					<select	className={classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
-							value={gender}
-							onChange={self.handleChangeGenderSelect.bind(self, binding)}
-							disabled={!self.isSportSelected()}
+					<select	className		= {classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
+							defaultValue	= "not-selected-gender"
+							value			= {gender}
+							onChange		= {self.handleChangeGenderSelect.bind(self, binding)}
+							disabled		= {!self.isSportSelected()}
 					>
 						{self.getGenderSelectOptions()}
 					</select>
@@ -351,28 +350,29 @@ const EventManagerBase = React.createClass({
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Game Type'}</div>
-						<select	className="eManager_select"
-								value={binding.toJS('model.type')}
-								onChange={self.changeCompleteType}>
-							<option	key="not-selected-game-type"
-									value={undefined}
-									disabled="disabled"
-									selected="selected"
+						<select	className		= 'eManager_select'
+								defaultValue	= 'not-selected-game-type'
+								value			= {binding.toJS('model.type')}
+								onChange		= {self.changeCompleteType}
+						>
+							<option	key			= "not-selected-game-type"
+									value		= "not-selected-game-type"
+									disabled	= "disabled"
 							>
 								Please select
 							</option>
-							<option	key="inter-schools-type"
-									value="inter-schools"
+							<option	key		= "inter-schools-type"
+									value	= "inter-schools"
 							>
 								Inter-schools
 							</option>
-							<option	key="houses-type"
-									value="houses"
+							<option	key		= "houses-type"
+									value	= "houses"
 							>
 								Houses
 							</option>
-							<option	key="anyway-type"
-									value="internal"
+							<option	key		= "anyway-type"
+									value	= "internal"
 							>
 								Internal
 							</option>

@@ -193,12 +193,14 @@ const TeamModeView = React.createClass({
 		];
 		return (
 			<div>
-				<div className={_classNames[0]}>
+				<div	key			= "team_wrapper_1"
+						className	= { _classNames[0] }>
 					<TeamWrapper	binding={tableWrapperBindings[0]}
 									handleIsSelectTeamLater={self.handleIsSelectTeamLater.bind(self, 0)}
 					/>
 				</div>
-				<div className={_classNames[1]}>
+				<div	key			= "team_wrapper_2"
+						className	= { _classNames[1] }>
 					<TeamWrapper	binding={tableWrapperBindings[1]}
 									handleIsSelectTeamLater={self.handleIsSelectTeamLater.bind(self, 1)}
 					/>
@@ -261,19 +263,20 @@ const TeamModeView = React.createClass({
 			//and hope - everything will work good.
 			//NO!) All fall down, man. Sorrrry.
 			teamChoosers = teamTableBindings.map((binding, index) =>
-				<TeamChooser	onTeamClick={self._onTeamClick}
-								onTeamDeselect={self._deselectTeam}
-								binding={teamTableBindings[index]}
-								isEnable={parseInt(selectedRivalIndex, 10) === index}
+				<TeamChooser	key				= { `team-chooser-${index}` }
+								onTeamClick		= { self._onTeamClick }
+								onTeamDeselect	= { self._deselectTeam }
+								binding			= { teamTableBindings[index] }
+								isEnable		= { parseInt(selectedRivalIndex, 10) === index }
 				/>
 			);
 		}
 
 		return (
 			<div className={teamModeViewClass}>
-				{teamChoosers}
-				{self._renderErrorBox()}
-				{self._renderTeamWrapper()}
+				{ teamChoosers }
+				{ self._renderErrorBox() }
+				{ self._renderTeamWrapper() }
 			</div>
 		);
 	}
