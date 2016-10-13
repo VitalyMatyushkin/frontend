@@ -15,4 +15,42 @@
   vertical-align: top;
 
   cursor: pointer;
+
+  &:hover {
+    border-color: $blueColor;
+  }
+}
+
+.eAddPhotoButton_body {
+  height: 75px;
+
+  padding-top: 50px;
+}
+
+.eAddPhotoButton_plus {
+  content: '+';
+
+  width: 21px;
+  height: 21px;
+
+  margin: auto;
+
+  border: $BORDER;
+  border-radius: 50%;
+
+  font-size: 24px;
+
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  background: $blueColor;
+  line-height: 26px;
+}
+
+.eAddPhotoButton_footer {
+  height: 15px;
+
+  padding: 5px;
+
+  text-align: center;
 }

@@ -9,7 +9,10 @@ const AddPhotoButton = React.createClass({
 			<div	className	= 'bAddPhotoButton'
 					onClick		= { this.props.handleClick }
 			>
-				<span className='eAlbumTitle'>Add photo...</span>
+				<div className='eAddPhotoButton_body'>
+					<div className="eAddPhotoButton_plus">+</div>
+				</div>
+				<div className='eAddPhotoButton_footer'>Add photo...</div>
 			</div>
 		);
 	}

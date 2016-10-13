@@ -6,6 +6,8 @@
 
   margin: 20px;
 
+  border: 1px solid #ccc;
+
   transition: opacity 0.3s;
 
   cursor: pointer;
@@ -16,4 +18,8 @@
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-image: url("/images/spin-loader-black.gif");
+
+  &:hover {
+    border-color: $blueColor;
+  }
 }
