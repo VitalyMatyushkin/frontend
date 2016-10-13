@@ -5,8 +5,7 @@
 /** using bluebird promise cancellation here, though this is not cleaner way I believe */
 
 const   React   = require('react'),
-        Lazy    = require('lazy.js'),
-        SVG 	= require('module/ui/svg');
+        Lazy    = require('lazy.js');
 
 const ComboBox2 = React.createClass({
     propTypes: {
@@ -356,18 +355,21 @@ const ComboBox2 = React.createClass({
         return (
             <div className={`bCombobox ${isOpenCN}`}>
                 <div className="eCombobox_inputContainer">
-                    <input type='text' value={placeholder} style={hintStyle} readOnly/>
-                    <input
-                        style       = {inputStyle}
-                        ref         = "input"
-                        className   = "eCombobox_input"
-                        placeholder = {placeholder}
-                        value       = {value}
-                        onChange    = {self.onChange}
-                        onKeyUp     = {self.onKeyUp}
-                        onClick     = {self.onInputClick}
-                        onBlur      = {self.onBlur}
-                        role        = "combobox"
+                    <input  type            = 'text'
+                            style           = { hintStyle }
+                            defaultValue    = { placeholder }
+                            readOnly
+                    />
+                    <input  style       = {inputStyle}
+                            ref         = "input"
+                            className   = "eCombobox_input"
+                            placeholder = {placeholder}
+                            value       = {value}
+                            onChange    = {self.onChange}
+                            onKeyUp     = {self.onKeyUp}
+                            onClick     = {self.onInputClick}
+                            onBlur      = {self.onBlur}
+                            role        = "combobox"
                     />
                     <img style={loaderStyle} src="/images/spinner.gif"/>
                 </div>
