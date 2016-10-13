@@ -910,7 +910,7 @@ function convertPoints(countPoints, pointsType){
 		const 	sec_in_hours 	= 3600,
 				sec_in_min 		= 60,
 				points 	= Math.floor(countPoints),
-				msec 	= (countPoints -points)*1000,
+				ms 	= Math.round((countPoints -points)*1000),
 				h 		= Math.floor(points / sec_in_hours),
 				min		= Math.floor((points - h * sec_in_hours) / sec_in_min),
 				sec		= points - h * sec_in_hours - min * sec_in_min;
@@ -920,13 +920,13 @@ function convertPoints(countPoints, pointsType){
 		str += h ? h + 'h ': '';
 		str += min ? min + 'min ': '';
 		str += sec || countPoints === 0 ? sec + 'sec ': '';
-		str += msec ? msec + 'msec': '';
+		str += ms ? ms + 'ms': '';
 
 		return {
 			h:h,
 			min:min,
 			sec:sec,
-			msec:msec,
+			ms:ms,
 			str:str.trim()
 		};
 	},
@@ -961,7 +961,7 @@ function convertPoints(countPoints, pointsType){
 			};
 			break;
 		case SportConsts.SPORT_POINTS_TYPE.TIME:
-			result = getTimeResult(countPoints, pointsStep);
+			result = getTimeResult(countPoints);
 			break;
 		case SportConsts.SPORT_POINTS_TYPE.DISTANCE:
 			result = getDistanceResult(countPoints);
@@ -1147,7 +1147,8 @@ function getEventType(event) {
 function operationByType(operation, value, type, pointsStep){
 	const	step = 	{
 			plain:pointsStep,
-			sec:pointsStep,
+			ms:pointsStep >= 1 ? 0.001 : pointsStep,
+			sec:pointsStep < 1 ? 1: pointsStep,
 			cm:pointsStep,
 			km:100000,
 			m:100,
