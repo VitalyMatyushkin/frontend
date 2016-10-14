@@ -17,7 +17,7 @@ const CommentBox = React.createClass({
 			return (
 				<div key={blog.id} className="bBlog_box">
 					<div className="ePicBox">
-						<Avatar pic={blog.author.avatar} minValue="45" />
+						<Avatar pic={blog.author.avatar} minValue={45} />
 					</div>
 					<div className="eMessageBox">
 						<span className="eUsername">

@@ -16,7 +16,7 @@ const Logs = React.createClass({
 		if(user){
 			avatar = (
 				<div className="eUserAvatar">
-					<Avatar pic={user.avatar} minValue="50"/>
+					<Avatar pic={user.avatar} minValue={50}/>
 				</div>
 			)
 		}

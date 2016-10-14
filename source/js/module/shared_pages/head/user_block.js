@@ -56,7 +56,7 @@ const UserBlock = React.createClass({
 			// Кнопка перехода на страницу пользователя
 			UserButton = (
 				<a href="/#settings/general" className={userClasses}>
-					<Avatar pic={binding.get('userInfo.avatar')} minValue="50" />
+					<Avatar pic={binding.get('userInfo.avatar')} minValue={50} />
 				</a>
 			);
 
