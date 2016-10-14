@@ -602,7 +602,7 @@ function getRival(event, activeSchoolId, forLeftContext){
 					}
 					break;
 			}
-			house = houseId ? housesData.find(h => h.id === houseId) : housesData[index];
+			house = houseId ? housesData.find(h => h && h.id === houseId) : housesData[index];
 			from = house ? house.name : '';
 			break;
 		case isInternalEvent:

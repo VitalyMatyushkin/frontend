@@ -52,25 +52,25 @@ const EventView = React.createClass({
 		}).then(event => {
 			event.schoolsData = TeamHelper.getSchoolsData(event);
 			event.teamsData = event.teamsData.sort((t1, t2) => {
+				if (!t1 || !t2 || t1.name === t2.name) {
+					return 0;
+				}
 				if (t1.name < t2.name) {
 					return -1;
 				}
 				if (t1.name > t2.name) {
 					return 1;
 				}
-				if (t1.name === t2.name) {
-					return 0;
-				}
 			});
 			event.housesData = event.housesData.sort((h1, h2) => {
+				if (!h1 || !h2 || h1.name === h2.name) {
+					return 0;
+				}
 				if (h1.name < h2.name) {
 					return -1;
 				}
 				if (h1.name > h2.name) {
 					return 1;
-				}
-				if (h1.name === h2.name) {
-					return 0;
 				}
 			});
 			// FUNCTION MODIFY EVENT OBJECT!!
