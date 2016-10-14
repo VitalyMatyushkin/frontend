@@ -12,9 +12,8 @@ const Gallery = React.createClass({
 
 	propTypes: {
 		photos:						React.PropTypes.array.isRequired,
-		handleClickAddPhotoButton:	React.PropTypes.func.isRequired
+		handleChangeAddPhotoButton:	React.PropTypes.func.isRequired
 	},
-
 	getInitialState: function() {
 		return {
 			mode:						this.MODE.PREVIEW_MODE,
@@ -51,7 +50,7 @@ const Gallery = React.createClass({
 		return photos;
 	},
 	renderAddPhotoButton: function() {
-		return <AddPhotoButton handleClick={ this.props.handleClickAddPhotoButton }/>;
+		return <AddPhotoButton handleChange={ this.props.handleChangeAddPhotoButton }/>;
 	},
 	renderPhoto: function(photo) {
 		return (

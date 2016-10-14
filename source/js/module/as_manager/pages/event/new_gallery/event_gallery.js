@@ -6,9 +6,23 @@ const	React 				= require('react'),
 
 const EventGallery = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId:	React.PropTypes.string.isRequired,
+		eventId:		React.PropTypes.string.isRequired
+	},
 
-	handleClickAddPhotoButton: function(id) {
-
+	handleChangeAddPhotoButton: function(file) {
+		window.Server.images.upload(file).then(picUrl => {
+			return window.Server.schoolEventPhotos.post(
+				{
+					schoolId:	this.props.activeSchoolId,
+					eventId:	this.props.eventId
+				},
+				{
+					picUrl: picUrl
+				}
+			)
+		}).then(() => this.getDefaultBinding().set('isSync', false));
 	},
 
 	render: function() {
@@ -17,7 +31,7 @@ const EventGallery = React.createClass({
 		return (
 			<div className='bEvent_media bEventBottomContainer'>
 				<Gallery	photos						= { photos }
-							handleClickAddPhotoButton	= { this.handleClickAddPhotoButton }
+							handleChangeAddPhotoButton	= { this.handleChangeAddPhotoButton }
 				/>
 			</div>
 		);

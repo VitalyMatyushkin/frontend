@@ -27,16 +27,9 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			model:			{},
-			gallery: {
-				photos: [
-					{
-						id:		'123',
-						picUrl:	"https://pp.vk.me/c637426/v637426292/b704/pVa9voZLKpA.jpg"
-					}, {
-						id:		'456',
-						picUrl:	"https://pp.vk.me/c637426/v637426292/b75e/2IgSkVlQBLc.jpg"
-					}
-				]
+			gallery:		{
+				photos: [],
+				isSync: false
 			},
 			sync:			false,
 			mode:			'general',
@@ -55,7 +48,7 @@ const EventView = React.createClass({
 
 		self.initTabs();
 
-		let eventData;
+		let eventData, report;
 		window.Server.schoolEvent.get({
 			schoolId: self.activeSchoolId,
 			eventId: self.eventId
@@ -93,18 +86,45 @@ const EventView = React.createClass({
 				schoolId: self.activeSchoolId,
 				eventId: self.eventId
 			});
-		}).then(report => {
+		}).then(_report => {
+			report = _report;
+
+			return this.loadPhotos();
+		}).then(photos => {
 			eventData.matchReport = report.content;
 
-			binding
-				.atomically()
-				.set('model', Immutable.fromJS(eventData))
-				.set('mode', Immutable.fromJS('general'))
-				.set('sync', Immutable.fromJS(true))
+			binding.atomically()
+				.set('model',			Immutable.fromJS(eventData))
+				.set('gallery.photos',	Immutable.fromJS(photos))
+				.set('gallery.isSync',	true)
+				.set('mode',			Immutable.fromJS('general'))
+				.set('sync',			Immutable.fromJS(true))
 				.commit();
+
+			this.addGalleryListeners();
 
 			return eventData;
 		})
+	},
+	addGalleryListeners: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.sub('gallery.isSync').addListener(descriptor => {
+			if(descriptor.getPreviousValue() && !descriptor.getCurrentValue()) {
+				this.loadPhotos().then(photos => {
+					binding.atomically()
+						.set('gallery.photos',	Immutable.fromJS(photos))
+						.set('gallery.isSync',	true)
+						.commit();
+				});
+			}
+		});
+	},
+	loadPhotos: function() {
+		return window.Server.schoolEventPhotos.get({
+			schoolId:	this.activeSchoolId,
+			eventId:	this.eventId
+		});
 	},
 	/**Init model for Tabs component*/
 	initTabs: function() {
@@ -258,7 +278,9 @@ const EventView = React.createClass({
 								<EventDetails binding={binding}/>
 							</If>
 							<If condition={activeTab === 'gallery'} >
-								<EventGallery binding={binding.sub('gallery')} />
+								<EventGallery	activeSchoolId	= { self.activeSchoolId }
+												eventId			= { self.eventId }
+												binding			= { binding.sub('gallery') } />
 							</If>
 							<If condition={activeTab === 'comments'} >
 								<div className="eEvent_commentBox">
