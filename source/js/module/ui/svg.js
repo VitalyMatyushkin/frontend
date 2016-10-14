@@ -1,26 +1,29 @@
 
-//<svg class="bIcon"><use xlink:href="#icon_key"></use></svg>
-const   React       = require('react'),
-		ReactDOM	= require('react-dom');
 
-// TODO: okay, what it really does?
+const   React       = require('react');
 
-const SVG = React.createClass({
-	propTypes: {
-		icon: 		React.PropTypes.string.isRequired,
-        classes: 	React.PropTypes.string
-	},
-	componentDidMount: function() {
-		var self = this;
-		ReactDOM.findDOMNode(self).firstElementChild.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + self.props.icon);
-	},
-	render: function() {
-		const 	self	= this,
-            	classes = self.props.classes ? 'bIcon ' + self.props.classes : 'bIcon';
+/** Simple wrapper to render SVG from global SVG bundle
+ *  This implementation use xlink:href tag for rendering images: there is big SVG file assembled during build, which
+ *  have all required icons as symbols. This component references to this symbols by using `icon` property.
+ *  Resulting SVG is something like that:
+ *  <svg class="bIcon"><use xlink:href="#icon_key"></use></svg>
+ */
+function SVG(props) {
+	const 	classes		= props.classes ? 'bIcon ' + props.classes : 'bIcon',
+			iconHref	= '#' + props.icon;
 
-		return <svg className={classes}>{React.createElement('use')}</svg>;
-	}
-});
+	return (
+		<svg className={classes}>
+			<use xlinkHref={iconHref}/>
+		</svg>
+	);
+
+}
+
+SVG.propTypes = {
+	icon: 		React.PropTypes.string.isRequired,
+	classes: 	React.PropTypes.string
+};
 
 module.exports = SVG;
 
