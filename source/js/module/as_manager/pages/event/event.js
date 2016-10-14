@@ -8,7 +8,7 @@ const	React			= require('react'),
 		EventRivals			= require('./view/event_rivals'),
 		EventButtons		= require('./view/event_buttons'),
 		EventTeams			= require('./view/teams/event_teams'),
-		EventGallery		= require('module/as_manager/pages/event/gallery/event_gallery'),
+		EventGallery		= require('./new_gallery/event_gallery'),
 		EventDetails		= require('./view/event_details'),
 		ManagerWrapper		= require('./view/manager_wrapper'),
 		Comments			= require('./view/event_blog'),
@@ -27,7 +27,10 @@ const EventView = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			model:			{},
-			albums:			[],
+			gallery:		{
+				photos: [],
+				isSync: false
+			},
 			sync:			false,
 			mode:			'general',
 			showingComment:	false,
@@ -45,7 +48,7 @@ const EventView = React.createClass({
 
 		self.initTabs();
 
-		let eventData;
+		let eventData, report;
 		window.Server.schoolEvent.get({
 			schoolId: self.activeSchoolId,
 			eventId: self.eventId
@@ -83,18 +86,45 @@ const EventView = React.createClass({
 				schoolId: self.activeSchoolId,
 				eventId: self.eventId
 			});
-		}).then(report => {
+		}).then(_report => {
+			report = _report;
+
+			return this.loadPhotos();
+		}).then(photos => {
 			eventData.matchReport = report.content;
 
-			binding
-				.atomically()
-				.set('model', Immutable.fromJS(eventData))
-				.set('mode', Immutable.fromJS('general'))
-				.set('sync', Immutable.fromJS(true))
+			binding.atomically()
+				.set('model',			Immutable.fromJS(eventData))
+				.set('gallery.photos',	Immutable.fromJS(photos))
+				.set('gallery.isSync',	true)
+				.set('mode',			Immutable.fromJS('general'))
+				.set('sync',			Immutable.fromJS(true))
 				.commit();
+
+			this.addGalleryListeners();
 
 			return eventData;
 		})
+	},
+	addGalleryListeners: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.sub('gallery.isSync').addListener(descriptor => {
+			if(descriptor.getPreviousValue() && !descriptor.getCurrentValue()) {
+				this.loadPhotos().then(photos => {
+					binding.atomically()
+						.set('gallery.photos',	Immutable.fromJS(photos))
+						.set('gallery.isSync',	true)
+						.commit();
+				});
+			}
+		});
+	},
+	loadPhotos: function() {
+		return window.Server.schoolEventPhotos.get({
+			schoolId:	this.activeSchoolId,
+			eventId:	this.eventId
+		});
 	},
 	/**Init model for Tabs component*/
 	initTabs: function() {
@@ -248,7 +278,9 @@ const EventView = React.createClass({
 								<EventDetails binding={binding}/>
 							</If>
 							<If condition={activeTab === 'gallery'} >
-								<EventGallery binding={binding} />
+								<EventGallery	activeSchoolId	= { self.activeSchoolId }
+												eventId			= { self.eventId }
+												binding			= { binding.sub('gallery') } />
 							</If>
 							<If condition={activeTab === 'comments'} >
 								<div className="eEvent_commentBox">
@@ -257,7 +289,7 @@ const EventView = React.createClass({
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-								<MatchReport binding={binding} eventId={self.eventId} />
+									<MatchReport binding={binding} eventId={self.eventId} />
 								</div>
 							</If>
 							<If condition={(binding.get('mode') !== 'general')}>
