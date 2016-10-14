@@ -25,20 +25,25 @@ const ViewNewsItem = React.createClass({
 			)
 		}
 	},
+	renderRows:function(rows){
+		return (
+			<div className="inlineBlock newsItemText">
+				{rows.map(row => {
+					return <p>{row}</p>;
+				})}
+			</div>
+		);
+	},
 	getNewsExcerpt:function(newsBody){
-		if(newsBody !== undefined){
-			return (
-				<p>
-					{newsBody.slice(0,100)}
-				</p>
-			);
+		if(newsBody){
+			const rows = newsBody.slice(0,100).split('\n').splice(0,2);
+			return this.renderRows(rows);
 		}
 	},
 	getFullNewsText: function(newsBody) {
-		if(newsBody !== undefined){
-			return (
-				<p>{newsBody}</p>
-			);
+		if(newsBody){
+			const rows = newsBody.split('\n');
+			return this.renderRows(rows);
 		}
 	},
 	_newsItemMoreInfo: function(id) {
@@ -75,7 +80,7 @@ const ViewNewsItem = React.createClass({
 						<div className="eSchoolNewsItemDate">
 							{self.getNewsDate(news)}
 						</div><hr/>
-						<span className="inlineBlock newsItemExcerpt">{text}</span>
+						{text}
 					</div>
 					<span	className="eSchoolNewsMoreInfo"
 							onClick={self._newsItemMoreInfo.bind(self, news.id)}

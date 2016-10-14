@@ -179,7 +179,7 @@ const TeamWrapper = React.createClass({
 
 			binding.atomically()
 				.set('isTeamPlayersChanged',	isTeamPlayersChanged)
-				.set('isTeamChanged',			isTeamPlayersChanged || binding.toJS('isTeamNameChanged'))
+				.set('isTeamChanged',			isTeamPlayersChanged || isTeamNameChanged)
 				.commit();
 		});
 	},
@@ -367,7 +367,11 @@ const TeamWrapper = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		// show button if isSetTeamLater === false and team was selected and team was changed(name or players)
-		return !this.isSetTeamLater() && binding.toJS('selectedTeamId') !== 'undefined' && binding.toJS('isTeamChanged');
+		return !!(
+			!this.isSetTeamLater() &&
+			typeof binding.toJS('selectedTeamId') !== 'undefined' &&
+			binding.toJS('isTeamChanged')
+		);
 	},
 	renderTeamNameComponent: function() {
 		const event = this.getBinding('model').toJS();
@@ -378,7 +382,7 @@ const TeamWrapper = React.createClass({
 			case TeamHelper.isTeamSport(event):
 				return (
 					<TeamName	name				= { this.getDefaultBinding().toJS('teamName.name') }
-								handleChangeName	= { this.handleChangeName.bind(this) }
+								handleChangeName	= { this.handleChangeName }
 					/>
 				);
 		}

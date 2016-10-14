@@ -70,7 +70,7 @@ const StudentForm = React.createClass({
 
 		return (
 			<div className="eStudentForm">
-				<Form onSubmit={self.props.onFormSubmit} binding={binding}>
+				<Form onSubmit={self.props.onFormSubmit} binding={binding} submitOnEnter={false}>
 					<FormColumn>
 						<h3>SUMMARY</h3>
 						<FormField labelText="+" type="imageFile" field="avatar"/>
