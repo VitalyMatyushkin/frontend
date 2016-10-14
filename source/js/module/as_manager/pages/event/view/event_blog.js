@@ -141,7 +141,7 @@ const Blog = React.createClass({
 
 		binding.set('replyTo', blog);
 
-		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.lastName} ${blog.author.firstName}, `;
+		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.firstName} ${blog.author.lastName}, `;
 	},
     render:function(){
         const   self    = this,

@@ -21,11 +21,11 @@ const CommentBox = React.createClass({
 					</div>
 					<div className="eMessageBox">
 						<span className="eUsername">
-							{`${blog.author.lastName} ${blog.author.firstName}`}
+							{`${blog.author.firstName} ${blog.author.lastName}`}
 						</span>
 						<If condition={!!(blog && blog.replyToUser)}>
 							<span className="eUsernameReply">
-								{`${blog.replyToUser && blog.replyToUser.lastName} ${blog.replyToUser && blog.replyToUser.firstName}`}
+								{`${blog.replyToUser && blog.replyToUser.firstName} ${blog.replyToUser && blog.replyToUser.lastName}`}
 							</span>
 						</If>
 						<span className="eMessage">
