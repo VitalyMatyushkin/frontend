@@ -11,8 +11,10 @@ const Gallery = React.createClass({
 	},
 
 	propTypes: {
-		photos:						React.PropTypes.array.isRequired,
-		handleChangeAddPhotoButton:	React.PropTypes.func.isRequired
+		photos:							React.PropTypes.array.isRequired,
+		handleChangeAddPhotoButton:		React.PropTypes.func,
+		handleClickDeletePhoto:			React.PropTypes.func,
+		isPublic:						React.PropTypes.bool.isRequired
 	},
 	getInitialState: function() {
 		return {
@@ -25,7 +27,6 @@ const Gallery = React.createClass({
 
 	// preview photo
 	handleClickPhoto: function(id) {
-		console.log('TEST');
 		this.setState({
 			mode						: this.MODE.FULLSCREEN_MODE,
 			currentFullScreenPhotoId	: id
@@ -50,14 +51,20 @@ const Gallery = React.createClass({
 		return photos;
 	},
 	renderAddPhotoButton: function() {
-		return <AddPhotoButton handleChange={ this.props.handleChangeAddPhotoButton }/>;
+		if(!this.props.isPublic) {
+			return <AddPhotoButton handleChange={ this.props.handleChangeAddPhotoButton }/>;
+		} else {
+			return null;
+		}
 	},
 	renderPhoto: function(photo) {
 		return (
-			<PreviewPhoto	key					= { photo.id }
-							id					= { photo.id }
-							url					= { photo.picUrl }
-							handleClickPhoto	= { this.handleClickPhoto }
+			<PreviewPhoto	key								= { photo.id }
+							id								= { photo.id }
+							url								= { photo.picUrl }
+							isPublic						= { this.props.isPublic }
+							handleClickPhoto				= { this.handleClickPhoto }
+							handleClickDeletePhoto			= { this.props.handleClickDeletePhoto }
 			/>
 		);
 	},
