@@ -13,6 +13,7 @@ const PublicEventGallery = React.createClass({
 			<div className="bPublicGallery">
 				<Gallery	photos		= { photos }
 							isPublic	= { true }
+							isLoading	= { false }
 				/>
 			</div>
 		);

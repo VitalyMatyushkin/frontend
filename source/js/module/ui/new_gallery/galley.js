@@ -14,7 +14,8 @@ const Gallery = React.createClass({
 		photos:							React.PropTypes.array.isRequired,
 		handleChangeAddPhotoButton:		React.PropTypes.func,
 		handleClickDeletePhoto:			React.PropTypes.func,
-		isPublic:						React.PropTypes.bool.isRequired
+		isPublic:						React.PropTypes.bool.isRequired,
+		isLoading:						React.PropTypes.bool.isRequired
 	},
 	getInitialState: function() {
 		return {
@@ -52,7 +53,11 @@ const Gallery = React.createClass({
 	},
 	renderAddPhotoButton: function() {
 		if(!this.props.isPublic) {
-			return <AddPhotoButton handleChange={ this.props.handleChangeAddPhotoButton }/>;
+			return (
+				<AddPhotoButton	handleChange	= { this.props.handleChangeAddPhotoButton }
+								isLoading		= { this.props.isLoading }
+				/>
+			);
 		} else {
 			return null;
 		}
