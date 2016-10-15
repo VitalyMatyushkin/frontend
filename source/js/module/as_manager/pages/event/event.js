@@ -28,8 +28,9 @@ const EventView = React.createClass({
 		return Immutable.fromJS({
 			model:			{},
 			gallery:		{
-				photos: [],
-				isSync: false
+				photos:		[],
+				isUploading:false,
+				isSync:		false
 			},
 			sync:			false,
 			mode:			'general',
@@ -109,12 +110,12 @@ const EventView = React.createClass({
 	addGalleryListeners: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.sub('gallery.isSync').addListener(descriptor => {
+		binding.sub('gallery.isUploading').addListener(descriptor => {
 			if(descriptor.getPreviousValue() && !descriptor.getCurrentValue()) {
 				this.loadPhotos().then(photos => {
 					binding.atomically()
-						.set('gallery.photos',	Immutable.fromJS(photos))
-						.set('gallery.isSync',	true)
+						.set('gallery.photos',		Immutable.fromJS(photos))
+						.set('gallery.isSync',		true)
 						.commit();
 				});
 			}

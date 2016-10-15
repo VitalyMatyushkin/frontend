@@ -11,6 +11,11 @@ const EventGallery = React.createClass({
 	},
 
 	handleChangeAddPhotoButton: function(file) {
+		this.getDefaultBinding().atomically()
+			.set('isSync',		false)
+			.set('isUploading',	true)
+			.commit();
+
 		window.Server.images.upload(file).then(picUrl => {
 			return window.Server.schoolEventPhotos.post(
 				{
@@ -21,20 +26,28 @@ const EventGallery = React.createClass({
 					picUrl: picUrl
 				}
 			)
-		}).then(() => this.getDefaultBinding().set('isSync', false));
+		}).then(() => this.getDefaultBinding().set('isUploading', false));
 	},
 	handleClickDeletePhoto: function(photoId) {
+		this.getDefaultBinding().atomically()
+			.set('isSync',		false)
+			.set('isUploading',	true)
+			.commit();
+
 		return window.Server.schoolEventPhoto.delete(
 			{
 				schoolId:	this.props.activeSchoolId,
 				eventId:	this.props.eventId,
 				photoId:	photoId
 			}
-		).then(() => this.getDefaultBinding().set('isSync', false));
+		).then(() => this.getDefaultBinding().set('isUploading', false));
 	},
 
 	render: function() {
-		const photos = this.getDefaultBinding().toJS('photos');
+		const	photos		= this.getDefaultBinding().toJS('photos'),
+				isLoading	= !this.getDefaultBinding().toJS('isSync');
+
+		console.log(isLoading);
 
 		return (
 			<div className='bEvent_media bEventBottomContainer'>
@@ -42,6 +55,7 @@ const EventGallery = React.createClass({
 							handleChangeAddPhotoButton	= { this.handleChangeAddPhotoButton }
 							handleClickDeletePhoto		= { this.handleClickDeletePhoto }
 							photos						= { photos }
+							isLoading					= { isLoading }
 				/>
 			</div>
 		);
