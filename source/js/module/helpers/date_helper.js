@@ -37,15 +37,25 @@ const DateHelper = {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
 	},
 
-	// TODO rename it to getDateStringFromUTCDateString
-    /** convert date from UTC-string to 'dd/mm/yyyy' format */
-    getDate: function (string) {
-        return this.getDateStringFromDateObject(new Date(string));
-    },
+	/**
+	 *
+	 * */
+	getDateTimeString: function(dateTime){
+		const 	date = this.getDateStringFromDateObject(dateTime),
+				time = this.getTimeStringFromDateObject(dateTime);
+
+		return `${date}, ${time}`;
+	},
 
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
-	toLocal:function(dotStr){
-		return this.getDate(dotStr).replace(/[/]/g, '.');
+	toLocal:function(str){
+		return this.getDateStringFromDateObject(new Date(str));
+	},
+
+	// TODO rename it to getDateStringFromUTCDateString
+	/** convert date from UTC-string to 'dd/mm/yyyy' format */
+	getDate: function (str) {
+		return this.toLocal(str).replace(/[.]/g, '/');
 	},
 
 	/** convert date from UTC-string to 'dd mmm yyyy' format */
