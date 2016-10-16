@@ -99,7 +99,7 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 	const	dayStart	= new Date(),
 			dayEnd		= new Date();
 
-	dayStart.setDate(dayStart.getDate() - 7)
+	dayStart.setDate(dayStart.getDate() - 7);
 
 	eventsBinding.set('prevSevenDaysFinishedEvents.isSync', false);
 

@@ -27,8 +27,7 @@ const PublicEvent = React.createClass({
 		});
 	},
 	_getEventTeamsBinding: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return {
 			default:	binding.sub('eventTeams'),
@@ -108,9 +107,12 @@ const PublicEvent = React.createClass({
 		return isReporting ? <PublicMatchReport report={binding.toJS('report')} activeSchoolId={this.props.activeSchoolId} /> : null;
 	},
 	render: function() {
-		const binding = this.getDefaultBinding();
+		const 	binding	= this.getDefaultBinding(),
+				isSync	= binding.get('sync');
 
-		if(binding.toJS('sync')) {
+		console.log('isSync: ' + isSync);
+
+		if(isSync) {
 			return (
 				<div className="bPublicEvent">
 					<div	onClick		= { this.handleClickGoBack }
