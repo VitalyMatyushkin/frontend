@@ -16,6 +16,7 @@ const HomeResults = React.createClass({
 			activeSchoolId={activeSchoolId}
 			isSync={isSync}
 			events={events}
+			isDaySelected={true}
 		/>;
 	}
 });
