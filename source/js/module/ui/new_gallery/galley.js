@@ -1,5 +1,4 @@
 const	React			= require('react'),
-
 		AddPhotoButton	= require('./add_photo_button'),
 		PreviewPhoto	= require('./preview_photo'),
 		FullScreenPhoto	= require('./fullscreen_photo');
@@ -47,7 +46,7 @@ const Gallery = React.createClass({
 	renderPhotos: function() {
 		const photos = this.props.photos.map( p => this.renderPhoto(p) );
 
-		photos.push( this.renderAddPhotoButton() );
+		photos.push( this.renderAddPhotoButton() );	// TODO: actually you need a key for AddPhotoButton too
 
 		return photos;
 	},

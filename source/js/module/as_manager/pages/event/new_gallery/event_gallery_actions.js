@@ -2,6 +2,10 @@
  * Created by wert on 16.10.16.
  */
 
+const Immutable = require('immutable');
+
+/* Set of actions school staff can perform on gallery:
+*/
 function addPhotoToEvent(binding, schoolId, eventId, file) {
 	binding.atomically()
 		.set('isSync',		false)
@@ -18,7 +22,10 @@ function addPhotoToEvent(binding, schoolId, eventId, file) {
 				picUrl: picUrl
 			}
 		)
-	}).then(() => binding.set('isUploading', false));
+	}).then(() => {
+		binding.set('isUploading', false)
+		return getPhotosForEvent(binding, schoolId, eventId);	// and reloading all photos
+	});
 }
 
 function deletePhotoFromEvent(binding, schoolId, eventId, photoId) {
@@ -33,7 +40,23 @@ function deletePhotoFromEvent(binding, schoolId, eventId, photoId) {
 			eventId:	eventId,
 			photoId:	photoId
 		}
-	).then(() => this.getDefaultBinding().set('isUploading', false));
+	).then(() => {
+		binding.set('isUploading', false);
+		return getPhotosForEvent(binding, schoolId, eventId);	// and reloading all photos
+	});
+}
+
+function getPhotosForEvent(binding, schoolId, eventId) {
+	binding.set('isSync', false);
+	return window.Server.schoolEventPhotos.get({
+		schoolId:	schoolId,
+		eventId:	eventId
+	}).then( photos => {
+		binding.atomically()
+			.set('photos',		Immutable.fromJS(photos))
+			.set('isSync',		true)
+			.commit();
+	});
 }
 
 module.exports.addPhotoToEvent = addPhotoToEvent;
