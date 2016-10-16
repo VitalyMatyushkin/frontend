@@ -1,6 +1,6 @@
 const	React 				= require('react'),
 		Morearty			= require('morearty'),
-
+		Actions				= require('./event_gallery_actions'),
 		Gallery				= require('./../../../../ui/new_gallery/galley');
 
 const EventGallery = React.createClass({
@@ -10,50 +10,18 @@ const EventGallery = React.createClass({
 		eventId:		React.PropTypes.string.isRequired
 	},
 
-	handleChangeAddPhotoButton: function(file) {
-		this.getDefaultBinding().atomically()
-			.set('isSync',		false)
-			.set('isUploading',	true)
-			.commit();
-
-		window.Server.images.upload(file).then(picUrl => {
-			return window.Server.schoolEventPhotos.post(
-				{
-					schoolId:	this.props.activeSchoolId,
-					eventId:	this.props.eventId
-				},
-				{
-					picUrl: picUrl
-				}
-			)
-		}).then(() => this.getDefaultBinding().set('isUploading', false));
-	},
-	handleClickDeletePhoto: function(photoId) {
-		this.getDefaultBinding().atomically()
-			.set('isSync',		false)
-			.set('isUploading',	true)
-			.commit();
-
-		return window.Server.schoolEventPhoto.delete(
-			{
-				schoolId:	this.props.activeSchoolId,
-				eventId:	this.props.eventId,
-				photoId:	photoId
-			}
-		).then(() => this.getDefaultBinding().set('isUploading', false));
-	},
-
 	render: function() {
-		const	photos		= this.getDefaultBinding().toJS('photos'),
-				isLoading	= !this.getDefaultBinding().toJS('isSync');
-
-		console.log(isLoading);
+		const	binding		= this.getDefaultBinding(),
+				photos		= binding.toJS('photos'),
+				isLoading	= !binding.toJS('isSync'),
+				schoolId	= this.props.activeSchoolId,
+				eventId		= this.props.eventId;
 
 		return (
 			<div className='bEvent_media bEventBottomContainer'>
 				<Gallery	isPublic					= { false }
-							handleChangeAddPhotoButton	= { this.handleChangeAddPhotoButton }
-							handleClickDeletePhoto		= { this.handleClickDeletePhoto }
+							handleChangeAddPhotoButton	= { file => Actions.addPhotoToEvent(binding, schoolId, eventId, file) }
+							handleClickDeletePhoto		= { photoId => Actions.deletePhotoFromEvent(binding, schoolId, eventId, photoId) }
 							photos						= { photos }
 							isLoading					= { isLoading }
 				/>

@@ -102,24 +102,8 @@ const EventView = React.createClass({
 				.set('sync',			Immutable.fromJS(true))
 				.commit();
 
-			this.addGalleryListeners();
-
 			return eventData;
 		})
-	},
-	addGalleryListeners: function() {
-		const binding = this.getDefaultBinding();
-
-		binding.sub('gallery.isUploading').addListener(descriptor => {
-			if(descriptor.getPreviousValue() && !descriptor.getCurrentValue()) {
-				this.loadPhotos().then(photos => {
-					binding.atomically()
-						.set('gallery.photos',		Immutable.fromJS(photos))
-						.set('gallery.isSync',		true)
-						.commit();
-				});
-			}
-		});
 	},
 	loadPhotos: function() {
 		return window.Server.schoolEventPhotos.get({
