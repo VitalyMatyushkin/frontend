@@ -16,6 +16,7 @@ const HomeFixtures = React.createClass({
 			activeSchoolId={activeSchoolId}
 			isSync={isSync}
 			events={events}
+			isDaySelected={true}
 		/>;
 	}
 });

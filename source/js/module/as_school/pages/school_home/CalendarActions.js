@@ -7,7 +7,7 @@ const Immutable = require('immutable');
 /** Load in binding data for all dates which have events */
 function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsBinding){
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
-			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0);
+			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
 	eventsBinding.set('distinctEventDatesData.isSync', false);
 
@@ -99,7 +99,7 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 	const	dayStart	= new Date(),
 			dayEnd		= new Date();
 
-	dayStart.setDate(dayStart.getDate() - 7)
+	dayStart.setDate(dayStart.getDate() - 7);
 
 	eventsBinding.set('prevSevenDaysFinishedEvents.isSync', false);
 

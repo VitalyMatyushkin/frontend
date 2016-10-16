@@ -110,14 +110,13 @@ const	TeamChooser	= React.createClass({
 			)
 		) {
 			teamItems.push((
-				<div className='eTeamChooser_team mLast mAlert'>
+				<div	key			= 'sadsadas'
+						className	= 'eTeamChooser_team mLast mAlert'
+				>
 					There are no teams matching you criteria. To create a new team pick players from the list.
 				</div>
 			)) ;
 		} else if(teams && teams.length !== 0) {
-			console.log(selectedTeamId);
-			console.log(exceptionTeamId);
-			console.log(teams);
 			// it doesn't show selected team and team selected for opponent
 			teamItems = teams.filter(team => team.id !== selectedTeamId && team.id !== exceptionTeamId)
 				.map((team, index) => {
@@ -229,9 +228,9 @@ const	TeamChooser	= React.createClass({
 				});
 
 		return (
-			<button	className={classNameTeamChooserButton}
-					onClick={self._onTeamChooserButtonClick}
-					onBlur={self._onTeamChooserButtonBlur}
+			<button	className	= {classNameTeamChooserButton}
+					onClick		= {self._onTeamChooserButtonClick}
+					onBlur		= {self._onTeamChooserButtonBlur}
 			>
 				Select Team
 			</button>

@@ -39,8 +39,8 @@ const EventRival = React.createClass({
 				team = teamsData.find(t => t.schoolId === school.id);
 			break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				pic = event.housesData[order].pic;
-				team = teamsData.find(t => t.houseId === event.housesData[order].id);
+				const house = event.housesData[order];
+				team = teamsData.find(t => house && house.id === t.houseId);
 			break;
 		};
 
@@ -83,11 +83,7 @@ const EventRival = React.createClass({
 				}
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				if(TeamHelper.isNonTeamSport(event)) {
-					name = event.housesData[order].name;
-				} else {
-					name = event.housesData[order].name ;
-				}
+				name = event.housesData[order] && event.housesData[order].name;
 				break;
 			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 				name = event.teamsData[order] ? event.teamsData[order].name : null;
@@ -150,6 +146,7 @@ const EventRival = React.createClass({
 			<div className="eEventResult_PointSideWrapper">
 				<Score	isChangeMode			={teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
 						plainPoints				={points}
+						pointsStep 				={event.sport.points.pointsStep}
 						pointsType				={event.sport.points.display}
 						handleClickPointSign	={self.handleClickPointSign.bind(self, teamBundleName, order)}
 				/>

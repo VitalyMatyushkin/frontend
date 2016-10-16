@@ -41,7 +41,8 @@
         "clearInterval":    true,
         "FormData":         true,
         "postMessage":      true,
-        "XMLHttpRequest":   true
+        "XMLHttpRequest":   true,
+        "MouseEvent":       true
 
     },
     "env": {
