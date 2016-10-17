@@ -18,6 +18,7 @@ const PublicEvent = React.createClass({
 		return Immutable.fromJS({
 			model:		{},
 			report:		{},	// actually it should be part of model, but too much complex things happen in EventResultHelper.initializeEventResults(event);
+			eventTeams: {},
 			gallery:	{
 				photos: []
 			},
