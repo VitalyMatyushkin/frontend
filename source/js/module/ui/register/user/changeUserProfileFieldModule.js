@@ -51,9 +51,9 @@ const ChangeUserProfileFieldModule = React.createClass({
 		if(!this.state.isDataResent) {
 			body = (
 				<label className="eRegistration_label">
-				<span className="eRegistration_labelField">
+				<div className="eRegistration_labelField">
 					{ this.props.labelText }
-				</span>
+				</div>
 					<input	className	= 'eRegistration_input'
 							value		= { this.state.inputText }
 							onChange	= { this.handleChangeInput }
@@ -64,7 +64,7 @@ const ChangeUserProfileFieldModule = React.createClass({
 					<button	className	= "bButton"
 							onClick		= { this.handleClickResendMessageButton }
 					>
-						Change
+						Save
 					</button>
 				</label>
 			);
