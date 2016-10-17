@@ -5,7 +5,8 @@ const	React				= require('react'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		PublicEventTeams	= require('./public_event_teams'),
-		PublicMatchReport 	= require('./public_match_report');
+		PublicMatchReport	= require('./public_match_report'),
+		PublicEventGallery	= require('./public_event_gallery');
 
 const PublicEvent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -17,15 +18,16 @@ const PublicEvent = React.createClass({
 		return Immutable.fromJS({
 			model:		{},
 			report:		{},	// actually it should be part of model, but too much complex things happen in EventResultHelper.initializeEventResults(event);
-			albums:		[],
+			gallery:	{
+				photos: []
+			},
 			sync:		false,
 			mode:		'general',
 			activeTab:	'teams'
 		});
 	},
 	_getEventTeamsBinding: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return {
 			default:	binding.sub('eventTeams'),
@@ -38,6 +40,7 @@ const PublicEvent = React.createClass({
 		const	rootBinding	= this.getMoreartyContext().getBinding(),
 				binding		= this.getDefaultBinding();
 
+		let report;
 
 		window.Server.publicSchoolEvent.get({
 			schoolId:	this.props.activeSchoolId,
@@ -70,15 +73,24 @@ const PublicEvent = React.createClass({
 			EventResultHelper.initializeEventResults(event);
 
 			return window.Server.publicSchoolEventReport.get({
-				schoolId: this.props.activeSchoolId,
-				eventId: event.id
-			}).then(report => {
-				binding
-					.atomically()
-					.set('model',	Immutable.fromJS(event))
-					.set('report',	Immutable.fromJS(report))
-					.set('sync',	Immutable.fromJS(true))
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			}).then(_report => {
+				report = _report;
+
+				return window.Server.publicSchoolEventPhotos.get({
+					schoolId:	this.props.activeSchoolId,
+					eventId:	event.id
+				});
+			}).then(photos => {
+
+				binding.atomically()
+					.set('model',			Immutable.fromJS(event))
+					.set('report',			Immutable.fromJS(report))
+					.set('gallery.photos',	Immutable.fromJS(photos))
+					.set('sync',			Immutable.fromJS(true))
 					.commit();
+
 				return event;
 			});
 		});
@@ -86,21 +98,34 @@ const PublicEvent = React.createClass({
 	handleClickGoBack: function() {
 		document.location.hash = 'home';
 	},
-	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
+	renderMatchReport: function() {
+		const	binding	= this.getDefaultBinding(),
 				report	= binding.toJS('report');
 
-		if(this.getDefaultBinding().toJS('sync')) {
-			const isReporting = report && report.content && report.content.length > 0;
+		const isReporting = report && report.content && report.content.length > 0;
+
+		return isReporting ? <PublicMatchReport report={binding.toJS('report')} activeSchoolId={this.props.activeSchoolId} /> : null;
+	},
+	render: function() {
+		const 	binding	= this.getDefaultBinding(),
+				isSync	= binding.get('sync');
+
+		console.log('isSync: ' + isSync);
+
+		if(isSync) {
 			return (
 				<div className="bPublicEvent">
-					<div onClick={ this.handleClickGoBack } className	="bBigButton">Go Back</div>
+					<div	onClick		= { this.handleClickGoBack }
+							className	= "bBigButton"
+					>
+						Go Back
+					</div>
 					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { this.props.activeSchoolId }
 					/>
-					<PublicEventTeams binding={ this._getEventTeamsBinding() } />
-					{isReporting ? <PublicMatchReport report={binding.toJS('report')} activeSchoolId={this.props.activeSchoolId} /> : null }
+					<PublicEventTeams binding={this._getEventTeamsBinding()}/>
+					{this.renderMatchReport()}
+					<PublicEventGallery binding={binding.sub('gallery')}/>
 				</div>
 			);
 		} else {

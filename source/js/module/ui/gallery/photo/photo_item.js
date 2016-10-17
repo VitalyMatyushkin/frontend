@@ -1,4 +1,4 @@
-const 	Immutable 	= require('immutable'),
+const	Immutable 	= require('immutable'),
 		React 		= require('react'),
 		Morearty    = require('morearty'),
 		SVG 		= require('module/ui/svg');

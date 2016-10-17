@@ -1,9 +1,10 @@
 /**
  * Created by bridark on 14/07/15.
  */
-const 	React 	= require('react'),
-		Avatar 	= require('module/ui/avatar/avatar'),
-		If		= require('module/ui/if/if');
+const 	React 		= require('react'),
+		Avatar 		= require('module/ui/avatar/avatar'),
+		If			= require('module/ui/if/if'),
+		DateHelper 	= require('module/helpers/date_helper');
 
 const CommentBox = React.createClass({
 	propTypes:{
@@ -17,7 +18,7 @@ const CommentBox = React.createClass({
 			return (
 				<div key={blog.id} className="bBlog_box">
 					<div className="ePicBox">
-						<Avatar pic={blog.author.avatar} minValue="45" />
+						<Avatar pic={blog.author.avatar} minValue={45} />
 					</div>
 					<div className="eMessageBox">
 						<span className="eUsername">
@@ -33,7 +34,7 @@ const CommentBox = React.createClass({
 						</span>
 						<div>
 							<a className="eReply" onClick={self.props.onReply.bind(null, blog)}>Reply</a>
-							<span className="eCommentDate">{new Date(blog.createdAt).toLocaleString('en-GB')}</span>
+							<span className="eCommentDate">{DateHelper.getDateTimeString(blog.createdAt)}</span>
 						</div>
 					</div>
 				</div>

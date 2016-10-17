@@ -1,0 +1,43 @@
+.bPreviewPhoto {
+  position: relative;
+
+  display: inline-block;
+
+  height: 150px;
+  width: 160px;
+
+  margin: 20px;
+
+  border: 1px solid #ccc;
+
+  transition: opacity 0.3s;
+
+  cursor: pointer;
+
+  vertical-align: top;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-image: url("/images/spin-loader-black.gif");
+
+  &:hover {
+    border-color: $blueColor;
+  }
+}
+
+.bPreviewPhoto:hover .ePreviewPhoto_actions {
+  display: block;
+}
+
+.ePreviewPhoto_actions {
+  display: none;
+
+  position: absolute;
+  top: 0;
+
+  background: rgba(0, 0, 0, 0.6);
+  transition: all .2s ease-in-out;
+
+  z-index: 10000;
+}
