@@ -19,7 +19,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 				$lt: 	monthEndDate
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED']
+				$nin: ['REJECTED']
 			}
 		}
 	};
