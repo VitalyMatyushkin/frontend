@@ -55,7 +55,7 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 				$lt: dayEnd
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED']
+				$nin: ['REJECTED']
 			}
 		}
 	};
