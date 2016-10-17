@@ -20,6 +20,9 @@ const PublicEventTeams = React.createClass({
 	componentWillMount: function() {
 		this.setPlayers();
 	},
+	componentDidMount: function(){
+		this.addBindingListener(this.getBinding('event'), this.setPlayers);
+	},
 	/* HELPERS */
 	/**
 	 * Load team players from server
