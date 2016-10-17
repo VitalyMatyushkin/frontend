@@ -184,13 +184,13 @@ const VerificationStep = React.createClass({
                         handleClickCloseButton  = { this.props.handleClickEmailPopupClose }
                         isShowCloseButton       = { true }
                 >
-                    We have sent the verification code again; please check your email.
+                    <span className="ePopupText">Email verification letter was sent to your address.</span>
                 </Popup>
                 <Popup  isOpened                = { this.state.isChangeEmailPopupOpen }
                         handleClickCloseButton  = { this.handleClickCloseChangeEmailPopup }
                         isShowCloseButton       = { true }
                 >
-                    <ChangeUserProfileFieldModule   labelText               = { "Your email" }
+                    <ChangeUserProfileFieldModule   labelText               = { "Enter your email address" }
                                                     successText             = {
                                                                                 `We have sent the verification code to ${this.props.email}`
                                                                             }
@@ -205,13 +205,13 @@ const VerificationStep = React.createClass({
                         handleClickCloseButton  = { this.props.handleClickPhonePopupClose }
                         isShowCloseButton       = { true }
                 >
-                    We have sent the verification code again; please check your text messages.
+                    <span className="ePopupText">We have sent the verification code again; please check your text messages.</span>
                 </Popup>
                 <Popup  isOpened                = { this.state.isChangePhonePopupOpen }
                         handleClickCloseButton  = { this.handleClickCloseChangePhonePopup }
                         isShowCloseButton       = { true }
                 >
-                    <ChangeUserProfileFieldModule   labelText               = { "Your phone" }
+                    <ChangeUserProfileFieldModule   labelText               = { "Enter your phone number" }
                                                     successText             = {
                                                                                 `We have sent the verification code to ${this.props.phone}`
                                                                             }
