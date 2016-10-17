@@ -333,7 +333,7 @@ const EventManager = React.createClass({
 		const map = {
 			'tbd':		"TBD",
 			'away':		"AWAY",
-			'neutral':	"CUSTOM",
+			'custom':	"CUSTOM",
 			'home':		"HOME"
 		};
 
