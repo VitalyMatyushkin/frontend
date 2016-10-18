@@ -1,26 +1,67 @@
 .bSimpleAlert {
-  position: fixed;
+  display: inline-block;
+  position: relative;
 
-  width: 500px;
-  min-height: 50px;
-  margin-left: -250px;
-  margin-top: -25px;
-
-  top: 25%;
-  left: 50%;
+  width: 35%;
+  min-width: 300px;
+  max-width: 400px;
 
   z-index: 10000;
 
   background: white;
-  padding: 20px;
 
-  border: 1px solid;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  box-sizing: border-box;
+
+  padding: 30px;
+  vertical-align: middle;
+
+  font-size: 18px;
 }
 
 .eSimpleAlert_body {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 140px;
   margin-bottom: 10px;
 }
 
 .eSimpleAlert_footer {
-  text-align: right;
+  text-align: center;
+
+  // TODO remove bButton padding and border-radius after creating general button style in new design
+  .bButton {
+    border-radius: 5px;
+    padding: 15px 0;
+  }
+
+  .mLeftBtn {
+    box-sizing: border-box;
+    width: 60%;
+  }
+  .mRightBtn{
+    box-sizing: border-box;
+    margin-right: 0;
+    width: 35%;
+  }
+}
+.bSimpleAlert_bg {
+  background-color: rgba(0, 0, 0, 0.25);
+  height: 100%;
+  left: 0;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  &:after{
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 100%;
+    content: '';
+  }
 }

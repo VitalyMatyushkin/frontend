@@ -75,7 +75,7 @@ const Head = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-			<div className="bTopPanel">
+			<div className="bTopPanel mClearFix">
 				<Logo/>
 				<TopMenu binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
 				<If condition={document.location.hash.indexOf('login') === -1}>
