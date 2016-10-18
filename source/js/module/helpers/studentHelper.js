@@ -1,4 +1,5 @@
 const	Lazy			= require('lazy.js'),
+		Promise 		= require('bluebird'),
 		EventHelper		= require('module/helpers/eventHelper');
 
 const StudentHelper = {
@@ -18,31 +19,44 @@ const StudentHelper = {
 			.then(student => {
 				studentData = student;
 				studentData.student = {
-					firstName:  student.firstName,
-					lastName:   student.lastName
+					firstName: student.firstName,
+					lastName: student.lastName
 				};
 				studentData.classData = student.form;
-				if(!studentData.classData){
-					window.Server.schoolForm.get({schoolId: student.schoolId, formId: student.formId})
+				let formPromise;
+				if (!studentData.classData) {
+					formPromise = window.Server.schoolForm.get({schoolId: student.schoolId, formId: student.formId})
 						.then(classData => {
 							studentData.classData = classData;
 						});
 				}
+				else
+					formPromise = Promise.resolve();
+
 				studentData.houseData = student.house;
-				if(!studentData.houseData){
-					window.Server.schoolHouse.get({schoolId: student.schoolId, houseId: student.houseId})
+				let housePromise;
+				if (!studentData.houseData) {
+					housePromise = window.Server.schoolHouse.get({schoolId: student.schoolId, houseId: student.houseId})
 						.then(houseData => {
 							studentData.houseData = houseData;
 						});
 				}
-				if(!schoolId){
-					this._getChildEventsCount(studentId).then(data => {
+				else
+					housePromise = Promise.resolve();
+
+				let countsPromise;
+				if (!schoolId) {
+					countsPromise = this._getChildEventsCount(studentId).then(data => {
 						studentData.numberOfGamesPlayed = data.childEventCount[0];
 						studentData.numOfGamesWon = data.childWinnerEventCount[0];
 						studentData.numOfGamesScoredIn = data.childScoredEventCount[0];
 					});
 				}
+				else
+					countsPromise = Promise.resolve();
 
+				return Promise.all([formPromise, housePromise, countsPromise]);
+			}).then(() => {
 				return window.Server.school.get({schoolId: studentData.schoolId});
 			})
 			.then(schoolData => {
