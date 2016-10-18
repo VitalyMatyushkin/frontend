@@ -15,6 +15,9 @@ const Grid = React.createClass({
 		this.props.model.onRender = this.onRender;
 	},
 	onRender:function(){
+		// TODO WTF??!
+		// I don't understand this. "onRender" was called only when "setData" or "render" func was called.
+		// So, do you really use it for re-render component? If it's right, then i think it's wrong way.
 		this.setState({renderStart: new Date()});
 	},
 	render: function() {
