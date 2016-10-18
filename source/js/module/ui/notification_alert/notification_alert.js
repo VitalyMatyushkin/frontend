@@ -22,14 +22,17 @@ const NotificationAlert = React.createClass({
 
 		if(isOpen) {
 			return (
-				<div className="bSimpleAlert">
-					<div className="eSimpleAlert_body">
-						{text}
-					</div>
-					<div className="eSimpleAlert_footer">
-						<Button	text	={ okButtonText }
-								onClick	={ this.handleClickOkButton }
-						/>
+				<div className="bSimpleAlert_bg">
+					<div className="bSimpleAlert">
+						<div className="eSimpleAlert_body">
+							{text}
+						</div>
+						<div className="eSimpleAlert_footer">
+							<Button text={ okButtonText }
+									onClick={ this.handleClickOkButton }
+									extraStyleClasses={ 'mFullWidth' }
+								/>
+						</div>
 					</div>
 				</div>
 			);

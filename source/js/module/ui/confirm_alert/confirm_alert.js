@@ -32,18 +32,21 @@ const ConfirmAlert = React.createClass({
 
 		if(isOpen) {
 			return (
-				<div className="bSimpleAlert">
-					<div className="eSimpleAlert_body">
-						{ text }
-					</div>
-					<div className="eSimpleAlert_footer">
-						<Button	text				= { okButtonText }
-								onClick				= { this.onOkButtonClick }
-								extraStyleClasses	= { 'mMarginRight' }
-						/>
-						<Button	text	= { cancelButtonText }
-								onClick	= { this.onCancelButtonClick }
-						/>
+				<div className="bSimpleAlert_bg">
+					<div className="bSimpleAlert">
+						<div className="eSimpleAlert_body">
+							{ text }
+						</div>
+						<div className="eSimpleAlert_footer">
+							<Button text={ okButtonText }
+									onClick={ this.onOkButtonClick }
+									extraStyleClasses={ 'mLeftBtn' }
+								/>
+							<Button text={ cancelButtonText }
+									onClick={ this.onCancelButtonClick }
+									extraStyleClasses={ 'mCancel mRightBtn' }
+								/>
+						</div>
 					</div>
 				</div>
 			);
