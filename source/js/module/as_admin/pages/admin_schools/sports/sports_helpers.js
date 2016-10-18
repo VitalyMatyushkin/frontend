@@ -124,7 +124,8 @@ const SportsHelpers = {
             pointsNamePlural:               undefined,
             pointsStep:                     undefined,
 			pointsDisplay:					self.getDefaultDisplayPointsClientValue(),
-            performance:                    [],
+			pointsInputMask: 				undefined,
+			performance:                    [],
             discipline:                     [],
             fieldPic:                       undefined,
             individualResultsAvailable:     true
@@ -146,7 +147,8 @@ const SportsHelpers = {
         formData.pointsNamePlural           = self.getData(serverData, 'points.namePlural');
         formData.pointsStep                 = self.getData(serverData, 'points.pointsStep');
 		formData.pointsDisplay 				= self.pointsDisplayServerToClientMap[self.getData(serverData, 'points.display')];
-        formData.genders                    = self.getData(serverData, 'genders');
+		formData.pointsInputMask 			= self.getData(serverData, 'points.inputMask');
+		formData.genders                    = self.getData(serverData, 'genders');
         formData.discipline                 = self.getData(serverData, 'discipline');
         formData.performance                = self.getData(serverData, 'performance');
         formData.scoring                    = self.scoringServerToClientMap[self.getData(serverData, 'scoring')];
@@ -194,7 +196,8 @@ const SportsHelpers = {
                                             name:       dataFromForm.pointsName,
                                             namePlural: dataFromForm.pointsNamePlural,
                                             pointsStep: dataFromForm.pointsStep,
-											display:	self.pointsDisplayClientToServerMap[dataFromForm.pointsDisplay]
+											display:	self.pointsDisplayClientToServerMap[dataFromForm.pointsDisplay],
+											inputMask: 	dataFromForm.pointsInputMask
                                         },
             discipline:                 self.filterEmptyDisciplineItems(dataFromForm.discipline),
             performance:                self.filterEmptyPerformanceItems(dataFromForm.performance.map(item => {
