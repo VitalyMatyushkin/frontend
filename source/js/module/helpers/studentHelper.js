@@ -22,7 +22,19 @@ const StudentHelper = {
 					lastName:   student.lastName
 				};
 				studentData.classData = student.form;
+				if(!studentData.classData){
+					window.Server.schoolForm.get({schoolId: student.schoolId, formId: student.formId})
+						.then(classData => {
+							studentData.classData = classData;
+						});
+				}
 				studentData.houseData = student.house;
+				if(!studentData.houseData){
+					window.Server.schoolHouse.get({schoolId: student.schoolId, houseId: student.houseId})
+						.then(houseData => {
+							studentData.houseData = houseData;
+						});
+				}
 				if(!schoolId){
 					this._getChildEventsCount(studentId).then(data => {
 						studentData.numberOfGamesPlayed = data.childEventCount[0];
