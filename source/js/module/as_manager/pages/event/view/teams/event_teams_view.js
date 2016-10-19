@@ -59,63 +59,21 @@ const EventTeamsView = React.createClass({
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
 	changePointsForTeam: function(event, player, teamId, operation, pointType) {
-		const self = this;
+		const 	self 		= this,
+				pointsStep 	= event.sport.points.pointsStep;
+		let		scoreData	= event.results.teamScore.find(s => s.teamId === teamId);
 
-		const pointsStep = event.sport.points.pointsStep;
-
-		const teamScoreDataIndex = event.results.teamScore.findIndex(
-			teamScoreData => teamScoreData.teamId === teamId
-		);
-
-		switch (operation) {
-			case "plus":
-				if(teamScoreDataIndex === -1) {
-					event.results.teamScore.push({
-						teamId:	teamId,
-						score:	TeamHelper.incByType(
-							0,
-							pointType,
-							pointsStep
-						)
-					})
-				} else {
-					event.results.teamScore[teamScoreDataIndex].score = TeamHelper.incByType(
-						event.results.teamScore[teamScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
-				}
-				break;
-			case "minus":
-				if(self.isPlayerHasPoints(event, player)) {
-					if(teamScoreDataIndex === -1) {
-						event.results.teamScore.push({
-							teamId:	teamId,
-							score:	TeamHelper.decByType(
-								0,
-								pointType,
-								pointsStep
-							)
-						})
-					} else {
-						event.results.teamScore[teamScoreDataIndex].score = TeamHelper.decByType(
-							event.results.teamScore[teamScoreDataIndex].score,
-							pointType,
-							pointsStep
-						);
-					}
-				}
-				break;
-		};
-
+		if(!scoreData) {
+			scoreData = {
+				teamId:	teamId,
+				score:	0
+			};
+			event.results.teamScore.push(scoreData);
+		}
+		/** set score */
+		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType, pointsStep);
+		console.log(scoreData);
 		self.getBinding('event').set(Immutable.fromJS(event));
-	},
-	isPlayerHasPoints: function(event, player) {
-		const userScoreData = event.results.individualScore.find(
-			userScoreData => userScoreData.userId === player.userId
-		);
-
-		return typeof userScoreData !== 'undefined' && userScoreData.score !== 0;
 	},
 	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {
 		const self = this;
