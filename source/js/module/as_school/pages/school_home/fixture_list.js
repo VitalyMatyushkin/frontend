@@ -28,16 +28,20 @@ const FixtureList = React.createClass({
 	getFixtureListByEvents: function(events) {
 		return events.map( e => <FixtureItem key={ e.id } event={ e } activeSchoolId={ this.props.activeSchoolId } /> );
 	},
+	getFixtureMessage: function(title) {
+		return (title === "Fixtures") ? "There are no upcoming events to display" : "There are no recent results to display";
+	},
 	renderFixtureList: function(){
 		const	events			= this.props.events,
 				isDaySelected	= this.props.isDaySelected,
-				isSync			= this.props.isSync;
+				isSync			= this.props.isSync,
+				title 			= this.props.title;
 
 		switch(true) {
 			case isDaySelected !== true:
 				return <div className="bFixtureMessage">{"Please select day."}</div>;
 			case isSync && Array.isArray(events) && events.length === 0:
-				return <div className="bFixtureMessage">{"There aren't fixtures for current date"}</div>;
+				return <div className="bFixtureMessage">{this.getFixtureMessage(title)}</div>;
 			// if  0 < events count <= 5
 			case isSync && Array.isArray(events) && (events.length > 0 && events.length <= this.EVENTS_COUNT):
 				return this.getFixtureListByEvents(events);
