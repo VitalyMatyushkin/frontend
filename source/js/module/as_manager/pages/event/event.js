@@ -230,11 +230,6 @@ const EventView = React.createClass({
 					</If>
 					<If condition={self.isShowMainMode()}>
 						<div className="bEvent">
-							<If condition={(binding.get('mode') === 'general')}>
-								<div className="bEventButtons_action">
-									<EventButtons binding={binding} />
-								</div>
-							</If>
 							<div className="bEventHeader_wrap">
 								<EventHeader binding={binding}/>
 								<EventRivals binding={binding}/>
