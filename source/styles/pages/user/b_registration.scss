@@ -93,13 +93,11 @@ $chooserIconSize: 35px;
 
 .eRegistration_label {
   display: block;
-  margin: 10px 12px 10px 0;
+  margin: 10px 0 10px 0;
 }
 
 .eRegistration_labelField {
-  display: inline-block;
-  width: 150px;
-  color: $COLOR;
+  display: block;
 }
 
 .eRegistration_input {
@@ -107,6 +105,7 @@ $chooserIconSize: 35px;
 }
 
 .eRegistration_label .bButton {
+  border: none;
   margin-left: 5px;
   font-size: 12px;
   padding: 5px;

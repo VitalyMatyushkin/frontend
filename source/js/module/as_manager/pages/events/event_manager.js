@@ -29,6 +29,9 @@ const EventManager = React.createClass({
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
 		return Immutable.fromJS({
+			// if true - then user click to finish button
+			// so we must block finish button
+			isSubmitProcessing: false,
 			model: {
 				name: '',
 				startTime: null,
@@ -181,26 +184,31 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event			= binding.toJS('model'),
+		// if true - then user click to finish button
+		// so we shouldn't do anything
+		if(!binding.toJS('isSubmitProcessing')) {
+			const	event		= binding.toJS('model'),
 				validationData	= [
 					binding.toJS('error.0'),
 					binding.toJS('error.1')
 				];
 
-		switch (true) {
-			// if teams data correct, team sport and players was changed
-			case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged():
+			switch (true) {
+				// if teams data correct, team sport and players was changed
+				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged():
 					this.showSavingChangesModePopup(event);
-				break;
-			// if teams data correct, non team sport or players wasn't changed
-			case TeamHelper.isTeamDataCorrect(event, validationData):
+					break;
+				// if teams data correct, non team sport or players wasn't changed
+				case TeamHelper.isTeamDataCorrect(event, validationData):
+					binding.set('isSubmitProcessing', true);
 					this.submit(event);
-				break;
-			// if teams data doesn't correct
-			default:
-				//So, let's show form with incorrect data
-				self._changeRivalFocusToErrorForm();
-				break;
+					break;
+				// if teams data doesn't correct
+				default:
+					//So, let's show form with incorrect data
+					self._changeRivalFocusToErrorForm();
+					break;
+			}
 		}
 	},
 	/**
@@ -214,6 +222,7 @@ const EventManager = React.createClass({
 			this.getDefaultBinding().toJS('teamModeView.teamWrapper.1.isTeamChanged')
 		);
 	},
+	//TODO WTF!!?? Why event in args?
 	submit: function(eventModel) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -333,7 +342,7 @@ const EventManager = React.createClass({
 		const map = {
 			'tbd':		"TBD",
 			'away':		"AWAY",
-			'neutral':	"CUSTOM",
+			'custom':	"CUSTOM",
 			'home':		"HOME"
 		};
 
@@ -399,9 +408,15 @@ const EventManager = React.createClass({
 		const self = this;
 
 		if(step === 3 && self._isStepComplete(3)) {
+			const finishButtonClassName = classNames({
+				eEvents_button:	true,
+				mFinish:		true,
+				mDisabled:		this.getDefaultBinding().toJS('isSubmitProcessing')
+			});
+
 			return (
-				<span	className	= "eEvents_button mFinish"
-						onClick		= {self.handleClickFinishButton}
+				<span	className	= { finishButtonClassName }
+						onClick		= { self.handleClickFinishButton }
 				>
 					Finish
 				</span>
@@ -448,6 +463,7 @@ const EventManager = React.createClass({
 				binding.toJS('model.sportId')			!== '' &&
 				typeof binding.toJS('model.gender')		!== 'undefined' &&
 				binding.toJS('model.gender')			!== '' &&
+				binding.toJS('model.gender')			!== 'not-selected-gender' &&
 				typeof binding.toJS('model.ages')		!== 'undefined' &&
 				binding.toJS('model.ages').length		!== 0 &&
 				typeof binding.toJS('model.type')		!== 'undefined' &&
@@ -535,14 +551,22 @@ const EventManager = React.createClass({
 		);
 	},
 	renderSavingPlayerChangesPopup: function(event) {
-		const isSavingChangesModePopupOpen = !!this.getDefaultBinding().toJS('isSavingChangesModePopupOpen');
+		const binding = this.getDefaultBinding();
+
+		const isSavingChangesModePopupOpen = !!binding.toJS('isSavingChangesModePopupOpen');
 
 		if(isSavingChangesModePopupOpen) {
 			return (
 				<ConfirmPopup	okButtonText			= "Create event"
 								cancelButtonText		= "Back"
-								handleClickOkButton		= { this.submit.bind(this, event) }
-								handleClickCancelButton	= { this.closeSavingChangesModePopup.bind(this) }
+								isOkButtonDisabled		= { binding.toJS('isSubmitProcessing') }
+								handleClickOkButton		= {
+									() => {
+										binding.set('isSubmitProcessing', true);
+										this.submit(event);
+									}
+								}
+								handleClickCancelButton	= { this.closeSavingChangesModePopup }
 				>
 					{ this.renderSavingPlayerChangesPopupBody(event) }
 				</ConfirmPopup>

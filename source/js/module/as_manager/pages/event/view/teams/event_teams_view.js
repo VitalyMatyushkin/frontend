@@ -383,7 +383,7 @@ const EventTeamsView = React.createClass({
 
 			return (
 				<div key={playerIndex} className="_bPlayer _mMini">
-					<If condition={mode !== 'closing' && isOwner}>
+					<If condition={isOwner}>
 						<span className="ePlayer_gender">
 							<GenderIcon gender={player.gender}/>
 						</span>

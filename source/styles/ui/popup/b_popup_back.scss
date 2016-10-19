@@ -1,18 +1,27 @@
 .bPopupBack {
-  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  display: none;
   height: 100%;
   left: 0;
-  opacity: .5;
   position: fixed;
+  text-align: center;
   top: 0;
   width: 100%;
   z-index: 100;
-  display: none;
-  cursor: pointer
-}
 
-.bPopupBack.mAcitve{
-  display: block;
+  &:after{
+    display: inline-block;
+    vertical-align: middle;
+    width: 0;
+    height: 100%;
+    content: '';
+  }
+
+  &.mAcitve {
+    display: block;
+  }
+
 }
 
 body.mShowPopup {

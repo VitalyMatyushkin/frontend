@@ -141,7 +141,7 @@ const serviceList = {
 		serviceList.schoolOutboxInvites 	= new Service('/i/schools/{schoolId}/invites/outbox', binding);
 		serviceList.schoolArchiveInvites 	= new Service('/i/schools/{schoolId}/invites/archive', binding);
 		serviceList.acceptSchoolInvite 		= new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
-		serviceList.declineSchoolInvite 	= new Service('/i/schools/{schoolId}/invites/{inviteId}/decline', binding);
+		serviceList.declineSchoolInvite 	= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
 
 		// event comments
 		serviceList.schoolEventComment = new Service('/i/schools/{schoolId}/events/{eventId}/comments/{commentId}', binding);

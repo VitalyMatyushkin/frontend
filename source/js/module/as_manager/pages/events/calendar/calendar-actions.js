@@ -19,7 +19,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 				$lt: 	monthEndDate
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED']
+				$nin: ['REJECTED']
 			}
 		}
 	};
@@ -55,7 +55,7 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 				$lt: dayEnd
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED']
+				$nin: ['REJECTED']
 			}
 		}
 	};

@@ -417,8 +417,10 @@ const SportsForm = React.createClass({
         binding.meta().set("performance", Immutable.fromJS(data.performance));
     },
     render: function() {
-        const self    = this,
-              binding = self.getDefaultBinding();
+        const 	self    		= this,
+              	binding 		= self.getDefaultBinding(),
+				pointsDisplay 	= binding.meta().get('pointsDisplay.value'),
+				showMask 		= pointsDisplay !== 'plain';
 
         // This comment about field "positions"
         // As you can see - container for this field is <div> instead <FormField>.
@@ -525,6 +527,13 @@ const SportsForm = React.createClass({
 										type="dropdown"
 							>
 								How to display points
+							</FormField>
+							<FormField  type="text"
+										field="pointsInputMask"
+										validation="required"
+										condition={showMask}
+							>
+								Points input mask
 							</FormField>
                         </FormPlaceholder>
                         <div className="eForm_fieldName mMarginTop">Game Field Picture</div>

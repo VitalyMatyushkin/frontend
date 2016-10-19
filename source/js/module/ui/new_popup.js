@@ -6,13 +6,14 @@ function Popup(props) {
 	if(props.isOpened) {
 		return (
 			<div>
-				<div className="bNewPopup">
-					<If condition={props.isShowCloseButton}>
-						<div className="ePopup_Close" onClick={props.handleClickCloseButton}></div>
-					</If>
-					{props.children}
+				<div className='bPopupBack mAcitve'>
+					<div className="bNewPopup">
+						<If condition={props.isShowCloseButton}>
+							<div className="ePopup_Close" onClick={props.handleClickCloseButton}></div>
+						</If>
+						{props.children}
+					</div>
 				</div>
-				<div className='bPopupBack mAcitve'></div>
 			</div>
 		)
 	} else{
