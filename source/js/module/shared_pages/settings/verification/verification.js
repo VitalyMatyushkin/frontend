@@ -69,7 +69,7 @@ const Verification = React.createClass({
 
 		window.Server.confirmUserPhone.post( {token: phoneCode} ).then(data => {
 			if(data.confirmed) {
-				verificationBinding.set('phone', true);
+				verificationBinding.set('sms', true);
 				binding.atomically()
 					.set('isSync',                      true)
 					.set('isErrorPhoneVerification',    false)
@@ -127,10 +127,12 @@ const Verification = React.createClass({
 		return !!this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
 	},
 	isPhoneVerified: function() {
-		return !!this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.phone');
+		return !!this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.sms');
 	},
 
 	render: function() {
+		console.log(this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified'));
+
 		return (
 			<div className="eRegistration_verificationWrapper">
 				<VerificationStep	email							= { this.getEmail() }

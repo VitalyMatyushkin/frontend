@@ -83,7 +83,7 @@ const RegisterUserPage = React.createClass({
 			    rootBinding		= self.getMoreartyContext().getBinding(),
 			    verified		= rootBinding.toJS('userData.authorizationInfo.verified'),
 			    isAuthorized	= !!rootBinding.get('userData.authorizationInfo.userId'),
-			    isVerified		= verified && verified.email && verified.phone;
+			    isVerified		= verified && verified.email && verified.sms;
 
 		if(isAuthorized)
 			if(isVerified)
@@ -112,7 +112,11 @@ const RegisterUserPage = React.createClass({
                             id: loginData.key,
                             userId:loginData.userId,
                             expireAt: loginData.expireAt,
-                            verified: {"email":false,"phone":false,"personal":true},
+                            verified: {
+                                "email":false,
+                                "sms":false,
+                                "personal":true
+                            },
                             email: binding.toJS('formFields').email,
                             phone: binding.toJS('formFields').phone
                         };
@@ -231,7 +235,7 @@ const RegisterUserPage = React.createClass({
                     .set('isErrorEmailVerification',    false)
                     .commit();
 
-                verificationBinding.toJS('phone') && self.setStepFunction('permissions');
+                verificationBinding.toJS('sms') && self.setStepFunction('permissions');
             } else {
                 binding.set('isErrorEmailVerification', true);
             }
@@ -248,7 +252,7 @@ const RegisterUserPage = React.createClass({
 
         window.Server.confirmUserPhone.post( {token: phoneCode} ).then(data => {
             if(data.confirmed) {
-                verificationBinding.set('phone', true);
+                verificationBinding.set('sms', true);
                 binding.atomically()
                     .set('isSync',                      true)
                     .set('isErrorPhoneVerification',    false)
@@ -315,7 +319,7 @@ const RegisterUserPage = React.createClass({
         return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.email');
     },
     isPhoneVerified: function() {
-        return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.phone');
+        return this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified.sms');
     },
 
     isErrorEmailVerification: function() {
@@ -347,6 +351,8 @@ const RegisterUserPage = React.createClass({
         const   self        = this,
                 binding     = self.getDefaultBinding(),
                 currentStep = binding.get('registerStep');
+
+        console.log(this.getMoreartyContext().getBinding().toJS('userData'));
 
         let currentView = null;
 

@@ -138,11 +138,10 @@ const EventManagerBase = React.createClass({
                 return model.get('id') === sportId;
             });
 
-		binding
-            .atomically()
+		binding.atomically()
             .set('model.sportId',    event.target.value)
             .set('model.sportModel', sportsBinding.get(`models.${sportIndex}`))
-            .set('model.gender',     sportsBinding.get(`models.${sportIndex}.gender.0`))
+            .set('model.gender',     Immutable.fromJS("not-selected-gender"))
             .commit();
 	},
     changeCompleteAges: function (selections) {

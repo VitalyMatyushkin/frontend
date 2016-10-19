@@ -1,34 +1,48 @@
-const	React	= require('react'),
-		Button	= require('./button/button');
+const	React		= require('react'),
 
-function Popup(props) {
-	return (
-		<div>
-			<div className="bConfirmPopup">
-				<div className="eConfirmPopup_body">
-					{ props.children }
+		classNames	= require('classnames'),
+		Button		= require('./button/button');
+
+const ConfirmPopup = React.createClass({
+
+	propTypes: {
+		isOkButtonDisabled:			React.PropTypes.bool.isRequired,
+		okButtonText:				React.PropTypes.string.isRequired,
+		cancelButtonText:			React.PropTypes.string.isRequired,
+		handleClickOkButton:		React.PropTypes.func.isRequired,
+		handleClickCancelButton:	React.PropTypes.func.isRequired
+	},
+	handleClickOkButton: function() {
+		if(!this.props.isOkButtonDisabled) {
+			this.props.handleClickOkButton();
+		}
+	},
+	render: function() {
+		const okButtonClassName = classNames({
+			mMarginRight:	true,
+			mDisable:		this.props.isOkButtonDisabled
+		});
+
+		return (
+			<div>
+				<div className="bConfirmPopup">
+					<div className="eConfirmPopup_body">
+						{ this.props.children }
+					</div>
+					<div className="eConfirmPopup_footer">
+						<Button	text				= { this.props.okButtonText }
+								onClick				= { this.handleClickOkButton }
+								extraStyleClasses	= { okButtonClassName }
+						/>
+						<Button	text	= { this.props.cancelButtonText }
+								onClick	= { this.props.handleClickCancelButton }
+						/>
+					</div>
 				</div>
-				<div className="eConfirmPopup_footer">
-					<Button	text				= { props.okButtonText }
-							onClick				= { props.handleClickOkButton }
-							extraStyleClasses	= { 'mMarginRight' }
-					/>
-					<Button	text	= { props.cancelButtonText }
-							onClick	= { props.handleClickCancelButton }
-					/>
-				</div>
+				<div className='bPopupBack mAcitve'></div>
 			</div>
-			<div className='bPopupBack mAcitve'></div>
-		</div>
-	);
-}
+		);
+	}
+});
 
-Popup.propTypes = {
-	okButtonText:				React.PropTypes.string.isRequired,
-	cancelButtonText:			React.PropTypes.string.isRequired,
-	handleClickOkButton:		React.PropTypes.func.isRequired,
-	handleClickCancelButton:	React.PropTypes.func.isRequired
-};
-
-module.exports = Popup;
-
+module.exports = ConfirmPopup;
