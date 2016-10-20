@@ -22,6 +22,7 @@ const EventGallery = React.createClass({
 				<Gallery	isPublic					= { false }
 							handleChangeAddPhotoButton	= { file => Actions.addPhotoToEvent(binding, schoolId, eventId, file) }
 							handleClickDeletePhoto		= { photoId => Actions.deletePhotoFromEvent(binding, schoolId, eventId, photoId) }
+							handleChangeAccessPreset	= { (photoId, preset) => Actions.changePhotoPreset(binding, schoolId, eventId, photoId, preset) }
 							photos						= { photos }
 							isLoading					= { isLoading }
 				/>

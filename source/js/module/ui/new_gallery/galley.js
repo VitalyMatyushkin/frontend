@@ -12,6 +12,7 @@ const Gallery = React.createClass({
 	propTypes: {
 		photos:							React.PropTypes.array.isRequired,
 		handleChangeAddPhotoButton:		React.PropTypes.func,
+		handleChangeAccessPreset:		React.PropTypes.func,
 		handleClickDeletePhoto:			React.PropTypes.func,
 		isPublic:						React.PropTypes.bool.isRequired,
 		isLoading:						React.PropTypes.bool.isRequired
@@ -41,6 +42,9 @@ const Gallery = React.createClass({
 			mode						: this.MODE.PREVIEW_MODE,
 			currentFullScreenPhotoId	: undefined
 		});
+	},
+	handleChangeAccessPreset: function(id, preset) {
+		this.props.handleChangeAccessPreset(id, preset);
 	},
 
 	renderPhotos: function() {
@@ -77,10 +81,13 @@ const Gallery = React.createClass({
 			const currentPhoto = this.props.photos.find(p => p.id === this.state.currentFullScreenPhotoId)
 
 			return (
-				<FullScreenPhoto	id					= { currentPhoto.id }
-									url					= { currentPhoto.picUrl }
-									handleClickPhoto	= { this.handleClickFullScreenPhoto }
-									handleClickClose	= { this.handleClickCloseFullScreenPhoto }
+				<FullScreenPhoto	id							= { currentPhoto.id }
+									url							= { currentPhoto.picUrl }
+									handleClickPhoto			= { this.handleClickFullScreenPhoto }
+									handleClickClose			= { this.handleClickCloseFullScreenPhoto }
+									currentAccessPreset			= { currentPhoto.accessPreset }
+									handleChangeAccessPreset	= { this.handleChangeAccessPreset.bind(this, currentPhoto.id)  }
+									isPublic					= { this.props.isPublic }
 				/>
 			);
 		} else {

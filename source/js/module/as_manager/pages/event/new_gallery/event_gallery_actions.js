@@ -59,5 +59,22 @@ function getPhotosForEvent(binding, schoolId, eventId) {
 	});
 }
 
-module.exports.addPhotoToEvent = addPhotoToEvent;
-module.exports.deletePhotoFromEvent = deletePhotoFromEvent;
+function changePhotoPreset(binding, schoolId, eventId, photoId, preset) {
+	return window.Server.schoolEventPhoto.put(
+			{
+				schoolId:	schoolId,
+				eventId:	eventId,
+				photoId:	photoId
+			},
+			{
+				accessPreset: preset
+			}
+		).then(() => {
+			binding.set('isUploading', false)
+			return getPhotosForEvent(binding, schoolId, eventId);
+		});
+}
+
+module.exports.addPhotoToEvent		= addPhotoToEvent;
+module.exports.deletePhotoFromEvent	= deletePhotoFromEvent;
+module.exports.changePhotoPreset	= changePhotoPreset;
