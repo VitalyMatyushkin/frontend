@@ -2,14 +2,15 @@
   display: inline-block;
 }
 
+.bScore.mError .eScore_Points{
+  border: solid 1px red;
+}
+
 .eScore_Points {
   display: inline-block;
-
   max-width: 40px;
-
   font-size: 14px;
   align-self: center;
-
   text-align: center;
 }
 

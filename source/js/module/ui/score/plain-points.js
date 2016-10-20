@@ -29,9 +29,19 @@ const PlainPoints = React.createClass({
 
 		e.stopPropagation();
 	},
+	onBlur:function(e){
+		const 	value = e.target.value,
+				error = this.state.error;
+
+		this.setState({
+			value: error ? value : value*1,
+			error: error
+		});
+
+		e.stopPropagation();
+	},
 	changeScore:function(value){
-		if(!isNaN(parseFloat(value)) && isFinite(value)){
-			value = value * 1;
+		if(/^[0-9.]+$/.test(value)){
 			const validationResult = TeamHelper.pointsPlainValidation(value, this.props.step);
 
 			this.setState({
@@ -40,7 +50,7 @@ const PlainPoints = React.createClass({
 			});
 
 			if(!validationResult)
-				this.props.onChange(value);
+				this.props.onChange(value*1);
 		}
 	},
 	render:function(){
