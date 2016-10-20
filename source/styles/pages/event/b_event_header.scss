@@ -1,9 +1,17 @@
 .bEventHeader {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  box-sizing: border-box;
   margin-top: 5px;
+}
+
+.bEventHeader_leftSide {
+  display: inline-block;
+  vertical-align: top;
+  width: 350px;
+}
+
+.bEventHeader_rightSide {
+  display: inline-block;
+  vertical-align: top;
+  width: 350px;
 }
 
 .eEventHeader_field {
@@ -24,6 +32,7 @@
   font-size: 14px;
   color: #959595;
   margin: 5px 0;
+  text-align: left;
 }
 .eEventHeader_field.mEvent{
   padding-top: 3px;
@@ -33,6 +42,7 @@
   max-width: 80%;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: left;
 }
 .eEventHeader_field.mType{
   padding: 2px 0;

@@ -23,7 +23,7 @@ const EventTeamsView = React.createClass({
 
 		return  userScoreDataIndex === -1 ? 0 : event.results.individualScore[userScoreDataIndex].score;
 	},
-	handleClickPointSign: function(event, teamId, player, operation, pointType) {
+	handleChangeScore: function(event, teamId, player, score) {
 		const self = this;
 
 		// Order of score changes is important!
@@ -32,17 +32,14 @@ const EventTeamsView = React.createClass({
 
 		// Sum current player points with other player points = team points
 		// But only for team games
-		if(
-			typeof teamId !== 'undefined' &&
-			TeamHelper.isTeamSport(event)
-		) {
-			self.changePointsForTeam(event, player, teamId, operation, pointType);
+		self.changePointsForPlayer(event, player, score);
+		if(	typeof teamId !== 'undefined' && TeamHelper.isTeamSport(event)) {
+			self.changePointsForTeam(event, teamId);
 		}
-		self.changePointsForPlayer(event, player, teamId, operation, pointType);
+		console.log(event.results);
 	},
-	changePointsForPlayer: function(event, player, teamId, operation, pointType) {
-		const 	self 		= this,
-				pointsStep 	= event.sport.points.pointsStep;
+	changePointsForPlayer: function(event, player, score) {
+		const 	self 		= this;
 		let		scoreData	= event.results.individualScore.find(s => s.userId === player.userId);
 
 		if(!scoreData) {
@@ -54,68 +51,23 @@ const EventTeamsView = React.createClass({
 			event.results.individualScore.push(scoreData);
 		}
 		/** set score */
-		scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType, pointsStep);
-		console.log(scoreData);
+		scoreData.score = score;
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
-	changePointsForTeam: function(event, player, teamId, operation, pointType) {
-		const self = this;
+	changePointsForTeam: function(event, teamId) {
+		const 	self 		= this;
+		let		scoreData	= event.results.teamScore.find(s => s.teamId === teamId);
 
-		const pointsStep = event.sport.points.pointsStep;
-
-		const teamScoreDataIndex = event.results.teamScore.findIndex(
-			teamScoreData => teamScoreData.teamId === teamId
-		);
-
-		switch (operation) {
-			case "plus":
-				if(teamScoreDataIndex === -1) {
-					event.results.teamScore.push({
-						teamId:	teamId,
-						score:	TeamHelper.incByType(
-							0,
-							pointType,
-							pointsStep
-						)
-					})
-				} else {
-					event.results.teamScore[teamScoreDataIndex].score = TeamHelper.incByType(
-						event.results.teamScore[teamScoreDataIndex].score,
-						pointType,
-						pointsStep
-					);
-				}
-				break;
-			case "minus":
-				if(self.isPlayerHasPoints(event, player)) {
-					if(teamScoreDataIndex === -1) {
-						event.results.teamScore.push({
-							teamId:	teamId,
-							score:	TeamHelper.decByType(
-								0,
-								pointType,
-								pointsStep
-							)
-						})
-					} else {
-						event.results.teamScore[teamScoreDataIndex].score = TeamHelper.decByType(
-							event.results.teamScore[teamScoreDataIndex].score,
-							pointType,
-							pointsStep
-						);
-					}
-				}
-				break;
-		};
-
+		if(!scoreData) {
+			scoreData = {
+				teamId:	teamId,
+				score:	0
+			};
+			event.results.teamScore.push(scoreData);
+		}
+		/** set score */
+		scoreData.score = TeamHelper.calculateTeamPoints(event, teamId);
 		self.getBinding('event').set(Immutable.fromJS(event));
-	},
-	isPlayerHasPoints: function(event, player) {
-		const userScoreData = event.results.individualScore.find(
-			userScoreData => userScoreData.userId === player.userId
-		);
-
-		return typeof userScoreData !== 'undefined' && userScoreData.score !== 0;
 	},
 	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {
 		const self = this;
@@ -396,11 +348,11 @@ const EventTeamsView = React.createClass({
 						!self.isNonInternalEventForOneOnOneSport(event) &&
 						(event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
 					}>
-						<Score	isChangeMode			={EventHelper.isShowScoreButtons(event, mode, isOwner)}
-								plainPoints				={self.getPointsByStudent(event, player.userId)}
-								pointsStep 				={event.sport.points.pointsStep}
-								pointsType				={event.sport.points.display}
-								handleClickPointSign	={self.handleClickPointSign.bind(self, event, teamId, player)}
+						<Score	isChangeMode	={EventHelper.isShowScoreButtons(event, mode, isOwner)}
+								plainPoints		={self.getPointsByStudent(event, player.userId)}
+								pointsStep 		={event.sport.points.pointsStep}
+								pointsType		={event.sport.points.display}
+							  	onChange 		={self.handleChangeScore.bind(self, event, teamId, player)}
 						/>
 					</If>
 				</div>
