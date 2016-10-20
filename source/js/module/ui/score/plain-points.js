@@ -13,29 +13,44 @@ const PlainPoints = React.createClass({
 		step:		React.PropTypes.number.isRequired,
 		onChange: 	React.PropTypes.func.isRequired
 	},
+	getInitialState:function(){
+		return {
+			error:false,
+			value:this.props.value
+		};
+	},
 	onClick:function(operation){
-		const result = TeamHelper.operationByType(operation, this.props.value, 'plain', this.props.step);
+		const result = TeamHelper.operationByType(operation, this.props.value*1, 'plain', this.props.step);
 
-		this.props.onChange(result);
+		this.changeScore(result);
 	},
 	onBlur:function(e){
-		const 	value 				= e.target.value,
-				validationResult 	= TeamHelper.pointsPlainValidation(value, this.props.step);
+		this.changeScore(e.target.value);
 
-		this.setState({
-			value: validationResult ? value : null,
-			error: validationResult
-		});
+		e.stopPropagation();
+	},
+	changeScore:function(value){
+		if(!isNaN(parseFloat(value)) && isFinite(value)){
+			const validationResult = TeamHelper.pointsPlainValidation(value, this.props.step);
 
-		if(!validationResult)
-			this.props.onChange(value);
+			this.setState({
+				value: value,
+				error: validationResult
+			});
+
+			if(!validationResult)
+				this.props.onChange(value);
+		}
+	},
+	onChange:function(e){
+		this.changeScore(e.target.value);
 
 		e.stopPropagation();
 	},
 	render:function(){
 		const 	error 	= !!this.state.error,
 				title 	= error ? this.state.error : null,
-				value 	= error ? this.state.value : this.props.value,
+				value 	= this.state.value,
 				classes = classNames({
 										bScore: true,
 										mError: error
@@ -44,9 +59,11 @@ const PlainPoints = React.createClass({
 		return (
 			<div className={classes}>
 				<ScoreSign type="minus" handleClick={this.onClick.bind(null, 'minus')}/>
-				<input className="eScore_Points"
+				<input type="text"
+					   className="eScore_Points"
 					   title={title}
 					   value={value}
+					   onChange={this.onChange}
 					   onBlur={this.onBlur} />
 				<ScoreSign type="plus" handleClick={this.onClick.bind(null, 'plus')}/>
 			</div>

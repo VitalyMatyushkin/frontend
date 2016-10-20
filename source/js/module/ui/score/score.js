@@ -3,7 +3,7 @@ const	React		= require('react'),
 		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
 		SportConsts	= require('module/helpers/consts/sport'),
 		If 			= require('module/ui/if/if'),
-		SVG			= require('module/ui/svg');
+		PlainPoints = require('./plain-points');
 
 const Score = React.createClass({
 	propTypes: {
@@ -46,15 +46,9 @@ const Score = React.createClass({
 		this.props.onChange(score);
 	},
 	renderPlayerPlainPointsInChangeMode: function() {
-		const self = this;
-
-		return (
-			<div className="bScore">
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'plain')}/>
-				<div className="eScore_Points">{self.props.plainPoints}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'plain')}/>
-			</div>
-		);
+		return <PlainPoints value={this.props.plainPoints}
+							step={this.props.pointsStep}
+							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
 		const self = this,
