@@ -7,10 +7,10 @@ const TeamPlayersValidator = {
 
         if(players && players.length === 0) {
             isError = true;
-            text = `Number of players should be great then 0`;
+            text = `Number of players should be greater than 0`;
         } else if(players && limits.minPlayers && players.length < limits.minPlayers) {
             isError = true;
-            text = `Number of players should be great or equal ${limits.minPlayers}`;
+            text = `Number of players should be greater or equal ${limits.minPlayers}`;
         } else if(players && limits.maxPlayers && players.length > limits.maxPlayers) {
             isError = true;
             text = `Number of players should be less or equal ${limits.maxPlayers}`;
