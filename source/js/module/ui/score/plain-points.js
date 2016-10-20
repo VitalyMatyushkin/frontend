@@ -24,13 +24,14 @@ const PlainPoints = React.createClass({
 
 		this.changeScore(result);
 	},
-	onBlur:function(e){
+	onChange:function(e){
 		this.changeScore(e.target.value);
 
 		e.stopPropagation();
 	},
 	changeScore:function(value){
 		if(!isNaN(parseFloat(value)) && isFinite(value)){
+			value = value * 1;
 			const validationResult = TeamHelper.pointsPlainValidation(value, this.props.step);
 
 			this.setState({
@@ -41,11 +42,6 @@ const PlainPoints = React.createClass({
 			if(!validationResult)
 				this.props.onChange(value);
 		}
-	},
-	onChange:function(e){
-		this.changeScore(e.target.value);
-
-		e.stopPropagation();
 	},
 	render:function(){
 		const 	error 	= !!this.state.error,

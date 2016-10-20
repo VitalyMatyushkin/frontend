@@ -32,15 +32,13 @@ const EventTeamsView = React.createClass({
 
 		// Sum current player points with other player points = team points
 		// But only for team games
-		if(
-			typeof teamId !== 'undefined' &&
-			TeamHelper.isTeamSport(event)
-		) {
-			self.changePointsForTeam(event, player, teamId, score);
+		self.changePointsForPlayer(event, player, score);
+		if(	typeof teamId !== 'undefined' && TeamHelper.isTeamSport(event)) {
+			self.changePointsForTeam(event, teamId);
 		}
-		self.changePointsForPlayer(event, player, teamId, score);
+		console.log(event.results);
 	},
-	changePointsForPlayer: function(event, player, teamId, score) {
+	changePointsForPlayer: function(event, player, score) {
 		const 	self 		= this;
 		let		scoreData	= event.results.individualScore.find(s => s.userId === player.userId);
 
@@ -54,10 +52,9 @@ const EventTeamsView = React.createClass({
 		}
 		/** set score */
 		scoreData.score = score;
-		console.log(scoreData);
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
-	changePointsForTeam: function(event, player, teamId, score) {
+	changePointsForTeam: function(event, teamId) {
 		const 	self 		= this;
 		let		scoreData	= event.results.teamScore.find(s => s.teamId === teamId);
 
@@ -69,8 +66,7 @@ const EventTeamsView = React.createClass({
 			event.results.teamScore.push(scoreData);
 		}
 		/** set score */
-		scoreData.score = score;
-		console.log(scoreData);
+		scoreData.score = TeamHelper.calculateTeamPoints(event, teamId);
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
 	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {

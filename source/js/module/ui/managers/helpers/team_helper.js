@@ -1191,6 +1191,25 @@ function decByType(value, type, pointsStep) {
 }
 
 /**
+ * Calculate team points
+ * @param {object} event
+ * @param {string} teamId
+ * @returns (number} - sum of individual points
+ * */
+function calculateTeamPoints(event, teamId){
+	const team = event.teamsData.find(t => t.id === teamId),
+		playerIds = team.players.map(p => {return p.userId}),
+		scores = event.results.individualScore.map(s => {
+			if(playerIds.indexOf(s.userId) !== -1)
+				return s.score;
+			else
+				return 0;
+		});
+
+	return scores.reduce((a, b) => a + b*1, 0);
+}
+
+/**
  * Validation result value according to 'plain' type
  * @param {Number} value - value to validation
  * @param {Number} pointsStep
@@ -1261,6 +1280,7 @@ const TeamHelper = {
 	operationByType:						operationByType,
 	decByType:								decByType,
 	incByType:								incByType,
+	calculateTeamPoints: 					calculateTeamPoints,
 	pointsPlainValidation:					pointsPlainValidation
 };
 
