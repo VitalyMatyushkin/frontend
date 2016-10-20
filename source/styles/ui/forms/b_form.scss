@@ -28,10 +28,12 @@ textarea, select {
   width: 300px;
 
   &:hover{
-    border-bottom: solid #959595 1px;
+    border: solid #959595;
+    border-width: 0 0 1px;
   }
   &:focus{
-    border-bottom: solid $blueColor 1px;
+    border: solid $blueColor;
+    border-width: 0 0 1px;
   }
 }
 select {
@@ -208,7 +210,8 @@ input.eDateInput{
     display: block;
   }
   input{
-    border-bottom: 1px solid $INVALID_COLOR;
+    border: solid $INVALID_COLOR;
+    border-width: 0 0 1px;
     color: $INVALID_COLOR;
   }
 }
