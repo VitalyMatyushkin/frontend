@@ -48,18 +48,26 @@ HouseListModel.prototype = {
 	onRemove:function(data){
 		const 	self = this;
 
-		if(data && confirm(`Are you sure you want to remove house ${data.name}?`)){
-			window.Server.schoolHouse.delete({schoolId:self.activeSchoolId, houseId:data.id})
-				.then(_ => self.reloadData())
-				.catch(error => {
-					const text = error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details ? error.xhr.responseJSON.details.text : '';
-					console.log('Got error while trying to remove student: ' + text);
-					window.simpleAlert(
-						'Sorry! You cannot perform this action. Please contact support',
-						'Ok',
-						() => {}
-					);
-				});
+		if(typeof data !== 'undefined') {
+			const showAlert = function() {
+				window.simpleAlert(
+					'Sorry! You cannot perform this action. Please contact support',
+					'Ok',
+					() => {
+					}
+				);
+			};
+
+			window.confirmAlert(
+				`Are you sure you want to remove house ${data.name}?`,
+				"Ok",
+				"Cancel",
+				window.Server.schoolHouse
+					.delete( {schoolId:self.activeSchoolId, houseId:data.id} )
+					.then(() => self.reloadData())
+					.catch(() => showAlert()),
+				() => {}
+			);
 		}
 	},
 	getGrid: function(){
