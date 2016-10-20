@@ -3,15 +3,15 @@ const	React		= require('react'),
 		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
 		SportConsts	= require('module/helpers/consts/sport'),
 		If 			= require('module/ui/if/if'),
-		SVG			= require('module/ui/svg');
+		PlainPoints = require('./plain-points');
 
 const Score = React.createClass({
 	propTypes: {
-		isChangeMode:			React.PropTypes.bool,
-		plainPoints:			React.PropTypes.number.isRequired,
-		pointsStep:				React.PropTypes.number.isRequired,
-		pointsType:				React.PropTypes.string.isRequired,
-		handleClickPointSign:	React.PropTypes.func.isRequired
+		isChangeMode:	React.PropTypes.bool,
+		plainPoints:	React.PropTypes.number.isRequired,
+		pointsStep:		React.PropTypes.number.isRequired,
+		pointsType:		React.PropTypes.string.isRequired,
+		onChange:		React.PropTypes.func.isRequired
 	},
 	getDefaultProps: function() {
 		return {
@@ -40,16 +40,15 @@ const Score = React.createClass({
 		}
 	},
 
-	renderPlayerPlainPointsInChangeMode: function() {
-		const self = this;
+	handleClickPointSign:function(operation, pointType){
+		const score = TeamHelper.operationByType(operation, this.props.plainPoints, pointType, this.props.pointsStep);
 
-		return (
-			<div className="bScore">
-				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'plain')}/>
-				<div className="eScore_Points">{self.props.plainPoints}</div>
-				<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'plain')}/>
-			</div>
-		);
+		this.props.onChange(score);
+	},
+	renderPlayerPlainPointsInChangeMode: function() {
+		return <PlainPoints value={this.props.plainPoints}
+							step={this.props.pointsStep}
+							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
 		const self = this,
@@ -61,24 +60,24 @@ const Score = React.createClass({
 			<div className="bScore">
 				<If condition={step >= 1}>
 					<span>
-						<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'h')}/>
+						<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'h')}/>
 						<div className="eScore_Points">{`${timePoints.h}h`}</div>
-						<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'h')}/>
+						<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'h')}/>
 					</span>
 				</If>
-				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'min')}/>
+				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'min')}/>
 				<div className="eScore_Points">{`${timePoints.min}min`}</div>
-				<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'min')}/>
+				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'min')}/>
 
-				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'sec')}/>
+				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'sec')}/>
 				<div className="eScore_Points">{`${timePoints.sec}sec`}</div>
-				<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'sec')}/>
+				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'sec')}/>
 
 				<If condition={step < 1}>
 					<span>
-						<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'ms')}/>
+						<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'ms')}/>
 						<div className="eScore_Points">{`${timePoints.ms}ms`}</div>
-						<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'ms')}/>
+						<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'ms')}/>
 					</span>
 				</If>
 			</div>
@@ -91,17 +90,17 @@ const Score = React.createClass({
 
 		return (
 			<div className="bScore">
-				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'km')}/>
+				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'km')}/>
 				<div className="eScore_Points">{`${distancePoints.km}km`}</div>
-				<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'km')}/>
+				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'km')}/>
 
-				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'm')}/>
+				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'm')}/>
 				<div className="eScore_Points">{`${distancePoints.m}m`}</div>
-				<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'm')}/>
+				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'm')}/>
 
-				<ScoreSign type="minus" handleClick={self.props.handleClickPointSign.bind(null, 'minus', 'cm')}/>
+				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'cm')}/>
 				<div className="eScore_Points">{`${distancePoints.cm}cm`}</div>
-				<ScoreSign type="plus" handleClick={self.props.handleClickPointSign.bind(null, 'plus', 'cm')}/>
+				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'cm')}/>
 			</div>
 		);
 	},
