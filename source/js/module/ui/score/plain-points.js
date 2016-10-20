@@ -49,8 +49,10 @@ const PlainPoints = React.createClass({
 				error: validationResult
 			});
 
-			if(!validationResult)
-				this.props.onChange(value*1);
+			this.props.onChange({
+									value: validationResult ? this.state.value*1 : value*1,
+									isValid:!validationResult
+								});
 		}
 	},
 	render:function(){

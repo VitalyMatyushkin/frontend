@@ -51,7 +51,8 @@ const EventTeamsView = React.createClass({
 			event.results.individualScore.push(scoreData);
 		}
 		/** set score */
-		scoreData.score = score;
+		scoreData.score = score.value;
+		scoreData.isValid = score.isValid;
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
 	changePointsForTeam: function(event, teamId) {

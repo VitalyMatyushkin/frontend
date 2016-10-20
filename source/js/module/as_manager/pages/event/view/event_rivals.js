@@ -128,7 +128,8 @@ const EventRival = React.createClass({
 			}
 
 			/** set score */
-			scoreData.score = score;
+			scoreData.score = score.value;
+			scoreData.isValid = score.isValid;
 			binding.set('model', Immutable.fromJS(event));
 		}
 	},
