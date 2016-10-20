@@ -47,8 +47,6 @@ const EventView = React.createClass({
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		self.initTabs();
-
 		let eventData, report;
 		window.Server.schoolEvent.get({
 			schoolId: self.activeSchoolId,
@@ -102,6 +100,8 @@ const EventView = React.createClass({
 				.set('sync',			Immutable.fromJS(true))
 				.commit();
 
+			self.initTabs();
+
 			return eventData;
 		})
 	},
@@ -120,36 +120,37 @@ const EventView = React.createClass({
 
 		self.tabListModel = [
 			{
-				value:'teams',
-				text:'Teams',
-				isActive:false
-			},
-			{
-				value:'performance',
-				text:'Performance',
-				isActive:false
-			},
-			//{
-			//	value:'details',
-			//	text:'Details',
-			//	isActive:false
-			//},
-			{
-				value:'gallery',
-				text:'Gallery',
-				isActive:false
-			},
-			{
-				value:'comments',
-				text:'Comments',
-				isActive:false
-			},
-			{
-				value:'report',
-				text:'Match Report',
-				isActive:false
+				value		: 'teams',
+				text		: 'Teams',
+				isActive	: false
 			}
 		];
+
+		if(self.hasSportPerformanceItems()) {
+			self.tabListModel.push({
+				value		: 'performance',
+				text		: 'Performance',
+				isActive	: false
+			});
+		}
+
+		self.tabListModel.push(
+			{
+				value		:'gallery',
+				text		:'Gallery',
+				isActive	:false
+			},
+			{
+				value		: 'comments',
+				text		: 'Comments',
+				isActive	: false
+			},
+			{
+				value		: 'report',
+				text		: 'Match Report',
+				isActive	: false
+			}
+		);
 
 		if(tab) {
 			let item = self.tabListModel.find(t => t.value === tab);
@@ -159,6 +160,11 @@ const EventView = React.createClass({
 			self.tabListModel[0].isActive = true;
 			binding.set('activeTab', 'teams');
 		}
+	},
+	hasSportPerformanceItems: function() {
+		const binding = this.getDefaultBinding();
+
+		return binding.toJS('model.sport.performance').length > 0;
 	},
 	changeActiveTab:function(value){
 		const	self	= this,
