@@ -47,15 +47,17 @@ TeamListModel.prototype = {
 		document.location.hash += `/players?id=${data.id}&name=${data.name}`;
 	},
 	onRemove: function(team) {
-		const 	self 		= this,
-				cf 			= confirm(`Are you sure you want to remove team ${team.name}?`);
+		const self = this;
 
-		if(cf === true){
-			window.Server.team.delete({schoolId:self.activeSchoolId, teamId:team.id})
-				.then(function(){
-					self.reloadData();
-				});
-		}
+		window.confirmAlert(
+			`Are you sure you want to remove team ${team.name}?`,
+			"Ok",
+			"Cancel",
+			() => window.Server.team
+				.delete( {schoolId:self.activeSchoolId, teamId:team.id} )
+				.then(() => self.reloadData()),
+			() => {}
+		);
 	},
 	_getAges: function(item) {
 		const ages = item.ages;

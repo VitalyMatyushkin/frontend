@@ -45,18 +45,23 @@ ClassListModel.prototype = {
 	onRemove:function(data){
 		const 	self = this;
 
-		if(data && confirm(`Are you sure you want to remove form ${data.name}?`)){
-			window.Server.schoolForm.delete({schoolId:self.activeSchoolId, formId:data.id})
-				.then(_ => self.reloadData())
-				.catch(error => {
-					const text = error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details ? error.xhr.responseJSON.details.text : '';
-					console.log('Got error while trying to remove student: ' + text);
-					window.simpleAlert(
-						'Sorry! You cannot perform this action. Please contact support',
-						'Ok',
-						() => {}
-					);
-				});
+		if(typeof data !== 'undefined') {
+			window.confirmAlert(
+				`Are you sure you want to remove form ${data.name}?`,
+				"Ok",
+				"Cancel",
+				() => window.Server.schoolForm
+					.delete( {schoolId:self.activeSchoolId, formId:data.id} )
+					.then(() => self.reloadData())
+					.catch(() => {
+						window.simpleAlert(
+							'Sorry! You cannot perform this action. Please contact support',
+							'Ok',
+							() => {}
+						);
+					}),
+				() => {}
+			);
 		}
 	},
 	getGrid: function(){

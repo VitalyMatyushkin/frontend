@@ -41,17 +41,19 @@ StudentListModel.prototype = {
 		document.location.hash = 'school_admin/students/stats?id='+student.id;
 	},
 	onRemove: function(student) {
-		const 	self 		= this,
-				rootBinding = self.getMoreartyContext().getBinding(),
-				schoolId 	= rootBinding.get('userRules.activeSchoolId'),
-				cf 			= confirm(`Are you sure you want to remove student ${student.firstName} ${student.lastName}?`);
+		const	self		= this,
+				rootBinding	= self.getMoreartyContext().getBinding(),
+				schoolId	= rootBinding.get('userRules.activeSchoolId');
 
-		if(cf === true){
-			window.Server.schoolStudent.delete({schoolId:schoolId, studentId:student.id})
-				.then(function(){
-					self.reloadData();
-				});
-		}
+		window.confirmAlert(
+			`Are you sure you want to remove student ${student.firstName} ${student.lastName}?`,
+			"Ok",
+			"Cancel",
+			() => window.Server.schoolStudent
+				.delete( {schoolId:schoolId, studentId:student.id} )
+				.then(() => self.reloadData()),
+			() => {}
+		);
 	},
 	getParents: function(item) {
 		const parents = item.parents;
