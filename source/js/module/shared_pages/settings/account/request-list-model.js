@@ -207,12 +207,15 @@ RequestListModel.prototype = {
 		}
 	},
 	_cancelRequest:function(request){
-		const   self = this,
-			conf = confirm('Are you sure you want to cancel pending request?');
+		const self = this;
 
-		if(conf){
-			window.Server.profileRequest.delete(request.id).then(res => self.reloadData());
-		}
+		window.confirmAlert(
+			'Are you sure you want to cancel pending request?',
+			"Ok",
+			"Cancel",
+			() => window.Server.profileRequest.delete(request.id).then(res => self.reloadData()),
+			() => {}
+		);
 	},
 	handleAddNewButtonClick:function(){
 		const binding = this.getDefaultBinding();
