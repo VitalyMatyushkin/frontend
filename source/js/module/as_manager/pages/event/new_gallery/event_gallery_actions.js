@@ -2,18 +2,30 @@
  * Created by wert on 16.10.16.
  */
 
-const Immutable = require('immutable');
+const	Immutable	= require('immutable'),
+		RoleHelper	= require('./../../../../helpers/role_helper');
 
 /* Set of actions school staff can perform on gallery:
 */
-function addPhotoToEvent(binding, schoolId, eventId, file) {
+function addPhotoToEvent(role, binding, schoolId, eventId, file) {
 	binding.atomically()
 		.set('isSync',		false)
 		.set('isUploading',	true)
 		.commit();
 
+	let service;
+
+	switch (role) {
+		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+			service = window.Server.childEventPhotos;
+			break;
+		default:
+			service = window.Server.schoolEventPhotos;
+			break;
+	}
+
 	return window.Server.images.upload(file).then(picUrl => {
-		return window.Server.schoolEventPhotos.post(
+		return service.post(
 			{
 				schoolId:	schoolId,
 				eventId:	eventId
@@ -24,17 +36,28 @@ function addPhotoToEvent(binding, schoolId, eventId, file) {
 		)
 	}).then(() => {
 		binding.set('isUploading', false)
-		return getPhotosForEvent(binding, schoolId, eventId);	// and reloading all photos
+		return getPhotosForEvent(role, binding, schoolId, eventId);	// and reloading all photos
 	});
 }
 
-function deletePhotoFromEvent(binding, schoolId, eventId, photoId) {
+function deletePhotoFromEvent(role, binding, schoolId, eventId, photoId) {
 	binding.atomically()
 		.set('isSync',		false)
 		.set('isUploading',	true)
 		.commit();
 
-	return window.Server.schoolEventPhoto.delete(
+	let service;
+
+	switch (role) {
+		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+			service = window.Server.childEventPhoto;
+			break;
+		default:
+			service = window.Server.schoolEventPhoto;
+			break;
+	}
+
+	return service.delete(
 		{
 			schoolId:	schoolId,
 			eventId:	eventId,
@@ -42,13 +65,25 @@ function deletePhotoFromEvent(binding, schoolId, eventId, photoId) {
 		}
 	).then(() => {
 		binding.set('isUploading', false);
-		return getPhotosForEvent(binding, schoolId, eventId);	// and reloading all photos
+		return getPhotosForEvent(role, binding, schoolId, eventId);	// and reloading all photos
 	});
 }
 
-function getPhotosForEvent(binding, schoolId, eventId) {
+function getPhotosForEvent(role, binding, schoolId, eventId) {
 	binding.set('isSync', false);
-	return window.Server.schoolEventPhotos.get({
+
+	let service;
+
+	switch (role) {
+		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+			service = window.Server.childEventPhotos;
+			break;
+		default:
+			service = window.Server.schoolEventPhotos;
+			break;
+	}
+
+	return service.get({
 		schoolId:	schoolId,
 		eventId:	eventId
 	}).then( photos => {
@@ -59,8 +94,19 @@ function getPhotosForEvent(binding, schoolId, eventId) {
 	});
 }
 
-function changePhotoPreset(binding, schoolId, eventId, photoId, preset) {
-	return window.Server.schoolEventPhoto.put(
+function changePhotoPreset(role, binding, schoolId, eventId, photoId, preset) {
+	let service;
+
+	switch (role) {
+		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+			service = window.Server.childEventPhoto;
+			break;
+		default:
+			service = window.Server.schoolEventPhoto;
+			break;
+	}
+
+	return service.put(
 			{
 				schoolId:	schoolId,
 				eventId:	eventId,
@@ -71,7 +117,7 @@ function changePhotoPreset(binding, schoolId, eventId, photoId, preset) {
 			}
 		).then(() => {
 			binding.set('isUploading', false)
-			return getPhotosForEvent(binding, schoolId, eventId);
+			return getPhotosForEvent(role, binding, schoolId, eventId);
 		});
 }
 

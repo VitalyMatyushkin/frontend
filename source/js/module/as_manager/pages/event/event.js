@@ -16,7 +16,9 @@ const	React			= require('react'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		MatchReport 		= require('module/as_manager/pages/event/view/match-report/report'),
-		SVG 				= require('module/ui/svg');
+		SVG 				= require('module/ui/svg'),
+
+		RoleHelper			= require('./../../../helpers/role_helper');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -88,7 +90,7 @@ const EventView = React.createClass({
 		}).then(_report => {
 			report = _report;
 
-			return this.loadPhotos();
+			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
 		}).then(photos => {
 			eventData.matchReport = report.content;
 
@@ -105,8 +107,19 @@ const EventView = React.createClass({
 			return eventData;
 		})
 	},
-	loadPhotos: function() {
-		return window.Server.schoolEventPhotos.get({
+	loadPhotos: function(role) {
+		let service;
+
+		switch (role) {
+			case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+				service = window.Server.childEventPhotos;
+				break;
+			default:
+				service = window.Server.schoolEventPhotos;
+				break;
+		}
+
+		return service.get({
 			schoolId:	this.activeSchoolId,
 			eventId:	this.eventId
 		});
