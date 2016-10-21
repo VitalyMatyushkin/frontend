@@ -1213,10 +1213,34 @@ function calculateTeamPoints(event, teamId){
  * Validation result value according to 'plain' type
  * @param {Number} value - value to validation
  * @param {Number} pointsStep
- * @returns {bool/string} - false or error message
+ * @returns {boolean/string} - false or error message
  */
 function pointsPlainValidation(value, pointsStep){
 	return value % pointsStep === 0 ? false : 'Validation error!';
+}
+
+/**
+ * Checking the results on the validation error.
+ * @param {object} event
+ * @returns {boolean} - false - not valid, true - valid
+ * */
+function checkValidationResultBeforeSubmit(event){
+	const scoreNames = ['houseScore', 'individualScore', 'schoolScore', 'teamScore'];
+	let result = true;
+
+	scoreNames.find(scoreName => {
+		const score = event.results[scoreName];
+
+		if(score.length){
+			let res = score.find(item => item.isValid === false);
+			if(res){
+				result = false;
+				return true;
+			}
+		}
+	});
+
+	return result;
 }
 
 const TeamHelper = {
@@ -1281,7 +1305,8 @@ const TeamHelper = {
 	decByType:								decByType,
 	incByType:								incByType,
 	calculateTeamPoints: 					calculateTeamPoints,
-	pointsPlainValidation:					pointsPlainValidation
+	pointsPlainValidation:					pointsPlainValidation,
+	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit
 };
 
 module.exports = TeamHelper;
