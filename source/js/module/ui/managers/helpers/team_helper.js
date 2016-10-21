@@ -1210,16 +1210,6 @@ function calculateTeamPoints(event, teamId){
 }
 
 /**
- * Validation result value according to 'plain' type
- * @param {Number} value - value to validation
- * @param {Number} pointsStep
- * @returns {boolean/string} - false or error message
- */
-function pointsPlainValidation(value, pointsStep){
-	return value % pointsStep === 0 ? false : 'Validation error!';
-}
-
-/**
  * Checking the results on the validation error.
  * @param {object} event
  * @returns {boolean} - false - not valid, true - valid
@@ -1305,7 +1295,6 @@ const TeamHelper = {
 	decByType:								decByType,
 	incByType:								incByType,
 	calculateTeamPoints: 					calculateTeamPoints,
-	pointsPlainValidation:					pointsPlainValidation,
 	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit
 };
 

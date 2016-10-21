@@ -1,17 +1,15 @@
 /**
- * Created by Anatoly on 19.10.2016.
+ * Created by Anatoly on 21.10.2016.
  */
 
 const 	React 		= require('react'),
-		ScoreSign	= require('./score_sign'),
-		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
 		ScoreHelper = require('./score_helper'),
 		classNames 	= require('classnames');
 
 const PlainPoints = React.createClass({
 	propTypes:{
 		value:		React.PropTypes.number.isRequired,
-		step:		React.PropTypes.number.isRequired,
+		mask:		React.PropTypes.string.isRequired,
 		onChange: 	React.PropTypes.func.isRequired
 	},
 	getInitialState:function(){
@@ -19,11 +17,6 @@ const PlainPoints = React.createClass({
 			error:false,
 			value:this.props.value
 		};
-	},
-	onClick:function(operation){
-		const result = TeamHelper.operationByType(operation, this.props.value*1, 'plain', this.props.step);
-
-		this.changeScore(result);
 	},
 	handleChange:function(e){
 		this.changeScore(e.target.value);
@@ -43,7 +36,7 @@ const PlainPoints = React.createClass({
 	},
 	changeScore:function(value){
 		if(/^[0-9.]+$/.test(value)){
-			const validationResult = ScoreHelper.pointsPlainValidation(value, this.props.step);
+			const validationResult = ScoreHelper.stringTimeValidation(value, this.props.mask);
 
 			this.setState({
 				value: value,
@@ -56,10 +49,14 @@ const PlainPoints = React.createClass({
 								});
 		}
 	},
+	getMask:function(mask){
+		return mask;
+	},
 	render:function(){
 		const 	error 	= !!this.state.error,
 				title 	= error ? this.state.error : null,
 				value 	= this.state.value,
+				mask = this.getMask(this.props.mask),
 				classes = classNames({
 										bScore: true,
 										mError: error
@@ -67,14 +64,8 @@ const PlainPoints = React.createClass({
 
 		return (
 			<div className={classes}>
-				<ScoreSign type="minus" handleClick={this.onClick.bind(null, 'minus')}/>
-				<input type="text"
-					   className="eScore_Points"
-					   title={title}
-					   value={value}
-					   onChange={this.handleChange}
-					   onBlur={this.handleBlur} />
-				<ScoreSign type="plus" handleClick={this.onClick.bind(null, 'plus')}/>
+				<MaskedInput title={title} value={value} className="eScore_Points"
+							 onBlur={this.handleBlur} onChange={this.handleChange} mask={mask} />
 			</div>
 		);
 
