@@ -36,20 +36,61 @@ const AddPermissionRequest = React.createClass({
                 return self.props.onSuccess && self.props.onSuccess(result);
             });
     },
-    render:function(){
+    isSchoolSelected: function() {
+        const binding = this.getDefaultBinding();
+
+        return binding.meta().toJS('schoolId.value') !== '';
+    },
+    getPlaceHolderForRoleSelect: function() {
+        return this.isSchoolSelected() ? 'Please select role' : "Please select school";
+    },
+    isRoleSelectDisabled: function() {
+        return !this.isSchoolSelected();
+    },
+    render: function() {
         const   self        = this,
                 binding     = self.getDefaultBinding(),
                 getSchools  = window.Server.publicSchools.filter,
                 isParent    = binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS();
 
+        console.log(this.isRoleSelectDisabled());
+
         return (
-        <Form name="New Request" updateBinding={true} binding={binding} onSubmit={self.continueButtonClick}
-              formStyleClass="bGrantContainer" defaultButton="Submit">
-            <FormField type="autocomplete" field="schoolId" serviceFullData={getSchools} validation="required" >School</FormField>
-            <FormField type="select" field="preset" sourceArray={roleList} >Role</FormField>
-            <FormField type="text" field="studentName" fieldClassName={classNames({mHidden:!isParent})} >Student</FormField>
-            <FormField type="textarea" field="comment" validation="alphanumeric" >Comment</FormField>
-        </Form>
+            <Form   name            = "New Request"
+                    updateBinding   = { true }
+                    binding         = { binding }
+                    onSubmit        = { self.continueButtonClick }
+                    formStyleClass  = "bGrantContainer"
+                    defaultButton   = "Submit"
+            >
+                <FormField type             = "autocomplete"
+                           field            = "schoolId"
+                           serviceFullData  = {getSchools}
+                           validation       = "required"
+                >
+                    School
+                </FormField>
+                <FormField type         = "select"
+                           field        = "preset"
+                           sourceArray  = {roleList}
+                           placeHolder  = {this.getPlaceHolderForRoleSelect()}
+                           isDisabled   = {this.isRoleSelectDisabled()}
+                >
+                    Role
+                </FormField>
+                <FormField type             = "text"
+                           field            = "studentName"
+                           fieldClassName   = {classNames({mHidden:!isParent})}
+                >
+                    Student
+                </FormField>
+                <FormField type         = "textarea"
+                           field        = "comment"
+                           validation   = "alphanumeric"
+                >
+                    Comment
+                </FormField>
+            </Form>
         );
     }
 });
