@@ -2,11 +2,13 @@
  * Created by Anatoly on 21.04.2016.
  */
 
-const   Form        = require('module/ui/form/form'),
-        FormField 	= require('module/ui/form/form_field'),
-        React       = require('react'),
+const   React       = require('react'),
         Morearty    = require('morearty'),
         Immutable   = require('immutable'),
+
+        MoreartyHelper  = require('./../../../helpers/morearty_helper'),
+        Form        = require('module/ui/form/form'),
+        FormField 	= require('module/ui/form/form_field'),
         classNames  = require('classnames'),
         roleList    = require('module/data/roles_data');
 
@@ -27,7 +29,6 @@ const AddPermissionRequest = React.createClass({
     },
     continueButtonClick:function(model){
         const self = this;
-
         if(model.studentName)
             model.comment = `Request to be parent of [ ${model.studentName} ] \r\n` + model.comment;
 
@@ -41,19 +42,36 @@ const AddPermissionRequest = React.createClass({
 
         return binding.meta().toJS('schoolId.value') !== '';
     },
+    getSchoolSelectedId: function() {
+        const binding = this.getDefaultBinding();
+
+        return binding.meta().toJS('schoolId.value');
+    },
     getPlaceHolderForRoleSelect: function() {
         return this.isSchoolSelected() ? 'Please select role' : "Please select school";
     },
     isRoleSelectDisabled: function() {
         return !this.isSchoolSelected();
     },
+    getRoles: function() {
+        // user roles for active school
+        const currentRoles = this.getMoreartyContext().getBinding().toJS('userData.roleList.permissions')
+            .filter(p => p.schoolId === this.getSchoolSelectedId())
+            .map(p => p.role.toLowerCase());
+
+        console.log(currentRoles);
+
+        const hasUserCurrentRole = function(currentRole) {
+            return currentRoles.find(r => r === currentRole);
+        };
+
+        return roleList.filter(r => !hasUserCurrentRole(r.id));
+    },
     render: function() {
         const   self        = this,
                 binding     = self.getDefaultBinding(),
                 getSchools  = window.Server.publicSchools.filter,
                 isParent    = binding.meta('preset.value').toJS() === 'parent' && binding.meta('schoolId.value').toJS();
-
-        console.log(this.isRoleSelectDisabled());
 
         return (
             <Form   name            = "New Request"
@@ -72,7 +90,7 @@ const AddPermissionRequest = React.createClass({
                 </FormField>
                 <FormField type         = "select"
                            field        = "preset"
-                           sourceArray  = {roleList}
+                           sourceArray  = {this.getRoles()}
                            placeHolder  = {this.getPlaceHolderForRoleSelect()}
                            isDisabled   = {this.isRoleSelectDisabled()}
                 >
