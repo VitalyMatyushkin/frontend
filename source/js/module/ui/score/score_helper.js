@@ -36,34 +36,44 @@ const ScoreHelper = {
 	 */
 	stringTimeToPoints: function(value, mask){
 		const 	maskParts 	= mask.replace(/[^hmsc]/g, ':').split(':'),
-				valueParts 	= value.replace(/[^0-9]/g, ':').split(':');
+				valueParts 	= value.replace(/[^0-9_]/g, ':').split(':');
 
 		let result = 0;
 		for(let i=0; i < maskParts.length; i++){
+			let tmp = 0;
 			switch (maskParts[i]){
 				case 'h':
 				case 'hh':
 				case 'hhh':
-					result += valueParts[i]*3600;
+					tmp = valueParts[i]*3600;
 					break;
 				case 'm':
 				case 'mm':
-					result += valueParts[i] < 60 ? valueParts[i]*60 : NaN;
+					if(valueParts[i] < 60)
+						tmp = valueParts[i]*60;
+					else
+						tmp = NaN;
 					break;
 				case 's':
 				case 'ss':
-					result += valueParts[i] < 60 ? valueParts[i] : NaN;
+					if(valueParts[i] < 60)
+						result += valueParts[i]*1;
+					else
+						tmp = NaN;
 					break;
 				case 'c':
 				case 'cc':
 				case 'ccc':
 				case 'cccc':
-					result += valueParts[i]/(10*valueParts[i].length);
+					tmp = valueParts[i]*1/(Math.pow(10, valueParts[i].length));
 					break;
 				default:
-					result = NaN;
+					tmp = NaN;
 					break;
 			}
+			if(isNaN(tmp))
+				return NaN;
+			result += tmp;
 		}
 		return result;
 	},

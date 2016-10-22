@@ -24,6 +24,17 @@ const TimePoints = React.createClass({
 
 		e.stopPropagation();
 	},
+	handleBlur:function(e){
+		const 	value = e.target.value,
+				error = this.state.error;
+
+		this.setState({
+			stringValue: value === this.emptyMask ? 0 : value,
+			error: error
+		});
+
+		e.stopPropagation();
+	},
 	handleFocus:function(e){
 		const 	value = this.state.stringValue,
 				error = this.state.error;
@@ -71,6 +82,7 @@ const TimePoints = React.createClass({
 			<div className={classes}>
 				<MaskedInput title={title} value={value} className="eScore_Points mTime" mask={mask}
 							 onChange={this.handleChange}
+							 onBlur={this.handleBlur}
 							 onFocus={this.handleFocus} />
 			</div>
 		);
