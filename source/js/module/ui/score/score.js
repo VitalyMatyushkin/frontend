@@ -53,11 +53,6 @@ const Score = React.createClass({
 							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
-		const self = this,
-				step = this.props.pointsStep;
-
-		const timePoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType);
-
 		return <TimePoints value={this.props.plainPoints}
 						   mask={this.props.pointsMask}
 						   onChange={this.props.onChange} />;

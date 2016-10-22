@@ -4,9 +4,10 @@
 
 const 	React 		= require('react'),
 		ScoreHelper = require('./score_helper'),
+		MaskedInput = require('module/ui/masked_input'),
 		classNames 	= require('classnames');
 
-const PlainPoints = React.createClass({
+const TimePoints = React.createClass({
 	propTypes:{
 		value:		React.PropTypes.number.isRequired,
 		mask:		React.PropTypes.string.isRequired,
@@ -15,7 +16,7 @@ const PlainPoints = React.createClass({
 	getInitialState:function(){
 		return {
 			error:false,
-			value:this.props.value
+			stringValue:this.props.value === 0 ? 0 : ScoreHelper.pointsToStringTime(this.props.value, this.props.mask)
 		};
 	},
 	handleChange:function(e){
@@ -23,39 +24,43 @@ const PlainPoints = React.createClass({
 
 		e.stopPropagation();
 	},
-	handleBlur:function(e){
-		const 	value = e.target.value,
+	handleFocus:function(e){
+		const 	value = this.state.stringValue,
 				error = this.state.error;
 
 		this.setState({
-			value: error ? value : value*1,
+			stringValue: value === 0 ? this.emptyMask : value,
 			error: error
 		});
 
 		e.stopPropagation();
 	},
-	changeScore:function(value){
-		if(/^[0-9.]+$/.test(value)){
-			const validationResult = ScoreHelper.stringTimeValidation(value, this.props.mask);
+	changeScore:function(strValue){
+		const validationResult = ScoreHelper.stringTimeValidation(strValue, this.props.mask),
+			points = validationResult ? this.props.value : ScoreHelper.stringTimeToPoints(strValue, this.props.mask);
 
-			this.setState({
-				value: value,
-				error: validationResult
-			});
+		this.setState({
+			stringValue: strValue,
+			error: validationResult
+		});
 
-			this.props.onChange({
-									value: validationResult ? this.state.value*1 : value*1,
-									isValid:!validationResult
-								});
-		}
+		this.props.onChange({
+								value: points,
+								isValid:!validationResult
+							});
 	},
 	getMask:function(mask){
-		return mask;
+		if(this.mask !== mask){
+			this.mask = mask;
+			this.defaultMask = mask.replace(/[hmsc]/g, '9');
+			this.emptyMask = mask.replace(/[hmsc]/g, '_');
+		}
+		return this.defaultMask;
 	},
 	render:function(){
 		const 	error 	= !!this.state.error,
 				title 	= error ? this.state.error : null,
-				value 	= this.state.value,
+				value 	= this.state.stringValue,
 				mask = this.getMask(this.props.mask),
 				classes = classNames({
 										bScore: true,
@@ -64,8 +69,9 @@ const PlainPoints = React.createClass({
 
 		return (
 			<div className={classes}>
-				<MaskedInput title={title} value={value} className="eScore_Points"
-							 onBlur={this.handleBlur} onChange={this.handleChange} mask={mask} />
+				<MaskedInput title={title} value={value} className="eScore_Points mTime" mask={mask}
+							 onChange={this.handleChange}
+							 onFocus={this.handleFocus} />
 			</div>
 		);
 
@@ -73,4 +79,4 @@ const PlainPoints = React.createClass({
 });
 
 
-module.exports = PlainPoints;
+module.exports = TimePoints;

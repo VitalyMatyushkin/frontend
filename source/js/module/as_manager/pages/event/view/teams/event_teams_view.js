@@ -353,6 +353,7 @@ const EventTeamsView = React.createClass({
 								plainPoints		={self.getPointsByStudent(event, player.userId)}
 								pointsStep 		={event.sport.points.pointsStep}
 								pointsType		={event.sport.points.display}
+							  	pointsMask		={event.sport.points.inputMask}
 							  	onChange 		={self.handleChangeScore.bind(self, event, teamId, player)}
 						/>
 					</If>

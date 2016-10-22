@@ -149,7 +149,8 @@ const EventRival = React.createClass({
 						plainPoints		={points}
 						pointsStep 		={event.sport.points.pointsStep}
 						pointsType		={event.sport.points.display}
-						onChange 		={self.handleChangeScore.bind(self, teamBundleName, order)}
+					  	pointsMask		={event.sport.points.inputMask}
+					  	onChange 		={self.handleChangeScore.bind(self, teamBundleName, order)}
 				/>
 			</div>
 		);

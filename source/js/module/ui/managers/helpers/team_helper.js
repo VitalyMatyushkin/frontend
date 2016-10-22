@@ -910,7 +910,7 @@ function convertPoints(countPoints, pointsType){
 		const 	sec_in_hours 	= 3600,
 				sec_in_min 		= 60,
 				points 	= Math.floor(countPoints),
-				ms 	= Math.round((countPoints -points)*1000),
+				ms 		= Math.round((countPoints - points)*1000),
 				h 		= Math.floor(points / sec_in_hours),
 				min		= Math.floor((points - h * sec_in_hours) / sec_in_min),
 				sec		= points - h * sec_in_hours - min * sec_in_min;
