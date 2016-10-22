@@ -2,7 +2,9 @@ const 	ComboboxOption 			= require('./option'),
 		React 					= require('react'),
 		Immutable 				= require('immutable'),
 		Morearty				= require('morearty'),
-		Lazy					= require('lazy.js');
+		Lazy					= require('lazy.js'),
+
+		If						= require('./../if/if');
 
 /** Component which acts like selects and display array of data passed as sourceArray property */
 const Select = React.createClass({
@@ -11,7 +13,9 @@ const Select = React.createClass({
 		/** function to call when option selected. (item.id, item.value) */
         onSelect: 		React.PropTypes.func,
 		/** array of data to display. Each item should have id and value properties */
-		sourceArray: 	React.PropTypes.array
+		sourceArray: 	React.PropTypes.array,
+		isDisabled:		React.PropTypes.bool, //false - show field like disabled
+		placeHolder:	React.PropTypes.string
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
@@ -27,7 +31,10 @@ const Select = React.createClass({
 		const 	binding 	= this.getDefaultBinding(),
 				showList 	= !(binding.get('showList') || false);
 
-		binding.set('showList', showList);
+		// toggle list only when component has prop isDisable === false
+		if(!(!!this.props.isDisabled)) {
+			binding.set('showList', showList);
+		}
 	},
 
 
@@ -91,6 +98,13 @@ const Select = React.createClass({
 			);
 		});
 	},
+	getText: function() {
+		return (
+			this.getDefaultBinding().toJS('selectedValue') !== null ?
+				this.getDefaultBinding().toJS('selectedValue') :
+				this.props.placeHolder
+		);
+	},
 	render: function () {
 		const 	self 			= this,
 				binding 		= self.getDefaultBinding(),
@@ -101,10 +115,15 @@ const Select = React.createClass({
 			listStyle.display = 'block';
 		}
 
+		// show button only when component has prop isDisable === false
+		const isShowComboboxButton = !(!!this.props.isDisabled);
+
 		return (
 			<div className="bCombobox">
-				<input value={binding.get('selectedValue')} onClick={self.toggleList} type="text" readOnly />
-				<span onClick={self.toggleList} className="eCombobox_button"></span>
+				<input value={this.getText()} onClick={self.toggleList} type="text" readOnly />
+				<If condition={isShowComboboxButton}>
+					<span onClick={self.toggleList} className="eCombobox_button"></span>
+				</If>
 				<div className="eCombobox_list" style={listStyle}>
 					{dropDownNodes}
 				</div>

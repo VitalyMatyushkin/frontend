@@ -167,6 +167,8 @@ const serviceList = {
 		serviceList.childrenEventsCount = new Service('/i/children/events/count', binding);
 		serviceList.child = new Service('/i/children/{childId}', binding);
 		serviceList.childEvents = new Service('/i/children/{childId}/events', binding);
+		serviceList.childEventPhotos = new Service('/i/children/events/{eventId}/photos', binding);
+		serviceList.childEventPhoto = new Service('/i/children/events/{eventId}/photos/{photoId}', binding);
 		serviceList.childParents = new Service('/i/children/{childId}/parents', binding);
 
 		// postcode
