@@ -25,7 +25,7 @@ const AccessPresetPanel = React.createClass({
 								isChecked	= { this.isChecked(AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.PRIVATE) }
 								onClick		= { this.props.handleChange.bind(null, AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.PRIVATE) }
 				/>
-				<RadioButton	text		= { 'Participant parents' }
+				<RadioButton	text		= { 'Team members' }
 								isChecked	= { this.isChecked(AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.ALL_PARTICIPANT_PARENTS) }
 								onClick		= { this.props.handleChange.bind(null, AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.ALL_PARTICIPANT_PARENTS) }
 				/>
