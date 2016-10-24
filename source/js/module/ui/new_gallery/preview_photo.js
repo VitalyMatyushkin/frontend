@@ -17,9 +17,14 @@ const PreviewPhoto = React.createClass({
 	},
 	handleClickDeletePhoto: function(e) {
 		typeof this.props.handleClickDeletePhoto !== "undefined" &&  this.props.handleClickDeletePhoto(this.props.id);
+
 		e.stopPropagation();
 	},
-
+	handleClickToTooltip: function(e) {
+		// just do stop propagation
+		// because onClick to tooltip doesn't anything
+		e.stopPropagation();
+	},
 	renderActions: function() {
 		switch (this.props.accessMode) {
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
@@ -27,11 +32,13 @@ const PreviewPhoto = React.createClass({
 			default:
 				return (
 					<div className='ePreviewPhoto_actions'>
-						<span	onClick				= { this.handleClickDeletePhoto }
-								 className			= "bTooltip"
-								 data-description	= "Delete Photo"
+						<span	className			= "bTooltip"
+								data-description	= "Delete Photo"
+								onClick				= { this.handleClickToTooltip }
 						>
-							<SVG icon = "icon_delete"/>
+							<SVG	onClick	= { this.handleClickDeletePhoto }
+									icon	= "icon_delete"
+							/>
 						</span>
 					</div>
 				);
