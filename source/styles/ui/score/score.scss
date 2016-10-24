@@ -6,7 +6,7 @@
   border: solid 1px red;
 }
 
-.eScore_Points {
+input[type="text"].eScore_Points {
   display: inline-block;
   width: 40px;
   font-size: 14px;
@@ -14,6 +14,10 @@
   text-align: center;
 
   &.mTime{
+    width: 100px;
+  }
+
+  &.mDistance{
     width: 100px;
   }
 }
