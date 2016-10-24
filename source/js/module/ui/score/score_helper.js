@@ -1,9 +1,6 @@
 /**
  * Created by Anatoly on 21.10.2016.
  */
-const 	TeamHelper  = require('module/ui/managers/helpers/team_helper'),
-		SportConsts	= require('module/helpers/consts/sport');
-
 const ScoreHelper = {
 
 	/**
@@ -40,7 +37,7 @@ const ScoreHelper = {
 	 * @returns {boolean/string} - false or error message
 	 */
 	stringTimeValidation: function(value, mask){
-		const points = this.stringTimeToPoints(value, mask);
+		const points = ScoreHelper.stringTimeToPoints(value, mask);
 
 		return points ? false : 'Validation error!';
 	},
@@ -59,7 +56,7 @@ const ScoreHelper = {
 		for(let i=0; i < maskParts.length; i++){
 			let tmp = 0;
 			switch (maskParts[i]){
-				case 'h':
+				case 'h':		//here we use falling through
 				case 'hh':
 				case 'hhh':
 					tmp = valueParts[i]*3600;
@@ -96,55 +93,13 @@ const ScoreHelper = {
 	},
 
 	/**
-	 * Convert points to string value according to the mask.
-	 * @param {number} countPoints - count of points
-	 * @param {string} mask - points.inputMask
-	 * @returns {string} - string value without separators
-	 * */
-	pointsToStringTime: function(countPoints, mask){
-		const 	maskParts 	= mask.replace(/[^hmsc]/g, ':').split(':'),
-			valueParts 	= TeamHelper.convertPoints(countPoints, SportConsts.SPORT_POINTS_TYPE.TIME);
-
-		let result = '';
-
-		for(let i=0; i < maskParts.length; i++){
-			switch (maskParts[i]){
-				case 'h':
-				case 'hh':
-				case 'hhh':
-					result += this.zeroFill(valueParts.h, maskParts[i].length);
-					break;
-				case 'm':
-				case 'mm':
-					result += this.zeroFill(valueParts.min, maskParts[i].length);
-					break;
-				case 's':
-				case 'ss':
-					result += this.zeroFill(valueParts.sec, maskParts[i].length);
-					break;
-				case 'c':
-				case 'cc':
-				case 'ccc':
-					result += this.zeroFill(valueParts.ms, maskParts[i].length);
-					break;
-				case 'cccc':
-					result += this.zeroFill(valueParts.ms*10, maskParts[i].length);
-					break;
-			}
-		}
-		return result;
-
-
-	},
-
-	/**
 	 * Validation string value according to 'distance' type
 	 * @param {string} value - value to validation
 	 * @param {string} mask - points.inputMask
 	 * @returns {boolean/string} - false or error message
 	 */
 	stringDistanceValidation: function(value, mask){
-		const points = this.stringDistanceToPoints(value, mask);
+		const points = ScoreHelper.stringDistanceToPoints(value, mask);
 
 		return points ? false : 'Validation error!';
 	},
@@ -163,7 +118,7 @@ const ScoreHelper = {
 		for(let i=0; i < maskParts.length; i++){
 			let tmp = 0;
 			switch (maskParts[i]){
-				case 'k':
+				case 'k':			//here we use falling through
 				case 'kk':
 				case 'kkk':
 					tmp = valueParts[i]*100000;
@@ -193,39 +148,6 @@ const ScoreHelper = {
 		}
 		return result;
 	},
-
-	/**
-	 * Convert points to string value according to the mask.
-	 * @param {number} countPoints - count of points
-	 * @param {string} mask - points.inputMask
-	 * @returns {string} - string value without separators
-	 * */
-	pointsToStringDistance: function(countPoints, mask){
-		const 	maskParts 	= mask.replace(/[^kmc]/g, ':').split(':'),
-				valueParts 	= TeamHelper.convertPoints(countPoints, SportConsts.SPORT_POINTS_TYPE.DISTANCE);
-
-		let result = '';
-
-		for(let i=0; i < maskParts.length; i++){
-			switch (maskParts[i]){
-				case 'k':
-				case 'kk':
-				case 'kkk':
-					result += this.zeroFill(valueParts.km, maskParts[i].length);
-					break;
-				case 'm':
-				case 'mm':
-				case 'mmm':
-					result += this.zeroFill(valueParts.m, maskParts[i].length);
-					break;
-				case 'c':
-				case 'cc':
-					result += this.zeroFill(valueParts.cm, maskParts[i].length);
-					break;
-			}
-		}
-		return result;
-	}
 };
 
 module.exports = ScoreHelper;

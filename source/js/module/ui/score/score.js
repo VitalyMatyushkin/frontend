@@ -1,11 +1,9 @@
 const	React			= require('react'),
-		ScoreSign		= require('./score_sign'),
 		TeamHelper  	= require('module/ui/managers/helpers/team_helper'),
 		SportConsts		= require('module/helpers/consts/sport'),
-		If 				= require('module/ui/if/if'),
+		ScoreHelper 	= require('./score_helper'),
 		PlainPoints 	= require('./plain-points'),
-		TimePoints 		= require('./time-points'),
-		DistancePoints 	= require('./distance-points');
+		MaskedPoints 	= require('./masked-points');
 
 const Score = React.createClass({
 	propTypes: {
@@ -54,14 +52,22 @@ const Score = React.createClass({
 							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
-		return <TimePoints value={this.props.plainPoints}
-						   mask={this.props.pointsMask}
-						   onChange={this.props.onChange} />;
+		return <MaskedPoints 	value={this.props.plainPoints}
+						   		mask={this.props.pointsMask}
+						   		onChange={this.props.onChange}
+								stringToPoints={ScoreHelper.stringTimeToPoints}
+								validation={ScoreHelper.stringTimeValidation}
+								className="mTime"
+		/>;
 	},
 	renderPlayerDistancePointsInChangeMode: function() {
-		return <DistancePoints 	value={this.props.plainPoints}
+		return <MaskedPoints 	value={this.props.plainPoints}
 								mask={this.props.pointsMask}
-								onChange={this.props.onChange} />;
+								onChange={this.props.onChange}
+								stringToPoints={ScoreHelper.stringDistanceToPoints}
+								validation={ScoreHelper.stringDistanceValidation}
+								className="mDistance"
+		/>;
 	},
 
 	render: function () {

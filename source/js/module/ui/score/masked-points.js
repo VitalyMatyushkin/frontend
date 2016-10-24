@@ -7,24 +7,26 @@ const 	React 		= require('react'),
 		MaskedInput = require('module/ui/masked_input'),
 		classNames 	= require('classnames');
 
-const DistancePoints = React.createClass({
+const MaskedPoints = React.createClass({
 	propTypes:{
-		value:		React.PropTypes.number.isRequired,
-		mask:		React.PropTypes.string.isRequired,
-		onChange: 	React.PropTypes.func.isRequired
+		value:			React.PropTypes.number.isRequired,
+		mask:			React.PropTypes.string.isRequired,
+		onChange: 		React.PropTypes.func.isRequired,
+		stringToPoints: React.PropTypes.func.isRequired,
+		validation: 	React.PropTypes.func.isRequired
 	},
 	getInitialState:function(){
 		return {
 			error:false,
-			stringValue:this.props.value === 0 ? 0 : ScoreHelper.pointsToStringDistance(this.props.value, this.props.mask)
+			stringValue:this.props.value
 		};
 	},
-	handleChange:function(e){
+	onChange:function(e){
 		this.changeScore(e.target.value);
 
 		e.stopPropagation();
 	},
-	handleBlur:function(e){
+	onBlur:function(e){
 		const 	value = e.target.value,
 				error = this.state.error;
 
@@ -35,7 +37,7 @@ const DistancePoints = React.createClass({
 
 		e.stopPropagation();
 	},
-	handleFocus:function(e){
+	onFocus:function(e){
 		const 	value = this.state.stringValue,
 				error = this.state.error;
 
@@ -47,8 +49,8 @@ const DistancePoints = React.createClass({
 		e.stopPropagation();
 	},
 	changeScore:function(strValue){
-		const validationResult = ScoreHelper.stringDistanceValidation(strValue, this.props.mask),
-			points = validationResult ? this.props.value : ScoreHelper.stringDistanceToPoints(strValue, this.props.mask);
+		const validationResult = this.props.validation(strValue, this.props.mask),
+			points = validationResult ? this.props.value : this.props.stringToPoints(strValue, this.props.mask);
 
 		this.setState({
 			stringValue: strValue,
@@ -60,11 +62,17 @@ const DistancePoints = React.createClass({
 								isValid:!validationResult
 							});
 	},
-	getMask:function(mask){
+	/**
+	 * get mask for MaskedInput component
+	 * it is counted only once.
+	 * */
+	getMask:function(){
+		const mask = this.props.mask;
+
 		if(this.mask !== mask){
 			this.mask = mask;
-			this.defaultMask = mask.replace(/[kmc]/g, '9');
-			this.emptyMask = mask.replace(/[kmc]/g, '_');
+			this.defaultMask = mask.replace(/[hkmsc]/g, '9'); 	// mask in format '999:999:999'
+			this.emptyMask = mask.replace(/[hkmsc]/g, '_');		// empty value for current mask
 		}
 		return this.defaultMask;
 	},
@@ -72,18 +80,18 @@ const DistancePoints = React.createClass({
 		const 	error 	= !!this.state.error,
 				title 	= error ? this.state.error : null,
 				value 	= this.state.stringValue,
-				mask = this.getMask(this.props.mask),
-				classes = classNames({
-										bScore: true,
-										mError: error
-									});
+				mask = this.getMask(),
+			classes = classNames({
+				bScore: true,
+				mError: error
+			});
 
 		return (
 			<div className={classes}>
-				<MaskedInput title={title} value={value} className="eScore_Points mDistance" mask={mask}
-							 onChange={this.handleChange}
-							 onBlur={this.handleBlur}
-							 onFocus={this.handleFocus} />
+				<MaskedInput title={title} value={value} className={`eScore_Points ${this.props.className}`} mask={mask}
+							 onChange={this.onChange}
+							 onBlur={this.onBlur}
+							 onFocus={this.onFocus} />
 			</div>
 		);
 
@@ -91,4 +99,4 @@ const DistancePoints = React.createClass({
 });
 
 
-module.exports = DistancePoints;
+module.exports = MaskedPoints;
