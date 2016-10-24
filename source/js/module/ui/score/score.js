@@ -1,10 +1,11 @@
-const	React		= require('react'),
-		ScoreSign	= require('./score_sign'),
-		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
-		SportConsts	= require('module/helpers/consts/sport'),
-		If 			= require('module/ui/if/if'),
-		PlainPoints = require('./plain-points'),
-		TimePoints 	= require('./time-points');
+const	React			= require('react'),
+		ScoreSign		= require('./score_sign'),
+		TeamHelper  	= require('module/ui/managers/helpers/team_helper'),
+		SportConsts		= require('module/helpers/consts/sport'),
+		If 				= require('module/ui/if/if'),
+		PlainPoints 	= require('./plain-points'),
+		TimePoints 		= require('./time-points'),
+		DistancePoints 	= require('./distance-points');
 
 const Score = React.createClass({
 	propTypes: {
@@ -58,25 +59,9 @@ const Score = React.createClass({
 						   onChange={this.props.onChange} />;
 	},
 	renderPlayerDistancePointsInChangeMode: function() {
-		const self = this;
-
-		const distancePoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType);
-
-		return (
-			<div className="bScore">
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'km')}/>
-				<div className="eScore_Points">{`${distancePoints.km}km`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'km')}/>
-
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'm')}/>
-				<div className="eScore_Points">{`${distancePoints.m}m`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'm')}/>
-
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'cm')}/>
-				<div className="eScore_Points">{`${distancePoints.cm}cm`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'cm')}/>
-			</div>
-		);
+		return <DistancePoints 	value={this.props.plainPoints}
+								mask={this.props.pointsMask}
+								onChange={this.props.onChange} />;
 	},
 
 	render: function () {
