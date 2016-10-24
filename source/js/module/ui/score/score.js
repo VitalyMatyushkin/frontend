@@ -52,7 +52,7 @@ const Score = React.createClass({
 							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
-		return <MaskedPoints 	value={this.props.plainPoints}
+		return <MaskedPoints 	plainPoints={this.props.plainPoints}
 						   		mask={this.props.pointsMask}
 						   		onChange={this.props.onChange}
 								stringToPoints={ScoreHelper.stringTimeToPoints}
@@ -61,7 +61,7 @@ const Score = React.createClass({
 		/>;
 	},
 	renderPlayerDistancePointsInChangeMode: function() {
-		return <MaskedPoints 	value={this.props.plainPoints}
+		return <MaskedPoints 	plainPoints={this.props.plainPoints}
 								mask={this.props.pointsMask}
 								onChange={this.props.onChange}
 								stringToPoints={ScoreHelper.stringDistanceToPoints}

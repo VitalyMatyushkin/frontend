@@ -3,13 +3,12 @@
  */
 
 const 	React 		= require('react'),
-		ScoreHelper = require('./score_helper'),
 		MaskedInput = require('module/ui/masked_input'),
 		classNames 	= require('classnames');
 
 const MaskedPoints = React.createClass({
 	propTypes:{
-		value:			React.PropTypes.number.isRequired,
+		plainPoints:	React.PropTypes.number.isRequired,
 		mask:			React.PropTypes.string.isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
 		/**
@@ -29,8 +28,10 @@ const MaskedPoints = React.createClass({
 	},
 	getInitialState:function(){
 		return {
-			error:false,
-			stringValue:this.props.value //string value from component MaskedInput
+			error: 			false,
+			stringValue: 	this.props.plainPoints, 					//string value from component MaskedInput
+			mask: 			this.props.mask.replace(/[hkmsc]/g, '9'), 	// mask in format '999:999:999'
+			emptyValue: 	this.props.mask.replace(/[hkmsc]/g, '_')	// empty value for current mask
 		};
 	},
 	onChange:function(e){
@@ -39,30 +40,26 @@ const MaskedPoints = React.createClass({
 		e.stopPropagation();
 	},
 	onBlur:function(e){
-		const 	value = e.target.value,
-				error = this.state.error;
+		const 	value = e.target.value;
 
 		this.setState({
-			stringValue: value === this.emptyMask ? 0 : value, // if empty value for current mask, then 0, else value
-			error: error
+			stringValue: value === this.state.emptyValue ? 0 : value // if empty value for current mask, then 0, else value
 		});
 
 		e.stopPropagation();
 	},
 	onFocus:function(e){
-		const 	value = this.state.stringValue,
-				error = this.state.error;
+		const 	value = this.state.stringValue;
 
 		this.setState({
-			stringValue: value === 0 ? this.emptyMask : value, // if value===0, then empty value for current mask, else value
-			error: error
+			stringValue: value === 0 ? this.state.emptyValue : value // if value===0, then empty value for current mask, else value
 		});
 
 		e.stopPropagation();
 	},
 	changeScore:function(strValue){
 		const 	validationResult = this.props.validation(strValue, this.props.mask),
-				points = validationResult ? this.props.value : this.props.stringToPoints(strValue, this.props.mask);
+				points = validationResult ? this.props.plainPoints : this.props.stringToPoints(strValue, this.props.mask);
 
 		this.setState({
 			stringValue: strValue,
@@ -75,25 +72,10 @@ const MaskedPoints = React.createClass({
 								isValid:!validationResult
 							});
 	},
-	/**
-	 * get mask for MaskedInput component
-	 * it is counted only once.
-	 * */
-	getMask:function(){
-		const mask = this.props.mask;
-
-		if(this.mask !== mask){
-			this.mask = mask;
-			this.defaultMask = mask.replace(/[hkmsc]/g, '9'); 	// mask in format '999:999:999'
-			this.emptyMask = mask.replace(/[hkmsc]/g, '_');		// empty value for current mask
-		}
-		return this.defaultMask;
-	},
 	render:function(){
 		const 	error 	= !!this.state.error,
 				title 	= error ? this.state.error : null,
-				value 	= this.state.stringValue,
-				mask 	= this.getMask(),
+				mask 	= this.state.mask,
 				classes = classNames({
 					bScore: true,
 					mError: error
@@ -101,7 +83,9 @@ const MaskedPoints = React.createClass({
 
 		return (
 			<div className={classes}>
-				<MaskedInput title={title} value={value} className={`eScore_Points ${this.props.className}`} mask={mask}
+				<MaskedInput title={title} value={this.state.stringValue}
+							 className={`eScore_Points ${this.props.className}`}
+							 mask={mask}
 							 onChange={this.onChange}
 							 onBlur={this.onBlur}
 							 onFocus={this.onFocus} />
