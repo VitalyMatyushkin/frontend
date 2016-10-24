@@ -1,7 +1,9 @@
-const	React			= require('react'),
-		AddPhotoButton	= require('./add_photo_button'),
-		PreviewPhoto	= require('./preview_photo'),
-		FullScreenPhoto	= require('./fullscreen_photo');
+const	React					= require('react'),
+		AddPhotoButton			= require('./add_photo_button'),
+		PreviewPhoto			= require('./preview_photo'),
+		FullScreenPhoto			= require('./fullscreen_photo'),
+
+		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
 
 const Gallery = React.createClass({
 	MODE: {
@@ -14,7 +16,7 @@ const Gallery = React.createClass({
 		handleChangeAddPhotoButton:		React.PropTypes.func,
 		handleChangeAccessPreset:		React.PropTypes.func,
 		handleClickDeletePhoto:			React.PropTypes.func,
-		isPublic:						React.PropTypes.bool.isRequired,
+		accessMode:						React.PropTypes.string.isRequired,
 		isLoading:						React.PropTypes.bool.isRequired
 	},
 	getInitialState: function() {
@@ -55,14 +57,15 @@ const Gallery = React.createClass({
 		return photos;
 	},
 	renderAddPhotoButton: function() {
-		if(!this.props.isPublic) {
-			return (
-				<AddPhotoButton	handleChange	= { this.props.handleChangeAddPhotoButton }
-								isLoading		= { this.props.isLoading }
-				/>
-			);
-		} else {
-			return null;
+		switch (this.props.accessMode) {
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
+				return null;
+			default:
+				return (
+					<AddPhotoButton	handleChange	= { this.props.handleChangeAddPhotoButton }
+									isLoading		= { this.props.isLoading }
+					/>
+				);
 		}
 	},
 	renderPhoto: function(photo) {
@@ -70,7 +73,7 @@ const Gallery = React.createClass({
 			<PreviewPhoto	key								= { photo.id }
 							id								= { photo.id }
 							url								= { photo.picUrl }
-							isPublic						= { this.props.isPublic }
+							accessMode						= { this.props.accessMode }
 							handleClickPhoto				= { this.handleClickPhoto }
 							handleClickDeletePhoto			= { this.props.handleClickDeletePhoto }
 			/>
@@ -87,7 +90,7 @@ const Gallery = React.createClass({
 									handleClickClose			= { this.handleClickCloseFullScreenPhoto }
 									currentAccessPreset			= { currentPhoto.accessPreset }
 									handleChangeAccessPreset	= { this.handleChangeAccessPreset.bind(this, currentPhoto.id)  }
-									isPublic					= { this.props.isPublic }
+									accessMode					= { this.props.accessMode }
 				/>
 			);
 		} else {

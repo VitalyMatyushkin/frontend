@@ -1,8 +1,10 @@
-const	React 				= require('react'),
-		Morearty			= require('morearty'),
-		Actions				= require('./event_gallery_actions'),
-		Gallery				= require('./../../../../ui/new_gallery/galley'),
-		RoleHelper			= require('./../../../../helpers/role_helper');
+const	React 					= require('react'),
+		Morearty				= require('morearty'),
+		Actions					= require('./event_gallery_actions'),
+		Gallery					= require('./../../../../ui/new_gallery/galley'),
+		RoleHelper				= require('./../../../../helpers/role_helper'),
+
+		GalleryAccessPresets	= require('./../../../../helpers/consts/gallery');
 
 const EventGallery = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -11,6 +13,14 @@ const EventGallery = React.createClass({
 		eventId:		React.PropTypes.string.isRequired
 	},
 
+	getGalleryAccessPreset: function(userRole) {
+		switch (userRole) {
+			case "PARENT":
+				return GalleryAccessPresets.GALLERY_ACCESS_PRESET.PARENT;
+			default:
+				return GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER;
+		}
+	},
 	render: function() {
 		const	binding		= this.getDefaultBinding(),
 				photos		= binding.toJS('photos'),
@@ -21,7 +31,7 @@ const EventGallery = React.createClass({
 
 		return (
 			<div className='bEvent_media bEventBottomContainer'>
-				<Gallery	isPublic					= { false }
+				<Gallery	accessMode					= { this.getGalleryAccessPreset(userRole) }
 							handleChangeAddPhotoButton	= { file => Actions.addPhotoToEvent(userRole, binding, schoolId, eventId, file) }
 							handleClickDeletePhoto		= { photoId => Actions.deletePhotoFromEvent(userRole, binding, schoolId, eventId, photoId) }
 							handleChangeAccessPreset	= { (photoId, preset) => Actions.changePhotoPreset(userRole, binding, schoolId, eventId, photoId, preset) }
