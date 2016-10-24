@@ -12,6 +12,12 @@ const MaskedPoints = React.createClass({
 		value:			React.PropTypes.number.isRequired,
 		mask:			React.PropTypes.string.isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
+		/**
+		 * Convert string value to points according to the mask.
+		 * @param {string} value - string masked value
+		 * @param {string} mask - points.inputMask
+		 * @returns {number} - count of points
+		 */
 		stringToPoints: React.PropTypes.func.isRequired,
 		/**
 		 * Validation string value according to 'distance' or 'time' type
@@ -24,7 +30,7 @@ const MaskedPoints = React.createClass({
 	getInitialState:function(){
 		return {
 			error:false,
-			stringValue:this.props.value
+			stringValue:this.props.value //string value from component MaskedInput
 		};
 	},
 	onChange:function(e){
@@ -37,7 +43,7 @@ const MaskedPoints = React.createClass({
 				error = this.state.error;
 
 		this.setState({
-			stringValue: value === this.emptyMask ? 0 : value,
+			stringValue: value === this.emptyMask ? 0 : value, // if empty value for current mask, then 0, else value
 			error: error
 		});
 
@@ -48,21 +54,22 @@ const MaskedPoints = React.createClass({
 				error = this.state.error;
 
 		this.setState({
-			stringValue: value === 0 ? this.emptyMask : value,
+			stringValue: value === 0 ? this.emptyMask : value, // if value===0, then empty value for current mask, else value
 			error: error
 		});
 
 		e.stopPropagation();
 	},
 	changeScore:function(strValue){
-		const validationResult = this.props.validation(strValue, this.props.mask),
-			points = validationResult ? this.props.value : this.props.stringToPoints(strValue, this.props.mask);
+		const 	validationResult = this.props.validation(strValue, this.props.mask),
+				points = validationResult ? this.props.value : this.props.stringToPoints(strValue, this.props.mask);
 
 		this.setState({
 			stringValue: strValue,
 			error: validationResult
 		});
 
+		// save changes to events
 		this.props.onChange({
 								value: points,
 								isValid:!validationResult
