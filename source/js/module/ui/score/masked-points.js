@@ -80,11 +80,11 @@ const MaskedPoints = React.createClass({
 		const 	error 	= !!this.state.error,
 				title 	= error ? this.state.error : null,
 				value 	= this.state.stringValue,
-				mask = this.getMask(),
-			classes = classNames({
-				bScore: true,
-				mError: error
-			});
+				mask 	= this.getMask(),
+				classes = classNames({
+					bScore: true,
+					mError: error
+				});
 
 		return (
 			<div className={classes}>
