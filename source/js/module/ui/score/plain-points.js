@@ -5,6 +5,7 @@
 const 	React 		= require('react'),
 		ScoreSign	= require('./score_sign'),
 		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
+		ScoreHelper = require('./score_helper'),
 		classNames 	= require('classnames');
 
 const PlainPoints = React.createClass({
@@ -24,12 +25,12 @@ const PlainPoints = React.createClass({
 
 		this.changeScore(result);
 	},
-	onChange:function(e){
+	handleChange:function(e){
 		this.changeScore(e.target.value);
 
 		e.stopPropagation();
 	},
-	onBlur:function(e){
+	handleBlur:function(e){
 		const 	value = e.target.value,
 				error = this.state.error;
 
@@ -42,15 +43,17 @@ const PlainPoints = React.createClass({
 	},
 	changeScore:function(value){
 		if(/^[0-9.]+$/.test(value)){
-			const validationResult = TeamHelper.pointsPlainValidation(value, this.props.step);
+			const validationResult = ScoreHelper.pointsPlainValidation(value, this.props.step);
 
 			this.setState({
 				value: value,
 				error: validationResult
 			});
 
-			if(!validationResult)
-				this.props.onChange(value*1);
+			this.props.onChange({
+									value: validationResult ? this.state.value*1 : value*1,
+									isValid:!validationResult
+								});
 		}
 	},
 	render:function(){
@@ -69,8 +72,8 @@ const PlainPoints = React.createClass({
 					   className="eScore_Points"
 					   title={title}
 					   value={value}
-					   onChange={this.onChange}
-					   onBlur={this.onBlur} />
+					   onChange={this.handleChange}
+					   onBlur={this.handleBlur} />
 				<ScoreSign type="plus" handleClick={this.onClick.bind(null, 'plus')}/>
 			</div>
 		);

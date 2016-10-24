@@ -3,14 +3,16 @@ const	React		= require('react'),
 		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
 		SportConsts	= require('module/helpers/consts/sport'),
 		If 			= require('module/ui/if/if'),
-		PlainPoints = require('./plain-points');
+		PlainPoints = require('./plain-points'),
+		TimePoints 	= require('./time-points');
 
 const Score = React.createClass({
 	propTypes: {
 		isChangeMode:	React.PropTypes.bool,
 		plainPoints:	React.PropTypes.number.isRequired,
-		pointsStep:		React.PropTypes.number.isRequired,
 		pointsType:		React.PropTypes.string.isRequired,
+		pointsStep:		React.PropTypes.number,
+		pointsMask:		React.PropTypes.string,
 		onChange:		React.PropTypes.func.isRequired
 	},
 	getDefaultProps: function() {
@@ -51,37 +53,9 @@ const Score = React.createClass({
 							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
-		const self = this,
-				step = this.props.pointsStep;
-
-		const timePoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType);
-
-		return (
-			<div className="bScore">
-				<If condition={step >= 1}>
-					<span>
-						<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'h')}/>
-						<div className="eScore_Points">{`${timePoints.h}h`}</div>
-						<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'h')}/>
-					</span>
-				</If>
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'min')}/>
-				<div className="eScore_Points">{`${timePoints.min}min`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'min')}/>
-
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'sec')}/>
-				<div className="eScore_Points">{`${timePoints.sec}sec`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'sec')}/>
-
-				<If condition={step < 1}>
-					<span>
-						<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'ms')}/>
-						<div className="eScore_Points">{`${timePoints.ms}ms`}</div>
-						<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'ms')}/>
-					</span>
-				</If>
-			</div>
-		);
+		return <TimePoints value={this.props.plainPoints}
+						   mask={this.props.pointsMask}
+						   onChange={this.props.onChange} />;
 	},
 	renderPlayerDistancePointsInChangeMode: function() {
 		const self = this;
