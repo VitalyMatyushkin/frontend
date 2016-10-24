@@ -13,6 +13,12 @@ const MaskedPoints = React.createClass({
 		mask:			React.PropTypes.string.isRequired,
 		onChange: 		React.PropTypes.func.isRequired,
 		stringToPoints: React.PropTypes.func.isRequired,
+		/**
+		 * Validation string value according to 'distance' or 'time' type
+		 * @param {string} value - value to validation
+		 * @param {string} mask - points.inputMask
+		 * @returns {boolean/string} - false or error message
+		 */
 		validation: 	React.PropTypes.func.isRequired
 	},
 	getInitialState:function(){
