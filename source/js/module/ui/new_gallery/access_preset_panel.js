@@ -1,34 +1,36 @@
 const	React			= require('react'),
 
-		RadioButton			= require('./../radio_button/radio_button'),
-		AccessPresetsConsts	= require('./../../helpers/consts/event_photos');
+		RadioButton		= require('./../radio_button/radio_button');
 
 const AccessPresetPanel = React.createClass({
 	propTypes: {
 		currentAccessPreset:	React.PropTypes.string.isRequired,
+		accessPresetList:		React.PropTypes.object.isRequired,
 		handleChange:			React.PropTypes.func.isRequired
 	},
 	isChecked: function(preset) {
 		return this.props.currentAccessPreset === preset;
 	},
+	renderList: function() {
+		const list = [];
 
+		for(let accessPreset in this.props.accessPresetList) {
+			list.push(
+				<RadioButton	text		= { this.props.accessPresetList[accessPreset] }
+								isChecked	= { this.isChecked(accessPreset) }
+								onClick		= { this.props.handleChange.bind(null, accessPreset) }
+				/>
+			);
+		}
+
+		return list;
+	},
 	render: function() {
 
 		return (
 			<div className='bPhotoAccessPresetPanel'>
-				<h2>Access Presets</h2>
-				<RadioButton	text		= { 'Public' }
-								isChecked	= { this.isChecked(AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.PUBLIC) }
-								onClick		= { this.props.handleChange.bind(null, AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.PUBLIC) }
-				/>
-				<RadioButton	text		= { 'Private' }
-								isChecked	= { this.isChecked(AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.PRIVATE) }
-								onClick		= { this.props.handleChange.bind(null, AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.PRIVATE) }
-				/>
-				<RadioButton	text		= { 'Team members' }
-								isChecked	= { this.isChecked(AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.ALL_PARTICIPANT_PARENTS) }
-								onClick		= { this.props.handleChange.bind(null, AccessPresetsConsts.ACCESS_PRESETS_SERVER_VALUE.ALL_PARTICIPANT_PARENTS) }
-				/>
+				<h2> Access Presets </h2>
+				{ this.renderList() }
 			</div>
 		);
 	}

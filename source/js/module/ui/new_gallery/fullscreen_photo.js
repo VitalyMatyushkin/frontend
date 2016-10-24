@@ -1,7 +1,8 @@
 const	React				= require('react'),
 
-		If					= require('./../if/if'),
-		AccessPresetPanel	= require('./access_preset_panel');
+		AccessPresetPanel		= require('./access_preset_panel'),
+		AccessPresetsConsts		= require('./../../helpers/consts/event_photos'),
+		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
 
 const PreviewPhoto = React.createClass({
 	propTypes: {
@@ -11,7 +12,7 @@ const PreviewPhoto = React.createClass({
 		handleClickClose:			React.PropTypes.func.isRequired,
 		currentAccessPreset:		React.PropTypes.string.isRequired,
 		handleChangeAccessPreset:	React.PropTypes.func.isRequired,
-		isPublic:					React.PropTypes.bool.isRequired
+		accessMode:					React.PropTypes.string.isRequired
 	},
 	getInitialState: function() {
 		return {
@@ -34,6 +35,26 @@ const PreviewPhoto = React.createClass({
 	handleClickPhoto: function() {
 		this.props.handleClickPhoto(this.props.id)
 	},
+	renderAccessPanelMode: function() {
+		switch (this.props.accessMode) {
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER:
+				return (
+					<AccessPresetPanel	currentAccessPreset	= { this.props.currentAccessPreset}
+										accessPresetList	= { AccessPresetsConsts.ACCESS_PRESET_LIST_MANAGER }
+										handleChange		= { this.props.handleChangeAccessPreset }
+					/>
+				);
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PARENT:
+				return (
+					<AccessPresetPanel	currentAccessPreset	= { this.props.currentAccessPreset}
+										accessPresetList	= { AccessPresetsConsts.ACCESS_PRESET_LIST_PARENT }
+										handleChange		= { this.props.handleChangeAccessPreset }
+					/>
+				);
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
+				return null;
+		}
+	},
 	render: function() {
 		const	src			= window.Server.images.getResizedToHeightUrl(this.props.url, 800),
 				width		= this.state.windowWidth * 0.8,
@@ -54,7 +75,7 @@ const PreviewPhoto = React.createClass({
 		sideContainerStyle = {
 			height: height - 10 // 10px - it is a left padding
 		};
-		console.log(this.props.isPublic);
+
 		return (
 			<div className='bFullScreenPhoto'>
 				<div	className	= 'eAlbumFullscreenList_cross'
@@ -72,11 +93,7 @@ const PreviewPhoto = React.createClass({
 						<div	className	= 'eFullScreenPhoto_sideContainer'
 								style		= { sideContainerStyle }
 						>
-							<If condition={!this.props.isPublic}>
-								<AccessPresetPanel	currentAccessPreset	= { this.props.currentAccessPreset}
-													handleChange		= { this.props.handleChangeAccessPreset }
-								/>
-							</If>
+							{ this.renderAccessPanelMode() }
 						</div>
 				</div>
 			</div>
