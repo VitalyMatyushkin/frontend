@@ -2,6 +2,8 @@
  * Created by Anatoly on 21.10.2016.
  */
 const ScoreHelper = {
+	DEFAULT_TIME_MASK: 'hh:mm:ss.ccc',
+	DEFAULT_DISTANCE_MASK: 'kk mmm.cc',
 
 	/**
 	 * Validation result value according to 'plain' type

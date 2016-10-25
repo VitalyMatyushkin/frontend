@@ -52,8 +52,10 @@ const Score = React.createClass({
 							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
+		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_TIME_MASK;
+
 		return <MaskedPoints 	plainPoints={this.props.plainPoints}
-						   		mask={this.props.pointsMask}
+						   		mask={mask}
 						   		onChange={this.props.onChange}
 								stringToPoints={ScoreHelper.stringTimeToPoints}
 								validation={ScoreHelper.stringTimeValidation}
@@ -61,8 +63,10 @@ const Score = React.createClass({
 		/>;
 	},
 	renderPlayerDistancePointsInChangeMode: function() {
+		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_DISTANCE_MASK;
+
 		return <MaskedPoints 	plainPoints={this.props.plainPoints}
-								mask={this.props.pointsMask}
+								mask={mask}
 								onChange={this.props.onChange}
 								stringToPoints={ScoreHelper.stringDistanceToPoints}
 								validation={ScoreHelper.stringDistanceValidation}
