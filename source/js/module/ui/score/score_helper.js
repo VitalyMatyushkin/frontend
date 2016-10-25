@@ -149,7 +149,7 @@ const ScoreHelper = {
 			result += tmp;
 		}
 		return result;
-	},
+	}
 };
 
 module.exports = ScoreHelper;
