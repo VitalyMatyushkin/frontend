@@ -35,7 +35,7 @@ const MaskedPoints = React.createClass({
 	componentWillMount:function(){
 		this.setMask(this.props.mask);
 	},
-	componentWillReceiveProps(nextProps){
+	componentWillReceiveProps: function(nextProps){
 		if(nextProps.mask !== this.props.mask)
 			this.setMask(nextProps.mask);
 	},

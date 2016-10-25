@@ -6,6 +6,7 @@ const 	React 		= require('react'),
 const FormField = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
+		id:					React.PropTypes.string,		// just html id to pass into real input field
 		type: 				React.PropTypes.string.isRequired,
 		field: 				React.PropTypes.string.isRequired,
 		validation:			React.PropTypes.string,
