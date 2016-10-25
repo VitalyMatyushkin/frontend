@@ -9,6 +9,7 @@ const FullscreenPhoto = React.createClass({
 		id:							React.PropTypes.string.isRequired,
 		url:						React.PropTypes.string.isRequired,
 		isShowArrowButtons:			React.PropTypes.bool.isRequired,
+		isShowSideContainer:		React.PropTypes.bool.isRequired,
 		handleClickPrevPhoto:		React.PropTypes.func.isRequired,
 		handleClickNextPhoto:		React.PropTypes.func.isRequired,
 		handleClickClose:			React.PropTypes.func.isRequired,
@@ -97,17 +98,16 @@ const FullscreenPhoto = React.createClass({
 		}
 	},
 	renderSideContainer: function(sideContainerStyle) {
-		switch (this.props.accessMode) {
-			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
-				return null;
-			default:
-				return (
-					<div	className	= 'eFullScreenPhoto_sideContainer'
-							style		= { sideContainerStyle }
-					>
-						{ this.renderAccessPanelMode() }
-					</div>
-				);
+		if(this.props.isShowSideContainer) {
+			return (
+				<div	className	= 'eFullScreenPhoto_sideContainer'
+						style		= { sideContainerStyle }
+				>
+					{ this.renderAccessPanelMode() }
+				</div>
+			);
+		} else {
+			return null;
 		}
 	},
 	render: function() {
