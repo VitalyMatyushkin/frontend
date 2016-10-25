@@ -59,6 +59,7 @@
     "mocha": "^2.3.3",
     "requirejs": "^2.1.22",
     "run-sequence": "^1.0.2",
+    "selenium-webdriver": "^3.0.0-beta-3",
     "webpack": "^1.13.1",
     "webpack-stream": "^3.2.0"
   },
