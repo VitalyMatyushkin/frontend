@@ -12,6 +12,7 @@ const Gallery = React.createClass({
 	},
 
 	propTypes: {
+		currentUserId:					React.PropTypes.string,
 		photos:							React.PropTypes.array.isRequired,
 		handleChangeAddPhotoButton:		React.PropTypes.func,
 		handleChangeAccessPreset:		React.PropTypes.func,
@@ -27,6 +28,16 @@ const Gallery = React.createClass({
 	},
 	isShowArrowButtons: function() {
 		return this.props.photos.length > 1;
+	},
+	isShowSideContainer: function(currentPhoto) {
+		switch (this.props.accessMode) {
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER:
+				return true;
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PARENT:
+				return (currentPhoto.author.role === 'PARENT' && currentPhoto.author.userId === this.props.currentUserId);
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
+				return false;
+		}
 	},
 	/**
 	 * Get index of current full screen photo from prop.photos array
@@ -113,6 +124,7 @@ const Gallery = React.createClass({
 				<FullScreenPhoto	id							= { currentPhoto.id }
 									url							= { currentPhoto.picUrl }
 									isShowArrowButtons			= { this.isShowArrowButtons() }
+									isShowSideContainer			= { this.isShowSideContainer(currentPhoto) }
 									handleClickPrevPhoto		= { this.handleClickPrevPhoto }
 									handleClickNextPhoto		= { this.handleClickNextPhoto }
 									handleClickClose			= { this.handleClickCloseFullScreenPhoto }

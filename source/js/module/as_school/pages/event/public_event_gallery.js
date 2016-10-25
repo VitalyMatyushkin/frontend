@@ -13,7 +13,7 @@ const PublicEventGallery = React.createClass({
 		return(
 			<div className="bPublicGallery">
 				<Gallery	photos			= { photos }
-							accessMode	= { GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC }
+							accessMode		= { GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC }
 							isLoading		= { false }
 				/>
 			</div>
