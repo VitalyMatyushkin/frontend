@@ -6,9 +6,6 @@ const	React						= require('react'),
 const CookiePopupMessage = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	componentWillMount:function(){
-
-	},
 	handleClickOkButton: function() {
 		CookiePopupMessageActions.setIsCookiePopupDisplayingToBinding(this.getDefaultBinding(), false);
 	},
