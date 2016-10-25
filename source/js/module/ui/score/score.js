@@ -47,7 +47,7 @@ const Score = React.createClass({
 		this.props.onChange(score);
 	},
 	renderPlayerPlainPointsInChangeMode: function() {
-		return <PlainPoints value={this.props.plainPoints}
+		return <PlainPoints plainPoints={this.props.plainPoints}
 							step={this.props.pointsStep}
 							onChange={this.props.onChange} />;
 	},
