@@ -10,33 +10,41 @@ const 	React 		= require('react'),
 
 const PlainPoints = React.createClass({
 	propTypes:{
-		value:		React.PropTypes.number.isRequired,
-		step:		React.PropTypes.number.isRequired,
-		onChange: 	React.PropTypes.func.isRequired
+		plainPoints:	React.PropTypes.number.isRequired,
+		step:			React.PropTypes.number.isRequired,
+		onChange: 		React.PropTypes.func.isRequired
 	},
 	getInitialState:function(){
 		return {
 			error:false,
-			value:this.props.value
+			value:this.props.plainPoints
 		};
 	},
 	onClick:function(operation){
-		const result = TeamHelper.operationByType(operation, this.props.value*1, 'plain', this.props.step);
+		const result = TeamHelper.operationByType(operation, this.props.plainPoints*1, 'plain', this.props.step);
 
 		this.changeScore(result);
 	},
-	handleChange:function(e){
+	onFocus:function(e){
+		const 	value = e.target.value*1;
+
+		this.setState({
+			value: value === 0 ? '' : value // if value===0, then empty value for current mask, else value
+		});
+
+		e.stopPropagation();
+	},
+	onChange:function(e){
 		this.changeScore(e.target.value);
 
 		e.stopPropagation();
 	},
-	handleBlur:function(e){
-		const 	value = e.target.value,
+	onBlur:function(e){
+		const 	value = e.target.value || 0,
 				error = this.state.error;
 
 		this.setState({
-			value: error ? value : value*1,
-			error: error
+			value: error ? value : value*1
 		});
 
 		e.stopPropagation();
@@ -72,8 +80,9 @@ const PlainPoints = React.createClass({
 					   className="eScore_Points"
 					   title={title}
 					   value={value}
-					   onChange={this.handleChange}
-					   onBlur={this.handleBlur} />
+					   onChange={this.onChange}
+					   onFocus={this.onFocus}
+					   onBlur={this.onBlur} />
 				<ScoreSign type="plus" handleClick={this.onClick.bind(null, 'plus')}/>
 			</div>
 		);

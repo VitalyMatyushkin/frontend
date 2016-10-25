@@ -29,10 +29,21 @@ const MaskedPoints = React.createClass({
 	getInitialState:function(){
 		return {
 			error: 			false,
-			stringValue: 	this.props.plainPoints, 					//string value from component MaskedInput
-			mask: 			this.props.mask.replace(/[hkmsc]/g, '9'), 	// mask in format '999:999:999'
-			emptyValue: 	this.props.mask.replace(/[hkmsc]/g, '_')	// empty value for current mask
+			stringValue: 	this.props.plainPoints 					//string value from component MaskedInput
 		};
+	},
+	componentWillMount:function(){
+		this.setMask(this.props.mask);
+	},
+	componentWillReceiveProps(nextProps){
+		if(nextProps.mask !== this.props.mask)
+			this.setMask(nextProps.mask);
+	},
+	setMask:function(mask){
+		this.setState({
+			mask: 			mask.replace(/[hkmsc]/g, '9'), 	// mask in format '999:999:999'
+			emptyValue: 	mask.replace(/[hkmsc]/g, '_')	// empty value for current mask
+		});
 	},
 	onChange:function(e){
 		this.changeScore(e.target.value);
@@ -58,19 +69,21 @@ const MaskedPoints = React.createClass({
 		e.stopPropagation();
 	},
 	changeScore:function(strValue){
-		const 	validationResult = this.props.validation(strValue, this.props.mask),
-				points = validationResult ? this.props.plainPoints : this.props.stringToPoints(strValue, this.props.mask);
+		const 	isEmpty = strValue === this.state.emptyValue,
+				error = !isEmpty && this.props.validation(strValue, this.props.mask),
+				points = error || isEmpty ? this.props.plainPoints : this.props.stringToPoints(strValue, this.props.mask);
 
 		this.setState({
 			stringValue: strValue,
-			error: validationResult
+			error: error
 		});
 
+		const result = {
+			value: points,
+			isValid:!error
+		};
 		// save changes to events
-		this.props.onChange({
-								value: points,
-								isValid:!validationResult
-							});
+		this.props.onChange(result);
 	},
 	render:function(){
 		const 	error 	= !!this.state.error,
