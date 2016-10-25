@@ -36,7 +36,6 @@ const EventTeamsView = React.createClass({
 		if(	typeof teamId !== 'undefined' && TeamHelper.isTeamSport(event)) {
 			self.changePointsForTeam(event, teamId);
 		}
-		console.log(event.results);
 	},
 	changePointsForPlayer: function(event, player, score) {
 		const 	self 		= this;
