@@ -24,8 +24,14 @@ MatchReportActions.prototype.load = function() {
 		schoolId: this.activeSchoolId,
 		eventId: this.eventId
 	}).then(report => {
-		binding.set('content', Immutable.fromJS(report.content));
-		binding.set('defaultContent', Immutable.fromJS(report.content));
+		const 	data 	= Immutable.fromJS(report.content),
+				isEdit 	= !report.content;
+
+		binding.atomically()
+			.set('content', data)
+			.set('defaultContent', data)
+			.set('isEditMode', isEdit)
+			.commit();
 
 		return report.content;
 	});
@@ -52,10 +58,9 @@ MatchReportActions.prototype.save = function(report){
 
 MatchReportActions.prototype.isEditMode = function(){
 	const 	self 		= this,
-			binding 	= self.getDefaultBinding(),
-			text 		= binding.get('content');
+			binding 	= self.getDefaultBinding();
 
-	return binding.toJS('isEditMode') || !text;
+	return binding.toJS('isEditMode');
 };
 
 MatchReportActions.prototype.onEdit = function(){
