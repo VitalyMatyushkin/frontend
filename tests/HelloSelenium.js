@@ -29,7 +29,9 @@ const 	loginInput		= driver.findElement(By.id('login_email')),
 
 'reference@squadintouch.com'.split('').forEach( c => loginInput.sendKeys(c));
 'reference'.split('').forEach(c => passwordInput.sendKeys(c));
-
 submitButton.click();
+
+
+
 
 // driver.quit();
