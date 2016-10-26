@@ -13,7 +13,9 @@ function SVG(props) {
 			iconHref	= '#' + props.icon;
 
 	return (
-		<svg className={classes}>
+		<svg	onClick		= {props.onClick}
+				className	= {classes}
+		>
 			<use xlinkHref={iconHref}/>
 		</svg>
 	);
@@ -21,8 +23,9 @@ function SVG(props) {
 }
 
 SVG.propTypes = {
-	icon: 		React.PropTypes.string.isRequired,
-	classes: 	React.PropTypes.string
+	onClick:	React.PropTypes.func,
+	icon:		React.PropTypes.string.isRequired,
+	classes:	React.PropTypes.string
 };
 
 module.exports = SVG;

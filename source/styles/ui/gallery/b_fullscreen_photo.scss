@@ -1,4 +1,6 @@
 .bFullScreenPhoto {
+  cursor: pointer;
+
   top: 0px;
   left: 0px;
   position: fixed;
@@ -25,6 +27,8 @@
 }
 
 .eFullScreenPhoto_photoContainer {
+  cursor: default;
+
   position: fixed;
   top: 50%;
   left: 50%;
@@ -44,8 +48,37 @@
 }
 
 .eFullScreenPhoto_photo {
+  position: relative;
   width: 100%;
   background: #1e1e1e center no-repeat;
+}
+
+.eFullScreenPhoto_arrowLeft {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+
+  width: 83px;
+
+  &:hover {
+    cursor: pointer;
+    background: url('/images/arrow-left.png') center no-repeat;
+    background-size: 83px 100px;
+  }
+}
+
+.eFullScreenPhoto_arrowRight {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+
+  width: 83px;
+
+  &:hover {
+    cursor: pointer;
+    background: url('/images/arrow-right.png') center no-repeat;
+    background-size: 83px 100px;
+  }
 }
 
 .eFullScreenPhoto_sideContainer {

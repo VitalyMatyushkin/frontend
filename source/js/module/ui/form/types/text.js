@@ -4,21 +4,20 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 
 const TypeText =  React.createClass({
 	propTypes: {
-		textType: 		React.PropTypes.string
+		textType: 		React.PropTypes.string,
+		id:				React.PropTypes.string 		// just old good html id
 	},
 	mixins: [Morearty.Mixin, TypeMixin],
 	componentWillMount: function() {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
-
+		const binding = this.getDefaultBinding();
 		// For case when form filled async
-		binding.addListener('defaultValue', function() {
-			self.fullValidate(binding.get('defaultValue'));
+		binding.addListener('defaultValue', () => {
+			this.fullValidate(binding.get('defaultValue'));
 		});
 	},
 	componentDidUpdate: function () {
 		if(this.cursor >= 0){
-			this.refs.input.setSelectionRange(this.cursor,this.cursor);
+			this.refs.input.setSelectionRange(this.cursor, this.cursor);
 		}
 	},
 	handleBlur: function(event) {
@@ -30,12 +29,17 @@ const TypeText =  React.createClass({
 		this.changeValue(event.target.value);
 	},
 	render: function () {
-		const 	self 	= this,
-				value 	= self.getDefaultBinding().get('value');
+		const value	= this.getDefaultBinding().get('value');
 
 		return (
-			<input ref="input" value={value} type={self.props.textType || 'text'} placeholder={self.props.placeholder}
-				   onBlur={self.handleBlur} onChange={self.handleChange} />
+			<input
+				id={this.props.id}
+				ref="input"
+				value={value}
+				type={this.props.textType || 'text'}
+				placeholder={this.props.placeholder}
+				onBlur={this.handleBlur}
+				onChange={this.handleChange} />
 		)
 	}
 });

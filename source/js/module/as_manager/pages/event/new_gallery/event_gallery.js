@@ -4,7 +4,8 @@ const	React 					= require('react'),
 		Gallery					= require('./../../../../ui/new_gallery/galley'),
 		RoleHelper				= require('./../../../../helpers/role_helper'),
 
-		GalleryAccessPresets	= require('./../../../../helpers/consts/gallery');
+		GalleryAccessPresets	= require('./../../../../helpers/consts/gallery'),
+		MoreartyHelper			= require('./../../../../helpers/morearty_helper');
 
 const EventGallery = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -31,7 +32,8 @@ const EventGallery = React.createClass({
 
 		return (
 			<div className='bEvent_media bEventBottomContainer'>
-				<Gallery	accessMode					= { this.getGalleryAccessPreset(userRole) }
+				<Gallery	currentUserId				= { MoreartyHelper.getLoggedInUserId(this) }
+							accessMode					= { this.getGalleryAccessPreset(userRole) }
 							handleChangeAddPhotoButton	= { file => Actions.addPhotoToEvent(userRole, binding, schoolId, eventId, file) }
 							handleClickDeletePhoto		= { photoId => Actions.deletePhotoFromEvent(userRole, binding, schoolId, eventId, photoId) }
 							handleChangeAccessPreset	= { (photoId, preset) => Actions.changePhotoPreset(userRole, binding, schoolId, eventId, photoId, preset) }

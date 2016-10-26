@@ -178,7 +178,7 @@ const MaskedInput = React.createClass({
 	render: function () {
 		//Use placeholder to display old information we already have
 		//Easier this way to use the mask to edit or add new data
-		return <input type="text" {...this.props} {...this.mask.props} placeholder={this.props.value} />
+		return <input type="text" {...this.props} {...this.mask.props} />
 	}
 });
 

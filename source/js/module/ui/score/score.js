@@ -1,10 +1,9 @@
-const	React		= require('react'),
-		ScoreSign	= require('./score_sign'),
-		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
-		SportConsts	= require('module/helpers/consts/sport'),
-		If 			= require('module/ui/if/if'),
-		PlainPoints = require('./plain-points'),
-		TimePoints 	= require('./time-points');
+const	React			= require('react'),
+		TeamHelper  	= require('module/ui/managers/helpers/team_helper'),
+		SportConsts		= require('module/helpers/consts/sport'),
+		ScoreHelper 	= require('./score_helper'),
+		PlainPoints 	= require('./plain-points'),
+		MaskedPoints 	= require('./masked-points');
 
 const Score = React.createClass({
 	propTypes: {
@@ -48,35 +47,31 @@ const Score = React.createClass({
 		this.props.onChange(score);
 	},
 	renderPlayerPlainPointsInChangeMode: function() {
-		return <PlainPoints value={this.props.plainPoints}
+		return <PlainPoints plainPoints={this.props.plainPoints}
 							step={this.props.pointsStep}
 							onChange={this.props.onChange} />;
 	},
 	renderPlayerTimePointsInChangeMode: function() {
-		return <TimePoints value={this.props.plainPoints}
-						   mask={this.props.pointsMask}
-						   onChange={this.props.onChange} />;
+		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_TIME_MASK;
+
+		return <MaskedPoints 	plainPoints={this.props.plainPoints}
+						   		mask={mask}
+						   		onChange={this.props.onChange}
+								stringToPoints={ScoreHelper.stringTimeToPoints}
+								validation={ScoreHelper.stringTimeValidation}
+								className="mTime"
+		/>;
 	},
 	renderPlayerDistancePointsInChangeMode: function() {
-		const self = this;
+		const mask = this.props.pointsMask ? this.props.pointsMask : ScoreHelper.DEFAULT_DISTANCE_MASK;
 
-		const distancePoints = TeamHelper.convertPoints(this.props.plainPoints, this.props.pointsType);
-
-		return (
-			<div className="bScore">
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'km')}/>
-				<div className="eScore_Points">{`${distancePoints.km}km`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'km')}/>
-
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'm')}/>
-				<div className="eScore_Points">{`${distancePoints.m}m`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'm')}/>
-
-				<ScoreSign type="minus" handleClick={self.handleClickPointSign.bind(null, 'minus', 'cm')}/>
-				<div className="eScore_Points">{`${distancePoints.cm}cm`}</div>
-				<ScoreSign type="plus" handleClick={self.handleClickPointSign.bind(null, 'plus', 'cm')}/>
-			</div>
-		);
+		return <MaskedPoints 	plainPoints={this.props.plainPoints}
+								mask={mask}
+								onChange={this.props.onChange}
+								stringToPoints={ScoreHelper.stringDistanceToPoints}
+								validation={ScoreHelper.stringDistanceValidation}
+								className="mDistance"
+		/>;
 	},
 
 	render: function () {

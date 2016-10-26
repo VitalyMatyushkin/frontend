@@ -4,11 +4,14 @@ const	React				= require('react'),
 		AccessPresetsConsts		= require('./../../helpers/consts/event_photos'),
 		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
 
-const PreviewPhoto = React.createClass({
+const FullscreenPhoto = React.createClass({
 	propTypes: {
 		id:							React.PropTypes.string.isRequired,
 		url:						React.PropTypes.string.isRequired,
-		handleClickPhoto:			React.PropTypes.func.isRequired,
+		isShowArrowButtons:			React.PropTypes.bool.isRequired,
+		isShowSideContainer:		React.PropTypes.bool.isRequired,
+		handleClickPrevPhoto:		React.PropTypes.func.isRequired,
+		handleClickNextPhoto:		React.PropTypes.func.isRequired,
 		handleClickClose:			React.PropTypes.func.isRequired,
 		currentAccessPreset:		React.PropTypes.string.isRequired,
 		handleChangeAccessPreset:	React.PropTypes.func.isRequired,
@@ -32,8 +35,20 @@ const PreviewPhoto = React.createClass({
 			windowHeight: window.innerHeight
 		});
 	},
-	handleClickPhoto: function() {
-		this.props.handleClickPhoto(this.props.id)
+	handleClickClose: function(e) {
+		this.props.handleClickClose();
+		e.stopPropagation();
+	},
+	handleClickPrevPhoto: function(e) {
+		this.props.handleClickPrevPhoto();
+		e.stopPropagation();
+	},
+	handleClickNextPhoto: function(e) {
+		this.props.handleClickNextPhoto();
+		e.stopPropagation();
+	},
+	handleClickPhoto: function(e) {
+		e.stopPropagation();
 	},
 	renderAccessPanelMode: function() {
 		switch (this.props.accessMode) {
@@ -55,6 +70,46 @@ const PreviewPhoto = React.createClass({
 				return null;
 		}
 	},
+	renderPhoto: function(photoStyle, arrowStyle) {
+		if(this.props.isShowArrowButtons) {
+			return (
+				<div	className	= 'eFullScreenPhoto_photo'
+						style		= { photoStyle }
+				>
+					<div	className	= "eFullScreenPhoto_arrowLeft"
+							onClick		= { this.handleClickPrevPhoto }
+							style		= { arrowStyle }
+					>
+					</div>
+					<div	className	= "eFullScreenPhoto_arrowRight"
+							onClick		= { this.handleClickNextPhoto }
+							style		= { arrowStyle }
+					>
+					</div>
+				</div>
+			);
+		} else {
+			return (
+				<div	className	= 'eFullScreenPhoto_photo'
+						style		= { photoStyle }
+				>
+				</div>
+			);
+		}
+	},
+	renderSideContainer: function(sideContainerStyle) {
+		if(this.props.isShowSideContainer) {
+			return (
+				<div	className	= 'eFullScreenPhoto_sideContainer'
+						style		= { sideContainerStyle }
+				>
+					{ this.renderAccessPanelMode() }
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	src			= window.Server.images.getResizedToHeightUrl(this.props.url, 800),
 				width		= this.state.windowWidth * 0.8,
@@ -74,31 +129,29 @@ const PreviewPhoto = React.createClass({
 		},
 		sideContainerStyle = {
 			height: height - 10 // 10px - it is a left padding
+		},
+		arrowStyle = {
+			height: height
 		};
 
 		return (
-			<div className='bFullScreenPhoto'>
+			<div	className	= 'bFullScreenPhoto'
+					onClick		= { this.handleClickClose }
+			>
 				<div	className	= 'eAlbumFullscreenList_cross'
-						onClick		= {this.props.handleClickClose}
+						onClick		= { this.handleClickClose }
 				>
 				</div>
 				<div	className	= "eFullScreenPhoto_photoContainer"
-						style		= { photoContainerStyle }
 						onClick		= { this.handleClickPhoto }
+						style		= { photoContainerStyle }
 				>
-					<div	className	= 'eFullScreenPhoto_photo'
-							style		= { photoStyle }
-					>
-					</div>
-						<div	className	= 'eFullScreenPhoto_sideContainer'
-								style		= { sideContainerStyle }
-						>
-							{ this.renderAccessPanelMode() }
-						</div>
+					{ this.renderPhoto(photoStyle, arrowStyle) }
+					{ this.renderSideContainer(sideContainerStyle) }
 				</div>
 			</div>
 		);
 	}
 });
 
-module.exports = PreviewPhoto;
+module.exports = FullscreenPhoto;
