@@ -7,18 +7,19 @@
 }
 
 input[type="text"].eScore_Points {
-  display: inline-block;
   width: 40px;
   font-size: 14px;
-  align-self: center;
-  text-align: center;
 
   &.mTime{
-    width: 100px;
+    width: 90px;
+  }
+
+  &.mPlain{
+    text-align: center;
   }
 
   &.mDistance{
-    width: 100px;
+    width: 75px;
   }
 }
 

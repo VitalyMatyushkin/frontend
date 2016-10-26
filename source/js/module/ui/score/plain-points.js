@@ -77,7 +77,7 @@ const PlainPoints = React.createClass({
 			<div className={classes}>
 				<ScoreSign type="minus" handleClick={this.onClick.bind(null, 'minus')}/>
 				<input type="text"
-					   className="eScore_Points"
+					   className="eScore_Points mPlain"
 					   title={title}
 					   value={value}
 					   onChange={this.onChange}
