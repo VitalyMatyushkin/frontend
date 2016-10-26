@@ -288,7 +288,7 @@ const EventView = React.createClass({
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReport binding={binding} eventId={self.eventId} />
+									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
 								</div>
 							</If>
 							<If condition={(binding.get('mode') !== 'general')}>

@@ -30,7 +30,7 @@ const MatchReport = React.createClass({
 								<SVG icon="icon_edit"/>
 							</div>
 						</div>
-						<div style={{whiteSpace: 'pre-line'}}>{binding.get('model.matchReport')}</div>
+						<div style={{whiteSpace: 'pre-line'}}>{binding.get('content')}</div>
 					</div>
 				</If>
 				<If condition={this.actions.isEditMode()}>
@@ -38,8 +38,8 @@ const MatchReport = React.createClass({
 						<Morearty.DOM.textarea
 							placeholder="Enter match report"
 							className="eEvent_report"
-							onChange={Morearty.Callback.set(binding, 'model.matchReport')}
-							value={binding.get('model.matchReport')}
+							onChange={Morearty.Callback.set(binding, 'content')}
+							value={binding.get('content')}
 						/>
 						<div className="bEventButtons">
 							<div className="bEventButton mCancel" onClick={this.actions.onCancel.bind(this.actions)}>

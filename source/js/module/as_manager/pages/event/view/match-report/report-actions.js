@@ -24,8 +24,8 @@ MatchReportActions.prototype.load = function() {
 		schoolId: this.activeSchoolId,
 		eventId: this.eventId
 	}).then(report => {
-		binding.set('model.matchReport', Immutable.fromJS(report.content));
-		binding.set('model.matchReportDefault', Immutable.fromJS(report.content));
+		binding.set('content', Immutable.fromJS(report.content));
+		binding.set('defaultContent', Immutable.fromJS(report.content));
 
 		return report.content;
 	});
@@ -45,40 +45,41 @@ MatchReportActions.prototype.save = function(report){
 			content: report
 		}
 	).then(data => {
-		binding.set('model.matchReportDefault', Immutable.fromJS(data.content));
+		binding.set('defaultContent', Immutable.fromJS(data.content));
 
 	});
 };
 
 MatchReportActions.prototype.isEditMode = function(){
 	const 	self 		= this,
-			binding 	= self.getDefaultBinding();
+			binding 	= self.getDefaultBinding(),
+			text 		= binding.get('content');
 
-	return binding.toJS('mode') === 'report_edit';
+	return binding.toJS('isEditMode') || !text;
 };
 
 MatchReportActions.prototype.onEdit = function(){
 	const 	self 		= this,
 			binding 	= self.getDefaultBinding();
 
-	return binding.set('mode', 'report_edit');
+	return binding.set('isEditMode', true);
 };
 
 MatchReportActions.prototype.onCancel = function(){
 	const 	self 		= this,
 			binding 	= self.getDefaultBinding();
 
-	binding.set('model.matchReport', binding.get('model.matchReportDefault'));
-	binding.set('mode', 'general');
+	binding.set('content', binding.get('defaultContent'));
+	binding.set('isEditMode', false);
 };
 
 MatchReportActions.prototype.onSave = function(){
 	const 	self 		= this,
 			binding 	= self.getDefaultBinding(),
-			report 		= binding.toJS('model.matchReport');
+			report 		= binding.toJS('content');
 
 	this.save(report);
-	binding.set('mode', 'general');
+	binding.set('isEditMode', false);
 };
 
 
