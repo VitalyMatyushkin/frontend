@@ -157,7 +157,7 @@ const EventHelper = {
 		const binding = thiz.getDefaultBinding();
 
 		return (
-			binding.get('mode') !== 'general' && binding.get('mode') !== 'report_edit'
+			binding.get('mode') !== 'general'
 			&& (binding.get('activeTab') === 'teams'
 					|| binding.get('activeTab') === 'performance')
 			&& RoleHelper.isUserSchoolWorker(thiz)
