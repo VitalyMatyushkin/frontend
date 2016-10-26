@@ -9,6 +9,8 @@
   cursor: pointer;
   position: relative;
   text-align: center;
+  border: none;
+  font-family: $basicFontFamily;
 
   &:hover{
     background:

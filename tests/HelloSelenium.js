@@ -20,3 +20,13 @@ const By = webdriver.By;
 
 
 driver.navigate().to('http://login.stage1.squadintouch.com');
+
+const 	loginInput		= driver.findElement(By.id('login_email')),
+		passwordInput	= driver.findElement(By.id('login_password'));
+
+// loginInput.sendKeys('referencesquadintouch.com');	// this leads to bug
+
+'reference@squadintouch.com'.split('').forEach( c => loginInput.sendKeys(c));
+'reference'.split('').forEach(c => passwordInput.sendKeys(c));
+
+// driver.quit();
