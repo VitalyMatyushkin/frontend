@@ -19,14 +19,17 @@ const By = webdriver.By;
 
 
 
-driver.navigate().to('http://login.stage1.squadintouch.com');
+driver.navigate().to('http://login.squard.com:8080');
 
 const 	loginInput		= driver.findElement(By.id('login_email')),
-		passwordInput	= driver.findElement(By.id('login_password'));
+		passwordInput	= driver.findElement(By.id('login_password')),
+		submitButton	= driver.findElement(By.id('login_submit'));
 
 // loginInput.sendKeys('referencesquadintouch.com');	// this leads to bug
 
 'reference@squadintouch.com'.split('').forEach( c => loginInput.sendKeys(c));
 'reference'.split('').forEach(c => passwordInput.sendKeys(c));
+
+submitButton.click();
 
 // driver.quit();
