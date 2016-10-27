@@ -1,12 +1,13 @@
-const	React	= require('react'),
+const	React					= require('react'),
 
-		SVG		= require('module/ui/svg');
+		SVG						= require('module/ui/svg'),
+		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
 
 const PreviewPhoto = React.createClass({
 	propTypes: {
 		id:						React.PropTypes.string.isRequired,
 		url:					React.PropTypes.string.isRequired,
-		isPublic:				React.PropTypes.bool.isRequired,
+		accessMode:				React.PropTypes.string.isRequired,
 		handleClickPhoto:		React.PropTypes.func,
 		handleClickDeletePhoto:	React.PropTypes.func
 	},
@@ -16,23 +17,31 @@ const PreviewPhoto = React.createClass({
 	},
 	handleClickDeletePhoto: function(e) {
 		typeof this.props.handleClickDeletePhoto !== "undefined" &&  this.props.handleClickDeletePhoto(this.props.id);
+
 		e.stopPropagation();
 	},
-
+	handleClickToTooltip: function(e) {
+		// just do stop propagation
+		// because onClick to tooltip doesn't anything
+		e.stopPropagation();
+	},
 	renderActions: function() {
-		if(!this.props.isPublic) {
-			return (
-				<div className='ePreviewPhoto_actions'>
-					<span	onClick				= { this.handleClickDeletePhoto }
-							className			= "bTooltip"
-							data-description	= "Delete Photo"
-					>
-						<SVG icon = "icon_delete"/>
-					</span>
-				</div>
-			);
-		} else {
-			return null;
+		switch (this.props.accessMode) {
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
+				return null;
+			default:
+				return (
+					<div className='ePreviewPhoto_actions'>
+						<span	className			= "bTooltip"
+								data-description	= "Delete Photo"
+								onClick				= { this.handleClickToTooltip }
+						>
+							<SVG	onClick	= { this.handleClickDeletePhoto }
+									icon	= "icon_delete"
+							/>
+						</span>
+					</div>
+				);
 		}
 	},
 	render: function() {

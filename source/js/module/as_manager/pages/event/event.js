@@ -16,7 +16,9 @@ const	React			= require('react'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		MatchReport 		= require('module/as_manager/pages/event/view/match-report/report'),
-		SVG 				= require('module/ui/svg');
+		SVG 				= require('module/ui/svg'),
+
+		RoleHelper			= require('./../../../helpers/role_helper');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -46,8 +48,6 @@ const EventView = React.createClass({
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
-
-		self.initTabs();
 
 		let eventData, report;
 		window.Server.schoolEvent.get({
@@ -90,7 +90,7 @@ const EventView = React.createClass({
 		}).then(_report => {
 			report = _report;
 
-			return this.loadPhotos();
+			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
 		}).then(photos => {
 			eventData.matchReport = report.content;
 
@@ -102,11 +102,24 @@ const EventView = React.createClass({
 				.set('sync',			Immutable.fromJS(true))
 				.commit();
 
+			self.initTabs();
+
 			return eventData;
 		})
 	},
-	loadPhotos: function() {
-		return window.Server.schoolEventPhotos.get({
+	loadPhotos: function(role) {
+		let service;
+
+		switch (role) {
+			case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+				service = window.Server.childEventPhotos;
+				break;
+			default:
+				service = window.Server.schoolEventPhotos;
+				break;
+		}
+
+		return service.get({
 			schoolId:	this.activeSchoolId,
 			eventId:	this.eventId
 		});
@@ -120,36 +133,37 @@ const EventView = React.createClass({
 
 		self.tabListModel = [
 			{
-				value:'teams',
-				text:'Teams',
-				isActive:false
-			},
-			{
-				value:'performance',
-				text:'Performance',
-				isActive:false
-			},
-			//{
-			//	value:'details',
-			//	text:'Details',
-			//	isActive:false
-			//},
-			{
-				value:'gallery',
-				text:'Gallery',
-				isActive:false
-			},
-			{
-				value:'comments',
-				text:'Comments',
-				isActive:false
-			},
-			{
-				value:'report',
-				text:'Match Report',
-				isActive:false
+				value		: 'teams',
+				text		: 'Teams',
+				isActive	: false
 			}
 		];
+
+		if(self.hasSportPerformanceItems()) {
+			self.tabListModel.push({
+				value		: 'performance',
+				text		: 'Performance',
+				isActive	: false
+			});
+		}
+
+		self.tabListModel.push(
+			{
+				value		:'gallery',
+				text		:'Gallery',
+				isActive	:false
+			},
+			{
+				value		: 'comments',
+				text		: 'Comments',
+				isActive	: false
+			},
+			{
+				value		: 'report',
+				text		: 'Match Report',
+				isActive	: false
+			}
+		);
 
 		if(tab) {
 			let item = self.tabListModel.find(t => t.value === tab);
@@ -159,6 +173,11 @@ const EventView = React.createClass({
 			self.tabListModel[0].isActive = true;
 			binding.set('activeTab', 'teams');
 		}
+	},
+	hasSportPerformanceItems: function() {
+		const binding = this.getDefaultBinding();
+
+		return binding.toJS('model.sport.performance').length > 0;
 	},
 	changeActiveTab:function(value){
 		const	self	= this,
@@ -230,11 +249,6 @@ const EventView = React.createClass({
 					</If>
 					<If condition={self.isShowMainMode()}>
 						<div className="bEvent">
-							<If condition={(binding.get('mode') === 'general')}>
-								<div className="bEventButtons_action">
-									<EventButtons binding={binding} />
-								</div>
-							</If>
 							<div className="bEventHeader_wrap">
 								<EventHeader binding={binding}/>
 								<EventRivals binding={binding}/>
@@ -274,7 +288,7 @@ const EventView = React.createClass({
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReport binding={binding} eventId={self.eventId} />
+									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
 								</div>
 							</If>
 							<If condition={(binding.get('mode') !== 'general')}>

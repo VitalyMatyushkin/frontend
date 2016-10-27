@@ -1,7 +1,8 @@
-const	React		= require('react'),
-		Morearty	= require('morearty'),
+const	React					= require('react'),
+		Morearty				= require('morearty'),
 
-		Gallery		= require('./../../../ui/new_gallery/galley');
+		Gallery					= require('./../../../ui/new_gallery/galley'),
+		GalleryAccessPresets	= require('./../../../helpers/consts/gallery');
 
 const PublicEventGallery = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -11,9 +12,9 @@ const PublicEventGallery = React.createClass({
 
 		return(
 			<div className="bPublicGallery">
-				<Gallery	photos		= { photos }
-							isPublic	= { true }
-							isLoading	= { false }
+				<Gallery	photos			= { photos }
+							accessMode		= { GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC }
+							isLoading		= { false }
 				/>
 			</div>
 		);

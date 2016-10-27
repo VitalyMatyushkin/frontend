@@ -3,6 +3,7 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		ConfirmAlertFactory	= require('./helpers/confirm_alert_factory'),
 		serviceList 		= require('module/core/service_list'),
 		userDataInstance 	= require('module/data/user_data'),
+		cookiePopupData 	= require('module/data/cookie_popup_data'),
 		authController 		= require('module/core/auth_controller'),
 		Immutable			= require('immutable'),
 		ReactDom 			= require('react-dom'),
@@ -50,7 +51,9 @@ function initMainView(school) {
 			},
 			schoolHomePage: {					// wrapping to 'schoolHomePage' not to break router. I'm not sure we actually need that, but this is easiest way
 				isPasswordPopupOpen:		false,
-				isCookiePopupDisplaying:	true,	// by default we showing popup with cookie policy on each visit because we don't store this value anywhere in user's browser
+				/** by default we showing popup with cookie policy on each visit
+				 * because we don't store this value anywhere in user's browser*/
+				isCookiePopupDisplaying:	cookiePopupData.getDefaultState(),
 				events: {							// will keep all data related to showing events on main page here
 					todayDate: 			today,
 					monthDate:			new Date(today.getFullYear(), today.getMonth()),
@@ -85,6 +88,8 @@ function initMainView(school) {
 
 	// setting context binding to data classes
 	userDataInstance.setBinding(binding.sub('userData'));
+	cookiePopupData.setBinding(binding.sub('schoolHomePage'));
+
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
 		binding:		binding,

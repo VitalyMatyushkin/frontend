@@ -103,12 +103,12 @@ const EventRival = React.createClass({
 		return !eventSummary[teamId] && event.status === EventHelper.EVENT_STATUS.FINISHED;
 	},
 	/** click handler on the '+' and '-' for result settings*/
-	handleClickPointSign: function(teamBundleName, order, operation, pointType) {
+	handleChangeScore: function(teamBundleName, order, score) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const 	event 		= binding.toJS('model'),
-				pointsStep	= event.sport.points.pointsStep;
+		const 	event 	= binding.toJS('model');
+
 		let scoreData;
 		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
 			/** get the correct object(scoreData) to store the result of the game */
@@ -128,7 +128,8 @@ const EventRival = React.createClass({
 			}
 
 			/** set score */
-			scoreData.score = TeamHelper.operationByType(operation, scoreData.score, pointType, pointsStep);
+			scoreData.score = score.value;
+			scoreData.isValid = score.isValid;
 			binding.set('model', Immutable.fromJS(event));
 		}
 	},
@@ -144,11 +145,12 @@ const EventRival = React.createClass({
 
 		return (
 			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode			={teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
-						plainPoints				={points}
-						pointsStep 				={event.sport.points.pointsStep}
-						pointsType				={event.sport.points.display}
-						handleClickPointSign	={self.handleClickPointSign.bind(self, teamBundleName, order)}
+				<Score	isChangeMode	={teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
+						plainPoints		={points}
+						pointsStep 		={event.sport.points.pointsStep}
+						pointsType		={event.sport.points.display}
+					  	pointsMask		={event.sport.points.inputMask}
+					  	onChange 		={self.handleChangeScore.bind(self, teamBundleName, order)}
 				/>
 			</div>
 		);

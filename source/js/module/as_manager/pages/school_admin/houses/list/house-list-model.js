@@ -1,11 +1,11 @@
 /**
  * Created by Anatoly on 16.08.2016.
  */
-
+//TODO Unused dependencies
 const 	React 			= require('react'),
 		Morearty		= require('morearty'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
-		SVG				=	require('module/ui/svg'),
+		SVG				= require('module/ui/svg'),
 		GridModel 		= require('module/ui/grid/grid-model');
 
 /**
@@ -14,21 +14,24 @@ const 	React 			= require('react'),
  * @param {object} page
  *
  * */
+// TODO Is it good idea send Morearty object to model by args?
 const HouseListModel = function(page){
 	this.getDefaultBinding = page.getDefaultBinding;
 	this.getMoreartyContext = page.getMoreartyContext;
+	//TODO Where was "props" used?
 	this.props = page.props;
+	//TODO Where was "state" used?
 	this.state = page.state;
 
 	this.rootBinding = this.getMoreartyContext().getBinding();
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 
 	this.grid = this.getGrid();
-	this.dataLoader = 	new DataLoader({
+	this.dataLoader = new DataLoader({
 		serviceName:'schoolHouses',
 		params:		{schoolId:this.activeSchoolId},
 		grid:		this.grid,
-		onLoad: 	this.getDataLoadedHandle()
+		onLoad: 	this.getDataLoadedHandle() // TODO You can use arrow function right here instead 'getDataLoadedHandle'.
 	});
 };
 
@@ -45,18 +48,26 @@ HouseListModel.prototype = {
 	onRemove:function(data){
 		const 	self = this;
 
-		if(data && confirm(`Are you sure you want to remove house ${data.name}?`)){
-			window.Server.schoolHouse.delete({schoolId:self.activeSchoolId, houseId:data.id})
-				.then(_ => self.reloadData())
-				.catch(error => {
-					const text = error && error.xhr && error.xhr.responseJSON && error.xhr.responseJSON.details ? error.xhr.responseJSON.details.text : '';
-					console.log('Got error while trying to remove student: ' + text);
-					window.simpleAlert(
-						'Sorry! You cannot perform this action. Please contact support',
-						'Ok',
-						() => {}
-					);
-				});
+		if(typeof data !== 'undefined') {
+			const showAlert = function() {
+				window.simpleAlert(
+					'Sorry! You cannot perform this action. Please contact support',
+					'Ok',
+					() => {
+					}
+				);
+			};
+
+			window.confirmAlert(
+				`Are you sure you want to remove house ${data.name}?`,
+				"Ok",
+				"Cancel",
+				() => {window.Server.schoolHouse
+					.delete( {schoolId:self.activeSchoolId, houseId:data.id} )
+					.then(() => self.reloadData())
+					.catch(() => showAlert())},
+				() => {}
+			);
 		}
 	},
 	getGrid: function(){
@@ -125,6 +136,7 @@ HouseListModel.prototype = {
 			columns:columns
 		});
 	},
+	// TODO Get WHAT??
 	getDataLoadedHandle: function(data){
 		const self = this,
 			binding = self.getDefaultBinding();

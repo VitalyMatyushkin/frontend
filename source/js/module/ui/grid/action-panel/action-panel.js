@@ -13,6 +13,9 @@ const ActionPanel = React.createClass({
 		const model = this.props.model;
 
 		model.toggleFilters();
+		// TODO Why do you change "isFilterActive" in state?
+		// Why isn't it enough change "isFilterActive" only in model?("toggleFilters" function change model.)
+		// And where do you use state?
 		this.setState({isFilterActive: model.isFilterActive});
 
 		e.stopPropagation();

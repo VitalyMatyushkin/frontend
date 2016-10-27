@@ -1,7 +1,9 @@
-const	React			= require('react'),
-		AddPhotoButton	= require('./add_photo_button'),
-		PreviewPhoto	= require('./preview_photo'),
-		FullScreenPhoto	= require('./fullscreen_photo');
+const	React					= require('react'),
+		AddPhotoButton			= require('./add_photo_button'),
+		PreviewPhoto			= require('./preview_photo'),
+		FullScreenPhoto			= require('./fullscreen_photo'),
+
+		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
 
 const Gallery = React.createClass({
 	MODE: {
@@ -10,10 +12,12 @@ const Gallery = React.createClass({
 	},
 
 	propTypes: {
+		currentUserId:					React.PropTypes.string,
 		photos:							React.PropTypes.array.isRequired,
 		handleChangeAddPhotoButton:		React.PropTypes.func,
+		handleChangeAccessPreset:		React.PropTypes.func,
 		handleClickDeletePhoto:			React.PropTypes.func,
-		isPublic:						React.PropTypes.bool.isRequired,
+		accessMode:						React.PropTypes.string.isRequired,
 		isLoading:						React.PropTypes.bool.isRequired
 	},
 	getInitialState: function() {
@@ -22,25 +26,64 @@ const Gallery = React.createClass({
 			currentFullScreenPhotoId:	undefined
 		};
 	},
-
-	componentWillMount: function() {},
-
-	// preview photo
+	isShowArrowButtons: function() {
+		return this.props.photos.length > 1;
+	},
+	isShowSideContainer: function(currentPhoto) {
+		switch (this.props.accessMode) {
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER:
+				return true;
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PARENT:
+				return (currentPhoto.author.role === 'PARENT' && currentPhoto.author.userId === this.props.currentUserId);
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
+				return false;
+		}
+	},
+	/**
+	 * Get index of current full screen photo from prop.photos array
+	 * @returns {number}
+	 */
+	getCurrentPhotoIndex: function() {
+		return this.props.photos.findIndex(p => p.id === this.state.currentFullScreenPhotoId);
+	},
 	handleClickPhoto: function(id) {
 		this.setState({
 			mode						: this.MODE.FULLSCREEN_MODE,
 			currentFullScreenPhotoId	: id
 		});
 	},
-	// preview fullscreen photo
-	handleClickFullScreenPhoto: function(id) {
-
-	},
 	handleClickCloseFullScreenPhoto: function() {
 		this.setState({
 			mode						: this.MODE.PREVIEW_MODE,
 			currentFullScreenPhotoId	: undefined
 		});
+	},
+	handleChangeAccessPreset: function(id, preset) {
+		this.props.handleChangeAccessPreset(id, preset);
+	},
+	handleClickPrevPhoto: function() {
+		const currentPhotoIndex = this.getCurrentPhotoIndex();
+
+		let currentFullScreenPhotoId;
+		if(currentPhotoIndex === 0) {
+			currentFullScreenPhotoId = this.props.photos[this.props.photos.length - 1].id;
+		} else {
+			currentFullScreenPhotoId = this.props.photos[currentPhotoIndex - 1].id;
+		}
+
+		this.setState( {currentFullScreenPhotoId: currentFullScreenPhotoId} );
+	},
+	handleClickNextPhoto: function() {
+		const currentPhotoIndex = this.getCurrentPhotoIndex();
+
+		let currentFullScreenPhotoId;
+		if(currentPhotoIndex === this.props.photos.length - 1) {
+			currentFullScreenPhotoId = this.props.photos[0].id;
+		} else {
+			currentFullScreenPhotoId = this.props.photos[currentPhotoIndex + 1].id;
+		}
+
+		this.setState( {currentFullScreenPhotoId: currentFullScreenPhotoId} );
 	},
 
 	renderPhotos: function() {
@@ -51,14 +94,15 @@ const Gallery = React.createClass({
 		return photos;
 	},
 	renderAddPhotoButton: function() {
-		if(!this.props.isPublic) {
-			return (
-				<AddPhotoButton	handleChange	= { this.props.handleChangeAddPhotoButton }
-								isLoading		= { this.props.isLoading }
-				/>
-			);
-		} else {
-			return null;
+		switch (this.props.accessMode) {
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
+				return null;
+			default:
+				return (
+					<AddPhotoButton	handleChange	= { this.props.handleChangeAddPhotoButton }
+									isLoading		= { this.props.isLoading }
+					/>
+				);
 		}
 	},
 	renderPhoto: function(photo) {
@@ -66,7 +110,7 @@ const Gallery = React.createClass({
 			<PreviewPhoto	key								= { photo.id }
 							id								= { photo.id }
 							url								= { photo.picUrl }
-							isPublic						= { this.props.isPublic }
+							accessMode						= { this.props.accessMode }
 							handleClickPhoto				= { this.handleClickPhoto }
 							handleClickDeletePhoto			= { this.props.handleClickDeletePhoto }
 			/>
@@ -77,10 +121,17 @@ const Gallery = React.createClass({
 			const currentPhoto = this.props.photos.find(p => p.id === this.state.currentFullScreenPhotoId)
 
 			return (
-				<FullScreenPhoto	id					= { currentPhoto.id }
-									url					= { currentPhoto.picUrl }
-									handleClickPhoto	= { this.handleClickFullScreenPhoto }
-									handleClickClose	= { this.handleClickCloseFullScreenPhoto }
+				<FullScreenPhoto	id							= { currentPhoto.id }
+									url							= { currentPhoto.picUrl }
+									isShowArrowButtons			= { this.isShowArrowButtons() }
+									isShowSideContainer			= { this.isShowSideContainer(currentPhoto) }
+									handleClickPrevPhoto		= { this.handleClickPrevPhoto }
+									handleClickNextPhoto		= { this.handleClickNextPhoto }
+									handleClickClose			= { this.handleClickCloseFullScreenPhoto }
+									currentAccessPreset			= { currentPhoto.accessPreset }
+									handleChangeAccessPreset	= { this.handleChangeAccessPreset.bind(this, currentPhoto.id)  }
+									accessMode					= { this.props.accessMode }
+									accessMode					= { this.props.accessMode }
 				/>
 			);
 		} else {

@@ -6,12 +6,15 @@ const 	React 		= require('react'),
 const FormField = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
+		id:					React.PropTypes.string,		// just html id to pass into real input field
 		type: 				React.PropTypes.string.isRequired,
 		field: 				React.PropTypes.string.isRequired,
 		validation:			React.PropTypes.string,
-        errorClassName:		React.PropTypes.string, //Error message specific class
-        fieldClassName:		React.PropTypes.string,
+		errorClassName:		React.PropTypes.string, //Error message specific class
+		fieldClassName:		React.PropTypes.string,
 		condition:			React.PropTypes.bool, 	//false - field is not included in the form, true or undefined - included
+		isDisabled:			React.PropTypes.bool, 	//false - show field like disabled
+		placeHolder:		React.PropTypes.string,
 		binding:			React.PropTypes.any
 	},
 	render: function () {

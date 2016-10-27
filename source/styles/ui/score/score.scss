@@ -2,15 +2,25 @@
   display: inline-block;
 }
 
-.eScore_Points {
-  display: inline-block;
+.bScore.mError .eScore_Points{
+  border: solid 1px red;
+}
 
-  min-width: 22px;
-
+input[type="text"].eScore_Points {
+  width: 40px;
   font-size: 14px;
-  align-self: center;
 
-  text-align: center;
+  &.mTime{
+    width: 90px;
+  }
+
+  &.mPlain{
+    text-align: center;
+  }
+
+  &.mDistance{
+    width: 75px;
+  }
 }
 
 .eScore_SignContainer {

@@ -134,7 +134,8 @@ const EventHelper = {
 	_isShowCancelEventCloseButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') === 'closing' && RoleHelper.isUserSchoolWorker(thiz);
+		return binding.get('mode') === 'closing'&& (binding.get('activeTab') === 'teams'
+			|| binding.get('activeTab') === 'performance') && RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "edit_squad".

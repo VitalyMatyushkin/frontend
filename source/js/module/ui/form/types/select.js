@@ -6,7 +6,9 @@ const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
 const TypeSelect = React.createClass({
 	mixins: [Morearty.Mixin, TypeMixin],
 	propTypes: {
-		sourceArray:	React.PropTypes.array
+		sourceArray:	React.PropTypes.array,
+		isDisabled:		React.PropTypes.bool, 	//false - show field like disabled
+		placeHolder:	React.PropTypes.string
 	},
     componentDidMount: function(){
         const self = this,
@@ -19,7 +21,11 @@ const TypeSelect = React.createClass({
 		var self = this;
 
 		return (
-			<Select sourceArray={self.props.sourceArray}  binding={self.getDefaultBinding().sub('select')} />
+			<Select	sourceArray	= {self.props.sourceArray}
+					isDisabled	= {self.props.isDisabled}
+					placeHolder	= {self.props.placeHolder}
+					binding		= {self.getDefaultBinding().sub('select')}
+			/>
 		);
 	}
 });

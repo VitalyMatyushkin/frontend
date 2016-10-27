@@ -910,7 +910,7 @@ function convertPoints(countPoints, pointsType){
 		const 	sec_in_hours 	= 3600,
 				sec_in_min 		= 60,
 				points 	= Math.floor(countPoints),
-				ms 	= Math.round((countPoints -points)*1000),
+				ms 		= Math.round((countPoints - points)*1000),
 				h 		= Math.floor(points / sec_in_hours),
 				min		= Math.floor((points - h * sec_in_hours) / sec_in_min),
 				sec		= points - h * sec_in_hours - min * sec_in_min;
@@ -1190,6 +1190,49 @@ function decByType(value, type, pointsStep) {
 	return operationByType(OPERATION_TYPE.minus, value, type, pointsStep);
 }
 
+/**
+ * Calculate team points
+ * @param {object} event
+ * @param {string} teamId
+ * @returns (number} - sum of individual points
+ * */
+function calculateTeamPoints(event, teamId){
+	const team = event.teamsData.find(t => t.id === teamId),
+		playerIds = team.players.map(p => {return p.userId}),
+		scores = event.results.individualScore.map(s => {
+			if(playerIds.indexOf(s.userId) !== -1)
+				return s.score;
+			else
+				return 0;
+		});
+
+	return scores.reduce((a, b) => a + b*1, 0);
+}
+
+/**
+ * Checking the results on the validation error.
+ * @param {object} event
+ * @returns {boolean} - false - not valid, true - valid
+ * */
+function checkValidationResultBeforeSubmit(event){
+	const scoreNames = ['houseScore', 'individualScore', 'schoolScore', 'teamScore'];
+	let result = true;
+
+	scoreNames.find(scoreName => {
+		const score = event.results[scoreName];
+
+		if(score.length){
+			let res = score.find(item => item.isValid === false);
+			if(res){
+				result = false;
+				return true;
+			}
+		}
+	});
+
+	return result;
+}
+
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -1250,7 +1293,9 @@ const TeamHelper = {
 	updateTeam:								updateTeam,
 	operationByType:						operationByType,
 	decByType:								decByType,
-	incByType:								incByType
+	incByType:								incByType,
+	calculateTeamPoints: 					calculateTeamPoints,
+	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit
 };
 
 module.exports = TeamHelper;

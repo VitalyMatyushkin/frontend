@@ -22,6 +22,9 @@ const EventButtons = React.createClass({
 
 		const event = binding.toJS('model');
 
+		if(!TeamHelper.checkValidationResultBeforeSubmit(event))
+			return;
+
 		if(TeamHelper.isNonTeamSport(event)) {
 			self.closeMatchForIndividualSport();
 		} else {
