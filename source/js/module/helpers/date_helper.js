@@ -77,7 +77,7 @@ const DateHelper = {
 		//ISO format date for locales == 'en-GB', format == 'yyyy-mm-dd'
 			isoStr = dateParts[2]+'-'+ dateParts[1]+'-'+ dateParts[0];
 
-		return this.isValid(isoStr) ? isoStr : '';
+		return isoStr;
 	},
 
 	/** validation date ISO-format or 'yyyy-mm-dd' */

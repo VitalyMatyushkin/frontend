@@ -9,6 +9,11 @@ const MaskedDate =  React.createClass({
 		onChange: 		React.PropTypes.func,
 		onBlur: 		React.PropTypes.func
 	},
+	getInitialState:function(){
+		return {
+			date:''
+		};
+	},
 	componentWillMount: function() {
 		const self = this;
 
@@ -32,9 +37,10 @@ const MaskedDate =  React.createClass({
 		const 	isValid			= date && DateHelper.isValid(date),
 				localeDate 		= isValid ? DateHelper.toLocal(date):'';
 
-		this.setState({date:localeDate});
-
-		this.props.onChange && this.props.onChange(DateHelper.toIso(localeDate));
+		if(localeDate){
+			this.setState({date:localeDate});
+			this.props.onChange && this.props.onChange(DateHelper.toIso(localeDate));
+		}
 		return localeDate;
 	},
 
@@ -44,9 +50,11 @@ const MaskedDate =  React.createClass({
 
         if(!value || value==='__.__.____'){
 			value = self.setDefaultValue();
+			this.setState({date:value});
 		}
+		value = value ? DateHelper.toIso(value) : value;
 
-		self.props.onBlur && self.props.onBlur(DateHelper.toIso(value));
+		self.props.onBlur && self.props.onBlur(value);
         e.stopPropagation();
 	},
 	handleChange: function(e) {
