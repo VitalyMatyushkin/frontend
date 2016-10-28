@@ -77,7 +77,6 @@ const InputTypeMixin = {
 
 		self.hideError();
 		self.fullValidate(value);
-		console.log('value=' + value);
 		// just storing current input value
 		// this can trigger extra form validation, but... emh.. it works.
 		// anyway all that form shit should be dropped eventually

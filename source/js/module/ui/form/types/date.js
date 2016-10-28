@@ -8,7 +8,7 @@ const MaskedDate =  React.createClass({
 		defaultValue:	React.PropTypes.string,
 		onChange: 		React.PropTypes.func,
 		onBlur: 		React.PropTypes.func,
-		validateOn: 	React.PropTypes.bool
+		validateOn: 	React.PropTypes.bool 		//true - validation on, false - off
 	},
 	getDefaultProps: function(){
 		return {
@@ -58,7 +58,6 @@ const MaskedDate =  React.createClass({
 		const self = this;
 		let value = e.target.value;
 
-		console.log('handleBlur: e.target.value = ' + value);
         if(!value || value==='__.__.____'){
 			value = self.setDefaultValue();
 			this.setState({date:value});
