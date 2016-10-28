@@ -111,7 +111,7 @@ const SettingsPage = React.createClass({
 						<span>{binding.get('userInfo.firstName')}</span>
 						<span>{binding.get('userInfo.lastName')}</span>
 					</div>
-					<Tabs	binding	= {binding.sub('settingsRouting')} tabListModel={self.tabListModel}
+					<Tabs	tabListModel={self.tabListModel}
 							onClick	= {self.changeActiveTab}/>
 				</div>
 				<div className="bSchoolMaster">
