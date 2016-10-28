@@ -101,10 +101,10 @@ const TypePhone =  React.createClass({
 
 		return (
 			<div className="eForm_fieldInput mPhone">
-                <select onChange={self.ccChange} value={cc} >
+                <select onChange={self.ccChange} value={cc} disabled={!!this.props.isDisabled} >
 					{codes.map(code => <option key={code} value={code} >{code}</option>)}
                 </select>
-                <input ref="input" type="text" value={phone} onChange={self.phoneChange} onBlur={self.handleBlur} />
+                <input ref="input" type="text" value={phone} onChange={self.phoneChange} onBlur={self.handleBlur} disabled={!!this.props.isDisabled} />
 			</div>
 		)
 	}

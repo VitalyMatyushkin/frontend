@@ -39,6 +39,7 @@ const TypeText =  React.createClass({
 				type={this.props.textType || 'text'}
 				placeholder={this.props.placeholder}
 				onBlur={this.handleBlur}
+				disabled={!!this.props.isDisabled}
 				onChange={this.handleChange} />
 		)
 	}
