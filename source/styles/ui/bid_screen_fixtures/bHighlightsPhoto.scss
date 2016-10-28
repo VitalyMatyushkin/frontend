@@ -1,0 +1,35 @@
+.bHighlightsPhoto {
+  margin: 0 auto;
+  width: 800px;
+  height: 300px;
+}
+
+.bBigHighlightsPhoto {
+  position: relative;
+
+  margin: 0 auto;
+  width: 800px;
+  height: 600px;
+}
+
+.eBigHighlightsPhoto_titleContainer {
+  position: absolute;
+
+  top: 20px;
+}
+
+.eHighlightsPhoto_Photo {
+  width: 400px;
+  height: 300px;
+
+  display: inline-block;
+  vertical-align: top;
+}
+
+.eHighlightsPhoto_smallPhoto {
+  width: 200px;
+  height: 300px;
+
+  display: inline-block;
+  vertical-align: top;
+}
