@@ -45,11 +45,13 @@ const MaskedDate =  React.createClass({
 
 		if(this.props.validateOn || localeDate){
 			this.setState({date:localeDate});
-			let isoDate = DateHelper.toIso(localeDate);
-			isoDate = DateHelper.isValid(isoDate) ? isoDate : '';
-			this.props.onChange && this.props.onChange(isoDate);
+			this.props.onChange && this.props.onChange(this.toIso(localeDate));
 		}
 		return localeDate;
+	},
+	toIso:function(localeDate){
+		let isoDate = DateHelper.toIso(localeDate);
+		return localeDate && (!this.props.validateOn || DateHelper.isValid(isoDate)) ? isoDate : '';
 	},
 
 	handleBlur: function(e) {
@@ -61,11 +63,7 @@ const MaskedDate =  React.createClass({
 			value = self.setDefaultValue();
 			this.setState({date:value});
 		}
-		value = value ? DateHelper.toIso(value) : value;
-
-		console.log('handleBlur: value = ' + value);
-
-		self.props.onBlur && self.props.onBlur(value);
+		self.props.onBlur && self.props.onBlur(this.toIso(value));
         e.stopPropagation();
 	},
 	handleChange: function(e) {
@@ -74,9 +72,7 @@ const MaskedDate =  React.createClass({
 
 		this.setState({date:inputValue});
 
-		let isoDate = DateHelper.toIso(inputValue);
-		isoDate = DateHelper.isValid(isoDate) || !this.props.validateOn ? isoDate : '';
-		self.props.onChange && self.props.onChange(isoDate);
+		self.props.onChange && self.props.onChange(this.toIso(inputValue));
 
         e.stopPropagation();
 	},
