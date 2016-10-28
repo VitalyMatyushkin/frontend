@@ -7,7 +7,18 @@ const MaskedDate =  React.createClass({
 		value:			React.PropTypes.string,
 		defaultValue:	React.PropTypes.string,
 		onChange: 		React.PropTypes.func,
-		onBlur: 		React.PropTypes.func
+		onBlur: 		React.PropTypes.func,
+		validateOn: 	React.PropTypes.bool 		//true - validation on, false - off
+	},
+	getDefaultProps: function(){
+		return {
+			validateOn: true
+		};
+	},
+	getInitialState: function(){
+		return {
+			date:''
+		};
 	},
 	componentWillMount: function() {
 		const self = this;
@@ -32,10 +43,15 @@ const MaskedDate =  React.createClass({
 		const 	isValid			= date && DateHelper.isValid(date),
 				localeDate 		= isValid ? DateHelper.toLocal(date):'';
 
-		this.setState({date:localeDate});
-
-		this.props.onChange && this.props.onChange(DateHelper.toIso(localeDate));
+		if(this.props.validateOn || localeDate){
+			this.setState({date:localeDate});
+			this.props.onChange && this.props.onChange(this.toIso(localeDate));
+		}
 		return localeDate;
+	},
+	toIso:function(localeDate){
+		let isoDate = DateHelper.toIso(localeDate);
+		return localeDate && (!this.props.validateOn || DateHelper.isValid(isoDate)) ? isoDate : '';
 	},
 
 	handleBlur: function(e) {
@@ -44,9 +60,9 @@ const MaskedDate =  React.createClass({
 
         if(!value || value==='__.__.____'){
 			value = self.setDefaultValue();
+			this.setState({date:value});
 		}
-
-		self.props.onBlur && self.props.onBlur(DateHelper.toIso(value));
+		self.props.onBlur && self.props.onBlur(this.toIso(value));
         e.stopPropagation();
 	},
 	handleChange: function(e) {
@@ -55,7 +71,7 @@ const MaskedDate =  React.createClass({
 
 		this.setState({date:inputValue});
 
-		self.props.onChange && self.props.onChange(DateHelper.toIso(inputValue));
+		self.props.onChange && self.props.onChange(this.toIso(inputValue));
 
         e.stopPropagation();
 	},

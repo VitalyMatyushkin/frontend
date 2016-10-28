@@ -11,7 +11,7 @@ const TypeDate =  React.createClass({
 			value = binding.get('value');
 
 		return (
-            <Date value={value} onChange={self.changeValue} onBlur={self.setValue} />
+            <Date value={value} validateOn={false} onChange={self.changeValue} onBlur={self.setValue} />
 		)
 	}
 });
