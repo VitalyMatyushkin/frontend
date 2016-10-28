@@ -31,8 +31,9 @@ const RegistrationPermissions = React.createClass({
 			const fields = fieldsAr[i];
 			if(fields.schoolId){
 				dataToPost.schoolId = fields.schoolId;
+				dataToPost.comment = fields.comment;
 				if(currentType === 'parent') {
-					dataToPost.comment = "Student - " + fields.firstName + " " + fields.lastName + "." +
+					dataToPost.comment += " Student - " + fields.firstName + " " + fields.lastName + "." +
 						" Form - " + fields.formName + ". House - " + fields.houseName + ".";
 				}
 				window.Server.profileRequests.post(dataToPost).then( _ => self.props.onSuccess());

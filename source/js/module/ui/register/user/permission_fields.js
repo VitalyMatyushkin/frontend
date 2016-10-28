@@ -119,6 +119,12 @@ const PermissionFields = React.createClass({
 
         binding.set('lastName', event.currentTarget.value);
     },
+	onChangeComment: function(event) {
+		const   self = this,
+			binding = self.getDefaultBinding();
+
+		binding.set('comment', event.currentTarget.value);
+	},
     schoolMessage: function () {
         return (
             <div className="eForm_message">
@@ -173,6 +179,11 @@ const PermissionFields = React.createClass({
 						<div className="eRegistration_input">
 							<input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
 						</div>
+					</div>
+				</If>
+				<If condition={!!binding.get('formId') || !!binding.get('schoolId') && currentType !== 'parent'}>
+					<div className="eRegistration_input">
+						<textarea placeholder="comments" onChange={self.onChangeComment} />
 					</div>
 				</If>
             </div>
