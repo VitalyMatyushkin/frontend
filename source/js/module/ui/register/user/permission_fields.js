@@ -174,10 +174,10 @@ const PermissionFields = React.createClass({
 				<If condition={!!binding.get('formId') && currentType === 'parent'}>
 					<div>
 						<div className="eRegistration_input">
-							<input ref="firstNameField" placeholder="Firstname" type={'text'} onChange={self.onChangeFirstName} />
+							<input ref="firstNameField" placeholder="first name" type={'text'} onChange={self.onChangeFirstName} />
 						</div>
 						<div className="eRegistration_input">
-							<input ref="lastNameField" placeholder="Lastname" type={'text'} onChange={self.onChangeLastName} />
+							<input ref="lastNameField" placeholder="last name" type={'text'} onChange={self.onChangeLastName} />
 						</div>
 					</div>
 				</If>
