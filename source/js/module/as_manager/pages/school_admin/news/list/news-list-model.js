@@ -42,6 +42,31 @@ NewsListModel.prototype = {
 	onView: function(data) {
 		document.location.hash += '/view?id=' + data.id;
 	},
+	onRemove:function(data){
+		const 	self = this;
+
+		if(typeof data !== 'undefined') {
+			const showAlert = function() {
+				window.simpleAlert(
+					'Sorry! You cannot perform this action. Please contact support',
+					'Ok',
+					() => {
+					}
+				);
+			};
+
+			window.confirmAlert(
+				`Are you sure you want to remove news "${data.title}"?`,
+				"Ok",
+				"Cancel",
+				() => {window.Server.schoolNewsItem
+					.delete( {schoolId:self.activeSchoolId, newsId:data.id} )
+					.then(() => self.reloadData())
+					.catch(() => showAlert())},
+				() => {}
+			);
+		}
+	},
 	getGrid: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
 				changeAllowed 	= role === "ADMIN" || role === "MANAGER";
@@ -84,8 +109,9 @@ NewsListModel.prototype = {
 						 * Only school admin and manager can edit news.
 						 * All other users should not see that button.
 						 * */
-						onItemEdit:	changeAllowed ? this.onEdit.bind(this) : null,
-						onItemView:	this.onView.bind(this)
+						onItemEdit:		changeAllowed ? this.onEdit.bind(this) : null,
+						onItemView:		this.onView.bind(this),
+						onItemRemove:	changeAllowed ? this.onRemove.bind(this) : null
 					}
 				}
 			}
