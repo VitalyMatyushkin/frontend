@@ -79,10 +79,13 @@ const SettingsPage = React.createClass({
 			);
 		}
 
+		console.log('tab=' + tab);
 		if(tab) {
 			let item = self.tabListModel.find(t => t.value === tab);
-			item.isActive = true;
-			binding.set('activeTab', tab);
+			if(item){
+				item.isActive = true;
+				binding.set('activeTab', tab);
+			}
 		} else {
 			self.tabListModel[0].isActive = true;
 			binding.set('activeTab', 'general');
