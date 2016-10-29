@@ -21,6 +21,9 @@ const SecuritySettingsPage = React.createClass({
 			);
 		});
 	},
+	onCancel:function(){
+		window.location.hash = '/settings/general';
+	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();

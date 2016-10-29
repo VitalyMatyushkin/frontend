@@ -33,7 +33,15 @@ const SettingsPage = React.createClass({
 			settingsRouting: {}
 		});
 	},
-	componentWillMount: function() {
+	componentWillMount:function(){
+		this.initTabs();
+	},
+	componentDidMount:function(){
+		const rootBinding = this.getMoreartyContext().getBinding();
+
+		this.addBindingListener(rootBinding, 'routing.pathParameters.0', this.initTabs)
+	},
+	initTabs: function() {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				rootBinding	= self.getMoreartyContext().getBinding(),
