@@ -38,6 +38,7 @@ const SecuritySettingsPage = React.createClass({
 					defaultButton="Change"
 					loadingButton="Saving..."
 					autoupdateOff={true}
+					onCancel={this.onCancel}
 				>
 					<FormField type="text"
 							   field="oldPassword"
