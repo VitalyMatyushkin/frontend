@@ -1,8 +1,21 @@
-const React = require('react');
+const	React		= require('react'),
+
+		DateHelper	= require('./../../../../../helpers/date_helper');
 
 const UpcomingEventView = React.createClass({
 	propTypes: {
 		model: React.PropTypes.object.isRequired
+	},
+
+	getDate: function(model) {
+		switch (true) {
+			case DateHelper.isToday(model.dateUTC):
+				return model.time;
+			case DateHelper.isTomorrow(model.dateUTC):
+				return `Tomorrow ${model.time}`;
+			default:
+				return `${DateHelper.getShortDateString(new Date(model.dateUTC))} ${model.time}`;
+		}
 	},
 
 	render: function() {
@@ -16,7 +29,7 @@ const UpcomingEventView = React.createClass({
 					</div>
 				</div>
 				<div className="eUpcomingEventView_bodyRightSide mRight">
-					{ `${model.date} - ${model.time}` }
+					{ this.getDate(model) }
 				</div>
 			</div>
 		)

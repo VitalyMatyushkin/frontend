@@ -1,6 +1,8 @@
-const React = require('react');
+const	React	= require('react'),
 
-const FixtureItemFooterFooter = React.createClass({
+		DateHelper	= require('./../../../../../helpers/date_helper');
+
+const FixtureItemFooter = React.createClass({
 	propTypes: {
 		model: React.PropTypes.object.isRequired
 	},
@@ -10,10 +12,10 @@ const FixtureItemFooterFooter = React.createClass({
 
 		return (
 			<div className="bEventResultFooter">
-				{ `${model.sport} - ${model.date}` }
+				{ `${model.sport} - ${DateHelper.getShortDateString(new Date(model.dateUTC))}` }
 			</div>
 		);
 	}
 });
 
-module.exports = FixtureItemFooterFooter;
+module.exports = FixtureItemFooter;

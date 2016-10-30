@@ -37,9 +37,6 @@ const DateHelper = {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
 	},
 
-	/**
-	 *
-	 * */
 	getDateTimeString: function(dateTime){
 		const 	date = this.getDateStringFromDateObject(dateTime),
 				time = this.getTimeStringFromDateObject(dateTime);
@@ -62,6 +59,7 @@ const DateHelper = {
 	toLocalWithMonthName:function(utcStr){
 		var self = this;
 		if(utcStr){
+			// TODO birthday?? WTF??
 			var	birthday = new Date(utcStr),
 				date = self.zeroFill(birthday.getDate()),
 				month = birthday.getMonth(),
@@ -199,7 +197,29 @@ const DateHelper = {
 
         return lastDayOfMonthDateTime.getDate();
 
-    }
+    },
+
+	getShortDateString: function(date) {
+		const	dayString	= this.zeroFill(date.getDate()),
+				monthString	= this.getMonthName(date.getMonth());
+
+		return `${dayString} ${monthString}`;
+	},
+
+	isToday: function(date) {
+		return this.getDate(new Date()) === this.getDate(date);
+	},
+
+	getTomorrow: function() {
+		const tomorrow = new Date();
+		tomorrow.setDate(tomorrow.getDate() + 1);
+
+		return tomorrow;
+	},
+
+	isTomorrow: function(date) {
+		return this.getDate(this.getTomorrow()) === this.getDate(date);
+	}
 };
 
 module.exports = DateHelper;

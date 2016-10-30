@@ -33,6 +33,7 @@ const   DateHelper  = require('module/helpers/date_helper'),
 const ChallengeModel = function(event, activeSchoolId){
     this.id 		= event.id;
     this.name 		= event.name;
+	this.dateUTC	= event.startTime;
 	this.date 		= DateHelper.getDate(event.startTime);
 	this.time 		= DateHelper.getTime(event.startTime);
 	this.eventType 	= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
