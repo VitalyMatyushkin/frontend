@@ -10,8 +10,7 @@ const FixtureList = React.createClass({
 		mode:			React.PropTypes.string.isRequired,
 		title:			React.PropTypes.string.isRequired,
 		activeSchoolId:	React.PropTypes.string.isRequired,
-		isSync:			React.PropTypes.bool.isRequired,
-		events:			React.PropTypes.any
+		events:			React.PropTypes.array.isRequired
 	},
 
 	getFixtureListByEvents: function(events) {
