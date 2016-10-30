@@ -5,7 +5,9 @@ const   ApplicationView 	= require('./as_bigscreen/application'),
 		Immutable			= require('immutable'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
-		Morearty			= require('morearty');
+		Morearty			= require('morearty'),
+
+		BigscreenConsts 	= require('./as_bigscreen/pages/consts/consts');
 
 function initMainView(school) {
 	// creating morearty context
@@ -31,8 +33,14 @@ function initMainView(school) {
 					nextSevenDaysEvents: {
 						isSync:	false,
 						events:	[]
+					},
+					highlightEvent: {
+						event:	{},
+						photos:	{},
+						isSync:	false
 					}
-				}
+				},
+				currentState: BigscreenConsts.BIGSCREEN_STATES_MODE.RECENT
 			}
 		},
 		options: {
