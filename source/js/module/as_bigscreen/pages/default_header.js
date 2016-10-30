@@ -5,6 +5,43 @@ const DefaultHeader = React.createClass({
 		title: React.PropTypes.string.isRequired
 	},
 
+	TIME_UPDATE_INTERVAL: 60000,
+	/*	INIT	*/
+	getInitialState: function() {
+		return {
+			currentTime: this.getCurrentTimeString()
+		};
+	},
+
+	componentWillMount: function () {
+		setInterval(this.handleChangeTime, this.TIME_UPDATE_INTERVAL);
+	},
+
+	/*	HELPERS	*/
+	setCurrentTime: function() {
+		this.setState(
+			{'currentTime': this.getCurrentTimeString()}
+		);
+	},
+	/**
+	 * Get current time string from state
+	 */
+	getCurrentTime: function() {
+		return this.state.currentTime;
+	},
+	/**
+	 * Get current time string by new Date()
+	 */
+	getCurrentTimeString: function() {
+		return new Date().toTimeString().substring(0,5);
+	},
+
+	/*	HANDLERS	*/
+	handleChangeTime: function() {
+		this.setCurrentTime();
+	},
+
+	/*	RENDER	*/
 	render: function() {
 		return (
 			<div className="bBigScreenTitle">
@@ -15,7 +52,7 @@ const DefaultHeader = React.createClass({
 					LOGO
 				</div>
 				<div className="eBigScreenTitle_time">
-					TIME
+					{ this.getCurrentTime() }
 				</div>
 			</div>
 		);
