@@ -23,7 +23,7 @@ const MaskedDate =  React.createClass({
 	componentWillMount: function() {
 		const self = this;
 
-		self.setDefaultValue();
+		self.setDate(self.props.value);
 	},
 	componentWillReceiveProps:function(nextProps){
 		const self = this;
