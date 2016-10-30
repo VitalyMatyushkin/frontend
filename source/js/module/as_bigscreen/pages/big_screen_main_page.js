@@ -15,6 +15,7 @@ const	React				= require('react'),
 const BigScreenMainPage = React.createClass({
 	mixins: [Morearty.Mixin],
 
+	timerId: undefined,
 	CHANGE_STATE_INTERVAL: 60000,
 
 	componentWillMount: function () {
@@ -25,7 +26,10 @@ const BigScreenMainPage = React.createClass({
 		CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
 		BigScreenActions.setHighlightEvent(activeSchoolId, binding);
 
-		setInterval(this.handleChangeState, this.CHANGE_STATE_INTERVAL);
+		this.timerId = setInterval(this.handleChangeState, this.CHANGE_STATE_INTERVAL);
+	},
+	componentWillUnmount: function () {
+		clearInterval(this.timerId);
 	},
 	handleChangeState: function() {
 		const binding = this.getDefaultBinding();

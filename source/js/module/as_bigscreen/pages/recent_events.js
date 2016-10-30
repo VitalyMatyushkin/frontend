@@ -2,7 +2,8 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 
 		BigScreenConsts	= require('./consts/consts'),
-		FixtureList		= require('./fixture_list/fixture_list');
+		FixtureList		= require('./fixture_list/fixture_list'),
+		Footer			= require('./footer');
 
 const RecentEvent = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -10,19 +11,30 @@ const RecentEvent = React.createClass({
 	EVENTS_COUNT: 6,
 
 	render:function() {
-		const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-				binding			= this.getDefaultBinding().sub('events'),
-				events			= binding.get('prevSevenDaysFinishedEvents.events').toJS(),
-				isSync 			= binding.get('prevSevenDaysFinishedEvents.isSync');
+		const binding = this.getDefaultBinding().sub('events');
 
-		return (
-			<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.RECENT }
-							title			= "Recent Events"
+		const isSync = binding.get('prevSevenDaysFinishedEvents.isSync') && binding.get('nextSevenDaysEvents.isSync');
+
+		if(isSync) {
+			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
+					events			= binding.toJS('prevSevenDaysFinishedEvents.events'),
+					footerEvent		= binding.toJS('nextSevenDaysEvents.events.0');
+
+			return (
+				<div className="bRecentEvents">
+					<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.RECENT }
+									title			= "Recent Events"
+									activeSchoolId	= { activeSchoolId }
+									events			= { events.slice(0, this.EVENTS_COUNT) }
+					/>
+					<Footer	event			= { footerEvent }
 							activeSchoolId	= { activeSchoolId }
-							isSync			= { isSync }
-							events			= { events.slice(0, this.EVENTS_COUNT) }
-			/>
-		);
+					/>
+				</div>
+			);
+		} else {
+			return null;
+		}
 	}
 });
 

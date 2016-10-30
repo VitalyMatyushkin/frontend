@@ -15,8 +15,6 @@ const Center = React.createClass({
 				currentPage	= binding.get('routing.currentPageName') || '',
 				mainClass	= 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
 
-		console.log("TESTTEST");
-
 		return (
 			<div className={mainClass}>
 				<div className="bPageWrap">

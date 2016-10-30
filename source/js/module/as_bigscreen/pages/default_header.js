@@ -5,6 +5,8 @@ const DefaultHeader = React.createClass({
 		title: React.PropTypes.string.isRequired
 	},
 
+	timerId: undefined,
+
 	TIME_UPDATE_INTERVAL: 60000,
 	/*	INIT	*/
 	getInitialState: function() {
@@ -14,7 +16,10 @@ const DefaultHeader = React.createClass({
 	},
 
 	componentWillMount: function () {
-		setInterval(this.handleChangeTime, this.TIME_UPDATE_INTERVAL);
+		this.timerId = setInterval(this.handleChangeTime, this.TIME_UPDATE_INTERVAL);
+	},
+	componentWillUnmount: function () {
+		clearInterval(this.timerId);
 	},
 
 	/*	HELPERS	*/
