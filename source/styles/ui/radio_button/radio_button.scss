@@ -1,5 +1,10 @@
 .bRadioButton {
 
+  &.mSaveAsNewTeam {
+    display: inline-block;
+
+    width: 160px;
+  }
 }
 
 .bRadioButton_input {
