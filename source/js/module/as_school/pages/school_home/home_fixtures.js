@@ -11,13 +11,15 @@ const HomeFixtures = React.createClass({
 				events 			= binding.get('nextSevenDaysEvents.events').toJS(),
 				isSync 			= binding.get('nextSevenDaysEvents.isSync');
 
-		return <FixtureList
-			title="Fixtures"
-			activeSchoolId={activeSchoolId}
-			isSync={isSync}
-			events={events}
-			isDaySelected={true}
-		/>;
+		return (
+			<FixtureList	title					= "Fixtures"
+							showAllItemsButtonText	= "More fixtures"
+							activeSchoolId			= { activeSchoolId }
+							isSync					= { isSync }
+							events					= { events }
+							isDaySelected			= { true }
+			/>
+		);
 	}
 });
 module.exports = HomeFixtures;
