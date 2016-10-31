@@ -9,20 +9,21 @@ const BigEventResultView = React.createClass({
 		const model = this.props.model;
 
 		return (
-			<div className="bBigEventResultView">
+			<div className="bEventResultView mBig">
 				<div className="bBigEventResultView_bodyLeftSide">
-					<div className="eBigEventResultView_mainInfoBlock">
+					<div className="eEventResultView_mainInfoBlock">
 						{ model.rivals[0].value }
 					</div>
-					<div className="bBigEventResultView_score">
+					<div className="eEventResultView_score mRight">
 						{ model.scoreAr[0] }
 					</div>
 				</div>
+				<span className="eSeparator"></span>
 				<div className="bBigEventResultView_bodyRightSide">
-					<div className="bBigEventResultView_score">
+					<div className="eEventResultView_score">
 						{ model.scoreAr[1] }
 					</div>
-					<div className="bBigEventResultView_mainInfoBlock mRight">
+					<div className="eEventResultView_mainInfoBlock mRight">
 						{ model.rivals[1].value }
 					</div>
 				</div>

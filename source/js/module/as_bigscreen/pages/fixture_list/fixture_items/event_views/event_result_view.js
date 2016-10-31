@@ -14,10 +14,11 @@ const EventResultView = React.createClass({
 					<div className="eEventResultView_mainInfoBlock">
 						{ model.rivals[0].value }
 					</div>
-					<div className="eEventResultView_score">
+					<div className="eEventResultView_score mRight">
 						{ model.scoreAr[0] }
 					</div>
 				</div>
+				<span className="eSeparator"></span>
 				<div className="eEventResultView_bodyRightSide">
 					<div className="eEventResultView_score">
 						{ model.scoreAr[1] }

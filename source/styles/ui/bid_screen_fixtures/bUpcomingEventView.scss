@@ -1,33 +1,45 @@
 .bUpcomingEventView {
-  width: 800px;
+  background: #fff;
+
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+
+  -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+  -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+  box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+
+  font-size: 2.5rem;
+
+  width: 100%;
+
+  @media (max-width: 1280px) {
+    font-size: 2rem;
+  }
 }
 
-.eUpcomingEventView_bodyLeftSide {
+.eUpcomingEventView_bodyLeftSide, .eUpcomingEventView_bodyRightSide {
+  box-sizing: border-box;
+  color: $textColor;
   display: inline-block;
-  vertical-align: center;
-
-  width: 400px;
-}
-
-.eUpcomingEventView_bodyRightSide {
-  display: inline-block;
-  vertical-align: top;
-
-  width: 400px;
+  padding: 1% 2% 0.5% 2%;
 
   &.mRight {
     text-align: center;
   }
+}
+.eUpcomingEventView_bodyRightSide {
+  color: $blueColor;
+  float: right;
 }
 
 .eUpcomingEventView_mainInfoBlock {
   display: inline-block;
-  vertical-align: top;
-
-  width: 350px;
-  height: 50px;
 
   &.mRight {
-    text-align: center;
+    float: right;
   }
+}
+.eUpcomingEventVS {
+  color: #8c8c8c;
 }

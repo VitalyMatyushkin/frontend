@@ -1,34 +1,51 @@
 .bHighlightsPhoto {
+  height: 100%;
   margin: 0 auto;
-  width: 800px;
-  height: 300px;
+  width: 100%;
+
 }
 
 .bBigHighlightsPhoto {
   position: relative;
 
   margin: 0 auto;
-  width: 800px;
-  height: 600px;
+  width: 100%;
+  height: 50%;
 }
 
 .eBigHighlightsPhoto_titleContainer {
   position: absolute;
 
-  top: 20px;
+  top: 30px;
+  width: 100%;
+
+  .bBigScreenTitle {
+    background: #fff;
+    border-radius: 15px;
+    margin: 0 auto;
+    padding: 0.5rem;
+    width: 85%;
+
+  }
 }
 
 .eHighlightsPhoto_Photo {
-  width: 400px;
-  height: 300px;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  width: 50%;
+  height: 100%;
 
   display: inline-block;
   vertical-align: top;
 }
 
 .eHighlightsPhoto_smallPhoto {
-  width: 200px;
-  height: 300px;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  width: 25%;
+  height: 100%;
 
   display: inline-block;
   vertical-align: top;

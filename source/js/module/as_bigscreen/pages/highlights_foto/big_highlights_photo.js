@@ -13,13 +13,13 @@ const BigHighlightsPhoto = React.createClass({
 
 		const styles = [
 			{
-				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[0].picUrl, 300)})`
+				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[0].picUrl, 500)})`
 			},
 			{
-				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[1].picUrl, 300)})`
+				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[1].picUrl, 500)})`
 			},
 			{
-				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[2].picUrl, 300)})`
+				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[2].picUrl, 500)})`
 			}
 		];
 

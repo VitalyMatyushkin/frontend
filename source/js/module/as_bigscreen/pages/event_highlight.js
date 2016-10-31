@@ -20,11 +20,13 @@ const EventHighlight = React.createClass({
 
 			return (
 				<div className="bEventHighlight">
+					<div className="eEventHighlight_header">
 					<DefaultTitle title={"Event Highlight"}/>
 					<div className="eEventHighlight_body">
 						<BigFixtureItem	activeSchoolId	= { activeSchoolId }
 										event			= { event }
 						/>
+					</div>
 					</div>
 					<div className="eEventHighlight_footer">
 						<HighlightsPhoto photos={photos}/>

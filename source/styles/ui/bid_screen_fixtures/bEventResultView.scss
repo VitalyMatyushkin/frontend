@@ -1,19 +1,41 @@
 .bEventResultView {
-  width: 800px;
+  background: #fff;
+
+  border-radius: 15px;
+  -moz-border-radius: 15px;
+  -webkit-border-radius: 15px;
+
+  -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+  -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+  box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+
+  font-size: 2.5rem;
+
+  width: 100%;
+
+  @media (max-width: 1280px) {
+    font-size: 2rem;
+  }
+  .eSeparator {
+    background: url(/images/icons/slash.svg) no-repeat center;
+    background-size: contain;
+    display: inline-block;
+    height: 2.5rem;
+    width: 4%;
+    vertical-align: middle;
+  }
+
+  &.mBig {
+    margin: 6% 0 1%;
+  }
 }
 
-.eEventResultView_bodyLeftSide {
+.eEventResultView_bodyLeftSide, .eEventResultView_bodyRightSide{
+  box-sizing: border-box;
+  color: $textColor;
   display: inline-block;
-  vertical-align: top;
-
-  width: 400px;
-}
-
-.eEventResultView_bodyRightSide {
-  display: inline-block;
-  vertical-align: top;
-
-  width: 400px;
+  padding: 1% 2% 0.5% 2%;
+  width: 48%;
 
   &.mRight {
     text-align: center;
@@ -22,20 +44,16 @@
 
 .eEventResultView_mainInfoBlock {
   display: inline-block;
-  vertical-align: top;
-
-  width: 350px;
-  height: 50px;
 
   &.mRight {
-    text-align: center;
+    float: right;
   }
 }
 
 .eEventResultView_score {
+  color: $blueColor;
   display: inline-block;
-  vertical-align: top;
-
-  width: 50px;
-  height: 50px;
+  &.mRight {
+    float: right;
+  }
 }
