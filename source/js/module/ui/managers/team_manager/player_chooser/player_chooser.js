@@ -2,7 +2,8 @@ const	React			= require('react'),
 		PlayersList		= require('./players_list'),
 		PlayerSearchBox	= require('./player_search_box'),
 
-		If				= require('./../../../if/if');
+		If				= require('./../../../if/if'),
+		Loader			= require('./../../../loader');
 
 const	PlayerChooser	= React.createClass({
 	propTypes: {
@@ -22,9 +23,7 @@ const	PlayerChooser	= React.createClass({
 				<div className="bPlayerChooser">
 					<PlayerSearchBox handleChangeSearchText={self.props.handleChangeSearchText}/>
 					<If condition={isSearch}>
-						<div>
-							LOADING...
-						</div>
+						<Loader condition={true}/>
 					</If>
 					<If condition={!isSearch}>
 						<PlayersList	players				= { self.props.students }
