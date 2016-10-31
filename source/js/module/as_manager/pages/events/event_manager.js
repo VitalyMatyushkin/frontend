@@ -504,11 +504,20 @@ const EventManager = React.createClass({
 		// it's important!!
 		// because TeamSaveModePanel use this.props.handleClick.bind(null, ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM)
 		// we must save context
+		// hmmm, or not.
 		const self = this;
 
 		self.getDefaultBinding().set(
 			`teamModeView.teamWrapper.${teamWrapperIndex}.savingChangesMode`,
 			Immutable.fromJS(currentMode)
+		);
+	},
+	handleChangeTeamName: function(teamWrapperIndex, name) {
+		const self = this;
+
+		self.getDefaultBinding().set(
+			`teamModeView.teamWrapper.${teamWrapperIndex}.teamName.name`,
+			Immutable.fromJS(name)
 		);
 	},
 	renderSavingPlayerChangesPopupBody: function(event) {
@@ -520,9 +529,11 @@ const EventManager = React.createClass({
 			// for internal event check only first team
 			case EventHelper.isInterSchoolsEvent(event) && teamWrappers[0].isTeamChanged:
 				savingPlayerChangesModePanels.push(
-					<TeamSaveModePanel	teamName		= { teamWrappers[0].teamName.name }
-										mode			= { teamWrappers[0].savingChangesMode }
-										handleChange	= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, 0) }
+					<TeamSaveModePanel	originalTeamName		= { teamWrappers[0].prevTeamName }
+										teamName				= { teamWrappers[0].teamName.name }
+										mode					= { teamWrappers[0].savingChangesMode }
+										handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, 0) }
+										handleChangeTeamName	= { this.handleChangeTeamName.bind(null, 0) }
 					/>
 				);
 				break;
@@ -531,9 +542,11 @@ const EventManager = React.createClass({
 				teamWrappers.forEach((tw, index) => {
 					if(tw.isTeamChanged) {
 						savingPlayerChangesModePanels.push(
-							<TeamSaveModePanel	teamName		= { teamWrappers[index].teamName.name }
-												mode			= { teamWrappers[index].savingChangesMode }
-												handleChange	= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, index) }
+							<TeamSaveModePanel	originalTeamName		= { teamWrappers[index].prevTeamName }
+												teamName				= { teamWrappers[index].teamName.name }
+												mode					= { teamWrappers[index].savingChangesMode }
+												handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, index) }
+												handleChangeTeamName	= { this.handleChangeTeamName.bind(null, index) }
 							/>
 						);
 					}

@@ -3,7 +3,8 @@ const	React				= require('react'),
 
 		DefaultTitle		= require('./default_header'),
 		BigFixtureItem		= require('./fixture_list/fixture_items/big_fixture_item'),
-		HighlightsPhoto		= require('./highlights_foto/highlights_photo');
+		HighlightsPhoto		= require('./highlights_foto/highlights_photo'),
+		Footer				= require('./footer');
 
 const EventHighlight = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -11,12 +12,13 @@ const EventHighlight = React.createClass({
 	render: function() {
 		const	binding			= this.getDefaultBinding().sub('events');
 
-		const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-				isSync 			= binding.get('highlightEvent.isSync');
+		const	isSync			= binding.get('highlightEvent.isSync') && binding.get('nextSevenDaysEvents.isSync');
 
 		if(isSync) {
-			const	event	= binding.toJS('highlightEvent.event'),
-					photos	= binding.toJS('highlightEvent.photos');
+			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
+					event			= binding.toJS('highlightEvent.event'),
+					photos			= binding.toJS('highlightEvent.photos'),
+					footerEvent		= binding.toJS('nextSevenDaysEvents.events.0');
 
 			return (
 				<div className="bEventHighlight">
@@ -29,8 +31,11 @@ const EventHighlight = React.createClass({
 					</div>
 					</div>
 					<div className="eEventHighlight_footer">
-						<HighlightsPhoto photos={photos}/>
+						<HighlightsPhoto photos={ photos }/>
 					</div>
+					<Footer	activeSchoolId	= { activeSchoolId }
+							event			= { footerEvent }
+					/>
 				</div>
 			);
 		} else {

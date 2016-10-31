@@ -2,7 +2,7 @@ const	React 					= require('react'),
 
 		ChallengeModel			= require('./../../../../ui/challenges/challenge_model'),
 		EventResultView			= require('./event_views/event_result_view'),
-		FixtureItemFooterFooter	= require('./footer/fixture_item_footer');
+		FixtureItemFooter	= require('./footer/fixture_item_footer');
 
 const FixtureItem = React.createClass({
 	propTypes: {
@@ -16,7 +16,7 @@ const FixtureItem = React.createClass({
 		return (
 			<div className="bFixtureItem">
 				<EventResultView model={model}/>
-				<FixtureItemFooterFooter model={model}/>
+				<FixtureItemFooter model={model}/>
 			</div>
 		)
 	}
