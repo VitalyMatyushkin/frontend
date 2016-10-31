@@ -54,7 +54,7 @@ const DefaultHeader = React.createClass({
 					{ this.props.title }
 				</div>
 				<div className="eBigScreenTitle_logo">
-					LOGO
+					<img src="images/big-logo.svg" alt="Squadintouch"/>
 				</div>
 				<div className="eBigScreenTitle_time">
 					{ this.getCurrentTime() }

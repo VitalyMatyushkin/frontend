@@ -25,7 +25,9 @@ const UpcomingEventView = React.createClass({
 			<div className="bUpcomingEventView">
 				<div className="eUpcomingEventView_bodyLeftSide">
 					<div className="eUpcomingEventView_mainInfoBlock">
-						{ `${model.rivals[0].value} vs ${model.rivals[1].value}` }
+						{ `${model.rivals[0].value}` }
+						<span className="eUpcomingEventVS"> vs </span>
+						{ `${model.rivals[1].value}` }
 					</div>
 				</div>
 				<div className="eUpcomingEventView_bodyRightSide mRight">
