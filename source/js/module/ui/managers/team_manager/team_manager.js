@@ -25,7 +25,12 @@ const TeamManager = React.createClass({
 			removedPlayers:		[],
 			selectedStudentIds:	[],
 			selectedPlayerIds:	[],
+			// TODO rename to isNeedClearBufferData
+			// for ex. it's need for team create form
+			// in case when user change type of team to houses
+			// and we need clear all prev buffer data
 			isSync:				true,
+			isSearch:			false, // true when loading data
 			// use this flag to command research users by current search text, see listeners
 			isNeedSearch:		false
 		});
@@ -116,6 +121,8 @@ const TeamManager = React.createClass({
 		const filter = binding.toJS('filter');
 
 		if(filter) {
+			binding.set('isSearch', true);
+
 			const requestFilter = {
 				filter: {
 					where: {
@@ -145,11 +152,15 @@ const TeamManager = React.createClass({
 			typeof self.currentSearchRequest !== 'undefined' && self.currentSearchRequest.cancel();
 
 			self.currentSearchRequest = window.Server.schoolStudents.get(filter.schoolId, requestFilter).then(players => {
-				return players.map(player => {
+				const updPlayers = players.map(player => {
 					player.name = `${player.firstName}' '${player.lastName}`;
 
 					return player;
 				});
+
+				binding.set('isSearch', false);
+
+				return updPlayers;
 			});
 			return self.currentSearchRequest;
 		} else {
@@ -327,6 +338,7 @@ const TeamManager = React.createClass({
 								handleChangeSearchText		= { self.handleChangeSearchText }
 								handleClickStudent			= { self.handleClickStudent }
 								handleClickAddTeamButton	= { self.handleClickAddStudentButton }
+								isSearch					= { binding.toJS('isSearch') }
 				/>
 			</div>
 		);
