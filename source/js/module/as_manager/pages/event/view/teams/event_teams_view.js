@@ -1,15 +1,15 @@
 const	If					= require('module/ui/if/if'),
-		SVG					= require('module/ui/svg'),
-		GenderIcon			= require('module/ui/icons/gender_icon'),
 		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		userConst			= require('module/helpers/consts/user'),
 		eventConst			= require('module/helpers/consts/events'),
 		Score				= require('./../../../../../ui/score/score'),
 		React				= require('react'),
 		Immutable			= require('immutable'),
-		Morearty			= require('morearty');
+		Morearty			= require('morearty'),
+
+		classNames			= require('classnames');
+
 
 const EventTeamsView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -335,11 +335,6 @@ const EventTeamsView = React.createClass({
 
 			return (
 				<div key={playerIndex} className="_bPlayer _mMini">
-					<If condition={isOwner}>
-						<span className="ePlayer_gender">
-							<GenderIcon gender={player.gender}/>
-						</span>
-					</If>
 					<span className="ePlayer_name">
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
@@ -352,8 +347,8 @@ const EventTeamsView = React.createClass({
 								plainPoints		={self.getPointsByStudent(event, player.userId)}
 								pointsStep 		={event.sport.points.pointsStep}
 								pointsType		={event.sport.points.display}
-							  	pointsMask		={event.sport.points.inputMask}
-							  	onChange 		={self.handleChangeScore.bind(self, event, teamId, player)}
+								pointsMask		={event.sport.points.inputMask}
+								onChange 		={self.handleChangeScore.bind(self, event, teamId, player)}
 						/>
 					</If>
 				</div>
@@ -416,6 +411,8 @@ const EventTeamsView = React.createClass({
 			return (
 				<div className={eventTeamsCss}>
 					{self.renderPlayersForLeftSide()}
+					<div className={"eEventTeams_separator"}>
+					</div>
 					{self.renderPlayersForRightSide()}
 				</div>
 			);
