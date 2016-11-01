@@ -21,8 +21,8 @@ const AddPhotoButton = React.createClass({
 	},
 	render: function() {
 		const isLoading = this.props.isLoading,
-			btnText = !isLoading ? 'Uploading...' : 'Add photo',
-			btnComponent = !isLoading ? <Loader /> : <input	className	= 'eAddPhotoButton_fileInput'
+			btnText = isLoading ? 'Uploading...' : 'Add photo',
+			btnComponent = isLoading ? null : <input	className	= 'eAddPhotoButton_fileInput'
 															type		= 'file'
 															onChange	= { this.handleChange }
 															ref			= { ref => this.fileInputRef = ref }
