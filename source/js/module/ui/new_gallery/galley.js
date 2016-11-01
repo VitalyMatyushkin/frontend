@@ -132,6 +132,7 @@ const Gallery = React.createClass({
 		return (
 			<div className="bGallery">
 				{ this.renderPhotos() }
+				{ this.renderAddPhotoButton() }
 				{ this.renderFullScreenPhoto() }
 			</div>
 		);
