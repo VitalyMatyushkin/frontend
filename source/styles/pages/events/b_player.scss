@@ -1,8 +1,11 @@
 ._bPlayer {
   display: flex;
-  width: 100%;
   flex-direction: row;
+
+  width: 200px;
   height: 30px;
+
+  margin: 0 auto;
   align-items: center;
 }
 
@@ -31,6 +34,11 @@
   padding: 5px 0 0;
   min-width: 45px;
   display: inline-block;
+
+  &.mBig {
+    color: #007abf;
+    font-size: 43px;
+  }
 }
 ._bPlayer._mMini:hover .ePlayer_score{
   color: $COLOR;
@@ -60,6 +68,11 @@
   span {
     margin-right: 5px;
   }
+}
+
+.bPlayer {
+  width: 300px;
+  margin: 0 auto;
 }
 
 .ePlayer_performance {

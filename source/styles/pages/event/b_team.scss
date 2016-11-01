@@ -1,18 +1,17 @@
 .bEventTeams {
+  margin: 0 auto;
+  width: 940px;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin: 15px auto;
-  border: $BORDER;
-  background: #fff;
-  max-width: 704px;
-  box-sizing: border-box;
-  width: 100%;
+
+  overflow: hidden;
 
   &.mWide {
     max-width: 902px;
   }
+}
+
+.eEventTeams_separator {
+  width: 40px;
 }
 
 .bEventTeams_TeamWrapper {
@@ -23,12 +22,15 @@
 }
 
 .bEventTeams_team {
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
-  padding: 10px 5px 10px 10px;
-  min-width: 350px;
-  width: 50%
+  width: 448px;
+  padding: 10px 0 10px 0;
+  
+  border: solid 1px #d2d2d2;
+  background-color: #f5f5f5;
+
+  &.mRight {
+    margin-left: 40px;
+  }
 }
 
 .bEventTeams_header {

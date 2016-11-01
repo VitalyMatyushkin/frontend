@@ -58,14 +58,18 @@ ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
 };
 
 ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
-	const points1 = TeamHelper.callFunctionForLeftContext(activeSchoolId, event,
-		TeamHelper.getCountPoints.bind(TeamHelper, event)),
-		points2 = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
+	if(this.isFinished) {
+		const points1 = TeamHelper.callFunctionForLeftContext(activeSchoolId, event,
 			TeamHelper.getCountPoints.bind(TeamHelper, event)),
-		result1 = TeamHelper.convertPoints(points1, this.sportPointsType).str,
-		result2 = TeamHelper.convertPoints(points2, this.sportPointsType).str;
+			points2 = TeamHelper.callFunctionForRightContext(activeSchoolId, event,
+				TeamHelper.getCountPoints.bind(TeamHelper, event)),
+			result1 = TeamHelper.convertPoints(points1, this.sportPointsType).str,
+			result2 = TeamHelper.convertPoints(points2, this.sportPointsType).str;
 
-	return [result1, result2];
+		return [result1, result2];
+	} else {
+		return [];
+	}
 };
 
 ChallengeModel.prototype._getScore = function(){

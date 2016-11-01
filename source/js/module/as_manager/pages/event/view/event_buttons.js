@@ -596,11 +596,10 @@ const EventButtons = React.createClass({
 			<If condition={EventHelper._isShowEventButtons(self)}>
 				<div className="bEventButtons">
 					<If condition={TeamHelper.isShowCloseEventButton(self)}>
-						<div
-							className='mClose mRed'
-							onClick={self.onClickCloseMatch}
+						<div	onClick		= {self.onClickCloseMatch}
+								className	="bEventButton"
 						>
-							<SVG icon="icon_close_match"/>
+							Close game
 						</div>
 					</If>
 					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>
