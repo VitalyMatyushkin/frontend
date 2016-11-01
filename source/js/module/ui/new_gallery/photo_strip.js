@@ -30,7 +30,9 @@ const Gallery = React.createClass({
     render: function() {
         return (
 			<div className="bPhotoStrip">
-				{ this.renderPhotos() }
+				<div className="eStrip">
+					{ this.renderPhotos() }
+				</div>
 			</div>
         );
     }
