@@ -4,6 +4,9 @@
 const	React					= require('react'),
         PreviewPhoto			= require('./preview_photo');
 
+const 	PHOTO_WIDTH = 240,
+		LAYOUT_WIDTH = 940;
+
 const Gallery = React.createClass({
     propTypes: {
         photos:							React.PropTypes.array.isRequired,
@@ -13,6 +16,7 @@ const Gallery = React.createClass({
     },
     getInitialState: function() {
         return {
+			currentPhoto:0
         };
     },
     renderPhotos: function() {
@@ -27,12 +31,40 @@ const Gallery = React.createClass({
 
         return photos;
     },
+	onLeft:function(){
+		let index = this.state.currentPhoto;
+		index = index === 0 ? 0 : index-1;
+
+		this.setState({
+			currentPhoto: index
+		});
+	},
+	onRight:function(){
+		const 	countPhotos = this.props.photos && this.props.photos.length;
+
+		let index = this.state.currentPhoto;
+		index = index >= countPhotos - Math.floor(LAYOUT_WIDTH/PHOTO_WIDTH) ? index : index+1;
+
+		this.setState({
+			currentPhoto: index
+		});
+	},
     render: function() {
+		const 	countPhotos = this.props.photos && this.props.photos.length,
+				widthStrip 	= countPhotos * PHOTO_WIDTH,
+				offset = this.state.currentPhoto*PHOTO_WIDTH,
+				margin = offset + LAYOUT_WIDTH <= widthStrip ? -offset : LAYOUT_WIDTH - widthStrip,
+				style 		= {width:widthStrip, marginLeft:margin};
+
         return (
-			<div className="bPhotos">
-				<div className="ePhotoStrip">
-					{ this.renderPhotos() }
+        	<div>
+				<div className="bPhotos">
+					<div className="ePhotoStrip" style={style}>
+						{ this.renderPhotos() }
+					</div>
 				</div>
+				<div className="eArrow mLeft" onClick={this.onLeft} />
+				<div className="eArrow mRight" onClick={this.onRight} />
 			</div>
         );
     }
