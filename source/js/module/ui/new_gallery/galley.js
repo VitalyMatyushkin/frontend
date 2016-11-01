@@ -1,6 +1,6 @@
 const	React					= require('react'),
 		AddPhotoButton			= require('./add_photo_button'),
-		PreviewPhoto			= require('./preview_photo'),
+		PhotoStrip				= require('./photo_strip'),
 		FullScreenPhoto			= require('./fullscreen_photo'),
 
 		GalleryAccessPresets	= require('./../../helpers/consts/gallery');
@@ -87,11 +87,13 @@ const Gallery = React.createClass({
 	},
 
 	renderPhotos: function() {
-		const photos = this.props.photos.map( p => this.renderPhoto(p) );
-
-		photos.push( this.renderAddPhotoButton() );	// TODO: actually you need a key for AddPhotoButton too
-
-		return photos;
+		return (
+			<PhotoStrip photos={this.props.photos}
+						handleClickDeletePhoto={this.props.handleClickDeletePhoto}
+						handleClickPhoto={this.handleClickPhoto}
+						accessMode={this.props.accessMode}
+			/>
+		);
 	},
 	renderAddPhotoButton: function() {
 		switch (this.props.accessMode) {
@@ -104,17 +106,6 @@ const Gallery = React.createClass({
 					/>
 				);
 		}
-	},
-	renderPhoto: function(photo) {
-		return (
-			<PreviewPhoto	key								= { photo.id }
-							id								= { photo.id }
-							url								= { photo.picUrl }
-							accessMode						= { this.props.accessMode }
-							handleClickPhoto				= { this.handleClickPhoto }
-							handleClickDeletePhoto			= { this.props.handleClickDeletePhoto }
-			/>
-		);
 	},
 	renderFullScreenPhoto: function() {
 		if(this.state.mode === this.MODE.FULLSCREEN_MODE) {
@@ -131,7 +122,6 @@ const Gallery = React.createClass({
 									currentAccessPreset			= { currentPhoto.accessPreset }
 									handleChangeAccessPreset	= { this.handleChangeAccessPreset.bind(this, currentPhoto.id)  }
 									accessMode					= { this.props.accessMode }
-									accessMode					= { this.props.accessMode }
 				/>
 			);
 		} else {
@@ -140,10 +130,8 @@ const Gallery = React.createClass({
 	},
 	render: function() {
 		return (
-			<div className="bGalleryWrapper">
-				<div className="bGallery">
-					{ this.renderPhotos() }
-				</div>
+			<div className="bGallery">
+				{ this.renderPhotos() }
 				{ this.renderFullScreenPhoto() }
 			</div>
 		);
