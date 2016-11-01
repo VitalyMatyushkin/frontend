@@ -28,9 +28,7 @@ const EventHeader = React.createClass({
 					<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 				</div>
 				<div className="bEventHeader_rightSide">
-					<If condition={(binding.get('mode') === 'general')}>
-						<EventButtons binding={binding} />
-					</If>
+					<EventButtons binding={binding} />
 				</div>
 			</div>
 		);

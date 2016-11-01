@@ -8,6 +8,7 @@ const	React			= require('react'),
 		EventRivals			= require('./view/event_rivals'),
 		EventButtons		= require('./view/event_buttons'),
 		EventTeams			= require('./view/teams/event_teams'),
+		EventPerformance	= require('./view/teams/event_teams_performance'),
 		EventGallery		= require('./new_gallery/event_gallery'),
 		EventDetails		= require('./view/event_details'),
 		ManagerWrapper		= require('./view/manager_wrapper'),
@@ -133,11 +134,6 @@ const EventView = React.createClass({
 
 		self.tabListModel = [
 			{
-				value		: 'teams',
-				text		: 'Teams',
-				isActive	: false
-			},
-			{
 				value		:'gallery',
 				text		:'Gallery',
 				isActive	:false
@@ -166,7 +162,7 @@ const EventView = React.createClass({
 			binding.set('activeTab', tab);
 		} else {
 			self.tabListModel[0].isActive = true;
-			binding.set('activeTab', 'teams');
+			binding.set('activeTab', 'gallery');
 		}
 	},
 	hasSportPerformanceItems: function() {
@@ -247,20 +243,22 @@ const EventView = React.createClass({
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
 							<div className="bEventMiddleSideContainer">
-								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
-								<If condition={TeamHelper.isShowEditEventButton(self)}>
-									<div className="bEditButtonWrapper">
-										<div
-											className="bEditButton"
-											onClick={self.handleClickChangeTeamsButtons}
+								<div className="bEditButtonWrapper">
+									<If condition={TeamHelper.isShowEditEventButton(self)}>
+										<div	className	= "bEditButton"
+												onClick		= {self.handleClickChangeTeamsButtons}
 										>
 											<SVG icon="icon_edit"/>
 										</div>
-									</div>
-								</If>
+									</If>
+								</div>
 							</div>
-							<If condition={activeTab === 'teams' || activeTab === 'performance'} >
-								<EventTeams binding={self._getEventTeamsBinding()} />
+							<EventTeams binding={self._getEventTeamsBinding()} />
+							<div className="bEventMiddleSideContainer">
+								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+							</div>
+							<If condition={activeTab === 'performance'} >
+								<EventPerformance binding={self._getEventTeamsBinding()} />
 							</If>
 							<If condition={activeTab === 'details'} >
 								<EventDetails binding={binding}/>
@@ -274,9 +272,6 @@ const EventView = React.createClass({
 								<div className="bEventBottomContainer">
 									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
 								</div>
-							</If>
-							<If condition={(binding.get('mode') !== 'general')}>
-								<EventButtons binding={binding} />
 							</If>
 							<div className="eEvent_commentBox">
 								<Comments binding={binding}/>
@@ -296,3 +291,7 @@ const EventView = React.createClass({
 });
 
 module.exports = EventView;
+
+//<If condition={(binding.get('mode') !== 'general')}>
+//	<EventButtons binding={binding} />
+//</If>

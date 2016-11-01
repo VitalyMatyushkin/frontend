@@ -505,7 +505,6 @@ function isShowEditEventButton(thiz) {
 
 	return EventHelper.isNotFinishedEvent(binding) &&
 		binding.get('mode') === 'general' &&
-		binding.get('activeTab') === 'teams' &&
 		RoleHelper.isUserSchoolWorker(thiz);
 }
 

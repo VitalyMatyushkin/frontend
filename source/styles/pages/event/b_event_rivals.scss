@@ -1,14 +1,15 @@
 .bEventRivals {
+  display: flex;
+
   width: 940px;
 }
 
 /* .bEventRival */
 
 .bEventRival {
-  display: inline-block;
-  vertical-align: top;
-
   width: 450px;
+  border: $BORDER;
+  background: #fff;
 
   &.mRight {
     margin-left: 40px;
