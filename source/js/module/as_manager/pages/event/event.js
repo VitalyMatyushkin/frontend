@@ -133,6 +133,11 @@ const EventView = React.createClass({
 
 		self.tabListModel = [
 			{
+				value		: 'teams',
+				text		: 'Teams',
+				isActive	: false
+			},
+			{
 				value		:'gallery',
 				text		:'Gallery',
 				isActive	:false
