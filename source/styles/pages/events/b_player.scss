@@ -31,6 +31,11 @@
   padding: 5px 0 0;
   min-width: 45px;
   display: inline-block;
+
+  &.mBig {
+    color: #007abf;
+    font-size: 43px;
+  }
 }
 ._bPlayer._mMini:hover .ePlayer_score{
   color: $COLOR;

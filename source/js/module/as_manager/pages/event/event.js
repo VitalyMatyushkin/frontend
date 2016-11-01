@@ -249,10 +249,8 @@ const EventView = React.createClass({
 					</If>
 					<If condition={self.isShowMainMode()}>
 						<div className="bEvent">
-							<div className="bEventHeader_wrap">
-								<EventHeader binding={binding}/>
-								<EventRivals binding={binding}/>
-							</div>
+							<EventHeader binding={binding}/>
+							<EventRivals binding={binding}/>
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_leftSide">
 									<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />

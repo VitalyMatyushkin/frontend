@@ -1,30 +1,38 @@
-const 	DateHelper 		= require('module/helpers/date_helper'),
+const	React 			= require('react'),
 		Morearty		= require('morearty'),
-		React 			= require('react'),
+
+		MoreartyHelper	= require('./../../../../helpers/morearty_helper'),
+		DateHelper		= require('./../../../../helpers/date_helper'),
 
 		If				= require('module/ui/if/if'),
-		EventButtons	= require('./event_buttons');
+		EventButtons	= require('./event_buttons'),
+		ChallengeModel	= require('./../../../../ui/challenges/challenge_model');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],
+
 	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				date = binding.toJS('model.startTime'),
-				eventDate = DateHelper.getDate(date),
-				time = DateHelper.getTime(date);
+		const	binding	= this.getDefaultBinding();
+
+		const	model	= new ChallengeModel(binding.toJS('model'), MoreartyHelper.getActiveSchoolId(this));
+
+		const	name	= model.name,
+				date	= DateHelper.toLocalWithMonthName(model.dateUTC),
+				time	= model.time,
+				sport	= model.sport;
+
 		return (
-				<div className="bEventHeader">
-					<div className="bEventHeader_leftSide">
-						<div className="eEventHeader_field mEvent">{binding.get('model.name')}</div>
-						<div className="eEventHeader_field mDate">{eventDate + ' ' + time}</div>
-					</div>
-					<div className="bEventHeader_rightSide">
-						<If condition={(binding.get('mode') === 'general')}>
-							<EventButtons binding={binding} />
-						</If>
-					</div>
+			<div className="bEventHeader">
+				<div className="bEventHeader_leftSide">
+					<div className="eEventHeader_field mEvent">{`${name}`}</div>
+					<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 				</div>
+				<div className="bEventHeader_rightSide">
+					<If condition={(binding.get('mode') === 'general')}>
+						<EventButtons binding={binding} />
+					</If>
+				</div>
+			</div>
 		);
 	}
 });

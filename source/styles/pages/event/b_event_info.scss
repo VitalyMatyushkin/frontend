@@ -1,11 +1,8 @@
 .bEventInfo {
+  width: 940px;
+  margin: 0 auto;
   border: $BORDER;
-  padding-top: 20px;
   background: #fff;
-  min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  box-sizing: border-box;
 }
 .eEventInfo_type {
   margin: 10px auto;

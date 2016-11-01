@@ -6,13 +6,21 @@ const 	React 		= require('react'),
 		ScoreSign	= require('./score_sign'),
 		TeamHelper  = require('module/ui/managers/helpers/team_helper'),
 		ScoreHelper = require('./score_helper'),
-		classNames 	= require('classnames');
+		classNames 	= require('classnames'),
+
+		ScoreConsts	= require('./score_consts');
 
 const PlainPoints = React.createClass({
 	propTypes:{
 		plainPoints:	React.PropTypes.number.isRequired,
 		step:			React.PropTypes.number.isRequired,
-		onChange: 		React.PropTypes.func.isRequired
+		onChange: 		React.PropTypes.func.isRequired,
+		modeView:		React.PropTypes.string
+	},
+	getDefaultProps: function() {
+		return {
+			modeView: ScoreConsts.SCORE_MODES_VIEW.SMALL
+		};
 	},
 	getInitialState:function(){
 		return {
@@ -65,25 +73,29 @@ const PlainPoints = React.createClass({
 		}
 	},
 	render:function(){
-		const 	error 	= !!this.state.error,
-				title 	= error ? this.state.error : null,
-				value 	= this.state.value,
-				classes = classNames({
-										bScore: true,
-										mError: error
-									});
+		const 	error					= !!this.state.error,
+				title					= error ? this.state.error : null,
+				value					= this.state.value,
+				bScoreClassNames		= classNames({
+					bScore:	true,
+					mError:	error
+				}),
+				bScorePointClassNames	= classNames({
+					eScore_Points:	true,
+					mPlain:			true,
+					mBig:			this.props.modeView === ScoreConsts.SCORE_MODES_VIEW.BIG
+				});
 
 		return (
-			<div className={classes}>
-				<ScoreSign type="minus" handleClick={this.onClick.bind(null, 'minus')}/>
-				<input type="text"
-					   className="eScore_Points mPlain"
-					   title={title}
-					   value={value}
-					   onChange={this.onChange}
-					   onFocus={this.onFocus}
-					   onBlur={this.onBlur} />
-				<ScoreSign type="plus" handleClick={this.onClick.bind(null, 'plus')}/>
+			<div className={bScoreClassNames}>
+				<input	type		= "text"
+						className	= {bScorePointClassNames}
+						title		= {title}
+						value		= {value}
+						onChange	= {this.onChange}
+						onFocus		= {this.onFocus}
+						onBlur		= {this.onBlur}
+				/>
 			</div>
 		);
 
