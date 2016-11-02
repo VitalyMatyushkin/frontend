@@ -1,13 +1,14 @@
 /**
  * Created by Anatoly on 31.10.2016.
  */
-const	React					= require('react'),
-        PreviewPhoto			= require('./preview_photo');
+const	React			= require('react'),
+        PreviewPhoto	= require('./preview_photo'),
+		classNames 		= require('classnames');
 
 const 	PHOTO_WIDTH = 240,
 		LAYOUT_WIDTH = 940;
 
-const Gallery = React.createClass({
+const PhotoStrip = React.createClass({
     propTypes: {
         photos:							React.PropTypes.array.isRequired,
         handleClickDeletePhoto:			React.PropTypes.func,
@@ -27,6 +28,7 @@ const Gallery = React.createClass({
                              accessMode						= { this.props.accessMode }
                              handleClickPhoto				= { this.props.handleClickPhoto }
                              handleClickDeletePhoto			= { this.props.handleClickDeletePhoto }
+							 PhotoWidth 					= { PHOTO_WIDTH }
             />);
 
         return photos;
@@ -53,8 +55,18 @@ const Gallery = React.createClass({
 		const 	countPhotos = this.props.photos && this.props.photos.length,
 				widthStrip 	= countPhotos * PHOTO_WIDTH,
 				offset = this.state.currentPhoto*PHOTO_WIDTH,
-				margin = offset + LAYOUT_WIDTH <= widthStrip ? -offset : LAYOUT_WIDTH - widthStrip,
-				style 		= {width:widthStrip, marginLeft:margin};
+				margin = offset + LAYOUT_WIDTH <= widthStrip || offset === 0 ? -offset : LAYOUT_WIDTH - widthStrip,
+				style 		= {width:widthStrip, marginLeft:margin},
+				lBtnClasses = classNames({
+					eArrow:true,
+					mLeft:true,
+					mHidden: offset === 0
+				}),
+				rBtnClasses = classNames({
+					eArrow:true,
+					mRight:true,
+					mHidden: LAYOUT_WIDTH > widthStrip || margin !== -offset
+				});
 
         return (
         	<div>
@@ -63,11 +75,11 @@ const Gallery = React.createClass({
 						{ this.renderPhotos() }
 					</div>
 				</div>
-				<div className="eArrow mLeft" onClick={this.onLeft} />
-				<div className="eArrow mRight" onClick={this.onRight} />
+				<div className={lBtnClasses} onClick={this.onLeft} />
+				<div className={rBtnClasses} onClick={this.onRight} />
 			</div>
         );
     }
 });
 
-module.exports = Gallery;
+module.exports = PhotoStrip;
