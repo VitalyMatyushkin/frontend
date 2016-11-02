@@ -5,6 +5,7 @@ const   ApplicationView     = require('module/as_admin/application'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
         serviceListAdmin    = require('module/core/service_list_admin'),
+        initTawkTo			= require('module/tawk_to/tawk_to'),
         Morearty			= require('morearty'),
         ReactDom            = require('react-dom'),
         React               = require('react');
@@ -129,6 +130,8 @@ function runAdminMode() {
         React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
         document.getElementById('jsMain')
     );
+
+	initTawkTo();
 }
 
 module.exports = runAdminMode;
