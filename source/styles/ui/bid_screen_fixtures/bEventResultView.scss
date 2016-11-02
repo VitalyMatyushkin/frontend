@@ -48,6 +48,11 @@
   &.mRight {
     float: right;
   }
+  .mSmall {
+    display: inline-block;
+    font-size: 1.3rem;
+    vertical-align: middle;
+  }
 }
 
 .eEventResultView_score {

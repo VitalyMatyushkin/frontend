@@ -16,7 +16,7 @@ const BigScreenMainPage = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	timerId: undefined,
-	CHANGE_STATE_INTERVAL: 60000,
+	CHANGE_STATE_INTERVAL: 10000,
 
 	componentWillMount: function () {
 		const	binding			= this.getDefaultBinding().sub('events'),

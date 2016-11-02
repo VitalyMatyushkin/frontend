@@ -19,15 +19,20 @@ const UpcomingEventView = React.createClass({
 	},
 
 	render: function() {
-		const model = this.props.model;
+		const model = this.props.model,
+			leftOpponent = model.rivals[0].value,
+			rightOpponent = model.rivals[1].value,
+			classes  = leftOpponent.length > 25 || rightOpponent.length > 25 ? "mSmall" : "";
 
 		return (
 			<div className="bUpcomingEventView">
 				<div className="eUpcomingEventView_bodyLeftSide">
 					<div className="eUpcomingEventView_mainInfoBlock">
-						{ `${model.rivals[0].value}` }
-						<span className="eUpcomingEventVS"> vs </span>
-						{ `${model.rivals[1].value}` }
+						<div className={classes}>
+							{ `${model.rivals[0].value}` }
+							<span className="eUpcomingEventVS"> vs </span>
+							{ `${model.rivals[1].value}` }
+						</div>
 					</div>
 				</div>
 				<div className="eUpcomingEventView_bodyRightSide mRight">
