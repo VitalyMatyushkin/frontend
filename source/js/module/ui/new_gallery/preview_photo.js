@@ -9,7 +9,8 @@ const PreviewPhoto = React.createClass({
 		url:					React.PropTypes.string.isRequired,
 		accessMode:				React.PropTypes.string.isRequired,
 		handleClickPhoto:		React.PropTypes.func,
-		handleClickDeletePhoto:	React.PropTypes.func
+		handleClickDeletePhoto:	React.PropTypes.func,
+		PhotoWidth: 			React.PropTypes.number.isRequired
 	},
 
 	handleClickPhoto: function() {
@@ -46,7 +47,7 @@ const PreviewPhoto = React.createClass({
 	},
 	render: function() {
 		const background  = {
-			backgroundImage: `url(${this.props.url})`
+			backgroundImage: `url(${window.Server.images.getResizedToMinValueUrl(this.props.url, this.props.PhotoWidth)})`
 		};
 
 		return (
