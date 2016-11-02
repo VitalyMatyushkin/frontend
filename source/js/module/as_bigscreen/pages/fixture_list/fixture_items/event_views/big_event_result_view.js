@@ -16,7 +16,7 @@ const BigEventResultView = React.createClass({
 			<div className="bEventResultView mBig">
 				<div className="bBigEventResultView_bodyLeftSide">
 					<div className="eEventResultView_mainInfoBlock">
-						<div className={leftSideClasses}>{ model.rivals[0].value }</div>
+						<div className={leftSideClasses}>{ leftOpponent }</div>
 					</div>
 					<div className="eEventResultView_score mRight">
 						{ model.scoreAr[0] }
@@ -28,7 +28,7 @@ const BigEventResultView = React.createClass({
 						{ model.scoreAr[1] }
 					</div>
 					<div className="eEventResultView_mainInfoBlock mRight">
-						<div className={rightSideClasses}>{ model.rivals[1].value }</div>
+						<div className={rightSideClasses}>{ rightOpponent }</div>
 					</div>
 				</div>
 			</div>
