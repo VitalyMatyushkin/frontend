@@ -7,17 +7,21 @@ const HighlightsPhoto = React.createClass({
 	},
 
 	render: function() {
-		const photos = this.props.photos;
+		const 	photos			= this.props.photos,
+				defaultPhoto 	= '//images.squadintouch.com/images/3txvxdlvjkcm65e13re3nbeuoyoft8pwnhd3_1478107508550.jpg',	// hack not to brake page when there is no photos. TODO: fix me
+				photo0Url		= photos[0] ? photos[0].picUrl : defaultPhoto,
+				photo1Url		= photos[1] ? photos[1].picUrl : defaultPhoto,
+				photo2Url		= photos[2] ? photos[2].picUrl : defaultPhoto;
 
 		const styles = [
 			{
-				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[0].picUrl, 300)})`
+				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photo0Url, 300)})`
 			},
 			{
-				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[1].picUrl, 300)})`
+				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photo1Url, 300)})`
 			},
 			{
-				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photos[2].picUrl, 300)})`
+				backgroundImage: `url(${window.Server.images.getResizedToHeightUrl(photo2Url, 300)})`
 			}
 		];
 
