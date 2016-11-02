@@ -13,12 +13,12 @@ const RecentEvent = React.createClass({
 	render:function() {
 		const binding = this.getDefaultBinding().sub('events');
 
-		const isSync = binding.get('prevSevenDaysFinishedEvents.isSync') && binding.get('nextSevenDaysEvents.isSync');
+		const isSync = binding.get('prevSevenDaysFinishedEvents.isSync') && binding.get('footerEvents.isSync');
 
 		if(isSync) {
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 					events			= binding.toJS('prevSevenDaysFinishedEvents.events'),
-					footerEvent		= binding.toJS('nextSevenDaysEvents.events.0');
+					footerEvents		= binding.toJS('footerEvents.events');
 
 			return (
 				<div className="bRecentEvents">
@@ -27,7 +27,7 @@ const RecentEvent = React.createClass({
 									activeSchoolId	= { activeSchoolId }
 									events			= { events.slice(0, this.EVENTS_COUNT) }
 					/>
-					<Footer	event			= { footerEvent }
+					<Footer	events			= { footerEvents }
 							activeSchoolId	= { activeSchoolId }
 					/>
 				</div>

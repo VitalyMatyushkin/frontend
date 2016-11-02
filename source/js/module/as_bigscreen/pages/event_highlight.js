@@ -12,13 +12,13 @@ const EventHighlight = React.createClass({
 	render: function() {
 		const	binding			= this.getDefaultBinding().sub('events');
 
-		const	isSync			= binding.get('highlightEvent.isSync') && binding.get('nextSevenDaysEvents.isSync');
+		const	isSync			= binding.get('highlightEvent.isSync') && binding.get('footerEvents.isSync');
 
 		if(isSync) {
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 					event			= binding.toJS('highlightEvent.event'),
 					photos			= binding.toJS('highlightEvent.photos'),
-					footerEvent		= binding.toJS('nextSevenDaysEvents.events.0');
+					footerEvents		= binding.toJS('footerEvents.events');
 
 			return (
 				<div className="bEventHighlight">
@@ -34,7 +34,7 @@ const EventHighlight = React.createClass({
 						<HighlightsPhoto photos={ photos }/>
 					</div>
 					<Footer	activeSchoolId	= { activeSchoolId }
-							event			= { footerEvent }
+							events			= { footerEvents }
 					/>
 				</div>
 			);
