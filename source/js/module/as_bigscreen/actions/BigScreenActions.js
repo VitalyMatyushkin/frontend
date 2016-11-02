@@ -4,6 +4,9 @@ const	Immutable	= require('immutable'),
 const highlightEventIds = {
 		"57b6c9a6dd69264b6c5ba82d": [
 			"57c4cc56b734c2d80fda9c20"
+		],
+		"58138b405f33e0b72d709e3b": [	// for prod demo
+			"5819f64e8d118cab2214d449"
 		]
 	},
 	footerEvents = {
@@ -15,6 +18,10 @@ const highlightEventIds = {
 			"58052cabb6f65e782d125aae",
 			"57ff21756d491de602b413be",
 			"57f667979dd7ea0009ea6752"
+		],
+		"58138b405f33e0b72d709e3b": [	// for prod demo
+			"581a18367fa3913f0959e381",
+			"581a187f6680025f093a65ec"
 		]
 	};
 
