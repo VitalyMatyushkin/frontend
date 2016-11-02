@@ -683,7 +683,7 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 							schoolsData[0].id === activeSchoolId ? 0 : 1
 						);
 					}
-				} else if(teamsData.length === 2) {
+				} else {
 					return cb(
 						'teamsData',
 						teamsData[0].schoolId === activeSchoolId ? 0 : 1
@@ -794,7 +794,7 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 						schoolsData[0].id !== activeSchoolId ? 0 : 1
 					);
 				}
-			} else if(teamsData.length === 2) {
+			} else {
 				return cb(
 					'teamsData',
 					teamsData[0].schoolId !== activeSchoolId ? 0 : 1
