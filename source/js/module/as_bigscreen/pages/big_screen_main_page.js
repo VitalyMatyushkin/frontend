@@ -8,7 +8,6 @@ const	React				= require('react'),
 		BigEventHighlight	= require('./big_event_highlight'),
 
 		BigScreenActions	= require('./../actions/BigScreenActions'),
-		CalendarActions		= require('./../../as_school/pages/school_home/CalendarActions'),
 
 		BigscreenConsts		= require('./consts/consts');
 
@@ -25,8 +24,8 @@ const BigScreenMainPage = React.createClass({
 		const	binding			= this.getDefaultBinding().sub('events'),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId');
 
-		CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
-		CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
+		BigScreenActions.setNextSevenDaysEvents(activeSchoolId, binding);
+		BigScreenActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
 		BigScreenActions.setHighlightEvent(activeSchoolId, binding);
 		BigScreenActions.setFooterEvents(activeSchoolId, binding);
 
