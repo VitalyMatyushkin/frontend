@@ -1,6 +1,6 @@
 .bPublicEvent {
   padding-top: 40px;
-  width: 902px;
+  width: 100%;
   margin: 0 auto;
   color: #535353;
 
@@ -10,5 +10,11 @@
     border: solid 1px #c2c2c2;
     background: #fff;
     white-space: pre-line
+  }
+  .bEventBottomContainer {
+    margin: 30px auto;
+  }
+  .bEventHeader_rightSide {
+    text-align: right;
   }
 }

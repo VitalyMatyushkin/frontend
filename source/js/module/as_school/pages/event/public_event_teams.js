@@ -69,7 +69,7 @@ const PublicEventTeams = React.createClass({
 	render: function() {
 		return (
 			<EventTeamsView	binding		= { this.getViewPlayersBinding() }
-							customCss	= { "mWide" }
+
 			/>
 		);
 	}
