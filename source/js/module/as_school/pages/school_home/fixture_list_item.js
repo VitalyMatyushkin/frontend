@@ -35,7 +35,7 @@ const FixtureListItem = React.createClass({
                     </div>
                     <div className="eEventRival_rivalName">{model.rivals[0].value}</div>
                     <div className="eEventRival_score">
-                        <div className="ePlayer_score mBig">{`${model.score}`}</div>
+                        <div className="ePlayer_score mBig">{`${model.scoreAr[0]}`}</div>
                     </div>
                 </div>
         );
@@ -49,7 +49,7 @@ const FixtureListItem = React.createClass({
                     </div>
                     <div className="eEventRival_rivalName">{model.rivals[1].value}</div>
                     <div className="eEventRival_score">
-                        <div className="ePlayer_score mBig">{`${model.score}`}</div>
+                        <div className="ePlayer_score mBig">{`${model.scoreAr[1]}`}</div>
                     </div>
                 </div>
         );
