@@ -7,6 +7,15 @@ const	React				= require('react'),
 const BigEventHighlight = React.createClass({
 	mixins: [Morearty.Mixin],
 
+	getCurrentFooterEvent: function() {
+		const binding = this.getDefaultBinding().sub('events.footerEvents');
+
+		const	currentEventIndex	= binding.toJS('currentEventIndex'),
+				events				= binding.toJS('events');
+
+		return events[currentEventIndex];
+	},
+
 	render: function() {
 		const	binding	= this.getDefaultBinding().sub('events');
 
@@ -15,13 +24,13 @@ const BigEventHighlight = React.createClass({
 		if(isSync) {
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 					photos			= binding.toJS('highlightEvent.photos'),
-					footerEvents	= binding.toJS('footerEvents.events');
+					footerEvent		= this.getCurrentFooterEvent();
 
 			return (
 				<div className="bEventHighlight">
 					<BigHighlightsPhoto photos={photos}/>
 					<Footer	activeSchoolId	= { activeSchoolId }
-							events			= { footerEvents }
+							event			= { footerEvent }
 					/>
 				</div>
 			);

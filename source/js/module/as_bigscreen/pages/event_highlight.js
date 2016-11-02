@@ -9,6 +9,15 @@ const	React				= require('react'),
 const EventHighlight = React.createClass({
 	mixins: [Morearty.Mixin],
 
+	getCurrentFooterEvent: function() {
+		const binding = this.getDefaultBinding().sub('events.footerEvents');
+
+		const	currentEventIndex	= binding.toJS('currentEventIndex'),
+				events				= binding.toJS('events');
+
+		return events[currentEventIndex];
+	},
+
 	render: function() {
 		const	binding			= this.getDefaultBinding().sub('events');
 
@@ -18,7 +27,7 @@ const EventHighlight = React.createClass({
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 					event			= binding.toJS('highlightEvent.event'),
 					photos			= binding.toJS('highlightEvent.photos'),
-					footerEvents		= binding.toJS('footerEvents.events');
+					footerEvent		= this.getCurrentFooterEvent();
 
 			return (
 				<div className="bEventHighlight">
@@ -34,7 +43,7 @@ const EventHighlight = React.createClass({
 						<HighlightsPhoto photos={ photos }/>
 					</div>
 					<Footer	activeSchoolId	= { activeSchoolId }
-							events			= { footerEvents }
+							event			= { footerEvent }
 					/>
 				</div>
 			);

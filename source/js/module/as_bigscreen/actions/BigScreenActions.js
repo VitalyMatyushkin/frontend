@@ -47,9 +47,12 @@ function setFooterEvents(activeSchoolId, binding){
 			eventId:	eventId
 		});
 	})).then(events => {
+		const currentEventIndex = events.length !== 0 ? 0 : undefined;
+
 		binding.atomically()
-			.set('footerEvents.events', Immutable.fromJS(events))
-			.set('footerEvents.isSync', true)
+			.set('footerEvents.events',				Immutable.fromJS(events))
+			.set('footerEvents.currentEventIndex',	Immutable.fromJS(currentEventIndex))
+			.set('footerEvents.isSync',				true)
 			.commit();
 	});
 }
