@@ -64,7 +64,7 @@ const ChallengesList = React.createClass({
 		binding.set('selectedDayFixtures', Immutable.fromJS(selectedDayFixture));
 	},
 	_onClickEvent: function(eventId) {
-		document.location.hash = 'event/' + eventId + '?tab=teams';
+		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
