@@ -3,6 +3,13 @@
  */
 
 
+/**
+ * This is simple transcript of tawk.to script to module.
+ * It just add new <script> entry into global html.
+ * Also it creates two global vars. I don't know why, but tawk.to code requires it
+ * @type {{}}
+ */
+
 window.$_Tawk_API = {};
 window.$_Tawk_LoadStart = new Date();
 
