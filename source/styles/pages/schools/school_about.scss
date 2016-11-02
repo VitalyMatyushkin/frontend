@@ -1,8 +1,8 @@
 .bSchoolAbout{
-  width: 900px;
+  width: 920px;
   height: 340px;
   margin: 20px auto;
-  padding: 4px;
+  padding: 4px 0;
 
   .eSchoolPicWrapper{
     float: left;
@@ -10,10 +10,10 @@
     margin-right: 75px;
     background-color: white;
     border-radius: 10px;
-    box-shadow: 1px 3px 6px 0px rgba(0,0,0,0.5);
+    box-shadow: 1px 2px 5px 0px rgba(0, 0, 0, 0.2);
 
     .eSchoolPic{
-      width: 200px;
+      width: 180px;
       height: 180px;
       background-position: 50% 50%;
       background-repeat: no-repeat;
@@ -24,7 +24,6 @@
     margin: 50px 0 40px;
   }
   .eSchoolDescription{
-    margin-right: 60px;
     min-height: 100px;
   }
   .eSchoolLink{
