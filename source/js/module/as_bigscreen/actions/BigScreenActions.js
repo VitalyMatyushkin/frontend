@@ -83,7 +83,7 @@ function getNextSevenDaysEvents(activeSchoolId) {
 function setHighlightEvent(activeSchoolId, binding){
 	binding.set('highlightEvent.isSync', false);
 
-	const highlightEventId = getHighlightEventId();
+	const highlightEventId = getHighlightEventId(activeSchoolId);
 
 	if(typeof highlightEventId !== 'undefined') {
 		return getEvent(activeSchoolId, highlightEventId)
