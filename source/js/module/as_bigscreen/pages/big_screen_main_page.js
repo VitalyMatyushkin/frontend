@@ -15,8 +15,11 @@ const	React				= require('react'),
 const BigScreenMainPage = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	timerId: undefined,
-	CHANGE_STATE_INTERVAL: 10000,
+	changeStateTimerId				: undefined,
+	CHANGE_STATE_INTERVAL			: 10000,
+
+	changeFooterEventTimerId		: undefined,
+	CHANGE_FOOTER_EVENT_INTERVAL	: 3000,
 
 	componentWillMount: function () {
 		const	binding			= this.getDefaultBinding().sub('events'),
@@ -25,11 +28,40 @@ const BigScreenMainPage = React.createClass({
 		CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
 		CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
 		BigScreenActions.setHighlightEvent(activeSchoolId, binding);
+		BigScreenActions.setFooterEvents(activeSchoolId, binding);
 
-		this.timerId = setInterval(this.handleChangeState, this.CHANGE_STATE_INTERVAL);
+		this.changeStateTimerId = setInterval(this.handleChangeState, this.CHANGE_STATE_INTERVAL);
+
+		binding.set("footerEvents.currentEventIndex", Immutable.fromJS(this.getNextFooterEventIndex()));
+		this.changeFooterEventTimerId = setInterval(this.handleChangeFooterEvent, this.CHANGE_FOOTER_EVENT_INTERVAL);
 	},
 	componentWillUnmount: function () {
-		clearInterval(this.timerId);
+		clearInterval(this.changeStateTimerId);
+		clearInterval(this.changeFooterEventTimerId);
+	},
+
+	getNextFooterEventIndex: function() {
+		const binding = this.getDefaultBinding().sub('events.footerEvents');
+
+		const	events				= binding.toJS('events'),
+				currentEventIndex	= binding.toJS('currentEventIndex');
+
+		switch (true) {
+			case events.length === 0:
+				return undefined;
+			case currentEventIndex === 'undefined':
+				return 0;
+			case currentEventIndex === events.length - 1:
+				return 0;
+			default:
+				return currentEventIndex + 1;
+		}
+	},
+	handleChangeFooterEvent: function() {
+		this.getDefaultBinding().set(
+			'events.footerEvents.currentEventIndex',
+			Immutable.fromJS(this.getNextFooterEventIndex())
+		);
 	},
 	handleChangeState: function() {
 		const binding = this.getDefaultBinding();

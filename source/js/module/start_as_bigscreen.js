@@ -34,6 +34,11 @@ function initMainView(school) {
 						isSync:	false,
 						events:	[]
 					},
+					footerEvents: {
+						isSync:				false,
+						events:				[],
+						currentEventIndex:	undefined
+					},
 					highlightEvent: {
 						event:	{},
 						photos:	{},

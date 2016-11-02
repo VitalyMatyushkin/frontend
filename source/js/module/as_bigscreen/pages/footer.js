@@ -9,7 +9,10 @@ const Footer = React.createClass({
 	},
 
 	render: function() {
-		const model = new ChallengeModel(this.props.event, this.props.activeSchoolId);
+		const model = new ChallengeModel(
+			this.props.event,
+			this.props.activeSchoolId
+		);
 
 		return (
 			<div className="bFooter">

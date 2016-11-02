@@ -7,15 +7,24 @@ const	React				= require('react'),
 const BigEventHighlight = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	render: function() {
-		const	binding			= this.getDefaultBinding().sub('events');
+	getCurrentFooterEvent: function() {
+		const binding = this.getDefaultBinding().sub('events.footerEvents');
 
-		const	isSync 			= binding.get('highlightEvent.isSync') && binding.get('nextSevenDaysEvents.isSync');
+		const	currentEventIndex	= binding.toJS('currentEventIndex'),
+				events				= binding.toJS('events');
+
+		return events[currentEventIndex];
+	},
+
+	render: function() {
+		const	binding	= this.getDefaultBinding().sub('events');
+
+		const	isSync	= binding.get('highlightEvent.isSync') && binding.get('footerEvents.isSync');
 
 		if(isSync) {
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
 					photos			= binding.toJS('highlightEvent.photos'),
-					footerEvent		= binding.toJS('nextSevenDaysEvents.events.0');
+					footerEvent		= this.getCurrentFooterEvent();
 
 			return (
 				<div className="bEventHighlight">
