@@ -22,7 +22,7 @@ const HomeCalender = React.createClass({
 	},
 
 	handleClickEvent: function(eventId) {
-		document.location.hash = 'event/' + eventId + '?tab=teams';
+		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 
 	render: function(){
