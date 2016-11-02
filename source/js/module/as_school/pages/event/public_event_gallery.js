@@ -11,7 +11,7 @@ const PublicEventGallery = React.createClass({
 		const photos = this.getDefaultBinding().toJS('photos');
 
 		return(
-			<div className="bPublicGallery">
+			<div className="bEvent_media bEventBottomContainer">
 				<Gallery	photos			= { photos }
 							accessMode		= { GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC }
 							isLoading		= { false }
