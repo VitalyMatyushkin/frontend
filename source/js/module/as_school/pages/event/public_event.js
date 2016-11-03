@@ -120,8 +120,8 @@ const PublicEvent = React.createClass({
 										activeSchoolId	= { this.props.activeSchoolId }
 					/>
 					<PublicEventTeams binding={this._getEventTeamsBinding()}/>
-					{this.renderMatchReport()}
 					<PublicEventGallery binding={binding.sub('gallery')}/>
+					{this.renderMatchReport()}
 				</div>
 			);
 		} else {
