@@ -32,7 +32,7 @@ const EventHighlight = React.createClass({
 			return (
 				<div className="bEventHighlight">
 					<div className="eEventHighlight_header">
-					<DefaultTitle title={"Event Highlight"}/>
+					<DefaultTitle title={"Event Highlight"} logo={"images/big-logo.svg"}/>
 					<div className="eEventHighlight_body">
 						<BigFixtureItem	activeSchoolId	= { activeSchoolId }
 										event			= { event }

@@ -35,7 +35,8 @@ const RecentEvent = React.createClass({
 									title			= "Recent Events"
 									activeSchoolId	= { activeSchoolId }
 									events			= { events.slice(0, this.EVENTS_COUNT) }
-					/>
+									logo            = "images/big-logo.svg"
+						/>
 					<Footer	event			= { footerEvent }
 							activeSchoolId	= { activeSchoolId }
 					/>

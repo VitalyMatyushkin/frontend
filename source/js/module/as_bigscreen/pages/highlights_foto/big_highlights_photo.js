@@ -29,7 +29,7 @@ const BigHighlightsPhoto = React.createClass({
 		return (
 			<div className="bBigHighlightsPhoto">
 				<div className="eBigHighlightsPhoto_titleContainer">
-					<DefaultHeader title={"EVENT HIGHLIGHT"}/>
+					<DefaultHeader title={"EVENT HIGHLIGHT"} logo={"images/big-logo-green.svg"}/>
 				</div>
 				<div	className	= "eHighlightsPhoto_smallPhoto"
 						style		= {styles[1]}
