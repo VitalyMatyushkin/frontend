@@ -2,7 +2,8 @@ const React = require('react');
 
 const DefaultHeader = React.createClass({
 	propTypes: {
-		title: React.PropTypes.string.isRequired
+		title: React.PropTypes.string.isRequired,
+		logo: React.PropTypes.string.isRequired
 	},
 
 	timerId: undefined,
@@ -54,7 +55,7 @@ const DefaultHeader = React.createClass({
 					{ this.props.title }
 				</div>
 				<div className="eBigScreenTitle_logo">
-					<img src="images/big-logo.svg" alt="Squadintouch"/>
+					<img src={ this.props.logo } alt="Squadintouch"/>
 				</div>
 				<div className="eBigScreenTitle_time">
 					{ this.getCurrentTime() }

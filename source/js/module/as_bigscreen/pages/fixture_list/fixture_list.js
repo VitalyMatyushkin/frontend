@@ -9,6 +9,7 @@ const FixtureList = React.createClass({
 	propTypes: {
 		mode:			React.PropTypes.string.isRequired,
 		title:			React.PropTypes.string.isRequired,
+		logo:			React.PropTypes.string.isRequired,
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		events:			React.PropTypes.array.isRequired
 	},
@@ -30,7 +31,7 @@ const FixtureList = React.createClass({
 
 		return (
 			<div className="bBigScreenFixtures">
-				<DefaultHeader title={this.props.title}/>
+				<DefaultHeader title={this.props.title} logo={this.props.logo}/>
 				<div className="eBigScreenFixtures_body">
 					{ this.getFixtureListByEvents(events) }
 				</div>
