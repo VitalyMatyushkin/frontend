@@ -68,7 +68,7 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 
 		return [result1, result2];
 	} else {
-		return [];
+		return ['-','-'];
 	}
 };
 
