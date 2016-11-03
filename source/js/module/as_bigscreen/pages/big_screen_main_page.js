@@ -83,6 +83,11 @@ const BigScreenMainPage = React.createClass({
 
 	render: function() {
 		const binding = this.getDefaultBinding();
+		return (
+			<div className="bBigScreen">
+				<RecentEvents binding={binding}/>
+			</div>
+		);
 
 		switch (binding.toJS('currentState')) {
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.RECENT:
