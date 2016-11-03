@@ -12,14 +12,12 @@ const PublicLogin = React.createClass({
     },
     render:function(){
         return(
-            <div className="bPublicLogin_wrap">
                 <div className="bPublicMenu_login">
                     <div onClick={this.handleSignInUpClick.bind(null,this)}
                          className="bPublicMenu_login_holder bPublicMenu_login_active">
-                        <span>Sign In</span>
+                        <span>Log In</span>
                     </div>
                 </div>
-            </div>
         )
     }
 });

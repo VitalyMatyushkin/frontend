@@ -2,7 +2,9 @@
 const 	React 		= require('react');
 
 function Logo(){
-	return <div className="bPublicLogo"></div>;
+	return <div className="bPublicLogo">
+		<img src="images/logo.png"/>
+	</div>;
 }
 
 

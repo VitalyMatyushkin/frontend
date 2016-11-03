@@ -5,7 +5,6 @@ const   Immutable 	= require('immutable'),
         React       = require('react'),
         Superuser   = require('module/helpers/superuser'),
         Helpers		= require('module/helpers/storage'),
-        PublicLogin = require('module/ui/menu/public_login'),
         Morearty    = require('morearty'),
         Lazy        = require('lazy.js');
 
@@ -102,7 +101,6 @@ const HomeHeader = React.createClass({
                         </div>
                         {schoolName}
                     </div>
-                    <PublicLogin />
                 </div>
             </div>
         )
