@@ -7,8 +7,8 @@ const EventResultView = React.createClass({
 
 	render: function() {
 		const model = this.props.model,
-		leftOpponent = model.rivals[0].value,
-		rightOpponent = model.rivals[1].value,
+		leftOpponent = model.rivals[0].value.replace(/\s+/g, ' '),
+		rightOpponent = model.rivals[1].value.replace(/\s+/g, ' '),
 		leftSideClasses  = leftOpponent.length > 25 ? "mSmall" : "",
 		rightSideClasses  = rightOpponent.length > 25 ? "mSmall" : "";
 
