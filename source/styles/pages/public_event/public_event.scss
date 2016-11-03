@@ -5,7 +5,9 @@
   color: #535353;
 
   .bMatchReport{
-    margin: 10px auto;
+    box-sizing: border-box;
+    margin: 10px auto 30px;
+    max-width: 940px;
     padding: 20px 15px;
     border: solid 1px #c2c2c2;
     background: #fff;
