@@ -8,62 +8,43 @@
   position: relative;
   background-color: #f0f0f0;
 }
+
+/*header*/
 .eSchoolHeader{
   background-size: cover;
-  height: 600px;
+  height: 470px;
   position:relative;
 }
 .eSchoolMastHead{
   position: absolute;
-  top: 400px;
+  top: 85px;
   left: 0;
   width: 100%;
-  height: auto;
-  //z-index: 200;
-}
-.eSchoolSalute{
-  font-size: 86px;
-  color:#FFFFFF;
-  font-style: italic;
-  font-weight: 900;
-  margin-left: 100px;
-}
-.eSchoolSalute i{
-  font-size: 36px;
-  color:#FFFFFF;
-  font-style: italic;
-  font-weight: 100;
 }
 .eSchoolMotto{
-  position: relative;
-  width: 100%;
-  height: auto;
+  background: #fff;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: $textColor;
+  font-size: 1.5625rem;
+  height: 300px;
+  margin: auto;
+  max-width: 315px;
+  padding-top: 70px;
   text-align: center;
+  word-break: break-all;
 }
-.eSchoolMottoText{
-  width: 80%;
-  height: 50px;
-  font-size: 18px;
-  text-align: center;
-  color: #fff;
+.eSchoolBlazon {
   margin: 0 auto;
-  text-transform: capitalize;
-  overflow: hidden;
-  padding: 5px;
+
+  img {
+    height: 100%;
+    max-height: 110px;
+    max-width: 220px;
+    padding-bottom: 20px;
+  }
 }
-.eSchoolBlazon{
-  height: auto;
-  margin: 0 auto;
-}
-.eSchoolBlazon img{
-  height: 64px;
-}
-.mottoWrapper{
-  width: 85%;
-  height: auto;
-  margin: 0 auto;
-  text-align: center;
-}
+
 .eSchoolFixtures{
   height: auto;
   position: relative;
@@ -499,16 +480,7 @@
   height: 100%;
   background:transparent;
 }
-.eSchoolMainSlideOutBanner::after {
-  display: block;
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  box-shadow:inset 0 0 120px 90px rgba(0,0,0,0.9);
-}
+
 .eSchoolMainSlideOutBanner img{
   width: 100%;
   height: 100%;
