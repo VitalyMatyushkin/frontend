@@ -2,7 +2,7 @@ const React = require('react');
 
 const PlayerPositionColumn = React.createClass({
 	propTypes: {
-		selectedPositionId:			React.PropTypes.string.isRequired,
+		selectedPositionId:			React.PropTypes.string,
 		positions: 					React.PropTypes.array.isRequired,
 		handleChangePlayerPosition:	React.PropTypes.func.isRequired
 	},
@@ -25,14 +25,16 @@ const PlayerPositionColumn = React.createClass({
 
 		return (
 			<div className="eTeam_playerItem mSelector mPosition">
-				<select	className="eTeam_positionSelector"
-						value={selectedPositionId}
-						onChange={self.handleChangePlayerPosition}
+				<select	className	= "eTeam_positionSelector"
+						value		= {selectedPositionId}
+						onChange	= {self.handleChangePlayerPosition}
 				>
-					<option key="not-selected-player-position" value={undefined}>
+					<option	key		= "not-selected-player-position"
+							value	= { undefined }
+					>
 						not selected
 					</option>
-					{self.renderPositions()}
+					{ self.renderPositions() }
 				</select>
 			</div>
 		);

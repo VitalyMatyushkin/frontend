@@ -251,7 +251,7 @@ const TeamManager = React.createClass({
 				if(foundRemovedPlayerIndex !== -1) {
 					teamStudents.push(removedPlayers[foundRemovedPlayerIndex]);
 					removedPlayers.splice(foundRemovedPlayerIndex, 1)
-				} else {
+				} else if(selectedStudentIndex !== -1) {
 					teamStudents.push(foundStudents[selectedStudentIndex]);
 				}
 
@@ -281,7 +281,7 @@ const TeamManager = React.createClass({
 				const	selectedPlayerIndex		= teamStudents.findIndex(s => s.id === id),
 						foundRemovedPlayerIndex	= removedPlayers.findIndex(p => p.id === id);
 
-				if(foundRemovedPlayerIndex === -1) {
+				if(selectedPlayerIndex === -1 && foundRemovedPlayerIndex === -1) {
 					removedPlayers.push(teamStudents[selectedPlayerIndex]);
 				}
 
