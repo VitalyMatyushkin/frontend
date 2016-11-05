@@ -20,19 +20,20 @@ const TeamManager = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			filter:				undefined,
-			foundStudents:		[],
-			removedPlayers:		[],
-			selectedStudentIds:	[],
-			selectedPlayerIds:	[],
+			filter:						undefined,
+			foundStudents:				[],
+			removedPlayers:				[],
+			selectedStudentIds:			[],
+			selectedPlayerIds:			[],
 			// TODO rename to isNeedClearBufferData
 			// for ex. it's need for team create form
 			// in case when user change type of team to houses
 			// and we need clear all prev buffer data
-			isSync:				true,
-			isSearch:			false, // true when loading data
+			isSync:						true,
+			isSearch:					false, // true when loading data
 			// use this flag to command research users by current search text, see listeners
-			isNeedSearch:		false
+			isNeedSearch:				false,
+			isRemovePlayerButtonBlock:	false
 		});
 	},
 	componentWillMount: function() {
@@ -101,12 +102,14 @@ const TeamManager = React.createClass({
 	searchAndSetStudents: function(searchText, binding) {
 		const self = this;
 
-		self.searchStudents(searchText).then(students => {
+		return self.searchStudents(searchText).then(students => {
 			binding.atomically()
 				.set("selectedStudentIds",	Immutable.fromJS([]))
 				.set("foundStudents",		Immutable.fromJS(students))
 				.set("isNeedSearch",		Immutable.fromJS(false))
 				.commit()
+
+			return true;
 		});
 	},
 	/**
@@ -270,6 +273,7 @@ const TeamManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		binding.set("isRemovePlayerButtonBlock", true);
 		const selectedPlayerIds = binding.toJS('selectedPlayerIds');
 
 		if(selectedPlayerIds.length !== 0) {
@@ -295,7 +299,8 @@ const TeamManager = React.createClass({
 				.set('removedPlayers',		Immutable.fromJS(removedPlayers))
 				.commit();
 
-			self.searchAndSetStudents(self.currentSearchText, binding);
+			self.searchAndSetStudents(self.currentSearchText, binding)
+				.then(() => binding.set("isRemovePlayerButtonBlock", false));
 		}
 	},
 	handleChangePlayerPosition: function(playerId, positionId) {
@@ -333,6 +338,7 @@ const TeamManager = React.createClass({
 						handleChangePlayerPosition		= { self.handleChangePlayerPosition }
 						handleClickPlayerSub			= { self.handleClickPlayerSub }
 						handleClickRemovePlayerButton	= { self.handleClickRemovePlayerButton }
+						isRemovePlayerButtonBlock		= { binding.toJS('isRemovePlayerButtonBlock') }
 				/>
 				<PlayerChooser	students					= { binding.toJS('foundStudents') }
 								handleChangeSearchText		= { self.handleChangeSearchText }

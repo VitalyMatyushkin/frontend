@@ -11,7 +11,8 @@ const DefaultTeam = React.createClass({
 		handleChangePlayerPosition:		React.PropTypes.func.isRequired,
 		handleClickPlayerSub:			React.PropTypes.func.isRequired,
 		handleClickRemovePlayerButton:	React.PropTypes.func.isRequired,
-		isNonTeamSport:					React.PropTypes.bool.isRequired
+		isNonTeamSport:					React.PropTypes.bool.isRequired,
+		isRemovePlayerButtonBlock:		React.PropTypes.bool.isRequired
 	},
 	renderTableHead: function() {
 		const self = this;
@@ -62,7 +63,7 @@ const DefaultTeam = React.createClass({
 						{self._renderPlayers()}
 					</div>
 				</div>
-				<RemovePlayersButton	isRemovePlayerButtonBlock		= { false }
+				<RemovePlayersButton	isRemovePlayerButtonBlock		= { this.props.isRemovePlayerButtonBlock }
 										handleClickRemovePlayerButton	= { this.props.handleClickRemovePlayerButton }
 				/>
 			</div>
