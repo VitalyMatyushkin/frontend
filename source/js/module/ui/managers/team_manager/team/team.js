@@ -1,5 +1,7 @@
 const	React	= require('react'),
-		Player	= require('./player');
+
+		Player				= require('./player'),
+		RemovePlayersButton	= require('./remove_players_button');
 
 const DefaultTeam = React.createClass({
 	propTypes: {
@@ -9,16 +11,8 @@ const DefaultTeam = React.createClass({
 		handleChangePlayerPosition:		React.PropTypes.func.isRequired,
 		handleClickPlayerSub:			React.PropTypes.func.isRequired,
 		handleClickRemovePlayerButton:	React.PropTypes.func.isRequired,
-		isNonTeamSport:				React.PropTypes.bool.isRequired
-	},
-	/**
-	 * Handler for click on remove player button
-	 * @private
-	 */
-	handleClickRemoveButton: function() {
-		const self = this;
-
-		self.props.handleClickRemovePlayerButton();
+		isNonTeamSport:					React.PropTypes.bool.isRequired,
+		isRemovePlayerButtonBlock:		React.PropTypes.bool.isRequired
 	},
 	renderTableHead: function() {
 		const self = this;
@@ -69,10 +63,9 @@ const DefaultTeam = React.createClass({
 						{self._renderPlayers()}
 					</div>
 				</div>
-				<div	className="eTeam_removeButton"
-						onClick={self.handleClickRemoveButton}
-				>
-				</div>
+				<RemovePlayersButton	isRemovePlayerButtonBlock		= { this.props.isRemovePlayerButtonBlock }
+										handleClickRemovePlayerButton	= { this.props.handleClickRemovePlayerButton }
+				/>
 			</div>
 		);
 	}
