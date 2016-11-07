@@ -20,17 +20,25 @@
   margin: 0;
 }
 .eSchoolMaster_summary{
-  border: solid 1px #c2c2c2;
   margin: 60px auto;
   background: #fff;
   max-width: 1000px;
+
+  .bMapView{
+    border: solid 1px #c2c2c2;
+    border-left: none;
+    box-sizing: border-box;
+    min-height: 100% !important;
+    position: absolute !important;
+  }
+  h1{
+    color: #535353;
+    text-align: left;
+    font-weight: normal;
+    line-height: 24px;
+  }
 }
-.eSchoolMaster_summary h1{
-  color: #535353;
-  text-align: left;
-  font-weight: normal;
-  line-height: 24px;
-}
+
 .eSchoolMaster_groupAction{
   position: relative;
 }
@@ -242,6 +250,8 @@
   padding: 40px;
 }
 .summary_inside{
+  border: solid 1px #c2c2c2;
+  border-right: none;
   max-width: 500px;
   width: 50%;
   float: left;
