@@ -72,7 +72,7 @@ const SummaryPanel = React.createClass({
 
 		return (
 			<div>
-				<div className="eSchoolMaster_summary">
+				<div className="eSchoolMaster_summary mClearFix">
 					<div className="summary_inside">
 						{this.renderEditButton()}
 						<div>
