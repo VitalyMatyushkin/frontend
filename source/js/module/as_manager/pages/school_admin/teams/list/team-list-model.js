@@ -25,7 +25,7 @@ const TeamListModel = function(page){
 	this.activeSchoolId = this.rootBinding.get('userRules.activeSchoolId');
 
 	const binding = this.getDefaultBinding();
-	window.Server.sports.get().then(sports => binding.set('sports', sports));
+	this.getSports().then(sports => binding.set('sports', sports));
 
 	this.grid = this.getGrid();
 	this.dataLoader = 	new DataLoader({
@@ -90,7 +90,10 @@ TeamListModel.prototype = {
 			}
 		];
 	},
-	_getSport: function (item) {
+	getSports:function () {
+		return window.Server.sports.get({filter:{limit:1000}});
+	},
+	_getSportName: function (item) {
 		const	self	= this,
 				sportId	= item.sportId,
 				binding	= self.getDefaultBinding();
@@ -99,17 +102,37 @@ TeamListModel.prototype = {
 				foundSport	= typeof sports !== 'undefined' ? sports.find(s => s.id === sportId) : undefined,
 				name		= typeof foundSport !== 'undefined' ? foundSport.name : '';
 
-		return <Sport name={name} className="bIcon_invites" />;
+		return name;
+	},
+	_getSportIcon: function (item) {
+
+		return <Sport name={this._getSportName(item)} className="bIcon_invites" />;
 	},
 	getGrid: function(){
 		const columns = [
+			{
+				cell:{
+					type:'custom',
+					typeOptions:{
+						parseFunction: this._getSportIcon.bind(this)
+					}
+				}
+			},
 			{
 				text:'Sport',
 				cell:{
 					dataField:'sportId',
 					type:'custom',
 					typeOptions:{
-						parseFunction: this._getSport.bind(this)
+						parseFunction: this._getSportName.bind(this)
+					}
+				},
+				filter:{
+					type:'multi-select',
+					typeOptions:{
+						getDataPromise: this.getSports(),
+						keyField:'id',
+						valueField:'name'
 					}
 				}
 			},
