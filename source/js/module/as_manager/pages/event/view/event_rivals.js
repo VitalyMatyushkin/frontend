@@ -2,10 +2,13 @@ const	EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('./../../../../ui/managers/helpers/team_helper'),
 		Sport			= require('module/ui/icons/sport_icon'),
 		Score			= require('./../../../../ui/score/score'),
+		ScoreConsts		= require('./../../../../ui/score/score_consts'),
 		Morearty		= require('morearty'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Immutable		= require('immutable'),
-		React			= require('react');
+		React			= require('react'),
+
+		classNames		= require('classnames');
 
 const EventRival = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -46,51 +49,13 @@ const EventRival = React.createClass({
 
 		if(typeof pic !== 'undefined') {
 			return (
-				<img	className="eEventRivals_pic"
+				<img	className="eEventRivals_logoPic"
 						src={pic}
 				/>
-			);
-		} else if(typeof team !== 'undefined') {
-			return (
-				<div className="eEventRivals_text">{team.name}</div>
 			);
 		} else {
 			return null;
 		}
-	},
-	getName: function (order) {
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				event		= binding.toJS('model'),
-				eventType	= event.eventType;
-		let		name		= null;
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		switch (eventType) {
-			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-				const	inviterSchool = binding.toJS('model.inviterSchool'),
-						invitedSchool = binding.toJS('model.invitedSchools.0');
-
-				if(order === 0) {
-					name = inviterSchool.id === activeSchoolId ?
-						inviterSchool.name :
-						invitedSchool.name;
-				} else if(order === 1) {
-					name = inviterSchool.id !== activeSchoolId ?
-						inviterSchool.name :
-						invitedSchool.name;
-				}
-				break;
-			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-				name = event.housesData[order] && event.housesData[order].name;
-				break;
-			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-				name = event.teamsData[order] ? event.teamsData[order].name : null;
-				break;
-		}
-
-		return name;
 	},
 	getSportIcon:function(sport) {
 		return <Sport name={sport} className="bIcon_invites" />;
@@ -145,12 +110,13 @@ const EventRival = React.createClass({
 
 		return (
 			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	={teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
-						plainPoints		={points}
-						pointsStep 		={event.sport.points.pointsStep}
-						pointsType		={event.sport.points.display}
-					  	pointsMask		={event.sport.points.inputMask}
-					  	onChange 		={self.handleChangeScore.bind(self, teamBundleName, order)}
+				<Score	isChangeMode	= {teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
+						plainPoints		= {points}
+						pointsStep		= {event.sport.points.pointsStep}
+						pointsType		= {event.sport.points.display}
+						pointsMask		= {event.sport.points.inputMask}
+						onChange		= {self.handleChangeScore.bind(self, teamBundleName, order)}
+						modeView		= {ScoreConsts.SCORE_MODES_VIEW.BIG}
 				/>
 			</div>
 		);
@@ -219,13 +185,178 @@ const EventRival = React.createClass({
 		}
 		return scoreData;
 	},
-	_renderTeamLeftSide: function() {
+
+	getTeamNameForInterSchoolsGameByOrder: function(order) {
+		const	self		= this,
+				binding		= self.getDefaultBinding();
+
+		const	event		= binding.toJS('model');
+		let		name		= undefined;
+
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		if(order === 0) {
+			const foundTeam = event.teamsData.find(t => t.schoolId === activeSchoolId);
+
+			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
+		} else if(order === 1) {
+			const foundTeam = event.teamsData.find(t => t.schoolId !== activeSchoolId);
+
+			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
+		}
+
+		return name;
+	},
+	getTeamNameForHousesGameByOrder: function(order) {
+		const	binding	= this.getDefaultBinding();
+
+		const	event	= binding.toJS('model');
+
+		const	house	= event.housesData[order],
+				team	= event.teamsData.find(t => house && house.id === t.houseId);
+
+		if(typeof team !== 'undefined') {
+			return team.name;
+		} else {
+			return undefined;
+		}
+	},
+	getTeamNameForInternalGameByOrder: function(order) {
+		const	binding	= this.getDefaultBinding();
+
+		const	event	= binding.toJS('model');
+
+		return event.teamsData[order] ? event.teamsData[order].name : undefined;
+	},
+
+	getTeamName: function(order) {
+		const event = this.getDefaultBinding().toJS('model');
+
+		switch (true) {
+			case EventHelper.isInterSchoolsEvent(event):
+				return this.getTeamNameForInterSchoolsGameByOrder(order);
+			case EventHelper.isHousesEvent(event):
+				return this.getTeamNameForHousesGameByOrder(order);
+			case EventHelper.isInternalEvent(event):
+				return this.getTeamNameForInternalGameByOrder(order);
+		}
+	},
+	getAdditionalName: function (order) {
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				event		= binding.toJS('model'),
+				eventType	= event.eventType;
+		let		name		= null;
+
+		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
+
+		switch (eventType) {
+			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
+				const	inviterSchool = binding.toJS('model.inviterSchool'),
+						invitedSchool = binding.toJS('model.invitedSchools.0');
+
+				if(order === 0) {
+					name = inviterSchool.id === activeSchoolId ?
+						inviterSchool.name :
+						invitedSchool.name;
+				} else if(order === 1) {
+					name = inviterSchool.id !== activeSchoolId ?
+						inviterSchool.name :
+						invitedSchool.name;
+				}
+				break;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
+				name = event.housesData[order] && event.housesData[order].name;
+				break;
+			case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
+				return undefined;
+		}
+
+		return name;
+	},
+	getRivalNameByOrder: function(order) {
+		const	teamName		= this.getTeamName(order),
+				additionalName	= this.getAdditionalName(order);
+
+		switch (true) {
+			case typeof teamName === "undefined":
+				return additionalName;
+			case typeof additionalName === "undefined":
+				return teamName;
+			default:
+				return `${teamName} (${additionalName})`;
+		}
+	},
+
+	renderCountPointLeftSide: function() {
+		const	binding	= this.getDefaultBinding();
+
+		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(this),
+				event			= binding.toJS('model');
+
+		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, this.renderCountPoints);
+	},
+	renderCountPointRightSide: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
+				event			= binding.toJS('model');
+
+		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints);
+	},
+	renderCountPointsByOrder: function(order) {
+		switch (order) {
+			case 0:
+				return this.renderCountPointLeftSide();
+			case 1:
+				return this.renderCountPointRightSide();
+		}
+	},
+	_renderPoints: function(order) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		const	event	= binding.toJS('model'),
+				mode	= binding.toJS('mode'),
+				status	= binding.toJS('model.status');
+
+		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
+			if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
+				return (
+					<div className="eEventRival_score">
+					</div>
+				);
+			} else if(status === "FINISHED" || mode === 'closing') {
+				return (
+					<div className="eEventRival_score">
+						{ this.renderCountPointsByOrder(order) }
+					</div>
+				);
+			}
+		}
+	},
+	_renderTeamByOrder: function(order) {
+		const eventRivalClassName = classNames({
+			"bEventRival":	true,
+			"mRight":		order === 1
+		});
+
+		return (
+			<div className={eventRivalClassName}>
+				<div className="eEventRival_logo">{ this.getPic(order) }</div>
+				<div className="eEventRival_rivalName">{ this.getRivalNameByOrder(order) }</div>
+				{ this._renderPoints(order) }
+			</div>
+		);
+	},
+	_renderTeamLeftSide: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
 		const	eventType		= binding.get('model.eventType'),
-				teamsData		= binding.toJS('model.teamsData'),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
+			teamsData		= binding.toJS('model.teamsData'),
+			activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(0);
@@ -255,23 +386,23 @@ const EventRival = React.createClass({
 	},
 	_renderTeamRightSide: function() {
 		const	self	= this,
-				binding	= self.getDefaultBinding();
+			binding	= self.getDefaultBinding();
 
 		const	eventType	= binding.get('model.eventType'),
-				teamsData	= binding.toJS('model.teamsData');
+			teamsData	= binding.toJS('model.teamsData');
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(1);
 		} else if (
 			// if inter school event and participant[0] is our school
-			teamsData.length > 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		teamsData.length > 1 &&
+		eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
 		} else if(
 			// if inter school event and opponent school is not yet accept invitation
-			teamsData.length === 1 &&
-			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
+		teamsData.length === 1 &&
+		eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 		) {
 			return self._renderTeamByOrder(1);
 		} else {
@@ -279,149 +410,30 @@ const EventRival = React.createClass({
 			return self._renderTeamByOrder(1);
 		}
 	},
-	getTeamNameForInterSchoolsGameByOrder: function(order) {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
-
-		const	event		= binding.toJS('model');
-		let		name		= '';
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		if(order === 0) {
-			const foundTeam = event.teamsData.find(t => t.schoolId === activeSchoolId);
-
-			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
-		} else if(order === 1) {
-			const foundTeam = event.teamsData.find(t => t.schoolId !== activeSchoolId);
-
-			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
-		}
-
-		return name;
-	},
-	_renderTeamByOrder: function(order) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const event = binding.toJS('model');
-
-		let teamName = '';
-		if(EventHelper.isInterSchoolsEvent(event)) {
-			teamName = self.getTeamNameForInterSchoolsGameByOrder(order);
-		}
-
-		// For internal and houses events show team name in eEventRival_name.
-		// For inter-schools events show SCHOOL name in eEventRival_name
-		// and show TEAM name in eEventRival_teamName.
-		return (
-			<div className="bEventRival">
-				<div className="eEventRival_rival">{self.getPic(order)}</div>
-				<div className="eEventRival_name">{self.getName(order)}</div>
-				<div className="eEventRival_teamName">{teamName}</div>
-			</div>
-		);
-	},
-	renderCountPointLeftSide: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
-				event			= binding.toJS('model');
-
-		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, self.renderCountPoints);
-	},
-	renderCountPointRightSide: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
-				event			= binding.toJS('model');
-
-		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints);
-	},
-	_renderPoints: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	event	= binding.toJS('model'),
-				mode	= binding.toJS('mode'),
-				status	= binding.toJS('model.status');
-
-		if(TeamHelper.isTeamSport(event) || TeamHelper.isOneOnOneSport(event)) {
-			if(EventHelper.isNotFinishedEvent(binding) && mode !== 'closing') {
-				return (
-					<div className="eEventResult_score">
-						<div className="eEventResult_PointsWrapper">
-							<span>-</span>
-							<span className="eEventResult_colon"> : </span>
-							<span>-</span>
-						</div>
-					</div>
-				);
-			} else if(status === "FINISHED" || mode === 'closing') {
-				return (
-					<div className="eEventResult_score">
-						<div className="eEventResult_PointsWrapper">
-							{self.renderCountPointLeftSide()}
-							<div className="eEventResult_Colon"> : </div>
-							{self.renderCountPointRightSide()}
-						</div>
-					</div>
-				);
-			}
-		}
-	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 		let		body	= null;
 
-		const	event		= binding.toJS('model'),
-				sportName	= event.sport.name,
-				sportIcon	= self.getSportIcon(sportName),
-				eventType	= EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType];
+		const	event	= binding.toJS('model');
 
 		const isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 
-		if(isEventWithOneIndividualTeam) {
-			body = (
-				<div className="bEventInfo">
-					<div className="eEventInfo_InfoContainer">
-						<div className="eEventInfo_SportInfo">
-							<div className="eEventSport_icon">{sportIcon}</div>
-							<div className="eEventSport_name mBig">{sportName}</div>
-						</div>
-						<div className="eEventInfo_EventTypeInfo">
-							{eventType}
-						</div>
-					</div>
-				</div>
-			);
-		} else {
+		if(!isEventWithOneIndividualTeam) {
 			body = (
 				<div className="bEventInfo">
 					<div className="bEventRivals">
 						{self._renderTeamLeftSide()}
-						<div className="bEventResult">
-							<div className="eEventSport">
-								<span className="eEventSport_icon">{sportIcon}</span>
-								<span className="eEventSport_name">{sportName}</span>
-							</div>
-						</div>
 						{self._renderTeamRightSide()}
 					</div>
-					<div className="eEventInfo_type">
-						{eventType}
-					</div>
-					{self._renderPoints()}
 				</div>
 			);
+		} else {
+			body = null;
 		}
 
 		return body;
 	}
 });
-
 
 module.exports = EventRival;

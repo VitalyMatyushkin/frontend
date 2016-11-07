@@ -16,7 +16,7 @@ const TeamName = React.createClass({
 		return (
 			<div className="bTeamName">
 				<div className="eTeamName_nameContainer">
-					<input	className	= "eTeamName_nameForm"
+					<input	className	= "eTeamName_nameForm mSaveAsNewTeam"
 							type		= { 'text' }
 							placeholder	= { 'Enter team name' }
 							onChange	= { self.handleChangeTeamName }

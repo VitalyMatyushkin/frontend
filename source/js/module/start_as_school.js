@@ -5,6 +5,7 @@ const 	ApplicationView 	= require('module/as_school/application'),
 		userDataInstance 	= require('module/data/user_data'),
 		cookiePopupData 	= require('module/data/cookie_popup_data'),
 		authController 		= require('module/core/auth_controller'),
+		initTawkTo			= require('module/tawk_to/tawk_to'),
 		Immutable			= require('immutable'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react'),
@@ -130,6 +131,8 @@ function runMainMode() {
 		}
 	};
 
+	initTawkTo();
+
 	return serviceList.publicSchools.get({filter: filter}).then( schoolList => {
 		const optSchool = schoolList[0];
 		if(optSchool) {
@@ -138,6 +141,7 @@ function runMainMode() {
 			init404View();
 		}
 	});
+
 }
 
 module.exports = runMainMode;

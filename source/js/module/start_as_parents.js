@@ -5,6 +5,7 @@ const  	ApplicationView 	= require('module/as_parents/application'),
 		userRulesInstance 	= require('module/data/user_rules'),
 		authController 		= require('module/core/auth_controller'),
 		serviceList 		= require('module/core/service_list'),
+		initTawkTo			= require('module/tawk_to/tawk_to'),
 		Morearty			= require('morearty'),
 		ReactDom 			= require('react-dom'),
 		React 				= require('react');
@@ -95,6 +96,8 @@ function runParentMode() {
 		React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
 		document.getElementById('jsMain')
 	);
+
+	initTawkTo();
 }
 
 module.exports = runParentMode;

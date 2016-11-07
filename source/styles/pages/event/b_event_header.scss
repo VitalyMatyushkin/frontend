@@ -1,5 +1,7 @@
 .bEventHeader {
-  margin-top: 5px;
+  width: 940px;
+  margin: 0 auto;
+  padding-top: 5px;
 }
 
 .bEventHeader_leftSide {
@@ -11,7 +13,8 @@
 .bEventHeader_rightSide {
   display: inline-block;
   vertical-align: top;
-  width: 350px;
+
+  width: 590px;
 }
 
 .eEventHeader_field {
@@ -29,16 +32,15 @@
   overflow: hidden;
 }
 .eEventHeader_field.mDate {
-  font-size: 14px;
-  color: #959595;
+  font-size: 16px;
+  color: #616161;
   margin: 5px 0;
   text-align: left;
 }
 .eEventHeader_field.mEvent{
   padding-top: 3px;
-  color: $COLOR;
-  font-weight: bold;
-  font-size: 20px;
+  color: #333333;
+  font-size: 16px;
   max-width: 80%;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -52,7 +54,7 @@
   display: flex;
   flex-wrap: wrap;
   flex-direction: column;
-  max-width: 700px;
+  max-width: 940px;
   width: 100%;
   margin: 0 auto;
 }

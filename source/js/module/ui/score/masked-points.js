@@ -3,8 +3,10 @@
  */
 
 const 	React 		= require('react'),
-		MaskedInput = require('module/ui/masked_input'),
-		classNames 	= require('classnames');
+		MaskedInput	= require('module/ui/masked_input'),
+		classNames 	= require('classnames'),
+
+		ScoreConsts	= require('./score_consts');
 
 const MaskedPoints = React.createClass({
 	propTypes:{
@@ -24,7 +26,13 @@ const MaskedPoints = React.createClass({
 		 * @param {string} mask - points.inputMask
 		 * @returns {boolean/string} - false or error message
 		 */
-		validation: 	React.PropTypes.func.isRequired
+		validation:		React.PropTypes.func.isRequired,
+		modeView:		React.PropTypes.string
+	},
+	getDefaultProps: function() {
+		return {
+			modeView: ScoreConsts.SCORE_MODES_VIEW.SMALL
+		};
 	},
 	getInitialState:function(){
 		return {

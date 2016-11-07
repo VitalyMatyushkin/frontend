@@ -33,7 +33,15 @@ const SettingsPage = React.createClass({
 			settingsRouting: {}
 		});
 	},
-	componentWillMount: function() {
+	componentWillMount:function(){
+		this.initTabs();
+	},
+	componentDidMount:function(){
+		const rootBinding = this.getMoreartyContext().getBinding();
+
+		this.addBindingListener(rootBinding, 'routing.pathParameters.0', this.initTabs)
+	},
+	initTabs: function() {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				rootBinding	= self.getMoreartyContext().getBinding(),
@@ -71,10 +79,13 @@ const SettingsPage = React.createClass({
 			);
 		}
 
+		console.log('tab=' + tab);
 		if(tab) {
 			let item = self.tabListModel.find(t => t.value === tab);
-			item.isActive = true;
-			binding.set('activeTab', tab);
+			if(item){
+				item.isActive = true;
+				binding.set('activeTab', tab);
+			}
 		} else {
 			self.tabListModel[0].isActive = true;
 			binding.set('activeTab', 'general');
@@ -111,7 +122,7 @@ const SettingsPage = React.createClass({
 						<span>{binding.get('userInfo.firstName')}</span>
 						<span>{binding.get('userInfo.lastName')}</span>
 					</div>
-					<Tabs	binding	= {binding.sub('settingsRouting')} tabListModel={self.tabListModel}
+					<Tabs	tabListModel={self.tabListModel}
 							onClick	= {self.changeActiveTab}/>
 				</div>
 				<div className="bSchoolMaster">

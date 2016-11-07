@@ -194,15 +194,17 @@ const TeamModeView = React.createClass({
 		return (
 			<div>
 				<div	key			= "team_wrapper_1"
-						className	= { _classNames[0] }>
-					<TeamWrapper	binding={tableWrapperBindings[0]}
-									handleIsSelectTeamLater={self.handleIsSelectTeamLater.bind(self, 0)}
+						className	= { _classNames[0] }
+				>
+					<TeamWrapper	binding					= {tableWrapperBindings[0] }
+									handleIsSelectTeamLater	= {self.handleIsSelectTeamLater.bind(self, 0) }
 					/>
 				</div>
 				<div	key			= "team_wrapper_2"
-						className	= { _classNames[1] }>
-					<TeamWrapper	binding={tableWrapperBindings[1]}
-									handleIsSelectTeamLater={self.handleIsSelectTeamLater.bind(self, 1)}
+						className	= { _classNames[1] }
+				>
+					<TeamWrapper	binding					= { tableWrapperBindings[1] }
+									handleIsSelectTeamLater	= { self.handleIsSelectTeamLater.bind(self, 1) }
 					/>
 				</div>
 			</div>

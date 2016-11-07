@@ -8,6 +8,7 @@ const   ApplicationView     = require('module/as_login/application'),
         userRulesInstance   = require('module/data/user_rules'),
         authController      = require('module/core/auth_controller'),
         serviceList         = require('module/core/service_list'),
+        initTawkTo			= require('module/tawk_to/tawk_to'),
         ReactDom            = require('react-dom'),
         React               = require('react'),
         Morearty            = require('morearty');
@@ -135,6 +136,8 @@ const   ApplicationView     = require('module/as_login/application'),
         React.createElement(MoreartyContext.bootstrap(ApplicationView), null),
         document.getElementById('jsMain')
     );
+
+	initTawkTo();
 }
 
 module.exports = runLoginMode;

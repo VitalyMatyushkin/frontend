@@ -30,7 +30,7 @@ const MatchReport = React.createClass({
 								<SVG icon="icon_edit"/>
 							</div>
 						</div>
-						<div style={{whiteSpace: 'pre-line'}}>{binding.get('content')}</div>
+						<div className="eText" >{binding.get('content')}</div>
 					</div>
 				</If>
 				<If condition={this.actions.isEditMode()}>

@@ -11,13 +11,15 @@ const HomeResults = React.createClass({
 				events			= binding.get('prevSevenDaysFinishedEvents.events').toJS(),
 				isSync			= binding.get('prevSevenDaysFinishedEvents.isSync');
 
-		return <FixtureList
-			title="Results"
-			activeSchoolId={activeSchoolId}
-			isSync={isSync}
-			events={events}
-			isDaySelected={true}
-		/>;
+		return (
+			<FixtureList	title					= "Results"
+							showAllItemsButtonText	= "More results"
+							activeSchoolId			= { activeSchoolId }
+							isSync					= { isSync }
+							events					= { events }
+							isDaySelected			= { true }
+			/>
+		);
 	}
 });
 module.exports = HomeResults;

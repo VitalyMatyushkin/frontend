@@ -1,0 +1,30 @@
+.bBigScreenTitle {
+  color: #fff;
+  font-size: 3rem;
+  padding: 3% 0 2%;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.eBigScreenTitle_title {
+  display: inline-block;
+}
+
+.eBigScreenTitle_logo {
+  display: inline-block;
+  padding: 0 1%;
+  img {
+    height: 3rem;
+  }
+}
+
+.eBigScreenTitle_time {
+  display: inline-block;
+
+}
+
+.eBigScreenTitle_title, .eBigScreenTitle_time {
+  padding: 1% 1% 0;
+  border: $mainBorder;
+  border-width: 0 1px;
+}

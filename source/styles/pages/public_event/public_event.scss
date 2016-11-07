@@ -1,14 +1,22 @@
 .bPublicEvent {
   padding-top: 40px;
-  width: 902px;
+  width: 100%;
   margin: 0 auto;
   color: #535353;
 
   .bMatchReport{
-    margin: 10px auto;
+    box-sizing: border-box;
+    margin: 10px auto 30px;
+    max-width: 940px;
     padding: 20px 15px;
     border: solid 1px #c2c2c2;
     background: #fff;
     white-space: pre-line
+  }
+  .bEventBottomContainer {
+    margin: 30px auto;
+  }
+  .bEventHeader_rightSide {
+    text-align: right;
   }
 }

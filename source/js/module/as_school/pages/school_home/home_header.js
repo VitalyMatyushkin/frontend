@@ -5,7 +5,6 @@ const   Immutable 	= require('immutable'),
         React       = require('react'),
         Superuser   = require('module/helpers/superuser'),
         Helpers		= require('module/helpers/storage'),
-        PublicLogin = require('module/ui/menu/public_login'),
         Morearty    = require('morearty'),
         Lazy        = require('lazy.js');
 
@@ -93,19 +92,14 @@ const HomeHeader = React.createClass({
 
             <div className="eSchoolHeader">
                 <div className="eSchoolMainSlideOutBanner">
-                    <img ref="schoolMainBanner" className="transitionImage" src="" />
+                    <img ref="schoolMainBanner" className="transitionImage" src=""/>
                 </div>
                 <div className="eSchoolMastHead">
                     <div className="eSchoolMotto">
-                        <div className="mottoWrapper">
-                            <div className="eSchoolBlazon">
-                                <img src={schoolBlazon || 'http://placehold.it/400x400'}/>
-                            </div>
-							<PublicLogin />
-                            <div className="eSchoolMottoText">
-                                {schoolMotto || ''}
-                            </div>
+                        <div className="eSchoolBlazon">
+                            <img src={schoolBlazon || 'http://placehold.it/400x400'}/>
                         </div>
+                        {schoolName}
                     </div>
                 </div>
             </div>

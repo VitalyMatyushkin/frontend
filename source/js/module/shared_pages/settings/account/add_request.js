@@ -15,7 +15,8 @@ const   React       = require('react'),
 const AddPermissionRequest = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
-        onSuccess:          React.PropTypes.func
+        onSuccess:          React.PropTypes.func,
+		onCancel: 			React.PropTypes.func
     },
     getDefaultState:function() {
         return Immutable.Map({
@@ -77,7 +78,8 @@ const AddPermissionRequest = React.createClass({
             <Form   name            = "New Request"
                     updateBinding   = { true }
                     binding         = { binding }
-                    onSubmit        = { self.continueButtonClick }
+					onSubmit        = { self.continueButtonClick }
+					onCancel        = { self.props.onCancel }
                     formStyleClass  = "bGrantContainer"
                     defaultButton   = "Submit"
             >

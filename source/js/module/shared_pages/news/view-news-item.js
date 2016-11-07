@@ -62,11 +62,13 @@ const ViewNewsItem = React.createClass({
 				binding	= self.getDefaultBinding(),
 				imgSrc = news.picUrl;
 
-		let	text;
+		let	text, linkText;
 		if(binding.toJS('selectedNewsItem') == news.id) {
 			text = self.getFullNewsText(news.body);
+			linkText = 'Less info'
 		} else {
 			text = self.getNewsExcerpt(news.body);
+			linkText = 'More info'
 		}
 
 		return (
@@ -85,7 +87,7 @@ const ViewNewsItem = React.createClass({
 					<span	className="eSchoolNewsMoreInfo"
 							onClick={self._newsItemMoreInfo.bind(self, news.id)}
 					>
-						More Info
+						{linkText}
 					</span>
 				</div>
 			</div>

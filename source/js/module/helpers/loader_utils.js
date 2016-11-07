@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login', 'playground', 'password'],
+const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage', 'login', 'playground', 'password', 'bigscreen'],
         defaultModel    = 'school',
         apiVersion      = 1;
 
@@ -10,9 +10,17 @@ const   specialModels   = ['parents', 'manager', 'admin', 'site', 'www', 'stage'
 function parseDomainName(domainName) {
     // http://manager.squard.com → ["manager.squard.com", "manager", undefined|stage, "squard"]
     const external = domainName.match(/([A-z0-9-]+)+(?:.(stage|stage1|stage2|prod|preprod))?.(squadintouch|squard)\.(com|co\.uk)/);
+
+    let model;
+    if(external[1].substring(0, 3) === 'bs_') {
+        model = 'bigscreen';
+    } else {
+        model = external[1];
+    }
+
     return {
         fullName:   external[0],
-        model:      external[1],
+        model:      model,
         isStage:    external[2] === 'stage' || external[2] === 'stage2',
         rootDomain: external[3],
         env:        external[2]

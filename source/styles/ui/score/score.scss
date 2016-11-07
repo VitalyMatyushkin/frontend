@@ -16,6 +16,12 @@ input[type="text"].eScore_Points {
 
   &.mPlain{
     text-align: center;
+
+    &.mBig {
+      color: #007abf;
+      font-size: 43px;
+      width: 100px;
+    }
   }
 
   &.mDistance{

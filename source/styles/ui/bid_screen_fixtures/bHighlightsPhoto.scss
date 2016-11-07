@@ -1,0 +1,55 @@
+.bHighlightsPhoto {
+  height: 100%;
+  margin: 0 auto;
+  width: 100%;
+
+}
+
+.bBigHighlightsPhoto {
+  position: relative;
+
+  margin: 0 auto;
+  width: 100%;
+  height: 50%;
+}
+
+.eBigHighlightsPhoto_titleContainer {
+  position: absolute;
+
+  top: 30px;
+  width: 100%;
+
+  .bBigScreenTitle {
+    background: #fff;
+    color: $blueColor;
+    border-radius: 15px;
+    margin: 0 auto;
+    padding: 0.5rem;
+    width: 85%;
+    -webkit-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+    -moz-box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+    box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+  }
+}
+
+.eHighlightsPhoto_Photo {
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  width: 50%;
+  height: 100%;
+
+  display: inline-block;
+  vertical-align: top;
+}
+
+.eHighlightsPhoto_smallPhoto {
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  width: 25%;
+  height: 100%;
+
+  display: inline-block;
+  vertical-align: top;
+}

@@ -20,7 +20,7 @@ const EventsCalendar = React.createClass({
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
 	},
 	onEventClick:function(eventId){
-		document.location.hash = 'event/' + eventId + '?tab=teams';
+		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 	render: function(){
 		const 	binding 					= this.getDefaultBinding().sub('calendar'),
