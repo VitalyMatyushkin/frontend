@@ -359,35 +359,24 @@ const RegisterUserPage = React.createClass({
 
         switch (currentStep) {
             case 'account':
-                currentView = (
-                    <AccountForm    onSuccess   = {self.setStepFunction.bind(null, 'verification')}
-                                    onError     = {self.catchStepFunctionError.bind(null,'verification')}
-                                    binding     = {binding.sub('formFields')}
-                    />
-                );
+                currentView = <PermissionsList
+                    onSuccess={self.setStepFunction.bind(null, 'finish')}
+                    binding={{
+                        //account: binding.sub('account'),
+                        //formFields: binding.sub('formFields'),
+                        default: binding
+					}}
+                    />;
                 break;
             case 'verification':
-                currentView = (
-                    <VerificationStep   email                           = { this.getEmail() }
-                                        isEmailVerified                 = { this.isEmailVerified() }
-                                        isErrorEmailVerification        = { this.isErrorEmailVerification() }
-                                        phone                           = { this.getPhone() }
-                                        isPhoneVerified                 = { this.isPhoneVerified() }
-                                        isErrorPhoneVerification        = { this.isErrorPhoneVerification() }
-                                        handleClickConfirmEmail         = { this.handleClickConfirmEmail }
-                                        handleClickConfirmPhone         = { this.handleClickConfirmPhone }
-                                        handleSuccessEmailChange        = { this.handleSuccessEmailChange }
-                                        handleSuccessPhoneChange        = { this.handleSuccessPhoneChange }
-                                        canUserResendEmailVerification  = { this.canUserResendEmailVerification() }
-                                        canUserResendPhoneVerification  = { this.canUserResendPhoneVerification() }
-                                        handleClickResendEmail          = { this.handleClickResendEmail }
-                                        handleClickResendPhone          = { this.handleClickResendPhone }
-                                        isResentEmailPopupOpen          = { this.isResentEmailPopupOpen() }
-                                        handleClickEmailPopupClose      = { this.handleClickEmailPopupClose }
-                                        isResentPhonePopupOpen          = { this.isResentPhonePopupOpen() }
-                                        handleClickPhonePopupClose      = { this.handleClickPhonePopupClose }
-                    />
-                );
+                currentView = <PermissionsList
+                    onSuccess={self.setStepFunction.bind(null, 'finish')}
+                    binding={{
+                        //account: binding.sub('account'),
+                        //formFields: binding.sub('formFields'),
+                        default: binding
+					}}
+                    />;
                 break;
             case 'permissions':
                 currentView = <PermissionsList
