@@ -2,22 +2,23 @@ const React = require('react');
 
 const PlayerSubColumn = React.createClass({
 	propTypes: {
-		isChecked:				React.PropTypes.bool.isRequired,
+		isChecked:				React.PropTypes.bool,
 		handleClickPlayerSub:	React.PropTypes.func.isRequired
 	},
-	handleCheckBoxClick: function(eventDescriptor) {
-		const self = this;
 
-		self.props.handleClickPlayerSub(eventDescriptor.target.checked);
+	isChecked: function() {
+		return typeof this.props.isChecked !== 'undefined' ? this.props.isChecked : false;
 	},
-	render: function() {
-		const self = this;
+	handleCheckBoxClick: function(eventDescriptor) {
+		this.props.handleClickPlayerSub(eventDescriptor.target.checked);
+	},
 
+	render: function() {
 		return (
 			<div className="eTeam_playerItem mSub">
-				<input	onClick={self.handleCheckBoxClick}
-						type="checkbox"
-						checked={self.props.isChecked}
+				<input	onChange	= { this.handleCheckBoxClick }
+						type		= "checkbox"
+						checked		= { this.isChecked() }
 				/>
 			</div>
 		);
