@@ -8,7 +8,8 @@
 const CellModel = function(options){
 	this.type = options.type || 'general';
 	this.typeOptions = options.typeOptions;
-	this.dataField = options.dataField;
+	this.dataField 	= options.dataField;
+	this.onEmpty 	= options.onEmpty || '';
 };
 
 CellModel.prototype = {
@@ -16,9 +17,15 @@ CellModel.prototype = {
 		const fieldParts = this.dataField.split('.');
 		let result = dataItem;
 
-		fieldParts.forEach(key => {
-			result = result[key];
-		});
+		for(let i = 0, len = fieldParts.length; i < len; i++) {
+			const key = fieldParts[i];
+			if(typeof result !== 'undefined') {
+				result = result[key];
+			} else {
+				result = this.onEmpty;
+				break;
+			}
+		}
 
 		return result;
 	}
