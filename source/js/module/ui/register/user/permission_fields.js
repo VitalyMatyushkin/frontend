@@ -182,9 +182,14 @@ const PermissionFields = React.createClass({
 					</div>
 				</If>
 				<If condition={!!binding.get('formId') || !!binding.get('schoolId') && currentType !== 'parent'}>
-					<div className="eRegistration_input">
-						<textarea placeholder="comments" onChange={self.onChangeComment} />
-					</div>
+                    <div>
+                        <div className="eRegistration_label">
+                            Comments:
+                        </div>
+                        <div className="eRegistration_input">
+                            <textarea placeholder="If you have an offer code, please enter it here" onChange={self.onChangeComment}/>
+                        </div>
+                    </div>
 				</If>
             </div>
         )

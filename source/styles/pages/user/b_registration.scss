@@ -75,16 +75,18 @@ $chooserIconSize: 35px;
   display: flex;
   flex-flow: column nowrap;
   float:left;
+
+  .eRegistration_input, .bCombobox {
+    width: 200px;
+    margin-bottom: 10px;
+    padding: 5px 0;
+  }
 }
 .eRegistration_permissions {
   margin-left: 40px;
   width: 360px;
 }
-.eRegistration_permissionsField input {
-  width: 200px;
-  margin-bottom: 10px;
-  padding: 5px 20px 5px 5px;
-}
+
 .eRegistration_permissions p{
   font-size: 12px;
   margin-bottom: 40px;
