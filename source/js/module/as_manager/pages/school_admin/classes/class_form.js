@@ -14,7 +14,7 @@ const ClassForm = React.createClass({
 
 	getAllAges: function() {
 		/** it should really be a server call */
-		const ages = Lazy.range(3, 14).map(i => {
+		const ages = Lazy.range(1, 14).map(i => {
 			return {
 				value: 'Y' + i,
 				age: i,
@@ -25,10 +25,8 @@ const ClassForm = React.createClass({
 	},
 
 	render: function() {
-		var self = this;
-
 		return (
-			<Form name={self.props.title} onSubmit={self.props.onFormSubmit} binding={self.getDefaultBinding()} >
+			<Form name={this.props.title} onSubmit={this.props.onFormSubmit} binding={this.getDefaultBinding()} >
 				<FormField type="text" field="name" validation="required">Form name</FormField>
 				<FormField type="select" sourceArray={this.getAllAges()} field="age" validation="required">Age group</FormField>
 			</Form>
