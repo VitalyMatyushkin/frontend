@@ -1,6 +1,10 @@
 .bAboutList{
   overflow: hidden;
   margin-bottom: 25px;
+
+  h6{
+    margin-top: 10px;
+  }
 }
 
 .eAboutList_item{
@@ -11,6 +15,10 @@
   line-height: 45px;
   color: rgb(219, 219, 219);
   border-bottom: solid 1px #3c3a3b;
+  
+  &.mMedical{
+    line-height: 20px;
+  }
 }
 
 .eAboutList_item:before{
