@@ -131,8 +131,6 @@ function runMainMode() {
 		}
 	};
 
-	initTawkTo();
-
 	return serviceList.publicSchools.get({filter: filter}).then( schoolList => {
 		const optSchool = schoolList[0];
 		if(optSchool) {
