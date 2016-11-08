@@ -11,6 +11,13 @@ const RegiseterUserDone = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding();
+
+		window.simpleAlert(
+			'Welcome to SquadInTouch! You just registered account and requested new role. Approving your account will take some time. We will send you email notification',
+			'Ok',
+			() => {
+			});
+
 		return (
 			<div className="bRegisterMessage">
 				{/*Check the type of account registered for by the user and display information accordingly*/}
