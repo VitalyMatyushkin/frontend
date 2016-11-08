@@ -24,9 +24,9 @@ const TeamSaveModePanel = React.createClass({
 				<input	className	= "bRadioButton_input"
 						type		= "radio"
 						checked		= { this.props.isChecked }
-						onClick		= { this.props.onClick }
+						onChange	= { this.props.onClick }
 				/>
-				<div	className="bRadioButton_text">
+				<div className="bRadioButton_text">
 					{ this.props.text }
 				</div>
 			</div>

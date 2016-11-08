@@ -3,16 +3,16 @@ const	ManagerConsts	= require('./../ui/managers/helpers/manager_consts'),
 		EventHelper		= require('./eventHelper'),
 		Promise			= require('bluebird');
 
-function processSavingChangesMode(schoolId, event, teamWrappers) {
+function processSavingChangesMode(schoolId, rivals, event, teamWrappers) {
 	switch (true) {
 		case EventHelper.isInterSchoolsEvent(event) && teamWrappers[0].isTeamChanged:
 			return processTeam(schoolId, teamWrappers[0], teamWrappers[0].savingChangesMode);
 		default:
 			let promises = [];
 
-			teamWrappers.forEach(tw => {
-				if(tw.isTeamChanged) {
-					promises = promises.concat(processTeam(schoolId, tw, tw.savingChangesMode));
+			teamWrappers.forEach((tw, index) => {
+				if(tw.isTeamChanged || isUserCreateNewTeam(tw)) {
+					promises = promises.concat(processTeam(schoolId, event, rivals[index], tw, tw.savingChangesMode));
 				}
 			});
 
@@ -20,9 +20,9 @@ function processSavingChangesMode(schoolId, event, teamWrappers) {
 	}
 };
 
-function processTeam(schoolId, teamWrapper, savingChangesMode) {
-	switch (savingChangesMode) {
-		case ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_PROTOTYPE_TEAM:
+function processTeam(schoolId, event, rival, teamWrapper, savingChangesMode) {
+	switch (true) {
+		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_PROTOTYPE_TEAM:
 			let promises = [];
 
 			promises.push(TeamHelper.updateTeam(
@@ -44,42 +44,51 @@ function processTeam(schoolId, teamWrapper, savingChangesMode) {
 				)
 			);
 			return promises;
-		case ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM:
+		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM && isUserCreateNewTeam(teamWrapper):
+			return TeamHelper.createPrototypeTeam(schoolId, event, rival, teamWrapper);
+		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM:
 			let team;
 
 			return window.Server.cloneAsPrototypeTeam.post({
-				schoolId:	schoolId,
-				teamId:		teamWrapper.selectedTeamId
-			})
-			.then(_team => {
-				team = _team;
+					schoolId:	schoolId,
+					teamId:		teamWrapper.selectedTeamId
+				})
+				.then(_team => {
+					team = _team;
 
-				return TeamHelper.updateTeam(
-					schoolId,
-					team.id,
-					{
-						name: teamWrapper.teamName.name
-					}
-				);
-			})
-			.then(() => {
-				const	players			= teamWrapper.___teamManagerBinding.teamStudents,
-						initialPlayers	= teamWrapper.prevPlayers;
+					return TeamHelper.updateTeam(
+						schoolId,
+						team.id,
+						{
+							name: teamWrapper.teamName.name
+						}
+					);
+				})
+				.then(() => {
+					const	players			= teamWrapper.___teamManagerBinding.teamStudents,
+							initialPlayers	= teamWrapper.prevPlayers;
 
-				return Promise.all(TeamHelper.commitPlayers(
-					initialPlayers,
-					players,
-					team.id,
-					schoolId
-				));
-			});
-		case ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES:
+					return Promise.all(TeamHelper.commitPlayers(
+						initialPlayers,
+						players,
+						team.id,
+						schoolId
+					));
+				});
+		case savingChangesMode === ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES:
 			return [Promise.resolve(true)];
 	}
 };
 
+function isUserCreateNewTeam(teamWrapper) {
+	return (
+		typeof teamWrapper.selectedTeamId === 'undefined' &&
+		!teamWrapper.isSetTeamLater
+	);
+};
+
 const SavingEventHelper = {
-	processSavingChangesMode: processSavingChangesMode
+	processSavingChangesMode:	processSavingChangesMode
 };
 
 module.exports = SavingEventHelper;
