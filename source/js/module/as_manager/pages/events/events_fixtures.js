@@ -56,7 +56,7 @@ const EventFixtures = React.createClass({
 			});
 	},
 	onClickChallenge: function (eventId) {
-		document.location.hash = 'event/' + eventId + '?tab=teams';
+		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 	render: function () {
 		const   self    		= this,
