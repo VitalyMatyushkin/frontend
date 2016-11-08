@@ -5,7 +5,8 @@
 'use strict';
 
 const 	papa	= require('papaparse'),
-		Promise	= require('bluebird');
+		Promise	= require('bluebird'),
+		Lazy	= require('lazy.js');
 
 /** Tiny wrapper for Papa parse to return Promise.
  * Note, it is impossible to wrap it with Bluebird's converters as it use custom config.
@@ -93,7 +94,9 @@ function readStudentsFromCSVFile(file) {
 				origHeaders		= result.meta.fields || [],
 				guessedHeaders	= guessHeaders(origHeaders);
 
-		const studentArray = data.map( item => objectToStudent(guessedHeaders, item));
+		const studentArray = data
+			.filter( item => Object.keys(item).length > 1 )	// removing empty objects
+			.map( item => objectToStudent(guessedHeaders, item));
 		return {
 			students: studentArray,
 			errors: result.errors,
@@ -102,4 +105,29 @@ function readStudentsFromCSVFile(file) {
 	});
 }
 
-module.exports = readStudentsFromCSVFile;
+function pullFormsAndHouses(result, school) {
+	let errors = [];
+	result.students = result.students.map( (student, i)=> {
+		const	form	= Lazy(school.forms).findWhere({name: student.form}),
+				house	= Lazy(school.houses).findWhere({name: student.house});
+
+		const 	formId	= form ? form.id : undefined,
+				houseId = house ? house.id : undefined;
+
+		student.formId = formId;
+		student.houseId = houseId;
+
+		if(typeof formId === 'undefined') errors.push( {
+			type:		'StudentFormMissed',
+			code:		'StudentFormMissed',
+			message: 	`There is no form with name: ${student.form}. Student is: ${student.firstName} ${student.lastName}`,
+			row:		i
+		});
+
+		return student;
+	});
+	return result;
+}
+
+module.exports.pullFormsAndHouses = pullFormsAndHouses;
+module.exports.loadFromCSV = readStudentsFromCSVFile;
