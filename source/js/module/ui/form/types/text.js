@@ -21,7 +21,6 @@ const TypeText =  React.createClass({
 		}
 	},
 	handleBlur: function(event) {
-		this.cursor = -1;
 		this.setValue(event.target.value);
 	},
 	handleChange: function(event) {

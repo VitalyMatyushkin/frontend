@@ -32,7 +32,7 @@ const SchoolHomePage = React.createClass({
                 </div>
                 <div className="eSchoolHomeFooter">
                     <img src = "images/logo.png"/>
-                    &copy;All Rights Reserved, SquadInTouch.com  SquadInTouch.com &trade;
+                    &copy;All Rights Reserved, SquadInTouch.com &trade;
                 </div>
                 <CookiePopupMessage binding={binding}/>
             </div>

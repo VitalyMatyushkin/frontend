@@ -3,7 +3,9 @@ const	React 			= require('react'),
 		Promise			= require('bluebird'),
 		Lazy			= require('lazy.js'),
 		Morearty    	= require('morearty'),
-		Immutable		= require('immutable');
+		Immutable		= require('immutable'),
+		moment			= require('moment'),
+		StudentImporter	= require('module/utils/student_importer');
 
 const ImportStudentsModule = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -15,7 +17,8 @@ const ImportStudentsModule = React.createClass({
 		});
 	},
 	_getBirthdayInServerFormat: function(birthday) {
-		return `${birthday.substring(6,10)}-${birthday.substring(3,5)}-${birthday.substring(0,2)}`;
+		return moment(birthday, 'DD-MM-YYYY').format('YYYY-MM-DD');
+		// return `${birthday.substring(6,10)}-${birthday.substring(3,5)}-${birthday.substring(0,2)}`;
 	},
 	_serviceSchoolFilter: function(schoolName) {
 		return window.Server.schools.get({
@@ -51,17 +54,17 @@ const ImportStudentsModule = React.createClass({
 	 * @private
 	 */
 	_handleChange: function(evt) {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const 	binding	= this.getDefaultBinding(),
+				file	= evt.target.files[0];
 
-		const	file	= evt.target.files[0],
-				reader	= new window.FileReader();
+		StudentImporter(file).then(
+			result => {
+				console.log('Data: ' + JSON.stringify(result, null, 2));
+				binding.set('studentsList', Immutable.fromJS(result.students));
+			},
+			err => { console.log('err: ' + err.message + '\n' + err.stack) }
+		);
 
-		reader.onload = function(e) {
-			binding.set('studentsList', Immutable.fromJS(JSON.parse(e.target.result)));
-		};
-
-		reader.readAsText(file);
 	},
 	_handleUploadStudentsButtonClick: function() {
 		const	self = this,
@@ -71,8 +74,8 @@ const ImportStudentsModule = React.createClass({
 				studentsList	= binding.toJS('studentsList');
 
 		Promise.all(studentsList.map(student => {
-				const	form	= Lazy(currentSchool.forms).findWhere({name: student.Form}),
-						house	= Lazy(currentSchool.houses).findWhere({name: student.House});
+				const	form	= Lazy(currentSchool.forms).findWhere({name: student.form}),
+						house	= Lazy(currentSchool.houses).findWhere({name: student.house});
 
 				let	formId,
 					houseId;
@@ -82,10 +85,10 @@ const ImportStudentsModule = React.createClass({
 
 				if(formId && houseId) {
 					return window.Server.schoolStudents.post(currentSchool.id, {
-						firstName:	student.Name,
-						lastName:	student.Surname,
-						gender:		student.Gender,
-						birthday:	self._getBirthdayInServerFormat(student.DOB),
+						firstName:	student.firstName,
+						lastName:	student.lastName,
+						gender:		student.gender,
+						birthday:	self._getBirthdayInServerFormat(student.birthday),
 						formId: 	formId,
 						houseId: 	houseId
 					});
