@@ -20,7 +20,10 @@ const StudentHelper = {
 				studentData = student;
 				studentData.student = {
 					firstName: student.firstName,
-					lastName: student.lastName
+					lastName: student.lastName,
+					medicalInfo: student.medicalInfo,
+					birthday: student.birthday,
+					age: this._calculateAge(student.birthday)
 				};
 				studentData.classData = student.form;
 				let formPromise;
@@ -82,6 +85,18 @@ const StudentHelper = {
 
 				return studentData;
 			});
+	},
+
+	/**
+	 * Calculate age
+	 * @param {string} birthday - string of date
+	 * @returns {number} - count of full years.
+	 * */
+	_calculateAge: function (birthday) {
+		const  ageDifMs = Date.now() - new Date(birthday).getTime();
+		var ageDate = new Date(ageDifMs); // miliseconds from epoch
+
+		return Math.abs(ageDate.getUTCFullYear() - 1970);
 	},
 	_getPlayedGames: function(events) {
 		return events.filter(event => event.status === EventHelper.EVENT_STATUS.FINISHED);

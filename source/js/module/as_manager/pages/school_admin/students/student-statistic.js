@@ -17,6 +17,7 @@ const StudentStatistic = React.createClass({
         if(!studentId) {
             document.location.hash = 'events/calendar';
         }
+		binding.clear();
 
         StudentHelper.getStudentDataForPersonalStudentPage(studentId, schoolId)
             .then(studentData => {
@@ -26,11 +27,6 @@ const StudentStatistic = React.createClass({
 
                 binding.set('achievements', Immutable.fromJS(studentData));
             });
-    },
-    componentWillUnmount:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
-        binding.clear('achievements');
     },
     render: function () {
         var self = this,
