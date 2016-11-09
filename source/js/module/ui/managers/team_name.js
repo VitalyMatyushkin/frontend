@@ -5,10 +5,16 @@ const TeamName = React.createClass({
 		handleChangeName:	React.PropTypes.func,
 		name:				React.PropTypes.string
 	},
-	handleChangeTeamName: function(eventDescriptor) {
-		const self = this;
+	componentDidUpdate: function () {
+		const cursor = this.state.cursor;
 
-		self.props.handleChangeName(eventDescriptor.target.value);
+		if(cursor >= 0){
+			this.refs.name.setSelectionRange(cursor, cursor);
+		}
+	},
+	handleChangeTeamName: function(e) {
+		this.props.handleChangeName(e.target.value);
+		this.setState({cursor:e.target.selectionStart})
 	},
 	render: function() {
 		const self = this;
@@ -17,6 +23,7 @@ const TeamName = React.createClass({
 			<div className="bTeamName">
 				<div className="eTeamName_nameContainer">
 					<input	className	= "eTeamName_nameForm mSaveAsNewTeam"
+						  	ref 		= "name"
 							type		= { 'text' }
 							placeholder	= { 'Enter team name' }
 							onChange	= { self.handleChangeTeamName }
