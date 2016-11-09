@@ -17,6 +17,7 @@ const	React			= require('react'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		MatchReport 		= require('module/as_manager/pages/event/view/match-report/report'),
+		Map 				= require('module/ui/map/map-event-venue'),
 		SVG 				= require('module/ui/svg'),
 
 		RoleHelper			= require('./../../../helpers/role_helper');
@@ -254,6 +255,7 @@ const EventView = React.createClass({
 								</div>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
+							<Map binding={binding} venue={binding.toJS('model.venue')} />
 							<div className="bEventMiddleSideContainer">
 								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 							</div>

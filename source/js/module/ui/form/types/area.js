@@ -34,7 +34,7 @@ const TypeArea = React.createClass({
 					limit: 10
             	};
 
-		return window.Server.postCode.get({ filter: postCodeFilter });
+		return window.Server.postCodes.get({ filter: postCodeFilter });
 	},
 	render: function() {
 		const 	self = this,

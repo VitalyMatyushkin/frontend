@@ -1,7 +1,7 @@
 .bInvite {
   display: flex;
   flex-direction: row;
-  height: 150px;
+  height: 300px;
   border: $BORDER;
   box-sizing: border-box;
   width: 475px;
@@ -122,4 +122,9 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.bSchoolMaster .bInvite .bMapView{
+  min-height: 150px;
+  width: 100%;
 }
