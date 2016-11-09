@@ -57,59 +57,87 @@ const ImportStudentsModule = React.createClass({
 		const 	binding	= this.getDefaultBinding(),
 				file	= evt.target.files[0];
 
-		StudentImporter(file).then(
+		StudentImporter.loadFromCSV(file).then(
 			result => {
 				console.log('Data: ' + JSON.stringify(result, null, 2));
 				binding.set('studentsList', Immutable.fromJS(result.students));
+				binding.set('studentData', Immutable.fromJS(result));
 			},
 			err => { console.log('err: ' + err.message + '\n' + err.stack) }
 		);
 
 	},
 	_handleUploadStudentsButtonClick: function() {
-		const	self = this,
+		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const	currentSchool	= binding.toJS('currentSchool'),
-				studentsList	= binding.toJS('studentsList');
+				studentsList	= binding.toJS('studentsList'),
+				studentData		= binding.toJS('studentData');
 
-		Promise.all(studentsList.map(student => {
-				const	form	= Lazy(currentSchool.forms).findWhere({name: student.form}),
-						house	= Lazy(currentSchool.houses).findWhere({name: student.house});
-
-				let	formId,
-					houseId;
-
-				form && (formId = form.id);
-				house && (houseId = house.id);
-
-				if(formId && houseId) {
-					return window.Server.schoolStudents.post(currentSchool.id, {
-						firstName:	student.firstName,
-						lastName:	student.lastName,
-						gender:		student.gender,
-						birthday:	self._getBirthdayInServerFormat(student.birthday),
-						formId: 	formId,
-						houseId: 	houseId
-					});
-				} else {
-					return {};
-				}
-			}))
-			.then(() => {
-				window.simpleAlert(
-					'Students upload was finished',
-					'Ok',
-					() => {}
-				);
-			})
-			.catch(error => {
-				window.simpleAlert(
-					`Something went wrong. Please show error text to your system administrator: \n${error}`,
-					'Ok',
-					() => {}
-				);
+		const result = StudentImporter.pullFormsAndHouses(studentData, currentSchool);
+		console.log('errors: ' + JSON.stringify(result.errors, null, 2));
+		Promise.all(result.students.map( student => {
+			return window.Server.schoolStudents.post(currentSchool.id, {
+				firstName:	student.firstName,
+				lastName:	student.lastName,
+				gender:		student.gender,
+				birthday:	self._getBirthdayInServerFormat(student.birthday),
+				formId: 	student.formId,
+				houseId: 	student.houseId
 			});
+		})).then(() => {
+			window.simpleAlert(
+				'Students upload was finished',
+				'Ok',
+				() => {}
+			);
+		})
+		.catch(error => {
+			window.simpleAlert(
+				`Something went wrong. Please show error text to your system administrator: \n${error}`,
+				'Ok',
+				() => {}
+			);
+		});
+
+		// Promise.all(studentsList.map(student => {
+		// 		const	form	= Lazy(currentSchool.forms).findWhere({name: student.form}),
+		// 				house	= Lazy(currentSchool.houses).findWhere({name: student.house});
+		//
+		// 		let	formId,
+		// 			houseId;
+		//
+		// 		form && (formId = form.id);
+		// 		house && (houseId = house.id);
+		//
+		// 		if(formId && houseId) {
+		// 			return window.Server.schoolStudents.post(currentSchool.id, {
+		// 				firstName:	student.firstName,
+		// 				lastName:	student.lastName,
+		// 				gender:		student.gender,
+		// 				birthday:	self._getBirthdayInServerFormat(student.birthday),
+		// 				formId: 	formId,
+		// 				houseId: 	houseId
+		// 			});
+		// 		} else {
+		// 			return {};
+		// 		}
+		// 	}))
+		// 	.then(() => {
+		// 		window.simpleAlert(
+		// 			'Students upload was finished',
+		// 			'Ok',
+		// 			() => {}
+		// 		);
+		// 	})
+		// 	.catch(error => {
+		// 		window.simpleAlert(
+		// 			`Something went wrong. Please show error text to your system administrator: \n${error}`,
+		// 			'Ok',
+		// 			() => {}
+		// 		);
+		// 	});
 	},
 	_renderUploadStudentsButton: function() {
 		const	self	= this,

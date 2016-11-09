@@ -21,9 +21,12 @@ const StudentEditPage = React.createClass({
 		// loading student data
 		if(activeSchoolId && studentId) {
 			window.Server.schoolStudent.get({schoolId: activeSchoolId, studentId: studentId}).then( studentUser => {
+				const 	formPromise		= studentUser.formId ? window.Server.schoolForm.get({schoolId: activeSchoolId, formId: studentUser.formId}) : Promise.resolve(undefined),
+						housePromise	= studentUser.houseId ? window.Server.schoolHouse.get({schoolId: activeSchoolId, houseId: studentUser.houseId}) : Promise.resolve(undefined);
+
 				return Promise.all([
-					window.Server.schoolForm.get({schoolId: activeSchoolId, formId: studentUser.formId}),
-					window.Server.schoolHouse.get({schoolId: activeSchoolId, houseId: studentUser.houseId})
+					formPromise,
+					housePromise
 				]).then( formAndHouseArray => {
 					// TODO: populate house and form details
 					studentUser.form 	= formAndHouseArray[0];
