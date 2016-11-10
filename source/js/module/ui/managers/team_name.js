@@ -6,7 +6,7 @@ const TeamName = React.createClass({
 		name:				React.PropTypes.string
 	},
 	componentDidUpdate: function () {
-		const cursor = this.state.cursor;
+		const cursor = this.state && this.state.cursor;
 
 		if(cursor >= 0){
 			this.refs.name.setSelectionRange(cursor, cursor);
