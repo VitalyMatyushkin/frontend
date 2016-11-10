@@ -54,7 +54,8 @@ const SchoolForm = React.createClass({
 				postcode 	= binding.toJS('postcode');
 
 		return (
-			<Form name={self.props.title} binding={self.getDefaultBinding()} service="i/schools/domains" onSubmit={self.props.onSubmit}>
+			<Form name={self.props.title} binding={self.getDefaultBinding()} service="i/schools/domains"
+				  onSubmit={self.props.onSubmit} submitOnEnter={false}>
 				<FormColumn>
 					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
