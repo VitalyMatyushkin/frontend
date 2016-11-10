@@ -18,7 +18,6 @@ const ImportStudentsModule = React.createClass({
 	},
 	_getBirthdayInServerFormat: function(birthday) {
 		return moment(birthday, 'DD-MM-YYYY').format('YYYY-MM-DD');
-		// return `${birthday.substring(6,10)}-${birthday.substring(3,5)}-${birthday.substring(0,2)}`;
 	},
 	_serviceSchoolFilter: function(schoolName) {
 		return window.Server.schools.get({
@@ -64,9 +63,7 @@ const ImportStudentsModule = React.createClass({
 				binding.set('studentData', Immutable.fromJS(result));
 				binding.set('studentsError', Immutable.fromJS(result.errors));
 			},
-			err => { 
-				console.log('err: ' + err.message + '\n' + err.stack) 
-			}
+			err => { console.log('err: ' + err.message + '\n' + err.stack) }
 		);
 
 	},
@@ -103,49 +100,10 @@ const ImportStudentsModule = React.createClass({
 				() => {}
 			);
 		});
-
-		// Promise.all(studentsList.map(student => {
-		// 		const	form	= Lazy(currentSchool.forms).findWhere({name: student.form}),
-		// 				house	= Lazy(currentSchool.houses).findWhere({name: student.house});
-		//
-		// 		let	formId,
-		// 			houseId;
-		//
-		// 		form && (formId = form.id);
-		// 		house && (houseId = house.id);
-		//
-		// 		if(formId && houseId) {
-		// 			return window.Server.schoolStudents.post(currentSchool.id, {
-		// 				firstName:	student.firstName,
-		// 				lastName:	student.lastName,
-		// 				gender:		student.gender,
-		// 				birthday:	self._getBirthdayInServerFormat(student.birthday),
-		// 				formId: 	formId,
-		// 				houseId: 	houseId
-		// 			});
-		// 		} else {
-		// 			return {};
-		// 		}
-		// 	}))
-		// 	.then(() => {
-		// 		window.simpleAlert(
-		// 			'Students upload was finished',
-		// 			'Ok',
-		// 			() => {}
-		// 		);
-		// 	})
-		// 	.catch(error => {
-		// 		window.simpleAlert(
-		// 			`Something went wrong. Please show error text to your system administrator: \n${error}`,
-		// 			'Ok',
-		// 			() => {}
-		// 		);
-		// 	});
 	},
 	_renderUploadStudentsButton: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
-
 		let button;
 
 		if(binding.toJS('studentsList').length !== 0 && binding.get('currentSchool')) {
@@ -157,34 +115,29 @@ const ImportStudentsModule = React.createClass({
 		}
 
 		return button
-	},
+	},	
+	_showErrors: function () {
+			const self	= this,
+					binding	= self.getDefaultBinding(),
+					errorsImport = binding.toJS('studentsError')
+			let errorsList = [],
+				numberError = 0;
+				numberId = 0;
+			if (typeof errorsImport !== 'undefined'){
+				for (key in errorsImport) {	
+					numberError++;					
+					for (mes in errorsImport[key]) {							
+						errorsList.push(<li key={numberId}>{mes} : {errorsImport[key][mes]}</li>);
+						numberId++;
+					}					
+				};
+				if (errorsList.length>0) {return (<div><p>Errors: {numberError} </p><ul>{errorsList}</ul></div>)}
+				else {return <p>Not Errors</p>};
+			};
+		},	
 	render: function() {
 		const	self	= this,				
 				binding	= self.getDefaultBinding();
-		
-
-
-				function showErrors() {
-					let errors_imp, errors_str;		
-					errors_imp = binding.toJS('studentsError');		
-
-					if (binding.toJS('studentsError')!==undefined){
-						errors_str='';
-						for (key in errors_imp) {						
-							for (mes in errors_imp[key]) {
-								errors_str += mes + ' '+ errors_imp[key][mes] + ' ' + '\r\n';
-							}
-
-
-						};
-						if (errors_str!==''){  
-							return (
-							errors_str
-							);		
-						};
-					};
-				};
-
 		return (
 			<div className='bForm'>
 				<h3>Pls, choose school</h3>
@@ -207,8 +160,7 @@ const ImportStudentsModule = React.createClass({
 				</div>
 				{self._renderUploadStudentsButton()}
 				<div>Students to upload: {binding.toJS('studentsList').length}</div>
-				<div className='eForm_error'>{showErrors()}
-				</div>
+				<div className='eForm_warning'>{self._showErrors()}</div>
 			</div>
 		)
 	}
