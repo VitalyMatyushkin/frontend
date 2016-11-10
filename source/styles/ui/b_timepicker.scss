@@ -26,16 +26,38 @@
   display: flex;
 }
 
-.eTimePicker_value {
+input[type="text"].eTimePicker_value {
   width: 40px;
   height: 40px;
-  line-height: 45px;
+
+  padding-top: 4px;
+
+  color: $lightBlue;
+  font-size: 25px;
+
+  text-align: center;
+
   border: $BORDER;
   border-radius: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   background: #eaeaea;
 }
+
+input[type="text"]:hover.eTimePicker_value {
+  border: $BORDER;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
+input[type="text"]:focus.eTimePicker_value {
+  border: $BORDER;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+
 .eTimePicker_box:hover .eTimePicker_arrow {
   display: block;
 }
