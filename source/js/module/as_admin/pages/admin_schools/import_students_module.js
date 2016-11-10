@@ -59,11 +59,14 @@ const ImportStudentsModule = React.createClass({
 
 		StudentImporter.loadFromCSV(file).then(
 			result => {
-				console.log('Data: ' + JSON.stringify(result, null, 2));
+				//console.log('Data: ' + JSON.stringify(result, null, 2));
 				binding.set('studentsList', Immutable.fromJS(result.students));
 				binding.set('studentData', Immutable.fromJS(result));
+				binding.set('studentsError', Immutable.fromJS(result.errors));
 			},
-			err => { console.log('err: ' + err.message + '\n' + err.stack) }
+			err => { 
+				console.log('err: ' + err.message + '\n' + err.stack) 
+			}
 		);
 
 	},
@@ -156,8 +159,31 @@ const ImportStudentsModule = React.createClass({
 		return button
 	},
 	render: function() {
-		const	self	= this,
+		const	self	= this,				
 				binding	= self.getDefaultBinding();
+		
+
+
+				function showErrors() {
+					let errors_imp, errors_str;		
+					errors_imp = binding.toJS('studentsError');		
+
+					if (binding.toJS('studentsError')!==undefined){
+						errors_str='';
+						for (key in errors_imp) {						
+							for (mes in errors_imp[key]) {
+								errors_str += mes + ' '+ errors_imp[key][mes] + ' ' + '\r\n';
+							}
+
+
+						};
+						if (errors_str!==''){  
+							return (
+							errors_str
+							);		
+						};
+					};
+				};
 
 		return (
 			<div className='bForm'>
@@ -180,6 +206,9 @@ const ImportStudentsModule = React.createClass({
 					/>
 				</div>
 				{self._renderUploadStudentsButton()}
+				<div>Students to upload: {binding.toJS('studentsList').length}</div>
+				<div className='eForm_error'>{showErrors()}
+				</div>
 			</div>
 		)
 	}
