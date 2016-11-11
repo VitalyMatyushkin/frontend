@@ -402,10 +402,9 @@ const EventTeamsView = React.createClass({
 	render: function() {
 		const self = this;
 
-		let eventTeamsCss = 'bEventTeams ';
-		if(typeof this.props.customCss !== 'undefined') {
-			eventTeamsCss += this.props.customCss;
-		}
+		let eventTeamsCss = classNames('bEventTeams', this.props.customCss, {
+			mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
+		});
 
 		if(self.getBinding('isSync').toJS()) {
 			return (
