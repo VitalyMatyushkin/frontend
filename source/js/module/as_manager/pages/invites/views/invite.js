@@ -6,6 +6,7 @@ const   classNames      = require('classnames'),
         Morearty		= require('morearty'),
 		Button			= require('module/ui/button/button'),
         SportIcon		= require('module/ui/icons/sport_icon'),
+		Map 			= require('module/ui/map/map-event-venue'),
 		GenderIcon		= require('module/ui/icons/gender_icon');
 
 const InviteView = React.createClass({
@@ -97,6 +98,7 @@ const InviteView = React.createClass({
                     <div>{'Time:'} {hours + ':' + minutes}</div>
                     <div>{'Year Group:'} {self._getAges(ages)}</div>
                 </div>
+				<Map binding={binding} venue={binding.toJS('event.venue')} />
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
                         {isOutBox ? 'Awaiting opponent...' : null}
@@ -109,7 +111,7 @@ const InviteView = React.createClass({
                     </div>
                 </div>
             </div>
-        </div>
+		</div>
         );
     }
 });

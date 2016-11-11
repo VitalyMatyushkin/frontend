@@ -58,17 +58,18 @@ const PlainPoints = React.createClass({
 		e.stopPropagation();
 	},
 	changeScore:function(value){
-		if(/^[0-9.]+$/.test(value)){
-			const validationResult = ScoreHelper.pointsPlainValidation(value, this.props.step);
+		if(/^[0-9.]+$/.test(value) || value === ''){
+			const error = ScoreHelper.pointsPlainValidation(value, this.props.step);
 
 			this.setState({
 				value: value,
-				error: validationResult
+				error: error
 			});
 
+			let result = !value ? 0 : error ? this.state.value*1 : value*1;
 			this.props.onChange({
-									value: validationResult ? this.state.value*1 : value*1,
-									isValid:!validationResult
+									value: result,
+									isValid:!error
 								});
 		}
 	},

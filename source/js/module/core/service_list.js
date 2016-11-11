@@ -172,8 +172,8 @@ const serviceList = {
 		serviceList.childParents = new Service('/i/children/{childId}/parents', binding);
 
 		// postcode
-		serviceList.postCode = new Service('/public/postcodes', binding);
-		serviceList.findPostCodeById = new Service('/public/postcodes/{postCode}', binding);
+		serviceList.postCodes = new Service('/public/postcodes', binding);
+		serviceList.postCodeById = new Service('/public/postcodes/{postcodeId}', binding);
 
 
         //Filtering services

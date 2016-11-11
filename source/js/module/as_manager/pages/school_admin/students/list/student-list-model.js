@@ -151,7 +151,7 @@ StudentListModel.prototype = {
 			},
 			{
 				text:'Form',
-				cell:{
+				cell: {
 					dataField:'form.name'
 				}
 			},
