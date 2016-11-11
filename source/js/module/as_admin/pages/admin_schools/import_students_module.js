@@ -58,10 +58,7 @@ const ImportStudentsModule = React.createClass({
 
 		StudentImporter.loadFromCSV(file).then(
 			result => {
-				//console.log('Data: ' + JSON.stringify(result, null, 2));
-				binding.set('studentsList', Immutable.fromJS(result.students));
 				binding.set('studentData', Immutable.fromJS(result));
-				binding.set('studentsError', Immutable.fromJS(result.errors));
 			},
 			err => { console.log('err: ' + err.message + '\n' + err.stack) }
 		);
@@ -72,11 +69,9 @@ const ImportStudentsModule = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	currentSchool	= binding.toJS('currentSchool'),
-				studentsList	= binding.toJS('studentsList'),
 				studentData		= binding.toJS('studentData');
 
 		const result = StudentImporter.pullFormsAndHouses(studentData, currentSchool);
-		console.log('errors: ' + JSON.stringify(result.errors, null, 2));
 		Promise.all(result.students.map( student => {
 			return window.Server.schoolStudents.post(currentSchool.id, {
 				firstName:	student.firstName,
@@ -103,22 +98,30 @@ const ImportStudentsModule = React.createClass({
 	},
 	_renderUploadStudentsButton: function() {
 		const	self	= this,
-				binding	= self.getDefaultBinding();
+				binding	= self.getDefaultBinding(),
+				dataStudents = binding.toJS('studentData.students');
 		let button;
-
-		if(binding.toJS('studentsList').length !== 0 && binding.get('currentSchool')) {
-			button = (
-				<div className="bButton" onClick={self._handleUploadStudentsButtonClick}>
-					Upload students
-				</div>
-			);
+		if (typeof dataStudents!=='undefined'){
+			if(dataStudents.length !== 0 && binding.get('currentSchool')) {
+				button = (
+					<div className="bButton" onClick={self._handleUploadStudentsButtonClick}>
+						Upload students
+					</div>
+				);
+			}
 		}
-
 		return button
 	},	
+	_lengthDataStudents: function(){
+		const binding	= this.getDefaultBinding(),
+			dataStudents = binding.toJS('studentData.students');
+		if (typeof dataStudents!=='undefined'){
+				return dataStudents.length
+		}
+	},
 	_showErrors: function () {
 			const binding	= this.getDefaultBinding(),
-					errorsImport = binding.toJS('studentsError')
+					errorsImport = binding.toJS('studentData.errors');
 			let errorsList = [],
 				numberError = 0;
 			if (typeof errorsImport !== 'undefined'){
@@ -165,7 +168,7 @@ const ImportStudentsModule = React.createClass({
 					/>
 				</div>
 				{self._renderUploadStudentsButton()}
-				<div>Students to upload: {binding.toJS('studentsList').length}</div>
+				<div>Students to upload: {this._lengthDataStudents()}</div>
 				<div className='eForm_warning'>{this._showErrors()}</div>
 			</div>
 		)
