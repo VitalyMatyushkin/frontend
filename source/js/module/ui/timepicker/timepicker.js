@@ -2,7 +2,7 @@ const   React			= require('react'),
 
 		SVG				= require('module/ui/svg'),
 		TimeInput		= require('./../time_input/time_input'),
-		TimeInputConsts	= require('./../timepicker/const');
+		TimeInputConsts	= require('./../time_input/const');
 
 const TimePicker = React.createClass({
 	propTypes: {

@@ -1,6 +1,6 @@
 const	React			= require('react'),
 
-		TimeInputConsts	= require('./../timepicker/const');
+		TimeInputConsts	= require('./const');
 
 const TimeInputHour = React.createClass({
 	propTypes: {
@@ -16,11 +16,9 @@ const TimeInputHour = React.createClass({
 		};
 	},
 
-	// HELPERS //
-
 	/**
 	 * Parse new value, check new value.
-	 * If all is ok, set it to state and call handler.
+	 * If all is ok, set it to state.
 	 * @param value
 	 */
 	processNewValue: function(value) {
@@ -34,14 +32,6 @@ const TimeInputHour = React.createClass({
 				this.setState({value: value});
 			}
 		};
-	},
-	getMaxLimit: function() {
-		switch (this.props.type) {
-			case TimeInputConsts.TIME_INPUT_TYPE.HOUR:
-				return 23;
-			case TimeInputConsts.TIME_INPUT_TYPE.MINUTES:
-				return 59;
-		}
 	},
 	fillZero: function(_value) {
 		const value = String(_value).trim();
@@ -61,6 +51,19 @@ const TimeInputHour = React.createClass({
 				} else {
 					return value;
 				}
+		}
+	},
+	/**
+	 * Get maximum limit for time input.
+	 * It's dependent of time type: minute, hour.
+	 * @returns {number}
+	 */
+	getMaxLimit: function() {
+		switch (this.props.type) {
+			case TimeInputConsts.TIME_INPUT_TYPE.HOUR:
+				return 23;
+			case TimeInputConsts.TIME_INPUT_TYPE.MINUTES:
+				return 59;
 		}
 	},
 
