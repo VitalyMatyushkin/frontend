@@ -1,0 +1,6 @@
+const TIME_INPUT_TYPE = {
+	'HOUR'		: 'HOUR',
+	'MINUTES'	: 'MINUTES'
+};
+
+module.exports.TIME_INPUT_TYPE = TIME_INPUT_TYPE;

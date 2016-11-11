@@ -2,7 +2,7 @@ const   Calendar			= require('module/as_manager/pages/events/calendar/calendar')
 		CalendarActions		= require('module/as_manager/pages/events/calendar/calendar-actions'),
 		EventManagerBase	= require('./manager/base'),
 		If					= require('module/ui/if/if'),
-		TimePicker			= require('module/ui/timepicker/timepicker'),
+		TimePickerWrapper	= require('./time_picker_wrapper'),
 		Manager				= require('module/ui/managers/manager'),
 		classNames			= require('classnames'),
 		React				= require('react'),
@@ -670,11 +670,7 @@ const EventManager = React.createClass({
 								binding={rootBinding.sub('events.calendar')}
 								onSelect={self.onSelectDate}
 							/>
-							{
-								binding.get('model.startTime') ?
-									<TimePicker binding={binding.sub('model.startTime')}/> :
-									null
-							}
+							<TimePickerWrapper binding={binding.sub('model.startTime')}/>
 						</div>
 					</If>
 					<If condition={step === 2}>
