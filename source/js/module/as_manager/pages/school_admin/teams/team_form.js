@@ -436,6 +436,7 @@ const TeamForm = React.createClass({
 							value={binding.get('name')}
 							placeholder={'enter name'}
 							onChange={self.handleChangeName}
+							onBlur={() => binding.set('nameCursor',-1)} //for block the installation of the cursor after a loss of focus.
 						/>
 					</div>
 					<div className="eManager_group">
@@ -447,6 +448,7 @@ const TeamForm = React.createClass({
 							value={binding.get('description')}
 							placeholder={'enter description'}
 							onChange={self.handleChangeDescription}
+							onBlur={() => binding.set('descriptionCursor',-1)}	//for block the installation of the cursor after a loss of focus.
 						/>
 					</div>
 					<div className="eManager_group">

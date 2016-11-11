@@ -27,6 +27,7 @@ const TeamName = React.createClass({
 							type		= { 'text' }
 							placeholder	= { 'Enter team name' }
 							onChange	= { self.handleChangeTeamName }
+							onBlur 		={() => this.setState({cursor:-1})} //for block the installation of the cursor after a loss of focus.
 							value		= { typeof self.props.name !== 'undefined' ? self.props.name : '' }
 					/>
 				</div>
