@@ -114,7 +114,7 @@ const ImportStudentsModule = React.createClass({
 	},	
 	_getLengthDataStudents: function(){
 		const binding	= this.getDefaultBinding(),
-			dataStudents = binding.toJS('studentData.students');
+				dataStudents = binding.toJS('studentData.students');
 		if (typeof dataStudents !== 'undefined'){
 				return dataStudents.length
 		}
@@ -125,11 +125,9 @@ const ImportStudentsModule = React.createClass({
 			let errorsList = [],
 				numberError = 0;
 			if (typeof errorsImport !== 'undefined'){
-				for (key in errorsImport) {	
-					numberError++;					
-					for (mes in errorsImport[key]) {							
-						errorsList.push(<li>{mes} : {errorsImport[key][mes]}</li>); //In console React has error with unique key in elements li
-					}					
+				for (let key in errorsImport) {	
+					numberError++;		
+					errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>); //In console React has error with unique key in elements li			
 				};
 				if (errorsList.length > 0) {
 					return (
@@ -168,7 +166,7 @@ const ImportStudentsModule = React.createClass({
 					/>
 				</div>
 				{self._renderUploadStudentsButton()}
-				<div>Students to upload: {this._getLengthDataStudents()}</div>
+				<div className='eForm_info'>Students to upload: {this._getLengthDataStudents()}</div>
 				<div className='eForm_warning'>{this._showErrors()}</div>
 			</div>
 		)
