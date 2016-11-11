@@ -2,7 +2,7 @@ const	React			= require('react'),
 
 		TimeInputConsts	= require('./const');
 
-const TimeInputHour = React.createClass({
+const TimeInput = React.createClass({
 	propTypes: {
 		cssClassName:	React.PropTypes.string.isRequired,
 		type:			React.PropTypes.string.isRequired,
@@ -110,4 +110,4 @@ const TimeInputHour = React.createClass({
 	}
 });
 
-module.exports = TimeInputHour;
+module.exports = TimeInput;

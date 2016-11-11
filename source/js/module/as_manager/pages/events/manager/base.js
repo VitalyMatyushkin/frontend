@@ -1,12 +1,14 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
-		If				= require('module/ui/if/if'),
-		Autocomplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		Multiselect		= require('module/ui/multiselect/multiselect'),
-		EventVenue		= require('./event_venue'),
-		DateHelper		= require('./../../../../helpers/date_helper'),
-		classNames		= require('classnames');
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
+
+		If					= require('module/ui/if/if'),
+		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Multiselect			= require('module/ui/multiselect/multiselect'),
+		EventVenue			= require('./event_venue'),
+		DateHelper			= require('./../../../../helpers/date_helper'),
+		TimeInputWrapper	= require('./time_input_wrapper'),
+		classNames			= require('classnames');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -275,12 +277,7 @@ const EventManagerBase = React.createClass({
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Time'}</div>
-					<Morearty.DOM.input
-						className="eManager_field"
-						type="text"
-						value={self.getEventTime(binding.get('model.startTime'))}
-						disabled={'disabled'}
-					/>
+					<TimeInputWrapper binding={binding.sub('model.startTime')}/>
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Event Name'}</div>

@@ -1,9 +1,9 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
+const	React			= require('react'),
+		Morearty		= require('morearty'),
 
-		TimePicker			= require('./../../../ui/timepicker/timepicker');
+		FullTimeInput	= require('./../../../../ui/full_time_input/full_time_input');
 
-const TimeInputWrapper = React.createClass({
+const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	handleChangeHour: function(hour) {
@@ -29,21 +29,17 @@ const TimeInputWrapper = React.createClass({
 	render: function() {
 		const binding = this.getDefaultBinding();
 
-		const timeString = binding.toJS();
+		const	timeString = binding.toJS(),
+				dateObject = new Date(timeString);
 
-		if(typeof timeString !== 'undefined' && timeString !== null) {
-			const dateObject = new Date(timeString);
-			return (
-				<TimePicker	hourValue			= { dateObject.getHours() }
+		return (
+			<FullTimeInput	hourValue			= { dateObject.getHours() }
 							minutesValue		= { dateObject.getMinutes() }
 							handleChangeHour	= { this.handleChangeHour }
 							handleChangeMinutes	= { this.handleChangeMinutes }
-				/>
-			);
-		} else {
-			return null;
-		}
+			/>
+		);
 	}
 });
 
-module.exports = TimeInputWrapper;
+module.exports = EventManager;
