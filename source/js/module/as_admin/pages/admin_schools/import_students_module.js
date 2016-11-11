@@ -117,22 +117,28 @@ const ImportStudentsModule = React.createClass({
 		return button
 	},	
 	_showErrors: function () {
-			const self	= this,
-					binding	= self.getDefaultBinding(),
+			const binding	= this.getDefaultBinding(),
 					errorsImport = binding.toJS('studentsError')
 			let errorsList = [],
 				numberError = 0;
-				numberId = 0;
 			if (typeof errorsImport !== 'undefined'){
 				for (key in errorsImport) {	
 					numberError++;					
 					for (mes in errorsImport[key]) {							
-						errorsList.push(<li key={numberId}>{mes} : {errorsImport[key][mes]}</li>);
-						numberId++;
+						errorsList.push(<li>{mes} : {errorsImport[key][mes]}</li>);
 					}					
 				};
-				if (errorsList.length>0) {return (<div><p>Errors: {numberError} </p><ul>{errorsList}</ul></div>)}
-				else {return <p>Not Errors</p>};
+				if (errorsList.length > 0) {
+					return (
+										<div>
+											<p>Errors: {numberError} </p>
+											<ul>{errorsList}</ul>
+										</div>
+						);
+				}
+				else {
+					return <p>Not Errors</p>;
+				};
 			};
 		},	
 	render: function() {
@@ -160,7 +166,7 @@ const ImportStudentsModule = React.createClass({
 				</div>
 				{self._renderUploadStudentsButton()}
 				<div>Students to upload: {binding.toJS('studentsList').length}</div>
-				<div className='eForm_warning'>{self._showErrors()}</div>
+				<div className='eForm_warning'>{this._showErrors()}</div>
 			</div>
 		)
 	}
