@@ -73,7 +73,7 @@ const LoginUserPage = React.createClass({
 		let currentView;
 		const showError = self.getDefaultBinding().get('showError');
 		const allPermissions = self.getDefaultBinding().get('__allPermissions');
-		console.log('allPermissions here: ' + allPermissions);
+
 		switch (true) {
 			case showError === true:
 				currentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />;
