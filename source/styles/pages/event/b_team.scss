@@ -8,6 +8,9 @@
   &.mWide {
     max-width: 902px;
   }
+  &.mIndividuals{
+    flex-direction: column;
+  }
 }
 
 .eEventTeams_separator {
