@@ -18,7 +18,6 @@ const ImportStudentsModule = React.createClass({
 	},
 	_getBirthdayInServerFormat: function(birthday) {
 		return moment(birthday, 'DD-MM-YYYY').format('YYYY-MM-DD');
-		// return `${birthday.substring(6,10)}-${birthday.substring(3,5)}-${birthday.substring(0,2)}`;
 	},
 	_serviceSchoolFilter: function(schoolName) {
 		return window.Server.schools.get({
@@ -59,8 +58,6 @@ const ImportStudentsModule = React.createClass({
 
 		StudentImporter.loadFromCSV(file).then(
 			result => {
-				console.log('Data: ' + JSON.stringify(result, null, 2));
-				binding.set('studentsList', Immutable.fromJS(result.students));
 				binding.set('studentData', Immutable.fromJS(result));
 			},
 			err => { console.log('err: ' + err.message + '\n' + err.stack) }
@@ -72,11 +69,9 @@ const ImportStudentsModule = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const	currentSchool	= binding.toJS('currentSchool'),
-				studentsList	= binding.toJS('studentsList'),
 				studentData		= binding.toJS('studentData');
 
 		const result = StudentImporter.pullFormsAndHouses(studentData, currentSchool);
-		console.log('errors: ' + JSON.stringify(result.errors, null, 2));
 		Promise.all(result.students.map( student => {
 			return window.Server.schoolStudents.post(currentSchool.id, {
 				firstName:	student.firstName,
@@ -100,65 +95,58 @@ const ImportStudentsModule = React.createClass({
 				() => {}
 			);
 		});
-
-		// Promise.all(studentsList.map(student => {
-		// 		const	form	= Lazy(currentSchool.forms).findWhere({name: student.form}),
-		// 				house	= Lazy(currentSchool.houses).findWhere({name: student.house});
-		//
-		// 		let	formId,
-		// 			houseId;
-		//
-		// 		form && (formId = form.id);
-		// 		house && (houseId = house.id);
-		//
-		// 		if(formId && houseId) {
-		// 			return window.Server.schoolStudents.post(currentSchool.id, {
-		// 				firstName:	student.firstName,
-		// 				lastName:	student.lastName,
-		// 				gender:		student.gender,
-		// 				birthday:	self._getBirthdayInServerFormat(student.birthday),
-		// 				formId: 	formId,
-		// 				houseId: 	houseId
-		// 			});
-		// 		} else {
-		// 			return {};
-		// 		}
-		// 	}))
-		// 	.then(() => {
-		// 		window.simpleAlert(
-		// 			'Students upload was finished',
-		// 			'Ok',
-		// 			() => {}
-		// 		);
-		// 	})
-		// 	.catch(error => {
-		// 		window.simpleAlert(
-		// 			`Something went wrong. Please show error text to your system administrator: \n${error}`,
-		// 			'Ok',
-		// 			() => {}
-		// 		);
-		// 	});
 	},
 	_renderUploadStudentsButton: function() {
 		const	self	= this,
-				binding	= self.getDefaultBinding();
-
+				binding	= self.getDefaultBinding(),
+				dataStudents = binding.toJS('studentData.students');
 		let button;
-
-		if(binding.toJS('studentsList').length !== 0 && binding.get('currentSchool')) {
-			button = (
-				<div className="bButton" onClick={self._handleUploadStudentsButtonClick}>
-					Upload students
-				</div>
-			);
+		if (typeof dataStudents !== 'undefined'){
+			if(dataStudents.length !== 0 && binding.get('currentSchool')) {
+				button = (
+					<div className="bButton" onClick={self._handleUploadStudentsButtonClick}>
+						Upload students
+					</div>
+				);
+			}
 		}
-
 		return button
+	},	
+	_getLengthDataStudents: function(){
+		const binding	= this.getDefaultBinding(),
+			dataStudents = binding.toJS('studentData.students');
+		if (typeof dataStudents !== 'undefined'){
+				return dataStudents.length
+		}
 	},
+	_showErrors: function () {
+			const binding	= this.getDefaultBinding(),
+					errorsImport = binding.toJS('studentData.errors');
+			let errorsList = [],
+				numberError = 0;
+			if (typeof errorsImport !== 'undefined'){
+				for (key in errorsImport) {	
+					numberError++;					
+					for (mes in errorsImport[key]) {							
+						errorsList.push(<li>{mes} : {errorsImport[key][mes]}</li>); //In console React has error with unique key in elements li
+					}					
+				};
+				if (errorsList.length > 0) {
+					return (
+										<div>
+											<p>Errors: {numberError} </p>
+											<ul>{errorsList}</ul>
+										</div>
+						);
+				}
+				else {
+					return <p>Not Errors</p>;
+				};
+			};
+		},	
 	render: function() {
-		const	self	= this,
+		const	self	= this,				
 				binding	= self.getDefaultBinding();
-
 		return (
 			<div className='bForm'>
 				<h3>Pls, choose school</h3>
@@ -180,6 +168,8 @@ const ImportStudentsModule = React.createClass({
 					/>
 				</div>
 				{self._renderUploadStudentsButton()}
+				<div>Students to upload: {this._getLengthDataStudents()}</div>
+				<div className='eForm_warning'>{this._showErrors()}</div>
 			</div>
 		)
 	}
