@@ -106,7 +106,6 @@ const AddPermissionRequest = React.createClass({
                 </FormField>
                 <FormField type         = "textarea"
                            field        = "comment"
-                           validation   = "alphanumeric"
                 >
                     Comment
                 </FormField>
