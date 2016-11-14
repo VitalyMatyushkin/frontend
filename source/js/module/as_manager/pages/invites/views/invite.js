@@ -67,7 +67,10 @@ const InviteView = React.createClass({
                 startDate       = DateHelper.getDateStringFromDateObject(eventDate),
                 hours           = self.addZeroToFirst(eventDate.getHours()),
                 minutes         = self.addZeroToFirst(eventDate.getMinutes()),
-				inviteId		= binding.get('id');
+				inviteId		= binding.get('id'),
+				venue 			= binding.toJS('event.venue'),
+				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
+													: <div>Venue to be defined</div>;
 
         let status;
 
@@ -99,7 +102,7 @@ const InviteView = React.createClass({
                     <div>{'Year Group:'} {self._getAges(ages)}</div>
                 </div>
                 <div className="eInvite_map">
-				    <Map binding={binding} venue={binding.toJS('event.venue')} />
+			{venueArea}
                 </div>
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
