@@ -70,7 +70,7 @@ const InviteView = React.createClass({
 				inviteId		= binding.get('id'),
 				venue 			= binding.toJS('event.venue'),
 				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
-													: <div>Venue to be defined</div>;
+													: 'Venue to be defined';
 
         let status;
 
@@ -102,7 +102,7 @@ const InviteView = React.createClass({
                     <div>{'Year Group:'} {self._getAges(ages)}</div>
                 </div>
                 <div className="eInvite_map">
-			{venueArea}
+					{venueArea}
                 </div>
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
