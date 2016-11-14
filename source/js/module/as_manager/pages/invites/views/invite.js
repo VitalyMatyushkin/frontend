@@ -98,7 +98,9 @@ const InviteView = React.createClass({
                     <div>{'Time:'} {hours + ':' + minutes}</div>
                     <div>{'Year Group:'} {self._getAges(ages)}</div>
                 </div>
-				<Map binding={binding} venue={binding.toJS('event.venue')} />
+                <div className="eInvite_map">
+				    <Map binding={binding} venue={binding.toJS('event.venue')} />
+                </div>
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
                         {isOutBox ? 'Awaiting opponent...' : null}
