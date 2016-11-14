@@ -237,14 +237,23 @@ const ImportStudentsModule = React.createClass({
 				currentSchool = binding.toJS('currentSchool');
 
 		if (typeof studentData !== 'undefined' && typeof currentSchool !== 'undefined'){
-			const errorsImport = binding.toJS('studentData.errors');
-			const studentsImport = binding.toJS('studentData.students');
+			const result = StudentImporter.pullFormsAndHouses(studentData, currentSchool),
+					errorsImport = binding.toJS('studentData.errors'),							
+					studentsImport = binding.toJS('studentData.students'),
+					errorsFormId = result.errors;
+
 			let errorsList = [],
 					numberError = 0;
+
 			for (let key in errorsImport) {	
 				numberError++;		
 				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>); //In console React has error with unique key in elements li			
 			};
+			for (let key in errorsFormId) {	
+				numberError++;		
+				errorsList.push(<li>Row: {errorsFormId[key].row} Message: {errorsFormId[key].message}</li>); //In console React has error with unique key in elements li			
+			};			
+
 			if (errorsList.length > 0) {
 					return (
 						<div>
@@ -263,15 +272,14 @@ const ImportStudentsModule = React.createClass({
 						<div className="bButton" onClick={this.handleUploadStudentsButtonClick}>
 							Upload students
 						</div>					
-						<p>Students to upload {studentsImport.length}</p>
-						<p>Not Errors to upload</p>					
+						<p>Students to upload {studentsImport.length}</p>		
 					</div>
 				)
 			};
 
 		}		
 		else {
-			return <p>Not data to upload</p>
+			return <p>No data to upload</p>
 		}
 	},
 
@@ -280,8 +288,7 @@ const ImportStudentsModule = React.createClass({
 
 		const	currentSchool	= binding.toJS('currentSchool'),
 				studentData		= binding.toJS('studentData');
-
-		const result = StudentImporter.pullFormsAndHouses(studentData, currentSchool);
+		
 		Promise.all(result.students.map( student => {
 			return window.Server.schoolStudents.post(currentSchool.id, {
 				firstName:	student.firstName,
