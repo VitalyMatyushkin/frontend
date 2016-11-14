@@ -2,8 +2,10 @@
  * Created by wert on 16.01.16.
  */
 
-const React = require('react'),
-    Morearty = require('morearty');
+const   React       		= require('react'),
+        Morearty    		= require('morearty'),
+		TopPanelStyles		= require('../../../styles/main/b_top_panel.scss'),
+		TopLogoStyles		= require('../../../styles/main/b_top_logo.scss');
 
 
 const Head = React.createClass({
@@ -12,11 +14,10 @@ const Head = React.createClass({
         document.location.hash = '#login';
     },
     render: function () {
-        var self = this;
         if (document.location.hash != '#login') {
             return (
                 <div className="bTopPanel">
-                    <div className="bTopLogo" onClick={self.returnToLoginPage}><img src="images/logo.png"/></div>
+                    <div className="bTopLogo" onClick={this.returnToLoginPage}><img src="images/logo.png"/></div>
                 </div>
             )
         }else{

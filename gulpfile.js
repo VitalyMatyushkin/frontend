@@ -104,7 +104,8 @@ gulp.task('styles', function () {
 		.pipe(sourcemaps.init())
 		.pipe(autoprefixer({ browsers: ['last 2 versions'], cascade: false }))
 		.pipe(concat('build.css'))
-		.pipe(gulp.dest(BUILD + '/styles')).pipe(sass())
+		.pipe(gulp.dest(BUILD + '/styles'))
+		.pipe(sass())
 		.pipe(gulp.dest(BUILD + '/styles'))
 		.pipe(connect.reload());
 });
