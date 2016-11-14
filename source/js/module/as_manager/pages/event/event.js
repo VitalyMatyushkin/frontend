@@ -3,7 +3,7 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 
 		If					= require('module/ui/if/if'),
-		Tabs				= require('module/ui/tabs/tabs'),
+		Tabs				= require('./../../../ui/tabs/tabs'),
 		EventHeader			= require('./view/event_header'),
 		EventRivals			= require('./view/event_rivals'),
 		EventButtons		= require('./view/event_buttons'),
@@ -101,10 +101,12 @@ const EventView = React.createClass({
 				.set('gallery.photos',	Immutable.fromJS(photos))
 				.set('gallery.isSync',	true)
 				.set('mode',			Immutable.fromJS('general'))
-				.set('sync',			Immutable.fromJS(true))
 				.commit();
 
 			self.initTabs();
+
+			binding.set('sync', Immutable.fromJS(true));
+			console.log(new Date() + " sync");
 
 			return eventData;
 		})
@@ -213,19 +215,16 @@ const EventView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return binding.toJS('sync')=== true;
+		return binding.toJS('sync');
 	},
  	isShowMainMode: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return self.isSync() && !self.isShowChangeTeamMode();
+		return this.isSync() && !this.isShowChangeTeamMode();
 	},
 	isShowChangeTeamMode: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return self.isSync()  && binding.toJS('mode') === 'edit_squad';
+		return self.isSync() && binding.toJS('mode') === 'edit_squad';
 	},
 	render: function() {
 		const	self			= this,
@@ -233,13 +232,17 @@ const EventView = React.createClass({
 				showingComment	= binding.get('showingComment'),
 				activeTab		= binding.get('activeTab');
 
-		return (
-			<div>
-				<div className="bEventContainer">
-					<If condition={self.isShowTrobber()}>
+		switch (true) {
+			case !self.isSync():
+				return (
+					<div className="bEventContainer">
 						<span>loading...</span>
-					</If>
-					<If condition={self.isShowMainMode()}>
+					</div>
+				);
+			// sync and any mode excluding edit_squad
+			case self.isSync() && binding.toJS('mode') !== 'edit_squad':
+				return (
+					<div className="bEventContainer">
 						<div className="bEvent">
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
@@ -267,8 +270,8 @@ const EventView = React.createClass({
 							</If>
 							<If condition={activeTab === 'gallery'} >
 								<EventGallery	activeSchoolId	= { self.activeSchoolId }
-												eventId			= { self.eventId }
-												binding			= { binding.sub('gallery') } />
+												 eventId			= { self.eventId }
+												 binding			= { binding.sub('gallery') } />
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
@@ -279,21 +282,20 @@ const EventView = React.createClass({
 								<Comments binding={binding}/>
 							</div>
 						</div>
-					</If>
-					<If condition={self.isShowChangeTeamMode()}>
+					</div>
+				);
+			// sync and edit squad mode
+			case self.isSync() && binding.toJS('mode') === 'edit_squad':
+				return (
+					<div className="bEventContainer">
 						<div>
 							<ManagerWrapper binding={binding} />
 							<EventButtons binding={binding} />
 						</div>
-					</If>
-				</div>
-			</div>
-		);
+					</div>
+				);
+		}
 	}
 });
 
 module.exports = EventView;
-
-//<If condition={(binding.get('mode') !== 'general')}>
-//	<EventButtons binding={binding} />
-//</If>
