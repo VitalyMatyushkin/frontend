@@ -13,6 +13,25 @@ const   Promise     = require('bluebird'),
 		loadSVG		= require('./module/helpers/svg_loader'),
         es6PonyFill = require('./module/helpers/ponyfill/es6_best_parts');
 
+/* Preloading styles here as migration for every component is quite slow - will do it step by step */
+
+const 	resetStyle		= require('../styles/reset.scss'),
+		veryBasicStyle	= require('../styles/style.scss');
+
+// main styles
+const 	bIcon		= require('../styles/main/b_icon.scss'),
+		bLink		= require('../styles/main/b_link.scss'),
+		bMainLayout	= require('../styles/main/b_main_layout.scss'),
+		bPageIn		= require('../styles/main/b_page_in.scss'),
+		bPanel		= require('../styles/main/b_panel.scss'),
+		bRoles		= require('../styles/main/b_roles.scss'),
+		bSiteWrap 	= require('../styles/main/b_site_wrap.scss'),
+		bSubMenu	= require('../styles/main/b_sub_menu.scss'),
+		bTopLogo	= require('../styles/main/b_top_logo.scss'),
+		bTopMenu	= require('../styles/main/b_top_menu.scss'),
+		bTopPanel	= require('../styles/main/b_top_panel.scss');
+
+
 
 const 	asAdmin 		= require('./module/start_as_admin'),
 		asManager		= require('./module/start_as_manager'),

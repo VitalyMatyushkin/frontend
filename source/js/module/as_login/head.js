@@ -4,8 +4,8 @@
 
 const   React       		= require('react'),
         Morearty    		= require('morearty'),
-		TopPanelStyles		= require('../../../styles/main/b_top_panel.scss'),
-		TopLogoStyles		= require('../../../styles/main/b_top_logo.scss');
+		TopPanelStyles		= require('styles/main/b_top_panel.scss'),
+		TopLogoStyles		= require('styles/main/b_top_logo.scss');
 
 
 const Head = React.createClass({

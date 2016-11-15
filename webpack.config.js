@@ -10,7 +10,8 @@ module.exports = {
 		],
 		modulesDirectories: [
 			'node_modules',
-			'source/js'
+			'source/js',
+			'source'
 		]
 	},
 	module: {

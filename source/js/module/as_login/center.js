@@ -9,7 +9,9 @@ const   React               = require('react'),
         SettingsRoute       = require('module/core/routes/settings_route'),
         Morearty            = require('morearty'),
         NotificationAlert	= require('./../ui/notification_alert/notification_alert'),
-        ConfirmAlert		= require('./../ui/confirm_alert/confirm_alert');
+        ConfirmAlert		= require('./../ui/confirm_alert/confirm_alert'),
+        MainLayoutStyle		= require('styles/main/b_main_layout.scss'),
+		BasicStyle			= require('styles/style.scss');
 
 const Center = React.createClass({
     mixins: [Morearty.Mixin],
@@ -17,6 +19,8 @@ const Center = React.createClass({
         const   binding         = this.getDefaultBinding(),
                 currentPage     = binding.get('routing.currentPageName') || '',
                 mainClass       = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
+
+		console.log('mainClass: ' + mainClass);
 
         return (
             <div className={mainClass}>
