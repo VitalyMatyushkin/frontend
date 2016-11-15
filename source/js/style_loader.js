@@ -34,3 +34,23 @@ const 	bsEventResultView	= require('../styles/ui/bid_screen_fixtures/bBigEventRe
 		bsRecentEvents		= require('../styles/ui/bid_screen_fixtures/bRecentEvents.scss'),
 		bsUpcomingEvents	= require('../styles/ui/bid_screen_fixtures/bUpcomingEvents.scss'),
 		bsUpcomingEventView	= require('../styles/ui/bid_screen_fixtures/bUpcomingEventView.scss');
+
+const bigButton = require('../styles/ui/big_button/big_button.scss');
+const calendar = require('../styles/ui/calendar/calendar.scss');
+const confirmPopup = require('../styles/ui/confirm_popup/confirm_popup.scss');
+
+const 	form			= require('../styles/ui/forms/b_form.scss'),
+		formPageMessage	= require('../styles/ui/forms/b_page_message.scss'),
+		formPanel		= require('../styles/ui/forms/b_panel.scss');
+
+const	galleryAddPhotoButton	= require('../styles/ui/gallery/b_add_photo_button.scss'),
+		galleryFullscreenPhoto	= require('../styles/ui/gallery/b_fullscreen_photo.scss'),
+		galleryGallery			= require('../styles/ui/gallery/b_gallery.scss'),
+		galleryPhotoAccess		= require('../styles/ui/gallery/b_photo_access_preset_panel.scss'),
+		galleryPhotos			= require('../styles/ui/gallery/b_photos.scss'),
+		galleryPreviewPhoto		= require('../styles/ui/gallery/b_preview_photo.scss');
+
+const	gridActionPanel	= require('../styles/ui/grid/action-panel.scss'),
+		gridFilterPanel	= require('../styles/ui/grid/filter-panel.scss'),
+		gridGrid		= require('../styles/ui/grid/grid.scss'),
+		grigPagination	= require('../styles/ui/grid/pagination.scss');
