@@ -258,7 +258,7 @@ const EventView = React.createClass({
 								</div>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
-							<Map binding={binding} venue={binding.toJS('model.venue')} />
+							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
 							<div className="bEventMiddleSideContainer">
 								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 							</div>

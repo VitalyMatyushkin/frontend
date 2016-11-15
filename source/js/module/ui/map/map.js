@@ -17,6 +17,9 @@ const MapView = React.createClass({
 	},
 	componentWillReceiveProps:function(nextProps){
 		var self = this;
+		if(this.props.point && nextProps.point &&
+			(this.props.point.lat != nextProps.point.lat
+			|| this.props.point.lng != nextProps.point.lng))
 		self.setUpMap(nextProps.point);
 	},
 	setUpMap:function(point){
@@ -42,7 +45,7 @@ const MapView = React.createClass({
 			map: self.mapView
 		});
 
-		binding && binding.addListener('list', self.addPointsToMap/*.bind(self)*/);
+		binding && binding.addListener('list', self.addPointsToMap);
 		binding && self.addPointsToMap();
 	},
 	addPointsToMap: function() {
@@ -78,7 +81,7 @@ const MapView = React.createClass({
 	render: function() {
 		var self = this,
 			binding = self.getDefaultBinding(),
-			classNames ='bMapView '+ (self.props.customStylingClass !== undefined?self.props.customStylingClass:'');
+			classNames = 'bMapView '+ (self.props.customStylingClass !== undefined?self.props.customStylingClass:'');
 		return (
 			<div className={classNames} ref="map">
 			</div>
