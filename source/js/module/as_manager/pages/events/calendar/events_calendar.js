@@ -23,19 +23,18 @@ const EventsCalendar = React.createClass({
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 	render: function(){
-		const 	binding 					= this.getDefaultBinding().sub('calendar'),
+		const	binding						= this.getDefaultBinding().sub('calendar'),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
 
 		return (
 			<div className="eEvents_calendar">
-				<Calendar binding={binding} />
-				<Challenges
-					activeSchoolId={activeSchoolId}
-					isSync={isSelectedDateEventsInSync}
-					events={selectedDateEvents}
-					onClick={this.onEventClick}
+				<Calendar	binding={binding} />
+				<Challenges	activeSchoolId	= {activeSchoolId}
+							isSync			= {isSelectedDateEventsInSync}
+							events			= {selectedDateEvents}
+							onClick			= {this.onEventClick}
 				/>
 			</div>
 		);
