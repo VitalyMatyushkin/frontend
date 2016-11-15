@@ -54,3 +54,17 @@ const	gridActionPanel	= require('../styles/ui/grid/action-panel.scss'),
 		gridFilterPanel	= require('../styles/ui/grid/filter-panel.scss'),
 		gridGrid		= require('../styles/ui/grid/grid.scss'),
 		grigPagination	= require('../styles/ui/grid/pagination.scss');
+
+const lists = require('../styles/ui/lists/b_data_list.scss');
+
+const 	managerGameField		= require('../styles/ui/mangers/b_game_filed.scss'),
+		managerPlayerChooser	= require('../styles/ui/mangers/b_player_chooser.scss'),
+		managerTeam				= require('../styles/ui/mangers/b_team.scss'),
+		managerTeamAutocomplete	= require('../styles/ui/mangers/b_team_autocomplete.scss'),
+		managerTeamChooser		= require('../styles/ui/mangers/b_team_chooser.scss'),
+		managerTeamName			= require('../styles/ui/mangers/b_team_name.scss'),
+		managerFootball			= require('../styles/ui/mangers/football.scss'),
+		managerManager			= require('../styles/ui/mangers/manager.scss');
+
+const multiselect = require('../styles/ui/multiselect/multiselect.scss');
+const newPopup = require('../styles/ui/new_popup/new_popup.scss');
