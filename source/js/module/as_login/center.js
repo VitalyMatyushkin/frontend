@@ -18,9 +18,7 @@ const Center = React.createClass({
     render: function(){
         const   binding         = this.getDefaultBinding(),
                 currentPage     = binding.get('routing.currentPageName') || '',
-                mainClass       = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);
-
-		console.log('mainClass: ' + mainClass);
+                mainClass       = 'bMainLayout mClearFix m' + currentPage.charAt(0).toUpperCase() + currentPage.slice(1);	// TODO: ???
 
         return (
             <div className={mainClass}>

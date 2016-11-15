@@ -9,13 +9,13 @@ const 	LoginForm 		= require('module/ui/login/user/form'),
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount:function(){
-		const 	self = this,
-				binding = self.getDefaultBinding(),
-				domain = window.location.host.split('.')[0];
-		self.formName = domain === 'admin' ? 'Administrator Login' : 'default'; //Injects custom headings for login forms
+		const 	self	= this,
+				binding = this.getDefaultBinding(),
+				domain	= window.location.host.split('.')[0];
+		this.formName = domain === 'admin' ? 'Administrator Login' : 'default'; //Injects custom headings for login forms
 
-		if(self._isAuthorized()) {
-			self._setPermissions();
+		if(this._isAuthorized()) {
+			this._setPermissions();
 		}
 	},
 	getDefaultState: function () {
@@ -24,32 +24,25 @@ const LoginUserPage = React.createClass({
 		});
 	},
 	onSuccess: function(data) {
-		console.log('success');
-
 		if(data.id) {
 			return this._setPermissions();
 		}
         return null;
 	},
 	showError: function() {
-		var self = this;
-		if(!self._isAuthorized()) {
-			self.getDefaultBinding().set('showError', true);
+		if(!this._isAuthorized()) {
+			this.getDefaultBinding().set('showError', true);
 		}
 		else{
-			self._setPermissions();
+			this._setPermissions();
 		}
 	},
 	hideError: function() {
-		var self = this;
-
-		self.getDefaultBinding().set('showError', false);
+		this.getDefaultBinding().set('showError', false);
 	},
 	onSingUp: function() {
-		var self = this;
-
 		document.location.hash = 'register';
-		self.hideError();
+		this.hideError();
 	},
 	_setPermissions: function() {
 		const	self	= this,
