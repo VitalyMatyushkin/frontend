@@ -187,6 +187,7 @@ module.exports = ImportStudentsModule;*/
 
 const	React 				= require('react'),
 		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Loader 					= require('module/ui/loader'),
 		Promise					= require('bluebird'),
 		Morearty    		= require('morearty'),
 		Immutable				= require('immutable'),
@@ -201,11 +202,13 @@ const ImportStudentsModule = React.createClass({
 
 		binding.remove('studentData');
 		binding.remove('currentSchool');
+		binding.set('importIsSync', Immutable.fromJS('false'));
   },		
 
 	onSchoolChange: function (schoolId, school){
 		const	binding	= this.getDefaultBinding();
 
+			binding.remove('importIsSync');
 			window.Server.schoolForms.get({schoolId: schoolId})
 				.then(forms => {
 					school.forms = forms;
@@ -214,6 +217,7 @@ const ImportStudentsModule = React.createClass({
 				.then(houses => {
 					school.houses = houses;
 					binding.set('currentSchool', Immutable.fromJS(school));
+					binding.set('importIsSync', Immutable.fromJS('false'));
 					this.validationEverything();
 				});	
 	},
@@ -233,7 +237,7 @@ const ImportStudentsModule = React.createClass({
 
 	validationEverything: function (){
 		const 	binding	= this.getDefaultBinding(),
-				studentData = binding.toJS('studentData'),				
+				studentData = binding.toJS('studentData'),			
 				currentSchool = binding.toJS('currentSchool');
 
 		if (typeof studentData !== 'undefined' && typeof currentSchool !== 'undefined'){
@@ -253,7 +257,7 @@ const ImportStudentsModule = React.createClass({
 				numberError++;		
 				errorsList.push(<li>Row: {errorsFormId[key].row} Message: {errorsFormId[key].message}</li>); //In console React has error with unique key in elements li			
 			};			
-
+			
 			if (errorsList.length > 0) {
 					return (
 						<div>
@@ -333,7 +337,9 @@ const ImportStudentsModule = React.createClass({
 
 	render: function() {
 			const	self	= this,								
-					binding	= self.getDefaultBinding();
+					binding	= self.getDefaultBinding(),
+					importIsSync = binding.toJS('importIsSync');
+					console.log(importIsSync);
 
 			return (			
 				<div className='bForm'>
@@ -355,6 +361,7 @@ const ImportStudentsModule = React.createClass({
 							onChange={self.onChangeFile}
 						/>
 					</div>
+					<Loader condition={!importIsSync} />
 					<div>{self.validationEverything()}</div>					
 				</div>
 				
