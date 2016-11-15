@@ -86,7 +86,7 @@ const OneSchoolPage = React.createClass({
             ];
             binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
         };
-
+        _createSubMenuData('*');	// drawing placeholder
         //Get the total number of permissions (Notification badge) in submenu
         // TODO shitty way
         // server doesn't implement filters
