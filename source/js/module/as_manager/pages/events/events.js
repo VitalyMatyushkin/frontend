@@ -1,18 +1,19 @@
-const   RouterView      			= require('module/core/router'),
-        Route           			= require('module/core/route'),
-        React           			= require('react'),
-        SubMenu         			= require('module/ui/menu/sub_menu'),
-        MoreartyHelper  			= require('module/helpers/morearty_helper'),
-        EventHelper     			= require('module/helpers/eventHelper'),
-        DateHelper      			= require('module/helpers/date_helper'),
-        Morearty					= require('morearty'),
-        Immutable       			= require('immutable'),
-        EventsCalendarComponent 	= require('module/as_manager/pages/events/calendar/events_calendar'),
-		EventManagerComponent 		= require('module/as_manager/pages/events/event_manager'),
-		EventFixturesComponent 		= require('./events_fixtures');
+const   React                       = require('react'),
+        Morearty                    = require('morearty'),
+        Immutable                   = require('immutable'),
+
+        RouterView                  = require('module/core/router'),
+        Route                       = require('module/core/route'),
+
+        SubMenu                     = require('module/ui/menu/sub_menu'),
+        EventsCalendarComponent     = require('module/as_manager/pages/events/calendar/events_calendar'),
+        EventManagerComponent       = require('module/as_manager/pages/events/event_manager'),
+        EventFixturesComponent      = require('./events_fixtures'),
+
+        MoreartyHelper              = require('module/helpers/morearty_helper');
 
 const EventView = React.createClass({
-	mixins: [Morearty.Mixin],
+    mixins: [Morearty.Mixin],
     // ID of current school
     // Will set on componentWillMount event
     activeSchoolId: undefined,
@@ -23,7 +24,7 @@ const EventView = React.createClass({
 
         return Immutable.fromJS({
             eventsRouting: {},
-			calendar:{},
+            calendar:{},
             teams: [],
             sports: {
                 models: [],
@@ -32,7 +33,7 @@ const EventView = React.createClass({
             models: [],
             sync: false,
             newEvent: {},
-			fixtures:{}
+            fixtures:{}
         });
     },
     componentWillMount: function () {
@@ -80,48 +81,50 @@ const EventView = React.createClass({
             }
         ];
     },
-	render: function() {
-		var self = this,
-			binding = self.getDefaultBinding(),
+    render: function() {
+        var self = this,
+            binding = self.getDefaultBinding(),
             rootBinging = self.getMoreartyContext().getBinding();
 
-		return (
+        return (
             <div>
-                <SubMenu binding={binding.sub('eventsRouting')} items={self.menuItems}/>
+                <SubMenu    binding = {binding.sub('eventsRouting')}
+                            items   = {self.menuItems}
+                />
                 <div className='bSchoolMaster'>
                     <div className='bEvents'>
-                        <RouterView routes={ binding.sub('eventsRouting') } binding={rootBinging}>
-                            <Route path='/events/calendar'
-                                   binding={binding}
-                                   component={EventsCalendarComponent}
+                        <RouterView routes  = {binding.sub('eventsRouting')}
+                                    binding = {rootBinging}
+                        >
+                            <Route path         = '/events/calendar'
+                                   binding      = {binding}
+                                   component    = {EventsCalendarComponent}
                             />
-                            <Route
-                                path='/events/manager'
-                                binding={
-                                    {
-                                        default: binding.sub('newEvent'),
-                                        sports: binding.sub('sports'),
-                                        calendar: binding.sub('calendar')
+                            <Route  path        = '/events/manager'
+                                    binding     = {
+                                        {
+                                            default:    binding.sub('newEvent'),
+                                            sports:     binding.sub('sports'),
+                                            calendar:   binding.sub('calendar')
+                                        }
                                     }
-                                }
-                                component={EventManagerComponent}
+                                    component   = {EventManagerComponent}
                             />
-                            <Route path='/events/fixtures'
-								   binding={
-										{
-											default: binding.sub('fixtures'),
-											calendar: binding.sub('calendar')
-										}
+                            <Route path         = '/events/fixtures'
+                                   binding      = {
+                                        {
+                                            default: binding.sub('fixtures'),
+                                            calendar: binding.sub('calendar')
+                                        }
                                     }
-                                   component={EventFixturesComponent}
+                                   component    = {EventFixturesComponent}
                             />
                         </RouterView>
                     </div>
                 </div>
             </div>
         );
-	}
+    }
 });
-
 
 module.exports = EventView;
