@@ -7,7 +7,7 @@ const InviteActions = {
 	inviteServicesByType:{
 		inbox:'schoolInboxInvites',
 		outbox:'schoolOutboxInvites',
-		archive:'schoolArchiveInvites',
+		archive:'schoolArchiveInvites'
 	},
 	loadData: function (schoolId, inviteType) {
 		const serviceName = this.inviteServicesByType[inviteType],
