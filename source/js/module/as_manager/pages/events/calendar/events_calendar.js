@@ -6,9 +6,11 @@ const 	React			= require('react'),
 		Challenges		= require('./../../../../ui/challenges/challenges'),
 		Calendar		= require('./calendar'),
 		CalendarActions	= require('./calendar-actions'),
-		Morearty        = require('morearty'),
+		Morearty		= require('morearty'),
 
-		AddEventButton	= require('./add_event_button');
+		AddEventButton	= require('./add_event_button'),
+
+		EventsStyles	= require('./../../../../../../styles/pages/events/b_events.scss');
 
 /** Show calendar section: month calendar and events for selected date */
 const EventsCalendar = React.createClass({
