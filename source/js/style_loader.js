@@ -68,3 +68,38 @@ const 	managerGameField		= require('../styles/ui/mangers/b_game_filed.scss'),
 
 const multiselect = require('../styles/ui/multiselect/multiselect.scss');
 const newPopup = require('../styles/ui/new_popup/new_popup.scss');
+
+const 	popupDetail	= require('../styles/ui/popup/b_details.scss'),
+		popupPopup	= require('../styles/ui/popup/b_popup.scss'),
+		popupBack	= require('../styles/ui/popup/b_popup_back.scss');
+
+const popupMessage	= require('../styles/ui/popup_message/b_popup_message.scss');
+const publicSchoolLogin = require('../styles/ui/publicSchoolLogin/public_school_login.scss');
+const radioButton = require('../styles/ui/radio_button/radio_button.scss');
+const savingPlayerChanges = require('../styles/ui/saving_player_changes_mode_panel/saving_player_changes_mode_panel.scss');
+const score = require('../styles/ui/score/score.scss');
+
+const 	starRatingStar	= require('../styles/ui/star_rating_bar/b_rating_star.scss'),
+		starRatingBar	= require('../styles/ui/star_rating_bar/b_star_rating_bar.scss');
+
+
+const 	adminButtons	= require('../styles/ui/admin_buttons.scss'),
+		adminDroplist	= require('../styles/ui/admin_droplist.scss'),
+		avatar			= require('../styles/ui/avatar.scss'),
+		the404			= require('../styles/ui/b404.scss'),
+		autocomplete	= require('../styles/ui/b_autocomplete.scss'),
+		bigCalendar		= require('../styles/ui/b_big_calendar.scss'),
+		button			= require('../styles/ui/b_button.scss'),
+		colorSelect		= require('../styles/ui/b_colors_select.scss'),
+		radioGroup		= require('../styles/ui/b_radio_group.scss'),
+		stepDescription	= require('../styles/ui/b_step_description.scss'),
+		stepProgress	= require('../styles/ui/b_step_progress.scss'),
+		tabs			= require('../styles/ui/b_tabs.scss'),
+		timepicker		= require('../styles/ui/b_timepicker.scss'),
+		tooltip			= require('../styles/ui/b_tooltip.scss'),
+		fulltimeInput	= require('../styles/ui/bFullTimeInput.scss'),
+		smalltimeInput	= require('../styles/ui/bSmallTimeInput.scss'),
+		colorPicker		= require('../styles/ui/color_picker.scss'),
+		switchCheckbox	= require('../styles/ui/e_switch_checkbox.scss'),
+		loader			= require('../styles/ui/loader.scss'),
+		simpleAlert		= require('../styles/ui/simple_alert.scss');
