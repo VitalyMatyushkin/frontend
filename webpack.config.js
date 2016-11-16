@@ -19,6 +19,13 @@ module.exports = {
 		children: false // not showing chatty logs from Child plugin
 	},
 	module: {
+		preLoaders: [
+			{
+				test: /\.js$/,
+				exclude: /(node_modules|bower_components)/,
+				loader: 'eslint'
+			}
+		],
 		loaders: [
 			{
 				test: /\.js$/,
