@@ -20,6 +20,7 @@
     "react-dom": "^15.2.1"
   },
   "devDependencies": {
+    "autoprefixer": "^6.5.3",
     "babel-loader": "^6.2.4",
     "babel-plugin-check-es2015-constants": "^6.3.13",
     "babel-plugin-transform-es2015-arrow-functions": "^6.3.13",
@@ -27,7 +28,9 @@
     "babel-plugin-transform-es2015-template-literals": "^6.3.13",
     "babel-preset-react": "^6.3.13",
     "chai": "^3.3.0",
+    "css-loader": "^0.25.0",
     "del": "^1.1.1",
+    "extract-text-webpack-plugin": "^1.0.1",
     "gulp": "^3.8.11",
     "gulp-autoprefixer": "^2.0.0",
     "gulp-babel": "^6.1.1",
@@ -56,8 +59,13 @@
     "karma-requirejs": "^0.2.2",
     "main-bower-files": "^2.4.1",
     "mocha": "^2.3.3",
+    "node-sass": "^3.11.2",
+    "postcss-loader": "^1.1.1",
     "requirejs": "^2.1.22",
+    "resolve-url-loader": "^1.6.0",
     "run-sequence": "^1.0.2",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
     "webpack": "^1.13.1",
     "webpack-stream": "^3.2.0"
   },

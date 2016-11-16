@@ -11,7 +11,8 @@ const   Promise     = require('bluebird'),
 		loaderUtils	= require('./module/helpers/loader_utils'),
 		storage		= require('./module/helpers/storage'),
 		loadSVG		= require('./module/helpers/svg_loader'),
-        es6PonyFill = require('./module/helpers/ponyfill/es6_best_parts');
+        es6PonyFill = require('./module/helpers/ponyfill/es6_best_parts'),
+		styleLoader	= require('./style_loader');
 
 
 const 	asAdmin 		= require('./module/start_as_admin'),

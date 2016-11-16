@@ -332,9 +332,12 @@ const EventTeamsView = React.createClass({
 		return players.map((player, playerIndex) => {
 			const 	mode	= self.getBinding('mode').toJS(),
 					event	= self.getBinding('event').toJS();
+			let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
+				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
+			});
 
 			return (
-				<div key={playerIndex} className="_bPlayer _mMini">
+				<div key={playerIndex} className={eventPlayerCss}>
 					<span className="ePlayer_name">
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>

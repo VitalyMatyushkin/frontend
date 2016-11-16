@@ -1,3 +1,5 @@
+@import "../../!variables";
+
 ._bPlayer {
   display: flex;
   flex-direction: row;
@@ -8,6 +10,22 @@
   margin: 0 auto;
   align-items: center;
   justify-content: space-between;
+
+  &.mMini {
+    height: 25px;
+    line-height: 25px;
+
+    &:hover .ePlayer_score{
+      color: $blueColor;
+    }
+    .ePlayer_name{
+      min-width: 150px;
+    }
+  }
+
+  &.mIndividuals {
+    flex: 0 0 100%;
+  }
 }
 
 .ePlayer_remove .bIcon {
@@ -40,9 +58,6 @@
     color: #007abf;
     font-size: 43px;
   }
-}
-._bPlayer._mMini:hover .ePlayer_score{
-  color: $COLOR;
 }
 
 .ePlayer_lastName {
@@ -145,15 +160,6 @@
   font-size: 16px;
   color: #2a2a2a;
   margin-top: -4px;
-}
-
-._bPlayer.mMini {
-  height: 25px;
-  line-height: 25px;
-}
-
-._bPlayer.mMini .ePlayer_name{
-  min-width: 150px;
 }
 
 ._bPlayer.mShowRemoveButton .ePlayer_remove {

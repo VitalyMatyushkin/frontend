@@ -106,24 +106,20 @@ function readStudentsFromCSVFile(file) {
 }
 
 function pullFormsAndHouses(result, school) {
-	let errors = [];
 	result.students = result.students.map( (student, i)=> {
 		const	form	= Lazy(school.forms).findWhere({name: student.form}),
-				house	= Lazy(school.houses).findWhere({name: student.house});
-
-		const 	formId	= form ? form.id : undefined,
+				house	= Lazy(school.houses).findWhere({name: student.house}),
+				formId	= form ? form.id : undefined,
 				houseId = house ? house.id : undefined;
 
 		student.formId = formId;
 		student.houseId = houseId;
-
-		if(typeof formId === 'undefined') errors.push( {
+		if (typeof formId === 'undefined') result.errors.push( {
 			type:		'StudentFormMissed',
 			code:		'StudentFormMissed',
 			message: 	`There is no form with name: ${student.form}. Student is: ${student.firstName} ${student.lastName}`,
 			row:		i
 		});
-
 		return student;
 	});
 	return result;

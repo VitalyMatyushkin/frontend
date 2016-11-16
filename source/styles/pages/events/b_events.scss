@@ -1,3 +1,5 @@
+@import "../../!variables";
+
 $red-color: #ff5252;
 $orange-color: #ffab40;
 $blue-color: #5DC8CD;
@@ -11,6 +13,11 @@ $green-color: #00AE68;
   width: 1075px;
   margin: 50px auto;
   font-size: 11px;
+
+  @media (max-width: 768px) {
+    width: 768px;
+  }
+
 }
 
 .eEvents_leftSideContainer {
