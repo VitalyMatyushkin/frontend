@@ -1,3 +1,5 @@
+@import "../!variables";
+
 .bButton{
   background: $blueColor;
   border-radius: 3px;
@@ -55,7 +57,6 @@
   color: #555;
 }
 
-$DarkRed:#a93e2f;
 .bButton.mRed {
   background: $DarkRed;
   color: #fff;

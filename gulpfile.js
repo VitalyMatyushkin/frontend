@@ -104,7 +104,8 @@ gulp.task('styles', function () {
 		.pipe(sourcemaps.init())
 		.pipe(autoprefixer({ browsers: ['last 2 versions'], cascade: false }))
 		.pipe(concat('build.css'))
-		.pipe(gulp.dest(BUILD + '/styles')).pipe(sass())
+		.pipe(gulp.dest(BUILD + '/styles'))
+		.pipe(sass())
 		.pipe(gulp.dest(BUILD + '/styles'))
 		.pipe(connect.reload());
 });
@@ -211,5 +212,5 @@ gulp.task('default', function (done) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'lint', 'styles', /*'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts',*/ 'svgSymbols', 'buildVersionFile', 'webpack', callback);
+    run('clean', 'lint', 'svgSymbols', 'buildVersionFile', 'webpack', callback);
 });
