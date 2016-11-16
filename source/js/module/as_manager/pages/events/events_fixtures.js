@@ -7,7 +7,9 @@ const   React           = require('react'),
 		Immutable       = require('immutable'),
 		DateHelper 		= require('module/helpers/date_helper'),
 		EventHelper     = require('module/helpers/eventHelper'),
-		Fixtures 		= require('module/ui/fixtures/fixtures');
+		Fixtures 		= require('module/ui/fixtures/fixtures'),
+
+		FixturesStyles	= require('./../../../../../styles/ui/bFixtures.scss');
 
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -59,16 +61,20 @@ const EventFixtures = React.createClass({
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 	render: function () {
-		const   self    		= this,
-				activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				binding 		= self.getDefaultBinding();
+		const	self			= this,
+				activeSchoolId	= self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				binding			= self.getDefaultBinding();
 
-		return <Fixtures events={binding.toJS('models')}
-						 activeSchoolId={activeSchoolId}
-						 sync={binding.toJS('sync')}
-						 onClick={self.onClickChallenge} />;
+		return (
+			<div className="bFixtures">
+				<Fixtures	events			= {binding.toJS('models')}
+							activeSchoolId	= {activeSchoolId}
+							sync			= {binding.toJS('sync')}
+							onClick			= {self.onClickChallenge}
+				/>;
+			</div>
+		);
 	}
 });
-
 
 module.exports = EventFixtures;

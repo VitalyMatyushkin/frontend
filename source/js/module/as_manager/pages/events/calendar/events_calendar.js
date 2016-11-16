@@ -3,10 +3,14 @@
  */
 
 const 	React			= require('react'),
-		Challenges		= require('module/ui/challenges/challenges'),
+		Challenges		= require('./../../../../ui/challenges/challenges'),
 		Calendar		= require('./calendar'),
 		CalendarActions	= require('./calendar-actions'),
-		Morearty        = require('morearty');
+		Morearty		= require('morearty'),
+
+		AddEventButton	= require('./add_event_button'),
+
+		EventsStyles	= require('./../../../../../../styles/pages/events/b_events.scss');
 
 /** Show calendar section: month calendar and events for selected date */
 const EventsCalendar = React.createClass({
@@ -22,21 +26,29 @@ const EventsCalendar = React.createClass({
 	onEventClick:function(eventId){
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
+	handleClickAddEventButton: function() {
+		document.location.hash = 'events/manager';
+	},
+
 	render: function(){
-		const 	binding 					= this.getDefaultBinding().sub('calendar'),
+		const	binding						= this.getDefaultBinding().sub('calendar'),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');
 
 		return (
-			<div className="eEvents_calendar">
-				<Calendar binding={binding} />
-				<Challenges
-					activeSchoolId={activeSchoolId}
-					isSync={isSelectedDateEventsInSync}
-					events={selectedDateEvents}
-					onClick={this.onEventClick}
-				/>
+			<div className="bEvents">
+				<div className="eEvents_leftSideContainer">
+					<Calendar	binding={binding} />
+				</div>
+				<div className="eEvents_rightSideContainer">
+					<Challenges	activeSchoolId	= {activeSchoolId}
+								isSync			= {isSelectedDateEventsInSync}
+								events			= {selectedDateEvents}
+								onClick			= {this.onEventClick}
+					/>
+					<AddEventButton handleClick	= {this.handleClickAddEventButton}/>
+				</div>
 			</div>
 		);
 	}

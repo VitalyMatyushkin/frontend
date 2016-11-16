@@ -15,6 +15,10 @@
   height: 404px;
   overflow-y: auto;
   width: 500px;
+
+  &.mGeneral {
+    margin: 0px;
+  }
 }
 
 .eEvents_challenges .eChallenge {
