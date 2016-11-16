@@ -15,7 +15,7 @@ const InviteView = React.createClass({
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
 	propTypes: {
-		type: React.PropTypes.oneOf(['inbox', 'outbox'])
+		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive'])
 	},
 	componentWillMount: function() {
 		const self = this;
