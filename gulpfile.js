@@ -212,5 +212,5 @@ gulp.task('default', function (done) {
 });
 
 gulp.task('deploy', function (callback) {
-    run('clean', 'lint', 'styles', /*'normalize', 'moveBowerScripts', 'moveCoreScripts', 'amdScripts',*/ 'svgSymbols', 'buildVersionFile', 'webpack', callback);
+    run('clean', 'lint', 'svgSymbols', 'buildVersionFile', 'webpack', callback);
 });
