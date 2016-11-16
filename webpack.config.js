@@ -14,6 +14,9 @@ module.exports = {
 			'source'
 		]
 	},
+	stats: {
+		children: false // not showing chatty logs from Child plugin
+	},
 	module: {
 		loaders: [
 			{
