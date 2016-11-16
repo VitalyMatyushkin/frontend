@@ -9,6 +9,11 @@ $green-color: #00AE68;
   width: 1075px;
   margin: 50px auto;
   font-size: 11px;
+
+  @media (max-width: 768px) {
+    width: 768px;
+  }
+
 }
 .bParentsPage .bEvents {
   width: 100%;
