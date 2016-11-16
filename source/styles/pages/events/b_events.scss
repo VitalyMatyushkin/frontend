@@ -5,11 +5,23 @@ $green-color: #00AE68;
 
 .bEvents {
   display: flex;
-  flex-flow: column wrap;
+  flex-direction: row;
+  justify-content: center;
+
   width: 1075px;
   margin: 50px auto;
   font-size: 11px;
 }
+
+.eEvents_leftSideContainer {
+  width: 400px;
+}
+
+.eEvents_rightSideContainer {
+  width: 502px;
+  margin-left: 20px;
+}
+
 .bParentsPage .bEvents {
   width: 100%;
   margin: 0 auto;

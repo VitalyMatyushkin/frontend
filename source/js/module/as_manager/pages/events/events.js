@@ -6,8 +6,8 @@ const   React                       = require('react'),
         Route                       = require('module/core/route'),
 
         SubMenu                     = require('module/ui/menu/sub_menu'),
-        EventsCalendarComponent     = require('module/as_manager/pages/events/calendar/events_calendar'),
-        EventManagerComponent       = require('module/as_manager/pages/events/event_manager'),
+        EventsCalendarComponent     = require('./calendar/events_calendar'),
+        EventManagerComponent       = require('./event_manager'),
         EventFixturesComponent      = require('./events_fixtures'),
 
         MoreartyHelper              = require('module/helpers/morearty_helper');
@@ -74,10 +74,6 @@ const EventView = React.createClass({
                 href: '/#events/fixtures',
                 name: 'Fixtures',
                 key: 'Fixtures'
-            },{
-                href: '/#events/manager',
-                name: 'New',
-                key: 'New...'
             }
         ];
     },
@@ -92,35 +88,33 @@ const EventView = React.createClass({
                             items   = {self.menuItems}
                 />
                 <div className='bSchoolMaster'>
-                    <div className='bEvents'>
-                        <RouterView routes  = {binding.sub('eventsRouting')}
-                                    binding = {rootBinging}
-                        >
-                            <Route path         = '/events/calendar'
-                                   binding      = {binding}
-                                   component    = {EventsCalendarComponent}
-                            />
-                            <Route  path        = '/events/manager'
-                                    binding     = {
-                                        {
-                                            default:    binding.sub('newEvent'),
-                                            sports:     binding.sub('sports'),
-                                            calendar:   binding.sub('calendar')
-                                        }
-                                    }
-                                    component   = {EventManagerComponent}
-                            />
-                            <Route path         = '/events/fixtures'
-                                   binding      = {
-                                        {
-                                            default: binding.sub('fixtures'),
-                                            calendar: binding.sub('calendar')
-                                        }
-                                    }
-                                   component    = {EventFixturesComponent}
-                            />
-                        </RouterView>
-                    </div>
+                    <RouterView routes  = {binding.sub('eventsRouting')}
+                                binding = {rootBinging}
+                    >
+                        <Route path         = '/events/calendar'
+                               binding      = {binding}
+                               component    = {EventsCalendarComponent}
+                        />
+                        <Route path         = '/events/fixtures'
+                               binding      = {
+                                                {
+                                                    default: binding.sub('fixtures'),
+                                                    calendar: binding.sub('calendar')
+                                                }
+                                            }
+                               component    = {EventFixturesComponent}
+                        />
+                        <Route  path        = '/events/manager'
+                                binding     = {
+                                                {
+                                                    default:    binding.sub('newEvent'),
+                                                    sports:     binding.sub('sports'),
+                                                    calendar:   binding.sub('calendar')
+                                                }
+                                            }
+                                component   = {EventManagerComponent}
+                        />
+                    </RouterView>
                 </div>
             </div>
         );

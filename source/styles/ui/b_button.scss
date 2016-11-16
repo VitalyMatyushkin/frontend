@@ -10,6 +10,10 @@
   position: relative;
   text-align: center;
 
+  &.mAddEvent {
+    width: 442px;
+  }
+
   &:hover{
     background:
     $lightBlue;
