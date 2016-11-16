@@ -21,6 +21,7 @@ const 	bIcon		= require('../styles/main/b_icon.scss'),
 		bTopPanel	= require('../styles/main/b_top_panel.scss');
 
 
+// ui styles
 const 	bsEventResultView	= require('../styles/ui/bid_screen_fixtures/bBigEventResultView.scss'),
 		bsBigScreen			= require('../styles/ui/bid_screen_fixtures/bBigScreen.scss'),
 		bsFixtures			= require('../styles/ui/bid_screen_fixtures/bBigScreenFixtures.scss'),
@@ -103,3 +104,40 @@ const 	adminButtons	= require('../styles/ui/admin_buttons.scss'),
 		switchCheckbox	= require('../styles/ui/e_switch_checkbox.scss'),
 		loader			= require('../styles/ui/loader.scss'),
 		simpleAlert		= require('../styles/ui/simple_alert.scss');
+
+
+// pages styles
+
+const 	albumAlbum			= require('../styles/pages/album/b_album.scss'),
+		albumFullscreenList	= require('../styles/pages/album/b_album_fullscreen_list.scss'),
+		albumPhoto			= require('../styles/pages/album/b_album_photo.scss');
+
+const 	eventEvent		= require('../styles/pages/event/b_event.scss'),
+		eventAlbums		= require('../styles/pages/event/b_event_albums.scss'),
+		eventButtons	= require('../styles/pages/event/b_event_buttons.scss'),
+		eventDetails	= require('../styles/pages/event/b_event_details.scss'),
+		eventHeader		= require('../styles/pages/event/b_event_header.scss'),
+		eventInfo		= require('../styles/pages/event/b_event_info.scss'),
+		eventMenu		= require('../styles/pages/event/b_event_menu.scss'),
+		eventMiddleSide	= require('../styles/pages/event/b_event_middle_side_container.scss'),
+		eventResult		= require('../styles/pages/event/b_event_result.scss'),
+		eventRivals		= require('../styles/pages/event/b_event_rivals.scss'),
+		eventSport		= require('../styles/pages/event/b_event_sport.scss'),
+		eventTeam		= require('../styles/pages/event/b_team.scss');
+
+const 	eventsChallenge		= require('../styles/pages/events/b_challenge.scss'),
+		eventsChallengeDate	= require('../styles/pages/events/b_challenge_date.scss'),
+		eventsChooser		= require('../styles/pages/events/b_chooser.scss'),
+		eventsEvent			= require('../styles/pages/events/b_event.scss'),
+		eventsEvents		= require('../styles/pages/events/b_events.scss'),
+		eventsCalendar		= require('../styles/pages/events/b_events_calendar.scss'),
+		eventsManager		= require('../styles/pages/events/b_events_manager.scss'),
+		eventsInvite		= require('../styles/pages/events/b_invite.scss'),
+		eventsInvites		= require('../styles/pages/events/b_invites.scss'),
+		eventsPlayer		= require('../styles/pages/events/b_player.scss'),
+		eventsTextBox		= require('../styles/pages/events/b_saving_changes_text_block.scss'),
+		eventsTeamViewer	= require('../styles/pages/events/b_team_viewer.scss'),
+		eventsTeamWrapper	= require('../styles/pages/events/b_team_wrapper.scss'),
+		eventsTeams			= require('../styles/pages/events/b_teams.scss'),
+		eventsTeamsTable	= require('../styles/pages/events/b_teams_table.scss'),
+		eventsVenue			= require('../styles/pages/events/b_venue.scss');
