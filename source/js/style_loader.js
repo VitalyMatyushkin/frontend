@@ -2,7 +2,11 @@
  * Created by wert on 15.11.16.
  */
 
-/* Preloading styles here as migration for every component is quite slow - will do it step by step */
+/**
+ * Actually styles should be `require`d in component where they are used. But we have a lot of components and
+ * patching each is quite long task. So I made this file which preload all styles by `require`-ing them.
+ * I believe some day we will drop that file.
+ */
 
 const 	resetStyle		= require('../styles/reset.scss'),
 		veryBasicStyle	= require('../styles/style.scss');
@@ -13,7 +17,7 @@ const 	bIcon		= require('../styles/main/b_icon.scss'),
 		bMainLayout	= require('../styles/main/b_main_layout.scss'),
 		bPageIn		= require('../styles/main/b_page_in.scss'),
 		bPanel		= require('../styles/main/b_panel.scss'),
-		bRoles		= require('../styles/main/b_roles.scss'),
+		bRoles		= require('../styles/main/b_roles.scss'
 		bSiteWrap 	= require('../styles/main/b_site_wrap.scss'),
 		bSubMenu	= require('../styles/main/b_sub_menu.scss'),
 		bTopLogo	= require('../styles/main/b_top_logo.scss'),
@@ -141,3 +145,45 @@ const 	eventsChallenge		= require('../styles/pages/events/b_challenge.scss'),
 		eventsTeams			= require('../styles/pages/events/b_teams.scss'),
 		eventsTeamsTable	= require('../styles/pages/events/b_teams_table.scss'),
 		eventsVenue			= require('../styles/pages/events/b_venue.scss');
+
+const galleryPage = require('../styles/pages/gallery/b_gallery_page.scss');
+
+const 	inviteAccept	= require('../styles/pages/invite/b_InviteAccept.scss'),
+		inviteAnswer	= require('../styles/pages/invite/b_invites_answer.scss');
+
+const news = require('../styles/pages/news/news.scss');
+
+const 	opponentsMaps	= require('../styles/pages/opponents/b_opponents_maps.scss'),
+		opponentsPage	= require('../styles/pages/opponents/b_opponents_page.scss');
+
+const 	publicEventGallery	= require('../styles/pages/public_event/b_public_gallery.scss'),
+		publicEventEvent	= require('../styles/pages/public_event/public_event.scss');
+
+const 	registerFinish		= require('../styles/pages/register/b_register_finish.scss'),
+		registerForm		= require('../styles/pages/register/b_register_form.scss'),
+		registerVerify		= require('../styles/pages/register/b_verify_register.scss');
+
+const 	schoolFixturesList		= require('../styles/pages/school_fixtures/b_fixtures_list.scss'),
+		schoolFixturesStats		= require('../styles/pages/school_fixtures/b_fixtures_statistics.scss'),
+		schoolFixturesEvent		= require('../styles/pages/school_fixtures/b_one_event.scss');
+
+const 	schoolsListPage			= require('../styles/pages/schools/b_list_page.scss'),
+		schoolsContacts			= require('../styles/pages/schools/b_school_contacts.scss'),
+		schoolsList				= require('../styles/pages/schools/b_school_list.scss'),
+		schoolsMaster			= require('../styles/pages/schools/b_school_master.scss'),
+		schoolsNews				= require('../styles/pages/schools/b_school_news.scss'),
+		schoolsAbout			= require('../styles/pages/schools/school_about.scss');
+
+const 	userAboutList			= require('../styles/pages/user/b_about_list.scss'),
+		userPermissionLink		= require('../styles/pages/user/b_permission_link.scss'),
+		userRegistration		= require('../styles/pages/user/b_registration.scss'),
+		userSettings			= require('../styles/pages/user/b_settings.scss'),
+		userSettingsForm		= require('../styles/pages/user/b_settings_form.scss'),
+		userButtons				= require('../styles/pages/user/b_user_buttons.scss'),
+		userInfo				= require('../styles/pages/user/b_user_info.scss'),
+		userName				= require('../styles/pages/user/b_user_name.scss'),
+		userPage				= require('../styles/pages/user/b_user_page.scss'),
+		userPhoto				= require('../styles/pages/user/b_user_photo.scss');
+
+const 	roleSelector	= require('../styles/pages/b_role_selector.scss'),
+		userActivity	= require('../styles/pages/b_user_activity.scss');
