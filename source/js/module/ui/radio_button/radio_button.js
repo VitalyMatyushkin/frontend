@@ -6,7 +6,7 @@ const RadioButton = React.createClass({
 	propTypes: {
 		isChecked:	React.PropTypes.bool.isRequired,
 		isDisabled:	React.PropTypes.bool,
-		text:		React.PropTypes.array.isRequired,
+		text:		React.PropTypes.string.isRequired,
 		onClick:	React.PropTypes.func.isRequired,
 		customCSS:	React.PropTypes.string
 	},

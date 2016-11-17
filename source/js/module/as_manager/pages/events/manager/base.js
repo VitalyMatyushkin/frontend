@@ -10,7 +10,8 @@ const	React					= require('react'),
 		TimeInputWrapper		= require('./time_input_wrapper'),
 		classNames				= require('classnames'),
 
-		GenderSelectorWrapper	= require('./manager_components/gender_selector/gender_selector_wrapper');
+		GenderSelectorWrapper	= require('./manager_components/gender_selector/gender_selector_wrapper'),
+		GameTypeSelectorWrapper	= require('./manager_components/game_type_selector/game_type_selector_wrapper');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -293,34 +294,10 @@ const EventManagerBase = React.createClass({
 					/>
 				</div>
 				<div className="eManager_group">
-					<div className="eManager_label">{'Game Type'}</div>
-						<select	className		= 'eManager_select'
-								defaultValue	= 'not-selected-game-type'
-								value			= {binding.toJS('model.type')}
-								onChange		= {self.changeCompleteType}
-						>
-							<option	key			= "not-selected-game-type"
-									value		= "not-selected-game-type"
-									disabled	= "disabled"
-							>
-								Please select
-							</option>
-							<option	key		= "inter-schools-type"
-									value	= "inter-schools"
-							>
-								Inter-schools
-							</option>
-							<option	key		= "houses-type"
-									value	= "houses"
-							>
-								Houses
-							</option>
-							<option	key		= "anyway-type"
-									value	= "internal"
-							>
-								Internal
-							</option>
-						</select>
+					<div className="eManager_label">
+						{'Game Type'}
+					</div>
+					<GameTypeSelectorWrapper binding={binding}/>
 				</div>
 				<If condition={!!type}>
 					<div>
