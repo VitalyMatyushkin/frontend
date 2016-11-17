@@ -45,13 +45,23 @@ StudentListModel.prototype = {
 				rootBinding	= self.getMoreartyContext().getBinding(),
 				schoolId	= rootBinding.get('userRules.activeSchoolId');
 
+		const showAlert = function() {
+			window.simpleAlert(
+				'Sorry! You cannot perform this action. Please contact support',
+				'Ok',
+				() => {
+				}
+			);
+		};
+
 		window.confirmAlert(
 			`Are you sure you want to remove student ${student.firstName} ${student.lastName}?`,
 			"Ok",
 			"Cancel",
 			() => window.Server.schoolStudent
 				.delete( {schoolId:schoolId, studentId:student.id} )
-				.then(() => self.reloadData()),
+				.then(() => self.reloadData())
+				.catch(() => showAlert()),
 			() => {}
 		);
 	},
@@ -141,7 +151,7 @@ StudentListModel.prototype = {
 			},
 			{
 				text:'Form',
-				cell:{
+				cell: {
 					dataField:'form.name'
 				}
 			},

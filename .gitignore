@@ -28,6 +28,7 @@ node_modules
 
 #IDE
 .idea
+*.iml
 
 #Bower
 source/js/bower

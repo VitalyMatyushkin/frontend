@@ -1,9 +1,31 @@
+@import "../../!variables";
+
 ._bPlayer {
   display: flex;
-  width: 100%;
   flex-direction: row;
+
+  width: 250px;
   height: 30px;
+
+  margin: 0 auto;
   align-items: center;
+  justify-content: space-between;
+
+  &.mMini {
+    height: 25px;
+    line-height: 25px;
+
+    &:hover .ePlayer_score{
+      color: $blueColor;
+    }
+    .ePlayer_name{
+      min-width: 150px;
+    }
+  }
+
+  &.mIndividuals {
+    flex: 0 0 100%;
+  }
 }
 
 .ePlayer_remove .bIcon {
@@ -31,9 +53,11 @@
   padding: 5px 0 0;
   min-width: 45px;
   display: inline-block;
-}
-._bPlayer._mMini:hover .ePlayer_score{
-  color: $COLOR;
+
+  &.mBig {
+    color: #007abf;
+    font-size: 43px;
+  }
 }
 
 .ePlayer_lastName {
@@ -52,7 +76,7 @@
   text-align: left;
   padding: 5px 5px 0 0;
   font-size: 16px;
-  width: 140px;
+  min-width: 140px;
   color: #2a2a2a;
   &.mHead {
     color: #939393;
@@ -60,6 +84,11 @@
   span {
     margin-right: 5px;
   }
+}
+
+.bPlayer {
+  width: 300px;
+  margin: 0 auto;
 }
 
 .ePlayer_performance {
@@ -131,15 +160,6 @@
   font-size: 16px;
   color: #2a2a2a;
   margin-top: -4px;
-}
-
-._bPlayer.mMini {
-  height: 25px;
-  line-height: 25px;
-}
-
-._bPlayer.mMini .ePlayer_name{
-  min-width: 150px;
 }
 
 ._bPlayer.mShowRemoveButton .ePlayer_remove {

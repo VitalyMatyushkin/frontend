@@ -6,6 +6,7 @@ const   classNames      = require('classnames'),
         Morearty		= require('morearty'),
 		Button			= require('module/ui/button/button'),
         SportIcon		= require('module/ui/icons/sport_icon'),
+		Map 			= require('module/ui/map/map-event-venue'),
 		GenderIcon		= require('module/ui/icons/gender_icon');
 
 const InviteView = React.createClass({
@@ -14,7 +15,7 @@ const InviteView = React.createClass({
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
 	propTypes: {
-		type: React.PropTypes.oneOf(['inbox', 'outbox'])
+		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive'])
 	},
 	componentWillMount: function() {
 		const self = this;
@@ -66,7 +67,10 @@ const InviteView = React.createClass({
                 startDate       = DateHelper.getDateStringFromDateObject(eventDate),
                 hours           = self.addZeroToFirst(eventDate.getHours()),
                 minutes         = self.addZeroToFirst(eventDate.getMinutes()),
-				inviteId		= binding.get('id');
+				inviteId		= binding.get('id'),
+				venue 			= binding.toJS('event.venue'),
+				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
+													: 'Venue to be defined';
 
         let status;
 
@@ -97,6 +101,9 @@ const InviteView = React.createClass({
                     <div>{'Time:'} {hours + ':' + minutes}</div>
                     <div>{'Year Group:'} {self._getAges(ages)}</div>
                 </div>
+                <div className="eInvite_map">
+					{venueArea}
+                </div>
                 <div className="eInvite_footer">
                     <div className="eInvite_message">
                         {isOutBox ? 'Awaiting opponent...' : null}
@@ -109,7 +116,7 @@ const InviteView = React.createClass({
                     </div>
                 </div>
             </div>
-        </div>
+		</div>
         );
     }
 });

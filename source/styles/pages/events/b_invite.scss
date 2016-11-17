@@ -1,7 +1,9 @@
+@import "../../!variables";
+
 .bInvite {
   display: flex;
   flex-direction: row;
-  height: 150px;
+  min-height: 300px;
   border: $BORDER;
   box-sizing: border-box;
   width: 475px;
@@ -122,4 +124,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.eInvite_map {
+  margin: 10px 0;
+}
+.bSchoolMaster .bInvite .bMapView{
+  min-height: 150px;
+  width: 100%;
 }

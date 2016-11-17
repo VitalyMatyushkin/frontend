@@ -1,7 +1,7 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-		FixtureListItem		= require('./../school_home/fixture_item'),
+		FixtureListItem		= require('./../school_home/fixture_list_item'),
 		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		PublicEventTeams	= require('./public_event_teams'),
@@ -116,17 +116,12 @@ const PublicEvent = React.createClass({
 		if(isSync) {
 			return (
 				<div className="bPublicEvent">
-					<div	onClick		= { this.handleClickGoBack }
-							className	= "bBigButton"
-					>
-						Go Back
-					</div>
 					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { this.props.activeSchoolId }
 					/>
 					<PublicEventTeams binding={this._getEventTeamsBinding()}/>
-					{this.renderMatchReport()}
 					<PublicEventGallery binding={binding.sub('gallery')}/>
+					{this.renderMatchReport()}
 				</div>
 			);
 		} else {

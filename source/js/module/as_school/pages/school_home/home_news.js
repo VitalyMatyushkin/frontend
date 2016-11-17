@@ -12,16 +12,14 @@ const HomeNews = React.createClass({
 				activeSchoolId	= rootBinding.get('activeSchoolId');
 
 		if(activeSchoolId !== undefined || activeSchoolId !== null){
-			window.Server.publicSchoolNews.get({schoolId:activeSchoolId})
-				.then(news =>{
+			window.Server.publicSchoolNews.get({schoolId:activeSchoolId}, {filter:{order:"date DESC"}})
+				.then(news => {
+					console.log(news);
+
 					binding.atomically()
-						.set('schoolNews',Immutable.fromJS(news))
-						.set('selectedNewsItem',Immutable.fromJS(''))
+						.set('schoolNews',			Immutable.fromJS(news))
+						.set('selectedNewsItem',	Immutable.fromJS(''))
 						.commit();
-				},error=>{
-					console.log(error);
-				}).catch(failed =>{
-					console.log(failed);
 				});
 		}
 	},

@@ -1,3 +1,5 @@
+@import "!variables";
+
 @font-face {
   font-family: 'Glober';
   font-style: normal;
@@ -26,7 +28,7 @@
 body{
   overflow-y: scroll;
 }
-$BodyColor:#333132;
+
 html, body {
   margin: 0;
   padding: 0;
@@ -36,6 +38,7 @@ html, body {
   background: #fff;
   color: $BodyColor;
   fill: currentColor;
+  overflow: auto;
 }
 
 h6{

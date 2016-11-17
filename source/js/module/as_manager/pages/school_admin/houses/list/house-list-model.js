@@ -62,10 +62,10 @@ HouseListModel.prototype = {
 				`Are you sure you want to remove house ${data.name}?`,
 				"Ok",
 				"Cancel",
-				window.Server.schoolHouse
+				() => {window.Server.schoolHouse
 					.delete( {schoolId:self.activeSchoolId, houseId:data.id} )
 					.then(() => self.reloadData())
-					.catch(() => showAlert()),
+					.catch(() => showAlert())},
 				() => {}
 			);
 		}

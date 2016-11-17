@@ -1,6 +1,5 @@
 const	InvitesMixin			= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventTeamsView			= require('./event_teams_view'),
-		EventTeamsPerformance	= require('./event_teams_performance'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
 		MoreartyHelper			= require('module/helpers/morearty_helper'),
 		React					= require('react'),
@@ -131,20 +130,9 @@ const EventTeams = React.createClass({
 	render: function() {
 		const self = this;
 
-		const activeTab = self.getBinding('activeTab').toJS();
-
-		switch (activeTab) {
-			case 'teams':
-				return (
-					<EventTeamsView binding={self.getViewPlayersBinding()} />
-				);
-			case 'performance':
-				return (
-					<EventTeamsPerformance binding={self.getPlayerPerformanceBinding()} />
-				);
-			default:
-				return null;
-		}
+		return (
+			<EventTeamsView binding={self.getViewPlayersBinding()} />
+		);
 	}
 });
 

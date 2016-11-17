@@ -164,7 +164,7 @@ const EventVenue = React.createClass({
             limit: 10
         };
 
-        return window.Server.postCode.get({ filter: postCodeFilter });
+        return window.Server.postCodes.get({ filter: postCodeFilter });
     },
     /*LISTENERS*/
     _onSelectPostcode: function(id, value) {

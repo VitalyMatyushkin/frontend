@@ -161,7 +161,7 @@ const Blog = React.createClass({
                     </div>
                 </div>
                 <div className="bEventButtons">
-                    <div onClick={self._commentButtonClick.bind(null,this)} className="bEventButton">Send</div>
+                    <div onClick={self._commentButtonClick} className="bEventButton">Send</div>
                 </div>
             </div>
         )

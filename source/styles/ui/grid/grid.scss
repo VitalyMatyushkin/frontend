@@ -1,6 +1,13 @@
-.bGrid{
+.bGrid {
   max-width: 1060px;
   padding: 0 130px;
 
-
+  @media (max-width: 992px) {
+    font-size: 14px;
+    padding: 0 30px;
+  }
+  @media (max-width: 768px) {
+    padding: 0;
+    overflow-x: auto;
+  }
 }

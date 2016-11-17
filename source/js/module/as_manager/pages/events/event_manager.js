@@ -2,7 +2,7 @@ const   Calendar			= require('module/as_manager/pages/events/calendar/calendar')
 		CalendarActions		= require('module/as_manager/pages/events/calendar/calendar-actions'),
 		EventManagerBase	= require('./manager/base'),
 		If					= require('module/ui/if/if'),
-		TimePicker			= require('module/ui/timepicker/timepicker'),
+		TimePickerWrapper	= require('./time_picker_wrapper'),
 		Manager				= require('module/ui/managers/manager'),
 		classNames			= require('classnames'),
 		React				= require('react'),
@@ -15,7 +15,7 @@ const   Calendar			= require('module/as_manager/pages/events/calendar/calendar')
 		Promise 			= require('bluebird'),
 		Immutable			= require('immutable'),
 		ConfirmPopup		= require('./../../../ui/confirm_popup'),
-		TeamSaveModePanel	= require('./../../../ui/managers/saving_player_changes_mode_panel'),
+		TeamSaveModePanel	= require('./../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
 		ManagerConsts		= require('./../../../ui/managers/helpers/manager_consts');
 
 const EventManager = React.createClass({
@@ -194,22 +194,39 @@ const EventManager = React.createClass({
 				];
 
 			switch (true) {
-				// if teams data correct, team sport and players was changed
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged():
+				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && !this.isAnyTeamChanged() && this.isUserCreateNewTeam():
 					this.showSavingChangesModePopup(event);
 					break;
-				// if teams data correct, non team sport or players wasn't changed
-				case TeamHelper.isTeamDataCorrect(event, validationData):
+				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
+					this.showSavingChangesModePopup(event);
+					break;
+				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && !this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
 					binding.set('isSubmitProcessing', true);
 					this.submit(event);
 					break;
-				// if teams data doesn't correct
+				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isNonTeamSport(event):
+					binding.set('isSubmitProcessing', true);
+					this.submit(event);
+					break;
+				// If teams data isn't correct
 				default:
-					//So, let's show form with incorrect data
+					// So, let's show form with incorrect data
 					self._changeRivalFocusToErrorForm();
 					break;
 			}
 		}
+	},
+	isUserCreateNewTeam: function() {
+		return (
+			this.isUserCreateNewTeamByOrder(0) ||
+			this.isUserCreateNewTeamByOrder(1)
+		);
+	},
+	isUserCreateNewTeamByOrder: function(order) {
+		return (
+			typeof this.getDefaultBinding().toJS(`teamModeView.teamWrapper.${order}.selectedTeamId`) === 'undefined' &&
+			!this.getDefaultBinding().toJS(`teamModeView.teamWrapper.${order}.isSetTeamLater`)
+		);
 	},
 	/**
 	 * Method return true, if players in any team was changed relatively prototype team
@@ -218,9 +235,13 @@ const EventManager = React.createClass({
 	isAnyTeamChanged: function() {
 
 		return (
-			this.getDefaultBinding().toJS('teamModeView.teamWrapper.0.isTeamChanged') ||
-			this.getDefaultBinding().toJS('teamModeView.teamWrapper.1.isTeamChanged')
+			this.isTeamChangedByOrder(0) ||
+			this.isTeamChangedByOrder(1)
 		);
+	},
+	isTeamChangedByOrder: function(order) {
+
+		return this.getDefaultBinding().toJS(`teamModeView.teamWrapper.${order}.isTeamChanged`);
 	},
 	//TODO WTF!!?? Why event in args?
 	submit: function(eventModel) {
@@ -248,6 +269,7 @@ const EventManager = React.createClass({
 					.all(
 						SavingEventHelper.processSavingChangesMode(
 							self.activeSchoolId,
+							binding.toJS(`rivals`),
 							binding.toJS('model'),
 							binding.toJS(`teamModeView.teamWrapper`)
 						)
@@ -358,7 +380,7 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		document.location.hash = 'event/' + event.id + '?tab=teams';
+		document.location.hash = 'event/' + event.id + '?tab=gallery';
 		binding.clear();
 		binding.meta().clear();
 
@@ -372,9 +394,9 @@ const EventManager = React.createClass({
 
 		return (
 			<div className="eEvents_buttons">
-				{self._renderBackStepButton(step)}
-				{self._renderNextStepButton(step)}
-				{self._renderFinishStepButton(step)}
+				{ self._renderBackStepButton(step) }
+				{ self._renderNextStepButton(step) }
+				{ self._renderFinishStepButton(step) }
 			</div>
 		);
 	},
@@ -441,9 +463,9 @@ const EventManager = React.createClass({
 				break;
 			case 3:
 				if(
-					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 							// for any INTER-SCHOOLS events
-					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||		// for INDIVIDUAL INTERNAL events
-					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError											// for any other type of event
+					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 						// for any INTER-SCHOOLS events
+					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL INTERNAL events
+					!binding.toJS('error.0').isError && !binding.toJS('error.1').isError										// for any other type of event
 				) {
 					isStepComplete = true;
 				};
@@ -504,11 +526,20 @@ const EventManager = React.createClass({
 		// it's important!!
 		// because TeamSaveModePanel use this.props.handleClick.bind(null, ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM)
 		// we must save context
+		// hmmm, or not.
 		const self = this;
 
 		self.getDefaultBinding().set(
 			`teamModeView.teamWrapper.${teamWrapperIndex}.savingChangesMode`,
 			Immutable.fromJS(currentMode)
+		);
+	},
+	handleChangeTeamName: function(teamWrapperIndex, name) {
+		const self = this;
+
+		self.getDefaultBinding().set(
+			`teamModeView.teamWrapper.${teamWrapperIndex}.teamName.name`,
+			Immutable.fromJS(name)
 		);
 	},
 	renderSavingPlayerChangesPopupBody: function(event) {
@@ -517,23 +548,30 @@ const EventManager = React.createClass({
 		const teamWrappers = this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 
 		switch (true) {
-			// for internal event check only first team
-			case EventHelper.isInterSchoolsEvent(event) && teamWrappers[0].isTeamChanged:
+			case EventHelper.isInterSchoolsEvent(event):
 				savingPlayerChangesModePanels.push(
-					<TeamSaveModePanel	teamName		= { teamWrappers[0].teamName.name }
-										mode			= { teamWrappers[0].savingChangesMode }
-										handleChange	= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, 0) }
+					<TeamSaveModePanel	key						= { `team-wrapper-0` }
+										originalTeamName		= { this.getOriginalTeamName(teamWrappers, 0) }
+										teamName				= { teamWrappers[0].teamName.name }
+										savingChangesMode		= { teamWrappers[0].savingChangesMode }
+										viewMode				= { this.getViewMode(0) }
+										handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, 0) }
+										handleChangeTeamName	= { this.handleChangeTeamName.bind(null, 0) }
 					/>
 				);
 				break;
 			// for other event types check all teams
 			default :
 				teamWrappers.forEach((tw, index) => {
-					if(tw.isTeamChanged) {
+					if(this.isTeamChangedByOrder(index) || this.isUserCreateNewTeamByOrder(index)) {
 						savingPlayerChangesModePanels.push(
-							<TeamSaveModePanel	teamName		= { teamWrappers[index].teamName.name }
-												mode			= { teamWrappers[index].savingChangesMode }
-												handleChange	= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, index) }
+							<TeamSaveModePanel	key						= { `team-wrapper-${index}` }
+												originalTeamName		= { this.getOriginalTeamName(teamWrappers, index) }
+												teamName				= { teamWrappers[index].teamName.name }
+												savingChangesMode		= { teamWrappers[index].savingChangesMode }
+												viewMode				= { this.getViewMode(index) }
+												handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, index) }
+												handleChangeTeamName	= { this.handleChangeTeamName.bind(null, index) }
 							/>
 						);
 					}
@@ -549,6 +587,22 @@ const EventManager = React.createClass({
 				{ savingPlayerChangesModePanels }
 			</div>
 		);
+	},
+	getOriginalTeamName: function(teamWrappers, order) {
+		switch (true) {
+			case this.isUserCreateNewTeam(order):
+				return teamWrappers[order].teamName.name;
+			case this.isTeamChangedByOrder(order):
+				return teamWrappers[order].prevTeamName;
+		}
+	},
+	getViewMode: function(order) {
+		switch (true) {
+			case this.isUserCreateNewTeam(order):
+				return ManagerConsts.VIEW_MODE.NEW_TEAM_VIEW;
+			case this.isTeamChangedByOrder(order):
+				return ManagerConsts.VIEW_MODE.OLD_TEAM_VIEW;
+		}
 	},
 	renderSavingPlayerChangesPopup: function(event) {
 		const binding = this.getDefaultBinding();
@@ -616,11 +670,7 @@ const EventManager = React.createClass({
 								binding={rootBinding.sub('events.calendar')}
 								onSelect={self.onSelectDate}
 							/>
-							{
-								binding.get('model.startTime') ?
-									<TimePicker binding={binding.sub('model.startTime')}/> :
-									null
-							}
+							<TimePickerWrapper binding={binding.sub('model.startTime')}/>
 						</div>
 					</If>
 					<If condition={step === 2}>

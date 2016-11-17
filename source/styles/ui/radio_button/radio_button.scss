@@ -1,5 +1,14 @@
 .bRadioButton {
 
+  &.mSaveAsNewTeam {
+    display: inline-block;
+
+    width: 160px;
+  }
+
+  &.mGenderSelector {
+    margin-top: 7px;
+  }
 }
 
 .bRadioButton_input {

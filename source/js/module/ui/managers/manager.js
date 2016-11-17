@@ -78,7 +78,8 @@ const Manager = React.createClass({
 								blackList: [],
 								positions: defaultBinding.get('model.sportModel.field.positions')
 							},
-							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES
+							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES,
+							isSetTeamLater: false
 						},
 						{
 							filter: undefined,
@@ -95,7 +96,8 @@ const Manager = React.createClass({
 								blackList: [],
 								positions: defaultBinding.get('model.sportModel.field.positions')
 							},
-							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES
+							savingChangesMode: ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES,
+							isSetTeamLater: false
 						}
 					]
 				}

@@ -3,7 +3,8 @@ const 	Form 		= require('module/ui/form/form'),
 		If			= require('module/ui/if/if'),
 		React 		= require('react'),
 		Morearty    = require('morearty'),
-        Auth        = require('module/core/services/AuthorizationServices');
+        Auth        = require('module/core/services/AuthorizationServices'),
+		bFormStyles	= require('../../../../../styles/ui/forms/b_form.scss');
 
 const LoginUserForm = React.createClass({
 	mixins: [Morearty.Mixin],

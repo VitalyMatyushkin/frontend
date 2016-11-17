@@ -1,3 +1,5 @@
+@import "../../!variables";
+
 .bForm {
   margin: auto;
   padding: 0 130px;
@@ -367,7 +369,7 @@ input.eDateInput{
   font-size: 11px;
   color: #a9a9a9;
   position: relative;
-  top: -7px;
+  padding-bottom: 10px;
   width: 200px;
 }
 .eRegisterMessage {
@@ -405,4 +407,7 @@ input.eDateInput{
 }
 .bForm .eCombobox_input{
   width: 300px;
+}
+.eForm_info{
+  margin-top: 10px;
 }

@@ -79,9 +79,9 @@ const StudentForm = React.createClass({
 						<FormField type="radio" field="gender" sourcePromise={self.getGender} validation="required">Gender</FormField>
 						<FormField type="date" field="birthday" validation="birthday">Date of birth</FormField>
 						<FormField type="autocomplete" serviceFullData={self.getClassService()} field="formId"
-								   defaultItem={self.props.initialForm} validation="required">Form</FormField>
+								   defaultItem={self.props.initialForm} >Form</FormField>
 						<FormField type="autocomplete" serviceFullData={self.getHouseService()} field="houseId"
-								   defaultItem={self.props.initialHouse} validation="required">House</FormField>
+								   defaultItem={self.props.initialHouse} >House</FormField>
 						<FormField type="checkbox" field="unwell" >Injured/Unwell</FormField>
 						<FormField type="textarea" field="medicalInfo">Medical Information</FormField>
 					</FormColumn>

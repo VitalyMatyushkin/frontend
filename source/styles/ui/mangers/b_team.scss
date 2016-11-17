@@ -1,3 +1,5 @@
+@import "../../!variables";
+
 .bTeam {
   width: 392px;
   height: 320px;
@@ -63,7 +65,7 @@
   line-height: 20px;
 
   &.mName {
-    width: 40%;
+    width: 37%;
     &.mDefaultView {
       width: 35%;
     }
@@ -73,7 +75,7 @@
   }
 
   &.mForm {
-    width: 10%;
+    width: 15%;
     &.mLong {
       width: 50%;
     }
@@ -91,7 +93,7 @@
   }
 
   &.mSub {
-    width: 10%;
+    width: 8%;
   }
 
   &.mRemove {

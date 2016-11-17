@@ -230,6 +230,12 @@ RequestListModel.prototype = {
 	_onSuccess:function(){
 		this._closePopup();
 		this.reloadData();
+		window.simpleAlert(
+			'You just requested new role. Approving will take some time. We will send you email notification',
+			'Ok',
+			() => {
+			});
+
 	}
 
 };

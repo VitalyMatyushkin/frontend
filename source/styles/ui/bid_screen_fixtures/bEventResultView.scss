@@ -1,0 +1,62 @@
+@import "../../!variables";
+
+.bEventResultView {
+  background: #fff;
+
+  border-radius: 15px;
+
+  box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.1);
+
+  font-size: 2.5rem;
+
+  width: 100%;
+
+  @media (max-width: 1280px) {
+    font-size: 2rem;
+  }
+  .eSeparator {
+    background: url(/images/icons/slash.svg) no-repeat center;
+    background-size: contain;
+    display: inline-block;
+    height: 2.5rem;
+    width: 4%;
+    vertical-align: middle;
+  }
+
+  &.mBig {
+    margin: 6% 0 1%;
+  }
+}
+
+.eEventResultView_bodyLeftSide, .eEventResultView_bodyRightSide{
+  box-sizing: border-box;
+  color: $textColor;
+  display: inline-block;
+  padding: 1% 2% 0.5% 2%;
+  width: 48%;
+
+  &.mRight {
+    text-align: center;
+  }
+}
+
+.eEventResultView_mainInfoBlock {
+  display: inline-block;
+
+  &.mRight {
+    float: right;
+  }
+  .mSmall {
+    display: inline-block;
+    font-size: 1.3rem;
+    vertical-align: middle;
+  }
+}
+
+.eEventResultView_score {
+  color: $blueColor;
+  display: inline-block;
+  &.mRight {
+    float: right;
+  }
+}

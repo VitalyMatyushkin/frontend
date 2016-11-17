@@ -505,7 +505,6 @@ function isShowEditEventButton(thiz) {
 
 	return EventHelper.isNotFinishedEvent(binding) &&
 		binding.get('mode') === 'general' &&
-		binding.get('activeTab') === 'teams' &&
 		RoleHelper.isUserSchoolWorker(thiz);
 }
 
@@ -684,7 +683,7 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 							schoolsData[0].id === activeSchoolId ? 0 : 1
 						);
 					}
-				} else if(teamsData.length === 2) {
+				} else {
 					return cb(
 						'teamsData',
 						teamsData[0].schoolId === activeSchoolId ? 0 : 1
@@ -795,7 +794,7 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 						schoolsData[0].id !== activeSchoolId ? 0 : 1
 					);
 				}
-			} else if(teamsData.length === 2) {
+			} else {
 				return cb(
 					'teamsData',
 					teamsData[0].schoolId !== activeSchoolId ? 0 : 1
@@ -1044,8 +1043,24 @@ function createTeam(schoolId, event, rival, teamWrapper) {
 			teamBody.teamType		= "ADHOC";
 			self.getEventType(event) === 'houses' && (teamBody.houseId = rival.id);
 
-			return self.createAdhocTeam(teamBody);
+			return self.createNewTeam(teamBody);
 	}
+}
+
+function createPrototypeTeam(schoolId, event, rival, teamWrapper) {
+	const self = this;
+
+	const teamBody = {};
+	teamBody.name			= teamWrapper.teamName.name;
+	teamBody.ages			= event.ages;
+	teamBody.gender			= TeamHelper.convertGenderToServerValue(event.gender);
+	teamBody.sportId		= event.sportId;
+	teamBody.schoolId		= schoolId;
+	teamBody.players		= TeamHelper.convertPlayersToServerValue(teamWrapper.___teamManagerBinding.teamStudents);
+	teamBody.teamType		= "PROTOTYPE";
+	self.getEventType(event) === 'houses' && (teamBody.houseId = rival.id);
+
+	return self.createNewTeam(teamBody);
 }
 
 function getTypeOfNewTeam(teamWrapper) {
@@ -1083,7 +1098,7 @@ function updateTeam(schoolId, teamId, body) {
 	}, body);
 }
 
-function createAdhocTeam(body) {
+function createNewTeam(body) {
 	return window.Server.teamsBySchoolId.post(body.schoolId, body);
 }
 
@@ -1281,7 +1296,8 @@ const TeamHelper = {
 	createTeams:							createTeams,
 	getTypeOfNewTeam:						getTypeOfNewTeam,
 	createTeamByPrototype:					createTeamByPrototype,
-	createAdhocTeam:						createAdhocTeam,
+	createNewTeam:							createNewTeam,
+	createPrototypeTeam:					createPrototypeTeam,
 	createTeam:								createTeam,
 	deleteTeamFromEvent:					deleteTeamFromEvent,
 	addTeamsToEvent:						addTeamsToEvent,

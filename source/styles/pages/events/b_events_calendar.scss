@@ -1,8 +1,9 @@
-$border-color: #c2c2c2;
+@import "../../!variables";
+
 .eEvents_calendar {
   display: flex;
-  flex-direction: row;
-  width: 1020px;
+  flex-flow: row wrap;
+  justify-content: center;
   margin: 0 auto;
   font-size: 10px;
 }
@@ -11,7 +12,13 @@ $border-color: #c2c2c2;
   margin-left: 10px;
   border: $BORDER;
   background: #fff;
-  min-width: 500px;
+  height: 404px;
+  overflow-y: auto;
+  width: 500px;
+
+  &.mGeneral {
+    margin: 0px;
+  }
 }
 
 .eEvents_challenges .eChallenge {

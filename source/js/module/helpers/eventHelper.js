@@ -134,8 +134,8 @@ const EventHelper = {
 	_isShowCancelEventCloseButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') === 'closing'&& (binding.get('activeTab') === 'teams'
-			|| binding.get('activeTab') === 'performance') && RoleHelper.isUserSchoolWorker(thiz);
+		return binding.get('mode') === 'closing' &&
+			RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "edit_squad".
@@ -145,7 +145,7 @@ const EventHelper = {
 	_isShowCancelEventEditButton: function(thiz) {
 		const binding = thiz.getDefaultBinding();
 
-		return binding.get('mode') === 'edit_squad' && binding.get('activeTab') === 'teams' && RoleHelper.isUserSchoolWorker(thiz);
+		return binding.get('mode') === 'edit_squad' && RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
 	 * Return TRUE if event edit mode is "general".
@@ -157,9 +157,7 @@ const EventHelper = {
 		const binding = thiz.getDefaultBinding();
 
 		return (
-			binding.get('mode') !== 'general' && binding.get('mode') !== 'report_edit'
-			&& (binding.get('activeTab') === 'teams'
-					|| binding.get('activeTab') === 'performance')
+			binding.get('mode') !== 'general'
 			&& RoleHelper.isUserSchoolWorker(thiz)
 		);
 	},

@@ -1,3 +1,5 @@
+@import "../../!variables";
+
 .bEventContainer {
   box-sizing: border-box;
   display: flex;
@@ -21,7 +23,7 @@
 .bEventBottomContainer {
   box-sizing: border-box;
   margin: 0 auto;
-  max-width: 700px;
+  max-width: 940px;
   width: 100%;
 }
 
@@ -213,8 +215,8 @@
 }
 .eEvent_commentBox {
   color: #333132;
-  max-width: 700px;
-  margin: 0 auto;
+  max-width: 940px;
+  margin: 20px auto;
   padding: 0 50px;
   width: 100%;
   box-sizing: border-box;
@@ -288,8 +290,54 @@
 }
 
 .bMatchReport{
+  margin-top: 20px;
+  min-height: 220px;
+
+  .eText{
+    white-space: pre-line;
+  }
   .eEvent_report{
     width: 100%;
     height: 120px;
+    margin-bottom: 10px;
   }
 }
+
+.bEvent .bTabs{
+  margin: 20px 0 0;
+  display: block;
+  background-color: $blueColor;
+  border: none;
+  padding: 0;
+
+  .eTab{
+    width: 150px;
+    cursor: pointer;
+    display: inline-block;
+    line-height: 70px;
+    text-align: center;
+    border-right: 1px solid $lightBlue;
+    color: white;
+    margin: 0;
+
+    &.mActive{
+      background-color: $darkBlue;
+      text-decoration: underline;
+      border-bottom: none;
+    }
+    &:hover{
+      text-decoration: underline;
+      border-bottom: none;
+    }
+  }
+}
+
+.bEvent .bMapView{
+  margin: 20px auto 0;
+  width: 940px;
+  height: 300px;
+}
+
+
+
+

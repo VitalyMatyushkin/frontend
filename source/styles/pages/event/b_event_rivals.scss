@@ -1,67 +1,44 @@
+@import "../../!variables";
+
 .bEventRivals {
   display: flex;
-  box-sizing: border-box;
-  flex-wrap: wrap;
-  min-height: 120px;
-}
 
-.eEventRivals_rival {
-  display: flex;
-  overflow: hidden;
-  flex-direction: row;
-  justify-content: center;
-  text-align: center;
-  align-content: center;
-  align-items: center;
-}
-
-.eEventRivals_pic {
-  max-height: 75px;
-  margin-top: 10px;
-  max-width: 75px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.eEventRivals_name {
-  text-align: center;
+  width: 940px;
 }
 
 /* .bEventRival */
 
 .bEventRival {
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 1%;
-  width: 39%;
-}
-
-.eEventRival_name {
+  width: 450px;
   border: $BORDER;
-  border-width:  1px 0 1px;
-  box-sizing: border-box;
-  color: #535353;
-  font-size: 18px;
-  font-weight: bold;
-  min-height: 30px;
-  max-width: 230px;
-  overflow: hidden;
-  text-align: center;
-  text-overflow: ellipsis;
-  padding: 7px 0 3px;
-  width: 100%;
+  background: #fff;
+
+  &.mRight {
+    margin-left: 40px;
+  }
 }
 
-.eEventRival_teamName {
-  padding-top: 3px;
+.eEventRival_logo {
+  height: 115px;
+
+  padding-top: 45px;
+  padding-bottom: 15px;
+
+  text-align: center;
 }
 
-.eEventRivals_text {
-  max-width: 200px;
-  padding-top: 10px;
-  overflow: hidden;
+.eEventRivals_logoPic {
+  height: 115px;
+}
+
+.eEventRival_rivalName {
+  font-size: 16px;
   text-align: center;
-  word-wrap: break-word;
+}
+
+.eEventRival_score {
+  height: 52px;
+
+  text-align: center;
+  padding:    10px 0 10px 0;
 }

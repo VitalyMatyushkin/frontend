@@ -1,8 +1,11 @@
+@import "../../!variables";
+
 .bActionPanel{
   height: 40px;
   display: flex;
   align-items: center;
   margin-top: 30px;
+  overflow: hidden;
 
   .eTitle{
     display: flex;

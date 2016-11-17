@@ -18,11 +18,13 @@ const TypeText =  React.createClass({
 	componentDidUpdate: function () {
 		if(this.cursor >= 0){
 			this.refs.input.setSelectionRange(this.cursor, this.cursor);
+			console.log(`Field - ${this.props.field}, set cursor=` + this.cursor);
 		}
 	},
 	handleBlur: function(event) {
-		this.cursor = -1;
+		this.cursor = -1;	//it is necessary to block the installation of the cursor after a loss of focus.
 		this.setValue(event.target.value);
+		console.log(`Field - ${this.props.field}, onBlur handler`);
 	},
 	handleChange: function(event) {
 		this.cursor = event.target.selectionStart;
@@ -39,6 +41,8 @@ const TypeText =  React.createClass({
 				type={this.props.textType || 'text'}
 				placeholder={this.props.placeholder}
 				onBlur={this.handleBlur}
+				onFocus={()=> console.log(`Field - ${this.props.field}, onFocus handler`)}
+				disabled={!!this.props.isDisabled}
 				onChange={this.handleChange} />
 		)
 	}

@@ -1,3 +1,5 @@
+@import "../!variables";
+
 .bButton{
   background: $blueColor;
   border-radius: 3px;
@@ -11,6 +13,10 @@
   text-align: center;
   border: none;
   font-family: $basicFontFamily;
+
+  &.mAddEvent {
+    width: 442px;
+  }
 
   &:hover{
     background:
@@ -57,7 +63,6 @@
   color: #555;
 }
 
-$DarkRed:#a93e2f;
 .bButton.mRed {
   background: $DarkRed;
   color: #fff;
@@ -70,8 +75,7 @@ $DarkRed:#a93e2f;
   }
 }
 .bButton_reg{
-  width:70px !important;
-  margin: 2px !important;
+  margin: 5px 5px 5px 0 !important;
   text-align:center !important;
 }
 .bButton_hide{
@@ -114,6 +118,7 @@ $DarkRed:#a93e2f;
 .bEditButtonWrapper {
   float: right;
   width: 18px;
+  height: 25px;
 }
 
 .bEditButton {

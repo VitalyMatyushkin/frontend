@@ -21,6 +21,9 @@ const SecuritySettingsPage = React.createClass({
 			);
 		});
 	},
+	onCancel:function(){
+		window.location.hash = '/settings/general';
+	},
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -35,6 +38,7 @@ const SecuritySettingsPage = React.createClass({
 					defaultButton="Change"
 					loadingButton="Saving..."
 					autoupdateOff={true}
+					onCancel={this.onCancel}
 				>
 					<FormField type="text"
 							   field="oldPassword"

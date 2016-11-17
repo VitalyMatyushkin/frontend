@@ -8,11 +8,12 @@ const	React						= require('react'),
 
 const FixtureList = React.createClass({
 	propTypes: {
-		title:			React.PropTypes.string.isRequired,
-		activeSchoolId:	React.PropTypes.string.isRequired,
-		isDaySelected:	React.PropTypes.bool.isRequired,
-		isSync:			React.PropTypes.bool.isRequired,
-		events:			React.PropTypes.any
+		title:					React.PropTypes.string.isRequired,
+		showAllItemsButtonText:	React.PropTypes.string.isRequired,
+		activeSchoolId:			React.PropTypes.string.isRequired,
+		isDaySelected:			React.PropTypes.bool.isRequired,
+		isSync:					React.PropTypes.bool.isRequired,
+		events:					React.PropTypes.any
 	},
 	// this is count of showing event for case when state.isShowAllItems === false
 	EVENTS_COUNT: 3,
@@ -62,8 +63,9 @@ const FixtureList = React.createClass({
 		// show when events counts more then five
 		if(isSync && Array.isArray(events) && events.length > this.EVENTS_COUNT) {
 			return (
-				<FixtureShowAllItemsButton	isShowAllItems={this.state.isShowAllItems}
-											handleClick={this.handleClickShowAllItemsButton}
+				<FixtureShowAllItemsButton	isShowAllItems	= { this.state.isShowAllItems}
+											handleClick		= { this.handleClickShowAllItemsButton}
+											text			= { this.props.showAllItemsButtonText}
 				/>
 			);
 		} else {

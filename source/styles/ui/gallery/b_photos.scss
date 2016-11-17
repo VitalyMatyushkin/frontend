@@ -1,0 +1,29 @@
+.bPhotos{
+  height: 240px;
+  overflow: hidden;
+
+  .ePhotoStrip{
+    height: 240px;
+  }
+}
+.bGallery .eArrow{
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  top:50%;
+  margin-top: -25px;
+  cursor: pointer;
+  border-radius: 50%;
+
+  &.mLeft{
+    background: url('/images/arrow-left-circle.png');
+    left:-55px;
+  }
+
+  &.mRight{
+    background: url('/images/arrow-right-circle.png');
+    right:-55px;
+  }
+}
+
+

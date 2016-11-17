@@ -3,11 +3,12 @@ const	React			= require('react'),
 		Immutable		= require('immutable'),
 
 		If					= require('module/ui/if/if'),
-		Tabs				= require('module/ui/tabs/tabs'),
+		Tabs				= require('./../../../ui/tabs/tabs'),
 		EventHeader			= require('./view/event_header'),
 		EventRivals			= require('./view/event_rivals'),
 		EventButtons		= require('./view/event_buttons'),
 		EventTeams			= require('./view/teams/event_teams'),
+		EventPerformance	= require('./view/teams/event_teams_performance'),
 		EventGallery		= require('./new_gallery/event_gallery'),
 		EventDetails		= require('./view/event_details'),
 		ManagerWrapper		= require('./view/manager_wrapper'),
@@ -16,6 +17,7 @@ const	React			= require('react'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper	= require('./../../../helpers/event_result_helper'),
 		MatchReport 		= require('module/as_manager/pages/event/view/match-report/report'),
+		Map 				= require('module/ui/map/map-event-venue'),
 		SVG 				= require('module/ui/svg'),
 
 		RoleHelper			= require('./../../../helpers/role_helper');
@@ -99,10 +101,12 @@ const EventView = React.createClass({
 				.set('gallery.photos',	Immutable.fromJS(photos))
 				.set('gallery.isSync',	true)
 				.set('mode',			Immutable.fromJS('general'))
-				.set('sync',			Immutable.fromJS(true))
 				.commit();
 
 			self.initTabs();
+
+			binding.set('sync', Immutable.fromJS(true));
+			console.log(new Date() + " sync");
 
 			return eventData;
 		})
@@ -133,9 +137,9 @@ const EventView = React.createClass({
 
 		self.tabListModel = [
 			{
-				value		: 'teams',
-				text		: 'Teams',
-				isActive	: false
+				value		:'gallery',
+				text		:'Gallery',
+				isActive	:false
 			}
 		];
 
@@ -149,16 +153,6 @@ const EventView = React.createClass({
 
 		self.tabListModel.push(
 			{
-				value		:'gallery',
-				text		:'Gallery',
-				isActive	:false
-			},
-			{
-				value		: 'comments',
-				text		: 'Comments',
-				isActive	: false
-			},
-			{
 				value		: 'report',
 				text		: 'Match Report',
 				isActive	: false
@@ -171,7 +165,7 @@ const EventView = React.createClass({
 			binding.set('activeTab', tab);
 		} else {
 			self.tabListModel[0].isActive = true;
-			binding.set('activeTab', 'teams');
+			binding.set('activeTab', 'gallery');
 		}
 	},
 	hasSportPerformanceItems: function() {
@@ -221,19 +215,16 @@ const EventView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return binding.toJS('sync')=== true;
+		return binding.toJS('sync');
 	},
  	isShowMainMode: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return self.isSync() && !self.isShowChangeTeamMode();
+		return this.isSync() && !this.isShowChangeTeamMode();
 	},
 	isShowChangeTeamMode: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return self.isSync()  && binding.toJS('mode') === 'edit_squad';
+		return self.isSync() && binding.toJS('mode') === 'edit_squad';
 	},
 	render: function() {
 		const	self			= this,
@@ -241,70 +232,69 @@ const EventView = React.createClass({
 				showingComment	= binding.get('showingComment'),
 				activeTab		= binding.get('activeTab');
 
-		return (
-			<div>
-				<div className="bEventContainer">
-					<If condition={self.isShowTrobber()}>
+		switch (true) {
+			case !self.isSync():
+				return (
+					<div className="bEventContainer">
 						<span>loading...</span>
-					</If>
-					<If condition={self.isShowMainMode()}>
+					</div>
+				);
+			// sync and any mode excluding edit_squad
+			case self.isSync() && binding.toJS('mode') !== 'edit_squad':
+				return (
+					<div className="bEventContainer">
 						<div className="bEvent">
-							<div className="bEventHeader_wrap">
-								<EventHeader binding={binding}/>
-								<EventRivals binding={binding}/>
-							</div>
+							<EventHeader binding={binding}/>
+							<EventRivals binding={binding}/>
 							<div className="bEventMiddleSideContainer">
-								<div className="bEventMiddleSideContainer_leftSide">
-									<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
-								</div>
-								<div className="bEventMiddleSideContainer_rightSide">
+								<div className="bEditButtonWrapper">
 									<If condition={TeamHelper.isShowEditEventButton(self)}>
-										<div className="bEditButtonWrapper">
-											<div
-												className="bEditButton"
-												onClick={self.handleClickChangeTeamsButtons}
-											>
-												<SVG icon="icon_edit"/>
-											</div>
+										<div	className	= "bEditButton"
+												onClick		= {self.handleClickChangeTeamsButtons}
+										>
+											<SVG icon="icon_edit"/>
 										</div>
 									</If>
 								</div>
 							</div>
-							<If condition={activeTab === 'teams' || activeTab === 'performance'} >
-								<EventTeams binding={self._getEventTeamsBinding()} />
+							<EventTeams binding={self._getEventTeamsBinding()} />
+							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
+							<div className="bEventMiddleSideContainer">
+								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+							</div>
+							<If condition={activeTab === 'performance'} >
+								<EventPerformance binding={self._getEventTeamsBinding()} />
 							</If>
 							<If condition={activeTab === 'details'} >
 								<EventDetails binding={binding}/>
 							</If>
 							<If condition={activeTab === 'gallery'} >
 								<EventGallery	activeSchoolId	= { self.activeSchoolId }
-												eventId			= { self.eventId }
-												binding			= { binding.sub('gallery') } />
-							</If>
-							<If condition={activeTab === 'comments'} >
-								<div className="eEvent_commentBox">
-									<Comments binding={binding}/>
-								</div>
+												 eventId			= { self.eventId }
+												 binding			= { binding.sub('gallery') } />
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReport binding={binding} eventId={self.eventId} />
+									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
 								</div>
 							</If>
-							<If condition={(binding.get('mode') !== 'general')}>
-								<EventButtons binding={binding} />
-							</If>
+							<div className="eEvent_commentBox">
+								<Comments binding={binding}/>
+							</div>
 						</div>
-					</If>
-					<If condition={self.isShowChangeTeamMode()}>
+					</div>
+				);
+			// sync and edit squad mode
+			case self.isSync() && binding.toJS('mode') === 'edit_squad':
+				return (
+					<div className="bEventContainer">
 						<div>
 							<ManagerWrapper binding={binding} />
 							<EventButtons binding={binding} />
 						</div>
-					</If>
-				</div>
-			</div>
-		);
+					</div>
+				);
+		}
 	}
 });
 

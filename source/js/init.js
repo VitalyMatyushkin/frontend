@@ -11,17 +11,19 @@ const   Promise     = require('bluebird'),
 		loaderUtils	= require('./module/helpers/loader_utils'),
 		storage		= require('./module/helpers/storage'),
 		loadSVG		= require('./module/helpers/svg_loader'),
-        es6PonyFill = require('./module/helpers/ponyfill/es6_best_parts');
+        es6PonyFill = require('./module/helpers/ponyfill/es6_best_parts'),
+		styleLoader	= require('./style_loader');
 
 
-const 	asAdmin 	= require('./module/start_as_admin'),
-		asManager	= require('./module/start_as_manager'),
-		asWWW		= require('./module/start_as_www'),
-		asLogin		= require('./module/start_as_login'),
-		asParents	= require('./module/start_as_parents'),
-		asPassword	= require('./module/start_as_password'),
-		asSchool	= require('./module/start_as_school'),
-		asPlayGround = require('./module/start_as_playground');
+const 	asAdmin 		= require('./module/start_as_admin'),
+		asManager		= require('./module/start_as_manager'),
+		asWWW			= require('./module/start_as_www'),
+		asLogin			= require('./module/start_as_login'),
+		asParents		= require('./module/start_as_parents'),
+		asPassword		= require('./module/start_as_password'),
+		asSchool		= require('./module/start_as_school'),
+		asPlayGround	= require('./module/start_as_playground'),
+		asBigScreen		= require('./module/start_as_bigscreen');
 
 
 
@@ -52,13 +54,14 @@ window.logLevel = log; //Make this global for usage
 
 
 switch(startModule) {
-	case 'module/start_as_admin':		asAdmin(); 		break;
+	case 'module/start_as_admin':		asAdmin();		break;
 	case 'module/start_as_manager':		asManager();	break;
 	case 'module/start_as_parents':		asParents();	break;
 	case 'module/start_as_www':			asWWW();		break;
 	case 'module/start_as_login':		asLogin();		break;
 	case 'module/start_as_password':	asPassword();	break;
-	case 'module/start_as_school':  	asSchool();  	break;
-	case 'module/start_as_playground':	asPlayGround(); break;
+	case 'module/start_as_school':		asSchool();		break;
+	case 'module/start_as_playground':	asPlayGround();	break;
+	case 'module/start_as_bigscreen':	asBigScreen();	break;
 	default: asLogin();
 }

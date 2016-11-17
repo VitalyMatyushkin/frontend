@@ -6,7 +6,6 @@ const   React       = require('react'),
         Morearty    = require('morearty'),
         Immutable   = require('immutable'),
 
-        MoreartyHelper  = require('./../../../helpers/morearty_helper'),
         Form        = require('module/ui/form/form'),
         FormField 	= require('module/ui/form/form_field'),
         classNames  = require('classnames'),
@@ -15,7 +14,8 @@ const   React       = require('react'),
 const AddPermissionRequest = React.createClass({
     mixins:[Morearty.Mixin],
     propTypes: {
-        onSuccess:          React.PropTypes.func
+        onSuccess:          React.PropTypes.func,
+		onCancel: 			React.PropTypes.func
     },
     getDefaultState:function() {
         return Immutable.Map({
@@ -48,7 +48,7 @@ const AddPermissionRequest = React.createClass({
         return binding.meta().toJS('schoolId.value');
     },
     getPlaceHolderForRoleSelect: function() {
-        return this.isSchoolSelected() ? 'Please select role' : "Please select school";
+        return this.isSchoolSelected() ? 'Please select role' : "";
     },
     isRoleSelectDisabled: function() {
         return !this.isSchoolSelected();
@@ -77,17 +77,20 @@ const AddPermissionRequest = React.createClass({
             <Form   name            = "New Request"
                     updateBinding   = { true }
                     binding         = { binding }
-                    onSubmit        = { self.continueButtonClick }
+					onSubmit        = { self.continueButtonClick }
+					onCancel        = { self.props.onCancel }
                     formStyleClass  = "bGrantContainer"
                     defaultButton   = "Submit"
             >
                 <FormField type             = "autocomplete"
                            field            = "schoolId"
                            serviceFullData  = {getSchools}
+						   placeholder 		= {'Please select school'}
                            validation       = "required"
                 >
                     School
                 </FormField>
+
                 <FormField type         = "select"
                            field        = "preset"
                            sourceArray  = {this.getRoles()}
@@ -104,7 +107,6 @@ const AddPermissionRequest = React.createClass({
                 </FormField>
                 <FormField type         = "textarea"
                            field        = "comment"
-                           validation   = "alphanumeric"
                 >
                     Comment
                 </FormField>

@@ -25,7 +25,10 @@ const PermissionRequestList = React.createClass({
 				<div className="eTable_view">
 					<Grid model={this.actions.grid}/>
 					<Popup binding={binding} stateProperty={'popup'} onRequestClose={this.actions._closePopup.bind(this.actions)} otherClass="bPopupGrant">
-						<AddRequest binding={binding.sub('addRequest')} onSuccess={this.actions._onSuccess.bind(this.actions)}/>
+						<AddRequest binding={binding.sub('addRequest')}
+									onSuccess={this.actions._onSuccess.bind(this.actions)}
+									onCancel={this.actions._closePopup.bind(this.actions)}
+						/>
 					</Popup>
 				</div>
 			</If>

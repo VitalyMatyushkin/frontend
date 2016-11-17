@@ -39,7 +39,7 @@ const serviceList = {
         serviceList.sport =  new Service('/superadmin/sports/{sportId}', binding);
 
         // postcode
-        serviceList.postCode = new Service('/superadmin/postcodes', binding);
+        serviceList.postCodes = new Service('/superadmin/postcodes', binding);
 
         // forms
         serviceList.schoolForms = new Service('/superadmin/schools/{schoolId}/forms', binding);

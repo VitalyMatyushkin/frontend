@@ -47,7 +47,7 @@ const authСontroller = {
 			if (notRegister && (data.adminId || data.isBecome)) {
 				document.location.hash = self.nextPage;
 			}
-		} else if(self.nextPage ==='loginPublicSchool'){
+		} else if(self.nextPage ==='loginPublicSchool' || self.nextPage ==='home') {
             document.location.hash = self.nextPage;  //Bypass authentication
         }
 		else if(!self.isPublicPage()){

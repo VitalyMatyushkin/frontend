@@ -44,6 +44,18 @@ const TeamForm = React.createClass({
 
 		binding.clear();
 	},
+	componentDidUpdate: function () {
+		const 	binding 			= this.getDefaultBinding(),
+				nameCursor 			= binding.toJS('nameCursor'),
+				descriptionCursor 	= binding.toJS('descriptionCursor');
+
+		if(nameCursor >= 0){
+			this.refs.name.setSelectionRange(nameCursor, nameCursor);
+		}
+		if(descriptionCursor >= 0){
+			this.refs.description.setSelectionRange(descriptionCursor, descriptionCursor);
+		}
+	},
 
 	clearTeamPlayers: function() {
 		const	self	= this,
@@ -248,7 +260,19 @@ const TeamForm = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		binding.set('name', Immutable.fromJS(descriptor.target.value));
+		binding.atomically()
+			.set('name', Immutable.fromJS(descriptor.target.value))
+			.set('nameCursor', Immutable.fromJS(descriptor.target.selectionStart))
+			.commit();
+	},
+	handleChangeDescription: function(e) {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		binding.atomically()
+			.set('description', Immutable.fromJS(e.target.value))
+			.set('descriptionCursor', Immutable.fromJS(e.target.selectionStart))
+			.commit();
 	},
 	handleSelectHouse: function(id, model) {
 		const	self = this,
@@ -406,21 +430,25 @@ const TeamForm = React.createClass({
 					<div className="eManager_group">
 						<div className="eManager_label">{'Team Name'}</div>
 						<input
+							ref="name"
 							className="eManager_field"
 							type="text"
 							value={binding.get('name')}
 							placeholder={'enter name'}
 							onChange={self.handleChangeName}
+							onBlur={() => binding.set('nameCursor',-1)} //for block the installation of the cursor after a loss of focus.
 						/>
 					</div>
 					<div className="eManager_group">
 						<div className="eManager_label">{'Team Description'}</div>
 						<textarea
+							ref="description"
 							className="eManager_field mTextArea"
 							type="text"
 							value={binding.get('description')}
 							placeholder={'enter description'}
-							onChange={Morearty.Callback.set(binding.sub('description'))}
+							onChange={self.handleChangeDescription}
+							onBlur={() => binding.set('descriptionCursor',-1)}	//for block the installation of the cursor after a loss of focus.
 						/>
 					</div>
 					<div className="eManager_group">
