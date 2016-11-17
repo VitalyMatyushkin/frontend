@@ -1,0 +1,30 @@
+.bDateSelector {
+  display: flex;
+
+  width: 550px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+}
+
+.eDateSelector_leftSide {
+  width: 183px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-width: 0 1px 0 0;
+}
+
+.eDateSelector_centerSide {
+  width: 183px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-width: 0 1px 0 0;
+}
+
+.eDateSelector_rightSide {
+  width: 183px;
+  height: 33px;
+}

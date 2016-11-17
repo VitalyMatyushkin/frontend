@@ -10,6 +10,7 @@ const	React					= require('react'),
 		TimeInputWrapper		= require('./time_input_wrapper'),
 		classNames				= require('classnames'),
 
+		DateSelectorWrapper		= require('./manager_components/date_selector/date_selector_wrapper'),
 		GenderSelectorWrapper	= require('./manager_components/gender_selector/gender_selector_wrapper'),
 		GameTypeSelectorWrapper	= require('./manager_components/game_type_selector/game_type_selector_wrapper');
 
@@ -222,15 +223,7 @@ const EventManagerBase = React.createClass({
 
 		return(
 			<div className="eManager_base">
-				<div className="eManager_group">
-					<div className="eManager_label">{'Date'}</div>
-					<Morearty.DOM.input
-						className="eManager_field"
-						type="text"
-						value={self.getEventDate(binding.get('model.startTime'))}
-						disabled={'disabled'}
-					/>
-				</div>
+				<DateSelectorWrapper binding={binding.sub('model.startTime')}/>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Time'}</div>
 					<TimeInputWrapper binding={binding.sub('model.startTime')}/>

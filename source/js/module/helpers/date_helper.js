@@ -219,6 +219,52 @@ const DateHelper = {
 
 	isTomorrow: function(date) {
 		return this.getDate(this.getTomorrow()) === this.getDate(date);
+	},
+
+	getDaysFromCurrentMonth: function(year, month) {
+		const countMonthDays = new Date(year, month, 0).getDate();
+
+		const daysArray = [];
+		for(let i = 1; i < countMonthDays; i++) {
+			daysArray.push(i);
+		}
+
+		return daysArray;
+	},
+	/**
+	 * Get array [currentYear - 5 ... currentYear - 1, currentYear, currentYear + 1 ... currentYear + 5]
+	 */
+	getYearRangeArray: function() {
+		const currentYear = new Date().getFullYear();
+
+		const yearRangeArray = [];
+
+		for(let i = currentYear - 5; i <= currentYear; i++) {
+			yearRangeArray.push(i);
+		}
+		for(let i = currentYear + 1; i <= currentYear + 5; i++) {
+			yearRangeArray.push(i);
+		}
+
+		return yearRangeArray;
+	},
+
+	/**
+	 * {
+	 * 	"January': 0,
+	 * 	"February": 1,
+	 * 	..............
+	 * 	"December": 11
+	 * }
+	 */
+	getRevertIndexedMonthMap: function() {
+		const monthMap = {};
+
+		this.monthNames.forEach((month, index) => {
+			monthMap[month] = index;
+		});
+
+		return monthMap;
 	}
 };
 
