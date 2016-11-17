@@ -10,8 +10,9 @@ const   RouterView      				= require('module/core/router'),
         Immutable       				= require('immutable'),
 		UsersComponent 					= require('module/as_manager/pages/school_console/views/users'),
 		AdminRequestsComponent 			= require('./views/requests'),
+		ImportStudentsComponent			= require('module/as_admin/pages/admin_schools/import_students_module'),
 		RequestArchiveComponent 		= require('./views/request_archive'),
-		AdminPermissionAcceptComponent 	= require("module/as_admin/pages/admin_schools/admin_views/admin_permission_accept");
+		AdminPermissionAcceptComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept');
 
 let liveRequestCount;
 
@@ -63,6 +64,10 @@ const SchoolConsole = React.createClass({
                 href: '/#school_console/archive',
                 name: 'Requests Archive',
                 key: 'archive'
+			},{
+				href: '/#school_console/import_students',
+				name: 'Import Students',
+				key: 'import'
             }];
             binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
         };
@@ -99,6 +104,7 @@ const SchoolConsole = React.createClass({
                     <Route path='/school_console/requests' binding={binding.sub('requests')} component={AdminRequestsComponent}/>
                     <Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component={AdminPermissionAcceptComponent}  afterSubmitPage="/school_console/requests"/>
                     <Route path='/school_console/archive' binding={binding.sub('archives')} component={RequestArchiveComponent}/>
+					<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudentsComponent}/>
                 </RouterView>
             </div>
         </div>;
