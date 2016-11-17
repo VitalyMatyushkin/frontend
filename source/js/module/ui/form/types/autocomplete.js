@@ -10,7 +10,8 @@ const TypeAutocomplete = React.createClass({
 		serviceFilter: 		React.PropTypes.func,
 		serverField: 		React.PropTypes.string,
 		field:				React.PropTypes.string,
-		defaultItem:		React.PropTypes.object
+		defaultItem:		React.PropTypes.object,
+		placeholder: 		React.PropTypes.string
 	},
 	/** Setting component's value when it choosen */
 	onSelect: function(data, fullValue){
@@ -32,6 +33,7 @@ const TypeAutocomplete = React.createClass({
 				serverField		= {self.props.serverField || 'name'}
 				onSelect		= {self.onSelect}
 				defaultItem		= {self.props.defaultItem}
+				placeholder 	= {self.props.placeholder}
 			/>
 		);
 	}
