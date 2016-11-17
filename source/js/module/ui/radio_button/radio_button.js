@@ -1,8 +1,11 @@
-const	React	= require('react');
+const	React				= require('react'),
 
-const TeamSaveModePanel = React.createClass({
+		RadioButtonStyle	= require('./../../../../styles/ui/radio_button/radio_button.scss');
+
+const RadioButton = React.createClass({
 	propTypes: {
 		isChecked:	React.PropTypes.bool.isRequired,
+		isDisabled:	React.PropTypes.bool,
 		text:		React.PropTypes.array.isRequired,
 		onClick:	React.PropTypes.func.isRequired,
 		customCSS:	React.PropTypes.string
@@ -25,6 +28,7 @@ const TeamSaveModePanel = React.createClass({
 						type		= "radio"
 						checked		= { this.props.isChecked }
 						onChange	= { this.props.onClick }
+						disabled	= { typeof this.props.isDisabled === "undefined" ? false : this.props.isDisabled }
 				/>
 				<div className="bRadioButton_text">
 					{ this.props.text }
@@ -34,4 +38,4 @@ const TeamSaveModePanel = React.createClass({
 	}
 });
 
-module.exports = TeamSaveModePanel;
+module.exports = RadioButton;
