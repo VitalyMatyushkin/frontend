@@ -19,15 +19,21 @@ const MapOfEventVenue = React.createClass({
 		const 	binding 	= this.getDefaultBinding(),
 				postcodeId 	= this.props.venue && this.props.venue.postcodeId;
 
-		if(postcodeId){
+		if(postcodeId && !binding.get('loading')){
+			binding.set('loading', true);
 			window.Server.postCodeById.get(postcodeId).then(postcode => {
-				binding.set('postcode', Immutable.fromJS(postcode))
+				binding.set('postcode', Immutable.fromJS(postcode));
+				binding.set('loading', false);
 			});
 		}
 	},
 	render:function () {
-		const 	binding = this.getDefaultBinding(),
-				point 	= binding.toJS('postcode.point');
+		const 	binding 	= this.getDefaultBinding(),
+				point 		= binding.toJS('postcode.point');
+
+		if(!point){
+			this.loadData();
+		}
 
 		return point ? <Map binding={binding.sub('map')} point={point} /> : null;
 	}
