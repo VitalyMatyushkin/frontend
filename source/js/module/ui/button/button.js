@@ -12,14 +12,15 @@ function Button(props) {
 	const 	extraStyleClasses = props.extraStyleClasses || '',
 			className = `bButton ${extraStyleClasses}`;
 
-	return <a className={className} href={props.href} onClick={props.onClick}>{props.text}</a>;
+	return <a className={className} href={props.href} onClick={props.onClick} id={props.id}>{props.text}</a>;
 }
 
 Button.propTypes = {
 	text: 				React.PropTypes.string,		// text to display in button
 	onClick:			React.PropTypes.func,		// function to be called on click
 	href:				React.PropTypes.string,		// hyperlink if need
-	extraStyleClasses: 	React.PropTypes.string 		// if one need to add extra styles to button.
+	extraStyleClasses: 	React.PropTypes.string,		// if one need to add extra styles to button.
+	id:					React.PropTypes.string 		// html id
 };
 
 module.exports = Button;

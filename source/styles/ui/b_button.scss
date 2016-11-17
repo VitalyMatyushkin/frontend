@@ -11,6 +11,8 @@
   cursor: pointer;
   position: relative;
   text-align: center;
+  border: none;
+  font-family: $basicFontFamily;
 
   &.mAddEvent {
     width: 442px;

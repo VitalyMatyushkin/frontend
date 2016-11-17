@@ -35,7 +35,9 @@ const Form = React.createClass({
 		autoupdateOff: 		React.PropTypes.bool,
 		formStyleClass: 	React.PropTypes.string,
 		submitOnEnter: 		React.PropTypes.bool, 	//submitting the form by pressing the Enter key
-		hideCancelButton: 	React.PropTypes.bool
+		hideCancelButton: 	React.PropTypes.bool,
+		submitButtonId:		React.PropTypes.string,	// html id of submit button
+		cancelButtonId:		React.PropTypes.string 	// html id of cancel button
 	},
 	getDefaultProps: function () {
 		return {
@@ -44,8 +46,8 @@ const Form = React.createClass({
 		};
 	},
 	componentWillMount: function () {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const 	self = this,
+				binding = self.getDefaultBinding();
 
 		self.defaultButton = self.props.defaultButton || 'Continue';
 		self.loadingButton = self.props.loadingButton || 'Loading...';
@@ -213,7 +215,7 @@ const Form = React.createClass({
 			self.props.onSuccess(data);
 		}
 	},
-	_onServiceError: function (data) {
+	_onServiceError: function(data) {
 		var self = this;
 		self.busy = false;
 		self.buttonText = self.defaultButton;
@@ -254,11 +256,10 @@ const Form = React.createClass({
 	},
 
 	_keyPress: function (event) {
-		const self = this,
-			keyCode = event.keyCode;
+		const keyCode = event.keyCode;
 
-		if (keyCode === 13 && self.props.submitOnEnter) {
-			self.tryToSubmit();
+		if (keyCode === 13 && this.props.submitOnEnter) {
+			this.tryToSubmit();
 		}
 	},
 	getTitle: function(){
@@ -277,28 +278,27 @@ const Form = React.createClass({
 		) : null;
 	},
 	render: function () {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
-			<div className={classNames('bForm', self.props.formStyleClass)} onKeyDown={self._keyPress}>
+			<div className={classNames('bForm', this.props.formStyleClass)} onKeyDown={this._keyPress}>
 				<div className="eForm_atCenter">
 
-					{self.getAutoupdateOffElement()}
+					{this.getAutoupdateOffElement()}
 
-					{self.getTitle()}
+					{this.getTitle()}
 
-					{self._createBindedClones(self)}
+					{this._createBindedClones(this)}
 
 					<div className="eForm_savePanel">
-						<If condition={!self.props.hideCancelButton}>
-							<div className="bButton mRight mCancel" tabIndex="-1" onClick={self.onCancel}>
+						<If condition={!this.props.hideCancelButton}>
+							<button className="bButton mRight mCancel" tabIndex="-1" onClick={this.onCancel} id={this.props.cancelButtonId}>
 								Cancel
-							</div>
+							</button>
 						</If>
-						<div className="bButton mRight" tabIndex="-1" onClick={self.tryToSubmit}>
+						<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
 							{binding.meta().get('buttonText')}
-						</div>
+						</button>
 					</div>
 				</div>
 			</div>
