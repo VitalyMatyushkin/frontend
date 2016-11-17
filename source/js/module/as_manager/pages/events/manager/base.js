@@ -102,39 +102,6 @@ const EventManagerBase = React.createClass({
         };
         return window.Server.publicSchools.get(filter);
     },
-    changeCompleteType: function (event) {
-        const   self        = this,
-                binding     = self.getDefaultBinding(),
-                type        = event.target.value,
-                schoolInfo  = binding.get('schoolInfo');
-
-        let     rivals = Immutable.List();
-
-		switch (type) {
-			case 'inter-schools':
-				rivals = rivals.push(binding.get('schoolInfo'));
-				break;
-			case 'internal':
-				rivals = Immutable.fromJS([
-					{
-						id: null,
-						name: ''
-					},
-					{
-						id: null,
-						name: ''
-					}
-				]);
-				break;
-		}
-
-        binding
-            .atomically()
-            .set('rivals', Immutable.fromJS(rivals))
-            .set('model.type', Immutable.fromJS(type))
-            .set('autocomplete', Immutable.Map())
-            .commit();
-    },
 	changeCompleteSport: function (event) {
 		var self = this,
             binding = self.getDefaultBinding(),
