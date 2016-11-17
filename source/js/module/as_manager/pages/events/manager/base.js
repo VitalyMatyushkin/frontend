@@ -1,14 +1,16 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
+const	React					= require('react'),
+		Morearty				= require('morearty'),
+		Immutable				= require('immutable'),
 
-		If					= require('module/ui/if/if'),
-		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		Multiselect			= require('module/ui/multiselect/multiselect'),
-		EventVenue			= require('./event_venue'),
-		DateHelper			= require('./../../../../helpers/date_helper'),
-		TimeInputWrapper	= require('./time_input_wrapper'),
-		classNames			= require('classnames');
+		If						= require('module/ui/if/if'),
+		Autocomplete			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Multiselect				= require('module/ui/multiselect/multiselect'),
+		EventVenue				= require('./event_venue'),
+		DateHelper				= require('./../../../../helpers/date_helper'),
+		TimeInputWrapper		= require('./time_input_wrapper'),
+		classNames				= require('classnames'),
+
+		GenderSelectorWrapper	= require('./manager_components/gender_selector/gender_selector_wrapper');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -140,11 +142,21 @@ const EventManagerBase = React.createClass({
                 return model.get('id') === sportId;
             });
 
+		const sportModel = sportsBinding.get(`models.${sportIndex}`).toJS();
+
 		binding.atomically()
             .set('model.sportId',    event.target.value)
-            .set('model.sportModel', sportsBinding.get(`models.${sportIndex}`))
-            .set('model.gender',     Immutable.fromJS("not-selected-gender"))
+            .set('model.sportModel', Immutable.fromJS(sportModel))
+            .set('model.gender',     Immutable.fromJS(this.getDefaultGender(sportModel)))
             .commit();
+	},
+	getDefaultGender: function(sportModel) {
+		switch (true) {
+			case sportModel.genders.maleOnly:
+				return 'maleOnly';
+			case sportModel.genders.femaleOnly:
+				return 'femaleOnly';
+		}
 	},
     changeCompleteAges: function (selections) {
         var self = this,
@@ -174,62 +186,6 @@ const EventManagerBase = React.createClass({
 			);
         });
     },
-	handleChangeGenderSelect: function(binding, eventDescriptor) {
-		binding.set('model.gender', Immutable.fromJS(eventDescriptor.target.value));
-	},
-	getGenderSelectOptions: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const sportModel = binding.get('model.sportModel');
-
-		let genderOptions = [];
-
-		//if sport was selected
-		if(self.isSportSelected()) {
-			genderOptions.push((
-				<option	key			= "not-selected-gender"
-						value		= "not-selected-gender"
-						disabled	= "disabled"
-				>
-					Please select
-				</option>
-			));
-		} else {
-			genderOptions.push((
-				<option	key			= "not-selected-gender"
-						value		= "not-selected-gender"
-						disabled	= "disabled"
-				>
-					At first, select game
-				</option>
-			));
-		}
-
-		if(sportModel) {
-			const genders = sportModel.toJS().genders;
-
-			genderOptions = genderOptions.concat(Object.keys(genders)
-				.filter(genderType => genders[genderType])
-				.map((genderType, index) => {
-					const genderNames = {
-						femaleOnly:	'Girls only',
-						maleOnly:	'Boys only',
-						mixed:		'Mixed'
-					};
-
-					return (
-						<option	key={`${index}-gender`}
-								value={genderType}
-						>
-							{genderNames[genderType]}
-						</option>
-					);
-				}));
-		}
-
-		return genderOptions;
-	},
     getAges: function () {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -261,7 +217,6 @@ const EventManagerBase = React.createClass({
                     'houses':           self.serviceHouseFilter,
                     'internal':         self.serviceClassFilter
                 },
-                gender  = binding.get('model.gender'),
                 type    = binding.get('model.type');
 
 		return(
@@ -317,14 +272,7 @@ const EventManagerBase = React.createClass({
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Genders'}</div>
-					<select	className		= {classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
-							defaultValue	= "not-selected-gender"
-							value			= {gender}
-							onChange		= {self.handleChangeGenderSelect.bind(self, binding)}
-							disabled		= {!self.isSportSelected()}
-					>
-						{self.getGenderSelectOptions()}
-					</select>
+					<GenderSelectorWrapper	binding={binding}/>
 				</div>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Ages'}</div>
