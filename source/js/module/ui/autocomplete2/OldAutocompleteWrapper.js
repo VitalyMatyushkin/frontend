@@ -14,7 +14,8 @@ const OldAutocompleteWrapper = React.createClass({
 		placeholder: 		React.PropTypes.string,
         onEscapeSelection:  React.PropTypes.func,
         clearAfterSelect: 	React.PropTypes.bool,
-        defaultItem: 	    React.PropTypes.object
+        defaultItem: 	    React.PropTypes.object,
+        extraCssStyle:      React.PropTypes.string
     },
     searchFunction: function(text) {
         return {
@@ -49,6 +50,7 @@ const OldAutocompleteWrapper = React.createClass({
                 getElementTitle     = {self.getInputText}
                 onEscapeSelection   = {self.getEscapeSelectFunction()}
                 clearAfterSelect    = {self.props.clearAfterSelect !== undefined ? self.props.clearAfterSelect : false}
+                extraCssStyle       = {self.props.extraCssStyle}
             />
         );
     }

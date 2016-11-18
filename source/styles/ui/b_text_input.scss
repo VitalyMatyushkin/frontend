@@ -1,0 +1,16 @@
+input.bTextInput {
+  width: 400px;
+  height: 40px;
+  border: 1px solid #d7d7d7;
+  border-radius: 5px;
+  padding: 8px;
+
+
+  &:hover {
+    border: 1px solid #959595;
+  }
+
+  &:focus{
+    border: 1px solid #959595;
+  }
+}
