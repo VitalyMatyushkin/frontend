@@ -1,7 +1,8 @@
 /**
  * Created by bridark on 09/06/15.
  */
-const   SchoolForm  	= require('module/as_manager/pages/schools/schools_form'),
+const   SchoolForm		= require('../../schools/school_form'),
+		//SchoolForm  	= require('module/as_manager/pages/schools/schools_form'),
         React       	= require('react'),
         Morearty    	= require('morearty'),
         Immutable   	= require('immutable'),
@@ -10,16 +11,13 @@ const   SchoolForm  	= require('module/as_manager/pages/schools/schools_form'),
 const EditSchoolForm = React.createClass({
     mixins: [Morearty.Mixin],
     componentWillMount: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            globalBinding = self.getMoreartyContext().getBinding(),
-            routingData = globalBinding.sub('routing.parameters').toJS(),
-            schoolId = routingData.id;
-
-        //binding.clear();
+        const 	binding			= this.getDefaultBinding(),
+				globalBinding	= this.getMoreartyContext().getBinding(),
+				routingData		= globalBinding.sub('routing.parameters').toJS(),
+				schoolId		= routingData.id;
 
         if (schoolId) {
-            window.Server.school.get(schoolId).then(function (data) {
+            window.Server.school.get(schoolId).then( data => {
 				if(data.postcode && data.postcode._id){
 					data.postcode.id = data.postcode._id;
 				}
@@ -37,7 +35,7 @@ const EditSchoolForm = React.createClass({
                 );
             });
 
-            self.schoolId = schoolId;
+            this.schoolId = schoolId;
         }
     },
     submitEdit: function(schoolData) {
@@ -54,10 +52,8 @@ const EditSchoolForm = React.createClass({
 
     },
     render: function() {
-        var self = this;
-
         return (
-            <SchoolForm title="Edit school..." onSubmit={self.submitEdit} binding={self.getDefaultBinding()} />
+            <SchoolForm title="Edit school..." onSubmit={this.submitEdit} binding={this.getDefaultBinding()} />
         )
     }
 });
