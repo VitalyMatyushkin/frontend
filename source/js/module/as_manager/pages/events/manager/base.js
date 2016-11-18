@@ -10,6 +10,7 @@ const	React					= require('react'),
 		TimeInputWrapper		= require('./time_input_wrapper'),
 		classNames				= require('classnames'),
 
+		DateSelectorWrapper		= require('./manager_components/date_selector/date_selector_wrapper'),
 		GenderSelectorWrapper	= require('./manager_components/gender_selector/gender_selector_wrapper'),
 		GameTypeSelectorWrapper	= require('./manager_components/game_type_selector/game_type_selector_wrapper');
 
@@ -101,39 +102,6 @@ const EventManagerBase = React.createClass({
         };
         return window.Server.publicSchools.get(filter);
     },
-    changeCompleteType: function (event) {
-        const   self        = this,
-                binding     = self.getDefaultBinding(),
-                type        = event.target.value,
-                schoolInfo  = binding.get('schoolInfo');
-
-        let     rivals = Immutable.List();
-
-		switch (type) {
-			case 'inter-schools':
-				rivals = rivals.push(binding.get('schoolInfo'));
-				break;
-			case 'internal':
-				rivals = Immutable.fromJS([
-					{
-						id: null,
-						name: ''
-					},
-					{
-						id: null,
-						name: ''
-					}
-				]);
-				break;
-		}
-
-        binding
-            .atomically()
-            .set('rivals', Immutable.fromJS(rivals))
-            .set('model.type', Immutable.fromJS(type))
-            .set('autocomplete', Immutable.Map())
-            .commit();
-    },
 	changeCompleteSport: function (event) {
 		var self = this,
             binding = self.getDefaultBinding(),
@@ -222,15 +190,7 @@ const EventManagerBase = React.createClass({
 
 		return(
 			<div className="eManager_base">
-				<div className="eManager_group">
-					<div className="eManager_label">{'Date'}</div>
-					<Morearty.DOM.input
-						className="eManager_field"
-						type="text"
-						value={self.getEventDate(binding.get('model.startTime'))}
-						disabled={'disabled'}
-					/>
-				</div>
+				<DateSelectorWrapper binding={binding.sub('model.startTime')}/>
 				<div className="eManager_group">
 					<div className="eManager_label">{'Time'}</div>
 					<TimeInputWrapper binding={binding.sub('model.startTime')}/>

@@ -1,0 +1,13 @@
+.bDropdown {
+
+  &.mDateSelector{
+    width: 150px;
+    height: 20px;
+    margin: 8px 0 0 16px;
+    border: none;
+
+    &:hover {
+      border: none;
+    }
+  }
+}

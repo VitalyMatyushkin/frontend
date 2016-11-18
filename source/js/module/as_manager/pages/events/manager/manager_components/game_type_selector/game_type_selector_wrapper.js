@@ -18,7 +18,34 @@ const GameTypeSelectorWrapper = React.createClass({
 	},
 
 	handleClick: function(selectedGameType) {
-		this.getDefaultBinding().set('model.type', Immutable.fromJS(selectedGameType));
+		const binding = this.getDefaultBinding();
+
+		let rivals = Immutable.List();
+
+		switch (selectedGameType) {
+			case 'inter-schools':
+				rivals = rivals.push(binding.get('schoolInfo'));
+				break;
+			case 'internal':
+				rivals = Immutable.fromJS([
+					{
+						id: null,
+						name: ''
+					},
+					{
+						id: null,
+						name: ''
+					}
+				]);
+				break;
+		}
+
+		binding
+			.atomically()
+			.set('rivals',			Immutable.fromJS(rivals))
+			.set('model.type',		Immutable.fromJS(selectedGameType))
+			.set('autocomplete',	Immutable.Map())
+			.commit();
 	},
 
 	render: function() {
