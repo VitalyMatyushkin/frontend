@@ -10,6 +10,7 @@ const Logs = React.createClass({
 	mixins: [Morearty.Mixin, ListPageMixin],
 	serviceName:'useractivity',
 	serviceCount:'useractivityCount',
+	filters:{'order' : 'startedAt ASC'},
 	_getUserAvatar: function(user) {
 		let avatar = '';
 

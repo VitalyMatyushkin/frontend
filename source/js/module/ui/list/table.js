@@ -57,7 +57,6 @@ const Table = React.createClass({
         self.addBindingListener(binding, 'filter',self._loadData);
         self.addBindingListener(binding, 'filter.where',self._getTotalCount);
         self.addBindingListener(binding, 'onReload',self.onReload);
-        self.onSort('createdAt', 'ASC');
     },
     componentWillUnmount: function () {
         var self = this,
