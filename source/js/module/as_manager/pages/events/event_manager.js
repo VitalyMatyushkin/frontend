@@ -16,7 +16,9 @@ const   Calendar			= require('module/as_manager/pages/events/calendar/calendar')
 		Immutable			= require('immutable'),
 		ConfirmPopup		= require('./../../../ui/confirm_popup'),
 		TeamSaveModePanel	= require('./../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
-		ManagerConsts		= require('./../../../ui/managers/helpers/manager_consts');
+		ManagerConsts		= require('./../../../ui/managers/helpers/manager_consts'),
+
+		ManagerStyles		= require('./../../../../../styles/pages/events/b_events_manager.scss');
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -28,18 +30,22 @@ const EventManager = React.createClass({
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
 
+		const currentDate = new Date();
+		currentDate.setHours(10);
+		currentDate.setMinutes(0);
+
 		return Immutable.fromJS({
 			// if true - then user click to finish button
 			// so we must block finish button
 			isSubmitProcessing: false,
 			model: {
-				name: '',
-				startTime: null,
-				type: undefined,
-				sportId: undefined,
-				gender: undefined,
-				ages: [],
-				description: ''
+				name:			'',
+				startTime:		currentDate,
+				type:			undefined,
+				sportId:		undefined,
+				gender:			undefined,
+				ages:			[],
+				description:	''
 			},
 			selectedRivalIndex: null,
 			schoolInfo: {},
@@ -403,10 +409,7 @@ const EventManager = React.createClass({
 	_renderNextStepButton: function(step) {
 		const self = this;
 
-		if(
-			step === 1 && self._isStepComplete(1) ||
-			step === 2 && self._isStepComplete(2)
-		) {
+		if(step === 1 && self._isStepComplete(1)) {
 			return <span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span>;
 		} else {
 			return null;
@@ -415,10 +418,7 @@ const EventManager = React.createClass({
 	_renderBackStepButton: function(step) {
 		const self = this;
 
-		if(
-			step === 2 ||
-			step === 3
-		) {
+		if(step === 2) {
 			return (
 				<span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span>
 			);
@@ -429,7 +429,7 @@ const EventManager = React.createClass({
 	_renderFinishStepButton: function(step) {
 		const self = this;
 
-		if(step === 3 && self._isStepComplete(3)) {
+		if(step === 2 && self._isStepComplete(2)) {
 			const finishButtonClassName = classNames({
 				eEvents_button:	true,
 				mFinish:		true,
@@ -454,14 +454,9 @@ const EventManager = React.createClass({
 
 		switch (step) {
 			case 1:
-				if(binding.get('model.startTime') !== undefined && binding.get('model.startTime') !== null) {
-					isStepComplete = true;
-				}
-				break;
-			case 2:
 				isStepComplete = self._isSecondStepIsComplete();
 				break;
-			case 3:
+			case 2:
 				if(
 					binding.toJS('model.type') === 'inter-schools' && !binding.toJS('error.0').isError || 						// for any INTER-SCHOOLS events
 					TeamHelper.isInternalEventForIndividualSport(binding.toJS('model')) && !binding.toJS('error.0').isError ||	// for INDIVIDUAL INTERNAL events
@@ -479,6 +474,9 @@ const EventManager = React.createClass({
 				binding			= self.getDefaultBinding();
 
 		return (
+				typeof binding.get('model.startTime')	!== 'undefined' &&
+				binding.get('model.startTime') 			!== null &&
+				binding.get('model.startTime') 			!== '' &&
 				typeof binding.toJS('model.name')		!== 'undefined' &&
 				binding.toJS('model.name')				!== '' &&
 				typeof binding.toJS('model.sportId')	!== 'undefined' &&
@@ -634,16 +632,10 @@ const EventManager = React.createClass({
 			binding = self.getDefaultBinding(),
 			rootBinding = self.getMoreartyContext().getBinding(),
 			step = binding.get('step'),
-			titles = [
-				'Choose Date',
-				'Fixture Details',
-				'Select from created teams'
-			],
 			bManagerClasses = classNames({
 				bManager: true,
-				mDate: step === 1,
-				mBase: step === 2,
-				mTeamManager: step === 3
+				mBase: step === 1,
+				mTeamManager: step === 2
 			}),
 			commonBinding = {
 				default: binding,
@@ -660,23 +652,11 @@ const EventManager = React.createClass({
 
 		return (
 			<div>
-				<div className="eManager_steps" >
-					<div className="eManager_step" >{step} </div>
-					<h3>{titles[step - 1]}</h3></div>
 				<div className={bManagerClasses}>
 					<If condition={step === 1}>
-						<div className="eManager_dateTimePicker">
-							<Calendar
-								binding={rootBinding.sub('events.calendar')}
-								onSelect={self.onSelectDate}
-							/>
-							<TimePickerWrapper binding={binding.sub('model.startTime')}/>
-						</div>
-					</If>
-					<If condition={step === 2}>
 						<EventManagerBase binding={commonBinding} />
 					</If>
-					<If condition={step === 3}>
+					<If condition={step === 2}>
 						<Manager isInviteMode={false} binding={managerBinding} />
 					</If>
 				</div>
