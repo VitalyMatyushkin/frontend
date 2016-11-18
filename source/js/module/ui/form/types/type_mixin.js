@@ -8,8 +8,9 @@ const 	React 			= require('react'),
  */
 const InputTypeMixin = {
 	propTypes: {
-		onSetValue: React.PropTypes.func,
-		validation: React.PropTypes.string  // string with validations, like that: 'require phone server'
+		onSetValue:			React.PropTypes.func,	// triggers when value already set
+		onBeforeValueSet:	React.PropTypes.func,	// takes value and return new value. Can be used to convert value before set. MUST return value (it can be same)
+		validation:			React.PropTypes.string  // string with validations, like that: 'require phone server'
 	},
 	componentWillMount: function() {
 		const 	self 		= this,
@@ -88,21 +89,24 @@ const InputTypeMixin = {
 	 * @param value
 	 */
 	setValue: function(value) {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				validateResult 	= self.fullValidate(value);
+		const	binding 		= this.getDefaultBinding(),
+				validateResult 	= this.fullValidate(value);
 
 		if (validateResult)
-			self.showError();
+			this.showError();
         else
-			self.hideError();
+			this.hideError();
 
 		if(typeof value === "undefined") {
 			value = '';
 		}
 
+		if(typeof this.props.onBeforeValueSet === 'function') {
+			value = this.props.onBeforeValueSet(value);
+		}
+
 		binding.set('value', value);
-        self.props.onSetValue && self.props.onSetValue(value);
+        this.props.onSetValue && this.props.onSetValue(value);
 	},
 	showError: function(text) {
 		console.log('showing error');

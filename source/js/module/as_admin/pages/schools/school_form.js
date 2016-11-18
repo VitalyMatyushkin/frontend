@@ -54,6 +54,10 @@ const SystemAdminSchoolForm = React.createClass({
 					{ text: 'Suspended', value: 'SUSPENDED' },
 					{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
 				],
+				availableForRegistrationOptions = [
+					{ text: 'Yes',	value: true },
+					{ text: 'No',	value: false }
+				],
 				postcode 	= binding.toJS('postcode');
 
 		return (
@@ -83,7 +87,7 @@ const SystemAdminSchoolForm = React.createClass({
 							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
 					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
-					<FormField	type="dropdown"
+					<FormField  type="dropdown"
 								  field="publicSite.status"
 								  options={ this.getPublicSiteAccessTypes() }
 					>
@@ -95,6 +99,13 @@ const SystemAdminSchoolForm = React.createClass({
 								  validation="required"
 					>
 						Public Site Access Password
+					</FormField>
+					<FormField
+						type="dropdown"
+						field="availableForRegistration"
+						options={availableForRegistrationOptions}
+						onBeforeValueSet={ value => value === 'true' /*casting back to boolean*/}>
+						Available For Reg.
 					</FormField>
 				</FormColumn>
 			</Form>
