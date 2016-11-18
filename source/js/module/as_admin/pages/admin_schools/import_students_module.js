@@ -162,7 +162,7 @@ const ImportStudentsModule = React.createClass({
 							serverField='name'
 							onSelect={self.onSchoolChange}
 							binding={binding.sub('schoolAutocomplete')}
-							placeholderText='School Name'
+							placeholder='School Name'
 						/>
 					</div>
 					<div className='eForm_field'>

@@ -309,7 +309,7 @@ const EventManagerBase = React.createClass({
 										defaultItem={binding.toJS('rivals.1')}
 										serviceFilter={services[type]}
 										serverField="name"
-										placeholderText={'enter school name'}
+										placeholder={'enter school name'}
 										onSelect={self.onSelectRival.bind(null, 1)}
 										binding={binding.sub('autocomplete.inter-schools.0')}
 									/>
@@ -322,7 +322,7 @@ const EventManagerBase = React.createClass({
 										defaultItem={binding.toJS('rivals.0')}
 										serviceFilter={self.serviceHouseFilter.bind(null, 0)}
 										serverField="name"
-										placeholderText={'Select the first house'}
+										placeholder={'Select the first house'}
 										onSelect={self.onSelectRival.bind(null, 0)}
 										binding={binding.sub('autocomplete.houses.0')}
 									/>
@@ -331,7 +331,7 @@ const EventManagerBase = React.createClass({
 										defaultItem={binding.toJS('rivals.1')}
 										serviceFilter={self.serviceHouseFilter.bind(null, 1)}
 										serverField="name"
-										placeholderText={'Select the second house'}
+										placeholder={'Select the second house'}
 										onSelect={self.onSelectRival.bind(null, 1)}
 										binding={binding.sub('autocomplete.houses.1')}
 									/>

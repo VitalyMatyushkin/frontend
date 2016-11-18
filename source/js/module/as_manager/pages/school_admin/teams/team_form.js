@@ -379,7 +379,7 @@ const TeamForm = React.createClass({
 					defaultItem={binding.toJS('house')}
 					serviceFilter={self.houseService}
 					serverField="name"
-					placeholderText={'Select House'}
+					placeholder={'Select House'}
 					onSelect={self.handleSelectHouse}
 					binding={binding.sub('___houseAutocompleteBinding')}
 				/>
@@ -389,7 +389,7 @@ const TeamForm = React.createClass({
 				<Autocomplete
 					serviceFilter={self.houseService}
 					serverField="name"
-					placeholderText={'Select House'}
+					placeholder={'Select House'}
 					onSelect={self.handleSelectHouse}
 					binding={binding.sub('___houseAutocompleteBinding')}
 				/>
