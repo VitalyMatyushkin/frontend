@@ -2,7 +2,6 @@
  * Created by bridark on 09/06/15.
  */
 const   SchoolForm		= require('../../schools/school_form'),
-		//SchoolForm  	= require('module/as_manager/pages/schools/schools_form'),
         React       	= require('react'),
         Morearty    	= require('morearty'),
         Immutable   	= require('immutable'),
@@ -39,14 +38,12 @@ const EditSchoolForm = React.createClass({
         }
     },
     submitEdit: function(schoolData) {
-        var self = this;
-
 		/**
 		 * !!! Method modify arg !!!
 		 * Method replace client publicSite.password field value by server value
 		 */
 		SchoolHelper.setServerPublicSiteAccessPasswordValue(schoolData);
-        window.Server.school.put(self.schoolId, schoolData).then(function() {
+        window.Server.school.put(this.schoolId, schoolData).then(() => {
             document.location.hash = 'admin_schools/admin_views/list';
         });
 
