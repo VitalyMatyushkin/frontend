@@ -332,7 +332,8 @@ const EventTeamsView = React.createClass({
 		return players.map((player, playerIndex) => {
 			const 	mode						= self.getBinding('mode').toJS(),
 					event						= self.getBinding('event').toJS(),
-					individualScoreAvailable	= self.getBinding('individualScoreAvailable').toJS();
+					isaBinding 					= self.getBinding('individualScoreAvailable'),
+					individualScoreAvailable	= isaBinding && isaBinding.toJS();
 
 			let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
 				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
