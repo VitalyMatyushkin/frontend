@@ -7,7 +7,7 @@ $green-color: #00AE68;
 
 .bEvents {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   justify-content: center;
 
   width: 1075px;
