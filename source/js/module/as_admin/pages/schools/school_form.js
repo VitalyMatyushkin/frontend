@@ -54,9 +54,14 @@ const SystemAdminSchoolForm = React.createClass({
 					{ text: 'Suspended', value: 'SUSPENDED' },
 					{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
 				],
-				availableForRegistrationOptions = [
+				yesNoOptions = [
 					{ text: 'Yes',	value: true },
 					{ text: 'No',	value: false }
+				],
+				onInviteActionOptions = [
+					{ text: 'Manual Mode (default)', value: 'MANUAL' },
+					{ text: 'Auto Accept', value: 'AUTO_ACCEPT' },
+					{ text: 'Auto Reject', value: 'AUTO_REJECT' }
 				],
 				postcode 	= binding.toJS('postcode');
 
@@ -103,9 +108,19 @@ const SystemAdminSchoolForm = React.createClass({
 					<FormField
 						type="dropdown"
 						field="availableForRegistration"
-						options={availableForRegistrationOptions}
-						onBeforeValueSet={ value => value === 'true' /*casting back to boolean*/}>
+						options={yesNoOptions}
+						onBeforeValueSet={ value => value === 'true' /*casting back string to boolean*/}>
 						Available For Reg.
+					</FormField>
+					<FormField type="dropdown" field="triggers.onInviteAction" options={onInviteActionOptions}>
+						Invite Accept Mode
+					</FormField>
+					<FormField
+						type="dropdown"
+						field="triggers.onInviteEmailNotification"
+						options={yesNoOptions}
+						onBeforeValueSet={ value => value === 'true' /*casting back string to boolean*/}>
+						Send Email On New Invite
 					</FormField>
 				</FormColumn>
 			</Form>
