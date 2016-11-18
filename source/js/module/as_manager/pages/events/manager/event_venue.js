@@ -1,9 +1,14 @@
-const   React           = require('react'),
-        Map             = require('module/ui/map/map'),
-        Autocomplete    = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-        Immutable       = require('immutable'),
-        Morearty		= require('morearty'),
-        If              = require('module/ui/if/if');
+const   React               = require('react'),
+        Map                 = require('module/ui/map/map'),
+        Autocomplete        = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+        Immutable           = require('immutable'),
+        Morearty		    = require('morearty'),
+        If                  = require('module/ui/if/if'),
+
+        InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
+        InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
+        TextInputStyles		= require('./../../../../../../styles/ui/b_text_input.scss'),
+        DropdownStyles		= require('./../../../../../../styles/ui/b_dropdown.scss');
 
 const EventVenue = React.createClass({
     displayName:            'EventVenue',
@@ -208,8 +213,8 @@ const EventVenue = React.createClass({
         const self = this;
 
         return (
-            <div className="eVenue_venue_type_radio_buttons">
-                <div className="eVenue_venue_type_radio_buttons_header">
+            <div className="bInputWrapper">
+                <div className="bInputLabel">
                     Change Venue
                 </div>
 
@@ -263,15 +268,18 @@ const EventVenue = React.createClass({
                     {self._renderVenueTypeRadioButton(venueType)}
                 </If>
                 <If condition={self._isShowPostcodeField()}>
-                    <div className="eVenue_postcode">
-                        <span className="eVenue_postcodeLabel">Change Postcode</span>
+                    <div className="bInputWrapper">
+                        <div className="bInputLabel">
+							Change Postcode
+						</div>
                         <Autocomplete
-                            serverField="postcode"
-                            defaultItem={binding.toJS('venue')}
-                            binding={binding.sub('postcode')}
-                            serviceFilter={self._postcodeService}
-                            onSelect={self._onSelectPostcode}
-                            placeholder={'Select Postcode'}
+                            serverField     ="postcode"
+                            defaultItem     ={binding.toJS('venue')}
+                            binding         ={binding.sub('postcode')}
+                            serviceFilter	={self._postcodeService}
+                            onSelect		={self._onSelectPostcode}
+                            placeholder		={'Select Postcode'}
+                            extraCssStyle	= {'mBigSize'}
                         />
                     </div>
                 </If>

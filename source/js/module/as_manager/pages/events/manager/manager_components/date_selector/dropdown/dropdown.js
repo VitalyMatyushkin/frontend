@@ -34,8 +34,6 @@ const Dropdown = React.createClass({
 			}
 		);
 
-		console.log(this.props.optionsArray);
-
 		return (
 			<select	className	= { this.getSelectCssStyle() }
 					value		= { this.props.currentOptionId }
