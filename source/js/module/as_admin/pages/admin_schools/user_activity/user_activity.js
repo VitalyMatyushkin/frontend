@@ -82,7 +82,7 @@ const Logs = React.createClass({
 						Status
 					</TableField>
 					<TableField	dataField="finishedAt"
-								filterType="none"
+								filterType="sorting"
 								parseFunction={self._finishedAt}
 					>
 						Finished
