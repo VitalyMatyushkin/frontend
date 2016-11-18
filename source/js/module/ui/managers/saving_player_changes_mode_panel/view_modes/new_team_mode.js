@@ -23,7 +23,8 @@ const Header = React.createClass({
 	render: function() {
 		return (
 			<div className="eSavingPlayerChangesModePanel_radioButtons">
-				<RadioButton	text		= { 'Save as new team' }
+				<RadioButton	id			= { "save-as-new-team-radio-button" }
+								text		= { 'Save as new team' }
 								isChecked	= { this.isChecked(ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM) }
 								onClick		= { this.props.handleChange.bind(null, ManagerConsts.SAVING_CHANGES_MODE.SAVE_CHANGES_TO_NEW_PROTOTYPE_TEAM) }
 								customCSS	= { 'mSaveAsNewTeam' }
@@ -34,7 +35,8 @@ const Header = React.createClass({
 						onChange	= { this.handleChangeTeamName }
 						value		= { typeof this.props.teamName !== 'undefined' ? this.props.teamName : '' }
 				/>
-				<RadioButton	text		= { 'Use team only for this event' }
+				<RadioButton	id			= { "save-as-new-team-radio-button" }
+								text		= { 'Use team only for this event' }
 								isChecked	= { this.isChecked(ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES) }
 								onClick		= { this.props.handleChange.bind(null, ManagerConsts.SAVING_CHANGES_MODE.DOESNT_SAVE_CHANGES) }
 				/>

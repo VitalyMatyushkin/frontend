@@ -16,7 +16,8 @@ const AccessPresetPanel = React.createClass({
 
 		for(let accessPreset in this.props.accessPresetList) {
 			list.push(
-				<RadioButton	text		= { this.props.accessPresetList[accessPreset] }
+				<RadioButton	id			= { `${accessPreset}-radio-button` }
+								text		= { this.props.accessPresetList[accessPreset] }
 								isChecked	= { this.isChecked(accessPreset) }
 								onClick		= { this.props.handleChange.bind(null, accessPreset) }
 				/>

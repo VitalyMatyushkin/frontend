@@ -11,6 +11,14 @@
   &.mTeamForm {
     padding-top: 30px;
   }
+
+  &.mTeamManager {
+    padding-top: 60px;
+  }
+
+  &.mBase {
+    padding-top: 60px;
+  }
 }
 
 .eManager_dateTimePicker {
@@ -73,7 +81,8 @@
 
 .eManager_container {
   display: flex;
-  width: 100%;
+  width: 1070px;
+  margin: 0 auto;
   flex-direction: column;
 }
 

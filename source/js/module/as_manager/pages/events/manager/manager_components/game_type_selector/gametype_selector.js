@@ -20,21 +20,24 @@ const GameTypeSelector = React.createClass({
 		return (
 			<div className="bGameTypeSelector">
 				<div className="eGameTypeSelector_leftSide">
-					<RadioButton	isChecked	= {this.props.iInterSchoolsChecked}
+					<RadioButton	id			= {"inter-schools-radio-button"}
+									isChecked	= {this.props.iInterSchoolsChecked}
 									text		= "Inter-schools"
 									onClick		= {this.handleClick.bind(null, 'inter-schools')}
 									customCSS	= "mGenderSelector"
 					/>
 				</div>
 				<div className="eGameTypeSelector_centerSide">
-					<RadioButton	isChecked	= {this.props.isHousesChecked}
+					<RadioButton	id			= {"houses-radio-button"}
+									isChecked	= {this.props.isHousesChecked}
 									text		= "Houses"
 									onClick		= {this.handleClick.bind(null, 'houses')}
 									customCSS	= "mGenderSelector"
 					/>
 				</div>
 				<div className="eGameTypeSelector_rightSide">
-					<RadioButton	isChecked	= {this.props.isInternalChecked}
+					<RadioButton	id			= {"internal-radio-button"}
+									isChecked	= {this.props.isInternalChecked}
 									text		= "Internal"
 									onClick		= {this.handleClick.bind(null, 'internal')}
 									customCSS	= "mGenderSelector"

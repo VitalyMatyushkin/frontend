@@ -21,7 +21,8 @@ const GenderSelector = React.createClass({
 		return (
 			<div className="bGenderSelector">
 				<div className="eGenderSelector_leftSide">
-					<RadioButton	isChecked	= {this.props.isBoysChecked}
+					<RadioButton	id			= {"boys-radio-button"}
+									isChecked	= {this.props.isBoysChecked}
 									isDisabled	= {this.props.isBoysDisabled}
 									text		= "BOYS"
 									onClick		= {this.handleClick.bind(null, 'boys')}
@@ -29,7 +30,8 @@ const GenderSelector = React.createClass({
 					/>
 				</div>
 				<div className="eGenderSelector_rightSide">
-					<RadioButton	isChecked	= {this.props.isGirlsChecked}
+					<RadioButton	id			= {"girls-radio-button"}
+									isChecked	= {this.props.isGirlsChecked}
 									isDisabled	= {this.props.isGirlsDisabled}
 									text		= "GIRLS"
 									onClick		= {this.handleClick.bind(null, 'girls')}
