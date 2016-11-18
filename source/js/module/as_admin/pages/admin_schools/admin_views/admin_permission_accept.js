@@ -149,7 +149,7 @@ const PermissionAcceptPage = React.createClass({
 						serverField='name'
 						onSelect={self.onSelectForm}
 						binding={binding.sub('_formAutocomplete')}
-						placeholderText='form name'
+						placeholder='form name'
 					/>
 				</div>
 				<If condition={binding.get('formId') !== undefined}>
@@ -159,7 +159,7 @@ const PermissionAcceptPage = React.createClass({
 							serverField='name'
 							onSelect={self.onSelectHouse}
 							binding={binding.sub('_houseAutocomplete')}
-							placeholderText='house name'
+							placeholder='house name'
 						/>
 					</div>
 				</If>
@@ -170,7 +170,7 @@ const PermissionAcceptPage = React.createClass({
 							serverField='name'
 							onSelect={self.onSelectStudent}
 							binding={binding.sub('_studentAutocomplete')}
-							placeholderText='Student name'
+							placeholder='Student name'
 						/>
 					</div>
 				</If>

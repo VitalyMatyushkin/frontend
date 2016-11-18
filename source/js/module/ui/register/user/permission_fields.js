@@ -148,7 +148,7 @@ const PermissionFields = React.createClass({
 						serverField="name"
 						onSelect={self.onSelectSchool}
 						binding={binding.sub('_schoolAutocomplete')}
-						placeholderText="school's name"
+						placeholder="school's name"
 						/>
 						{message}
 					</div>
@@ -159,7 +159,7 @@ const PermissionFields = React.createClass({
 						serverField="name"
 						onSelect={self.onSelectHouse}
 						binding={binding.sub('_houseAutocomplete')}
-						placeholderText="house's name"
+						placeholder="house's name"
 					/>
 				</If>
 				<If condition={!!binding.get('houseId') && currentType === 'parent'}>
@@ -167,7 +167,7 @@ const PermissionFields = React.createClass({
 						serviceFilter={self.serviceFormFilter}
 						serverField="name"
 						onSelect={self.onSelectForm}
-						placeholderText="form's name"
+						placeholder="form's name"
 						binding={binding.sub('_formAutocomplete')}
 					/>
 				</If>

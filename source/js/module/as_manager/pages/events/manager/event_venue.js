@@ -271,7 +271,7 @@ const EventVenue = React.createClass({
                             binding={binding.sub('postcode')}
                             serviceFilter={self._postcodeService}
                             onSelect={self._onSelectPostcode}
-                            placeholderText={'Select Postcode'}
+                            placeholder={'Select Postcode'}
                         />
                     </div>
                 </If>
