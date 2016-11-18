@@ -106,7 +106,6 @@ const EventView = React.createClass({
 			self.initTabs();
 
 			binding.set('sync', Immutable.fromJS(true));
-			console.log(new Date() + " sync");
 
 			return eventData;
 		})
