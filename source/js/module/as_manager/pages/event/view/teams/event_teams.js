@@ -108,11 +108,12 @@ const EventTeams = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return {
-			default:	binding.sub('viewPlayers'),
-			event:		self.getBinding('event'),
-			points:		self.getBinding('points'),
-			mode:		self.getBinding('mode'),
-			isSync:		binding.sub('isSync')
+			default:					binding.sub('viewPlayers'),
+			event:						self.getBinding('event'),
+			points:						self.getBinding('points'),
+			mode:						self.getBinding('mode'),
+			individualScoreAvailable:	self.getBinding('individualScoreAvailable'),
+			isSync:						binding.sub('isSync')
 		};
 	},
 	getPlayerPerformanceBinding: function() {
