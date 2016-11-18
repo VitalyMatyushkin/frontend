@@ -338,6 +338,17 @@
   height: 300px;
 }
 
+.mIndividualScoreAvailable{
+  &.eForm_field{
+    margin: 10px 0;
+
+    .eForm_fieldName{
+      width: 180px;
+    }
+  }
+
+}
+
 
 
 

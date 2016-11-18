@@ -330,8 +330,10 @@ const EventTeamsView = React.createClass({
 		const self = this;
 
 		return players.map((player, playerIndex) => {
-			const 	mode	= self.getBinding('mode').toJS(),
-					event	= self.getBinding('event').toJS();
+			const 	mode						= self.getBinding('mode').toJS(),
+					event						= self.getBinding('event').toJS(),
+					individualScoreAvailable	= self.getBinding('individualScoreAvailable').toJS();
+
 			let eventPlayerCss = classNames('_bPlayer _mMini', this.props.customCss, {
 				mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
 			});
@@ -346,7 +348,7 @@ const EventTeamsView = React.createClass({
 						!self.isNonInternalEventForOneOnOneSport(event) &&
 						(event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
 					}>
-						<Score	isChangeMode	={EventHelper.isShowScoreButtons(event, mode, isOwner)}
+						<Score	isChangeMode	={EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
 								plainPoints		={self.getPointsByStudent(event, player.userId)}
 								pointsStep 		={event.sport.points.pointsStep}
 								pointsType		={event.sport.points.display}

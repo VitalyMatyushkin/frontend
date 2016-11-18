@@ -167,7 +167,7 @@ const EventHelper = {
 
 		return (eventType === 'internal') && (sport.players === 'INDIVIDUAL' || sport.players === '1X1');
 	},
-	isShowScoreButtons: function(event, mode, isOwner) {
+	isShowScoreButtons: function(event, mode, isOwner, individualScoreAvailable) {
 		return (
 					event.status === "NOT_FINISHED" ||
 					event.status === "DRAFT" ||
@@ -175,7 +175,7 @@ const EventHelper = {
 					event.status === "INVITES_SENT"
 			) &&
 			mode === 'closing' &&
-			isOwner;
+			isOwner && individualScoreAvailable;
 	},
 	isInterSchoolsEvent: function(event) {
 		const self = this;

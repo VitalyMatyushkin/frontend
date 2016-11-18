@@ -2,29 +2,29 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
 
-		If					= require('module/ui/if/if'),
-		Tabs				= require('./../../../ui/tabs/tabs'),
-		EventHeader			= require('./view/event_header'),
-		EventRivals			= require('./view/event_rivals'),
-		EventButtons		= require('./view/event_buttons'),
-		EventTeams			= require('./view/teams/event_teams'),
-		EventPerformance	= require('./view/teams/event_teams_performance'),
-		EventGallery		= require('./new_gallery/event_gallery'),
-		EventDetails		= require('./view/event_details'),
-		ManagerWrapper		= require('./view/manager_wrapper'),
-		Comments			= require('./view/event_blog'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		EventResultHelper	= require('./../../../helpers/event_result_helper'),
-		MatchReport 		= require('module/as_manager/pages/event/view/match-report/report'),
-		Map 				= require('module/ui/map/map-event-venue'),
-		SVG 				= require('module/ui/svg'),
+		If							= require('module/ui/if/if'),
+		Tabs						= require('./../../../ui/tabs/tabs'),
+		EventHeader					= require('./view/event_header'),
+		EventRivals					= require('./view/event_rivals'),
+		EventButtons				= require('./view/event_buttons'),
+		IndividualScoreAvailable 	= require('./view/individual_score_available'),
+		EventTeams					= require('./view/teams/event_teams'),
+		EventPerformance			= require('./view/teams/event_teams_performance'),
+		EventGallery				= require('./new_gallery/event_gallery'),
+		EventDetails				= require('./view/event_details'),
+		ManagerWrapper				= require('./view/manager_wrapper'),
+		Comments					= require('./view/event_blog'),
+		MoreartyHelper				= require('module/helpers/morearty_helper'),
+		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
+		EventResultHelper			= require('./../../../helpers/event_result_helper'),
+		MatchReport 				= require('./view/match-report/report'),
+		Map 						= require('module/ui/map/map-event-venue'),
+		SVG 						= require('module/ui/svg'),
 
-		RoleHelper			= require('./../../../helpers/role_helper');
+		RoleHelper					= require('./../../../helpers/role_helper');
 
-const EventView = React.createClass({
+const EventPage = React.createClass({
 	mixins: [Morearty.Mixin],
-	displayName: 'EventPage',
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -40,7 +40,10 @@ const EventView = React.createClass({
 			mode:			'general',
 			showingComment:	false,
 			activeTab:		'teams',
-			eventTeams:		{}
+			eventTeams:		{},
+			individualScoreAvailable:{
+				value:true
+			}
 		});
 	},
 	componentWillMount: function () {
@@ -199,10 +202,11 @@ const EventView = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return {
-			default:	binding.sub('eventTeams'),
-			activeTab:	binding.sub('activeTab'),
-			event:		binding.sub('model'),
-			mode:		binding.sub('mode')
+			default:					binding.sub('eventTeams'),
+			activeTab:					binding.sub('activeTab'),
+			event:						binding.sub('model'),
+			mode:						binding.sub('mode'),
+			individualScoreAvailable: 	binding.sub('individualScoreAvailable.value')
 		};
 	},
 	isShowTrobber: function() {
@@ -226,10 +230,11 @@ const EventView = React.createClass({
 		return self.isSync() && binding.toJS('mode') === 'edit_squad';
 	},
 	render: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding(),
-				showingComment	= binding.get('showingComment'),
-				activeTab		= binding.get('activeTab');
+		const	self						= this,
+				binding						= self.getDefaultBinding(),
+				showingComment				= binding.get('showingComment'),
+				activeTab					= binding.get('activeTab'),
+				isClosingMode 				= binding.toJS('mode') === 'closing';
 
 		switch (true) {
 			case !self.isSync():
@@ -255,6 +260,7 @@ const EventView = React.createClass({
 										</div>
 									</If>
 								</div>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable')} isVisible={isClosingMode}/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
 							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
@@ -297,4 +303,4 @@ const EventView = React.createClass({
 	}
 });
 
-module.exports = EventView;
+module.exports = EventPage;

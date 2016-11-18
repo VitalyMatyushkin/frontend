@@ -105,12 +105,13 @@ const EventRival = React.createClass({
 		const	event	= binding.toJS('model'),
 				points	= TeamHelper.getCountPoints(event, teamBundleName, order);
 
-		const	mode	= binding.toJS('mode'),
-				status	= binding.toJS('model.status');
+		const	mode						= binding.toJS('mode'),
+				status						= binding.toJS('model.status'),
+				individualScoreAvailable 	= binding.toJS('individualScoreAvailable.value');
 
 		return (
 			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	= {teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
+				<Score	isChangeMode	= {teamBundleName === 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true, !individualScoreAvailable)}
 						plainPoints		= {points}
 						pointsStep		= {event.sport.points.pointsStep}
 						pointsType		= {event.sport.points.display}
