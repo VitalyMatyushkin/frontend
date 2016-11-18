@@ -597,14 +597,14 @@ const EventButtons = React.createClass({
 				<div className="bEventButtons">
 					<If condition={TeamHelper.isShowCloseEventButton(self)}>
 						<div	onClick		= {self.onClickCloseMatch}
-								className	="bEventButton"
+								className	="bButton"
 						>
 							Close game
 						</div>
 					</If>
 					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>
 						<div
-							className="bEventButton mCancel"
+							className="bButton mCancel"
 							onClick={self.onClickCloseCancel}
 						>
 							Cancel
@@ -612,7 +612,7 @@ const EventButtons = React.createClass({
 					</If>
 					<If condition={EventHelper._isShowCancelEventEditButton(self)}>
 						<div
-							className="bEventButton mCancel"
+							className="bButton mCancel"
 							onClick={self.onClickEditCancel}
 						>
 							Cancel
@@ -620,7 +620,7 @@ const EventButtons = React.createClass({
 					</If>
 					<If condition={EventHelper._isShowFinishEventEditingButton(self)}>
 						<div
-								className="bEventButton"
+								className="bButton"
 								onClick={self.onClickOk}
 						>
 							Save
