@@ -4,6 +4,7 @@ const	React				= require('react'),
 
 const RadioButton = React.createClass({
 	propTypes: {
+		id:			React.PropTypes.string.isRequired,
 		isChecked:	React.PropTypes.bool.isRequired,
 		isDisabled:	React.PropTypes.bool,
 		text:		React.PropTypes.string.isRequired,
@@ -24,15 +25,18 @@ const RadioButton = React.createClass({
 	render: function() {
 		return (
 			<div className={ this.getStyle() }>
-				<input	className	= "bRadioButton_input"
+				<input	id			= { this.props.id }
+						className	= "bRadioButton_input"
 						type		= "radio"
 						checked		= { this.props.isChecked }
 						onChange	= { this.props.onClick }
 						disabled	= { typeof this.props.isDisabled === "undefined" ? false : this.props.isDisabled }
 				/>
-				<div className="bRadioButton_text">
+				<label	className	= "bRadioButton_text"
+						htmlFor		= { this.props.id }
+				>
 					{ this.props.text }
-				</div>
+				</label>
 			</div>
 		);
 	}
