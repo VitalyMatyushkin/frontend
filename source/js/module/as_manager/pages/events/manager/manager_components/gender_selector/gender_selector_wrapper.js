@@ -2,20 +2,47 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
 
-		GenderSelector	= require('./gender_selector');
+		RadioButton		= require('../../../../../../ui/radio_button/radio_button'),
+		ControlPanel	= require('../../../../../../ui/control_panel/control_panel'),
+
+		EventConsts		= require('../../../../../../helpers/consts/events');
 
 const GenderSelectorWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
 
+	CUSTOM_CSS_STYLE:	"mGenderSelector",
+	BOYS_TEXT:			"BOYS",
+	GIRLS_TEXT:			"GIRLS",
+	RADIO_BUTTON_IDS :	{
+		"BOYS_RADIOBUTTON":		"BOYS_RADIOBUTTON",
+		"GIRLS_RADIOBUTTON":	"GIRLS_RADIOBUTTON"
+	},
+	getRadioButtonIdArray: function() {
+		const ids = [];
+
+		for(let key in this.RADIO_BUTTON_IDS) {
+			ids.push(this.RADIO_BUTTON_IDS[key]);
+		}
+
+		return ids;
+	},
+	isCheckedById: function(radiobuttonId) {
+		switch(radiobuttonId) {
+			case this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON:
+				return this.isBoysChecked();
+			case this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON:
+				return this.isGirlsChecked();
+		}
+	},
 	isBoysChecked: function() {
 		const gender = this.getDefaultBinding().toJS('model.gender');
 
 		switch (gender) {
-			case "femaleOnly":
+			case EventConsts.EVENT_GENDERS.FEMALE_ONLY:
 				return false;
-			case "maleOnly":
+			case EventConsts.EVENT_GENDERS.MALE_ONLY:
 				return true;
-			case "mixed":
+			case EventConsts.EVENT_GENDERS.MIXED:
 				return true;
 			default:
 				return false;
@@ -25,14 +52,22 @@ const GenderSelectorWrapper = React.createClass({
 		const gender = this.getDefaultBinding().toJS('model.gender');
 
 		switch (gender) {
-			case "femaleOnly":
+			case EventConsts.EVENT_GENDERS.FEMALE_ONLY:
 				return true;
-			case "maleOnly":
+			case EventConsts.EVENT_GENDERS.MALE_ONLY:
 				return false;
-			case "mixed":
+			case EventConsts.EVENT_GENDERS.MIXED:
 				return true;
 			default:
 				return false;
+		}
+	},
+	isDisabledById: function(radiobuttonId) {
+		switch(radiobuttonId) {
+			case this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON:
+				return this.isBoysDisabled();
+			case this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON:
+				return this.isGirlsDisabled();
 		}
 	},
 	isBoysDisabled: function() {
@@ -57,8 +92,21 @@ const GenderSelectorWrapper = React.createClass({
 			return true;
 		}
 	},
-
-	handleClick: function(selectedGender) {
+	getTextById: function(radiobuttonId) {
+		switch(radiobuttonId) {
+			case this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON:
+				return this.getBoysText();
+			case this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON:
+				return this.getGirlsText();
+		}
+	},
+	getBoysText: function() {
+		return this.BOYS_TEXT; 
+	},
+	getGirlsText: function() {
+		return this.GIRLS_TEXT;
+	},
+	handleClick: function(radiobuttonId) {
 		const sportModel = this.getDefaultBinding().get('model.sportModel');
 
 		if(sportModel) {
@@ -66,42 +114,49 @@ const GenderSelectorWrapper = React.createClass({
 					currentGender	= this.getDefaultBinding().toJS('model.gender');
 
 			switch (true) {
-				case selectedGender === 'boys' && genders.mixed && currentGender === 'femaleOnly':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('mixed'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && genders.mixed && currentGender === EventConsts.EVENT_GENDERS.FEMALE_ONLY:
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MIXED));
 					break;
-				case selectedGender === 'boys' && currentGender === 'femaleOnly':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('maleOnly'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && currentGender === EventConsts.EVENT_GENDERS.FEMALE_ONLY:
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MALE_ONLY));
 					break;
-				case selectedGender === 'boys' && currentGender === 'mixed':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('femaleOnly'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && currentGender === EventConsts.EVENT_GENDERS.MIXED:
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.FEMALE_ONLY));
 					break;
-				case selectedGender === 'boys' && typeof currentGender === 'undefined':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('maleOnly'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.BOYS_RADIOBUTTON && typeof currentGender === 'undefined':
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MALE_ONLY));
 					break;
-				case selectedGender === 'girls' && genders.mixed && currentGender === 'maleOnly':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('mixed'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && genders.mixed && currentGender === EventConsts.EVENT_GENDERS.MALE_ONLY:
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MIXED));
 					break;
-				case selectedGender === 'girls' && currentGender === 'maleOnly':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('femaleOnly'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && currentGender === EventConsts.EVENT_GENDERS.MALE_ONLY:
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.FEMALE_ONLY));
 					break;
-				case selectedGender === 'girls' && currentGender === 'mixed':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('maleOnly'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && currentGender === EventConsts.EVENT_GENDERS.MIXED:
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.MALE_ONLY));
 					break;
-				case selectedGender === 'girls' && typeof currentGender === 'undefined':
-					this.getDefaultBinding().set('model.gender', Immutable.fromJS('femaleOnly'));
+				case radiobuttonId === this.RADIO_BUTTON_IDS.GIRLS_RADIOBUTTON && typeof currentGender === 'undefined':
+					this.getDefaultBinding().set('model.gender', Immutable.fromJS(EventConsts.EVENT_GENDERS.FEMALE_ONLY));
 					break;
 			}
 		}
 	},
-
+	getRadiobuttonArray: function() {
+		return this.getRadioButtonIdArray().map(radiobuttonId => {
+			return (
+				<RadioButton	id			= { radiobuttonId }
+								isChecked	= { this.isCheckedById(radiobuttonId) }
+								isDisabled	= { this.isDisabledById(radiobuttonId) }
+								text		= { this.getTextById(radiobuttonId) }
+								onClick		= { this.handleClick.bind(null, radiobuttonId) }
+								customCSS	= "mGenderSelector"
+				/>
+			);
+		});
+	},
 	render: function() {
-		return(
-			<GenderSelector	isBoysChecked	= {this.isBoysChecked()}
-							isBoysDisabled	= {this.isBoysDisabled()}
-							isGirlsChecked	= {this.isGirlsChecked()}
-							isGirlsDisabled	= {this.isGirlsDisabled()}
-							handleClick		= {this.handleClick}
-			/>
+		return (
+			<ControlPanel controlArray={this.getRadiobuttonArray()}/>
 		);
 	}
 });

@@ -14,4 +14,11 @@ const EVENT_STATUS = {
 	'CANCELED'					: 'CANCELED'						// event canceled because of some reason
 };
 
-module.exports.EVENT_STATUS = EVENT_STATUS;
+const EVENT_GENDERS = {
+	FEMALE_ONLY:	'femaleOnly',
+	MALE_ONLY:		'maleOnly',
+	MIXED:			'mixed'
+};
+
+module.exports.EVENT_STATUS		= EVENT_STATUS;
+module.exports.EVENT_GENDERS	= EVENT_GENDERS;
