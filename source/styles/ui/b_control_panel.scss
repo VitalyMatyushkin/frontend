@@ -16,4 +16,8 @@
 
   border: 1px solid #d7d7d7;
   border-width: 0 1px 0 0;
+
+  &.mLast {
+    border: none;
+  }
 }

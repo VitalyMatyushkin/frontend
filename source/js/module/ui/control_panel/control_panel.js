@@ -1,5 +1,7 @@
 const	React					= require('react'),
 
+		classNames				= require('classnames'),
+
 		ControlPanelStyles		= require('./../../../../styles/ui/b_control_panel.scss');
 
 const ControlPanel = React.createClass({
@@ -9,9 +11,14 @@ const ControlPanel = React.createClass({
 	},
 
 	renderControlElements: function() {
-		return this.props.controlArray.map(control => {
+		return this.props.controlArray.map((control, index) => {
+			const sectionStyle = classNames({
+				'eControlPanel_section': true,
+				'mLast':				index === this.props.controlArray.length - 1
+			});
+
 			return (
-				<div className="eControlPanel_section">
+				<div className={sectionStyle}>
 					{control}
 				</div>
 			);
