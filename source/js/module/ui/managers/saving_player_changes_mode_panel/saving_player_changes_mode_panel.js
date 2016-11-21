@@ -20,7 +20,6 @@ const TeamSaveModePanel = React.createClass({
 	render: function() {
 		return (
 			<div className="bSavingPlayerChangesModePanel">
-				<Header text={ this.props.originalTeamName } />
 				<If condition={ this.props.viewMode === ManagerConsts.VIEW_MODE.NEW_TEAM_VIEW}>
 					<NewTeamMode	teamName				= { this.props.teamName }
 									savingChangesMode		= { this.props.savingChangesMode }
@@ -29,7 +28,8 @@ const TeamSaveModePanel = React.createClass({
 					/>
 				</If>
 				<If condition={ this.props.viewMode === ManagerConsts.VIEW_MODE.OLD_TEAM_VIEW}>
-					<OldTeamMode	teamName				= { this.props.teamName }
+					<OldTeamMode	originalTeamName		= { this.props.originalTeamName }
+									teamName				= { this.props.teamName }
 									savingChangesMode		= { this.props.savingChangesMode }
 									handleChange			= { this.props.handleChange }
 									handleChangeTeamName	= { this.props.handleChangeTeamName }

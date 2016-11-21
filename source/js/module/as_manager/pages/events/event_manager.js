@@ -7,18 +7,18 @@ const   Calendar			= require('module/as_manager/pages/events/calendar/calendar')
 		classNames			= require('classnames'),
 		React				= require('react'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		TeamHelper			= require('./../../../ui/managers/helpers/team_helper'),
-		SavingEventHelper	= require('./../../../helpers/saving_event_helper'),
+		TeamHelper			= require('../../../ui/managers/helpers/team_helper'),
+		SavingEventHelper	= require('../../../helpers/saving_event_helper'),
 		EventHelper			= require('module/helpers/eventHelper'),
-		Loader				= require('./../../../ui/loader'),
+		Loader				= require('../../../ui/loader'),
 		Morearty			= require('morearty'),
 		Promise 			= require('bluebird'),
 		Immutable			= require('immutable'),
-		ConfirmPopup		= require('./../../../ui/confirm_popup'),
-		TeamSaveModePanel	= require('./../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
-		ManagerConsts		= require('./../../../ui/managers/helpers/manager_consts'),
+		ConfirmPopup		= require('../../../ui/confirm_popup'),
+		TeamSaveModePanel	= require('../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
+		ManagerConsts		= require('../../../ui/managers/helpers/manager_consts'),
 
-		ManagerStyles		= require('./../../../../../styles/pages/events/b_events_manager.scss');
+		ManagerStyles		= require('../../../../../styles/pages/events/b_events_manager.scss');
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -206,6 +206,9 @@ const EventManager = React.createClass({
 				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
 					this.showSavingChangesModePopup(event);
 					break;
+				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged() && this.isUserCreateNewTeam():
+					this.showSavingChangesModePopup(event);
+					break;
 				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && !this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
 					binding.set('isSubmitProcessing', true);
 					this.submit(event);
@@ -215,7 +218,7 @@ const EventManager = React.createClass({
 					this.submit(event);
 					break;
 				// If teams data isn't correct
-				default:
+				case !TeamHelper.isTeamDataCorrect(event, validationData):
 					// So, let's show form with incorrect data
 					self._changeRivalFocusToErrorForm();
 					break;
@@ -562,6 +565,11 @@ const EventManager = React.createClass({
 			default :
 				teamWrappers.forEach((tw, index) => {
 					if(this.isTeamChangedByOrder(index) || this.isUserCreateNewTeamByOrder(index)) {
+						if(savingPlayerChangesModePanels.length !== 0) {
+							savingPlayerChangesModePanels.push(
+								<div className="eSavingChangesBlock_changesSeparator"></div>
+							);
+						}
 						savingPlayerChangesModePanels.push(
 							<TeamSaveModePanel	key						= { `team-wrapper-${index}` }
 												originalTeamName		= { this.getOriginalTeamName(teamWrappers, index) }
@@ -579,9 +587,6 @@ const EventManager = React.createClass({
 
 		return (
 			<div className="bSavingChangesBlock">
-				<div className="eSavingChangesBlock_text">
-					Team have been changed. Please select one of the following options:
-				</div>
 				{ savingPlayerChangesModePanels }
 			</div>
 		);
@@ -596,10 +601,10 @@ const EventManager = React.createClass({
 	},
 	getViewMode: function(order) {
 		switch (true) {
-			case this.isUserCreateNewTeam(order):
-				return ManagerConsts.VIEW_MODE.NEW_TEAM_VIEW;
-			case this.isTeamChangedByOrder(order):
+			case this.isTeamChangedByOrder(order) && !this.isUserCreateNewTeamByOrder(order):
 				return ManagerConsts.VIEW_MODE.OLD_TEAM_VIEW;
+			case this.isUserCreateNewTeamByOrder(order):
+				return ManagerConsts.VIEW_MODE.NEW_TEAM_VIEW;
 		}
 	},
 	renderSavingPlayerChangesPopup: function(event) {
