@@ -30,7 +30,7 @@ const EventsCalendar = React.createClass({
 		CalendarActions.setSelectedDate(selectedDate, childIdList, calendar);
 	},
 	onEventClick:function(eventId){
-		document.location.hash = 'event/' + eventId + '?tab=teams';
+		document.location.hash = 'event/' + eventId;
 	},
 	_renderChallengesListView: function() {
 		const	self		= this,
