@@ -106,22 +106,20 @@ const EventView = React.createClass({
 					}}/>
 
 			<div className='bSchoolMaster'>
-				<div className='bEvents'>
-					<RouterView routes={binding.sub('eventsRouting')}
-								binding={rootBinging}>
-						<Route	path='/events/calendar/:userId'
-								binding={binding}
-								component={EventsCalendarComponent}/>
+				<RouterView routes={binding.sub('eventsRouting')}
+							binding={rootBinging}>
+					<Route	path='/events/calendar/:userId'
+							binding={binding}
+							component={EventsCalendarComponent}/>
 
-						<Route	path='/events/fixtures/:userId'
-							  	binding={binding}
-								component={EventsFixturesComponent}/>
+					<Route	path='/events/fixtures/:userId'
+							binding={binding}
+							component={EventsFixturesComponent}/>
 
-						<Route	path="/events/achievement/:userId"
-								binding={binding}
-								component={EventsAchievementComponent}/>
-					</RouterView>
-				</div>
+					<Route	path="/events/achievement/:userId"
+							binding={binding}
+							component={EventsAchievementComponent}/>
+				</RouterView>
 			</div>
 		</div>;
 	}
