@@ -16,7 +16,6 @@ const CookiePopupMessage = React.createClass({
 							handleClickOkButton	= { this.handleClickOkButton }
 			>
 				We use cookies to provide you the best experience on our Website.
-				Please read our cookie policy to find out more.
 				By continuing to browse our Website, you are agreeing to our use of cookies.
 				Please read our <a className="ePopupMessage_ref" href="cookies_policy_v1.0.docx">cookie policy</a> to find out more.
 			</PopupMessage>
