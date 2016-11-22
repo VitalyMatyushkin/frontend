@@ -10,6 +10,7 @@ const 	GeneralType 		= require('./general-type'),
 		ImageType 			= require('./image-type'),
 		ActionButtonsType 	= require('./action-buttons-type'),
 		ActionDropListType 	= require('./action-drop-list-type'),
+		AvatarType			= require('./avatar-type'),
 		EmailUrlType 		= require('./email-url-type');
 
 const CellTypeList = {
@@ -22,6 +23,7 @@ const CellTypeList = {
 	'action-buttons': 	ActionButtonsType,
 	'action-list':		ActionDropListType,
 	'email':			EmailUrlType,
+	'avatar': 			AvatarType,
 	'url': 				EmailUrlType
 };
 
