@@ -244,7 +244,7 @@ const TeamWrapper = React.createClass({
 						.set('prevPlayers',							Immutable.fromJS(updatedPlayers))
 						.set('removedPlayers',						Immutable.fromJS([]))
 						.set('___teamManagerBinding.teamStudents',	Immutable.fromJS(updatedPlayers))
-						.set('___teamManagerBinding.blackList',		Immutable.fromJS(updatedPlayers))
+						.set('___teamManagerBinding.isNeedSearch',	true)
 						.commit();
 
 					return team;
