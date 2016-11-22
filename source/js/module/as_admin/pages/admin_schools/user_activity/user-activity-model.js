@@ -25,7 +25,7 @@ const UserActivityModel = function(page){
     this.setColumns();
 };
 UserActivityModel.prototype = {
-    getNameUser: function(item){
+    getUserName: function(item){
         let name = '';
 
         if (typeof item.user !== 'undefined'){
@@ -34,7 +34,7 @@ UserActivityModel.prototype = {
 
         return name;
     },
-    getMethod: function(){
+    getMethodList: function(){
         return [
             {
                 key:'GET',
@@ -61,7 +61,7 @@ UserActivityModel.prototype = {
                 isSorted:false,
                 cell:{
                     dataField:'user.avatar',
-                    type:'avatar'
+                    type:'image'
                 }
             },
             {
@@ -70,7 +70,7 @@ UserActivityModel.prototype = {
                 cell:{
                     type:'custom',
                     typeOptions:{
-                        parseFunction:this.getNameUser.bind(this)
+                        parseFunction:this.getUserName.bind(this)
                     }
                 }
             },
@@ -94,7 +94,7 @@ UserActivityModel.prototype = {
                 filter:{
                     type:'multi-select',
                     typeOptions:{
-                        items: this.getMethod(),
+                        items: this.getMethodList(),
                         hideFilter:true,
                         hideButtons:true
                     }
@@ -103,10 +103,10 @@ UserActivityModel.prototype = {
             {
                 text:'Url',
                 isSorted:true,
+                width:370,
                 cell:{
                     dataField:'httpUrl',
-                    type:'url',
-                    width:370
+                    type:'url'                    
                 },
                 filter:{
                     type:'string'

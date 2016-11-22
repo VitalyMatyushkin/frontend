@@ -6,7 +6,7 @@ const React = require('react');
 
 const EmailUrlType = function(props){
 	const 	value 	= props.cell.getValue(props.dataItem),
-			cellStyle 	= props.cell.width ? {maxWidth: props.cell.width} : null,
+			cellStyle 	= props.width ? {maxWidth: props.width} : null,
 			result 	= value ? value : null;
 
 	return (
@@ -18,7 +18,8 @@ const EmailUrlType = function(props){
 
 EmailUrlType.propTypes = {
 	cell: 		React.PropTypes.object.isRequired,
-	dataItem:	React.PropTypes.object.isRequired
+	dataItem:	React.PropTypes.object.isRequired,
+	width:		React.PropTypes.number
 };
 
 module.exports = EmailUrlType;

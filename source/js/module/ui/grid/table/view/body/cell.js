@@ -13,10 +13,11 @@ const Cell = React.createClass({
 	render: function() {
 		const self = this,
 			cell = self.props.column.cell,
+			width = self.props.column.width,
 			CellType = TypeList[cell.type];
 
 		return (
-				<CellType cell={cell} dataItem={self.props.dataItem} />
+				<CellType cell={cell} dataItem={self.props.dataItem}  width={width} />
 		);
 	}
 });
