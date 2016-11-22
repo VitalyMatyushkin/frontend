@@ -107,11 +107,12 @@ const EventRival = React.createClass({
 
 		const	mode						= binding.toJS('mode'),
 				status						= binding.toJS('model.status'),
-				individualScoreAvailable 	= binding.toJS('individualScoreAvailable.value');
+				individualScoreAvailable 	= binding.toJS('individualScoreAvailable.value'),
+				isa 						= !individualScoreAvailable || teamBundleName != 'teamsData';
 
 		return (
 			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	= {teamBundleName === 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true, !individualScoreAvailable)}
+				<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
 						plainPoints		= {points}
 						pointsStep		= {event.sport.points.pointsStep}
 						pointsType		= {event.sport.points.display}
