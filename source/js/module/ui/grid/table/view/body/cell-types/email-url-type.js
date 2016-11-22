@@ -22,5 +22,4 @@ EmailUrlType.propTypes = {
 	width:		React.PropTypes.number
 };
 
-
 module.exports = EmailUrlType;

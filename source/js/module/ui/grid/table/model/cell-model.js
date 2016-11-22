@@ -9,7 +9,6 @@ const CellModel = function(options){
 	this.type = options.type || 'general';
 	this.typeOptions = options.typeOptions;
 	this.dataField 	= options.dataField;
-
 	this.onEmpty 	= options.onEmpty || '';
 };
 
