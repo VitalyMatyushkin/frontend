@@ -199,7 +199,7 @@ const EventTeamsView = React.createClass({
 		return (
 			<div className="bEventTeams_team">
 				<div className="eEventTeams_awaiting">
-					{'Opponent select team later...'}
+					{'Accepted by opponent'}
 				</div>
 			</div>
 		);
