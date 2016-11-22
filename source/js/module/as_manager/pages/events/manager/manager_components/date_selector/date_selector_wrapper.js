@@ -16,8 +16,6 @@ const DateSelectorWrapper = React.createClass({
 	render: function() {
 		const date = this.getDefaultBinding().toJS();
 
-		console.log(date);
-
 		return(
 			<div className="bDateSelectorWrapper">
 				<DateSelector	date				= { date }
