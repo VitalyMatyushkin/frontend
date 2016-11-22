@@ -226,10 +226,17 @@ const EventManager = React.createClass({
 		}
 	},
 	isUserCreateNewTeam: function() {
-		return (
-			this.isUserCreateNewTeamByOrder(0) ||
-			this.isUserCreateNewTeamByOrder(1)
-		);
+		const event = this.getDefaultBinding().toJS('model');
+
+		switch (true) {
+			case EventHelper.isInterSchoolsEvent(event):
+				return this.isUserCreateNewTeamByOrder(0);
+			default :
+				return (
+					this.isUserCreateNewTeamByOrder(0) ||
+					this.isUserCreateNewTeamByOrder(1)
+				);
+		}
 	},
 	isUserCreateNewTeamByOrder: function(order) {
 		return (
@@ -242,11 +249,17 @@ const EventManager = React.createClass({
 	 * @returns {any|*}
 	 */
 	isAnyTeamChanged: function() {
+		const event = this.getDefaultBinding().toJS('model');
 
-		return (
-			this.isTeamChangedByOrder(0) ||
-			this.isTeamChangedByOrder(1)
-		);
+		switch (true) {
+			case EventHelper.isInterSchoolsEvent(event):
+				return this.isTeamChangedByOrder(0);
+			default :
+				return (
+					this.isTeamChangedByOrder(0) ||
+					this.isTeamChangedByOrder(1)
+				);
+		}
 	},
 	isTeamChangedByOrder: function(order) {
 
