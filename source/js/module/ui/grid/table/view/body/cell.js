@@ -22,4 +22,5 @@ const Cell = React.createClass({
 	}
 });
 
+
 module.exports = Cell;
