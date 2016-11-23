@@ -1,12 +1,15 @@
 /**
  * Created by Anatoly on 29.05.2016.
  */
-const   React           				= require('react'),
-		Morearty       					= require('morearty'),
-        RouterView      				= require('module/core/router'),
+const	React							= require('react'),
+		Morearty						= require('morearty'),
+		RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
 		PasswordResetComponent 			= require('module/as_password/forgot_password/reset'),
-		PasswordResetRequestComponent 	= require('module/as_password/forgot_password/reset_request');
+		PasswordResetRequestComponent	= require('module/as_password/forgot_password/reset_request'),
+
+		NotificationAlert				= require('../ui/notification_alert/notification_alert'),
+		ConfirmAlert					= require('../ui/confirm_alert/confirm_alert');
 
 const Center = React.createClass({
     mixins: [Morearty.Mixin],
