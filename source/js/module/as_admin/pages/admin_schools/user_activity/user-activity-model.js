@@ -105,7 +105,7 @@ UserActivityModel.prototype.setColumns = function(){
         {
             text:'Url',
             isSorted:true,
-            width:370,
+            width:'370px',
             cell:{
                 dataField:'httpUrl',
                 type:'url'

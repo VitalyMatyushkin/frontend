@@ -19,7 +19,7 @@ const EmailUrlType = function(props){
 EmailUrlType.propTypes = {
 	cell: 		React.PropTypes.object.isRequired,
 	dataItem:	React.PropTypes.object.isRequired,
-	width:		React.PropTypes.number
+	width:		React.PropTypes.string
 };
 
 module.exports = EmailUrlType;
