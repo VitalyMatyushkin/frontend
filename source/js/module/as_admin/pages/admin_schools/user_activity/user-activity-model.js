@@ -1,0 +1,166 @@
+/**
+ * Created by Anatoly on 21.11.2016.
+ */
+
+const 	DataLoader 		= require('module/ui/grid/data-loader'),
+    React 			= require('react'),
+    Morearty		= require('morearty'),
+    GridModel 		= require('module/ui/grid/grid-model'),
+    RoleHelper 		= require('module/helpers/role_helper');
+
+/**
+ * UserActivityModel
+ *
+ * @param {object} page
+ *
+ * */
+const UserActivityModel = function(page){
+    this.getDefaultBinding = page.getDefaultBinding;
+    this.getMoreartyContext = page.getMoreartyContext;
+    this.props = page.props;
+    this.state = page.state;
+
+    this.rootBinding = this.getMoreartyContext().getBinding();    
+
+    this.setColumns();
+};
+
+UserActivityModel.prototype.getUserName = function(item){
+    let name = '';
+
+    if (typeof item.user !== 'undefined'){
+        name = item.user.firstName + ' ' + item.user.lastName;
+    }
+
+    return name;    
+};
+
+UserActivityModel.prototype.getMethodList = function(){
+    return [
+        {
+            key:'GET',
+            value:'GET'
+        },
+        {
+            key:'PUT',
+            value:'PUT'
+        },
+        {
+            key:'DELETE',
+            value:'DELETE'
+        },
+        {
+            key:'POST',
+            value:'POST'
+        }
+    ];
+};
+
+UserActivityModel.prototype.setColumns = function(){
+    this.columns = [
+        {
+            text:'',
+            isSorted:false,
+            cell:{
+                dataField:'user.avatar',
+                type:'image'
+            }
+        },
+        {
+            text:'Name',
+            isSorted:false,
+            cell:{
+                type:'custom',
+                typeOptions:{
+                    parseFunction:this.getUserName.bind(this)
+                }
+            }
+        },
+        {
+            text:'Email',
+            isSorted:true,
+            cell:{
+                dataField:'userEmail',
+                type:'email'
+            },
+            filter:{
+                type:'string'
+            }
+        },
+        {
+            text:'Method',
+            isSorted:true,
+            cell:{
+                dataField:'httpVerb'
+            },
+            filter:{
+                type:'multi-select',
+                typeOptions:{
+                    items: this.getMethodList(),
+                    hideFilter:true,
+                    hideButtons:true
+                }
+            }
+        },
+        {
+            text:'Url',
+            isSorted:true,
+            width:370,
+            cell:{
+                dataField:'httpUrl',
+                type:'url'
+            },
+            filter:{
+                type:'string'
+            }
+        },
+        {
+            text:'Status',
+            isSorted:true,
+            cell:{
+                dataField:'httpStatusCode'
+            }
+        },
+        {
+            text:'Finished',
+            isSorted:true,
+            cell:{
+                dataField:'finishedAt',
+                type:'date'
+            },
+            filter:{
+                type:'between-date'
+            }
+        }
+    ];
+};
+
+UserActivityModel.prototype.init = function(){
+    this.grid = new GridModel({
+        actionPanel:{
+            title:'User Activity',
+            showStrip:true
+        },
+        columns:this.columns,
+        filters:{limit:20, order:'startedAt DESC'}
+    });
+
+    this.dataLoader =   new DataLoader({
+        serviceName:'useractivity',
+        grid:       this.grid,
+        onLoad:     this.getDataLoadedHandle()
+    });
+
+    return this;
+};
+
+UserActivityModel.prototype.getDataLoadedHandle = function(){
+    const self = this,
+        binding = self.getDefaultBinding();
+
+    return function(data){
+        binding.set('data', self.grid.table.data);
+    };    
+};
+
+module.exports = UserActivityModel;

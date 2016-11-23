@@ -15,7 +15,7 @@ const   RouterView  					= require('module/core/router'),
 		UserComponent 					= require('module/as_admin/pages/admin_add/user'),
 		SportsPageComponent 			= require('module/as_admin/pages/admin_schools/sports/sports_page'),
 		ImportStudentsComponent 		= require('module/as_admin/pages/admin_schools/import_students_module'),
-		UserActivityComponent 			= require('module/as_admin/pages/admin_schools/user_activity/user_activity');
+		UserActivityComponent 			= require('module/as_admin/pages/admin_schools/user_activity/user-activity');
 
 const OneSchoolPage = React.createClass({
     mixins: [Morearty.Mixin],
@@ -80,7 +80,7 @@ const OneSchoolPage = React.createClass({
                 },{
                     href:'/#admin_schools/user_activity',
                     name:'User Activity',
-                    key:'user_activity'
+                    key:'user-activity'
                 }
 
             ];
