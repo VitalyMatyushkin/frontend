@@ -2,6 +2,8 @@
  * Created by Anatoly on 19.07.2016.
  */
 
+const propz = require('propz');
+
 /**
  * CellModel
  * */
@@ -14,19 +16,8 @@ const CellModel = function(options){
 
 CellModel.prototype = {
 	getValue:function(dataItem){
-		const fieldParts = this.dataField.split('.');
-		let result = dataItem;
-
-		for(let i = 0, len = fieldParts.length; i < len; i++) {
-			const key = fieldParts[i];
-			if(typeof result !== 'undefined') {
-				result = result[key];
-			} else {
-				result = this.onEmpty;
-				break;
-			}
-		}
-
+		const 	fieldParts	= this.dataField.split('.'),
+				result		= propz.get(dataItem, fieldParts, this.onEmpty);
 		return result;
 	}
 };
