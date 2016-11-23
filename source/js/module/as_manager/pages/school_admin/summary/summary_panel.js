@@ -16,7 +16,7 @@ const SummaryPanel = React.createClass({
 		schoolName:		React.PropTypes.string.isRequired,
 		postcodeId:		React.PropTypes.string,
 		address:		React.PropTypes.string.isRequired,
-		description:	React.PropTypes.string.isRequired,
+		description:	React.PropTypes.string,
 		siteLink:		React.PropTypes.string.isRequired,
 		geoPoint:		React.PropTypes.any,
 		binding:		React.PropTypes.any 		// yes, it will be here for a while. Need to pass it down to map
@@ -76,20 +76,19 @@ const SummaryPanel = React.createClass({
 
 	renderDescription: function () {
 		const description = this.props.description;
-
-		var linkText, text;
+		let linkText, text;
 
 		if (this.state.expanded) {
 			text = description;
 			linkText = 'Show Less';
 		} else {
-			text = description.slice(0, 200) + '...';
+			text = typeof description !== 'undefined' ? description.slice(0, 200) + '...' : undefined;
 			linkText = 'Read More';
 		}
 		return (
 			<div className="eDescription">
 				{ text }
-			<If condition={description.length > 200}>
+			<If condition={description && description.length > 200}>
 				<a className="eDescription_link" onClick={this.expandedText}> { linkText } </a>
 			</If>
 		</div>
