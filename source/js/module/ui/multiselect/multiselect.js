@@ -6,6 +6,9 @@ const   MultiSelectItem = require('./multiselect_item'),
 const MultiSelect = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'MultiSelect',
+    componentWillReceiveProps(nextProps) {
+        this.getDefaultBinding().set('selections', Immutable.fromJS(nextProps.selections));
+    },
     getDefaultProps: function() {
         return {
             items: [],
@@ -104,6 +107,7 @@ const MultiSelect = React.createClass({
         const self = this;
         let   binding = self.getDefaultBinding(),
               count = self.props.selections.length;
+
         return (
             <div className="bMultiSelect">
                 <input onChange={this.handleFilterChange} value={binding.toJS('filter')} placeholder={this.props.placeholder} />
