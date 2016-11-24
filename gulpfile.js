@@ -12,8 +12,7 @@ var SOURCE 			= './source',
 	filenames 		= require('gulp-filenames'),
 	git 			= require('gulp-git'),
 	fs 				= require('fs'),
-	webpack			= require('webpack-stream'),
-	karmaTools 		= require('./project/karma_tools');
+	webpack			= require('webpack-stream');
 
 gulp.task('buildVersionFile', function(done){
 	git.revParse({args:'HEAD'}, function (err, hash) {
@@ -41,18 +40,6 @@ gulp.task('collectTestConfigurations', function(){		// TODO: maybe done will be 
 		.pipe(filenames('karma-config-files'));
 });
 
-
-/** Run Karma server sequentially for each configuration provided from 'filenames.get('karma-config-files', 'full')'
- */
-gulp.task('test', function (done) {
-	run('collectTestConfigurations', 'buildDev', 'buildTests', function(){
-		var fnames = filenames.get('karma-config-files', 'full');
-		var activeConfigs = karmaTools.getActiveConfigs(fnames);
-		karmaTools.runKarma(activeConfigs).then(function(){
-			done(null);
-		});
-	});
-});
 
 
 // SVG Symbols generation
