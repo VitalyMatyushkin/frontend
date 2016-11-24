@@ -80,10 +80,10 @@ const Head = React.createClass({
 			<div className="bTopPanel container">
 
 				<div className="row">
-					<div className="col-md-2">
+					<div className="col-md-2 col-sm-2">
 						<Logo/>
 					</div>
-					<div className="col-md-10 bTopNav">
+					<div className="col-md-10 col-sm-10 bTopNav">
 						<TopMenu
 							binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
 						<If condition={document.location.hash.indexOf('login') === -1}>

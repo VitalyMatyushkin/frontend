@@ -5,6 +5,10 @@
   display: inline-block;
   padding-top: 25px;
   vertical-align: top;
+
+  &.mLogout {
+    padding: 0;
+  }
 }
 
 .bRoles{
@@ -32,7 +36,7 @@
     border: $mainBorder;
     border-radius: 7px;
     margin-top: 10px;
-    width: 100%;
+    right: 0;
     z-index: 100;
 
     .eScrollList{

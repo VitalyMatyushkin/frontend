@@ -1,6 +1,12 @@
 .bTopLogo {
   cursor: pointer;
   padding-top: 7px;
+
+  span {
+    display: inline-block;
+    padding: 25px 20px 0;
+    vertical-align: top;
+  }
 }
 /*.bTopLogo .bIcon {
   width: 105px;

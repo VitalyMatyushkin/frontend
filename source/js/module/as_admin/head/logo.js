@@ -4,7 +4,10 @@ const 	React			= require('react'),
 const Logo = React.createClass({
 	render: function() {
 		return (
-			<div className="bTopLogo">SquadInTouch - Admin Portal</div>
+			<div className="bTopLogo">
+				<img src="images/logo.png"/>
+				<span> Admin Portal </span>
+			</div>
 		);
 	}
 });
