@@ -209,15 +209,16 @@ const EventButtons = React.createClass({
 		}
 
 		return Promise.all(
-			event.results.individualScore.map(
-				individualScoreData => window.Server.schoolEventResultIndividualsScore.post(
-					{
-						schoolId:	activeSchoolId,
-						eventId:	event.id
-					},
-					individualScoreData
-				)
-			)
+			event.results.individualScore.map(individualScoreData => {
+					if (individualScoreData.score)
+						window.Server.schoolEventResultIndividualsScore.post(
+							{
+								schoolId: activeSchoolId,
+								eventId: event.id
+							},
+							individualScoreData
+						)
+				})
 		);
 	},
 	submitIndividualPerformance: function(event) {

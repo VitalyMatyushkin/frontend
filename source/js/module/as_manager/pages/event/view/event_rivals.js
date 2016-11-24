@@ -92,6 +92,10 @@ const EventRival = React.createClass({
 					break;
 			}
 
+			if(scoreData.teamId){
+				TeamHelper.clearIndividualScore(event, scoreData.teamId)
+			}
+
 			/** set score */
 			scoreData.score = score.value;
 			scoreData.isValid = score.isValid;

@@ -1263,6 +1263,11 @@ function checkValidationResultBeforeSubmit(event){
 	return result;
 }
 
+function clearIndividualScore(event, teamId) {
+	const scores = event.results.individualScore.filter(s => s.teamId === teamId);
+
+	scores.forEach(s => s.score = 0);
+}
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -1328,7 +1333,8 @@ const TeamHelper = {
 	calculateTeamPoints: 					calculateTeamPoints,
 	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit,
 	getParametersForLeftContext: 			getParametersForLeftContext,
-	getParametersForRightContext: 			getParametersForRightContext
+	getParametersForRightContext: 			getParametersForRightContext,
+	clearIndividualScore:					clearIndividualScore
 };
 
 module.exports = TeamHelper;

@@ -32,18 +32,19 @@ const EventTeamsView = React.createClass({
 
 		// Sum current player points with other player points = team points
 		// But only for team games
-		self.changePointsForPlayer(event, player, score);
+		self.changePointsForPlayer(event, teamId, player, score);
 		if(	typeof teamId !== 'undefined' && TeamHelper.isTeamSport(event)) {
 			self.changePointsForTeam(event, teamId);
 		}
 	},
-	changePointsForPlayer: function(event, player, score) {
+	changePointsForPlayer: function(event, teamId, player, score) {
 		const 	self 		= this;
-		let		scoreData	= event.results.individualScore.find(s => s.userId === player.userId);
+		let		scoreData	= event.results.individualScore.find(s => s.userId === player.userId && s.teamId === teamId);
 
 		if(!scoreData) {
 			scoreData = {
 				userId:			player.userId,
+				teamId: 		teamId,
 				permissionId:	player.permissionId,
 				score:			0
 			};

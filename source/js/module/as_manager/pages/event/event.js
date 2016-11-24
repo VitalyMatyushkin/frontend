@@ -265,8 +265,11 @@ const EventPage = React.createClass({
 										</div>
 									</If>
 								</div>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')} isVisible={isClosingMode}/>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')} isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
+														  isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+														  isVisible={isClosingMode}
+														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
 							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
