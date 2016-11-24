@@ -127,10 +127,14 @@ const EventManagerBase = React.createClass({
 	},
 	getDefaultGender: function(sportModel) {
 		switch (true) {
-			case sportModel.genders.maleOnly:
-				return 'maleOnly';
+			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && sportModel.genders.mixed:
+				return undefined;
+			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && !sportModel.genders.mixed:
+				return undefined;
 			case sportModel.genders.femaleOnly:
 				return 'femaleOnly';
+			case sportModel.genders.maleOnly:
+				return 'maleOnly';
 		}
 	},
     changeCompleteAges: function (selections) {
