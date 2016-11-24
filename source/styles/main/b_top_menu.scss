@@ -3,9 +3,67 @@
 @charset "UTF-8";
 
 .bTopMenu {
-  float: left;
-  min-height: 60px;
+  display: inline-block;
+  font-size: $menu-font-size;
+  vertical-align: top;
 }
+
+.eTopMenu_item {
+  color: $textColor;
+  display: inline-block;
+  padding: 25px 25px 0;
+
+  &.mActive, &:hover {
+    color: $textColor;
+    text-decoration: underline;
+  }
+
+  .bIcon{
+    margin-right: 7px;
+    margin-top: -5px;
+    vertical-align: middle;
+  }
+}
+
+.eTopMenu_photo {
+  display: inline-block;
+  height: 50px;
+  margin: 10px 0 0 10px;
+  width: 50px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  color: white;
+  border-radius: 50%;
+
+  &:hover {
+    color: white;
+  }
+
+  &:hover:after,
+  &.mActive:after{
+    content: 'Me';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 24px;
+    text-align: center;
+    background: rgba(0,0,0,0.2);
+  }
+
+}
+
+.bTopMenu.mRight .eTopMenu_item .bIcon{
+  margin-right: 0;
+}
+
+/*PUBLIC MENU*/
+//TODO Move it from here
 .bPublicMenu{
   height: 60px;
   line-height: 50px;
@@ -29,13 +87,7 @@
 .hBurgerIcon img{
   height: 24px;
 }
-.bTopMenu.mRight {
-  float: right;
-  text-align: right;
-}
-.bTopMenu.mRight a {
-  font-size: 16px;
-}
+
 .bPublicMenu_icon{
   width: 40px !important;
   height: 20px !important;
@@ -77,70 +129,7 @@
   text-decoration: underline;
 }
 
-.eTopMenu_item {
-  display: inline-block;
-  padding-right: 25px;
-  height: 69px;
-  line-height: 69px;
-  cursor: pointer;
-  font-size: 18px;
-  letter-spacing: 0.7px;
-  color: $textColor;
-  vertical-align: top;
-  position: relative;
-  -webkit-transition: color 0.3s;
-  -moz-transition: color 0.3s;
-  -o-transition: color 0.3s;
-  transition: color 0.3s;
-}
 
-.eTopMenu_item:hover,
-.eTopMenu_item.mActive{
-  color: $textColor;
-  text-decoration: underline;
-}
-
-.eTopMenu_photo{
-  display: inline-block;
-  height: 50px;
-  width: 50px;
-  overflow: hidden;
-  cursor: pointer;
-  position: relative;
-  color: white;
-  border-radius: 50%;
-  margin-top: 10px;
-  float: right;
-}
-.eTopMenu_photo:hover{
-  color: white;
-}
-
-.eTopMenu_photo:hover:after,
-.eTopMenu_photo.mActive:after{
-  content: 'Me';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  font-size: 24px;
-  text-align: center;
-  background: rgba(0,0,0,0.2);
-}
-
-.eTopMenu_item .bIcon{
-  margin-right: 7px;
-  margin-top: -5px;
-  vertical-align: middle;
-}
-
-.bTopMenu.mRight .eTopMenu_item .bIcon{
-  margin-right: 0;
-}
 .eTopMenu_tray{
   position: absolute;
   height: 82px;
@@ -183,8 +172,7 @@
   height: 300px;
   display: none;
 }
-.bPublicMenu_login_active{
-}
+
 .bPublicMenu_login .eForm_field{
   height:48px;
 }

@@ -1,28 +1,20 @@
+@import '../!variables';
+
+$submenu-color: #88adc9;
 .bSubMenu {
-  background-image: linear-gradient(to right, rgb(0,100,150)0%, rgb(0,120,170)100%);
+  background-image: linear-gradient(to right, rgb(22,65,112)0%, rgb(12,112,176)100%);
+  font-size: $menu-font-size;
+  min-height: 60px;
+  text-align: center;
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  list-style: none;
-  box-sizing: border-box;
 }
 
 .eSubMenu_item {
+  color: $submenu-color;
   display: inline-block;
-  flex: 0 1 auto;
-  padding: 0 12px;
-  height: 55px;
-  line-height: 55px;
-  cursor: pointer;
-  font-size: 16px;
-  color: #ffffff;
-  letter-spacing: 0.5px;
   overflow: hidden;
+  padding: 22px 25px 0;
   position: relative;
-  -webkit-transition: color 0.2s;
-  -moz-transition: color 0.2s;
-  -o-transition: color 0.2s;
   transition: color 0.2s;
 
   input[type=file] {
@@ -40,17 +32,27 @@
     cursor: inherit;
     display: block;
   }
-}
 
+  &.mActive{
+    color: #fff;
 
-.eSubMenu_item.mActive{
-  color: #fff;
-  text-decoration: underline;
-}
+    .bIcon {
+      color: #fff;
+    }
+  }
 
-.eSubMenu_item:hover {
-  color: #fff;
-  text-decoration: underline;
+  &:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .bIcon {
+    height: 28px;
+    width: 28px;
+    margin-right: 10px;
+    color: $submenu-color;
+    transition: color 0.2s;
+    vertical-align: middle;
+  }
 }
 
 a.mDisabled{
@@ -58,36 +60,10 @@ a.mDisabled{
 }
 
 .bParentsPage .eSubMenu_item{
-  text-transform: none;
-  display: flex;
-  align-items: center;
-  line-height: 18px;
-  box-sizing: border-box;
-  font-weight: bold;
-  border-bottom: solid transparent;
-  padding: 0 0 0 10px ;
-}
-.bParentsPage .eSubMenu_item.mActive{
-  color: #fff;
-  .bIcon {
-    color: #fff;
-  }
+  padding: 17px 25px 0;
 }
 
-.bParentsPage .eSubMenu_item .bIcon {
-  height: 28px;
-  width: 28px;
-  vertical-align: middle;
-  margin-right: 10px;
-  color: #ffffff;
-  -webkit-transition: color 0.2s;
-  -moz-transition: color 0.2s;
-  -o-transition: color 0.2s;
-  transition: color 0.2s;
-}
 .bIcon.allChildren{
-  height: 45px!important;
+  height: 28px!important;
   width: 45px!important;
-  vertical-align: middle!important;
-  margin-right: 20px!important;
 }

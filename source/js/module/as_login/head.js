@@ -5,7 +5,8 @@
 const   React       		= require('react'),
         Morearty    		= require('morearty'),
 		TopPanelStyles		= require('styles/main/b_top_panel.scss'),
-		TopLogoStyles		= require('styles/main/b_top_logo.scss');
+		TopLogoStyles		= require('styles/main/b_top_logo.scss'),
+        Bootstrap  	        = require('styles/bootstrap-custom.scss');
 
 
 const Head = React.createClass({
@@ -16,7 +17,7 @@ const Head = React.createClass({
     render: function () {
         if (document.location.hash != '#login') {
             return (
-                <div className="bTopPanel">
+                <div className="bTopPanel container">
                     <div className="bTopLogo" onClick={this.returnToLoginPage}><img src="images/logo.png"/></div>
                 </div>
             )
