@@ -625,7 +625,22 @@ function getRivalForLeftContext(event, activeSchoolId){
 function getRivalForRightContext(event, activeSchoolId){
 	return getRival(event, activeSchoolId, false);
 }
-
+function getParametersForLeftContext(activeSchoolId, event){
+	return this.callFunctionForLeftContext(activeSchoolId, event, (bundleName, order) => {
+		return {
+			bundleName: bundleName,
+			order: order
+		}
+	});
+}
+function getParametersForRightContext(activeSchoolId, event){
+	return this.callFunctionForRightContext(activeSchoolId, event, (bundleName, order) => {
+		return {
+			bundleName: bundleName,
+			order: order
+		}
+	});
+}
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
@@ -1311,7 +1326,9 @@ const TeamHelper = {
 	decByType:								decByType,
 	incByType:								incByType,
 	calculateTeamPoints: 					calculateTeamPoints,
-	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit
+	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit,
+	getParametersForLeftContext: 			getParametersForLeftContext,
+	getParametersForRightContext: 			getParametersForRightContext
 };
 
 module.exports = TeamHelper;
