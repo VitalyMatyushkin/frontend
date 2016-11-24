@@ -41,6 +41,14 @@ html, body {
   overflow: auto;
 }
 
+* {
+  box-sizing: border-box;
+  &:before,
+  &after {
+    box-sizing: border-box;
+  }
+}
+
 h6{
   margin: 2px 0 15px;
   font-size: 15px;

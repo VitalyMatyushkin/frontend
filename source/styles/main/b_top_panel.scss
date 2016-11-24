@@ -7,18 +7,8 @@ $HEADER_HEIGHT: 69px;
   background: #ffffff;
   border-bottom: solid 1px #e6e6e6;
   color: $textColor;
-  clear: both;
   min-height: $HEADER_HEIGHT;
-  position: relative;
-  padding: 0 130px;
   z-index: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-  box-sizing: border-box;
-
-  @media (max-width: 992px) {
-    padding: 0 30px;
-  }
 
   .bDropdown {
 
