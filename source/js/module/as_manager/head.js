@@ -3,7 +3,9 @@ const	Logo		= require('module/as_manager/head/logo'),
 		UserBlock	= require('module/shared_pages/head/user_block'),
 		If			= require('module/ui/if/if'),
 		Morearty	= require('morearty'),
-		React		= require('react');
+		React		= require('react'),
+		TopNavStyle = require('styles/main/b_top_nav.scss'),
+		Bootstrap  	= require('styles/bootstrap-custom.scss');
 
 const Head = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -75,12 +77,21 @@ const Head = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		return (
-			<div className="bTopPanel mClearFix">
-				<Logo/>
-				<TopMenu binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
-				<If condition={document.location.hash.indexOf('login') === -1}>
-					<UserBlock binding={binding.sub('userData')}/>
-				</If>
+			<div className="bTopPanel container">
+
+				<div className="row">
+					<div className="col-md-2 col-sm-2">
+						<Logo/>
+					</div>
+					<div className="col-md-10 col-sm-10 bTopNav">
+						<TopMenu
+							binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
+						<If condition={document.location.hash.indexOf('login') === -1}>
+							<UserBlock binding={binding.sub('userData')}/>
+						</If>
+					</div>
+				</div>
+
 			</div>
 		)
 	}

@@ -5,7 +5,9 @@ const   Logo        = require('module/as_admin/head/logo'),
         TopMenu     = require('module/ui/menu/top_menu'),
         UserBlock   = require('module/shared_pages/head/user_block'),
         Morearty    = require('morearty'),
-        React       = require('react');
+        React       = require('react'),
+        TopNavStyle = require('styles/main/b_top_nav.scss'),
+        Bootstrap  	= require('styles/bootstrap-custom.scss');
     
 
 const Head = React.createClass({
@@ -27,10 +29,16 @@ const Head = React.createClass({
             binding = this.getDefaultBinding();
 
         return (
-            <div className="bTopPanel">
-                <Logo />
-                <TopMenu items={self.menuItems} binding={binding.sub('routing')} />
-                <UserBlock binding={binding.sub('userData')} asAdmin={true} />
+            <div className="bTopPanel container">
+                <div className="row">
+                    <div className="col-md-4">
+                        <Logo />
+                    </div>
+                    <div className="col-md-8 bTopNav">
+                        <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
+                        <UserBlock binding={binding.sub('userData')} asAdmin={true}/>
+                    </div>
+                </div>
             </div>
         )
     }

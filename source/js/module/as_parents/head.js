@@ -3,7 +3,9 @@ const   Logo            = require('module/as_manager/head/logo'),
         UserBlock       = require('module/shared_pages/head/user_block'),
         React           = require('react'),
         Morearty        = require('morearty'),
-        Immutable       = require('immutable');
+        Immutable       = require('immutable'),
+        TopNavStyle     = require('styles/main/b_top_nav.scss'),
+        Bootstrap  	    = require('styles/bootstrap-custom.scss');
 
 const Head = React.createClass({
     mixins: [Morearty.Mixin],
@@ -41,10 +43,16 @@ const Head = React.createClass({
             binding = self.getDefaultBinding();
 
         return (
-            <div className="bTopPanel">
-                <Logo />
-                <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
-                <UserBlock binding={binding.sub('userData')}/>
+            <div className="bTopPanel container">
+                <div className="row">
+                    <div className="col-md-2 col-sm-2">
+                        <Logo />
+                    </div>
+                    <div className="col-md-10 col-sm-10 bTopNav">
+                        <TopMenu items={self.menuItems} binding={binding.sub('routing')}/>
+                        <UserBlock binding={binding.sub('userData')}/>
+                    </div>
+                </div>
             </div>
         )
     }

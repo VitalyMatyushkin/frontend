@@ -1,71 +1,63 @@
 @import "../!variables";
 
 .bRoleList{
+  cursor: pointer;
   display: inline-block;
-  &.mLogout{
-    float: right;
+  padding-top: 25px;
+  vertical-align: top;
+
+  &.mLogout {
+    padding: 0;
   }
 }
 
 .bRoles{
-  font-size: 14px;
   display: inline-block;
-  height: 30px;
-  padding: 20px 20px 14px 10px;
   position: relative;
   text-transform: none;
-  margin: 0 10px;
+
+  .eRole {
+    padding-left: 25px;
+  }
 
   .eArrow{
+    background: url(/images/down.png) no-repeat center top;
+    left: 0;
+    top: 4px;
     position: absolute;
-    right: 0;
-    top: 50%;
-    margin-top: -8px;
-    cursor: pointer;
+    height: 100%;
+    width: 25px;
   }
 
   .eRolesList{
     display:none;
     position: absolute;
-    top: 100%;
-    right: 0px;
-    margin-top: -7px;
     background-color: #ffffff;
     border: $mainBorder;
+    border-radius: 7px;
+    margin-top: 10px;
+    right: 0;
     z-index: 100;
 
     .eScrollList{
       overflow-y: auto;
-      max-height: 250px;
-
     }
     .eRole{
-      padding: 5px 10px;
       border-bottom: $mainBorder;
-
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 18px 5px 16px;
+      text-align: center;
+      width: 100%;
+      white-space: nowrap;
 
       &.mLogout{
-        text-align: center;
-        line-height: 32px;
-        font-size: 18px;
-        text-transform: uppercase;
+        border-bottom: none;
       }
 
       &:hover{
-        background-color: #fafafa;
+        background: #fafafa;
       }
-    }
-  }
-
-  .eRole{
-    cursor: pointer;
-
-    p {
-      margin: 0px;
-      line-height: 16px;
-      text-align: left;
-      white-space: nowrap;
-      padding-right: 10px;
     }
   }
 
@@ -76,5 +68,8 @@
   }
 }
 .eRole_name {
+  padding: 0 5px;
+
+  color: #8c8c8c;
   text-transform: lowercase;
 }
