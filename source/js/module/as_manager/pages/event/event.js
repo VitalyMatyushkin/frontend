@@ -30,20 +30,25 @@ const EventPage = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			model:			{},
-			gallery:		{
-				photos:		[],
-				isUploading:false,
-				isSync:		false
+			model: {},
+			gallery: {
+				photos: [],
+				isUploading: false,
+				isSync: false
 			},
-			sync:			false,
-			mode:			'general',
-			showingComment:	false,
-			activeTab:		'teams',
-			eventTeams:		{},
-			individualScoreAvailable:{
-				value:true
-			}
+			sync: false,
+			mode: 'general',
+			showingComment: false,
+			activeTab: 'teams',
+			eventTeams: {},
+			individualScoreAvailable: [
+				{
+					value: true
+				},
+				{
+					value: true
+				}
+			]
 		});
 	},
 	componentWillMount: function () {
@@ -206,7 +211,7 @@ const EventPage = React.createClass({
 			activeTab:					binding.sub('activeTab'),
 			event:						binding.sub('model'),
 			mode:						binding.sub('mode'),
-			individualScoreAvailable: 	binding.sub('individualScoreAvailable.value')
+			individualScoreAvailable: 	binding.sub('individualScoreAvailable')
 		};
 	},
 	isShowTrobber: function() {
@@ -260,7 +265,11 @@ const EventPage = React.createClass({
 										</div>
 									</If>
 								</div>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable')} isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
+														  isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+														  isVisible={isClosingMode}
+														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
 							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />

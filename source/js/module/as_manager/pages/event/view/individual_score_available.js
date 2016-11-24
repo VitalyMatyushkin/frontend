@@ -4,7 +4,8 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
-		FormField 		= require('module/ui/form/form_field');
+		FormField 		= require('module/ui/form/form_field'),
+		classNames 		= require('classnames');
 
 const EventIndividualScoreAvailable = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -21,7 +22,7 @@ const EventIndividualScoreAvailable = React.createClass({
 			return (
 				<FormField type="checkbox" binding={this.getDefaultBinding()}
 						   field="individualScoreAvailable"
-						   fieldClassName="mIndividualScoreAvailable" >
+						   fieldClassName={classNames("mIndividualScoreAvailable", this.props.className)} >
 					Individual score available
 				</FormField>
 			);
