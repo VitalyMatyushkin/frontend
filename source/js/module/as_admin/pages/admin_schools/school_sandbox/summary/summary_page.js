@@ -1,86 +1,17 @@
 const	React 					= require('react'),
-		If							= require('module/ui/if/if'),
-		Immutable				= require('immutable'),
+		Immutable					= require('immutable'),
+		SummaryComponent	= require('module/as_admin/pages/admin_schools/school_sandbox/summary/summary_component'),
 		Morearty				= require('morearty');
 
 const SummaryPage = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	componentWillMount: function() {
-		const	binding	= this.getDefaultBinding();
-
-		binding.set('expanded', Immutable.fromJS('true'));
-	},
-
-	expandedText: function() {
-		const	binding	= this.getDefaultBinding(),
-				expandedState = binding.toJS('expanded');
-
-		binding.set('expanded', Immutable.fromJS(!expandedState));
-	},
-
 	render: function() {
 		const self					= this,
 				binding					= self.getDefaultBinding(),
-				school					= binding.toJS('schoolDetails'),
-				expandedState 	= binding.toJS('expanded');
+				school					= binding.toJS('schoolDetails');
 
-		let text, linkText, schoolImage;
-
-			if (typeof school !== 'undefined') {
-				schoolImage = school.pic + '?sizing=minvalue&value=170';
-				if (expandedState === false) {
-						text = school.description;
-						linkText = 'Show Less';
-					} else {
-						if (school.description.length > 200) {
-							text = school.description.slice(0, 200) + '...';
-						} else {
-							text = school.description;
-						}
-						linkText = 'Read More';
-					}
-				return (
-					<div>
-						<div className='eSchoolSummary_wrap'>
-							<h1 className='eSchoolSummary_title'>{school.name}</h1>
-							<div className='eStrip'></div>
-						</div>
-						<div className="eSchoolSummary_main">
-							<div className="eImg" style={{backgroundImage:'url(' + schoolImage + ')'}}></div>
-							<div className="eText">
-								<div className="eTextKey">School status</div>
-								<div className="eTextValue">{school.status}</div>
-								<div className="eTextKey">Phone</div>
-								<div className="eTextValue">{school.phone}</div>
-								<div className="eTextKey">Postcode</div>
-								<div className="eTextValue">{school.postcode.postcode}</div>
-								<div className="eTextKey">Address</div>
-								<div className="eTextValue">{school.address}</div>
-								<div className="eTextKey">Domain</div>
-								<div className="eTextValue">{school.domain}</div>
-								<div className="eTextKey">Public site access</div>
-								<div className="eTextValue">{school.publicSite.status}</div>
-								<div className="eTextKey">School Official Email</div>
-								<div className="eTextValue">{school.email}</div>
-								<div className="eTextKey">Sports Department Email</div>
-								<div className="eTextValue">{school.sportsDepartmentEmail}</div>
-								<div className="eTextKey">Notification Email</div>
-								<div className="eTextValue">{school.notificationEmail}</div>
-								<div className="eTextKey">Description</div>
-								<div className="eTextValue">
-									{text}
-									<If condition={school.description && school.description.length > 200}>
-										<a className="eDescription_link" onClick={self.expandedText}> {linkText} </a>
-									</If>
-								</div>
-							</div>
-						</div>
-					</div>
-				)
-			} else {
-				return null
-			}		
+				return <SummaryComponent school={school} />
 	}
 });
 

@@ -172,7 +172,6 @@ const 	schoolsListPage			= require('../styles/pages/schools/b_list_page.scss'),
 		schoolsList				= require('../styles/pages/schools/b_school_list.scss'),
 		schoolsMaster			= require('../styles/pages/schools/b_school_master.scss'),
 		schoolsNews				= require('../styles/pages/schools/b_school_news.scss'),
-		schoolSummary			= require('../styles/pages/schools/b_school_summary.scss'),
 		schoolsAbout			= require('../styles/pages/schools/school_about.scss');
 
 const 	userAboutList			= require('../styles/pages/user/b_about_list.scss'),
