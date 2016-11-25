@@ -7,8 +7,7 @@ const SummaryPage = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	render: function() {
-		const self					= this,
-				binding					= self.getDefaultBinding(),
+		const binding				= this.getDefaultBinding(),
 				school					= binding.toJS('schoolDetails');
 
 				return <SummaryComponent school={school} />

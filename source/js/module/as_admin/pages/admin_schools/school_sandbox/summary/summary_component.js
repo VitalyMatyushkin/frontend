@@ -1,8 +1,12 @@
-const	React 					= require('react'),
-		schoolSummary			= require('styles/pages/schools/b_school_summary.scss'),
-		If								= require('module/ui/if/if');
+const	React 							= require('react'),
+		schoolSummaryStyles		= require('styles/pages/schools/b_school_summary.scss'),
+		If										= require('module/ui/if/if');
 
 const SummaryComponent = React.createClass({
+
+	propTypes: {
+		school: 	React.PropTypes.object
+	},
 
 	getInitialState: function() {
 		return {
