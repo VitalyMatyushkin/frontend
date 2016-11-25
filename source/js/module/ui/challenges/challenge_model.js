@@ -41,6 +41,7 @@ const ChallengeModel = function(event, activeSchoolId){
 
 	this.sport 				= event.sport ? event.sport.name : '';
 	this.isIndividualSport 	= TeamHelper.isIndividualSport(event);
+	this.isEventWithOneIndividualTeam	= EventHelper.isEventWithOneIndividualTeam(event);
 	this.sportPointsType 	= event.sport && event.sport.points ? event.sport.points.display : '';
 
     this.rivals 	= this._getRivals(event, activeSchoolId);
