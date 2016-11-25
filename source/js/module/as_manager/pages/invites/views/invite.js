@@ -7,7 +7,7 @@ const   classNames      = require('classnames'),
 		Button			= require('module/ui/button/button'),
         SportIcon		= require('module/ui/icons/sport_icon'),
 		Map 			= require('module/ui/map/map-event-venue'),
-		GenderIcon		= require('module/ui/icons/gender_icon');
+        Bootstrap  	    = require('styles/bootstrap-custom.scss');
 
 const InviteView = React.createClass({
     mixins: [Morearty.Mixin],
@@ -27,9 +27,6 @@ const InviteView = React.createClass({
             return {backgroundImage: 'url(' + participant.pic + ')'};
         }
     },
-    getSportIcon:function(sport){
-        return <SportIcon name={sport} className="bIcon_invites" />;
-    },
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
     },
@@ -39,7 +36,7 @@ const InviteView = React.createClass({
         if (data !== undefined) {
             result = data.map(function (elem) {
                 return 'Y' + elem;
-            }).join(";");
+            }).join(", ");
         }
 
         return result;
@@ -58,9 +55,9 @@ const InviteView = React.createClass({
                 isOutBox        = self.props.type === 'outbox',
                 isArchive       = binding.get('status') !== "NOT_READY",
                 schoolPicture   = self.getParticipantEmblem(rival),
-                sport           = self.getSportIcon(binding.get('sport.name')),
+                sport           = binding.get('sport.name'),
                 ages            = binding.get('event.ages'),
-                gender          = <GenderIcon classes='bIcon_invites' gender={binding.get('event.gender')}/>,
+                gender          = binding.get('event.gender'),
                 message         = binding.get('message') || '',
                 accepted        = binding.get('status') === 'ACCEPTED',
                 eventDate       = (new Date(binding.get('event.startTime'))),
@@ -86,37 +83,49 @@ const InviteView = React.createClass({
         }
 
         return (
-        <div className={inviteClasses}>
-            <div className="eInvite_img" style={schoolPicture}></div>
-            <div className="eInviteWrap">
-                <div className="eInvite_header">
-                    <span className="eInvite_eventName">
-                        {rival.name}
-                    </span>
-                    <div className="eInviteSport">{sport}</div>
-                </div>
-                <div className="eInvite_info">
-                    <div className="eInvite_gender">{gender}</div>
-                    <div>{'Start date:'} {startDate}</div>
-                    <div>{'Time:'} {hours + ':' + minutes}</div>
-                    <div>{'Year Group:'} {self._getAges(ages)}</div>
-                </div>
-                <div className="eInvite_map">
-					{venueArea}
-                </div>
-                <div className="eInvite_footer">
-                    <div className="eInvite_message">
-                        {isOutBox ? 'Awaiting opponent...' : null}
-                        {isArchive ? <span className={'m'+status}>{status}</span>: null}
+            <div className={inviteClasses}>
+
+                <div className="row">
+
+                    <div className="col-md-6 eInvite_left">
+                        <div className="col-md-5 col-sm-5">
+                            <div className="eInvite_img" style={schoolPicture}></div>
+                        </div>
+                        <div className="eInvite_info col-md-7 col-sm-7">
+
+                            <h4> {rival.name }</h4>
+                            <h4>Team Name</h4>
+                            <div className="eInvite_content">
+                                {sport} / {gender} / {self._getAges(ages)} <br/>
+                                {startDate} / {hours + ':' + minutes}<br/>
+
+                            </div>
+                            <div className="eInvite_footer">
+                                <div className="eInvite_message">
+                                    {isOutBox ? 'Awaiting opponent...' : null}
+                                    {isArchive ? <span className={'m'+status}>{status}</span> : null}
+                                </div>
+                                <div className="eInvite_buttons">
+                                    {isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
+                                                       extraStyleClasses={'mHalfWidth'}/> : null }
+                                    {isInbox ? <Button href={`/#invites/${inviteId}/decline`} text={'Decline'}
+                                                       extraStyleClasses={'mCancel mHalfWidth'}/> : null }
+                                    {isOutBox ? <Button href={`/#invites/${inviteId}/cancel`} text={'Cancel'}
+                                                        extraStyleClasses={'mRed'}/> : null }
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="eInvite_buttons">
-                        {isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}/> : null }
-                        {isInbox ? <Button href={`/#invites/${inviteId}/decline`} text={'Decline'} extraStyleClasses={'mRed'}/> : null }
-                        {isOutBox ? <Button href={`/#invites/${inviteId}/cancel`} text={'Cancel'} extraStyleClasses={'mRed'}/> : null }
+
+
+                    <div className="col-md-6">
+                        <div className="eInvite_map">
+                            {venueArea}
+                        </div>
                     </div>
                 </div>
             </div>
-		</div>
+
         );
     }
 });

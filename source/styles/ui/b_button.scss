@@ -5,7 +5,7 @@
   border-radius: 3px;
   font-size: 18px;
   color: #fff;
-  padding: 10px 30px;
+  padding: 13px 30px;
   display: inline-block;
   user-select: none;
   cursor: pointer;
@@ -35,9 +35,14 @@
   &.mMarginRight {
     margin-right: 10px;
   }
+  &.mMarginLeft {
+    margin-left: 10px;
+  }
   &.mFullWidth {
-    box-sizing: border-box;
     width: 100%;
+  }
+  &.mHalfWidth {
+    width: 48%;
   }
 
   &.mCancel{
@@ -45,7 +50,7 @@
     border: solid 1px #d2d2d2;
     box-sizing: border-box;
     color: $textColor;
-    margin: 0 10px;
+    margin: 0 2%;
 
     &:hover {
       background: #fafafa;
