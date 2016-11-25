@@ -1,24 +1,23 @@
-const	React						= require('react'),
-		Morearty					= require('morearty'),
-		Immutable					= require('immutable'),
+const	React							= require('react'),
+		Morearty						= require('morearty'),
+		Immutable						= require('immutable'),
 
-		If							= require('module/ui/if/if'),
-		Autocomplete				= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
-		Multiselect					= require('module/ui/multiselect/multiselect'),
-		EventVenue					= require('./event_venue'),
-		DateHelper					= require('./../../../../helpers/date_helper'),
-		TimeInputWrapper			= require('./time_input_wrapper'),
-		classNames					= require('classnames'),
+		If								= require('module/ui/if/if'),
+		Autocomplete					= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		EventVenue						= require('./event_venue'),
+		DateHelper						= require('./../../../../helpers/date_helper'),
+		TimeInputWrapper				= require('./time_input_wrapper'),
 
-		DateSelectorWrapper			= require('./manager_components/date_selector/date_selector_wrapper'),
-		GenderSelectorWrapper		= require('./manager_components/gender_selector/gender_selector_wrapper'),
-		GameTypeSelectorWrapper		= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
+		DateSelectorWrapper				= require('./manager_components/date_selector/date_selector_wrapper'),
+		GenderSelectorWrapper			= require('./manager_components/gender_selector/gender_selector_wrapper'),
+		GameTypeSelectorWrapper			= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
+		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper'),
 
-		InputWrapperStyles			= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
-		InputLabelStyles			= require('./../../../../../../styles/ui/b_input_label.scss'),
-		TextInputStyles				= require('./../../../../../../styles/ui/b_text_input.scss'),
-		DropdownStyles				= require('./../../../../../../styles/ui/b_dropdown.scss'),
-		HouseAutocompleteWrapper	= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss');
+		InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
+		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
+		TextInputStyles					= require('./../../../../../../styles/ui/b_text_input.scss'),
+		DropdownStyles					= require('./../../../../../../styles/ui/b_dropdown.scss'),
+		HouseAutocompleteWrapper		= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -182,17 +181,6 @@ const EventManagerBase = React.createClass({
     getEventTime: function(date) {
 		return DateHelper.getTimeStringFromDateObject(date);
     },
-	getItemsForAgeMultiSelect: function() {
-		return this.getDefaultBinding().get('availableAges')
-			.sort((f,l) => f - l)
-			.map((age) => {
-				return {
-					id: age,
-					text: 'Y' + age
-				};
-			})
-			.toJS();
-	},
 
 	render: function() {
 		const   self                = this,
@@ -255,11 +243,7 @@ const EventManagerBase = React.createClass({
 					<div className="bInputLabel">
 						Ages
 					</div>
-					<Multiselect	binding		= {binding}
-									items		= {this.getItemsForAgeMultiSelect()}
-									selections	= {binding.toJS('model.ages')}
-									onChange	= {self.changeCompleteAges}
-					/>
+					<AgeMultiselectDropdownWrapper binding={binding}/>
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
