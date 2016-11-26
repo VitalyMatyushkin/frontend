@@ -33,12 +33,10 @@ const GrantRole = React.createClass({
         return window.Server.schoolStudents.filter(schoolId, filter);
     },
     continueButtonClick:function(model){
-        const self = this;
-
-        let ids = self.props.userIdsBinding.toJS();
+        let ids = this.props.userIdsBinding.toJS();
         ids = ids && typeof ids === 'string' ? [ids] : ids;
 
-        ids.forEach(function(currentId){
+        ids.forEach(currentId => {
             let body;
 
             switch(model.preset) {
@@ -57,11 +55,10 @@ const GrantRole = React.createClass({
                     break;
             }
 
-            window.Server.userPermissions.post(currentId, body)
-                .then(function(result){
-                    return self.props.onSuccess && self.props.onSuccess(result);
-                });
-
+			if((model.preset === 'parent' && typeof model.studentId !== 'undefined') || model.preset !== 'parent') {
+				window.Server.userPermissions.post(currentId, body)
+					.then(result => this.props.onSuccess && this.props.onSuccess(result));
+			}
         });
     },
     render:function(){
