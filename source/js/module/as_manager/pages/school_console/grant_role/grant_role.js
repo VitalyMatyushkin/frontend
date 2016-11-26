@@ -33,14 +33,13 @@ const GrantRole = React.createClass({
         return window.Server.schoolStudents.filter(activeSchoolId, filter);
     },
     continueButtonClick:function(model){
-        const   self        = this,
-                rootBinding = self.getMoreartyContext().getBinding(),
-                activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+        const   rootBinding     = this.getMoreartyContext().getBinding(),
+                activeSchoolId  = rootBinding.get('userRules.activeSchoolId');
 
-        let ids = self.props.userIdsBinding.toJS();
+        let ids = this.props.userIdsBinding.toJS();
         ids = ids && typeof ids === 'string' ? [ids] : ids;
 
-        ids.forEach(function(currentId){
+        ids.forEach(currentId => {
             let body;
 
             switch(model.preset) {
@@ -59,10 +58,10 @@ const GrantRole = React.createClass({
                     break;
             }
 
-            window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId}, body)
-                .then(function(result){
-                    return self.props.onSuccess && self.props.onSuccess(result);
-                });
+            if((model.preset === 'parent' && typeof model.studentId !== 'undefined') || model.preset !== 'parent') {
+				window.Server.schoolUserPermissions.post({schoolId:activeSchoolId, userId:currentId}, body)
+					.then(result => this.props.onSuccess && this.props.onSuccess(result));
+			}
 
         });
     },
