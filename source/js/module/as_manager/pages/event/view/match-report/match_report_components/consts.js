@@ -1,0 +1,6 @@
+const REPORT_FILED_VIEW_MODE = {
+	'VIEW' : 'VIEW',
+	'EDIT' : 'EDIT'
+};
+
+module.exports.REPORT_FILED_VIEW_MODE	= REPORT_FILED_VIEW_MODE;
