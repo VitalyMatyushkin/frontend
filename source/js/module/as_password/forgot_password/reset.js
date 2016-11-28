@@ -29,9 +29,9 @@ const PasswordResetRequestForm = React.createClass({
 			window.simpleAlert(
 				'Password is changed.',
 				'Ok',
-				() => {}
+				() => {window.location.href = domainHelper.getLoginUrl();}
 			);
-			window.location.href = domainHelper.getLoginUrl();
+
 		});
 	},
 	render: function() {
