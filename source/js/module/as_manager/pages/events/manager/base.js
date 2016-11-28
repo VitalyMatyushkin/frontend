@@ -5,7 +5,6 @@ const	React							= require('react'),
 		If								= require('module/ui/if/if'),
 		Autocomplete					= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		EventVenue						= require('./event_venue'),
-		DateHelper						= require('./../../../../helpers/date_helper'),
 		TimeInputWrapper				= require('./time_input_wrapper'),
 
 		DateSelectorWrapper				= require('./manager_components/date_selector/date_selector_wrapper'),
@@ -21,12 +20,6 @@ const	React							= require('react'),
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
-    isSportSelected: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return !!binding.toJS('model.sportId');
-	},
 	/**
      * House filtering service...
      * @param houseName
@@ -163,27 +156,6 @@ const EventManagerBase = React.createClass({
 				</option>
 			);
         });
-    },
-    getAges: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            ages = binding.toJS('model.ages'),
-            availableAges = binding.get('availableAges');
-
-        return availableAges.sort().filter(function (age) {
-            return ages === null || ages.indexOf(age) === -1;
-        }).map(function (age) {
-            return <Morearty.DOM.option
-                key={age + '-ages'}
-                value={age}>{'Y' + age}</Morearty.DOM.option>;
-        });
-
-    },
-    getEventDate: function(date) {
-        return DateHelper.getDateStringFromDateObject(date);
-    },
-    getEventTime: function(date) {
-		return DateHelper.getTimeStringFromDateObject(date);
     },
 
 	render: function() {
