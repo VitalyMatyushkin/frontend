@@ -2,27 +2,19 @@
 
 @font-face {
   font-family: 'Glober';
-  font-style: normal;
-  font-weight: normal;
-  src: local('Glober'), local('Glober-Regular'), url('/fonts/Glober_Regular.otf') format('opentype');
+  src: url('/fonts/Glober_Regular.otf') format('opentype');
 }
 @font-face {
-  font-family: 'Glober';
-  font-style: italic;
-  font-weight: normal;
-  src: local('Glober'), local('Glober-italic'), url('/fonts/Glober_Regular_Italic.otf') format('opentype');
+  font-family: 'Glober-Italic';
+  src: url('/fonts/Glober_Regular_Italic.otf') format('opentype');
 }
 @font-face {
-  font-family: 'Glober';
-  font-style: normal;
-  font-weight: bold;
-  src: local('Glober'), local('Glober_Bold_Free'), url('/fonts/Glober_Bold_Free.otf') format('opentype');
+  font-family: 'Glober-Bold';
+  src: url('/fonts/Glober_Bold_Free.otf') format('opentype');
 }
 @font-face {
-  font-family: 'Glober';
-  font-style: italic;
-  font-weight: bold;
-  src: local('Glober'), local('Glober_Bold_Italic'), url('/fonts/Glober_Bold_Italic.otf') format('opentype');
+  font-family: 'Glober-Bold-Italic';
+  src: url('/fonts/Glober_Bold_Italic.otf') format('opentype');
 }
 
 body{
@@ -39,6 +31,14 @@ html, body {
   color: $BodyColor;
   fill: currentColor;
   overflow: auto;
+}
+
+* {
+  box-sizing: border-box;
+  &:before,
+  &after {
+    box-sizing: border-box;
+  }
 }
 
 h6{
@@ -70,6 +70,9 @@ h3{
   color: $blueColor;
   font-size: 16px;
   font-weight: bold;
+}
+h4{
+  font-size: 1rem;
 }
 
 .mClearFix:after {

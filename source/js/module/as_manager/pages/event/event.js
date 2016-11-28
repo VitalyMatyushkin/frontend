@@ -17,7 +17,7 @@ const	React			= require('react'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
-		MatchReport 				= require('./view/match-report/report'),
+		MatchReportWrapper 			= require('./view/match-report/report_wrapper'),
 		Map 						= require('module/ui/map/map-event-venue'),
 		SVG 						= require('module/ui/svg'),
 
@@ -30,20 +30,25 @@ const EventPage = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			model:			{},
-			gallery:		{
-				photos:		[],
-				isUploading:false,
-				isSync:		false
+			model: {},
+			gallery: {
+				photos: [],
+				isUploading: false,
+				isSync: false
 			},
-			sync:			false,
-			mode:			'general',
-			showingComment:	false,
-			activeTab:		'teams',
-			eventTeams:		{},
-			individualScoreAvailable:{
-				value:true
-			}
+			sync: false,
+			mode: 'general',
+			showingComment: false,
+			activeTab: 'teams',
+			eventTeams: {},
+			individualScoreAvailable: [
+				{
+					value: true
+				},
+				{
+					value: true
+				}
+			]
 		});
 	},
 	componentWillMount: function () {
@@ -156,7 +161,7 @@ const EventPage = React.createClass({
 		self.tabListModel.push(
 			{
 				value		: 'report',
-				text		: 'Match Report',
+				text		: 'Details',
 				isActive	: false
 			}
 		);
@@ -206,7 +211,7 @@ const EventPage = React.createClass({
 			activeTab:					binding.sub('activeTab'),
 			event:						binding.sub('model'),
 			mode:						binding.sub('mode'),
-			individualScoreAvailable: 	binding.sub('individualScoreAvailable.value')
+			individualScoreAvailable: 	binding.sub('individualScoreAvailable')
 		};
 	},
 	isShowTrobber: function() {
@@ -260,7 +265,11 @@ const EventPage = React.createClass({
 										</div>
 									</If>
 								</div>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable')} isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
+														  isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+														  isVisible={isClosingMode}
+														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
 							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
@@ -275,12 +284,14 @@ const EventPage = React.createClass({
 							</If>
 							<If condition={activeTab === 'gallery'} >
 								<EventGallery	activeSchoolId	= { self.activeSchoolId }
-												 eventId			= { self.eventId }
-												 binding			= { binding.sub('gallery') } />
+												eventId			= { self.eventId }
+												binding			= { binding.sub('gallery') } />
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
+									<MatchReportWrapper	eventId		= {self.eventId}
+														schoolId	= {self.activeSchoolId}
+									/>
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
@@ -294,8 +305,8 @@ const EventPage = React.createClass({
 				return (
 					<div className="bEventContainer">
 						<div>
-							<ManagerWrapper binding={binding} />
-							<EventButtons binding={binding} />
+							<ManagerWrapper binding={binding}/>
+							<EventButtons binding={binding}/>
 						</div>
 					</div>
 				);

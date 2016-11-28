@@ -289,20 +289,6 @@
   color: $blueColor;
 }
 
-.bMatchReport{
-  margin-top: 20px;
-  min-height: 220px;
-
-  .eText{
-    white-space: pre-line;
-  }
-  .eEvent_report{
-    width: 100%;
-    height: 120px;
-    margin-bottom: 10px;
-  }
-}
-
 .bEvent .bTabs{
   margin: 20px 0 0;
   display: block;
@@ -341,9 +327,15 @@
 .mIndividualScoreAvailable{
   &.eForm_field{
     margin: 10px 0;
+    width: 430px;
+    float: left;
+
+    &.mRight{
+      margin-left: 60px;
+    }
 
     .eForm_fieldName{
-      width: 180px;
+      width: 200px;
     }
   }
 
