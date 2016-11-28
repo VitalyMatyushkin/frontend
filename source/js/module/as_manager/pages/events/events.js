@@ -92,7 +92,7 @@ const EventView = React.createClass({
                                 binding = {rootBinging}
                     >
                         <Route path         = '/events/calendar'
-                               binding      = {binding}
+                               binding      = {binding.sub('calendar')}
                                component    = {EventsCalendarComponent}
                         />
                         <Route path         = '/events/fixtures'
