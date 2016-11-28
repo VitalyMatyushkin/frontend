@@ -27,20 +27,21 @@ const DetailsWrapper = React.createClass({
 	},
 
 	componentWillMount: function() {
-		Actions.getEventById(this.props.schoolId, this.props.eventId)
-		.then(event => {
-			let eventDetails = {};
-			if(typeof event.details !== 'undefined') {
-				eventDetails = event.details;
-			}
+		Actions.getDetailsByEventId(this.props.schoolId, this.props.eventId)
+			.then(details => {
+				this.setState({
+					eventDetails : details
+				});
 
-			this.setState({
-				isLoading		: false,
-				eventName		: event.generatedNames[this.props.schoolId],
-				eventDetails	: eventDetails,
-				venue			: this.getVenueView(event)
+				return Actions.getEventById(this.props.schoolId, this.props.eventId);
+			})
+			.then(event => {
+				this.setState({
+					isLoading		: false,
+					eventName		: event.generatedNames[this.props.schoolId],
+					venue			: this.getVenueView(event)
+				});
 			});
-		});
 	},
 	getVenueView: function(event) {
 		switch (true) {
