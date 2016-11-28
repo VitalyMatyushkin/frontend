@@ -9,9 +9,10 @@ const	React			= require('react'),
 const ReportWrapper = React.createClass({
 
 	VENUE_SERVER_CLIENT_MAP: {
-		"HOME"	: 'Home',
-		"AWAY"	: 'Away',
-		"TBC"	: 'TBC'
+		"HOME"		: 'Home',
+		"AWAY"		: 'Away',
+		"CUSTOM"	: 'Away',
+		"TBC"		: 'TBD'
 	},
 
 	propTypes:{
@@ -59,6 +60,8 @@ const ReportWrapper = React.createClass({
 				return this.VENUE_SERVER_CLIENT_MAP['AWAY'];
 			case event.venue.venueType === 'AWAY' && event.inviterSchoolId !== this.props.schoolId:
 				return this.VENUE_SERVER_CLIENT_MAP['HOME'];
+			case event.venue.venueType === 'CUSTOM':
+				return this.VENUE_SERVER_CLIENT_MAP['CUSTOM'];
 			case event.venue.venueType === 'TBC':
 				return this.VENUE_SERVER_CLIENT_MAP['TBC'];
 		}
