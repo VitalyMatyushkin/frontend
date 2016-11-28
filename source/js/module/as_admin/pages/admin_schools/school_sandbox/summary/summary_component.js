@@ -70,7 +70,7 @@ const SummaryComponent = React.createClass({
 								<div className="eTextKey">Description</div>
 								<div className="eTextValue">
 									{text}
-									<If condition={school.description && school.description.length > 200}>
+									<If condition={school.description !== '' && school.description.length > 200}>
 										<a className="eDescription_link" onClick={self.expandedText}> {linkText} </a>
 									</If>
 								</div>
