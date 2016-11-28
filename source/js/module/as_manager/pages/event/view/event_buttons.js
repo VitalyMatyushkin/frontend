@@ -605,7 +605,7 @@ const EventButtons = React.createClass({
 					</If>
 					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>
 						<div
-							className="bButton mCancel"
+							className="bButton mCancel mMarginRight"
 							onClick={self.onClickCloseCancel}
 						>
 							Cancel
@@ -613,7 +613,7 @@ const EventButtons = React.createClass({
 					</If>
 					<If condition={EventHelper._isShowCancelEventEditButton(self)}>
 						<div
-							className="bButton mCancel"
+							className="bButton mCancel mMarginRight"
 							onClick={self.onClickEditCancel}
 						>
 							Cancel

@@ -296,7 +296,7 @@ const Form = React.createClass({
 								Cancel
 							</button>
 						</If>
-						<button className="bButton mRight" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
+						<button className="bButton mRight mMarginLeft" tabIndex="-1" onClick={this.tryToSubmit} id={this.props.submitButtonId}>
 							{binding.meta().get('buttonText')}
 						</button>
 					</div>

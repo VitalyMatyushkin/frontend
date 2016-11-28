@@ -7,7 +7,8 @@ const   Invite          = require('./invite'),
 	inviteActions 	= require('./invite-actions'),
 	React           = require('react'),
 	Morearty		= require('morearty'),
-	Immutable       = require('immutable');
+	Immutable       = require('immutable'),
+	Bootstrap  	    = require('styles/bootstrap-custom.scss');
 
 /** Component to show all inbox invites */
 const InboxView = React.createClass({
@@ -64,13 +65,9 @@ const InboxView = React.createClass({
 			invites = self.getInvites();
 
 		return (
-			<div className="eInvites_inboxContainer">
-				<div className="eSchoolMaster_wrap">
-					<h1 className="eSchoolMaster_title">{this.props.type}</h1>
-					<div className="eStrip"></div>
-				</div>
+			<div>
 				<div className="eInvites_filterPanel"></div>
-				<div className="eInvites_list" >{invites && invites.length ? invites : null}</div>
+				<div className="eInvites_list container" >{invites && invites.length ? invites : null}</div>
 				<ProcessingView binding={binding} />
 			</div>
 		);
