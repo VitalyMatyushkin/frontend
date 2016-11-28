@@ -1,10 +1,10 @@
-const	React				= require('react'),
+const	React			= require('react'),
 
-		DateHelper			= require('../../../../../../../../helpers/date_helper'),
+		DateHelper		= require('../../../../../../../../helpers/date_helper'),
 
-		FullTimeInput		= require('../../../../../../../../ui/full_time_input/full_time_input'),
+		FullTimeInput	= require('../../../../../../../../ui/full_time_input/full_time_input'),
 
-		MatchReportStyle	= require('../../../../../../../../../../styles/ui/b_match_report.scss');
+		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
 
 const EditMode = React.createClass({
 	propTypes:{

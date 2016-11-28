@@ -2,14 +2,13 @@ const	React				= require('react'),
 
 		SVG					= require('../../../../../ui/svg'),
 
-		TextBlock			= require('./match_report_components/text_block/text_block'),
-		TimeBlock			= require('./match_report_components/time_block/time_block'),
+		TextBlock			= require('./details_components/text_block/text_block'),
+		TimeBlock			= require('./details_components/time_block/time_block'),
 
+		Consts				= require('./details_components/consts'),
+		DetailsStyle		= require('../../../../../../../styles/ui/b_details.scss');
 
-		Consts				= require('./match_report_components/consts'),
-		MatchReportStyle	= require('../../../../../../../styles/ui/b_match_report.scss');
-
-const MatchReport = React.createClass({
+const Details = React.createClass({
 	propTypes:{
 		name:				React.PropTypes.string.isRequired,
 		venue:				React.PropTypes.string.isRequired,
@@ -43,8 +42,8 @@ const MatchReport = React.createClass({
 	},
 	render: function() {
 		return(
-			<div className="bMatchReport">
-				<div className="eMatchReport_column mBig">
+			<div className="bDetails">
+				<div className="eDetails_column mBig">
 					<TextBlock	header			= {this.props.name}
 								mode			= {Consts.REPORT_FILED_VIEW_MODE.VIEW}
 								text			= {this.props.venue}
@@ -66,15 +65,15 @@ const MatchReport = React.createClass({
 								handleChange	= {this.props.handleChange.bind(null, 'comments')}
 					/>
 				</div>
-				<div className="eMatchReport_column mGrayBackground mWithoutPadding">
-					<div className = "eMatchReport_editButtonWrapper">
-						<div	className	= "eMatchReport_editButton"
+				<div className="eDetails_column mGrayBackground mWithoutPadding">
+					<div className = "eDetails_editButtonWrapper">
+						<div	className	= "eDetails_editButton"
 								onClick		= {this.handleClickEditButton}
 						>
 							<SVG icon="icon_edit"/>
 						</div>
 					</div>
-					<div className="eMatchReport_infoContainer">
+					<div className="eDetails_infoContainer">
 							<TimeBlock	label			= {"Team departs"}
 										dateString		= {this.props.teamDeparts}
 										mode			= {this.state.viewMode}
@@ -107,5 +106,5 @@ const MatchReport = React.createClass({
 	}
 });
 
-module.exports = MatchReport;
+module.exports = Details;
 

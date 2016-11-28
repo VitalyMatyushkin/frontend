@@ -7,7 +7,7 @@ const	React			= require('react'),
 		EventHeader					= require('./view/event_header'),
 		EventRivals					= require('./view/event_rivals'),
 		EventButtons				= require('./view/event_buttons'),
-		IndividualScoreAvailable 	= require('./view/individual_score_available'),
+		IndividualScoreAvailable	= require('./view/individual_score_available'),
 		EventTeams					= require('./view/teams/event_teams'),
 		EventPerformance			= require('./view/teams/event_teams_performance'),
 		EventGallery				= require('./new_gallery/event_gallery'),
@@ -17,7 +17,7 @@ const	React			= require('react'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
-		MatchReportWrapper 			= require('./view/match-report/report_wrapper'),
+		DetailsWrapper 				= require('./view/details/details_wrapper'),
 		Map 						= require('module/ui/map/map-event-venue'),
 		SVG 						= require('module/ui/svg'),
 
@@ -289,8 +289,8 @@ const EventPage = React.createClass({
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReportWrapper	eventId		= {self.eventId}
-														schoolId	= {self.activeSchoolId}
+									<DetailsWrapper	eventId		= {self.eventId}
+													schoolId	= {self.activeSchoolId}
 									/>
 								</div>
 							</If>

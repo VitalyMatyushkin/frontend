@@ -1,6 +1,6 @@
-const	React				= require('react'),
+const	React			= require('react'),
 
-		MatchReportStyle	= require('../../../../../../../../../../styles/ui/b_match_report.scss');
+		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
 
 const ViewMode = React.createClass({
 	propTypes: {

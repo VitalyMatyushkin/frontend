@@ -1,8 +1,8 @@
-const	React				= require('react'),
+const	React			= require('react'),
 
-		DateHelper			= require('../../../../../../../../helpers/date_helper'),
+		DateHelper		= require('../../../../../../../../helpers/date_helper'),
 
-		MatchReportStyle	= require('../../../../../../../../../../styles/ui/b_match_report.scss');
+		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
 
 const ViewMode = React.createClass({
 	propTypes:{

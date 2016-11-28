@@ -1,10 +1,10 @@
-const	React			= require('react'),
+const	React	= require('react'),
 
-		Actions			= require('./actions/actions'),
-		Report			= require('./report'),
-		Consts			= require('./match_report_components/consts');
+		Actions	= require('./actions/actions'),
+		Details	= require('./details'),
+		Consts	= require('./details_components/consts');
 
-const ReportWrapper = React.createClass({
+const DetailsWrapper = React.createClass({
 
 	propTypes:{
 		schoolId:	React.PropTypes.string.isRequired,
@@ -75,22 +75,22 @@ const ReportWrapper = React.createClass({
 			return null;
 		} else {
 			return (
-				<Report	name				= {this.state.eventName}
-						venue				= {this.state.venue}
-						description			= {this.state.eventDetails.description}
-						kitNotes			= {this.state.eventDetails.kitNotes}
-						comments			= {this.state.eventDetails.comments}
-						teamDeparts			= {this.state.eventDetails.teamDeparts}
-						teamReturns			= {this.state.eventDetails.teamReturns}
-						meetTime			= {this.state.eventDetails.meetTime}
-						teaTime				= {this.state.eventDetails.teaTime}
-						lunchTime			= {this.state.eventDetails.lunchTime}
-						handleChange		= {this.handleChange}
-						handleChangeMode	= {this.handleChangeMode}
+				<Details	name				= { this.state.eventName }
+							venue				= { this.state.venue }
+							description			= { this.state.eventDetails.description }
+							kitNotes			= { this.state.eventDetails.kitNotes }
+							comments			= { this.state.eventDetails.comments }
+							teamDeparts			= { this.state.eventDetails.teamDeparts }
+							teamReturns			= { this.state.eventDetails.teamReturns }
+							meetTime			= { this.state.eventDetails.meetTime }
+							teaTime				= { this.state.eventDetails.teaTime }
+							lunchTime			= { this.state.eventDetails.lunchTime }
+							handleChange		= { this.handleChange }
+							handleChangeMode	= { this.handleChangeMode }
 				/>
 			);
 		}
 	}
 });
 
-module.exports = ReportWrapper;
+module.exports = DetailsWrapper;
