@@ -1,13 +1,15 @@
 /**
  * Created by Bright on 01/03/2016.
  */
-const   React       = require('react'),
-        Immutable   = require('immutable'),
-        Morearty    = require('morearty'),
-		Promise 	= require('bluebird'),
-        Form        = require('module/ui/form/form'),
-        FormColumn 	= require('module/ui/form/form_column'),
-        FormField   = require('module/ui/form/form_field');
+const   React       	= require('react'),
+        Immutable   	= require('immutable'),
+        Morearty    	= require('morearty'),
+		Promise 		= require('bluebird'),
+        Form        	= require('module/ui/form/form'),
+        FormColumn 		= require('module/ui/form/form_column'),
+        FormField   	= require('module/ui/form/form_field'),
+
+		DetailsStyle	= require('../../../../styles/ui/popup/b_details.scss');
 
 const TabItemDetails = React.createClass({
     mixins:[Morearty.Mixin],
@@ -82,7 +84,7 @@ const TabItemDetails = React.createClass({
             binding = self.getDefaultBinding();
 
         return (
-            <div className="bDetails">
+            <div className="bDetailsTab">
                 <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={self._onSubmit} defaultButton="Save" formStyleClass="mDetails">
                     <FormColumn>
                         <FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>

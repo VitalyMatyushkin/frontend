@@ -30,11 +30,11 @@ const EditMode = React.createClass({
 		const dateObject = new Date(this.props.dateString)
 
 		return(
-			<div className="eMatchReport_time">
-				<div className="eMatchReport_timeLabel">
+			<div className="eDetails_time">
+				<div className="eDetails_timeLabel">
 					{this.props.label}
 				</div>
-				<div className="eMatchReport_timeValue">
+				<div className="eDetails_timeValue">
 					<FullTimeInput	hourValue			= { dateObject.getHours() }
 									minutesValue		= { dateObject.getMinutes() }
 									handleChangeHour	= { this.handleChangeHour }

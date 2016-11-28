@@ -14,11 +14,11 @@ const ViewMode = React.createClass({
 	},
 	render:function(){
 		return(
-			<div className="eMatchReport_time">
-				<div className="eMatchReport_timeLabel">
+			<div className="eDetails_time">
+				<div className="eDetails_timeLabel">
 					{this.props.label}
 				</div>
-				<div className="eMatchReport_timeValue">
+				<div className="eDetails_timeValue">
 					{this.getTimeView()}
 				</div>
 			</div>

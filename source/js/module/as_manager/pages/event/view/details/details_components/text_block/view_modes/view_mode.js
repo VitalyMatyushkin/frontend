@@ -9,8 +9,8 @@ const ViewMode = React.createClass({
 	},
 	render: function(){
 		return (
-			<div className="eMatchReport_textBlock">
-				<h3 className="eMatchReport_header">
+			<div className="eDetails_textBlock">
+				<h3 className="eDetails_header">
 					{this.props.header}
 				</h3>
 				{this.props.text}

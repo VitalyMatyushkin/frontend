@@ -18,6 +18,7 @@ const	React			= require('react'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
 		DetailsWrapper 				= require('./view/details/details_wrapper'),
+		MatchReport 				= require('./view/match-report/report'),
 		Map 						= require('module/ui/map/map-event-venue'),
 		SVG 						= require('module/ui/svg'),
 
@@ -160,8 +161,12 @@ const EventPage = React.createClass({
 
 		self.tabListModel.push(
 			{
-				value		: 'report',
+				value		: 'details',
 				text		: 'Details',
+				isActive	: false
+			}, {
+				value		: 'report',
+				text		: 'Match Report',
 				isActive	: false
 			}
 		);
@@ -279,19 +284,21 @@ const EventPage = React.createClass({
 							<If condition={activeTab === 'performance'} >
 								<EventPerformance binding={self._getEventTeamsBinding()} />
 							</If>
-							<If condition={activeTab === 'details'} >
-								<EventDetails binding={binding}/>
-							</If>
 							<If condition={activeTab === 'gallery'} >
 								<EventGallery	activeSchoolId	= { self.activeSchoolId }
 												eventId			= { self.eventId }
 												binding			= { binding.sub('gallery') } />
 							</If>
-							<If condition={activeTab === 'report'} >
+							<If condition={activeTab === 'details'} >
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {self.activeSchoolId}
 									/>
+								</div>
+							</If>
+							<If condition={activeTab === 'report'} >
+								<div className="bEventBottomContainer">
+									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
