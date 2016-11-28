@@ -1,10 +1,19 @@
 const	React			= require('react'),
 
+		EventHelper		= require('../../../../../helpers/eventHelper'),
+
 		Actions			= require('./actions/actions'),
 		Report			= require('./report'),
 		Consts			= require('./match_report_components/consts');
 
 const ReportWrapper = React.createClass({
+
+	VENUE_SERVER_CLIENT_MAP: {
+		"HOME"		: 'Home',
+		"AWAY"		: 'Away',
+		"CUSTOM"	: 'Away',
+		"TBC"		: 'TBD'
+	},
 
 	propTypes:{
 		schoolId:	React.PropTypes.string.isRequired,
@@ -29,18 +38,32 @@ const ReportWrapper = React.createClass({
 				isLoading		: false,
 				eventName		: event.generatedNames[this.props.schoolId],
 				eventDetails	: eventDetails,
-				venue			: this.getVenueTextFromEvent(event)
+				venue			: this.getVenueView(event)
 			});
 		});
 	},
-	getVenueTextFromEvent: function(event) {
-		switch (event.venue.venueType) {
-			case "HOME":
-				return "Home";
-			case "AWAY":
-				return "Away";
-			case "TBC":
-				return "TBC";
+	getVenueView: function(event) {
+		switch (true) {
+			case EventHelper.isInterSchoolsEvent(event):
+				return this.getInterSchoolsVenue(event);
+			default:
+				return this.VENUE_SERVER_CLIENT_MAP[event.venue.venueType];
+		}
+	},
+	getInterSchoolsVenue: function(event) {
+		switch (true) {
+			case event.venue.venueType === 'HOME' && event.inviterSchoolId === this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['HOME'];
+			case event.venue.venueType === 'HOME' && event.inviterSchoolId !== this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['AWAY'];
+			case event.venue.venueType === 'AWAY' && event.inviterSchoolId === this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['AWAY'];
+			case event.venue.venueType === 'AWAY' && event.inviterSchoolId !== this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['HOME'];
+			case event.venue.venueType === 'CUSTOM':
+				return this.VENUE_SERVER_CLIENT_MAP['CUSTOM'];
+			case event.venue.venueType === 'TBC':
+				return this.VENUE_SERVER_CLIENT_MAP['TBC'];
 		}
 	},
 	submitChanges: function() {

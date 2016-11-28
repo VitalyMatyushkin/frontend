@@ -13,6 +13,9 @@ const ViewMode = React.createClass({
 				<h3 className="eMatchReport_header">
 					{this.props.header}
 				</h3>
+				<div className="eMatchReport_body">
+
+				</div>
 				{this.props.text}
 			</div>
 		);
