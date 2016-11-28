@@ -1,10 +1,19 @@
-const	React	= require('react'),
+const	React			= require('react'),
 
-		Actions	= require('./actions/actions'),
-		Details	= require('./details'),
-		Consts	= require('./details_components/consts');
+		EventHelper		= require('../../../../../helpers/eventHelper'),
+
+		Actions			= require('./actions/actions'),
+		Details			= require('./details'),
+		Consts			= require('./details_components/consts');
 
 const DetailsWrapper = React.createClass({
+
+	VENUE_SERVER_CLIENT_MAP: {
+		"HOME"		: 'Home',
+		"AWAY"		: 'Away',
+		"CUSTOM"	: 'Away',
+		"TBC"		: 'TBD'
+	},
 
 	propTypes:{
 		schoolId:	React.PropTypes.string.isRequired,
@@ -29,18 +38,32 @@ const DetailsWrapper = React.createClass({
 				isLoading		: false,
 				eventName		: event.generatedNames[this.props.schoolId],
 				eventDetails	: eventDetails,
-				venue			: this.getVenueTextFromEvent(event)
+				venue			: this.getVenueView(event)
 			});
 		});
 	},
-	getVenueTextFromEvent: function(event) {
-		switch (event.venue.venueType) {
-			case "HOME":
-				return "Home";
-			case "AWAY":
-				return "Away";
-			case "TBC":
-				return "TBC";
+	getVenueView: function(event) {
+		switch (true) {
+			case EventHelper.isInterSchoolsEvent(event):
+				return this.getInterSchoolsVenue(event);
+			default:
+				return this.VENUE_SERVER_CLIENT_MAP[event.venue.venueType];
+		}
+	},
+	getInterSchoolsVenue: function(event) {
+		switch (true) {
+			case event.venue.venueType === 'HOME' && event.inviterSchoolId === this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['HOME'];
+			case event.venue.venueType === 'HOME' && event.inviterSchoolId !== this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['AWAY'];
+			case event.venue.venueType === 'AWAY' && event.inviterSchoolId === this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['AWAY'];
+			case event.venue.venueType === 'AWAY' && event.inviterSchoolId !== this.props.schoolId:
+				return this.VENUE_SERVER_CLIENT_MAP['HOME'];
+			case event.venue.venueType === 'CUSTOM':
+				return this.VENUE_SERVER_CLIENT_MAP['CUSTOM'];
+			case event.venue.venueType === 'TBC':
+				return this.VENUE_SERVER_CLIENT_MAP['TBC'];
 		}
 	},
 	submitChanges: function() {

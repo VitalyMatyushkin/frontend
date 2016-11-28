@@ -54,6 +54,7 @@
 }
 
 .eDetails_textBlock {
+  white-space: pre;
   font-size: 14px;
   margin-bottom: 40px;
 
@@ -91,4 +92,8 @@
   color:  black;
 
   font-family: Glober-Bold, sans-serif;
+}
+
+.eDetails_body {
+  margin-top: 5px;
 }
