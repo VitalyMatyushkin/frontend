@@ -41,6 +41,18 @@ const InviteView = React.createClass({
 
         return result;
     },
+    _getGender: function (gender) { //TODO Move this method into helpers
+        switch (gender) {
+            case 'MALE_ONLY':
+                return 'Boys';
+            case 'FEMALE_ONLY':
+                return 'Girls';
+            case 'MIXED':
+                return 'Mixed';
+            default:
+                return '';
+        }
+    },
     render: function() {
         const   self            = this,
                 binding         = self.getDefaultBinding(),
@@ -88,40 +100,38 @@ const InviteView = React.createClass({
                 <div className="row">
 
                     <div className="col-md-6 eInvite_left">
-                        <div className="col-md-5 col-sm-5">
-                            <div className="eInvite_img" style={schoolPicture}></div>
-                        </div>
-                        <div className="eInvite_info col-md-7 col-sm-7">
-
-                            <h4> {rival.name }</h4>
-                            <h4>Team Name</h4>
-                            <div className="eInvite_content">
-                                {sport} / {gender} / {self._getAges(ages)} <br/>
-                                {startDate} / {hours + ':' + minutes}<br/>
-
+                        <div className="row">
+                            <div className="col-md-5 col-sm-5">
+                                <div className="eInvite_img" style={schoolPicture}></div>
                             </div>
-                            <div className="eInvite_footer">
-                                <div className="eInvite_message">
-                                    {isOutBox ? 'Awaiting opponent...' : null}
-                                    {isArchive ? <span className={'m'+status}>{status}</span> : null}
+                            <div className="eInvite_info col-md-7 col-sm-7">
+
+                                <h4> {rival.name }</h4>
+                                <h4>Team Name</h4>
+
+                                <div className="eInvite_content">
+                                    {sport} / {self._getGender(gender)} / {self._getAges(ages)} <br/>
+                                    {startDate} / {hours + ':' + minutes}<br/>
                                 </div>
-                                <div className="eInvite_buttons">
-                                    {isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
-                                                       extraStyleClasses={'mHalfWidth'}/> : null }
-                                    {isInbox ? <Button href={`/#invites/${inviteId}/decline`} text={'Decline'}
-                                                       extraStyleClasses={'mCancel mHalfWidth'}/> : null }
-                                    {isOutBox ? <Button href={`/#invites/${inviteId}/cancel`} text={'Cancel'}
-                                                        extraStyleClasses={'mRed'}/> : null }
+                                <div>
+                                    <div className="eInvite_message">
+                                        {isArchive ? <span className={'m'+status}>{status}</span> : null}
+                                    </div>
+                                    <div className="eInvite_buttons">
+                                        {isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
+                                                           extraStyleClasses={'mHalfWidth mMarginRight'}/> : null }
+                                        {isInbox ? <Button href={`/#invites/${inviteId}/decline`} text={'Decline'}
+                                                           extraStyleClasses={'mCancel mHalfWidth'}/> : null }
+                                        {isOutBox ?
+                                            <Button href={`/#invites/${inviteId}/cancel`} text={'Cancel invitation'}
+                                                    extraStyleClasses={'mCancel'}/> : null }
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
                     <div className="col-md-6">
-                        <div className="eInvite_map">
-                            {venueArea}
-                        </div>
+                        <div className="eInvite_map">{venueArea}</div>
                     </div>
                 </div>
             </div>

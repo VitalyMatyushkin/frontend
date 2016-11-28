@@ -42,7 +42,7 @@ const MatchReport = React.createClass({
 							value={binding.get('content')}
 						/>
 						<div className="bEventButtons">
-							<div className="bButton mCancel" onClick={this.actions.onCancel.bind(this.actions)}>
+							<div className="bButton mCancel mMarginRight" onClick={this.actions.onCancel.bind(this.actions)}>
 								Cancel
 							</div>
 							<div className="bButton" onClick={this.actions.onSave.bind(this.actions)}>
