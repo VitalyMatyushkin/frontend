@@ -88,7 +88,7 @@ const InviteView = React.createClass({
             	status = 'Accepted';
 				break;
 			case isArchive && !accepted:
-				status = 'Refused';
+				status = 'Declined';
 				break;
 			default:
 				status = '';

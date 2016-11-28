@@ -41,7 +41,7 @@
   color: darken(#ddd, 40);
   width: 100%;
 
-  .mAccepted, .mRefused {
+  .mAccepted, .mDeclined {
     background: #f5f5f5 url("/images/invite_icons.png") no-repeat;
     border-radius: 3px;
     display: inline-block;
@@ -52,7 +52,7 @@
     background-position: left 15px;
     color:#66952e;
   }
-  .mRefused{
+  .mDeclined{
     background-position: left -61px;
     color:#f26522;
   }
