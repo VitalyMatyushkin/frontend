@@ -1,10 +1,10 @@
-const	React				= require('react'),
+const	React			= require('react'),
 
-		ViewMode			= require('./view_modes/view_mode'),
-		EditMode			= require('./view_modes/edit_mode'),
+		ViewMode		= require('./view_modes/view_mode'),
+		EditMode		= require('./view_modes/edit_mode'),
 
-		Consts				= require('./../consts'),
-		MatchReportStyle	= require('../../../../../../../../../styles/ui/b_match_report.scss');
+		Consts			= require('./../consts'),
+		DetailsStyle	= require('../../../../../../../../../styles/ui/b_details.scss');
 
 const TextBlock = React.createClass({
 	propTypes:{

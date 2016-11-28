@@ -6,7 +6,7 @@ const	React				= require('react'),
 		EditMode			= require('./view_modes/edit_mode'),
 
 		Consts				= require('./../consts'),
-		MatchReportStyle	= require('../../../../../../../../../styles/ui/b_match_report.scss');
+		DetailsStyle	= require('../../../../../../../../../styles/ui/b_details.scss');
 
 const TimeBlock = React.createClass({
 	propTypes:{

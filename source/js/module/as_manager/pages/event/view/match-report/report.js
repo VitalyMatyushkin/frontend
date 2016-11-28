@@ -1,107 +1,61 @@
+/**
+ * Created by Anatoly on 30.09.2016.
+ */
+
 const	React				= require('react'),
+		Morearty			= require('morearty'),
 
-		SVG					= require('../../../../../ui/svg'),
+		If					= require('module/ui/if/if'),
+		Actions 			= require('./report-actions'),
+		SVG 				= require('module/ui/svg'),
 
-		TextBlock			= require('./match_report_components/text_block/text_block'),
-		TimeBlock			= require('./match_report_components/time_block/time_block'),
-
-
-		Consts				= require('./match_report_components/consts'),
-		MatchReportStyle	= require('../../../../../../../styles/ui/b_match_report.scss');
+		MatchReportStyle	= require('../../../../../../../styles/pages/public_event/public_event.scss'),
+		ButtonStyle			= require('../../../../../../../styles/ui/b_button.scss'),
+		EditButtonStyle		= require('../../../../../../../styles/pages/public_event/public_event.scss');
 
 const MatchReport = React.createClass({
+	mixins: [Morearty.Mixin],
 	propTypes:{
-		name:				React.PropTypes.string.isRequired,
-		venue:				React.PropTypes.string.isRequired,
-		description:		React.PropTypes.string.isRequired,
-		kitNotes:			React.PropTypes.string.isRequired,
-		comments:			React.PropTypes.string.isRequired,
-		teamDeparts:		React.PropTypes.string.isRequired,
-		teamReturns:		React.PropTypes.string.isRequired,
-		meetTime:			React.PropTypes.string.isRequired,
-		teaTime:			React.PropTypes.string.isRequired,
-		lunchTime:			React.PropTypes.string.isRequired,
-		handleChange:		React.PropTypes.func.isRequired,
-		handleChangeMode:	React.PropTypes.func.isRequired
+		eventId: React.PropTypes.string.isRequired
 	},
-	getInitialState: function() {
-		return {
-			viewMode: Consts.REPORT_FILED_VIEW_MODE.VIEW
-		};
+	componentWillMount: function(){
+		this.actions = new Actions(this);
+		this.actions.load();
 	},
-	handleClickEditButton: function() {
-		switch (this.state.viewMode) {
-			case Consts.REPORT_FILED_VIEW_MODE.VIEW:
-				this.setState({viewMode: Consts.REPORT_FILED_VIEW_MODE.EDIT});
-				this.props.handleChangeMode(Consts.REPORT_FILED_VIEW_MODE.EDIT);
-				break;
-			case Consts.REPORT_FILED_VIEW_MODE.EDIT:
-				this.setState({viewMode: Consts.REPORT_FILED_VIEW_MODE.VIEW});
-				this.props.handleChangeMode(Consts.REPORT_FILED_VIEW_MODE.VIEW);
-				break;
-		}
-	},
-	render: function() {
+	render:function(){
+		const 	self 		= this,
+				binding 	= self.getDefaultBinding();
+
 		return(
 			<div className="bMatchReport">
-				<div className="eMatchReport_column mBig">
-					<TextBlock	header			= {this.props.name}
-								mode			= {Consts.REPORT_FILED_VIEW_MODE.VIEW}
-								text			= {this.props.venue}
-								handleChange	= {this.props.handleChange.bind(null, 'name')}
-					/>
-					<TextBlock	header			= {"Event Description"}
-								text			= {this.props.description}
-								mode			= {this.state.viewMode}
-								handleChange	= {this.props.handleChange.bind(null, 'description')}
-					/>
-					<TextBlock	header			= {"Kit notes"}
-								text			= {this.props.kitNotes}
-								mode			= {this.state.viewMode}
-								handleChange	= {this.props.handleChange.bind(null, 'kitNotes')}
-					/>
-					<TextBlock	header			= {"Comments"}
-								text			= {this.props.comments}
-								mode			= {this.state.viewMode}
-								handleChange	= {this.props.handleChange.bind(null, 'comments')}
-					/>
-				</div>
-				<div className="eMatchReport_column mGrayBackground mWithoutPadding">
-					<div className = "eMatchReport_editButtonWrapper">
-						<div	className	= "eMatchReport_editButton"
-								onClick		= {this.handleClickEditButton}
-						>
-							<SVG icon="icon_edit"/>
+				<If condition={!this.actions.isEditMode()}>
+					<div>
+						<div className="bEditButtonWrapper">
+							<div className="bEditButton" onClick={this.actions.onEdit.bind(this.actions)}>
+								<SVG icon="icon_edit"/>
+							</div>
+						</div>
+						<div className="eText" >{binding.get('content')}</div>
+					</div>
+				</If>
+				<If condition={this.actions.isEditMode()}>
+					<div>
+						<Morearty.DOM.textarea
+							placeholder="Enter match report"
+							className="eEvent_report"
+							onChange={Morearty.Callback.set(binding, 'content')}
+							value={binding.get('content')}
+						/>
+						<div className="bEventButtons">
+							<div className="bButton mCancel mMarginRight" onClick={this.actions.onCancel.bind(this.actions)}>
+								Cancel
+							</div>
+							<div className="bButton" onClick={this.actions.onSave.bind(this.actions)}>
+								Save
+							</div>
 						</div>
 					</div>
-					<div className="eMatchReport_infoContainer">
-							<TimeBlock	label			= {"Team departs"}
-										dateString		= {this.props.teamDeparts}
-										mode			= {this.state.viewMode}
-										handleChange	= {this.props.handleChange.bind(null, 'teamDeparts')}
-							/>
-							<TimeBlock	label			= {"Team returns"}
-										dateString		= {this.props.teamReturns}
-										mode			= {this.state.viewMode}
-										handleChange	= {this.props.handleChange.bind(null, 'teamReturns')}
-							/>
-							<TimeBlock	label			= {"Meet time"}
-										dateString		= {this.props.meetTime}
-										mode			= {this.state.viewMode}
-										handleChange	= {this.props.handleChange.bind(null, 'meetTime')}
-							/>
-							<TimeBlock	label			= {"Tea time"}
-										dateString		= {this.props.teaTime}
-										mode			= {this.state.viewMode}
-										handleChange	= {this.props.handleChange.bind(null, 'teaTime')}
-							/>
-							<TimeBlock	label			= {"Lunch time"}
-										dateString		= {this.props.lunchTime}
-										mode			= {this.state.viewMode}
-										handleChange	= {this.props.handleChange.bind(null, 'lunchTime')}
-							/>
-					</div>
-				</div>
+				</If>
 			</div>
 		);
 	}

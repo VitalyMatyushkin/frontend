@@ -1,10 +1,10 @@
-const	React				= require('react'),
+const	React			= require('react'),
 
-		DateHelper			= require('../../../../../../../../helpers/date_helper'),
+		DateHelper		= require('../../../../../../../../helpers/date_helper'),
 
-		FullTimeInput		= require('../../../../../../../../ui/full_time_input/full_time_input'),
+		FullTimeInput	= require('../../../../../../../../ui/full_time_input/full_time_input'),
 
-		MatchReportStyle	= require('../../../../../../../../../../styles/ui/b_match_report.scss');
+		DetailsStyle	= require('../../../../../../../../../../styles/ui/b_details.scss');
 
 const EditMode = React.createClass({
 	propTypes:{
@@ -30,11 +30,11 @@ const EditMode = React.createClass({
 		const dateObject = new Date(this.props.dateString)
 
 		return(
-			<div className="eMatchReport_time">
-				<div className="eMatchReport_timeLabel">
+			<div className="eDetails_time">
+				<div className="eDetails_timeLabel">
 					{this.props.label}
 				</div>
-				<div className="eMatchReport_timeValue">
+				<div className="eDetails_timeValue">
 					<FullTimeInput	hourValue			= { dateObject.getHours() }
 									minutesValue		= { dateObject.getMinutes() }
 									handleChangeHour	= { this.handleChangeHour }
