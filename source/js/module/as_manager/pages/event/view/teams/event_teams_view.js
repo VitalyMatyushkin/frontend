@@ -91,7 +91,7 @@ const EventTeamsView = React.createClass({
 		return (
 			<div className="bEventTeams_team">
 				<div className="eEventTeams_awaiting">
-					{'Accepted by opponent'}
+					{'Select players later...'}
 				</div>
 			</div>
 		);
@@ -116,7 +116,7 @@ const EventTeamsView = React.createClass({
 		return (
 			<div className="bEventTeams_team">
 				<div className="eEventTeams_awaiting">
-					{'Accepted by opponent'}
+					{'Select players later...'}
 				</div>
 			</div>
 		);
@@ -125,7 +125,7 @@ const EventTeamsView = React.createClass({
 		return (
 			<div className="bEventTeams_team">
 				<div className="eEventTeams_awaiting">
-					{'Accepted by opponent'}
+					{'Team members have not been added yet'}
 				</div>
 			</div>
 		);
@@ -176,7 +176,7 @@ const EventTeamsView = React.createClass({
 					return self.renderIndividualPlayersByHouseId(event.houses[0], individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
-						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(0, individualScoreAvailable);
+						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(0);
 					} else if(TeamHelper.isIndividualSport(event)) {
 						return self.renderIndividualPlayersForInternalEventForIndividualSport();
 					}
@@ -255,7 +255,7 @@ const EventTeamsView = React.createClass({
 					return self.renderIndividualPlayersByHouseId(event.houses[1], individualScoreAvailable);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
-						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(1, individualScoreAvailable);
+						return self.renderIndividualPlayersForInternalEventForOneOnOneSportByOrder(1);
 					} else {
 						return null;
 					}
