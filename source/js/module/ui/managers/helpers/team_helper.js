@@ -421,7 +421,7 @@ function isTeamSport(event) {
 	if(typeof event !== 'undefined') {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
-		return sport.players === SportConsts.SPORT_PLAYERS.TEAM || sport.players === SportConsts.SPORT_PLAYERS['2X2'];
+		return sport && (sport.players === SportConsts.SPORT_PLAYERS.TEAM || sport.players === SportConsts.SPORT_PLAYERS['2X2']);
 	} else {
 		return false;
 	}

@@ -242,9 +242,12 @@ const EventPage = React.createClass({
 	render: function() {
 		const	self						= this,
 				binding						= self.getDefaultBinding(),
+				event 						= binding.toJS('model'),
 				showingComment				= binding.get('showingComment'),
 				activeTab					= binding.get('activeTab'),
-				isClosingMode 				= binding.toJS('mode') === 'closing';
+				isTeamSport 				= TeamHelper.isTeamSport(event),
+				isClosingMode 				= binding.toJS('mode') === 'closing',
+				isaShow 					= isClosingMode && isTeamSport;
 
 		switch (true) {
 			case !self.isSync():
@@ -271,9 +274,9 @@ const EventPage = React.createClass({
 									</If>
 								</div>
 								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-														  isVisible={isClosingMode}/>
+														  isVisible={isaShow}/>
 								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-														  isVisible={isClosingMode}
+														  isVisible={isaShow}
 														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
