@@ -5,15 +5,19 @@ const Actions = {
 			eventId		: eventId
 		});
 	},
+	getDetailsByEventId: function (schoolId, eventId) {
+		return window.Server.schoolEventDetails.get({
+			schoolId	: schoolId,
+			eventId		: eventId
+		});
+	},
 	submitEventDetailsChangesById: function(schoolId, eventId, changes) {
-		return window.Server.schoolEvent.put(
+		return window.Server.schoolEventDetails.put(
 			{
 				schoolId	: schoolId,
 				eventId		: eventId
 			},
-			{
-				details	: changes
-			}
+			changes
 		)
 		.then(updEvent => updEvent.details);
 	}
