@@ -41,6 +41,7 @@ const SecuritySettingsPage = React.createClass({
 					onCancel={this.onCancel}
 				>
 					<FormField type="text"
+							   textType="password"
 							   field="oldPassword"
 							   validation="required"
 							   fieldClassName="mLarge"
