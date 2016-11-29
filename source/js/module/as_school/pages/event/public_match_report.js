@@ -12,6 +12,7 @@ const MatchReport = React.createClass({
 	render:function(){
 		return(
 			<div className="bMatchReport">
+				<h3>Match Report </h3>
 				{this.props.report.content}
 			</div>
 		);

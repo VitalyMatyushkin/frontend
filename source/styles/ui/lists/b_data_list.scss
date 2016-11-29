@@ -1,6 +1,7 @@
 @import "../../!variables";
 
 .bDataList{
+  box-sizing: content-box;
   max-width: 1060px;
   padding: 0 11%;
   text-transform: none;

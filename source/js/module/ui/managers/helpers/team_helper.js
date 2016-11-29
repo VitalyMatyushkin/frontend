@@ -625,7 +625,22 @@ function getRivalForLeftContext(event, activeSchoolId){
 function getRivalForRightContext(event, activeSchoolId){
 	return getRival(event, activeSchoolId, false);
 }
-
+function getParametersForLeftContext(activeSchoolId, event){
+	return this.callFunctionForLeftContext(activeSchoolId, event, (bundleName, order) => {
+		return {
+			bundleName: bundleName,
+			order: order
+		}
+	});
+}
+function getParametersForRightContext(activeSchoolId, event){
+	return this.callFunctionForRightContext(activeSchoolId, event, (bundleName, order) => {
+		return {
+			bundleName: bundleName,
+			order: order
+		}
+	});
+}
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
@@ -1248,6 +1263,11 @@ function checkValidationResultBeforeSubmit(event){
 	return result;
 }
 
+function clearIndividualScore(event, teamId) {
+	const scores = event.results.individualScore.filter(s => s.teamId === teamId);
+
+	scores.forEach(s => s.score = 0);
+}
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -1311,7 +1331,10 @@ const TeamHelper = {
 	decByType:								decByType,
 	incByType:								incByType,
 	calculateTeamPoints: 					calculateTeamPoints,
-	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit
+	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit,
+	getParametersForLeftContext: 			getParametersForLeftContext,
+	getParametersForRightContext: 			getParametersForRightContext,
+	clearIndividualScore:					clearIndividualScore
 };
 
 module.exports = TeamHelper;

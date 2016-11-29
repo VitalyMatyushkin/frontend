@@ -120,8 +120,8 @@ const  RoleList = React.createClass({
 
 		return (
 			<div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, role, schoolId) : null}>
-				<p>{schoolName}</p>
-				<p className="eRole_name">{roleClient}</p>
+				<span>{schoolName}</span>
+				<span className="eRole_name">{roleClient}</span>
 			</div>
 		);
 	},
@@ -185,8 +185,8 @@ const  RoleList = React.createClass({
 				<If condition={show}>
 					<div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
 						<div onClick={self.onToggle}>
+							<div className="eArrow"></div>
 							{self.renderActiveRole()}
-							<div className="eArrow eCombobox_button"></div>
 						</div>
 						<div className="eRolesList">
 							<div className="eScrollList">

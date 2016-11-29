@@ -1,0 +1,106 @@
+@import "../!variables";
+
+.bDetails {
+  display: flex;
+  justify-content: space-around;
+
+  border-bottom: 1px solid #d4d4d4;
+}
+
+.eDetails_column {
+  width: 350px;
+
+  padding: 50px;
+  min-height: 550px;
+
+  &.mWithoutPadding {
+    padding: 0px;
+  }
+
+  &.mBig {
+    width: 590px;
+  }
+
+  &.mGrayBackground {
+    background-color: #f6f5f8;
+  }
+}
+
+.eDetails_infoContainer {
+  padding: 0px 50px 50px 50px;
+}
+
+.eDetails_editButton {
+  width: 20px;
+  height: 20px;
+
+
+  cursor: pointer;
+  font-weight: bold;
+
+  & .bIcon{
+    color: #929496;
+  }
+  &:hover .bIcon{
+    color: $textColor;
+  }
+}
+
+.eDetails_editButtonWrapper {
+  display: flex;
+  flex-direction: row-reverse;
+
+  padding: 15px 15px 15px 0px;
+}
+
+.eDetails_textBlock {
+  white-space: pre;
+  font-size: 14px;
+  margin-bottom: 40px;
+
+  font-family: Glober, sans-serif;
+}
+
+.eDetails_textArea {
+  width: 500px;
+  height: 100px;
+  max-width: 500px;
+  max-height: 200px;
+
+  font-size: 14px;
+  font-family: Glober, sans-serif;
+}
+
+.eDetails_timeContainer {
+  margin-top: 50px;
+}
+
+.eDetails_time {
+  margin-bottom: 20px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.eDetails_timeLabel {
+}
+
+.eDetails_timeValue {
+}
+
+.eDetails_header {
+  color:  black;
+
+  font-family: Glober-Bold, sans-serif;
+
+  &.mSmall {
+    font-size: 14px;
+    font-family: Glober, sans-serif;
+    font-weight: normal;
+    color: #757477;
+  }
+}
+
+.eDetails_body {
+  margin-top: 10px;
+}

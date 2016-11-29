@@ -9,6 +9,9 @@
   -webkit-font-smoothing: antialiased;
   position: relative;
   background-color: #f0f0f0;
+  * {
+    box-sizing: content-box;//TODO remove it, when new disign will be added
+  }
 }
 
 /*header*/

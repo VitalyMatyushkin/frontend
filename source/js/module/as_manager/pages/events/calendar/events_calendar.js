@@ -17,7 +17,7 @@ const EventsCalendar = React.createClass({
 	mixins:[Morearty.Mixin ],
 
 	componentWillMount: function () {
-		const	binding					= this.getDefaultBinding().sub('calendar'),
+		const	binding					= this.getDefaultBinding(),
 				activeSchoolId			= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 
 		/** Loading initial data for this month */
@@ -31,7 +31,7 @@ const EventsCalendar = React.createClass({
 	},
 
 	render: function(){
-		const	binding						= this.getDefaultBinding().sub('calendar'),
+		const	binding						= this.getDefaultBinding(),
 				activeSchoolId				= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				isSelectedDateEventsInSync	= binding.get('selectedDateEventsData.isSync'),
 				selectedDateEvents			= binding.toJS('selectedDateEventsData.events');

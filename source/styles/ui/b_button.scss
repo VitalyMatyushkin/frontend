@@ -5,7 +5,7 @@
   border-radius: 3px;
   font-size: 18px;
   color: #fff;
-  padding: 10px 30px;
+  padding: 13px 30px;
   display: inline-block;
   user-select: none;
   cursor: pointer;
@@ -15,12 +15,11 @@
   font-family: $basicFontFamily;
 
   &.mAddEvent {
-    width: 442px;
+    width: 100%;
   }
 
   &:hover{
-    background:
-    $lightBlue;
+    background: $lightBlue;
     color: #fff;
   }
 
@@ -33,19 +32,22 @@
     background-color: $blueColor;
   }
   &.mMarginRight {
-    margin-right: 10px;
+    margin-right: 2%;
+  }
+  &.mMarginLeft {
+    margin-left: 2%;
   }
   &.mFullWidth {
-    box-sizing: border-box;
     width: 100%;
+  }
+  &.mHalfWidth {
+    width: 49%;
   }
 
   &.mCancel{
     background: #ffffff;
     border: solid 1px #d2d2d2;
-    box-sizing: border-box;
     color: $textColor;
-    margin: 0 10px;
 
     &:hover {
       background: #fafafa;
@@ -53,6 +55,19 @@
 
     &:active{
       background: #f5f5f5;
+    }
+  }
+
+
+  &.mCircle {
+    background: #ffffff;
+    border: $mainBorder;
+    border-radius: 50%;
+    height: 50px;
+    padding: 15px;
+    width: 50px;
+    &:hover {
+      background: $secondBackgroundColor;
     }
   }
 }

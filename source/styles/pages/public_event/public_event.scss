@@ -4,8 +4,7 @@
   margin: 0 auto;
   color: #535353;
 
-  .bMatchReport{
-    box-sizing: border-box;
+  .bMatchReport {
     margin: 10px auto 30px;
     max-width: 940px;
     padding: 20px 15px;
@@ -13,10 +12,12 @@
     background: #fff;
     white-space: pre-line
   }
+
   .bEventBottomContainer {
     margin: 30px auto;
   }
-  .bEventHeader_rightSide {
-    text-align: right;
-  }
 }
+.bEventHeader_rightSide {
+  text-align: right;
+}
+

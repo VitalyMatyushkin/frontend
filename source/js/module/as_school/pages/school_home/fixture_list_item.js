@@ -27,33 +27,36 @@ const FixtureListItem = React.createClass({
         )
     },
 
-    renderLeftOpponentSide: function (event, model) {
-        return (
-                <div>
-                    <div className="eEventRival_logo">
-                        <img className="eEventRivals_logoPic" src={model.rivals[0].schoolPic}/>
-                    </div>
-                    <div className="eEventRival_rivalName">{model.rivals[0].value}</div>
-                    <div className="eEventRival_score">
-                        <div className="ePlayer_score mBig">{`${model.scoreAr[0]}`}</div>
-                    </div>
-                </div>
-        );
-    },
+	renderOpponentSide: function (model, order) {
+		return (
+			<div>
+				<div className="eEventRival_logo">
+					<img className="eEventRivals_logoPic" src={model.rivals[order].schoolPic}/>
+				</div>
+				<div className="eEventRival_rivalName">{model.rivals[order].value}</div>
+				<div className="eEventRival_score">
+					<div className="ePlayer_score mBig">{`${model.scoreAr[order]}`}</div>
+				</div>
+			</div>
+		);
+	},
 
-    renderRightOpponentSide: function (event, model) {
-        return (
-                <div>
-                    <div className="eEventRival_logo">
-                        <img className="eEventRivals_logoPic" src={model.rivals[1].schoolPic}/>
-                    </div>
-                    <div className="eEventRival_rivalName">{model.rivals[1].value}</div>
-                    <div className="eEventRival_score">
-                        <div className="ePlayer_score mBig">{`${model.scoreAr[1]}`}</div>
-                    </div>
-                </div>
-        );
-    },
+	getEventRivals: function (model) {
+    	if(!model.isEventWithOneIndividualTeam)
+			return (
+				<div className="bEventRivals">
+					<div className="bEventRival">
+						{this.renderOpponentSide(model, 0)}
+					</div>
+					<div className="bEventRival mRight">
+						{this.renderOpponentSide(model, 1)}
+					</div>
+				</div>
+
+			);
+
+    	return null;
+	},
     handleClickGoBack: function() {
         document.location.hash = 'home';
     },
@@ -81,14 +84,7 @@ const FixtureListItem = React.createClass({
                 </div>
 
                 <div className="bEventInfo">
-                    <div className="bEventRivals">
-                        <div className="bEventRival tTeasttsts">
-                            {this.renderLeftOpponentSide(event, challengeModel)}
-                        </div>
-                        <div className="bEventRival mRight">
-                            {this.renderRightOpponentSide(event, challengeModel)}
-                        </div>
-                    </div>
+					{this.getEventRivals(challengeModel)}
                 </div>
             </div>
         )

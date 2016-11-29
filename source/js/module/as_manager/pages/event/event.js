@@ -7,7 +7,7 @@ const	React			= require('react'),
 		EventHeader					= require('./view/event_header'),
 		EventRivals					= require('./view/event_rivals'),
 		EventButtons				= require('./view/event_buttons'),
-		IndividualScoreAvailable 	= require('./view/individual_score_available'),
+		IndividualScoreAvailable	= require('./view/individual_score_available'),
 		EventTeams					= require('./view/teams/event_teams'),
 		EventPerformance			= require('./view/teams/event_teams_performance'),
 		EventGallery				= require('./new_gallery/event_gallery'),
@@ -17,6 +17,7 @@ const	React			= require('react'),
 		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
+		DetailsWrapper 				= require('./view/details/details_wrapper'),
 		MatchReport 				= require('./view/match-report/report'),
 		Map 						= require('module/ui/map/map-event-venue'),
 		SVG 						= require('module/ui/svg'),
@@ -30,20 +31,25 @@ const EventPage = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			model:			{},
-			gallery:		{
-				photos:		[],
-				isUploading:false,
-				isSync:		false
+			model: {},
+			gallery: {
+				photos: [],
+				isUploading: false,
+				isSync: false
 			},
-			sync:			false,
-			mode:			'general',
-			showingComment:	false,
-			activeTab:		'teams',
-			eventTeams:		{},
-			individualScoreAvailable:{
-				value:true
-			}
+			sync: false,
+			mode: 'general',
+			showingComment: false,
+			activeTab: 'teams',
+			eventTeams: {},
+			individualScoreAvailable: [
+				{
+					value: true
+				},
+				{
+					value: true
+				}
+			]
 		});
 	},
 	componentWillMount: function () {
@@ -155,6 +161,10 @@ const EventPage = React.createClass({
 
 		self.tabListModel.push(
 			{
+				value		: 'details',
+				text		: 'Details',
+				isActive	: false
+			}, {
 				value		: 'report',
 				text		: 'Match Report',
 				isActive	: false
@@ -206,7 +216,7 @@ const EventPage = React.createClass({
 			activeTab:					binding.sub('activeTab'),
 			event:						binding.sub('model'),
 			mode:						binding.sub('mode'),
-			individualScoreAvailable: 	binding.sub('individualScoreAvailable.value')
+			individualScoreAvailable: 	binding.sub('individualScoreAvailable')
 		};
 	},
 	isShowTrobber: function() {
@@ -260,7 +270,11 @@ const EventPage = React.createClass({
 										</div>
 									</If>
 								</div>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable')} isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
+														  isVisible={isClosingMode}/>
+								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+														  isVisible={isClosingMode}
+														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
 							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
@@ -270,13 +284,18 @@ const EventPage = React.createClass({
 							<If condition={activeTab === 'performance'} >
 								<EventPerformance binding={self._getEventTeamsBinding()} />
 							</If>
-							<If condition={activeTab === 'details'} >
-								<EventDetails binding={binding}/>
-							</If>
 							<If condition={activeTab === 'gallery'} >
 								<EventGallery	activeSchoolId	= { self.activeSchoolId }
-												 eventId			= { self.eventId }
-												 binding			= { binding.sub('gallery') } />
+												eventId			= { self.eventId }
+												binding			= { binding.sub('gallery') } />
+							</If>
+							<If condition={activeTab === 'details'} >
+								<div className="bEventBottomContainer">
+									<DetailsWrapper	eventId		= {self.eventId}
+													schoolId	= {self.activeSchoolId}
+													isParent	= {RoleHelper.isParent(this)}
+									/>
+								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
@@ -294,8 +313,8 @@ const EventPage = React.createClass({
 				return (
 					<div className="bEventContainer">
 						<div>
-							<ManagerWrapper binding={binding} />
-							<EventButtons binding={binding} />
+							<ManagerWrapper binding={binding}/>
+							<EventButtons binding={binding}/>
 						</div>
 					</div>
 				);

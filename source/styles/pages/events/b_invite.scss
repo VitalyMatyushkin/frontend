@@ -1,72 +1,61 @@
 @import "../../!variables";
 
 .bInvite {
-  display: flex;
-  flex-direction: row;
-  min-height: 300px;
-  border: $BORDER;
-  box-sizing: border-box;
-  width: 475px;
-  margin: 5px;
-  background: #fff;
+  border: $mainBorder;
+  border-radius: 5px;
+  font-size: 1rem;
+  margin-bottom: 10px;
 }
 
-.eInvite_header {
-  justify-content: space-between;
-  height: 40px;
-  white-space: nowrap;
-  display: flex;
-}
-.bIcon_invites{
-  width: 30px;
-  height: 30px;
-}
-.eInvite_vs {
-  font-size: 11px;
-  margin: 0 10px;
+.eInvite_left {
+  padding-bottom: 30px;
+  padding-top: 30px;
 }
 
-.eInvite_eventName{
-  font-size: 24px;
-  font-weight: bold;
-  color: #535353;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  max-width: 250px;
-  height: 30px;
-  padding: 10px 0 0;
+.eInvite_img {
+  background: no-repeat center center;
+  background-size: contain;
+  display: inline-block;
+  height: 130px;
+  margin: 40px 0 40px 15px;
+  width: 100%;
 }
 
-.eInvite_eventDate {
-  font-size: 12px;
-  color: darken(#ddd, 20);
+.eInvite_info {
+  display: inline-block;
+
+
+  h4 {
+    color: $textColor;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+}
+.eInvite_content {
+  line-height: 1.5;
+  min-height: 120px;
+  padding-top: 20px;
 }
 
 .eInvite_message {
   color: darken(#ddd, 40);
+  width: 100%;
 
+  .mAccepted, .mDeclined {
+    background: #f5f5f5 url("/images/invite_icons.png") no-repeat;
+    border-radius: 3px;
+    display: inline-block;
+    padding: 18px 55px 14px;
+    width: 100%;
+  }
   .mAccepted{
-    color:$DarkGreen;
+    background-position: left 15px;
+    color:#66952e;
   }
-  .mRefused{
-    color:$DarkRed;
+  .mDeclined{
+    background-position: left -61px;
+    color:#f26522;
   }
-}
-
-.eInvite_info {
-  font-size: 16px;
-  color: #666;
-  line-height: 20px;
-}
-
-.eInvite_buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-}
-
-.eInvite_buttons .bButton {
-  margin-right: 10px;
 }
 
 .eInvite_redeemed {
@@ -82,53 +71,15 @@
   }
 }
 
-.bInvite.mNotRedeemed {
-}
-
-.eInvites_list{
-  display: flex;
-  flex-wrap: wrap;
-  max-width: 970px;
-  margin: auto;
-}
-.eInvite_img {
-  width: 100px;
-  height: 100px;
-  margin: 25px 20px 0;
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: 50% 50%;
-
-}
-.eInviteSport{
-  display: flex;
-  justify-content: flex-end;
-}
-.eInvite_gender{
-  float: right;
-  .bIcon{
-    color:$DarkGreen;
-  }
-}
-.eInviteWrap{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  width: 100%;
-  padding: 10px;
-}
 .eInvites_processing {
   text-align: center;
 }
-.eInvite_footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
 .eInvite_map {
-  margin: 10px 0;
+  clear: both;
+  height: 280px;
 }
 .bSchoolMaster .bInvite .bMapView{
-  min-height: 150px;
+  min-height: 280px;
   width: 100%;
+  max-width: 100%;
 }

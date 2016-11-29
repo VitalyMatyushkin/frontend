@@ -24,9 +24,10 @@ const EventManager = React.createClass({
 	getDefaultState: function () {
 		var self = this,
 			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolId = rootBinding.get('userRules.activeSchoolId');
+			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
+			calendarBinding = this.getBinding('calendar');
 
-		const currentDate = new Date();
+		const currentDate = calendarBinding.toJS('selectedDate');
 		currentDate.setHours(10);
 		currentDate.setMinutes(0);
 
