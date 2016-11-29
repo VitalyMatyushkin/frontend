@@ -293,6 +293,7 @@ const EventPage = React.createClass({
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {self.activeSchoolId}
+													isParent	= {RoleHelper.isParent(this)}
 									/>
 								</div>
 							</If>
