@@ -5,6 +5,8 @@ const	React				= require('react'),
 		TextBlock			= require('./details_components/text_block/text_block'),
 		TimeBlock			= require('./details_components/time_block/time_block'),
 
+		If					= require('../../../../../ui/if/if'),
+
 		Consts				= require('./details_components/consts'),
 		DetailsStyle		= require('../../../../../../../styles/ui/b_details.scss');
 
@@ -22,7 +24,8 @@ const Details = React.createClass({
 		teaTime:			React.PropTypes.string.isRequired,
 		lunchTime:			React.PropTypes.string.isRequired,
 		handleChange:		React.PropTypes.func.isRequired,
-		handleChangeMode:	React.PropTypes.func.isRequired
+		handleChangeMode:	React.PropTypes.func.isRequired,
+		isParent:			React.PropTypes.bool.isRequired
 	},
 	getInitialState: function() {
 		return {
@@ -42,7 +45,7 @@ const Details = React.createClass({
 		}
 	},
 	render: function() {
-		return(
+		return (
 			<div className="bDetails">
 				<div className="eDetails_column mBig">
 					<div className="eDetails_textBlock">
@@ -73,13 +76,15 @@ const Details = React.createClass({
 					/>
 				</div>
 				<div className="eDetails_column mGrayBackground mWithoutPadding">
-					<div className = "eDetails_editButtonWrapper">
-						<div	className	= "eDetails_editButton"
-								onClick		= {this.handleClickEditButton}
-						>
-							<SVG icon="icon_edit"/>
+						<div className = "eDetails_editButtonWrapper">
+							<If condition={!this.props.isParent}>
+								<div	className	= "eDetails_editButton"
+										onClick		= {this.handleClickEditButton}
+								>
+									<SVG icon="icon_edit"/>
+								</div>
+							</If>
 						</div>
-					</div>
 					<div className="eDetails_infoContainer">
 							<TimeBlock	label			= {"Team departs"}
 										dateString		= {this.props.teamDeparts}

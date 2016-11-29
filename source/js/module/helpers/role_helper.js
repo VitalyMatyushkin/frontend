@@ -36,6 +36,11 @@ const RoleHelper = {
 
 		return role === this.ALLOWED_PERMISSION_PRESETS.ADMIN || role === this.ALLOWED_PERMISSION_PRESETS.MANAGER ||
 			role === this.ALLOWED_PERMISSION_PRESETS.TEACHER || role === this.ALLOWED_PERMISSION_PRESETS.COACH;
+	},
+	isParent: function(self) {
+		const role = this.getLoggedInUserRole(self);
+
+		return role === this.ALLOWED_PERMISSION_PRESETS.PARENT;
 	}
 };
 
