@@ -92,8 +92,15 @@
   color:  black;
 
   font-family: Glober-Bold, sans-serif;
+
+  &.mSmall {
+    font-size: 14px;
+    font-family: Glober, sans-serif;
+    font-weight: normal;
+    color: #757477;
+  }
 }
 
 .eDetails_body {
-  margin-top: 5px;
+  margin-top: 10px;
 }
