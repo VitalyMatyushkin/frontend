@@ -11,6 +11,7 @@ const	React				= require('react'),
 const Details = React.createClass({
 	propTypes:{
 		name:				React.PropTypes.string.isRequired,
+		officialName:		React.PropTypes.string.isRequired,
 		venue:				React.PropTypes.string.isRequired,
 		description:		React.PropTypes.string.isRequired,
 		kitNotes:			React.PropTypes.string.isRequired,
@@ -44,11 +45,17 @@ const Details = React.createClass({
 		return(
 			<div className="bDetails">
 				<div className="eDetails_column mBig">
-					<TextBlock	header			= {this.props.name}
-								mode			= {Consts.REPORT_FILED_VIEW_MODE.VIEW}
-								text			= {this.props.venue}
-								handleChange	= {this.props.handleChange.bind(null, 'name')}
-					/>
+					<div className="eDetails_textBlock">
+						<h3 className="eDetails_header">
+							{this.props.name}
+						</h3>
+						<h4 className="eDetails_header mSmall">
+							{this.props.officialName}
+						</h4>
+						<div className="eDetails_body">
+							{this.props.venue}
+						</div>
+					</div>
 					<TextBlock	header			= {"Event Description"}
 								text			= {this.props.description}
 								mode			= {this.state.viewMode}

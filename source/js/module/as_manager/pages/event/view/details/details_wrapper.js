@@ -36,9 +36,12 @@ const DetailsWrapper = React.createClass({
 				return Actions.getEventById(this.props.schoolId, this.props.eventId);
 			})
 			.then(event => {
+				console.log(event.generatedNames);
+
 				this.setState({
 					isLoading		: false,
 					eventName		: event.generatedNames[this.props.schoolId],
+					officialName	: event.generatedNames.official,
 					venue			: this.getVenueView(event)
 				});
 			});
@@ -100,6 +103,7 @@ const DetailsWrapper = React.createClass({
 		} else {
 			return (
 				<Details	name				= { this.state.eventName }
+							officialName		= { this.state.officialName }
 							venue				= { this.state.venue }
 							description			= { this.state.eventDetails.description }
 							kitNotes			= { this.state.eventDetails.kitNotes }
