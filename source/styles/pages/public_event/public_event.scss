@@ -3,22 +3,21 @@
   width: 100%;
   margin: 0 auto;
   color: #535353;
-}
 
-.bMatchReport{
-  box-sizing: border-box;
-  margin: 10px auto 30px;
-  max-width: 940px;
-  padding: 20px 15px;
-  border: solid 1px #c2c2c2;
-  background: #fff;
-  white-space: pre-line
-}
+  .bMatchReport {
+    margin: 10px auto 30px;
+    max-width: 940px;
+    padding: 20px 15px;
+    border: solid 1px #c2c2c2;
+    background: #fff;
+    white-space: pre-line
+  }
 
+  .bEventBottomContainer {
+    margin: 30px auto;
+  }
+}
 .bEventHeader_rightSide {
   text-align: right;
 }
 
-.bEventBottomContainer {
-  margin: 30px auto;
-}

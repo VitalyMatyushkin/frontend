@@ -107,7 +107,7 @@ const InviteView = React.createClass({
                             <div className="eInvite_info col-md-7 col-sm-7">
 
                                 <h4> {rival.name }</h4>
-                                <h4>Team Name</h4>
+                                <h4> </h4>
 
                                 <div className="eInvite_content">
                                     {sport} / {self._getGender(gender)} / {self._getAges(ages)} <br/>
