@@ -28,13 +28,15 @@ function isTeamEnableForEdit(activeSchoolId, event, team) {
  * @private
  */
 function getAges(schoolData) {
-	return schoolData.forms.reduce(function (memo, form) {
-		if (memo.indexOf(form.age) === -1) {
-			memo.push(form.age);
-		}
+	return schoolData.forms
+		.reduce((memo, form) => {
+			if (memo.indexOf(form.age) === -1) {
+				memo.push(form.age);
+			}
 
-		return memo;
-	}, []);
+			return memo;
+		}, [])
+		.sort((a, b) => a - b);
 };
 
 /**

@@ -186,3 +186,6 @@ const 	userAboutList			= require('../styles/pages/user/b_about_list.scss'),
 
 const 	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 		userActivity	= require('../styles/pages/b_user_activity.scss');
+
+// font awesome styles
+const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');

@@ -40,11 +40,11 @@ const ConfirmAlert = React.createClass({
 						<div className="eSimpleAlert_footer">
 							<Button text={ okButtonText }
 									onClick={ this.onOkButtonClick }
-									extraStyleClasses={ 'mLeftBtn' }
+									extraStyleClasses={ 'mHalfWidth mMarginRight' }
 								/>
 							<Button text={ cancelButtonText }
 									onClick={ this.onCancelButtonClick }
-									extraStyleClasses={ 'mCancel mRightBtn' }
+									extraStyleClasses={ 'mCancel mHalfWidth' }
 								/>
 						</div>
 					</div>
