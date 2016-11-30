@@ -75,11 +75,20 @@
   text-align: center;
 }
 .eInvite_map {
+  background: #ccc;
   clear: both;
   height: 280px;
+  text-align: center;
 }
 .bSchoolMaster .bInvite .bMapView{
   min-height: 280px;
   width: 100%;
   max-width: 100%;
+}
+.eInvite_venue {
+  color: #fff;
+  display: inline-block;
+  font-size: 3rem;
+  font-weight: bold;
+  margin-top: 125px;
 }
