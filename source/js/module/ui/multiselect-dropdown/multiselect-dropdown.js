@@ -67,13 +67,33 @@ const MultiselectDropdown = React.createClass({
 			</div>
 		);
 	},
+	isItemSelected: function(item) {
+		const foundItem = this.props.selectedItems.find(i => item.id === i.id);
+
+		return typeof foundItem !== 'undefined';
+	},
 	renderMenuItem: function(item) {
+		const isItemSelected = this.isItemSelected(item);
+
+		const circleClassName = classNames({
+			"fa fa-circle"		: isItemSelected,
+			"fa fa-circle-o"	: !isItemSelected
+		});
+
 		return (
 			<div	key			= {item.id}
 					className	= 'eMultiSelectDropdown_item'
 					onMouseDown	= {this.handleClickItem.bind(this, item)}
 			>
-				{this.getItemView(item)}
+				<div className="eMultiSelectDropdown_itemIcon">
+					<i	className	= {circleClassName}
+						aria-hidden	= "true"
+					>
+					</i>
+				</div>
+				<div className="eMultiSelectDropdown_itemText">
+					{this.getItemView(item)}
+				</div>
 			</div>
 		);
 	},
@@ -98,7 +118,8 @@ const MultiselectDropdown = React.createClass({
 	render: function() {
 		const inputClassName = classNames({
 			eMultiSelectDropdown_input	: true,
-			mFocus						: this.state.isOpen
+			mFocus						: this.state.isOpen,
+			mOpen						: this.state.isOpen
 		});
 
 		return (
