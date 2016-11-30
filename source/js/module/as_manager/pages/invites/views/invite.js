@@ -79,7 +79,7 @@ const InviteView = React.createClass({
 				inviteId		= binding.get('id'),
 				venue 			= binding.toJS('event.venue'),
 				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
-													: 'Venue to be defined';
+													: <span className="eInvite_venue">Venue to be defined</span>;
 
         let status;
 
