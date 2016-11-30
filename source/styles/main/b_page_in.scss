@@ -280,22 +280,17 @@
   flex-wrap: wrap;
   justify-content: center;
 }
-.eSchoolCalendarWrapper .bCalendar{
-  max-width: 400px;
-  display: inline-block
+.eSchoolCalendarWrapper {
+
+  .bCalendar {
+    background: transparent;
+    max-width: 400px;
+    display: inline-block;
+  }
+  .eMonth_day.mWeekName {
+    background: transparent;
+  }
 }
-/*.eSchoolCalenderFixtureList{
-  max-width: 550px;
-  min-width: 50%;
-  height: auto;
-  border: $BORDER;
-  display: inline-block;
-  background: #fff;
-  font-size: 13px;
-}
-.eSchoolCalenderFixtureList h4{
-  text-align: center;
-}*/
 .eSchoolFixtureListItem{
   color: #333132;
   text-transform: none;
