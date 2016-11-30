@@ -17,7 +17,8 @@ const DetailsWrapper = React.createClass({
 
 	propTypes:{
 		schoolId:	React.PropTypes.string.isRequired,
-		eventId:	React.PropTypes.string.isRequired
+		eventId:	React.PropTypes.string.isRequired,
+		isParent:	React.PropTypes.bool.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -115,6 +116,7 @@ const DetailsWrapper = React.createClass({
 							lunchTime			= { this.state.eventDetails.lunchTime }
 							handleChange		= { this.handleChange }
 							handleChangeMode	= { this.handleChangeMode }
+							isParent			= { this.props.isParent }
 				/>
 			);
 		}
