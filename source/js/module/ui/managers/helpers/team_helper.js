@@ -748,10 +748,10 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-			if(TeamHelper.isOneOnOneSport(event)){
-				return cb('individualsData', 0);
+			if(TeamHelper.isTeamSport(event)){
+				return cb('teamsData', 0);
 			}
-			return cb('teamsData', 0);
+			return cb('individualsData', 0);
 	}
 };
 
@@ -860,10 +860,10 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-			if(TeamHelper.isOneOnOneSport(event)){
-				return cb('individualsData', 1);
+			if(TeamHelper.isTeamSport(event)){
+				return cb('teamsData', 1);
 			}
-			return cb('teamsData', 1);
+			return cb('individualsData', 1);
 	}
 }
 
@@ -992,7 +992,7 @@ function getSchoolsData(event) {
 	const schoolsData = [];
 
 	schoolsData.push(event.inviterSchool);
-	event.invitedSchools.forEach( s => schoolsData.push(s) );
+	event.invitedSchools && event.invitedSchools.forEach( s => schoolsData.push(s) );
 
 	return schoolsData;
 }

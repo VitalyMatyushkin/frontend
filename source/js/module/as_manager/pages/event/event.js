@@ -19,6 +19,7 @@ const	React			= require('react'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
 		DetailsWrapper 				= require('./view/details/details_wrapper'),
 		MatchReport 				= require('./view/match-report/report'),
+		SportConsts					= require('module/helpers/consts/sport'),
 		Map 						= require('module/ui/map/map-event-venue'),
 		SVG 						= require('module/ui/svg'),
 
@@ -239,15 +240,28 @@ const EventPage = React.createClass({
 
 		return self.isSync() && binding.toJS('mode') === 'edit_squad';
 	},
+	isaLeftShow:function (activeSchoolId, event, mode) {
+		const 	isClosingMode 	= mode === 'closing',
+				params 			= isClosingMode && TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+
+		return params && params.bundleName === 'teamsData';
+	},
+	isaRightShow:function (activeSchoolId, event, mode) {
+		const 	isClosingMode 	= mode === 'closing',
+				params 			= isClosingMode && TeamHelper.getParametersForRightContext(activeSchoolId, event);
+
+		return params && params.bundleName === 'teamsData';
+	},
 	render: function() {
 		const	self						= this,
 				binding						= self.getDefaultBinding(),
 				event 						= binding.toJS('model'),
 				showingComment				= binding.get('showingComment'),
 				activeTab					= binding.get('activeTab'),
-				isTeamSport 				= TeamHelper.isTeamSport(event),
-				isClosingMode 				= binding.toJS('mode') === 'closing',
-				isaShow 					= isClosingMode && isTeamSport;
+				activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
+				mode 						= binding.toJS('mode'),
+				isaLeftShow 				= this.isaLeftShow(activeSchoolId, event, mode),
+				isaRightShow 				= this.isaRightShow(activeSchoolId, event, mode);
 
 		switch (true) {
 			case !self.isSync():
@@ -274,9 +288,9 @@ const EventPage = React.createClass({
 									</If>
 								</div>
 								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-														  isVisible={isaShow}/>
+														  isVisible={isaLeftShow}/>
 								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-														  isVisible={isaShow}
+														  isVisible={isaRightShow}
 														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
