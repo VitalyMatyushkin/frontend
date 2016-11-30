@@ -1,0 +1,27 @@
+.bRadioButtonCustom {
+  display: flex;
+
+  &.mSaveAsNewTeam {
+    display: inline-block;
+
+    width: 160px;
+  }
+
+  &.mGenderSelector {
+    margin-top: 8px;
+  }
+}
+
+.eRadioButtonCustom_circle {
+  margin-left: 7px;
+}
+
+.eRadioButtonCustom_text {
+  margin-left: 7px;
+  padding-top: 2px;
+
+  color: #959595;
+}
+.mGrayColor {
+  color: #959595;
+}

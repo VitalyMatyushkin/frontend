@@ -1,9 +1,9 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
 
-		RadioButton		= require('../../../../../../ui/radio_button/radio_button'),
-		ControlPanel	= require('../../../../../../ui/control_panel/control_panel');
+		RadioButtonCustom	= require('../../../../../../ui/radio_button_custom/radio_button_custom'),
+		ControlPanel		= require('../../../../../../ui/control_panel/control_panel');
 
 const GameTypeSelectorWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -97,11 +97,10 @@ const GameTypeSelectorWrapper = React.createClass({
 	getRadioButtonArray: function() {
 		return this.getRadioButtonIdArray().map(radioButtonId => {
 			return (
-				<RadioButton	id			= { radioButtonId }
-								isChecked	= { this.isCheckedById(radioButtonId) }
-								text		= { this.getTextById(radioButtonId) }
-								onClick		= { this.handleClick.bind(null, radioButtonId) }
-								customCSS	= { this.CUSTOM_CSS_RADIO_BUTTON_STYLE }
+				<RadioButtonCustom	isChecked	= { this.isCheckedById(radioButtonId) }
+									text		= { this.getTextById(radioButtonId) }
+									onClick		= { this.handleClick.bind(null, radioButtonId) }
+									customCSS	= { this.CUSTOM_CSS_RADIO_BUTTON_STYLE }
 				/>
 			);
 		});
