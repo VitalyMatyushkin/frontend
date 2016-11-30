@@ -89,12 +89,36 @@ RequestActions.prototype = {
 	getCurrentPermission: function(id, permissions) {
 		return Lazy(permissions).find(permission => permission.id && permission.id === id);
 	},
+	getConfirmMessage: function(email) {
+		return (
+			<div>
+				<h2> Please Read Carefully! </h2>
+
+				<p className="eSimpleAlert_text">We use reasonable measures to check the identity of each User
+					registering with Squad In Touch. We require
+					that each User provides a valid mobile phone number and email address so we check their validity via
+					confirmation codes.</p>
+
+				<p className="eSimpleAlert_text">The Mobile phone and email address the User has verified is as
+					follows:
+					<span className="eSimpleAlert_mail">{email}</span></p>
+
+				<p className="eSimpleAlert_text">Notwithstanding mobile phone and email address verification, it is the
+					responsibility of the School to
+					satisfy that the User’s identity has been verified prior to accepting a role request.
+					If you are not completely satisfied the User is genuine, please complete additional checks before
+					granting
+					them any permissions in the system or simply decline a role request.</p>
+			</div>
+		);
+	},
 	_getQuickEditActionFunctions:function(itemId,action){
 		const   self      = this,
 				prId      = itemId,
 				binding   = self.getDefaultBinding().sub('data'),
 				currentPr = self.getCurrentPermission(prId, binding.toJS()),
-				schoolId  = currentPr.requestedPermission.schoolId;
+				schoolId  = currentPr.requestedPermission.schoolId,
+				email     = currentPr.requester.email;
 		let confirmMsg;
 		switch (action){
 			case 'Accept':
@@ -102,7 +126,7 @@ RequestActions.prototype = {
 					document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`;
 				} else {
 					window.confirmAlert(
-						"Are you sure you want to accept?",
+						self.getConfirmMessage(email),
 						"Ok",
 						"Cancel",
 						() => {
