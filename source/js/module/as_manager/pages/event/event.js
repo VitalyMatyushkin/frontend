@@ -254,14 +254,16 @@ const EventPage = React.createClass({
 	},
 	render: function() {
 		const	self						= this,
-				binding						= self.getDefaultBinding(),
-				event 						= binding.toJS('model'),
+				binding						= self.getDefaultBinding();
+
+		const	event						= binding.toJS('model'),
 				showingComment				= binding.get('showingComment'),
 				activeTab					= binding.get('activeTab'),
 				activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
-				mode 						= binding.toJS('mode'),
-				isaLeftShow 				= this.isaLeftShow(activeSchoolId, event, mode),
-				isaRightShow 				= this.isaRightShow(activeSchoolId, event, mode);
+				mode						= binding.toJS('mode'),
+				isaLeftShow					= this.isaLeftShow(activeSchoolId, event, mode),
+				isaRightShow				= this.isaRightShow(activeSchoolId, event, mode),
+				isParent					= RoleHelper.isParent(this);
 
 		switch (true) {
 			case !self.isSync():
@@ -310,13 +312,16 @@ const EventPage = React.createClass({
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {self.activeSchoolId}
-													isParent	= {RoleHelper.isParent(this)}
+													isParent	= {isParent}
 									/>
 								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
+									<MatchReport	binding		= {binding.sub('matchReport')}
+													eventId		= {self.eventId}
+													isParent	= {isParent}
+									/>
 								</div>
 							</If>
 							<div className="eEvent_commentBox">

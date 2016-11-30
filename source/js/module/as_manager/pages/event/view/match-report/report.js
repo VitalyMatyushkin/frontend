@@ -17,11 +17,15 @@ const	React				= require('react'),
 const MatchReport = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes:{
-		eventId: React.PropTypes.string.isRequired
+		eventId		: React.PropTypes.string.isRequired,
+		isParent	: React.PropTypes.string.isRequired
 	},
 	componentWillMount: function(){
 		this.actions = new Actions(this);
 		this.actions.load();
+	},
+	isShowEditButton: function() {
+		return !this.props.isParent;
 	},
 	render:function(){
 		const 	self 		= this,
@@ -32,11 +36,13 @@ const MatchReport = React.createClass({
 				<If condition={!this.actions.isEditMode()}>
 					<div className="mAdded">
 						<div className="eMatchReport_text">{binding.get('content')}</div>
-						<div className="eMatchReport_btn">
-							<div className="bButton mCircle" onClick={this.actions.onEdit.bind(this.actions)}>
-								<SVG icon="icon_edit2"/>
+						<If condition={this.isShowEditButton()}>
+							<div className="eMatchReport_btn">
+								<div className="bButton mCircle" onClick={this.actions.onEdit.bind(this.actions)}>
+									<SVG icon="icon_edit2"/>
+								</div>
 							</div>
-						</div>
+						</If>
 					</div>
 				</If>
 				<If condition={this.actions.isEditMode()}>
