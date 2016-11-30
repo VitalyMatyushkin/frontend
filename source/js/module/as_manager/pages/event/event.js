@@ -241,10 +241,12 @@ const EventPage = React.createClass({
 	},
 	render: function() {
 		const	self						= this,
-				binding						= self.getDefaultBinding(),
-				showingComment				= binding.get('showingComment'),
+				binding						= self.getDefaultBinding();
+
+		const	showingComment				= binding.get('showingComment'),
 				activeTab					= binding.get('activeTab'),
-				isClosingMode 				= binding.toJS('mode') === 'closing';
+				isClosingMode 				= binding.toJS('mode') === 'closing',
+				isParent					= RoleHelper.isParent(this);
 
 		switch (true) {
 			case !self.isSync():
@@ -293,13 +295,16 @@ const EventPage = React.createClass({
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {self.activeSchoolId}
-													isParent	= {RoleHelper.isParent(this)}
+													isParent	= {isParent}
 									/>
 								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
+									<MatchReport	binding		= {binding.sub('matchReport')}
+													eventId		= {self.eventId}
+													isParent	= {isParent}
+									/>
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
