@@ -9,7 +9,7 @@ const	React 		= require('react'),
 
 const ChallengeItem = function(props){
 	const	event 		= props.event,
-			stringDate	= DateHelper.getDate(event.get('startTime')),
+			time		= DateHelper.getTime(event.get('startTime')),
 			sport		= event.get('sport').get('name');
 
 	return(
@@ -17,7 +17,7 @@ const ChallengeItem = function(props){
 			<span className="eChallenge_sport">
 				<Sport name={sport} className="bIcon_invites" />
 			</span>
-			<span className="eChallenge_date">{stringDate}</span>
+			<span className="eChallenge_date">{time}</span>
 			<div className="eChallenge_name" title={event.get('name')}>{event.get('name')}</div>
 		</div>
 	);
