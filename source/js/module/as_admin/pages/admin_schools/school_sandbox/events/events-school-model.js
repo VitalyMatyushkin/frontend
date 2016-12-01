@@ -6,6 +6,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
     React 			= require('react'),
     Morearty		= require('morearty'),
     DateHelper      = require('module/helpers/date_helper'),
+    EventHelper     = require('module/helpers/eventHelper'),
     GridModel 		= require('module/ui/grid/grid-model');
 
 /**
@@ -80,40 +81,6 @@ EventsSchoolModel.prototype.getSportName = function (item) {
     return name;
 };
 
-EventsSchoolModel.prototype.getGenders = function(){
-    return [
-        {
-            key:'MALE_ONLY',
-            value:'Boys only'
-        },
-        {
-            key:'FEMALE_ONLY',
-            value:'Girls only'
-        },
-        {
-            key:'MIXED',
-            value:'Mixed'
-        }
-    ];
-},
-
-EventsSchoolModel.prototype.getStatusList = function(){
-    return [
-        {
-            key:'INVITES_SENT',
-            value:'Invite sent'
-        },
-        {
-            key:'ACCEPTED',
-            value:'Accepted'
-        },
-        {
-            key:'FINISHED',
-            value:'Finished'
-        }
-    ];
-};
-
 EventsSchoolModel.prototype.setColumns = function(){
     this.columns = [
         {
@@ -172,7 +139,7 @@ EventsSchoolModel.prototype.setColumns = function(){
             filter:{
                 type:'multi-select',
                 typeOptions:{
-                    items: this.getGenders(),
+                    items: EventHelper.getGenderListEvent(),
                     hideFilter:true,
                     hideButtons:true
                 }
@@ -202,7 +169,7 @@ EventsSchoolModel.prototype.setColumns = function(){
             filter:{
                 type:'multi-select',
                 typeOptions:{
-                    items: this.getStatusList(),
+                    items: EventHelper.getStatusListEvent(),
                     hideFilter:true,
                     hideButtons:true
                 }
