@@ -1,11 +1,7 @@
 @import "../../!variables";
+@import "../../bootstrap-custom";
 
 .bEventContainer {
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  min-width: 730px;
-  max-width: 1073px;
   margin: 30px auto 50px;
 }
 
@@ -21,10 +17,7 @@
 }
 
 .bEventBottomContainer {
-  box-sizing: border-box;
-  margin: 0 auto;
-  max-width: 940px;
-  width: 100%;
+  @extend .container;
 }
 
 .eEvent_points {
@@ -341,7 +334,11 @@
   }
 
 }
-
+.eEvent_loading {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
 
 
 

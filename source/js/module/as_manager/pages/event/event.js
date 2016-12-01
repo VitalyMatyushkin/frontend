@@ -269,7 +269,7 @@ const EventPage = React.createClass({
 			case !self.isSync():
 				return (
 					<div className="bEventContainer">
-						<span>loading...</span>
+						<span className="eEvent_loading">loading...</span>
 					</div>
 				);
 			// sync and any mode excluding edit_squad
@@ -297,11 +297,13 @@ const EventPage = React.createClass({
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
 							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
-							<div className="bEventMiddleSideContainer">
+							<div className="bEventMiddleSideContainer mFullWidth">
 								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 							</div>
 							<If condition={activeTab === 'performance'} >
-								<EventPerformance binding={self._getEventTeamsBinding()} />
+								<div className="bEventBottomContainer">
+									<EventPerformance binding={self._getEventTeamsBinding()}/>
+								</div>
 							</If>
 							<If condition={activeTab === 'gallery'} >
 								<EventGallery	activeSchoolId	= { self.activeSchoolId }

@@ -1,7 +1,14 @@
+@import "../../bootstrap-custom";
+
 .bEventMiddleSideContainer {
   margin: 0 auto;
   max-width: 940px;
   width: 100%;
+
+  &.mFullWidth {
+    @extend .container;
+    max-width: 1170px;
+  }
 }
 
 .bEventMiddleSideContainer_leftSide {

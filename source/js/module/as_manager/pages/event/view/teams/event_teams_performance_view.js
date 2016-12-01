@@ -24,7 +24,7 @@ const EventTeamsPerformance = React.createClass({
 			return self.renderPlayerTeamLater();
 		} else {
 			return (
-				<div className="bEventPerformanceTeams_team">
+				<div className="bEventPerformance_team">
 					{self.renderPlayers(players, true)}
 				</div>
 			);
@@ -32,7 +32,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderPlayerTeamLater: function() {
 		return (
-			<div className="bEventPerformanceTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Select players later...'}
 				</div>
@@ -49,7 +49,7 @@ const EventTeamsPerformance = React.createClass({
 			return self.renderSelectTeamLater();
 		} else {
 			return (
-				<div className="bEventPerformanceTeams_team">
+				<div className="bEventPerformance_team">
 					{self.renderPlayers(players, true)}
 				</div>
 			);
@@ -57,7 +57,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderSelectPlayersLater: function() {
 		return (
-			<div className="bEventPerformanceTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Select players later...'}
 				</div>
@@ -66,7 +66,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderSelectTeamLater: function() {
 		return (
-			<div className="bEventPerformanceTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Select team later...'}
 				</div>
@@ -75,7 +75,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderOpponentSelectTeamLater: function() {
 		return (
-			<div className="bEventPerformanceTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Accepted by opponent'}
 				</div>
@@ -92,7 +92,7 @@ const EventTeamsPerformance = React.createClass({
 			return self.renderSelectTeamLater();
 		} else {
 			return (
-				<div className="bEventPerformanceTeams_team">
+				<div className="bEventPerformance_team">
 					{self.renderPlayers(players, true)}
 				</div>
 			);
@@ -257,7 +257,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderAwaitingOpponentTeam: function() {
 		return (
-			<div className="bEventPerformanceTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Awaiting opponent...'}
 				</div>
@@ -388,7 +388,7 @@ const EventTeamsPerformance = React.createClass({
 		}
 
 		return (
-			<div className="bEventPerformanceTeams_team">
+			<div className="bEventPerformance_team">
 				{players}
 			</div>
 		);
@@ -404,17 +404,20 @@ const EventTeamsPerformance = React.createClass({
 			switch (true) {
 				case TeamHelper.isInternalEventForIndividualSport(event):
 					result = (
-						<div className="bEventTeams">
+						<div className="bEventPerformance_teams mIndivid">
 							{self.renderIndividuals()}
 						</div>
 					);
 					break;
 				default:
 					result = (
-						<div className="bEventPerformanceTeams">
-							{self.renderPlayersForLeftSide()}
-
-							{self.renderPlayersForRightSide()}
+						<div className="bEventPerformance_teams">
+							<div className="eEventPerformance_col">
+								{self.renderPlayersForLeftSide()}
+							</div>
+							<div className="eEventPerformance_col">
+								{self.renderPlayersForRightSide()}
+							</div>
 						</div>
 					);
 					break;
