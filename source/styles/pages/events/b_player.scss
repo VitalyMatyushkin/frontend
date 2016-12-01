@@ -71,13 +71,12 @@
 }
 
 .ePlayer_name {
-  box-sizing: border-box;
   vertical-align: middle;
   text-align: left;
-  padding: 5px 5px 0 0;
+  padding: 10px 0;
   font-size: 16px;
   min-width: 140px;
-  color: #2a2a2a;
+  color: $textColor;
   &.mHead {
     color: #939393;
   }
@@ -87,15 +86,25 @@
 }
 
 .bPlayer {
-  width: 300px;
   margin: 0 auto;
+
+  &.mPerformance {
+    background: linear-gradient(90deg, #d2d2d2 0%, #ffffff 100%) no-repeat bottom;
+    background-size: 100% 1px;
+
+    padding: 30px 40px;
+  }
 }
 
 .ePlayer_performance {
-  padding: 0 0 15px 15px;
+
+}
+.ePlayer_performanceItem {
+  padding: 10px 0;
 }
 
 .ePlayer_performanceItemName {
+  color: $GrayText;
   display: inline-block;
   width: 100px;
 }

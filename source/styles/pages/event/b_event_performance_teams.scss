@@ -1,0 +1,9 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
+.bEventPerformanceTeams {
+ @include make-row();
+}
+.bEventPerformanceTeams_team {
+  @include make-md-column(6);
+}
