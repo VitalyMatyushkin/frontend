@@ -19,7 +19,6 @@ const Actions = {
 			},
 			changes
 		)
-		.then(updEvent => updEvent.details);
 	}
 };
 
