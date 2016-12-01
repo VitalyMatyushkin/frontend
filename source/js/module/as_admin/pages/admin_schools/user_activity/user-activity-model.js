@@ -77,7 +77,7 @@ UserActivityModel.prototype.setColumns = function(){
             cell:{
                 type:'custom',
                 typeOptions:{
-                    parseFunction:this.getUserName.bind(this)
+                    parseFunction:this.getUserName.bind(this) // If without .bind did it, then return UserActivityModel
                 }
             }
         },
@@ -133,7 +133,7 @@ UserActivityModel.prototype.setColumns = function(){
                 dataField:'finishedAt',
                 type:'custom',
                 typeOptions:{
-                    parseFunction: this.getDateTime.bind(this)
+                    parseFunction: this.getDateTime.bind(this) // If without .bind did it, then return UserActivityModel
                 }
             },
             filter:{
