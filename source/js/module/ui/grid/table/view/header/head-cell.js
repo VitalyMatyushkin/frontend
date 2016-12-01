@@ -14,7 +14,7 @@ const HeadCell = React.createClass({
 	},
 	render: function() {
 		const 	column 		= this.props.column,
-				cellStyle 	= column.width ? {width:column.width}:null;
+				cellStyle 	= column.width ? {width:column.width} : null;
 
 		return (
 			<div className="eDataList_listItemCell" style={cellStyle}>

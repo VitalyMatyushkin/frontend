@@ -11,10 +11,11 @@ const OldAutocompleteWrapper = React.createClass({
         onSelect: 			React.PropTypes.func,
         onBlur: 			React.PropTypes.func,
         onInput: 			React.PropTypes.func,
-        placeholderText: 	React.PropTypes.string,
+		placeholder: 		React.PropTypes.string,
         onEscapeSelection:  React.PropTypes.func,
         clearAfterSelect: 	React.PropTypes.bool,
-        defaultItem: 	    React.PropTypes.object
+        defaultItem: 	    React.PropTypes.object,
+        extraCssStyle:      React.PropTypes.string
     },
     searchFunction: function(text) {
         return {
@@ -43,12 +44,13 @@ const OldAutocompleteWrapper = React.createClass({
             <ComboBox2
                 defaultItem         = {self.props.defaultItem}
                 initialValue        = {self.props.initialValue}
-                placeholder         = {self.props.placeholderText}
+                placeholder         = {self.props.placeholder}
                 searchFunction      = {self.searchFunction}
                 onSelect            = {self.props.onSelect}
                 getElementTitle     = {self.getInputText}
                 onEscapeSelection   = {self.getEscapeSelectFunction()}
                 clearAfterSelect    = {self.props.clearAfterSelect !== undefined ? self.props.clearAfterSelect : false}
+                extraCssStyle       = {self.props.extraCssStyle}
             />
         );
     }

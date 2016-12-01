@@ -38,7 +38,8 @@ const ComboBox2 = React.createClass({
          * @returns text element representation
          */
         getElementTitle:   React.PropTypes.func.isRequired,
-        clearAfterSelect:  React.PropTypes.bool
+        clearAfterSelect:  React.PropTypes.bool,
+        extraCssStyle:     React.PropTypes.string
     },
     getInitialState: function(){
         return {
@@ -325,6 +326,26 @@ const ComboBox2 = React.createClass({
             return undefined;
         }
     },
+    getExtraCssStyle: function() {
+        const self = this;
+
+        return typeof self.props.extraCssStyle !== 'undefined' ? self.props.extraCssStyle : '';
+    },
+    getLoaderCssStyle: function() {
+        const self = this;
+
+        return "eCombobox_loader " + self.getExtraCssStyle();
+    },
+    getTriangleButtonCssStyle: function() {
+        const self = this;
+
+        return "eCombobox_button " + self.getExtraCssStyle();
+    },
+    getInputCssStyle: function() {
+        const self = this;
+
+        return "eCombobox_input " + self.getExtraCssStyle();
+    },
     render: function(){
         const   self        = this,
                 placeholder = self.getPlaceHolder(),
@@ -342,10 +363,6 @@ const ComboBox2 = React.createClass({
         };
         // this will act instead of loader spinner for a while
         const loaderStyle = {
-            position:    'absolute',
-            top:         '3px',
-            right:       '3px',
-            height:      '17px',
             display:      self.state.isLoading ? undefined : "none"
         };
         const triangleStyle = {
@@ -362,7 +379,7 @@ const ComboBox2 = React.createClass({
                     />
                     <input  style       = {inputStyle}
                             ref         = "input"
-                            className   = "eCombobox_input"
+                            className   = {self.getInputCssStyle()}
                             placeholder = {placeholder}
                             value       = {value}
                             onChange    = {self.onChange}
@@ -371,10 +388,13 @@ const ComboBox2 = React.createClass({
                             onBlur      = {self.onBlur}
                             role        = "combobox"
                     />
-                    <img style={loaderStyle} src="/images/spinner.gif"/>
+                    <img className  = {self.getLoaderCssStyle()}
+                         style      = {loaderStyle}
+                         src        = "/images/spinner.gif"
+                    />
                 </div>
                 <div
-                    className   = "eCombobox_button"
+                    className   = {self.getTriangleButtonCssStyle()}
                     style       = {triangleStyle}
                     onClick     = {self.onTriangleClick}
                 >

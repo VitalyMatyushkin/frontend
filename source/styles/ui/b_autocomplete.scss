@@ -55,6 +55,22 @@
   &:hover{
     border-bottom: solid #959595 1px;
   }
+
+  &.mBigSize {
+    width: 400px;
+    height: 40px;
+    border: 1px solid #d7d7d7;
+    border-radius: 5px;
+    padding: 8px;
+
+    &:hover {
+      border: 1px solid #959595;
+    }
+
+    &:focus{
+      border: 1px solid #959595;
+    }
+  }
 }
 
 .eCombobox_button {
@@ -72,6 +88,21 @@
   border-width: 7px 5px 0 5px;
   border-style: solid;
   border-color: $blueColor transparent;
+
+  &.mBigSize {
+    top: 17px;
+  }
+}
+
+.eCombobox_loader {
+  position:    absolute;
+  top:         3px;
+  right:       3px;
+  height:      17px;
+
+  &.mBigSize {
+    top: 10px;
+  }
 }
 
 .eCombobox_button:active {

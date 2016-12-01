@@ -209,15 +209,16 @@ const EventButtons = React.createClass({
 		}
 
 		return Promise.all(
-			event.results.individualScore.map(
-				individualScoreData => window.Server.schoolEventResultIndividualsScore.post(
-					{
-						schoolId:	activeSchoolId,
-						eventId:	event.id
-					},
-					individualScoreData
-				)
-			)
+			event.results.individualScore.map(individualScoreData => {
+					if (individualScoreData.score)
+						window.Server.schoolEventResultIndividualsScore.post(
+							{
+								schoolId: activeSchoolId,
+								eventId: event.id
+							},
+							individualScoreData
+						)
+				})
 		);
 	},
 	submitIndividualPerformance: function(event) {
@@ -597,14 +598,14 @@ const EventButtons = React.createClass({
 				<div className="bEventButtons">
 					<If condition={TeamHelper.isShowCloseEventButton(self)}>
 						<div	onClick		= {self.onClickCloseMatch}
-								className	="bEventButton"
+								className	="bButton"
 						>
 							Close game
 						</div>
 					</If>
 					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>
 						<div
-							className="bEventButton mCancel"
+							className="bButton mCancel mMarginRight"
 							onClick={self.onClickCloseCancel}
 						>
 							Cancel
@@ -612,7 +613,7 @@ const EventButtons = React.createClass({
 					</If>
 					<If condition={EventHelper._isShowCancelEventEditButton(self)}>
 						<div
-							className="bEventButton mCancel"
+							className="bButton mCancel mMarginRight"
 							onClick={self.onClickEditCancel}
 						>
 							Cancel
@@ -620,7 +621,7 @@ const EventButtons = React.createClass({
 					</If>
 					<If condition={EventHelper._isShowFinishEventEditingButton(self)}>
 						<div
-								className="bEventButton"
+								className="bButton"
 								onClick={self.onClickOk}
 						>
 							Save

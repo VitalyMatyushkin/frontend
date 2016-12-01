@@ -42,9 +42,9 @@ const Center = React.createClass({
                         <Route path="/schools/add "                 binding={binding.sub('schoolsPage')}        component={SchoolAddComponent}/>
                         <Route path="/albums /albums/:albumId"      binding={binding.sub('albums')}             component={AlbumsComponent} />
                         <Route path="/admin_schools /admin_schools/:subPage /admin_schools/:subFolder/:subPage /admin_schools/:subFolder/:subPage/:mode /user/view"
-                                                                    binding={binding.sub('adminSchoolList')}    component={AdminDashboardComponent}/>
+                                                                    binding={binding.sub('adminDashboard')}    component={AdminDashboardComponent}/>
                         <Route path="/school_sandbox/:schoolId school_sandbox/:schoolId/:subPage /school_sandbox/:schoolId/:subPage/:mode /school_sandbox/:schoolId/:subPage/:mode/:id"
-                               binding={binding.sub('adminSchoolList')} component={SchoolSandboxComponent}/>
+                               binding={binding.sub('schoolSandbox')} component={SchoolSandboxComponent}/>
                         <LoginRoute                                 binding={binding.sub('userData')}/>
                         <LogoutRoute                                binding={binding.sub('userData')}/>
                         <SettingsRoute                              binding={binding.sub('userData')}/>

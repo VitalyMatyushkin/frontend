@@ -8,7 +8,8 @@ const	If					= require('module/ui/if/if'),
 		eventConst			= require('module/helpers/consts/events'),
 		React				= require('react'),
 		Immutable			= require('immutable'),
-		Morearty			= require('morearty');
+		Morearty			= require('morearty'),
+		PerformanceStyle    = require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
 
 const EventTeamsPerformance = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
@@ -23,7 +24,7 @@ const EventTeamsPerformance = React.createClass({
 			return self.renderPlayerTeamLater();
 		} else {
 			return (
-				<div className="bEventTeams_team">
+				<div className="bEventPerformance_team">
 					{self.renderPlayers(players, true)}
 				</div>
 			);
@@ -31,7 +32,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderPlayerTeamLater: function() {
 		return (
-			<div className="bEventTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Select players later...'}
 				</div>
@@ -48,7 +49,7 @@ const EventTeamsPerformance = React.createClass({
 			return self.renderSelectTeamLater();
 		} else {
 			return (
-				<div className="bEventTeams_team">
+				<div className="bEventPerformance_team">
 					{self.renderPlayers(players, true)}
 				</div>
 			);
@@ -56,7 +57,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderSelectPlayersLater: function() {
 		return (
-			<div className="bEventTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Select players later...'}
 				</div>
@@ -65,7 +66,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderSelectTeamLater: function() {
 		return (
-			<div className="bEventTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Select team later...'}
 				</div>
@@ -74,9 +75,9 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderOpponentSelectTeamLater: function() {
 		return (
-			<div className="bEventTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
-					{'Opponent select team later...'}
+					{'Accepted by opponent'}
 				</div>
 			</div>
 		);
@@ -91,7 +92,7 @@ const EventTeamsPerformance = React.createClass({
 			return self.renderSelectTeamLater();
 		} else {
 			return (
-				<div className="bEventTeams_team">
+				<div className="bEventPerformance_team">
 					{self.renderPlayers(players, true)}
 				</div>
 			);
@@ -256,7 +257,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	renderAwaitingOpponentTeam: function() {
 		return (
-			<div className="bEventTeams_team">
+			<div className="bEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Awaiting opponent...'}
 				</div>
@@ -270,8 +271,8 @@ const EventTeamsPerformance = React.createClass({
 			const mode = self.getBinding('mode').toJS();
 
 			return (
-				<div key={playerIndex} className="bPlayer">
-					<div className="ePlayer_name mBold mGreen">
+				<div key={playerIndex} className="bPlayer mPerformance">
+					<div className="ePlayer_name mBold">
 						<span>{player.firstName} {player.lastName}</span>
 					</div>
 					<div className="ePlayer_performance">
@@ -387,7 +388,7 @@ const EventTeamsPerformance = React.createClass({
 		}
 
 		return (
-			<div className="bEventTeams_team">
+			<div className="bEventPerformance_team">
 				{players}
 			</div>
 		);
@@ -403,18 +404,20 @@ const EventTeamsPerformance = React.createClass({
 			switch (true) {
 				case TeamHelper.isInternalEventForIndividualSport(event):
 					result = (
-						<div className="bEventTeams">
+						<div className="bEventPerformance_teams mIndivid">
 							{self.renderIndividuals()}
 						</div>
 					);
 					break;
 				default:
 					result = (
-						<div className="bEventTeams">
-							{self.renderPlayersForLeftSide()}
-							<div className={"eEventTeams_separator"}>
+						<div className="bEventPerformance_teams">
+							<div className="eEventPerformance_col">
+								{self.renderPlayersForLeftSide()}
 							</div>
-							{self.renderPlayersForRightSide()}
+							<div className="eEventPerformance_col">
+								{self.renderPlayersForRightSide()}
+							</div>
 						</div>
 					);
 					break;

@@ -9,7 +9,7 @@ const Header = function(){
 		<div className="eChallenge_title">
 			<div className="eChildFixturesAll">
 				<div className="eChallenge_sport">Sport</div>
-				<div className="eChallenge_date">Date</div>
+				<div className="eChallenge_date">Time</div>
 				<div className="eChallenge_name">Event Name</div>
 			</div>
 			<div className="eChallenge_childName">Name</div>

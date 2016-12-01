@@ -20,17 +20,20 @@ const PermissionFields = React.createClass({
      * @returns {*}
      */
     serviceSchoolFilter: function(schoolName) {
-
         return window.Server.publicSchools.get( {
             filter: {
                 where: {
                     name: {
                         like: schoolName,
                         options: 'i'
-                    }
+                    },
+					/* this param was added later, so it is undefined on some schools. Default value is true.
+					 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
+					 */
+					availableForRegistration: { $ne: false }
                 },
-				limit:1000,
-				order:"name ASC"
+				limit: 1000,
+				order: 'name ASC'
             }
         });
     },
@@ -40,8 +43,7 @@ const PermissionFields = React.createClass({
      * @returns {*}
      */
     serviceHouseFilter: function(houseName) {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+        const binding = this.getDefaultBinding();
 
         return window.Server.publicSchoolHouses.get(binding.get('schoolId'), {
             filter: {
@@ -60,8 +62,7 @@ const PermissionFields = React.createClass({
      * @returns {*}
      */
     serviceFormFilter: function(formName) {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+        const binding = this.getDefaultBinding();
 
         return window.Server.publicSchoolForms.get(binding.get('schoolId'), {
             filter: {
@@ -75,8 +76,7 @@ const PermissionFields = React.createClass({
         });
     },
     onSelectSchool: function(schoolId) {
-        const   self        = this,
-                binding     = self.getDefaultBinding();
+        const binding = this.getDefaultBinding();
         binding
             .atomically()
             .set('schoolId', schoolId)
@@ -148,7 +148,7 @@ const PermissionFields = React.createClass({
 						serverField="name"
 						onSelect={self.onSelectSchool}
 						binding={binding.sub('_schoolAutocomplete')}
-						placeholderText="school's name"
+						placeholder="school's name"
 						/>
 						{message}
 					</div>
@@ -159,7 +159,7 @@ const PermissionFields = React.createClass({
 						serverField="name"
 						onSelect={self.onSelectHouse}
 						binding={binding.sub('_houseAutocomplete')}
-						placeholderText="house's name"
+						placeholder="house's name"
 					/>
 				</If>
 				<If condition={!!binding.get('houseId') && currentType === 'parent'}>
@@ -167,7 +167,7 @@ const PermissionFields = React.createClass({
 						serviceFilter={self.serviceFormFilter}
 						serverField="name"
 						onSelect={self.onSelectForm}
-						placeholderText="form's name"
+						placeholder="form's name"
 						binding={binding.sub('_formAutocomplete')}
 					/>
 				</If>

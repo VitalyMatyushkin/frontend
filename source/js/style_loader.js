@@ -74,8 +74,7 @@ const 	managerGameField		= require('../styles/ui/mangers/b_game_filed.scss'),
 const multiselect = require('../styles/ui/multiselect/multiselect.scss');
 const newPopup = require('../styles/ui/new_popup/new_popup.scss');
 
-const 	popupDetail	= require('../styles/ui/popup/b_details.scss'),
-		popupPopup	= require('../styles/ui/popup/b_popup.scss'),
+const	popupPopup	= require('../styles/ui/popup/b_popup.scss'),
 		popupBack	= require('../styles/ui/popup/b_popup_back.scss');
 
 const popupMessage	= require('../styles/ui/popup_message/b_popup_message.scss');
@@ -187,3 +186,6 @@ const 	userAboutList			= require('../styles/pages/user/b_about_list.scss'),
 
 const 	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 		userActivity	= require('../styles/pages/b_user_activity.scss');
+
+// font awesome styles
+const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');

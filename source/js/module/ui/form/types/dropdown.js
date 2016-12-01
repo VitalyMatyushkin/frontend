@@ -12,11 +12,11 @@ const   React       = require('react'),
  * */
 const TypeDropDown = React.createClass({
 	mixins:[Morearty.Mixin, TypeMixin],
-	propTypes:{
-		options:React.PropTypes.array.isRequired
+	propTypes: {
+		options: React.PropTypes.array.isRequired
 	},
 	renderOptions:function(){
-		return this.props.options.map(function(item, i){
+		return this.props.options.map( (item, i) => {
 			if(typeof item === 'string')
 				/** string option */
 				return <option key={item+'-'+i} value={item}>{item}</option>;
@@ -31,13 +31,12 @@ const TypeDropDown = React.createClass({
 		e.stopPropagation();
 	},
 	render:function(){
-		const 	self = this,
-				binding = self.getDefaultBinding(),
-				value = binding.get('value');
+		const 	binding	= this.getDefaultBinding(),
+				value	= binding.get('value');
 
 		return (
-			<select value={value} onChange={self.onChange}>
-				{self.renderOptions()}
+			<select value={value} onChange={this.onChange}>
+				{this.renderOptions()}
 			</select>
 		);
 	}

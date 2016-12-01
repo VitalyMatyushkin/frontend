@@ -1,0 +1,109 @@
+@import "../!variables";
+@import "../bootstrap-custom";
+
+.bDetails {
+  @include make-row();
+  border-bottom: $mainBorder;
+}
+
+.eDetails_column {
+  @include make-md-column(4);
+  @include make-sm-column(4);
+
+  &.mBig {
+    @include make-md-column(8);
+    @include make-sm-column(8);
+  }
+}
+
+.eDetails_columnContent {
+  padding: 40px;
+  min-height: 550px;
+
+  &.mWithoutPadding {
+    padding: 0px;
+  }
+  &.mGrayBackground {
+    background-color: $secondBackgroundColor;
+  }
+}
+
+.eDetails_infoContainer {
+  padding: 0px 80px 50px 50px;
+}
+
+.eDetails_editButton {
+  width: 50px;
+  height: 50px;
+  padding: 12px 15px;
+
+  background: #ffffff;
+  border: $mainBorder;
+  border-radius: 50%;
+
+  color: $GrayText;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 22px;
+
+  &:hover {
+    background: $secondBackgroundColor;
+  }
+}
+
+.eDetails_editButtonWrapper {
+  display: flex;
+  flex-direction: row-reverse;
+
+  padding: 15px 15px 15px 0px;
+}
+
+.eDetails_textBlock {
+  white-space: pre;
+  margin-bottom: 40px;
+
+  font-family: Glober, sans-serif;
+}
+
+.eDetails_textArea {
+  width: 500px;
+  height: 100px;
+  max-width: 500px;
+  max-height: 200px;
+
+  font-family: Glober, sans-serif;
+}
+
+.eDetails_timeContainer {
+  margin-top: 50px;
+}
+
+.eDetails_time {
+  margin-bottom: 20px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.eDetails_timeLabel {
+}
+
+.eDetails_timeValue {
+}
+
+.eDetails_header {
+  color:  $BodyColor;
+
+  font-family: Glober-Bold, sans-serif;
+
+  &.mSmall {
+    font-size: 14px;
+    font-family: Glober, sans-serif;
+    font-weight: normal;
+    color: #757477;
+  }
+}
+
+.eDetails_body {
+  margin-top: 10px;
+}

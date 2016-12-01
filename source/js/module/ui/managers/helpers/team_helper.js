@@ -28,13 +28,15 @@ function isTeamEnableForEdit(activeSchoolId, event, team) {
  * @private
  */
 function getAges(schoolData) {
-	return schoolData.forms.reduce(function (memo, form) {
-		if (memo.indexOf(form.age) === -1) {
-			memo.push(form.age);
-		}
+	return schoolData.forms
+		.reduce((memo, form) => {
+			if (memo.indexOf(form.age) === -1) {
+				memo.push(form.age);
+			}
 
-		return memo;
-	}, []);
+			return memo;
+		}, [])
+		.sort((a, b) => a - b);
 };
 
 /**
@@ -421,7 +423,7 @@ function isTeamSport(event) {
 	if(typeof event !== 'undefined') {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
-		return sport.players === SportConsts.SPORT_PLAYERS.TEAM || sport.players === SportConsts.SPORT_PLAYERS['2X2'];
+		return sport && (sport.players === SportConsts.SPORT_PLAYERS.TEAM || sport.players === SportConsts.SPORT_PLAYERS['2X2']);
 	} else {
 		return false;
 	}
@@ -625,7 +627,22 @@ function getRivalForLeftContext(event, activeSchoolId){
 function getRivalForRightContext(event, activeSchoolId){
 	return getRival(event, activeSchoolId, false);
 }
-
+function getParametersForLeftContext(activeSchoolId, event){
+	return this.callFunctionForLeftContext(activeSchoolId, event, (bundleName, order) => {
+		return {
+			bundleName: bundleName,
+			order: order
+		}
+	});
+}
+function getParametersForRightContext(activeSchoolId, event){
+	return this.callFunctionForRightContext(activeSchoolId, event, (bundleName, order) => {
+		return {
+			bundleName: bundleName,
+			order: order
+		}
+	});
+}
 function callFunctionForLeftContext(activeSchoolId, event, cb) {
 	const self = this;
 
@@ -731,10 +748,10 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-			if(TeamHelper.isOneOnOneSport(event)){
-				return cb('individualsData', 0);
+			if(TeamHelper.isTeamSport(event)){
+				return cb('teamsData', 0);
 			}
-			return cb('teamsData', 0);
+			return cb('individualsData', 0);
 	}
 };
 
@@ -843,10 +860,10 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-			if(TeamHelper.isOneOnOneSport(event)){
-				return cb('individualsData', 1);
+			if(TeamHelper.isTeamSport(event)){
+				return cb('teamsData', 1);
 			}
-			return cb('teamsData', 1);
+			return cb('individualsData', 1);
 	}
 }
 
@@ -975,7 +992,7 @@ function getSchoolsData(event) {
 	const schoolsData = [];
 
 	schoolsData.push(event.inviterSchool);
-	event.invitedSchools.forEach( s => schoolsData.push(s) );
+	event.invitedSchools && event.invitedSchools.forEach( s => schoolsData.push(s) );
 
 	return schoolsData;
 }
@@ -1248,6 +1265,11 @@ function checkValidationResultBeforeSubmit(event){
 	return result;
 }
 
+function clearIndividualScore(event, teamId) {
+	const scores = event.results.individualScore.filter(s => s.teamId === teamId);
+
+	scores.forEach(s => s.score = 0);
+}
 const TeamHelper = {
 	getAges:								getAges,
 	validate:								validate,
@@ -1311,7 +1333,10 @@ const TeamHelper = {
 	decByType:								decByType,
 	incByType:								incByType,
 	calculateTeamPoints: 					calculateTeamPoints,
-	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit
+	checkValidationResultBeforeSubmit: 		checkValidationResultBeforeSubmit,
+	getParametersForLeftContext: 			getParametersForLeftContext,
+	getParametersForRightContext: 			getParametersForRightContext,
+	clearIndividualScore:					clearIndividualScore
 };
 
 module.exports = TeamHelper;

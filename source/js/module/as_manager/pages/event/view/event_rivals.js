@@ -92,25 +92,30 @@ const EventRival = React.createClass({
 					break;
 			}
 
+			if(scoreData.teamId){
+				TeamHelper.clearIndividualScore(event, scoreData.teamId)
+			}
+
 			/** set score */
 			scoreData.score = score.value;
 			scoreData.isValid = score.isValid;
 			binding.set('model', Immutable.fromJS(event));
 		}
 	},
-	renderCountPoints: function (teamBundleName, order) {
+	renderCountPoints: function (teamBundleName, order, individualScoreAvailable) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		const	event	= binding.toJS('model'),
 				points	= TeamHelper.getCountPoints(event, teamBundleName, order);
 
-		const	mode	= binding.toJS('mode'),
-				status	= binding.toJS('model.status');
+		const	mode						= binding.toJS('mode'),
+				status						= binding.toJS('model.status'),
+				isa 						= !individualScoreAvailable || teamBundleName != 'teamsData';
 
 		return (
 			<div className="eEventResult_PointSideWrapper">
-				<Score	isChangeMode	= {teamBundleName !== 'teamsData' && EventHelper.isShowScoreButtons(event, mode, true)}
+				<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, true, isa)}
 						plainPoints		= {points}
 						pointsStep		= {event.sport.points.pointsStep}
 						pointsType		= {event.sport.points.display}
@@ -291,19 +296,22 @@ const EventRival = React.createClass({
 	renderCountPointLeftSide: function() {
 		const	binding	= this.getDefaultBinding();
 
-		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(this),
-				event			= binding.toJS('model');
+		const	activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
+				individualScoreAvailable 	= binding.toJS('individualScoreAvailable.0.value'),
+				event						= binding.toJS('model'),
+				params 						= TeamHelper.getParametersForLeftContext(activeSchoolId, event);
 
-		return TeamHelper.callFunctionForLeftContext(activeSchoolId, event, this.renderCountPoints);
+		return this.renderCountPoints(params.bundleName, params.order, individualScoreAvailable);
 	},
 	renderCountPointRightSide: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding	= this.getDefaultBinding();
 
-		const	activeSchoolId	= MoreartyHelper.getActiveSchoolId(self),
-				event			= binding.toJS('model');
+		const	activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
+				individualScoreAvailable 	= binding.toJS('individualScoreAvailable.1.value'),
+				event						= binding.toJS('model'),
+				params 						= TeamHelper.getParametersForRightContext(activeSchoolId, event);
 
-		return TeamHelper.callFunctionForRightContext(activeSchoolId, event, self.renderCountPoints);
+		return this.renderCountPoints(params.bundleName, params.order, individualScoreAvailable);
 	},
 	renderCountPointsByOrder: function(order) {
 		switch (order) {

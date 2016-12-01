@@ -1,0 +1,30 @@
+.bGameTypeSelector {
+  display: flex;
+
+  width: 398px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+}
+
+.eGameTypeSelector_leftSide {
+  width: 133px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-width: 0 1px 0 0;
+}
+
+.eGameTypeSelector_centerSide {
+  width: 132px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-width: 0 1px 0 0;
+}
+
+.eGameTypeSelector_rightSide {
+  width: 133px;
+  height: 33px;
+}

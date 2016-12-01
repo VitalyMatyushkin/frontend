@@ -18,7 +18,10 @@ function RoleSelectorComponent(props) {
 	return (
 		<div className="bRoleSelector">
 			{availableRoles.map( role =>
-				<Button key={role} text={RoleHelper.SERVER_ROLE_FOR_CLIENT[role]} onClick={() => onRoleSelected(role)}/>
+				<Button key={role}
+						text={RoleHelper.SERVER_ROLE_FOR_CLIENT[role]}
+						onClick={() => onRoleSelected(role)}
+						id={role} />
 			)}
 		</div>
 	);

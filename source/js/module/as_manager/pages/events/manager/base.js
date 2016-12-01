@@ -1,23 +1,25 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
+const	React							= require('react'),
+		Morearty						= require('morearty'),
+		Immutable						= require('immutable'),
 
-		If					= require('module/ui/if/if'),
-		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		Multiselect			= require('module/ui/multiselect/multiselect'),
-		EventVenue			= require('./event_venue'),
-		DateHelper			= require('./../../../../helpers/date_helper'),
-		TimeInputWrapper	= require('./time_input_wrapper'),
-		classNames			= require('classnames');
+		If								= require('module/ui/if/if'),
+		Autocomplete					= require('./../../../../ui/autocomplete2/OldAutocompleteWrapper'),
+		EventVenue						= require('./event_venue'),
+		TimeInputWrapper				= require('./time_input_wrapper'),
+
+		DateSelectorWrapper				= require('./manager_components/date_selector/date_selector_wrapper'),
+		GenderSelectorWrapper			= require('./manager_components/gender_selector/gender_selector_wrapper'),
+		GameTypeSelectorWrapper			= require('./manager_components/game_type_selector/game_type_selector_wrapper'),
+		AgeMultiselectDropdownWrapper	= require('./manager_components/age_multiselect_dropdown/age_multiselect_dropdown_wrapper'),
+
+		InputWrapperStyles				= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
+		InputLabelStyles				= require('./../../../../../../styles/ui/b_input_label.scss'),
+		TextInputStyles					= require('./../../../../../../styles/ui/b_text_input.scss'),
+		DropdownStyles					= require('./../../../../../../styles/ui/b_dropdown.scss'),
+		HouseAutocompleteWrapper		= require('./../../../../../../styles/ui/b_house_autocomplete_wrapper.scss');
 
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
-    isSportSelected: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return !!binding.toJS('model.sportId');
-	},
 	/**
      * House filtering service...
      * @param houseName
@@ -98,39 +100,6 @@ const EventManagerBase = React.createClass({
         };
         return window.Server.publicSchools.get(filter);
     },
-    changeCompleteType: function (event) {
-        const   self        = this,
-                binding     = self.getDefaultBinding(),
-                type        = event.target.value,
-                schoolInfo  = binding.get('schoolInfo');
-
-        let     rivals = Immutable.List();
-
-		switch (type) {
-			case 'inter-schools':
-				rivals = rivals.push(binding.get('schoolInfo'));
-				break;
-			case 'internal':
-				rivals = Immutable.fromJS([
-					{
-						id: null,
-						name: ''
-					},
-					{
-						id: null,
-						name: ''
-					}
-				]);
-				break;
-		}
-
-        binding
-            .atomically()
-            .set('rivals', Immutable.fromJS(rivals))
-            .set('model.type', Immutable.fromJS(type))
-            .set('autocomplete', Immutable.Map())
-            .commit();
-    },
 	changeCompleteSport: function (event) {
 		var self = this,
             binding = self.getDefaultBinding(),
@@ -140,11 +109,25 @@ const EventManagerBase = React.createClass({
                 return model.get('id') === sportId;
             });
 
+		const sportModel = sportsBinding.get(`models.${sportIndex}`).toJS();
+
 		binding.atomically()
             .set('model.sportId',    event.target.value)
-            .set('model.sportModel', sportsBinding.get(`models.${sportIndex}`))
-            .set('model.gender',     Immutable.fromJS("not-selected-gender"))
+            .set('model.sportModel', Immutable.fromJS(sportModel))
+            .set('model.gender',     Immutable.fromJS(this.getDefaultGender(sportModel)))
             .commit();
+	},
+	getDefaultGender: function(sportModel) {
+		switch (true) {
+			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && sportModel.genders.mixed:
+				return undefined;
+			case sportModel.genders.maleOnly && sportModel.genders.femaleOnly && !sportModel.genders.mixed:
+				return undefined;
+			case sportModel.genders.femaleOnly:
+				return 'femaleOnly';
+			case sportModel.genders.maleOnly:
+				return 'maleOnly';
+		}
 	},
     changeCompleteAges: function (selections) {
         var self = this,
@@ -174,83 +157,7 @@ const EventManagerBase = React.createClass({
 			);
         });
     },
-	handleChangeGenderSelect: function(binding, eventDescriptor) {
-		binding.set('model.gender', Immutable.fromJS(eventDescriptor.target.value));
-	},
-	getGenderSelectOptions: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
 
-		const sportModel = binding.get('model.sportModel');
-
-		let genderOptions = [];
-
-		//if sport was selected
-		if(self.isSportSelected()) {
-			genderOptions.push((
-				<option	key			= "not-selected-gender"
-						value		= "not-selected-gender"
-						disabled	= "disabled"
-				>
-					Please select
-				</option>
-			));
-		} else {
-			genderOptions.push((
-				<option	key			= "not-selected-gender"
-						value		= "not-selected-gender"
-						disabled	= "disabled"
-				>
-					At first, select game
-				</option>
-			));
-		}
-
-		if(sportModel) {
-			const genders = sportModel.toJS().genders;
-
-			genderOptions = genderOptions.concat(Object.keys(genders)
-				.filter(genderType => genders[genderType])
-				.map((genderType, index) => {
-					const genderNames = {
-						femaleOnly:	'Girls only',
-						maleOnly:	'Boys only',
-						mixed:		'Mixed'
-					};
-
-					return (
-						<option	key={`${index}-gender`}
-								value={genderType}
-						>
-							{genderNames[genderType]}
-						</option>
-					);
-				}));
-		}
-
-		return genderOptions;
-	},
-    getAges: function () {
-        var self = this,
-            binding = self.getDefaultBinding(),
-            ages = binding.toJS('model.ages'),
-            availableAges = binding.get('availableAges');
-
-        return availableAges.sort().filter(function (age) {
-            return ages === null || ages.indexOf(age) === -1;
-        }).map(function (age) {
-            return <Morearty.DOM.option
-                key={age + '-ages'}
-                value={age}>{'Y' + age}</Morearty.DOM.option>;
-        });
-
-    },
-    getEventDate: function(date) {
-        return DateHelper.getDateStringFromDateObject(date);
-    },
-    getEventTime: function(date) {
-		return DateHelper.getTimeStringFromDateObject(date);
-    },
 	render: function() {
 		const   self                = this,
                 binding             = self.getDefaultBinding(),
@@ -261,47 +168,34 @@ const EventManagerBase = React.createClass({
                     'houses':           self.serviceHouseFilter,
                     'internal':         self.serviceClassFilter
                 },
-                gender  = binding.get('model.gender'),
                 type    = binding.get('model.type');
 
 		return(
 			<div className="eManager_base">
-				<div className="eManager_group">
-					<div className="eManager_label">{'Date'}</div>
-					<Morearty.DOM.input
-						className="eManager_field"
-						type="text"
-						value={self.getEventDate(binding.get('model.startTime'))}
-						disabled={'disabled'}
-					/>
-				</div>
-				<div className="eManager_group">
-					<div className="eManager_label">{'Time'}</div>
+				<DateSelectorWrapper binding={binding.sub('model.startTime')}/>
+				<div className="bInputWrapper">
+					<div className="bInputLabel">
+						Time
+					</div>
 					<TimeInputWrapper binding={binding.sub('model.startTime')}/>
 				</div>
-				<div className="eManager_group">
-					<div className="eManager_label">{'Event Name'}</div>
+				<div className="bInputWrapper">
+					<div className="bInputLabel">
+						Event Name
+					</div>
 					<Morearty.DOM.input
-						className="eManager_field"
-						type="text"
-						value={binding.get('model.name')}
-						placeholder={'enter name'}
-						onChange={Morearty.Callback.set(binding.sub('model.name'))}
+						className	= "bTextInput"
+						type		= "text"
+						value		= {binding.get('model.name')}
+						placeholder	= {'enter name'}
+						onChange	= {Morearty.Callback.set(binding.sub('model.name'))}
 					/>
 				</div>
-				<div className="eManager_group">
-					<div className="eManager_label">{'Event Description'}</div>
-					<Morearty.DOM.textarea
-						className="eManager_field mTextArea"
-						type="text"
-						value={binding.get('model.description')}
-						placeholder={'enter description'}
-						onChange={Morearty.Callback.set(binding.sub('model.description'))}
-					/>
-				</div>
-				<div className="eManager_group">
-					<div className="eManager_label">{'Game'}</div>
-						<select	className		= "eManager_select"
+				<div className="bInputWrapper">
+					<div className="bInputLabel">
+						Game
+					</div>
+						<select	className		= "bDropdown"
 								defaultValue	= "not-selected-sport"
 								value			= {sportId}
 								onChange		= {self.changeCompleteSport}
@@ -315,107 +209,66 @@ const EventManagerBase = React.createClass({
 							{self.getSports()}
 						</select>
 				</div>
-				<div className="eManager_group">
-					<div className="eManager_label">{'Genders'}</div>
-					<select	className		= {classNames({eManager_select: true, mDisabled: !self.isSportSelected()})}
-							defaultValue	= "not-selected-gender"
-							value			= {gender}
-							onChange		= {self.handleChangeGenderSelect.bind(self, binding)}
-							disabled		= {!self.isSportSelected()}
-					>
-						{self.getGenderSelectOptions()}
-					</select>
+				<div className="bInputWrapper">
+					<div className="bInputLabel">
+						Genders
+					</div>
+					<GenderSelectorWrapper binding={binding}/>
 				</div>
-				<div className="eManager_group">
-					<div className="eManager_label">{'Ages'}</div>
-					<Multiselect
-						binding={binding}
-						items={
-							binding.get('availableAges').sort((f,l)=>{
-								return f - l;
-							}).map(function (age) {
-								return {
-									id: age,
-									text: 'Y' + age
-								};
-							}).toJS()
-						}
-						selections={binding.toJS('model.ages')}
-						onChange={self.changeCompleteAges}
-					/>
+				<div className="bInputWrapper">
+					<div className="bInputLabel">
+						Ages
+					</div>
+					<AgeMultiselectDropdownWrapper binding={binding}/>
 				</div>
-				<div className="eManager_group">
-					<div className="eManager_label">{'Game Type'}</div>
-						<select	className		= 'eManager_select'
-								defaultValue	= 'not-selected-game-type'
-								value			= {binding.toJS('model.type')}
-								onChange		= {self.changeCompleteType}
-						>
-							<option	key			= "not-selected-game-type"
-									value		= "not-selected-game-type"
-									disabled	= "disabled"
-							>
-								Please select
-							</option>
-							<option	key		= "inter-schools-type"
-									value	= "inter-schools"
-							>
-								Inter-schools
-							</option>
-							<option	key		= "houses-type"
-									value	= "houses"
-							>
-								Houses
-							</option>
-							<option	key		= "anyway-type"
-									value	= "internal"
-							>
-								Internal
-							</option>
-						</select>
+				<div className="bInputWrapper">
+					<div className="bInputLabel">
+						Game Type
+					</div>
+					<GameTypeSelectorWrapper binding={binding}/>
 				</div>
 				<If condition={!!type}>
 					<div>
-						<div className="eManager_group">
-							{type === 'inter-schools' ? <div className="eManager_label">Choose school</div> : null}
+						<div className="bInputWrapper">
+							{type === 'inter-schools' ? <div className="bInputLabel">Choose school</div> : null}
 							<If condition={type === 'inter-schools'} key={'if-choose-school'}>
-								<div>
-									<Autocomplete
-										defaultItem={binding.toJS('rivals.1')}
-										serviceFilter={services[type]}
-										serverField="name"
-										placeholderText={'enter school name'}
-										onSelect={self.onSelectRival.bind(null, 1)}
-										binding={binding.sub('autocomplete.inter-schools.0')}
-									/>
-								</div>
+								<Autocomplete
+									defaultItem		= {binding.toJS('rivals.1')}
+									serviceFilter	= {services[type]}
+									serverField		= "name"
+									placeholder		= "enter school name"
+									onSelect		= {self.onSelectRival.bind(null, 1)}
+									binding			= {binding.sub('autocomplete.inter-schools.0')}
+									extraCssStyle	= "mBigSize"
+								/>
 							</If>
-							{type === 'houses' ? <div className="eManager_label">Choose houses</div> : null}
+							{type === 'houses' ? <div className="bInputLabel">Choose houses</div> : null}
 							<If condition={type === 'houses'}>
-								<div className="eChooseHouses">
+								<div>
+									<div className="bHouseAutocompleteWrapper">
+										<Autocomplete
+											defaultItem		= {binding.toJS('rivals.0')}
+											serviceFilter	= {self.serviceHouseFilter.bind(null, 0)}
+											serverField		= "name"
+											placeholder		= {'Select the first house'}
+											onSelect		= {self.onSelectRival.bind(null, 0)}
+											binding			= {binding.sub('autocomplete.houses.0')}
+											extraCssStyle	= {'mBigSize'}
+										/>
+									</div>
 									<Autocomplete
-										defaultItem={binding.toJS('rivals.0')}
-										serviceFilter={self.serviceHouseFilter.bind(null, 0)}
-										serverField="name"
-										placeholderText={'Select the first house'}
-										onSelect={self.onSelectRival.bind(null, 0)}
-										binding={binding.sub('autocomplete.houses.0')}
-									/>
-									<div className="eChoose_vs">vs</div>
-									<Autocomplete
-										defaultItem={binding.toJS('rivals.1')}
-										serviceFilter={self.serviceHouseFilter.bind(null, 1)}
-										serverField="name"
-										placeholderText={'Select the second house'}
-										onSelect={self.onSelectRival.bind(null, 1)}
-										binding={binding.sub('autocomplete.houses.1')}
+										defaultItem		= {binding.toJS('rivals.1')}
+										serviceFilter	= {self.serviceHouseFilter.bind(null, 1)}
+										serverField		= "name"
+										placeholder		= "Select the second house"
+										onSelect		= {self.onSelectRival.bind(null, 1)}
+										binding			= {binding.sub('autocomplete.houses.1')}
+										extraCssStyle	= {'mBigSize'}
 									/>
 								</div>
 							</If>
 						</div>
-						<div className="eManager_group">
-							<EventVenue binding={binding}/>
-						</div>
+						<EventVenue binding={binding}/>
 					</div>
 				</If>
 			</div>

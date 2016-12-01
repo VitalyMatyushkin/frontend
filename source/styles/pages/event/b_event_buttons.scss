@@ -7,24 +7,7 @@
   width: 100%;
   margin: 0 auto;
 }
-.bEventButton {
-  color: #fff;
-  padding: 8px 20px;
-  cursor: pointer;
-  background: $blueColor;
-}
-.bEventButton:hover {
- background: $blueColor;
-}
-.bEventButton.mCancel{
-  color: #aaaaaa;
-  background: transparent;
-  margin: 0 10px;
-}
-.bEventButton.mCancel:hover {
-  background: transparent;
-  color: $COLOR;
-}
+
 .bEventButtons_action {
   position: absolute;
   width: 100%;

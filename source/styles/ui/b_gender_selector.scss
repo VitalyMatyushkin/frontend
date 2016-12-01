@@ -1,0 +1,22 @@
+.bGenderSelector {
+  display: flex;
+
+  width: 400px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+}
+
+.eGenderSelector_leftSide {
+  width: 200px;
+  height: 33px;
+
+  border: 1px solid #d7d7d7;
+  border-width: 0 1px 0 0;
+}
+
+.eGenderSelector_rightSide {
+  width: 200px;
+  height: 33px;
+}

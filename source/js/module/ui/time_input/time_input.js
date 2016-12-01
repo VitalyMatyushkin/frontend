@@ -84,15 +84,13 @@ const TimeInput = React.createClass({
 	},
 	handleFocus: function() {
 		this.setState({
-			value		: this.fillZero(this.props.value),
+			value		: '',
 			isTyping	: true
 		});
 	},
 	handleBlur: function() {
 		this.setState({'isTyping': false});
-		if(this.state.value === '') {
-			this.props.handleChange(0);
-		} else {
+		if(this.state.value !== '') {
 			this.props.handleChange(parseInt(this.state.value, 10));
 		}
 	},

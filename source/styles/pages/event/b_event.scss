@@ -1,11 +1,7 @@
 @import "../../!variables";
+@import "../../bootstrap-custom";
 
 .bEventContainer {
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  min-width: 730px;
-  max-width: 1073px;
   margin: 30px auto 50px;
 }
 
@@ -21,10 +17,7 @@
 }
 
 .bEventBottomContainer {
-  box-sizing: border-box;
-  margin: 0 auto;
-  max-width: 940px;
-  width: 100%;
+  @extend .container;
 }
 
 .eEvent_points {
@@ -88,6 +81,7 @@
       display: inline-block;
       padding: 10px 10px 10px 0;
       line-height: 16px;
+      white-space: pre-line;
     }
     .eUsername, .eUsernameReply {
       color: $blueColor;
@@ -289,20 +283,6 @@
   color: $blueColor;
 }
 
-.bMatchReport{
-  margin-top: 20px;
-  min-height: 220px;
-
-  .eText{
-    white-space: pre-line;
-  }
-  .eEvent_report{
-    width: 100%;
-    height: 120px;
-    margin-bottom: 10px;
-  }
-}
-
 .bEvent .bTabs{
   margin: 20px 0 0;
   display: block;
@@ -338,6 +318,27 @@
   height: 300px;
 }
 
+.mIndividualScoreAvailable{
+  &.eForm_field{
+    margin: 10px 0;
+    width: 430px;
+    float: left;
+
+    &.mRight{
+      margin-left: 60px;
+    }
+
+    .eForm_fieldName{
+      width: 200px;
+    }
+  }
+
+}
+.eEvent_loading {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+}
 
 
 

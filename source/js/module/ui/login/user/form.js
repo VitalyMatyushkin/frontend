@@ -30,8 +30,13 @@ const LoginUserForm = React.createClass({
 
 		return (
 			<div className="bLoginForm">
-				<Form name={self.tmpFormName} service={Auth.login} binding={self.getDefaultBinding()}
-					  onSuccess={self.props.onSuccess} onError={self.props.onError} hideCancelButton={true}>
+				<Form    name={self.tmpFormName}
+						 service={Auth.login}
+						 binding={self.getDefaultBinding()}
+						 onSuccess={self.props.onSuccess}
+						 onError={self.props.onError}
+						 hideCancelButton={true}
+						 submitButtonId='login_submit'>
 					<FormField type="text" placeholder="E-mail" field="email" validation="email required" id="login_email"/>
 					<FormField type="text" textType="password" placeholder="Password" field="password" validation="required" binding={binding} id="login_password"/>
 				</Form>

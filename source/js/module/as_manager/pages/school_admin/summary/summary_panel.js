@@ -16,7 +16,7 @@ const SummaryPanel = React.createClass({
 		schoolName:		React.PropTypes.string.isRequired,
 		postcodeId:		React.PropTypes.string,
 		address:		React.PropTypes.string.isRequired,
-		description:	React.PropTypes.string.isRequired,
+		description:	React.PropTypes.string,
 		siteLink:		React.PropTypes.string.isRequired,
 		geoPoint:		React.PropTypes.any,
 		binding:		React.PropTypes.any 		// yes, it will be here for a while. Need to pass it down to map
@@ -62,12 +62,44 @@ const SummaryPanel = React.createClass({
 		}
 	},
 
+	getInitialState: function() {
+		return {
+			expanded: false
+		};
+	},
+
+	expandedText: function() {
+		this.setState({
+			expanded: !this.state.expanded
+		});
+	},
+
+	renderDescription: function () {
+		const description = this.props.description;
+		let linkText, text;
+
+		if (this.state.expanded) {
+			text = description;
+			linkText = 'Show Less';
+		} else {
+			text = typeof description !== 'undefined' ? description.slice(0, 200) + '...' : undefined;
+			linkText = 'Read More';
+		}
+		return (
+			<div className="eDescription">
+				{ text }
+			<If condition={description && description.length > 200}>
+				<a className="eDescription_link" onClick={this.expandedText}> { linkText } </a>
+			</If>
+		</div>
+		);
+	},
+
 	render: function () {
 		const 	schoolPic	= this.props.schoolPic,
 				schoolName	= this.props.schoolName,
 				postcodeId	= this.props.postcodeId,
 				address		= this.props.address,
-				description	= this.props.description,
 				geoPoint	= this.props.geoPoint;
 
 		return (
@@ -78,15 +110,14 @@ const SummaryPanel = React.createClass({
 						<div>
 							{schoolPic ? <div className="eSchoolMaster_flag"><img src={schoolPic}/></div> : ''}
 							<h1 className="eSchoolMaster_title"> {schoolName}</h1>
+
 							<div className="eSchoolAddress">
 								{postcodeId}
 								{address}
 							</div>
 						</div>
-						<div className="eDescription">
-							<p>{description}</p>
-						</div>
-						{this.renderSiteLink()}
+						{ this.renderDescription() }
+						{ this.renderSiteLink() }
 					</div>
 						<If condition={geoPoint !== undefined}>
 							<Map binding={this.props.binding} point={geoPoint}/>

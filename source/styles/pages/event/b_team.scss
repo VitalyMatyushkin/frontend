@@ -9,7 +9,9 @@
     max-width: 902px;
   }
   &.mIndividuals{
+    width: 942px;
     flex-wrap: wrap;
+    justify-content: center;
   }
 }
 
@@ -25,7 +27,7 @@
 }
 
 .bEventTeams_team {
-  width: 448px;
+  width: 450px;
   padding: 10px 0 10px 0;
 
   border: solid 1px #d2d2d2;
