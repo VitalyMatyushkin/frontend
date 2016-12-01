@@ -18,7 +18,7 @@ const MatchReport = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes:{
 		eventId		: React.PropTypes.string.isRequired,
-		isParent	: React.PropTypes.string.isRequired
+		isParent	: React.PropTypes.bool.isRequired
 	},
 	componentWillMount: function(){
 		this.actions = new Actions(this);

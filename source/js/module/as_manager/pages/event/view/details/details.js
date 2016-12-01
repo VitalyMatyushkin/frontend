@@ -15,14 +15,14 @@ const Details = React.createClass({
 		name:				React.PropTypes.string.isRequired,
 		officialName:		React.PropTypes.string.isRequired,
 		venue:				React.PropTypes.string.isRequired,
-		description:		React.PropTypes.string.isRequired,
-		kitNotes:			React.PropTypes.string.isRequired,
-		comments:			React.PropTypes.string.isRequired,
-		teamDeparts:		React.PropTypes.string.isRequired,
-		teamReturns:		React.PropTypes.string.isRequired,
-		meetTime:			React.PropTypes.string.isRequired,
-		teaTime:			React.PropTypes.string.isRequired,
-		lunchTime:			React.PropTypes.string.isRequired,
+		description:		React.PropTypes.string,
+		kitNotes:			React.PropTypes.string,
+		comments:			React.PropTypes.string,
+		teamDeparts:		React.PropTypes.string,
+		teamReturns:		React.PropTypes.string,
+		meetTime:			React.PropTypes.string,
+		teaTime:			React.PropTypes.string,
+		lunchTime:			React.PropTypes.string,
 		handleChange:		React.PropTypes.func.isRequired,
 		handleChangeMode:	React.PropTypes.func.isRequired,
 		isParent:			React.PropTypes.bool.isRequired
@@ -61,20 +61,20 @@ const Details = React.createClass({
 								{this.props.venue}
 							</div>
 						</div>
-						<TextBlock header={"Event Description"}
-								   text={this.props.description}
-								   mode={this.state.viewMode}
-								   handleChange={this.props.handleChange.bind(null, 'description')}
+						<TextBlock	header={"Event Description"}
+									text={this.props.description}
+									mode={this.state.viewMode}
+									handleChange={this.props.handleChange.bind(null, 'description')}
 							/>
-						<TextBlock header={"Kit notes"}
-								   text={this.props.kitNotes}
-								   mode={this.state.viewMode}
-								   handleChange={this.props.handleChange.bind(null, 'kitNotes')}
+						<TextBlock	header={"Kit notes"}
+									text={this.props.kitNotes}
+									mode={this.state.viewMode}
+									handleChange={this.props.handleChange.bind(null, 'kitNotes')}
 							/>
-						<TextBlock header={"Comments"}
-								   text={this.props.comments}
-								   mode={this.state.viewMode}
-								   handleChange={this.props.handleChange.bind(null, 'comments')}
+						<TextBlock	header={"Comments"}
+									text={this.props.comments}
+									mode={this.state.viewMode}
+									handleChange={this.props.handleChange.bind(null, 'comments')}
 							/>
 					</div>
 				</div>
@@ -91,30 +91,30 @@ const Details = React.createClass({
 							</If>
 						</div>
 						<div className="eDetails_infoContainer">
-							<TimeBlock label={"Team departs"}
-									   dateString={this.props.teamDeparts}
-									   mode={this.state.viewMode}
-									   handleChange={this.props.handleChange.bind(null, 'teamDeparts')}
+							<TimeBlock	label={"Team departs"}
+										dateString={this.props.teamDeparts}
+										mode={this.state.viewMode}
+										handleChange={this.props.handleChange.bind(null, 'teamDeparts')}
 								/>
-							<TimeBlock label={"Team returns"}
-									   dateString={this.props.teamReturns}
-									   mode={this.state.viewMode}
-									   handleChange={this.props.handleChange.bind(null, 'teamReturns')}
+							<TimeBlock	label={"Team returns"}
+										dateString={this.props.teamReturns}
+										mode={this.state.viewMode}
+										handleChange={this.props.handleChange.bind(null, 'teamReturns')}
 								/>
-							<TimeBlock label={"Meet time"}
-									   dateString={this.props.meetTime}
-									   mode={this.state.viewMode}
-									   handleChange={this.props.handleChange.bind(null, 'meetTime')}
+							<TimeBlock	label={"Meet time"}
+										dateString={this.props.meetTime}
+										mode={this.state.viewMode}
+										handleChange={this.props.handleChange.bind(null, 'meetTime')}
 								/>
-							<TimeBlock label={"Tea time"}
-									   dateString={this.props.teaTime}
-									   mode={this.state.viewMode}
-									   handleChange={this.props.handleChange.bind(null, 'teaTime')}
+							<TimeBlock	label={"Tea time"}
+										dateString={this.props.teaTime}
+										mode={this.state.viewMode}
+										handleChange={this.props.handleChange.bind(null, 'teaTime')}
 								/>
-							<TimeBlock label={"Lunch time"}
-									   dateString={this.props.lunchTime}
-									   mode={this.state.viewMode}
-									   handleChange={this.props.handleChange.bind(null, 'lunchTime')}
+							<TimeBlock	label={"Lunch time"}
+										dateString={this.props.lunchTime}
+										mode={this.state.viewMode}
+										handleChange={this.props.handleChange.bind(null, 'lunchTime')}
 								/>
 						</div>
 					</div>

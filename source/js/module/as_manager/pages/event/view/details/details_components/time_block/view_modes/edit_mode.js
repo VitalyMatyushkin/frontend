@@ -10,7 +10,7 @@ const EditMode = React.createClass({
 	propTypes:{
 		label			: React.PropTypes.string.isRequired,
 		dateString		: React.PropTypes.string.isRequired,
-		handleChange	: React.PropTypes.string.isRequired
+		handleChange	: React.PropTypes.func.isRequired
 	},
 	handleChangeHour: function(hours) {
 		const dateObject = new Date(this.props.dateString);
