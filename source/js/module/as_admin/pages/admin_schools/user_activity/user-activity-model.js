@@ -6,6 +6,7 @@ const 	DataLoader 		= require('module/ui/grid/data-loader'),
     React 			= require('react'),
     Morearty		= require('morearty'),
     GridModel 		= require('module/ui/grid/grid-model'),
+    DateHelper      = require('module/helpers/date_helper'),
     RoleHelper 		= require('module/helpers/role_helper');
 
 /**
@@ -20,7 +21,7 @@ const UserActivityModel = function(page){
     this.props = page.props;
     this.state = page.state;
 
-    this.rootBinding = this.getMoreartyContext().getBinding();    
+    this.rootBinding = this.getMoreartyContext().getBinding();
 
     this.setColumns();
 };
@@ -32,8 +33,12 @@ UserActivityModel.prototype.getUserName = function(item){
         name = item.user.firstName + ' ' + item.user.lastName;
     }
 
-    return name;    
+    return name;
 };
+
+UserActivityModel.prototype.getDateTime = function(item){
+     return DateHelper.getDateTimeString(item.finishedAt);
+ };
 
 UserActivityModel.prototype.getMethodList = function(){
     return [
@@ -72,7 +77,7 @@ UserActivityModel.prototype.setColumns = function(){
             cell:{
                 type:'custom',
                 typeOptions:{
-                    parseFunction:this.getUserName.bind(this)
+                    parseFunction:this.getUserName.bind(this) // If without .bind did it, then return UserActivityModel
                 }
             }
         },
@@ -126,7 +131,10 @@ UserActivityModel.prototype.setColumns = function(){
             isSorted:true,
             cell:{
                 dataField:'finishedAt',
-                type:'date'
+                type:'custom',
+                typeOptions:{
+                    parseFunction: this.getDateTime.bind(this) // If without .bind did it, then return UserActivityModel
+                }
             },
             filter:{
                 type:'between-date'
