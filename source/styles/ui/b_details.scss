@@ -1,48 +1,53 @@
 @import "../!variables";
+@import "../bootstrap-custom";
 
 .bDetails {
-  display: flex;
-  justify-content: space-around;
-
-  border-bottom: 1px solid #d4d4d4;
+  @include make-row();
+  border-bottom: $mainBorder;
 }
 
 .eDetails_column {
-  width: 350px;
+  @include make-md-column(4);
+  @include make-sm-column(4);
 
-  padding: 50px;
+  &.mBig {
+    @include make-md-column(8);
+    @include make-sm-column(8);
+  }
+}
+
+.eDetails_columnContent {
+  padding: 40px;
   min-height: 550px;
 
   &.mWithoutPadding {
     padding: 0px;
   }
-
-  &.mBig {
-    width: 590px;
-  }
-
   &.mGrayBackground {
-    background-color: #f6f5f8;
+    background-color: $secondBackgroundColor;
   }
 }
 
 .eDetails_infoContainer {
-  padding: 0px 50px 50px 50px;
+  padding: 0px 80px 50px 50px;
 }
 
 .eDetails_editButton {
-  width: 20px;
-  height: 20px;
+  width: 50px;
+  height: 50px;
+  padding: 12px 15px;
 
+  background: #ffffff;
+  border: $mainBorder;
+  border-radius: 50%;
 
+  color: $GrayText;
   cursor: pointer;
   font-weight: bold;
+  font-size: 22px;
 
-  & .bIcon{
-    color: #929496;
-  }
-  &:hover .bIcon{
-    color: $textColor;
+  &:hover {
+    background: $secondBackgroundColor;
   }
 }
 
@@ -55,7 +60,6 @@
 
 .eDetails_textBlock {
   white-space: pre;
-  font-size: 14px;
   margin-bottom: 40px;
 
   font-family: Glober, sans-serif;
@@ -67,7 +71,6 @@
   max-width: 500px;
   max-height: 200px;
 
-  font-size: 14px;
   font-family: Glober, sans-serif;
 }
 
@@ -89,7 +92,7 @@
 }
 
 .eDetails_header {
-  color:  black;
+  color:  $BodyColor;
 
   font-family: Glober-Bold, sans-serif;
 
