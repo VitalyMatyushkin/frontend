@@ -45,7 +45,7 @@ const UserDetail= React.createClass({
             if(binding.get('popup')===false){
                 window.Server.user.get(self.params)
                 .then(function(user){
-					binding.set('userWithPermissionDetail',Immutable.fromJS(user));
+                    binding.set('userWithPermissionDetail',Immutable.fromJS(user));
                     return user;
                 });
             }
@@ -85,9 +85,9 @@ const UserDetail= React.createClass({
     _getGender: function (gender) {
         switch (gender) {
             case 'MALE':
-                return 'Boys';
+                return 'Male';
             case 'FEMALE':
-                return 'Girls';
+                return 'Female';
             default:
                 return '';
         }
@@ -100,7 +100,6 @@ const UserDetail= React.createClass({
             selectedUserData = binding.toJS('userWithPermissionDetail');
             profilePicture = selectedUserData.avatar;
             name = selectedUserData.firstName+" "+selectedUserData.lastName;
-            username = selectedUserData.username;
             email = selectedUserData.email;
             phone = selectedUserData.phone;
             gender = selectedUserData.gender;
@@ -108,32 +107,33 @@ const UserDetail= React.createClass({
         }
         return (
             <div>
-
                 <div className = "bAdminView">
-
-                    <h1 className="eSchoolMaster_title">
-                        {profilePicture ? <div className="eSchoolMaster_flag"><img src={profilePicture}/></div> : ''}
-                        {username}
-                        <If condition={self.props.isEditable}>
-                            <div className="eSchoolMaster_buttons">
-                                <a onClick={self.onEditClick} className="bButton">Edit...</a>
-                            </div>
-                        </If>
-                    </h1>
-                    <div>
-                        <div style={{padding:10+'px'}}>
-                            Name: {name}
+                    <div className="eSchoolMaster_title">                    
+                        {profilePicture ? <div><h3>Photo</h3><img src={profilePicture}/></div> : ''}
+                    </div>
+                    <div className="eSchoolMaster_field">
+                        <h3>Summary</h3>
+                        <div>
+                            <span>Name: </span>{name}
                         </div>
-                        <div style={{padding:10+'px'}}>
-                            Gender: {self._getGender(gender)}
+                        <div>
+                            <span>Gender: </span>{self._getGender(gender)}
                         </div>
-                        <div style={{padding:10+'px'}}>
-                            Email: {email}
+                        <div>
+                            <span>Email: </span>{email}
                         </div>
-                        <div style={{padding:10+'px'}}>
-                            Phone: {phone}
+                        <div>
+                            <span>Phone: </span>{phone}
                         </div>
                     </div>
+                    <If condition={self.props.isEditable}>
+                        <div className="eSchoolMaster_buttons">
+                            <h3>Actions</h3>
+                            <div>
+                                <a onClick={self.onEditClick} className="bButton">Edit...</a>
+                            </div>
+                        </div>
+                    </If>
                 </div>
 
                 <div style={{padding:10+'px'}}>
