@@ -176,8 +176,10 @@
   border-color: transparent transparent #c8cdd0 transparent;
   left:12px;
 }
-.eSchoolMaster_buttons{
-
+.bAdminView{
+  display: flex;
+  max-width: 1060px;
+  margin: 40px auto;
 }
 .eSchoolMaster_buttons_admin{
   margin-top:-65px;
@@ -209,7 +211,16 @@
   margin-right: 15px;
 }
 
-.eSchoolMaster_flag,
+.eSchoolMaster_flag {
+  img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+.eSchoolMaster_summary_wrap {
+  display: flex;
+  flex-basis: 600px;
+}
 .eSchoolMaster_title {
   img {
     max-width: 170px;
