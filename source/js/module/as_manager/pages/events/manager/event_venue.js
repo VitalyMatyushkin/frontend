@@ -62,7 +62,7 @@ const EventVenue = React.createClass({
         const   self = this,
                 binding = self.getDefaultBinding(),
 				value = binding.toJS('venue'),
-				postcode = self._getHomeSchoolPostCode();
+				postcode = self.getHomeSchoolPostCode();
 
         if(!value && postcode) {
 			binding.atomically()
@@ -109,13 +109,13 @@ const EventVenue = React.createClass({
                 postcode = undefined;
                 break;
             case 'home':
-                postcode = self._getHomeSchoolPostCode();
+                postcode = self.getHomeSchoolPostCode();
                 break;
             case 'away':
-                postcode = self._getOpponentSchoolPostCode();
+                postcode = self.getOpponentSchoolPostCode();
                 break;
             case 'custom':
-                postcode = self._getHomeSchoolPostCode();
+                postcode = self.getHomeSchoolPostCode();
                 break;
             default:
                 postcode = undefined;
@@ -141,7 +141,7 @@ const EventVenue = React.createClass({
      * @returns {*}
      * @private
      */
-    _getHomeSchoolPostCode: function() {
+    getHomeSchoolPostCode: function() {
         const   self    = this,
                 binding = self.getDefaultBinding();
 
@@ -152,14 +152,14 @@ const EventVenue = React.createClass({
      * @returns {*}
      * @private
      */
-    _getOpponentSchoolPostCode: function() {
+    getOpponentSchoolPostCode: function() {
         const   self    = this,
                 binding = self.getDefaultBinding();
 
         return binding.toJS('rivals.1.postcode');
     },
-    _postcodeService: function (postcode) {
-        const	postCodeFilter = {
+    postcodeService: function (postcode) {
+        const postCodeFilter = {
             where: {
                 postcode: {
                     like: postcode,
@@ -169,7 +169,42 @@ const EventVenue = React.createClass({
             limit: 10
         };
 
-        return window.Server.postCodes.get({ filter: postCodeFilter });
+        return window.Server.postCodes.get({ filter: postCodeFilter }).then(postcodes => {
+            const   homePostcode = this.getHomeSchoolPostCode(),
+                    awayPostcode = this.getOpponentSchoolPostCode();
+            console.log(homePostcode);
+            console.log(awayPostcode);
+
+            const awayPostcodeIndex = postcodes.findIndex(p => p.id === awayPostcode.id);
+            if(awayPostcodeIndex !== -1) {
+                postcodes[awayPostcodeIndex].tooltip = '(opponent school)';
+                // Function modify args!!!
+                postcodes = this.upPostcodeToStart(awayPostcodeIndex, postcodes);
+            }
+
+            const homePostcodeIndex = postcodes.findIndex(p => p.id === homePostcode.id);
+            if(homePostcodeIndex !== -1) {
+                postcodes[homePostcodeIndex].tooltip = '(your school)';
+                // Function modify args!!!
+                postcodes = this.upPostcodeToStart(homePostcodeIndex, postcodes);
+            }
+
+            return postcodes;
+        });
+    },
+	/**
+     * Function modify args
+     * @param currentPostcodeIndex
+     * @param postcodes
+     * @returns {*}
+     */
+    upPostcodeToStart: function(currentPostcodeIndex, postcodes) {
+        const postcodeElement = postcodes[currentPostcodeIndex];
+
+        postcodes.splice(currentPostcodeIndex, 1);
+        postcodes.unshift(postcodeElement);
+
+        return postcodes;
     },
     /*LISTENERS*/
     _onSelectPostcode: function(id, value) {
@@ -264,22 +299,19 @@ const EventVenue = React.createClass({
 
         return (
             <div>
-                <If condition={self._isShowVenueTypeRadioButtons()}>
-                    {self._renderVenueTypeRadioButton(venueType)}
-                </If>
                 <If condition={self._isShowPostcodeField()}>
                     <div className="bInputWrapper">
                         <div className="bInputLabel">
-							Change Postcode
+							Postcode
 						</div>
                         <Autocomplete
                             serverField     ="postcode"
                             defaultItem     ={binding.toJS('venue')}
                             binding         ={binding.sub('postcode')}
-                            serviceFilter	={self._postcodeService}
+                            serviceFilter	={self.postcodeService}
                             onSelect		={self._onSelectPostcode}
                             placeholder		={'Select Postcode'}
-                            extraCssStyle	= {'mBigSize'}
+                            extraCssStyle	={'mBigSize'}
                         />
                     </div>
                 </If>
