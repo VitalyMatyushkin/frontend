@@ -5,6 +5,14 @@ const	React					= require('react'),
 
 		RadioButtonCustomStyle	= require('./../../../../styles/ui/radio_button_custom/radio_button_custom.scss');
 
+/**
+ * It's react js radiobutton. This component doesn't use html tag <input>.
+ * Because this component has custom view. Ok, i know, this can be done by css.
+ * But i think that is hard and dreary way.
+ * Because you should use pseudo css class like :after :before and :checked :not(checked).
+ * And you should hide standard html tag <input> and handle click only by label.
+ * Also, we use awesomefont for our custom raddiobutton view - this creates additional problems.
+ */
 const RadioButtonCustom = React.createClass({
 	propTypes: {
 		isChecked:	React.PropTypes.bool.isRequired,
