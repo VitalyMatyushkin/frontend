@@ -14,6 +14,7 @@ const OldAutocompleteWrapper = React.createClass({
 		placeholder: 		React.PropTypes.string,
         onEscapeSelection:  React.PropTypes.func,
         clearAfterSelect: 	React.PropTypes.bool,
+        isBlocked:          React.PropTypes.bool,
         defaultItem: 	    React.PropTypes.object,
         extraCssStyle:      React.PropTypes.string
     },
@@ -55,6 +56,7 @@ const OldAutocompleteWrapper = React.createClass({
                 onEscapeSelection   = {self.getEscapeSelectFunction()}
                 clearAfterSelect    = {self.props.clearAfterSelect !== undefined ? self.props.clearAfterSelect : false}
                 extraCssStyle       = {self.props.extraCssStyle}
+                isBlocked           = {self.props.isBlocked}
             />
         );
     }

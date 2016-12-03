@@ -40,7 +40,12 @@ const ComboBox2 = React.createClass({
         getElementTitle:    React.PropTypes.func.isRequired,
         getElementTooltip:  React.PropTypes.func,
         clearAfterSelect:   React.PropTypes.bool,
-        extraCssStyle:      React.PropTypes.string
+        extraCssStyle:      React.PropTypes.string,
+		/**
+         * Combobox doesn't react on click if true.
+         * False by default.
+         */
+        isBlocked:          React.PropTypes.bool
     },
     getInitialState: function(){
         return {
@@ -52,6 +57,11 @@ const ComboBox2 = React.createClass({
             currentTooltip:      undefined,
             currentIndex:        undefined,
             currentAsyncRequest: undefined
+        };
+    },
+    getDefaultProps: function(){
+        return {
+            isBlocked: false
         };
     },
     /** Checks on mount if we need to set default item */
@@ -214,8 +224,10 @@ const ComboBox2 = React.createClass({
     /**
      * Handles left mouse button click on text input
      */
-    onInputClick: function(){
-        this.search(this.getCurrentText());
+    onInputClick: function() {
+        if(!this.props.isBlocked) {
+            this.search(this.getCurrentText());
+        }
     },
     /**
      * Handles left mouse button click on triangle button
@@ -223,7 +235,7 @@ const ComboBox2 = React.createClass({
     onTriangleClick: function(){
         const self = this;
 
-        if(!self.state.isOpen) {
+        if(!this.props.isBlocked && !self.state.isOpen) {
             self.refs.input.focus();
             self.refs.input.click();
         }
