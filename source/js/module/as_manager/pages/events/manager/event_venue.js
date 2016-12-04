@@ -15,6 +15,7 @@ const EventVenue = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	DEFAULT_VENUE_POINT: { "lat": 50.832949, "lng": -0.246722 },
+
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
 
@@ -29,6 +30,7 @@ const EventVenue = React.createClass({
 		this.getDefaultBinding().addListener('model.type', this.clearVenueData);
 	},
 	generatePostcodeInputKey: function() {
+		// just current date in timestamp view
 		return + new Date();
 	},
 	/**
