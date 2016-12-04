@@ -20,5 +20,12 @@ const EVENT_GENDERS = {
 	MIXED:			'mixed'
 };
 
-module.exports.EVENT_STATUS		= EVENT_STATUS;
-module.exports.EVENT_GENDERS	= EVENT_GENDERS;
+const EVENT_GENDERS_FILTER = {
+	FEMALE_ONLY:	'FEMALE_ONLY',
+	MALE_ONLY:		'MALE_ONLY',
+	MIXED:				'MIXED'
+};
+
+module.exports.EVENT_STATUS						= EVENT_STATUS;
+module.exports.EVENT_GENDERS					= EVENT_GENDERS;
+module.exports.EVENT_GENDERS_FILTER		= EVENT_GENDERS_FILTER;
