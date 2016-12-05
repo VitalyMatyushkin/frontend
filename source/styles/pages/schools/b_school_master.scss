@@ -24,7 +24,7 @@
   .eSchoolMaster_field_name {
     font-weight: bold;
     display: inline-block;
-    width: 100px;
+    width: 150px;
     color: #aaaaaa;
   }
 
@@ -38,10 +38,10 @@
   margin-right: 85px;
 }
 .eSchoolMaster_fields {
-  flex-basis: 400px;
+  flex-basis: 550px;
 }
 .eSchoolMaster_buttons{
-  flex-basis: 200px;
+  flex-basis: 150px;
 }
 
 .eSchoolMaster_buttons,
@@ -225,7 +225,7 @@
 }
 .eSchoolMaster_summary_wrap {
   display: flex;
-  flex-basis: 600px;
+  flex-basis: 750px;
 }
 .eSchoolMaster_title {
   img {
