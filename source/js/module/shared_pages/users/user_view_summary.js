@@ -29,21 +29,25 @@ const UserViewSummary = React.createClass({
 			return (
 				<div className="eSchoolMaster_summary_wrap">
 					<div className="eSchoolMaster_title">
-			        {avatar ? <div><h3>Photo</h3><img src={avatar}/></div> : ''}
+			        {avatar ? <span><h3>Photo</h3><img src={avatar}/></span> : ''}
 		    	</div>
-			    <div className="eSchoolMaster_field">
+			    <div className="eSchoolMaster_fields">
 		        <h3>Summary</h3>
-		        <div>
-		            <span>Name: </span>{name}
+		        <div className="eSchoolMaster_field">
+		            <div className="eSchoolMaster_field_name">Name:</div>
+		            <div className="eSchoolMaster_field_value">{name}</div>
 		        </div>
-		        <div>
-		            <span>Gender: </span>{this.getGender(gender)}
+		        <div className="eSchoolMaster_field">
+		            <div className="eSchoolMaster_field_name">Gender:</div>
+		            <div className="eSchoolMaster_field_value">{this.getGender(gender)}</div>
 		        </div>
-		        <div>
-		            <span>Email: </span>{email}
+		        <div className="eSchoolMaster_field">
+		            <div className="eSchoolMaster_field_name">Email:</div>
+		            <div className="eSchoolMaster_field_value">{email}</div>
 		        </div>
-		        <div>
-		            <span>Phone: </span>{phone}
+		        <div className="eSchoolMaster_field">
+		            <div className="eSchoolMaster_field_name">Phone:</div>
+		            <div className="eSchoolMaster_field_value">{phone}</div>
 		        </div>
 			    </div>
 				</div>
