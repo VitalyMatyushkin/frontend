@@ -280,24 +280,33 @@ const EventPage = React.createClass({
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
 							<div className="bEventMiddleSideContainer">
-								<div className="bEditButtonWrapper">
-									<If condition={TeamHelper.isShowEditEventButton(self)}>
-										<div	className	= "bEditButton"
-												onClick		= {self.handleClickChangeTeamsButtons}
-										>
-											<SVG icon="icon_edit"/>
-										</div>
-									</If>
+								<div className="bEventMiddleSideContainer_row">
+									<div className="bEventMiddleSideContainer_buttons">
+										<If condition={TeamHelper.isShowEditEventButton(self)}>
+											<div className="bButton mCircle"
+												 onClick={self.handleClickChangeTeamsButtons}
+												>
+												<i className="fa fa-pencil" aria-hidden="true"/>
+											</div>
+										</If>
+									</div>
+									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
+															  isVisible={isaLeftShow}
+															  className="mLeft"/>
+									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+															  isVisible={isaRightShow}/>
 								</div>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-														  isVisible={isaLeftShow}/>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-														  isVisible={isaRightShow}
-														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
-							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
-							<div className="bEventMiddleSideContainer mFullWidth">
+
+							<div className="bEventMap">
+								<div className="bEventMap_row">
+									<div className="bEventMap_col">
+										<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')}/>
+									</div>
+								</div>
+							</div>
+							<div className="bEventMiddleSideContainer">
 								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 							</div>
 							<If condition={activeTab === 'performance'} >

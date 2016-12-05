@@ -39,7 +39,7 @@ const MatchReport = React.createClass({
 						<If condition={this.isShowEditButton()}>
 							<div className="eMatchReport_btn">
 								<div className="bButton mCircle" onClick={this.actions.onEdit.bind(this.actions)}>
-									<SVG icon="icon_edit2"/>
+									<i className="fa fa-pencil" aria-hidden="true"/>
 								</div>
 							</div>
 						</If>
