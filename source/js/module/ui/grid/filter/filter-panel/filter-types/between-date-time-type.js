@@ -12,31 +12,41 @@ const FilterBetweenDateTimeType = React.createClass({
 	getInitialState: function() {
 		return {values:null};
 	},
-	onChangeFrom:function(value){
+	getValueFrom: function() {
 		const 	model = this.props.filterField,
 				badge = model.getBadge(),
-				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '',
+				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '';
+
+		return valueTo;
+	},
+	onChangeFrom:function(value){
+		const 	model = this.props.filterField,
+				valueTo = this.getValueFrom(),
 				values = [value, valueTo];
 
 		this.setState({values:values});
 
 		model.onChange(values);
 	},
-	onChangeTo:function(value){
+	getValueTo: function(){
 		const 	model = this.props.filterField,
-			badge = model.getBadge(),
-			valueFrom = badge && badge.values && badge.values.length > 0 ? badge.values[0] : '',
-			values = [valueFrom, value];
+				badge = model.getBadge(),
+				valueFrom = badge && badge.values && badge.values.length > 0 ? badge.values[0] : '';
+
+		return valueFrom;
+	},
+	onChangeTo:function(value){
+		const model = this.props.filterField,
+				valueFrom = this.getValueTo(),
+				values = [valueFrom, value];
 
 		this.setState({values:values});
 
 		model.onChange(values);
 	},
 	render: function() {
-		const 	model = this.props.filterField,
-				badge = model.getBadge(),
-				valueFrom = badge && badge.values && badge.values.length > 0 ? badge.values[0] : '',
-				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '';
+		const valueFrom = this.getValueTo(),
+				valueTo = this.getValueFrom();
 
 		return (
 			<div className="eBetweenDateTime">

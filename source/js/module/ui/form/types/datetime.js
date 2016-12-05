@@ -2,7 +2,9 @@ const 	MaskedInput = require('module/ui/masked_input'),
 		DateHelper 	= require('module/helpers/date_helper'),
 		React 		= require('react');
 
-const MaskedDateTime =  React.createClass({
+const MASKED_INPUT_DATETIME = '__.__.____ __:__';
+
+const MaskedDateTime =  React.createClass({	
 	propTypes: {
 		value:			React.PropTypes.string,
 		defaultValue:	React.PropTypes.string,
@@ -21,17 +23,13 @@ const MaskedDateTime =  React.createClass({
 		};
 	},
 	componentWillMount: function() {
-		const self = this;
-
-		self.setDateTime(self.props.value);
+		this.setDateTime(this.props.value);
 	},
 	componentWillReceiveProps:function(nextProps){
-		const self = this;
-
-		if(self.props.defaultValue !== nextProps.defaultValue)
-			self.setDefaultValue(nextProps);
-		if(self.props.value !== nextProps.value){
-			self.setDateTime(nextProps.value);
+		if(this.props.defaultValue !== nextProps.defaultValue)
+			this.setDefaultValue(nextProps);
+		if(this.props.value !== nextProps.value){
+			this.setDateTime(nextProps.value);
 		}
 	},
 	setDefaultValue: function(nextProps) {
@@ -55,33 +53,30 @@ const MaskedDateTime =  React.createClass({
 	},	
 
 	handleBlur: function(e) {
-		const self = this;
 		let value = e.target.value;
 
-    if(!value || value==='__.__.____ __:__'){
-			value = self.setDefaultValue();
+    if(!value || value === MASKED_INPUT_DATETIME){
+			value = this.setDefaultValue();
 			this.setState({dateTime:value});
 		}
-		self.props.onBlur && self.props.onBlur(this.toIsoDateTime(value));
+		this.props.onBlur && this.props.onBlur(this.toIsoDateTime(value));
         e.stopPropagation();
 	},
 	handleChange: function(e) {
-		const self = this,
-			inputValue = e.target.value;
+		const inputValue = e.target.value;
 
 		this.setState({dateTime:inputValue});
 
-		self.props.onChange && self.props.onChange(this.toIsoDateTime(inputValue));
+		this.props.onChange && this.props.onChange(this.toIsoDateTime(inputValue));
 
         e.stopPropagation();
 	},
 	render: function () {
-        const self = this,
-			dateTime = self.state.dateTime;
+        const dateTime = this.state.dateTime;
 
 		return (
             <MaskedInput title="Format date-time dd.mm.yyyy hh:mm" value={dateTime} className="eDateTimeInput"
-                         onBlur={self.handleBlur} onChange={self.handleChange} mask="99.99.9999 99:99" />
+                         onBlur={this.handleBlur} onChange={this.handleChange} mask="99.99.9999 99:99" />
 		)
 	}
 });

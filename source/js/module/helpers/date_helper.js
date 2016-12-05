@@ -128,13 +128,13 @@ const DateHelper = {
 					valueArray 	= value.split(' '),
 					dateArray 	= valueArray[0].split('-'),
 					timeArray 	= valueArray[1].split(':'),
-					minutes 		= timeArray[1],
-					hour 				= timeArray[0],
+					minutes 		= +timeArray[1], 
+					hour 				= +timeArray[0], //because hours and minutes maybe equal 0 and this no error
 					day 				= dateArray[2],
 					month 			= dateArray[1],
 					year 				= dateArray[0];			
-
-			result = date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == day && date.getHours() == hour && date.getMinutes() == minutes;
+			//getUTC return month and day starting 0, so we decrease month and day by 1
+			result = date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == (day - 1) && date.getHours() == hour && date.getMinutes() == minutes;
 		}
 
 		return result;
