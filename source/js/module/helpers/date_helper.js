@@ -47,9 +47,21 @@ const DateHelper = {
 		return `${date}, ${time}`;
 	},
 
+	getDateShortTimeString: function(dateTime){
+		const 	date = this.getDateStringFromDateObject(dateTime),
+				time = this.getShortTimeStringFromDateObject(dateTime);
+
+		return `${date} ${time}`;
+	},
+
 	/** convert date from UTC-string to 'dd.mm.yyyy' format */
 	toLocal:function(str){
 		return this.getDateStringFromDateObject(new Date(str));
+	},
+
+	/** convert date time from UTC-string to 'dd.mm.yyyy hh:mm' format */
+	toLocalDateTime:function(str){
+		return this.getDateShortTimeString(new Date(str));
 	},
 
 	// TODO rename it to getDateStringFromUTCDateString
@@ -81,6 +93,16 @@ const DateHelper = {
 		return isoStr;
 	},
 
+	toIsoDateTime: function(dotString) {
+		const dateTimeParts = dotString ? dotString.split(' '):[],
+				dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
+				timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
+
+				//ISO format date, time for locales == 'en-GB', format == 'yyyy-mm-dd hh:mm'
+				isoStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0] + ' ' + timeParts[0] + ':' + timeParts[1];
+		return isoStr;
+	},
+
 	/** validation date ISO-format or 'yyyy-mm-dd' */
 	isValid:function(value){
 		let result = false;
@@ -93,6 +115,26 @@ const DateHelper = {
 					year = valueArray[0];
 
 			result = date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == day;
+		}
+
+		return result;
+	},
+
+		isValidDateTime:function(value){
+		let result = false;
+		
+		if(Date.parse(value)){						
+			const 	date 		= new Date(value),
+					valueArray 	= value.split(' '),
+					dateArray 	= valueArray[0].split('-'),
+					timeArray 	= valueArray[1].split(':'),
+					minutes 		= timeArray[1],
+					hour 				= timeArray[0],
+					day 				= dateArray[2],
+					month 			= dateArray[1],
+					year 				= dateArray[0];			
+
+			result = date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == day && date.getHours() == hour && date.getMinutes() == minutes;
 		}
 
 		return result;

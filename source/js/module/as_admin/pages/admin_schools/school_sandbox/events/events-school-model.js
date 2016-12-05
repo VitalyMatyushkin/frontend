@@ -156,7 +156,7 @@ EventsSchoolModel.prototype.setColumns = function(){
                 }
             },
             filter:{
-                type:'between-date'
+                type:'between-date-time'
             }
         },
         {
