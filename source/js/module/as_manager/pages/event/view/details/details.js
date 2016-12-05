@@ -82,7 +82,7 @@ const Details = React.createClass({
 					<div className="eDetails_columnContent mGrayBackground  mWithoutPadding">
 						<div className="eDetails_editButtonWrapper">
 							<If condition={!this.props.isParent}>
-								<div className="eDetails_editButton"
+								<div className="bButton mCircle"
 									 onClick={this.handleClickEditButton}
 									>
 									<i className="fa fa-pencil" aria-hidden="true"></i>

@@ -5,11 +5,6 @@
   margin: 30px auto 50px;
 }
 
-.eEventContainer_buttons {
-  display: flex;
-  justify-content: center;
-}
-
 .bEvent {
   display: flex;
   flex-direction: column;
@@ -18,16 +13,6 @@
 
 .bEventBottomContainer {
   @extend .container;
-}
-
-.eEvent_points {
-  margin-top: 15px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  color: $blueColor;
-  font-size: 25px;
 }
 
 .eEvent_commentText {
@@ -160,7 +145,7 @@
     padding-left: 65px;
   }
 }
-.bBlogMain .bEventHeader {
+/*.bBlogMain .bEventHeader {
   border: none;
   background: transparent;
   color: $COLOR;
@@ -176,7 +161,7 @@
 .bBlogMain .eEventHeader_field.mName,
 .bBlogMain .eEventHeader_field.mSport {
   display: none;
-}
+}*/
 .eComment_notification {
   background: #c8cdd0;
   padding: 2px;
@@ -230,7 +215,7 @@
   height: 40px;
   margin: auto;
 }
-.bMainComment {
+/*.bMainComment {
   display: flex;
   align-items: center;
 }
@@ -244,7 +229,7 @@
   max-width: 55px;
   max-height: 55px;
   border-radius: 50%;
-}
+}*/
 .eEvent_commentBox textarea {
   display: inline-block;
   padding: 10px;
@@ -312,22 +297,14 @@
   }
 }
 
-.bEvent .bMapView{
-  margin: 20px auto 0;
-  width: 940px;
-  height: 300px;
-}
-
 .mIndividualScoreAvailable{
   &.eForm_field{
+    @include make-md-column(5);
     margin: 10px 0;
-    width: 430px;
-    float: left;
 
-    &.mRight{
-      margin-left: 60px;
+    &.mLeft {
+      @include make-md-column-offset(1);
     }
-
     .eForm_fieldName{
       width: 200px;
     }
@@ -340,5 +317,21 @@
   text-align: center;
 }
 
+.bEventMap {
+  @extend .container;
+  padding-top: 15px;
 
+  &_row {
+    @include make-row()
+  }
 
+  &_col {
+    @include make-md-column-offset(1);
+    @include make-md-column(10)
+  }
+
+  .bMapView{
+    height: 300px;
+  }
+
+}
