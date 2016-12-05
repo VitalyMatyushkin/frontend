@@ -38,11 +38,11 @@ const EventManager = React.createClass({
 			model: {
 				name:			'',
 				startTime:		currentDate,
-				type:			undefined,
 				sportId:		undefined,
 				gender:			undefined,
 				ages:			[],
-				description:	''
+				description:	'',
+				type:			'inter-schools'
 			},
 			selectedRivalIndex: null,
 			schoolInfo: {},
@@ -54,7 +54,7 @@ const EventManager = React.createClass({
 				houses: [],
 				internal: []
 			},
-			rivals: [{id: activeSchoolId}],
+			rivals: [],
 			players: [[],[]],
 			error: [
 				{
@@ -95,6 +95,7 @@ const EventManager = React.createClass({
 				binding
 					.atomically()
 					.set('schoolInfo',		Immutable.fromJS(schoolData))
+					.set('rivals',			Immutable.fromJS([schoolData]))
 					.set('availableAges',	Immutable.fromJS(ages))
 					.set('isSync',			Immutable.fromJS(true))
 					.commit();
@@ -335,19 +336,11 @@ const EventManager = React.createClass({
 
 		const modelVenue = binding.toJS('model.venue');
 		body.venue = {
-			venueType: self.convertVenueTypeToServerValue(modelVenue.venueType)
+			venueType: modelVenue.venueType
 		};
-		modelVenue.postcode && (body.venue.postcodeId = modelVenue.postcode);
-	},
-	convertVenueTypeToServerValue: function(venueType) {
-		const map = {
-			'tbd':		"TBD",
-			'away':		"AWAY",
-			'custom':	"CUSTOM",
-			'home':		"HOME"
-		};
-
-		return map[venueType];
+		if(modelVenue.postcode.id !== 'TBD') {
+			body.venue.postcodeId = modelVenue.postcode.id;
+		}
 	},
 	/**
 	 * Actions that do after fully event creation

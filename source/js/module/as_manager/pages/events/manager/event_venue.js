@@ -1,297 +1,254 @@
-const   React               = require('react'),
-        Map                 = require('module/ui/map/map'),
-        Autocomplete        = require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-        Immutable           = require('immutable'),
-        Morearty		    = require('morearty'),
-        If                  = require('module/ui/if/if'),
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
 
-        InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
-        InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
-        TextInputStyles		= require('./../../../../../../styles/ui/b_text_input.scss'),
-        DropdownStyles		= require('./../../../../../../styles/ui/b_dropdown.scss');
+		Promise				= require('bluebird'),
+		Map					= require('module/ui/map/map'),
+		Autocomplete		= require('../../../../../../js/module/ui/autocomplete2/OldAutocompleteWrapper'),
+
+		InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
+		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
+		TextInputStyles		= require('./../../../../../../styles/ui/b_text_input.scss'),
+		DropdownStyles		= require('./../../../../../../styles/ui/b_dropdown.scss');
 
 const EventVenue = React.createClass({
-    displayName:            'EventVenue',
-    mixins:                 [Morearty.Mixin],
-    DEFAULT_VENUE_POINT:    { "lat": 50.832949, "lng": -0.246722 },
-    componentWillMount:function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+	mixins: [Morearty.Mixin],
 
-        self._initData(binding.toJS('model.type'));
+	DEFAULT_VENUE_POINT: { "lat": 50.832949, "lng": -0.246722 },
 
-        // Listen changes of event type.
-        // This component doesn't contain eventType field,
-        // so we should listen changes of this field.
-        // Because view of this component depends of eventType.
-        binding.addListener('model.type', self._onChangeEventType);
-    },
-    /*HELPERS*/
+	componentWillMount: function() {
+		const binding = this.getDefaultBinding();
+
+		// It's auto generated key for postcode input.
+		// It exists because we must have opportunity to reset state of this component by hand.
+		binding.set('postcodeInputKey', Immutable.fromJS(this.generatePostcodeInputKey()));
+
+		// Listen changes of event type.
+		// This component doesn't contain eventType field,
+		// so we should listen changes of this field.
+		// Because view of this component depends of eventType.
+		this.getDefaultBinding().addListener('model.type', this.clearVenueData);
+	},
+	generatePostcodeInputKey: function() {
+		// just current date in timestamp view
+		return + new Date();
+	},
 	/**
-     * Init venue type and postcode by event type.
-     * @private
-     */
-    _initData: function(eventType) {
-        const self = this;
+	 * Clear all venue data:
+	 * 1) venue type
+	 * 2) venue postcode
+	 *
+	 * And generate new key for postcode input. By this operation we can reload state of postcode input
+	 */
+	clearVenueData: function() {
+		this.getDefaultBinding().atomically()
+			.set('postcodeInputKey',	Immutable.fromJS(this.generatePostcodeInputKey()))
+			.set('model.venue',			Immutable.fromJS({}))
+			.commit();
+	},
+	/**
+	 * Get home school postcode
+	 * @returns {*}
+	 * @private
+	 */
+	getHomeSchoolPostCode: function() {
+		const binding = this.getDefaultBinding();
 
-        self._initVenueType(eventType);
-        self._initPostCode(eventType);
-    },
-    _initVenueType: function(eventType) {
-        const   self = this,
-            binding = self.getDefaultBinding(),
-			value = binding.toJS('radio');
+		const postcode = binding.toJS('schoolInfo.postcode');
+		postcode.tooltip = '(your school)';
 
-		if(!value)
-			switch (eventType) {
-				case 'inter-schools':
-					binding.atomically()
-						.set('radio',                   Immutable.fromJS('home'))
-						.set('model.venue.venueType',   Immutable.fromJS('home'))
-						.commit();
-					break;
-				default:
-					binding.atomically()
-						.set('radio',                   Immutable.fromJS(undefined))
-						.set('model.venue.venueType',   Immutable.fromJS('home'))
-						.commit();
-					break;
-			}
-    },
-    _initPostCode: function() {
-        const   self = this,
-                binding = self.getDefaultBinding(),
-				value = binding.toJS('venue'),
-				postcode = self._getHomeSchoolPostCode();
+		return postcode;
+	},
+	/**
+	 * Get home school postcode
+	 * @returns {*}
+	 * @private
+	 */
+	getOpponentSchoolPostCode: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
-        if(!value && postcode) {
-			binding.atomically()
-				.set('venue',                Immutable.fromJS(postcode))
-				.set('model.venue.postcode', Immutable.fromJS(postcode.id))
-				.commit();
+		const postcode = binding.toJS('rivals.1.postcode');
+		typeof postcode !== 'undefined' && (postcode.tooltip = '(opponent school)');
+
+		return postcode;
+	},
+	getTBDPostcode: function() {
+		return {
+			id			: "TBD",
+			postcode	: "TBD"
+		};
+	},
+	getResultForEmptySearchString: function() {
+		const	binding		= this.getDefaultBinding(),
+				gameType	= binding.toJS('model.type');
+
+		const promises = [this.getHomeSchoolPostCode()];
+		if(gameType === 'inter-schools') {
+			promises.push(this.getOpponentSchoolPostCode());
 		}
-    },
-    /**
-     * Function set default postcode by venue type.
-     * Summary, function set postcode and venue type to binding.
-     * @param venueType
-     * @private
-     */
-    _setPostCodeAndVenueType: function(venueType) {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+		promises.push(this.getTBDPostcode());
 
-        const postcode = self._getPostCodeByVenueType(venueType);
+		return Promise.resolve(promises);
+	},
+	getResultForNotEmptySearchString: function(postcode) {
+		const	binding		= this.getDefaultBinding(),
+				gameType	= binding.toJS('model.type');
 
-        if(postcode) {
-            binding.atomically()
-                .set('radio',                   Immutable.fromJS(venueType))
-                .set('venue',                   Immutable.fromJS(postcode))
-                .set('model.venue.postcode',    Immutable.fromJS(postcode.id))
-                .set('model.venue.venueType',   Immutable.fromJS(venueType))
-                .commit();
-        } else {
-            binding.atomically()
-                .set('radio',                   Immutable.fromJS(venueType))
-                .set('venue',                   Immutable.fromJS(undefined))
-                .set('model.venue.postcode',    Immutable.fromJS(undefined))
-                .set('model.venue.venueType',   Immutable.fromJS(venueType))
-                .commit();
-        }
-    },
-    _getPostCodeByVenueType: function(venueType) {
-        const   self = this;
+		const	homePostcode	= this.getHomeSchoolPostCode(),
+				tbd				= {id:"TBD",postcode:"TBD"};
 
-        let postcode;
+		const postCodeFilter = {
+			where: {
+				postcode: {
+					like	: postcode,
+					options	: 'i'
+				}
+			},
+			limit: 10
+		};
 
-        switch (venueType) {
-            case 'tbd':
-                postcode = undefined;
-                break;
-            case 'home':
-                postcode = self._getHomeSchoolPostCode();
-                break;
-            case 'away':
-                postcode = self._getOpponentSchoolPostCode();
-                break;
-            case 'custom':
-                postcode = self._getHomeSchoolPostCode();
-                break;
-            default:
-                postcode = undefined;
-                break;
-        }
+		return window.Server.postCodes.get({ filter: postCodeFilter }).then(postcodes => {
+			// away
+			if(gameType === 'inter-schools') {
+				const	awayPostcode	= this.getOpponentSchoolPostCode(),
+						foundAwayPostcodeIndex = postcodes.findIndex(p => p.id === awayPostcode.id);
 
-        return postcode;
-    },
-    _isShowVenueTypeRadioButtons: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+				if(foundAwayPostcodeIndex !== -1) {
+					postcodes[foundAwayPostcodeIndex].tooltip = '(opponent school)';
+					// Function modify args!!!
+					postcodes = this.upPostcodeToStart(foundAwayPostcodeIndex, postcodes);
+				}
+			}
 
-        return binding.toJS('model.type') === 'inter-schools';
-    },
-    _isShowPostcodeField: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+			// home
+			const homePostcodeIndex = postcodes.findIndex(p => p.id === homePostcode.id);
+			if(homePostcodeIndex !== -1) {
+				postcodes[homePostcodeIndex].tooltip = '(your school)';
+				// Function modify args!!!
+				postcodes = this.upPostcodeToStart(homePostcodeIndex, postcodes);
+			}
 
-        return !(binding.toJS('model.type') === 'inter-schools' && binding.toJS('radio') === 'tbd');
-    },
+			// tbd
+			postcodes.unshift(tbd);
+
+			return postcodes;
+		});
+	},
+	postcodeService: function (postcode) {
+		if(postcode === '') {
+			return this.getResultForEmptySearchString();
+		} else {
+			return this.getResultForNotEmptySearchString(postcode);
+		}
+	},
 	/**
-     * Get home school postcode
-     * @returns {*}
-     * @private
-     */
-    _getHomeSchoolPostCode: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+	 * Function modify args
+	 * @param currentPostcodeIndex
+	 * @param postcodes
+	 * @returns {*}
+	 */
+	upPostcodeToStart: function(currentPostcodeIndex, postcodes) {
+		const postcodeElement = postcodes[currentPostcodeIndex];
 
-        return binding.toJS('schoolInfo.postcode');
-    },
-    /**
-     * Get home school postcode
-     * @returns {*}
-     * @private
-     */
-    _getOpponentSchoolPostCode: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+		postcodes.splice(currentPostcodeIndex, 1);
+		postcodes.unshift(postcodeElement);
 
-        return binding.toJS('rivals.1.postcode');
-    },
-    _postcodeService: function (postcode) {
-        const	postCodeFilter = {
-            where: {
-                postcode: {
-                    like: postcode,
-                    options: 'i'
-                }
-            },
-            limit: 10
-        };
+		return postcodes;
+	},
+	getVenueTypeByPostcode: function(value) {
+		const	homePostcodeId	= this.getHomeSchoolPostCode().id,
+				// away postcode can be undefined, so - check it
+				awayPostcode	= this.getOpponentSchoolPostCode(),
+				awayPostcodeId	= typeof awayPostcode !== 'undefined' ? awayPostcode.id : undefined;
 
-        return window.Server.postCodes.get({ filter: postCodeFilter });
-    },
-    /*LISTENERS*/
-    _onSelectPostcode: function(id, value) {
-        const   self        = this,
-                binding     = self.getDefaultBinding();
 
-        binding.atomically()
-            .set('venue',                Immutable.fromJS(value))
-            .set('model.venue.postcode', Immutable.fromJS(value.id))
-            .commit();
-    },
-    _onVenueTypeChange: function(venueType) {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+		switch (true) {
+			case homePostcodeId === value.id:
+				return 'HOME';
+			case awayPostcodeId === value.id:
+				return 'AWAY';
+			case value.id === "TBD":
+				return 'TBD';
+			default:
+				return 'CUSTOM';
+		}
+	},
+	handleSelectPostcode: function(id, value) {
+		this.getDefaultBinding().atomically()
+			.set('model.venue.venueType',	Immutable.fromJS(this.getVenueTypeByPostcode(value)))
+			.set('model.venue.postcode',	Immutable.fromJS(value))
+			.commit();
+	},
+	handleClickPostcodeInput: function(eventDescriptor) {
+		if(this.isPostcodeInputBlocked()) {
+			window.simpleAlert(
+				'Please, enter opponent school, at first.',
+				'Ok',
+				() => {}
+			);
+			eventDescriptor.stopPropagation();
+		}
+	},
+	/**
+	 * Get geo point for map.
+	 * Return default geo point when postcode isn't selected.
+	 * @returns {*}
+	 */
+	getPoint: function() {
+		const binding = this.getDefaultBinding();
 
-        switch(venueType) {
-            case 'away':
-                if(binding.toJS('rivals.1')) {
-                    self._setPostCodeAndVenueType(venueType);
-                } else  {
-                    window.simpleAlert(
-                        'Please select rival school',
-                        'Ok',
-                        () => {}
-                    );
-                }
-                break;
-            default:
-                self._setPostCodeAndVenueType(venueType);
-                break;
-        }
-    },
-    _onChangeEventType: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
+		const	venueType	= binding.toJS('model.venue.venueType'),
+				venuePoint	= binding.toJS('model.venue.postcode');
 
-        self._initData(binding.toJS('model.type'));
-    },
-    /*RENDER FUNCTIONS*/
-    _renderVenueTypeRadioButton: function(venueTypeRadioButtonValue) {
-        const self = this;
+		switch (true) {
+			case typeof venuePoint === 'undefined':
+				return this.DEFAULT_VENUE_POINT;
+			case typeof venuePoint !== 'undefined' && venueType === "TBD":
+				return this.DEFAULT_VENUE_POINT;
+			case typeof venuePoint !== 'undefined':
+				return venuePoint.point;
+		};
+	},
+	isPostcodeInputBlocked: function() {
+		const binding = this.getDefaultBinding();
 
-        return (
-            <div className="bInputWrapper">
-                <div className="bInputLabel">
-                    Change Venue
-                </div>
+		const	gameType	= binding.toJS('model.type'),
+				secondRival	= binding.toJS('rivals.1'); // opponent school for inter-schools event
 
-                <div className="eVenue_venue_type_radio_buttons_container">
-                    <input type="checkbox"
-                           checked={venueTypeRadioButtonValue === 'tbd'}
-                           onChange={() => self._onVenueTypeChange('tbd')}
-                    />
-                    <label className="eVenue_venue_type_radio_button_label">
-                        TBD
-                    </label>
+		return gameType === 'inter-schools' && typeof secondRival === 'undefined';
+	},
+	render: function() {
+		const binding = this.getDefaultBinding();
 
-                    <input type="checkbox"
-                           checked={venueTypeRadioButtonValue === 'home'}
-                           onChange={() => self._onVenueTypeChange('home')}
-                    />
-                    <label className="eVenue_venue_type_radio_button_label">
-                        Home
-                    </label>
-
-                    <input type="checkbox"
-                           checked={venueTypeRadioButtonValue === 'away'}
-                           onChange={() => self._onVenueTypeChange('away')}
-                    />
-                    <label className="eVenue_venue_type_radio_button_label">
-                        Away
-                    </label>
-
-                    <input type="checkbox"
-                           checked={venueTypeRadioButtonValue === 'custom'}
-                           onChange={() => self._onVenueTypeChange('custom')}
-                    />
-                    <label className="eVenue_venue_type_radio_button_label">
-                        Custom
-                    </label>
-                </div>
-            </div>
-        );
-    },
-    render: function() {
-        const   self    = this,
-                binding = self.getDefaultBinding();
-
-        const   venueType   = binding.toJS('radio'),
-                venuePoint  = binding.toJS('venue'),
-                point       = venuePoint ? venuePoint.point : self.DEFAULT_VENUE_POINT;
-
-        return (
-            <div>
-                <If condition={self._isShowVenueTypeRadioButtons()}>
-                    {self._renderVenueTypeRadioButton(venueType)}
-                </If>
-                <If condition={self._isShowPostcodeField()}>
-                    <div className="bInputWrapper">
-                        <div className="bInputLabel">
-							Change Postcode
-						</div>
-                        <Autocomplete
-                            serverField     ="postcode"
-                            defaultItem     ={binding.toJS('venue')}
-                            binding         ={binding.sub('postcode')}
-                            serviceFilter	={self._postcodeService}
-                            onSelect		={self._onSelectPostcode}
-                            placeholder		={'Select Postcode'}
-                            extraCssStyle	= {'mBigSize'}
-                        />
-                    </div>
-                </If>
-                <If condition={venueType !== 'tbd'}>
-                    <Map binding={binding}
-                         point={point}
-                         customStylingClass="eEvents_venue_map"
-                    />
-                </If>
-            </div>
-        );
-    }
+		// Note. Pls look at Autocomplete component.
+		// You can see generated key.
+		// We must have opportunity to reset state of this component by hand.
+		return (
+			<div>
+				<div	className	= "bInputWrapper"
+						onClick		= {this.handleClickPostcodeInput}
+				>
+					<div className="bInputLabel">
+						Postcode
+					</div>
+					<Autocomplete	key				= {binding.toJS('postcodeInputKey')}
+									serverField		= "postcode"
+									binding			= {binding}
+									serviceFilter	= {this.postcodeService}
+									onSelect		= {this.handleSelectPostcode}
+									placeholder		= {'Select Postcode'}
+									isBlocked		= {this.isPostcodeInputBlocked()}
+									extraCssStyle	= {'mBigSize'}
+					/>
+				</div>
+				<Map	binding				= {binding}
+						point				= {this.getPoint()}
+						customStylingClass	= "eEvents_venue_map"
+				/>
+			</div>
+		);
+	}
 });
 
 module.exports = EventVenue;
