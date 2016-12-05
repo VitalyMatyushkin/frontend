@@ -2,6 +2,7 @@ const	Form			= require('module/ui/form/form'),
 		FormColumn 		= require('module/ui/form/form_column'),
 		FormField		= require('module/ui/form/form_field'),
 		React			= require('react'),
+		Promise 		= require('bluebird'),
 		Morearty        = require('morearty'),
 		Immutable		= require('immutable');
 
@@ -34,6 +35,22 @@ const GeneralSettingsPage = React.createClass({
 			}
 		});
 	},
+	
+	getGender: function () {
+		const gendersArray = [
+			{
+				value: 'Male',
+				id: 'MALE'
+			},
+			{
+				value: 'Female',
+				id: 'FEMALE'
+			}
+		];
+
+		return Promise.resolve(gendersArray);
+	},
+
 	render: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -52,6 +69,7 @@ const GeneralSettingsPage = React.createClass({
 					<h3>SUMMARY</h3>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
+						<FormField type="radio" field="gender" sourcePromise={this.getGender}>Gender</FormField>
 						<FormField type="date" field="birthday" validation="birthday" >Date of birth</FormField>
 						<h3 className="mHigh">VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email" isDisabled={true}>Email</FormField>
