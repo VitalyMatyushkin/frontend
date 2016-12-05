@@ -1,11 +1,11 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable'),
 
-		RadioButton		= require('../../../../../../ui/radio_button/radio_button'),
-		ControlPanel	= require('../../../../../../ui/control_panel/control_panel'),
+		RadioButtonCustom	= require('../../../../../../ui/radio_button_custom/radio_button_custom'),
+		ControlPanel		= require('../../../../../../ui/control_panel/control_panel'),
 
-		EventConsts		= require('../../../../../../helpers/consts/events');
+		EventConsts			= require('../../../../../../helpers/consts/events');
 
 const GenderSelectorWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -144,12 +144,11 @@ const GenderSelectorWrapper = React.createClass({
 	getRadiobuttonArray: function() {
 		return this.getRadioButtonIdArray().map(radiobuttonId => {
 			return (
-				<RadioButton	id			= { radiobuttonId }
-								isChecked	= { this.isCheckedById(radiobuttonId) }
-								isDisabled	= { this.isDisabledById(radiobuttonId) }
-								text		= { this.getTextById(radiobuttonId) }
-								onClick		= { this.handleClick.bind(null, radiobuttonId) }
-								customCSS	= "mGenderSelector"
+				<RadioButtonCustom	isChecked	= { this.isCheckedById(radiobuttonId) }
+									isDisabled	= { this.isDisabledById(radiobuttonId) }
+									text		= { this.getTextById(radiobuttonId) }
+									onClick		= { this.handleClick.bind(null, radiobuttonId) }
+									customCSS	= "mGenderSelector"
 				/>
 			);
 		});

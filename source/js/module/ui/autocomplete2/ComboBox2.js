@@ -30,16 +30,22 @@ const ComboBox2 = React.createClass({
          * @param id      - element id from search result
          * @param element - element from search result
          */
-        onSelect:          React.PropTypes.func,
-        onEscapeSelection: React.PropTypes.func,
+        onSelect:           React.PropTypes.func,
+        onEscapeSelection:  React.PropTypes.func,
         /**
          * Function return element representaition in combobox list.
          * @param element - element from search result.
          * @returns text element representation
          */
-        getElementTitle:   React.PropTypes.func.isRequired,
-        clearAfterSelect:  React.PropTypes.bool,
-        extraCssStyle:     React.PropTypes.string
+        getElementTitle:    React.PropTypes.func.isRequired,
+        getElementTooltip:  React.PropTypes.func,
+        clearAfterSelect:   React.PropTypes.bool,
+        extraCssStyle:      React.PropTypes.string,
+		/**
+         * Combobox doesn't react on click if true.
+         * False by default.
+         */
+        isBlocked:          React.PropTypes.bool
     },
     getInitialState: function(){
         return {
@@ -48,8 +54,14 @@ const ComboBox2 = React.createClass({
             isOpen:              false,
             prevText:            '',
             currentText:         undefined,
+            currentTooltip:      undefined,
             currentIndex:        undefined,
             currentAsyncRequest: undefined
+        };
+    },
+    getDefaultProps: function(){
+        return {
+            isBlocked: false
         };
     },
     /** Checks on mount if we need to set default item */
@@ -189,9 +201,10 @@ const ComboBox2 = React.createClass({
             });
         } else {
             self.setState({
-                dataList:     [],
-                currentIndex: undefined,
-                currentText:  self.props.getElementTitle(self.state.dataList[index])
+                dataList        : [],
+                currentIndex    : undefined,
+                currentText     : self.props.getElementTitle(self.state.dataList[index]),
+                currentTooltip  : self.props.getElementTooltip(self.state.dataList[index])
             });
         }
 
@@ -211,8 +224,10 @@ const ComboBox2 = React.createClass({
     /**
      * Handles left mouse button click on text input
      */
-    onInputClick: function(){
-        this.search(this.getCurrentText());
+    onInputClick: function() {
+        if(!this.props.isBlocked) {
+            this.search(this.getCurrentText());
+        }
     },
     /**
      * Handles left mouse button click on triangle button
@@ -220,7 +235,7 @@ const ComboBox2 = React.createClass({
     onTriangleClick: function(){
         const self = this;
 
-        if(!self.state.isOpen) {
+        if(!this.props.isBlocked && !self.state.isOpen) {
             self.refs.input.focus();
             self.refs.input.click();
         }
@@ -300,6 +315,12 @@ const ComboBox2 = React.createClass({
             );
         }
     },
+    getMenuItemText: function(currentMenuItem) {
+        const   title   = this.props.getElementTitle(currentMenuItem),
+                tooltip = typeof this.props.getElementTooltip !== 'undefined' ? this.props.getElementTooltip(currentMenuItem) : '';
+
+        return `${title}${tooltip}`;
+    },
     renderMenuItem: function(data){
         const self = this;
         let cssStyle = 'eCombobox_option';
@@ -313,7 +334,7 @@ const ComboBox2 = React.createClass({
         const key = data.id ? data.id : self.props.getElementTitle(data);
         return (
             <div key={key} className={cssStyle} onMouseDown={self.onListItemClick.bind(self, index)}>
-                {self.props.getElementTitle(data)}
+                {this.getMenuItemText(data)}
             </div>
         );
     },
@@ -346,10 +367,18 @@ const ComboBox2 = React.createClass({
 
         return "eCombobox_input " + self.getExtraCssStyle();
     },
+    getInputText: function() {
+        if(this.state.isOpen) {
+            return this.getCurrentText();
+        } else {
+            const tooltip = typeof this.state.currentTooltip !== 'undefined' ? this.state.currentTooltip : '';
+            return this.getCurrentText() + tooltip;
+        }
+    },
     render: function(){
         const   self        = this,
                 placeholder = self.getPlaceHolder(),
-                value       = self.getCurrentText(),
+                value       = self.getInputText(),
                 isOpenCN    = self.state.isOpen === true ? 'mOpen' : '';
 
         const hintStyle = {
