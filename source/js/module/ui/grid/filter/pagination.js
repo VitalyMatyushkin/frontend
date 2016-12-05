@@ -9,6 +9,12 @@ const Pagination = React.createClass({
 	propTypes: {
 		model: 	React.PropTypes.object.isRequired
 	},
+	onScrollUp:function () {
+		window.scrollTo(0, 0);
+	},
+	onScroll:function (e) {
+		console.log(e.target.scrollTop);
+	},
 	render: function() {
 		const model = this.props.model,
 				classes = classNames({
@@ -18,9 +24,10 @@ const Pagination = React.createClass({
 				});
 
 		return (
-			<div className={classes}>
+			<div className={classes} onScroll={this.onScroll}>
 				<span className="bButton" onClick={model.nextPage.bind(model)}>More</span>
 				<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>
+				<div className="bButton mUp" onClick={this.onScrollUp}>Up ↑</div>
 			</div>
 		);
 	}
