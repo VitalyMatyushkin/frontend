@@ -312,12 +312,6 @@
   }
 }
 
-.bEvent .bMapView{
-  margin: 20px auto 0;
-  width: 940px;
-  height: 300px;
-}
-
 .mIndividualScoreAvailable{
   &.eForm_field{
     margin: 10px 0;
@@ -340,5 +334,22 @@
   text-align: center;
 }
 
+.bEventMap {
+  @extend .container;
+  padding-top: 15px;
 
+  &_row {
+    @include make-row()
+  }
+
+  &_col {
+    @include make-md-column-offset(1);
+    @include make-md-column(10)
+  }
+
+  .bMapView{
+    height: 300px;
+  }
+
+}
 

@@ -282,10 +282,10 @@ const EventPage = React.createClass({
 							<div className="bEventMiddleSideContainer">
 								<div className="bEditButtonWrapper">
 									<If condition={TeamHelper.isShowEditEventButton(self)}>
-										<div	className	= "bEditButton"
+										<div	className	= "bButton mCircle"
 												onClick		= {self.handleClickChangeTeamsButtons}
 										>
-											<SVG icon="icon_edit"/>
+											<i className="fa fa-pencil" aria-hidden="true"/>
 										</div>
 									</If>
 								</div>
@@ -296,7 +296,14 @@ const EventPage = React.createClass({
 														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
-							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
+
+							<div className="bEventMap">
+								<div className="bEventMap_row">
+									<div className="bEventMap_col">
+										<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')}/>
+									</div>
+								</div>
+							</div>
 							<div className="bEventMiddleSideContainer mFullWidth">
 								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 							</div>

@@ -32,25 +32,6 @@
   padding: 0px 80px 50px 50px;
 }
 
-.eDetails_editButton {
-  width: 50px;
-  height: 50px;
-  padding: 12px 15px;
-
-  background: #ffffff;
-  border: $mainBorder;
-  border-radius: 50%;
-
-  color: $GrayText;
-  cursor: pointer;
-  font-weight: bold;
-  font-size: 22px;
-
-  &:hover {
-    background: $secondBackgroundColor;
-  }
-}
-
 .eDetails_editButtonWrapper {
   display: flex;
   flex-direction: row-reverse;
