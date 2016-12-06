@@ -12,7 +12,7 @@ const FilterBetweenDateTimeType = React.createClass({
 	getInitialState: function() {
 		return {values:null};
 	},
-	getValueFrom: function() {
+	getValueTo: function() {
 		const 	model = this.props.filterField,
 				badge = model.getBadge(),
 				valueTo = badge && badge.values && badge.values.length === 2 ? badge.values[1] : '';
@@ -21,14 +21,14 @@ const FilterBetweenDateTimeType = React.createClass({
 	},
 	onChangeFrom:function(value){
 		const 	model = this.props.filterField,
-				valueTo = this.getValueFrom(),
+				valueTo = this.getValueTo(),
 				values = [value, valueTo];
 
 		this.setState({values:values});
 
 		model.onChange(values);
 	},
-	getValueTo: function(){
+	getValueFrom: function(){
 		const 	model = this.props.filterField,
 				badge = model.getBadge(),
 				valueFrom = badge && badge.values && badge.values.length > 0 ? badge.values[0] : '';
@@ -37,7 +37,7 @@ const FilterBetweenDateTimeType = React.createClass({
 	},
 	onChangeTo:function(value){
 		const model = this.props.filterField,
-				valueFrom = this.getValueTo(),
+				valueFrom = this.getValueFrom(),
 				values = [valueFrom, value];
 
 		this.setState({values:values});
@@ -45,8 +45,8 @@ const FilterBetweenDateTimeType = React.createClass({
 		model.onChange(values);
 	},
 	render: function() {
-		const valueFrom = this.getValueTo(),
-				valueTo = this.getValueFrom();
+		const valueFrom = this.getValueFrom(),
+				valueTo = this.getValueTo();
 
 		return (
 			<div className="eBetweenDateTime">
