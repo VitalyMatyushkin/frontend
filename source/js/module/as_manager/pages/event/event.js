@@ -298,7 +298,6 @@ const EventPage = React.createClass({
 								</div>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
-
 							<div className="bEventMap">
 								<div className="bEventMap_row">
 									<div className="bEventMap_col">
