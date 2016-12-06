@@ -13,7 +13,7 @@ const UserViewSummary = React.createClass({
           case 'FEMALE':
               return 'Female';
           default:
-              return '';
+              return 'Not defined';
       }
   },
 

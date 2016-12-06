@@ -6,6 +6,8 @@ const	Form			= require('module/ui/form/form'),
 		Morearty        = require('morearty'),
 		Immutable		= require('immutable');
 
+const USER = require('module/helpers/consts/user');
+
 const GeneralSettingsPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
@@ -39,16 +41,19 @@ const GeneralSettingsPage = React.createClass({
 	getGender: function () {
 		const gendersArray = [
 			{
-				value: 'Male',
-				id: 'MALE'
+				text: 'Male',
+				value: USER.GENDER.MALE
 			},
 			{
-				value: 'Female',
-				id: 'FEMALE'
+				text: 'Female',
+				value: USER.GENDER.FEMALE
+			},
+			{
+				text: 'Not defined',
+				value: USER.GENDER.NOT_DEFINED
 			}
 		];
-
-		return Promise.resolve(gendersArray);
+		return gendersArray;
 	},
 
 	render: function() {
@@ -69,7 +74,7 @@ const GeneralSettingsPage = React.createClass({
 					<h3>SUMMARY</h3>
 						<FormField type="text" field="firstName" validation="required alphanumeric">Name</FormField>
 						<FormField type="text" field="lastName" validation="required alphanumeric">Surname</FormField>
-						<FormField type="radio" field="gender" sourcePromise={this.getGender}>Gender</FormField>
+						<FormField type="dropdown" field="gender" options={self.getGender()}>Gender</FormField>
 						<FormField type="date" field="birthday" validation="birthday" >Date of birth</FormField>
 						<h3 className="mHigh">VERIFICATION INFORMATION</h3>
 						<FormField type="text" field="email" validation="required email" isDisabled={true}>Email</FormField>
