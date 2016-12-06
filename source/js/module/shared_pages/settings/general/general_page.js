@@ -2,7 +2,6 @@ const	Form			= require('module/ui/form/form'),
 		FormColumn 		= require('module/ui/form/form_column'),
 		FormField		= require('module/ui/form/form_field'),
 		React			= require('react'),
-		Promise 		= require('bluebird'),
 		Morearty        = require('morearty'),
 		Immutable		= require('immutable');
 
