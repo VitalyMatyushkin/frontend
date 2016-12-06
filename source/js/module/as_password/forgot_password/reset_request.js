@@ -12,11 +12,11 @@ const PasswordResetRequestForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount:function(){
 		const self = this;
-		self.tmpFormName = "Forgot password";
+		self.tmpFormName = "Please enter the email address you used </br> to create the account.";
 	},
 	onSuccess:function(){
 		window.simpleAlert(
-			'The request to change the password was sent by email.',
+			'Please check your email inbox, and click the link in the email you received to reset your password.',
 			'Ok',
 			() => {window.location.href = domainHelper.getLoginUrl();}
 		);
