@@ -420,7 +420,7 @@ const EventManager = React.createClass({
 
 		switch (step) {
 			case 1:
-				isStepComplete = self._isSecondStepIsComplete();
+				isStepComplete = self._isFirstStepIsComplete();
 				break;
 			case 2:
 				if(
@@ -435,25 +435,27 @@ const EventManager = React.createClass({
 
 		return isStepComplete;
 	},
-	_isSecondStepIsComplete: function() {
+	_isFirstStepIsComplete: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
 		return (
-				typeof binding.get('model.startTime')	!== 'undefined' &&
-				binding.get('model.startTime') 			!== null &&
-				binding.get('model.startTime') 			!== '' &&
-				typeof binding.toJS('model.name')		!== 'undefined' &&
-				binding.toJS('model.name')				!== '' &&
-				typeof binding.toJS('model.sportId')	!== 'undefined' &&
-				binding.toJS('model.sportId')			!== '' &&
-				typeof binding.toJS('model.gender')		!== 'undefined' &&
-				binding.toJS('model.gender')			!== '' &&
-				binding.toJS('model.gender')			!== 'not-selected-gender' &&
-				typeof binding.toJS('model.ages')		!== 'undefined' &&
-				binding.toJS('model.ages').length		!== 0 &&
-				typeof binding.toJS('model.type')		!== 'undefined' &&
-				binding.toJS('model.type')				!== '' &&
+				typeof binding.get('model.startTime')			!== 'undefined' &&
+				binding.get('model.startTime') 					!== null &&
+				binding.get('model.startTime') 					!== '' &&
+				typeof binding.toJS('model.name')				!== 'undefined' &&
+				binding.toJS('model.name')						!== '' &&
+				typeof binding.toJS('model.sportId')			!== 'undefined' &&
+				binding.toJS('model.sportId')					!== '' &&
+				typeof binding.toJS('model.gender')				!== 'undefined' &&
+				binding.toJS('model.gender')					!== '' &&
+				binding.toJS('model.gender')					!== 'not-selected-gender' &&
+				typeof binding.toJS('model.ages')				!== 'undefined' &&
+				binding.toJS('model.ages').length				!== 0 &&
+				typeof binding.toJS('model.type')				!== 'undefined' &&
+				binding.toJS('model.type')						!== '' &&
+				typeof binding.toJS('model.venue.postcode')		!== 'undefined' &&
+				typeof binding.toJS('model.venue.postcode.id')	!== 'undefined' &&
 				self.isAllRivalsSelected()
 		);
 	},
