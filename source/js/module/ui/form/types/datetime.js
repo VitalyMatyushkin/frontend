@@ -48,7 +48,7 @@ const MaskedDateTime =  React.createClass({
 		return localeDateTime;
 	},
 	toIsoDateTime:function(localeDateTime){
-		let isoDateTime = DateHelper.toIsoDateTime(localeDateTime);
+		const isoDateTime = DateHelper.toIsoDateTime(localeDateTime);
 		return localeDateTime && (!this.props.validateOn || DateHelper.isValidDateTime(isoDateTime)) ? isoDateTime : '';
 	},	
 
