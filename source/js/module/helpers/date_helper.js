@@ -133,8 +133,8 @@ const DateHelper = {
 					day 				= dateArray[2],
 					month 			= dateArray[1],
 					year 				= dateArray[0];			
-			//getUTC return month and day starting 0, so we decrease month and day by 1
-			result = date.getUTCFullYear() == year && date.getUTCMonth() == (month - 1) && date.getUTCDate() == (day - 1) && date.getHours() == hour && date.getMinutes() == minutes;
+			//getUTC return month starting 0, so we decrease month
+			result = date.getFullYear() == year && date.getMonth() == (month - 1) && date.getDate() == day && date.getHours() == hour && date.getMinutes() == minutes;
 		}
 
 		return result;
