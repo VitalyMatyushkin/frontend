@@ -37,6 +37,9 @@ FilterFieldModel.prototype._setValue = function(value){
 		case 'between-date':
 			res = this._setBetweenDateValue(value);
 			break;
+		case 'between-date-time':
+			res = this._setBetweenDateValue(value);
+			break;
 		case 'multi-select':
 			res = this._setKeyValueArray(value);
 			break;
