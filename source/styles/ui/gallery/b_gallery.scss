@@ -1,4 +1,7 @@
+@import "../../!variables";
 .bGallery {
   position: relative;
   width: 100%;
+
+  border-bottom: $mainBorder;
 }
