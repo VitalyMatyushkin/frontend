@@ -82,9 +82,18 @@ UserActivityModel.prototype.setColumns = function(){
             }
         },
         {
+            text:'IP adress',
+            isSorted:false,
+            cell:{
+                dataField:'httpHeaders.x-real-ip',
+                type:'general'
+            }
+        },
+        {
             text:'Email',
             isSorted:true,
-            cell:{
+            width:'150px',
+            cell:{                
                 dataField:'userEmail',
                 type:'email'
             },
