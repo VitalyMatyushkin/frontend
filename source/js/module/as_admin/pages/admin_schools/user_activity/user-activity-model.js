@@ -37,7 +37,7 @@ UserActivityModel.prototype.getUserName = function(item){
 };
 
 UserActivityModel.prototype.getDateTime = function(item){
-     return DateHelper.getDateTimeString(item.finishedAt);
+     return DateHelper.getDateTimeUTCString(item.finishedAt);
  };
 
 UserActivityModel.prototype.getMethodList = function(){
@@ -82,9 +82,18 @@ UserActivityModel.prototype.setColumns = function(){
             }
         },
         {
+            text:'IP adress',
+            isSorted:false,
+            cell:{
+                dataField:'httpHeaders.x-real-ip',
+                type:'general'
+            }
+        },
+        {
             text:'Email',
             isSorted:true,
-            cell:{
+            width:'150px',
+            cell:{                
                 dataField:'userEmail',
                 type:'email'
             },
@@ -137,7 +146,7 @@ UserActivityModel.prototype.setColumns = function(){
                 }
             },
             filter:{
-                type:'between-date'
+                type:'between-date-time'
             }
         }
     ];
