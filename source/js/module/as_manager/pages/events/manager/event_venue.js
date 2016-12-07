@@ -55,7 +55,7 @@ const EventVenue = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		const postcode = binding.toJS('schoolInfo.postcode');
-		postcode.tooltip = '(your school)';
+		postcode.tooltip = ' (your school)';
 
 		return postcode;
 	},
@@ -69,7 +69,7 @@ const EventVenue = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		const postcode = binding.toJS('rivals.1.postcode');
-		typeof postcode !== 'undefined' && (postcode.tooltip = '(opponent school)');
+		typeof postcode !== 'undefined' && (postcode.tooltip = ' (opponent school)');
 
 		return postcode;
 	},
