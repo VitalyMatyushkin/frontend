@@ -426,7 +426,7 @@ const EventTeamsView = React.createClass({
 		if(self.getBinding('isSync').toJS()) {
 			return (
 				<div className={eventTeamsCss}>
-					<div className="bEventTeams_row">
+					<div className="bEventTeams_row mEqualHeight">
 						<div className="bEventTeams_col mLeft">
 							{self.renderPlayersForLeftSide()}
 						</div>

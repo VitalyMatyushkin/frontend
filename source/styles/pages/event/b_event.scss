@@ -6,8 +6,6 @@
 }
 
 .bEvent {
-  display: flex;
-  flex-direction: column;
   width: 100%;
 }
 
@@ -145,23 +143,7 @@
     padding-left: 65px;
   }
 }
-/*.bBlogMain .bEventHeader {
-  border: none;
-  background: transparent;
-  color: $COLOR;
-  height: auto;
-  margin: 0;
-}
-.bBlogMain .eEventHeader_field.mDate {
-  font-size: 16px
-}
-.bBlogMain .eEventHeader_field {
-  width: auto;
-}
-.bBlogMain .eEventHeader_field.mName,
-.bBlogMain .eEventHeader_field.mSport {
-  display: none;
-}*/
+
 .eComment_notification {
   background: #c8cdd0;
   padding: 2px;

@@ -37,3 +37,11 @@
     text-align: left;
   }
 }
+@media (max-width: $screen-xs-max) {
+  .eEventHeader_field {
+    text-align: center;
+    &.mDate {
+      font-size: 1rem;
+    }
+  }
+}
