@@ -303,9 +303,7 @@ const EventButtons = React.createClass({
 						activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
 
 				if(TeamHelper.isTeamDataCorrect(event, self.getValidationData())) {
-					Actions.changeTeamNames(activeSchoolId, binding)
-						.then(() => Actions.commitChanges(activeSchoolId, binding))
-						.then(() => self.doAfterCommitActions());
+					Actions.submitAllChanges(activeSchoolId, binding).then(() => this.doAfterCommitActions());
 				}
 				break;
 		}

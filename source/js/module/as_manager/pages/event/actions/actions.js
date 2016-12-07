@@ -74,7 +74,7 @@ function isNameTeamChangedByOrder(order, binding) {
 /**
  * Submit team player changes
  */
-function commitChanges(activeSchoolId, binding) {
+function commitPlayersChanges(activeSchoolId, binding) {
 	const event = binding.toJS('model');
 
 	let promises = [];
@@ -204,8 +204,13 @@ function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
 	);
 };
 
-module.exports.changeTeamNames				= changeTeamNames;
-module.exports.isSetTeamLaterByOrder		= isSetTeamLaterByOrder;
-module.exports.isTeamChangedByOrder			= isTeamChangedByOrder;
-module.exports.isNameTeamChangedByOrder		= isNameTeamChangedByOrder;
-module.exports.commitChanges				= commitChanges;
+function submitAllChanges(activeSchoolId, binding) {
+	return changeTeamNames(activeSchoolId, binding).then(() => commitPlayersChanges(activeSchoolId, binding));
+};
+
+module.exports.changeTeamNames			= changeTeamNames;
+module.exports.isSetTeamLaterByOrder	= isSetTeamLaterByOrder;
+module.exports.isTeamChangedByOrder		= isTeamChangedByOrder;
+module.exports.isNameTeamChangedByOrder	= isNameTeamChangedByOrder;
+module.exports.commitPlayersChanges		= commitPlayersChanges;
+module.exports.submitAllChanges			= submitAllChanges;

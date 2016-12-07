@@ -1,10 +1,14 @@
-const	Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
-		React 			= require('react'),
-		Manager			= require('./../../../../ui/managers/manager'),
-		EventHelper		= require('./../../../../helpers/eventHelper'),
-		TeamHelper		= require('./../../../../ui/managers/helpers/team_helper'),
-		MoreartyHelper	= require('./../../../../helpers/morearty_helper');
+const	Morearty					= require('morearty'),
+		Immutable					= require('immutable'),
+		React 						= require('react'),
+		Manager						= require('./../../../../ui/managers/manager'),
+		EventHelper					= require('./../../../../helpers/eventHelper'),
+		TeamHelper					= require('./../../../../ui/managers/helpers/team_helper'),
+		MoreartyHelper				= require('./../../../../helpers/morearty_helper'),
+
+		Actions						= require('../actions/actions'),
+		SavingPlayerChangesPopup	= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
+		SavingEventHelper			= require('../../../../helpers/saving_event_helper');
 
 const ManagerWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -254,14 +258,36 @@ const ManagerWrapper = React.createClass({
 			error:				teamManagerWrapperBinding.sub('default.error')
 		};
 	},
-	render: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+	/**
+	 * Just wrapper.
+	 * @returns {*}
+	 */
+	processSavingChangesMode: function() {
+		const binding = this.getDefaultBinding();
 
-		const managerBinding = self.getManagerBinding();
+		return SavingEventHelper.processSavingChangesMode(
+			this.activeSchoolId,
+			binding.toJS(`rivals`),
+			binding.toJS('model'),
+			binding.toJS(`teamModeView.teamWrapper`)
+		)
+	},
+	handleClickPopupSubmit: function() {
+		const binding = this.getDefaultBinding();
+
+		return Promise.all(this.processSavingChangesMode()).then(() => Actions.submitAllChanges(this.activeSchoolId, binding));
+	},
+	render: function() {
+		const	binding			= this.getDefaultBinding(),
+				managerBinding	= this.getManagerBinding();
 
 		return (
-			<Manager binding={managerBinding}/>
+			<div>
+				<Manager binding={managerBinding}/>
+				<SavingPlayerChangesPopup	binding	= {binding}
+											submit	= {this.handleClickPopupSubmit}
+				/>
+			</div>
 		);
 	}
 });

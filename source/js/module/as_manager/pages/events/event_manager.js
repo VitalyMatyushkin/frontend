@@ -1,20 +1,20 @@
-const	EventManagerBase	= require('./manager/base'),
-		If					= require('module/ui/if/if'),
-		Manager				= require('module/ui/managers/manager'),
-		classNames			= require('classnames'),
-		React				= require('react'),
-		MoreartyHelper		= require('module/helpers/morearty_helper'),
-		TeamHelper			= require('../../../ui/managers/helpers/team_helper'),
-		SavingEventHelper	= require('../../../helpers/saving_event_helper'),
-		EventHelper			= require('module/helpers/eventHelper'),
-		Morearty			= require('morearty'),
-		Promise 			= require('bluebird'),
-		Immutable			= require('immutable'),
+const	EventManagerBase			= require('./manager/base'),
+		If							= require('module/ui/if/if'),
+		Manager						= require('module/ui/managers/manager'),
+		classNames					= require('classnames'),
+		React						= require('react'),
+		MoreartyHelper				= require('module/helpers/morearty_helper'),
+		TeamHelper					= require('../../../ui/managers/helpers/team_helper'),
+		SavingEventHelper			= require('../../../helpers/saving_event_helper'),
+		EventHelper					= require('module/helpers/eventHelper'),
+		Morearty					= require('morearty'),
+		Promise 					= require('bluebird'),
+		Immutable					= require('immutable'),
 		SavingPlayerChangesPopup	= require('./saving_player_changes_popup/saving_player_changes_popup'),
 		// TODO go to separate module
-		MixinHelper			= require('./saving_player_changes_popup/mixin_helper'),
+		MixinHelper					= require('./saving_player_changes_popup/mixin_helper'),
 
-		ManagerStyles		= require('../../../../../styles/pages/events/b_events_manager.scss');
+		ManagerStyles				= require('../../../../../styles/pages/events/b_events_manager.scss');
 
 const EventManager = React.createClass({
 	mixins: [Morearty.Mixin, MixinHelper],
