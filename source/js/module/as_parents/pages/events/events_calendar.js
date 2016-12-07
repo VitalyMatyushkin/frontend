@@ -3,6 +3,7 @@ const 	Challenges 				= require('module/ui/challenges/challenges'),
 		Calendar 				= require('./calendar/calendar'),
 		CalendarActions			= require('./calendar/calendar-actions'),
 		Morearty            	= require('morearty'),
+		MoreartyHelper			= require('../../../helpers/morearty_helper'),
 		React 					= require('react');
 
 const EventsCalendar = React.createClass({
@@ -55,7 +56,6 @@ const EventsCalendar = React.createClass({
 		} else {
 			challengesList = (
 				<Challenges
-					activeSchoolId={null}
 					isSync={isSelectedDateEventsInSync}
 					events={selectedDateEvents.toJS()}
 					onClick={this.onEventClick}

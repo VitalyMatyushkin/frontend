@@ -73,10 +73,9 @@ const EventFixtures = React.createClass({
 				activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
 				binding 		= self.getDefaultBinding();
 
-		return <Fixtures events={binding.toJS('models')}
-						 activeSchoolId={activeSchoolId}
-						 sync={binding.toJS('sync')}
-						 onClick={self.onClickChallenge} />;
+		return <Fixtures	events={binding.toJS('models')}
+							sync={binding.toJS('sync')}
+							onClick={self.onClickChallenge} />;
 	}
 });
 

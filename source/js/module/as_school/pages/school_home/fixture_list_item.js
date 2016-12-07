@@ -19,7 +19,7 @@ const FixtureListItem = React.createClass({
     getFixtureInfo: function(event) {
         return(
             <div>
-                <div className="eEventHeader_field mEvent">{event.name}</div>
+                <div className="eEventHeader_field mEvent">{event.generatedNames.official}</div>
                 <div className="eEventHeader_field mDate">
                     {`${this.getDateFromIso(event.startTime)} / ${this.getTimeFromIso(event.startTime)} / ${event.sport.name}`}
                 </div>
