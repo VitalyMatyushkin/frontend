@@ -17,9 +17,6 @@
     }
   }
 
-  &.mWide {
-  }
-
   &.mIndividuals {//internal-individual sport
 
     .bEventTeams_col {
@@ -29,8 +26,19 @@
 
   }
 }
-.eEventTeams_separator {
-  width: 40px;
+
+@media (min-width: $screen-sm-min) {
+  .bEventTeams_row.mEqualHeight {//addition to the bootstrap styles for the columns equal height
+    display: flex;
+    flex-flow: row wrap;
+
+    .bEventTeams_col {
+      display: flex;
+    }
+    .bEventTeams_team {
+      width: 100%;
+    }
+  }
 }
 
 .bEventTeams_TeamWrapper {
@@ -46,14 +54,6 @@
 
   padding-top: 15px;
   padding-bottom: 15px;
-
-  &.mRight {
-
-  }
-}
-
-.bEventTeams_header {
-  padding: 10px;
 }
 
 .bEventTeams_teamButton {
@@ -104,12 +104,4 @@
 .eEventTeams_awaiting {
   padding-top: 10px;
   text-align: center;
-}
-
-@media (min-width: $screen-md-min) {
-  .bEventTeams_row,
-  .bEventTeams_col,
-  .bEventTeams_team {
-    height: 100%;
-  }
 }
