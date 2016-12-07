@@ -37,7 +37,7 @@ UserActivityModel.prototype.getUserName = function(item){
 };
 
 UserActivityModel.prototype.getDateTime = function(item){
-     return DateHelper.getDateTimeString(item.finishedAt);
+     return DateHelper.getDateTimeUTCString(item.finishedAt);
  };
 
 UserActivityModel.prototype.getMethodList = function(){

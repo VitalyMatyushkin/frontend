@@ -36,8 +36,18 @@ const DateHelper = {
 	getTimeStringFromDateObject: function(date) {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
 	},
+	getTimeUTCStringFromDateObject: function(date) {
+		return new Date(date).toUTCString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
+	},
 	getShortTimeStringFromDateObject: function(date) {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}/i)[0];
+	},
+
+	getDateTimeUTCString: function(dateTime){
+		const 	date = this.getDateStringFromDateObject(dateTime),
+				time = this.getTimeUTCStringFromDateObject(dateTime);
+
+		return `${date}, ${time}`;
 	},
 
 	getDateTimeString: function(dateTime){
