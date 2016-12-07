@@ -2,8 +2,8 @@
  * Created by Anatoly on 22.07.2016.
  */
 
-const 	HEADER_HEIGHT = 150,
-		BOTTOM_HEIGHT = 150;
+const 	HEADER_HEIGHT = 150,	// the value of scroll at which the button appears Up
+		FOOTER_HEIGHT = 150;	// the value of indent bottom at which begins loading the next page of data.
 
 
 /**
@@ -41,7 +41,7 @@ PaginationModel.prototype._onScroll = function(){
 		this.isScrolled = window.scrollY > HEADER_HEIGHT;
 		this.onShowBtnUp();
 	}
-	if(document.body.clientHeight - BOTTOM_HEIGHT < window.scrollY + window.innerHeight){
+	if(document.body.clientHeight - FOOTER_HEIGHT < window.scrollY + window.innerHeight){
 		!this.isLastPage && this.nextPage();
 	}
 };
