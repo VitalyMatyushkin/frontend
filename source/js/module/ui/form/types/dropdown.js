@@ -17,14 +17,19 @@ const TypeDropDown = React.createClass({
 	propTypes: {
 		options: React.PropTypes.array.isRequired
 	},
+	
 	renderOptions:function(){
 		return this.props.options.map( (item, i) => {
+
 			if(typeof item === 'string')
 				/** string option */
 				return <option key={item+'-'+i} value={item}>{item}</option>;
 
 			/** {value, text} object */
-			return <option key={item.value+'-'+i} value={item.value}>{item.text}</option>;
+			if (typeof item === 'object') {
+				let valueSelect = (item.value === null || typeof item.value === 'undefined') ? NULL_STRING : item.value;
+				return <option key={valueSelect+'-'+i} value={valueSelect}>{item.text}</option>;
+			}			
 		});
 
 	},
@@ -43,7 +48,8 @@ const TypeDropDown = React.createClass({
 	render:function(){
 		const 	binding	= this.getDefaultBinding(),
 				value	= binding.get('value');
-		let valueSelect = value === null ? NULL_STRING : value;
+
+		let valueSelect = (value === null || typeof value === 'undefined') ? NULL_STRING : value;
 
 		return (
 			<select value={valueSelect} onChange={this.onChange}>
