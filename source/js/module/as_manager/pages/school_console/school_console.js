@@ -49,15 +49,15 @@ const SchoolConsole = React.createClass({
         const 	binding		        = this.getDefaultBinding(),
 				viewerRole          = this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role'),
                 activeSchoolId      = MoreartyHelper.getActiveSchoolId(this);
+
         let     allowImportStudent  = false;
 
         window.Server.school.get(activeSchoolId).then(schoolData => {
             allowImportStudent = typeof schoolData.studentImportForAdminAllowed === 'undefined' ? false : schoolData.studentImportForAdminAllowed;
-            allowImportStudent = true;
         });
 
         const _createSubMenuData = function(count){
-            
+
             if (allowImportStudent) {
                 let menuItems = [{
                                 href: '/#school_console/users',
