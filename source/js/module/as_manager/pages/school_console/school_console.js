@@ -46,32 +46,58 @@ const SchoolConsole = React.createClass({
         this.addBindingListener(globalBinding, 'submenuNeedsUpdate', this.createSubMenu);
     },
     createSubMenu: function(){
-        const 	binding		= this.getDefaultBinding(),
-				viewerRole	= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
+        const 	binding		        = this.getDefaultBinding(),
+				viewerRole          = this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role'),
+                activeSchoolId      = MoreartyHelper.getActiveSchoolId(this);
+        let     allowImportStudent  = false;
 
+        window.Server.school.get(activeSchoolId).then(schoolData => {
+            allowImportStudent = typeof schoolData.studentImportForAdminAllowed === 'undefined' ? false : schoolData.studentImportForAdminAllowed;
+            allowImportStudent = true;
+        });
 
         const _createSubMenuData = function(count){
-            let menuItems = [{
-                href: '/#school_console/users',
-                name: 'Users & Permissions',
-                key: 'Users'
-            },{
-                href: '/#school_console/requests',
-                name: 'New Requests',
-                key: 'requests',
-                num: '(' + count + ')'
-            },{
-                href: '/#school_console/archive',
-                name: 'Requests Archive',
-                key: 'archive'
-			},{
-				href: '/#school_console/import_students',
-				name: 'Import Students',
-				key: 'import'
-            }];
-            binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
-        };
+            
+            if (allowImportStudent) {
+                let menuItems = [{
+                                href: '/#school_console/users',
+                                name: 'Users & Permissions',
+                                key: 'Users'
+                            },{
+                                href: '/#school_console/requests',
+                                name: 'New Requests',
+                                key: 'requests',
+                                num: '(' + count + ')'
+                            },{
+                                href: '/#school_console/archive',
+                                name: 'Requests Archive',
+                                key: 'archive'
+                            },{
+                                href: '/#school_console/import_students',
+                                name: 'Import Students',
+                                key: 'import'
+                            }];
 
+                binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();                            
+            } else {
+                let menuItems = [{
+                                href: '/#school_console/users',
+                                name: 'Users & Permissions',
+                                key: 'Users'
+                            },{
+                                href: '/#school_console/requests',
+                                name: 'New Requests',
+                                key: 'requests',
+                                num: '(' + count + ')'
+                            },{
+                                href: '/#school_console/archive',
+                                name: 'Requests Archive',
+                                key: 'archive'
+                            }];
+
+                binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
+            }            
+    }
         let requestFilter = {
 			status: 'NEW'
 		};
