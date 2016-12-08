@@ -291,8 +291,6 @@ const EventManager = React.createClass({
 		const model = binding.toJS('model');
 
 		const body = {
-			name:					model.name,
-			description:			model.description,
 			gender:					TeamHelper.convertGenderToServerValue(model.gender),
 			// invited
 			// convert client event type const to server event type const
@@ -443,8 +441,6 @@ const EventManager = React.createClass({
 				typeof binding.get('model.startTime')			!== 'undefined' &&
 				binding.get('model.startTime') 					!== null &&
 				binding.get('model.startTime') 					!== '' &&
-				typeof binding.toJS('model.name')				!== 'undefined' &&
-				binding.toJS('model.name')						!== '' &&
 				typeof binding.toJS('model.sportId')			!== 'undefined' &&
 				binding.toJS('model.sportId')					!== '' &&
 				typeof binding.toJS('model.gender')				!== 'undefined' &&
