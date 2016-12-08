@@ -38,11 +38,11 @@ const EventManager = React.createClass({
 			model: {
 				name:			'',
 				startTime:		currentDate,
-				type:			undefined,
 				sportId:		undefined,
 				gender:			undefined,
 				ages:			[],
-				description:	''
+				description:	'',
+				type:			'inter-schools'
 			},
 			selectedRivalIndex: null,
 			schoolInfo: {},
@@ -54,7 +54,7 @@ const EventManager = React.createClass({
 				houses: [],
 				internal: []
 			},
-			rivals: [{id: activeSchoolId}],
+			rivals: [],
 			players: [[],[]],
 			error: [
 				{
@@ -95,6 +95,7 @@ const EventManager = React.createClass({
 				binding
 					.atomically()
 					.set('schoolInfo',		Immutable.fromJS(schoolData))
+					.set('rivals',			Immutable.fromJS([schoolData]))
 					.set('availableAges',	Immutable.fromJS(ages))
 					.set('isSync',			Immutable.fromJS(true))
 					.commit();
@@ -290,8 +291,6 @@ const EventManager = React.createClass({
 		const model = binding.toJS('model');
 
 		const body = {
-			name:					model.name,
-			description:			model.description,
 			gender:					TeamHelper.convertGenderToServerValue(model.gender),
 			// invited
 			// convert client event type const to server event type const
@@ -335,19 +334,11 @@ const EventManager = React.createClass({
 
 		const modelVenue = binding.toJS('model.venue');
 		body.venue = {
-			venueType: self.convertVenueTypeToServerValue(modelVenue.venueType)
+			venueType: modelVenue.venueType
 		};
-		modelVenue.postcode && (body.venue.postcodeId = modelVenue.postcode);
-	},
-	convertVenueTypeToServerValue: function(venueType) {
-		const map = {
-			'tbd':		"TBD",
-			'away':		"AWAY",
-			'custom':	"CUSTOM",
-			'home':		"HOME"
-		};
-
-		return map[venueType];
+		if(modelVenue.postcode.id !== 'TBD') {
+			body.venue.postcodeId = modelVenue.postcode.id;
+		}
 	},
 	/**
 	 * Actions that do after fully event creation
@@ -427,7 +418,7 @@ const EventManager = React.createClass({
 
 		switch (step) {
 			case 1:
-				isStepComplete = self._isSecondStepIsComplete();
+				isStepComplete = self._isFirstStepIsComplete();
 				break;
 			case 2:
 				if(
@@ -442,25 +433,25 @@ const EventManager = React.createClass({
 
 		return isStepComplete;
 	},
-	_isSecondStepIsComplete: function() {
+	_isFirstStepIsComplete: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
 		return (
-				typeof binding.get('model.startTime')	!== 'undefined' &&
-				binding.get('model.startTime') 			!== null &&
-				binding.get('model.startTime') 			!== '' &&
-				typeof binding.toJS('model.name')		!== 'undefined' &&
-				binding.toJS('model.name')				!== '' &&
-				typeof binding.toJS('model.sportId')	!== 'undefined' &&
-				binding.toJS('model.sportId')			!== '' &&
-				typeof binding.toJS('model.gender')		!== 'undefined' &&
-				binding.toJS('model.gender')			!== '' &&
-				binding.toJS('model.gender')			!== 'not-selected-gender' &&
-				typeof binding.toJS('model.ages')		!== 'undefined' &&
-				binding.toJS('model.ages').length		!== 0 &&
-				typeof binding.toJS('model.type')		!== 'undefined' &&
-				binding.toJS('model.type')				!== '' &&
+				typeof binding.get('model.startTime')			!== 'undefined' &&
+				binding.get('model.startTime') 					!== null &&
+				binding.get('model.startTime') 					!== '' &&
+				typeof binding.toJS('model.sportId')			!== 'undefined' &&
+				binding.toJS('model.sportId')					!== '' &&
+				typeof binding.toJS('model.gender')				!== 'undefined' &&
+				binding.toJS('model.gender')					!== '' &&
+				binding.toJS('model.gender')					!== 'not-selected-gender' &&
+				typeof binding.toJS('model.ages')				!== 'undefined' &&
+				binding.toJS('model.ages').length				!== 0 &&
+				typeof binding.toJS('model.type')				!== 'undefined' &&
+				binding.toJS('model.type')						!== '' &&
+				typeof binding.toJS('model.venue.postcode')		!== 'undefined' &&
+				typeof binding.toJS('model.venue.postcode.id')	!== 'undefined' &&
 				self.isAllRivalsSelected()
 		);
 	},

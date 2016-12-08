@@ -1,22 +1,44 @@
+@import "../../!variables";
+@import "../../bootstrap-custom";
+
 .bEventTeams {
-  margin: 0 auto;
-  width: 940px;
-  display: flex;
+  @extend .container;
 
-  overflow: hidden;
-
-  &.mWide {
-    max-width: 902px;
+  &_row {
+    @include make-row()
   }
-  &.mIndividuals{
-    width: 942px;
-    flex-wrap: wrap;
-    justify-content: center;
+  &_col {
+    @include make-md-column(5);
+    @extend .col-sm-6;
+    @extend .col-xs-12;
+
+    &.mLeft {
+      @include make-md-column-offset(1)
+    }
+  }
+
+  &.mIndividuals {//internal-individual sport
+
+    .bEventTeams_col {
+      @include make-md-column(10);
+      height: auto;
+    }
+
   }
 }
 
-.eEventTeams_separator {
-  width: 40px;
+@media (min-width: $screen-sm-min) {
+  .bEventTeams_row.mEqualHeight {//addition to the bootstrap styles for the columns equal height
+    display: flex;
+    flex-flow: row wrap;
+
+    .bEventTeams_col {
+      display: flex;
+    }
+    .bEventTeams_team {
+      width: 100%;
+    }
+  }
 }
 
 .bEventTeams_TeamWrapper {
@@ -27,19 +49,11 @@
 }
 
 .bEventTeams_team {
-  width: 450px;
-  padding: 10px 0 10px 0;
+  border: $mainBorder;
+  background-color: $secondBackgroundColor;
 
-  border: solid 1px #d2d2d2;
-  background-color: #f5f5f5;
-
-  &.mRight {
-    margin-left: 40px;
-  }
-}
-
-.bEventTeams_header {
-  padding: 10px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .bEventTeams_teamButton {

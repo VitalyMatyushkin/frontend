@@ -598,7 +598,7 @@ const EventButtons = React.createClass({
 				<div className="bEventButtons">
 					<If condition={TeamHelper.isShowCloseEventButton(self)}>
 						<div	onClick		= {self.onClickCloseMatch}
-								className	="bButton"
+								className	="bButton mHalfWidth"
 						>
 							Close game
 						</div>

@@ -353,13 +353,16 @@ const EventTeamsView = React.createClass({
 						&& (event.status === eventConst.EVENT_STATUS.FINISHED || mode === 'closing')
 						&& individualScoreAvailable
 					}>
-						<Score	isChangeMode	={EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-								plainPoints		={self.getPointsByStudent(event, player.userId)}
-								pointsStep 		={event.sport.points.pointsStep}
-								pointsType		={event.sport.points.display}
-								pointsMask		={event.sport.points.inputMask}
-								onChange 		={self.handleChangeScore.bind(self, event, teamId, player)}
-						/>
+						<span className="ePlayer_scoreContainer">
+							<Score
+								isChangeMode={EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
+								plainPoints={self.getPointsByStudent(event, player.userId)}
+								pointsStep={event.sport.points.pointsStep}
+								pointsType={event.sport.points.display}
+								pointsMask={event.sport.points.inputMask}
+								onChange={self.handleChangeScore.bind(self, event, teamId, player)}
+								/>
+						</span>
 					</If>
 				</div>
 			);
@@ -377,7 +380,10 @@ const EventTeamsView = React.createClass({
 		if(players.length === 0) {
 			return self.renderSelectPlayersLater();
 		} else {
-			return self.renderPlayers(undefined, players, true, true);
+			return (
+				<div className="bEventTeams_team">
+					{self.renderPlayers(undefined, players, true, true)}
+				</div>)
 		}
 	},
 	renderTeamPlayersByOrder: function(order, individualScoreAvailable) {
@@ -414,16 +420,20 @@ const EventTeamsView = React.createClass({
 		const self = this;
 
 		let eventTeamsCss = classNames('bEventTeams', this.props.customCss, {
-			mIndividuals: TeamHelper.isIndividualSport(self.getBinding('event').toJS())
+			mIndividuals: TeamHelper.isInternalEventForIndividualSport(self.getBinding('event').toJS())
 		});
 
 		if(self.getBinding('isSync').toJS()) {
 			return (
 				<div className={eventTeamsCss}>
-					{self.renderPlayersForLeftSide()}
-					<div className={"eEventTeams_separator"}>
+					<div className="bEventTeams_row mEqualHeight">
+						<div className="bEventTeams_col mLeft">
+							{self.renderPlayersForLeftSide()}
+						</div>
+						<div className="bEventTeams_col">
+							{self.renderPlayersForRightSide()}
+						</div>
 					</div>
-					{self.renderPlayersForRightSide()}
 				</div>
 			);
 		} else {

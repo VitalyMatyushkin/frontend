@@ -146,7 +146,7 @@ EventsSchoolModel.prototype.setColumns = function(){
             }
         },
         {
-            text:'Start Registration Date, Time',
+            text:'Start Date Time',
             isSorted:true,
             cell:{
                 dataField:'startRegistrationTime',
@@ -156,7 +156,7 @@ EventsSchoolModel.prototype.setColumns = function(){
                 }
             },
             filter:{
-                type:'between-date'
+                type:'between-date-time'
             }
         },
         {

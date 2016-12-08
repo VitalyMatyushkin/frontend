@@ -289,7 +289,7 @@ const EventRival = React.createClass({
 			case typeof additionalName === "undefined":
 				return teamName;
 			default:
-				return `${teamName} (${additionalName})`;
+				return <div>{teamName} <span>/</span> {additionalName}</div>;
 		}
 	},
 
@@ -429,10 +429,14 @@ const EventRival = React.createClass({
 
 		if(!isEventWithOneIndividualTeam) {
 			body = (
-				<div className="bEventInfo">
-					<div className="bEventRivals">
-						{self._renderTeamLeftSide()}
-						{self._renderTeamRightSide()}
+				<div className="bEventRivals">
+					<div className="bEventRivals_row">
+						<div className="bEventRivals_column mLeft">
+							{self._renderTeamLeftSide()}
+						</div>
+						<div className="bEventRivals_column">
+							{self._renderTeamRightSide()}
+						</div>
 					</div>
 				</div>
 			);

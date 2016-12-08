@@ -181,18 +181,6 @@ const EventManagerBase = React.createClass({
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
-						Event Name
-					</div>
-					<Morearty.DOM.input
-						className	= "bTextInput"
-						type		= "text"
-						value		= {binding.get('model.name')}
-						placeholder	= {'enter name'}
-						onChange	= {Morearty.Callback.set(binding.sub('model.name'))}
-					/>
-				</div>
-				<div className="bInputWrapper">
-					<div className="bInputLabel">
 						Game
 					</div>
 						<select	className		= "bDropdown"
@@ -227,50 +215,47 @@ const EventManagerBase = React.createClass({
 					</div>
 					<GameTypeSelectorWrapper binding={binding}/>
 				</div>
-				<If condition={!!type}>
-					<div>
-						<div className="bInputWrapper">
-							{type === 'inter-schools' ? <div className="bInputLabel">Choose school</div> : null}
-							<If condition={type === 'inter-schools'} key={'if-choose-school'}>
-								<Autocomplete
-									defaultItem		= {binding.toJS('rivals.1')}
-									serviceFilter	= {services[type]}
-									serverField		= "name"
-									placeholder		= "enter school name"
-									onSelect		= {self.onSelectRival.bind(null, 1)}
-									binding			= {binding.sub('autocomplete.inter-schools.0')}
-									extraCssStyle	= "mBigSize"
-								/>
-							</If>
-							{type === 'houses' ? <div className="bInputLabel">Choose houses</div> : null}
-							<If condition={type === 'houses'}>
-								<div>
-									<div className="bHouseAutocompleteWrapper">
-										<Autocomplete
-											defaultItem		= {binding.toJS('rivals.0')}
-											serviceFilter	= {self.serviceHouseFilter.bind(null, 0)}
-											serverField		= "name"
-											placeholder		= {'Select the first house'}
-											onSelect		= {self.onSelectRival.bind(null, 0)}
-											binding			= {binding.sub('autocomplete.houses.0')}
-											extraCssStyle	= {'mBigSize'}
-										/>
-									</div>
-									<Autocomplete
-										defaultItem		= {binding.toJS('rivals.1')}
-										serviceFilter	= {self.serviceHouseFilter.bind(null, 1)}
+				<div className="bInputWrapper">
+					{type === 'inter-schools' ? <div className="bInputLabel">Choose school</div> : null}
+					<If	condition	= {type === 'inter-schools'}
+						key			= {'if-choose-school'}
+					>
+						<Autocomplete	defaultItem		= {binding.toJS('rivals.1')}
+										serviceFilter	= {services[type]}
 										serverField		= "name"
-										placeholder		= "Select the second house"
+										placeholder		= "enter school name"
 										onSelect		= {self.onSelectRival.bind(null, 1)}
-										binding			= {binding.sub('autocomplete.houses.1')}
-										extraCssStyle	= {'mBigSize'}
-									/>
-								</div>
-							</If>
+										binding			= {binding.sub('autocomplete.inter-schools.0')}
+										extraCssStyle	= "mBigSize"
+						/>
+					</If>
+					{type === 'houses' ? <div className="bInputLabel">Choose houses</div> : null}
+					<If condition={type === 'houses'}>
+						<div>
+							<div className="bHouseAutocompleteWrapper">
+								<Autocomplete
+									defaultItem		= {binding.toJS('rivals.0')}
+									serviceFilter	= {self.serviceHouseFilter.bind(null, 0)}
+									serverField		= "name"
+									placeholder		= {'Select the first house'}
+									onSelect		= {self.onSelectRival.bind(null, 0)}
+									binding			= {binding.sub('autocomplete.houses.0')}
+									extraCssStyle	= {'mBigSize'}
+								/>
+							</div>
+							<Autocomplete
+								defaultItem		= {binding.toJS('rivals.1')}
+								serviceFilter	= {self.serviceHouseFilter.bind(null, 1)}
+								serverField		= "name"
+								placeholder		= "Select the second house"
+								onSelect		= {self.onSelectRival.bind(null, 1)}
+								binding			= {binding.sub('autocomplete.houses.1')}
+								extraCssStyle	= {'mBigSize'}
+							/>
 						</div>
-						<EventVenue binding={binding}/>
-					</div>
-				</If>
+					</If>
+				</div>
+				<EventVenue binding={binding}/>
 			</div>
 		);
 	}

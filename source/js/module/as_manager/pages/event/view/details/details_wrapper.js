@@ -12,7 +12,7 @@ const DetailsWrapper = React.createClass({
 		"HOME"		: 'Home',
 		"AWAY"		: 'Away',
 		"CUSTOM"	: 'Away',
-		"TBC"		: 'TBD'
+		"TBD"		: 'TBD'
 	},
 
 	propTypes:{
@@ -66,8 +66,8 @@ const DetailsWrapper = React.createClass({
 				return this.VENUE_SERVER_CLIENT_MAP['HOME'];
 			case event.venue.venueType === 'CUSTOM':
 				return this.VENUE_SERVER_CLIENT_MAP['CUSTOM'];
-			case event.venue.venueType === 'TBC':
-				return this.VENUE_SERVER_CLIENT_MAP['TBC'];
+			case event.venue.venueType === 'TBD':
+				return this.VENUE_SERVER_CLIENT_MAP['TBD'];
 		}
 	},
 	submitChanges: function() {

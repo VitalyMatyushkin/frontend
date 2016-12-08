@@ -23,12 +23,14 @@ const EventHeader = React.createClass({
 
 		return (
 			<div className="bEventHeader">
-				<div className="bEventHeader_leftSide">
-					<div className="eEventHeader_field mEvent">{`${name}`}</div>
-					<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
-				</div>
-				<div className="bEventHeader_rightSide">
-					<EventButtons binding={binding} />
+				<div className="bEventHeader_row">
+					<div className="bEventHeader_leftSide">
+						<div className="eEventHeader_field mEvent">{`${name}`}</div>
+						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
+					</div>
+					<div className="bEventHeader_rightSide">
+						<EventButtons binding={binding}/>
+					</div>
 				</div>
 			</div>
 		);

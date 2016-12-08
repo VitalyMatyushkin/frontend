@@ -212,9 +212,6 @@ const EventHelper = {
 	      {
 	          key:EventsConst.EVENT_GENDERS_FILTER.MIXED,
 	          value:'Mixed'
-	      },
-	      {
-	          value:'Not availible'
 	      }
 	  ];
 	},

@@ -1,13 +1,19 @@
 @import "../../bootstrap-custom";
 
 .bEventMiddleSideContainer {
-  margin: 0 auto;
-  max-width: 940px;
-  width: 100%;
+  @extend .container;
 
-  &.mFullWidth {
-    @extend .container;
-    max-width: 1170px;
+  &_row {
+    @include make-row()
+  }
+  &_buttons {
+    @include make-md-column-offset(1);
+    @include make-md-column(10);
+
+    text-align: right;
+
+    padding-bottom: 5px;
+    padding-top: 5px;
   }
 }
 

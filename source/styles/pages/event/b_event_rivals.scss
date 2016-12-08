@@ -1,20 +1,28 @@
 @import "../../!variables";
+@import "../../bootstrap-custom";
 
 .bEventRivals {
-  display: flex;
+  @extend .container;
 
-  width: 940px;
+  &_row {
+    @include make-row();
+  }
+  &_column {
+    @include make-md-column(5);
+    @extend .col-sm-6;
+    @extend .col-xs-12;
+
+    &.mLeft {
+      @include make-md-column-offset(1)
+    }
+  }
 }
 
 /* .bEventRival */
 
 .bEventRival {
-  width: 450px;
-  border: $BORDER;
-  background: #fff;
-
+  border: $mainBorder;
   &.mRight {
-    margin-left: 40px;
   }
 }
 
@@ -30,8 +38,14 @@
 }
 
 .eEventRival_rivalName {
-  font-size: 16px;
+  font-size: 1.25rem;
   text-align: center;
+
+  padding: 0 40px;
+
+  span {
+    color: #d2d2d2;
+  }
 }
 
 .eEventRival_score {

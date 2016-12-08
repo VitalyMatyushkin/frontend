@@ -4,7 +4,8 @@
 
 const GENDER = {
 	MALE: 	'MALE',
-	FEMALE: 'FEMALE'
+	FEMALE: 'FEMALE',
+	NOT_DEFINED: '_null_'
 };
 
 module.exports.GENDER = GENDER;
