@@ -35,7 +35,10 @@ const TermsCheckbox = React.createClass({
             <div className="eForm_conditions">
                 <div>
                     <input name="Terms" type="checkbox" value="Terms" onClick={self._checkBoxClicked}/>
-                    <label style={{fontSize:12+'px'}} htmlFor="Terms">I have read and agree to the <a href="/#register">Privacy Policy and Terms and Conditions</a></label>
+                    <label style={{fontSize:12+'px'}} htmlFor="Terms">I have read and agree to the
+                        <a href="images/pdf/privacy_policy_v1.0_2016_05_10.pdf" download=" "> Privacy Policy</a> and
+                        <a href="images/pdf/terms_of_website_use_2016_05_10.pdf" download=" "> Terms and Conditions</a>
+                    </label>
                 </div>
                 <div className="mNotRequired">
                     <div>
