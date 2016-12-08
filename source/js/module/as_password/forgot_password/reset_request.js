@@ -22,6 +22,14 @@ const PasswordResetRequestForm = React.createClass({
 		);
 
 	},
+	onError:function(){
+		window.simpleAlert(
+			'There is no such address',
+			'Ok',
+			() => {window.location.reload()}
+		);
+
+	},	
 	render: function() {
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
@@ -29,7 +37,7 @@ const PasswordResetRequestForm = React.createClass({
 		return (
 		<div className="bPageMessage">
 			<SVG classes="bLoginIcon" icon="icon_login"/>
-			<Form name={self.tmpFormName} service={window.Server.passwordsResetRequest} binding={binding} onSuccess={self.onSuccess}>
+			<Form name={self.tmpFormName} service={window.Server.passwordsResetRequest} binding={binding} onSuccess={self.onSuccess} onError={self.onError}>
 				<FormField type="text" placeholder="E-mail" field="email" validation="email required" />
 			</Form>
 		</div>
