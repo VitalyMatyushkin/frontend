@@ -31,8 +31,8 @@ const   DateHelper  = require('module/helpers/date_helper'),
  *
  * */
 const ChallengeModel = function(event, activeSchoolId){
-    this.id 		= event.id;
-    this.name 		= event.name;
+	this.id 		= event.id;
+    this.name 		= this._getName(event, activeSchoolId);
 	this.dateUTC	= event.startTime;
 	this.date 		= DateHelper.getDate(event.startTime);
 	this.time 		= DateHelper.getTime(event.startTime);
@@ -47,6 +47,10 @@ const ChallengeModel = function(event, activeSchoolId){
     this.rivals 	= this._getRivals(event, activeSchoolId);
 	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
 	this.score 		= this._getScore(event, activeSchoolId);
+};
+
+ChallengeModel.prototype._getName = function(event, activeSchoolId){
+	return typeof activeSchoolId !== 'undefined' && typeof event.generatedNames[activeSchoolId] !== 'undefined' ? event.generatedNames[activeSchoolId] : event.generatedNames.official;
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){

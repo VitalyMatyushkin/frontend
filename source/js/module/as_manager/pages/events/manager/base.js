@@ -181,18 +181,6 @@ const EventManagerBase = React.createClass({
 				</div>
 				<div className="bInputWrapper">
 					<div className="bInputLabel">
-						Event Name
-					</div>
-					<Morearty.DOM.input
-						className	= "bTextInput"
-						type		= "text"
-						value		= {binding.get('model.name')}
-						placeholder	= {'enter name'}
-						onChange	= {Morearty.Callback.set(binding.sub('model.name'))}
-					/>
-				</div>
-				<div className="bInputWrapper">
-					<div className="bInputLabel">
 						Game
 					</div>
 						<select	className		= "bDropdown"
