@@ -9,9 +9,8 @@ function ChallengeListTitle(){
 		<div className="eChallenge_title">
 			<span className="eChallenge_sport">Sport</span>
 			<span className="eChallenge_date">Time</span>
-			<span className="eChallenge_name">Event Name</span>
-			<span className="eChallenge_rivals">Game Type</span>
-			<div className="eChallenge_score">Score</div>
+			<span className="eChallenge_name">Fixture</span>
+			<div className="eChallenge_score">Result</div>
 		</div>
 	);
 }
