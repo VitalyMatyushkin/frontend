@@ -6,6 +6,8 @@ const   React       = require('react'),
 		Morearty    = require('morearty'),
 		TypeMixin   = require('module/ui/form/types/type_mixin');
 
+const NULL_STRING = '_null_';
+
 /**
  * The select list form component
  * @param {array} options - array of options (string or {value, text} object)
@@ -27,15 +29,24 @@ const TypeDropDown = React.createClass({
 
 	},
 	onChange:function(e){
-		this.setValue(e.currentTarget.value);
+		const value = e.currentTarget.value,
+				binding = this.getDefaultBinding();
+
+		if (value === NULL_STRING) {
+			binding.set('value', null);
+		} else {
+			this.setValue(value);
+		}
+
 		e.stopPropagation();
 	},
 	render:function(){
 		const 	binding	= this.getDefaultBinding(),
 				value	= binding.get('value');
+		let valueSelect = value === null ? NULL_STRING : value;
 
 		return (
-			<select value={value} onChange={this.onChange}>
+			<select value={valueSelect} onChange={this.onChange}>
 				{this.renderOptions()}
 			</select>
 		);
