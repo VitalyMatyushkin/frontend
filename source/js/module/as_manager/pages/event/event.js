@@ -344,10 +344,7 @@ const EventPage = React.createClass({
 			case self.isSync() && binding.toJS('mode') === 'edit_squad':
 				return (
 					<div className="bEventContainer">
-						<div>
-							<ManagerWrapper binding={binding}/>
-							<EventButtons binding={binding}/>
-						</div>
+						<ManagerWrapper binding={binding}/>
 					</div>
 				);
 		}

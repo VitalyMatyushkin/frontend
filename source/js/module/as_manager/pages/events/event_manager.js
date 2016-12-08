@@ -1,28 +1,27 @@
-const	EventManagerBase			= require('./manager/base'),
-		If							= require('module/ui/if/if'),
-		Manager						= require('module/ui/managers/manager'),
-		classNames					= require('classnames'),
-		React						= require('react'),
-		MoreartyHelper				= require('module/helpers/morearty_helper'),
-		TeamHelper					= require('../../../ui/managers/helpers/team_helper'),
-		SavingEventHelper			= require('../../../helpers/saving_event_helper'),
-		EventHelper					= require('module/helpers/eventHelper'),
-		Morearty					= require('morearty'),
-		Promise 					= require('bluebird'),
-		Immutable					= require('immutable'),
-		SavingPlayerChangesPopup	= require('./saving_player_changes_popup/saving_player_changes_popup'),
-		// TODO go to separate module
-		MixinHelper					= require('./saving_player_changes_popup/mixin_helper'),
+const	EventManagerBase				= require('./manager/base'),
+		If								= require('module/ui/if/if'),
+		Manager							= require('module/ui/managers/manager'),
+		classNames						= require('classnames'),
+		React							= require('react'),
+		MoreartyHelper					= require('module/helpers/morearty_helper'),
+		TeamHelper						= require('../../../ui/managers/helpers/team_helper'),
+		SavingEventHelper				= require('../../../helpers/saving_event_helper'),
+		EventHelper						= require('module/helpers/eventHelper'),
+		Morearty						= require('morearty'),
+		Promise 						= require('bluebird'),
+		Immutable						= require('immutable'),
+		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup'),
+		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper'),
 
-		ManagerStyles				= require('../../../../../styles/pages/events/b_events_manager.scss');
+		ManagerStyles					= require('../../../../../styles/pages/events/b_events_manager.scss');
 
 const EventManager = React.createClass({
-	mixins: [Morearty.Mixin, MixinHelper],
+	mixins: [Morearty.Mixin],
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
 	getDefaultState: function () {
-		var self = this,
+		var	self = this,
 			rootBinding = self.getMoreartyContext().getBinding(),
 			activeSchoolId = rootBinding.get('userRules.activeSchoolId'),
 			calendarBinding = this.getBinding('calendar');
@@ -191,23 +190,36 @@ const EventManager = React.createClass({
 		// if true - then user click to finish button
 		// so we shouldn't do anything
 		if(!binding.toJS('isSubmitProcessing')) {
-			const	event		= binding.toJS('model'),
-				validationData	= [
-					binding.toJS('error.0'),
-					binding.toJS('error.1')
-				];
+			const	event			= binding.toJS('model'),
+					teamWrappers	= this.getTeamWrappers(),
+					validationData	= [
+						binding.toJS('error.0'),
+						binding.toJS('error.1')
+					];
 
 			switch (true) {
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && !this.isAnyTeamChanged() && this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					this.showSavingChangesModePopup();
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					this.showSavingChangesModePopup();
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged() && this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					this.showSavingChangesModePopup();
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && !this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					binding.set('isSubmitProcessing', true);
 					this.submit(event);
 					break;
@@ -222,6 +234,9 @@ const EventManager = React.createClass({
 					break;
 			}
 		}
+	},
+	getTeamWrappers: function() {
+		return this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 	},
 	//TODO WTF!!?? Why event in args?
 	submit: function(eventModel) {

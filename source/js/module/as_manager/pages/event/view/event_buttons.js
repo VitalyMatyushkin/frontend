@@ -292,47 +292,7 @@ const EventButtons = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const currentMode	= binding.get('mode');
-
-		switch (currentMode) {
-			case 'closing':
-				self.closeMatch();
-				break;
-			default:
-				const	event			= binding.toJS('model'),
-						activeSchoolId	= MoreartyHelper.getActiveSchoolId(this);
-
-				if(TeamHelper.isTeamDataCorrect(event, self.getValidationData())) {
-					Actions.submitAllChanges(activeSchoolId, binding).then(() => this.doAfterCommitActions());
-				}
-				break;
-		}
-	},
-	getValidationData: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const event = binding.toJS('model');
-
-		if(EventHelper.isInterSchoolsEvent(event)) {
-			return [
-				binding.toJS('teamManagerWrapper.default.error.0')
-			];
-		} else {
-			return [
-				binding.toJS('teamManagerWrapper.default.error.0'),
-				binding.toJS('teamManagerWrapper.default.error.1')
-			];
-		}
-	},
-	doAfterCommitActions: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.atomically()
-			.set('mode', 'general')
-			.set('eventTeams.isSync', Immutable.fromJS(false))
-			.commit();
+		self.closeMatch();
 	},
 	/**
 	 * Return reverted team manager binding
@@ -407,22 +367,6 @@ const EventButtons = React.createClass({
 							onClick={self.onClickCloseCancel}
 						>
 							Cancel
-						</div>
-					</If>
-					<If condition={EventHelper._isShowCancelEventEditButton(self)}>
-						<div
-							className="bButton mCancel mMarginRight"
-							onClick={self.onClickEditCancel}
-						>
-							Cancel
-						</div>
-					</If>
-					<If condition={EventHelper._isShowFinishEventEditingButton(self)}>
-						<div
-								className="bButton"
-								onClick={self.onClickOk}
-						>
-							Save
 						</div>
 					</If>
 				</div>
