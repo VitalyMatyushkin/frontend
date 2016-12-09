@@ -299,6 +299,15 @@
   text-align: center;
 }
 
+.eRightButtonColumn{
+  margin-left: 15px;
+  width: 50%;
+  display: inline-block;
+}
+.bEventMiddleSideContainer_buttons .bButton.mCircle{
+  margin-right: 3px;
+}
+
 .bEventMap {
   @extend .container;
   padding-top: 15px;

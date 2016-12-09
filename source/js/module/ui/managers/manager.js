@@ -276,6 +276,8 @@ const Manager = React.createClass({
 			  selectedRivalIndex = self.getBinding('selectedRivalIndex').toJS(),
 			  rivalsBinding = self.getBinding('rivals');
 
+		const event = self.getDefaultBinding().toJS('model');
+
 		return rivalsBinding.get().map(function (rival, index) {
 			const	disable		= self._isRivalDisable(rival),
 					teamClasses	= classNames({
@@ -283,7 +285,7 @@ const Manager = React.createClass({
 						eChooser_item: true,
 						mDisable: disable
 					}),
-					eventType	= TeamHelper.getEventType(self.getDefaultBinding().toJS('model'))
+					eventType	= TeamHelper.getEventType(self.getDefaultBinding().toJS('model'));
 			let		text		= '';
 
 			switch (eventType) {
@@ -300,11 +302,14 @@ const Manager = React.createClass({
 					break;
 			}
 
-			return (
-				<span key={`team-index-${index}`} className={teamClasses}
-					  onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{text}
-				</span>
-			);
+			if(!TeamHelper.isInternalEventForIndividualSport(event)
+				&& (self.isShowRivals() || selectedRivalIndex == index)) {
+				return (
+					<span key={`team-index-${index}`} className={teamClasses}
+						  onClick={!disable ? self.onChooseRival.bind(null, index) : null}>{text}
+					</span>
+				);
+			}
 		}).toArray();
 	},
 	_isRivalDisable: function(rival) {
@@ -321,15 +326,13 @@ const Manager = React.createClass({
 	_renderRivals: function() {
 		const self = this;
 
-		if(self.isShowRivals()) {
-			return (
-				<div className="eManager_chooser">
-					<div className="bChooserRival">
-						{self._getRivals()}
-					</div>
+		return (
+			<div className="eManager_chooser">
+				<div className="bChooserRival">
+					{self._getRivals()}
 				</div>
-			);
-		}
+			</div>
+		);
 	},
 	isShowRivals: function() {
 		const self = this;

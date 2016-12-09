@@ -47,7 +47,7 @@ const ChallengeModel = function(event, activeSchoolId){
     this.rivals 	= this._getRivals(event, activeSchoolId);
 	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
 	this.score 		= this._getScore(event);
-	this.textResult	= this._getTextResult();
+	this.textResult	= this._getTextResult(event);
 };
 
 ChallengeModel.prototype._getName = function(event, activeSchoolId){
