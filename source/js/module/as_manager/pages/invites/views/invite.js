@@ -63,7 +63,7 @@ const InviteView = React.createClass({
             "Cancel",
             () => {if (type === 'cancel' || type === 'decline') {
                     window.Server.declineSchoolInvite.post({schoolId: self.activeSchoolId, inviteId: inviteId
-                    }).then( () => location.reload());
+                    }).then( () => window.location.reload());
                 }
             },
             () => {}
