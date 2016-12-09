@@ -7,8 +7,8 @@ const 	RouterView 			= require('module/core/router'),
 		InboxComponent 		= require('module/as_manager/pages/invites/views/inbox'),
 		OutboxComponent 	= require('module/as_manager/pages/invites/views/outbox'),
 		ArchiveComponent 	= require('module/as_manager/pages/invites/views/archive'),
-		AcceptComponent 	= require('module/as_manager/pages/invites/views/accept'),
-		AnswerComponent 	= require('module/as_manager/pages/invites/views/answer');
+		AcceptComponent 	= require('module/as_manager/pages/invites/views/accept');
+
 
 const InvitesView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -61,8 +61,6 @@ const InvitesView = React.createClass({
 						<Route path='/invites/outbox' 				binding={binding.sub('outbox')} 	component={OutboxComponent} />
 						<Route path='/invites/archive' 				binding={binding.sub('archive')} 	component={ArchiveComponent} />
 						<Route path='/invites/:inviteId/accept' 	binding={binding.sub('accept')} 	component={AcceptComponent} />
-						<Route path='/invites/:inviteId/decline' 	binding={binding.sub('decline')} 	component={AnswerComponent}  />
-						<Route path='/invites/:inviteId/cancel' 	binding={binding.sub('cancel')} 	component={AnswerComponent}  />
 					</RouterView>
 				</div>
 			</div>
