@@ -30,7 +30,6 @@ const  RoleList = React.createClass({
 
 		if(!self.props.onlyLogout) {
 			self.getMyRoles();
-			self.getMySchools();
 		}
 	},
 	getMyRoles:function(){
@@ -59,6 +58,7 @@ const  RoleList = React.createClass({
 					});
 				});
 				binding.set('permissions', Immutable.fromJS(permissions));
+				self.getMySchools();
 				self.setActivePermission();
 			}
 		});
@@ -99,11 +99,38 @@ const  RoleList = React.createClass({
 			DomainHelper.redirectToStartPage(roleName);
 		});
 	},
+
+	//Check unique value in array
+	getUniqueArray:function(array){		
+		let obj = {};
+		for (let i = 0; i < array.length; i++) {			
+			let str = array[i];
+			obj[str] = true;
+		}
+		return Object.keys(obj);
+	},
+
 	getMySchools:function(){
 		const 	self 	= this,
-				binding = self.getDefaultBinding();
+				binding = self.getDefaultBinding(),
+				permissions = binding.toJS('permissions');
 
-		window.Server.publicSchools.get({filter:{limit:1000}}).then(schools => {
+		let schoolIdArray = [];
+		//Get array schoolId for query
+		for (let key in permissions) {
+			schoolIdArray.push(permissions[key].schoolId);
+		}
+		
+		const uniqueSchoolIdArray = self.getUniqueArray(schoolIdArray);
+
+		window.Server.publicSchools.get({filter:{
+			limit:1000,
+			where: {
+				id: {
+					$in: uniqueSchoolIdArray
+				}
+			}
+		}}).then(schools => {
 			binding.set('schools', Immutable.fromJS(schools));
 		});
 	},
