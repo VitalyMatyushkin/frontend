@@ -2,16 +2,16 @@
  * Created by Anatoly on 16.11.2016.
  */
 const   Invite          = require('./invite'),
-	ProcessingView  = require('./processing'),
-	Promise 		= require('bluebird'),
-	inviteActions 	= require('./invite-actions'),
-	React           = require('react'),
-	Morearty		= require('morearty'),
-	Immutable       = require('immutable'),
-	Bootstrap  	    = require('styles/bootstrap-custom.scss');
+		ProcessingView  = require('./processing'),
+		Promise 		= require('bluebird'),
+		inviteActions 	= require('./invite-actions'),
+		React           = require('react'),
+		Morearty		= require('morearty'),
+		Immutable       = require('immutable'),
+		Bootstrap  	    = require('styles/bootstrap-custom.scss');
 
-/** Component to show all inbox invites */
-const InboxView = React.createClass({
+/** Component to show all box invites */
+const InviteList = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
@@ -56,8 +56,20 @@ const InboxView = React.createClass({
 
 			const reactKey = inviteBinding.default.toJS().id;
 
-			return <Invite key={reactKey} type={self.props.type}  binding={inviteBinding} />;
+			return <Invite key={reactKey}
+						   type={self.props.type}
+						   binding={inviteBinding}
+						   onDecline={this.onDecline}
+			/>;
 		}).toArray();
+	},
+	onDecline:function (inviteId) {
+		const
+			binding 		= this.getDefaultBinding(),
+			rootBinding 	= this.getMoreartyContext().getBinding(),
+			activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
+
+		inviteActions.declineInvite(activeSchoolId, inviteId, binding);
 	},
 	render: function() {
 		const 	self 	= this,
@@ -75,4 +87,4 @@ const InboxView = React.createClass({
 });
 
 
-module.exports = InboxView;
+module.exports = InviteList;
