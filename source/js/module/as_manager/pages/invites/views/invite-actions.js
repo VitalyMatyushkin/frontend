@@ -1,7 +1,8 @@
 /**
  * Created by Anatoly on 16.11.2016.
  */
-const Promise = require('bluebird');
+const 	Promise 	= require('bluebird'),
+		Immutable 	= require('immutable');
 
 const InviteActions = {
 	inviteServicesByType:{
@@ -62,6 +63,16 @@ const InviteActions = {
 
 				return Promise.resolve(invites);
 			});
+	},
+	declineInvite:function (schoolId, inviteId, binding) {
+		window.Server.declineSchoolInvite.post({schoolId: schoolId, inviteId: inviteId
+		}).then( () => {
+			const 	invites = binding.toJS('models'),
+					newList = invites.filter(i => i.id !== inviteId);
+
+			binding.set('models', Immutable.fromJS(newList));
+
+		});
 	}
 };
 
