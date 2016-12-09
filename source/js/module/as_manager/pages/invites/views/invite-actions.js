@@ -5,37 +5,39 @@ const 	Promise 	= require('bluebird'),
 		Immutable 	= require('immutable');
 
 const InviteActions = {
-	inviteServicesByType:{
-		inbox:'schoolInboxInvites',
-		outbox:'schoolOutboxInvites',
-		archive:'schoolArchiveInvites'
+	inviteServicesByType: {
+		inbox: 'schoolInboxInvites',
+		outbox: 'schoolOutboxInvites',
+		archive: 'schoolArchiveInvites'
 	},
 	loadData: function (schoolId, inviteType) {
 		const serviceName = this.inviteServicesByType[inviteType],
 			service = window.Server[serviceName];
 
 		let invites, events;
-		return service.get(schoolId, { filter: { limit: 100 }})
-			.then( allInvites => {
+		return service.get(schoolId, {filter: {limit: 100}})
+			.then(allInvites => {
 				invites = allInvites;
 
 				events = [];
-				invites.forEach(inv =>{
+				invites.forEach(inv => {
 					events.push(inv.eventId);
 				});
-				return window.Server.events.get(schoolId, {filter:{
-					limit:1000,
-					where:{
-						id:{
-							$in:events
+				return window.Server.events.get(schoolId, {
+					filter: {
+						limit: 1000,
+						where: {
+							id: {
+								$in: events
+							}
 						}
 					}
-				}});
+				});
 			})
 			.then(eventsData => {
 				events = eventsData;
 
-				invites = invites.map(invite =>{
+				invites = invites.map(invite => {
 
 					invite.event = events.find(e => e.id === invite.eventId);
 					invite.sport = invite.event.sport;
@@ -48,14 +50,14 @@ const InviteActions = {
 				return Promise.resolve(invites);
 			})
 			.then(invitesData => {
-				invites = invitesData.sort((a,b) => {
+				invites = invitesData.sort((a, b) => {
 					const _a = a.event.startTime,
 						_b = b.event.startTime;
 
-					if(_a < _b){
+					if (_a < _b) {
 						return -1;
 					}
-					if(_a > _b){
+					if (_a > _b) {
 						return 1;
 					}
 					return 0;
@@ -64,11 +66,12 @@ const InviteActions = {
 				return Promise.resolve(invites);
 			});
 	},
-	declineInvite:function (schoolId, inviteId, binding) {
-		window.Server.declineSchoolInvite.post({schoolId: schoolId, inviteId: inviteId
-		}).then( () => {
-			const 	invites = binding.toJS('models'),
-					newList = invites.filter(i => i.id !== inviteId);
+	declineInvite: function (schoolId, inviteId, binding) {
+		window.Server.declineSchoolInvite.post({
+			schoolId: schoolId, inviteId: inviteId
+		}).then(() => {
+			const invites = binding.toJS('models'),
+				newList = invites.filter(i => i.id !== inviteId);
 
 			binding.set('models', Immutable.fromJS(newList));
 
