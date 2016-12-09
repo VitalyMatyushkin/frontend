@@ -1,32 +1,27 @@
 @import "../../!variables";
-
-$red-color: #ff5252;
-$orange-color: #ffab40;
-$blue-color: #5DC8CD;
-$green-color: #00AE68;
+@import "../../bootstrap-custom";
 
 .bEvents {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+  margin-top: 50px;
+}
 
-  width: 1075px;
-  margin: 50px auto;
-  font-size: 11px;
+.eEvents {
 
-  @media (max-width: 768px) {
-    width: 768px;
+  &_container {
+    @extend .container
   }
 
-}
+  &_row {
+    @include make-row()
+  }
 
-.eEvents_leftSideContainer {
-  width: 400px;
-}
+  &_leftSideContainer {
+    @include make-md-column(7)
+  }
 
-.eEvents_rightSideContainer {
-  width: 502px;
-  margin-left: 20px;
+  &_rightSideContainer {
+    @include make-md-column(5)
+  }
 }
 
 .bParentsPage .bEvents {
