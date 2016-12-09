@@ -100,7 +100,7 @@ const  RoleList = React.createClass({
 		const binding = this.getDefaultBinding(),
 				permissions = binding.toJS('permissions');
 	
-		const uniqueSchoolIdArray = Lazy(permissions).map(function(e){return e.schoolId}).uniq().toArray();
+		const uniqueSchoolIdArray = Lazy(permissions).map(e => e.schoolId).uniq().toArray();
 
 		window.Server.publicSchools.get({filter:{
 			limit:1000,
