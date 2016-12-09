@@ -51,9 +51,10 @@ const SchoolConsole = React.createClass({
                 activeSchoolId      = MoreartyHelper.getActiveSchoolId(this);
 
         let     allowImportStudent  = false;
-
+        binding.set('allowImportStudent', Immutable.fromJS(allowImportStudent));
         window.Server.school.get(activeSchoolId).then(schoolData => {
             allowImportStudent = typeof schoolData.studentImportForAdminAllowed === 'undefined' ? false : schoolData.studentImportForAdminAllowed;
+            binding.set('allowImportStudent', Immutable.fromJS(allowImportStudent));
         });
 
         const _createSubMenuData = function(count){
