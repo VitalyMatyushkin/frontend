@@ -25,6 +25,7 @@ const PaginationModel = function(filter){
 };
 
 PaginationModel.prototype.nextPage = function(){
+	this.isLoading = true;
 	this.currentPage++;
 	this.filter.setPageNumber(this.currentPage);
 };
@@ -41,8 +42,8 @@ PaginationModel.prototype._onScroll = function(){
 		this.isScrolled = window.scrollY > HEADER_HEIGHT;
 		this.onShowBtnUp();
 	}
-	if(document.body.clientHeight - FOOTER_HEIGHT < window.scrollY + window.innerHeight){
-		!this.isLastPage && this.nextPage();
+	if(!this.isLastPage && !this.isLoading && (document.body.clientHeight - FOOTER_HEIGHT < window.scrollY + window.innerHeight)){
+		this.nextPage();
 	}
 };
 PaginationModel.prototype.onScrollTop = function(){
