@@ -2,14 +2,15 @@
  * Created by Anatoly on 30.03.2016.
  */
 
-const	React			= require('react'),
-		Immutable		= require('immutable'),
-		classNames		= require('classnames'),
-		If				= require('module/ui/if/if'),
-		Morearty        = require('morearty'),
-		DomainHelper 	= require('module/helpers/domain_helper'),
-		RoleHelper 		= require('module/helpers/role_helper'),
-		Auth			= require('module/core/services/AuthorizationServices');
+const	React					= require('react'),
+		Immutable				= require('immutable'),
+		classNames			= require('classnames'),
+		Lazy 						= require('lazy.js'),
+		If							= require('module/ui/if/if'),
+		Morearty				= require('morearty'),
+		DomainHelper 		= require('module/helpers/domain_helper'),
+		RoleHelper 			= require('module/helpers/role_helper'),
+		Auth						= require('module/core/services/AuthorizationServices');
 
 
 const  RoleList = React.createClass({
@@ -26,16 +27,12 @@ const  RoleList = React.createClass({
 		});
 	},
 	componentWillMount: function() {
-		const self = this;
-
-		if(!self.props.onlyLogout) {
-			self.getMyRoles();
-			self.getMySchools();
+		if(!this.props.onlyLogout) {
+			this.getMyRoles();
 		}
 	},
 	getMyRoles:function(){
-		const	self			= this,
-				binding			= self.getDefaultBinding();
+		const binding			= this.getDefaultBinding();
 
 		window.Server.roles.get().then(roles => {
 			if (roles && roles.length) {
@@ -59,14 +56,14 @@ const  RoleList = React.createClass({
 					});
 				});
 				binding.set('permissions', Immutable.fromJS(permissions));
-				self.setActivePermission();
+				this.getMySchools();
+				this.setActivePermission();
 			}
 		});
 	},
 	setActivePermission:function(){
-		const	self		= this,
-				binding		= self.getDefaultBinding(),
-				rootBinding	= self.getMoreartyContext().getBinding();
+		const binding		= this.getDefaultBinding(),
+				rootBinding	= this.getMoreartyContext().getBinding();
 
 		const	activeRoleName	= rootBinding.toJS('userData.authorizationInfo.role'),
 				activeSchoolId	= rootBinding.toJS('userRules.activeSchoolId'),
@@ -88,28 +85,36 @@ const  RoleList = React.createClass({
 		}
 	},
 	setRole:function(roleName, schoolId){
-		const	self 			= this,
-				rootBinding		= self.getMoreartyContext().getBinding();
+		const	rootBinding		= this.getMoreartyContext().getBinding();
 
 		rootBinding.set('userRules.activeSchoolId', schoolId);
-		self.roleBecome(roleName);
+		this.roleBecome(roleName);
 	},
 	roleBecome:function(roleName){
 		Auth.become(roleName).then(() => {
 			DomainHelper.redirectToStartPage(roleName);
 		});
 	},
-	getMySchools:function(){
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
 
-		window.Server.publicSchools.get({filter:{limit:1000}}).then(schools => {
+	getMySchools:function(){
+		const binding = this.getDefaultBinding(),
+				permissions = binding.toJS('permissions');
+	
+		const uniqueSchoolIdArray = Lazy(permissions).map(e => e.schoolId).uniq().toArray();
+
+		window.Server.publicSchools.get({filter:{
+			limit:1000,
+			where: {
+				id: {
+					$in: uniqueSchoolIdArray
+				}
+			}
+		}}).then(schools => {
 			binding.set('schools', Immutable.fromJS(schools));
 		});
 	},
 	renderRole:function(permission, active){
-		const   self 	    = this,
-				binding     = self.getDefaultBinding(),
+		const binding     = this.getDefaultBinding(),
 				schoolId    = permission ? permission.schoolId : null,
 				role        = permission ? permission.role : null,
 				roleClient 	= permission ? RoleHelper.SERVER_ROLE_FOR_CLIENT[permission.role] : 'NO ROLE',
@@ -119,29 +124,26 @@ const  RoleList = React.createClass({
 				id          = permission ? permission.id : null;
 
 		return (
-			<div key={id} className="eRole" onClick={active ? self.onSetRole.bind(null, role, schoolId) : null}>
+			<div key={id} className="eRole" onClick={active ? this.onSetRole.bind(null, role, schoolId) : null}>
 				<span>{schoolName}</span>
 				<span className="eRole_name">{roleClient}</span>
 			</div>
 		);
 	},
 	renderActiveRole:function(){
-		const   self 	            = this,
-				binding             = self.getDefaultBinding(),
+		const binding             = this.getDefaultBinding(),
 				activePermission    = binding.toJS('activePermission');
 
-		return self.renderRole(activePermission, false);
+		return this.renderRole(activePermission, false);
 	},
 	renderSelectList:function(){
-		const   self 	= this,
-				binding = self.getDefaultBinding(),
+		const binding = this.getDefaultBinding(),
 				permissions   = binding.toJS('permissions');
 
-		return permissions && permissions.map(p => self.renderRole(p, true));
+		return permissions && permissions.map(p => this.renderRole(p, true));
 	},
 	onToggle:function(e){
-		const   self 	    = this,
-				binding     = self.getDefaultBinding(),
+		const binding     = this.getDefaultBinding(),
 				listOpen    = binding.toJS('listOpen');
 
 		binding.set('listOpen', Immutable.fromJS(!listOpen));
@@ -149,8 +151,7 @@ const  RoleList = React.createClass({
 		e.stopPropagation();
 	},
 	onBlur:function(e){
-		const   self 	    = this,
-				binding     = self.getDefaultBinding();
+		const binding     = this.getDefaultBinding();
 
 		/**in IE11 onBlur is triggered faster than onClick, and onClick not triggered */
 		setTimeout(function(){
@@ -160,22 +161,20 @@ const  RoleList = React.createClass({
 		e.stopPropagation();
 	},
 	onSetRole:function(roleName, schoolId){
-		const   self 	    = this,
-				binding     = self.getDefaultBinding();
+		const binding     = this.getDefaultBinding();
 
-		self.setRole(roleName, schoolId);
+		this.setRole(roleName, schoolId);
 		binding.set('listOpen', Immutable.fromJS(false));
 	},
 	logout:function(){
 		window.location.hash = 'logout';
 	},
 	render: function() {
-		const 	self 		= this,
-				binding 	= self.getDefaultBinding(),
-				role        = self.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role'),
+		const binding 	= this.getDefaultBinding(),
+				role        = this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role'),
 				listOpen    = binding.toJS('listOpen'),
 				show        = !!binding.toJS('permissions').length && !!role,
-				hidden      = !binding.toJS('schools').length && !role && !self.props.onlyLogout;
+				hidden      = !binding.toJS('schools').length && !role && !this.props.onlyLogout;
 
 		if(listOpen)
 			this.refs.role_list.focus();
@@ -183,16 +182,16 @@ const  RoleList = React.createClass({
 		return(
 			<div className={classNames({bRoleList:true, mLogout:!show, mHidden:hidden})}>
 				<If condition={show}>
-					<div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={self.onBlur}>
-						<div onClick={self.onToggle}>
+					<div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={this.onBlur}>
+						<div onClick={this.onToggle}>
 							<div className="eArrow"></div>
-							{self.renderActiveRole()}
+							{this.renderActiveRole()}
 						</div>
 						<div className="eRolesList">
 							<div className="eScrollList">
-								{self.renderSelectList()}
+								{this.renderSelectList()}
 							</div>
-							<div className="eRole mLogout" onClick={self.logout}>
+							<div className="eRole mLogout" onClick={this.logout}>
 								Log Out
 							</div>
 						</div>
