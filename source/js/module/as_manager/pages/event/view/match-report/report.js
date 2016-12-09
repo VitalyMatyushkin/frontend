@@ -7,7 +7,6 @@ const	React				= require('react'),
 
 		If					= require('module/ui/if/if'),
 		Actions 			= require('./report-actions'),
-		SVG 				= require('module/ui/svg'),
 
 		MatchReportStyle	= require('../../../../../../../styles/pages/event/b_match_report.scss'),
 		ButtonStyle			= require('../../../../../../../styles/ui/b_button.scss'),
@@ -24,6 +23,12 @@ const MatchReport = React.createClass({
 		this.actions = new Actions(this);
 		this.actions.load();
 	},
+	isShowViewMode: function() {
+		return !this.actions.isEditMode();
+	},
+	isShowEditMode: function() {
+		return !this.props.isParent && this.actions.isEditMode();
+	},
 	isShowEditButton: function() {
 		return !this.props.isParent;
 	},
@@ -33,7 +38,7 @@ const MatchReport = React.createClass({
 
 		return(
 			<div className="bMatchReport">
-				<If condition={!this.actions.isEditMode()}>
+				<If condition={this.isShowViewMode()}>
 					<div className="mAdded">
 						<div className="eMatchReport_text">{binding.get('content')}</div>
 						<If condition={this.isShowEditButton()}>
@@ -45,7 +50,7 @@ const MatchReport = React.createClass({
 						</If>
 					</div>
 				</If>
-				<If condition={this.actions.isEditMode()}>
+				<If condition={this.isShowEditMode()}>
 					<div className="mNew row">
 						<div className="col-md-9">
 						<Morearty.DOM.textarea
