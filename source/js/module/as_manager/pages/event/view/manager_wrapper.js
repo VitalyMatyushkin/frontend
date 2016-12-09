@@ -11,6 +11,8 @@ const ManagerWrapper = React.createClass({
 	componentWillMount: function() {
 		const	self						= this,
 				binding						= self.getDefaultBinding(),
+				index 						= binding.get('selectedRivalIndex'),
+				selectedRivalIndex 			= index !== undefined ? index : 0,
 				teamManagerWrapperBinding	= binding.sub('teamManagerWrapper.default');
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
@@ -22,7 +24,7 @@ const ManagerWrapper = React.createClass({
 			.set('model.sportModel',	Immutable.fromJS(event.sport))
 			.set('rivals',				Immutable.fromJS(self.getRivals()))
 			.set('schoolInfo',			Immutable.fromJS(event.inviterSchoolId === self.activeSchoolId ? event.inviterSchool : event.invitedSchools[0]))
-			.set('selectedRivalIndex',	Immutable.fromJS(0))
+			.set('selectedRivalIndex',	Immutable.fromJS(selectedRivalIndex))
 			.set('error',				Immutable.fromJS([
 											{
 												isError: false,
@@ -261,7 +263,7 @@ const ManagerWrapper = React.createClass({
 		const managerBinding = self.getManagerBinding();
 
 		return (
-			<Manager binding={managerBinding}/>
+			<Manager binding={managerBinding} isInviteMode={true}/>
 		);
 	}
 });
