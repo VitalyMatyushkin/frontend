@@ -104,7 +104,7 @@ const DateHelper = {
 	},
 
 	toIsoDateTime: function(dotString) {
-		const dateTimeParts = dotString ? dotString.split('|'):[],
+		const dateTimeParts = dotString ? dotString.split('/'):[],
 				dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
 				timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
 
