@@ -53,6 +53,22 @@ const InviteView = React.createClass({
                 return '';
         }
     },
+
+    _getInviteRequest: function (inviteId, type) {
+        const self = this;
+
+        window.confirmAlert(
+            `Are you sure you want to ${type} ?`,
+            "Ok",
+            "Cancel",
+            () => {if (type === 'cancel' || type === 'decline') {
+                    window.Server.declineSchoolInvite.post({schoolId: self.activeSchoolId, inviteId: inviteId
+                    }).then( () => window.location.reload());
+                }
+            },
+            () => {}
+        );
+    },
     render: function() {
         const   self            = this,
                 binding         = self.getDefaultBinding(),
@@ -120,10 +136,12 @@ const InviteView = React.createClass({
                                     <div className="eInvite_buttons">
                                         {isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
                                                            extraStyleClasses={'mHalfWidth mMarginRight'}/> : null }
-                                        {isInbox ? <Button href={`/#invites/${inviteId}/decline`} text={'Decline'}
+                                        {isInbox ? <Button text={'Decline'}
+                                                           onClick={() => self._getInviteRequest(inviteId,'decline')}
                                                            extraStyleClasses={'mCancel mHalfWidth'}/> : null }
                                         {isOutBox ?
-                                            <Button href={`/#invites/${inviteId}/cancel`} text={'Cancel invitation'}
+                                            <Button text={'Cancel invitation'}
+                                                    onClick={() => self._getInviteRequest(inviteId,'cancel')}
                                                     extraStyleClasses={'mCancel'}/> : null }
                                     </div>
                                 </div>
