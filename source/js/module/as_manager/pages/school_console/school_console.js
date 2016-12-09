@@ -10,8 +10,9 @@ const   RouterView      				= require('module/core/router'),
         Immutable       				= require('immutable'),
 		UsersComponent 					= require('module/as_manager/pages/school_console/views/users'),
 		AdminRequestsComponent 			= require('./views/requests'),
+		ImportStudents					= require('module/as_manager/pages/school_console/views/import_students'),
 		RequestArchiveComponent 		= require('./views/request_archive'),
-		AdminPermissionAcceptComponent 	= require("module/as_admin/pages/admin_schools/admin_views/admin_permission_accept");
+		AdminPermissionAcceptComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept');
 
 let liveRequestCount;
 
@@ -45,28 +46,59 @@ const SchoolConsole = React.createClass({
         this.addBindingListener(globalBinding, 'submenuNeedsUpdate', this.createSubMenu);
     },
     createSubMenu: function(){
-        const 	binding		= this.getDefaultBinding(),
-				viewerRole	= this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role');
+        const 	binding		        = this.getDefaultBinding(),
+				viewerRole          = this.getMoreartyContext().getBinding().get('userData.authorizationInfo.role'),
+                activeSchoolId      = MoreartyHelper.getActiveSchoolId(this);
 
+        let     allowImportStudent  = false;
+        binding.set('allowImportStudent', Immutable.fromJS(allowImportStudent));
+        window.Server.school.get(activeSchoolId).then(schoolData => {
+            allowImportStudent = typeof schoolData.studentImportForAdminAllowed === 'undefined' ? false : schoolData.studentImportForAdminAllowed;
+            binding.set('allowImportStudent', Immutable.fromJS(allowImportStudent));
+        });
 
         const _createSubMenuData = function(count){
-            let menuItems = [{
-                href: '/#school_console/users',
-                name: 'Users & Permissions',
-                key: 'Users'
-            },{
-                href: '/#school_console/requests',
-                name: 'New Requests',
-                key: 'requests',
-                num: '(' + count + ')'
-            },{
-                href: '/#school_console/archive',
-                name: 'Requests Archive',
-                key: 'archive'
-            }];
-            binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
-        };
 
+            if (allowImportStudent) {
+                let menuItems = [{
+                                href: '/#school_console/users',
+                                name: 'Users & Permissions',
+                                key: 'Users'
+                            },{
+                                href: '/#school_console/requests',
+                                name: 'New Requests',
+                                key: 'requests',
+                                num: '(' + count + ')'
+                            },{
+                                href: '/#school_console/archive',
+                                name: 'Requests Archive',
+                                key: 'archive'
+                            },{
+                                href: '/#school_console/import_students',
+                                name: 'Import Students',
+                                key: 'import'
+                            }];
+
+                binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();                            
+            } else {
+                let menuItems = [{
+                                href: '/#school_console/users',
+                                name: 'Users & Permissions',
+                                key: 'Users'
+                            },{
+                                href: '/#school_console/requests',
+                                name: 'New Requests',
+                                key: 'requests',
+                                num: '(' + count + ')'
+                            },{
+                                href: '/#school_console/archive',
+                                name: 'Requests Archive',
+                                key: 'archive'
+                            }];
+
+                binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
+            }            
+    }
         let requestFilter = {
 			status: 'NEW'
 		};
@@ -99,6 +131,7 @@ const SchoolConsole = React.createClass({
                     <Route path='/school_console/requests' binding={binding.sub('requests')} component={AdminRequestsComponent}/>
                     <Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component={AdminPermissionAcceptComponent}  afterSubmitPage="/school_console/requests"/>
                     <Route path='/school_console/archive' binding={binding.sub('archives')} component={RequestArchiveComponent}/>
+					<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudents}/>
                 </RouterView>
             </div>
         </div>;

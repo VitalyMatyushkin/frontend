@@ -80,6 +80,9 @@ const SystemAdminSchoolForm = React.createClass({
 					<FormField type="text" field="notificationEmail" validation="email" fieldClassName="mLarge">
 						Notification Email
 					</FormField>
+					<FormField type="checkbox" field="studentImportForAdminAllowed">
+						Allow student import for Admin
+					</FormField>
 				</FormColumn>
 				<FormColumn>
 					<FormField type="text" field="name" validation="required">Name</FormField>
