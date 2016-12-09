@@ -304,6 +304,9 @@
   width: 50%;
   display: inline-block;
 }
+.bEventMiddleSideContainer_buttons .bButton.mCircle{
+  margin-right: 3px;
+}
 
 .bEventMap {
   @extend .container;

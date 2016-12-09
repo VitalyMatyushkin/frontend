@@ -277,7 +277,7 @@ const Manager = React.createClass({
 			  rivalsBinding = self.getBinding('rivals');
 
 		const event = self.getDefaultBinding().toJS('model');
-		
+
 		return rivalsBinding.get().map(function (rival, index) {
 			const	disable		= self._isRivalDisable(rival),
 					teamClasses	= classNames({
