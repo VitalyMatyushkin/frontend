@@ -46,7 +46,8 @@ const ChallengeModel = function(event, activeSchoolId){
 
     this.rivals 	= this._getRivals(event, activeSchoolId);
 	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
-	this.score 		= this._getScore(event, activeSchoolId);
+	this.score 		= this._getScore(event);
+	this.textResult	= this._getTextResult(event);
 };
 
 ChallengeModel.prototype._getName = function(event, activeSchoolId){
@@ -78,7 +79,28 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 };
 
 ChallengeModel.prototype._getScore = function(){
-	return !this.isFinished ?  '- : -' : !this.isIndividualSport? this.scoreAr.join(' : ') : '';
+	switch (true) {
+		case !this.isFinished:
+			return '- : -';
+		case this.isFinished && this.isIndividualSport:
+			return '';
+		case this.isFinished && !this.isIndividualSport:
+			return this.scoreAr.join(' : ');
+	};
+};
+
+ChallengeModel.prototype._getTextResult = function(event){
+		if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS") {
+			const scoreArray = this.scoreAr;
+
+			if(scoreArray[0] > scoreArray[1]) {
+				return "Won";
+			} else if(scoreArray[0] < scoreArray[1]) {
+				return "Lost";
+			} else {
+				return "Draw";
+			}
+		}
 };
 
 module.exports = ChallengeModel;
