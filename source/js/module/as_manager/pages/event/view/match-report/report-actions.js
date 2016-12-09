@@ -24,7 +24,7 @@ MatchReportActions.prototype.load = function() {
 		schoolId: this.activeSchoolId,
 		eventId: this.eventId
 	}).then(report => {
-		const 	data 	= Immutable.fromJS(report.content),
+		const	data 	= Immutable.fromJS(report.content),
 				isEdit 	= !report.content;
 
 		binding.atomically()
