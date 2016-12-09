@@ -9,10 +9,11 @@ const 	React 		= require('react'),
 
 const EditingTeamsButtons = React.createClass({
 	mixins: [Morearty.Mixin],
-	handleClickChangeTeamsButtons: function () {
+	handleClickChangeTeamsButtons: function (index) {
 		const binding	= this.getDefaultBinding();
 
 		binding.set('mode', 'edit_squad');
+		binding.set('selectedRivalIndex', index);
 	},
 	render:function () {
 		const	binding		= this.getDefaultBinding();
@@ -24,17 +25,19 @@ const EditingTeamsButtons = React.createClass({
 			<If condition={TeamHelper.isShowEditEventButton(this)}>
 				<div className="bEventMiddleSideContainer_buttons">
 					<div className="bButton mCircle"
-						 onClick={this.handleClickChangeTeamsButtons}
+						 onClick={this.handleClickChangeTeamsButtons.bind(null, 0)}
 					>
 						<i className="fa fa-pencil" aria-hidden="true"/>
 					</div>
-					<If condition={condition}>
+					<If condition={!TeamHelper.isInternalEventForIndividualSport(event)}>
 						<div className="eRightButtonColumn">
-							<div className="bButton mCircle"
-								 onClick={this.handleClickChangeTeamsButtons}
-							>
-								<i className="fa fa-pencil" aria-hidden="true"/>
-							</div>
+							<If condition={!EventHelper.isInterSchoolsEvent(event)}>
+								<div className="bButton mCircle"
+									 onClick={this.handleClickChangeTeamsButtons.bind(null, 1)}
+								>
+									<i className="fa fa-pencil" aria-hidden="true"/>
+								</div>
+							</If>
 						</div>
 					</If>
 				</div>
