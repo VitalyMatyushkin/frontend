@@ -83,7 +83,7 @@ const Blog = React.createClass({
         self.intervalId = setInterval(function () {
             window.Server.schoolEventCommentsCount.get({
                 schoolId:   self.activeSchoolId,
-                eventId:    this.props.eventId}
+                eventId:    self.props.eventId}
             )
             .then(function(res){
                 var oldCount = binding.get('blogCount');
