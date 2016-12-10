@@ -12,7 +12,7 @@ const DetailsWrapper = React.createClass({
 		"HOME"		: 'Home',
 		"AWAY"		: 'Away',
 		"CUSTOM"	: 'Away',
-		"TBC"		: 'TBD'
+		"TBD"		: 'TBD'
 	},
 
 	propTypes:{
@@ -22,25 +22,24 @@ const DetailsWrapper = React.createClass({
 	},
 	getInitialState: function(){
 		return {
-			isLoading:		false,
+			isLoading:		true,
 			eventDetails:	{}
 		};
 	},
 
 	componentWillMount: function() {
+		let details;
+
 		Actions.getDetailsByEventId(this.props.schoolId, this.props.eventId)
-			.then(details => {
-				this.setState({
-					eventDetails : details
-				});
+			.then(_details => {
+				details = _details;
 
 				return Actions.getEventById(this.props.schoolId, this.props.eventId);
 			})
 			.then(event => {
-				console.log(event.generatedNames);
-
 				this.setState({
 					isLoading		: false,
+					eventDetails	: details,
 					eventName		: event.generatedNames[this.props.schoolId],
 					officialName	: event.generatedNames.official,
 					venue			: this.getVenueView(event)
@@ -67,8 +66,8 @@ const DetailsWrapper = React.createClass({
 				return this.VENUE_SERVER_CLIENT_MAP['HOME'];
 			case event.venue.venueType === 'CUSTOM':
 				return this.VENUE_SERVER_CLIENT_MAP['CUSTOM'];
-			case event.venue.venueType === 'TBC':
-				return this.VENUE_SERVER_CLIENT_MAP['TBC'];
+			case event.venue.venueType === 'TBD':
+				return this.VENUE_SERVER_CLIENT_MAP['TBD'];
 		}
 	},
 	submitChanges: function() {

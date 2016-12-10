@@ -14,11 +14,47 @@
 }
 
 .eSchoolMaster_title{
-  display: flex;
   color: $lightBlue;
-  flex-shrink: 0;
   text-transform: capitalize;
 }
+
+.eSchoolMaster_field {
+  margin-bottom: 25px;
+
+  .eSchoolMaster_field_name {
+    font-weight: bold;
+    display: inline-block;
+    width: 150px;
+    color: #aaaaaa;
+  }
+
+  .eSchoolMaster_field_value {
+    display: inline-block;
+  }
+}
+
+.eSchoolMaster_title {
+  flex-basis: 200px;
+  margin-right: 85px;
+}
+.eSchoolMaster_fields {
+  flex-basis: 550px;
+}
+.eSchoolMaster_buttons{
+  flex-basis: 150px;
+}
+
+.eSchoolMaster_buttons,
+.eSchoolMaster_title,
+.eSchoolMaster_fields {
+  h3{
+    color: $blueColor;
+    font-weight: normal;
+    text-transform: uppercase;
+    margin: 25px 0;
+  }
+}
+
 .eSchoolMaster_title h1{
   margin: 0;
 }
@@ -147,12 +183,10 @@
   border-color: transparent transparent #c8cdd0 transparent;
   left:12px;
 }
-.eSchoolMaster_buttons{
-  position: absolute;
-  left: 950px;
-  top: 160px;
-  margin-top: -15px;
-  z-index: 100;
+.bAdminView{
+  display: flex;
+  max-width: 900px;
+  margin: 40px auto;
 }
 .eSchoolMaster_buttons_admin{
   margin-top:-65px;
@@ -161,10 +195,8 @@
   align-items: center;
 }
 .eSchoolMaster_buttons .bButton{
-  margin-left: 10px;
   font-size: 16px;
   letter-spacing: 1px;
-  float:right;
 }
 .filterBase_container{
   width: 400px;
@@ -185,9 +217,23 @@
   margin-right: 15px;
 }
 
-.eSchoolMaster_flag img{
-  max-width: 80px;
-  max-height: 80px;
+.eSchoolMaster_flag {
+  img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+}
+.eSchoolMaster_summary_wrap {
+  display: flex;
+  flex-basis: 750px;
+}
+.eSchoolMaster_title {
+  img {
+    max-width: 170px;
+    max-height: 170px;
+    border-radius: 5px;
+    border: solid 1px #959595;    
+  }
 }
 .bSchoolMaster .bMapView {
   min-height: 315px;

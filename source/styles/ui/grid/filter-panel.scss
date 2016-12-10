@@ -170,3 +170,17 @@ $grey: rgba(0, 0, 0, 0.2);
     display: inline-block;
   }
 }
+
+.eBetweenDateTime {
+  line-height: 30px;
+  width: 170px;
+
+  label {
+    width: 40px;
+    display: inline-block;
+  }
+
+  .eDateTimeInput{
+    width: 125px;
+  }
+}

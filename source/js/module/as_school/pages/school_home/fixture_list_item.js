@@ -19,7 +19,7 @@ const FixtureListItem = React.createClass({
     getFixtureInfo: function(event) {
         return(
             <div>
-                <div className="eEventHeader_field mEvent">{event.name}</div>
+                <div className="eEventHeader_field mEvent">{event.generatedNames.official}</div>
                 <div className="eEventHeader_field mDate">
                     {`${this.getDateFromIso(event.startTime)} / ${this.getTimeFromIso(event.startTime)} / ${event.sport.name}`}
                 </div>
@@ -44,14 +44,20 @@ const FixtureListItem = React.createClass({
 	getEventRivals: function (model) {
     	if(!model.isEventWithOneIndividualTeam)
 			return (
-				<div className="bEventRivals">
-					<div className="bEventRival">
-						{this.renderOpponentSide(model, 0)}
-					</div>
-					<div className="bEventRival mRight">
-						{this.renderOpponentSide(model, 1)}
-					</div>
-				</div>
+                <div className="bEventRivals">
+                    <div className="bEventRivals_row">
+                        <div className="bEventRivals_column mLeft">
+                            <div className="bEventRival">
+                                {this.renderOpponentSide(model, 0)}
+                            </div>
+                        </div>
+                        <div className="bEventRivals_column">
+                            <div className="bEventRival mRight">
+                                {this.renderOpponentSide(model, 1)}
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 			);
 

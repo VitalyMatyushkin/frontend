@@ -23,7 +23,7 @@ const FixtureItem = React.createClass({
 		return(
 			<div>
 				<div className="bFix_date">{`${this.getDateFromIso(event.startTime)} ${this.getTimeFromIso(event.startTime)}`}</div>
-				<div className="bFix_name">{event.name}</div>
+				<div className="bFix_name">{event.generatedNames.official}</div>
 				<div className="bFix_type">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
 			</div>
 		)

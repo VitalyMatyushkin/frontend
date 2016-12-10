@@ -28,13 +28,15 @@ function isTeamEnableForEdit(activeSchoolId, event, team) {
  * @private
  */
 function getAges(schoolData) {
-	return schoolData.forms.reduce(function (memo, form) {
-		if (memo.indexOf(form.age) === -1) {
-			memo.push(form.age);
-		}
+	return schoolData.forms
+		.reduce((memo, form) => {
+			if (memo.indexOf(form.age) === -1) {
+				memo.push(form.age);
+			}
 
-		return memo;
-	}, []);
+			return memo;
+		}, [])
+		.sort((a, b) => a - b);
 };
 
 /**
@@ -421,7 +423,7 @@ function isTeamSport(event) {
 	if(typeof event !== 'undefined') {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
-		return sport.players === SportConsts.SPORT_PLAYERS.TEAM || sport.players === SportConsts.SPORT_PLAYERS['2X2'];
+		return sport && (sport.players === SportConsts.SPORT_PLAYERS.TEAM || sport.players === SportConsts.SPORT_PLAYERS['2X2']);
 	} else {
 		return false;
 	}
@@ -746,10 +748,10 @@ function callFunctionForLeftContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-			if(TeamHelper.isOneOnOneSport(event)){
-				return cb('individualsData', 0);
+			if(TeamHelper.isTeamSport(event)){
+				return cb('teamsData', 0);
 			}
-			return cb('teamsData', 0);
+			return cb('individualsData', 0);
 	}
 };
 
@@ -858,10 +860,10 @@ function callFunctionForRightContext(activeSchoolId, event, cb) {
 			}
 			break;
 		case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
-			if(TeamHelper.isOneOnOneSport(event)){
-				return cb('individualsData', 1);
+			if(TeamHelper.isTeamSport(event)){
+				return cb('teamsData', 1);
 			}
-			return cb('teamsData', 1);
+			return cb('individualsData', 1);
 	}
 }
 
@@ -990,7 +992,7 @@ function getSchoolsData(event) {
 	const schoolsData = [];
 
 	schoolsData.push(event.inviterSchool);
-	event.invitedSchools.forEach( s => schoolsData.push(s) );
+	event.invitedSchools && event.invitedSchools.forEach( s => schoolsData.push(s) );
 
 	return schoolsData;
 }

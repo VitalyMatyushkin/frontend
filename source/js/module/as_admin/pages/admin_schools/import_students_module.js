@@ -1,11 +1,11 @@
 const	React 				= require('react'),
-		Autocomplete		= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
-		Loader 					= require('module/ui/loader'),
-		Promise					= require('bluebird'),
-		Morearty    		= require('morearty'),
-		Immutable				= require('immutable'),
-		moment					= require('moment'),
-		StudentImporter	= require('module/utils/student_importer');
+	Autocomplete			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+	Loader 					= require('module/ui/loader'),
+	Promise					= require('bluebird'),
+	Morearty				= require('morearty'),
+	Immutable				= require('immutable'),
+	moment					= require('moment'),
+	StudentImporter			= require('module/utils/student_importer');
 
 const ImportStudentsModule = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -49,33 +49,33 @@ const ImportStudentsModule = React.createClass({
 
 	validationEverything: function (){
 		const 	binding	= this.getDefaultBinding(),
-				studentData = binding.toJS('studentData'),			
+				studentData = binding.toJS('studentData'),
 				currentSchool = binding.toJS('currentSchool');
 
 		if (typeof studentData !== 'undefined' && typeof currentSchool !== 'undefined'){
 			const result = StudentImporter.pullFormsAndHouses(studentData, currentSchool),
-					errorsImport = binding.toJS('studentData.errors'),							
+					errorsImport = binding.toJS('studentData.errors'),
 					studentsImport = binding.toJS('studentData.students'),
 					errorsFormId = result.errors;
 
 			let errorsList = [],
 					numberError = 0;
 
-			for (let key in errorsImport) {	
-				numberError++;		
-				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>); //In console React has error with unique key in elements li			
+			for (let key in errorsImport) {
+				numberError++;
+				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>); //In console React has error with unique key in elements li
 			}
-			for (let key in errorsFormId) {	
-				numberError++;		
-				errorsList.push(<li>Row: {errorsFormId[key].row} Message: {errorsFormId[key].message}</li>); //In console React has error with unique key in elements li			
+			for (let key in errorsFormId) {
+				numberError++;
+				errorsList.push(<li>Row: {errorsFormId[key].row} Message: {errorsFormId[key].message}</li>); //In console React has error with unique key in elements li
 			}
-			
+
 			if (errorsList.length > 0) {
 					return (
 						<div>
 						<div className="bButton" onClick={this.handleUploadStudentsButtonClick}>
 							Upload students
-						</div>						
+						</div>
 							<p>Students to upload {studentsImport.length}</p>
 							<p>Errors: {numberError} </p>
 							<ul>{errorsList}</ul>
@@ -83,17 +83,17 @@ const ImportStudentsModule = React.createClass({
 					)
 			}
 			else {
-				return  (					
+				return  (
 					<div>
 						<div className="bButton" onClick={this.handleUploadStudentsButtonClick}>
 							Upload students
-						</div>					
-						<p>Students to upload {studentsImport.length}</p>		
+						</div>
+						<p>Students to upload {studentsImport.length}</p>
 					</div>
 				)
 			}
 
-		}		
+		}
 		else {
 			return <p>No data to upload</p>
 		}
@@ -104,7 +104,7 @@ const ImportStudentsModule = React.createClass({
 
 		const	currentSchool	= binding.toJS('currentSchool'),
 				studentData		= binding.toJS('studentData');
-		
+
 		Promise.all(studentData.students.map( student => {
 			return window.Server.schoolStudents.post(currentSchool.id, {
 				firstName:	student.firstName,
@@ -148,12 +148,11 @@ const ImportStudentsModule = React.createClass({
 	},
 
 	render: function() {
-			const	self	= this,								
+			const	self	= this,
 					binding	= self.getDefaultBinding(),
 					importIsSync = binding.toJS('importIsSync');
-					console.log(importIsSync);
 
-			return (			
+			return (
 				<div className='bForm'>
 					<h3>Pls, choose school</h3>
 					<div className='eForm_field'>
@@ -174,7 +173,7 @@ const ImportStudentsModule = React.createClass({
 						/>
 					</div>
 					<Loader condition={!importIsSync} />
-					<div>{self.validationEverything()}</div>					
+					<div>{self.validationEverything()}</div>
 				</div>
 				
 			)

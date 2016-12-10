@@ -57,6 +57,9 @@ const serviceList = {
 		serviceList.useractivity = new Service('/superadmin/useractivity', binding);
 		serviceList.useractivityCount = new Service('/superadmin/useractivity/count', binding);
 
+        //events
+        serviceList.events = new Service('/superadmin/schools/{schoolId}/events', binding);
+
         //Filtering services
         serviceList.publicSchools.filter = FilteringServices.allSchoolsFiltering;       //(filter)
         serviceList.schoolStudents.filter = FilteringServices.studentsFilteringByLastName;    //(schoolId, filter)

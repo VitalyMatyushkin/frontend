@@ -1,4 +1,5 @@
 const	RoleHelper		= require('module/helpers/role_helper'),
+		EventsConst			= require('module/helpers/consts/events'),
 		MoreartyHelper	= require('module/helpers/morearty_helper');
 
 const EventHelper = {
@@ -197,6 +198,62 @@ const EventHelper = {
 		return event.type ?
 		event.type === "internal" :
 		self.serverEventTypeToClientEventTypeMapping[event.eventType] === "internal";
+	},
+	getGenderListEvent: function() {
+	  return [
+	      {
+	          key:EventsConst.EVENT_GENDERS_FILTER.MALE_ONLY,
+	          value:'Boys only'
+	      },
+	      {
+	          key:EventsConst.EVENT_GENDERS_FILTER.FEMALE_ONLY,
+	          value:'Girls only'
+	      },
+	      {
+	          key:EventsConst.EVENT_GENDERS_FILTER.MIXED,
+	          value:'Mixed'
+	      }
+	  ];
+	},
+	getStatusListEvent: function() {
+	  return [
+	      {
+	          key:EventsConst.EVENT_STATUS.DRAFT,
+	          value:'Draft'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.SENDING_INVITES,
+	          value:'Sending invites'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.INVITES_SENT,
+	          value:'Invites sent'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.COLLECTING_INVITE_RESPONSE,
+	          value:'Collecting invite response'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.ACCEPTED,
+	          value:'Accepted'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.REJECTED,
+	          value:'Rejected'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.FINISHED,
+	          value:'Finished'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.ON_HOLD,
+	          value:'On hold'
+	      },
+	      {
+	          key:EventsConst.EVENT_STATUS.CANCELED,
+	          value:'Cancelled'
+	      }
+	  ];
 	}
 };
 

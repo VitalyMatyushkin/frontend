@@ -45,12 +45,20 @@ const ChallengeListItem = React.createClass({
 
 		return (
 			<div key={'event-' + event.id} className='eChallenge' onClick={() => onEventClick(event.id)}>
-				<div className="eChallenge_sport"><SportIcon name={model.sport} className="bIcon_invites" /></div>
-				<div className="eChallenge_date">{model.date}</div>
-
-				<div className="eChallenge_name" title={model.name}>{model.name}</div>
-				{this.renderGameTypeColumn(model)}
-				<div className="eChallenge_score">{model.score}</div>
+				<div className="eChallenge_sport">
+					<SportIcon name={model.sport} className="bIcon_invites" />
+				</div>
+				<div className="eChallenge_date">
+					{model.time}
+				</div>
+				<div className="eChallenge_name" title={model.name}>
+					{model.name}
+				</div>
+				<div className="eChallenge_score">
+					{typeof model.textResult === 'undefined' ? null : model.textResult}
+					{typeof model.textResult === 'undefined' ? null : <br></br>}
+					{model.score}
+				</div>
 			</div>
 		);
 	}

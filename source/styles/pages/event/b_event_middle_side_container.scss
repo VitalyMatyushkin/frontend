@@ -1,7 +1,22 @@
+@import "../../bootstrap-custom";
+
 .bEventMiddleSideContainer {
-  margin: 0 auto;
-  max-width: 940px;
-  width: 100%;
+  @extend .container;
+
+  &_row {
+    @include make-row();
+    position: relative;
+  }
+  &_buttons {
+    @include make-md-column-offset(1);
+    @include make-md-column(10);
+    position: absolute;
+    z-index: 10;
+    text-align: right;
+
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
 }
 
 .bEventMiddleSideContainer_leftSide {

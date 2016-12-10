@@ -14,6 +14,7 @@ const OldAutocompleteWrapper = React.createClass({
 		placeholder: 		React.PropTypes.string,
         onEscapeSelection:  React.PropTypes.func,
         clearAfterSelect: 	React.PropTypes.bool,
+        isBlocked:          React.PropTypes.bool,
         defaultItem: 	    React.PropTypes.object,
         extraCssStyle:      React.PropTypes.string
     },
@@ -37,6 +38,9 @@ const OldAutocompleteWrapper = React.createClass({
     getInputText: function(elem) {
         return  elem[this.props.serverField];
     },
+    getElementTooltip: function(elem) {
+        return  typeof elem.tooltip !== 'undefined' ? elem.tooltip : '';
+    },
     render: function () {
         const self = this;
 
@@ -48,9 +52,11 @@ const OldAutocompleteWrapper = React.createClass({
                 searchFunction      = {self.searchFunction}
                 onSelect            = {self.props.onSelect}
                 getElementTitle     = {self.getInputText}
+                getElementTooltip   = {self.getElementTooltip}
                 onEscapeSelection   = {self.getEscapeSelectFunction()}
                 clearAfterSelect    = {self.props.clearAfterSelect !== undefined ? self.props.clearAfterSelect : false}
                 extraCssStyle       = {self.props.extraCssStyle}
+                isBlocked           = {self.props.isBlocked}
             />
         );
     }

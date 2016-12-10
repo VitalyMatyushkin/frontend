@@ -12,16 +12,24 @@ const PasswordResetRequestForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount:function(){
 		const self = this;
-		self.tmpFormName = "Forgot password";
+		self.tmpFormName = "Please enter the email address you used </br> to create the account.";
 	},
 	onSuccess:function(){
 		window.simpleAlert(
-			'The request to change the password was sent by email.',
+			'Please check your email inbox, and click the link in the email you received to reset your password.',
 			'Ok',
 			() => {window.location.href = domainHelper.getLoginUrl();}
 		);
 
 	},
+	onError:function(){
+		window.simpleAlert(
+			'There is no such address',
+			'Ok',
+			() => {window.location.reload()}
+		);
+
+	},	
 	render: function() {
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
@@ -29,7 +37,7 @@ const PasswordResetRequestForm = React.createClass({
 		return (
 		<div className="bPageMessage">
 			<SVG classes="bLoginIcon" icon="icon_login"/>
-			<Form name={self.tmpFormName} service={window.Server.passwordsResetRequest} binding={binding} onSuccess={self.onSuccess}>
+			<Form name={self.tmpFormName} service={window.Server.passwordsResetRequest} binding={binding} onSuccess={self.onSuccess} onError={self.onError}>
 				<FormField type="text" placeholder="E-mail" field="email" validation="email required" />
 			</Form>
 		</div>

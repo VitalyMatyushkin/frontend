@@ -3,13 +3,12 @@
 ._bPlayer {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 
-  width: 250px;
-  height: 30px;
-
+  max-width: 260px;
+  padding: 15px 0;
   margin: 0 auto;
-  align-items: center;
-  justify-content: space-between;
+
 
   &.mMini {
     height: 25px;
@@ -24,7 +23,6 @@
   }
 
   &.mIndividuals {
-    flex: 0 0 100%;
   }
 }
 
@@ -50,7 +48,6 @@
 .ePlayer_score {
   font-size: 16px;
   align-self: center;
-  padding: 5px 0 0;
   min-width: 45px;
   display: inline-block;
 
@@ -58,6 +55,11 @@
     color: #007abf;
     font-size: 43px;
   }
+}
+.ePlayer_scoreContainer {
+  flex: 2;
+
+  text-align: right;
 }
 
 .ePlayer_lastName {
@@ -71,13 +73,10 @@
 }
 
 .ePlayer_name {
-  box-sizing: border-box;
   vertical-align: middle;
   text-align: left;
-  padding: 5px 5px 0 0;
-  font-size: 16px;
-  min-width: 140px;
-  color: #2a2a2a;
+  font-size: 1rem;
+  color: $textColor;
   &.mHead {
     color: #939393;
   }
@@ -87,15 +86,25 @@
 }
 
 .bPlayer {
-  width: 300px;
   margin: 0 auto;
+
+  &.mPerformance {
+    background: linear-gradient(90deg, #d2d2d2 0%, #ffffff 100%) no-repeat bottom;
+    background-size: 100% 1px;
+
+    padding: 30px 40px;
+  }
 }
 
 .ePlayer_performance {
-  padding: 0 0 15px 15px;
+
+}
+.ePlayer_performanceItem {
+  padding: 10px 0;
 }
 
 .ePlayer_performanceItemName {
+  color: $GrayText;
   display: inline-block;
   width: 100px;
 }
@@ -164,34 +173,6 @@
 
 ._bPlayer.mShowRemoveButton .ePlayer_remove {
   display: flex;
-}
-
-.ePlayer_minus,
-.ePlayer_plus {
-  cursor: pointer;
-  display: inline-block;
-  text-align: center;
-  border: solid 1px #fff;
-  border-radius: 50%;
-  padding: 1px 0 0;
-  width: 16px;
-  height: 16px;
-  &:hover{
-    border: solid 1px #c2c2c2;
-  }
-}
-.ePlayer_plus {
-  margin-right: 10px;
-}
-._bPlayer:hover .ePlayer_minus .bIcon,
-._bPlayer:hover .ePlayer_plus .bIcon{
-  color: #000;
-}
-.ePlayer_minus .bIcon,
-.ePlayer_plus .bIcon {
-  width: 8px;
-  height: 8px;
-  color: #fff;
 }
 
 .ePlayer_gender .bIcon {

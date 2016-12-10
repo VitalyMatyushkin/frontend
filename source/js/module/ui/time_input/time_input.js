@@ -96,7 +96,6 @@ const TimeInput = React.createClass({
 	},
 
 	render: function () {
-		console.log(this.props.value);
 		return (
 			<input	className	= { this.props.cssClassName }
 					type		= { 'text' }

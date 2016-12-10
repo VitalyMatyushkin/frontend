@@ -10,9 +10,10 @@ const	React				= require('react'),
 
 const TimeBlock = React.createClass({
 	propTypes:{
-		label:		React.PropTypes.string.isRequired,
-		dateString:	React.PropTypes.string,
-		mode:		React.PropTypes.string
+		label:			React.PropTypes.string.isRequired,
+		dateString:		React.PropTypes.string,
+		mode:			React.PropTypes.string,
+		handleChange:	React.PropTypes.func
 	},
 	getDefaultProps: function () {
 		const date = new Date();

@@ -128,10 +128,10 @@ $border: solid 1px #c2c2c2;
 }
 .eAllAchievements_container{
   position: relative;
-  width: 800px;
+  max-width: 800px;
+  width: 100%;
   height:100%;
-  border: $BORDER;
-  font-size: 16px;
+  font-size: 1rem;
   text-transform: none;
   text-align: center;
   margin: 20px auto 0;
@@ -199,11 +199,6 @@ $border: solid 1px #c2c2c2;
 .eAchievements_wrap .bChallenge{
   border-top: $BORDER;
   margin-top: 1px;
-}
-.bAdminView{
-  display: flex;
-  max-width: 1060px;
-  padding: 40px 11%;
 }
 .bAchievementsDate {
   max-width: 470px;

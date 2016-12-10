@@ -8,6 +8,7 @@ const	React			= require('react'),
 		EventRivals					= require('./view/event_rivals'),
 		EventButtons				= require('./view/event_buttons'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
+		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
 		EventTeams					= require('./view/teams/event_teams'),
 		EventPerformance			= require('./view/teams/event_teams_performance'),
 		EventGallery				= require('./new_gallery/event_gallery'),
@@ -19,6 +20,7 @@ const	React			= require('react'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
 		DetailsWrapper 				= require('./view/details/details_wrapper'),
 		MatchReport 				= require('./view/match-report/report'),
+		SportConsts					= require('module/helpers/consts/sport'),
 		Map 						= require('module/ui/map/map-event-venue'),
 		SVG 						= require('module/ui/svg'),
 
@@ -201,12 +203,6 @@ const EventPage = React.createClass({
 
 		window.location.hash = hash + '?tab=' + value;
 	},
-	handleClickChangeTeamsButtons: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.set('mode', 'edit_squad');
-	},
 	_getEventTeamsBinding: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -239,18 +235,36 @@ const EventPage = React.createClass({
 
 		return self.isSync() && binding.toJS('mode') === 'edit_squad';
 	},
+	isaLeftShow:function (activeSchoolId, event, mode) {
+		const 	isClosingMode 	= mode === 'closing',
+				params 			= isClosingMode && TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+
+		return params && params.bundleName === 'teamsData';
+	},
+	isaRightShow:function (activeSchoolId, event, mode) {
+		const 	isClosingMode 	= mode === 'closing',
+				params 			= isClosingMode && TeamHelper.getParametersForRightContext(activeSchoolId, event);
+
+		return params && params.bundleName === 'teamsData';
+	},
 	render: function() {
 		const	self						= this,
-				binding						= self.getDefaultBinding(),
+				binding						= self.getDefaultBinding();
+
+		const	event						= binding.toJS('model'),
 				showingComment				= binding.get('showingComment'),
 				activeTab					= binding.get('activeTab'),
-				isClosingMode 				= binding.toJS('mode') === 'closing';
+				activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
+				mode						= binding.toJS('mode'),
+				isaLeftShow					= this.isaLeftShow(activeSchoolId, event, mode),
+				isaRightShow				= this.isaRightShow(activeSchoolId, event, mode),
+				isParent					= RoleHelper.isParent(this);
 
 		switch (true) {
 			case !self.isSync():
 				return (
 					<div className="bEventContainer">
-						<span>loading...</span>
+						<span className="eEvent_loading">loading...</span>
 					</div>
 				);
 			// sync and any mode excluding edit_squad
@@ -261,28 +275,31 @@ const EventPage = React.createClass({
 							<EventHeader binding={binding}/>
 							<EventRivals binding={binding}/>
 							<div className="bEventMiddleSideContainer">
-								<div className="bEditButtonWrapper">
-									<If condition={TeamHelper.isShowEditEventButton(self)}>
-										<div	className	= "bEditButton"
-												onClick		= {self.handleClickChangeTeamsButtons}
-										>
-											<SVG icon="icon_edit"/>
-										</div>
-									</If>
+								<div className="bEventMiddleSideContainer_row">
+									<EditingTeamsButtons binding={binding} />
+									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
+															  isVisible={isaLeftShow}
+															  className="mLeft"/>
+									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
+															  isVisible={isaRightShow}/>
 								</div>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-														  isVisible={isClosingMode}/>
-								<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-														  isVisible={isClosingMode}
-														  className="mRight"/>
 							</div>
 							<EventTeams binding={self._getEventTeamsBinding()} />
-							<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')} />
+
+							<div className="bEventMap">
+								<div className="bEventMap_row">
+									<div className="bEventMap_col">
+										<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')}/>
+									</div>
+								</div>
+							</div>
 							<div className="bEventMiddleSideContainer">
 								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
 							</div>
 							<If condition={activeTab === 'performance'} >
-								<EventPerformance binding={self._getEventTeamsBinding()} />
+								<div className="bEventBottomContainer">
+									<EventPerformance binding={self._getEventTeamsBinding()}/>
+								</div>
 							</If>
 							<If condition={activeTab === 'gallery'} >
 								<EventGallery	activeSchoolId	= { self.activeSchoolId }
@@ -293,13 +310,16 @@ const EventPage = React.createClass({
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {self.activeSchoolId}
-													isParent	= {RoleHelper.isParent(this)}
+													isParent	= {isParent}
 									/>
 								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
 								<div className="bEventBottomContainer">
-									<MatchReport binding={binding.sub('matchReport')} eventId={self.eventId} />
+									<MatchReport	binding		= {binding.sub('matchReport')}
+													eventId		= {self.eventId}
+													isParent	= {isParent}
+									/>
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
@@ -312,10 +332,8 @@ const EventPage = React.createClass({
 			case self.isSync() && binding.toJS('mode') === 'edit_squad':
 				return (
 					<div className="bEventContainer">
-						<div>
-							<ManagerWrapper binding={binding}/>
-							<EventButtons binding={binding}/>
-						</div>
+						<ManagerWrapper binding={binding}/>
+						<EventButtons binding={binding}/>
 					</div>
 				);
 		}

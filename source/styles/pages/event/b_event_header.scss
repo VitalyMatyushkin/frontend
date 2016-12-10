@@ -1,74 +1,47 @@
 @import "../../!variables";
+@import "../../bootstrap-custom";
 
 .bEventHeader {
-  width: 940px;
-  margin: 0 auto;
-  padding-top: 5px;
-}
+  @extend .container;
+  margin-bottom: 20px;
 
-.bEventHeader_leftSide {
-  display: inline-block;
-  vertical-align: top;
-  width: 350px;
-}
+  &_row {
+    @include make-row();
+  }
 
-.bEventHeader_rightSide {
-  display: inline-block;
-  vertical-align: top;
+  &_leftSide {
+    @include make-md-column-offset(1);
+    @include make-md-column(6);
+    @extend .col-sm-8
+  }
 
-  width: 590px;
+  &_rightSide {
+    @include make-md-column(4);
+    @extend .col-sm-4
+  }
 }
 
 .eEventHeader_field {
   text-transform: none;
   text-align: center;
-}
+  font-size: 1.5625rem;
 
-.eEventHeader_field.mName {
-  font-size: 18px;
-  color: $blueColor;
-  font-weight: bold;
-  text-align: center;
-  width: 80%;
-  max-height: 70px;
-  overflow: hidden;
+  margin: 10px 0;
+
+  &.mEvent{
+    text-align: left;
+    text-overflow: ellipsis;
+  }
+  &.mDate {
+    color: $GrayText;
+    text-align: left;
+  }
 }
-.eEventHeader_field.mDate {
-  font-size: 16px;
-  color: #616161;
-  margin: 5px 0;
-  text-align: left;
-}
-.eEventHeader_field.mEvent{
-  padding-top: 3px;
-  color: #333333;
-  font-size: 16px;
-  max-width: 80%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-}
-.eEventHeader_field.mType{
-  padding: 2px 0;
-  min-height: 15px;
-}
-.bEventHeader_wrap {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  max-width: 940px;
-  width: 100%;
-  margin: 0 auto;
-}
-.eEventHeader_field_wrap{
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  width: 100%;
-}
-.eEventHeader_field_wrap .eEventHeader_field{
-  width: 100%;
-}
-.eEventHeader_field.mSport{
-  display: flex;
+@media (max-width: $screen-xs-max) {
+  .eEventHeader_field {
+    text-align: center;
+    &.mDate {
+      font-size: 1rem;
+    }
+  }
 }

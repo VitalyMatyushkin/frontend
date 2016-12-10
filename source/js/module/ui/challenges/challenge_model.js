@@ -31,8 +31,8 @@ const   DateHelper  = require('module/helpers/date_helper'),
  *
  * */
 const ChallengeModel = function(event, activeSchoolId){
-    this.id 		= event.id;
-    this.name 		= event.name;
+	this.id 		= event.id;
+    this.name 		= this._getName(event, activeSchoolId);
 	this.dateUTC	= event.startTime;
 	this.date 		= DateHelper.getDate(event.startTime);
 	this.time 		= DateHelper.getTime(event.startTime);
@@ -46,7 +46,12 @@ const ChallengeModel = function(event, activeSchoolId){
 
     this.rivals 	= this._getRivals(event, activeSchoolId);
 	this.scoreAr 	= this._getScoreAr(event, activeSchoolId);
-	this.score 		= this._getScore(event, activeSchoolId);
+	this.score 		= this._getScore(event);
+	this.textResult	= this._getTextResult(event);
+};
+
+ChallengeModel.prototype._getName = function(event, activeSchoolId){
+	return typeof activeSchoolId !== 'undefined' && typeof event.generatedNames[activeSchoolId] !== 'undefined' ? event.generatedNames[activeSchoolId] : event.generatedNames.official;
 };
 
 ChallengeModel.prototype._getRivals = function(event, activeSchoolId){
@@ -74,7 +79,28 @@ ChallengeModel.prototype._getScoreAr = function(event, activeSchoolId){
 };
 
 ChallengeModel.prototype._getScore = function(){
-	return !this.isFinished ?  '- : -' : !this.isIndividualSport? this.scoreAr.join(' : ') : '';
+	switch (true) {
+		case !this.isFinished:
+			return '- : -';
+		case this.isFinished && this.isIndividualSport:
+			return '';
+		case this.isFinished && !this.isIndividualSport:
+			return this.scoreAr.join(' : ');
+	};
+};
+
+ChallengeModel.prototype._getTextResult = function(event){
+		if(this.isFinished && !this.isIndividualSport && event.eventType === "EXTERNAL_SCHOOLS") {
+			const scoreArray = this.scoreAr;
+
+			if(scoreArray[0] > scoreArray[1]) {
+				return "Won";
+			} else if(scoreArray[0] < scoreArray[1]) {
+				return "Lost";
+			} else {
+				return "Draw";
+			}
+		}
 };
 
 module.exports = ChallengeModel;

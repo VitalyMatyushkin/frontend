@@ -11,6 +11,8 @@ const   React       	= require('react'),
 
 		DetailsStyle	= require('../../../../styles/ui/popup/b_details.scss');
 
+const USER = require('module/helpers/consts/user');
+
 const TabItemDetails = React.createClass({
     mixins:[Morearty.Mixin],
     componentWillMount:function(){
@@ -65,36 +67,38 @@ const TabItemDetails = React.createClass({
         // return '7' + phone.replace('(', '').replace(')', '').replace('-', '');
         return phone.replace(' ', '').replace('(', '').replace(')', '').replace('-', '');
     },
-	getGender: function () {
-		const gendersArray = [
-			{
-				value: 'Male',
-				id: 'MALE'
-			},
-			{
-				value: 'Female',
-				id: 'FEMALE'
-			}
-		];
-
-		return Promise.resolve(gendersArray);
-	},
+    getGender: function () {
+        const gendersArray = [
+            {
+                text: 'Male',
+                value: USER.GENDER.MALE
+            },
+            {
+                text: 'Female',
+                value: USER.GENDER.FEMALE
+            },
+            {
+                text: 'Not defined',
+                value: USER.GENDER.NOT_DEFINED
+            }
+        ];
+        return gendersArray;
+    },
     render:function(){
-        var self = this,
-            binding = self.getDefaultBinding();
+        var binding = this.getDefaultBinding();
 
         return (
             <div className="bDetailsTab">
-                <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={self._onSubmit} defaultButton="Save" formStyleClass="mDetails">
+                <Form binding={binding.sub('form')} service="superadmin/users" onSubmit={this._onSubmit} defaultButton="Save" formStyleClass="mDetails">
                     <FormColumn>
                         <FormField labelText="Upload New Avatar" type="imageFile" typeOfFile="image" field="avatar"/>
                     </FormColumn>
                     <FormColumn>
                         <FormField type="text" field="firstName" validation="required">First name</FormField>
                         <FormField type="text" field="lastName" validation="required">Surname</FormField>
-						<FormField type="radio" field="gender" sourcePromise={self.getGender}>Gender</FormField>
+						<FormField type="dropdown" field="gender" options={this.getGender()}>Gender</FormField>
                         <FormField type="text" field="email" validation="email server">Email</FormField>
-                        <FormField type="phone" field="phone" validation="server" onPrePost={self.getPhone}>Mobile phone</FormField>
+                        <FormField type="phone" field="phone" validation="server" onPrePost={this.getPhone}>Mobile phone</FormField>
 						<FormField type="checkbox" field="verification.status.email">Email verified</FormField>
 						<FormField type="checkbox" field="verification.status.sms">Phone verified</FormField>
                     </FormColumn>

@@ -31,7 +31,7 @@ const SecuritySettingsPage = React.createClass({
 		return (
 			<div>
 				<Form
-					formStyleClass="bSettingsForm"
+					formStyleClass="bSettingsForm mLeft"
 					name="Change password"
 					onSubmit={self.onChangePassword}
 					binding={binding}

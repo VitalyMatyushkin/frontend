@@ -8,6 +8,8 @@ const   RouterView  			= require('module/core/router'),
         Morearty    			= require('morearty'),
         Immutable   			= require('immutable'),
         ClassesPageComponent 	= require('module/as_admin/pages/admin_schools/school_sandbox/classes/classes_page'),
+        EventsPageComponent    = require('module/as_admin/pages/admin_schools/school_sandbox/events/events_page'),
+        SummaryPageComponent    = require('module/as_admin/pages/admin_schools/school_sandbox/summary/summary_page'),
 		HousePageComponent 		= require('module/as_admin/pages/admin_schools/school_sandbox/houses/houses_page');
 
 const SchoolSandbox = React.createClass({
@@ -43,6 +45,18 @@ const SchoolSandbox = React.createClass({
                                         name:'Houses',
                                         key:'houses',
                                         routes:[`/school_sandbox/${schoolId}/houses`]
+                                    },
+                                    {
+                                        href:`/#school_sandbox/${schoolId}/events`,
+                                        name:'Events',
+                                        key:'events',
+                                        routes:[`/school_sandbox/${schoolId}/events`]
+                                    },
+                                    {
+                                        href:`/#school_sandbox/${schoolId}/summary`,
+                                        name:'Summary',
+                                        key:'summary',
+                                        routes:[`/school_sandbox/${schoolId}/summary`]
                                     }
                                 ];
         //Set sub menu items in default binding
@@ -83,6 +97,16 @@ const SchoolSandbox = React.createClass({
                             path="/school_sandbox/:schoolId/houses /school_sandbox/:schoolId/houses/:mode /school_sandbox/:schoolId/houses/:mode/:id"
                             binding={subBinding}
                             component={HousePageComponent}
+                        />
+                        <Route
+                            path="/school_sandbox/:schoolId/events"
+                            binding={subBinding}
+                            component={EventsPageComponent}
+                        />
+                        <Route
+                            path="/school_sandbox/:schoolId/summary"
+                            binding={binding}
+                            component={SummaryPageComponent}
                         />
                     </RouterView>
                 </div>
