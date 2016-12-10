@@ -14,12 +14,14 @@ const Blog = React.createClass({
     // ID of current school
     // Will set on componentWillMount event
     activeSchoolId: undefined,
-    loggedUser: undefined,
+	propTypes:{
+    	eventId: React.PropTypes.string.isRequired
+	},
     _setBlogCount:function(){
         const   self    = this,
                 binding = self.getDefaultBinding();
 
-        window.Server.schoolEventCommentsCount.get({schoolId: self.activeSchoolId, eventId: binding.get('model.id')})
+        window.Server.schoolEventCommentsCount.get({schoolId: self.activeSchoolId, eventId: this.props.eventId})
             .then(res => {
                 binding.set('blogCount', res.count);
                 return res;
@@ -36,7 +38,7 @@ const Blog = React.createClass({
         window.Server.schoolEventComments.get(
             {
                 schoolId:   self.activeSchoolId,
-                eventId:    binding.get('model.id')
+                eventId:    this.props.eventId
             },
             {
                 filter: {
@@ -63,9 +65,10 @@ const Blog = React.createClass({
         self._setComments();
     },
     _setLoggedUser: function() {
-        const self = this;
+		const   self    = this,
+			binding = self.getDefaultBinding();
 
-        window.Server.profile.get().then(user => self.loggedUser = user)
+        window.Server.profile.get().then(user => binding.set('loggedUser', Immutable.fromJS(user)))
     },
     // TODO HMMMMM???
     componentDidMount:function(){
@@ -80,7 +83,7 @@ const Blog = React.createClass({
         self.intervalId = setInterval(function () {
             window.Server.schoolEventCommentsCount.get({
                 schoolId:   self.activeSchoolId,
-                eventId:    binding.get('model.id')}
+                eventId:    this.props.eventId}
             )
             .then(function(res){
                 var oldCount = binding.get('blogCount');
@@ -89,7 +92,7 @@ const Blog = React.createClass({
                 }
                 return res;
             });
-        }, 15000);
+        }, 30000);
     },
     componentWillUnmount:function(){
         var self = this,
@@ -101,7 +104,7 @@ const Blog = React.createClass({
     _commentButtonClick:function(){
         var self = this,
             binding = self.getDefaultBinding(),
-            eventId = binding.get('model.id'),
+            eventId = this.props.eventId,
             comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
 			replyTo = binding.get('replyTo'),
 			replyName = replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
@@ -147,14 +150,15 @@ const Blog = React.createClass({
         const   self    = this,
                 binding = self.getDefaultBinding();
 
-        const   dataBlog = binding.toJS('blogs');
+        const   dataBlog 	= binding.toJS('blogs'),
+				loggedUser 	= binding.toJS('loggedUser');
 
         return(
             <div className="bBlogMain">
                 <CommentBox onReply={self.onReply} blogData={dataBlog} />
                 <div className="bBlog_box mNewComment">
                     <div className="ePicBox">
-                        <Avatar pic={self.loggedUser && self.loggedUser.avatar} minValue={45} />
+                        <Avatar pic={loggedUser && loggedUser.avatar} minValue={45} />
                     </div>
                     <div className="eEvent_commentBlog">
                         <Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>
