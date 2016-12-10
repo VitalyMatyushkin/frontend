@@ -21,7 +21,7 @@ const PaginationModel = function(filter){
 	this.filter.onPageLoaded.on(this.onPageLoaded.bind(this));
 	this.filter.onChange.on(this.onLoading.bind(this));
 
-	this.onShowBtnUp = () => {};
+	this.onShowBtnUp = null;
 };
 
 PaginationModel.prototype.nextPage = function(){
@@ -40,7 +40,7 @@ PaginationModel.prototype.onLoading = function(){
 PaginationModel.prototype._onScroll = function(){
 	if(!this.isScrolled && window.scrollY > HEADER_HEIGHT || this.isScrolled && window.scrollY < HEADER_HEIGHT){
 		this.isScrolled = window.scrollY > HEADER_HEIGHT;
-		this.onShowBtnUp();
+		this.onShowBtnUp && this.onShowBtnUp();
 	}
 	if(!this.isLastPage && !this.isLoading && (document.body.clientHeight - FOOTER_HEIGHT < window.scrollY + window.innerHeight)){
 		this.nextPage();
@@ -52,8 +52,9 @@ PaginationModel.prototype.onScrollTop = function(){
 PaginationModel.prototype.addListener = function(){
 	window.addEventListener('scroll', this._onScroll.bind(this));
 };
-PaginationModel.prototype.removeListener = function(){
+PaginationModel.prototype.removeListeners = function(){
 	window.removeEventListener('scroll', this._onScroll.bind(this));
+	this.onShowBtnUp = null;
 };
 
 

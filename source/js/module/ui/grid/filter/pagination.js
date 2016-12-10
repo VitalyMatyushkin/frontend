@@ -18,7 +18,7 @@ const Pagination = React.createClass({
 		model.onShowBtnUp = this.onRender;
 	},
 	componentWillUnmount: function () {
-		this.props.model.removeListener();
+		this.props.model.removeListeners();
 	},
 	onRender:function(){
 		this.setState({scrollY: window.scrollY});
