@@ -48,7 +48,7 @@ const SchoolSummary = React.createClass({
 				activeSchoolId	= rootBinding.get('userRules.activeSchoolId'),
 				role 			= rootBinding.get('userData.authorizationInfo.role'),
 				schoolName		= binding.get('schoolData').get('name'),
-				postcodeId		= binding.get('schoolData').get('postcodeId'),
+				postcode		= binding.get('schoolData.postcode.postcode'),
 				address			= binding.get('schoolData').get('address'),
 				description		= binding.get('schoolData').get('description');
 
@@ -61,8 +61,6 @@ const SchoolSummary = React.createClass({
 			activeSchoolId	= {activeSchoolId}
 			schoolName		= {schoolName}
 			schoolPic		= {schoolPicture}
-			postcodeId		= {postcodeId}
-			address			= {address}
 			description		= {description}
 			siteLink		= {siteLink}
 			geoPoint		= {geoPoint}

@@ -15,7 +15,7 @@ const SummaryPanel = React.createClass({
 		schoolPic:		React.PropTypes.string,
 		schoolName:		React.PropTypes.string.isRequired,
 		postcodeId:		React.PropTypes.string,
-		address:		React.PropTypes.string.isRequired,
+		address:		React.PropTypes.string,
 		description:	React.PropTypes.string,
 		siteLink:		React.PropTypes.string.isRequired,
 		geoPoint:		React.PropTypes.any,
