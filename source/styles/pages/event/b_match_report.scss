@@ -1,15 +1,17 @@
 @import "../../!variables";
 
 .bMatchReport{
+  background: $secondBackgroundColor;
   border-bottom: $mainBorder;
+  min-height: 100px;
 
   .mNew {
+    background: #fff;
     margin-top: 20px;
-    padding: 10px 30px;
+    padding: 20px 30px;
   }
 
   .mAdded {
-    background: $secondBackgroundColor;
     padding: 35px;
     word-break: break-all;
   }
