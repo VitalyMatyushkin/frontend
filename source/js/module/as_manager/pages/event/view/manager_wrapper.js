@@ -305,44 +305,47 @@ const ManagerWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const	event			= binding.toJS('model'),
+				teamWrappers	= this.getTeamWrappers(),
+				validationData	= this.getValidationData();
+
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(!binding.toJS('teamManagerWrapper.default.isSubmitProcessing')) {
-			const	event			= binding.toJS('model'),
-					teamWrappers	= this.getTeamWrappers(),
-					validationData	= this.getValidationData();
+		if(!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') && TeamHelper.isTeamDataCorrect(event, validationData)) {
 
-			switch (true) {
-				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-				):
-					this.showSavingChangesModePopup();
-					break;
-				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-				):
-					this.showSavingChangesModePopup();
-					break;
-				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-				):
-					this.showSavingChangesModePopup();
-					break;
-				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
-				):
-					binding.set('isSubmitProcessing', true);
-					this.submit();
-					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isNonTeamSport(event):
-					binding.set('isSubmitProcessing', true);
-					this.submit();
-					break;
-			}
+			binding.set('isSubmitProcessing', true);
+			this.submit();
+			//switch (true) {
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		this.showSavingChangesModePopup();
+			//		break;
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		this.showSavingChangesModePopup();
+			//		break;
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		this.showSavingChangesModePopup();
+			//		break;
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		binding.set('isSubmitProcessing', true);
+			//		this.submit();
+			//		break;
+			//	case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isNonTeamSport(event):
+			//		binding.set('isSubmitProcessing', true);
+			//		this.submit();
+			//		break;
+			//}
 		}
 	},
 	showSavingChangesModePopup: function() {
@@ -360,9 +363,11 @@ const ManagerWrapper = React.createClass({
 	submit: function() {
 		const binding = this.getDefaultBinding();
 
-		return Promise.all(this.processSavingChangesMode())
-			.then(() => Actions.submitAllChanges(this.activeSchoolId, binding))
-			.then(() => this.doAfterCommitActions());
+		//return Promise.all(this.processSavingChangesMode())
+		//	.then(() => Actions.submitAllChanges(this.activeSchoolId, binding))
+		//	.then(() => this.doAfterCommitActions());
+
+		return Actions.submitAllChanges(this.activeSchoolId, binding).then(() => this.doAfterCommitActions());
 	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),

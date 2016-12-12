@@ -25,12 +25,13 @@ const SavingPlayerChangesPopup = React.createClass({
 				return teamWrappers[order].prevTeamName;
 		}
 	},
-	getViewMode: function(order) {
+	getViewMode: function(order, teamWrappers) {
 		switch (true) {
-			case this.isTeamChangedByOrder(order) && !this.isUserCreateNewTeamByOrder(order):
+			case SavingPlayerChangesPopupHelper.isTeamChangedByOrder(order, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
 				return ManagerConsts.VIEW_MODE.OLD_TEAM_VIEW;
-			case this.isUserCreateNewTeamByOrder(order):
+			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
 				return ManagerConsts.VIEW_MODE.NEW_TEAM_VIEW;
+
 		}
 	},
 

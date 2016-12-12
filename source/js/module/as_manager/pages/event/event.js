@@ -105,7 +105,7 @@ const EventPage = React.createClass({
 			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
 		}).then(photos => {
 			eventData.matchReport = report.content;
-
+			console.log(eventData);
 			binding.atomically()
 				.set('model',			Immutable.fromJS(eventData))
 				.set('gallery.photos',	Immutable.fromJS(photos))

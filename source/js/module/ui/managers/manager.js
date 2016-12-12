@@ -147,6 +147,17 @@ const Manager = React.createClass({
 				undefined
 		);
 	},
+	getTeamTypeByOrder: function(order) {
+		const	self	= this,
+				binding	= self.getBinding();
+
+		return (
+			typeof binding.rivals !== "undefined" &&
+			typeof binding.rivals.toJS()[order].team !== "undefined" ?
+				binding.rivals.toJS()[order].team.teamType :
+				undefined
+		);
+	},
 	/**
 	 * Add listeners on binding
 	 * @private
