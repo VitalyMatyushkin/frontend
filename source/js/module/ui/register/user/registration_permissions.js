@@ -31,6 +31,7 @@ const RegistrationPermissions = React.createClass({
 			const fields = fieldsAr[i];
 			if(fields.schoolId){
 				dataToPost.schoolId = fields.schoolId;
+				dataToPost.promo = fields.promo;
 				dataToPost.comment = fields.comment;
 				if(currentType === 'parent') {
 					dataToPost.comment += " Student - " + fields.firstName + " " + fields.lastName + "." +
