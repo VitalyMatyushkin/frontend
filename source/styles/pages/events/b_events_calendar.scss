@@ -1,17 +1,13 @@
 @import "../../!variables";
+@import "../../!mixins";
 
 .eEvents_calendar {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  margin: 0 auto;
-  font-size: 10px;
 }
 
 .eEvents_challenges {
   background: $secondBackgroundColor;
   border: $mainBorder;
-  border-radius: 5px;
+  border-radius: $borderRadius;
   height: 500px;
   overflow-y: auto;
 
@@ -21,11 +17,12 @@
 
   .eChallenge {
     align-items: center;
-    background: linear-gradient(90deg, #d2d2d2 0%, $secondBackgroundColor 100%) no-repeat bottom;
+    background: $gradientBorder;
     background-size: 100% 1px;
     cursor: pointer;
     display: flex;
     font-size: 14px;
+    justify-content: center;
     min-height: 50px;
     padding: 0 10px;
     text-align: center;
@@ -46,7 +43,7 @@
 
 .eChallenge_title{
   align-items: center;
-  background: linear-gradient(90deg, #d2d2d2 0%, $secondBackgroundColor 100%) no-repeat bottom;
+  background: $gradientBorder;
   background-size: 100% 1px;
   cursor: default;
   display: flex;
@@ -74,10 +71,9 @@
 }
 
 .eChallenge_name{
+  @include text-overflow;
   width: 50%;
   padding-top: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .eChallenge_type{
   width: 15%;
@@ -89,10 +85,9 @@
   }
 }
 .eChallenge_rivalName{
+  @include text-overflow;
   width: 110px;
   margin: auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
   padding: 5px;
 }
 .eChallenge_vs{
@@ -108,11 +103,6 @@
   text-align: center;
   width: 24%;
 }
-
-.eChallenge_vs{
-  margin: auto;
-}
-
 .eChallenge_childName{
   padding-top: 5px;
   width: 20%;
