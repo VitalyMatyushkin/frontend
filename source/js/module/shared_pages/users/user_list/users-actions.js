@@ -45,7 +45,7 @@ UsersActions.prototype = {
 		item.permissions.filter(p=> p.preset != 'STUDENT').forEach(p => {
 			let action = 'Revoke the role ';
 			if(p.preset === 'PARENT'){
-				action += `of ${p.student.firstName} parent`;
+				action += `of ${p.student.firstName} ${p.student.lastName} parent`;
 			}
 			else{
 				action += p.preset;

@@ -323,7 +323,7 @@ const EventPage = React.createClass({
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
-								<Comments binding={binding}/>
+								<Comments binding={binding.sub('comments')} eventId={event.id}/>
 							</div>
 						</div>
 					</div>

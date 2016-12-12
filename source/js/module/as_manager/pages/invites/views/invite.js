@@ -1,11 +1,9 @@
-const   classNames      = require('classnames'),
+const   React           = require('react'),
+		Morearty		= require('morearty'),
+		classNames      = require('classnames'),
 		DateHelper		= require('./../../../../helpers/date_helper'),
-        React           = require('react'),
-        SVG             = require('module/ui/svg'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
-        Morearty		= require('morearty'),
-		Button			= require('module/ui/button/button'),
-        SportIcon		= require('module/ui/icons/sport_icon'),
+        MoreartyHelper	= require('module/helpers/morearty_helper'),
+        Button			= require('module/ui/button/button'),
 		Map 			= require('module/ui/map/map-event-venue'),
         Bootstrap  	    = require('styles/bootstrap-custom.scss');
 
@@ -15,7 +13,8 @@ const InviteView = React.createClass({
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
 	propTypes: {
-		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive'])
+		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']),
+		onDecline: React.PropTypes.func
 	},
 	componentWillMount: function() {
 		const self = this;
@@ -61,11 +60,7 @@ const InviteView = React.createClass({
             `Are you sure you want to ${type} ?`,
             "Ok",
             "Cancel",
-            () => {if (type === 'cancel' || type === 'decline') {
-                    window.Server.declineSchoolInvite.post({schoolId: self.activeSchoolId, inviteId: inviteId
-                    }).then( () => window.location.reload());
-                }
-            },
+            () => self.props.onDecline && self.props.onDecline(inviteId),
             () => {}
         );
     },
