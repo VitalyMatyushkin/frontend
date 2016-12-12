@@ -51,6 +51,11 @@
   min-height: 50px;
   padding: 0 10px;
   text-align: center;
+
+  &.mFixtures {
+    background: #fff;
+    border-bottom: solid 1px $borderColor;
+  }
 }
 
 .eChallenge_basic {
@@ -112,10 +117,6 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
-  .eChallenge_name {
-    width: 35%;
-  }
 }
 
 .bParentsPage .bChallenges {
