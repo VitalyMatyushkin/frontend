@@ -36,8 +36,18 @@ const DateHelper = {
 	getTimeStringFromDateObject: function(date) {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
 	},
+	getTimeUTCStringFromDateObject: function(date) {
+		return new Date(date).toUTCString().match(/[0-9]{1,2}:[0-9]{2}:[0-9]{2}/i)[0];
+	},
 	getShortTimeStringFromDateObject: function(date) {
 		return new Date(date).toTimeString().match(/[0-9]{1,2}:[0-9]{2}/i)[0];
+	},
+
+	getDateTimeUTCString: function(dateTime){
+		const 	date = this.getDateStringFromDateObject(dateTime),
+				time = this.getTimeUTCStringFromDateObject(dateTime);
+
+		return `${date}, ${time}`;
 	},
 
 	getDateTimeString: function(dateTime){
@@ -94,7 +104,7 @@ const DateHelper = {
 	},
 
 	toIsoDateTime: function(dotString) {
-		const dateTimeParts = dotString ? dotString.split(' '):[],
+		const dateTimeParts = dotString ? dotString.split('/'):[],
 				dateParts = dateTimeParts[0] ? dateTimeParts[0].split('.'):[],
 				timeParts = dateTimeParts[1] ? dateTimeParts[1].split(':'):[],
 
@@ -123,7 +133,7 @@ const DateHelper = {
 		isValidDateTime:function(value){
 		let result = false;
 		
-		if(Date.parse(value)){						
+		if(Date.parse(value)){
 			const 	date 		= new Date(value),
 					valueArray 	= value.split(' '),
 					dateArray 	= valueArray[0].split('-'),
@@ -132,7 +142,7 @@ const DateHelper = {
 					hour 				= Number(timeArray[0]), //because string hours and minutes 00, which return getHours() and getMinutes() not equal 0
 					day 				= dateArray[2],
 					month 			= dateArray[1],
-					year 				= dateArray[0];			
+					year 				= dateArray[0];
 			//getUTC return month starting 0, so we decrease month
 			result = date.getFullYear() == year && date.getMonth() == (month - 1) && date.getDate() == day && date.getHours() == hour && date.getMinutes() == minutes;
 		}

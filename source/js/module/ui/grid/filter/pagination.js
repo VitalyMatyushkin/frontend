@@ -1,33 +1,42 @@
 /**
  * Created by Anatoly on 28.07.2016.
  */
-const   React 		= require('react'),
-		SVG 		= require('module/ui/svg'),
-		classNames 	= require('classnames');
+const   React 			= require('react'),
+		SVG 			= require('module/ui/svg'),
+		PaginationModel = require('./model/pagination-model'),
+		classNames 		= require('classnames');
 
 const Pagination = React.createClass({
 	propTypes: {
-		model: 	React.PropTypes.object.isRequired
+		model: 	React.PropTypes.instanceOf(PaginationModel).isRequired
 	},
-	onScrollUp:function () {
-		window.scrollTo(0, 0);
+	componentWillMount:function () {
+		const self = this,
+			model = this.props.model;
+
+		model.addListener();
+		model.onShowBtnUp = this.onRender;
 	},
-	onScroll:function (e) {
-		console.log(e.target.scrollTop);
+	componentWillUnmount: function () {
+		this.props.model.removeListeners();
+	},
+	onRender:function(){
+		this.setState({scrollY: window.scrollY});
 	},
 	render: function() {
 		const model = this.props.model,
 				classes = classNames({
-					bPagination:true,
-					mLoading: model.isLoading,
-					mLast:model.isLastPage
+					bPagination:	true,
+					mLoading: 		model.isLoading,
+					mLast:			model.isLastPage,
+					mScrolled: 		model.isScrolled
 				});
 
 		return (
-			<div className={classes} onScroll={this.onScroll}>
+			<div className={classes}>
 				<span className="bButton" onClick={model.nextPage.bind(model)}>More</span>
 				<div className="eLoader"><SVG icon="icon_spin-loader-black" /></div>
-				<div className="bButton mUp" onClick={this.onScrollUp}>Up ↑</div>
+				<div className="bButton mUp" onClick={model.onScrollTop}>Up ↑</div>
 			</div>
 		);
 	}

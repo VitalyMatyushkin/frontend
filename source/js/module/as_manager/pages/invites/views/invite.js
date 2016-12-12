@@ -1,11 +1,9 @@
-const   classNames      = require('classnames'),
+const   React           = require('react'),
+		Morearty		= require('morearty'),
+		classNames      = require('classnames'),
 		DateHelper		= require('./../../../../helpers/date_helper'),
-        React           = require('react'),
-        SVG             = require('module/ui/svg'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
-        Morearty		= require('morearty'),
-		Button			= require('module/ui/button/button'),
-        SportIcon		= require('module/ui/icons/sport_icon'),
+        MoreartyHelper	= require('module/helpers/morearty_helper'),
+        Button			= require('module/ui/button/button'),
 		Map 			= require('module/ui/map/map-event-venue'),
         Bootstrap  	    = require('styles/bootstrap-custom.scss');
 
@@ -15,7 +13,8 @@ const InviteView = React.createClass({
 	// Will set on componentWillMount event
 	activeSchoolId: undefined,
 	propTypes: {
-		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive'])
+		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']),
+		onDecline: React.PropTypes.func
 	},
 	componentWillMount: function() {
 		const self = this;
@@ -52,6 +51,18 @@ const InviteView = React.createClass({
             default:
                 return '';
         }
+    },
+
+    _getInviteRequest: function (inviteId, type) {
+        const self = this;
+
+        window.confirmAlert(
+            `Are you sure you want to ${type} ?`,
+            "Ok",
+            "Cancel",
+            () => self.props.onDecline && self.props.onDecline(inviteId),
+            () => {}
+        );
     },
     render: function() {
         const   self            = this,
@@ -120,10 +131,12 @@ const InviteView = React.createClass({
                                     <div className="eInvite_buttons">
                                         {isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
                                                            extraStyleClasses={'mHalfWidth mMarginRight'}/> : null }
-                                        {isInbox ? <Button href={`/#invites/${inviteId}/decline`} text={'Decline'}
+                                        {isInbox ? <Button text={'Decline'}
+                                                           onClick={() => self._getInviteRequest(inviteId,'decline')}
                                                            extraStyleClasses={'mCancel mHalfWidth'}/> : null }
                                         {isOutBox ?
-                                            <Button href={`/#invites/${inviteId}/cancel`} text={'Cancel invitation'}
+                                            <Button text={'Cancel invitation'}
+                                                    onClick={() => self._getInviteRequest(inviteId,'cancel')}
                                                     extraStyleClasses={'mCancel'}/> : null }
                                     </div>
                                 </div>

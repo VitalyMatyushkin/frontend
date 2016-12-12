@@ -289,7 +289,7 @@ const EventRival = React.createClass({
 			case typeof additionalName === "undefined":
 				return teamName;
 			default:
-				return `${teamName} / ${additionalName}`;
+				return <div>{teamName} <span>/</span> {additionalName}</div>;
 		}
 	},
 

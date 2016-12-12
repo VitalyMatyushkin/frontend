@@ -8,6 +8,7 @@ const	React			= require('react'),
 		EventRivals					= require('./view/event_rivals'),
 		EventButtons				= require('./view/event_buttons'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
+		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
 		EventTeams					= require('./view/teams/event_teams'),
 		EventPerformance			= require('./view/teams/event_teams_performance'),
 		EventGallery				= require('./new_gallery/event_gallery'),
@@ -202,12 +203,6 @@ const EventPage = React.createClass({
 
 		window.location.hash = hash + '?tab=' + value;
 	},
-	handleClickChangeTeamsButtons: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.set('mode', 'edit_squad');
-	},
 	_getEventTeamsBinding: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -281,15 +276,7 @@ const EventPage = React.createClass({
 							<EventRivals binding={binding}/>
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
-									<div className="bEventMiddleSideContainer_buttons">
-										<If condition={TeamHelper.isShowEditEventButton(self)}>
-											<div className="bButton mCircle"
-												 onClick={self.handleClickChangeTeamsButtons}
-												>
-												<i className="fa fa-pencil" aria-hidden="true"/>
-											</div>
-										</If>
-									</div>
+									<EditingTeamsButtons binding={binding} />
 									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
 															  isVisible={isaLeftShow}
 															  className="mLeft"/>
@@ -335,7 +322,7 @@ const EventPage = React.createClass({
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
-								<Comments binding={binding}/>
+								<Comments binding={binding.sub('comments')} eventId={event.id}/>
 							</div>
 						</div>
 					</div>
