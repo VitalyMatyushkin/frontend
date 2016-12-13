@@ -125,6 +125,11 @@ const PermissionFields = React.createClass({
 
 		binding.set('comment', event.currentTarget.value);
 	},
+    onChangePromo: function(event) {
+        const binding = this.getDefaultBinding();
+
+        binding.set('promo', event.currentTarget.value);
+    },    
     schoolMessage: function () {
         return (
             <div className="eForm_message">
@@ -187,10 +192,17 @@ const PermissionFields = React.createClass({
                             Comments:
                         </div>
                         <div className="eRegistration_input">
-                            <textarea placeholder="If you have an offer code, please enter it here" onChange={self.onChangeComment}/>
+                            <textarea placeholder="Comment" onChange={self.onChangeComment}/>
                         </div>
                     </div>
 				</If>
+                <If condition={!!binding.get('schoolId') && currentType === 'admin'}>
+                    <div>
+                        <div className="eRegistration_input">
+                            <input ref="promo" placeholder="promo" type={'text'} onChange={self.onChangePromo} />
+                        </div>
+                    </div>
+                </If>
             </div>
         )
     }

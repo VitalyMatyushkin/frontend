@@ -27,11 +27,31 @@ const EventVenue = React.createClass({
 		// This component doesn't contain eventType field,
 		// so we should listen changes of this field.
 		// Because view of this component depends of eventType.
-		this.getDefaultBinding().addListener('model.type', this.clearVenueData);
+		this.getDefaultBinding().addListener('model.type', this.handleChangeGameType);
 	},
 	generatePostcodeInputKey: function() {
 		// just current date in timestamp view
 		return + new Date();
+	},
+	handleChangeGameType: function(changeDescriptor) {
+		const currentGameType = changeDescriptor.getCurrentValue();
+
+		switch (currentGameType) {
+			case "inter-schools":
+				this.clearVenueData();
+				break;
+			case "houses":
+				this.clearVenueData();
+				this.setHomePostcode(this.getHomeSchoolPostCode());
+				break;
+			case "internal":
+				this.clearVenueData();
+				this.setHomePostcode(this.getHomeSchoolPostCode());
+				break;
+		}
+	},
+	setHomePostcode: function() {
+		this.setPostcode(this.getHomeSchoolPostCode());
 	},
 	/**
 	 * Clear all venue data:
@@ -174,11 +194,14 @@ const EventVenue = React.createClass({
 				return 'CUSTOM';
 		}
 	},
-	handleSelectPostcode: function(id, value) {
+	setPostcode: function(postcode) {
 		this.getDefaultBinding().atomically()
-			.set('model.venue.venueType',	Immutable.fromJS(this.getVenueTypeByPostcode(value)))
-			.set('model.venue.postcode',	Immutable.fromJS(value))
+			.set('model.venue.venueType',	Immutable.fromJS(this.getVenueTypeByPostcode(postcode)))
+			.set('model.venue.postcode',	Immutable.fromJS(postcode))
 			.commit();
+	},
+	handleSelectPostcode: function(id, value) {
+		this.setPostcode(value);
 	},
 	handleClickPostcodeInput: function(eventDescriptor) {
 		if(this.isPostcodeInputBlocked()) {
@@ -235,6 +258,7 @@ const EventVenue = React.createClass({
 					<Autocomplete	key				= {binding.toJS('postcodeInputKey')}
 									serverField		= "postcode"
 									binding			= {binding}
+									defaultItem		= {binding.toJS('model.venue.postcode')}
 									serviceFilter	= {this.postcodeService}
 									onSelect		= {this.handleSelectPostcode}
 									placeholder		= {'Select Postcode'}

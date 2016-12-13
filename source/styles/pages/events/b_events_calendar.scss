@@ -1,48 +1,61 @@
 @import "../../!variables";
+@import "../../!mixins";
 
 .eEvents_calendar {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
-  margin: 0 auto;
-  font-size: 10px;
 }
 
 .eEvents_challenges {
-  margin-left: 10px;
-  border: $BORDER;
-  background: #fff;
-  height: 404px;
+  background: $secondBackgroundColor;
+  border: $mainBorder;
+  border-radius: $borderRadius;
+  height: 500px;
   overflow-y: auto;
-  width: 500px;
 
   &.mGeneral {
     margin: 0px;
   }
-}
 
-.eEvents_challenges .eChallenge {
-  display: flex;
-  cursor: pointer;
-  border-bottom: solid 1px #d2d2d2;
-  text-align: center;
-  text-transform: none;
-  font-size: 13px;
-  min-height: 40px;
-  align-items: center;
-  padding: 0 15px;
-  &.mActive {
-    color: #fff;
-    background: lighten($blueColor, 10%);
+  .eChallenge {
+    align-items: center;
+    background: $gradientBorder;
+    background-size: 100% 1px;
+    cursor: pointer;
+    display: flex;
+    font-size: 14px;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 10px;
+    text-align: center;
+    text-transform: none;
+    transition: background-color .5s;
+
+    &.mActive {
+      color: #fff;
+      background: lighten($blueColor, 10%);
+    }
+
+    &:hover {
+      background-color: darken($secondBackgroundColor, 5%);
+    }
   }
+
 }
 
-.eEvents_challenges.mGeneral .eChallenge:hover {
-  background: lighten($blueColor, 25%);
-}
-.eChallenge_rivals {
+.eChallenge_title{
+  align-items: center;
+  background: $gradientBorder;
+  background-size: 100% 1px;
+  cursor: default;
   display: flex;
-  flex-direction: row;
+  font-size: 16px;
+  min-height: 50px;
+  padding: 0 10px;
+  text-align: center;
+
+  &.mFixtures {
+    background: #fff;
+    border-bottom: solid 1px $borderColor;
+  }
 }
 
 .eChallenge_basic {
@@ -52,6 +65,7 @@
 .eChallenge_rivals {
   width: 44%;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   padding-top: 5px;
@@ -62,10 +76,9 @@
 }
 
 .eChallenge_name{
+  @include text-overflow;
   width: 50%;
   padding-top: 5px;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 .eChallenge_type{
   width: 15%;
@@ -77,10 +90,9 @@
   }
 }
 .eChallenge_rivalName{
+  @include text-overflow;
   width: 110px;
   margin: auto;
-  overflow: hidden;
-  text-overflow: ellipsis;
   padding: 5px;
 }
 .eChallenge_vs{
@@ -96,19 +108,6 @@
   text-align: center;
   width: 24%;
 }
-.eChallenge_title{
-  align-items: center;
-  display: flex;
-  text-align: center;
-  font-size: 16px;
-  height: 40px;
-  border-bottom: solid 1px #d2d2d2;
-  padding: 0 15px;
-}
-.eChallenge_vs{
-  margin: auto;
-}
-
 .eChallenge_childName{
   padding-top: 5px;
   width: 20%;
@@ -118,12 +117,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
-  .eChallenge_name {
-    width: 35%;
-  }
 }
-.bParentsPage .eEvents_calendar,
+
 .bParentsPage .bChallenges {
   margin: 15px auto;
   max-width: 1060px;
