@@ -16,7 +16,7 @@ const ClassesPage = React.createClass({
 		const 	binding 		= this.getDefaultBinding(),
 				subBinding      = binding.sub('classesRouting'),
 				globalBinding 	= this.getMoreartyContext().getBinding(),
-				addButton = <div className="addButtonShort" onClick={this.createNewClass}><SVG icon="icon_add_form" /></div>;				
+				addButton = <div className="addButtonShort" onClick={this.createNewClass}><SVG icon="icon_add_form" /></div>;
 
 
 		return (
