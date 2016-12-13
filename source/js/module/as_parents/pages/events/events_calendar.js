@@ -71,9 +71,17 @@ const EventsCalendar = React.createClass({
 			childIdList 	= activeChildId === 'all' ? binding.toJS('childrenIds') : [activeChildId];
 
 		return (
-			<div className="eEvents_calendar">
-				<Calendar binding={binding.sub('calendar')} childIdList={childIdList} />
-				{self._renderChallengesListView()}
+			<div className="bEvents">
+				<div className="eEvents_container">
+					<div className="eEvents_row">
+						<div className="eEvents_leftSideContainer">
+							<Calendar binding={binding.sub('calendar')} childIdList={childIdList}/>
+						</div>
+						<div className="eEvents_rightSideContainer">
+							{self._renderChallengesListView()}
+						</div>
+					</div>
+				</div>
 			</div>
 		);
 	}

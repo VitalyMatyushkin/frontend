@@ -81,7 +81,7 @@
 
 .eManager_container {
   display: flex;
-  width: 1070px;
+  max-width: 1070px;
   margin: 0 auto;
   flex-direction: column;
 }
@@ -99,6 +99,9 @@
 }
 
 .eManager_containerTeam {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
   margin: 10px 0;
 }
 

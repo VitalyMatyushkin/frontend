@@ -14,7 +14,7 @@ const SummaryPanel = React.createClass({
 		activeSchoolId:	React.PropTypes.string.isRequired,
 		schoolPic:		React.PropTypes.string,
 		schoolName:		React.PropTypes.string.isRequired,
-		postcodeId:		React.PropTypes.string,
+		postcode:		React.PropTypes.string,
 		address:		React.PropTypes.string.isRequired,
 		description:	React.PropTypes.string,
 		siteLink:		React.PropTypes.string.isRequired,
@@ -98,7 +98,7 @@ const SummaryPanel = React.createClass({
 	render: function () {
 		const 	schoolPic	= this.props.schoolPic,
 				schoolName	= this.props.schoolName,
-				postcodeId	= this.props.postcodeId,
+				postcode	= this.props.postcode,
 				address		= this.props.address,
 				geoPoint	= this.props.geoPoint;
 
@@ -112,8 +112,8 @@ const SummaryPanel = React.createClass({
 							<h1 className="eSchoolMaster_title"> {schoolName}</h1>
 
 							<div className="eSchoolAddress">
-								{postcodeId}
-								{address}
+								<p>{postcode}</p>
+								<p>{address}</p>
 							</div>
 						</div>
 						{ this.renderDescription() }
