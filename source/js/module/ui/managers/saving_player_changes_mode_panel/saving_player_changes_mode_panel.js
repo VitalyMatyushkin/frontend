@@ -1,6 +1,5 @@
 const	React			= require('react'),
 
-		Header			= require('./header'),
 		NewTeamMode		= require('./view_modes/new_team_mode'),
 		OldTeamMode		= require('./view_modes/old_team_mode'),
 		ManagerConsts	= require('./../helpers/manager_consts'),
