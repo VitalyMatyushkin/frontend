@@ -1,19 +1,17 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
+const	React							= require('react'),
+		Morearty						= require('morearty'),
+		Immutable						= require('immutable'),
 
-		ConfirmPopup		= require('../../../../ui/confirm_popup'),
-		TeamSaveModePanel	= require('../../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
-		ManagerConsts		= require('../../../../ui/managers/helpers/manager_consts'),
-		EventHelper			= require('module/helpers/eventHelper'),
-		TeamHelper			= require('../../../../ui/managers/helpers/team_helper'),
-		// TODO go to separate module
-		MixinHelper			= require('./mixin_helper'),
+		ConfirmPopup					= require('../../../../ui/confirm_popup'),
+		TeamSaveModePanel				= require('../../../../ui/managers/saving_player_changes_mode_panel/saving_player_changes_mode_panel'),
+		ManagerConsts					= require('../../../../ui/managers/helpers/manager_consts'),
+		EventHelper						= require('module/helpers/eventHelper'),
+		SavingPlayerChangesPopupHelper	= require('./helper'),
 
-		ManagerStyles		= require('../../../../../../styles/pages/events/b_events_manager.scss');
+		ManagerStyles					= require('../../../../../../styles/pages/events/b_events_manager.scss');
 
 const SavingPlayerChangesPopup = React.createClass({
-	mixins: [Morearty.Mixin, MixinHelper],
+	mixins: [Morearty.Mixin],
 
 	propTypes: {
 		submit: React.PropTypes.func.isRequired
@@ -21,18 +19,19 @@ const SavingPlayerChangesPopup = React.createClass({
 
 	getOriginalTeamName: function(teamWrappers, order) {
 		switch (true) {
-			case this.isUserCreateNewTeam(order):
+			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
 				return teamWrappers[order].teamName.name;
-			case this.isTeamChangedByOrder(order):
+			case SavingPlayerChangesPopupHelper.isTeamChangedByOrder(order, teamWrappers):
 				return teamWrappers[order].prevTeamName;
 		}
 	},
-	getViewMode: function(order) {
+	getViewMode: function(order, teamWrappers) {
 		switch (true) {
-			case this.isTeamChangedByOrder(order) && !this.isUserCreateNewTeamByOrder(order):
+			case SavingPlayerChangesPopupHelper.isTeamChangedByOrder(order, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
 				return ManagerConsts.VIEW_MODE.OLD_TEAM_VIEW;
-			case this.isUserCreateNewTeamByOrder(order):
+			case SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(order, teamWrappers):
 				return ManagerConsts.VIEW_MODE.NEW_TEAM_VIEW;
+
 		}
 	},
 
@@ -68,19 +67,19 @@ const SavingPlayerChangesPopup = React.createClass({
 			case EventHelper.isInterSchoolsEvent(event):
 				savingPlayerChangesModePanels.push(
 					<TeamSaveModePanel	key						= { `team-wrapper-0` }
-										  originalTeamName		= { this.getOriginalTeamName(teamWrappers, 0) }
-										  teamName				= { teamWrappers[0].teamName.name }
-										  savingChangesMode		= { teamWrappers[0].savingChangesMode }
-										  viewMode				= { this.getViewMode(0) }
-										  handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, 0) }
-										  handleChangeTeamName	= { this.handleChangeTeamName.bind(null, 0) }
+										originalTeamName		= { this.getOriginalTeamName(teamWrappers, 0) }
+										teamName				= { teamWrappers[0].teamName.name }
+										savingChangesMode		= { teamWrappers[0].savingChangesMode }
+										viewMode				= { this.getViewMode(0, teamWrappers) }
+										handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, 0) }
+										handleChangeTeamName	= { this.handleChangeTeamName.bind(null, 0) }
 					/>
 				);
 				break;
 			// for other event types check all teams
 			default :
 				teamWrappers.forEach((tw, index) => {
-					if(this.isTeamChangedByOrder(index) || this.isUserCreateNewTeamByOrder(index)) {
+					if(SavingPlayerChangesPopupHelper.isTeamChangedByOrder(index, teamWrappers) || SavingPlayerChangesPopupHelper.isUserCreateNewTeamByOrder(index, teamWrappers)) {
 						if(savingPlayerChangesModePanels.length !== 0) {
 							savingPlayerChangesModePanels.push(
 								<div className="eSavingChangesBlock_changesSeparator"></div>
@@ -88,12 +87,12 @@ const SavingPlayerChangesPopup = React.createClass({
 						}
 						savingPlayerChangesModePanels.push(
 							<TeamSaveModePanel	key						= { `team-wrapper-${index}` }
-												  originalTeamName		= { this.getOriginalTeamName(teamWrappers, index) }
-												  teamName				= { teamWrappers[index].teamName.name }
-												  savingChangesMode		= { teamWrappers[index].savingChangesMode }
-												  viewMode				= { this.getViewMode(index) }
-												  handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, index) }
-												  handleChangeTeamName	= { this.handleChangeTeamName.bind(null, index) }
+												originalTeamName		= { this.getOriginalTeamName(teamWrappers, index) }
+												teamName				= { teamWrappers[index].teamName.name }
+												savingChangesMode		= { teamWrappers[index].savingChangesMode }
+												viewMode				= { this.getViewMode(index, teamWrappers) }
+												handleChange			= { this.handleClickSavingPlayerChangesModeRadioButton.bind(null, index) }
+												handleChangeTeamName	= { this.handleChangeTeamName.bind(null, index) }
 							/>
 						);
 					}
