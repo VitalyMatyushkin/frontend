@@ -1,9 +1,7 @@
 $IMAGE_DIR: '/images/' !global;
-$MAIN_COLOR: #66952D !global;
 $COLOR: #007abf !global;
 $BORDER: solid 1px #c2c2c2 !global;
 $INVALID_COLOR: #d3978f;
-$DarkGreen: #235413;
 
 /*new colors*/
 $blueColor: #007abf;
@@ -12,15 +10,18 @@ $lightBlue: #008ed3;
 $DarkRed:#a93e2f;
 $textColor: #333132;
 $borderColor: #c2c2c2;
-$darkGrey: #959595;
+$greyColor: #d2d2d2;
+$darkGrey: #8c8c8c;
 
 /*background (main background: #fff;)*/
 $secondBackgroundColor: #f5f5f5;
 
 /*borders*/
-$mainBorder: solid 1px #d2d2d2;
+$mainBorder: solid 1px $greyColor;
+$borderRadius: 5px;
+$gradientBorder: linear-gradient(90deg, $greyColor 0%, $secondBackgroundColor 100%) no-repeat bottom;
 
-
+/*text-colors*/
 $BodyColor:#333132;
 $GrayText: #8c8c8c;
 
@@ -29,3 +30,6 @@ $basicFontFamily: Glober, sans-serif;
 
 /*font-sizes*/
 $menu-font-size: 1.125rem;
+
+
+$spacing: 10px;

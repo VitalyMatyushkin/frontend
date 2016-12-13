@@ -1,20 +1,19 @@
-const   If							= require('module/ui/if/if'),
-        Manager						= require('module/ui/managers/manager'),
-        React						= require('react'),
-        classNames					= require('classnames'),
-        TeamHelper					= require('./../../../../ui/managers/helpers/team_helper'),
-        Promise						= require('bluebird'),
-        MoreartyHelper				= require('module/helpers/morearty_helper'),
-        Morearty					= require('morearty'),
-        Immutable					= require('immutable'),
+const	If								= require('module/ui/if/if'),
+		Manager							= require('module/ui/managers/manager'),
+		React							= require('react'),
+		classNames						= require('classnames'),
+		TeamHelper						= require('./../../../../ui/managers/helpers/team_helper'),
+		Promise							= require('bluebird'),
+		MoreartyHelper					= require('module/helpers/morearty_helper'),
+		Morearty						= require('morearty'),
+		Immutable						= require('immutable'),
 
-		SavingEventHelper			= require('../../../../helpers/saving_event_helper'),
-		SavingPlayerChangesPopup	= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
-		// TODO go to separate module
-		MixinHelper					= require('../../events/saving_player_changes_popup/mixin_helper');
+		SavingEventHelper				= require('../../../../helpers/saving_event_helper'),
+		SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
+		SavingPlayerChangesPopupHelper	= require('../../events/saving_player_changes_popup/helper');
 
 const InviteAcceptView = React.createClass({
-    mixins: [Morearty.Mixin, MixinHelper],
+    mixins: [Morearty.Mixin],
     // ID of current school
     // Will set on componentWillMount event
     activeSchoolId: undefined,
@@ -93,28 +92,41 @@ const InviteAcceptView = React.createClass({
 	},
     onClickAccept: function () {
 		const	self	= this,
-			binding	= self.getDefaultBinding();
+				binding	= self.getDefaultBinding();
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
 		if(!binding.toJS('isSubmitProcessing')) {
-			const	event		= binding.toJS('model'),
+			const	event			= binding.toJS('model'),
+					teamWrappers	= this.getTeamWrappers(),
 					validationData	= [
 						binding.toJS('error.0'),
 						binding.toJS('error.1')
 					];
 
 			switch (true) {
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && !this.isAnyTeamChanged() && this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					this.showSavingChangesModePopup();
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					this.showSavingChangesModePopup();
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && this.isAnyTeamChanged() && this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					this.showSavingChangesModePopup();
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) && !this.isAnyTeamChanged() && !this.isUserCreateNewTeam():
+				case (
+						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+				):
 					binding.set('isSubmitProcessing', true);
 					this._submit();
 					break;
@@ -124,6 +136,9 @@ const InviteAcceptView = React.createClass({
 					break;
 			}
 		}
+	},
+	getTeamWrappers: function() {
+		return this.getDefaultBinding().toJS('teamModeView.teamWrapper');
 	},
     _submit: function() {
         const   self    = this,

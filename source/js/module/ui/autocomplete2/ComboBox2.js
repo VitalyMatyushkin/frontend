@@ -68,6 +68,11 @@ const ComboBox2 = React.createClass({
     componentWillMount: function(){
         if(this.props.defaultItem && this.props.onSelect) {
             this.props.onSelect(this.props.defaultItem.id, this.props.defaultItem);
+            if(typeof this.props.defaultItem !== "undefined" && typeof this.props.getElementTooltip !== "undefined") {
+                this.setState({
+                    currentTooltip: this.props.getElementTooltip(this.props.defaultItem)
+                });
+            }
         }
     },
     /** Checks on new props if we need to set default item */
@@ -75,6 +80,12 @@ const ComboBox2 = React.createClass({
         /* eliminating infinite looping by checking if really props update take place */
         if(nextProps.defaultItem && nextProps.onSelect && JSON.stringify(nextProps.defaultItem) !== JSON.stringify(this.props.defaultItem)) {
             nextProps.onSelect(nextProps.defaultItem.id, nextProps.defaultItem);
+
+            if(typeof nextProps.getElementTooltip !== "undefined") {
+                this.setState({
+                    currentTooltip: nextProps.getElementTooltip(nextProps.defaultItem)
+                });
+            }
         }
     },
     /** Calculates current text.
