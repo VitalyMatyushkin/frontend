@@ -92,7 +92,7 @@ const OneSchoolPage = React.createClass({
 				teamAdd: {},
 				teamsRouting: {}
 			},
-			schoolInfo: '',
+			// schoolInfo: '',
 			schoolRouting: {}
 		});
 	},

@@ -21,9 +21,7 @@ const HouseStudents = React.createClass({
 		this.model.init();
 	},
 	render: function () {
-		return (
-			<Grid model={this.model.grid}/>
-		);
+		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });
 

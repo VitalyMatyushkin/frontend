@@ -12,9 +12,7 @@ const StudentList = React.createClass({
 		this.model = new StudentListModel(this).init();
 	},
 	render: function () {
-		return (
-			<Grid model={this.model.grid}/>
-		);
+		return this.model.grid ? <Grid model={this.model.grid}/> : null;
 	}
 });
 

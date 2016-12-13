@@ -58,12 +58,16 @@ const SystemAdminSchoolForm = React.createClass({
 					{ text: 'Yes',	value: true },
 					{ text: 'No',	value: false }
 				],
-				onInviteActionOptions = [
+				inviteActionOptions = [
 					{ text: 'Manual Mode (default)', value: 'MANUAL' },
 					{ text: 'Auto Accept', value: 'AUTO_ACCEPT' },
 					{ text: 'Auto Reject', value: 'AUTO_REJECT' }
 				],
-				postcode 	= binding.toJS('postcode');
+				postcode 	= binding.toJS('postcode'),
+				subscriptionPlanOptions = [
+					{text: 'Full', value: SchoolConsts.SCHOOL_SUBSCRIPTION_PLAN.FULL},
+					{text: 'Lite', value: SchoolConsts.SCHOOL_SUBSCRIPTION_PLAN.LITE}
+				];
 
 		return (
 			<Form name={this.props.title} binding={this.getDefaultBinding()} service="i/schools/domains"
@@ -115,7 +119,7 @@ const SystemAdminSchoolForm = React.createClass({
 						onBeforeValueSet={ value => value === 'true' /*casting back string to boolean*/}>
 						Available For Reg.
 					</FormField>
-					<FormField type="dropdown" field="triggers.onInviteAction" options={onInviteActionOptions}>
+					<FormField type="dropdown" field="triggers.onInviteAction" options={inviteActionOptions}>
 						Invite Accept Mode
 					</FormField>
 					<FormField
@@ -124,6 +128,9 @@ const SystemAdminSchoolForm = React.createClass({
 						options={yesNoOptions}
 						onBeforeValueSet={ value => value === 'true' /*casting back string to boolean*/}>
 						Send Email On New Invite
+					</FormField>
+					<FormField type="dropdown" field="subscriptionPlan" options={subscriptionPlanOptions}>
+						Subscription Plan
 					</FormField>
 				</FormColumn>
 			</Form>
