@@ -41,8 +41,35 @@ const SchoolHelper = {
 		return window.Server.school.get(activeSchoolId).then(data => {
 			rootBinding.set('activeSchool.schoolInfo', Immutable.fromJS(data));
 
-			return data;
+			return Promise.resolve(data);
 		})
+	},
+
+	setSchoolSubscriptionPlanPromise: function (self) {
+		const binding = self.getDefaultBinding();
+
+		return this.loadActiveSchoolInfo(self).then(data => {
+			binding.set('schoolSubscriptionPlan', data.subscriptionPlan);
+
+			return Promise.resolve(data);
+		});
+
+	},
+
+	schoolSubscriptionPlanIsFull: function (self) {
+		const
+			binding = self.getDefaultBinding(),
+			subscriptionPlan = binding.get('schoolSubscriptionPlan');
+
+		if(subscriptionPlan === schoolConsts.SCHOOL_SUBSCRIPTION_PLAN.LITE){
+			window.simpleAlert(
+				'For your subscription level, this action is not available. For adding students go to the full version.',
+				'Ok',
+				() => {}
+			)
+		}
+
+		return subscriptionPlan === schoolConsts.SCHOOL_SUBSCRIPTION_PLAN.FULL;
 	},
 
 	/**

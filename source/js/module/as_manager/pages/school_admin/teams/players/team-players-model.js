@@ -2,7 +2,7 @@
  * Created by Anatoly on 22.08.2016.
  */
 const  Morearty			= require('morearty'),
-	StudentListModel  	= require('module/as_manager/pages/school_admin/students/list/student-list-model');
+	StudentListModel  	= require('./../../students/list/student-list-model');
 
 const TeamPlayersModel = function(page){
 	this.getDefaultBinding = page.getDefaultBinding;
@@ -18,6 +18,7 @@ const TeamPlayersModel = function(page){
 	this.model = new StudentListModel(page);
 
 	this.model.title = `Players of ${teamName} team`;
+	this.model.btnAdd = null;
 	this.getPlayers(teamId);
 
 	return this.model;
