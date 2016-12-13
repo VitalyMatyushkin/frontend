@@ -5,7 +5,7 @@ const   SchoolForm		= require('../../schools/school_form'),
         React       	= require('react'),
         Morearty    	= require('morearty'),
         Immutable   	= require('immutable'),
-		SchoolHelper	= require('module/as_manager/pages/schools/schools_helper');
+		SchoolHelper	= require('module/helpers/school_helper');
 
 const EditSchoolForm = React.createClass({
     mixins: [Morearty.Mixin],
