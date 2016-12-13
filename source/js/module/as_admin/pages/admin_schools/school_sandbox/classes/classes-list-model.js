@@ -25,7 +25,8 @@ const ClassesListModel = function(page){
     this.grid = new GridModel({
         actionPanel:{
             title:'Forms',
-            showStrip:true
+            showStrip:true,
+            btnAdd:this.props.addButton
         },
         columns:this.columns,
         filters:{limit: 20}
