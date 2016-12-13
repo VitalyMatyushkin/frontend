@@ -87,6 +87,9 @@ UserActivityModel.prototype.setColumns = function(){
             cell:{
                 dataField:'httpHeaders.x-real-ip',
                 type:'general'
+            },
+            filter:{
+                type:'string'
             }
         },
         {
