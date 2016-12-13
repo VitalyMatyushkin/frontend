@@ -1,4 +1,3 @@
-
 const	RouterView 			= require('module/core/router'),
 		React 				= require('react'),
 		Morearty			= require('morearty'),
@@ -13,7 +12,7 @@ const HousesPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	createNewHouse: function(){
 		document.location.hash = document.location.hash +'/add';
-	},	
+	},
 	render: function() {
 		const binding     	= this.getDefaultBinding(),
 				subBinding  	= binding.sub('housesRouting'),
