@@ -6,7 +6,7 @@ const   RouterView  					= require('module/core/router'),
         Immutable   					= require('immutable'),
         AdminUserListComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_users_list'),
 		UserViewComponent 				= require('module/shared_pages/users/user_view'),
-		AdminListComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_list'),
+		AdminListComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin-list'),
 		AdminAddComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_add'),
 		AdminEditComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_edit'),
 		AdminRequestsComponent 			= require('module/shared_pages/permission_requests/request-list'),
@@ -15,10 +15,14 @@ const   RouterView  					= require('module/core/router'),
 		UserComponent 					= require('module/as_admin/pages/admin_add/user'),
 		SportsPageComponent 			= require('module/as_admin/pages/admin_schools/sports/sports_page'),
 		ImportStudentsComponent 		= require('module/as_admin/pages/admin_schools/import_students_module'),
-		UserActivityComponent 			= require('module/as_admin/pages/admin_schools/user_activity/user-activity');
+		UserActivityComponent 			= require('module/as_admin/pages/admin_schools/user_activity/user-activity'),
+        SVG                             = require('module/ui/svg');
 
 const OneSchoolPage = React.createClass({
     mixins: [Morearty.Mixin],
+    createNewSchool: function(){
+        document.location.hash = 'admin_schools/admin_views/add';
+    },
     componentWillMount: function() {
         this.createSubMenu();
     },
@@ -106,9 +110,10 @@ const OneSchoolPage = React.createClass({
             });
     },
     render: function() {
-        const   self            = this,
-                binding         = self.getDefaultBinding(),
-                globalBinding   = self.getMoreartyContext().getBinding();
+        const   binding         = this.getDefaultBinding(),
+                globalBinding   = this.getMoreartyContext().getBinding(),
+                addButton = <div className="addButtonShort" onClick={this.createNewSchool}><SVG icon="icon_add_school" /></div>;
+
         return (
             <div>
                 <SubMenu binding={{default: binding.sub('schoolRouting'), itemsBinding: binding.sub('subMenuItems')}} />
@@ -128,6 +133,7 @@ const OneSchoolPage = React.createClass({
                             path="/admin_schools/admin_views/list /admin_schools/admin_views/list:mode"
                             binding={binding.sub('schools')}
                             component={AdminListComponent}
+                            addButton={addButton}
                         />
                         <Route
                             path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode"
