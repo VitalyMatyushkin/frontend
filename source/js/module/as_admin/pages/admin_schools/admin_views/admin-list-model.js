@@ -143,12 +143,7 @@ SchoolsListModel.prototype.setColumns = function(){
                 type:'general'
             },
             filter:{
-                type:'multi-select',
-                typeOptions:{
-                    getDataPromise: this.getSchoolList(),
-                    valueField:'name',
-                    keyField:'id'
-                }
+                type:'string'
             }
         },
         {
