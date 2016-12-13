@@ -43,7 +43,6 @@ const SchoolHelper = {
 
 			return data;
 		})
-
 	},
 
 	/**
