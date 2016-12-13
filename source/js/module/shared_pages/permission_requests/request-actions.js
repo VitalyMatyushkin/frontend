@@ -225,6 +225,13 @@ RequestActions.prototype = {
 				}
 			},
 			{
+				text:'Phone',
+				isSorted:false,
+				cell:{
+					dataField:'requester.phone'
+				}
+			},
+			{
 				text:'Email',
 				isSorted:true,
 				cell:{
