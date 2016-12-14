@@ -16,11 +16,11 @@
   }
 
   &_leftSideContainer {
-    @include make-md-column(7)
+    @include make-md-column(6)
   }
 
   &_rightSideContainer {
-    @include make-md-column(5)
+    @include make-md-column(6)
   }
 }
 
