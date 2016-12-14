@@ -23,10 +23,11 @@ const Grid = React.createClass({
 	},
 	render: function() {
 		const model = this.props.model,
+			classStyleAdmin = model.classStyleAdmin ? " " + model.classStyleAdmin : '',
 			mHidden = !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
-			<div className="bGrid">
+			<div className={"bGrid" + classStyleAdmin}>
 				<ActionPanel model={model.actionPanel} />
 				<div className={mHidden}>
 					<FilterPanel model={model.filterPanel} />
