@@ -389,7 +389,7 @@ const EventManager = React.createClass({
 		const self = this;
 
 		if(step === 1 && self._isStepComplete(1)) {
-			return <span className="eEvents_next eEvents_button" onClick={self.toNext}>Next</span>;
+			return <span className="bButton" onClick={self.toNext}>Continue</span>;
 		} else {
 			return null;
 		}
@@ -399,7 +399,7 @@ const EventManager = React.createClass({
 
 		if(step === 2) {
 			return (
-				<span className="eEvents_back eEvents_button" onClick={self.toBack}>Back</span>
+				<span className="bButton mCancel mMarginRight" onClick={self.toBack}>Back</span>
 			);
 		} else {
 			return null;
@@ -410,7 +410,7 @@ const EventManager = React.createClass({
 
 		if(step === 2 && self._isStepComplete(2)) {
 			const finishButtonClassName = classNames({
-				eEvents_button:	true,
+				bButton:		true,
 				mFinish:		true,
 				mDisabled:		this.getDefaultBinding().toJS('isSubmitProcessing')
 			});
