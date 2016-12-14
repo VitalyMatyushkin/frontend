@@ -27,7 +27,7 @@ const Form = React.createClass({
 		onError: 			React.PropTypes.func,
 		onCancel: 			React.PropTypes.func,
 		name: 				React.PropTypes.string,
-		defaultButton: 		React.PropTypes.string,
+		defaultButton: 		React.PropTypes.string, // It should be name as defaultButtonText, stupid
 		loadingButton: 		React.PropTypes.string,
 		updateBinding: 		React.PropTypes.bool,
 		// False by default, if true, then browser doesn't save data for this field.
