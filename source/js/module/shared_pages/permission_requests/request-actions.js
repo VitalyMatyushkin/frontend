@@ -267,6 +267,13 @@ RequestActions.prototype = {
 				}
 			},
 			{
+				text:'Promo',
+				isSorted:false,
+				cell:{
+					dataField:'promo'
+				}
+			},
+			{
 				text:'Actions',
 				cell:{
 					type:'action-list',
