@@ -23,7 +23,7 @@ const Grid = React.createClass({
 	},
 	render: function() {
 		const model = this.props.model,
-			classStyleAdmin = model.classStyleAdmin ? " " + model.classStyleAdmin : '',
+			classStyleAdmin = model.classStyleAdmin ? ' bGrid-wide' : '',
 			mHidden = !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (

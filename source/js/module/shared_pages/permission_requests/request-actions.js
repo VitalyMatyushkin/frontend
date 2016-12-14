@@ -279,7 +279,7 @@ RequestActions.prototype = {
 		];
 	},
 	init: function(){
-		const classStyleAdmin = typeof this.viewerRole === 'undefined' ? 'bGrid-wide' : '';
+		const classStyleAdmin = typeof this.viewerRole === 'undefined' ? true : false;
 
 		let defaultFilter = {
 			where: {
