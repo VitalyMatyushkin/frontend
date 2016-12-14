@@ -89,6 +89,7 @@ const GridModel = function(options){
 		columns:options.columns
 	});
 	this.actionPanel = new ActionPanelModel(options.actionPanel);
+	this.classStyleAdmin = options.classStyleAdmin;
 	this.actionPanel.onChange = this.render.bind(this);
 	this.onRender = null;
 };

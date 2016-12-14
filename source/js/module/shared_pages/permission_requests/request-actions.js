@@ -286,6 +286,7 @@ RequestActions.prototype = {
 		];
 	},
 	init: function(){
+		const classStyleAdmin = typeof this.viewerRole === 'undefined' ? true : false;
 
 		let defaultFilter = {
 			where: {
@@ -304,7 +305,8 @@ RequestActions.prototype = {
 				showStrip: true
 			},
 			columns: this.columns,
-			filters: defaultFilter
+			filters: defaultFilter,
+			classStyleAdmin: classStyleAdmin
 		});
 
 		this.dataLoader = 	new DataLoader({
