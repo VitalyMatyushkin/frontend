@@ -41,14 +41,14 @@
 
 
 .eColorsSelect_picker {
-  width: 236px;
+  width: 245px;
   position: absolute;
   left: 50%;
   bottom: 33px;
   z-index: 22;
   background: white;
   overflow: hidden;
-  padding: 5px;
+  padding: $spacing / 2;
   box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.4);
   margin-left: -118px;
 }
@@ -64,8 +64,4 @@
 .eColorsSelect_buttons .bButton{
   font-size: 13px;
   padding: 6px 12px;
-}
-
-.eColorsSelect_buttons .bButton.mRight{
-  float: right;
 }
