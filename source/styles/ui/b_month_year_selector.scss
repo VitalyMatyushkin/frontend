@@ -1,0 +1,23 @@
+.bMonthYearSelector {
+  display: flex;
+
+  width: 370px;
+  height: 50px;
+  margin: 0 auto;
+
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+}
+
+.eMonthYearSelector_leftSide {
+  width: 183px;
+  height: 50px;
+
+  border: 1px solid #d7d7d7;
+  border-width: 0 1px 0 0;
+}
+
+.eMonthYearSelector_rightSide {
+  width: 183px;
+  height: 50px;
+}
