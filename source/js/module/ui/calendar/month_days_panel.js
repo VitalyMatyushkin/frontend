@@ -89,6 +89,7 @@ const MonthDaysPanel = React.createClass({
 			d1.getDate() === d2.getDate()
 		);
 	},
+	getNextMonth: function(){},
 	noOp: function(){},	// most robust function ever
 
 	render: function(){
@@ -106,8 +107,8 @@ const MonthDaysPanel = React.createClass({
 					date		= datesToDraw[i],
 					dateMonth	= date.getMonth(),
 					dataAtDate	= this.getEventDataAtDate(date),
-					isNextMonth	= dateMonth === month + 1 ,
-					isPrevMonth	= dateMonth === month - 1 ,
+					isNextMonth	= dateMonth != month,
+					isPrevMonth	= dateMonth != month,
 					isToday		= this.areDatesInSameDay(date, todayDate),
 					isSelected	= this.areDatesInSameDay(date, selectedDate),
 					row			= rows[rowNumber] || [];
