@@ -119,11 +119,12 @@
 
 .eDataList_listItemColor{
   display: inline-block;
-  height: 15px;
-  width: 15px;
+  height: 18px;
+  width: 18px;
   vertical-align: middle;
   margin-right: 3px;
   position: relative;
+  border: $mainBorderStyle $darkGrey;
   border-radius: 50%;
 }
 
