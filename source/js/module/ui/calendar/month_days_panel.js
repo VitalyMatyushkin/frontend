@@ -89,7 +89,6 @@ const MonthDaysPanel = React.createClass({
 			d1.getDate() === d2.getDate()
 		);
 	},
-	getNextMonth: function(){},
 	noOp: function(){},	// most robust function ever
 
 	render: function(){
