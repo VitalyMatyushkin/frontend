@@ -18,6 +18,7 @@ const Gallery = React.createClass({
 		handleChangeAccessPreset:		React.PropTypes.func,
 		handleClickDeletePhoto:			React.PropTypes.func,
 		accessMode:						React.PropTypes.string.isRequired,
+		isUserCanUploadPhotos:			React.PropTypes.bool.isRequired,
 		isLoading:						React.PropTypes.bool.isRequired
 	},
 	getInitialState: function() {
@@ -97,6 +98,8 @@ const Gallery = React.createClass({
 	},
 	renderAddPhotoButton: function() {
 		switch (this.props.accessMode) {
+			case !this.props.isUserCanUploadPhotos:
+				return null;
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
 				return null;
 			default:

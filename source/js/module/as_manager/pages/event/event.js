@@ -55,14 +55,14 @@ const EventPage = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		const 	self 		= this,
-				rootBinding = self.getMoreartyContext().getBinding(),
-				binding 	= self.getDefaultBinding();
+		const	self		= this,
+				rootBinding	= self.getMoreartyContext().getBinding(),
+				binding		= self.getDefaultBinding();
 
 		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		let eventData, report;
+		let eventData, report, photos;
 		window.Server.schoolEvent.get({
 			schoolId: self.activeSchoolId,
 			eventId: self.eventId
@@ -104,14 +104,19 @@ const EventPage = React.createClass({
 			report = _report;
 
 			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
-		}).then(photos => {
+		}).then(_photos => {
+			photos = _photos;
+
+			return window.Server.schoolSettings.get({schoolId: this.activeSchoolId});
+		}).then(settings => {
 			eventData.matchReport = report.content;
-			console.log(eventData);
+
 			binding.atomically()
-				.set('model',			Immutable.fromJS(eventData))
-				.set('gallery.photos',	Immutable.fromJS(photos))
-				.set('gallery.isSync',	true)
-				.set('mode',			Immutable.fromJS('general'))
+				.set('model',							Immutable.fromJS(eventData))
+				.set('gallery.photos',					Immutable.fromJS(photos))
+				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
+				.set('gallery.isSync',					true)
+				.set('mode',							Immutable.fromJS('general'))
 				.commit();
 
 			self.initTabs();
@@ -119,7 +124,7 @@ const EventPage = React.createClass({
 			binding.set('sync', Immutable.fromJS(true));
 
 			return eventData;
-		})
+		});
 	},
 	loadPhotos: function(role) {
 		let service;
