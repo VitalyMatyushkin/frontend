@@ -1,4 +1,8 @@
 ### Node template
+
+# index.html is auto-generated from template. So ignoring generated version
+index.html
+
 # Logs
 logs
 *.log

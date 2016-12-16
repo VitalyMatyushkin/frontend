@@ -1,6 +1,7 @@
 var 	webpack				= require("webpack"),
 		path				= require('path'),
 		ExtractTextPlugin	= require('extract-text-webpack-plugin'),
+		HtmlWebpackPlugin	= require('html-webpack-plugin'),
 		autoprefixer		= require('autoprefixer');
 
 module.exports = {
@@ -50,11 +51,17 @@ module.exports = {
 	plugins: [
 		new ExtractTextPlugin('styles.css', {
 			allChunks: true
+		}),
+		new HtmlWebpackPlugin({
+			template: 'index.html.ejs',
+			inject: 'body',
+			hash: true,
+			filename: '../index.html'	// index.html is in root directory
 		})
 	],
 	output: {
 		publicPath: 'dist/',					// specifies the public URL address of the output files when referenced in a browser
 		path: 		path.resolve('./dist'),		// storing all results in this folder
-		filename: 	'bundle.[hash].js'					// with names like this
+		filename: 	'bundle.js'					// with names like this
 	}
 };
