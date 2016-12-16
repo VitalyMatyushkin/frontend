@@ -132,7 +132,7 @@ const MonthDaysPanel = React.createClass({
 			renderedRows.push(renderedRow);
 		}
 
-		return <div>{renderedRows}</div>;
+		return <div className="eMonth_container" >{renderedRows}</div>;
 	}
 });
 
