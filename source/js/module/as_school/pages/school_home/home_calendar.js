@@ -65,7 +65,7 @@ const HomeCalender = React.createClass({
 									/>
 							</div>
 						</div>
-						<div>
+						<div className="eEvents_rightSideContainer">
 							<Challenges
 								activeSchoolId={activeSchoolId}
 								isSync={isSelectedDateEventsInSync}
