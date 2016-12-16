@@ -97,10 +97,8 @@ const Gallery = React.createClass({
 		);
 	},
 	renderAddPhotoButton: function() {
-		switch (this.props.accessMode) {
+		switch (true) {
 			case !this.props.isUserCanUploadPhotos:
-				return null;
-			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
 				return null;
 			default:
 				return (

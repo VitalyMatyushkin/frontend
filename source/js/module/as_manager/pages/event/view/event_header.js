@@ -1,20 +1,20 @@
-const	React 			= require('react'),
+const	React			= require('react'),
 		Morearty		= require('morearty'),
 
-		MoreartyHelper	= require('./../../../../helpers/morearty_helper'),
 		DateHelper		= require('./../../../../helpers/date_helper'),
 
-		If				= require('module/ui/if/if'),
 		EventButtons	= require('./event_buttons'),
 		ChallengeModel	= require('./../../../../ui/challenges/challenge_model');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],
-
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	render: function() {
 		const	binding	= this.getDefaultBinding();
 
-		const	model	= new ChallengeModel(binding.toJS('model'), MoreartyHelper.getActiveSchoolId(this));
+		const	model	= new ChallengeModel(binding.toJS('model'), this.props.activeSchoolId);
 
 		const	name	= model.name,
 				date	= DateHelper.toLocalWithMonthName(model.dateUTC),

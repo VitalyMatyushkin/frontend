@@ -1,13 +1,15 @@
 const	InvitesMixin			= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		EventTeamsView			= require('./event_teams_view'),
 		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
-		MoreartyHelper			= require('module/helpers/morearty_helper'),
 		React					= require('react'),
 		Immutable				= require('immutable'),
 		Morearty				= require('morearty');
 
 const EventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			viewPlayers: {
@@ -18,10 +20,8 @@ const EventTeams = React.createClass({
 	},
 	componentWillMount: function() {
 		const self = this;
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		self.loadPlayers();
-
 		self._addListeners();
 	},
 	/* HELPERS */
@@ -66,7 +66,7 @@ const EventTeams = React.createClass({
 
 		window.Server.schoolEvent.get(
 				{
-					schoolId:	self.activeSchoolId,
+					schoolId:	this.props.activeSchoolId,
 					eventId:	event.id
 				}
 			)
@@ -88,7 +88,7 @@ const EventTeams = React.createClass({
 
 		window.Server.schoolEvent.get(
 			{
-				schoolId:	self.activeSchoolId,
+				schoolId:	this.props.activeSchoolId,
 				eventId:	event.id
 			}
 		).then(updEvent => {

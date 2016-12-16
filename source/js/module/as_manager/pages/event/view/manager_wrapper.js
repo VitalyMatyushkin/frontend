@@ -1,10 +1,10 @@
-const	Morearty						= require('morearty'),
+const	React 							= require('react'),
+		Morearty						= require('morearty'),
 		Immutable						= require('immutable'),
-		React 							= require('react'),
+
 		Manager							= require('./../../../../ui/managers/manager'),
 		EventHelper						= require('./../../../../helpers/eventHelper'),
 		TeamHelper						= require('./../../../../ui/managers/helpers/team_helper'),
-		MoreartyHelper					= require('./../../../../helpers/morearty_helper'),
 
 		Actions							= require('../actions/actions'),
 		SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
@@ -13,14 +13,15 @@ const	Morearty						= require('morearty'),
 
 const ManagerWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	componentWillMount: function() {
 		const	self						= this,
 				binding						= self.getDefaultBinding(),
 				index 						= binding.get('selectedRivalIndex'),
 				selectedRivalIndex 			= index !== undefined ? index : 0,
 				teamManagerWrapperBinding	= binding.sub('teamManagerWrapper.default');
-
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		const event = binding.toJS('model');
 
@@ -30,7 +31,7 @@ const ManagerWrapper = React.createClass({
 			.set('model',							Immutable.fromJS(event))
 			.set('model.sportModel',				Immutable.fromJS(event.sport))
 			.set('rivals',							Immutable.fromJS(self.getRivals()))
-			.set('schoolInfo',						Immutable.fromJS(event.inviterSchoolId === self.activeSchoolId ? event.inviterSchool : event.invitedSchools[0]))
+			.set('schoolInfo',						Immutable.fromJS(event.inviterSchoolId === this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0]))
 			.set('selectedRivalIndex',				Immutable.fromJS(selectedRivalIndex))
 			.set('error',							Immutable.fromJS([
 														{
@@ -58,9 +59,7 @@ const ManagerWrapper = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const	event			= binding.toJS('model'),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
-
+		const	event			= binding.toJS('model');
 		let		rival;
 
 		// Add school or house
@@ -69,10 +68,10 @@ const ManagerWrapper = React.createClass({
 				let school;
 				switch (order) {
 					case 0:
-						school = event.inviterSchool.id === activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
+						school = event.inviterSchool.id === this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
 						break;
 					case 1:
-						school = event.inviterSchool.id !== activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
+						school = event.inviterSchool.id !== this.props.activeSchoolId ? event.inviterSchool : event.invitedSchools[0];
 						break;
 				}
 				rival = {
@@ -137,7 +136,7 @@ const ManagerWrapper = React.createClass({
 			case 'inter-schools':
 				switch (order) {
 					case 0:
-						players = event.individualsData.filter(p => p.schoolId === self.activeSchoolId);
+						players = event.individualsData.filter(p => p.schoolId === this.props.activeSchoolId);
 						break;
 					case 1:
 						players = [];
@@ -206,7 +205,7 @@ const ManagerWrapper = React.createClass({
 
 		if(EventHelper.isInterSchoolsEvent(binding.toJS('model'))) {
 			if(order === 0) {
-				const t = teams.find(t => t.schoolId === MoreartyHelper.getActiveSchoolId(self));
+				const t = teams.find(t => t.schoolId === this.props.activeSchoolId);
 				return typeof t === 'undefined' ? [] : t.players;
 			} else {
 				return [];
@@ -236,7 +235,7 @@ const ManagerWrapper = React.createClass({
 			case TeamHelper.isTeamSport(event):
 				if(EventHelper.isInterSchoolsEvent(binding.toJS('model'))) {
 					if(order === 0) {
-						const t = teams.find(t => t.schoolId === MoreartyHelper.getActiveSchoolId(self));
+						const t = teams.find(t => t.schoolId === this.props.activeSchoolId);
 						team = t;
 					} else {
 						team = undefined;
@@ -271,7 +270,7 @@ const ManagerWrapper = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		return SavingEventHelper.processSavingChangesMode(
-			this.activeSchoolId,
+			this.props.activeSchoolId,
 			binding.toJS(`teamManagerWrapper.default.rivals`),
 			binding.toJS('teamManagerWrapper.default.model'),
 			this.getTeamWrappers()
@@ -369,7 +368,7 @@ const ManagerWrapper = React.createClass({
 		//	.then(() => Actions.submitAllChanges(this.activeSchoolId, binding))
 		//	.then(() => this.doAfterCommitActions());
 
-		return Actions.submitAllChanges(this.activeSchoolId, binding).then(() => this.doAfterCommitActions());
+		return Actions.submitAllChanges(this.props.activeSchoolId, binding).then(() => this.doAfterCommitActions());
 	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),

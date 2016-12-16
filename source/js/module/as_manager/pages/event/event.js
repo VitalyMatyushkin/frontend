@@ -6,28 +6,26 @@ const	React			= require('react'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
 		EventHeader					= require('./view/event_header'),
 		EventRivals					= require('./view/event_rivals'),
-		EventButtons				= require('./view/event_buttons'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
 		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
 		EventTeams					= require('./view/teams/event_teams'),
 		EventPerformance			= require('./view/teams/event_teams_performance'),
 		EventGallery				= require('./new_gallery/event_gallery'),
-		EventDetails				= require('./view/event_details'),
 		ManagerWrapper				= require('./view/manager_wrapper'),
 		Comments					= require('./view/event_blog'),
-		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
-		DetailsWrapper 				= require('./view/details/details_wrapper'),
-		MatchReport 				= require('./view/match-report/report'),
-		SportConsts					= require('module/helpers/consts/sport'),
-		Map 						= require('module/ui/map/map-event-venue'),
-		SVG 						= require('module/ui/svg'),
+		DetailsWrapper				= require('./view/details/details_wrapper'),
+		MatchReport					= require('./view/match-report/report'),
+		Map							= require('../../../ui/map/map-event-venue'),
 
 		RoleHelper					= require('./../../../helpers/role_helper');
 
-const EventPage = React.createClass({
+const Event = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -59,12 +57,11 @@ const EventPage = React.createClass({
 				rootBinding	= self.getMoreartyContext().getBinding(),
 				binding		= self.getDefaultBinding();
 
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		let eventData, report, photos;
 		window.Server.schoolEvent.get({
-			schoolId: self.activeSchoolId,
+			schoolId: this.props.activeSchoolId,
 			eventId: self.eventId
 		}).then(event => {
 			event.schoolsData = TeamHelper.getSchoolsData(event);
@@ -97,7 +94,7 @@ const EventPage = React.createClass({
 
 			// loading match report
 			return window.Server.schoolEventReport.get({
-				schoolId: self.activeSchoolId,
+				schoolId: this.props.activeSchoolId,
 				eventId: self.eventId
 			});
 		}).then(_report => {
@@ -107,7 +104,7 @@ const EventPage = React.createClass({
 		}).then(_photos => {
 			photos = _photos;
 
-			return window.Server.schoolSettings.get({schoolId: this.activeSchoolId});
+			return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
 		}).then(settings => {
 			eventData.matchReport = report.content;
 
@@ -116,6 +113,7 @@ const EventPage = React.createClass({
 				.set('gallery.photos',					Immutable.fromJS(photos))
 				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
 				.set('gallery.isSync',					true)
+				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
 				.set('mode',							Immutable.fromJS('general'))
 				.commit();
 
@@ -139,7 +137,7 @@ const EventPage = React.createClass({
 		}
 
 		return service.get({
-			schoolId:	this.activeSchoolId,
+			schoolId:	this.props.activeSchoolId,
 			eventId:	this.eventId
 		});
 	},
@@ -259,10 +257,9 @@ const EventPage = React.createClass({
 		const	event						= binding.toJS('model'),
 				showingComment				= binding.get('showingComment'),
 				activeTab					= binding.get('activeTab'),
-				activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
 				mode						= binding.toJS('mode'),
-				isaLeftShow					= this.isaLeftShow(activeSchoolId, event, mode),
-				isaRightShow				= this.isaRightShow(activeSchoolId, event, mode),
+				isaLeftShow					= this.isaLeftShow(this.props.activeSchoolId, event, mode),
+				isaRightShow				= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				isParent					= RoleHelper.isParent(this);
 
 		switch (true) {
@@ -277,8 +274,12 @@ const EventPage = React.createClass({
 				return (
 					<div className="bEventContainer">
 						<div className="bEvent">
-							<EventHeader binding={binding}/>
-							<EventRivals binding={binding}/>
+							<EventHeader	binding			= {binding}
+											activeSchoolId	= {this.props.activeSchoolId}
+							/>
+							<EventRivals	binding			= {binding}
+											activeSchoolId	= {this.props.activeSchoolId}
+							/>
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
@@ -289,31 +290,39 @@ const EventPage = React.createClass({
 															  isVisible={isaRightShow}/>
 								</div>
 							</div>
-							<EventTeams binding={self._getEventTeamsBinding()} />
+							<EventTeams	binding			= {self._getEventTeamsBinding()}
+										activeSchoolId	= {this.props.activeSchoolId}
+							/>
 							<div className="bEventMap">
 								<div className="bEventMap_row">
 									<div className="bEventMap_col">
-										<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')}/>
+										<Map	binding	= {binding.sub('mapOfEventVenue')}
+												venue	= {binding.toJS('model.venue')}
+										/>
 									</div>
 								</div>
 							</div>
 							<div className="bEventMiddleSideContainer">
-								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+								<Tabs	tabListModel	= {self.tabListModel}
+										onClick			= {self.changeActiveTab}
+								/>
 							</div>
 							<If condition={activeTab === 'performance'} >
 								<div className="bEventBottomContainer">
-									<EventPerformance binding={self._getEventTeamsBinding()}/>
+									<EventPerformance	binding			= {self._getEventTeamsBinding()}
+														activeSchoolId	= {this.props.activeSchoolId}
+									/>
 								</div>
 							</If>
 							<If condition={activeTab === 'gallery'} >
-								<EventGallery	activeSchoolId	= { self.activeSchoolId }
+								<EventGallery	activeSchoolId	= { this.props.activeSchoolId }
 												eventId			= { self.eventId }
 												binding			= { binding.sub('gallery') } />
 							</If>
 							<If condition={activeTab === 'details'} >
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
-													schoolId	= {self.activeSchoolId}
+													schoolId	= {this.props.activeSchoolId}
 													isParent	= {isParent}
 									/>
 								</div>
@@ -327,7 +336,11 @@ const EventPage = React.createClass({
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
-								<Comments binding={binding.sub('comments')} eventId={event.id}/>
+								<Comments	binding						= {binding.sub('comments')}
+											isUserCanWriteComments		= {binding.toJS('isUserCanWriteComments')}
+											eventId						= {event.id}
+											activeSchoolId				= {this.props.activeSchoolId}
+								/>
 							</div>
 						</div>
 					</div>
@@ -336,11 +349,13 @@ const EventPage = React.createClass({
 			case self.isSync() && binding.toJS('mode') === 'edit_squad':
 				return (
 					<div className="bEventContainer">
-						<ManagerWrapper binding={binding}/>
+						<ManagerWrapper	binding			= {binding}
+										activeSchoolId	= {this.props.activeSchoolId}
+						/>
 					</div>
 				);
 		}
 	}
 });
 
-module.exports = EventPage;
+module.exports = Event;

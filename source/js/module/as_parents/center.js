@@ -8,7 +8,7 @@ const 	RouterView 				= require('module/core/router'),
 		Morearty        		= require('morearty'),
 		React 					= require('react'),
 		EventsComponent 		= require("module/as_parents/pages/events/events"),
-		EventComponent 			= require("module/as_manager/pages/event/event"),
+		EventComponent 			= require("./pages/event/event_page"),
 		GalleryRoutesComponent 	= require("module/as_manager/pages/event/gallery/eventGalleryRoutes"),
 		NotificationAlert		= require('./../ui/notification_alert/notification_alert'),
 		ConfirmAlert			= require('./../ui/confirm_alert/confirm_alert');
@@ -35,15 +35,18 @@ const Center = React.createClass({
 						<VerifyRoute binding={binding.sub('userData')} />
 						<SettingsRoute binding={binding.sub('userData')} />
 
-						<Route path="/events/calendar/:userId /events/fixtures/:userId /events/achievement/:userId"
-							   binding={binding.sub('events')}
-							   component={EventsComponent}/>
-						<Route path="/event /event/:eventId /event/:eventId/:mode"
-							   binding={binding.sub('events')}
-							   component={EventComponent}/>
-						<Route path="/event-albums/:eventId/:mode /event-albums/:eventId/:mode/:albumId /event-albums/:eventId/:albumId/:mode/:photoId"
-							   binding={binding.sub('event-albums')}
-							   component={GalleryRoutesComponent}/>
+						<Route	path		= "/events/calendar/:userId /events/fixtures/:userId /events/achievement/:userId"
+								binding		= {binding.sub('events')}
+								component	= {EventsComponent}
+						/>
+						<Route	path		= "/event /event/:eventId /event/:eventId/:mode"
+								binding		= {binding.sub('events')}
+								component	= {EventComponent}
+						/>
+						<Route	path		= "/event-albums/:eventId/:mode /event-albums/:eventId/:mode/:albumId /event-albums/:eventId/:albumId/:mode/:photoId"
+								binding		= {binding.sub('event-albums')}
+								component	= {GalleryRoutesComponent}
+						/>
 					</RouterView>
 				</div>
 				<NotificationAlert binding={binding.sub('notificationAlertData')} />

@@ -51,14 +51,14 @@ const ModerationPage = React.createClass({
 						defaultButton		= {'Save'}
 				>
 					<FormField	type	= "checkbox"
-								field	= "commentsEnabled"
+								field	= "photosEnabled"
 					>
 						User can upload photos to event
 					</FormField>
 					<FormField	type	= "checkbox"
-								field	= "photosEnabled"
+								field	= "commentsEnabled"
 					>
-						User comment event
+						User can write comments for event
 					</FormField>
 				</Form>
 			</div>
