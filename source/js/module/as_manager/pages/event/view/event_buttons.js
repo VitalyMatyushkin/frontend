@@ -289,10 +289,7 @@ const EventButtons = React.createClass({
 	},
 	/** The Save button handler */
 	onClickOk: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		self.closeMatch();
+		this.closeMatch();
 	},
 	/**
 	 * Return reverted team manager binding
@@ -367,6 +364,14 @@ const EventButtons = React.createClass({
 							onClick={self.onClickCloseCancel}
 						>
 							Cancel
+						</div>
+					</If>
+					<If condition={EventHelper._isShowFinishEventEditingButton(self)}>
+						<div
+							className="bButton"
+							onClick={self.onClickOk}
+						>
+							Save
 						</div>
 					</If>
 				</div>

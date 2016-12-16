@@ -426,7 +426,7 @@ const EventRival = React.createClass({
 		if(!isEventWithOneIndividualTeam) {
 			body = (
 				<div className="bEventRivals">
-					<div className="bEventRivals_row">
+					<div className="bEventRivals_row mEqualHeight">
 						<div className="bEventRivals_column mLeft">
 							{self._renderTeamLeftSide()}
 						</div>

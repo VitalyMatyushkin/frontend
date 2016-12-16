@@ -18,6 +18,7 @@ $secondBackgroundColor: #f5f5f5;
 
 /*borders*/
 $mainBorder: solid 1px $greyColor;
+$mainBorderStyle: solid 1px;
 $borderRadius: 5px;
 $gradientBorder: linear-gradient(90deg, $greyColor 0%, $secondBackgroundColor 100%) no-repeat bottom;
 
