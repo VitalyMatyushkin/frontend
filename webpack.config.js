@@ -55,6 +55,6 @@ module.exports = {
 	output: {
 		publicPath: 'dist/',					// specifies the public URL address of the output files when referenced in a browser
 		path: 		path.resolve('./dist'),		// storing all results in this folder
-		filename: 	'bundle.js'					// with names like this
+		filename: 	'bundle.[hash].js'					// with names like this
 	}
 };
