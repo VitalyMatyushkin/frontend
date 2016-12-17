@@ -17,11 +17,11 @@
 
   &_leftSideContainer {
     @include make-md-column-offset(1);
-    @include make-md-column(5);
+    @include make-md-column(4);
   }
 
   &_rightSideContainer {
-    @include make-md-column(5)
+    @include make-md-column(6)
   }
 }
 
