@@ -58,7 +58,7 @@
 }
 .eSchoolFixtureTab{
   width: 100%;
-  max-width: 1170px;
+  max-width: 1180px;
   height: 40px;
   position:relative;
   text-align: center;
@@ -255,7 +255,6 @@
 
 .eSchoolBodyWrapper{
   position:relative;
-  width: 90%;
   height: auto;
   margin: auto;
 }
@@ -263,6 +262,13 @@
   height: auto;
   position: relative;
   margin-top: 40px;
+  * {
+    box-sizing: border-box;//Remove it after adding bootstrap grid to school page
+  }
+  .bCalendar {
+    background: transparent;
+  }
+
 }
 .eSchoolFixtureTab.eCalendar_tab h1{
   color: $COLOR;
@@ -280,17 +286,7 @@
   flex-wrap: wrap;
   justify-content: center;
 }
-.eSchoolCalendarWrapper {
 
-  .bCalendar {
-    background: transparent;
-    max-width: 400px;
-    display: inline-block;
-  }
-  .eMonth_day.mWeekName {
-    background: transparent;
-  }
-}
 .eSchoolFixtureListItem{
   color: #333132;
   text-transform: none;

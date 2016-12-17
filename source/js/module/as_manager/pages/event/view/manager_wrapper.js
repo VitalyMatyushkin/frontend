@@ -1,10 +1,15 @@
-const	Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
-		React 			= require('react'),
-		Manager			= require('./../../../../ui/managers/manager'),
-		EventHelper		= require('./../../../../helpers/eventHelper'),
-		TeamHelper		= require('./../../../../ui/managers/helpers/team_helper'),
-		MoreartyHelper	= require('./../../../../helpers/morearty_helper');
+const	Morearty						= require('morearty'),
+		Immutable						= require('immutable'),
+		React 							= require('react'),
+		Manager							= require('./../../../../ui/managers/manager'),
+		EventHelper						= require('./../../../../helpers/eventHelper'),
+		TeamHelper						= require('./../../../../ui/managers/helpers/team_helper'),
+		MoreartyHelper					= require('./../../../../helpers/morearty_helper'),
+
+		Actions							= require('../actions/actions'),
+		SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
+		SavingPlayerChangesPopupHelper	= require('../../events/saving_player_changes_popup/helper'),
+		SavingEventHelper				= require('../../../../helpers/saving_event_helper');
 
 const ManagerWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -20,21 +25,23 @@ const ManagerWrapper = React.createClass({
 		const event = binding.toJS('model');
 
 		teamManagerWrapperBinding.atomically()
-			.set('model',				Immutable.fromJS(event))
-			.set('model.sportModel',	Immutable.fromJS(event.sport))
-			.set('rivals',				Immutable.fromJS(self.getRivals()))
-			.set('schoolInfo',			Immutable.fromJS(event.inviterSchoolId === self.activeSchoolId ? event.inviterSchool : event.invitedSchools[0]))
-			.set('selectedRivalIndex',	Immutable.fromJS(selectedRivalIndex))
-			.set('error',				Immutable.fromJS([
-											{
-												isError: false,
-												text: ""
-											},
-											{
-												isError: false,
-												text: ""
-											}
-										]))
+			.set('isSubmitProcessing',				false)
+			.set('isSavingChangesModePopupOpen',	false)
+			.set('model',							Immutable.fromJS(event))
+			.set('model.sportModel',				Immutable.fromJS(event.sport))
+			.set('rivals',							Immutable.fromJS(self.getRivals()))
+			.set('schoolInfo',						Immutable.fromJS(event.inviterSchoolId === self.activeSchoolId ? event.inviterSchool : event.invitedSchools[0]))
+			.set('selectedRivalIndex',				Immutable.fromJS(selectedRivalIndex))
+			.set('error',							Immutable.fromJS([
+														{
+															isError: false,
+															text: ""
+														},
+														{
+															isError: false,
+															text: ""
+														}
+													]))
 			.commit();
 	},
 	getRivals: function() {
@@ -256,14 +263,137 @@ const ManagerWrapper = React.createClass({
 			error:				teamManagerWrapperBinding.sub('default.error')
 		};
 	},
-	render: function() {
+	/**
+	 * Just wrapper.
+	 * @returns {*}
+	 */
+	processSavingChangesMode: function() {
+		const binding = this.getDefaultBinding();
+
+		return SavingEventHelper.processSavingChangesMode(
+			this.activeSchoolId,
+			binding.toJS(`teamManagerWrapper.default.rivals`),
+			binding.toJS('teamManagerWrapper.default.model'),
+			this.getTeamWrappers()
+		)
+	},
+	handleClickPopupSubmit: function() {
+		this.submit();
+	},
+	handleClickCancelButton: function() {
+		this.getDefaultBinding().set('mode', 'general');
+	},
+	getValidationData: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
+		const event = binding.toJS('model');
+
+		if(EventHelper.isInterSchoolsEvent(event)) {
+			return [
+				binding.toJS('teamManagerWrapper.default.error.0')
+			];
+		} else {
+			return [
+				binding.toJS('teamManagerWrapper.default.error.0'),
+				binding.toJS('teamManagerWrapper.default.error.1')
+			];
+		}
+	},
+	getTeamWrappers: function() {
+		return this.getDefaultBinding().toJS('teamManagerWrapper.default.teamModeView.teamWrapper');
+	},
+	handleClickSubmitButton: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		const managerBinding = self.getManagerBinding();
+		const	event			= binding.toJS('model'),
+				teamWrappers	= this.getTeamWrappers(),
+				validationData	= this.getValidationData();
+
+		// if true - then user click to finish button
+		// so we shouldn't do anything
+		if(!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') && TeamHelper.isTeamDataCorrect(event, validationData)) {
+
+			binding.set('isSubmitProcessing', true);
+			this.submit();
+			//switch (true) {
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		this.showSavingChangesModePopup();
+			//		break;
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		this.showSavingChangesModePopup();
+			//		break;
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		this.showSavingChangesModePopup();
+			//		break;
+			//	case (
+			//			TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
+			//			!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+			//	):
+			//		binding.set('isSubmitProcessing', true);
+			//		this.submit();
+			//		break;
+			//	case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isNonTeamSport(event):
+			//		binding.set('isSubmitProcessing', true);
+			//		this.submit();
+			//		break;
+			//}
+		}
+	},
+	showSavingChangesModePopup: function() {
+		this.getDefaultBinding().set('teamManagerWrapper.default.isSavingChangesModePopupOpen', true);
+	},
+	doAfterCommitActions: function() {
+		const	self	= this,
+			binding	= self.getDefaultBinding();
+
+		binding.atomically()
+			.set('mode', 'general')
+			.set('eventTeams.isSync', Immutable.fromJS(false))
+			.commit();
+	},
+	submit: function() {
+		const binding = this.getDefaultBinding();
+
+		//return Promise.all(this.processSavingChangesMode())
+		//	.then(() => Actions.submitAllChanges(this.activeSchoolId, binding))
+		//	.then(() => this.doAfterCommitActions());
+
+		return Actions.submitAllChanges(this.activeSchoolId, binding).then(() => this.doAfterCommitActions());
+	},
+	render: function() {
+		const	binding			= this.getDefaultBinding(),
+				managerBinding	= this.getManagerBinding();
 
 		return (
-			<Manager binding={managerBinding} isInviteMode={true}/>
+			<div>
+				<Manager binding={managerBinding} isInviteMode={true}/>
+				<SavingPlayerChangesPopup	binding	= {binding.sub('teamManagerWrapper.default')}
+											submit	= {this.handleClickPopupSubmit}
+				/>
+				<div className="bEventButtons">
+					<div	className	= "bButton mCancel mMarginRight"
+							onClick		= {this.handleClickCancelButton}
+					>
+						Cancel
+					</div>
+					<div	className	= "bButton"
+							onClick		= {this.handleClickSubmitButton}
+					>
+						Save
+					</div>
+				</div>
+			</div>
 		);
 	}
 });

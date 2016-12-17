@@ -7,7 +7,8 @@ const 	React 			= require('react'),
 		SVG 			= require('module/ui/svg'),
 		GenderIcon		= require('module/ui/icons/gender_icon'),
 		DataLoader 		= require('module/ui/grid/data-loader'),
-		GridModel 		= require('module/ui/grid/grid-model');
+		GridModel 		= require('module/ui/grid/grid-model'),
+		schoolHelper 	= require('module/helpers/school_helper');
 
 /**
  * StudentListModel
@@ -230,21 +231,25 @@ StudentListModel.prototype = {
 		];
 	},
 	init: function(){
-		this.grid = new GridModel({
-			actionPanel:{
-				title:this.title,
-				showStrip:true,
-				btnAdd:this.btnAdd
-			},
-			columns: this.columns,
-			filters: this.filters
-		});
+		schoolHelper.setSchoolSubscriptionPlanPromise(this).then(() => {
+			if(schoolHelper.schoolSubscriptionPlanIsFull(this)) {
+				this.grid = new GridModel({
+					actionPanel: {
+						title: this.title,
+						showStrip: true,
+						btnAdd: this.btnAdd
+					},
+					columns: this.columns,
+					filters: this.filters
+				});
 
-		this.dataLoader = new DataLoader({
-			serviceName:'schoolStudents',
-			params:		{schoolId:this.activeSchoolId},
-			grid:		this.grid,
-			onLoad: 	this.getDataLoadedHandle()
+				this.dataLoader = new DataLoader({
+					serviceName: 'schoolStudents',
+					params: {schoolId: this.activeSchoolId},
+					grid: this.grid,
+					onLoad: this.getDataLoadedHandle()
+				});
+			}
 		});
 
 		return this;

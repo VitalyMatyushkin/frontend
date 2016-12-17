@@ -4,7 +4,7 @@
 
 const 	React 			= require('react'),
 		Immutable		= require('immutable'),
-		MonthNavBar		= require('./month_nav_bar'),
+		MonthNavBar		= require('./month_year_selector'),
 		DaysOfWeekBar	= require('./days_of_week_bar'),
 		MonthDaysPanel	= require('./month_days_panel');
 
@@ -30,10 +30,8 @@ function MonthCalendar(props) {
 
 	return <div className="eCalendar_eMonth">
 		<MonthNavBar
-			monthName={monthName}
-			yearName={monthDate.getFullYear()}
-			onNextClick={props.onNextMonthClick}
-			onPrevClick={props.onPrevMonthClick}
+			date={monthDate}
+			onMonthClick={props.onMonthClick}
 		/>
 		<DaysOfWeekBar/>
 		<MonthDaysPanel

@@ -118,8 +118,8 @@ const ColorsSelect =  React.createClass({
 						<div className="eColorsSelect_plate" height="200" ref="picker"></div>
 
 						<div className="eColorsSelect_buttons">
-							<div className="bButton" onClick={self.hidePicker}>Cancel</div>
-							<div className="bButton mRight" onClick={self.acceptColor}>Accept</div>
+							<div className="bButton mHalfWidth mCancel" onClick={self.hidePicker}>Cancel</div>
+							<div className="bButton mHalfWidth mMarginLeft" onClick={self.acceptColor}>Accept</div>
 						</div>
 					</div>
 				</div>

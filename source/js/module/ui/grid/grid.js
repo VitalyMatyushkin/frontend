@@ -14,18 +14,20 @@ const Grid = React.createClass({
 	componentWillMount:function(){
 		this.props.model.onRender = this.onRender;
 	},
+	componentWillUnmount:function(){
+		this.props.model.onRender = null;
+	},
+	/**start re-render. Model use it for re-render component*/
 	onRender:function(){
-		// TODO WTF??!
-		// I don't understand this. "onRender" was called only when "setData" or "render" func was called.
-		// So, do you really use it for re-render component? If it's right, then i think it's wrong way.
 		this.setState({renderStart: new Date()});
 	},
 	render: function() {
 		const model = this.props.model,
+			classStyleAdmin = model.classStyleAdmin ? ' bGrid-wide' : '',
 			mHidden = !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
-			<div className="bGrid">
+			<div className={"bGrid" + classStyleAdmin}>
 				<ActionPanel model={model.actionPanel} />
 				<div className={mHidden}>
 					<FilterPanel model={model.filterPanel} />

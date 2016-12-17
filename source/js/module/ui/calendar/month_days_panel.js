@@ -106,8 +106,8 @@ const MonthDaysPanel = React.createClass({
 					date		= datesToDraw[i],
 					dateMonth	= date.getMonth(),
 					dataAtDate	= this.getEventDataAtDate(date),
-					isNextMonth	= dateMonth === month + 1 ,
-					isPrevMonth	= dateMonth === month - 1 ,
+					isNextMonth	= dateMonth != month,
+					isPrevMonth	= dateMonth != month,
 					isToday		= this.areDatesInSameDay(date, todayDate),
 					isSelected	= this.areDatesInSameDay(date, selectedDate),
 					row			= rows[rowNumber] || [];
@@ -132,7 +132,7 @@ const MonthDaysPanel = React.createClass({
 			renderedRows.push(renderedRow);
 		}
 
-		return <div>{renderedRows}</div>;
+		return <div className="eMonth_container" >{renderedRows}</div>;
 	}
 });
 

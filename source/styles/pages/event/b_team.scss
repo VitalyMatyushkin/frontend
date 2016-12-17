@@ -30,7 +30,6 @@
 @media (min-width: $screen-sm-min) {
   .bEventTeams_row.mEqualHeight {//addition to the bootstrap styles for the columns equal height
     display: flex;
-    flex-flow: row wrap;
 
     .bEventTeams_col {
       display: flex;

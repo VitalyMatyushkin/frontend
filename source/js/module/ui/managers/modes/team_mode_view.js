@@ -102,6 +102,10 @@ const TeamModeView = React.createClass({
 				Immutable.fromJS(teamId)
 			)
 			.set(
+				`teamWrapper.${rivalIndex}.teamType`,
+				Immutable.fromJS(team.teamType)
+			)
+			.set(
 				`teamWrapper.${rivalIndex}.selectedTeam`,
 				Immutable.fromJS(team)
 			)
@@ -138,6 +142,10 @@ const TeamModeView = React.createClass({
 			.atomically()
 			.set(
 				`teamWrapper.${rivalIndex}.selectedTeamId`,
+				Immutable.fromJS(undefined)
+			)
+			.set(
+				`teamWrapper.${rivalIndex}.teamType`,
 				Immutable.fromJS(undefined)
 			)
 			.set(

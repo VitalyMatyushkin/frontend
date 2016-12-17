@@ -82,7 +82,7 @@ const EventTeamsView = React.createClass({
 		} else {
 			return (
 				<div className="bEventTeams_team">
-					{self.renderPlayers(undefined, players, true)}
+					{self.renderPlayers(undefined, players, true, true)}
 				</div>
 			);
 		}

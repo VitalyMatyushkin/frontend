@@ -6,7 +6,8 @@ const 	FilterModel 		= require('./filter/model/filter-model'),
 		FilterPanelModel 	= require('./filter/model/filter-panel-model'),
 		PaginationModel 	= require('./filter/model/pagination-model'),
 		ActionPanelModel 	= require('./action-panel/action-panel-model'),
-		TableModel 			= require('./table/model/table-model');
+		TableModel 			= require('./table/model/table-model'),
+		Lazy 				= require('lazy.js');
 
 /**
  * GridModel - model for Grid class
@@ -88,13 +89,14 @@ const GridModel = function(options){
 		columns:options.columns
 	});
 	this.actionPanel = new ActionPanelModel(options.actionPanel);
+	this.classStyleAdmin = options.classStyleAdmin;
 	this.actionPanel.onChange = this.render.bind(this);
 	this.onRender = null;
 };
 
 GridModel.prototype.setData = function(data){
 	if(this.filter.isChangePage){
-		this.table.data = this.table.data.concat(data);
+		this.table.data = Lazy(this.table.data.concat(data)).uniq('id').toArray();
 	} else {
 		this.table.data = data;
 	}

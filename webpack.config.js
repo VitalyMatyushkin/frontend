@@ -1,6 +1,7 @@
 var 	webpack				= require("webpack"),
 		path				= require('path'),
 		ExtractTextPlugin	= require('extract-text-webpack-plugin'),
+		HtmlWebpackPlugin	= require('html-webpack-plugin'),
 		autoprefixer		= require('autoprefixer');
 
 module.exports = {
@@ -50,6 +51,12 @@ module.exports = {
 	plugins: [
 		new ExtractTextPlugin('styles.css', {
 			allChunks: true
+		}),
+		new HtmlWebpackPlugin({
+			template: 'index.html.ejs',
+			inject: 'body',
+			hash: true,
+			filename: '../index.html'	// index.html is in root directory
 		})
 	],
 	output: {

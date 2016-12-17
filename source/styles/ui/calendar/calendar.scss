@@ -1,6 +1,8 @@
 @import "../../!variables";
 
-$border-color: #c2c2c2;
+$month-day-size: 50px; // set calendar cell width, height and vertical padding
+$today-background-image: url('/images/today_calendar_day.png') no-repeat center;
+$active-day-background: #b2d7ec;
 
 .bCalendar {
   display: flex;
@@ -12,115 +14,114 @@ $border-color: #c2c2c2;
 }
 
 .eCalendar_navBar {
-  display: flex;
   align-content: space-between;
+  display: flex;
   justify-content: center;
-  margin-top: 10px;
+  padding-bottom: $spacing*3;
 }
 
 .eCalendar_item {
-  display: flex;
-  color: #333;
+  display: inline-block;
   cursor: pointer;
-  margin: 0 7px;
+
   &.mNameMonth {
-    font-weight: bold;
-    color: #333;
+    color: $BodyColor;
     cursor: default;
-    line-height: 20px;
-    font-size: 16px;
+    font-size: 1.125rem;
+    min-width: 150px;
+    text-align: center;
+  }
+
+  .bIcon {
+    color: $blueColor;
+    width: 14px;
+    height: 14px;
+    &:hover .bIcon {
+      color: $COLOR;
+    }
   }
 }
-.eCalendar_item .bIcon {
-  color: #0079be;
-  width: 14px;
-  height: 14px;
-}
-.eCalendar_item:hover .bIcon {
-  color: $COLOR;
-}
+
 .eCalendar_eMonth {
   display: flex;
   flex-flow: column wrap;
 
+  align-items: center;
   margin-bottom: 20px;
 }
 
 .eMonth_row {
   display: flex;
+  justify-content: center;
 }
 
 .eMonth_day {
-  display: flex;
-  width: 50px;
-  height: 50px;
-  line-height: 50px;
-  vertical-align: middle;
-  text-align: center;
-  justify-content: center;
-  cursor: pointer;
-  border: solid 1px #dddddd;
-  border-radius: 10%;
-  margin: 3px;
   background: #fff;
-  color: #8c8c8c;
-  font-size: 22px;
-  &.mFirst {
-  }
-  &.mWeekName {
-    border: 0;
-    font-weight: 500;
-    font-size: 14px;
-    color: #8c8c8c;
-    cursor: default;
-    height: 40px;
-    background: #fff
-  }
-  &.mToday {
-    background: #fff url('/images/today_calendar_day.png') center;
-    &.mSelect {
-      color: #fff;
-      background: $blueColor url('/images/today_calendar_day.png') center;
-    }
-    &.mActive {
-      background: #b2d7ec url('/images/today_calendar_day.png') center;
-      &:hover {
+  border: $mainBorder;
+  border-radius: $borderRadius;
+  color: $GrayText;
+  cursor: pointer;
+  font-size: 1.3rem;
+  height: $month-day-size;
+  margin: $spacing / 4;
+  padding-top: $month-day-size / 4;
+  text-align: center;
+  transition: border .5s;
+  width: $month_day_size;
 
-      }
-    }
-  }
-  &.mPrev,
-  &.mNext {
-    cursor: default;
-    background: #fff;
-    color: rgba(0, 0, 0, .2);
-    &.hover {
-      border-color: $DarkGreen;
-      color: $DarkGreen;
-    }
+  &:hover {
+    border-color: $darkGrey;
   }
   &.mActive {
-    background: #b2d7ec;;
+    background: $active-day-background;
     color: $blueColor;
     &:hover {
-      border-color: #0079be;
-      color: #0079be;
+      border-color: $blueColor
     }
   }
   &.mSelect {
     color: #fff;
     background: #0079be;
   }
-  &:hover {
-    border-color: #0079be;
+  &.mToday {
+    background: #fff $today-background-image;
+    background-size: cover;
+    &.mSelect {
+      color: #fff;
+      background: $blueColor;
+    }
+    &.mActive {
+      background: $active-day-background $today-background-image;
+      background-size: cover;
+    }
+  }
+  &.mPrev,
+  &.mNext {
+    cursor: default;
+    background: #fff;
+    color: #dddddd;
+    &:hover {
+      border-color: $greyColor;
+    }
+  }
+  &.mWeekName {
+    background: transparent;
+    border: 0;
+    color: $GrayText;
+    cursor: default;
+    font-size: 1.1rem;
+    height: 40px;
   }
 }
 
-.eCalendar_eEventsPanel {
-  width: 400px;
-  padding: 0 20px;
-  margin-left: 15px;
-  display: flex;
-  flex-flow: column nowrap;
-  overflow: hidden;
+@media screen and (max-width: 480px) {
+  .eMonth_container {
+    width: 100%;
+  }
+  .eMonth_day {
+    font-size: 1.5rem;
+    margin: 1px;
+    padding: 14px 0;
+    flex: 0 0 (100%/7);
+  }
 }

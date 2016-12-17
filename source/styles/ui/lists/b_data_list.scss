@@ -5,6 +5,17 @@
   max-width: 1060px;
   padding: 0 11%;
   text-transform: none;
+
+  @media (max-width: 992px) {
+    font-size: 14px;
+    padding: 0 30px;
+  }
+  @media (max-width: 768px) {
+    padding: 0 15px;
+    overflow-x: auto;
+
+    font-size: 12px;
+  }
 }
 
 .eDataList_title{
@@ -108,11 +119,12 @@
 
 .eDataList_listItemColor{
   display: inline-block;
-  height: 15px;
-  width: 15px;
+  height: 18px;
+  width: 18px;
   vertical-align: middle;
   margin-right: 3px;
   position: relative;
+  border: $mainBorderStyle $darkGrey;
   border-radius: 50%;
 }
 
@@ -260,7 +272,6 @@
 }
 .eTable_view{
   padding-bottom: 30px;
-
 }
 .requestActions{
   cursor: pointer;
