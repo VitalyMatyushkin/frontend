@@ -1,6 +1,6 @@
 @import "../../!variables";
 
-$month-day-size: 55px; // set calendar cell width, height and vertical padding
+$month-day-size: 50px; // set calendar cell width, height and vertical padding
 $today-background-image: url('/images/today_calendar_day.png') no-repeat center;
 $active-day-background: #b2d7ec;
 
@@ -61,10 +61,10 @@ $active-day-background: #b2d7ec;
   border-radius: $borderRadius;
   color: $GrayText;
   cursor: pointer;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   height: $month-day-size;
-  margin: $spacing / 3;
-  padding-top: $month-day-size / 3;
+  margin: $spacing / 4;
+  padding-top: $month-day-size / 4;
   text-align: center;
   transition: border .5s;
   width: $month_day_size;
