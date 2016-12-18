@@ -1,9 +1,10 @@
-const 	Challenges 				= require('module/ui/challenges/challenges'),
+const	React					= require('react'),
+		Morearty				= require('morearty'),
+
+		Challenges				= require('../../../../ui/challenges/challenges'),
 		AllChildrenChallenges 	= require('./calendar/challenges/all_children_challenges'),
 		Calendar 				= require('./calendar/calendar'),
-		CalendarActions			= require('./calendar/calendar-actions'),
-		Morearty            	= require('morearty'),
-		React 					= require('react');
+		CalendarActions			= require('./calendar/calendar-actions');
 
 const EventsCalendar = React.createClass({
 	mixins: [Morearty.Mixin],

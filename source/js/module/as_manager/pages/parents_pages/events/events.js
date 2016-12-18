@@ -1,12 +1,14 @@
-const   RouterView  				= require('module/core/router'),
-		Route       				= require('module/core/route'),
-		React       				= require('react'),
-		SubMenu     				= require('module/ui/menu/sub_menu'),
-		Morearty        			= require('morearty'),
-		Immutable   				= require('immutable'),
-		EventsCalendarComponent 	= require('module/as_parents/pages/events/events_calendar'),
-		EventsFixturesComponent 	= require('./events_fixtures'),
-		EventsAchievementComponent 	= require("module/as_parents/pages/events/events_achievement");
+const	React						= require('react'),
+		Morearty					= require('morearty'),
+		Immutable					= require('immutable'),
+
+		RouterView					= require('module/core/router'),
+		Route						= require('module/core/route'),
+		SubMenu						= require('module/ui/menu/sub_menu'),
+
+		EventsFixturesComponent		= require('./events_fixtures'),
+		EventsCalendarComponent		= require('module/as_parents/pages/events/events_calendar'),
+		EventsAchievementComponent	= require("module/as_parents/pages/events/events_achievement");
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],

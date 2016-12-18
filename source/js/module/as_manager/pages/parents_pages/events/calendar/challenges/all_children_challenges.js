@@ -4,9 +4,10 @@
 
 const	React			= require('react'),
 		Immutable 		= require('immutable'),
+
 		Header 			= require('./header'),
 		ChildChallenges = require('./child_challenges'),
-		NoResultItem	= require('module/ui/challenges/no_result_item');
+		NoResultItem	= require('../../../../../../ui/challenges/no_result_item');
 
 const AllChildrenChallenges = React.createClass({
 	propTypes: {

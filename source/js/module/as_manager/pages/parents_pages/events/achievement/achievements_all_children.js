@@ -2,18 +2,19 @@
  * Created by Anatoly on 17.03.2016.
  */
 
-const   React 		= require('react'),
-		EventHelper	= require('module/helpers/eventHelper'),
-		Loader 		= require('module/ui/loader'),
-		Immutable   = require('immutable'),
-        Morearty 	= require('morearty');
+const	React		= require('react'),
+		Morearty	= require('morearty'),
+		Immutable	= require('immutable'),
+
+		EventHelper	= require('../../../../../helpers/eventHelper'),
+		Loader		= require('../../../../../ui/loader');
 
 const AchievementsAllChildren = React.createClass({
-    mixins: [Morearty.Mixin],
+	mixins: [Morearty.Mixin],
 	componentDidMount:function(){
-		const   self    = this,
-			binding = self.getDefaultBinding(),
-			children = binding.toJS('children');
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				children	= binding.toJS('children');
 
 		if(children.length){
 			self.getData();
@@ -22,10 +23,10 @@ const AchievementsAllChildren = React.createClass({
 		}
 	},
 	getData: function(){
-		const   self    = this,
-			binding = self.getDefaultBinding(),
-			children = binding.toJS('children'),
-			ids = children && children.map(ch => ch.id);
+		const	self		= this,
+				binding		= self.getDefaultBinding(),
+				children	= binding.toJS('children'),
+				ids			= children && children.map(ch => ch.id);
 
 		if(ids){
 			window.Server.childrenEventsCount.get({filter:{
@@ -40,11 +41,11 @@ const AchievementsAllChildren = React.createClass({
 			});
 		}
 	},
-    renderAllAchievements:function(){
-        const   self    = this,
-                binding = self.getDefaultBinding(),
-				children = binding.toJS('children'),
-				achievements = binding.toJS('allAchievements');
+	renderAllAchievements:function(){
+		const	self			= this,
+				binding			= self.getDefaultBinding(),
+				children		= binding.toJS('children'),
+				achievements	= binding.toJS('allAchievements');
 
         let result = (
 			<div className="eAchievement_row">

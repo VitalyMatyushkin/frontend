@@ -2,9 +2,10 @@
  * Created by Anatoly on 08.10.2016.
  */
 
-const	React 			= require('react'),
-		Immutable 		= require('immutable'),
-		ChallengeItem 	= require('./challenge_item');
+const	React			= require('react'),
+		Immutable		= require('immutable'),
+
+		ChallengeItem	= require('./challenge_item');
 
 const ChildChallenges = function(props){
 	const	child 	= props.child,
