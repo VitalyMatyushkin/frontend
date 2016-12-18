@@ -16,7 +16,7 @@ const   Promise     = require('bluebird'),
 
 
 const 	asAdmin 		= require('./module/start_as_admin'),
-		asManager		= require('./module/start_as_manager'),
+		asApp			= require('./module/start_as_app'),
 		asWWW			= require('./module/start_as_www'),
 		asLogin			= require('./module/start_as_login'),
 		asParents		= require('./module/start_as_parents'),
@@ -55,7 +55,7 @@ window.logLevel = log; //Make this global for usage
 
 switch(startModule) {
 	case 'module/start_as_admin':		asAdmin();		break;
-	case 'module/start_as_manager':		asManager();	break;
+	case 'module/start_as_app':			asApp();		break;
 	case 'module/start_as_parents':		asParents();	break;
 	case 'module/start_as_www':			asWWW();		break;
 	case 'module/start_as_login':		asLogin();		break;

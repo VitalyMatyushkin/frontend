@@ -1,6 +1,6 @@
 const   Logo            = require('module/as_manager/head/logo'),
         TopMenu         = require('module/ui/menu/top_menu'),
-        UserBlock       = require('module/shared_pages/head/user_block'),
+        UserBlock       = require('../shared_pages/head/user_block'),
         React           = require('react'),
         Morearty        = require('morearty'),
         Immutable       = require('immutable'),

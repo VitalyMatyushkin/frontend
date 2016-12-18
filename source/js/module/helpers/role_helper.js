@@ -1,10 +1,10 @@
 const RoleHelper = {
 	roleMapper: {
-		owner:		'manager',
-		admin:		'manager',
-		manager:	'manager',
-		teacher:	'manager',
-		trainer:	'manager',
+		owner:		'app',
+		admin:		'app',
+		manager:	'app',
+		teacher:	'app',
+		trainer:	'app',
 		parent:		'parents'
 	},
 	ALLOWED_PERMISSION_PRESETS: {

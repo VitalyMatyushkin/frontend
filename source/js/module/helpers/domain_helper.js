@@ -50,7 +50,7 @@ const DomainHelper = {
 			const domain = subdomains.join(".");
 			let newUrl = window.location.href;
 			switch (roleSubdomain) {
-				case 'manager':
+				case 'app':
 					newUrl = `//${domain}/#school_admin/summary`;
 					break;
 				case 'parents':

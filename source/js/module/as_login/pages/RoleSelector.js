@@ -3,7 +3,7 @@
  */
 const 	React 		= require('react'),
 		RoleHelper  = require('module/helpers/role_helper'),
-		Auth 		= require('module/core/services/AuthorizationServices'),
+		Auth 		= require('../../core/services/AuthorizationServices'),
 		RSC			= require('./RoleSelectorComponent');
 
 const RoleSelector = React.createClass({
@@ -22,29 +22,43 @@ const RoleSelector = React.createClass({
 		return RoleHelper.roleMapper[roleName.toLowerCase()];
 	},
 	redirectToStartPage: function(roleName) {
-		const 	self 			= this,
-				roleSubdomain 	= self.getRoleSubdomain(roleName),
-				subdomains 		= document.location.host.split('.');
+		const	self			= this,
+				roleSubdomain	= self.getRoleSubdomain(roleName),
+				subdomains		= document.location.host.split('.');
+
 		let defaultPage;
 
-		subdomains[0] = roleSubdomain;
-		switch (roleSubdomain) {
+		switch (roleName) {
+			case 'owner':
+				defaultPage = `school_admin/summary`;
+				break;
+			case 'admin':
+				defaultPage = `school_admin/summary`;
+				break;
 			case 'manager':
 				defaultPage = `school_admin/summary`;
 				break;
-			case 'parents':
+			case 'teacher':
+				defaultPage = `school_admin/summary`;
+				break;
+			case 'trainer':
+				defaultPage = `school_admin/summary`;
+				break;
+			case 'parent':
 				defaultPage = `events/calendar/all`;
 				break;
 			default:
 				defaultPage = `settings/general`;
-				subdomains[0] = 'manager';
+				subdomains[0] = 'app';
 				break;
 		}
+
+		subdomains[0] = roleSubdomain;
 		const domain = subdomains.join(".");
 		window.location.href = `//${domain}/#${defaultPage}`;
 	},
 	onRoleSelected: function(roleName){
-		Auth.become(roleName).then(data => {
+		Auth.become(roleName).then(() => {
 			return this.redirectToStartPage(roleName.toLowerCase());
 		});
 	},
@@ -56,6 +70,5 @@ const RoleSelector = React.createClass({
 		return null;
 	}
 });
-
 
 module.exports = RoleSelector;
