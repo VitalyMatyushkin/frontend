@@ -2,10 +2,11 @@
  * Created by Anatoly on 08.10.2016.
  */
 
-const	React 		= require('react'),
-		Immutable 	= require('immutable'),
-		DateHelper 	= require('module/helpers/date_helper'),
-		Sport		= require('module/ui/icons/sport_icon');
+const	React		= require('react'),
+		Immutable	= require('immutable'),
+
+		DateHelper	= require('../../../../../../helpers/date_helper'),
+		Sport		= require('../../../../../../ui/icons/sport_icon');
 
 const ChallengeItem = function(props){
 	const	event 		= props.event,

@@ -2,11 +2,12 @@
  * Created by Anatoly on 10.10.2016.
  */
 
-const   React           = require('react'),
-        Morearty        = require('morearty'),
-		Immutable       = require('immutable'),
-		DateHelper 		= require('module/helpers/date_helper'),
-		Fixtures 		= require('module/ui/fixtures/fixtures');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
+
+		DateHelper		= require('../../../../helpers/date_helper'),
+		Fixtures		= require('../../../../ui/fixtures/fixtures');
 
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],

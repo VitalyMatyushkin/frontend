@@ -1,11 +1,12 @@
 const RoleHelper = {
 	roleMapper: {
-		owner:		'manager',
-		admin:		'manager',
-		manager:	'manager',
-		teacher:	'manager',
-		trainer:	'manager',
-		parent:		'parents'
+		owner:		'app',
+		admin:		'app',
+		manager:	'app',
+		teacher:	'app',
+		trainer:	'app',
+		parent:		'app',
+		no_body:	'app'// it's a synthetic role, it isn't exist on server
 	},
 	ALLOWED_PERMISSION_PRESETS: {
 		ADMIN:		'ADMIN',

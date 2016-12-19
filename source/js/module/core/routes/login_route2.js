@@ -1,6 +1,6 @@
 const 	React 		= require('react'),
 		Route 		= require('module/core/route'),
-		loginUser2	= require('module/ui/login/user2');
+		loginUser2	= require('../../ui/login/user2');
 
 //TODO does anybody know why it is done this way?
 const LoginRoute = React.createClass({

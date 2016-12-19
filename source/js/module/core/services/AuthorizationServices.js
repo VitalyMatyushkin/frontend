@@ -59,7 +59,6 @@ const AuthorizationServices ={
 			/** save verification status */
 			authInfo.verified = profile.verification && profile.verification.status;
 			binding.set(Immutable.fromJS(authInfo));
-			console.log(authInfo);
 			return authInfo;
 		});
     },
