@@ -49,12 +49,12 @@ const DomainHelper = {
 			}
 			const domain = subdomains.join(".");
 			let newUrl = window.location.href;
-			switch (roleSubdomain) {
-				case 'app':
-					newUrl = `//${domain}/#school_admin/summary`;
-					break;
-				case 'parents':
+			switch (roleName) {
+				case 'PARENT':
 					newUrl = `//${domain}/#events/calendar/all`;
+					break;
+				default:
+					newUrl = `//${domain}/#school_admin/summary`;
 					break;
 			}
 			window.location = newUrl;

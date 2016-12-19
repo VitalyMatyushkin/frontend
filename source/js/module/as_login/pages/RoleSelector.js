@@ -18,44 +18,41 @@ const RoleSelector = React.createClass({
 			self.redirectToStartPage('no_body');
 		}
 	},
-	getRoleSubdomain: function(roleName) {
-		return RoleHelper.roleMapper[roleName.toLowerCase()];
+	getDomainNameByRole: function(role) {
+		// parse domains from domain name to array
+		// app.squard.com => ['app', 'squard', 'com']
+		const domains = document.location.host.split('.');
+		// Third level domain is "0" index in array
+		domains[0] = this.getThirdLevelDomainByRole(role);
+
+		return domains.join(".");
 	},
-	redirectToStartPage: function(roleName) {
-		const	self			= this,
-				roleSubdomain	= self.getRoleSubdomain(roleName),
-				subdomains		= document.location.host.split('.');
-
-		let defaultPage;
-
+	getThirdLevelDomainByRole: function(role) {
+		return RoleHelper.roleMapper[role.toLowerCase()];
+	},
+	getDefaultPageByRoleName: function(roleName) {
 		switch (roleName) {
 			case 'owner':
-				defaultPage = `school_admin/summary`;
-				break;
+				return `school_admin/summary`;
 			case 'admin':
-				defaultPage = `school_admin/summary`;
-				break;
+				return `school_admin/summary`;
 			case 'manager':
-				defaultPage = `school_admin/summary`;
-				break;
+				return `school_admin/summary`;
 			case 'teacher':
-				defaultPage = `school_admin/summary`;
-				break;
+				return `school_admin/summary`;
 			case 'trainer':
-				defaultPage = `school_admin/summary`;
-				break;
+				return `school_admin/summary`;
 			case 'parent':
-				defaultPage = `events/calendar/all`;
-				break;
-			default:
-				defaultPage = `settings/general`;
-				subdomains[0] = 'app';
-				break;
+				return `events/calendar/all`;
+			case 'no_body':
+				return `settings/general`;
 		}
+	},
+	redirectToStartPage: function(role) {
+		const	domainName	= this.getDomainNameByRole(role),
+				defaultPage	= this.getDefaultPageByRoleName(role);
 
-		subdomains[0] = roleSubdomain;
-		const domain = subdomains.join(".");
-		window.location.href = `//${domain}/#${defaultPage}`;
+		window.location.href = `//${domainName}/#${defaultPage}`;
 	},
 	onRoleSelected: function(roleName){
 		Auth.become(roleName).then(() => {

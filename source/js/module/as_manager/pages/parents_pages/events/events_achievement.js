@@ -9,12 +9,8 @@ const	React						= require('react'),
 		AchievementsAllChildren		= require('./achievement/achievements_all_children'),
 		AchievementOneChild			= require('./achievement/achievement_one_child');
 
-ParentChildAchievement = React.createClass({
+const ParentChildAchievement = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentWillMount:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
-	},
 	render: function () {
 		var self = this,
 			binding = self.getDefaultBinding();
@@ -30,4 +26,5 @@ ParentChildAchievement = React.createClass({
 		)
 	}
 });
+
 module.exports = ParentChildAchievement;

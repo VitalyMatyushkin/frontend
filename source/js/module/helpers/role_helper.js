@@ -5,7 +5,8 @@ const RoleHelper = {
 		manager:	'app',
 		teacher:	'app',
 		trainer:	'app',
-		parent:		'parents'
+		parent:		'app',
+		no_body:	'app'// it's a synthetic role, it isn't exist on server
 	},
 	ALLOWED_PERMISSION_PRESETS: {
 		ADMIN:		'ADMIN',

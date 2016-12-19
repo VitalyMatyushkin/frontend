@@ -7,8 +7,8 @@ const	React						= require('react'),
 		SubMenu						= require('module/ui/menu/sub_menu'),
 
 		EventsFixturesComponent		= require('./events_fixtures'),
-		EventsCalendarComponent		= require('module/as_parents/pages/events/events_calendar'),
-		EventsAchievementComponent	= require("module/as_parents/pages/events/events_achievement");
+		EventsCalendarComponent		= require('./events_calendar'),
+		EventsAchievementComponent	= require('./events_achievement');
 
 const EventView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -126,6 +126,5 @@ const EventView = React.createClass({
 		</div>;
 	}
 });
-
 
 module.exports = EventView;
