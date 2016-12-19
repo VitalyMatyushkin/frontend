@@ -3,7 +3,7 @@
  */
 const 	React 		= require('react'),
 		RoleHelper  = require('module/helpers/role_helper'),
-		Auth 		= require('module/core/services/AuthorizationServices'),
+		Auth 		= require('../../core/services/AuthorizationServices'),
 		RSC			= require('./RoleSelectorComponent');
 
 const RoleSelector = React.createClass({
@@ -18,33 +18,44 @@ const RoleSelector = React.createClass({
 			self.redirectToStartPage('no_body');
 		}
 	},
-	getRoleSubdomain: function(roleName) {
-		return RoleHelper.roleMapper[roleName.toLowerCase()];
-	},
-	redirectToStartPage: function(roleName) {
-		const 	self 			= this,
-				roleSubdomain 	= self.getRoleSubdomain(roleName),
-				subdomains 		= document.location.host.split('.');
-		let defaultPage;
+	getDomainNameByRole: function(role) {
+		// parse domains from domain name to array
+		// app.squard.com => ['app', 'squard', 'com']
+		const domains = document.location.host.split('.');
+		// Third level domain is "0" index in array
+		domains[0] = this.getThirdLevelDomainByRole(role);
 
-		subdomains[0] = roleSubdomain;
-		switch (roleSubdomain) {
+		return domains.join(".");
+	},
+	getThirdLevelDomainByRole: function(role) {
+		return RoleHelper.roleMapper[role.toLowerCase()];
+	},
+	getDefaultPageByRoleName: function(roleName) {
+		switch (roleName) {
+			case 'owner':
+				return `school_admin/summary`;
+			case 'admin':
+				return `school_admin/summary`;
 			case 'manager':
-				defaultPage = `school_admin/summary`;
-				break;
-			case 'parents':
-				defaultPage = `events/calendar/all`;
-				break;
-			default:
-				defaultPage = `settings/general`;
-				subdomains[0] = 'manager';
-				break;
+				return `school_admin/summary`;
+			case 'teacher':
+				return `school_admin/summary`;
+			case 'trainer':
+				return `school_admin/summary`;
+			case 'parent':
+				return `events/calendar/all`;
+			case 'no_body':
+				return `settings/general`;
 		}
-		const domain = subdomains.join(".");
-		window.location.href = `//${domain}/#${defaultPage}`;
+	},
+	redirectToStartPage: function(role) {
+		const	domainName	= this.getDomainNameByRole(role),
+				defaultPage	= this.getDefaultPageByRoleName(role);
+
+		window.location.href = `//${domainName}/#${defaultPage}`;
 	},
 	onRoleSelected: function(roleName){
-		Auth.become(roleName).then(data => {
+		Auth.become(roleName).then(() => {
 			return this.redirectToStartPage(roleName.toLowerCase());
 		});
 	},
@@ -56,6 +67,5 @@ const RoleSelector = React.createClass({
 		return null;
 	}
 });
-
 
 module.exports = RoleSelector;

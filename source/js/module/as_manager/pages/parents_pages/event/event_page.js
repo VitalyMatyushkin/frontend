@@ -1,9 +1,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 
-		MoreartyHelper	= require('../../../helpers/morearty_helper'),
-
-		Event			= require('../../../as_manager/pages/event/event');
+		Event			= require('../../event/event');
 
 const EventPage = React.createClass({
 	mixins: [Morearty.Mixin],

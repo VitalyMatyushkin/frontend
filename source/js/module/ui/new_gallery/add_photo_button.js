@@ -6,14 +6,23 @@ const AddPhotoButton = React.createClass({
 	fileInputRef: undefined,
 
 	propTypes: {
-		isLoading:		React.PropTypes.bool.isRequired,
-		handleChange:	React.PropTypes.func.isRequired
+		isLoading:				React.PropTypes.bool.isRequired,
+		isUserCanUploadPhotos:	React.PropTypes.bool.isRequired,
+		handleChange:			React.PropTypes.func.isRequired
 	},
 
 	handleClick: function() {
-		if(typeof this.fileInputRef !== 'undefined') {
-			const event = new MouseEvent('click');
-			this.fileInputRef.dispatchEvent(event);
+		if(this.props.isUserCanUploadPhotos) {
+			if(typeof this.fileInputRef !== 'undefined') {
+				const event = new MouseEvent('click');
+				this.fileInputRef.dispatchEvent(event);
+			}
+		} else {
+			window.simpleAlert(
+				`Sorry, this feature is not available in your school`,
+				'Ok',
+				() => {}
+			);
 		}
 	},
 	handleChange: function(eventDescriptor) {

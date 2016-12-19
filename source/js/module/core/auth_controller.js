@@ -56,7 +56,6 @@ const authСontroller = {
 				avoids users getting stuck if the current hash string is the same as the next one but are presented
 				the login view because they are not authenticated.
 			 */
-			console.log('auth_controller: redirected to login');
 			window.location.href = domainHelper.getLoginUrl();
 		}
 	}

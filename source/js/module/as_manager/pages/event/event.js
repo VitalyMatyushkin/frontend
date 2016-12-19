@@ -1,6 +1,6 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
+const	React						= require('react'),
+		Morearty					= require('morearty'),
+		Immutable					= require('immutable'),
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),

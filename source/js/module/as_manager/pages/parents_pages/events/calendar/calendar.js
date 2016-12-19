@@ -2,10 +2,11 @@
  * Created by Anatoly on 07.10.2016.
  */
 
-const 	React			= require('react'),
-		MonthCalendar	= require('module/ui/calendar/month_calendar'),
-		CalendarActions	= require('./calendar-actions'),
-		Morearty        = require('morearty');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+
+		MonthCalendar	= require('../../../../../ui/calendar/month_calendar'),
+		CalendarActions	= require('./calendar-actions');
 
 /** Show calendar section: month calendar and events for selected date */
 const Calendar = React.createClass({

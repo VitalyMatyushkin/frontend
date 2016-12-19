@@ -9,9 +9,9 @@ const 	React 			= require('react'),
 
 const FixtureItem = React.createClass({
 	propTypes: {
-		event: React.PropTypes.object.isRequired,
-		activeSchoolId: React.PropTypes.string.isRequired,
-		onClick: React.PropTypes.func
+		event			: React.PropTypes.object.isRequired,
+		activeSchoolId	: React.PropTypes.string.isRequired,
+		onClick			: React.PropTypes.func
 	},
 	/**
 	 * Render game type column
@@ -39,7 +39,15 @@ const FixtureItem = React.createClass({
 		);
 	},
 	onClickChallenge: function (e) {
-		this.props.onClick && this.props.onClick(this.props.event.id);
+		if(typeof this.props.onClick !== "undefined") {
+			// if child isn't undefined, then it's parent fixture
+			// and we must add schoolId for fixture item click handler
+			if(typeof this.props.event.child !== "undefined") {
+				this.props.onClick(this.props.event.id, this.props.event.child.schoolId);
+			} else {
+				this.props.onClick(this.props.event.id);
+			}
+		}
 		e.stopPropagation();
 	},
 	render: function () {

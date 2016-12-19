@@ -24,8 +24,11 @@ const FixtureList = React.createClass({
 
 		return eventsByDate.map(event => {
 			return (
-				<FixtureItem key={'item-'+event.id} event={event} activeSchoolId={self.props.activeSchoolId}
-								onClick={self.props.onClick} />
+				<FixtureItem	key				= {'item-'+event.id}
+								event			= {event}
+								activeSchoolId	= {self.props.activeSchoolId}
+								onClick			= {this.props.onClick}
+				/>
 			);
 		});
 	},

@@ -12,8 +12,8 @@ const EventPage = React.createClass({
 	},
 
 	render: function() {
-		const	self						= this,
-				binding						= self.getDefaultBinding();
+		const	self	= this,
+				binding	= self.getDefaultBinding();
 
 		return (
 			<Event	binding			= {binding}

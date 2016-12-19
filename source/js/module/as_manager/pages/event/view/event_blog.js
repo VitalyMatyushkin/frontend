@@ -98,41 +98,49 @@ const Blog = React.createClass({
 		clearInterval(self.intervalId);
 	},
 	_commentButtonClick:function(){
-		var self = this,
-			binding = self.getDefaultBinding(),
-			eventId = this.props.eventId,
-			comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
-			replyTo = binding.get('replyTo'),
-			replyName = replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
-			postData = {text: comments};
+		if(this.props.isUserCanWriteComments) {
+			var self = this,
+				binding = self.getDefaultBinding(),
+				eventId = this.props.eventId,
+				comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
+				replyTo = binding.get('replyTo'),
+				replyName = replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
+				postData = {text: comments};
 
-		ReactDOM.findDOMNode(self.refs.commentBox).value = "";
-		binding.sub('replyTo').clear();
+			ReactDOM.findDOMNode(self.refs.commentBox).value = "";
+			binding.sub('replyTo').clear();
 
-		/**if reply and a comment contains the name*/
-		if(replyTo && comments.indexOf(replyName) >= 0){
-			postData.text = comments.replace(`${replyName},`, '').trim(); // remove reply name from comment
-			postData.replyToCommentId = replyTo.id;// set reply comment in postData
+			/**if reply and a comment contains the name*/
+			if(replyTo && comments.indexOf(replyName) >= 0){
+				postData.text = comments.replace(`${replyName},`, '').trim(); // remove reply name from comment
+				postData.replyToCommentId = replyTo.id;// set reply comment in postData
+			}
+
+			return window.Server.schoolEventComments.post(
+				{
+					schoolId: this.props.activeSchoolId,
+					eventId: eventId
+				},
+				postData
+				)
+				.then(function(comment) {
+					const   blogs       = binding.toJS('blogs'),
+						blogCount   = binding.toJS('blogCount');
+
+					blogs.push(comment);
+
+					binding.atomically()
+						.set('blogCount',   Immutable.fromJS(blogCount + 1))
+						.set('blogs',       Immutable.fromJS(blogs))
+						.commit();
+				});
+		} else {
+			window.simpleAlert(
+				`Sorry, this feature is not available in your school`,
+				'Ok',
+				() => {}
+			);
 		}
-
-		return window.Server.schoolEventComments.post(
-			{
-				schoolId: this.props.activeSchoolId,
-				eventId: eventId
-			},
-			postData
-		)
-		.then(function(comment) {
-			const   blogs       = binding.toJS('blogs'),
-					blogCount   = binding.toJS('blogCount');
-
-			blogs.push(comment);
-
-			binding.atomically()
-				.set('blogCount',   Immutable.fromJS(blogCount + 1))
-				.set('blogs',       Immutable.fromJS(blogs))
-				.commit();
-		});
 	},
 	onReply:function(blog){
 		var     self    = this,
@@ -152,21 +160,19 @@ const Blog = React.createClass({
 		return(
 			<div className="bBlogMain">
 				<CommentBox onReply={self.onReply} blogData={dataBlog} />
-				<If condition={this.props.isUserCanWriteComments}>
-					<div>
-						<div className="bBlog_box mNewComment">
-							<div className="ePicBox">
-								<Avatar pic={loggedUser && loggedUser.avatar} minValue={45} />
-							</div>
-							<div className="eEvent_commentBlog">
-								<Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>
-							</div>
+				<div>
+					<div className="bBlog_box mNewComment">
+						<div className="ePicBox">
+							<Avatar pic={loggedUser && loggedUser.avatar} minValue={45} />
 						</div>
-						<div className="bEventButtons">
-							<div onClick={self._commentButtonClick} className="bButton">Send</div>
+						<div className="eEvent_commentBlog">
+							<Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>
 						</div>
 					</div>
-				</If>
+					<div className="bEventButtons">
+						<div onClick={self._commentButtonClick} className="bButton">Send</div>
+					</div>
+				</div>
 			</div>
 		)
 	}
