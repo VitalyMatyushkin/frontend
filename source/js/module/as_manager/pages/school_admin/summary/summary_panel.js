@@ -25,10 +25,10 @@ const SummaryPanel = React.createClass({
 	renderEditButton: function() {
 		if(this.props.showEditButton === true) {
 			return (
-				<div className="editSchool">
+				<div className="eSchoolMaster_summary_buttons">
 					<a href={'/#schools/edit?id=' + this.props.activeSchoolId}>
-						<div className="bEditButton bTooltip" data-description="Edit">
-							<SVG icon="icon_edit"/>
+						<div className="bButton mCircle bTooltip" data-description="Edit">
+							<i className="fa fa-pencil" aria-hidden="true"/>
 						</div>
 					</a>
 				</div>
