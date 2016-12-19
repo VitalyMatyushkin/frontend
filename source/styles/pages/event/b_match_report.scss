@@ -9,10 +9,13 @@
     background: #fff;
     margin-top: 20px;
     padding: 20px 30px;
+    min-height: inherit;
   }
 
   .mAdded {
     padding: 35px;
+    min-height: inherit;
+
     word-break: break-all;
   }
 
