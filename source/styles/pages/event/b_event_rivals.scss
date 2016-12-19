@@ -32,7 +32,13 @@
 /* .bEventRival */
 
 .bEventRival {
+  display: flex;
+
+  flex-direction: column;
+  justify-content: space-between;
+
   border: $mainBorder;
+
   &.mRight {
   }
 }
