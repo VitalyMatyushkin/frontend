@@ -9,7 +9,7 @@ const	React					= require('react'),
 		SettingsRoute			= require('module/core/routes/settings_route'),
 		VerifyRoute				= require('module/core/routes/verify_route'),
 
-		EventComponent			= require('module/as_manager/pages/event/event'),
+		EventComponent			= require('../pages/parents_pages/event/event_page'),
 		ParentEventsComponent	= require("./../pages/parents_pages/events/events");
 
 /**

@@ -12,6 +12,9 @@ const	EventHelper		= require('module/helpers/eventHelper'),
 
 const EventRival = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	getPic: function (order) {
 		const	self = this,
 				binding = self.getDefaultBinding();
@@ -27,12 +30,12 @@ const EventRival = React.createClass({
 				let school;
 				switch (order) {
 					case 0:
-						school = binding.toJS('model.inviterSchool.id') === MoreartyHelper.getActiveSchoolId(self) ?
+						school = binding.toJS('model.inviterSchool.id') === this.props.activeSchoolId ?
 							binding.toJS('model.inviterSchool') :
 							binding.toJS('model.invitedSchools.0');
 						break;
 					case 1:
-						school = binding.toJS('model.inviterSchool.id') !== MoreartyHelper.getActiveSchoolId(self) ?
+						school = binding.toJS('model.inviterSchool.id') !== this.props.activeSchoolId ?
 							binding.toJS('model.inviterSchool') :
 							binding.toJS('model.invitedSchools.0');
 						break;
@@ -198,14 +201,12 @@ const EventRival = React.createClass({
 		const	event		= binding.toJS('model');
 		let		name		= undefined;
 
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
 		if(order === 0) {
-			const foundTeam = event.teamsData.find(t => t.schoolId === activeSchoolId);
+			const foundTeam = event.teamsData.find(t => t.schoolId === this.props.activeSchoolId);
 
 			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
 		} else if(order === 1) {
-			const foundTeam = event.teamsData.find(t => t.schoolId !== activeSchoolId);
+			const foundTeam = event.teamsData.find(t => t.schoolId !== this.props.activeSchoolId);
 
 			typeof foundTeam !== 'undefined' && (name = foundTeam.name);
 		}
@@ -253,19 +254,17 @@ const EventRival = React.createClass({
 				eventType	= event.eventType;
 		let		name		= null;
 
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
 		switch (eventType) {
 			case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
 				const	inviterSchool = binding.toJS('model.inviterSchool'),
 						invitedSchool = binding.toJS('model.invitedSchools.0');
 
 				if(order === 0) {
-					name = inviterSchool.id === activeSchoolId ?
+					name = inviterSchool.id === this.props.activeSchoolId ?
 						inviterSchool.name :
 						invitedSchool.name;
 				} else if(order === 1) {
-					name = inviterSchool.id !== activeSchoolId ?
+					name = inviterSchool.id !== this.props.activeSchoolId ?
 						inviterSchool.name :
 						invitedSchool.name;
 				}
@@ -296,20 +295,18 @@ const EventRival = React.createClass({
 	renderCountPointLeftSide: function() {
 		const	binding	= this.getDefaultBinding();
 
-		const	activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
-				individualScoreAvailable 	= binding.toJS('individualScoreAvailable.0.value'),
+		const	individualScoreAvailable	= binding.toJS('individualScoreAvailable.0.value'),
 				event						= binding.toJS('model'),
-				params 						= TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				params 						= TeamHelper.getParametersForLeftContext(this.props.activeSchoolId, event);
 
 		return this.renderCountPoints(params.bundleName, params.order, individualScoreAvailable);
 	},
 	renderCountPointRightSide: function() {
 		const	binding	= this.getDefaultBinding();
 
-		const	activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
-				individualScoreAvailable 	= binding.toJS('individualScoreAvailable.1.value'),
+		const	individualScoreAvailable	= binding.toJS('individualScoreAvailable.1.value'),
 				event						= binding.toJS('model'),
-				params 						= TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				params 						= TeamHelper.getParametersForRightContext(this.props.activeSchoolId, event);
 
 		return this.renderCountPoints(params.bundleName, params.order, individualScoreAvailable);
 	},
@@ -360,11 +357,10 @@ const EventRival = React.createClass({
 	},
 	_renderTeamLeftSide: function() {
 		const	self	= this,
-			binding	= self.getDefaultBinding();
+				binding	= self.getDefaultBinding();
 
 		const	eventType		= binding.get('model.eventType'),
-			teamsData		= binding.toJS('model.teamsData'),
-			activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
+				teamsData		= binding.toJS('model.teamsData');
 
 		if(TeamHelper.isNonTeamSport(binding.toJS('model'))) {
 			return self._renderTeamByOrder(0);
@@ -375,17 +371,17 @@ const EventRival = React.createClass({
 			return self._renderTeamByOrder(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[0].schoolId === activeSchoolId
+			teamsData[0].schoolId === this.props.activeSchoolId
 		) {
 			return self._renderTeamByOrder(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[0].schoolId !== activeSchoolId
+			teamsData[0].schoolId !== this.props.activeSchoolId
 		) {
 			return self._renderTeamByOrder(0);
 		} else if(
 			eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
-			teamsData[1].schoolId === activeSchoolId
+			teamsData[1].schoolId === this.props.activeSchoolId
 		) {
 			return self._renderTeamByOrder(1);
 		} else if(eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']) {

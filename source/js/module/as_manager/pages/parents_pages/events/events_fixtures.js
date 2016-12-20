@@ -59,6 +59,7 @@ const EventFixtures = React.createClass({
 		if(childIdList.length)
 			window.Server.childrenEvents.get({ filter: filter })
 				.then(events => {
+					this.injectChildrenToEvents(events, binding.toJS('children'), childIdList);
 					binding
 						.atomically()
 						.set('models', Immutable.fromJS(events))
@@ -66,17 +67,48 @@ const EventFixtures = React.createClass({
 						.commit();
 				});
 	},
-	onClickChallenge: function (eventId) {
-		document.location.hash = 'event/' + eventId;
+	injectChildrenToEvents: function(events, childList, currentChildIdList) {
+		if(currentChildIdList.length === 1) {
+			return this.injectChildToEvents(events, childList.find(c => c.id === currentChildIdList[0]));
+		} else {
+			return events.forEach(event => {
+				const child = this.getChildFromEvent(event, childList);
+				if(typeof child !== "undefined") {
+					console.log(child);
+					event.child = child;
+				}
+			});
+		}
+	},
+	getChildFromEvent: function(event, childList) {
+		return childList.find(child => this.isChildPlayInEvent(event, child));
+	},
+	isChildPlayInEvent: function(event, child) {
+		const foundTeam = event.teamsData.find(t => this.isChildPlayInTeam(t, child));
+
+		return typeof foundTeam !== 'undefined';
+	},
+	isChildPlayInTeam: function(team, child) {
+		const foundPlayer = team.players.find(p => p.userId === child.id);
+
+		return typeof foundPlayer !== 'undefined';
+	},
+	injectChildToEvents: function(events, child) {
+		return events.forEach(e => e.child = child);
+	},
+	onClickChallenge: function (eventId, schoolId) {
+		document.location.hash = 'event/' + eventId + "?schoolId=" + schoolId ;
 	},
 	render: function () {
-		const   self    		= this,
-				activeSchoolId  = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				binding 		= self.getDefaultBinding();
+		const	activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				binding			= this.getDefaultBinding();
 
-		return <Fixtures	events={binding.toJS('models')}
-							sync={binding.toJS('sync')}
-							onClick={self.onClickChallenge} />;
+		return (
+				<Fixtures	events			= {binding.toJS('models')}
+							sync			= {binding.toJS('sync')}
+							onClick			= {this.onClickChallenge}
+				/>
+		);
 	}
 });
 

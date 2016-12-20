@@ -18,6 +18,7 @@ const Gallery = React.createClass({
 		handleChangeAccessPreset:		React.PropTypes.func,
 		handleClickDeletePhoto:			React.PropTypes.func,
 		accessMode:						React.PropTypes.string.isRequired,
+		isUserCanUploadPhotos:			React.PropTypes.bool.isRequired,
 		isLoading:						React.PropTypes.bool.isRequired
 	},
 	getInitialState: function() {
@@ -88,7 +89,7 @@ const Gallery = React.createClass({
 
 	renderPhotos: function() {
 		return (
-			<PhotoStrip photos={this.props.photos}
+			<PhotoStrip	photos={this.props.photos}
 						handleClickDeletePhoto={this.props.handleClickDeletePhoto}
 						handleClickPhoto={this.handleClickPhoto}
 						accessMode={this.props.accessMode}
@@ -101,8 +102,9 @@ const Gallery = React.createClass({
 				return null;
 			default:
 				return (
-					<AddPhotoButton	handleChange	= { this.props.handleChangeAddPhotoButton }
-									isLoading		= { this.props.isLoading }
+					<AddPhotoButton	handleChange			= { this.props.handleChangeAddPhotoButton }
+									isUserCanUploadPhotos	= { this.props.isUserCanUploadPhotos }
+									isLoading				= { this.props.isLoading }
 					/>
 				);
 		}

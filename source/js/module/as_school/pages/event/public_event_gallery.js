@@ -11,11 +11,13 @@ const PublicEventGallery = React.createClass({
 		const photos = this.getDefaultBinding().toJS('photos');
 
 		if(photos.length)
+			// About props - isisUserCanUploadPhotos, it equals false because user can't upload photos in public mode.
 			return(
 				<div className="bEvent_media bEventBottomContainer">
-					<Gallery	photos			= { photos }
-								accessMode		= { GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC }
-								isLoading		= { false }
+					<Gallery	photos					= { photos }
+								accessMode				= { GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC }
+								isUserCanUploadPhotos	= { false }
+								isLoading				= { false }
 					/>
 				</div>
 			);

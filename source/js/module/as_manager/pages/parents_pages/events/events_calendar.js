@@ -30,8 +30,8 @@ const EventsCalendar = React.createClass({
 		CalendarActions.setCurrentMonth(monthDate, childIdList, calendar);
 		CalendarActions.setSelectedDate(selectedDate, childIdList, calendar);
 	},
-	onEventClick:function(eventId){
-		document.location.hash = 'event/' + eventId;
+	onEventClick:function(schoolId, eventId){
+		document.location.hash = 'event/' + eventId + '?schoolId=' + schoolId;
 	},
 	_renderChallengesListView: function() {
 		const	self		= this,
@@ -46,24 +46,30 @@ const EventsCalendar = React.createClass({
 
 		if(binding.get('activeChildId') == 'all') {
 			challengesList = (
-				<AllChildrenChallenges
-					isSync={isSelectedDateEventsInSync}
-					children={children}
-					events={selectedDateEvents}
-					onClick={this.onEventClick}
+				<AllChildrenChallenges	isSync		= {isSelectedDateEventsInSync}
+										children	= {children}
+										events		= {selectedDateEvents}
+										onClick		= {this.onEventClick}
 				/>
 			);
 		} else {
-			challengesList = (
-				<Challenges
-					isSync={isSelectedDateEventsInSync}
-					events={selectedDateEvents.toJS()}
-					onClick={this.onEventClick}
-				/>
-			);
+			const child = this.getChildById(children.toJS(), binding.toJS('activeChildId'));
+			if(typeof child !== 'undefined') {
+				challengesList = (
+					<Challenges	isSync	= {isSelectedDateEventsInSync}
+								events	= {selectedDateEvents.toJS()}
+								onClick	= {this.onEventClick.bind(null, child.schoolId)}
+					/>
+				);
+			} else {
+				challengesList = null;
+			}
 		}
 
 		return challengesList;
+	},
+	getChildById: function(children, currentChildId) {
+		return children.find(c => c.id === currentChildId);
 	},
 	render: function() {
 		var self 			= this,
