@@ -324,7 +324,7 @@ const EventTeamsPerformance = React.createClass({
 	},
 	handleValueChange: function(player, permissionId, performanceId, value) {
 		const self = this;
-		console.log(player);
+
 		const	event = self.getBinding('event').toJS(),
 				pDataIndex = event.results.individualPerformance.findIndex(pData =>
 					pData.userId === player.userId &&
