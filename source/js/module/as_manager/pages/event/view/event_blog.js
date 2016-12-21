@@ -14,6 +14,7 @@ const Blog = React.createClass({
 	mixins:[Morearty.Mixin],
 	propTypes:{
 		eventId					: React.PropTypes.string.isRequired,
+		activeSchoolId			: React.PropTypes.string.isRequired,
 		isUserCanWriteComments	: React.PropTypes.bool.isRequired
 	},
 	_setBlogCount:function(){
