@@ -7,12 +7,24 @@ const BigHighlightsPhoto = React.createClass({
 		photos: React.PropTypes.array.isRequired
 	},
 
+	getRandomPhoto: function() {
+		const 	photos			= this.props.photos,
+				maxRand = photos.length;
+
+		let rand = Math.random() * (maxRand - 1);
+		rand = Math.round(rand);
+
+		return rand;
+	},
+
 	render: function() {
 		const 	photos			= this.props.photos,
 				defaultPhoto 	= '//images.squadintouch.com/images/3txvxdlvjkcm65e13re3nbeuoyoft8pwnhd3_1478107508550.jpg',	// hack not to brake page when there is no photos. TODO: fix me
-				photo0Url		= photos[0] ? photos[0].picUrl : defaultPhoto,
-				photo1Url		= photos[1] ? photos[1].picUrl : defaultPhoto,
-				photo2Url		= photos[2] ? photos[2].picUrl : defaultPhoto;
+				photo0Url		= photos[0] ? photos[this.getRandomPhoto()].picUrl : defaultPhoto,
+				photo1Url		= photos[1] ? photos[this.getRandomPhoto()].picUrl : defaultPhoto,
+				photo2Url		= photos[2] ? photos[this.getRandomPhoto()].picUrl : defaultPhoto;
+
+
 
 		const styles = [
 			{
@@ -34,6 +46,7 @@ const BigHighlightsPhoto = React.createClass({
 				<div	className	= "eHighlightsPhoto_smallPhoto"
 						style		= {styles[1]}
 				>
+
 				</div>
 				<div	className	= "eHighlightsPhoto_smallPhoto"
 						style		= {styles[2]}

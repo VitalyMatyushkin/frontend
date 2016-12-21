@@ -18,17 +18,15 @@ const BigScreenMainPage = React.createClass({
 	CHANGE_STATE_INTERVAL			: 10000,
 
 	changeFooterEventTimerId		: undefined,
-	CHANGE_FOOTER_EVENT_INTERVAL	: 3000,
+	CHANGE_FOOTER_EVENT_INTERVAL	: 300000,
 
 	componentWillMount: function () {
 		const	binding			= this.getDefaultBinding().sub('events'),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId');
-
-		BigScreenActions.setNextSevenDaysEvents(activeSchoolId, binding);
-		BigScreenActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
-		BigScreenActions.setHighlightEvent(activeSchoolId, binding);
+		
+		BigScreenActions.setLastFiveEvents(activeSchoolId, binding);
+		BigScreenActions.setClosestFiveEvents(activeSchoolId, binding);
 		BigScreenActions.setFooterEvents(activeSchoolId, binding);
-
 		this.changeStateTimerId = setInterval(this.handleChangeState, this.CHANGE_STATE_INTERVAL);
 
 		binding.set("footerEvents.currentEventIndex", Immutable.fromJS(this.getNextFooterEventIndex()));
@@ -63,16 +61,17 @@ const BigScreenMainPage = React.createClass({
 		);
 	},
 	handleChangeState: function() {
-		const binding = this.getDefaultBinding();
-
+		const binding = this.getDefaultBinding(),
+				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId');
 		switch (binding.toJS('currentState')) {
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.RECENT:
 				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.UPCOMING));
 				break;
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.UPCOMING:
-				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.EVENT_HIGHLIGHT));
+			 	binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.EVENT_HIGHLIGHT));
 				break;
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.EVENT_HIGHLIGHT:
+				BigScreenActions.setHighlightEvent(activeSchoolId, binding.sub('events'));
 				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.HIGHLIGHT));
 				break;
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.HIGHLIGHT:
