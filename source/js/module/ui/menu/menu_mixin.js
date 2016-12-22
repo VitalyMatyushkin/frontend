@@ -1,7 +1,8 @@
 const 	React 		= require('react'),
 		GoBackItem		= require('./sub_menu_items/go_back_item'),
 		ChooseFileItem 	= require('./sub_menu_items/choose_file_item'),
-		DefaultItem		= require('./sub_menu_items/default_item');
+		DefaultItem		= require('./sub_menu_items/default_item'),
+		HelpItem		= require('./sub_menu_items/help_item');
 
 const MenuMixin = {
 	propTypes: {
@@ -38,6 +39,8 @@ const MenuMixin = {
 				return <GoBackItem key={'goback' + item.name} name={item.name} icon={item.icon} className={item.className} num={item.num} className2={className}/>;
 			case 'file':
 				return <ChooseFileItem key={'file' + item.name} name={item.name} className={className} onChange={item.onChange}/>;
+			case 'Help':
+				return <HelpItem userId={userId} name={item.name} className={className}/>;
 			case 'Console':
 				//We don't want to show the console tab if the current user is not an admin
 				//if(userRole == 'admin')
