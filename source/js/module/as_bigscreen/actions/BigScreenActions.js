@@ -249,9 +249,7 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 		return Promise.all(eventsId.map(eventId => {
 		   return getEventPhotos(activeSchoolId, eventId).then(photos => {
 		    if (photos.length !== 0) {
-		     eventsBinding.atomically()
-		     .set('lastFiveEvents.photos', Immutable.fromJS(photos))
-		     .commit();
+		     eventsBinding.set('lastFiveEvents.photos', Immutable.fromJS(photos));
 		     return true;
 		    } else {
 		     return getSchoolPublicData(activeSchoolId)
@@ -261,9 +259,7 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 		      })
 		      .then(photos => {
 		       if (photos.length !== 0) {
-		        eventsBinding.atomically()
-		        .set('lastFiveEvents.photos', Immutable.fromJS(photos))
-		        .commit();
+		        eventsBinding.set('lastFiveEvents.photos', Immutable.fromJS(photos));
 		       }
 		       return true;
 		      });
