@@ -18,13 +18,13 @@ const BigScreenMainPage = React.createClass({
 	CHANGE_STATE_INTERVAL			: 10000,
 
 	changeFooterEventTimerId		: undefined,
-	CHANGE_FOOTER_EVENT_INTERVAL	: 300000,
+	CHANGE_FOOTER_EVENT_INTERVAL	: 3000,
 
 	componentWillMount: function () {
 		const	binding			= this.getDefaultBinding().sub('events'),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId');
 		
-		BigScreenActions.setLastFiveEvents(activeSchoolId, binding);
+		BigScreenActions.setLastFiveFinishedEvents(activeSchoolId, binding);
 		BigScreenActions.setClosestFiveEvents(activeSchoolId, binding);
 		BigScreenActions.setFooterEvents(activeSchoolId, binding);
 		this.changeStateTimerId = setInterval(this.handleChangeState, this.CHANGE_STATE_INTERVAL);

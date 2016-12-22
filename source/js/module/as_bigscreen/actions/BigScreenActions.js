@@ -33,23 +33,19 @@ function getHighlightEventId(activeSchoolId) {
 		return undefined;
 	}
 };
-
-function getRandomEventId(activeSchoolId, eventsBinding) {
-	if (typeof eventsBinding.toJS('closestFiveEvents.events') !== 'undefined') {
-		const closestFiveEvents = eventsBinding.toJS('closestFiveEvents.events'),
-			maxRand = closestFiveEvents.length;
+//Return random event id from array events
+function getRandomEventId(eventsArray) {
+		const maxRand = eventsArray.length;
 
 		let rand = Math.random() * (maxRand - 1);
 		rand = Math.round(rand);
 
-		const randomEventsId = closestFiveEvents[rand].id;
+		const randomEventsId = eventsArray[rand].id;
+
 		return randomEventsId;
-	} else {
-		return undefined;
-	}
 };
 
-function getLastFiveEvents(activeSchoolId) {
+function getLastFiveFinishedEvents(activeSchoolId) {
 	const filter = {
 		limit: 5,
 		order: "startTime DESC",
@@ -97,21 +93,21 @@ function getEvent(activeSchoolId, eventId){
 	});
 };
 
-function getEventPhoto(activeSchoolId, eventId){
+function getEventPhotos(activeSchoolId, eventId){
 	return window.Server.publicSchoolEventPhotos.get({
 		schoolId:	activeSchoolId,
 		eventId:	eventId
 	});
 };
 
-function getSchoolPhoto(activeSchoolId, albumId){
+function getSchoolPhotos(activeSchoolId, albumId){
 	return window.Server.publicSchoolAlbumPhotos.get({
 		schoolId:	activeSchoolId,
 		albumId:	albumId
 	});
 };
 
-function getSchoolAlbumId(activeSchoolId){
+function getSchoolPublicData(activeSchoolId){
 	return window.Server.publicSchool.get({
 		schoolId:	activeSchoolId
 	});
@@ -143,34 +139,34 @@ function getNextSevenDaysEvents(activeSchoolId) {
 
 function setHighlightEvent(activeSchoolId, binding){
 	binding.set('highlightEvent.isSync', false);
-
-	const highlightEventId = getRandomEventId(activeSchoolId, binding);
+	const eventsArray = binding.toJS('closestFiveEvents.events');
+	const highlightEventId = getRandomEventId(eventsArray);
 	let albumId;
 
 	return getEvent(activeSchoolId, highlightEventId)
 		.then(event => {
 			binding.set('highlightEvent.event', Immutable.fromJS(event));
 
-			return getEventPhoto(activeSchoolId, highlightEventId);
+			return getEventPhotos(activeSchoolId, highlightEventId);
 		})
 		.then(photos => {
 			if (photos.length !== 0){
-			binding.atomically()
+				binding.atomically()
 				.set('highlightEvent.photos', Immutable.fromJS(photos))
 				.set('highlightEvent.isSync', true)
 				.commit();
 			} else {
-				getSchoolAlbumId(activeSchoolId).then(school => {
-						albumId = school.defaultAlbumId;
-						getSchoolPhoto(activeSchoolId, albumId).then(photos => {
-							if (photos.length !== 0) {
+				getSchoolPublicData(activeSchoolId).then(school => {
+					albumId = school.defaultAlbumId;
+					getSchoolPhotos(activeSchoolId, albumId).then(photos => {
+						if (photos.length !== 0) {
 							binding.atomically()
-								.set('highlightEvent.photos', Immutable.fromJS(photos))
-								.set('highlightEvent.isSync', true)
-								.commit();
-							}
-						});
+							.set('highlightEvent.photos', Immutable.fromJS(photos))
+							.set('highlightEvent.isSync', true)
+							.commit();
+						}
 					});
+				});
 			};
 		});
 };
@@ -217,6 +213,20 @@ function setFooterEvents(activeSchoolId, binding){
 	}
 };
 
+//Call only if exist array of photos 
+function getRandomPhotoIndex(photos) {
+	const maxRand = photos.length;
+
+	if (maxRand <= 0) {
+		throw new RangeError('Array photos empty');
+	}
+	let rand = Math.random() * (maxRand - 1);
+	rand = Math.round(rand);
+
+	return rand;
+};
+
+
 function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
 	eventsBinding.set('nextSevenDaysEvents.isSync', false);
 
@@ -226,37 +236,43 @@ function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
 	});
 };
 
-function setLastFiveEvents(activeSchoolId, eventsBinding) {
+function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 	eventsBinding.set('lastFiveEvents.isSync', false);
 
-	return getLastFiveEvents(activeSchoolId).then(eventsData => {
+	return getLastFiveFinishedEvents(activeSchoolId).then(eventsData => {
 		eventsBinding.set('lastFiveEvents.events',	Immutable.fromJS(eventsData));
 		let eventsId = [];
 		let albumId;
 
-		eventsData.forEach(i => {eventsId.push(i.id)});
-		eventsId.forEach(i => {
-			getEventPhoto(activeSchoolId, i).then(photos => {
-				if (photos.length !== 0) {
-				eventsBinding.atomically()
-					.set('lastFiveEvents.photos', Immutable.fromJS(photos))
-					.commit();
-				} else {
-				getSchoolAlbumId(activeSchoolId).then(school => {
-					albumId = school.defaultAlbumId;
-					getSchoolPhoto(activeSchoolId, albumId).then(photos => {
-						if (photos.length !== 0) {
-						eventsBinding.atomically()
-							.set('lastFiveEvents.photos', Immutable.fromJS(photos))
-							.commit();
-						}
-					});
-				});
-				}
-			});
-		});
-		eventsBinding.set('lastFiveEvents.eventsId',	Immutable.fromJS(eventsId));
-		eventsBinding.set('lastFiveEvents.isSync',	 true);
+		eventsData.forEach(events => {eventsId.push(events.id)});
+
+		return Promise.all(eventsId.map(eventId => {
+		   return getEventPhotos(activeSchoolId, eventId).then(photos => {
+		    if (photos.length !== 0) {
+		     eventsBinding.atomically()
+		     .set('lastFiveEvents.photos', Immutable.fromJS(photos))
+		     .commit();
+		     return true;
+		    } else {
+		     return getSchoolPublicData(activeSchoolId)
+		      .then(school => {
+		        albumId = school.defaultAlbumId;
+		        return getSchoolPhotos(activeSchoolId, albumId);
+		      })
+		      .then(photos => {
+		       if (photos.length !== 0) {
+		        eventsBinding.atomically()
+		        .set('lastFiveEvents.photos', Immutable.fromJS(photos))
+		        .commit();
+		       }
+		       return true;
+		      });
+		    }
+		   });
+		  })).then( () => {
+		   eventsBinding.set('lastFiveEvents.eventsId', Immutable.fromJS(eventsId));
+		   eventsBinding.set('lastFiveEvents.isSync', true);
+		  });
 	});
 };
 
@@ -301,7 +317,7 @@ function setPrevSevenDaysFinishedEvents(activeSchoolId, eventsBinding) {
 module.exports.setFooterEvents									= setFooterEvents;
 module.exports.setNextSevenDaysEvents						= setNextSevenDaysEvents;
 module.exports.setPrevSevenDaysFinishedEvents		= setPrevSevenDaysFinishedEvents;
-module.exports.setLastFiveEvents								= setLastFiveEvents;
+module.exports.setLastFiveFinishedEvents				= setLastFiveFinishedEvents;
 module.exports.setClosestFiveEvents							= setClosestFiveEvents;
 module.exports.setHighlightEvent								= setHighlightEvent;
-
+module.exports.getRandomPhotoIndex							= getRandomPhotoIndex;
