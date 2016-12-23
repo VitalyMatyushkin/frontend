@@ -99,7 +99,11 @@
 .ePlayer_performance {
 
 }
+
 .ePlayer_performanceItem {
+  display: flex;
+  justify-content: space-between;
+
   padding: 10px 0;
 }
 
@@ -112,6 +116,28 @@
 .ePlayer_performanceItemValueContainer {
   display: inline-block;
   width: 190px;
+}
+
+.ePlayer_discipline {
+
+}
+
+.ePlayer_disciplineItem {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 10px 0;
+}
+
+.ePlayer_disciplineItemName {
+  color: $GrayText;
+  display: inline-block;
+  width: 100px;
+}
+
+.ePlayer_disciplineItemValueContainer {
+  display: inline-block;
+  width: 30px;
 }
 
 .ePlayer_form {

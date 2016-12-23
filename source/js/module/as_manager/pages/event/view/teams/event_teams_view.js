@@ -354,14 +354,13 @@ const EventTeamsView = React.createClass({
 						&& individualScoreAvailable
 					}>
 						<span className="ePlayer_scoreContainer">
-							<Score
-								isChangeMode={EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-								plainPoints={self.getPointsByStudent(event, player.userId)}
-								pointsStep={event.sport.points.pointsStep}
-								pointsType={event.sport.points.display}
-								pointsMask={event.sport.points.inputMask}
-								onChange={self.handleChangeScore.bind(self, event, teamId, player)}
-								/>
+							<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
+									plainPoints		= {self.getPointsByStudent(event, player.userId)}
+									pointsStep		= {event.sport.points.pointsStep}
+									pointsType		= {event.sport.points.display}
+									pointsMask		= {event.sport.points.inputMask}
+									onChange		= {self.handleChangeScore.bind(self, event, teamId, player)}
+							/>
 						</span>
 					</If>
 				</div>

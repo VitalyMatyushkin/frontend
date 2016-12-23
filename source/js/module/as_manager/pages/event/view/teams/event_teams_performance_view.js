@@ -1,18 +1,53 @@
-const	If					= require('module/ui/if/if'),
-		SVG					= require('module/ui/svg'),
-		InvitesMixin 		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+const	React				= require('react'),
+		Immutable			= require('immutable'),
+		Morearty			= require('morearty'),
+
+		InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		StarRatingBar		= require('./../../../../../ui/star_rating_bar/star_rating_bar'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
-		userConst			= require('module/helpers/consts/user'),
-		eventConst			= require('module/helpers/consts/events'),
-		React				= require('react'),
-		Immutable			= require('immutable'),
-		Morearty			= require('morearty'),
+		EventConst			= require('module/helpers/consts/events'),
+
 		PerformanceStyle    = require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
 
 const EventTeamsPerformance = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+	handleValueChange: function(player, permissionId, performanceId, value) {
+		const self = this;
+
+		const	event = self.getBinding('event').toJS(),
+			pDataIndex = event.results.individualPerformance.findIndex(pData =>
+				pData.userId === player.userId &&
+				pData.permissionId === permissionId &&
+				pData.performanceId === performanceId
+			);
+
+		if(pDataIndex === -1) {
+			const newPerformancePlayerData = {
+				userId:			player.userId,
+				permissionId:	permissionId,
+				performanceId:	performanceId,
+				value:			value
+			}
+
+			if(TeamHelper.isTeamSport(event)) {
+				event.teamsData.forEach((t) => {
+					if(!newPerformancePlayerData.teamId) {
+						const foundPlayer = t.players.find(p => p.id === player.id);
+
+						foundPlayer && (newPerformancePlayerData.teamId = t.id);
+					}
+				})
+			}
+
+			event.results.individualPerformance.push(newPerformancePlayerData);
+		} else {
+			event.results.individualPerformance[pDataIndex].value = value;
+		}
+
+		self.getBinding('event').set(Immutable.fromJS(event));
+	},
+	// TODO: All these render methods are copypaste from event_teams_view!
 	renderInternalEventForOneOnOneEvent: function(order) {
 		const self = this;
 
@@ -25,7 +60,7 @@ const EventTeamsPerformance = React.createClass({
 		} else {
 			return (
 				<div className="bEventPerformance_team">
-					{self.renderPlayers(players, true)}
+					{self.renderPlayers(players)}
 				</div>
 			);
 		}
@@ -43,14 +78,14 @@ const EventTeamsPerformance = React.createClass({
 		const self = this;
 
 		const	event	= self.getBinding('event').toJS(),
-			players	= self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
+				players	= self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 		if(players.length === 0) {
 			return self.renderSelectTeamLater();
 		} else {
 			return (
 				<div className="bEventPerformance_team">
-					{self.renderPlayers(players, true)}
+					{self.renderPlayers(players)}
 				</div>
 			);
 		}
@@ -93,7 +128,7 @@ const EventTeamsPerformance = React.createClass({
 		} else {
 			return (
 				<div className="bEventPerformance_team">
-					{self.renderPlayers(players, true)}
+					{self.renderPlayers(players)}
 				</div>
 			);
 		}
@@ -175,7 +210,7 @@ const EventTeamsPerformance = React.createClass({
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
 				case EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']:
-					if(event.status === eventConst.EVENT_STATUS.ACCEPTED || event.status === eventConst.EVENT_STATUS.FINISHED) {
+					if(event.status === EventConst.EVENT_STATUS.ACCEPTED || event.status === EventConst.EVENT_STATUS.FINISHED) {
 						const schoolId = event.inviterSchool.id !== activeSchoolId ?
 							event.inviterSchool.id :
 							event.invitedSchools[0].id;
@@ -264,7 +299,7 @@ const EventTeamsPerformance = React.createClass({
 			</div>
 		);
 	},
-	renderPlayers: function(players, isOwner) {
+	renderPlayers: function(players) {
 		const self = this;
 
 		return players.map((player, playerIndex) => {
@@ -276,13 +311,13 @@ const EventTeamsPerformance = React.createClass({
 						<span>{player.firstName} {player.lastName}</span>
 					</div>
 					<div className="ePlayer_performance">
-						{self.renderPlayerPerformance(player, isOwner)}
+						{self.renderPlayerPerformance(player)}
 					</div>
 				</div>
 			);
 		});
 	},
-	renderPlayerPerformance: function(player, isOwner) {
+	renderPlayerPerformance: function(player) {
 		const self = this;
 
 		const	event	= self.getBinding('event').toJS(),
@@ -322,41 +357,6 @@ const EventTeamsPerformance = React.createClass({
 				);
 			});
 	},
-	handleValueChange: function(player, permissionId, performanceId, value) {
-		const self = this;
-
-		const	event = self.getBinding('event').toJS(),
-				pDataIndex = event.results.individualPerformance.findIndex(pData =>
-					pData.userId === player.userId &&
-					pData.permissionId === permissionId &&
-					pData.performanceId === performanceId
-				);
-
-		if(pDataIndex === -1) {
-			const newPerformancePlayerData = {
-				userId:			player.userId,
-				permissionId:	permissionId,
-				performanceId:	performanceId,
-				value:			value
-			}
-
-			if(TeamHelper.isTeamSport(event)) {
-				event.teamsData.forEach((t) => {
-					if(!newPerformancePlayerData.teamId) {
-						const foundPlayer = t.players.find(p => p.id === player.id);
-
-						foundPlayer && (newPerformancePlayerData.teamId = t.id);
-					}
-				})
-			}
-
-			event.results.individualPerformance.push(newPerformancePlayerData);
-		} else {
-			event.results.individualPerformance[pDataIndex].value = value;
-		}
-
-		self.getBinding('event').set(Immutable.fromJS(event));
-	},
 	renderIndividuals: function() {
 		const self = this;
 
@@ -366,7 +366,7 @@ const EventTeamsPerformance = React.createClass({
 		if(players.length === 0) {
 			return self.renderSelectPlayersLater();
 		} else {
-			return self.renderPlayers(players, true);
+			return self.renderPlayers(players);
 		}
 	},
 	renderTeamPlayersByOrder: function(order) {
@@ -376,15 +376,9 @@ const EventTeamsPerformance = React.createClass({
 		const playersBinding = self.getDefaultBinding().get(['players', order]);
 
 		if(playersBinding) {
-			const	event	= self.getBinding('event').toJS(),
-					isOwner	= event.eventType === 'inter-schools' ?
-						event.teamsData[order].schoolId === self.getActiveSchoolId() :
-							true;
+			const event = self.getBinding('event').toJS();
 
-			players = self.renderPlayers(
-				playersBinding.toJS(),
-				isOwner
-			);
+			players = self.renderPlayers(playersBinding.toJS());
 		}
 
 		return (
@@ -393,6 +387,7 @@ const EventTeamsPerformance = React.createClass({
 			</div>
 		);
 	},
+
 	render: function() {
 		const	self	= this;
 		let		result	= null;
