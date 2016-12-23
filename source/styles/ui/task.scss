@@ -1,0 +1,24 @@
+.bTask {
+  display: flex;
+  flex-wrap: wrap;
+
+  padding: 20px;
+
+  .eTask_column {
+    width: 960px;
+    background-color: red;
+
+    &.mButtons {
+      width: 140px;
+      background-color: blue;
+    }
+  }
+
+  .eTask_playerNames {
+
+  }
+
+  .eTask_text {
+    margin-top: 10px;
+  }
+}
