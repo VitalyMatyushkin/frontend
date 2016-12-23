@@ -1,5 +1,4 @@
 const	React					= require('react'),
-		AddPhotoButton			= require('./add_photo_button'),
 		PhotoStrip				= require('./photo_strip'),
 		FullScreenPhoto			= require('./fullscreen_photo'),
 
@@ -102,10 +101,7 @@ const Gallery = React.createClass({
 				return null;
 			default:
 				return (
-					<AddPhotoButton	handleChange			= { this.props.handleChangeAddPhotoButton }
-									isUserCanUploadPhotos	= { this.props.isUserCanUploadPhotos }
-									isLoading				= { this.props.isLoading }
-					/>
+					null
 				);
 		}
 	},
