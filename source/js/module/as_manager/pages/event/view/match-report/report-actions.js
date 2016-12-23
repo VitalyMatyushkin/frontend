@@ -31,6 +31,7 @@ MatchReportActions.prototype.load = function() {
 			.set('content', data)
 			.set('defaultContent', data)
 			.set('isEditMode', isEdit)
+			.set('isLoadActions', false)
 			.commit();
 
 		return report.content;
