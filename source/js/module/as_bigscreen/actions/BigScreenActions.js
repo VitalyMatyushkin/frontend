@@ -16,10 +16,7 @@ function getRandomEventId(eventsArray) {
 		const randomEventsId = eventsArray[rand].id;
 
 		return randomEventsId;
-	} else {
-		return undefined;
 	}
-
 };
 
 function getLastFiveFinishedEvents(activeSchoolId) {
@@ -56,10 +53,11 @@ function getClosestFiveEvents(activeSchoolId) {
 };
 
 /**
- * Get school id from domain
- *
+ * Get school data by domain
+ * Split domain name by dots, then first chunk of full domain name splitter by underscore to chop ‘bs’ prefix.
+ * Second part used for locating school by domain name
  */
-function getSchoolId() {
+function getSchoolData() {
 	const domain = document.location.hostname,
 		domainNameArray = domain.split('.'),
 		domainName = domainNameArray[0].split('_'),
@@ -179,7 +177,7 @@ function setFooterEvents(activeSchoolId, binding){
 
 	let eventIds = [];
 	getFooterEvents(activeSchoolId).then(eventsId => {
-			eventsId.map((eventId) => {eventIds.push(eventId.id)});
+			eventsId.forEach(eventId => {eventIds.push(eventId.id)});
 			if(typeof eventIds !== 'undefined') {
 				return Promise.all(eventIds.map(eventId => {
 					return window.Server.publicSchoolEvent.get({
@@ -291,7 +289,7 @@ function setClosestFiveEvents(activeSchoolId, eventsBinding) {
  *
  */
 function setSchoolId(binding) {
-		return getSchoolId().then(school => {
+		return getSchoolData().then(school => {
 				const schoolId = school[0].id;
 
 				binding.set('domainSchoolId', Immutable.fromJS(schoolId));
