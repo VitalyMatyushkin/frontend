@@ -245,10 +245,8 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 
 	return getLastFiveFinishedEvents(activeSchoolId).then(eventsData => {
 		eventsBinding.set('lastFiveEvents.events',	Immutable.fromJS(eventsData));
-		let eventsId = [];
-		let albumId;
 
-		eventsData.forEach(events => {eventsId.push(events.id)});
+		const eventsId = eventsData.map(event => event.id);
 
 		return Promise.all(eventsId.map(eventId => {
 			return getEventPhotos(activeSchoolId, eventId).then(photos => {
@@ -257,8 +255,7 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 					return true;
 				} else {
 					return getSchoolPublicData(activeSchoolId).then(school => {
-						albumId = school.defaultAlbumId;
-						return getSchoolPhotos(activeSchoolId, albumId);
+						return getSchoolPhotos(activeSchoolId, school.defaultAlbumId);
 					}).then(photos => {
 						if (photos.length !== 0) {
 							eventsBinding.set('lastFiveEvents.photos', Immutable.fromJS(photos));
