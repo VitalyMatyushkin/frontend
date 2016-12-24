@@ -253,28 +253,26 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 		eventsData.forEach(events => {eventsId.push(events.id)});
 
 		return Promise.all(eventsId.map(eventId => {
-		   return getEventPhotos(activeSchoolId, eventId).then(photos => {
-		    if (photos.length !== 0) {
-		     eventsBinding.set('lastFiveEvents.photos', Immutable.fromJS(photos));
-		     return true;
-		    } else {
-		     return getSchoolPublicData(activeSchoolId)
-		      .then(school => {
-		        albumId = school.defaultAlbumId;
-		        return getSchoolPhotos(activeSchoolId, albumId);
-		      })
-		      .then(photos => {
-		       if (photos.length !== 0) {
-		        eventsBinding.set('lastFiveEvents.photos', Immutable.fromJS(photos));
-		       }
-		       return true;
-		      });
-		    }
-		   });
-		  })).then( () => {
-		   eventsBinding.set('lastFiveEvents.eventsId', Immutable.fromJS(eventsId));
-		   eventsBinding.set('lastFiveEvents.isSync', true);
-		  });
+			return getEventPhotos(activeSchoolId, eventId).then(photos => {
+				if (photos.length !== 0) {
+					eventsBinding.set('lastFiveEvents.photos', Immutable.fromJS(photos));
+					return true;
+				} else {
+					return getSchoolPublicData(activeSchoolId).then(school => {
+						albumId = school.defaultAlbumId;
+						return getSchoolPhotos(activeSchoolId, albumId);
+					}).then(photos => {
+						if (photos.length !== 0) {
+							eventsBinding.set('lastFiveEvents.photos', Immutable.fromJS(photos));
+						}
+						return true;
+					});
+				}
+			});
+		})).then( () => {
+			eventsBinding.set('lastFiveEvents.eventsId', Immutable.fromJS(eventsId));
+			eventsBinding.set('lastFiveEvents.isSync', true);
+		});
 	});
 };
 
