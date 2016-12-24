@@ -8,8 +8,6 @@ const	React			= require('react'),
 const RecentEvent = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	EVENTS_COUNT: 6,
-
 	getCurrentFooterEvent: function() {
 		const binding = this.getDefaultBinding().sub('events.footerEvents');
 
@@ -22,20 +20,20 @@ const RecentEvent = React.createClass({
 	render:function() {
 		const binding = this.getDefaultBinding().sub('events');
 
-		const isSync = binding.get('nextSevenDaysEvents.isSync') && binding.get('footerEvents.isSync');
+		const isSync = binding.get('closestFiveEvents.isSync') && binding.get('footerEvents.isSync');
 
 		if(isSync) {
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-					events			= binding.toJS('nextSevenDaysEvents.events'),
+					events			= binding.toJS('closestFiveEvents.events'),
 					footerEvent		= this.getCurrentFooterEvent();
 
 			return (
 				<div className="bUpcomingEvents">
 					<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.UPCOMING }
-									title			= "Upcoming Events"
+									title			= "Closest Five Events"
 									activeSchoolId	= { activeSchoolId }
 									isSync			= { isSync }
-									events			= { events.slice(0, this.EVENTS_COUNT) }
+									events			= { events }
 									logo            = "images/big-logo.svg"
 					/>
 					<Footer	event			= { footerEvent }

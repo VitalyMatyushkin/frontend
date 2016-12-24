@@ -19,11 +19,11 @@ const BigEventHighlight = React.createClass({
 	render: function() {
 		const	binding	= this.getDefaultBinding().sub('events');
 
-		const	isSync	= binding.get('highlightEvent.isSync') && binding.get('footerEvents.isSync');
+		const	isSync	= binding.get('lastFiveEvents.isSync') && binding.get('footerEvents.isSync');
 
 		if(isSync) {
 			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-					photos			= binding.toJS('highlightEvent.photos'),
+					photos			= binding.toJS('lastFiveEvents.photos'),
 					footerEvent		= this.getCurrentFooterEvent();
 
 			return (
