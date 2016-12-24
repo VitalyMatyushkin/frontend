@@ -1,9 +1,12 @@
 .bFooter {
   background: #0a2a43;
+  bottom: 0;
   color: #fff;
   font-size: 1.8rem;
+  height: 6%;
   line-height: 4.5rem;
   overflow: hidden;
+  position: absolute;
   text-align: center;
   width: 100%;
 }
