@@ -89,7 +89,7 @@ RequestActions.prototype = {
 	getCurrentPermission: function(id, permissions) {
 		return Lazy(permissions).find(permission => permission.id && permission.id === id);
 	},
-	getConfirmMessage: function(email) {
+	getConfirmMessage: function(email, phone) {
 		return (
 			<div>
 				<h2> Please Read Carefully! </h2>
@@ -101,7 +101,9 @@ RequestActions.prototype = {
 
 				<p className="eSimpleAlert_text">The Mobile phone and email address the User has verified is as
 					follows:
-					<span className="eSimpleAlert_mail">{email}</span></p>
+					<p className="eSimpleAlert_mail">{email}</p>
+					<p className="eSimpleAlert_phone">{phone}</p>
+				</p>
 
 				<p className="eSimpleAlert_text">Notwithstanding mobile phone and email address verification, it is the
 					responsibility of the School to
@@ -118,12 +120,13 @@ RequestActions.prototype = {
 				binding   = self.getDefaultBinding().sub('data'),
 				currentPr = self.getCurrentPermission(prId, binding.toJS()),
 				schoolId  = currentPr.requestedPermission.schoolId,
-				email     = currentPr.requester.email;
+				email     = currentPr.requester.email,
+				phone 	  = currentPr.requester.phone;
 		let confirmMsg;
 		switch (action){
 			case 'Accept':
 				window.confirmAlert(
-					self.getConfirmMessage(email),
+					self.getConfirmMessage(email, phone),
 					"Ok",
 					"Cancel",
 					() => {

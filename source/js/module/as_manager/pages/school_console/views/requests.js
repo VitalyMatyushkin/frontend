@@ -4,14 +4,13 @@
 
 const   React 		= require('react'),
 		Morearty	= require('morearty'),
-		Actions 	= require('module/shared_pages/permission_requests/request-actions'),
+		Actions 	= require('module/as_manager/pages/school_console/views/request-actions'),
 		Grid 		= require('module/ui/grid/grid');
 
 const SchoolRequest = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		this.actions = new Actions(this);
-		this.actions.columns.splice(1,3);
 		this.actions.init();
 	},
 	render: function () {
