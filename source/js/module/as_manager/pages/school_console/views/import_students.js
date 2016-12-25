@@ -9,9 +9,23 @@ const	React 				= require('react'),
 const ImportStudents = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentDidMount: function() {
-		const	binding	= this.getDefaultBinding();
-		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+		const	binding	= this.getDefaultBinding(),
+			activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+
+		let school = {};
+
 		binding.remove('studentData');
+		binding.remove('activeSchool');
+
+		window.Server.schoolForms.get({schoolId: activeSchoolId})
+			.then(forms => {
+				school.forms = forms;
+				return window.Server.schoolHouses.get({schoolId: activeSchoolId})
+			})
+			.then(houses => {
+				school.houses = houses;
+				binding.set('activeSchool', Immutable.fromJS(school));
+			});
 	},
 
 	onChangeFile: function (event){
@@ -29,10 +43,13 @@ const ImportStudents = React.createClass({
 
 	validationEverything: function (){
 		const 	binding	= this.getDefaultBinding(),
-			studentData = binding.toJS('studentData');
+			studentData = binding.toJS('studentData'),
+			activeSchool = binding.toJS('activeSchool');
 
 		if (typeof studentData !== 'undefined'){
-			const errorsImport = binding.toJS('studentData.errors'),
+			const result = StudentImporter.pullFormsAndHouses(studentData, activeSchool),
+				errorsFormId = result.errors,
+				errorsImport = binding.toJS('studentData.errors'),
 				studentsImport = binding.toJS('studentData.students');
 
 			let errorsList = [],
@@ -40,7 +57,17 @@ const ImportStudents = React.createClass({
 
 			for (let key in errorsImport) {
 				numberError++;
-				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>); //In console React has error with unique key in elements li
+				/**
+				 * In console React has error with unique key in elements li
+				 */
+				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>);
+			}
+			for (let key in errorsFormId) {
+				numberError++;
+				/**
+				 * In console React has error with unique key in elements li
+				 */
+				errorsList.push(<li>Row: {errorsFormId[key].row} Message: {errorsFormId[key].message}</li>);
 			}
 
 			if (errorsList.length > 0) {
@@ -73,11 +100,12 @@ const ImportStudents = React.createClass({
 	},
 
 	handleUploadStudentsButtonClick: function() {
-		const	binding	= this.getDefaultBinding();
-		const	studentData		= binding.toJS('studentData');
+		const binding = this.getDefaultBinding(),
+			studentData = binding.toJS('studentData'),
+			activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 
 		Promise.all(studentData.students.map( student => {
-			return window.Server.schoolStudents.post(this.activeSchoolId, {
+			return window.Server.schoolStudents.post(activeSchoolId, {
 				firstName:	student.firstName,
 				lastName:	student.lastName,
 				gender:		student.gender,
@@ -106,8 +134,7 @@ const ImportStudents = React.createClass({
 	},
 
 	render: function() {
-		const	self	= this,
-			binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
 			<div className='bForm'>
@@ -116,10 +143,10 @@ const ImportStudents = React.createClass({
 						id="files"
 						type="file"
 						name="files[]"
-						onChange={self.onChangeFile}
+						onChange={this.onChangeFile}
 					/>
 				</div>
-				<div>{self.validationEverything()}</div>
+				<div>{this.validationEverything()}</div>
 			</div>
 
 		)
