@@ -17,37 +17,14 @@ const InviteActions = {
 		let invites, events;
 		return service.get(schoolId, {filter: {limit: 100}})
 			.then(allInvites => {
-				invites = allInvites;
-
-				events = [];
-				invites.forEach(inv => {
-					events.push(inv.eventId);
-				});
-				return window.Server.events.get(schoolId, {
-					filter: {
-						limit: 1000,
-						where: {
-							id: {
-								$in: events
-							}
-						}
-					}
-				});
-			})
-			.then(eventsData => {
-				events = eventsData;
-
-				invites = invites.map(invite => {
-
-					invite.event = events.find(e => e.id === invite.eventId);
-					invite.sport = invite.event.sport;
-					invite.inviterSchool = invite.event.inviterSchool;
-					invite.invitedSchool = invite.event.invitedSchools[0];
-
-					return invite;
-				});
-
-				return Promise.resolve(invites);
+                invites = allInvites;
+                invites.map(invite => {
+						invite.sport = invite.event.sport;
+						invite.inviterSchool = invite.event.inviterSchool;
+						invite.invitedSchool = invite.event.invitedSchools[0];
+                    	return invite;
+					});
+				return invites;
 			})
 			.then(invitesData => {
 				invites = invitesData.sort((a, b) => {
