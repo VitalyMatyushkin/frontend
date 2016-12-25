@@ -2,7 +2,7 @@
  * Created by Anatoly on 16.11.2016.
  */
 const 	Promise 	= require('bluebird'),
-		Immutable 	= require('immutable');
+	Immutable 	= require('immutable');
 
 const InviteActions = {
 	inviteServicesByType: {
@@ -17,13 +17,13 @@ const InviteActions = {
 		let invites, events;
 		return service.get(schoolId, {filter: {limit: 100}})
 			.then(allInvites => {
-                invites = allInvites;
-                invites.map(invite => {
-						invite.sport = invite.event.sport;
-						invite.inviterSchool = invite.event.inviterSchool;
-						invite.invitedSchool = invite.event.invitedSchools[0];
-                    	return invite;
-					});
+				invites = allInvites;
+				invites.map(invite => {
+					invite.sport = invite.event.sport;
+					invite.inviterSchool = invite.event.inviterSchool;
+					invite.invitedSchool = invite.event.invitedSchools[0];
+					return invite;
+				});
 				return invites;
 			})
 			.then(invitesData => {
