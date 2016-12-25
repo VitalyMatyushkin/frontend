@@ -13,6 +13,9 @@ const   Invite          = require('./invite'),
 /** Component to show all box invites */
 const InviteList = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive'])
+	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			models: [],
@@ -31,16 +34,15 @@ const InviteList = React.createClass({
 			.set('models', Immutable.fromJS([]))
 			.commit();
 
-		inviteActions.loadData(activeSchoolId, this.props.type)
-			.then(invites => {
-				binding
-					.atomically()
-					.set('sync', true)
-					.set('models', Immutable.fromJS(invites))
-					.commit();
+		inviteActions.loadData(activeSchoolId, this.props.type).then(invites => {
+			binding
+				.atomically()
+				.set('sync', true)
+				.set('models', Immutable.fromJS(invites))
+				.commit();
 
-				return invites;
-			});
+			return invites;
+		});
 	},
 	getInvites: function () {
 		const 	self 	= this,
