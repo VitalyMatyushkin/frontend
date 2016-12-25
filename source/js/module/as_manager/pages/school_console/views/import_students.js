@@ -30,11 +30,15 @@ const ImportStudents = React.createClass({
 
 	onChangeFile: function (event){
 		const 	binding	= this.getDefaultBinding(),
-			file	= event.target.files[0];
+			file	= event.target.files[0],
+			activeSchool = binding.toJS('activeSchool');
 
 		StudentImporter.loadFromCSV(file).then(
 			result => {
 				binding.set('studentData', Immutable.fromJS(result));
+				const formsAndHouses = StudentImporter.pullFormsAndHouses(result, activeSchool);
+				binding.set('studentData', Immutable.fromJS(formsAndHouses));
+
 				this.validationEverything();
 			},
 			err => { console.log('err: ' + err.message + '\n' + err.stack) }
@@ -43,16 +47,11 @@ const ImportStudents = React.createClass({
 
 	validationEverything: function (){
 		const 	binding	= this.getDefaultBinding(),
-			studentData = binding.toJS('studentData'),
-			activeSchool = binding.toJS('activeSchool');
+			studentData = binding.toJS('studentData');
 
 		if (typeof studentData !== 'undefined'){
-			const result = StudentImporter.pullFormsAndHouses(studentData, activeSchool),
-				errorsFormId = result.errors,
-				errorsImport = binding.toJS('studentData.errors'),
+			const errorsImport = binding.toJS('studentData.errors'),
 				studentsImport = binding.toJS('studentData.students');
-
-			binding.set('studentData', Immutable.fromJS(result));
 
 			let errorsList = [],
 				numberError = 0;
@@ -63,13 +62,6 @@ const ImportStudents = React.createClass({
 				 * In console React has error with unique key in elements li
 				 */
 				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>);
-			}
-			for (let key in errorsFormId) {
-				numberError++;
-				/**
-				 * In console React has error with unique key in elements li
-				 */
-				errorsList.push(<li>Row: {errorsFormId[key].row} Message: {errorsFormId[key].message}</li>);
 			}
 
 			if (errorsList.length > 0) {
