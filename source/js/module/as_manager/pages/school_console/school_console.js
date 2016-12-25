@@ -87,6 +87,10 @@ const SchoolConsole = React.createClass({
 								href	: '/#school_console/import_students',
 								name	: 'Import Students',
 								key		: 'import'
+							},{
+								href	: '/#school_console/moderation',
+								name	: 'Moderation',
+								key		: 'moderation'
 							}];
 
 				binding.atomically().set('subMenuItems', Immutable.fromJS(menuItems)).commit();
