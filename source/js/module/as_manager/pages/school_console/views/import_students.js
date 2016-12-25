@@ -52,6 +52,8 @@ const ImportStudents = React.createClass({
 				errorsImport = binding.toJS('studentData.errors'),
 				studentsImport = binding.toJS('studentData.students');
 
+			binding.set('studentData', Immutable.fromJS(result));
+
 			let errorsList = [],
 				numberError = 0;
 
@@ -109,9 +111,9 @@ const ImportStudents = React.createClass({
 				firstName:	student.firstName,
 				lastName:	student.lastName,
 				gender:		student.gender,
-				birthday:	this.getBirthdayInServerFormat(student.birthday),
 				formId: 	student.formId,
-				houseId: 	student.houseId
+				houseId: 	student.houseId,
+				birthday:	this.getBirthdayInServerFormat(student.birthday)
 			});
 		})).then(() => {
 			window.simpleAlert(
