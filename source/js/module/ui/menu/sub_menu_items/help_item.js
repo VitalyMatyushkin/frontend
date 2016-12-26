@@ -9,7 +9,7 @@ function HelpItem(props) {
         <a className={props.className} onClick={handleClick}>
             {props.name}
             <form id='formUserId' method='post' target='_blank' action='http://docs.squadintouch.com/faq'>
-                    <input type='hidden' value={props.userId} />
+                    <input type='hidden' name='userId' value={props.userId} />
             </form>
         </a>
     );
