@@ -74,16 +74,17 @@ const Blog = React.createClass({
 		self._tickerForNewComments();
 	},
 	_tickerForNewComments:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding	= this.getDefaultBinding();
 
-		self.intervalId = setInterval(function () {
-			window.Server.schoolEventCommentsCount.get({
-				schoolId:   this.props.activeSchoolId,
-				eventId:    self.props.eventId}
+		this.intervalId = setInterval(() => {
+			const self = this;
+
+				window.Server.schoolEventCommentsCount.get({
+					schoolId:   self.props.activeSchoolId,
+					eventId:    self.props.eventId}
 			)
-			.then(function(res){
-				var oldCount = binding.get('blogCount');
+			.then(res => {
+				const oldCount = binding.get('blogCount');
 				if(oldCount && oldCount !== res.count) {
 					self._setComments();
 				}

@@ -1,13 +1,11 @@
 const	React				= require('react'),
 
 		SVG					= require('../../../../../ui/svg'),
-
 		TextBlock			= require('./details_components/text_block/text_block'),
 		TimeBlock			= require('./details_components/time_block/time_block'),
-
 		If					= require('../../../../../ui/if/if'),
-
 		Consts				= require('./details_components/consts'),
+		PencilButton		= require('../../../../../ui/pencil_button'),
 		DetailsStyle		= require('../../../../../../../styles/ui/b_details.scss');
 
 const Details = React.createClass({
@@ -82,12 +80,7 @@ const Details = React.createClass({
 					<div className="eDetails_columnContent mGrayBackground  mWithoutPadding">
 						<div className="eDetails_editButtonWrapper">
 							<If condition={!this.props.isParent}>
-								<div className="bButton mCircle"
-									 onClick={this.handleClickEditButton}
-									>
-									<i className="fa fa-pencil" aria-hidden="true"></i>
-
-								</div>
+								<PencilButton handleClick={this.handleClickEditButton}/>
 							</If>
 						</div>
 						<div className="eDetails_infoContainer">

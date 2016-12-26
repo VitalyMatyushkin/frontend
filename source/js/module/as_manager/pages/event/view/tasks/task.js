@@ -1,10 +1,12 @@
-const	React = require('react'),
+const	React			= require('react'),
 
-		TaskCssStyle = require('../../../../../../../styles/ui/task.scss');
+		PencilButton	= require('../../../../../ui/pencil_button'),
+		CrossButton		= require('../../../../../ui/cross_button'),
+		TaskCssStyle	= require('../../../../../../../styles/ui/task.scss');
 
 const Task = React.createClass({
 	propTypes: {
-		task					: React.PropTypes.array.isRequired,
+		task					: React.PropTypes.object.isRequired,
 		handleClickChangeTask	: React.PropTypes.func.isRequired,
 		handleClickDeleteTask	: React.PropTypes.func.isRequired
 	},
@@ -27,6 +29,10 @@ const Task = React.createClass({
 					</div>
 				</div>
 				<div className="eTask_column mButtons">
+					<div className="eTask_buttonsWrapper">
+						<PencilButton	handleClick	= {this.props.handleClickChangeTask.bind(null, this.props.task)}/>
+						<CrossButton	handleClick	= {this.props.handleClickDeleteTask.bind(null, this.props.task.id)}/>
+					</div>
 				</div>
 			</div>
 		);

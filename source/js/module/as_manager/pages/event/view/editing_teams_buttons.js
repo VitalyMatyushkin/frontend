@@ -1,11 +1,13 @@
 /**
  * Created by Anatoly on 08.12.2016.
  */
-const 	React 		= require('react'),
-		Morearty	= require('morearty'),
-		If			= require('module/ui/if/if'),
-		EventHelper	= require('module/helpers/eventHelper'),
-		TeamHelper	= require('module/ui/managers/helpers/team_helper');
+const 	React 			= require('react'),
+		Morearty		= require('morearty'),
+		If				= require('module/ui/if/if'),
+		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+
+		PencilButton	= require('../../../../ui/pencil_button');
 
 const EditingTeamsButtons = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -23,20 +25,13 @@ const EditingTeamsButtons = React.createClass({
 
 		return (
 			<If condition={TeamHelper.isShowEditEventButton(this)}>
+
 				<div className="bEventMiddleSideContainer_buttons">
-					<div className="bButton mCircle"
-						 onClick={this.handleClickChangeTeamsButtons.bind(null, 0)}
-					>
-						<i className="fa fa-pencil" aria-hidden="true"/>
-					</div>
+					<PencilButton handleClick={this.handleClickChangeTeamsButtons.bind(null, 0)}/>
 					<If condition={!TeamHelper.isInternalEventForIndividualSport(event)}>
 						<div className="eRightButtonColumn">
 							<If condition={!EventHelper.isInterSchoolsEvent(event)}>
-								<div className="bButton mCircle"
-									 onClick={this.handleClickChangeTeamsButtons.bind(null, 1)}
-								>
-									<i className="fa fa-pencil" aria-hidden="true"/>
-								</div>
+								<PencilButton handleClick={this.handleClickChangeTeamsButtons.bind(null, 1)}/>
 							</If>
 						</div>
 					</If>

@@ -11,7 +11,8 @@ const	React				= require('react'),
 		MatchReportStyle	= require('../../../../../../../styles/pages/event/b_match_report.scss'),
 		ButtonStyle			= require('../../../../../../../styles/ui/b_button.scss'),
 		EditButtonStyle		= require('../../../../../../../styles/pages/public_event/public_event.scss'),
-		Bootstrap  	    	= require('../../../../../../../styles/bootstrap-custom.scss');
+		Bootstrap			= require('../../../../../../../styles/bootstrap-custom.scss'),
+		PencilButton		= require('../../../../../ui/pencil_button');
 
 const MatchReport = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -43,9 +44,7 @@ const MatchReport = React.createClass({
 						<div className="eMatchReport_text">{binding.get('content')}</div>
 						<If condition={this.isShowEditButton()}>
 							<div className="eMatchReport_btn">
-								<div className="bButton mCircle" onClick={this.actions.onEdit.bind(this.actions)}>
-									<i className="fa fa-pencil" aria-hidden="true"/>
-								</div>
+								<PencilButton handleClick={this.actions.onEdit.bind(this.actions)}/>
 							</div>
 						</If>
 					</div>

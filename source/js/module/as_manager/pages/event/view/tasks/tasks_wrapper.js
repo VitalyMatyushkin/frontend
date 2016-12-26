@@ -16,9 +16,11 @@ const TasksWrapper = React.createClass({
 				text: "It should not be forgotten that the strengthening and development of the structure provides a wide range of (specialist) participated in the formation of forms of development. The significance of these problems are so obvious that implementation of the planned tasks in largely determines the creation of personnel training system, and meets urgent needs.",
 				players: [
 					{
+						id: 1,
 						firstName	: "Donald",
 						lastName	: "Kramb"
 					}, {
+						id: 2,
 						firstName	: "Maxim",
 						lastName	: "Rudoy"
 					}
@@ -28,9 +30,11 @@ const TasksWrapper = React.createClass({
 				text: "It should not be forgotten that the strengthening and development of the structure provides a wide range of (specialist) participated in the formation of forms of development. The significance of these problems are so obvious that implementation of the planned tasks in largely determines the creation of personnel training system, and meets urgent needs.",
 				players: [
 					{
+						id: 1,
 						firstName	: "Louise",
 						lastName	: "Lourence"
 					}, {
+						id: 2,
 						firstName	: "Jeff",
 						lastName	: "Back"
 					}
@@ -38,11 +42,31 @@ const TasksWrapper = React.createClass({
 			}
 		];
 	},
+	getPlayers: function() {
+		//return this.getDefaultBinding().toJS('viewPlayers.players')
+		return [
+			{
+				id: 1,
+				firstName	: "Louise",
+				lastName	: "Lourence"
+			}, {
+				id: 2,
+				firstName	: "Jeff",
+				lastName	: "Back"
+			}
+		];
+	},
+	handleClickChangeTask: function(taskId) {
+
+	},
+	handleClickDeleteTask: function(taskId) {
+
+	},
 	render: function() {
 		return (
 			<Tasks	tasks					= {this.getTasks()}
-					handleClickChangeTask	= {() => {}}
-					handleClickDeleteTask	= {() => {}}
+					players					= {this.getPlayers()}
+					handleClickDeleteTask	= {this.handleClickDeleteTask}
 			/>
 		);
 	}
