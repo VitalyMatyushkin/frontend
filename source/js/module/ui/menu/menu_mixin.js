@@ -32,7 +32,7 @@ const MenuMixin = {
 		}
 
 		// render
-		const userId 	= globalBinding.get('userData.authorizationInfo.userId');
+		const userId 	= globalBinding.get('userData.authorizationInfo.id');
 
 		switch (item.key) {
 			case 'goback':
