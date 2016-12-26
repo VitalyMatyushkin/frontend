@@ -22,16 +22,20 @@ const Head = React.createClass({
 			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.ADMIN:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
+				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
 			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.MANAGER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
+				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
 			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.TEACHER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
+				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
 			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.COACH:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
+				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
 			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
 				return this.getMainMenuItemsForParent();
@@ -96,6 +100,10 @@ const Head = React.createClass({
 				key: 'Achievements',
 				authorization: true,
 				routes: ['/events/achievement/:userId']
+			}, {
+				href: '/#help',
+				name: 'Help',
+				key: 'Help'
 			}
 		];
 	},
@@ -108,6 +116,13 @@ const Head = React.createClass({
 			routes			: ['/school_console/:subPage', '/school_console/:filter', '/school_console/:inviteId/:mode'],
 			authorization	: true,
 			verified		: true
+		};
+	},
+	getHelpMenuItem: function() {
+		return {
+			href			: '/#help',
+			name			: 'Help',
+			key				: 'Help'
 		};
 	},
 	createMenuItems: function() {
