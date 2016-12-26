@@ -40,7 +40,7 @@ const MenuMixin = {
 			case 'file':
 				return <ChooseFileItem key={'file' + item.name} name={item.name} className={className} onChange={item.onChange}/>;
 			case 'Help':
-				return <HelpItem userId={userId} name={item.name} className={className}/>;
+				return <HelpItem key={item.name} userId={userId} name={item.name} className={className}/>;
 			case 'Console':
 				//We don't want to show the console tab if the current user is not an admin
 				//if(userRole == 'admin')
