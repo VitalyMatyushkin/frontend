@@ -7,8 +7,7 @@ const	React		= require('react'),
 
 		If			= require('../../../../ui/if/if'),
 		CommentBox	= require('./event_blogBox'),
-		ReactDOM	= require('react-dom'),
-		Avatar		= require('module/ui/avatar/avatar');
+		Comments	= require('module/ui/comments/comments');
 
 const Blog = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -18,8 +17,7 @@ const Blog = React.createClass({
 		isUserCanWriteComments	: React.PropTypes.bool.isRequired
 	},
 	_setBlogCount:function(){
-		const   self    = this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		window.Server.schoolEventCommentsCount.get({schoolId: this.props.activeSchoolId, eventId: this.props.eventId})
 			.then(res => {
@@ -32,8 +30,7 @@ const Blog = React.createClass({
 	 * @private
 	 */
 	_setComments: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		window.Server.schoolEventComments.get(
 			{
@@ -55,66 +52,62 @@ const Blog = React.createClass({
 		});
 	},
 	componentWillMount:function(){
-		const self = this;
 
-		self._setLoggedUser();
+		this._setLoggedUser();
 		// upload all comments from server
-		self._setComments();
+		this._setComments();
 	},
 	_setLoggedUser: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
+		const	binding = this.getDefaultBinding();
 
 		window.Server.profile.get().then(user => binding.set('loggedUser', Immutable.fromJS(user)))
 	},
 	// TODO HMMMMM???
 	componentDidMount:function(){
-		var self = this;
-
-		self._tickerForNewComments();
+		this._tickerForNewComments(this.props);
 	},
-	_tickerForNewComments:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
+	_tickerForNewComments:function(props){
+		const binding = this.getDefaultBinding();
 
-		self.intervalId = setInterval(function () {
+		this.intervalId = setInterval(function () {
 			window.Server.schoolEventCommentsCount.get({
-				schoolId:   this.props.activeSchoolId,
-				eventId:    self.props.eventId}
+				schoolId:	props.activeSchoolId,
+				eventId:	props.eventId}
 			)
 			.then(function(res){
-				var oldCount = binding.get('blogCount');
+				const oldCount = binding.get('blogCount');
 				if(oldCount && oldCount !== res.count) {
-					self._setComments();
+					this._setComments();
 				}
 				return res;
 			});
 		}, 30000);
 	},
 	componentWillUnmount:function(){
-		var self = this,
-			binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.remove('blogs');
-		clearInterval(self.intervalId);
+		clearInterval(this.intervalId);
 	},
+
 	_commentButtonClick:function(){
 		if(this.props.isUserCanWriteComments) {
-			var self = this,
-				binding = self.getDefaultBinding(),
-				eventId = this.props.eventId,
-				comments = ReactDOM.findDOMNode(self.refs.commentBox).value,
-				replyTo = binding.get('replyTo'),
-				replyName = replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
-				postData = {text: comments};
+			const binding 	= this.getDefaultBinding(),
+				eventId 	= this.props.eventId,
+				comments 	= document.getElementById('commentArea').value,
+				replyTo 	= binding.get('replyTo'),
+				replyName 	= replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
+				postData 	= {text: comments};
 
-			ReactDOM.findDOMNode(self.refs.commentBox).value = "";
+			/**Clear textarea*/
+			document.getElementById('commentArea').value = "";
+
 			binding.sub('replyTo').clear();
 
 			/**if reply and a comment contains the name*/
 			if(replyTo && comments.indexOf(replyName) >= 0){
 				postData.text = comments.replace(`${replyName},`, '').trim(); // remove reply name from comment
-				postData.replyToCommentId = replyTo.id;// set reply comment in postData
+				postData.replyToCommentId = replyTo.id; // set reply comment in postData
 			}
 
 			return window.Server.schoolEventComments.post(
@@ -122,17 +115,17 @@ const Blog = React.createClass({
 					schoolId: this.props.activeSchoolId,
 					eventId: eventId
 				},
-				postData
+					postData
 				)
 				.then(function(comment) {
-					const   blogs       = binding.toJS('blogs'),
-						blogCount   = binding.toJS('blogCount');
+					const blogs 	= binding.toJS('blogs'),
+						blogCount 	= binding.toJS('blogCount');
 
 					blogs.push(comment);
 
 					binding.atomically()
-						.set('blogCount',   Immutable.fromJS(blogCount + 1))
-						.set('blogs',       Immutable.fromJS(blogs))
+						.set('blogCount', 	Immutable.fromJS(blogCount + 1))
+						.set('blogs', 		Immutable.fromJS(blogs))
 						.commit();
 				});
 		} else {
@@ -144,36 +137,20 @@ const Blog = React.createClass({
 		}
 	},
 	onReply:function(blog){
-		var     self    = this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.set('replyTo', blog);
-
-		ReactDOM.findDOMNode(self.refs.commentBox).value = `${blog.author.firstName} ${blog.author.lastName}, `;
+		document.getElementById('commentArea').value = `${blog.author.firstName} ${blog.author.lastName}, `;
 	},
 	render:function(){
-		const   self    = this,
-				binding = self.getDefaultBinding();
-
-		const   dataBlog 	= binding.toJS('blogs'),
-				loggedUser 	= binding.toJS('loggedUser');
+		const binding 	= this.getDefaultBinding(),
+			dataBlog 	= binding.toJS('blogs'),
+			loggedUser 	= binding.toJS('loggedUser');
 
 		return(
 			<div className="bBlogMain">
-				<CommentBox onReply={self.onReply} blogData={dataBlog} />
-				<div>
-					<div className="bBlog_box mNewComment">
-						<div className="ePicBox">
-							<Avatar pic={loggedUser && loggedUser.avatar} minValue={45} />
-						</div>
-						<div className="eEvent_commentBlog">
-							<Morearty.DOM.textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>
-						</div>
-					</div>
-					<div className="bEventButtons">
-						<div onClick={self._commentButtonClick} className="bButton">Send</div>
-					</div>
-				</div>
+				<CommentBox onReply={this.onReply} blogData={dataBlog} />
+				<Comments avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this._commentButtonClick} />
 			</div>
 		)
 	}

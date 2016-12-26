@@ -1,7 +1,8 @@
 /**
  * Created by Woland on 26.12.2016.
  */
-const React = require('react');
+const React 	= require('react'),
+	Avatar 		= require('module/ui/avatar/avatar');
 
 const Comments = React.createClass({
 	propTypes:{
@@ -15,16 +16,17 @@ const Comments = React.createClass({
 			<div>
 				<div className="bBlog_box mNewComment">
 					<div className="ePicBox">
-						<Avatar pic={props.avatarPic} minValue={props.avatarMinValue} />
+						<Avatar pic={this.props.avatarPic} minValue={this.props.avatarMinValue} />
 					</div>
 					<div className="eEvent_commentBlog">
-						<Textarea ref="commentBox" placeholder="Enter your comment" className="eEvent_comment"/>
+						<textarea id="commentArea" placeholder="Enter your comment" className="eEvent_comment"></textarea>
 					</div>
 				</div>
 				<div className="bEventButtons">
-					<div onClick={props.onClick()} className="bButton">Send</div>
+					<div onClick={this.props.onClick} className="bButton">Send</div>
 				</div>
 			</div>
 		)
 	}
 });
+module.exports = Comments;
