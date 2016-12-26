@@ -92,20 +92,19 @@ const Blog = React.createClass({
 		clearInterval(this.intervalId);
 	},
 
-	_commentButtonClick:function(textComment){
+	onSubmitCommentClick: function(textComment){
 		if(this.props.isUserCanWriteComments) {
 			const binding 	= this.getDefaultBinding(),
 				eventId 	= this.props.eventId,
-				comments 	= textComment,
 				replyTo 	= binding.get('replyTo'),
 				replyName 	= replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
-				postData 	= {text: comments};
+				postData 	= {text: textComment};
 
 			binding.sub('replyTo').clear();
 
 			/**if reply and a comment contains the name*/
-			if(replyTo && comments.indexOf(replyName) >= 0){
-				postData.text = comments.replace(`${replyName},`, '').trim(); // remove reply name from comment
+			if(replyTo && textComment.indexOf(replyName) >= 0){
+				postData.text = textComment.replace(`${replyName},`, '').trim(); // remove reply name from comment
 				postData.replyToCommentId = replyTo.id; // set reply comment in postData
 			}
 
@@ -116,7 +115,7 @@ const Blog = React.createClass({
 				},
 					postData
 				)
-				.then(function(comment) {
+				.then(comment => {
 					const blogs 	= binding.toJS('blogs'),
 						blogCount 	= binding.toJS('blogCount');
 
@@ -135,21 +134,22 @@ const Blog = React.createClass({
 			);
 		}
 	},
+
 	onReply:function(blog){
 		const binding = this.getDefaultBinding();
-
 		binding.set('replyTo', blog);
-		document.getElementById('commentArea').value = `${blog.author.firstName} ${blog.author.lastName}, `;
 	},
 	render:function(){
-		const binding 	= this.getDefaultBinding(),
-			dataBlog 	= binding.toJS('blogs'),
-			loggedUser 	= binding.toJS('loggedUser');
+		const binding 		= this.getDefaultBinding(),
+			dataBlog 		= binding.toJS('blogs'),
+			loggedUser 		= binding.toJS('loggedUser'),
+			replyTo			= binding.toJS('replyTo') ? binding.toJS('replyTo')	: null,
+			commentText 	= replyTo ? replyTo.author.firstName + ' ' + replyTo.author.lastName + ', ': '';
 
 		return(
 			<div className="bBlogMain">
 				<CommentBox onReply={this.onReply} blogData={dataBlog} />
-				<NewCommentForm textTextarea={''} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this._commentButtonClick} />
+				<NewCommentForm commentText={commentText} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this.onSubmitCommentClick} />
 			</div>
 		)
 	}
