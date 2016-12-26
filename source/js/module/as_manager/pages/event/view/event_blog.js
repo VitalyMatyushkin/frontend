@@ -1,13 +1,13 @@
 /**
  * Created by bridark on 16/06/15.
  */
-const	React		= require('react'),
-		Morearty	= require('morearty'),
-		Immutable	= require('immutable'),
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
 
-		If			= require('../../../../ui/if/if'),
-		CommentBox	= require('./event_blogBox'),
-		Comments	= require('module/ui/comments/comments');
+		If				= require('../../../../ui/if/if'),
+		CommentBox		= require('./event_blogBox'),
+		NewCommentForm	= require('module/ui/comments/comments');
 
 const Blog = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -63,18 +63,19 @@ const Blog = React.createClass({
 		window.Server.profile.get().then(user => binding.set('loggedUser', Immutable.fromJS(user)))
 	},
 	// TODO HMMMMM???
-	componentDidMount:function(){
-		this._tickerForNewComments(this.props);
-	},
-	_tickerForNewComments:function(props){
+	/**
+	 * Function start timer, which send request on server with count comment
+	 * If count don't equal old count, then call function with get comments
+	 */
+	componentDidMount: function() {
 		const binding = this.getDefaultBinding();
 
-		this.intervalId = setInterval(function () {
+		this.intervalId = setInterval( () => {
 			window.Server.schoolEventCommentsCount.get({
-				schoolId:	props.activeSchoolId,
-				eventId:	props.eventId}
+				schoolId:	this.props.activeSchoolId,
+				eventId:	this.props.eventId}
 			)
-			.then(function(res){
+			.then(res => {
 				const oldCount = binding.get('blogCount');
 				if(oldCount && oldCount !== res.count) {
 					this._setComments();
@@ -83,6 +84,7 @@ const Blog = React.createClass({
 			});
 		}, 30000);
 	},
+
 	componentWillUnmount:function(){
 		const binding = this.getDefaultBinding();
 
@@ -90,17 +92,14 @@ const Blog = React.createClass({
 		clearInterval(this.intervalId);
 	},
 
-	_commentButtonClick:function(){
+	_commentButtonClick:function(textComment){
 		if(this.props.isUserCanWriteComments) {
 			const binding 	= this.getDefaultBinding(),
 				eventId 	= this.props.eventId,
-				comments 	= document.getElementById('commentArea').value,
+				comments 	= textComment,
 				replyTo 	= binding.get('replyTo'),
 				replyName 	= replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
 				postData 	= {text: comments};
-
-			/**Clear textarea*/
-			document.getElementById('commentArea').value = "";
 
 			binding.sub('replyTo').clear();
 
@@ -150,7 +149,7 @@ const Blog = React.createClass({
 		return(
 			<div className="bBlogMain">
 				<CommentBox onReply={this.onReply} blogData={dataBlog} />
-				<Comments avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this._commentButtonClick} />
+				<NewCommentForm textTextarea={''} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this._commentButtonClick} />
 			</div>
 		)
 	}
