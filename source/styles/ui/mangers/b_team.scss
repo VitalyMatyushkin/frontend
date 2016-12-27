@@ -64,13 +64,17 @@
   font-size: 16px;
   line-height: 20px;
 
+  &.mNumber {
+    width: 5%;
+  }
+
   &.mName {
-    width: 37%;
+    width: 32%;
     &.mDefaultView {
       width: 35%;
     }
     &.mLong {
-      width: 50%;
+      width: 45%;
     }
   }
 

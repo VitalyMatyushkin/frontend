@@ -6,6 +6,7 @@ const	React					= require('react'),
 const Player = React.createClass({
 	propTypes: {
 		isNonTeamSport:				React.PropTypes.bool.isRequired,
+		number:						React.PropTypes.string.isRequired,
 		player:						React.PropTypes.object.isRequired,
 		positions:					React.PropTypes.array,
 		handleClickPlayer:			React.PropTypes.func.isRequired,
@@ -83,9 +84,12 @@ const Player = React.createClass({
 				});
 
 		return (
-			<div	className={playerClass}
-					onClick={self.handlePlayerClick}
+			<div	className	= {playerClass}
+					onClick		= {self.handlePlayerClick}
 			>
+				<div className="eTeam_playerItem mNumber">
+					{this.props.number}
+				</div>
 				<div className={playerNameClass}>
 					{`${player.firstName} ${player.lastName}`}
 				</div>
