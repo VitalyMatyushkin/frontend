@@ -247,8 +247,10 @@ const EventButtons = React.createClass({
 		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 
 		return Promise.all(
-			event.results.individualDiscipline.map(
-				individualDisciplineItem => window.Server.schoolEventIndividualDiscipline.post(
+			event.results.individualDiscipline
+				// filter value 0
+				.filter(individualDisciplineItem => individualDisciplineItem.value !== 0)
+				.map(individualDisciplineItem => window.Server.schoolEventIndividualDiscipline.post(
 					{
 						schoolId:	activeSchoolId,
 						eventId:	event.id
