@@ -4,6 +4,7 @@ const	React 				= require('react'),
 	Immutable				= require('immutable'),
 	moment					= require('moment'),
 	MoreartyHelper			= require('./../../../../helpers/morearty_helper'),
+	Loader 					= require('module/ui/loader'),
 	StudentImporter			= require('module/utils/student_importer');
 
 const ImportStudents = React.createClass({
@@ -13,7 +14,7 @@ const ImportStudents = React.createClass({
 			activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 
 		let school = {};
-
+		binding.set('importIsSync', Immutable.fromJS(false));
 		binding.remove('studentData');
 		binding.remove('activeSchool');
 
@@ -97,7 +98,7 @@ const ImportStudents = React.createClass({
 		const binding = this.getDefaultBinding(),
 			studentData = binding.toJS('studentData'),
 			activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
-
+		binding.remove('importIsSync');
 		Promise.all(studentData.students.map( student => {
 			return window.Server.schoolStudents.post(activeSchoolId, {
 				firstName:	student.firstName,
@@ -108,6 +109,7 @@ const ImportStudents = React.createClass({
 				birthday:	this.getBirthdayInServerFormat(student.birthday)
 			});
 		})).then(() => {
+			binding.set('importIsSync', Immutable.fromJS(false));
 			window.simpleAlert(
 				'Students upload was finished',
 				'Ok',
@@ -128,10 +130,12 @@ const ImportStudents = React.createClass({
 	},
 
 	render: function() {
-		const binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding(),
+			isSync = binding.toJS('importIsSync');
 
 		return (
 			<div className='bForm'>
+				<Loader condition={isSync} />
 				<div className='eForm_field'>
 					<input
 						id="files"
