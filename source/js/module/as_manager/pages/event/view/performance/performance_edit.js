@@ -338,6 +338,7 @@ const PerformanceEdit = React.createClass({
 						</div>
 						<div className="ePlayer_performanceItemValueContainer">
 							<StarRatingBar	starCount			= {5}
+											isEditMode			= {true}
 											value				= {value}
 											handleValueChanges	= {self.handleValueChange.bind(
 												self,

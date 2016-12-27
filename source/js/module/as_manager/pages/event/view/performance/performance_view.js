@@ -339,6 +339,7 @@ const PerformanceView = React.createClass({
 						</div>
 						<div className="ePlayer_performanceItemValueContainer">
 							<StarRatingBar	starCount			= {5}
+											isEditMode			= {false}
 											value				= {value}
 											handleValueChanges	= {() => {}}
 							/>
