@@ -18,7 +18,7 @@ const Head = React.createClass({
         if (document.location.hash != '#login') {
             return (
                 <div className="bTopPanel container">
-                    <div className="bTopLogo" onClick={this.returnToLoginPage}><img src="images/logo.png"/></div>
+                    <div className="bTopLogo" onClick={this.returnToLoginPage}><img src="images/logo.svg"/></div>
                 </div>
             )
         }else{
