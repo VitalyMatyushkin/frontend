@@ -5,7 +5,7 @@ const Logo = React.createClass({
 	render: function() {
 		return (
 			<div className="bTopLogo">
-				<img src="images/logo.png"/>
+				<img src="images/logo.svg"/>
 				<span> Admin Portal </span>
 			</div>
 		);
