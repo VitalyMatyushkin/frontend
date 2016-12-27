@@ -16,25 +16,19 @@ const InviteComments = React.createClass({
 		activeSchoolId			: React.PropTypes.string.isRequired
 	},
 	/**
-	 * Function set in binding count comments
-	 */
-	setCommentsCount:function(){
-		const binding = this.getDefaultBinding();
-
-		window.Server.schoolInviteCommentsCount.get({schoolId: this.props.activeSchoolId, inviteId: this.props.inviteId})
-			.then(res => {
-				binding.set('inviteCommentsCount', res.count);
-				return res;
-			});
-	},
-	/**
 	 * Get all comments for invite from server
 	 * @private
 	 */
 	setComments: function() {
 		const binding = this.getDefaultBinding();
 
-		window.Server.schoolInviteComments.get(
+			binding
+				.atomically()
+				.set('inviteComments',		Immutable.fromJS([]))
+				.set('inviteCommentsCount',	Immutable.fromJS(0))
+				.commit();
+
+		/*window.Server.schoolInviteComments.get(
 			{
 				schoolId	: this.props.activeSchoolId,
 				inviteId	: this.props.inviteId
@@ -51,10 +45,12 @@ const InviteComments = React.createClass({
 					.set('inviteComments',		Immutable.fromJS(comments))
 					.set('inviteCommentsCount',	Immutable.fromJS(comments.length))
 					.commit();
-			});
+			});*/
 	},
 	componentWillMount:function(){
+		const	binding = this.getDefaultBinding();
 
+		binding.set('expandedComments', Immutable.fromJS(false));
 		this.setLoggedUser();
 		// upload all comments from server
 		this.setComments();
@@ -83,7 +79,9 @@ const InviteComments = React.createClass({
 						this.setComments();
 					}
 					return res;
-				});
+				}, () => {
+						return 0;
+					});
 		}, 30000);
 	},
 
@@ -133,6 +131,36 @@ const InviteComments = React.createClass({
 		const binding = this.getDefaultBinding();
 		binding.set('replyTo', comments);
 	},
+	expandedComments: function() {
+		const binding = this.getDefaultBinding(),
+			expanded = binding.toJS('expandedComments');
+
+		binding.set('expandedComments', Immutable.fromJS(!expanded));
+	},
+	renderComments: function (comments, loggedUser, replyTo, commentText) {
+		let linkText, text;
+		const binding = this.getDefaultBinding(),
+			expanded = binding.toJS('expandedComments');
+		if (expanded) {
+			text =
+				<div>
+					<div className="bInviteComments">
+						<InviteCommentsView onReply={this.onReply} comments={comments} />
+						<NewCommentForm commentText={commentText} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this.onSubmitCommentClick} />
+					</div>
+				</div>;
+			linkText = 'Hide comments';
+		} else {
+			text='';
+			linkText = 'Show comments';
+		}
+		return (
+			<div className="eDescription">
+				<a className="eDescription_link" onClick={this.expandedComments}> { linkText } </a>
+				{ text }
+			</div>
+		);
+	},
 	render:function(){
 		const binding 		= this.getDefaultBinding(),
 			comments 		= binding.toJS('inviteComments'),
@@ -141,9 +169,8 @@ const InviteComments = React.createClass({
 			commentText 	= replyTo ? replyTo.author.firstName + ' ' + replyTo.author.lastName + ', ': '';
 
 		return(
-			<div className="bBlogMain">
-				<InviteCommentsView onReply={this.onReply} comments={comments} />
-				<NewCommentForm commentText={commentText} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this.onSubmitCommentClick} />
+			<div>
+				{ this.renderComments(comments, loggedUser, replyTo, commentText) }
 			</div>
 		)
 	}

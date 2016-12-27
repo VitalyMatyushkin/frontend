@@ -7,7 +7,8 @@ const React 			= require('react'),
 		Map 			= require('module/ui/map/map-event-venue'),
 		propz			= require('propz'),
 		Bootstrap 		= require('styles/bootstrap-custom.scss'),
-		InviteComments	= require('module/ui/comments/invite-comments');
+		InviteComments	= require('module/ui/comments/invite-comments'),
+		InviteStyles 	= require('styles/pages/events/b_Invite.scss');
 
 const InviteView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -142,8 +143,8 @@ const InviteView = React.createClass({
 									<div className="eInvite_message">
 										{isArchive ? <span className={'m'+status}>{status}</span> : null}
 									</div>
-									<div>
-										<InviteComments inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
+									<div className="eInvite_comments">
+										<InviteComments binding	= {binding.sub('inviteComments')} inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
 									</div>
 									<div className="eInvite_buttons">
 										{isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}

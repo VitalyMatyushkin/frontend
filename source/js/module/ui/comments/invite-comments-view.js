@@ -18,7 +18,7 @@ const InviteCommentsView = React.createClass({
 
 		return comments && comments.map( comment => {
 				return (
-					<div key={comment.id} className="bBlog_box">
+					<div key={comment.id} className="bInviteCommentsView_box">
 						<div className="ePicBox">
 							<Avatar pic={comment.author.avatar} minValue={45} />
 						</div>
