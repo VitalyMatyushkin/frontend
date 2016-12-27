@@ -10,6 +10,7 @@ const	React						= require('react'),
 		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
 		EventTeams					= require('./view/teams/event_teams'),
 		EventPerformance			= require('./view/teams/event_teams_performance'),
+		DisciplineWrapper			= require('./view/discipline/discipline_wrapper'),
 		EventGallery				= require('./new_gallery/event_gallery'),
 		ManagerWrapper				= require('./view/manager_wrapper'),
 		Comments					= require('./view/event_blog'),
@@ -108,6 +109,7 @@ const Event = React.createClass({
 		}).then(settings => {
 			eventData.matchReport = report.content;
 
+			this.setPlayersFromEventToBinding(eventData);
 			binding.atomically()
 				.set('model',							Immutable.fromJS(eventData))
 				.set('gallery.photos',					Immutable.fromJS(photos))
@@ -121,8 +123,60 @@ const Event = React.createClass({
 
 			binding.set('sync', Immutable.fromJS(true));
 
+			this.addListeners();
+
 			return eventData;
 		});
+	},
+	addListeners: function() {
+		this.addListenerToEventTeams();
+	},
+	addListenerToEventTeams: function() {
+		const binding = this.getDefaultBinding();
+
+		// reload players from server if isSync is false.
+		binding.sub('eventTeams.isSync').addListener(descriptor => !descriptor.getCurrentValue() && this.loadPlayers());
+	},
+	/**
+	 * Load team players from server
+	 * @private
+	 */
+	loadPlayers: function() {
+		window.Server.schoolEvent.get(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	this.eventId
+			}
+		).then(event => {
+			this.setPlayersFromEventToBinding(event);
+		});
+	},
+	setPlayersFromEventToBinding: function(event) {
+		if(event && TeamHelper.isNonTeamSport(event)) {
+			this.setNonTeamPlayersToBinding(event);
+		} else {
+			this.setTeamPlayersFromEventToBinding(event);
+		}
+	},
+	setNonTeamPlayersToBinding: function(event) {
+		const binding = this.getDefaultBinding();
+
+		binding
+			.atomically()
+			.set('model.individualsData',			Immutable.fromJS(event.individualsData))
+			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(event.individualsData))
+			.set('eventTeams.isSync',				Immutable.fromJS(true))
+			.commit();
+	},
+	setTeamPlayersFromEventToBinding: function(event) {
+		const binding = this.getDefaultBinding();
+
+		binding
+			.atomically()
+			.set('model.teamsData',					Immutable.fromJS(event.teamsData))
+			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(event.teamsData.map(tp => tp.players)))
+			.set('eventTeams.isSync',				Immutable.fromJS(true))
+			.commit();
 	},
 	loadPhotos: function(role) {
 		let service;
@@ -164,6 +218,14 @@ const Event = React.createClass({
 			});
 		}
 
+		if(self.hasSportDisciplineItems()) {
+			self.tabListModel.push({
+				value		: 'discipline',
+				text		: 'Discipline',
+				isActive	: false
+			});
+		}
+
 		self.tabListModel.push(
 			{
 				value		: 'details',
@@ -189,6 +251,11 @@ const Event = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		return binding.toJS('model.sport.performance').length > 0;
+	},
+	hasSportDisciplineItems: function() {
+		const binding = this.getDefaultBinding();
+
+		return binding.toJS('model.sport.discipline').length > 0;
 	},
 	changeActiveTab:function(value){
 		const	self	= this,
@@ -251,16 +318,16 @@ const Event = React.createClass({
 		return params && params.bundleName === 'teamsData';
 	},
 	render: function() {
-		const	self						= this,
-				binding						= self.getDefaultBinding();
+		const	self			= this,
+				binding			= self.getDefaultBinding();
 
-		const	event						= binding.toJS('model'),
-				showingComment				= binding.get('showingComment'),
-				activeTab					= binding.get('activeTab'),
-				mode						= binding.toJS('mode'),
-				isaLeftShow					= this.isaLeftShow(this.props.activeSchoolId, event, mode),
-				isaRightShow				= this.isaRightShow(this.props.activeSchoolId, event, mode),
-				isParent					= RoleHelper.isParent(this);
+		const	event			= binding.toJS('model'),
+				showingComment	= binding.get('showingComment'),
+				activeTab		= binding.get('activeTab'),
+				mode			= binding.toJS('mode'),
+				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
+				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
+				isParent		= RoleHelper.isParent(this);
 
 		switch (true) {
 			case !self.isSync():
@@ -309,7 +376,12 @@ const Event = React.createClass({
 							</div>
 							<If condition={activeTab === 'performance'} >
 								<div className="bEventBottomContainer">
-									<EventPerformance	binding			= {self._getEventTeamsBinding()}
+									<EventPerformance binding={self._getEventTeamsBinding()}/>
+								</div>
+							</If>
+							<If condition={activeTab === 'discipline'} >
+								<div className="bEventBottomContainer">
+									<DisciplineWrapper	binding			= {self._getEventTeamsBinding()}
 														activeSchoolId	= {this.props.activeSchoolId}
 									/>
 								</div>
@@ -336,10 +408,10 @@ const Event = React.createClass({
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
-								<Comments	binding						= {binding.sub('comments')}
-											isUserCanWriteComments		= {binding.toJS('isUserCanWriteComments')}
-											eventId						= {event.id}
-											activeSchoolId				= {this.props.activeSchoolId}
+								<Comments	binding					= {binding.sub('comments')}
+											isUserCanWriteComments	= {binding.toJS('isUserCanWriteComments')}
+											eventId					= {event.id}
+											activeSchoolId			= {this.props.activeSchoolId}
 								/>
 							</div>
 						</div>
