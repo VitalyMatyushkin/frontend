@@ -48,7 +48,9 @@ const EditEditTaskView = React.createClass({
 			selectedPlayers.push(selectedPlayer.id);
 		}
 
-		this.getDefaultBinding().set('model.ages', Immutable.fromJS(ages));
+		this.setState({
+			selectedPlayers: selectedPlayers
+		});
 	},
 	render: function() {
 		return (

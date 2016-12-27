@@ -23,20 +23,20 @@ const RecentEvent = React.createClass({
 		const isSync = binding.get('lastFiveEvents.isSync') && binding.get('footerEvents.isSync');
 
 		if(isSync) {
-			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-					events			= binding.toJS('lastFiveEvents.events'),
-					footerEvent		= this.getCurrentFooterEvent();
+			const	events			= binding.toJS('lastFiveEvents.events'),
+					footerEvent		= this.getCurrentFooterEvent(),
+					newActiveSchoolId = this.getDefaultBinding().sub('events').toJS('domainSchoolId');
 
 			return (
 				<div className="bRecentEvents">
 					<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.RECENT }
 									title			= "Last Five Events"
-									activeSchoolId	= { activeSchoolId }
+									activeSchoolId	= { newActiveSchoolId }
 									events			= { events }
 									logo            = "images/big-logo.svg"
 						/>
 					<Footer	event			= { footerEvent }
-							activeSchoolId	= { activeSchoolId }
+							activeSchoolId	= { newActiveSchoolId }
 					/>
 				</div>
 			);
