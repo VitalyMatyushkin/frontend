@@ -9,7 +9,7 @@ const	React						= require('react'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
 		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
 		EventTeams					= require('./view/teams/event_teams'),
-		EventPerformance			= require('./view/teams/event_teams_performance'),
+		Performance			= require('./view/performance/performance'),
 		DisciplineWrapper			= require('./view/discipline/discipline_wrapper'),
 		EventGallery				= require('./new_gallery/event_gallery'),
 		ManagerWrapper				= require('./view/manager_wrapper'),
@@ -43,6 +43,9 @@ const Event = React.createClass({
 			showingComment: false,
 			activeTab: 'teams',
 			eventTeams: {},
+			performanceTab: {
+				isEditMode: false
+			},
 			individualScoreAvailable: [
 				{
 					value: true
@@ -273,7 +276,16 @@ const Event = React.createClass({
 
 		window.location.hash = hash + '?tab=' + value;
 	},
-	_getEventTeamsBinding: function() {
+	getPerformanceTabBinding: function() {
+		const binding	= this.getDefaultBinding();
+
+		return {
+			default:					binding.sub('performanceTab'),
+			eventTeams:					binding.sub('eventTeams'),
+			event:						binding.sub('model')
+		};
+	},
+	getEventTeamsBinding: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -282,7 +294,7 @@ const Event = React.createClass({
 			activeTab:					binding.sub('activeTab'),
 			event:						binding.sub('model'),
 			mode:						binding.sub('mode'),
-			individualScoreAvailable: 	binding.sub('individualScoreAvailable')
+			individualScoreAvailable:	binding.sub('individualScoreAvailable')
 		};
 	},
 	isShowTrobber: function() {
@@ -357,7 +369,7 @@ const Event = React.createClass({
 															  isVisible={isaRightShow}/>
 								</div>
 							</div>
-							<EventTeams	binding			= {self._getEventTeamsBinding()}
+							<EventTeams	binding			= {self.getEventTeamsBinding()}
 										activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<div className="bEventMap">
@@ -376,12 +388,14 @@ const Event = React.createClass({
 							</div>
 							<If condition={activeTab === 'performance'} >
 								<div className="bEventBottomContainer">
-									<EventPerformance binding={self._getEventTeamsBinding()}/>
+									<Performance	binding			= {self.getPerformanceTabBinding()}
+													activeSchoolId	= {this.props.activeSchoolId}
+									/>
 								</div>
 							</If>
 							<If condition={activeTab === 'discipline'} >
 								<div className="bEventBottomContainer">
-									<DisciplineWrapper	binding			= {self._getEventTeamsBinding()}
+									<DisciplineWrapper	binding			= {self.getEventTeamsBinding()}
 														activeSchoolId	= {this.props.activeSchoolId}
 									/>
 								</div>

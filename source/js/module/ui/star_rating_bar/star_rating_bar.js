@@ -28,10 +28,10 @@ const StarRatingBar = React.createClass({
 		for(let i = 1; i <= self.props.starCount; i++) {
 			stars.push(
 				<RatingStar
-					key={`${i}_rating_star`}
-					isChecked={i <= self.props.value}
-					value={i}
-					handleClick={self.handleClick}
+					key			= {`${i}_rating_star`}
+					isChecked	= {i <= self.props.value}
+					value		= {i}
+					handleClick	= {self.handleClick}
 				/>
 			);
 		}

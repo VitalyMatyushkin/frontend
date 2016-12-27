@@ -10,8 +10,11 @@ const	React				= require('react'),
 
 		PerformanceStyle    = require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
 
-const EventTeamsPerformance = React.createClass({
+const PerformanceView = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
+	propTypes: {
+		handleClickChangeMode: React.PropTypes.func.isRequired
+	},
 	handleValueChange: function(player, permissionId, performanceId, value) {
 		const self = this;
 
@@ -303,8 +306,6 @@ const EventTeamsPerformance = React.createClass({
 		const self = this;
 
 		return players.map((player, playerIndex) => {
-			const mode = self.getBinding('mode').toJS();
-
 			return (
 				<div key={playerIndex} className="bPlayer mPerformance">
 					<div className="ePlayer_name mBold">
@@ -320,15 +321,14 @@ const EventTeamsPerformance = React.createClass({
 	renderPlayerPerformance: function(player) {
 		const self = this;
 
-		const	event	= self.getBinding('event').toJS(),
-				mode	= self.getBinding('mode').toJS();
+		const event = self.getBinding('event').toJS();
 
 		return event && event.sport && event.sport.performance && event.sport.performance.map(pItem => {
 				// player performance data
 				const pData = (
 						event.results &&
 						event.results.individualPerformance &&
-						event.results.individualPerformance.find(pUserData => pUserData.performanceId === pItem._id && pUserData.userId === player.id)
+						event.results.individualPerformance.find(pUserData => pUserData.performanceId === pItem._id && pUserData.userId === player.userId)
 					),
 					value = pData ? pData.value : 0;
 
@@ -338,19 +338,9 @@ const EventTeamsPerformance = React.createClass({
 							{pItem.name}
 						</div>
 						<div className="ePlayer_performanceItemValueContainer">
-							<StarRatingBar
-								starCount={5}
-								value={value}
-								handleValueChanges={
-									mode === 'closing' ?
-										self.handleValueChange.bind(
-											self,
-											player,
-											player.permissionId,
-											pItem._id
-										) :
-										() => {}
-								}
+							<StarRatingBar	starCount			= {5}
+											value				= {value}
+											handleValueChanges	= {() => {}}
 							/>
 						</div>
 					</div>
@@ -390,37 +380,47 @@ const EventTeamsPerformance = React.createClass({
 
 	render: function() {
 		const	self	= this;
-		let		result	= null;
+		let		teams	= null;
 
-		const	event = self.getBinding('event').toJS(),
-				isSync = self.getBinding('isSync').toJS();
+		const event = self.getBinding('event').toJS();
 
-		if(isSync) {
-			switch (true) {
-				case TeamHelper.isInternalEventForIndividualSport(event):
-					result = (
-						<div className="bEventPerformance_teams mIndivid">
-							{self.renderIndividuals()}
+		switch (true) {
+			case TeamHelper.isInternalEventForIndividualSport(event):
+				teams = (
+					<div className="eEventPerformance_teams mIndivid">
+						{self.renderIndividuals()}
+					</div>
+				);
+				break;
+			default:
+				teams = (
+					<div className="eEventPerformance_teams">
+						<div className="eEventPerformance_col">
+							{self.renderPlayersForLeftSide()}
 						</div>
-					);
-					break;
-				default:
-					result = (
-						<div className="bEventPerformance_teams">
-							<div className="eEventPerformance_col">
-								{self.renderPlayersForLeftSide()}
-							</div>
-							<div className="eEventPerformance_col">
-								{self.renderPlayersForRightSide()}
-							</div>
+						<div className="eEventPerformance_col">
+							{self.renderPlayersForRightSide()}
 						</div>
-					);
-					break;
-			}
+					</div>
+				);
+				break;
 		}
 
-		return result;
+		return (
+			<div className="bEventPerformance">
+				<div className="eEventPerformance_header">
+					<div className="eMatchReport_btn">
+						<div className="bButton mCircle" onClick={this.props.handleClickChangeMode}>
+							<i className="fa fa-pencil" aria-hidden="true"/>
+						</div>
+					</div>
+				</div>
+				<div className="eEventPerformance_body">
+					{teams}
+				</div>
+			</div>
+		);
 	}
 });
 
-module.exports = EventTeamsPerformance;
+module.exports = PerformanceView;
