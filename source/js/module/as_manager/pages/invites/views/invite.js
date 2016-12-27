@@ -1,37 +1,45 @@
-const   React           = require('react'),
+const React 			= require('react'),
 		Morearty		= require('morearty'),
-		classNames      = require('classnames'),
+		classNames 		= require('classnames'),
 		DateHelper		= require('./../../../../helpers/date_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		Button			= require('module/ui/button/button'),
 		Map 			= require('module/ui/map/map-event-venue'),
 		propz			= require('propz'),
-		Bootstrap  	    = require('styles/bootstrap-custom.scss');
+		Bootstrap 		= require('styles/bootstrap-custom.scss'),
+		InviteComments	= require('module/ui/comments/invite-comments');
 
 const InviteView = React.createClass({
 	mixins: [Morearty.Mixin],
-// ID of current school
-// Will set on componentWillMount event
+	/**
+	 * ID of current school
+	 * Will set on componentWillMount event
+	 */
 	activeSchoolId: undefined,
 	propTypes: {
 		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']),
 		onDecline: React.PropTypes.func
 	},
+
 	componentWillMount: function() {
 		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 	},
+
 	getParticipantEmblem: function(participant){
 		const pic = propz.get(participant, ['pic']);
 		if(pic) return { backgroundImage: `url(${pic})` };
 	},
+
 	addZeroToFirst: function (num) {
 		return String(num).length === 1 ? '0' + num : num;
 	},
-	_getAges: function (data) {
+
+	getAges: function (data) {
 		data = data || [];
 		return data.map(elem => 'Y' + elem).join(", ");
 	},
-	_getGender: function (gender) { //TODO Move this method into helpers
+
+	getGender: function (gender) { //TODO Move this method into helpers
 		switch (gender) {
 			case 'MALE_ONLY':
 				return 'Boys';
@@ -44,7 +52,7 @@ const InviteView = React.createClass({
 		}
 	},
 
-	_getInviteRequest: function (inviteId, type) {
+	getInviteRequest: function (inviteId, type) {
 		window.confirmAlert(
 			`Are you sure you want to ${type} ?`,
 			"Ok",
@@ -53,32 +61,32 @@ const InviteView = React.createClass({
 			() => {}
 		);
 	},
+
 	render: function() {
-		const   self            = this,
-				binding         = self.getDefaultBinding(),
-				inviterSchool   = binding.toJS('inviterSchool'),
-				invitedSchool   = binding.toJS('invitedSchool'),
-				rival           = invitedSchool.id === self.activeSchoolId ? inviterSchool : invitedSchool,
-				inviteClasses   = classNames({
+		const binding			= this.getDefaultBinding(),
+				inviterSchool 	= binding.toJS('inviterSchool'),
+				invitedSchool 	= binding.toJS('invitedSchool'),
+				rival 			= invitedSchool.id === this.activeSchoolId ? inviterSchool : invitedSchool,
+				inviteClasses 	= classNames({
 					bInvite: true,
 					mNotRedeemed: !binding.get('redeemed')
 				}),
-				isInbox         = self.props.type === 'inbox',
-				isOutBox        = self.props.type === 'outbox',
-				isArchive       = binding.get('status') !== "NOT_READY",
-				schoolPicture   = self.getParticipantEmblem(rival),
-				sport           = binding.get('sport.name'),
-				ages            = binding.get('event.ages'),
-				gender          = binding.get('event.gender'),
-				message         = binding.get('message') || '',
-				accepted        = binding.get('status') === 'ACCEPTED',
-				eventDate       = (new Date(binding.get('event.startTime'))),
-				startDate       = DateHelper.getDateStringFromDateObject(eventDate),
-				hours           = self.addZeroToFirst(eventDate.getHours()),
-				minutes         = self.addZeroToFirst(eventDate.getMinutes()),
+				isInbox 		= this.props.type === 'inbox',
+				isOutBox 		= this.props.type === 'outbox',
+				isArchive 		= binding.get('status') !== "NOT_READY",
+				schoolPicture 	= this.getParticipantEmblem(rival),
+				sport 			= binding.get('sport.name'),
+				ages 			= binding.get('event.ages'),
+				gender 			= binding.get('event.gender'),
+				message 		= binding.get('message') || '',
+				accepted 		= binding.get('status') === 'ACCEPTED',
+				eventDate 		= (new Date(binding.get('event.startTime'))),
+				startDate 		= DateHelper.getDateStringFromDateObject(eventDate),
+				hours 			= this.addZeroToFirst(eventDate.getHours()),
+				minutes 		= this.addZeroToFirst(eventDate.getMinutes()),
 				inviteId		= binding.get('id'),
 				venue 			= binding.toJS('event.venue'),
-				teamData        = binding.toJS('event.teamsData'),
+				teamData 		= binding.toJS('event.teamsData'),
 				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
 									: <span className="eInvite_venue">Venue to be defined</span>;
 
@@ -127,22 +135,25 @@ const InviteView = React.createClass({
 								{teamDataName}
 
 								<div className="eInvite_content">
-									{sport} / {self._getGender(gender)} / {self._getAges(ages)} <br/>
+									{sport} / {this.getGender(gender)} / {this.getAges(ages)} <br/>
 									{startDate} / {hours + ':' + minutes}<br/>
 								</div>
 								<div>
 									<div className="eInvite_message">
 										{isArchive ? <span className={'m'+status}>{status}</span> : null}
 									</div>
+									<div>
+										<InviteComments inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
+									</div>
 									<div className="eInvite_buttons">
 										{isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
 														   extraStyleClasses={'mHalfWidth mMarginRight'}/> : null }
 										{isInbox ? <Button text={'Decline'}
-														   onClick={() => self._getInviteRequest(inviteId,'decline')}
+														   onClick={() => this.getInviteRequest(inviteId,'decline')}
 														   extraStyleClasses={'mCancel mHalfWidth'}/> : null }
 										{isOutBox ?
 											<Button text={'Cancel invitation'}
-													onClick={() => self._getInviteRequest(inviteId,'cancel')}
+													onClick={() => this.getInviteRequest(inviteId,'cancel')}
 													extraStyleClasses={'mCancel'}/> : null }
 									</div>
 								</div>
