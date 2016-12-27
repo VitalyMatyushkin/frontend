@@ -345,6 +345,7 @@ const EventTeamsView = React.createClass({
 			return (
 				<div key={playerIndex} className={eventPlayerCss}>
 					<span className="ePlayer_name">
+						<span>{`${playerIndex + 1}. `}</span>
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
 					</span>
