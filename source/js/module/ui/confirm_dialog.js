@@ -37,7 +37,7 @@ const ConfirmDialog = React.createClass({
             dialogClasses = binding.get('dialogShow')?'bPopup bDialog mAcitve':'bPopup bDialog';
         return (
             <div className={dialogClasses}>
-                <div className="bDialog_header"><img src="images/logo.png"/></div>
+                <div className="bDialog_header"><img src="images/logo.svg"/></div>
                 <div className="bDialog_content">{self.props.stringContent}</div>
                 <div className="bDialog_actions">
                     <div className="bDialog_button button_L">

@@ -22,7 +22,7 @@ const Logo = React.createClass({
         var self = this;
         return (
             <div className="bTopLogo" onClick={self.returnToHomePage}>
-                <img src="images/logo.png"/>
+                <img src="images/logo.svg"/>
             </div>
         )
     }
