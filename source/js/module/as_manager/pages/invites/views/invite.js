@@ -1,5 +1,6 @@
 const React 			= require('react'),
 		Morearty		= require('morearty'),
+		Immutable 		= require('immutable'),
 		classNames 		= require('classnames'),
 		DateHelper		= require('./../../../../helpers/date_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
@@ -8,7 +9,7 @@ const React 			= require('react'),
 		propz			= require('propz'),
 		Bootstrap 		= require('styles/bootstrap-custom.scss'),
 		InviteComments	= require('module/ui/comments/invite-comments'),
-		InviteStyles 	= require('styles/pages/events/b_Invite.scss');
+		InviteStyles 	= require('styles/pages/events/b_invite.scss');
 
 const InviteView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -23,6 +24,8 @@ const InviteView = React.createClass({
 	},
 
 	componentWillMount: function() {
+		const binding = this.getDefaultBinding().sub('inviteComments');
+		binding.set('expandedComments', Immutable.fromJS(false));
 		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 	},
 
@@ -63,6 +66,13 @@ const InviteView = React.createClass({
 		);
 	},
 
+	toogleDiscussionLink: function() {
+		const binding = this.getDefaultBinding().sub('inviteComments'),
+			expanded = binding.toJS('expandedComments');
+
+		binding.set('expandedComments', Immutable.fromJS(!expanded));
+	},
+
 	render: function() {
 		const binding			= this.getDefaultBinding(),
 				inviterSchool 	= binding.toJS('inviterSchool'),
@@ -88,11 +98,17 @@ const InviteView = React.createClass({
 				inviteId		= binding.get('id'),
 				venue 			= binding.toJS('event.venue'),
 				teamData 		= binding.toJS('event.teamsData'),
+				toggleLink		= binding.sub('inviteComments').toJS('expandedComments'),
 				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
 									: <span className="eInvite_venue">Venue to be defined</span>;
 
-		let status, teamDataName;
+		let status, teamDataName, linkText;
 
+		if (toggleLink) {
+			linkText  = 'Hide discussion';
+		} else {
+			linkText = 'Discussion';
+		}
 		if (teamData.length > 0) {
 			for (let i=0; i < teamData.length; i++){
 				if (inviterSchool.id === teamData[i].schoolId) {
@@ -122,9 +138,7 @@ const InviteView = React.createClass({
 
 		return (
 			<div className={inviteClasses}>
-
 				<div className="row">
-
 					<div className="col-md-6 eInvite_left">
 						<div className="row">
 							<div className="col-md-5 col-sm-5">
@@ -143,9 +157,6 @@ const InviteView = React.createClass({
 									<div className="eInvite_message">
 										{isArchive ? <span className={'m'+status}>{status}</span> : null}
 									</div>
-									<div className="eInvite_comments">
-										<InviteComments binding	= {binding.sub('inviteComments')} inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
-									</div>
 									<div className="eInvite_buttons">
 										{isInbox ? <Button href={`/#invites/${inviteId}/accept`} text={'Accept'}
 														   extraStyleClasses={'mHalfWidth mMarginRight'}/> : null }
@@ -157,6 +168,9 @@ const InviteView = React.createClass({
 													onClick={() => this.getInviteRequest(inviteId,'cancel')}
 													extraStyleClasses={'mCancel'}/> : null }
 									</div>
+									<div className="eInviteDiscussionLink">
+										<a onClick={this.toogleDiscussionLink}> { linkText } </a>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -164,6 +178,9 @@ const InviteView = React.createClass({
 					<div className="col-md-6">
 						<div className="eInvite_map">{venueArea}</div>
 					</div>
+				</div>
+				<div className="eInvite_comments">
+					<InviteComments binding	= {binding.sub('inviteComments')} inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
 				</div>
 			</div>
 

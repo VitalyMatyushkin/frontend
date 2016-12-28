@@ -50,7 +50,6 @@ const InviteComments = React.createClass({
 	componentWillMount:function(){
 		const	binding = this.getDefaultBinding();
 
-		binding.set('expandedComments', Immutable.fromJS(false));
 		this.setLoggedUser();
 		// upload all comments from server
 		this.setComments();
@@ -131,32 +130,27 @@ const InviteComments = React.createClass({
 		const binding = this.getDefaultBinding();
 		binding.set('replyTo', comments);
 	},
-	expandedComments: function() {
-		const binding = this.getDefaultBinding(),
-			expanded = binding.toJS('expandedComments');
 
-		binding.set('expandedComments', Immutable.fromJS(!expanded));
-	},
 	renderComments: function (comments, loggedUser, replyTo, commentText) {
 		let linkText, text;
 		const binding = this.getDefaultBinding(),
 			expanded = binding.toJS('expandedComments');
+		console.log(expanded);
 		if (expanded) {
 			text =
-				<div>
-					<div className="bInviteComments">
-						<InviteCommentsView onReply={this.onReply} comments={comments} />
-						<NewCommentForm commentText={commentText} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this.onSubmitCommentClick} />
+				<div className="row">
+					<div className="col-md-10 col-md-offset-2">
+						<div className="bInviteComments">
+							<InviteCommentsView onReply={this.onReply} comments={comments} />
+							<NewCommentForm commentText={commentText} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this.onSubmitCommentClick} />
+						</div>
 					</div>
 				</div>;
-			linkText = 'Hide comments';
 		} else {
 			text='';
-			linkText = 'Show comments';
 		}
 		return (
-			<div className="eDescription">
-				<a className="eDescription_link" onClick={this.expandedComments}> { linkText } </a>
+			<div>
 				{ text }
 			</div>
 		);

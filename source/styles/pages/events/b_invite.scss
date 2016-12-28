@@ -6,7 +6,7 @@
   font-size: 1rem;
   margin-bottom: 10px;
     .eEvent_commentBlog {
-      width: 250px;
+      width: 515px;
       textarea{
         resize: none;
         border: 1px solid #d7d7d7;
@@ -14,17 +14,31 @@
       }
     }
     .bEventButtons{
-      justify-content: center;
+      justify-content: flex-start;
       margin-bottom: 10px;
       padding-bottom: 10px;
-      border-bottom: 1px solid #d7d7d7;
     }
+  .eInvite_buttons{
+    padding-bottom: 14px;
+  }
+  .eInviteDiscussionLink{
+    a{
+      color: $lightBlue;
+      text-decoration: underline;
+      &:hover{
+        color: #000;
+      }
+    }
+  }
 }
 
+.bInviteComments{
+  margin-left: 50px;
+}
 
 .eInvite_left {
-  padding-bottom: 30px;
-  padding-top: 30px;
+  padding-top: 18px;
+  padding-bottom: 14px;
 }
 
 .eInvite_img {
