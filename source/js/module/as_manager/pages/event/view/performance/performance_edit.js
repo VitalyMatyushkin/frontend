@@ -2,6 +2,7 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		Morearty			= require('morearty'),
 
+		PencilButton		= require('../../../../../ui/pencil_button'),
 		InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		StarRatingBar		= require('./../../../../../ui/star_rating_bar/star_rating_bar'),
 		EventHelper			= require('module/helpers/eventHelper'),
@@ -415,11 +416,7 @@ const PerformanceEdit = React.createClass({
 		return (
 			<div className="bEventPerformance">
 				<div className="eEventPerformance_header">
-					<div className="eMatchReport_btn">
-						<div className="bButton mCircle" onClick={this.props.handleClickChangeMode}>
-							<i className="fa fa-pencil" aria-hidden="true"/>
-						</div>
-					</div>
+					<PencilButton handleClick={this.props.handleClickChangeMode}/>
 				</div>
 				<div className="eEventPerformance_body">
 					{teams}

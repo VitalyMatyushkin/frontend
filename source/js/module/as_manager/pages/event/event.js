@@ -245,11 +245,12 @@ const Event = React.createClass({
 				value		: 'report',
 				text		: 'Match Report',
 				isActive	: false
-			}, {
-				value		: 'tasks',
-				text		: 'Tasks',
-				isActive	: false
 			}
+			//, {
+			//	value		: 'tasks',
+			//	text		: 'Tasks',
+			//	isActive	: false
+			//}
 		);
 
 		if(tab) {
@@ -473,7 +474,7 @@ const Event = React.createClass({
 							</If>
 							<If condition={activeTab === 'tasks'} >
 								<div className="bEventBottomContainer">
-									<TasksWrapper	binding			= {self._getEventTeamsBinding()}
+									<TasksWrapper	binding			= {self.getEventTeamsBinding()}
 													activeSchoolId	= {this.props.activeSchoolId}
 									/>
 								</div>
