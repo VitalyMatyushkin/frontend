@@ -3,12 +3,11 @@
 .bAddPhotoButton {
   height: 50px;
   width: 120px;
+
   border: 1px solid $lightBlue;
-  cursor: pointer;
-  position: absolute;
-  top: -60px;
-  right: 10px;
   border-radius: 4px;
+
+  cursor: pointer;
   color: white;
   line-height: 50px;
   text-align: center;

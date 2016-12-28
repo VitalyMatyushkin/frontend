@@ -2,8 +2,8 @@
  * Created by Anatoly on 23.05.2016.
  */
 
-const 	React 		= require('react'),
-		classNames 	= require('classnames');
+const	React		= require('react'),
+		classNames	= require('classnames');
 /**
  * Tab item component
  * @param tabModel {object} = 	{
@@ -14,20 +14,24 @@ const 	React 		= require('react'),
  * */
 const TabItem = React.createClass({
 	propTypes: {
-		tabModel: 	React.PropTypes.object.isRequired,
-		onClick:	React.PropTypes.func.isRequired
+		tabModel	: React.PropTypes.object.isRequired,
+		onClick		: React.PropTypes.func.isRequired
+	},
+	getTabClassName: function() {
+		return classNames({
+			eTabs_tab	: true,
+			mActive		: this.props.tabModel.isActive
+		});
 	},
 	render:function(){
-		const 	self 	= this,
-				model 	= self.props.tabModel,
-				classes = classNames({
-					eTab:true,
-					mActive:model.isActive
-				});
+		const model = this.props.tabModel;
 
 		return (
-			<span className={classes} onClick={self.props.onClick.bind(null, model.value)}>{model.text}
-			</span>
+			<div	className	= {this.getTabClassName()}
+					onClick		= {this.props.onClick.bind(null, model.value)}
+			>
+				{model.text}
+			</div>
 		);
 	}
 });

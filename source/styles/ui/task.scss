@@ -1,0 +1,39 @@
+.bTasks {
+  border-bottom: solid 1px #d2d2d2;
+}
+
+.bTask {
+  display: flex;
+  flex-wrap: wrap;
+
+  min-height: 140px;
+  padding: 20px;
+
+  .eTask_column {
+    width: 960px;
+
+    &.mButtons {
+      width: 140px;
+
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  .eTask_playerNames {
+
+  }
+
+  .eTask_text {
+    margin-top: 10px;
+    padding-right: 10px;
+  }
+
+  .eTask_buttonsWrapper {
+    display: flex;
+    justify-content: space-between;
+    width: 110px;
+
+    margin-right: 25px;
+  }
+}

@@ -1,11 +1,12 @@
-const	React		= require('react'),
+const	React			= require('react'),
 
-		Score		= require('./../../../../../ui/score/score'),
+		Score			= require('./../../../../../ui/score/score'),
 
-		EventHelper	= require('module/helpers/eventHelper'),
-		TeamHelper	= require('module/ui/managers/helpers/team_helper'),
-		EventConst	= require('module/helpers/consts/events'),
-		SportConsts	= require('module/helpers/consts/sport');
+		PencilButton	= require('../../../../../ui/pencil_button'),
+		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		EventConst		= require('module/helpers/consts/events'),
+		SportConsts		= require('module/helpers/consts/sport');
 
 const DisciplineEdit = React.createClass({
 	propTypes: {
@@ -355,11 +356,7 @@ const DisciplineEdit = React.createClass({
 		return (
 			<div className="bEventPerformance">
 				<div className="eEventPerformance_header">
-					<div className="eMatchReport_btn">
-						<div className="bButton mCircle" onClick={this.props.handleClickChangeMode}>
-							<i className="fa fa-pencil" aria-hidden="true"/>
-						</div>
-					</div>
+					<PencilButton handleClick={this.props.handleClickChangeMode}/>
 				</div>
 				<div className="eEventPerformance_body">
 					{teams}

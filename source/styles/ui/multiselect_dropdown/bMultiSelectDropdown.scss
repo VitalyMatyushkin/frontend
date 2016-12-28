@@ -1,4 +1,4 @@
-@import "../!variables";
+@import "../../!variables";
 
 .bMultiSelectDropdown {
   position: relative;
@@ -8,12 +8,14 @@
   cursor: pointer;
 }
 
-input.eMultiSelectDropdown_input {
-  width: 400px;
-  height: 40px;
+.eMultiSelectDropdown_input {
+  display: flex;
+  flex-wrap: wrap;
+
+  min-height: 40px;
   border: 1px solid #d7d7d7;
   border-radius: 5px;
-  padding: 8px;
+  padding-top: 5px;
 
   &:hover {
     border: 1px solid #959595;
@@ -53,12 +55,15 @@ input.eMultiSelectDropdown_input {
   border-bottom-left-radius: 10px;
 
   &.mOpen {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
   }
 }
 
 .eMultiSelectDropdown_item {
   display: flex;
+  flex-basis: 50%;
 
   cursor: pointer;
   padding: 10px;
@@ -69,7 +74,7 @@ input.eMultiSelectDropdown_input {
 }
 
 .eMultiSelectDropdown_itemIcon {
-
+  color: #0178bf;
 }
 
 .eMultiSelectDropdown_itemText {
