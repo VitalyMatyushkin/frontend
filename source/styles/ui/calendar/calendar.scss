@@ -9,7 +9,6 @@ $active-day-background: #b2d7ec;
   flex-flow: column wrap;
   justify-content: center;
   align-self: flex-start;
-  padding: 0 40px 40px 40px;
   background: #fff;
 }
 
@@ -47,7 +46,7 @@ $active-day-background: #b2d7ec;
   flex-flow: column wrap;
 
   align-items: center;
-  margin-bottom: 20px;
+  margin: 0 -15px 20px;
 }
 
 .eMonth_row {
@@ -118,10 +117,15 @@ $active-day-background: #b2d7ec;
   .eMonth_container {
     width: 100%;
   }
+
   .eMonth_day {
     font-size: 1.5rem;
     margin: 1px;
     padding: 14px 0;
     flex: 0 0 (100%/7);
+  }
+
+  .eCalendar_eMonth {
+    margin: 0;
   }
 }
