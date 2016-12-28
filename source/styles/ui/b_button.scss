@@ -58,6 +58,9 @@
     }
   }
 
+   &.mDisable {
+     display: none;
+   }
 
   &.mCircle {
     width: 50px;
