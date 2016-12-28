@@ -25,20 +25,49 @@ const Performance = React.createClass({
 	getEvent: function() {
 		return this.getBinding('event').toJS();
 	},
-	submitIndividualPerformance: function(event) {
-		const activeSchoolId = this.props.activeSchoolId;
-
-		return Promise.all(
-			event.results.individualPerformance.map(
-				individualPerformanceData => window.Server.schoolEventIndividualPerformance.post(
-					{
-						schoolId:	activeSchoolId,
-						eventId:	event.id
-					},
-					individualPerformanceData
-				)
-			)
+	isNewPerformanceItem: function(performanceItem) {
+		return typeof performanceItem._id === "undefined";
+	},
+	isPerformanceItemChanged: function(performanceItem) {
+		return !this.isNewPerformanceItem(performanceItem) && performanceItem.isChanged;
+	},
+	createNewPerformanceItem: function(event, individualPerformanceItem) {
+		return window.Server.schoolEventIndividualPerformance.post(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			},
+			individualPerformanceItem
 		);
+	},
+	updatePerformanceItem: function (event, individualPerformanceItem) {
+		return window.Server.schoolEventIndividualPerformance.put(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			},
+			{
+				value: individualPerformanceItem.value
+			}
+		);
+	},
+	submitIndividualPerformance: function(event) {
+		let promises = [];
+
+		// create new discipline items
+		promises.push(
+			event.results.individualPerformance
+				.filter(individualPerformanceItem => this.isNewPerformanceItem(individualPerformanceItem))
+				.map(individualPerformanceItem => this.createNewPerformanceItem(event, individualPerformanceItem))
+		);
+		// update discipline items
+		promises.push(
+			event.results.individualPerformance
+				.filter(individualPerformanceItem => this.isPerformanceItemChanged(individualPerformanceItem))
+				.map(individualPerformanceItem => this.updatePerformanceItem(event, individualPerformanceItem))
+		);
+
+		return Promise.all(promises);
 	},
 	handleClickChangeMode: function() {
 		this.getDefaultBinding().set(

@@ -46,6 +46,7 @@ const PerformanceEdit = React.createClass({
 			event.results.individualPerformance.push(newPerformancePlayerData);
 		} else {
 			event.results.individualPerformance[pDataIndex].value = value;
+			event.results.individualPerformance[pDataIndex].isChanged = value;
 		}
 
 		self.getBinding('event').set(Immutable.fromJS(event));
