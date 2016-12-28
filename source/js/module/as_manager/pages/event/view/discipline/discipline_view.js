@@ -265,8 +265,10 @@ const DisciplineView = React.createClass({
 			);
 		});
 	},
-	getDisciplineItemValueByUserId: function (player) {
-		const foundDisciplineItemValue = this.props.disciplineValues.find(disciplineItemValue => disciplineItemValue.userId === player.userId);
+	getDisciplineItemValueByUserId: function (disciplineItemId, userId) {
+		const foundDisciplineItemValue = this.props.disciplineValues.find(
+			disciplineItemValue => disciplineItemValue.disciplineId === disciplineItemId && disciplineItemValue.userId === userId
+		);
 
 		if(typeof foundDisciplineItemValue !== "undefined") {
 			return foundDisciplineItemValue.value;
@@ -276,13 +278,14 @@ const DisciplineView = React.createClass({
 	},
 	renderPlayerDisciplineItems: function(player) {
 		return this.props.disciplineItems.map(disciplineItem => {
+			console.log(disciplineItem);
 			return (
 				<div className="ePlayer_disciplineItem">
 					<div className="ePlayer_disciplineItemName">
 						{disciplineItem.namePlural}
 					</div>
 					<div className="ePlayer_disciplineItemValueContainer">
-						{this.getDisciplineItemValueByUserId(player)}
+						{this.getDisciplineItemValueByUserId(disciplineItem._id, player.userId)}
 					</div>
 				</div>
 			);
@@ -312,18 +315,18 @@ const DisciplineView = React.createClass({
 		);
 	},
 	render: function() {
-		let result = null;
+		let teams = null;
 
 		switch (true) {
 			case TeamHelper.isInternalEventForIndividualSport(this.props.event):
-				result = (
+				teams = (
 					<div className="bEventPerformance_teams mIndivid">
 						{this.renderIndividuals()}
 					</div>
 				);
 				break;
 			default:
-				result = (
+				teams = (
 					<div className="bEventPerformance_teams">
 						<div className="eEventPerformance_col">
 							{this.renderPlayersForLeftSide()}
@@ -336,7 +339,20 @@ const DisciplineView = React.createClass({
 				break;
 		}
 
-		return result;
+		return (
+			<div className="bEventPerformance">
+				<div className="eEventPerformance_header">
+					<div className="eMatchReport_btn">
+						<div className="bButton mCircle" onClick={this.props.handleClickChangeMode}>
+							<i className="fa fa-pencil" aria-hidden="true"/>
+						</div>
+					</div>
+				</div>
+				<div className="eEventPerformance_body">
+					{teams}
+				</div>
+			</div>
+		);
 	}
 });
 

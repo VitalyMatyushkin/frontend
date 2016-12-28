@@ -46,6 +46,9 @@ const Event = React.createClass({
 			performanceTab: {
 				isEditMode: false
 			},
+			disciplineTab: {
+				isEditMode: false
+			},
 			individualScoreAvailable: [
 				{
 					value: true
@@ -285,6 +288,15 @@ const Event = React.createClass({
 			event:						binding.sub('model')
 		};
 	},
+	getDisciplineTabBinding: function() {
+		const binding = this.getDefaultBinding();
+
+		return {
+			default:					binding.sub('disciplineTab'),
+			eventTeams:					binding.sub('eventTeams'),
+			event:						binding.sub('model')
+		};
+	},
 	getEventTeamsBinding: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -395,7 +407,7 @@ const Event = React.createClass({
 							</If>
 							<If condition={activeTab === 'discipline'} >
 								<div className="bEventBottomContainer">
-									<DisciplineWrapper	binding			= {self.getEventTeamsBinding()}
+									<DisciplineWrapper	binding			= {self.getDisciplineTabBinding()}
 														activeSchoolId	= {this.props.activeSchoolId}
 									/>
 								</div>
