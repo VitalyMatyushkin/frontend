@@ -207,23 +207,23 @@ const	TeamChooser	= React.createClass({
 	_renderRevertButton: function() {
 		const	self					= this,
 				classNameRevertButton	= classNames({
-					eTeamChooser_button:	true,
-					mDeselect:				true,
+					bButton:				true,
+					mCancel:				true,
 					mDisable:				!self._isTeamSelected()
 				});
 
 		return (
-			<div	className={classNameRevertButton}
+			<button	className={classNameRevertButton}
 					onClick={self._onTeamDeselectButtonClick}
 			>
 				Deselect Team
-			</div>
+			</button>
 		);
 	},
 	_renderTeamChooserButton: function() {
 		const	self						= this,
 				classNameTeamChooserButton	= classNames({
-					eTeamChooser_button:	true,
+					bButton:				true,
 					mActive:				self._isOpen()
 				});
 
