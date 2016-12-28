@@ -16,14 +16,25 @@
   position: relative;
 }
 .bNewsEdit .eForm_blazonPreview{
+  position: relative;
+
   width: 120px;
   height: 80px;
   overflow: hidden;
 }
-.bNewsEdit .eForm_blazonPreview img{
-  width: 120px;
-  height: 80px;
+
+.bNewsEdit .eForm_blazonPreview {
+
+  img {
+    width: 120px;
+    height: 80px;
+  }
+  .eLoader_gif img {
+    margin: 0;
+    height: auto;
+  }
 }
+
 .bNewsEdit .bButton {
   max-width: 120px;
 }
