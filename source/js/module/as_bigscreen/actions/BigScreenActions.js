@@ -138,7 +138,7 @@ function getNextSevenDaysEvents(activeSchoolId) {
 
 function setHighlightEvent(activeSchoolId, binding){
 	binding.set('highlightEvent.isSync', false);
-	const eventsArray = binding.toJS('closestFiveEvents.events'),
+	const eventsArray = binding.toJS('lastFiveEvents.events'),
 		highlightEventId = getRandomEventId(eventsArray);
 
 	let albumId;
@@ -245,7 +245,7 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 
 	return getLastFiveFinishedEvents(activeSchoolId).then(eventsData => {
 		eventsBinding.set('lastFiveEvents.events',	Immutable.fromJS(eventsData));
-
+		setHighlightEvent(activeSchoolId,eventsBinding);
 		const eventsId = eventsData.map(event => event.id);
 
 		return Promise.all(eventsId.map(eventId => {
@@ -277,7 +277,6 @@ function setClosestFiveEvents(activeSchoolId, eventsBinding) {
 	return getClosestFiveEvents(activeSchoolId).then(eventsData => {
 		eventsBinding.set('closestFiveEvents.events',	Immutable.fromJS(eventsData));
 		eventsBinding.set('closestFiveEvents.isSync',	true);
-		setHighlightEvent(activeSchoolId,eventsBinding);
 	});
 };
 
