@@ -28,19 +28,35 @@ const AddPhotoButton = React.createClass({
 	handleChange: function(eventDescriptor) {
 		this.props.handleChange(eventDescriptor.target.files[0]);
 	},
+	getButtonText: function() {
+		if(this.props.isLoading) {
+			return 'Uploading...';
+		} else {
+			return 'Add photo';
+		}
+	},
+	renderFileInput: function() {
+		if(this.props.isLoading) {
+			return null;
+		} else {
+			return (
+				<input	className	= 'eAddPhotoButton_fileInput'
+						type		= 'file'
+						onChange	= { this.handleChange }
+						ref			= { ref => this.fileInputRef = ref }
+				/>
+			);
+		}
+	},
 	render: function() {
-		const isLoading = this.props.isLoading,
-			btnText = isLoading ? 'Uploading...' : 'Add photo',
-			btnComponent = isLoading ? null : <input	className	= 'eAddPhotoButton_fileInput'
-															type		= 'file'
-															onChange	= { this.handleChange }
-															ref			= { ref => this.fileInputRef = ref }
-													/>;
+
 
 		return (
-			<div className = 'bAddPhotoButton' onClick = { this.handleClick } >
-				{btnText}
-				{btnComponent}
+			<div	className	= 'bAddPhotoButton'
+					onClick		= { this.handleClick }
+			>
+				{this.getButtonText()}
+				{this.renderFileInput()}
 			</div>
 		);
 	}

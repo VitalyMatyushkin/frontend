@@ -5,7 +5,6 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
 
-		If				= require('../../../../ui/if/if'),
 		CommentBox		= require('./event_blogBox'),
 		NewCommentForm	= require('module/ui/comments/comments');
 
@@ -68,12 +67,17 @@ const Blog = React.createClass({
 	 * If count don't equal old count, then call function with get comments
 	 */
 	componentDidMount: function() {
-		const binding = this.getDefaultBinding();
+		this._tickerForNewComments();
+	},
+	_tickerForNewComments:function(){
+		const binding	= this.getDefaultBinding();
 
-		this.intervalId = setInterval( () => {
-			window.Server.schoolEventCommentsCount.get({
-				schoolId:	this.props.activeSchoolId,
-				eventId:	this.props.eventId}
+		this.intervalId = setInterval(() => {
+			const self = this;
+
+				window.Server.schoolEventCommentsCount.get({
+					schoolId:   self.props.activeSchoolId,
+					eventId:    self.props.eventId}
 			)
 			.then(res => {
 				const oldCount = binding.get('blogCount');

@@ -1,20 +1,22 @@
-const	React		= require('react'),
+const	React			= require('react'),
 
-		Score		= require('./../../../../../ui/score/score'),
+		Score			= require('./../../../../../ui/score/score'),
 
-		EventHelper	= require('module/helpers/eventHelper'),
-		TeamHelper	= require('module/ui/managers/helpers/team_helper'),
-		EventConst	= require('module/helpers/consts/events'),
-		SportConsts	= require('module/helpers/consts/sport');
+		PencilButton	= require('../../../../../ui/pencil_button'),
+		EventHelper		= require('module/helpers/eventHelper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		EventConst		= require('module/helpers/consts/events'),
+		SportConsts		= require('module/helpers/consts/sport');
 
 const DisciplineEdit = React.createClass({
 	propTypes: {
-		event				: React.PropTypes.object.isRequired,
-		players				: React.PropTypes.array.isRequired,
-		disciplineItems		: React.PropTypes.array.isRequired,
-		disciplineValues	: React.PropTypes.array.isRequired,
-		activeSchoolId		: React.PropTypes.string.isRequired,
-		handleChange		: React.PropTypes.func.isRequired
+		event					: React.PropTypes.object.isRequired,
+		players					: React.PropTypes.array.isRequired,
+		disciplineItems			: React.PropTypes.array.isRequired,
+		disciplineValues		: React.PropTypes.array.isRequired,
+		activeSchoolId			: React.PropTypes.string.isRequired,
+		handleChange			: React.PropTypes.func.isRequired,
+		handleClickChangeMode	: React.PropTypes.func.isRequired
 	},
 	// TODO: All these render methods are copypaste from event_teams_view!
 	renderInternalEventForOneOnOneEvent: function(order) {
@@ -271,8 +273,10 @@ const DisciplineEdit = React.createClass({
 			);
 		});
 	},
-	getDisciplineItemValueByUserId: function (userId) {
-		const foundDisciplineItemValue = this.props.disciplineValues.find(disciplineItemValue => disciplineItemValue.userId === userId);
+	getDisciplineItemValueByUserId: function (disciplineItemId, userId) {
+		const foundDisciplineItemValue = this.props.disciplineValues.find(
+			disciplineItemValue => disciplineItemValue.disciplineId === disciplineItemId && disciplineItemValue.userId === userId
+		);
 
 		if(typeof foundDisciplineItemValue !== "undefined") {
 			return foundDisciplineItemValue.value;
@@ -291,7 +295,7 @@ const DisciplineEdit = React.createClass({
 					</div>
 					<div className="ePlayer_disciplineItemValueContainer">
 						<Score	isChangeMode	= {true}
-								plainPoints		= {this.getDisciplineItemValueByUserId(player.userId)}
+								plainPoints		= {this.getDisciplineItemValueByUserId(disciplineItem._id, player.userId)}
 								pointsStep		= {1}
 								pointsType		= {SportConsts.SPORT_POINTS_TYPE.PLAIN}
 								onChange		= {this.props.handleChange.bind(null, player.userId, player.permissionId, teamId, disciplineItem._id)}
@@ -325,18 +329,18 @@ const DisciplineEdit = React.createClass({
 		);
 	},
 	render: function() {
-		let result = null;
+		let teams = null;
 
 		switch (true) {
 			case TeamHelper.isInternalEventForIndividualSport(this.props.event):
-				result = (
+				teams = (
 					<div className="bEventPerformance_teams mIndivid">
 						{this.renderIndividuals()}
 					</div>
 				);
 				break;
 			default:
-				result = (
+				teams = (
 					<div className="bEventPerformance_teams">
 						<div className="eEventPerformance_col">
 							{this.renderPlayersForLeftSide()}
@@ -349,7 +353,16 @@ const DisciplineEdit = React.createClass({
 				break;
 		}
 
-		return result;
+		return (
+			<div className="bEventPerformance">
+				<div className="eEventPerformance_header">
+					<PencilButton handleClick={this.props.handleClickChangeMode}/>
+				</div>
+				<div className="eEventPerformance_body">
+					{teams}
+				</div>
+			</div>
+		);
 	}
 });
 

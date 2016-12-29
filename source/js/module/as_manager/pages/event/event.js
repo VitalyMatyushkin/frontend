@@ -9,8 +9,9 @@ const	React						= require('react'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
 		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
 		EventTeams					= require('./view/teams/event_teams'),
-		EventPerformance			= require('./view/teams/event_teams_performance'),
+		Performance			= require('./view/performance/performance'),
 		DisciplineWrapper			= require('./view/discipline/discipline_wrapper'),
+		TasksWrapper				= require('./view/tasks/tasks_wrapper'),
 		EventGallery				= require('./new_gallery/event_gallery'),
 		ManagerWrapper				= require('./view/manager_wrapper'),
 		Comments					= require('./view/event_blog'),
@@ -19,6 +20,9 @@ const	React						= require('react'),
 		DetailsWrapper				= require('./view/details/details_wrapper'),
 		MatchReport					= require('./view/match-report/report'),
 		Map							= require('../../../ui/map/map-event-venue'),
+
+		GalleryActions				= require('./new_gallery/event_gallery_actions'),
+		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
 
 		RoleHelper					= require('./../../../helpers/role_helper');
 
@@ -43,6 +47,12 @@ const Event = React.createClass({
 			showingComment: false,
 			activeTab: 'teams',
 			eventTeams: {},
+			performanceTab: {
+				isEditMode: false
+			},
+			disciplineTab: {
+				isEditMode: false
+			},
 			individualScoreAvailable: [
 				{
 					value: true
@@ -236,6 +246,11 @@ const Event = React.createClass({
 				text		: 'Match Report',
 				isActive	: false
 			}
+			//, {
+			//	value		: 'tasks',
+			//	text		: 'Tasks',
+			//	isActive	: false
+			//}
 		);
 
 		if(tab) {
@@ -273,7 +288,25 @@ const Event = React.createClass({
 
 		window.location.hash = hash + '?tab=' + value;
 	},
-	_getEventTeamsBinding: function() {
+	getPerformanceTabBinding: function() {
+		const binding	= this.getDefaultBinding();
+
+		return {
+			default:					binding.sub('performanceTab'),
+			eventTeams:					binding.sub('eventTeams'),
+			event:						binding.sub('model')
+		};
+	},
+	getDisciplineTabBinding: function() {
+		const binding = this.getDefaultBinding();
+
+		return {
+			default:					binding.sub('disciplineTab'),
+			eventTeams:					binding.sub('eventTeams'),
+			event:						binding.sub('model')
+		};
+	},
+	getEventTeamsBinding: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -282,7 +315,7 @@ const Event = React.createClass({
 			activeTab:					binding.sub('activeTab'),
 			event:						binding.sub('model'),
 			mode:						binding.sub('mode'),
-			individualScoreAvailable: 	binding.sub('individualScoreAvailable')
+			individualScoreAvailable:	binding.sub('individualScoreAvailable')
 		};
 	},
 	isShowTrobber: function() {
@@ -317,13 +350,63 @@ const Event = React.createClass({
 
 		return params && params.bundleName === 'teamsData';
 	},
+	/**
+	 * Function returns add photo button for gallery tab.
+	 */
+	getAddPhotoButton: function() {
+		const binding = this.getDefaultBinding();
+
+		const	userRole			= RoleHelper.getLoggedInUserRole(this),
+				galleryBinding		= binding.sub('gallery'),
+				activeSchool		= this.props.activeSchoolId,
+				eventId				= this.eventId;
+
+		const isUserCanUploadPhotos	= galleryBinding.toJS('isUserCanUploadPhotos');
+
+		const isLoading				= !galleryBinding.toJS('isSync');
+
+		return (
+			<AddPhotoButton	handleChange			= { file => GalleryActions.addPhotoToEvent(userRole, galleryBinding, activeSchool, eventId, file) }
+							isUserCanUploadPhotos	= { isUserCanUploadPhotos }
+							isLoading				= { isLoading }
+			/>
+		);
+	},
+	/**
+	 * Function return add task button for tasks tab.
+	 * @returns {undefined}
+	 */
+	getAddTaskButton: function() {
+		return undefined;
+	},
+	/**
+	 * Function returns the active tab.
+	 * @returns {*}
+	 */
+	getActiveTab: function() {
+		return this.getDefaultBinding().toJS('activeTab');
+	},
+	/**
+	 * Function returns custom button for tabs.
+	 * It depends on the current tab.
+	 */
+	getCustomButtonForTabs: function() {
+		switch (this.getActiveTab()) {
+			case "gallery":
+				return this.getAddPhotoButton();
+			case "tasks":
+				return this.getAddTaskButton();
+			default:
+				return null;
+		}
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
 
 		const	event			= binding.toJS('model'),
 				showingComment	= binding.get('showingComment'),
-				activeTab		= binding.get('activeTab'),
+				activeTab		= this.getActiveTab(),
 				mode			= binding.toJS('mode'),
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
@@ -357,7 +440,7 @@ const Event = React.createClass({
 															  isVisible={isaRightShow}/>
 								</div>
 							</div>
-							<EventTeams	binding			= {self._getEventTeamsBinding()}
+							<EventTeams	binding			= {self.getEventTeamsBinding()}
 										activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<div className="bEventMap">
@@ -372,17 +455,27 @@ const Event = React.createClass({
 							<div className="bEventMiddleSideContainer">
 								<Tabs	tabListModel	= {self.tabListModel}
 										onClick			= {self.changeActiveTab}
+										customButton	= {this.getCustomButtonForTabs()}
 								/>
 							</div>
 							<If condition={activeTab === 'performance'} >
 								<div className="bEventBottomContainer">
-									<EventPerformance binding={self._getEventTeamsBinding()}/>
+									<Performance	binding			= {self.getPerformanceTabBinding()}
+													activeSchoolId	= {this.props.activeSchoolId}
+									/>
 								</div>
 							</If>
 							<If condition={activeTab === 'discipline'} >
 								<div className="bEventBottomContainer">
-									<DisciplineWrapper	binding			= {self._getEventTeamsBinding()}
+									<DisciplineWrapper	binding			= {self.getDisciplineTabBinding()}
 														activeSchoolId	= {this.props.activeSchoolId}
+									/>
+								</div>
+							</If>
+							<If condition={activeTab === 'tasks'} >
+								<div className="bEventBottomContainer">
+									<TasksWrapper	binding			= {self.getEventTeamsBinding()}
+													activeSchoolId	= {this.props.activeSchoolId}
 									/>
 								</div>
 							</If>

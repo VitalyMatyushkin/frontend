@@ -5,6 +5,7 @@ const StarRatingBar = React.createClass({
 	propTypes: {
 		// max count of rating stars
 		starCount:			React.PropTypes.number.isRequired,
+		isEditMode:			React.PropTypes.bool.isRequired,
 		// count of rating stars
 		value:				React.PropTypes.number,
 		// handle changes of star rating value
@@ -28,10 +29,11 @@ const StarRatingBar = React.createClass({
 		for(let i = 1; i <= self.props.starCount; i++) {
 			stars.push(
 				<RatingStar
-					key={`${i}_rating_star`}
-					isChecked={i <= self.props.value}
-					value={i}
-					handleClick={self.handleClick}
+					key			= {`${i}_rating_star`}
+					isEditMode	= {self.props.isEditMode}
+					isChecked	= {i <= self.props.value}
+					value		= {i}
+					handleClick	= {self.handleClick}
 				/>
 			);
 		}

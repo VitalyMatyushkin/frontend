@@ -9,23 +9,23 @@ const DisciplineWrapper = React.createClass({
 	propTypes: {
 		activeSchoolId : React.PropTypes.string.isRequired
 	},
-	/**
-	 * Function return view mode for discipline component.
-	 * View mode - player list and they discipline values.
-	 * Edit mode - player list and they discipline values and possibility to change it.
-	 */
 	isEditMode: function() {
-		// Edit mode only for closing mode.
-		return this.getBinding('mode').toJS() === "closing";
+		return this.getDefaultBinding().toJS('isEditMode');
 	},
 	isDataSync: function() {
-		return this.getDefaultBinding().toJS('isSync');
+		return this.getBinding('eventTeams').toJS('isSync');
+	},
+	isNewDisciplineItem: function(disciplineItem) {
+		return typeof disciplineItem._id === "undefined";
+	},
+	isDisciplineItemChanged: function(disciplineItem) {
+		return !this.isNewDisciplineItem(disciplineItem) && disciplineItem.isChanged;
 	},
 	getEvent: function() {
 		return this.getBinding('event').toJS();
 	},
 	getPlayers: function() {
-		return this.getDefaultBinding().toJS('viewPlayers.players')
+		return this.getBinding('eventTeams').toJS('viewPlayers.players')
 	},
 	disciplineItems: function() {
 		const event = this.getEvent();
@@ -48,6 +48,44 @@ const DisciplineWrapper = React.createClass({
 			return [];
 		}
 	},
+	createNewDisciplineItem: function(event, individualDisciplineItem) {
+		window.Server.schoolEventIndividualDiscipline.post(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			},
+			individualDisciplineItem
+		)
+	},
+	updateDisciplineItem: function(event, individualDisciplineItem) {
+		window.Server.schoolEventIndividualDiscipline.put(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			},
+			{
+				value: individualDisciplineItem.value
+			}
+		)
+	},
+	submitIndividualDiscipline: function(event) {
+		let promises = [];
+
+		// create new discipline items
+		promises.push(
+			event.results.individualDiscipline
+				.filter(individualDisciplineItem => this.isNewDisciplineItem(individualDisciplineItem))
+				.map(individualDisciplineItem => this.createNewDisciplineItem(event, individualDisciplineItem))
+		);
+		// update discipline items
+		promises.push(
+			event.results.individualDiscipline
+				.filter(individualDisciplineItem => this.isDisciplineItemChanged(individualDisciplineItem))
+				.map(individualDisciplineItem => this.updateDisciplineItem(event, individualDisciplineItem))
+		);
+
+		return Promise.all(promises);
+	},
 	handleChange: function(userId, permissionId, teamId, disciplineId, valueObject) {
 		const disciplineValues = this.disciplineValues();
 
@@ -65,22 +103,34 @@ const DisciplineWrapper = React.createClass({
 			});
 		} else {
 			disciplineValues[foundDisciplineValueIndex].value = valueObject.value;
+			disciplineValues[foundDisciplineValueIndex].isChanged = true;
 		}
 
 		this.getBinding('event').set('results.individualDiscipline', Immutable.fromJS(disciplineValues));
+	},
+	handleClickChangeMode: function() {
+		this.getDefaultBinding().set(
+			'isEditMode',
+			!this.isEditMode()
+		);
+		// if user change tab to view mode
+		if(!this.isEditMode()) {
+			this.submitIndividualDiscipline(this.getEvent())
+		}
 	},
 	render: function() {
 		let body = null;
 
 		if(this.isDataSync()) {
 			body = (
-				<Discipline		event				= {this.getEvent()}
-								players				= {this.getPlayers()}
-								disciplineItems		= {this.disciplineItems()}
-								disciplineValues	= {this.disciplineValues()}
-								isEditMode			= {this.isEditMode()}
-								activeSchoolId		= {this.props.activeSchoolId}
-								handleChange		= {this.handleChange}
+				<Discipline	event					= {this.getEvent()}
+							players					= {this.getPlayers()}
+							disciplineItems			= {this.disciplineItems()}
+							disciplineValues		= {this.disciplineValues()}
+							isEditMode				= {this.isEditMode()}
+							activeSchoolId			= {this.props.activeSchoolId}
+							handleChange			= {this.handleChange}
+							handleClickChangeMode	= {this.handleClickChangeMode}
 				/>
 			);
 		}

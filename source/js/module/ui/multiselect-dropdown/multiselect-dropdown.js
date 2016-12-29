@@ -2,7 +2,9 @@ const	React						= require('react'),
 
 		classNames					= require('classnames'),
 
-		MultiselectDropdownStyles	= require('../../../../styles/ui/bMultiSelectDropdown.scss');
+		InputItem					= require('./input_item'),
+		AddButton					= require('./add_button'),
+		MultiselectDropdownStyles	= require('../../../../styles/ui/multiselect_dropdown/bMultiSelectDropdown.scss');
 
 const MultiselectDropdown = React.createClass({
 
@@ -35,6 +37,9 @@ const MultiselectDropdown = React.createClass({
 	getItemView: function(item) {
 		return item.value;
 	},
+	handleClickRemoveItem: function(item) {
+		this.props.handleClickItem(item);
+	},
 	getInputView: function() {
 		return this.props.items
 			.filter(i => {
@@ -43,16 +48,16 @@ const MultiselectDropdown = React.createClass({
 
 				return typeof foundItem !== 'undefined';
 			})
-			.reduce((prevValue, currentValue, index) => {
-				//if accumulator string is empty
-				if(index === 0) {
-					return `${currentValue.value}`;
-				} else {
-					return `${prevValue}, ${currentValue.value}`;
-				}
-			}, '');
+			.map(item => this.renderItem(item));
 	},
-
+	renderItem: function(item) {
+		return (
+			<InputItem	key						= {item.id}
+						text					= {item.value}
+						handleClickRemoveItem	= {this.handleClickRemoveItem.bind(null, item)}
+			/>
+		);
+	},
 	renderItems: function() {
 		const cssStyle = classNames({
 			eMultiSelectDropdown_itemList	: true,
@@ -76,8 +81,8 @@ const MultiselectDropdown = React.createClass({
 		const isItemSelected = this.isItemSelected(item);
 
 		const circleClassName = classNames({
-			"fa fa-circle"		: isItemSelected,
-			"fa fa-circle-o"	: !isItemSelected
+			"fa fa-check-circle"	: isItemSelected,
+			"fa fa-circle-o"		: !isItemSelected
 		});
 
 		return (
@@ -114,7 +119,10 @@ const MultiselectDropdown = React.createClass({
 	handleMouseDown: function() {
 		this.isMouseDown = true;
 	},
-
+	handleClickAddButton: function(eventDescritor) {
+		this.setState({isOpen: !this.state.isOpen});
+		eventDescritor.stopPropagation();
+	},
 	render: function() {
 		const inputClassName = classNames({
 			eMultiSelectDropdown_input	: true,
@@ -127,12 +135,10 @@ const MultiselectDropdown = React.createClass({
 					onMouseDown	= {this.handleMouseDown}
 					onMouseUp	= {this.handleMouseUp}
 			>
-				<input	className	= {inputClassName}
-						type		= 'text'
-						onClick		= {this.handleClickInput}
-						value		= {this.getInputView()}
-						readOnly
-				/>
+				<div className={inputClassName}>
+					<AddButton handleClick={this.handleClickAddButton}/>
+					{this.getInputView()}
+				</div>
 				{ this.renderItems() }
 			</div>
 		)
