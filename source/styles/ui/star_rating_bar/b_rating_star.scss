@@ -3,11 +3,13 @@
   width: 20px;
   height: 20px;
   margin: 0 5px;
-  background: url('/images/empty_star.png') no-repeat;
   background-size: cover;
 
-  &.mChecked {
-    background: url('/images/star.png') no-repeat;
-    background-size: cover;
+  &.mBlue {
+    color: #007abf;
+  }
+
+  &.mGray {
+    color: #8c8c8c;
   }
 }

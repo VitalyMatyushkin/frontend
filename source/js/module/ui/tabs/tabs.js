@@ -2,8 +2,8 @@
  * Created by Anatoly on 23.05.2016.
  */
 
-const 	React       = require('react'),
-		TabItem 	= require('module/ui/tabs/tab_item');
+const	React		= require('react'),
+		TabItem		= require('./tab_item');
 
 /**
  * Tabs component
@@ -22,8 +22,9 @@ const 	React       = require('react'),
  * */
 const Tabs = React.createClass({
 	propTypes: {
-		tabListModel: 	React.PropTypes.array.isRequired,
-		onClick:		React.PropTypes.func.isRequired
+		tabListModel	: React.PropTypes.array.isRequired,
+		onClick			: React.PropTypes.func.isRequired,
+		customButton	: React.PropTypes.object
 	},
 	getInitialState:function(){
 		return {
@@ -57,17 +58,34 @@ const Tabs = React.createClass({
 			self.props.onClick && self.props.onClick(value);
 		}
 	},
-	render:function(){
-		const 	self 	= this,
-				model 	= self.props.tabListModel,
-				tabs	= model && model.map(item => {
-						return <TabItem key={item.value} tabModel={item} onClick={self.onClickTab} />
-					});
+	renderTabs: function() {
+		const model = this.props.tabListModel;
 
+		if(typeof model !== "undefined") {
+			return model.map(item => <TabItem key={item.value} tabModel={item} onClick={this.onClickTab}/>);
+		} else {
+			return null;
+		}
+	},
+	renderCustomButton: function() {
+		const customButton = this.props.customButton;
+
+		if(typeof customButton !== "undefined") {
+			return (
+				<div className="eTabs_customButtonContainer">
+					{customButton}
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
+	render:function(){
 		return (
-			<span className="bTabs">
-				{tabs}
-			</span>
+			<div className="bTabs">
+				{this.renderTabs()}
+				{this.renderCustomButton()}
+			</div>
 		);
 	}
 });

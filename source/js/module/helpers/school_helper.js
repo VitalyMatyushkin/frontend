@@ -63,7 +63,7 @@ const SchoolHelper = {
 
 		if(subscriptionPlan === schoolConsts.SCHOOL_SUBSCRIPTION_PLAN.LITE){
 			window.simpleAlert(
-				'For your subscription level, this action is not available. For adding students go to the full version.',
+				'This feature is not available in your current subscription plan. To be able to manage students you need to upgrade your subscription.',
 				'Ok',
 				() => {}
 			)

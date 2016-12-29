@@ -250,35 +250,6 @@
   color: $blueColor;
 }
 
-.bEvent .bTabs{
-  margin: 20px 0 0;
-  display: block;
-  background-color: $blueColor;
-  border: none;
-  padding: 0;
-
-  .eTab{
-    width: 150px;
-    cursor: pointer;
-    display: inline-block;
-    line-height: 70px;
-    text-align: center;
-    border-right: 1px solid $lightBlue;
-    color: white;
-    margin: 0;
-
-    &.mActive{
-      background-color: $darkBlue;
-      text-decoration: underline;
-      border-bottom: none;
-    }
-    &:hover{
-      text-decoration: underline;
-      border-bottom: none;
-    }
-  }
-}
-
 .mIndividualScoreAvailable{
   &.eForm_field{
     @include make-md-column(5);

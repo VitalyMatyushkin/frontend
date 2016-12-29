@@ -1,7 +1,23 @@
 @import "../../!variables";
 @import "../../bootstrap-custom";
 
-.bEventPerformance_teams {
+.bEventPerformance {
+
+}
+
+.eEventPerformance_header {
+  display: flex;
+  justify-content: flex-end;
+
+  padding-top: 15px;
+  padding-right: 15px;
+}
+
+.eEventPerformance_body {
+
+}
+
+.eEventPerformance_teams {
  @include make-row();
   &.mIndivid{
     .mPerformance {

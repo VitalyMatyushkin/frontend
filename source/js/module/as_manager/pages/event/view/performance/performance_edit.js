@@ -1,30 +1,71 @@
-const	React		= require('react'),
+const	React				= require('react'),
+		Immutable			= require('immutable'),
+		Morearty			= require('morearty'),
 
-		PencilButton	= require('../../../../../ui/pencil_button'),
-		EventHelper		= require('module/helpers/eventHelper'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-		EventConst		= require('module/helpers/consts/events');
+		PencilButton		= require('../../../../../ui/pencil_button'),
+		InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		StarRatingBar		= require('./../../../../../ui/star_rating_bar/star_rating_bar'),
+		EventHelper			= require('module/helpers/eventHelper'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		EventConst			= require('module/helpers/consts/events'),
 
-const DisciplineView = React.createClass({
+		PerformanceStyle	= require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
+
+const PerformanceEdit = React.createClass({
+	mixins: [Morearty.Mixin, InvitesMixin],
 	propTypes: {
-		event					: React.PropTypes.object.isRequired,
-		players					: React.PropTypes.array.isRequired,
-		disciplineItems			: React.PropTypes.array.isRequired,
-		disciplineValues		: React.PropTypes.array.isRequired,
-		activeSchoolId			: React.PropTypes.string.isRequired,
-		handleClickChangeMode	: React.PropTypes.func.isRequired
+		handleClickChangeMode: React.PropTypes.func.isRequired
+	},
+	handleValueChange: function(player, permissionId, performanceId, value) {
+		const self = this;
+
+		const	event		= self.getBinding('event').toJS(),
+				pDataIndex	= event.results.individualPerformance.findIndex(pData =>
+					pData.userId === player.userId &&
+					pData.permissionId === permissionId &&
+					pData.performanceId === performanceId
+				);
+
+		if(pDataIndex === -1) {
+			const newPerformancePlayerData = {
+				userId:			player.userId,
+				permissionId:	permissionId,
+				performanceId:	performanceId,
+				value:			value
+			};
+
+			if(TeamHelper.isTeamSport(event)) {
+				event.teamsData.forEach((t) => {
+					if(!newPerformancePlayerData.teamId) {
+						const foundPlayer = t.players.find(p => p.id === player.id);
+
+						foundPlayer && (newPerformancePlayerData.teamId = t.id);
+					}
+				})
+			}
+
+			event.results.individualPerformance.push(newPerformancePlayerData);
+		} else {
+			event.results.individualPerformance[pDataIndex].value = value;
+			event.results.individualPerformance[pDataIndex].isChanged = value;
+		}
+
+		self.getBinding('event').set(Immutable.fromJS(event));
 	},
 	// TODO: All these render methods are copypaste from event_teams_view!
 	renderInternalEventForOneOnOneEvent: function(order) {
-		const	player	= this.props.players[order],
-				players	= player ? [ player ] : [];
+		const self = this;
+
+		const	event	= self.getBinding('event').toJS(),
+			player	= self.getDefaultBinding().toJS(`players.${order}`),
+			players	= player ? [ player ] : [];
 
 		if(players.length === 0) {
-			return this.renderPlayerTeamLater();
+			return self.renderPlayerTeamLater();
 		} else {
 			return (
 				<div className="bEventPerformance_team">
-					{this.renderPlayers(players)}
+					{self.renderPlayers(players)}
 				</div>
 			);
 		}
@@ -39,14 +80,17 @@ const DisciplineView = React.createClass({
 		);
 	},
 	renderIndividualPlayersBySchoolId: function(schoolId) {
-		const players	= this.props.players.filter(p => p.schoolId === schoolId);
+		const self = this;
+
+		const	event	= self.getBinding('event').toJS(),
+				players	= self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 		if(players.length === 0) {
-			return this.renderSelectTeamLater();
+			return self.renderSelectTeamLater();
 		} else {
 			return (
 				<div className="bEventPerformance_team">
-					{this.renderPlayers(players)}
+					{self.renderPlayers(players)}
 				</div>
 			);
 		}
@@ -79,23 +123,28 @@ const DisciplineView = React.createClass({
 		);
 	},
 	renderIndividualPlayersByHouseId: function(houseId) {
-		const players = this.props.players.filter(p => p.houseId === houseId);
+		const self = this;
+
+		const	event	= self.getBinding('event').toJS(),
+			players	= self.getDefaultBinding().toJS('players').filter(p => p.houseId === houseId);
 
 		if(players.length === 0) {
-			return this.renderSelectTeamLater();
+			return self.renderSelectTeamLater();
 		} else {
 			return (
 				<div className="bEventPerformance_team">
-					{this.renderPlayers(players)}
+					{self.renderPlayers(players)}
 				</div>
 			);
 		}
 	},
 	renderPlayersForLeftSide: function() {
-		const	event			= this.props.event,
+		const self = this;
+
+		const	event			= self.getBinding('event').toJS(),
 				eventType		= event.eventType,
 				teamsData		= event.teamsData,
-				activeSchoolId	= this.props.activeSchoolId;
+				activeSchoolId	= self.getActiveSchoolId();
 
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
@@ -103,12 +152,12 @@ const DisciplineView = React.createClass({
 					const schoolId = event.inviterSchool.id === activeSchoolId ?
 						event.inviterSchool.id :
 						event.invitedSchools[0].id;
-					return this.renderIndividualPlayersBySchoolId(schoolId);
+					return self.renderIndividualPlayersBySchoolId(schoolId);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return this.renderIndividualPlayersByHouseId(event.houses[0]);
+					return self.renderIndividualPlayersByHouseId(event.houses[0]);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
-						return this.renderInternalEventForOneOnOneEvent(0);
+						return self.renderInternalEventForOneOnOneEvent(0);
 					} else {
 						return null;
 					}
@@ -124,19 +173,19 @@ const DisciplineView = React.createClass({
 					teamsData[0].schoolId !== activeSchoolId
 				)
 			) {
-				return this.renderSelectTeamLater();
+				return self.renderSelectTeamLater();
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
 				const order = teamsData[0].schoolId === activeSchoolId ? 0 : 1;
-				return this.renderTeamPlayersByOrder(order);
+				return self.renderTeamPlayersByOrder(order);
 			} else if (eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
 			) {
 				const teamIndex = teamsData.findIndex(t => t.houseId === event.housesData[0].id);
 				if(teamIndex !== -1) {
-					return this.renderTeamPlayersByOrder(teamIndex);
+					return self.renderTeamPlayersByOrder(teamIndex);
 				} else {
-					return this.renderSelectTeamLater();
+					return self.renderSelectTeamLater();
 				}
 			} else if (
 				(
@@ -144,22 +193,24 @@ const DisciplineView = React.createClass({
 				) &&
 				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
-				return this.renderTeamPlayersByOrder(0);
+				return self.renderTeamPlayersByOrder(0);
 			} else if (
 				(
 					teamsData.length === 0
 				) &&
 				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
-				return this.renderSelectTeamLater();
+				return self.renderSelectTeamLater();
 			}
 		}
 	},
 	renderPlayersForRightSide: function() {
-		const	event			= this.props.event,
+		const self = this;
+
+		const	event			= self.getBinding('event').toJS(),
 				eventType		= event.eventType,
 				teamsData		= event.teamsData,
-				activeSchoolId	= this.props.activeSchoolId;
+				activeSchoolId	= self.getActiveSchoolId();
 
 		if(TeamHelper.isNonTeamSport(event)) {
 			switch (eventType) {
@@ -169,21 +220,21 @@ const DisciplineView = React.createClass({
 							event.inviterSchool.id :
 							event.invitedSchools[0].id;
 
-						const players = this.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
+						const players = self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 						if(players.length === 0) {
-							return this.renderOpponentSelectTeamLater();
+							return self.renderOpponentSelectTeamLater();
 						} else {
-							return this.renderIndividualPlayersBySchoolId(schoolId);
+							return self.renderIndividualPlayersBySchoolId(schoolId);
 						}
 					} else {
-						return this.renderAwaitingOpponentTeam();
+						return self.renderAwaitingOpponentTeam();
 					}
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
-					return this.renderIndividualPlayersByHouseId(event.houses[1]);
+					return self.renderIndividualPlayersByHouseId(event.houses[1]);
 				case EventHelper.clientEventTypeToServerClientTypeMapping['internal']:
 					if(TeamHelper.isOneOnOneSport(event)) {
-						return this.renderInternalEventForOneOnOneEvent(1);
+						return self.renderInternalEventForOneOnOneEvent(1);
 					} else {
 						return null;
 					}
@@ -194,53 +245,53 @@ const DisciplineView = React.createClass({
 				teamsData.length === 0
 			) {
 				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
-					return this.renderOpponentSelectTeamLater();
+					return self.renderOpponentSelectTeamLater();
 				} else {
-					return this.renderAwaitingOpponentTeam();
+					return self.renderAwaitingOpponentTeam();
 				}
 			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[0].schoolId !== activeSchoolId
 			) {
-				return this.renderTeamPlayersByOrder(0);
+				return self.renderTeamPlayersByOrder(0);
 			} else if(
 				teamsData.length > 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[0].schoolId !== activeSchoolId
 			) {
-				return this.renderTeamPlayersByOrder(0);
+				return self.renderTeamPlayersByOrder(0);
 			} else if (
 				teamsData.length > 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[1].schoolId !== activeSchoolId
 			) {
-				return this.renderTeamPlayersByOrder(1);
+				return self.renderTeamPlayersByOrder(1);
 			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
 				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
-					return this.renderOpponentSelectTeamLater();
+					return self.renderOpponentSelectTeamLater();
 				} else {
-					return this.renderAwaitingOpponentTeam();
+					return self.renderAwaitingOpponentTeam();
 				}
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
 			) {
 				const teamIndex = teamsData.findIndex(t => t.houseId === event.housesData[1].id);
 				if(teamIndex !== -1) {
-					return this.renderTeamPlayersByOrder(teamIndex);
+					return self.renderTeamPlayersByOrder(teamIndex);
 				} else {
-					return this.renderSelectTeamLater();
+					return self.renderSelectTeamLater();
 				}
 			} else if (
 				teamsData.length <= 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']
 			) {
-				return this.renderSelectTeamLater();
+				return self.renderSelectTeamLater();
 			} else {
-				return this.renderTeamPlayersByOrder(1);
+				return self.renderTeamPlayersByOrder(1);
 			}
 		}
 	},
@@ -254,76 +305,97 @@ const DisciplineView = React.createClass({
 		);
 	},
 	renderPlayers: function(players) {
+		const self = this;
+
 		return players.map((player, playerIndex) => {
 			return (
 				<div key={playerIndex} className="bPlayer mPerformance">
 					<div className="ePlayer_name mBold">
 						<span>{player.firstName} {player.lastName}</span>
 					</div>
-					<div className="ePlayer_discipline">
-						{this.renderPlayerDisciplineItems(player)}
+					<div className="ePlayer_performance">
+						{self.renderPlayerPerformance(player)}
 					</div>
 				</div>
 			);
 		});
 	},
-	getDisciplineItemValueByUserId: function (disciplineItemId, userId) {
-		const foundDisciplineItemValue = this.props.disciplineValues.find(
-			disciplineItemValue => disciplineItemValue.disciplineId === disciplineItemId && disciplineItemValue.userId === userId
-		);
+	renderPlayerPerformance: function(player) {
+		const self = this;
 
-		if(typeof foundDisciplineItemValue !== "undefined") {
-			return foundDisciplineItemValue.value;
-		} else {
-			return 0;
-		}
-	},
-	renderPlayerDisciplineItems: function(player) {
-		return this.props.disciplineItems.map(disciplineItem => {
-			console.log(disciplineItem);
-			return (
-				<div className="ePlayer_disciplineItem">
-					<div className="ePlayer_disciplineItemName">
-						{disciplineItem.namePlural}
+		const	event	= self.getBinding('event').toJS();
+
+		return event && event.sport && event.sport.performance && event.sport.performance.map(pItem => {
+				// player performance data
+				const pData = (
+						event.results &&
+						event.results.individualPerformance &&
+						event.results.individualPerformance.find(pUserData => pUserData.performanceId === pItem._id && pUserData.userId === player.userId)
+					),
+					value = pData ? pData.value : 0;
+				return (
+					<div key={pItem._id} className="ePlayer_performanceItem">
+						<div className="ePlayer_performanceItemName">
+							{pItem.name}
+						</div>
+						<div className="ePlayer_performanceItemValueContainer">
+							<StarRatingBar	starCount			= {5}
+											isEditMode			= {true}
+											value				= {value}
+											handleValueChanges	= {self.handleValueChange.bind(
+												self,
+												player,
+												player.permissionId,
+												pItem._id
+											)}
+							/>
+						</div>
 					</div>
-					<div className="ePlayer_disciplineItemValueContainer">
-						{this.getDisciplineItemValueByUserId(disciplineItem._id, player.userId)}
-					</div>
-				</div>
-			);
-		});
+				);
+			});
 	},
 	renderIndividuals: function() {
-		if(this.props.players.length === 0) {
-			return this.renderSelectPlayersLater();
+		const self = this;
+
+		const	event	= self.getBinding('event').toJS(),
+			players	= self.getDefaultBinding().toJS('players');
+
+		if(players.length === 0) {
+			return self.renderSelectPlayersLater();
 		} else {
-			return this.renderPlayers(this.props.players);
+			return self.renderPlayers(players);
 		}
 	},
 	renderTeamPlayersByOrder: function(order) {
-		let renderedPlayers = null;
+		const	self	= this;
+		let		players	= null;
 
-		const players = this.props.players[order];
+		const playersBinding = self.getDefaultBinding().get(['players', order]);
 
-		// what if there aren't players by current order
-		if(typeof players !== 'undefined') {
-			renderedPlayers = this.renderPlayers(players);
+		if(playersBinding) {
+			const event = self.getBinding('event').toJS();
+
+			players = self.renderPlayers(playersBinding.toJS());
 		}
 
 		return (
 			<div className="bEventPerformance_team">
-				{renderedPlayers}
+				{players}
 			</div>
 		);
 	},
+
 	render: function() {
-		let teams = null;
+		const	self	= this;
+		let		teams	= null;
+
+		const event = self.getBinding('event').toJS();
 
 		switch (true) {
-			case TeamHelper.isInternalEventForIndividualSport(this.props.event):
+			case TeamHelper.isInternalEventForIndividualSport(event):
 				teams = (
 					<div className="bEventPerformance_teams mIndivid">
-						{this.renderIndividuals()}
+						{self.renderIndividuals()}
 					</div>
 				);
 				break;
@@ -331,10 +403,10 @@ const DisciplineView = React.createClass({
 				teams = (
 					<div className="bEventPerformance_teams">
 						<div className="eEventPerformance_col">
-							{this.renderPlayersForLeftSide()}
+							{self.renderPlayersForLeftSide()}
 						</div>
 						<div className="eEventPerformance_col">
-							{this.renderPlayersForRightSide()}
+							{self.renderPlayersForRightSide()}
 						</div>
 					</div>
 				);
@@ -354,4 +426,4 @@ const DisciplineView = React.createClass({
 	}
 });
 
-module.exports = DisciplineView;
+module.exports = PerformanceEdit;
