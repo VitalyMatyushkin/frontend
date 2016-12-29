@@ -5,6 +5,7 @@ const	React				= require('react'),
 
 		ParentRouter		= require('./routes/parent_router'),
 		SchoolWorkerRouter	= require('./routes/school_worker_router'),
+		NobodyRouter		= require('./routes/nobody_router'),
 
 		NotificationAlert	= require('./../ui/notification_alert/notification_alert'),
 		ConfirmAlert		= require('./../ui/confirm_alert/confirm_alert');
@@ -31,6 +32,10 @@ const Center = React.createClass({
 			case typeof role !== "undefined":
 				return (
 					<SchoolWorkerRouter binding={binding}/>
+				);
+			case typeof role === "undefined":
+				return (
+					<NobodyRouter binding={binding}/>
 				);
 		}
 	},
