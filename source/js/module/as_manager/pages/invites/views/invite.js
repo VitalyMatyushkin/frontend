@@ -1,15 +1,16 @@
-const React 			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable 		= require('immutable'),
-		classNames 		= require('classnames'),
-		DateHelper		= require('./../../../../helpers/date_helper'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
-		Button			= require('module/ui/button/button'),
-		Map 			= require('module/ui/map/map-event-venue'),
-		propz			= require('propz'),
-		Bootstrap 		= require('styles/bootstrap-custom.scss'),
-		InviteComments	= require('module/ui/comments/invite-comments'),
-		InviteStyles 	= require('styles/pages/events/b_invite.scss');
+const React 				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable 			= require('immutable'),
+		classNames 			= require('classnames'),
+		DateHelper			= require('./../../../../helpers/date_helper'),
+		MoreartyHelper		= require('module/helpers/morearty_helper'),
+		Button				= require('module/ui/button/button'),
+		Map 				= require('module/ui/map/map-event-venue'),
+		propz				= require('propz'),
+		Bootstrap 			= require('styles/bootstrap-custom.scss'),
+		InviteComments		= require('module/ui/comments/invite-comments'),
+		ConfirmDeclinePopup	= require('./confirm-decline-popup'),
+		InviteStyles 		= require('styles/pages/events/b_invite.scss');
 
 const InviteView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -56,14 +57,15 @@ const InviteView = React.createClass({
 		}
 	},
 
-	getInviteRequest: function (inviteId, type) {
-		window.confirmAlert(
-			`Are you sure you want to ${type} ?`,
-			"Ok",
-			"Cancel",
-			() => this.props.onDecline && this.props.onDecline(inviteId),
-			() => {}
-		);
+	getInviteRequest: function(inviteId, type) {
+		const binding = this.getDefaultBinding();
+
+		binding.set('isConfirmPopup', Immutable.fromJS(true));
+		binding.set('isConfirmPopupType', Immutable.fromJS(type));
+	},
+	closePopup: function() {
+		const binding = this.getDefaultBinding();
+		binding.set('isConfirmPopup', Immutable.fromJS(false));
 	},
 
 	toogleDiscussionLink: function() {
@@ -99,10 +101,13 @@ const InviteView = React.createClass({
 				venue 			= binding.toJS('event.venue'),
 				teamData 		= binding.toJS('event.teamsData'),
 				toggleLink		= binding.sub('inviteComments').toJS('expandedComments'),
+				typeBinding		= binding.toJS('isConfirmPopupType') ? binding.toJS('isConfirmPopupType') : '',
+				isConfirmPopup 	= binding.toJS('isConfirmPopup') ? binding.toJS('isConfirmPopup') : false,
 				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
 									: <span className="eInvite_venue">Venue to be defined</span>;
 
-		let status, teamDataName, linkText;
+
+		let status, teamDataName, linkText, confirmDeclineEvent;
 
 		if (toggleLink) {
 			linkText  = 'Hide discussion';
@@ -135,6 +140,8 @@ const InviteView = React.createClass({
 			default:
 				status = '';
 		}
+
+
 
 		return (
 			<div className={inviteClasses}>
@@ -182,6 +189,13 @@ const InviteView = React.createClass({
 				<div className="eInvite_comments">
 					<InviteComments binding	= {binding.sub('inviteComments')} inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
 				</div>
+				<ConfirmDeclinePopup type={typeBinding}
+									 isConfirmPopup={isConfirmPopup}
+									 inviteId={inviteId}
+									 onClosePopup={this.closePopup}
+									 onDecline={this.props.onDecline}
+									 commentText=''
+				/>
 			</div>
 
 		);

@@ -135,7 +135,6 @@ const InviteComments = React.createClass({
 		let linkText, text;
 		const binding = this.getDefaultBinding(),
 			expanded = binding.toJS('expandedComments');
-		console.log(expanded);
 		if (expanded) {
 			text =
 				<div className="row">
