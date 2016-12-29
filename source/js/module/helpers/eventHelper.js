@@ -139,6 +139,24 @@ const EventHelper = {
 			RoleHelper.isUserSchoolWorker(thiz);
 	},
 	/**
+	 * Return TRUE if event status is "invite sent", "accepted", "sending invites", "collecting invite response".
+	 * @returns {boolean}
+	 * @private
+	 */
+	isShowCancelButton: function(thiz) {
+		const self = this,
+			binding = thiz.getDefaultBinding();
+
+		return (
+			binding.get('model.status') === self.EVENT_STATUS.INVITES_SENT ||
+			binding.get('model.status') === self.EVENT_STATUS.ACCEPTED ||
+			binding.get('model.status') === self.EVENT_STATUS.SENDING_INVITES ||
+			binding.get('model.status') === self.EVENT_STATUS.COLLECTING_INVITE_RESPONSE
+		);
+	},
+
+
+	/**
 	 * Return TRUE if event edit mode is "edit_squad".
 	 * @returns {boolean}
 	 * @private

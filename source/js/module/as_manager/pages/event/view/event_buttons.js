@@ -353,6 +353,28 @@ const EventButtons = React.createClass({
 
 		binding.set('mode', 'general');
 	},
+	onClickCancelMatch: function () {
+		const binding	= this.getDefaultBinding(),
+			schoolId = MoreartyHelper.getActiveSchoolId(this),
+			eventId = binding.toJS('model.id');
+
+		window.confirmAlert(
+			"You are going to cancel the fixture. Are you sure?",
+			"Ok",
+			"Cancel",
+			() => {
+				window.Server.eventCancel.post({
+					schoolId: schoolId,
+					eventId: eventId
+				})
+					.then(function(){
+						document.location.reload();
+					});
+			},
+			() => {}
+		);
+	},
+
 	/**
 	 * Set init state of score. See to component will mount function of Event React Component.
 	 */
@@ -368,14 +390,23 @@ const EventButtons = React.createClass({
 	render: function() {
 		const self = this;
 
+
 		return (
 			<If condition={EventHelper._isShowEventButtons(self)}>
 				<div className="bEventButtons">
 					<If condition={TeamHelper.isShowCloseEventButton(self)}>
 						<div	onClick		= {self.onClickCloseMatch}
-								className	="bButton mHalfWidth"
+								className	="bButton mHalfWidth mMarginRight"
 						>
 							Close game
+						</div>
+					</If>
+					<If condition={EventHelper.isShowCancelButton(self)}>
+						<div
+							className="bButton mCancel mHalfWidth"
+							onClick={self.onClickCancelMatch}
+						>
+							Cancel
 						</div>
 					</If>
 					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>

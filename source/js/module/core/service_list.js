@@ -96,6 +96,7 @@ const serviceList = {
 
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
+		serviceList.eventCancel = new Service('/i/schools/{schoolId}/events/{eventId}/cancel', binding);
 		serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
 		serviceList.schoolEventDetails = new Service('/i/schools/{schoolId}/events/{eventId}/details', binding);
 		serviceList.schoolEventDates = new Service('/i/schools/{schoolId}/events/dates/distinct', binding);
