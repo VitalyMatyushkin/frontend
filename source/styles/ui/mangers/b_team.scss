@@ -1,4 +1,5 @@
 @import "../../!variables";
+@import "../../!mixins";
 
 .bTeam {
   width: 392px;
@@ -69,7 +70,12 @@
   }
 
   &.mName {
+    @include text-overflow;
+    white-space: nowrap;
+
     width: 32%;
+
+
     &.mDefaultView {
       width: 35%;
     }
