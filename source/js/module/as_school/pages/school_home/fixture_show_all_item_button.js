@@ -9,11 +9,14 @@ const FixtureShowAllItemButton = React.createClass({
 	},
 
 	render: function() {
+		var classes = this.props.isShowAllItems ? "fa fa-angle-up" : "fa fa-angle-down";
+
 		return (
 			<div	onClick		={ this.props.handleClick }
 					className	="bBigButton"
 			>
-				{ this.props.isShowAllItems ? "Hide" : this.props.text }
+				<i className={ classes } aria-hidden="true"></i>
+				<span>{ this.props.isShowAllItems ? "Hide" : this.props.text }</span>
 			</div>
 		)
 	}
