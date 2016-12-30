@@ -52,6 +52,7 @@ const EventTeamsView = React.createClass({
 		}
 		/** set score */
 		scoreData.score = score.value;
+		scoreData.isChanged = true;
 		scoreData.isValid = score.isValid;
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
@@ -68,6 +69,7 @@ const EventTeamsView = React.createClass({
 		}
 		/** set score */
 		scoreData.score = TeamHelper.calculateTeamPoints(event, teamId);
+		scoreData.isChanged = true;
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
 	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {

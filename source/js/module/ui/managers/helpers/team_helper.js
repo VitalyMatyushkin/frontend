@@ -469,22 +469,23 @@ function isTeamDataCorrect(event, validationData) {
  * @returns {boolean}
  * @private
  */
-function isShowCloseEventButton(thiz) {
+function isShowScoreEventButton(thiz) {
 	const	self	= this,
 			binding	= thiz.getDefaultBinding();
 
 	const event = binding.toJS('model');
 
-	return binding.toJS('model.status') === "ACCEPTED" &&
-		(
+	return (
+			binding.toJS('model.status') === "ACCEPTED" ||
+			binding.toJS('model.status') === "FINISHED"
+		) && (
 			self.isInterSchoolsEventForIndividualSport(event) ?
 				(
 					self.isSchoolHaveIndividualPlayers(event, event.inviterSchool.id) &&
 					self.isSchoolHaveIndividualPlayers(event, event.invitedSchools[0].id)
 				)
 				: true
-		) &&
-		(
+		) && (
 			self.isHousesEventForIndividualSport(event) ?
 				self.isHouseHaveIndividualPlayers(event, event.housesData[0].id) &&
 				self.isHouseHaveIndividualPlayers(event, event.housesData[1].id)
@@ -904,7 +905,7 @@ function getCountPoints(event, teamBundleName, order) {
 	}
 
 	const scoreData = event.results[scoreBundleName].find(r => r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
-
+	console.log(event.results);
 	let points = 0;
 	if(typeof scoreData !== 'undefined') {
 		points = scoreData.score;
@@ -1307,7 +1308,7 @@ const TeamHelper = {
 	isTeamDataCorrect:						isTeamDataCorrect,
 	isTeamSport:							isTeamSport,
 	isShowEditEventButton:					isShowEditEventButton,
-	isShowCloseEventButton:					isShowCloseEventButton,
+	isShowScoreEventButton:					isShowScoreEventButton,
 	isSchoolHaveIndividualPlayers:			isSchoolHaveIndividualPlayers,
 	isHouseHaveIndividualPlayers:			isHouseHaveIndividualPlayers,
 	callFunctionForRightContext:			callFunctionForRightContext,
