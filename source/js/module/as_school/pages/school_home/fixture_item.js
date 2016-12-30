@@ -2,11 +2,12 @@
  * Created by wert on 06.09.16.
  */
 
-const 	React 			= require('react'),
-		DateTimeMixin	= require('module/mixins/datetime'),
-		EventHelper		= require('module/helpers/eventHelper'),
-		SportIcon		= require('module/ui/icons/sport_icon'),
-		ChallengeModel	= require('module/ui/challenges/challenge_model');
+const 	React 			 = require('react'),
+		DateTimeMixin	 = require('module/mixins/datetime'),
+		EventHelper		 = require('module/helpers/eventHelper'),
+		SportIcon		 = require('module/ui/icons/sport_icon'),
+		ChallengeModel	 = require('module/ui/challenges/challenge_model'),
+		FixtureItemStyle = require('./../../../../../styles/main/b_school_fixtures.scss');
 
 const FixtureItem = React.createClass({
 
@@ -30,29 +31,30 @@ const FixtureItem = React.createClass({
 	},
 
 	renderLeftOpponentSide: function (event, model) {
+		const imgStyle = {
+			backgroundImage: 'url(' + model.rivals[0].schoolPic + ')'
+		};
 
 		return (
-			<div className="bFixtureOpponent bFixture_item no-margin">
-				<div>
-					<div className="bFixtureImgContainer">
-						<img src={model.rivals[0].schoolPic}/>
-					</div>
-					<span>{model.rivals[0].value}</span>
+			<div className="eFixture_item mOpponent">
+				<div className="eFixture_item_imgContainer">
+					<div className="eFixture_item_img" style={imgStyle}/>
 				</div>
+				<span>{model.rivals[0].value}</span>
 			</div>
 		);
 	},
 
 	renderRightOpponentSide: function (event, model) {
-
+		const imgStyle = {
+			backgroundImage: 'url(' + model.rivals[1].schoolPic + ')'
+		};
 		return (
-			<div className="bFixtureOpponent bFixture_item no-margin">
-				<div>
-					<div className="bFixtureImgContainer">
-						<img src={model.rivals[1].schoolPic}/>
-					</div>
-					<span>{model.rivals[1].value}</span>
+			<div className="eFixture_item mOpponent">
+				<div className="eFixture_item_imgContainer">
+					<div className="eFixture_item_img" style={imgStyle}/>
 				</div>
+				<span>{model.rivals[1].value}</span>
 			</div>
 		);
 	},
@@ -64,21 +66,29 @@ const FixtureItem = React.createClass({
 				challengeModel	= new ChallengeModel(event, activeSchoolId);
 
 		return (
-			<div className="bFixtureContainer" onClick={ this.handleClickFixtureItem }>
-				<div className="bFixtureIcon bFixture_item">
-					<SportIcon name={sportName || ''} className="bIcon_mSport" />
-				</div>
-				<div className="bFixtureInfo bFixture_item">
-					{this.getFixtureInfo(event)}
-				</div>
-				{this.renderLeftOpponentSide(event, challengeModel)}
-				<div className="bFixtureResult bFixture_item no-margin">
-					<div>
-						<div className="bFix_scoreText">{'Score'}</div>
-						<div className="bFix_scoreResult">{`${challengeModel.score}`}</div>
+			<div className="bFixtureContainer">
+				<div className="eFixture_row">
+					<div className="eFixture_content" onClick={ this.handleClickFixtureItem }>
+						<div className="eFixture_leftSide">
+							<div className="eFixture_item mSport">
+								<SportIcon name={sportName || ''} className="bIcon_mSport"/>
+							</div>
+							<div className="eFixture_item mInfo">
+								{this.getFixtureInfo(event)}
+							</div>
+						</div>
+						<div className="eFixture_rightSide">
+							{this.renderLeftOpponentSide(event, challengeModel)}
+							<div className="eFixture_item mResult">
+								<div>
+									<div className="bFix_scoreText">{'Score'}</div>
+									<div className="bFix_scoreResult">{`${challengeModel.score}`}</div>
+								</div>
+							</div>
+							{this.renderRightOpponentSide(event, challengeModel)}
+						</div>
 					</div>
 				</div>
-				{this.renderRightOpponentSide(event, challengeModel)}
 			</div>
 		)
 	}
