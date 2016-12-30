@@ -8,7 +8,8 @@ const	React			= require('react'),
 
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper');
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		LinkStyles 	    = require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
 /**
  * This component displays the buttons close, save, cancel and contains methods save and close the event.
@@ -439,6 +440,27 @@ const Buttons = React.createClass({
 
 		binding.set('model', Immutable.fromJS(updEvent));
 	},
+	onClickCancelMatch: function () {
+		const binding	= this.getDefaultBinding(),
+			schoolId = MoreartyHelper.getActiveSchoolId(this),
+			eventId = binding.toJS('model.id');
+
+		window.confirmAlert(
+			"You are going to cancel the fixture. Are you sure?",
+			"Ok",
+			"Cancel",
+			() => {
+				window.Server.eventCancel.post({
+					schoolId: schoolId,
+					eventId: eventId
+				})
+					.then(function(){
+						document.location.hash = 'events/calendar';
+					});
+			},
+			() => {}
+		);
+	},
 	renderScoreEventButton: function() {
 		switch (this.getDefaultBinding().toJS('model.status')) {
 			case "FINISHED":
@@ -451,12 +473,40 @@ const Buttons = React.createClass({
 				);
 			case "ACCEPTED":
 				return (
+				<div>
 					<div	onClick		= {this.handleClickCloseEvent}
-							className	="bButton mHalfWidth"
+							className	="bButton mFullWidth"
 					>
 						Close event
 					</div>
+					<div className="eLink_CancelEvent">
+						<a onClick={this.onClickCancelMatch}>
+							Cancel
+						</a>
+					</div>
+				</div>
 				);
+			case "INVITES_SENT": return (
+				<div className="eLink_CancelEvent">
+					<a onClick={this.onClickCancelMatch}>
+						Cancel
+					</a>
+				</div>
+			);
+			case "SENDING_INVITES": return (
+				<div className="eLink_CancelEvent">
+					<a onClick={this.onClickCancelMatch}>
+						Cancel
+					</a>
+				</div>
+			);
+			case "COLLECTING_INVITE_RESPONSE": return (
+				<div className="eLink_CancelEvent">
+					<a onClick={this.onClickCancelMatch}>
+						Cancel
+					</a>
+				</div>
+			);
 		};
 	},
 	render: function() {
