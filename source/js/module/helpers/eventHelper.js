@@ -106,10 +106,7 @@ const EventHelper = {
 	 * @private
 	 */
 	_isShowEventButtons: function(thiz) {
-		const	self	= this,
-				binding	= thiz.getDefaultBinding();
-
-		return self.isNotFinishedEvent(binding) && RoleHelper.isUserSchoolWorker(thiz);
+		return RoleHelper.isUserSchoolWorker(thiz);
 	},
 	isNotFinishedEvent: function(binding) {
 		const self = this;
@@ -189,6 +186,7 @@ const EventHelper = {
 	isShowScoreButtons: function(event, mode, isOwner, individualScoreAvailable) {
 		return (
 					event.status === "NOT_FINISHED" ||
+					event.status === "FINISHED" ||
 					event.status === "DRAFT" ||
 					event.status === "ACCEPTED" ||
 					event.status === "INVITES_SENT"

@@ -1,10 +1,10 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 
-		DateHelper		= require('./../../../../helpers/date_helper'),
+		DateHelper		= require('./../../../../../helpers/date_helper'),
 
-		EventButtons	= require('./event_buttons'),
-		ChallengeModel	= require('./../../../../ui/challenges/challenge_model');
+		Buttons			= require('./buttons'),
+		ChallengeModel	= require('./../../../../../ui/challenges/challenge_model');
 
 const EventHeader = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -29,7 +29,7 @@ const EventHeader = React.createClass({
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 					</div>
 					<div className="bEventHeader_rightSide">
-						<EventButtons binding={binding}/>
+						<Buttons binding={binding}/>
 					</div>
 				</div>
 			</div>
