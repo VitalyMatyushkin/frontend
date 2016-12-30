@@ -30,7 +30,7 @@ const RecentEvent = React.createClass({
 			return (
 				<div className="bRecentEvents">
 					<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.RECENT }
-									title			= "Last Five Events"
+									title			= "Recent results"
 									activeSchoolId	= { newActiveSchoolId }
 									events			= { events }
 									logo            = "images/big-logo.svg"
