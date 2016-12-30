@@ -31,7 +31,7 @@ const RoleSelector = React.createClass({
 		return RoleHelper.roleMapper[role.toLowerCase()];
 	},
 	getDefaultPageByRoleName: function(roleName) {
-		switch (roleName) {
+		switch (roleName.toLowerCase()) {
 			case 'owner':
 				return `school_admin/summary`;
 			case 'admin':
@@ -56,7 +56,7 @@ const RoleSelector = React.createClass({
 	},
 	onRoleSelected: function(roleName){
 		Auth.become(roleName).then(() => {
-			return this.redirectToStartPage(roleName.toLowerCase());
+			return this.redirectToStartPage(roleName);
 		});
 	},
 	render: function(){
