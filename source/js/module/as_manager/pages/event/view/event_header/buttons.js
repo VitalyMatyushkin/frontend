@@ -463,7 +463,7 @@ const Buttons = React.createClass({
 	},
 	renderScoreEventButton: function() {
 		switch (this.getDefaultBinding().toJS('model.status')) {
-			case "FINISHED":
+			case EventHelper.EVENT_STATUS.FINISHED:
 				return (
 					<div	onClick		= {this.handleClickCloseEvent}
 							className	="bButton mHalfWidth"
@@ -471,7 +471,7 @@ const Buttons = React.createClass({
 						Change score
 					</div>
 				);
-			case "ACCEPTED":
+			case EventHelper.EVENT_STATUS.ACCEPTED:
 				return (
 				<div>
 					<div	onClick		= {this.handleClickCloseEvent}
@@ -486,21 +486,21 @@ const Buttons = React.createClass({
 					</div>
 				</div>
 				);
-			case "INVITES_SENT": return (
+			case EventHelper.EVENT_STATUS.INVITES_SENT: return (
 				<div className="eLink_CancelEvent">
 					<a onClick={this.onClickCancelMatch}>
 						Cancel
 					</a>
 				</div>
 			);
-			case "SENDING_INVITES": return (
+			case EventHelper.EVENT_STATUS.SENDING_INVITES: return (
 				<div className="eLink_CancelEvent">
 					<a onClick={this.onClickCancelMatch}>
 						Cancel
 					</a>
 				</div>
 			);
-			case "COLLECTING_INVITE_RESPONSE": return (
+			case EventHelper.EVENT_STATUS.COLLECTING_INVITE_RESPONSE: return (
 				<div className="eLink_CancelEvent">
 					<a onClick={this.onClickCancelMatch}>
 						Cancel
