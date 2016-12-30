@@ -37,7 +37,7 @@ function getLastFiveFinishedEvents(activeSchoolId) {
 	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter});
 };
 
-function getClosestFiveEventsExternal(activeSchoolId) {
+function getClosestFiveEvents(activeSchoolId) {
 	const dayStart = new Date(); // current day
 
 	const filter = {
@@ -48,29 +48,7 @@ function getClosestFiveEventsExternal(activeSchoolId) {
 				$gte:	dayStart
 			},
 			status: {
-				$in: ['ACCEPTED']
-			}
-		}
-	};
-
-	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter});
-};
-
-function getClosestFiveEventsInternal(activeSchoolId) {
-	const dayStart = new Date(); // current day
-
-	const filter = {
-		limit: 5,
-		order: "startTime ASC",
-		where: {
-			startTime: {
-				$gte:	dayStart
-			},
-			eventType: {
-				$in: ['INTERNAL_TEAMS']
-			},
-			status: {
-				$in: ['FINISHED']
+				$in: ['ACCEPTED', 'FINISHED']
 			}
 		}
 	};
@@ -97,15 +75,26 @@ function getSchoolData() {
 };
 
 /**
- * Get seven events for footer
+ * Get ten upcoming events for footer
  *
  */
 function getFooterEvents(activeSchoolId) {
+	const dayStart = new Date(); // current day
 
 	return window.Server.publicSchoolEvents.get(
 		{schoolId:	activeSchoolId},
-		{filter:
-			{limit: 7}
+		{
+			filter: {
+				limit: 10,
+				where: {
+					startTime: {
+						$gte: dayStart
+					},
+					status: {
+						$in: ['ACCEPTED', 'FINISHED']
+					}
+				}
+			}
 		}
 	);
 };
@@ -201,44 +190,12 @@ function setHighlightEvent(activeSchoolId, binding){
 function setFooterEvents(activeSchoolId, binding){
 	binding.set('footerEvents.isSync', false);
 
-	let eventIds = [];
-	getFooterEvents(activeSchoolId).then(eventsId => {
-			eventsId.forEach(eventId => {eventIds.push(eventId.id)});
-			if(typeof eventIds !== 'undefined') {
-				return Promise.all(eventIds.map(eventId => {
-					return window.Server.publicSchoolEvent.get({
-						schoolId:	activeSchoolId,
-						eventId:	eventId
-					});
-				})).then(events => {
-					const currentEventIndex = events.length !== 0 ? 0 : undefined;
-
-				binding.atomically()
-					.set('footerEvents.events',				Immutable.fromJS(events))
-					.set('footerEvents.currentEventIndex',	Immutable.fromJS(currentEventIndex))
-					.set('footerEvents.isSync',				true)
-					.commit();
-				});
-			} else {
-				return getNextSevenDaysEvents(activeSchoolId)
-					.then(events => {
-						return Promise.all(events.map(e => {
-							return window.Server.publicSchoolEvent.get({
-								schoolId:	activeSchoolId,
-								eventId:	e.id
-							});
-						}));
-					})
-					.then(events => {
-						const currentEventIndex = events.length !== 0 ? 0 : undefined;
-
-						binding.atomically()
-							.set('footerEvents.events',				Immutable.fromJS(events))
-							.set('footerEvents.currentEventIndex',	Immutable.fromJS(currentEventIndex))
-							.set('footerEvents.isSync',				true)
-							.commit();
-					});
-			}
+	return getFooterEvents(activeSchoolId).then(eventsData => {
+		binding.atomically()
+			.set('footerEvents.events',				Immutable.fromJS(eventsData))
+			.set('footerEvents.currentEventIndex',	Immutable.fromJS(0))
+			.set('footerEvents.isSync',				true)
+			.commit();
 	});
 };
 
@@ -300,15 +257,9 @@ function setLastFiveFinishedEvents(activeSchoolId, eventsBinding) {
 function setClosestFiveEvents(activeSchoolId, eventsBinding) {
 	eventsBinding.set('closestFiveEvents.isSync', false);
 
-	getClosestFiveEventsExternal(activeSchoolId).then(eventsData => {
+	return getClosestFiveEvents(activeSchoolId).then(eventsData => {
 		eventsBinding.set('closestFiveEvents.events',	Immutable.fromJS(eventsData));
-		return true;
-	}).then(() => {
-		return getClosestFiveEventsInternal(activeSchoolId).then(eventsData => {
-			eventsBinding.set('closestFiveEvents.events',	Immutable.fromJS(eventsData));
-			eventsBinding.set('closestFiveEvents.isSync',	true);
-			console.log(eventsBinding.toJS('closestFiveEvents.events'));
-		});
+		eventsBinding.set('closestFiveEvents.isSync',	true);
 	});
 };
 
