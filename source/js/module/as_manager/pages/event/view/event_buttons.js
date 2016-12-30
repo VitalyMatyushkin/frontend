@@ -336,6 +336,7 @@ const EventButtons = React.createClass({
 		);
 	},
 
+
 	/**
 	 * Set init state of score. See to component will mount function of Event React Component.
 	 */
