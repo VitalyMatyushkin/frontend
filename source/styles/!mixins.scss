@@ -2,3 +2,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@mixin add-clearfix() {
+  &:after {
+    content: " ";
+    clear: both;
+    display: table;
+  }
+}
