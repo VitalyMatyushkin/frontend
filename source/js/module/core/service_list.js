@@ -126,6 +126,8 @@ const serviceList = {
         serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
 		serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
 		serviceList.schoolEventReport = new Service('/i/schools/{schoolId}/events/{eventId}/report', binding);
+		serviceList.schoolEventTasks = new Service('/i/schools/{schoolId}/events/{eventId}/tasks', binding);
+		serviceList.schoolEventTask = new Service('/i/schools/{schoolId}/events/{eventId}/tasks/{taskId}', binding);
 
         serviceList.addPointToSchoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result/points', binding);
         serviceList.finishSchoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/finish', binding);

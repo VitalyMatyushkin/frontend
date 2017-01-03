@@ -5,22 +5,13 @@ const	React			= require('react'),
 
 const Tasks = React.createClass({
 	propTypes: {
+		viewMode				: React.PropTypes.string.isRequired,
 		tasks					: React.PropTypes.array.isRequired,
+		editingTask				: React.PropTypes.object.isRequired,
 		players					: React.PropTypes.array.isRequired,
+		handleClickSave			: React.PropTypes.func.isRequired,
+		handleClickChangeTask	: React.PropTypes.func.isRequired,
 		handleClickDeleteTask	: React.PropTypes.func.isRequired
-	},
-	getInitialState: function() {
-		return {
-			editingTask	: undefined
-		};
-	},
-	isEditMode: function() {
-		return typeof this.state.editingTask !== "undefined";
-	},
-	handleClickChangeTask: function(task) {
-		this.setState({
-			editingTask: task
-		});
 	},
 	handleClickDeleteTask: function(taskId) {
 
@@ -35,23 +26,40 @@ const Tasks = React.createClass({
 	renderTask: function(task) {
 		return (
 			<Task	task					= {task}
-					handleClickChangeTask	= {this.handleClickChangeTask}
-					handleClickDeleteTask	= {this.handleClickDeleteTask}
+					handleClickChangeTask	= {this.props.handleClickChangeTask}
+					handleClickDeleteTask	= {this.props.handleClickDeleteTask}
 			/>
+		);
+	},
+	renderAddTaskView: function() {
+		return (
+			<div className="bTasks">
+				<EditTaskView	viewMode		= {this.props.viewMode}
+								handleClickSave	= {this.props.handleClickSave}
+								task			= {{}}
+								players			= {this.props.players}/>
+			</div>
 		);
 	},
 	renderEditTaskView: function() {
 		return (
 			<div className="bTasks">
-				<EditTaskView task={this.state.editingTask} players={this.props.players}/>
+				<EditTaskView	viewMode		= {this.props.viewMode}
+								handleClickSave	= {this.props.handleClickSave}
+								task			= {this.props.editingTask}
+								players			= {this.props.players}
+				/>
 			</div>
 		);
 	},
 	render: function() {
-		if(this.isEditMode()) {
-			return this.renderEditTaskView();
-		} else {
-			return this.renderTasks();
+		switch (this.props.viewMode) {
+			case "ADD":
+				return this.renderAddTaskView();
+			case "EDIT":
+				return this.renderEditTaskView();
+			case "VIEW":
+				return this.renderTasks();
 		}
 	}
 });

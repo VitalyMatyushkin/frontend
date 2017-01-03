@@ -15,7 +15,7 @@ const Task = React.createClass({
 	 * @returns {*|string}
 	 */
 	getPlayerNames: function() {
-		return this.props.task.players.map(player => `${player.firstName} ${player.lastName}`).join(' ');
+		return this.props.task.assignees.map(player => `${player.firstName} ${player.lastName}`).join(' ');
 	},
 	render: function() {
 		return (
