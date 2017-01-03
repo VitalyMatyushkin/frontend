@@ -18,33 +18,35 @@ const ChallengeListItem = React.createClass({
 		onClick: 		React.PropTypes.func 	// first argument is eventId
 	},
 
-	renderGameTypeColumn: function(model) {
-		const	leftSideRivalName	= model.rivals[0].value,
-				rightSideRivalName	= model.rivals[1].value;
-
-		if(model.isIndividualSport) {
-			return (
-				<div className="eChallenge_rivals">
-					{"Individual Game"}
-				</div>
-			);
-		}
-
-		return (
-			<div className="eChallenge_rivals">
-				<span className="eChallenge_rivalName" title={leftSideRivalName}>{leftSideRivalName}</span>
-				<span>vs</span>
-				<span className="eChallenge_rivalName" title={rightSideRivalName}>{rightSideRivalName}</span>
-			</div>
-		);
+	onClick: function(eventId) {
+		if(typeof this.props.onClick === 'function')
+			this.props.onClick(eventId);
 	},
 	render: function () {
 		const 	event 			= this.props.event,
 				model			= this.props.model,
-				onEventClick 	= this.props.onClick;
+				isCancelled		= event.status === 'CANCELED',
+				isRejected		= event.status === 'REJECTED';
+
+		let eventResult;
+
+		// TODO: I'm not sure it should be here. Models as they are implemented sucks, but they hide that kind of code
+		switch (true) {
+			case isCancelled:
+				eventResult = 'Canceled';
+				break;
+			case isRejected:
+				eventResult = 'Rejected';
+				break;
+			case typeof model.textResult === 'undefined':
+				eventResult = model.score;
+				break;
+			default:
+				eventResult = <span>{model.textResult}<br/>{model.score}</span>
+		}
 
 		return (
-			<div key={'event-' + event.id} className='eChallenge' onClick={() => onEventClick(event.id)}>
+			<div key={'event-' + event.id} className='eChallenge' onClick={() => this.onClick(event.id)}>
 				<div className="eChallenge_sport">
 					<SportIcon name={model.sport} className="bIcon_invites" />
 				</div>
@@ -55,9 +57,7 @@ const ChallengeListItem = React.createClass({
 					{model.name}
 				</div>
 				<div className="eChallenge_score">
-					{typeof model.textResult === 'undefined' ? null : model.textResult}
-					{typeof model.textResult === 'undefined' ? null : <br></br>}
-					{model.score}
+					{eventResult}
 				</div>
 			</div>
 		);

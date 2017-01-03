@@ -13,6 +13,7 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 
 	eventsBinding.set('distinctEventDatesData.isSync', false);	// TODO: is it okay?
 
+	/* filter to load all event dates for one month */
 	const filter = {
 		limit: 1000,
 		where: {
