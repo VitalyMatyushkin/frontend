@@ -4,12 +4,14 @@
 
 const Immutable = require('immutable');
 
-/** Load in binding data for all dates which have events */
+/** Load in binding data for all dates which have events
+ *  Required for building calendar highlight - it requires only dates without event content, so loaded blazing fast
+ */
 function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsBinding){
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
-	eventsBinding.set('distinctEventDatesData.isSync', false);
+	eventsBinding.set('distinctEventDatesData.isSync', false);	// TODO: is it okay?
 
 	const filter = {
 		limit: 1000,
@@ -17,9 +19,6 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 			startTime: {
 				$gte: 	monthStartDate,
 				$lt: 	monthEndDate
-			},
-			status: {
-				$nin: ['REJECTED']
 			}
 		}
 	};

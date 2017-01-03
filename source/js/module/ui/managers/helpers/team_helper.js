@@ -3,6 +3,7 @@ const	TeamPlayersValidator	= require('module/ui/managers/helpers/team_players_va
 		MoreartyHelper			= require('module/helpers/morearty_helper'),
 		RoleHelper				= require('module/helpers/role_helper'),
 		SportConsts				= require('module/helpers/consts/sport'),
+		propz					= require('propz'),
 		Lazy					= require('lazy.js'),
 		Promise 				= require('bluebird'),
 		Immutable				= require('immutable');
@@ -408,15 +409,19 @@ function isInterSchoolsEventForOneOnOneSport(event) {
 
 		return (eventType === 'inter-schools') && self.isOneOnOneSport(event);
 	}
-};
+}
 
+/** Check if sport is INDIVIDUAL or 1X1
+ * @param event
+ * @returns {boolean}
+ */
 function isNonTeamSport(event) {
 	if(typeof event !== 'undefined') {
 		const sport = event.sportModel ? event.sportModel : event.sport;
 
 		return sport.players === 'INDIVIDUAL' || sport.players === '1X1';
 	}
-};
+}
 
 /** Checking if event's sport is TEAM or 2x2 */
 function isTeamSport(event) {

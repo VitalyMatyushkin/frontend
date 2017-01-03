@@ -1,6 +1,7 @@
 const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
+		Lazy						= require('lazy.js'),
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
@@ -193,7 +194,7 @@ const Event = React.createClass({
 	setTeamPlayersFromEventToBinding: function(event) {
 		const binding = this.getDefaultBinding();
 
-		const players = event.teamsData.map(tp => tp.players);
+		const players = event.teamsData.map(tp => tp.players);	// players is Array[Array[Object]]
 		// TODO many player bundles, oh it's soo bad
 		binding
 			.atomically()
@@ -321,22 +322,17 @@ const Event = React.createClass({
 		};
 	},
 	// TODO many player bundles, oh it's soo bad
+	/**
+	 *
+	 * @param {Array.<Array.<Object>>|Array.<Object>} players array of arrays of team players or array of individuals
+	 */
 	setPlayersToTabBinding: function(players) {
 		const binding = this.getDefaultBinding();
 
-		let _players = [];
-		if(players.length !== 0) {
-			if(TeamHelper.isNonTeamSport()) {
-				_players.push(players);
-			} else {
-				_players = _players.concat(players[0]);
-				_players = _players.concat(players[1]);
-			}
-			_players = _players.map(p => {
-				p.id = p.userId + p.permissionId;
-				return p;
-			});
-		}
+		const _players = Lazy(players).flatten().map(p => {
+			p.id = p.userId + p.permissionId;
+			return p;
+		}).toArray();
 
 		binding.set('tasksTab.players', Immutable.fromJS(_players));
 	},
