@@ -21,11 +21,11 @@ const	React							= require('react'),
 const EventManagerBase = React.createClass({
 	mixins: [Morearty.Mixin],
 	/**
-     * House filtering service...
-     * @param houseName
-     * @returns {*}
-     */
-    serviceHouseFilter: function(order, houseName) {
+	 * House filtering service...
+	 * @param houseName
+	 * @returns {*}
+	 */
+	serviceHouseFilter: function(order, houseName) {
 		const	self		= this,
 				binding		= self.getDefaultBinding(),
 				schoolId	= binding.get('schoolInfo.id');
@@ -54,7 +54,7 @@ const EventManagerBase = React.createClass({
 				filter: filter
 			}
 		);
-    },
+	},
 	/**
 	 * Get house ID from other autocomplete
 	 * @param currHouseIndex -
@@ -76,46 +76,70 @@ const EventManagerBase = React.createClass({
 
 		return otherHouseId;
 	},
-    /**
-     * School filtering service
-     * @param schoolName
-     * @returns {*}
-     */
-    serviceSchoolFilter: function(schoolName) {
-        const   self        = this,
-                binding     = self.getDefaultBinding(),
-                schoolId    = binding.get('schoolInfo.id');
+	/**
+	 * School filtering service
+	 * @param schoolName
+	 * @returns {*}
+	 */
+	serviceSchoolFilter: function(schoolName) {
+		const   self        = this,
+				binding     = self.getDefaultBinding(),
+				schoolId    = binding.get('schoolInfo.id');
 
-        const filter = {
-            filter: {
-                where: {
+		let schools;
+
+		const filter = {
+			filter: {
+				where: {
 					id: {
 						$nin: [schoolId]
 					},
-                    name: { like: schoolName }
-                },
+					name: { like: schoolName }
+				},
 				order:"name ASC",
-                limit: 400
-            }
-        };
-        return window.Server.publicSchools.get(filter);
-    },
+				limit: 400
+			}
+		};
+
+		return window.Server.publicSchools.get(filter)
+			.then(_schools => {
+				schools = _schools;
+
+				return this.getTBDSchool();
+			})
+			.then(data => {
+				// set TBD school at first
+
+				schools.unshift(data[0]);
+				return schools;
+			});
+	},
+	getTBDSchool: function() {
+		const filter = {
+			filter: {
+				where: {
+					name: { like: "TBD" }
+				}
+			}
+		};
+		return window.Server.publicSchools.get(filter);
+	},
 	changeCompleteSport: function (event) {
 		var self = this,
-            binding = self.getDefaultBinding(),
-            sportsBinding = self.getBinding('sports'),
-            sportId = event.target.value,
-            sportIndex = sportsBinding.get('models').findIndex(function(model) {
-                return model.get('id') === sportId;
-            });
+			binding = self.getDefaultBinding(),
+			sportsBinding = self.getBinding('sports'),
+			sportId = event.target.value,
+			sportIndex = sportsBinding.get('models').findIndex(function(model) {
+				return model.get('id') === sportId;
+			});
 
 		const sportModel = sportsBinding.get(`models.${sportIndex}`).toJS();
 
 		binding.atomically()
-            .set('model.sportId',    event.target.value)
-            .set('model.sportModel', Immutable.fromJS(sportModel))
-            .set('model.gender',     Immutable.fromJS(this.getDefaultGender(sportModel)))
-            .commit();
+			.set('model.sportId',    event.target.value)
+			.set('model.sportModel', Immutable.fromJS(sportModel))
+			.set('model.gender',     Immutable.fromJS(this.getDefaultGender(sportModel)))
+			.commit();
 	},
 	getDefaultGender: function(sportModel) {
 		switch (true) {
@@ -129,12 +153,12 @@ const EventManagerBase = React.createClass({
 				return 'maleOnly';
 		}
 	},
-    changeCompleteAges: function (selections) {
-        var self = this,
-            binding = self.getDefaultBinding();
+	changeCompleteAges: function (selections) {
+		var self = this,
+			binding = self.getDefaultBinding();
 
-        binding.set('model.ages', Immutable.fromJS(selections));
-    },
+		binding.set('model.ages', Immutable.fromJS(selections));
+	},
 	onSelectRival: function (order, id, model) {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -143,11 +167,11 @@ const EventManagerBase = React.createClass({
 			binding.set(`rivals.${order}`, Immutable.fromJS(model));
 		}
 	},
-    getSports: function () {
-        const	self	= this,
-        		sports	= self.getBinding('sports').toJS();
+	getSports: function () {
+		const	self	= this,
+				sports	= self.getBinding('sports').toJS();
 
-        return sports.models.map(sport => {
+		return sports.models.map(sport => {
 			return (
 				<option	value	= { sport.id }
 						key		= { sport.id }
@@ -155,20 +179,20 @@ const EventManagerBase = React.createClass({
 					{sport.name}
 				</option>
 			);
-        });
-    },
+		});
+	},
 
 	render: function() {
 		const   self                = this,
-                binding             = self.getDefaultBinding(),
-                activeSchoolName    = binding.get('schoolInfo.name'),
-                sportId             = binding.get('model.sportId'),
-                services = {
-                    'inter-schools':    self.serviceSchoolFilter,
-                    'houses':           self.serviceHouseFilter,
-                    'internal':         self.serviceClassFilter
-                },
-                type    = binding.get('model.type');
+				binding             = self.getDefaultBinding(),
+				activeSchoolName    = binding.get('schoolInfo.name'),
+				sportId             = binding.get('model.sportId'),
+				services = {
+					'inter-schools':    self.serviceSchoolFilter,
+					'houses':           self.serviceHouseFilter,
+					'internal':         self.serviceClassFilter
+				},
+				type    = binding.get('model.type');
 
 		return(
 			<div className="eManager_base">
