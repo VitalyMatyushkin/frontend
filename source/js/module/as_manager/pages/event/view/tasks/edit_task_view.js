@@ -1,19 +1,20 @@
 const	React					= require('react'),
 
-		PencilButton			= require('../../../../../ui/pencil_button'),
-		CrossButton				= require('../../../../../ui/cross_button'),
 		MultiselectDropdown		= require('../../../../../ui/multiselect-dropdown/multiselect-dropdown'),
 		Button					= require('../../../../../ui/button/button'),
 		EditTaskViewCssStyle	= require('../../../../../../../styles/ui/b_edit_task_view.scss');
 
-const EditEditTaskView = React.createClass({
+const EditTaskView = React.createClass({
 	propTypes: {
-		task		: React.PropTypes.array.isRequired,
-		players		: React.PropTypes.array.isRequired
+		viewMode		: React.PropTypes.array.isRequired,
+		task			: React.PropTypes.array.isRequired,
+		players			: React.PropTypes.array.isRequired,
+		handleClickSave	: React.PropTypes.func.isRequired
 	},
 	componentWillMount: function() {
 		this.setState({
-			selectedPlayers	: this.convertPlayersToMultiselectFormat(this.props.task.players),
+			selectedPlayers	: typeof this.props.task.assignees !== "undefined" ?
+				this.convertPlayersToMultiselectFormat(this.props.task.assignees): [],
 			text			: this.props.task.text
 		});
 	},
@@ -23,14 +24,23 @@ const EditEditTaskView = React.createClass({
 			text			: undefined
 		};
 	},
+	getHeaderText: function() {
+		switch (this.props.viewMode) {
+			case "EDIT":
+				return "Change task";
+			case "ADD":
+				return "Add task";
+		}
+	},
 	convertPlayersToMultiselectFormat: function(players) {
 		return players.map(p => {
+			p.id = p.userId + p.permissionId;
 			p.value = `${p.firstName} ${p.lastName}`;
 			return p;
 		});
 	},
-	getPlayers: function(players) {
-		return this.convertPlayersToMultiselectFormat(players);
+	getPlayersForMultiselect: function(players) {
+		return typeof players !== "undefined" ? this.convertPlayersToMultiselectFormat(players) : [];
 	},
 	handleChangeText: function(eventDescriptor) {
 		this.setState({
@@ -45,18 +55,26 @@ const EditEditTaskView = React.createClass({
 		if(foundSelectedPlayerIndex !== -1) {
 			selectedPlayers.splice(foundSelectedPlayerIndex, 1);
 		} else {
-			selectedPlayers.push(selectedPlayer.id);
+			selectedPlayers.push(selectedPlayer);
 		}
 
 		this.setState({
 			selectedPlayers: selectedPlayers
 		});
 	},
+	handleClickSave: function() {
+		this.props.handleClickSave(
+			{
+				text			: this.state.text,
+				selectedPlayers	: this.state.selectedPlayers
+			}
+		);
+	},
 	render: function() {
 		return (
 			<div className="bEditTaskView">
 				<div className="eEditTaskView_header">
-					Change task
+					{this.getHeaderText()}
 				</div>
 				<div className="eEditTaskView_body">
 					<div className="eEditTaskView_descriptionTextFieldLabel">
@@ -71,16 +89,19 @@ const EditEditTaskView = React.createClass({
 				</div>
 				<div className="eEditTaskView_footer">
 					<div className="eEditTaskView_multiselectWrapper">
-						<MultiselectDropdown	items			= {this.getPlayers(this.props.players)}
+						<MultiselectDropdown	items			= {this.getPlayersForMultiselect(this.props.players)}
 												selectedItems	= {this.state.selectedPlayers}
 												handleClickItem	= {this.handleClickPlayer}
 						/>
 					</div>
-					<Button text={'Save'}/>
+					<Button	extraStyleClasses	= {'mSaveTask'}
+							onClick				= {this.handleClickSave}
+							text				= {'Save'}
+					/>
 				</div>
 			</div>
 		);
 	}
 });
 
-module.exports = EditEditTaskView;
+module.exports = EditTaskView;
