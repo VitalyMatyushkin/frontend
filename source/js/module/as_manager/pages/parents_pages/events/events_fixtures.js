@@ -74,7 +74,6 @@ const EventFixtures = React.createClass({
 			return events.forEach(event => {
 				const child = this.getChildFromEvent(event, childList);
 				if(typeof child !== "undefined") {
-					console.log(child);
 					event.child = child;
 				}
 			});
