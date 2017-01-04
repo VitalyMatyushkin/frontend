@@ -187,14 +187,17 @@ const InviteView = React.createClass({
 					</div>
 				</div>
 				<div className="eInvite_comments">
-					<InviteComments binding	= {binding.sub('inviteComments')} inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
+					<InviteComments	binding			= {binding.sub('inviteComments')}
+									inviteId		= {inviteId}
+									activeSchoolId	= {this.activeSchoolId}
+					/>
 				</div>
-				<ConfirmDeclinePopup type={typeBinding}
-									 isConfirmPopup={isConfirmPopup}
-									 inviteId={inviteId}
-									 onClosePopup={this.closePopup}
-									 onDecline={this.props.onDecline}
-									 commentText=''
+				<ConfirmDeclinePopup	type			= {typeBinding}
+										isConfirmPopup	= {isConfirmPopup}
+										inviteId		= {inviteId}
+										onClosePopup	= {this.closePopup}
+										onDecline		= {this.props.onDecline}
+										commentText		= ''
 				/>
 			</div>
 
