@@ -59,6 +59,9 @@ const Event = React.createClass({
 				viewMode		: "VIEW",
 				editingTask		: undefined
 			},
+			autocompleteChangeOpponentSchool: {
+				school: undefined
+			},
 			individualScoreAvailable: [
 				{
 					value: true
