@@ -16,6 +16,12 @@ const Performance = React.createClass({
 			event:		this.getBinding('event')
 		};
 	},
+	getPerformanceData: function() {
+		return this.getBinding('event').toJS('results.individualPerformance');
+	},
+	getBackupPerformanceData: function() {
+		return this.getDefaultBinding().toJS('backupIndividualPerformance');
+	},
 	isSync: function() {
 		return this.getBinding('eventTeams').toJS('isSync');
 	},
@@ -69,15 +75,42 @@ const Performance = React.createClass({
 
 		return Promise.all(promises);
 	},
-	handleClickChangeMode: function() {
+	changeViewMode: function() {
 		this.getDefaultBinding().set(
 			'isEditMode',
 			!this.isEditMode()
 		);
-		// if user change tab to view mode
+	},
+	backupPerformanceData: function() {
+		this.getDefaultBinding().set(
+			'backupIndividualPerformance',
+			Immutable.fromJS(this.getPerformanceData())
+		);
+	},
+	restorePerformanceData: function() {
+		this.getBinding('event').set(
+			'results.individualPerformance',
+			Immutable.fromJS(this.getBackupPerformanceData())
+		);
+	},
+	clearBackupPerformanceDate: function() {
+		this.getDefaultBinding().set('backupIndividualPerformance', undefined);
+	},
+	handleClickChangeMode: function() {
 		if(!this.isEditMode()) {
-			this.submitIndividualPerformance(this.getEvent())
+			this.backupPerformanceData();
 		}
+		this.changeViewMode();
+	},
+	onSave: function() {
+		this.clearBackupPerformanceDate();
+		this.submitIndividualPerformance(this.getEvent());
+		this.changeViewMode();
+	},
+	onCancel: function() {
+		this.restorePerformanceData();
+		this.clearBackupPerformanceDate();
+		this.changeViewMode();
 	},
 	render: function() {
 		switch (true) {
@@ -87,8 +120,9 @@ const Performance = React.createClass({
 			// Is edit mode
 			case this.getDefaultBinding().get('isEditMode'):
 				return (
-					<PerformanceEdit	binding					= {this.getPlayerPerformanceBinding()}
-										handleClickChangeMode	= {this.handleClickChangeMode}
+					<PerformanceEdit	binding		= {this.getPlayerPerformanceBinding()}
+										onSave		= {this.onSave}
+										onCancel	= {this.onCancel}
 					/>
 				);
 			// Is view mode

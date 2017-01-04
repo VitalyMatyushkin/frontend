@@ -14,7 +14,8 @@ const	React				= require('react'),
 const PerformanceEdit = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	propTypes: {
-		handleClickChangeMode: React.PropTypes.func.isRequired
+		onSave		: React.PropTypes.func.isRequired,
+		onCancel	: React.PropTypes.func.isRequired
 	},
 	handleValueChange: function(player, permissionId, performanceId, value) {
 		const self = this;
@@ -416,7 +417,16 @@ const PerformanceEdit = React.createClass({
 		return (
 			<div className="bEventPerformance">
 				<div className="eEventPerformance_header">
-					<PencilButton handleClick={this.props.handleClickChangeMode}/>
+					<div	className	= "bButton mCancel mMarginRight"
+							onClick		= {this.props.onCancel}
+					>
+						Cancel
+					</div>
+					<div	className	= "bButton"
+							onClick		= {this.props.onSave}
+					>
+						Save
+					</div>
 				</div>
 				<div className="eEventPerformance_body">
 					{teams}
