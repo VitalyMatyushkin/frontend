@@ -5,7 +5,7 @@ const	React			= require('react'),
 		If				= require('module/ui/if/if'),
 		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		Promise			= require('bluebird'),
-
+		RoleHelper		= require('../../../../../helpers/role_helper'),
 		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
@@ -481,11 +481,11 @@ const Buttons = React.createClass({
 		}
 	},
 	renderScoreEventButton: function() {
-		switch (this.getDefaultBinding().toJS('model.status')) {
+		switch (this.getEventStatus()) {
 			case EventHelper.EVENT_STATUS.FINISHED:
 				return (
 					<div	onClick		= {this.handleClickCloseEvent}
-							className	="bButton mHalfWidth"
+							className	="bButton mFullWidth"
 					>
 						Change score
 					</div>
@@ -500,32 +500,66 @@ const Buttons = React.createClass({
 				);
 		};
 	},
-	render: function() {
-		const self = this;
-		return (
-			<If condition={EventHelper._isShowEventButtons(self)}>
+	getEventStatus: function() {
+		return this.getDefaultBinding().toJS('model.status');
+	},
+	getViewMode: function() {
+		return this.getDefaultBinding().toJS('mode');
+	},
+	/**
+	 * Close event/change score button and cancel event button.
+	 * @returns {XML}
+	 */
+	renderScoreEventButtonsContainer: function() {
+		if(TeamHelper.isShowScoreEventButtonsBlock(this)) {
+			return (
 				<div className="bEventButtons">
-					<If condition={TeamHelper.isShowScoreEventButton(self)}>
+					<div className="eEventButtons_wrapper">
 						{this.renderScoreEventButton()}
 						{this.renderCancelEventButton()}
-					</If>
-					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>
-						<div	className	= "bButton mCancel mMarginRight"
-								onClick		= {self.onClickCloseCancel}
-						>
-							Cancel
-						</div>
-					</If>
-					<If condition={EventHelper._isShowFinishEventEditingButton(self)}>
-						<div	className	= "bButton"
-								onClick		= {self.onClickOk}
-						>
-							Save
-						</div>
-					</If>
+					</div>
 				</div>
-			</If>
+			);
+		}
+	},
+	/**
+	 * Cancel and Save - buttons.
+	 * Buttons for close event or for change score.
+	 * So, save results or cancel.
+	 * @returns {XML}
+	 */
+	renderChangeScoreEventButtonsContainer: function() {
+		return (
+			<div className="bEventButtons">
+				<div	className	= "bButton mCancel mMarginRight"
+						onClick		= {this.onClickCloseCancel}
+				>
+					Cancel
+				</div>
+				<div	className	= "bButton"
+						onClick		= {this.onClickOk}
+				>
+					Save
+				</div>
+			</div>
 		);
+	},
+	render: function() {
+		let buttons = null;
+
+		// It's general condition for all buttons
+		if(RoleHelper.isUserSchoolWorker(this)) {
+			switch (this.getViewMode()) {
+				case 'general':
+					buttons = this.renderScoreEventButtonsContainer();
+					break;
+				case 'closing':
+					buttons = this.renderChangeScoreEventButtonsContainer();
+					break;
+			};
+		}
+
+		return buttons;
 	}
 });
 
