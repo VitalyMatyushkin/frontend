@@ -21,7 +21,8 @@ const EventHelper = {
 		NOT_FINISHED:				'NOT_FINISHED',
 		DRAFT:						'DRAFT',
 		ACCEPTED:					'ACCEPTED',
-		REJECTED:					'REJECTED'
+		REJECTED:					'REJECTED',
+		CANCELED:					'CANCELED'
 	},
 	/**
 	 * Create event summary object by event result object.

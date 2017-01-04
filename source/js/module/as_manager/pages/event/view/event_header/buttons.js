@@ -461,6 +461,25 @@ const Buttons = React.createClass({
 			() => {}
 		);
 	},
+	renderCancelEventButton: function() {
+		const eventStatus = this.getDefaultBinding().toJS('model.status');
+
+		if(
+			eventStatus !== EventHelper.EVENT_STATUS.FINISHED ||
+			eventStatus !== EventHelper.EVENT_STATUS.REJECTED ||
+			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
+		) {
+			return (
+				<div className="eLink_CancelEvent">
+					<a onClick={this.onClickCancelMatch}>
+						Cancel
+					</a>
+				</div>
+			);
+		} else {
+			return null;
+		}
+	},
 	renderScoreEventButton: function() {
 		switch (this.getDefaultBinding().toJS('model.status')) {
 			case EventHelper.EVENT_STATUS.FINISHED:
@@ -473,40 +492,12 @@ const Buttons = React.createClass({
 				);
 			case EventHelper.EVENT_STATUS.ACCEPTED:
 				return (
-				<div>
 					<div	onClick		= {this.handleClickCloseEvent}
 							className	="bButton mFullWidth"
 					>
 						Close event
 					</div>
-					<div className="eLink_CancelEvent">
-						<a onClick={this.onClickCancelMatch}>
-							Cancel
-						</a>
-					</div>
-				</div>
 				);
-			case EventHelper.EVENT_STATUS.INVITES_SENT: return (
-				<div className="eLink_CancelEvent">
-					<a onClick={this.onClickCancelMatch}>
-						Cancel
-					</a>
-				</div>
-			);
-			case EventHelper.EVENT_STATUS.SENDING_INVITES: return (
-				<div className="eLink_CancelEvent">
-					<a onClick={this.onClickCancelMatch}>
-						Cancel
-					</a>
-				</div>
-			);
-			case EventHelper.EVENT_STATUS.COLLECTING_INVITE_RESPONSE: return (
-				<div className="eLink_CancelEvent">
-					<a onClick={this.onClickCancelMatch}>
-						Cancel
-					</a>
-				</div>
-			);
 		};
 	},
 	render: function() {
@@ -516,6 +507,7 @@ const Buttons = React.createClass({
 				<div className="bEventButtons">
 					<If condition={TeamHelper.isShowScoreEventButton(self)}>
 						{this.renderScoreEventButton()}
+						{this.renderCancelEventButton()}
 					</If>
 					<If condition={EventHelper._isShowCancelEventCloseButton(self)}>
 						<div	className	= "bButton mCancel mMarginRight"
