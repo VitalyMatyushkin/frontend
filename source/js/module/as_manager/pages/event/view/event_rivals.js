@@ -350,7 +350,11 @@ const EventRival = React.createClass({
 
 		const	event	= binding.toJS('model');
 
-		return order === 1 && EventHelper.isInterSchoolsEvent(event) && EventHelper.isNotAcceptedEvent(binding);
+		return order === 1 &&
+			EventHelper.isInterSchoolsEvent(event) &&
+			binding.get('model.status') !== EventHelper.EVENT_STATUS.FINISHED &&
+			binding.get('model.status') !== EventHelper.EVENT_STATUS.ACCEPTED &&
+			this.props.activeSchoolId === event.inviterSchoolId;
 	},
 	_renderTeamByOrder: function(order) {
 		const eventRivalClassName = classNames({
