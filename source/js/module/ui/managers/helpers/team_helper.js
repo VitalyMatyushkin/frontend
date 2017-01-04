@@ -474,16 +474,13 @@ function isTeamDataCorrect(event, validationData) {
  * @returns {boolean}
  * @private
  */
-function isShowScoreEventButton(thiz) {
+function isShowScoreEventButtonsBlock(thiz) {
 	const	self	= this,
 			binding	= thiz.getDefaultBinding();
 
 	const event = binding.toJS('model');
 
 	return (
-			binding.toJS('model.status') === "ACCEPTED" ||
-			binding.toJS('model.status') === "FINISHED"
-		) && (
 			self.isInterSchoolsEventForIndividualSport(event) ?
 				(
 					self.isSchoolHaveIndividualPlayers(event, event.inviterSchool.id) &&
@@ -497,9 +494,7 @@ function isShowScoreEventButton(thiz) {
 				: true
 		) &&
 		( self.isInternalEventForTeamSport(event) ? event.teamsData.length === 2 : true ) &&
-		( self.isInternalEventForOneOnOneSport(event) ? event.individualsData.length === 2 : true ) &&
-		EventHelper.isGeneralMode(binding) &&
-		RoleHelper.isUserSchoolWorker(thiz);
+		( self.isInternalEventForOneOnOneSport(event) ? event.individualsData.length === 2 : true );
 }
 
 /**
@@ -1313,7 +1308,7 @@ const TeamHelper = {
 	isTeamDataCorrect:						isTeamDataCorrect,
 	isTeamSport:							isTeamSport,
 	isShowEditEventButton:					isShowEditEventButton,
-	isShowScoreEventButton:					isShowScoreEventButton,
+	isShowScoreEventButtonsBlock:					isShowScoreEventButtonsBlock,
 	isSchoolHaveIndividualPlayers:			isSchoolHaveIndividualPlayers,
 	isHouseHaveIndividualPlayers:			isHouseHaveIndividualPlayers,
 	callFunctionForRightContext:			callFunctionForRightContext,

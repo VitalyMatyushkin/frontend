@@ -21,7 +21,8 @@ const EventHelper = {
 		NOT_FINISHED:				'NOT_FINISHED',
 		DRAFT:						'DRAFT',
 		ACCEPTED:					'ACCEPTED',
-		REJECTED:					'REJECTED'
+		REJECTED:					'REJECTED',
+		CANCELED:					'CANCELED'
 	},
 	/**
 	 * Create event summary object by event result object.
@@ -131,42 +132,6 @@ const EventHelper = {
 	},
 	isGeneralMode: function(binding) {
 		return binding.get('mode') === 'general';
-	},
-	/**
-	 * Return TRUE if event edit mode is "closing".
-	 * It's mean step before event will close.
-	 * @returns {boolean}
-	 * @private
-	 */
-	_isShowCancelEventCloseButton: function(thiz) {
-		const binding = thiz.getDefaultBinding();
-
-		return binding.get('mode') === 'closing' &&
-			RoleHelper.isUserSchoolWorker(thiz);
-	},
-	/**
-	 * Return TRUE if event edit mode is "edit_squad".
-	 * @returns {boolean}
-	 * @private
-	 */
-	_isShowCancelEventEditButton: function(thiz) {
-		const binding = thiz.getDefaultBinding();
-
-		return binding.get('mode') === 'edit_squad' && RoleHelper.isUserSchoolWorker(thiz);
-	},
-	/**
-	 * Return TRUE if event edit mode is "general".
-	 * And for tabs teams, performance
-	 * @returns {boolean}
-	 * @private
-	 */
-	_isShowFinishEventEditingButton: function(thiz) {
-		const binding = thiz.getDefaultBinding();
-
-		return (
-			binding.get('mode') !== 'general'
-			&& RoleHelper.isUserSchoolWorker(thiz)
-		);
 	},
 	isEventWithOneIndividualTeam: function(event) {
 		const	eventType	= event.eventType ?  EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType] : event.type,
