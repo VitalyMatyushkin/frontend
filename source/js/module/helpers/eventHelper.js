@@ -121,15 +121,6 @@ const EventHelper = {
 			binding.get('model.status') === self.EVENT_STATUS.INVITES_SENT
 		);
 	},
-	isNotAcceptedEvent: function(binding) {
-		const self = this;
-
-		// TODO I'm not completely sure
-		return (
-			binding.get('model.status') !== self.EVENT_STATUS.FINISHED ||
-			binding.get('model.status') !== self.EVENT_STATUS.ACCEPTED
-		);
-	},
 	isGeneralMode: function(binding) {
 		return binding.get('mode') === 'general';
 	},
