@@ -2,8 +2,9 @@
  * Created by wert on 03.09.16.
  */
 
-const 	React		= require('react'),
-		SportIcon	= require('module/ui/icons/sport_icon');
+const 	React				= require('react'),
+		SportIcon			= require('module/ui/icons/sport_icon'),
+		EventCalendarStyle	= require('../../../../styles/pages/events/b_events_calendar.scss');
 
 /** Object to draw event details in challenge list.
  *  Have a lot of undocumented shit inside - it was just compiled from already existed code.
@@ -33,7 +34,7 @@ const ChallengeListItem = React.createClass({
 		// TODO: I'm not sure it should be here. Models as they are implemented sucks, but they hide that kind of code
 		switch (true) {
 			case isCancelled:
-				eventResult = 'Canceled';
+				eventResult = 'Cancelled';
 				break;
 			case isRejected:
 				eventResult = 'Rejected';
@@ -45,10 +46,21 @@ const ChallengeListItem = React.createClass({
 				eventResult = <span>{model.textResult}<br/>{model.score}</span>
 		}
 
+		/* calculating styles. cancelled and rejected events have their own inactive style */
+		const	isInactive	= isCancelled || isRejected,
+				topClassName	= 'eChallenge ' + (isInactive ? 'mInactive' : ''),
+				iconClassName	= 'bIcon_invites ' + (isInactive ? 'mInactive' : '');
+
+		// TODO: actually it shouldn't be here. Click event should be triggered on any event and dispatched on
+		// TODO: top levels of hierarchy. But this is faster solution.
+		const handler = () => {
+			if(!isCancelled && !isRejected) this.onClick(event.id)
+		};
+
 		return (
-			<div key={'event-' + event.id} className='eChallenge' onClick={() => this.onClick(event.id)}>
+			<div key={'event-' + event.id} className={topClassName} onClick={handler}>
 				<div className="eChallenge_sport">
-					<SportIcon name={model.sport} className="bIcon_invites" />
+					<SportIcon name={model.sport} className={iconClassName} />
 				</div>
 				<div className="eChallenge_date">
 					{model.time}

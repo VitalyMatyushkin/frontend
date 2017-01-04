@@ -4,6 +4,10 @@
   display: inline-block;
   color: #fff;
   fill: currentColor;
+
+  &.mInactive {
+    filter: grayscale(100%);
+  }
 }
 .bIcon-mod{
   color: #000000 ;
