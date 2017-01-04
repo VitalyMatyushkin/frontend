@@ -113,9 +113,11 @@ const DetailsWrapper = React.createClass({
 							meetTime			= { this.state.eventDetails.meetTime }
 							teaTime				= { this.state.eventDetails.teaTime }
 							lunchTime			= { this.state.eventDetails.lunchTime }
+							staff				= { this.state.eventDetails.staff }
 							handleChange		= { this.handleChange }
 							handleChangeMode	= { this.handleChangeMode }
 							isParent			= { this.props.isParent }
+							activeSchoolId		= { this.props.schoolId }
 				/>
 			);
 		}

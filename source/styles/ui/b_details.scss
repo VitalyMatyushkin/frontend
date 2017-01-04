@@ -46,6 +46,28 @@
   font-family: Glober, sans-serif;
 }
 
+.eDetails_comboboxWrapper {
+  margin-top: 8px;
+}
+
+.eDetails_personalContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.eDetails_personalName {
+  flex-grow: 6;
+}
+
+.eDetails_deletePersonalButton {
+  width: 14px;
+
+  &:hover {
+    color: #007abf;
+  }
+}
+
 .eDetails_textArea {
   width: 500px;
   height: 100px;
