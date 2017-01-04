@@ -45,7 +45,8 @@ const InviteActions = {
 	},
 	declineInvite: function (schoolId, inviteId, binding, commentText) {
 		window.Server.declineSchoolInvite.post({
-			schoolId: schoolId, inviteId: inviteId
+			schoolId: schoolId,
+			inviteId: inviteId
 		})
 		.then(() => {
 			const	invites = binding.toJS('models'),
@@ -54,7 +55,7 @@ const InviteActions = {
 			binding.set('models', Immutable.fromJS(newList));
 			return window.Server.schoolInviteComments.post(
 				{
-					schoolId: this.props.activeSchoolId,
+					schoolId: schoolId,
 					inviteId: inviteId
 				}, {
 					text: "Rejected by opponent. " + commentText
