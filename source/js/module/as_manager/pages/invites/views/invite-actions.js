@@ -43,7 +43,7 @@ const InviteActions = {
 			});
 		});
 	},
-	declineInvite: function (schoolId, inviteId, binding) {
+	declineInvite: function (schoolId, inviteId, binding, commentText) {
 		window.Server.declineSchoolInvite.post({
 			schoolId: schoolId, inviteId: inviteId
 		}).then(() => {
