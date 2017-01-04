@@ -115,11 +115,12 @@ const Details = React.createClass({
 	 * @param user
 	 */
 	handleDeletePersonal: function(user) {
-		const updStaff = this.props.staff;
+		let updStaff = this.props.staff;
 
 		const foundStaffIndex = updStaff.findIndex(staff => staff.userId === user.userId && staff.permissionId === user.permissionId);
+		updStaff = updStaff.slice(foundStaffIndex, 1);
 
-		this.props.handleChange('staff', updStaff.splice(0, foundStaffIndex));
+		this.props.handleChange('staff', updStaff);
 	},
 	/**
 	 * Handler for new coach.
