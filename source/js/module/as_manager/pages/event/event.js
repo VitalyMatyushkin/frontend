@@ -261,12 +261,12 @@ const Event = React.createClass({
 				text		: 'Details',
 				isActive	: false
 			}, {
-				value		: 'report',
-				text		: 'Match Report',
-				isActive	: false
-			}, {
 				value		: 'tasks',
 				text		: 'Tasks',
+				isActive	: false
+			}, {
+				value		: 'report',
+				text		: 'Match Report',
 				isActive	: false
 			}
 		);
