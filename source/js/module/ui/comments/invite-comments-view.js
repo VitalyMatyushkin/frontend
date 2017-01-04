@@ -1,10 +1,10 @@
 /**
  * Created by Woland on 27.12.2016.
  */
-const  React 		= require('react'),
-	Avatar 			= require('module/ui/avatar/avatar'),
-	If 				= require('module/ui/if/if'),
-	DateHelper 		= require('module/helpers/date_helper');
+const	React 		= require('react'),
+		Avatar 			= require('module/ui/avatar/avatar'),
+		If 				= require('module/ui/if/if'),
+		DateHelper 		= require('module/helpers/date_helper');
 
 const InviteCommentsView = React.createClass({
 	propTypes: {
@@ -18,24 +18,24 @@ const InviteCommentsView = React.createClass({
 
 		return comments && comments.map( comment => {
 				return (
-					<div key={comment.id} className="bInviteCommentsView_box">
+					<div key={comment.id} className="bBlog_box">
 						<div className="ePicBox">
 							<Avatar pic={comment.author.avatar} minValue={45} />
 						</div>
 						<div className="eMessageBox">
-						<span className="eUsername">
-							{`${comment.author.firstName} ${comment.author.lastName}`}
-						</span>
-							<If condition={!!(comment && comment.replyToUser)}>
-							<span className="eUsernameReply">
-								{`${comment.replyToUser && comment.replyToUser.firstName} ${comment.replyToUser && comment.replyToUser.lastName}`}
+							<span className="eUsername">
+								{`${comment.author.firstName} ${comment.author.lastName}`}
 							</span>
+							<If condition={!!(comment && comment.replyToUser)}>
+								<span className="eUsernameReply">
+									{`${comment.replyToUser && comment.replyToUser.firstName} ${comment.replyToUser && comment.replyToUser.lastName}`}
+								</span>
 							</If>
 							<span className="eMessage">
-							{comment.text}
-						</span>
+								{comment.text}
+							</span>
 							<div>
-								<a className="eReply" onClick={this.handleOnClick(comment)}>Reply</a>
+								<a className="eReply" onClick={this.handleOnClick.bind(null, comment)}>Reply</a>
 								<span className="eCommentDate">{DateHelper.getDateTimeString(comment.createdAt)}</span>
 							</div>
 						</div>

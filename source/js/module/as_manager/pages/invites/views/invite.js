@@ -1,4 +1,4 @@
-const React 				= require('react'),
+const	React 				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable 			= require('immutable'),
 		classNames 			= require('classnames'),
@@ -8,9 +8,10 @@ const React 				= require('react'),
 		Map 				= require('module/ui/map/map-event-venue'),
 		propz				= require('propz'),
 		Bootstrap 			= require('styles/bootstrap-custom.scss'),
-		InviteComments		= require('module/ui/comments/invite-comments'),
+		InviteComments		= require('../../../../ui/comments/invite-comments'),
 		ConfirmDeclinePopup	= require('./confirm-decline-popup'),
-		InviteStyles 		= require('styles/pages/events/b_invite.scss');
+		InviteStyles 		= require('styles/pages/events/b_invite.scss'),
+		If					= require('../../../../ui/if/if');
 
 const InviteView = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -74,7 +75,9 @@ const InviteView = React.createClass({
 
 		binding.set('expandedComments', Immutable.fromJS(!expanded));
 	},
-
+	isShowComments: function() {
+		return this.getDefaultBinding().toJS('inviteComments.expandedComments');
+	},
 	render: function() {
 		const binding			= this.getDefaultBinding(),
 				inviterSchool 	= binding.toJS('inviterSchool'),
@@ -186,15 +189,20 @@ const InviteView = React.createClass({
 						<div className="eInvite_map">{venueArea}</div>
 					</div>
 				</div>
-				<div className="eInvite_comments">
-					<InviteComments binding	= {binding.sub('inviteComments')} inviteId={inviteId} activeSchoolId={this.activeSchoolId} />
-				</div>
-				<ConfirmDeclinePopup type={typeBinding}
-									 isConfirmPopup={isConfirmPopup}
-									 inviteId={inviteId}
-									 onClosePopup={this.closePopup}
-									 onDecline={this.props.onDecline}
-									 commentText=''
+				<If condition={this.isShowComments()}>
+					<div className="eInvite_comments">
+						<InviteComments	binding			= {binding.sub('inviteComments')}
+										inviteId		= {inviteId}
+										activeSchoolId	= {this.activeSchoolId}
+						/>
+					</div>
+				</If>
+				<ConfirmDeclinePopup	type			= {typeBinding}
+										isConfirmPopup	= {isConfirmPopup}
+										inviteId		= {inviteId}
+										onClosePopup	= {this.closePopup}
+										onDecline		= {this.props.onDecline}
+										commentText		= ''
 				/>
 			</div>
 
