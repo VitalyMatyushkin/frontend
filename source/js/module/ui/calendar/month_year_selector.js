@@ -59,25 +59,69 @@ const MonthYearSelector = React.createClass({
 		this.setState({dateState: dateObject.toISOString()});
 		this.props.onMonthClick(dateObject);
 	},
-
-	render: function() {		
+	changeMonthAndYear: function(month, year) {
 		const dateObject = new Date(this.state.dateState);
 
+		dateObject.setMonth(month);
+		dateObject.setFullYear(year);
+		this.setState({dateState: dateObject.toISOString()});
+		this.props.onMonthClick(dateObject);
+	},
+	handleClickPrevMonth: function() {
+		const currentMonth = parseInt(this.getCurrentMonth(), 10);
+
+		if(currentMonth === 0) {
+			this.changeMonthAndYear(
+				11,
+				parseInt(this.getCurrentYear(), 10) - 1
+			);
+		} else {
+			this.handleChangeMonth(currentMonth - 1);
+		}
+	},
+	handleClickNextMonth: function() {
+		const currentMonth = parseInt(this.getCurrentMonth(), 10);
+
+		if(currentMonth === 11) {
+			this.changeMonthAndYear(
+				0,
+				parseInt(this.getCurrentYear(), 10) + 1
+			);
+		} else {
+			this.handleChangeMonth(currentMonth + 1);
+		}
+	},
+
+	render: function() {
 		return (
 			<div className="bMonthYearSelector">
-				<div className="eMonthYearSelector_leftSide">
+				<div className="eMonthYearSelector_smallSizeColumn mLeft">
+					<div	className	= "eMonthYearSelector_arrow mLeft"
+							onClick		= {this.handleClickPrevMonth}
+					>
+						<i className="fa fa-arrow-left" aria-hidden="true"></i>
+					</div>
+				</div>
+				<div className="eMonthYearSelector_middleSizeColumn">
 					<Dropdown	optionsArray		= { this.getOptionsForMonthDropdown() }
 								currentOptionId		= { this.getCurrentMonth() }
 								handleChange		= { this.handleChangeMonth }
 								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
 				</div>
-				<div className="eMonthYearSelector_rightSide">
+				<div className="eMonthYearSelector_middleSizeColumn">
 					<Dropdown	optionsArray		= { this.getOptionsForYearDropdown() }
 								currentOptionId		= { this.getCurrentYear() }
 								handleChange		= { this.handleChangeYear }
 								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
+				</div>
+				<div className="eMonthYearSelector_smallSizeColumn mWithoutBorder mRight">
+					<div	className	= "eMonthYearSelector_arrow mRight"
+							onClick		= {this.handleClickNextMonth}
+					>
+						<i className="fa fa-arrow-right" aria-hidden="true"></i>
+					</div>
 				</div>
 			</div>
 		);
