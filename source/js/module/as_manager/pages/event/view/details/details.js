@@ -118,7 +118,7 @@ const Details = React.createClass({
 		let updStaff = this.props.staff;
 
 		const foundStaffIndex = updStaff.findIndex(staff => staff.userId === user.userId && staff.permissionId === user.permissionId);
-		updStaff = updStaff.slice(foundStaffIndex, 1);
+		updStaff.splice(foundStaffIndex, 1);
 
 		this.props.handleChange('staff', updStaff);
 	},

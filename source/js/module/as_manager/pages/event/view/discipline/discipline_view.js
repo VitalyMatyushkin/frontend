@@ -280,7 +280,6 @@ const DisciplineView = React.createClass({
 	},
 	renderPlayerDisciplineItems: function(player) {
 		return this.props.disciplineItems.map(disciplineItem => {
-			console.log(disciplineItem);
 			return (
 				<div className="ePlayer_disciplineItem">
 					<div className="ePlayer_disciplineItemName">
