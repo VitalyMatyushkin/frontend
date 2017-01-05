@@ -57,6 +57,7 @@ const Event = React.createClass({
 			},
 			tasksTab: {
 				viewMode		: "VIEW",
+				tasks			: [],
 				editingTask		: undefined
 			},
 			autocompleteChangeOpponentSchool: {
@@ -138,7 +139,7 @@ const Event = React.createClass({
 				.set('gallery.photos',					Immutable.fromJS(photos))
 				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
 				.set('gallery.isSync',					true)
-				.set('tasksTab.tasks',					Immutable.fromJS(tasks))
+				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
 				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
 				.set('mode',							Immutable.fromJS('general'))
 				.commit();
@@ -192,7 +193,9 @@ const Event = React.createClass({
 			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(event.individualsData))
 			.set('eventTeams.isSync',				Immutable.fromJS(true))
 			.commit();
-		this.setPlayersToTabBinding(event.individualsData);
+
+		const playersForTaskTab = event.individualsData.filter(player => player.schoolId === this.props.activeSchoolId);
+		this.setPlayersToTaskTabBinding(playersForTaskTab);
 	},
 	setTeamPlayersFromEventToBinding: function(event) {
 		const binding = this.getDefaultBinding();
@@ -205,7 +208,13 @@ const Event = React.createClass({
 			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(players))
 			.set('eventTeams.isSync',				Immutable.fromJS(true))
 			.commit();
-		this.setPlayersToTabBinding(players);
+
+		// playersForTaskTab is Array[Array[Object]]
+		const playersForTaskTab = event.teamsData
+			.filter(td => td.schoolId === this.props.activeSchoolId)
+			.map(tp => tp.players);
+
+		this.setPlayersToTaskTabBinding(playersForTaskTab);
 	},
 	loadPhotos: function(role) {
 		let service;
@@ -329,7 +338,7 @@ const Event = React.createClass({
 	 *
 	 * @param {Array.<Array.<Object>>|Array.<Object>} players array of arrays of team players or array of individuals
 	 */
-	setPlayersToTabBinding: function(players) {
+	setPlayersToTaskTabBinding: function(players) {
 		const binding = this.getDefaultBinding();
 
 		const _players = Lazy(players).flatten().map(p => {
@@ -439,7 +448,7 @@ const Event = React.createClass({
 		switch (true) {
 			case this.getActiveTab() === "gallery":
 				return this.getAddPhotoButton();
-			case viewMode !== "ADD" && this.getActiveTab() === "tasks":
+			case viewMode === "VIEW" && this.getActiveTab() === "tasks":
 				return this.getAddTaskButton();
 			default:
 				return null;

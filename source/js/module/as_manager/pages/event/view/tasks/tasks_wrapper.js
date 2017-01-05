@@ -9,6 +9,22 @@ const TasksWrapper = React.createClass({
 	propTypes: {
 		activeSchoolId	: React.PropTypes.string.isRequired
 	},
+	componentWillMount: function() {
+		const tasks = this.getDefaultBinding().toJS('tasks');
+		if(tasks.length === 0) {
+			this.setViewMode("ADD");
+		} else {
+			this.setViewMode("VIEW");
+		}
+
+		this.getDefaultBinding().sub('tasks').addListener(descriptor => {
+			const tasks = descriptor.getCurrentValue();
+
+			if(tasks.length === 0) {
+				this.setViewMode("ADD");
+			}
+		});
+	},
 	getViewMode: function() {
 		return this.getDefaultBinding().toJS('viewMode');
 	},
@@ -90,6 +106,10 @@ const TasksWrapper = React.createClass({
 		.then(() => window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: this.getEvent().id}))
 		.then(tasks => this.setTasks(tasks));
 	},
+	handleClickCancelChange: function() {
+		this.setViewMode('VIEW');
+		this.setEditingTask(undefined);
+	},
 	render: function() {
 		return (
 			<Tasks	viewMode				= {this.getViewMode()}
@@ -98,6 +118,7 @@ const TasksWrapper = React.createClass({
 					players					= {this.getPlayers()}
 					handleClickSave			= {this.handleClickSave}
 					handleClickChangeTask	= {this.handleClickChangeTask}
+					handleClickCancelChange	= {this.handleClickCancelChange}
 					handleClickDeleteTask	= {this.handleClickDeleteTask}
 			/>
 		);
