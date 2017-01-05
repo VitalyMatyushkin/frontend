@@ -9,6 +9,30 @@ const DisciplineWrapper = React.createClass({
 	propTypes: {
 		activeSchoolId : React.PropTypes.string.isRequired
 	},
+	getDiscipline: function() {
+		return this.getBinding('event').toJS('results.individualDiscipline');
+	},
+	getBackupDiscipline: function() {
+		return this.getDefaultBinding().toJS('backupDiscipline');
+	},
+	backupDiscipline: function() {
+		this.getDefaultBinding().set(
+			'backupDiscipline',
+			Immutable.fromJS(this.getDiscipline())
+		);
+	},
+	restoreDiscipline: function() {
+		this.getBinding('event').set(
+			'results.individualDiscipline',
+			Immutable.fromJS(this.getBackupDiscipline())
+		);
+	},
+	clearBackupDiscipline: function() {
+		this.getDefaultBinding().set(
+			'backupDiscipline',
+			undefined
+		);
+	},
 	isEditMode: function() {
 		return this.getDefaultBinding().toJS('isEditMode');
 	},
@@ -108,15 +132,27 @@ const DisciplineWrapper = React.createClass({
 
 		this.getBinding('event').set('results.individualDiscipline', Immutable.fromJS(disciplineValues));
 	},
-	handleClickChangeMode: function() {
+	changeViewMode: function() {
 		this.getDefaultBinding().set(
 			'isEditMode',
 			!this.isEditMode()
 		);
-		// if user change tab to view mode
+	},
+	handleClickChangeMode: function() {
 		if(!this.isEditMode()) {
-			this.submitIndividualDiscipline(this.getEvent())
+			this.backupDiscipline();
 		}
+		this.changeViewMode();
+	},
+	onSave: function() {
+		this.submitIndividualDiscipline(this.getEvent());
+		this.clearBackupDiscipline();
+		this.changeViewMode();
+	},
+	onCancel: function() {
+		this.restoreDiscipline();
+		this.clearBackupDiscipline();
+		this.changeViewMode();
 	},
 	render: function() {
 		let body = null;
@@ -131,6 +167,8 @@ const DisciplineWrapper = React.createClass({
 							activeSchoolId			= {this.props.activeSchoolId}
 							handleChange			= {this.handleChange}
 							handleClickChangeMode	= {this.handleClickChangeMode}
+							onSave					= {this.onSave}
+							onCancel				= {this.onCancel}
 				/>
 			);
 		}

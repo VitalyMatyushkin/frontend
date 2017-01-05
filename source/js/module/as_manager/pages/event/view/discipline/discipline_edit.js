@@ -2,7 +2,6 @@ const	React			= require('react'),
 
 		Score			= require('./../../../../../ui/score/score'),
 
-		PencilButton	= require('../../../../../ui/pencil_button'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		EventConst		= require('module/helpers/consts/events'),
@@ -16,7 +15,8 @@ const DisciplineEdit = React.createClass({
 		disciplineValues		: React.PropTypes.array.isRequired,
 		activeSchoolId			: React.PropTypes.string.isRequired,
 		handleChange			: React.PropTypes.func.isRequired,
-		handleClickChangeMode	: React.PropTypes.func.isRequired
+		onSave					: React.PropTypes.func.isRequired,
+		onCancel				: React.PropTypes.func.isRequired
 	},
 	// TODO: All these render methods are copypaste from event_teams_view!
 	renderInternalEventForOneOnOneEvent: function(order) {
@@ -356,7 +356,16 @@ const DisciplineEdit = React.createClass({
 		return (
 			<div className="bEventPerformance">
 				<div className="eEventPerformance_header">
-					<PencilButton handleClick={this.props.handleClickChangeMode}/>
+					<div	className	= "bButton mCancel mMarginRight"
+							onClick		= {this.props.onCancel}
+					>
+						Cancel
+					</div>
+					<div	className	= "bButton"
+							onClick		= {this.props.onSave}
+					>
+						Save
+					</div>
 				</div>
 				<div className="eEventPerformance_body">
 					{teams}

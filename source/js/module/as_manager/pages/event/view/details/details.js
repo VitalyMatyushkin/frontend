@@ -25,7 +25,8 @@ const Details = React.createClass({
 		lunchTime:			React.PropTypes.string,
 		staff:				React.PropTypes.array.isRequired,
 		handleChange:		React.PropTypes.func.isRequired,
-		handleChangeMode:	React.PropTypes.func.isRequired,
+		onSave:				React.PropTypes.func.isRequired,
+		onCancel:			React.PropTypes.func.isRequired,
 		isParent:			React.PropTypes.bool.isRequired,
 		activeSchoolId:		React.PropTypes.string.isRequired
 	},
@@ -78,16 +79,7 @@ const Details = React.createClass({
 	 * Change view mode from view to edit and vice versa
 	 */
 	handleClickEditButton: function() {
-		switch (this.state.viewMode) {
-			case Consts.REPORT_FILED_VIEW_MODE.VIEW:
-				this.setState({viewMode: Consts.REPORT_FILED_VIEW_MODE.EDIT});
-				this.props.handleChangeMode(Consts.REPORT_FILED_VIEW_MODE.EDIT);
-				break;
-			case Consts.REPORT_FILED_VIEW_MODE.EDIT:
-				this.setState({viewMode: Consts.REPORT_FILED_VIEW_MODE.VIEW});
-				this.props.handleChangeMode(Consts.REPORT_FILED_VIEW_MODE.VIEW);
-				break;
-		}
+		this.setState({viewMode: Consts.REPORT_FILED_VIEW_MODE.EDIT});
 	},
 	/**
 	 * Handler for new coach.
@@ -142,6 +134,39 @@ const Details = React.createClass({
 
 		this.props.handleChange('staff', updStaff);
 	},
+	onCancel: function() {
+		this.setState({viewMode: Consts.REPORT_FILED_VIEW_MODE.VIEW});
+		this.props.onCancel();
+	},
+	onSave: function() {
+		this.setState({viewMode: Consts.REPORT_FILED_VIEW_MODE.VIEW});
+		this.props.onSave();
+	},
+	renderControlButtons: function() {
+		switch (this.state.viewMode) {
+			case Consts.REPORT_FILED_VIEW_MODE.VIEW:
+				return (
+					<div className="eDetails_editButtonWrapper">
+						<PencilButton handleClick={this.handleClickEditButton}/>
+					</div>
+				);
+			case Consts.REPORT_FILED_VIEW_MODE.EDIT:
+				return (
+					<div className="eDetails_editButtonWrapper">
+						<div	className	= "bButton mCancel mMarginRight"
+								onClick		= {this.onCancel}
+						>
+							Cancel
+						</div>
+						<div	className	= "bButton"
+								onClick		= {this.onSave}
+						>
+							Save
+						</div>
+					</div>
+				);
+		}
+	},
 	render: function() {
 		return (
 			<div className="bDetails">
@@ -177,11 +202,9 @@ const Details = React.createClass({
 				</div>
 				<div className="eDetails_column">
 					<div className="eDetails_columnContent mGrayBackground  mWithoutPadding">
-						<div className="eDetails_editButtonWrapper">
 							<If condition={!this.props.isParent}>
-								<PencilButton handleClick={this.handleClickEditButton}/>
+								{this.renderControlButtons()}
 							</If>
-						</div>
 						<div className="eDetails_infoContainer">
 							<div className="eDetails_header">
 								Coach

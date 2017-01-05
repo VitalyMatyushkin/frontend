@@ -34,7 +34,7 @@
 
 .eDetails_editButtonWrapper {
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
 
   padding: 15px 15px 15px 0px;
 }
