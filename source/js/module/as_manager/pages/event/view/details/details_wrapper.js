@@ -4,7 +4,8 @@ const	React			= require('react'),
 
 		Actions			= require('./actions/actions'),
 		Details			= require('./details'),
-		Consts			= require('./details_components/consts');
+		Consts			= require('./details_components/consts'),
+		DetailsStyleCss	= require('../../../../../../../styles/ui/b_details.scss');
 
 const DetailsWrapper = React.createClass({
 
@@ -22,11 +23,11 @@ const DetailsWrapper = React.createClass({
 	},
 	getInitialState: function(){
 		return {
-			isLoading:		true,
-			eventDetails:	{}
+			isLoading			: true,
+			eventDetails		: {},
+			backupEventDetails	: {}
 		};
 	},
-
 	componentWillMount: function() {
 		let details;
 
@@ -37,14 +38,20 @@ const DetailsWrapper = React.createClass({
 				return Actions.getEventById(this.props.schoolId, this.props.eventId);
 			})
 			.then(event => {
+				this.backupEventDetails = details;
 				this.setState({
-					isLoading		: false,
-					eventDetails	: details,
-					eventName		: event.generatedNames[this.props.schoolId],
-					officialName	: event.generatedNames.official,
-					venue			: this.getVenueView(event)
+					isLoading			: false,
+					eventDetails		: details,
+					eventName			: event.generatedNames[this.props.schoolId],
+					officialName		: event.generatedNames.official,
+					venue				: this.getVenueView(event)
 				});
 			});
+	},
+	restoreEventDetails: function() {
+		this.setState({
+			eventDetails: this.backupEventDetails
+		});
 	},
 	getVenueView: function(event) {
 		switch (true) {
@@ -80,22 +87,18 @@ const DetailsWrapper = React.createClass({
 	},
 
 	handleChange: function(field, value) {
-		const eventDetails = this.state.eventDetails;
-		eventDetails[field] = value;
+		const upd = {
+			eventDetails: {}
+		};
+		upd.eventDetails[field] = value;
 
-		this.setState({
-			eventDetails : eventDetails
-		});
-
+		this.setState(upd);
 	},
-	handleChangeMode: function(currentMode) {
-		switch (currentMode) {
-			case Consts.REPORT_FILED_VIEW_MODE.EDIT:
-				break;
-			case Consts.REPORT_FILED_VIEW_MODE.VIEW:
-				this.submitChanges();
-				break;
-		}
+	onSave: function() {
+		this.submitChanges();
+	},
+	onCancel: function() {
+		this.restoreEventDetails();
 	},
 	render: function() {
 		if(this.state.isLoading) {
@@ -115,9 +118,10 @@ const DetailsWrapper = React.createClass({
 							lunchTime			= { this.state.eventDetails.lunchTime }
 							staff				= { this.state.eventDetails.staff }
 							handleChange		= { this.handleChange }
-							handleChangeMode	= { this.handleChangeMode }
 							isParent			= { this.props.isParent }
 							activeSchoolId		= { this.props.schoolId }
+							onSave				= { this.onSave }
+							onCancel			= { this.onCancel }
 				/>
 			);
 		}
