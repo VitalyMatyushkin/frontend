@@ -1,5 +1,6 @@
-const React = require('react'),
-	ConfirmPopup	= require('module/ui/confirm_popup');
+const	React				= require('react'),
+		ConfirmPopup		= require('module/ui/confirm_popup'),
+		InvitePopupStyleCss	= require('../../../../../../styles/ui/b_invite_popup.scss');
 
 const ConfirmDeclinePopup = React.createClass({
 	propTypes: {
@@ -24,45 +25,32 @@ const ConfirmDeclinePopup = React.createClass({
 		this.setState({text: nextProps.commentText});
 	},
 
-	renderTextarea: function (){
-		const type = this.props.type,
-			style = {
-				resize: 'none',
-				width: '100%',
-				border: '1px solid #d7d7d7'
-			};
-
-		return (
-			<div>
-				<p>Are you sure you want to {type}?</p>
-				<div>
-					<textarea value={this.state.text} onChange={this.onChangeTextarea} style={style} placeholder="Enter your comment"></textarea>
-				</div>
-			</div>
-		);
-	},
-
 	handlerClosePopup: function(){
 		this.props.onClosePopup();
 	},
 
 	render: function(){
-		const isConfirmPopup 	= this.props.isConfirmPopup,
-			type 				= this.props.type,
-			inviteId 			= this.props.inviteId,
-			commentText			= this.state.text;
+		const	isConfirmPopup		= this.props.isConfirmPopup,
+				type 				= this.props.type,
+				inviteId 			= this.props.inviteId,
+				commentText			= this.state.text;
 
 		if (isConfirmPopup) {
 			return (
-				<ConfirmPopup okButtonText 				= "Ok"
-							  cancelButtonText			= "Cancel"
-							  handleClickOkButton		= {
-								  () => { this.props.onDecline(inviteId, commentText) }
-							  }
-							  handleClickCancelButton	= { this.handlerClosePopup }
-							  isOkButtonDisabled		= { false }
+				<ConfirmPopup	okButtonText 			= "Ok"
+								cancelButtonText		= "Cancel"
+								handleClickOkButton		= { this.props.onDecline.bind(null, inviteId, commentText)}
+								handleClickCancelButton	= { this.handlerClosePopup }
+								isOkButtonDisabled		= { false }
 				>
-					{ this.renderTextarea() }
+					<div className="bInvitePopup">
+						<p>Are you sure you want to {type}?</p>
+						<textarea	className	= "eInvitePopup_textArea"
+									value		= {this.state.text}
+									onChange	= {this.onChangeTextarea}
+									placeholder	= "Enter your comment"
+						/>
+					</div>
 				</ConfirmPopup>
 			);
 		} else {
