@@ -139,7 +139,7 @@ const Event = React.createClass({
 				.set('gallery.photos',					Immutable.fromJS(photos))
 				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
 				.set('gallery.isSync',					true)
-				.set('tasksTab.tasks',					Immutable.fromJS(tasks))
+				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
 				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
 				.set('mode',							Immutable.fromJS('general'))
 				.commit();
