@@ -108,9 +108,12 @@ const EventManagerBase = React.createClass({
 				return this.getTBDSchool();
 			})
 			.then(data => {
-				// set TBD school at first
 
-				schools.unshift(data[0]);
+
+				if(data.length > 0 && data[0].name === "TBD") {
+					// set TBD school at first
+					schools.unshift(data[0]);
+				}
 				return schools;
 			});
 	},
