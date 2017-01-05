@@ -31,8 +31,7 @@ const Calendar = React.createClass({
 				monthDate={monthDate}
 				todayDate={todayDate}
 				selectedDate={selectedDate}
-				onNextMonthClick={ () => CalendarActions.setNextMonth(self.props.childIdList, binding) }
-				onPrevMonthClick={ () => CalendarActions.setPrevMonth(self.props.childIdList, binding) }
+				onMonthClick={ (date) => CalendarActions.setCurrentMonth(date, self.props.childIdList, binding) }
 				onDateClick={ date => CalendarActions.setSelectedDate(date, self.props.childIdList, binding) }
 				eventsData={eventsData}
 			/>
