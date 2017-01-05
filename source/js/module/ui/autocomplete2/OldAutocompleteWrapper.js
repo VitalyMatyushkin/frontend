@@ -63,5 +63,3 @@ const OldAutocompleteWrapper = React.createClass({
 });
 
 module.exports = OldAutocompleteWrapper;
-
-

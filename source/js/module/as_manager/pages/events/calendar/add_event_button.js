@@ -1,7 +1,5 @@
 const	React						= require('react'),
-
 		Button						= require('./../../../../ui/button/button'),
-
 		AddEventButtonWrapperStyles	= require('./../../../../../../styles/ui/b_add_event_button_wrapper.scss');
 
 const AddEventButton = React.createClass({

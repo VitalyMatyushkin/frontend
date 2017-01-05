@@ -67,7 +67,7 @@ const Blog = React.createClass({
 	 * If count don't equal old count, then call function with get comments
 	 */
 	componentDidMount: function() {
-		this._tickerForNewComments();
+		//this._tickerForNewComments();
 	},
 	_tickerForNewComments:function(){
 		const binding	= this.getDefaultBinding();

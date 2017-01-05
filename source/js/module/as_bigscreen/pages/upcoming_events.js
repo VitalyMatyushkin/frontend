@@ -30,7 +30,7 @@ const RecentEvent = React.createClass({
 			return (
 				<div className="bUpcomingEvents">
 					<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.UPCOMING }
-									title			= "Closest Five Events"
+									title			= "Upcoming Events"
 									activeSchoolId	= { activeSchoolId }
 									isSync			= { isSync }
 									events			= { events }

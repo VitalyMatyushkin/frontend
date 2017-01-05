@@ -1,6 +1,7 @@
 const	React						= require('react'),
 		Morearty					= require('morearty'),
 		Immutable					= require('immutable'),
+		Lazy						= require('lazy.js'),
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
@@ -23,6 +24,7 @@ const	React						= require('react'),
 
 		GalleryActions				= require('./new_gallery/event_gallery_actions'),
 		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
+		Button						= require('../../../ui/button/button'),
 
 		RoleHelper					= require('./../../../helpers/role_helper');
 
@@ -53,6 +55,13 @@ const Event = React.createClass({
 			disciplineTab: {
 				isEditMode: false
 			},
+			tasksTab: {
+				viewMode		: "VIEW",
+				editingTask		: undefined
+			},
+			autocompleteChangeOpponentSchool: {
+				school: undefined
+			},
 			individualScoreAvailable: [
 				{
 					value: true
@@ -70,7 +79,7 @@ const Event = React.createClass({
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		let eventData, report, photos;
+		let eventData, report, photos, settings;
 		window.Server.schoolEvent.get({
 			schoolId: this.props.activeSchoolId,
 			eventId: self.eventId
@@ -116,7 +125,11 @@ const Event = React.createClass({
 			photos = _photos;
 
 			return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
-		}).then(settings => {
+		}).then(_settings => {
+			settings = _settings;
+
+			return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
+		}).then(tasks => {
 			eventData.matchReport = report.content;
 
 			this.setPlayersFromEventToBinding(eventData);
@@ -125,6 +138,7 @@ const Event = React.createClass({
 				.set('gallery.photos',					Immutable.fromJS(photos))
 				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
 				.set('gallery.isSync',					true)
+				.set('tasksTab.tasks',					Immutable.fromJS(tasks))
 				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
 				.set('mode',							Immutable.fromJS('general'))
 				.commit();
@@ -171,22 +185,27 @@ const Event = React.createClass({
 	setNonTeamPlayersToBinding: function(event) {
 		const binding = this.getDefaultBinding();
 
+		// TODO many player bundles, oh it's soo bad
 		binding
 			.atomically()
 			.set('model.individualsData',			Immutable.fromJS(event.individualsData))
 			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(event.individualsData))
 			.set('eventTeams.isSync',				Immutable.fromJS(true))
 			.commit();
+		this.setPlayersToTabBinding(event.individualsData);
 	},
 	setTeamPlayersFromEventToBinding: function(event) {
 		const binding = this.getDefaultBinding();
 
+		const players = event.teamsData.map(tp => tp.players);	// players is Array[Array[Object]]
+		// TODO many player bundles, oh it's soo bad
 		binding
 			.atomically()
 			.set('model.teamsData',					Immutable.fromJS(event.teamsData))
-			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(event.teamsData.map(tp => tp.players)))
+			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(players))
 			.set('eventTeams.isSync',				Immutable.fromJS(true))
 			.commit();
+		this.setPlayersToTabBinding(players);
 	},
 	loadPhotos: function(role) {
 		let service;
@@ -242,15 +261,14 @@ const Event = React.createClass({
 				text		: 'Details',
 				isActive	: false
 			}, {
+				value		: 'tasks',
+				text		: 'Tasks',
+				isActive	: false
+			}, {
 				value		: 'report',
 				text		: 'Match Report',
 				isActive	: false
 			}
-			//, {
-			//	value		: 'tasks',
-			//	text		: 'Tasks',
-			//	isActive	: false
-			//}
 		);
 
 		if(tab) {
@@ -304,6 +322,29 @@ const Event = React.createClass({
 			default:					binding.sub('disciplineTab'),
 			eventTeams:					binding.sub('eventTeams'),
 			event:						binding.sub('model')
+		};
+	},
+	// TODO many player bundles, oh it's soo bad
+	/**
+	 *
+	 * @param {Array.<Array.<Object>>|Array.<Object>} players array of arrays of team players or array of individuals
+	 */
+	setPlayersToTabBinding: function(players) {
+		const binding = this.getDefaultBinding();
+
+		const _players = Lazy(players).flatten().map(p => {
+			p.id = p.userId + p.permissionId;
+			return p;
+		}).toArray();
+
+		binding.set('tasksTab.players', Immutable.fromJS(_players));
+	},
+	getTasksTabBinding: function() {
+		const binding = this.getDefaultBinding();
+
+		return {
+			default:	binding.sub('tasksTab'),
+			event:		binding.sub('model')
 		};
 	},
 	getEventTeamsBinding: function() {
@@ -372,12 +413,14 @@ const Event = React.createClass({
 			/>
 		);
 	},
+	handleClickAddTaskButton: function() {
+		return this.getDefaultBinding().set('tasksTab.viewMode', "ADD");
+	},
 	/**
 	 * Function return add task button for tasks tab.
-	 * @returns {undefined}
 	 */
 	getAddTaskButton: function() {
-		return undefined;
+		return <Button extraStyleClasses="mAddTask" text="Add task" onClick={this.handleClickAddTaskButton}/>;
 	},
 	/**
 	 * Function returns the active tab.
@@ -391,10 +434,12 @@ const Event = React.createClass({
 	 * It depends on the current tab.
 	 */
 	getCustomButtonForTabs: function() {
-		switch (this.getActiveTab()) {
-			case "gallery":
+		const viewMode = this.getDefaultBinding().toJS('tasksTab.viewMode');
+
+		switch (true) {
+			case this.getActiveTab() === "gallery":
 				return this.getAddPhotoButton();
-			case "tasks":
+			case viewMode !== "ADD" && this.getActiveTab() === "tasks":
 				return this.getAddTaskButton();
 			default:
 				return null;
@@ -411,7 +456,7 @@ const Event = React.createClass({
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				isParent		= RoleHelper.isParent(this);
-
+		console.log("TEST");
 		switch (true) {
 			case !self.isSync():
 				return (
@@ -474,7 +519,7 @@ const Event = React.createClass({
 							</If>
 							<If condition={activeTab === 'tasks'} >
 								<div className="bEventBottomContainer">
-									<TasksWrapper	binding			= {self.getEventTeamsBinding()}
+									<TasksWrapper	binding			= {this.getTasksTabBinding()}
 													activeSchoolId	= {this.props.activeSchoolId}
 									/>
 								</div>

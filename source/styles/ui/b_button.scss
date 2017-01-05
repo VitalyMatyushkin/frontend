@@ -77,6 +77,29 @@
       background: $secondBackgroundColor;
     }
   }
+
+  &.mAddTask {
+    height: 50px;
+    width: 120px;
+    padding: 0;
+
+    border: 1px solid $lightBlue;
+    border-radius: 4px;
+
+    cursor: pointer;
+    color: white;
+    line-height: 50px;
+    text-align: center;
+
+    &:hover {
+      background-color: $darkBlue;
+    }
+  }
+
+  &.mSaveTask {
+    height: 50px;
+    width: 120px;
+  }
 }
 
 .bButton.mDisable {

@@ -2,7 +2,8 @@
  * Created by wert on 13.09.16.
  */
 
-const React = require('react');
+const	React			= require('react'),
+		ButtonCssStyle	= require('../../../../styles/ui/b_button.scss');
 
 /** Just Button. Buttons are clickable and have some text inside.
  * Maybe it should also take children for displaying icons or something like that, but we don't use it now,

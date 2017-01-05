@@ -7,9 +7,7 @@ const 	React			= require('react'),
 		Calendar		= require('./calendar'),
 		CalendarActions	= require('./calendar-actions'),
 		Morearty		= require('morearty'),
-
 		AddEventButton	= require('./add_event_button'),
-
 		EventsStyles	= require('./../../../../../../styles/pages/events/b_events.scss');
 
 /** Show calendar section: month calendar and events for selected date */
@@ -23,7 +21,7 @@ const EventsCalendar = React.createClass({
 		/** Loading initial data for this month */
 		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
 	},
-	onEventClick:function(eventId){
+	onEventClick: function(eventId){
 		document.location.hash = 'event/' + eventId + '?tab=gallery';
 	},
 	handleClickAddEventButton: function() {

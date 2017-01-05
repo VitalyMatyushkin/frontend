@@ -65,13 +65,13 @@ const InviteList = React.createClass({
 			/>;
 		}).toArray();
 	},
-	onDecline:function (inviteId) {
+	onDecline:function (inviteId, commentText) {
 		const
 			binding 		= this.getDefaultBinding(),
 			rootBinding 	= this.getMoreartyContext().getBinding(),
 			activeSchoolId 	= rootBinding.get('userRules.activeSchoolId');
 
-		inviteActions.declineInvite(activeSchoolId, inviteId, binding);
+		inviteActions.declineInvite(activeSchoolId, inviteId, binding, commentText);
 	},
 	render: function() {
 		const 	self 	= this,

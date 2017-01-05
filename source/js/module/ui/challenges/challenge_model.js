@@ -86,7 +86,7 @@ ChallengeModel.prototype._getScore = function(){
 			return '';
 		case this.isFinished && !this.isIndividualSport:
 			return this.scoreAr.join(' : ');
-	};
+	}
 };
 
 ChallengeModel.prototype._getTextResult = function(event){

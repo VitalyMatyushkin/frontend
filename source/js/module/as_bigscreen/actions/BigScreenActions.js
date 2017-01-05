@@ -20,12 +20,16 @@ function getRandomEventId(eventsArray) {
 };
 
 function getLastFiveFinishedEvents(activeSchoolId) {
+	const dayStart = new Date();
 	const filter = {
 		limit: 5,
 		order: "startTime DESC",
 		where: {
 			status: {
 				$in: ['FINISHED']
+			},
+			startTime: {
+				$lte:	dayStart
 			}
 		}
 	};
@@ -44,7 +48,7 @@ function getClosestFiveEvents(activeSchoolId) {
 				$gte:	dayStart
 			},
 			status: {
-				$in: ['ACCEPTED']
+				$in: ['ACCEPTED', 'FINISHED']
 			}
 		}
 	};
@@ -71,15 +75,26 @@ function getSchoolData() {
 };
 
 /**
- * Get seven events for footer
+ * Get ten upcoming events for footer
  *
  */
 function getFooterEvents(activeSchoolId) {
+	const dayStart = new Date(); // current day
 
 	return window.Server.publicSchoolEvents.get(
 		{schoolId:	activeSchoolId},
-		{filter:
-			{limit: 7}
+		{
+			filter: {
+				limit: 10,
+				where: {
+					startTime: {
+						$gte: dayStart
+					},
+					status: {
+						$in: ['ACCEPTED', 'FINISHED']
+					}
+				}
+			}
 		}
 	);
 };
@@ -175,44 +190,12 @@ function setHighlightEvent(activeSchoolId, binding){
 function setFooterEvents(activeSchoolId, binding){
 	binding.set('footerEvents.isSync', false);
 
-	let eventIds = [];
-	getFooterEvents(activeSchoolId).then(eventsId => {
-			eventsId.forEach(eventId => {eventIds.push(eventId.id)});
-			if(typeof eventIds !== 'undefined') {
-				return Promise.all(eventIds.map(eventId => {
-					return window.Server.publicSchoolEvent.get({
-						schoolId:	activeSchoolId,
-						eventId:	eventId
-					});
-				})).then(events => {
-					const currentEventIndex = events.length !== 0 ? 0 : undefined;
-
-				binding.atomically()
-					.set('footerEvents.events',				Immutable.fromJS(events))
-					.set('footerEvents.currentEventIndex',	Immutable.fromJS(currentEventIndex))
-					.set('footerEvents.isSync',				true)
-					.commit();
-				});
-			} else {
-				return getNextSevenDaysEvents(activeSchoolId)
-					.then(events => {
-						return Promise.all(events.map(e => {
-							return window.Server.publicSchoolEvent.get({
-								schoolId:	activeSchoolId,
-								eventId:	e.id
-							});
-						}));
-					})
-					.then(events => {
-						const currentEventIndex = events.length !== 0 ? 0 : undefined;
-
-						binding.atomically()
-							.set('footerEvents.events',				Immutable.fromJS(events))
-							.set('footerEvents.currentEventIndex',	Immutable.fromJS(currentEventIndex))
-							.set('footerEvents.isSync',				true)
-							.commit();
-					});
-			}
+	return getFooterEvents(activeSchoolId).then(eventsData => {
+		binding.atomically()
+			.set('footerEvents.events',				Immutable.fromJS(eventsData))
+			.set('footerEvents.currentEventIndex',	Immutable.fromJS(0))
+			.set('footerEvents.isSync',				true)
+			.commit();
 	});
 };
 

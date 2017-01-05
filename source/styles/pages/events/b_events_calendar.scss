@@ -33,6 +33,10 @@
       background: lighten($blueColor, 10%);
     }
 
+    &.mInactive {
+      color: $inactiveTextColor;
+    }
+
     &:hover {
       background-color: darken($secondBackgroundColor, 5%);
     }
