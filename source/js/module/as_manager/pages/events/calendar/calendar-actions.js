@@ -53,10 +53,7 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 			startTime: {
 				$gte: dayStart,
 				$lt: dayEnd
-			}//,
-			// status: {
-			// 	$nin: ['REJECTED']
-			// }
+			}
 		}
 	};
 
