@@ -3,7 +3,6 @@
 
 .bDetails {
   @include make-row();
-  border-bottom: $mainBorder;
 }
 
 .eDetails_column {
@@ -109,4 +108,13 @@
 
 .eDetails_body {
   margin-top: 10px;
+}
+
+.eDetails_border {
+  float: left;
+
+  padding: 0 15px;
+  width: 100%;
+
+  border-bottom: solid 1px $greyColor;
 }

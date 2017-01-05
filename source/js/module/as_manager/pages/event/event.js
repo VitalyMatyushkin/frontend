@@ -543,6 +543,7 @@ const Event = React.createClass({
 													schoolId	= {this.props.activeSchoolId}
 													isParent	= {isParent}
 									/>
+									<div className="eDetails_border" />
 								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
