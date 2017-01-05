@@ -454,6 +454,9 @@ const Event = React.createClass({
 				return null;
 		}
 	},
+	isShowMap: function() {
+		return this.getDefaultBinding().toJS('model.venue.venueType') !== "TBD";
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
@@ -496,15 +499,17 @@ const Event = React.createClass({
 							<EventTeams	binding			= {self.getEventTeamsBinding()}
 										activeSchoolId	= {this.props.activeSchoolId}
 							/>
-							<div className="bEventMap">
-								<div className="bEventMap_row">
-									<div className="bEventMap_col">
-										<Map	binding	= {binding.sub('mapOfEventVenue')}
-												venue	= {binding.toJS('model.venue')}
-										/>
+							<If condition={this.isShowMap()}>
+								<div className="bEventMap">
+									<div className="bEventMap_row">
+										<div className="bEventMap_col">
+											<Map	binding	= {binding.sub('mapOfEventVenue')}
+													venue	= {binding.toJS('model.venue')}
+											/>
+										</div>
 									</div>
 								</div>
-							</div>
+							</If>
 							<div className="bEventMiddleSideContainer">
 								<Tabs	tabListModel	= {self.tabListModel}
 										onClick			= {self.changeActiveTab}
