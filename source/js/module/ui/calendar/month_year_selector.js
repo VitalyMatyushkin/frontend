@@ -18,10 +18,10 @@ const MonthYearSelector = React.createClass({
 	},
 
 	getCurrentMonth: function() {
-		return String(new Date(this.state.dateState).getMonth());
+		return new Date(this.state.dateState).getMonth();
 	},
 	getCurrentYear: function() {
-		return String(new Date(this.state.dateState).getFullYear());
+		return new Date(this.state.dateState).getFullYear();
 	},
 
 	getOptionsForMonthDropdown: function() {
@@ -68,24 +68,24 @@ const MonthYearSelector = React.createClass({
 		this.props.onMonthClick(dateObject);
 	},
 	handleClickPrevMonth: function() {
-		const currentMonth = parseInt(this.getCurrentMonth(), 10);
+		const currentMonth = this.getCurrentMonth();
 
 		if(currentMonth === 0) {
 			this.changeMonthAndYear(
 				11,
-				parseInt(this.getCurrentYear(), 10) - 1
+				this.getCurrentYear() - 1
 			);
 		} else {
 			this.handleChangeMonth(currentMonth - 1);
 		}
 	},
 	handleClickNextMonth: function() {
-		const currentMonth = parseInt(this.getCurrentMonth(), 10);
+		const currentMonth = this.getCurrentMonth();
 
 		if(currentMonth === 11) {
 			this.changeMonthAndYear(
 				0,
-				parseInt(this.getCurrentYear(), 10) + 1
+				this.getCurrentYear() + 1
 			);
 		} else {
 			this.handleChangeMonth(currentMonth + 1);
@@ -104,14 +104,14 @@ const MonthYearSelector = React.createClass({
 				</div>
 				<div className="eMonthYearSelector_middleSizeColumn">
 					<Dropdown	optionsArray		= { this.getOptionsForMonthDropdown() }
-								currentOptionId		= { this.getCurrentMonth() }
+								currentOptionId		= { String(this.getCurrentMonth()) }
 								handleChange		= { this.handleChangeMonth }
 								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
 				</div>
 				<div className="eMonthYearSelector_middleSizeColumn">
 					<Dropdown	optionsArray		= { this.getOptionsForYearDropdown() }
-								currentOptionId		= { this.getCurrentYear() }
+								currentOptionId		= { String(this.getCurrentYear()) }
 								handleChange		= { this.handleChangeYear }
 								extraCssStyle		= { this.DROPDOWN_CSS_STYLE }
 					/>
