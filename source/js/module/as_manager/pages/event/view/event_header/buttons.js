@@ -16,7 +16,6 @@ const	React			= require('react'),
  * */
 const Buttons = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-	displayName: 'EventButtons',
 	/** event closing process started after click save button */
 	closeMatch: function () {
 		const	self		= this,
@@ -520,6 +519,8 @@ const Buttons = React.createClass({
 					</div>
 				</div>
 			);
+		} else {
+			return null;
 		}
 	},
 	/**

@@ -1,21 +1,25 @@
 const	React					= require('react'),
 
+		If						= require('../../../../../ui/if/if'),
 		MultiselectDropdown		= require('../../../../../ui/multiselect-dropdown/multiselect-dropdown'),
 		Button					= require('../../../../../ui/button/button'),
 		EditTaskViewCssStyle	= require('../../../../../../../styles/ui/b_edit_task_view.scss');
 
 const EditTaskView = React.createClass({
 	propTypes: {
-		viewMode		: React.PropTypes.array.isRequired,
-		task			: React.PropTypes.array.isRequired,
-		players			: React.PropTypes.array.isRequired,
-		handleClickSave	: React.PropTypes.func.isRequired
+		tasksCount			: React.PropTypes.number.isRequired,
+		viewMode			: React.PropTypes.string.isRequired,
+		task				: React.PropTypes.object.isRequired,
+		players				: React.PropTypes.array.isRequired,
+		handleClickSave		: React.PropTypes.func.isRequired,
+		handleClickCancel	: React.PropTypes.func.isRequired
 	},
 	componentWillMount: function() {
 		this.setState({
-			selectedPlayers	: typeof this.props.task.assignees !== "undefined" ?
+			selectedPlayers			: typeof this.props.task.assignees !== "undefined" ?
 				this.convertPlayersToMultiselectFormat(this.props.task.assignees): [],
-			text			: this.props.task.text
+			text					: this.props.task.text,
+			isShowValidationText	: false
 		});
 	},
 	getInitialState: function() {
@@ -63,12 +67,24 @@ const EditTaskView = React.createClass({
 		});
 	},
 	handleClickSave: function() {
-		this.props.handleClickSave(
-			{
-				text			: this.state.text,
-				selectedPlayers	: this.state.selectedPlayers
-			}
-		);
+		if(typeof this.state.text !== 'undefined' && this.state.text !== "") {
+			this.props.handleClickSave(
+				{
+					text			: this.state.text,
+					selectedPlayers	: this.state.selectedPlayers
+				}
+			);
+		}
+	},
+	onFocus: function() {
+		this.setState({
+			isShowValidationText: false
+		});
+	},
+	onBlur: function() {
+		this.setState({
+			isShowValidationText: this.state.text === "" || typeof this.state.text === 'undefined'
+		});
 	},
 	render: function() {
 		return (
@@ -78,14 +94,20 @@ const EditTaskView = React.createClass({
 				</div>
 				<div className="eEditTaskView_body">
 					<div className="eEditTaskView_descriptionTextFieldLabel">
-						Task: description
+						Task description
 					</div>
 					<textarea	className	= "eEditTaskView_descriptionTextField"
 								placeholder	= "Description"
+								value		= {this.state.text}
 								onChange	= {this.handleChangeText}
-					>
-						{this.props.task.text}
-					</textarea>
+								onFocus		= {this.onFocus}
+								onBlur		= {this.onBlur}
+					/>
+					<If condition={this.state.isShowValidationText}>
+						<p className="eEditTaskView_validationText">
+							Please enter task description
+						</p>
+					</If>
 				</div>
 				<div className="eEditTaskView_footer">
 					<div className="eEditTaskView_multiselectWrapper">
@@ -94,10 +116,18 @@ const EditTaskView = React.createClass({
 												handleClickItem	= {this.handleClickPlayer}
 						/>
 					</div>
-					<Button	extraStyleClasses	= {'mSaveTask'}
-							onClick				= {this.handleClickSave}
-							text				= {'Save'}
-					/>
+					<If condition={this.props.tasksCount > 0}>
+						<div	className	= "bButton mCancel mMarginRightFixed"
+								onClick		= {this.props.handleClickCancel}
+						>
+							Cancel
+						</div>
+					</If>
+					<div	className	= "bButton "
+							onClick		= {this.handleClickSave}
+					>
+						Save
+					</div>
 				</div>
 			</div>
 		);

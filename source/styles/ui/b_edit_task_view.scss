@@ -45,7 +45,13 @@
     }
   }
 
+  .eEditTaskView_validationText {
+    color: red;
+  }
+
   .eEditTaskView_multiselectWrapper {
     width: 560px;
+
+    margin-right: 5px;
   }
 }

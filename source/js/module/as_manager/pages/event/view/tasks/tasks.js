@@ -7,14 +7,15 @@ const Tasks = React.createClass({
 	propTypes: {
 		viewMode				: React.PropTypes.string.isRequired,
 		tasks					: React.PropTypes.array.isRequired,
-		editingTask				: React.PropTypes.object.isRequired,
+		editingTask				: React.PropTypes.object,
 		players					: React.PropTypes.array.isRequired,
 		handleClickSave			: React.PropTypes.func.isRequired,
+		handleClickCancelChange	: React.PropTypes.func.isRequired,
 		handleClickChangeTask	: React.PropTypes.func.isRequired,
 		handleClickDeleteTask	: React.PropTypes.func.isRequired
 	},
-	handleClickDeleteTask: function(taskId) {
-
+	getTasksCount: function() {
+		return this.props.tasks.length;
 	},
 	renderTasks: function() {
 		return (
@@ -34,20 +35,25 @@ const Tasks = React.createClass({
 	renderAddTaskView: function() {
 		return (
 			<div className="bTasks">
-				<EditTaskView	viewMode		= {this.props.viewMode}
-								handleClickSave	= {this.props.handleClickSave}
-								task			= {{}}
-								players			= {this.props.players}/>
+				<EditTaskView	viewMode			= {this.props.viewMode}
+								handleClickSave		= {this.props.handleClickSave}
+								handleClickCancel	= {this.props.handleClickCancelChange}
+								task				= {{}}
+								players				= {this.props.players}
+								tasksCount			= {this.getTasksCount()}
+				/>
 			</div>
 		);
 	},
 	renderEditTaskView: function() {
 		return (
 			<div className="bTasks">
-				<EditTaskView	viewMode		= {this.props.viewMode}
-								handleClickSave	= {this.props.handleClickSave}
-								task			= {this.props.editingTask}
-								players			= {this.props.players}
+				<EditTaskView	viewMode			= {this.props.viewMode}
+								handleClickSave		= {this.props.handleClickSave}
+								handleClickCancel	= {this.props.handleClickCancelChange}
+								task				= {this.props.editingTask}
+								players				= {this.props.players}
+								tasksCount			= {this.getTasksCount()}
 				/>
 			</div>
 		);
