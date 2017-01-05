@@ -14,7 +14,9 @@ const Discipline = React.createClass({
 		disciplineValues		: React.PropTypes.array.isRequired,
 		activeSchoolId			: React.PropTypes.string.isRequired,
 		handleChange			: React.PropTypes.func.isRequired,
-		handleClickChangeMode	: React.PropTypes.func.isRequired
+		handleClickChangeMode	: React.PropTypes.func.isRequired,
+		onSave					: React.PropTypes.func.isRequired,
+		onCancel				: React.PropTypes.func.isRequired
 	},
 
 	render: function() {
@@ -36,7 +38,8 @@ const Discipline = React.createClass({
 									disciplineValues		= {this.props.disciplineValues}
 									activeSchoolId			= {this.props.activeSchoolId}
 									handleChange			= {this.props.handleChange}
-									handleClickChangeMode	= {this.props.handleClickChangeMode}
+									onSave					= {this.props.onSave}
+									onCancel				= {this.props.onCancel}
 					/>
 				</If>
 			</div>

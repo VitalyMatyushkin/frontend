@@ -2,7 +2,6 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		Morearty			= require('morearty'),
 
-		PencilButton		= require('../../../../../ui/pencil_button'),
 		InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		StarRatingBar		= require('./../../../../../ui/star_rating_bar/star_rating_bar'),
 		EventHelper			= require('module/helpers/eventHelper'),
