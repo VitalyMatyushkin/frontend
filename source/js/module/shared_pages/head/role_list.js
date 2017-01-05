@@ -170,17 +170,17 @@ const  RoleList = React.createClass({
 		window.location.hash = 'logout';
 	},
 	render: function() {
-		const binding 	= this.getDefaultBinding(),
+		const	binding 	= this.getDefaultBinding(),
 				role        = this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role'),
 				listOpen    = binding.toJS('listOpen'),
-				show        = !!binding.toJS('permissions').length && !!role,
-				hidden      = !binding.toJS('schools').length && !role && !this.props.onlyLogout;
+				show        = !!binding.toJS('permissions').length && !!role;
 
-		if(listOpen)
+		if(listOpen) {
 			this.refs.role_list.focus();
+		}
 
 		return(
-			<div className={classNames({bRoleList:true, mLogout:!show, mHidden:hidden})}>
+			<div className={classNames({bRoleList:true, mLogout:!show})}>
 				<If condition={show}>
 					<div className={classNames({bRoles:true, mOpen:listOpen})} tabIndex="-1" ref="role_list" onBlur={this.onBlur}>
 						<div onClick={this.onToggle}>
