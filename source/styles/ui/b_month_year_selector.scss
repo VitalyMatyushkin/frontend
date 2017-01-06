@@ -10,10 +10,10 @@
 }
 
 .eMonthYearSelector_smallSizeColumn {
-  width: 21px;
+  width: 43px;
   height: 38px;
 
-  border: 1px solid #d7d7d7;
+  border: solid #d7d7d7;
   border-width: 0 1px 0 0;
 
   &.mWithoutBorder {
@@ -34,10 +34,10 @@
 }
 
 .eMonthYearSelector_middleSizeColumn {
-  width: 163px;
+  width: 141px;
   height: 38px;
 
-  border: 1px solid #d7d7d7;
+  border: solid #d7d7d7;
   border-width: 0 1px 0 0;
 
   &:hover {
@@ -51,10 +51,10 @@
   color: #008ed3;
 
   &.mLeft {
-    padding-left: 3px;
+    padding-left: 13px;
   }
 
   &.mRight {
-    padding-left: 3px;
+    padding-left: 13px;
   }
 }
