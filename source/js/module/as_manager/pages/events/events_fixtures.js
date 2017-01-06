@@ -2,11 +2,11 @@
  * Created by Anatoly on 22.09.2016.
  */
 
-const   React           = require('react'),
-        Morearty        = require('morearty'),
-		Immutable       = require('immutable'),
+const   React			= require('react'),
+        Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
 		DateHelper 		= require('module/helpers/date_helper'),
-		EventHelper     = require('module/helpers/eventHelper'),
+		EventHelper		= require('module/helpers/eventHelper'),
 		Fixtures 		= require('module/ui/fixtures/fixtures'),
 
 		FixturesStyles	= require('./../../../../../styles/ui/bFixtures.scss');
@@ -14,30 +14,26 @@ const   React           = require('react'),
 const EventFixtures = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const   self            = this,
-				binding         = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		binding.clear();
-		self.activeSchoolId = self.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
+		this.activeSchoolId = this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 
-		self._setEvents();
+		this._setEvents();
 	},
 	_setEvents: function() {
-		const   self    = this,
-				binding = self.getBinding('calendar');
+		const binding = this.getBinding('calendar'),
+			currentDate = binding.toJS('monthDate');
 
-		const currentDate = binding.toJS('monthDate');
-
-		self._setEventsByDateRange(
+		this._setEventsByDateRange(
 			DateHelper.getStartDateTimeOfMonth(currentDate),
 			DateHelper.getEndDateTimeOfMonth(currentDate)
 		);
 	},
 	_setEventsByDateRange: function(gteDate, ltDate) {
-		const   self            = this,
-				binding         = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
-		window.Server.events.get(self.activeSchoolId, {
+		window.Server.events.get(this.activeSchoolId, {
 				filter: {
 					limit: 1000,
 					where: {
@@ -48,7 +44,7 @@ const EventFixtures = React.createClass({
 					}
 				}
 			})
-			.then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, self.activeSchoolId)))
+			.then(events => events.filter(event => EventHelper.isShowEventOnCalendar(event, this.activeSchoolId)))
 			.then(events => {
 				binding
 					.atomically()
@@ -61,16 +57,15 @@ const EventFixtures = React.createClass({
 		document.location.hash = 'event/' + eventId;
 	},
 	render: function () {
-		const	self			= this,
-				activeSchoolId	= self.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
-				binding			= self.getDefaultBinding();
+		const activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId'),
+				binding			= this.getDefaultBinding();
 
 		return (
 			<div className="bFixtures">
 				<Fixtures	events			= {binding.toJS('models')}
 							activeSchoolId	= {activeSchoolId}
 							sync			= {binding.toJS('sync')}
-							onClick			= {self.onClickChallenge}
+							onClick			= {this.onClickChallenge}
 				/>
 			</div>
 		);
