@@ -26,7 +26,6 @@ const UserAchievements = React.createClass({
         var tempAr = [];
         for(var i=0; i<data1.length;i++){
             for(var x= 0; x < data2.length; x++){
-                //console.log(data1[i]);
                 if(data1[i].resultId){
                     if(data1[i].resultId === data2[x].id){
                         tempAr.push(data1[i]);

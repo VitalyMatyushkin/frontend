@@ -14,8 +14,6 @@ const HomeNews = React.createClass({
 		if(activeSchoolId !== undefined || activeSchoolId !== null){
 			window.Server.publicSchoolNews.get({schoolId:activeSchoolId}, {filter:{order:"date DESC"}})
 				.then(news => {
-					console.log(news);
-
 					binding.atomically()
 						.set('schoolNews',			Immutable.fromJS(news))
 						.set('selectedNewsItem',	Immutable.fromJS(''))

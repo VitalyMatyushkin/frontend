@@ -39,13 +39,12 @@ const Calendar = React.createClass({
 				eventsData		= binding.get('eventsData');
 
 		return (
-			<MonthCalendar
-				monthDate={monthDate}
-				todayDate={todayDate}
-				selectedDate={selectedDate}
-				onMonthClick={ (data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding) }
-				onDateClick={this.onSelect }
-				eventsData={eventsData}
+			<MonthCalendar	monthDate		= {monthDate}
+							todayDate		= {todayDate}
+							selectedDate	= {selectedDate}
+							onMonthClick	= {(data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding)}
+							onDateClick		= {this.onSelect }
+							eventsData		= {eventsData}
 			/>
 		);
 	}
