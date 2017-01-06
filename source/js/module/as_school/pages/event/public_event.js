@@ -111,8 +111,6 @@ const PublicEvent = React.createClass({
 		const 	binding	= this.getDefaultBinding(),
 				isSync	= binding.get('sync');
 
-		console.log('isSync: ' + isSync);
-
 		if(isSync) {
 			return (
 				<div className="bPublicEvent">

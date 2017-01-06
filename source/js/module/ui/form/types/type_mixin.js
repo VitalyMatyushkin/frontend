@@ -109,7 +109,6 @@ const InputTypeMixin = {
         this.props.onSetValue && this.props.onSetValue(value);
 	},
 	showError: function(text) {
-		console.log('showing error');
 		const 	self 	= this,
 				binding = self.getDefaultBinding();
 		text && binding.set('error', text);

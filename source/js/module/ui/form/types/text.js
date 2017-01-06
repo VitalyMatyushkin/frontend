@@ -39,7 +39,7 @@ const TypeText =  React.createClass({
 				type={this.props.textType || 'text'}
 				placeholder={this.props.placeholder}
 				onBlur={this.handleBlur}
-				onFocus={()=> console.log(`Field - ${this.props.field}, onFocus handler`)}
+				onFocus={() => {}}
 				disabled={!!this.props.isDisabled}
 				onChange={this.handleChange} />
 		)

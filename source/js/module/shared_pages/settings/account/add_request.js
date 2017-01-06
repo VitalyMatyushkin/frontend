@@ -59,8 +59,6 @@ const AddPermissionRequest = React.createClass({
             .filter(p => p.schoolId === this.getSchoolSelectedId())
             .map(p => p.role.toLowerCase());
 
-        console.log(currentRoles);
-
         const hasUserCurrentRole = function(currentRole) {
             return currentRoles.find(r => r === currentRole);
         };

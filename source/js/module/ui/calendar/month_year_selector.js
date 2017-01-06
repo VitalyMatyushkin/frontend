@@ -1,7 +1,7 @@
 const	React				= require('react'),
 
 		DateHelper			= require('module/helpers/date_helper'),
-		Dropdown			= require('module/as_manager/pages/events/manager/manager_components/date_selector/dropdown/dropdown'),
+		Dropdown			= require('../../as_manager/pages/events/manager/manager_components/date_selector/dropdown/dropdown'),
 
 		DateSelectorStyle	= require('styles/ui/b_month_year_selector.scss');
 

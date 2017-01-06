@@ -98,7 +98,6 @@ const Table = React.createClass({
             binding = self.getDefaultBinding(),
             filter = self.filter.getFilters();
 
-        console.log('Table load data started');
         if(self.props.getDataPromise) {
             self.request = self.props.getDataPromise(filter).then(function (data) {
                 var res = data;

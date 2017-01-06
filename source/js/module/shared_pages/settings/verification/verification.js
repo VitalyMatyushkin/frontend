@@ -131,8 +131,6 @@ const Verification = React.createClass({
 	},
 
 	render: function() {
-		console.log(this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.verified'));
-
 		return (
 			<div className="eRegistration_verificationWrapper">
 				<VerificationStep	email							= { this.getEmail() }
