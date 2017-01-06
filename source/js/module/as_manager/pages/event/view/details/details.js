@@ -49,7 +49,7 @@ const Details = React.createClass({
 	 */
 	getCoachPermissionFromUser: function(user) {
 		const permissions =  user.permissions.filter(p =>
-			p.preset === 'COACH' &&
+			(p.preset === 'COACH' || p.preset === "TEACHER") &&
 			p.schoolId === this.props.activeSchoolId &&
 			p.status === 'ACTIVE'
 		);
