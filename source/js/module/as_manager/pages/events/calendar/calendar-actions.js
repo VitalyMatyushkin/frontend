@@ -20,7 +20,27 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 			startTime: {
 				$gte: 	monthStartDate,
 				$lt: 	monthEndDate
-			}
+			},
+			$or: [
+				{	// internal events are always shown no matter what
+					eventType: { $in: ['INTERNAL_HOUSES', 'INTERNAL_TEAMS']}
+				},
+				{	// external events created by me always visible with any status
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: activeSchoolId
+				},
+				{	// external events where I'm invited shown only in some special statuses
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: { $ne: activeSchoolId },
+					invitedSchoolIds: activeSchoolId,
+					status: { $in: [
+						'ACCEPTED',
+						'REJECTED',
+						'FINISHED',
+						'CANCELED'
+					]}
+				}
+			]
 		}
 	};
 
@@ -50,13 +70,30 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 	const filter = {
 		limit: 100,
 		where: {
-			startTime: {
+			startTime: {			// strict time gaps
 				$gte: dayStart,
 				$lt: dayEnd
-			}//,
-			// status: {
-			// 	$nin: ['REJECTED']
-			// }
+			},
+			$or: [
+				{	// internal events are always shown no matter what
+					eventType: { $in: ['INTERNAL_HOUSES', 'INTERNAL_TEAMS']}
+				},
+				{	// external events created by me always visible with any status
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: activeSchoolId
+				},
+				{	// external events where I'm invited shown only in some special statuses
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: { $ne: activeSchoolId },
+					invitedSchoolIds: activeSchoolId,
+					status: { $in: [
+						'ACCEPTED',
+						'REJECTED',
+						'FINISHED',
+						'CANCELED'
+					]}
+				}
+			]
 		}
 	};
 
