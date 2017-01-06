@@ -71,7 +71,7 @@ const EventFixtures = React.createClass({
 							activeSchoolId	= {activeSchoolId}
 							sync			= {binding.toJS('sync')}
 							onClick			= {self.onClickChallenge}
-				/>;
+				/>
 			</div>
 		);
 	}
