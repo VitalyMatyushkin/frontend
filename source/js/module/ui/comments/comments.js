@@ -1,6 +1,7 @@
-const	React	= require('react'),
-		Button	= require('../button/button'),
-		Avatar	= require('../avatar/avatar');
+const	React				= require('react'),
+		Button				= require('../button/button'),
+		Avatar				= require('../avatar/avatar'),
+		NewCommentFormStyle	= require('../../../../styles/ui/comments/b_new_comment_form.scss');
 
 /**
  * Form for new comment.
@@ -10,8 +11,6 @@ const NewCommentForm = React.createClass({
 	propTypes: {
 		// Avatar of user which post the comment
 		avatarPic		: React.PropTypes.string,
-		//TODO What is avatarMinValue?
-		avatarMinValue	: React.PropTypes.number,
 		// Text of comment
 		text			: React.PropTypes.string,
 		// Handler for change text
@@ -33,24 +32,21 @@ const NewCommentForm = React.createClass({
 	},
 
 	render: function(){
-		// TODO move to a garbage these shitty css classes and write new with normal names.
 		return (
-			<div>
-				<div className="bBlog_box mNewComment">
-					<div className="ePicBox">
-						<Avatar	pic			= {this.props.avatarPic}
-								minValue	= {this.props.avatarMinValue}
-						/>
+			<div className="bNewCommentForm">
+				<div className="eNewCommentForm_body">
+					<div className="eNewCommentForm_avatarWrapper">
+						<Avatar pic= {this.props.avatarPic}/>
 					</div>
-					<div className="eEvent_commentBlog">
-						<textarea	className	= "eEvent_comment"
+					<div className="eNewCommentForm_textareaWrapper">
+						<textarea	className	= "eNewCommentForm_textarea"
 									value		= {this.getText()}
 									placeholder	= "Enter your comment"
 									onChange	= {this.onChangeText}
 						/>
 					</div>
 				</div>
-				<div className="bEventButtons">
+				<div className="eNewCommentForm_footer">
 					<Button	text	= "Send"
 							onClick	= {this.props.onSubmit}
 					/>

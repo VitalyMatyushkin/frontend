@@ -37,6 +37,9 @@ const InviteComments = React.createClass({
 	setNewCommentText: function(text) {
 		return this.getDefaultBinding().set('newCommentText', text);
 	},
+	clearNewCommentText: function() {
+		this.setNewCommentText('');
+	},
 	/**
 	 * Function add name of "reply user" to new comment text and return it.
 	 * Result - "FirstName LastName, newCommentText"
@@ -46,7 +49,7 @@ const InviteComments = React.createClass({
 	getNewCommentTextWithReplyText: function(replyUser) {
 		const binding = this.getDefaultBinding();
 
-		return `${replyUser.author.firstName} ${replyUser.author.lastName}, ${binding.get('newCommentText')}`;
+		return `${replyUser.firstName} ${replyUser.lastName}, ${binding.get('newCommentText')}`;
 	},
 	checkComments: function() {
 		const binding = this.getDefaultBinding();
@@ -94,15 +97,17 @@ const InviteComments = React.createClass({
 					.commit();
 			});
 	},
-	onSubmitCommentClick: function(textComment){
+	onSubmitCommentClick: function(){
 		const binding 	= this.getDefaultBinding();
 
-		const	inviteId	= this.props.inviteId,
+		const	textComment	= this.getNewCommentText(),
+				inviteId	= this.props.inviteId,
 				replyTo		= binding.get('replyTo'),
 				replyName	= replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
 				postData	= {text: textComment};
 
 		binding.sub('replyTo').clear();
+		this.clearNewCommentText();
 
 		/**if reply and a comment contains the name*/
 		if(replyTo && textComment.indexOf(replyName) >= 0){
@@ -134,7 +139,7 @@ const InviteComments = React.createClass({
 
 		binding
 			.atomically()
-			.set('newCommentText',	this.getNewCommentTextWithReplyText())
+			.set('newCommentText',	this.getNewCommentTextWithReplyText(comments.author))
 			.set('replyTo', 		comments)
 			.commit();
 	},
