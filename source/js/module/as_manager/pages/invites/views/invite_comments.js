@@ -1,8 +1,7 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		Immutable			= require('immutable'),
-		InviteCommentsView	= require('./invite-comments-view'),
-		NewCommentForm		= require('./comments');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
+		Comments		= require('../../../../ui/comments/comments');
 
 const InviteComments = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -97,7 +96,7 @@ const InviteComments = React.createClass({
 					.commit();
 			});
 	},
-	onSubmitCommentClick: function(){
+	onSubmitComment: function(){
 		const binding 	= this.getDefaultBinding();
 
 		const	textComment	= this.getNewCommentText(),
@@ -154,15 +153,10 @@ const InviteComments = React.createClass({
 				replyTo		= binding.toJS('replyTo') ? binding.toJS('replyTo') : null;
 
 		return (
-				<div className="bInviteComments">
-					<InviteCommentsView onReply={this.onReply} comments={comments} />
-					<NewCommentForm	avatarPic		= {loggedUser && loggedUser.avatar}
-									avatarMinValue	= {45}
-									text			= {this.getNewCommentText()}
-									onChangeText	= {this.onChangeNewCommentText}
-									onSubmit		= {this.onSubmitCommentClick}
-					/>
-				</div>
+			<Comments	comments	= {comments}
+						loggedUser	= {loggedUser}
+						onSubmit	= {this.onSubmitComment}
+			/>
 		);
 	}
 });

@@ -5,8 +5,7 @@ const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
 
-		CommentBox		= require('./event_blogBox'),
-		NewCommentForm	= require('module/ui/comments/comments');
+		CommentBox		= require('./event_blogBox');
 
 const Blog = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -153,7 +152,6 @@ const Blog = React.createClass({
 		return(
 			<div className="bBlogMain">
 				<CommentBox onReply={this.onReply} blogData={dataBlog} />
-				<NewCommentForm commentText={commentText} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this.onSubmitCommentClick} />
 			</div>
 		)
 	}
