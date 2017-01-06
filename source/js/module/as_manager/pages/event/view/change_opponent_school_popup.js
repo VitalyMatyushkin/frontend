@@ -31,12 +31,15 @@ const ChangeOpponentSchoolPopup = React.createClass({
 		binding.set('model', Immutable.fromJS(event));
 
 		// change school on server
-		window.Server.schoolEvent.put({
-			schoolId: this.props.activeSchoolId,
-			eventId: event.id
-		}, {
-			invitedSchoolIds: event.invitedSchoolIds
-		}).then(() => this.closeSavingChangesModePopup());
+		window.Server.schoolEventChangeOpponent.post(
+			{
+				schoolId	: this.props.activeSchoolId,
+				eventId		: event.id
+			}, {
+				invitedSchoolIds: event.invitedSchoolIds
+			}
+		)
+		.then(() => this.closeSavingChangesModePopup());
 	},
 	closeSavingChangesModePopup: function() {
 		const binding = this.getDefaultBinding();
@@ -69,18 +72,7 @@ const ChangeOpponentSchoolPopup = React.createClass({
 			}
 		};
 
-		return window.Server.publicSchools.get(filter)
-			.then(_schools => {
-				schools = _schools;
-
-				return this.getTBDSchool();
-			})
-			.then(data => {
-				// set TBD school at first
-
-				schools.unshift(data[0]);
-				return schools;
-			});
+		return window.Server.publicSchools.get(filter);
 	},
 	getTBDSchool: function() {
 		const filter = {
