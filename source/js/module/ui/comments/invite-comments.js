@@ -1,6 +1,3 @@
-/**
- * Created by Woland on 27.12.2016.
- */
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
@@ -17,6 +14,9 @@ const InviteComments = React.createClass({
 		this.setLoggedUser();
 		// upload all comments from server
 		this.setComments();
+
+		const binding = this.getDefaultBinding();
+		binding.set('newCommentText', '');
 	},
 	/**
 	 * Function start timer, which send request on server with count comment
@@ -30,6 +30,23 @@ const InviteComments = React.createClass({
 
 		binding.remove('inviteComments');
 		clearInterval(this.intervalId);
+	},
+	getNewCommentText: function() {
+		return this.getDefaultBinding().get('newCommentText');
+	},
+	setNewCommentText: function(text) {
+		return this.getDefaultBinding().set('newCommentText', text);
+	},
+	/**
+	 * Function add name of "reply user" to new comment text and return it.
+	 * Result - "FirstName LastName, newCommentText"
+	 * @param replyUser
+	 * @returns {string}
+	 */
+	getNewCommentTextWithReplyText: function(replyUser) {
+		const binding = this.getDefaultBinding();
+
+		return `${replyUser.author.firstName} ${replyUser.author.lastName}, ${binding.get('newCommentText')}`;
 	},
 	checkComments: function() {
 		const binding = this.getDefaultBinding();
@@ -114,29 +131,33 @@ const InviteComments = React.createClass({
 	},
 	onReply:function(comments){
 		const binding = this.getDefaultBinding();
-		binding.set('replyTo', comments);
+
+		binding
+			.atomically()
+			.set('newCommentText',	this.getNewCommentTextWithReplyText())
+			.set('replyTo', 		comments)
+			.commit();
 	},
-	render:function(){
+	onChangeNewCommentText: function(text) {
+		this.setNewCommentText(text);
+	},
+	render:function() {
 		const	binding		= this.getDefaultBinding();
 
 		const	comments	= binding.toJS('inviteComments'),
 				loggedUser	= binding.toJS('loggedUser'),
-				replyTo		= binding.toJS('replyTo') ? binding.toJS('replyTo') : null,
-				commentText	= replyTo ? replyTo.author.firstName + ' ' + replyTo.author.lastName + ', ': '';
+				replyTo		= binding.toJS('replyTo') ? binding.toJS('replyTo') : null;
 
 		return (
-			<div className="row">
-				<div className="col-md-10 col-md-offset-2">
-					<div className="bInviteComments">
-						<InviteCommentsView onReply={this.onReply} comments={comments} />
-						<NewCommentForm	commentText		= {commentText}
-										avatarMinValue	= {45}
-										avatarPic		= {loggedUser && loggedUser.avatar}
-										onClick			= {this.onSubmitCommentClick}
-						/>
-					</div>
+				<div className="bInviteComments">
+					<InviteCommentsView onReply={this.onReply} comments={comments} />
+					<NewCommentForm	avatarPic		= {loggedUser && loggedUser.avatar}
+									avatarMinValue	= {45}
+									text			= {this.getNewCommentText()}
+									onChangeText	= {this.onChangeNewCommentText}
+									onSubmit		= {this.onSubmitCommentClick}
+					/>
 				</div>
-			</div>
 		);
 	}
 });
