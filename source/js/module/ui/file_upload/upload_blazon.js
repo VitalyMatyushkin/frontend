@@ -89,7 +89,6 @@ const BlazonUpload = React.createClass({
                         window.Server.photos.post(albumDetails.id, model).then(function(data){
                             urlStr = 'http:'+uri+'/files/'+fileName+'/contain?height=60&width=60';
                             rootBinding.set('picUrl',urlStr);
-                            //console.log(rootBinding.get('picUrl'));
                             //React.findDOMNode(self.refs.prevImage).src = data.pic+'/contain?height=60&width=60';
                             ReactDOM.findDOMNode(self.refs.imageChanged).innerText = 'Image changed - Please submit to effect changes';
                             self.forceUpdate();
@@ -110,7 +109,7 @@ const BlazonUpload = React.createClass({
                 description: 'blazon_'+rootBinding.get('userRules.activeSchoolId')+'_staging',
                 eventId: rootBinding.get('userRules.activeSchoolId')
             }).then(function(res){
-                albumDetails=res;console.log(albumDetails);
+                albumDetails=res;
                 var formData = new FormData(),
                     uri = window.apiBase + '/storage/'+albumDetails.storageId,
                     fileName = Math.random().toString(12).substring(7) + '.' + file.name.split('.')[1];
