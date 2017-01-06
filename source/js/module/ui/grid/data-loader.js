@@ -43,7 +43,6 @@ DataLoader.prototype = {
 				filters = this.filter.getFilters(),
 				service = this.getService(self.serviceName);
 
-		console.log('DataLoader: load data started');
 		if(service) {
 			const promise = self.params ? service.get(this.params, filters): service.get(filters);
 			return promise.then(data => {

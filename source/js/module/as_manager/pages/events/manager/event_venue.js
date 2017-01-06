@@ -1,11 +1,10 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-
+		If					= require('../../../../ui/if/if'),
 		Promise				= require('bluebird'),
 		Map					= require('module/ui/map/map'),
 		Autocomplete		= require('../../../../../../js/module/ui/autocomplete2/OldAutocompleteWrapper'),
-
 		InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
 		TextInputStyles		= require('./../../../../../../styles/ui/b_text_input.scss'),
@@ -206,6 +205,9 @@ const EventVenue = React.createClass({
 				return 'CUSTOM';
 		}
 	},
+	getVenueType: function() {
+		return this.getDefaultBinding().get('model.venue.venueType');
+	},
 	setPostcode: function(postcode) {
 		this.getDefaultBinding().atomically()
 			.set('model.venue.venueType',	Immutable.fromJS(this.getVenueTypeByPostcode(postcode)))
@@ -253,6 +255,12 @@ const EventVenue = React.createClass({
 
 		return gameType === 'inter-schools' && typeof secondRival === 'undefined';
 	},
+	/**
+	 * Show map when venue isn't equal TBD
+	 */
+	isShowMap: function() {
+		return this.getVenueType() !== "TBD";
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -278,10 +286,12 @@ const EventVenue = React.createClass({
 									extraCssStyle	= {'mBigSize'}
 					/>
 				</div>
-				<Map	binding				= {binding}
-						point				= {this.getPoint()}
-						customStylingClass	= "eEvents_venue_map"
-				/>
+				<If condition={this.isShowMap()}>
+					<Map	binding				= {binding}
+							point				= {this.getPoint()}
+							customStylingClass	= "eEvents_venue_map"
+					/>
+				</If>
 			</div>
 		);
 	}

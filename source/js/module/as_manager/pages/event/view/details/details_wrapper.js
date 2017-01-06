@@ -38,15 +38,22 @@ const DetailsWrapper = React.createClass({
 				return Actions.getEventById(this.props.schoolId, this.props.eventId);
 			})
 			.then(event => {
-				this.backupEventDetails = details;
+				this.backupEventDetails(details);
 				this.setState({
-					isLoading			: false,
-					eventDetails		: details,
-					eventName			: event.generatedNames[this.props.schoolId],
-					officialName		: event.generatedNames.official,
-					venue				: this.getVenueView(event)
+					isLoading		: false,
+					eventDetails	: details,
+					eventName		: event.generatedNames[this.props.schoolId],
+					officialName	: event.generatedNames.official,
+					venue			: this.getVenueView(event)
 				});
 			});
+	},
+	/**
+	 * Copy event details and set it as prop of component - this.backupEventDetails
+	 * @param eventDetails
+	 */
+	backupEventDetails: function(eventDetails) {
+		this.backupEventDetails = Object.assign(eventDetails);
 	},
 	restoreEventDetails: function() {
 		this.setState({
@@ -85,14 +92,14 @@ const DetailsWrapper = React.createClass({
 				});
 			});
 	},
-
 	handleChange: function(field, value) {
-		const upd = {
-			eventDetails: {}
-		};
-		upd.eventDetails[field] = value;
+		// get old event details and update it
+		const eventDetails = this.state.eventDetails;
+		eventDetails[field] = value;
 
-		this.setState(upd);
+		this.setState({
+			eventDetails: eventDetails
+		});
 	},
 	onSave: function() {
 		this.submitChanges();
