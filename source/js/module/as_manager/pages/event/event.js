@@ -245,6 +245,14 @@ const Event = React.createClass({
 				value		:'gallery',
 				text		:'Gallery',
 				isActive	:false
+			}, {
+				value		: 'details',
+				text		: 'Details',
+				isActive	: false
+			}, {
+				value		: 'tasks',
+				text		: 'Jobs',
+				isActive	: false
 			}
 		];
 
@@ -266,14 +274,6 @@ const Event = React.createClass({
 
 		self.tabListModel.push(
 			{
-				value		: 'details',
-				text		: 'Details',
-				isActive	: false
-			}, {
-				value		: 'tasks',
-				text		: 'Tasks',
-				isActive	: false
-			}, {
 				value		: 'report',
 				text		: 'Match Report',
 				isActive	: false
