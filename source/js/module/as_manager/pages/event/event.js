@@ -423,7 +423,11 @@ const Event = React.createClass({
 		);
 	},
 	handleClickAddTaskButton: function() {
-		return this.getDefaultBinding().set('tasksTab.viewMode', "ADD");
+		return this.getDefaultBinding().atomically()
+			.set('tasksTab.editingTask',	undefined)
+			.set('tasksTab.viewMode',		"ADD")
+			.commit();
+
 	},
 	/**
 	 * Function return add task button for tasks tab.
