@@ -8,8 +8,6 @@ const	React			= require('react'),
 const RecentEvent = React.createClass({
 	mixins: [Morearty.Mixin],
 
-	EVENTS_COUNT: 6,
-
 	getCurrentFooterEvent: function() {
 		const binding = this.getDefaultBinding().sub('events.footerEvents');
 
@@ -22,23 +20,23 @@ const RecentEvent = React.createClass({
 	render:function() {
 		const binding = this.getDefaultBinding().sub('events');
 
-		const isSync = binding.get('prevSevenDaysFinishedEvents.isSync') && binding.get('footerEvents.isSync');
+		const isSync = binding.get('lastFiveEvents.isSync') && binding.get('footerEvents.isSync');
 
 		if(isSync) {
-			const	activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId'),
-					events			= binding.toJS('prevSevenDaysFinishedEvents.events'),
-					footerEvent		= this.getCurrentFooterEvent();
+			const	events			= binding.toJS('lastFiveEvents.events'),
+					footerEvent		= this.getCurrentFooterEvent(),
+					newActiveSchoolId = this.getDefaultBinding().sub('events').toJS('domainSchoolId');
 
 			return (
 				<div className="bRecentEvents">
 					<FixtureList	mode			= { BigScreenConsts.FIXTURE_LIST_MODE.RECENT }
-									title			= "Recent Events"
-									activeSchoolId	= { activeSchoolId }
-									events			= { events.slice(0, this.EVENTS_COUNT) }
+									title			= "Recent results"
+									activeSchoolId	= { newActiveSchoolId }
+									events			= { events }
 									logo            = "images/big-logo.svg"
 						/>
 					<Footer	event			= { footerEvent }
-							activeSchoolId	= { activeSchoolId }
+							activeSchoolId	= { newActiveSchoolId }
 					/>
 				</div>
 			);

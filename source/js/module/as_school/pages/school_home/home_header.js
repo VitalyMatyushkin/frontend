@@ -70,7 +70,6 @@ const HomeHeader = React.createClass({
             if(photos.length !== 0) {
                 /* maybe this is not really so bad as it looks like because otherwise React Animation should be used */
                 headerSection.src = photos[randIndexPos];
-                //console.log('src: ' + headerSection.src);
             }
         },5000);
     },
@@ -97,7 +96,7 @@ const HomeHeader = React.createClass({
                 <div className="eSchoolMastHead">
                     <div className="eSchoolMotto">
                         <div className="eSchoolBlazon">
-                            <img src={schoolBlazon || 'http://placehold.it/400x400'}/>
+                            <img src={schoolBlazon || 'images/default_blazon.svg'}/>
                         </div>
                         {schoolName}
                     </div>

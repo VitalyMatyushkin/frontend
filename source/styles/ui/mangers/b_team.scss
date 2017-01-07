@@ -1,4 +1,5 @@
 @import "../../!variables";
+@import "../../!mixins";
 
 .bTeam {
   width: 392px;
@@ -30,7 +31,7 @@
 .eTeam_player {
   cursor: pointer;
 
-  padding: 5px;
+  padding: 10px 5px 5px;
 
   &.mHead {
     color: #939393;
@@ -57,20 +58,27 @@
   vertical-align: top;
 
   height: 20px;
-  padding-top: 5px;
 
   text-align: center;
   font-weight: bold;
   font-size: 16px;
   line-height: 20px;
 
+  &.mNumber {
+    width: 5%;
+  }
+
   &.mName {
-    width: 37%;
+    @include text-overflow;
+    white-space: nowrap;
+
+    width: 32%;
+
     &.mDefaultView {
       width: 35%;
     }
     &.mLong {
-      width: 50%;
+      width: 45%;
     }
   }
 

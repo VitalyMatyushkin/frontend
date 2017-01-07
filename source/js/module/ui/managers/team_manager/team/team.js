@@ -20,6 +20,7 @@ const DefaultTeam = React.createClass({
 		if(self.props.isNonTeamSport) {
 			return (
 				<div className="eTeam_player mHead">
+					<div className="eTeam_playerItem mNumber">№</div>
 					<div className="eTeam_playerItem mName mLong">Name</div>
 					<div className="eTeam_playerItem mForm mLong">Form</div>
 				</div>
@@ -27,6 +28,7 @@ const DefaultTeam = React.createClass({
 		} else {
 			return (
 				<div className="eTeam_player mHead">
+					<div className="eTeam_playerItem mNumber">№</div>
 					<div className="eTeam_playerItem mName">Name</div>
 					<div className="eTeam_playerItem mForm">Form</div>
 					<div className="eTeam_playerItem mPosition">Position</div>
@@ -41,14 +43,15 @@ const DefaultTeam = React.createClass({
 		const	players		= self.props.players,
 				positions	= self.props.positions;
 
-		return players.map(player =>
-			<Player	key={player.id}
-					isNonTeamSport={self.props.isNonTeamSport}
-					player={player}
-					positions={positions}
-					handleClickPlayer={self.props.handleClickPlayer}
-					handleChangePlayerPosition={self.props.handleChangePlayerPosition}
-					handleClickPlayerSub={self.props.handleClickPlayerSub}
+		return players.map((player, index) =>
+			<Player	number						= {index + 1}
+					key							= {player.id}
+					isNonTeamSport				= {self.props.isNonTeamSport}
+					player						= {player}
+					positions					= {positions}
+					handleClickPlayer			= {self.props.handleClickPlayer}
+					handleChangePlayerPosition	= {self.props.handleChangePlayerPosition}
+					handleClickPlayerSub		= {self.props.handleClickPlayerSub}
 			/>
 		);
 	},

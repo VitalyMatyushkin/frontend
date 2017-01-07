@@ -4,23 +4,42 @@ const	React 				= require('react'),
 	Immutable				= require('immutable'),
 	moment					= require('moment'),
 	MoreartyHelper			= require('./../../../../helpers/morearty_helper'),
+	Loader 					= require('module/ui/loader'),
 	StudentImporter			= require('module/utils/student_importer');
 
 const ImportStudents = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentDidMount: function() {
-		const	binding	= this.getDefaultBinding();
-		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+		const	binding	= this.getDefaultBinding(),
+			activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+
+		let school = {};
+		binding.set('importIsSync', Immutable.fromJS(false));
 		binding.remove('studentData');
+		binding.remove('activeSchool');
+
+		window.Server.schoolForms.get({schoolId: activeSchoolId})
+			.then(forms => {
+				school.forms = forms;
+				return window.Server.schoolHouses.get({schoolId: activeSchoolId})
+			})
+			.then(houses => {
+				school.houses = houses;
+				binding.set('activeSchool', Immutable.fromJS(school));
+			});
 	},
 
 	onChangeFile: function (event){
 		const 	binding	= this.getDefaultBinding(),
-			file	= event.target.files[0];
+			file	= event.target.files[0],
+			activeSchool = binding.toJS('activeSchool');
 
 		StudentImporter.loadFromCSV(file).then(
 			result => {
 				binding.set('studentData', Immutable.fromJS(result));
+				const formsAndHouses = StudentImporter.pullFormsAndHouses(result, activeSchool);
+				binding.set('studentData', Immutable.fromJS(formsAndHouses));
+
 				this.validationEverything();
 			},
 			err => { console.log('err: ' + err.message + '\n' + err.stack) }
@@ -40,7 +59,10 @@ const ImportStudents = React.createClass({
 
 			for (let key in errorsImport) {
 				numberError++;
-				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>); //In console React has error with unique key in elements li
+				/**
+				 * In console React has error with unique key in elements li
+				 */
+				errorsList.push(<li>Row: {errorsImport[key].row} Message: {errorsImport[key].message}</li>);
 			}
 
 			if (errorsList.length > 0) {
@@ -73,19 +95,21 @@ const ImportStudents = React.createClass({
 	},
 
 	handleUploadStudentsButtonClick: function() {
-		const	binding	= this.getDefaultBinding();
-		const	studentData		= binding.toJS('studentData');
-
+		const binding = this.getDefaultBinding(),
+			studentData = binding.toJS('studentData'),
+			activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
+		binding.remove('importIsSync');
 		Promise.all(studentData.students.map( student => {
-			return window.Server.schoolStudents.post(this.activeSchoolId, {
+			return window.Server.schoolStudents.post(activeSchoolId, {
 				firstName:	student.firstName,
 				lastName:	student.lastName,
 				gender:		student.gender,
-				birthday:	this.getBirthdayInServerFormat(student.birthday),
 				formId: 	student.formId,
-				houseId: 	student.houseId
+				houseId: 	student.houseId,
+				birthday:	this.getBirthdayInServerFormat(student.birthday)
 			});
 		})).then(() => {
+			binding.set('importIsSync', Immutable.fromJS(false));
 			window.simpleAlert(
 				'Students upload was finished',
 				'Ok',
@@ -106,20 +130,21 @@ const ImportStudents = React.createClass({
 	},
 
 	render: function() {
-		const	self	= this,
-			binding	= self.getDefaultBinding();
+		const binding = this.getDefaultBinding(),
+			isSync = binding.toJS('importIsSync');
 
 		return (
 			<div className='bForm'>
+				<Loader condition={isSync} />
 				<div className='eForm_field'>
 					<input
 						id="files"
 						type="file"
 						name="files[]"
-						onChange={self.onChangeFile}
+						onChange={this.onChangeFile}
 					/>
 				</div>
-				<div>{self.validationEverything()}</div>
+				<div>{this.validationEverything()}</div>
 			</div>
 
 		)

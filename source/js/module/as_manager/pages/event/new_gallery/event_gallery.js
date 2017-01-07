@@ -23,22 +23,23 @@ const EventGallery = React.createClass({
 		}
 	},
 	render: function() {
-		const	binding		= this.getDefaultBinding(),
-				photos		= binding.toJS('photos'),
-				isLoading	= !binding.toJS('isSync'),
-				schoolId	= this.props.activeSchoolId,
-				eventId		= this.props.eventId,
-				userRole	= RoleHelper.getLoggedInUserRole(this);
+		const	binding					= this.getDefaultBinding(),
+				photos					= binding.toJS('photos'),
+				isLoading				= !binding.toJS('isSync'),
+				isUserCanUploadPhotos	= binding.toJS('isUserCanUploadPhotos'),
+				schoolId				= this.props.activeSchoolId,
+				eventId					= this.props.eventId,
+				userRole				= RoleHelper.getLoggedInUserRole(this);
 
 		return (
 			<div className='bEvent_media bEventBottomContainer'>
 				<Gallery	currentUserId				= { MoreartyHelper.getLoggedInUserId(this) }
 							accessMode					= { this.getGalleryAccessPreset(userRole) }
-							handleChangeAddPhotoButton	= { file => Actions.addPhotoToEvent(userRole, binding, schoolId, eventId, file) }
 							handleClickDeletePhoto		= { photoId => Actions.deletePhotoFromEvent(userRole, binding, schoolId, eventId, photoId) }
 							handleChangeAccessPreset	= { (photoId, preset) => Actions.changePhotoPreset(userRole, binding, schoolId, eventId, photoId, preset) }
 							photos						= { photos }
 							isLoading					= { isLoading }
+							isUserCanUploadPhotos		= { isUserCanUploadPhotos }
 				/>
 			</div>
 		);

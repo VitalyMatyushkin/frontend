@@ -52,6 +52,7 @@ const EventTeamsView = React.createClass({
 		}
 		/** set score */
 		scoreData.score = score.value;
+		scoreData.isChanged = true;
 		scoreData.isValid = score.isValid;
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
@@ -68,6 +69,7 @@ const EventTeamsView = React.createClass({
 		}
 		/** set score */
 		scoreData.score = TeamHelper.calculateTeamPoints(event, teamId);
+		scoreData.isChanged = true;
 		self.getBinding('event').set(Immutable.fromJS(event));
 	},
 	renderIndividualPlayersForInternalEventForOneOnOneSportByOrder: function(order) {
@@ -345,6 +347,7 @@ const EventTeamsView = React.createClass({
 			return (
 				<div key={playerIndex} className={eventPlayerCss}>
 					<span className="ePlayer_name">
+						<span>{`${playerIndex + 1}. `}</span>
 						<span>{player.firstName}</span>
 						<span>{player.lastName}</span>
 					</span>
@@ -354,14 +357,13 @@ const EventTeamsView = React.createClass({
 						&& individualScoreAvailable
 					}>
 						<span className="ePlayer_scoreContainer">
-							<Score
-								isChangeMode={EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
-								plainPoints={self.getPointsByStudent(event, player.userId)}
-								pointsStep={event.sport.points.pointsStep}
-								pointsType={event.sport.points.display}
-								pointsMask={event.sport.points.inputMask}
-								onChange={self.handleChangeScore.bind(self, event, teamId, player)}
-								/>
+							<Score	isChangeMode	= {EventHelper.isShowScoreButtons(event, mode, isOwner, individualScoreAvailable)}
+									plainPoints		= {self.getPointsByStudent(event, player.userId)}
+									pointsStep		= {event.sport.points.pointsStep}
+									pointsType		= {event.sport.points.display}
+									pointsMask		= {event.sport.points.inputMask}
+									onChange		= {self.handleChangeScore.bind(self, event, teamId, player)}
+							/>
 						</span>
 					</If>
 				</div>

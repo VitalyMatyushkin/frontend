@@ -4,13 +4,16 @@
 
 const Immutable = require('immutable');
 
-/** Load in binding data for all dates which have events */
+/** Load in binding data for all dates which have events
+ *  Required for building calendar highlight - it requires only dates without event content, so loaded blazing fast
+ */
 function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsBinding){
 	const 	monthStartDate	= new Date(monthDate.getFullYear(), monthDate.getMonth(), 1),
 			monthEndDate	= new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 1);
 
-	eventsBinding.set('distinctEventDatesData.isSync', false);
+	eventsBinding.set('distinctEventDatesData.isSync', false);	// TODO: is it okay?
 
+	/* filter to load all event dates for one month */
 	const filter = {
 		limit: 1000,
 		where: {
@@ -18,9 +21,26 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 				$gte: 	monthStartDate,
 				$lt: 	monthEndDate
 			},
-			status: {
-				$nin: ['REJECTED']
-			}
+			$or: [
+				{	// internal events are always shown no matter what
+					eventType: { $in: ['INTERNAL_HOUSES', 'INTERNAL_TEAMS']}
+				},
+				{	// external events created by me always visible with any status
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: activeSchoolId
+				},
+				{	// external events where I'm invited shown only in some special statuses
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: { $ne: activeSchoolId },
+					invitedSchoolIds: activeSchoolId,
+					status: { $in: [
+						'ACCEPTED',
+						'REJECTED',
+						'FINISHED',
+						'CANCELED'
+					]}
+				}
+			]
 		}
 	};
 
@@ -34,8 +54,9 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 		});
 
 		eventsBinding.atomically()
-			.set('eventsData', Immutable.fromJS(eventsData))
-			.set('monthDate', monthDate)
+			.set('eventsData',	Immutable.fromJS(eventsData))
+			.set('monthDate',	monthDate)
+			.set('isSync',		true)
 			.commit();
 	});
 
@@ -50,13 +71,30 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 	const filter = {
 		limit: 100,
 		where: {
-			startTime: {
+			startTime: {			// strict time gaps
 				$gte: dayStart,
 				$lt: dayEnd
 			},
-			status: {
-				$nin: ['REJECTED']
-			}
+			$or: [
+				{	// internal events are always shown no matter what
+					eventType: { $in: ['INTERNAL_HOUSES', 'INTERNAL_TEAMS']}
+				},
+				{	// external events created by me always visible with any status
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: activeSchoolId
+				},
+				{	// external events where I'm invited shown only in some special statuses
+					eventType: { $in: ['EXTERNAL_SCHOOLS'] },
+					inviterSchoolId: { $ne: activeSchoolId },
+					invitedSchoolIds: activeSchoolId,
+					status: { $in: [
+						'ACCEPTED',
+						'REJECTED',
+						'FINISHED',
+						'CANCELED'
+					]}
+				}
+			]
 		}
 	};
 

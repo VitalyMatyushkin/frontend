@@ -9,9 +9,6 @@
   -webkit-font-smoothing: antialiased;
   position: relative;
   background-color: #f0f0f0;
-  * {
-    box-sizing: content-box;//TODO remove it, when new disign will be added
-  }
 }
 
 /*header*/
@@ -51,12 +48,7 @@
   }
 }
 
-.eSchoolFixtures{
-  height: auto;
-  position: relative;
-  margin-top: 40px;
-}
-.eSchoolFixtureTab{
+.eSchoolFixtureTab{//TODO Rename it
   width: 100%;
   max-width: 1180px;
   height: 40px;
@@ -70,51 +62,6 @@
 .eSchoolFixtureTab hr{
   border-color: #293e6b;
 }
-
-.bFixtureContainer{
-  border: $BORDER;
-  cursor: pointer;
-  margin: 10px auto;
-  position: relative;
-  min-height: 160px;
-  width: 900px;
-  background: #fff;
-  display: flex;
-  justify-content: flex-start;
-  color: #535353;
-}
-.bFixture_item{
-  text-align: center;
-}
-.bFixtureIcon{
-  width: 180px;
-  height:auto;
-  margin: auto;
-}
-.bFixtureInfo{
-  width: 280px;
-  height: auto;
-  border-right: $BORDER;
-  text-align: left;
-}
-.bFixtureOpponent{
-  width: 180px;
-  height: auto;
-  overflow: hidden;
-}
-.bFixtureImgContainer {
-  height: 120px;
-}
-.bFixtureOpponent img{
-  height: 70px;
-  padding: 23px 0;
-  max-width: 150px;
-}
-.bFixtureOpponent span{
-  display: block;
-  border-top: $BORDER;
-  padding: 10px 0 10px 0;
-}
 .bFixtureResult{
   width: 90px;
   min-height: 100px;
@@ -124,47 +71,6 @@
   justify-content: center;
   align-items: center;
 }
-.bIcon_fixture_mod{
-  width: 60px !important;
-  height: 60px !important;
-}
-.bFix_date{
-  height: 50px;
-  text-transform: uppercase;
-  font-size: 20pt;
-  padding: 35px 0 0 0;
-}
-
-.bFix_name{
-  text-transform: uppercase;
-  height: 30px;
-  font-size: 15px;
-  overflow: hidden;
-  padding-top: 5px;
-}
-
-.bFix_type{
-  text-transform: capitalize;
-  font-weight: bold;
-  border-top: $BORDER;
-  padding-top: 10px;
-  font-size: 12px;
-}
-
-.no-margin{
-  margin:0;
-}
-.bFix_scoreText{
-  font-weight: 400;
-  font-size: 18px;
-  margin-bottom: 5px;
-  text-transform: lowercase;
-}
-.bFix_scoreResult{
-  font-weight: 900;
-  font-size: 26px;
-}
-
 .eSchoolFixtureTab.eNews_tab h1{
   color: #9c3022;
 }

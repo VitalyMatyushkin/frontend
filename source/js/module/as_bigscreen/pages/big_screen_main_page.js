@@ -21,14 +21,9 @@ const BigScreenMainPage = React.createClass({
 	CHANGE_FOOTER_EVENT_INTERVAL	: 3000,
 
 	componentWillMount: function () {
-		const	binding			= this.getDefaultBinding().sub('events'),
-				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId');
+		const	binding			= this.getDefaultBinding().sub('events');
 
-		BigScreenActions.setNextSevenDaysEvents(activeSchoolId, binding);
-		BigScreenActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
-		BigScreenActions.setHighlightEvent(activeSchoolId, binding);
-		BigScreenActions.setFooterEvents(activeSchoolId, binding);
-
+		BigScreenActions.setSchoolId(binding);
 		this.changeStateTimerId = setInterval(this.handleChangeState, this.CHANGE_STATE_INTERVAL);
 
 		binding.set("footerEvents.currentEventIndex", Immutable.fromJS(this.getNextFooterEventIndex()));
@@ -63,16 +58,18 @@ const BigScreenMainPage = React.createClass({
 		);
 	},
 	handleChangeState: function() {
-		const binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding(),
+			newActiveSchoolId = this.getDefaultBinding().sub('events').toJS('domainSchoolId');
 
 		switch (binding.toJS('currentState')) {
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.RECENT:
 				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.UPCOMING));
 				break;
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.UPCOMING:
-				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.EVENT_HIGHLIGHT));
+			 	binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.EVENT_HIGHLIGHT));
 				break;
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.EVENT_HIGHLIGHT:
+				BigScreenActions.setHighlightEvent(newActiveSchoolId, binding.sub('events'));
 				binding.set('currentState', Immutable.fromJS(BigscreenConsts.BIGSCREEN_STATES_MODE.HIGHLIGHT));
 				break;
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.HIGHLIGHT:
@@ -83,6 +80,7 @@ const BigScreenMainPage = React.createClass({
 
 	render: function() {
 		const binding = this.getDefaultBinding();
+		const newActiveSchoolId = this.getDefaultBinding().sub('events').toJS('domainSchoolId');
 
 		switch (binding.toJS('currentState')) {
 			case BigscreenConsts.BIGSCREEN_STATES_MODE.RECENT:

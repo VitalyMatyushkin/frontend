@@ -79,7 +79,6 @@ const SettingsPage = React.createClass({
 			);
 		}
 
-		console.log('tab=' + tab);
 		if(tab) {
 			let item = self.tabListModel.find(t => t.value === tab);
 			if(item){

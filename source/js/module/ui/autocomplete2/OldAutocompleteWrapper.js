@@ -28,9 +28,7 @@ const OldAutocompleteWrapper = React.createClass({
         const self = this;
 
         if(self.props.onEscapeSelection === undefined) {
-            return function () {
-              console.log("escape selection");
-            };
+            return () => {};
         } else {
             return self.props.onEscapeSelection;
         }
@@ -63,5 +61,3 @@ const OldAutocompleteWrapper = React.createClass({
 });
 
 module.exports = OldAutocompleteWrapper;
-
-

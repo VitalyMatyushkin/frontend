@@ -1,9 +1,10 @@
 @import "../!variables";
+@import "../!mixins";
 
 .bRoleList{
   cursor: pointer;
   display: inline-block;
-  padding-top: 25px;
+  padding-top: 20px;
   vertical-align: top;
 
   &.mLogout {
@@ -23,7 +24,7 @@
   .eArrow{
     background: url(/images/down.png) no-repeat center top;
     left: 0;
-    top: 4px;
+    top: 9px;
     position: absolute;
     height: 100%;
     width: 25px;
@@ -68,8 +69,20 @@
   }
 }
 .eRole_name {
-  padding: 0 5px;
+  display: inline-block;
+
+  padding: 5px 5px 0;
+  vertical-align: top;
 
   color: #8c8c8c;
   text-transform: lowercase;
+}
+.eRole_schoolName {
+  @include text-overflow;
+  white-space: nowrap;
+
+  max-width: 180px;
+  padding-top: 5px;
+
+  display: inline-block;
 }

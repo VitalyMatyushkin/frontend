@@ -1,33 +1,38 @@
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
+const	React						= require('react'),
+		Morearty					= require('morearty'),
+		Immutable					= require('immutable'),
+		Lazy						= require('lazy.js'),
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
-		EventHeader					= require('./view/event_header'),
+		EventHeader					= require('./view/event_header/event_header'),
 		EventRivals					= require('./view/event_rivals'),
-		EventButtons				= require('./view/event_buttons'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
 		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
 		EventTeams					= require('./view/teams/event_teams'),
-		EventPerformance			= require('./view/teams/event_teams_performance'),
+		Performance					= require('./view/performance/performance'),
+		DisciplineWrapper			= require('./view/discipline/discipline_wrapper'),
+		TasksWrapper				= require('./view/tasks/tasks_wrapper'),
 		EventGallery				= require('./new_gallery/event_gallery'),
-		EventDetails				= require('./view/event_details'),
 		ManagerWrapper				= require('./view/manager_wrapper'),
 		Comments					= require('./view/event_blog'),
-		MoreartyHelper				= require('module/helpers/morearty_helper'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
-		DetailsWrapper 				= require('./view/details/details_wrapper'),
-		MatchReport 				= require('./view/match-report/report'),
-		SportConsts					= require('module/helpers/consts/sport'),
-		Map 						= require('module/ui/map/map-event-venue'),
-		SVG 						= require('module/ui/svg'),
+		DetailsWrapper				= require('./view/details/details_wrapper'),
+		MatchReport					= require('./view/match-report/report'),
+		Map							= require('../../../ui/map/map-event-venue'),
+
+		GalleryActions				= require('./new_gallery/event_gallery_actions'),
+		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
+		Button						= require('../../../ui/button/button'),
 
 		RoleHelper					= require('./../../../helpers/role_helper');
 
-const EventPage = React.createClass({
+const Event = React.createClass({
 	mixins: [Morearty.Mixin],
+	propTypes: {
+		activeSchoolId: React.PropTypes.string.isRequired
+	},
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
@@ -44,6 +49,20 @@ const EventPage = React.createClass({
 			showingComment: false,
 			activeTab: 'teams',
 			eventTeams: {},
+			performanceTab: {
+				isEditMode: false
+			},
+			disciplineTab: {
+				isEditMode: false
+			},
+			tasksTab: {
+				viewMode		: "VIEW",
+				tasks			: [],
+				editingTask		: undefined
+			},
+			autocompleteChangeOpponentSchool: {
+				school: undefined
+			},
 			individualScoreAvailable: [
 				{
 					value: true
@@ -55,16 +74,15 @@ const EventPage = React.createClass({
 		});
 	},
 	componentWillMount: function () {
-		const 	self 		= this,
-				rootBinding = self.getMoreartyContext().getBinding(),
-				binding 	= self.getDefaultBinding();
+		const	self		= this,
+				rootBinding	= self.getMoreartyContext().getBinding(),
+				binding		= self.getDefaultBinding();
 
-		self.activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
-		let eventData, report;
+		let eventData, report, photos, settings;
 		window.Server.schoolEvent.get({
-			schoolId: self.activeSchoolId,
+			schoolId: this.props.activeSchoolId,
 			eventId: self.eventId
 		}).then(event => {
 			event.schoolsData = TeamHelper.getSchoolsData(event);
@@ -97,29 +115,106 @@ const EventPage = React.createClass({
 
 			// loading match report
 			return window.Server.schoolEventReport.get({
-				schoolId: self.activeSchoolId,
+				schoolId: this.props.activeSchoolId,
 				eventId: self.eventId
 			});
 		}).then(_report => {
 			report = _report;
 
 			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
-		}).then(photos => {
+		}).then(_photos => {
+			photos = _photos;
+
+			return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
+		}).then(_settings => {
+			settings = _settings;
+
+			return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
+		}).then(tasks => {
 			eventData.matchReport = report.content;
-			console.log(eventData);
+
+			this.setPlayersFromEventToBinding(eventData);
 			binding.atomically()
-				.set('model',			Immutable.fromJS(eventData))
-				.set('gallery.photos',	Immutable.fromJS(photos))
-				.set('gallery.isSync',	true)
-				.set('mode',			Immutable.fromJS('general'))
+				.set('model',							Immutable.fromJS(eventData))
+				.set('gallery.photos',					Immutable.fromJS(photos))
+				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
+				.set('gallery.isSync',					true)
+				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
+				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
+				.set('mode',							Immutable.fromJS('general'))
 				.commit();
 
 			self.initTabs();
 
 			binding.set('sync', Immutable.fromJS(true));
 
+			this.addListeners();
+
 			return eventData;
-		})
+		});
+	},
+	addListeners: function() {
+		this.addListenerToEventTeams();
+	},
+	addListenerToEventTeams: function() {
+		const binding = this.getDefaultBinding();
+
+		// reload players from server if isSync is false.
+		binding.sub('eventTeams.isSync').addListener(descriptor => !descriptor.getCurrentValue() && this.loadPlayers());
+	},
+	/**
+	 * Load team players from server
+	 * @private
+	 */
+	loadPlayers: function() {
+		window.Server.schoolEvent.get(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	this.eventId
+			}
+		).then(event => {
+			this.setPlayersFromEventToBinding(event);
+		});
+	},
+	setPlayersFromEventToBinding: function(event) {
+		if(event && TeamHelper.isNonTeamSport(event)) {
+			this.setNonTeamPlayersToBinding(event);
+		} else {
+			this.setTeamPlayersFromEventToBinding(event);
+		}
+	},
+	setNonTeamPlayersToBinding: function(event) {
+		const binding = this.getDefaultBinding();
+
+		// TODO many player bundles, oh it's soo bad
+		binding
+			.atomically()
+			.set('model.individualsData',			Immutable.fromJS(event.individualsData))
+			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(event.individualsData))
+			.set('eventTeams.isSync',				Immutable.fromJS(true))
+			.commit();
+
+		const playersForTaskTab = event.individualsData.filter(player => player.schoolId === this.props.activeSchoolId);
+		this.setPlayersToTaskTabBinding(playersForTaskTab);
+	},
+	setTeamPlayersFromEventToBinding: function(event) {
+		const binding = this.getDefaultBinding();
+
+		const players = event.teamsData.map(tp => tp.players);	// players is Array[Array[Object]]
+		// TODO many player bundles, oh it's soo bad
+		binding
+			.atomically()
+			.set('model.teamsData',					Immutable.fromJS(event.teamsData))
+			.set('eventTeams.viewPlayers.players',	Immutable.fromJS(players))
+			.set('eventTeams.isSync',				Immutable.fromJS(true))
+			.commit();
+
+		// playersForTaskTab is Array[Array[Object]]
+		const playersForTaskTab = event.teamsData
+			.filter(td => td.schoolId === this.props.activeSchoolId)
+			.map(tp => tp.players);
+
+		this.setPlayersToTaskTabBinding(playersForTaskTab);
 	},
 	loadPhotos: function(role) {
 		let service;
@@ -134,7 +229,7 @@ const EventPage = React.createClass({
 		}
 
 		return service.get({
-			schoolId:	this.activeSchoolId,
+			schoolId:	this.props.activeSchoolId,
 			eventId:	this.eventId
 		});
 	},
@@ -150,6 +245,14 @@ const EventPage = React.createClass({
 				value		:'gallery',
 				text		:'Gallery',
 				isActive	:false
+			}, {
+				value		: 'details',
+				text		: 'Details',
+				isActive	: false
+			}, {
+				value		: 'tasks',
+				text		: 'Jobs',
+				isActive	: false
 			}
 		];
 
@@ -161,12 +264,16 @@ const EventPage = React.createClass({
 			});
 		}
 
+		if(self.hasSportDisciplineItems()) {
+			self.tabListModel.push({
+				value		: 'discipline',
+				text		: 'Discipline',
+				isActive	: false
+			});
+		}
+
 		self.tabListModel.push(
 			{
-				value		: 'details',
-				text		: 'Details',
-				isActive	: false
-			}, {
 				value		: 'report',
 				text		: 'Match Report',
 				isActive	: false
@@ -187,6 +294,11 @@ const EventPage = React.createClass({
 
 		return binding.toJS('model.sport.performance').length > 0;
 	},
+	hasSportDisciplineItems: function() {
+		const binding = this.getDefaultBinding();
+
+		return binding.toJS('model.sport.discipline').length > 0;
+	},
 	changeActiveTab:function(value){
 		const	self	= this,
 				binding	= self.getDefaultBinding();
@@ -203,7 +315,48 @@ const EventPage = React.createClass({
 
 		window.location.hash = hash + '?tab=' + value;
 	},
-	_getEventTeamsBinding: function() {
+	getPerformanceTabBinding: function() {
+		const binding	= this.getDefaultBinding();
+
+		return {
+			default:					binding.sub('performanceTab'),
+			eventTeams:					binding.sub('eventTeams'),
+			event:						binding.sub('model')
+		};
+	},
+	getDisciplineTabBinding: function() {
+		const binding = this.getDefaultBinding();
+
+		return {
+			default:					binding.sub('disciplineTab'),
+			eventTeams:					binding.sub('eventTeams'),
+			event:						binding.sub('model')
+		};
+	},
+	// TODO many player bundles, oh it's soo bad
+	/**
+	 *
+	 * @param {Array.<Array.<Object>>|Array.<Object>} players array of arrays of team players or array of individuals
+	 */
+	setPlayersToTaskTabBinding: function(players) {
+		const binding = this.getDefaultBinding();
+
+		const _players = Lazy(players).flatten().map(p => {
+			p.id = p.userId + p.permissionId;
+			return p;
+		}).toArray();
+
+		binding.set('tasksTab.players', Immutable.fromJS(_players));
+	},
+	getTasksTabBinding: function() {
+		const binding = this.getDefaultBinding();
+
+		return {
+			default:	binding.sub('tasksTab'),
+			event:		binding.sub('model')
+		};
+	},
+	getEventTeamsBinding: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
@@ -212,7 +365,7 @@ const EventPage = React.createClass({
 			activeTab:					binding.sub('activeTab'),
 			event:						binding.sub('model'),
 			mode:						binding.sub('mode'),
-			individualScoreAvailable: 	binding.sub('individualScoreAvailable')
+			individualScoreAvailable:	binding.sub('individualScoreAvailable')
 		};
 	},
 	isShowTrobber: function() {
@@ -247,19 +400,78 @@ const EventPage = React.createClass({
 
 		return params && params.bundleName === 'teamsData';
 	},
+	/**
+	 * Function returns add photo button for gallery tab.
+	 */
+	getAddPhotoButton: function() {
+		const binding = this.getDefaultBinding();
+
+		const	userRole			= RoleHelper.getLoggedInUserRole(this),
+				galleryBinding		= binding.sub('gallery'),
+				activeSchool		= this.props.activeSchoolId,
+				eventId				= this.eventId;
+
+		const isUserCanUploadPhotos	= galleryBinding.toJS('isUserCanUploadPhotos');
+
+		const isLoading				= !galleryBinding.toJS('isSync');
+
+		return (
+			<AddPhotoButton	handleChange			= { file => GalleryActions.addPhotoToEvent(userRole, galleryBinding, activeSchool, eventId, file) }
+							isUserCanUploadPhotos	= { isUserCanUploadPhotos }
+							isLoading				= { isLoading }
+			/>
+		);
+	},
+	handleClickAddTaskButton: function() {
+		return this.getDefaultBinding().atomically()
+			.set('tasksTab.editingTask',	undefined)
+			.set('tasksTab.viewMode',		"ADD")
+			.commit();
+
+	},
+	/**
+	 * Function return add task button for tasks tab.
+	 */
+	getAddTaskButton: function() {
+		return <Button extraStyleClasses="mAddTask" text="Add job" onClick={this.handleClickAddTaskButton}/>;
+	},
+	/**
+	 * Function returns the active tab.
+	 * @returns {*}
+	 */
+	getActiveTab: function() {
+		return this.getDefaultBinding().toJS('activeTab');
+	},
+	/**
+	 * Function returns custom button for tabs.
+	 * It depends on the current tab.
+	 */
+	getCustomButtonForTabs: function() {
+		const viewMode = this.getDefaultBinding().toJS('tasksTab.viewMode');
+
+		switch (true) {
+			case this.getActiveTab() === "gallery":
+				return this.getAddPhotoButton();
+			case viewMode === "VIEW" && this.getActiveTab() === "tasks":
+				return this.getAddTaskButton();
+			default:
+				return null;
+		}
+	},
+	isShowMap: function() {
+		return this.getDefaultBinding().toJS('model.venue.venueType') !== "TBD";
+	},
 	render: function() {
-		const	self						= this,
-				binding						= self.getDefaultBinding();
+		const	self			= this,
+				binding			= self.getDefaultBinding();
 
-		const	event						= binding.toJS('model'),
-				showingComment				= binding.get('showingComment'),
-				activeTab					= binding.get('activeTab'),
-				activeSchoolId				= MoreartyHelper.getActiveSchoolId(this),
-				mode						= binding.toJS('mode'),
-				isaLeftShow					= this.isaLeftShow(activeSchoolId, event, mode),
-				isaRightShow				= this.isaRightShow(activeSchoolId, event, mode),
-				isParent					= RoleHelper.isParent(this);
-
+		const	event			= binding.toJS('model'),
+				showingComment	= binding.get('showingComment'),
+				activeTab		= this.getActiveTab(),
+				mode			= binding.toJS('mode'),
+				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
+				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
+				isParent		= RoleHelper.isParent(this);
 		switch (true) {
 			case !self.isSync():
 				return (
@@ -272,8 +484,12 @@ const EventPage = React.createClass({
 				return (
 					<div className="bEventContainer">
 						<div className="bEvent">
-							<EventHeader binding={binding}/>
-							<EventRivals binding={binding}/>
+							<EventHeader	binding			= {binding}
+											activeSchoolId	= {this.props.activeSchoolId}
+							/>
+							<EventRivals	binding			= {binding}
+											activeSchoolId	= {this.props.activeSchoolId}
+							/>
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
@@ -284,33 +500,59 @@ const EventPage = React.createClass({
 															  isVisible={isaRightShow}/>
 								</div>
 							</div>
-							<EventTeams binding={self._getEventTeamsBinding()} />
-							<div className="bEventMap">
-								<div className="bEventMap_row">
-									<div className="bEventMap_col">
-										<Map binding={binding.sub('mapOfEventVenue')} venue={binding.toJS('model.venue')}/>
+							<EventTeams	binding			= {self.getEventTeamsBinding()}
+										activeSchoolId	= {this.props.activeSchoolId}
+							/>
+							<If condition={this.isShowMap()}>
+								<div className="bEventMap">
+									<div className="bEventMap_row">
+										<div className="bEventMap_col">
+											<Map	binding	= {binding.sub('mapOfEventVenue')}
+													venue	= {binding.toJS('model.venue')}
+											/>
+										</div>
 									</div>
 								</div>
-							</div>
+							</If>
 							<div className="bEventMiddleSideContainer">
-								<Tabs tabListModel={self.tabListModel} onClick={self.changeActiveTab} />
+								<Tabs	tabListModel	= {self.tabListModel}
+										onClick			= {self.changeActiveTab}
+										customButton	= {this.getCustomButtonForTabs()}
+								/>
 							</div>
 							<If condition={activeTab === 'performance'} >
 								<div className="bEventBottomContainer">
-									<EventPerformance binding={self._getEventTeamsBinding()}/>
+									<Performance	binding			= {self.getPerformanceTabBinding()}
+													activeSchoolId	= {this.props.activeSchoolId}
+									/>
+								</div>
+							</If>
+							<If condition={activeTab === 'discipline'} >
+								<div className="bEventBottomContainer">
+									<DisciplineWrapper	binding			= {self.getDisciplineTabBinding()}
+														activeSchoolId	= {this.props.activeSchoolId}
+									/>
+								</div>
+							</If>
+							<If condition={activeTab === 'tasks'} >
+								<div className="bEventBottomContainer">
+									<TasksWrapper	binding			= {this.getTasksTabBinding()}
+													activeSchoolId	= {this.props.activeSchoolId}
+									/>
 								</div>
 							</If>
 							<If condition={activeTab === 'gallery'} >
-								<EventGallery	activeSchoolId	= { self.activeSchoolId }
+								<EventGallery	activeSchoolId	= { this.props.activeSchoolId }
 												eventId			= { self.eventId }
 												binding			= { binding.sub('gallery') } />
 							</If>
 							<If condition={activeTab === 'details'} >
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
-													schoolId	= {self.activeSchoolId}
+													schoolId	= {this.props.activeSchoolId}
 													isParent	= {isParent}
 									/>
+									<div className="eDetails_border" />
 								</div>
 							</If>
 							<If condition={activeTab === 'report'} >
@@ -322,7 +564,11 @@ const EventPage = React.createClass({
 								</div>
 							</If>
 							<div className="eEvent_commentBox">
-								<Comments binding={binding.sub('comments')} eventId={event.id}/>
+								<Comments	binding					= {binding.sub('comments')}
+											isUserCanWriteComments	= {binding.toJS('isUserCanWriteComments')}
+											eventId					= {event.id}
+											activeSchoolId			= {this.props.activeSchoolId}
+								/>
 							</div>
 						</div>
 					</div>
@@ -331,11 +577,13 @@ const EventPage = React.createClass({
 			case self.isSync() && binding.toJS('mode') === 'edit_squad':
 				return (
 					<div className="bEventContainer">
-						<ManagerWrapper binding={binding}/>
+						<ManagerWrapper	binding			= {binding}
+										activeSchoolId	= {this.props.activeSchoolId}
+						/>
 					</div>
 				);
 		}
 	}
 });
 
-module.exports = EventPage;
+module.exports = Event;

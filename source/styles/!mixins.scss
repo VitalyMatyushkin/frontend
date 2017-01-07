@@ -2,3 +2,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+@mixin add-clearfix() {
+  &:after {
+    content: " ";
+    clear: both;
+    display: table;
+  }
+}
+
+@mixin border-gradient($firstColor, $secondColor) {
+  border-bottom: 1px solid;
+  border-image: linear-gradient(to bottom right, $firstColor 0%, $secondColor 100%) 1;
+}

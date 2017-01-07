@@ -5,11 +5,40 @@
   border-radius: 5px;
   font-size: 1rem;
   margin-bottom: 10px;
+    .eEvent_commentBlog {
+      width: 515px;
+      textarea{
+        resize: none;
+        border: 1px solid #d7d7d7;
+        padding: 10px;
+      }
+    }
+    .bEventButtons{
+      justify-content: flex-start;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+    }
+  .eInvite_buttons{
+    padding-bottom: 14px;
+  }
+  .eInviteDiscussionLink{
+    a{
+      color: $lightBlue;
+      text-decoration: underline;
+      &:hover{
+        color: #000;
+      }
+    }
+  }
+}
+
+.bInviteComments {
+  margin-left: 50px;
 }
 
 .eInvite_left {
-  padding-bottom: 30px;
-  padding-top: 30px;
+  padding-top: 18px;
+  padding-bottom: 14px;
 }
 
 .eInvite_img {
@@ -91,4 +120,9 @@
   font-size: 3rem;
   font-weight: bold;
   margin-top: 125px;
+}
+
+.eInvite_comments {
+  border-top: $mainBorder;
+  padding-top: 10px;
 }

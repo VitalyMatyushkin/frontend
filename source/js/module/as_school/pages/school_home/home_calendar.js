@@ -55,23 +55,22 @@ const HomeCalender = React.createClass({
 						<div className="eEvents_leftSideContainer">
 							<div className="bCalendar">
 								<MonthCalendar
-									monthDate={monthDate}
-									todayDate={todayDate}
-									selectedDate={selectedDate}
-									onNextMonthClick={ () => CalendarActions.setNextMonth(activeSchoolId, binding) }
-									onPrevMonthClick={ () => CalendarActions.setPrevMonth(activeSchoolId, binding) }
-									onDateClick={ (date) => CalendarActions.setSelectedDate(date, activeSchoolId, binding) }
-									eventsData={Immutable.fromJS(eventsData)}
-									/>
+									monthDate		= {monthDate}
+									todayDate		= {todayDate}
+									selectedDate	= {selectedDate}
+									onMonthClick	= { (data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding) }
+									onDateClick		= { (date) => CalendarActions.setSelectedDate(date, activeSchoolId, binding) }
+									eventsData		= {Immutable.fromJS(eventsData)}
+								/>
 							</div>
 						</div>
 						<div className="eEvents_rightSideContainer">
 							<Challenges
-								activeSchoolId={activeSchoolId}
-								isSync={isSelectedDateEventsInSync}
-								isDaySelected={true}
-								events={selectedDateEvents.toJS()}
-								onClick={this.handleClickEvent}
+								activeSchoolId	= {activeSchoolId}
+								isSync			= {isSelectedDateEventsInSync}
+								isDaySelected	= {true}
+								events			= {selectedDateEvents.toJS()}
+								onClick			= {this.handleClickEvent}
 								/>
 
 						</div>

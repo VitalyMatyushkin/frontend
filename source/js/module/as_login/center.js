@@ -3,7 +3,7 @@
  */
 const   React               = require('react'),
         RouterView          = require('module/core/router'),
-        LoginRoute2         = require('module/core/routes/login_route2'),
+        LoginRoute2         = require('../core/routes/login_route2'),
         LogoutRoute         = require('module/core/routes/logout_route'),
         RegisterRoute       = require('module/core/routes/register_route'),
         SettingsRoute       = require('module/core/routes/settings_route'),

@@ -8,8 +8,6 @@ const serviceList = {
 	// Services which require authorization
 	initialize: function(binding) {
 
-		console.log('initializing services with binding: ' + JSON.stringify(binding.toJS()));
-
         // authorization
         serviceList._login = new Service('/i/login', binding);
         serviceList.roles = new Service('/i/roles', binding);
@@ -41,6 +39,7 @@ const serviceList = {
         // schools
         serviceList.schools = new Service('/i/schools', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
+        serviceList.schoolSettings = new Service('/i/schools/{schoolId}/settings', binding);
         serviceList.publicSchool = new Service('/public/schools/{schoolId}', binding);
         serviceList.publicSchools = new Service('/public/schools', binding);
         serviceList.publicSchoolCheckPassword = new Service('/public/schools/{schoolId}/publicSite/password/check', binding);
@@ -97,6 +96,8 @@ const serviceList = {
 
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
+		serviceList.eventCancel = new Service('/i/schools/{schoolId}/events/{eventId}/cancel', binding);
+		serviceList.schoolEventChangeOpponent = new Service('/i/schools/{schoolId}/events/{eventId}/changeOpponent', binding);
 		serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
 		serviceList.schoolEventDetails = new Service('/i/schools/{schoolId}/events/{eventId}/details', binding);
 		serviceList.schoolEventDates = new Service('/i/schools/{schoolId}/events/dates/distinct', binding);
@@ -113,14 +114,21 @@ const serviceList = {
 
 		// event individual performance
 		serviceList.schoolEventIndividualPerformance = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/performance', binding);
+		serviceList.schoolEventIndividualDiscipline = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/discipline', binding);
 
-		serviceList.schoolEventResultSchoolScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/schools/score', binding);
-		serviceList.schoolEventResultTeamScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/teams/score', binding);
-		serviceList.schoolEventResultHousesScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/houses/score', binding);
-        serviceList.schoolEventResultIndividualsScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score', binding);
+		serviceList.schoolEventResultSchoolScores = new Service('/i/schools/{schoolId}/events/{eventId}/results/schools/score', binding);
+		serviceList.schoolEventResultSchoolScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/schools/score/{scoreId}', binding);
+		serviceList.schoolEventResultTeamScores = new Service('/i/schools/{schoolId}/events/{eventId}/results/teams/score', binding);
+		serviceList.schoolEventResultTeamScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/teams/score/{scoreId}', binding);
+		serviceList.schoolEventResultHousesScores = new Service('/i/schools/{schoolId}/events/{eventId}/results/houses/score', binding);
+		serviceList.schoolEventResultHousesScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/houses/score/{scoreId}', binding);
+        serviceList.schoolEventResultIndividualsScores = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score', binding);
+        serviceList.schoolEventResultIndividualsScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/score/{scoreId}', binding);
         serviceList.schoolEventTeamPlayers = new Service('/i/schools/{schoolId}/events/{eventId}/teams/{teamId}/players', binding);
 		serviceList.schoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result', binding);
 		serviceList.schoolEventReport = new Service('/i/schools/{schoolId}/events/{eventId}/report', binding);
+		serviceList.schoolEventTasks = new Service('/i/schools/{schoolId}/events/{eventId}/tasks', binding);
+		serviceList.schoolEventTask = new Service('/i/schools/{schoolId}/events/{eventId}/tasks/{taskId}', binding);
 
         serviceList.addPointToSchoolEventResult = new Service('/i/schools/{schoolId}/events/{eventId}/result/points', binding);
         serviceList.finishSchoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}/finish', binding);
@@ -136,13 +144,15 @@ const serviceList = {
 		serviceList.publicSchoolEventPhotos = new Service('/public/schools/{schoolId}/events/{eventId}/photos', binding);
 
 		// invites
-		serviceList.schoolInvites 			= new Service('/i/schools/{schoolId}/invites', binding);
-		serviceList.schoolInvite 			= new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
-		serviceList.schoolInboxInvites 		= new Service('/i/schools/{schoolId}/invites/inbox', binding);
-		serviceList.schoolOutboxInvites 	= new Service('/i/schools/{schoolId}/invites/outbox', binding);
-		serviceList.schoolArchiveInvites 	= new Service('/i/schools/{schoolId}/invites/archive', binding);
-		serviceList.acceptSchoolInvite 		= new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
-		serviceList.declineSchoolInvite 	= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
+		serviceList.schoolInvites 				= new Service('/i/schools/{schoolId}/invites', binding);
+		serviceList.schoolInvite 				= new Service('/i/schools/{schoolId}/invites/{inviteId}', binding);
+		serviceList.schoolInboxInvites 			= new Service('/i/schools/{schoolId}/invites/inbox', binding);
+		serviceList.schoolOutboxInvites 		= new Service('/i/schools/{schoolId}/invites/outbox', binding);
+		serviceList.schoolArchiveInvites		= new Service('/i/schools/{schoolId}/invites/archive', binding);
+		serviceList.acceptSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/accept', binding);
+		serviceList.declineSchoolInvite			= new Service('/i/schools/{schoolId}/invites/{inviteId}/reject', binding);
+		serviceList.schoolInviteComments		= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments', binding);
+		serviceList.schoolInviteCommentsCount	= new Service('/i/schools/{schoolId}/invites/{inviteId}/comments/count', binding);
 
 		// event comments
 		serviceList.schoolEventComment = new Service('/i/schools/{schoolId}/events/{eventId}/comments/{commentId}', binding);

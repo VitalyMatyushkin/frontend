@@ -32,7 +32,24 @@
 /* .bEventRival */
 
 .bEventRival {
+  display: flex;
+  position: relative;
+
+  flex-direction: column;
+  justify-content: space-between;
+
   border: $mainBorder;
+
+  .eEventRival_buttonContainer {
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+
+    width: 100%;
+
+    padding: 3px;
+  }
+
   &.mRight {
   }
 }

@@ -353,8 +353,6 @@ const RegisterUserPage = React.createClass({
                 binding     = self.getDefaultBinding(),
                 currentStep = binding.get('registerStep');
 
-        console.log(this.getMoreartyContext().getBinding().toJS('userData'));
-
         let currentView = null;
 
         switch (currentStep) {

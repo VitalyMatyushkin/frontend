@@ -3,7 +3,6 @@
 
 .bDetails {
   @include make-row();
-  border-bottom: $mainBorder;
 }
 
 .eDetails_column {
@@ -34,7 +33,7 @@
 
 .eDetails_editButtonWrapper {
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: flex-end;
 
   padding: 15px 15px 15px 0px;
 }
@@ -44,6 +43,28 @@
   margin-bottom: 40px;
 
   font-family: Glober, sans-serif;
+}
+
+.eDetails_comboboxWrapper {
+  margin-top: 8px;
+}
+
+.eDetails_personalContainer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.eDetails_personalName {
+  flex-grow: 6;
+}
+
+.eDetails_deletePersonalButton {
+  width: 14px;
+
+  &:hover {
+    color: #007abf;
+  }
 }
 
 .eDetails_textArea {
@@ -87,4 +108,13 @@
 
 .eDetails_body {
   margin-top: 10px;
+}
+
+.eDetails_border {
+  float: left;
+
+  padding: 0 15px;
+  width: 100%;
+
+  border-bottom: solid 1px $greyColor;
 }

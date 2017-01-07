@@ -3,7 +3,7 @@ const 	LoginForm 		= require('module/ui/login/user/form'),
 		React 			= require('react'),
 		Immutable 		= require('immutable'),
 		Morearty        = require('morearty'),
-		RoleSelector	= require('module/as_login/pages/RoleSelector'),
+		RoleSelector	= require('../../as_login/pages/RoleSelector'),
 		SVG 		    = require('module/ui/svg');
 
 const LoginUserPage = React.createClass({
@@ -72,13 +72,11 @@ const LoginUserPage = React.createClass({
 				currentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />;
 				break;
 			case showError === false && typeof allPermissions !== 'undefined':
-				console.log('got permissions and ready to draw:' + JSON.stringify(allPermissions));
 				currentView = <RoleSelector availableRoles={allPermissions}/>;
 				break;
 			case showError === false:
 				currentView = <LoginForm customName={self.formName} onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
 				break;
-
 		}
 
 		return (

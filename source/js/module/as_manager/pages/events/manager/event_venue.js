@@ -1,11 +1,10 @@
 const	React				= require('react'),
 		Morearty			= require('morearty'),
 		Immutable			= require('immutable'),
-
+		If					= require('../../../../ui/if/if'),
 		Promise				= require('bluebird'),
 		Map					= require('module/ui/map/map'),
 		Autocomplete		= require('../../../../../../js/module/ui/autocomplete2/OldAutocompleteWrapper'),
-
 		InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
 		TextInputStyles		= require('./../../../../../../styles/ui/b_text_input.scss'),
@@ -36,22 +35,21 @@ const EventVenue = React.createClass({
 	handleChangeGameType: function(changeDescriptor) {
 		const currentGameType = changeDescriptor.getCurrentValue();
 
+		const homePostCode = this.getHomeSchoolPostCode();
+
 		switch (currentGameType) {
 			case "inter-schools":
 				this.clearVenueData();
 				break;
 			case "houses":
 				this.clearVenueData();
-				this.setHomePostcode(this.getHomeSchoolPostCode());
+				typeof homePostCode !== 'undefined' && this.setPostcode(homePostCode);
 				break;
 			case "internal":
 				this.clearVenueData();
-				this.setHomePostcode(this.getHomeSchoolPostCode());
+				typeof homePostCode !== 'undefined' && this.setPostcode(homePostCode);
 				break;
 		}
-	},
-	setHomePostcode: function() {
-		this.setPostcode(this.getHomeSchoolPostCode());
 	},
 	/**
 	 * Clear all venue data:
@@ -75,7 +73,7 @@ const EventVenue = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		const postcode = binding.toJS('schoolInfo.postcode');
-		postcode.tooltip = ' (your school)';
+		typeof postcode !== 'undefined' && (postcode.tooltip = ' (your school)');
 
 		return postcode;
 	},
@@ -103,10 +101,19 @@ const EventVenue = React.createClass({
 		const	binding		= this.getDefaultBinding(),
 				gameType	= binding.toJS('model.type');
 
-		const promises = [this.getHomeSchoolPostCode()];
+		const promises = [];
+
+		// set home postcode
+		const homePostCode = this.getHomeSchoolPostCode();
+		typeof homePostCode !== "undefined" && promises.push(homePostCode);
+
+		// set opponent postcode
 		if(gameType === 'inter-schools') {
-			promises.push(this.getOpponentSchoolPostCode());
+			const opponentSchoolPostCode = this.getOpponentSchoolPostCode();
+			typeof opponentSchoolPostCode !== "undefined" && promises.push(opponentSchoolPostCode);
 		}
+
+		// set TBD plug - it's fake postcode
 		promises.push(this.getTBDPostcode());
 
 		return Promise.resolve(promises);
@@ -115,8 +122,9 @@ const EventVenue = React.createClass({
 		const	binding		= this.getDefaultBinding(),
 				gameType	= binding.toJS('model.type');
 
-		const	homePostcode	= this.getHomeSchoolPostCode(),
-				tbd				= {id:"TBD",postcode:"TBD"};
+		const	homePostcode		= this.getHomeSchoolPostCode(),
+				opponentPostcode	= this.getOpponentSchoolPostCode(),
+				tbd					= {id:"TBD",postcode:"TBD"};
 
 		const postCodeFilter = {
 			where: {
@@ -130,9 +138,8 @@ const EventVenue = React.createClass({
 
 		return window.Server.postCodes.get({ filter: postCodeFilter }).then(postcodes => {
 			// away
-			if(gameType === 'inter-schools') {
-				const	awayPostcode	= this.getOpponentSchoolPostCode(),
-						foundAwayPostcodeIndex = postcodes.findIndex(p => p.id === awayPostcode.id);
+			if(gameType === 'inter-schools' && typeof opponentPostcode !== 'undefined') {
+				const foundAwayPostcodeIndex = postcodes.findIndex(p => p.id === opponentPostcode.id);
 
 				if(foundAwayPostcodeIndex !== -1) {
 					postcodes[foundAwayPostcodeIndex].tooltip = '(opponent school)';
@@ -142,11 +149,13 @@ const EventVenue = React.createClass({
 			}
 
 			// home
-			const homePostcodeIndex = postcodes.findIndex(p => p.id === homePostcode.id);
-			if(homePostcodeIndex !== -1) {
-				postcodes[homePostcodeIndex].tooltip = '(your school)';
-				// Function modify args!!!
-				postcodes = this.upPostcodeToStart(homePostcodeIndex, postcodes);
+			if(typeof homePostcode !== 'undefined') {
+				const homePostcodeIndex = postcodes.findIndex(p => p.id === homePostcode.id);
+				if(homePostcodeIndex !== -1) {
+					postcodes[homePostcodeIndex].tooltip = '(your school)';
+					// Function modify args!!!
+					postcodes = this.upPostcodeToStart(homePostcodeIndex, postcodes);
+				}
 			}
 
 			// tbd
@@ -177,7 +186,9 @@ const EventVenue = React.createClass({
 		return postcodes;
 	},
 	getVenueTypeByPostcode: function(value) {
-		const	homePostcodeId	= this.getHomeSchoolPostCode().id,
+				// home postcode can be undefined, so - check it
+		const	homePostcode	= this.getHomeSchoolPostCode(),
+				homePostcodeId	= typeof homePostcode !== 'undefined' ? homePostcode.id : undefined,
 				// away postcode can be undefined, so - check it
 				awayPostcode	= this.getOpponentSchoolPostCode(),
 				awayPostcodeId	= typeof awayPostcode !== 'undefined' ? awayPostcode.id : undefined;
@@ -193,6 +204,9 @@ const EventVenue = React.createClass({
 			default:
 				return 'CUSTOM';
 		}
+	},
+	getVenueType: function() {
+		return this.getDefaultBinding().get('model.venue.venueType');
 	},
 	setPostcode: function(postcode) {
 		this.getDefaultBinding().atomically()
@@ -241,6 +255,12 @@ const EventVenue = React.createClass({
 
 		return gameType === 'inter-schools' && typeof secondRival === 'undefined';
 	},
+	/**
+	 * Show map when venue isn't equal TBD
+	 */
+	isShowMap: function() {
+		return this.getVenueType() !== "TBD";
+	},
 	render: function() {
 		const binding = this.getDefaultBinding();
 
@@ -266,10 +286,12 @@ const EventVenue = React.createClass({
 									extraCssStyle	= {'mBigSize'}
 					/>
 				</div>
-				<Map	binding				= {binding}
-						point				= {this.getPoint()}
-						customStylingClass	= "eEvents_venue_map"
-				/>
+				<If condition={this.isShowMap()}>
+					<Map	binding				= {binding}
+							point				= {this.getPoint()}
+							customStylingClass	= "eEvents_venue_map"
+					/>
+				</If>
 			</div>
 		);
 	}
