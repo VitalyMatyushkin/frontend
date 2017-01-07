@@ -904,7 +904,7 @@ function getCountPoints(event, teamBundleName, order) {
 			break;
 	}
 
-	const scoreData = event.results[scoreBundleName].find(r => r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
+	const scoreData = event.results[scoreBundleName].find(r => typeof dataBundle[order] !== "undefined" && r[resultIdFieldName] === dataBundle[order][dataBundleIdFieldName]);
 	let points = 0;
 	if(typeof scoreData !== 'undefined') {
 		points = scoreData.score;
