@@ -29,17 +29,15 @@ function MonthCalendar(props) {
 			monthName 	= MonthCalendar.monthNames[monthDate.getMonth()];
 
 	return <div className="eCalendar_eMonth">
-		<MonthNavBar
-			date={monthDate}
-			onMonthClick={props.onMonthClick}
+		<MonthNavBar	date			= {monthDate}
+						onMonthClick	= {props.onMonthClick}
 		/>
 		<DaysOfWeekBar/>
-		<MonthDaysPanel
-			monthDate={monthDate}
-			todayDate={props.todayDate}
-			eventsData={props.eventsData}
-			selectedDate={props.selectedDate}
-			onClick={props.onDateClick}
+		<MonthDaysPanel	monthDate		= {monthDate}
+						todayDate		= {props.todayDate}
+						eventsData		= {props.eventsData}
+						selectedDate	= {props.selectedDate}
+						onClick			= {props.onDateClick}
 		/>
 	</div>;
 }
