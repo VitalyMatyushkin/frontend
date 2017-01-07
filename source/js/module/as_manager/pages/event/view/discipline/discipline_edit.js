@@ -1,10 +1,12 @@
 const	React			= require('react'),
 
 		Score			= require('./../../../../../ui/score/score'),
-
+		If				= require('../../../../../ui/if/if'),
+		TabHelper		= require('../tab_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
 		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
 		EventConst		= require('module/helpers/consts/events'),
+		classNames		= require('classnames'),
 		SportConsts		= require('module/helpers/consts/sport');
 
 const DisciplineEdit = React.createClass({
@@ -27,7 +29,7 @@ const DisciplineEdit = React.createClass({
 			return this.renderPlayerTeamLater();
 		} else {
 			return (
-				<div className="bEventPerformance_team">
+				<div className="eEventPerformance_team">
 					{this.renderPlayers(players)}
 				</div>
 			);
@@ -35,7 +37,7 @@ const DisciplineEdit = React.createClass({
 	},
 	renderPlayerTeamLater: function() {
 		return (
-			<div className="bEventPerformance_team">
+			<div className="eEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Select players later...'}
 				</div>
@@ -46,36 +48,25 @@ const DisciplineEdit = React.createClass({
 		const players	= this.props.players.filter(p => p.schoolId === schoolId);
 
 		if(players.length === 0) {
-			return this.renderSelectTeamLater();
+			return this.renderEmptyTeam();
 		} else {
 			return (
-				<div className="bEventPerformance_team">
+				<div className="eEventPerformance_team">
 					{this.renderPlayers(players)}
 				</div>
 			);
 		}
 	},
-	renderSelectPlayersLater: function() {
+	renderEmptyTeam: function() {
 		return (
-			<div className="bEventPerformance_team">
-				<div className="eEventTeams_awaiting">
-					{'Select players later...'}
-				</div>
-			</div>
-		);
-	},
-	renderSelectTeamLater: function() {
-		return (
-			<div className="bEventPerformance_team">
-				<div className="eEventTeams_awaiting">
-					{'Select team later...'}
-				</div>
+			<div className="eEventPerformance_team mEmpty">
+				{'Team members have not been added yet'}
 			</div>
 		);
 	},
 	renderOpponentSelectTeamLater: function() {
 		return (
-			<div className="bEventPerformance_team">
+			<div className="eEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Accepted by opponent'}
 				</div>
@@ -86,10 +77,10 @@ const DisciplineEdit = React.createClass({
 		const players = this.props.players.filter(p => p.houseId === houseId);
 
 		if(players.length === 0) {
-			return this.renderSelectTeamLater();
+			return this.renderEmptyTeam();
 		} else {
 			return (
-				<div className="bEventPerformance_team">
+				<div className="eEventPerformance_team">
 					{this.renderPlayers(players)}
 				</div>
 			);
@@ -128,7 +119,7 @@ const DisciplineEdit = React.createClass({
 					teamsData[0].schoolId !== activeSchoolId
 				)
 			) {
-				return this.renderSelectTeamLater();
+				return this.renderEmptyTeam();
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
@@ -140,7 +131,7 @@ const DisciplineEdit = React.createClass({
 				if(teamIndex !== -1) {
 					return this.renderTeamPlayersByOrder(teamIndex, teamsData[teamIndex].id);
 				} else {
-					return this.renderSelectTeamLater();
+					return this.renderEmptyTeam();
 				}
 			} else if (
 				(
@@ -155,7 +146,7 @@ const DisciplineEdit = React.createClass({
 				) &&
 				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
-				return this.renderSelectTeamLater();
+				return this.renderEmptyTeam();
 			}
 		}
 	},
@@ -176,12 +167,12 @@ const DisciplineEdit = React.createClass({
 						const players = this.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 						if(players.length === 0) {
-							return this.renderOpponentSelectTeamLater();
+							return null;
 						} else {
 							return this.renderIndividualPlayersBySchoolId(schoolId);
 						}
 					} else {
-						return this.renderAwaitingOpponentTeam();
+						return null;
 					}
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 					return this.renderIndividualPlayersByHouseId(event.houses[1]);
@@ -198,36 +189,36 @@ const DisciplineEdit = React.createClass({
 				teamsData.length === 0
 			) {
 				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
-					return this.renderOpponentSelectTeamLater();
+					return null;
 				} else {
-					return this.renderAwaitingOpponentTeam();
+					return null;
 				}
 			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[0].schoolId !== activeSchoolId
 			) {
-				return this.renderTeamPlayersByOrder(0);
+				return null;
 			} else if(
 				teamsData.length > 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[0].schoolId !== activeSchoolId
 			) {
-				return this.renderTeamPlayersByOrder(0);
+				return null;
 			} else if (
 				teamsData.length > 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[1].schoolId !== activeSchoolId
 			) {
-				return this.renderTeamPlayersByOrder(1);
+				return null;
 			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
 				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
-					return this.renderOpponentSelectTeamLater();
+					return null;
 				} else {
-					return this.renderAwaitingOpponentTeam();
+					return null;
 				}
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
@@ -236,13 +227,13 @@ const DisciplineEdit = React.createClass({
 				if(teamIndex !== -1) {
 					return this.renderTeamPlayersByOrder(teamIndex);
 				} else {
-					return this.renderSelectTeamLater();
+					return this.renderEmptyTeam();
 				}
 			} else if (
 				teamsData.length <= 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']
 			) {
-				return this.renderSelectTeamLater();
+				return this.renderEmptyTeam();
 			} else {
 				return this.renderTeamPlayersByOrder(1);
 			}
@@ -250,7 +241,7 @@ const DisciplineEdit = React.createClass({
 	},
 	renderAwaitingOpponentTeam: function() {
 		return (
-			<div className="bEventPerformance_team">
+			<div className="eEventPerformance_team">
 				<div className="eEventTeams_awaiting">
 					{'Awaiting opponent...'}
 				</div>
@@ -258,10 +249,16 @@ const DisciplineEdit = React.createClass({
 		);
 	},
 	renderPlayers: function(players, teamId) {
-		return players.map(player => {
+		return players.map((player, playerIndex) => {
+			const playerStyle = classNames({
+				'bPlayer'		: true,
+				'mPerformance'	: true,
+				'mLast'			: players.length === playerIndex + 1
+			});
+
 			return (
 				<div	key			= {player.id}
-						className	= "bPlayer mPerformance"
+						className	= {playerStyle}
 				>
 					<div className="ePlayer_name mBold">
 						<span>{player.firstName} {player.lastName}</span>
@@ -307,7 +304,7 @@ const DisciplineEdit = React.createClass({
 	},
 	renderIndividuals: function() {
 		if(this.props.players.length === 0) {
-			return this.renderSelectPlayersLater();
+			return this.renderEmptyTeam();
 		} else {
 			return this.renderPlayers(this.props.players);
 		}
@@ -323,7 +320,7 @@ const DisciplineEdit = React.createClass({
 		}
 
 		return (
-			<div className="bEventPerformance_team">
+			<div className="eEventPerformance_team">
 				{renderedPlayers}
 			</div>
 		);
@@ -334,14 +331,14 @@ const DisciplineEdit = React.createClass({
 		switch (true) {
 			case TeamHelper.isInternalEventForIndividualSport(this.props.event):
 				teams = (
-					<div className="bEventPerformance_teams mIndivid">
+					<div className="eEventPerformance_teams mIndivid">
 						{this.renderIndividuals()}
 					</div>
 				);
 				break;
 			default:
 				teams = (
-					<div className="bEventPerformance_teams">
+					<div className="eEventPerformance_teams">
 						<div className="eEventPerformance_col">
 							{this.renderPlayersForLeftSide()}
 						</div>
@@ -355,18 +352,20 @@ const DisciplineEdit = React.createClass({
 
 		return (
 			<div className="bEventPerformance">
-				<div className="eEventPerformance_header">
-					<div	className	= "bButton mCancel mMarginRight"
-							onClick		= {this.props.onCancel}
-					>
-						Cancel
+				<If condition={TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, this.props.event)}>
+					<div className="eEventPerformance_header">
+						<div	className	= "bButton mCancel mMarginRight"
+								onClick		= {this.props.onCancel}
+						>
+							Cancel
+						</div>
+						<div	className	= "bButton"
+								onClick		= {this.props.onSave}
+						>
+							Save
+						</div>
 					</div>
-					<div	className	= "bButton"
-							onClick		= {this.props.onSave}
-					>
-						Save
-					</div>
-				</div>
+				</If>
 				<div className="eEventPerformance_body">
 					{teams}
 				</div>

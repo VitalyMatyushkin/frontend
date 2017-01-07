@@ -1,20 +1,22 @@
 const	React				= require('react'),
 		Immutable			= require('immutable'),
 		Morearty			= require('morearty'),
-
+		If					= require('../../../../../ui/if/if'),
 		InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
 		StarRatingBar		= require('./../../../../../ui/star_rating_bar/star_rating_bar'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
 		EventConst			= require('module/helpers/consts/events'),
-
+		TabHelper			= require('../tab_helper'),
+		classNames			= require('classnames'),
 		PerformanceStyle	= require('../../../../../../../styles/pages/event/b_event_performance_teams.scss');
 
 const PerformanceEdit = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
 	propTypes: {
-		onSave		: React.PropTypes.func.isRequired,
-		onCancel	: React.PropTypes.func.isRequired
+		activeSchoolId	: React.PropTypes.string.isRequired,
+		onSave			: React.PropTypes.func.isRequired,
+		onCancel		: React.PropTypes.func.isRequired
 	},
 	handleValueChange: function(player, permissionId, performanceId, value) {
 		const self = this;
@@ -86,7 +88,7 @@ const PerformanceEdit = React.createClass({
 				players	= self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 		if(players.length === 0) {
-			return self.renderSelectTeamLater();
+			return self.renderEmptyTeam();
 		} else {
 			return (
 				<div className="bEventPerformance_team">
@@ -95,30 +97,10 @@ const PerformanceEdit = React.createClass({
 			);
 		}
 	},
-	renderSelectPlayersLater: function() {
+	renderEmptyTeam: function() {
 		return (
-			<div className="bEventPerformance_team">
-				<div className="eEventTeams_awaiting">
-					{'Select players later...'}
-				</div>
-			</div>
-		);
-	},
-	renderSelectTeamLater: function() {
-		return (
-			<div className="bEventPerformance_team">
-				<div className="eEventTeams_awaiting">
-					{'Select team later...'}
-				</div>
-			</div>
-		);
-	},
-	renderOpponentSelectTeamLater: function() {
-		return (
-			<div className="bEventPerformance_team">
-				<div className="eEventTeams_awaiting">
-					{'Accepted by opponent'}
-				</div>
+			<div className="eEventPerformance_team mEmpty">
+				{'Team members have not been added yet'}
 			</div>
 		);
 	},
@@ -129,7 +111,7 @@ const PerformanceEdit = React.createClass({
 			players	= self.getDefaultBinding().toJS('players').filter(p => p.houseId === houseId);
 
 		if(players.length === 0) {
-			return self.renderSelectTeamLater();
+			return self.renderEmptyTeam();
 		} else {
 			return (
 				<div className="bEventPerformance_team">
@@ -173,7 +155,7 @@ const PerformanceEdit = React.createClass({
 					teamsData[0].schoolId !== activeSchoolId
 				)
 			) {
-				return self.renderSelectTeamLater();
+				return self.renderEmptyTeam();
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
@@ -185,7 +167,7 @@ const PerformanceEdit = React.createClass({
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex);
 				} else {
-					return self.renderSelectTeamLater();
+					return self.renderEmptyTeam();
 				}
 			} else if (
 				(
@@ -200,7 +182,7 @@ const PerformanceEdit = React.createClass({
 				) &&
 				eventType !== EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
-				return self.renderSelectTeamLater();
+				return self.renderEmptyTeam();
 			}
 		}
 	},
@@ -223,12 +205,12 @@ const PerformanceEdit = React.createClass({
 						const players = self.getDefaultBinding().toJS('players').filter(p => p.schoolId === schoolId);
 
 						if(players.length === 0) {
-							return self.renderOpponentSelectTeamLater();
+							return null;
 						} else {
 							return self.renderIndividualPlayersBySchoolId(schoolId);
 						}
 					} else {
-						return self.renderAwaitingOpponentTeam();
+						return null;
 					}
 				case EventHelper.clientEventTypeToServerClientTypeMapping['houses']:
 					return self.renderIndividualPlayersByHouseId(event.houses[1]);
@@ -245,36 +227,36 @@ const PerformanceEdit = React.createClass({
 				teamsData.length === 0
 			) {
 				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
-					return self.renderOpponentSelectTeamLater();
+					return null;
 				} else {
-					return self.renderAwaitingOpponentTeam();
+					return null;
 				}
 			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[0].schoolId !== activeSchoolId
 			) {
-				return self.renderTeamPlayersByOrder(0);
+				return null;
 			} else if(
 				teamsData.length > 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[0].schoolId !== activeSchoolId
 			) {
-				return self.renderTeamPlayersByOrder(0);
+				return null;
 			} else if (
 				teamsData.length > 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools'] &&
 				teamsData[1].schoolId !== activeSchoolId
 			) {
-				return self.renderTeamPlayersByOrder(1);
+				return null;
 			} else if (
 				teamsData.length === 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['inter-schools']
 			) {
 				if(event.status === EventHelper.EVENT_STATUS.ACCEPTED) {
-					return self.renderOpponentSelectTeamLater();
+					return null;
 				} else {
-					return self.renderAwaitingOpponentTeam();
+					return null;
 				}
 			} else if (
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['houses']
@@ -283,33 +265,30 @@ const PerformanceEdit = React.createClass({
 				if(teamIndex !== -1) {
 					return self.renderTeamPlayersByOrder(teamIndex);
 				} else {
-					return self.renderSelectTeamLater();
+					return self.renderEmptyTeam();
 				}
 			} else if (
 				teamsData.length <= 1 &&
 				eventType === EventHelper.clientEventTypeToServerClientTypeMapping['internal']
 			) {
-				return self.renderSelectTeamLater();
+				return self.renderEmptyTeam();
 			} else {
 				return self.renderTeamPlayersByOrder(1);
 			}
 		}
 	},
-	renderAwaitingOpponentTeam: function() {
-		return (
-			<div className="bEventPerformance_team">
-				<div className="eEventTeams_awaiting">
-					{'Awaiting opponent...'}
-				</div>
-			</div>
-		);
-	},
 	renderPlayers: function(players) {
 		const self = this;
 
 		return players.map((player, playerIndex) => {
+			const playerStyle = classNames({
+				'bPlayer'		: true,
+				'mPerformance'	: true,
+				'mLast'			: players.length === playerIndex + 1
+			});
+
 			return (
-				<div key={playerIndex} className="bPlayer mPerformance">
+				<div key={playerIndex} className={playerStyle}>
 					<div className="ePlayer_name mBold">
 						<span>{player.firstName} {player.lastName}</span>
 					</div>
@@ -358,10 +337,10 @@ const PerformanceEdit = React.createClass({
 		const self = this;
 
 		const	event	= self.getBinding('event').toJS(),
-			players	= self.getDefaultBinding().toJS('players');
+				players	= self.getDefaultBinding().toJS('players');
 
 		if(players.length === 0) {
-			return self.renderSelectPlayersLater();
+			return self.renderEmptyTeam();
 		} else {
 			return self.renderPlayers(players);
 		}
@@ -394,14 +373,14 @@ const PerformanceEdit = React.createClass({
 		switch (true) {
 			case TeamHelper.isInternalEventForIndividualSport(event):
 				teams = (
-					<div className="bEventPerformance_teams mIndivid">
+					<div className="eEventPerformance_teams mIndivid">
 						{self.renderIndividuals()}
 					</div>
 				);
 				break;
 			default:
 				teams = (
-					<div className="bEventPerformance_teams">
+					<div className="eEventPerformance_teams">
 						<div className="eEventPerformance_col">
 							{self.renderPlayersForLeftSide()}
 						</div>
@@ -415,18 +394,20 @@ const PerformanceEdit = React.createClass({
 
 		return (
 			<div className="bEventPerformance">
-				<div className="eEventPerformance_header">
-					<div	className	= "bButton mCancel mMarginRight"
-							onClick		= {this.props.onCancel}
-					>
-						Cancel
+				<If condition={TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, event)}>
+					<div className="eEventPerformance_header">
+						<div	className	= "bButton mCancel mMarginRight"
+								onClick		= {this.props.onCancel}
+						>
+							Cancel
+						</div>
+						<div	className	= "bButton"
+								onClick		= {this.props.onSave}
+						>
+							Save
+						</div>
 					</div>
-					<div	className	= "bButton"
-							onClick		= {this.props.onSave}
-					>
-						Save
-					</div>
-				</div>
+				</If>
 				<div className="eEventPerformance_body">
 					{teams}
 				</div>
