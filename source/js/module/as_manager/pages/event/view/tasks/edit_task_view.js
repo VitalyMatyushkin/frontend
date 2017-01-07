@@ -31,9 +31,9 @@ const EditTaskView = React.createClass({
 	getHeaderText: function() {
 		switch (this.props.viewMode) {
 			case "EDIT":
-				return "Change task";
+				return "Change job";
 			case "ADD":
-				return "Add task";
+				return "Add job";
 		}
 	},
 	convertPlayersToMultiselectFormat: function(players) {
@@ -94,7 +94,7 @@ const EditTaskView = React.createClass({
 				</div>
 				<div className="eEditTaskView_body">
 					<div className="eEditTaskView_descriptionTextFieldLabel">
-						Task description
+						Job description
 					</div>
 					<textarea	className	= "eEditTaskView_descriptionTextField"
 								placeholder	= "Description"
@@ -105,7 +105,7 @@ const EditTaskView = React.createClass({
 					/>
 					<If condition={this.state.isShowValidationText}>
 						<p className="eEditTaskView_validationText">
-							Please enter task description
+							Please enter job description
 						</p>
 					</If>
 				</div>
