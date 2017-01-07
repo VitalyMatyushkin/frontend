@@ -433,7 +433,7 @@ const Event = React.createClass({
 	 * Function return add task button for tasks tab.
 	 */
 	getAddTaskButton: function() {
-		return <Button extraStyleClasses="mAddTask" text="Add task" onClick={this.handleClickAddTaskButton}/>;
+		return <Button extraStyleClasses="mAddTask" text="Add job" onClick={this.handleClickAddTaskButton}/>;
 	},
 	/**
 	 * Function returns the active tab.
