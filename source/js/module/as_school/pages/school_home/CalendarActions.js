@@ -52,9 +52,12 @@ function loadDailyEvents(date, activeSchoolId, eventsBinding) {
 		}
 	};
 
-	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter}).then( eventsData => {
-		eventsBinding.set('selectedDateEventsData.events', Immutable.fromJS(eventsData));
-		eventsBinding.set('selectedDateEventsData.isSync', true);
+	return window.Server.publicSchoolEvents.get( {schoolId: activeSchoolId}, { filter: filter})
+		.then( eventsData => {
+			eventsBinding.set('selectedDateEventsData.events', Immutable.fromJS(eventsData));
+			eventsBinding.set('selectedDateEventsData.isSync', true);
+
+			return true;
 	});
 }
 
@@ -135,7 +138,7 @@ function setPrevMonth(activeSchoolId, eventsBinding) {
 function setSelectedDate(date, activeSchoolId, eventsBinding) {
 	eventsBinding.set('selectedDate', date);
 
-	loadDailyEvents(date, activeSchoolId, eventsBinding);
+	return loadDailyEvents(date, activeSchoolId, eventsBinding);
 }
 
 module.exports.setNextMonth						= setNextMonth;
