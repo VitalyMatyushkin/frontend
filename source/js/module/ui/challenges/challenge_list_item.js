@@ -27,7 +27,8 @@ const ChallengeListItem = React.createClass({
 		const 	event 			= this.props.event,
 				model			= this.props.model,
 				isCancelled		= event.status === 'CANCELED',
-				isRejected		= event.status === 'REJECTED';
+				isRejected		= event.status === 'REJECTED',
+				isInvitesSent	= event.status === 'INVITES_SENT';
 
 		let eventResult;
 
@@ -38,6 +39,9 @@ const ChallengeListItem = React.createClass({
 				break;
 			case isRejected:
 				eventResult = 'Rejected';
+				break;
+			case isInvitesSent:
+				eventResult = <span>Awaiting<br/>opponent</span>;
 				break;
 			case typeof model.textResult === 'undefined':
 				eventResult = model.score;

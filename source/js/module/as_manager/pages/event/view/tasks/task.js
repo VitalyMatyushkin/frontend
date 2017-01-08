@@ -16,7 +16,7 @@ const Task = React.createClass({
 	 */
 	getPlayerNames: function() {
 		if(this.props.task.assignees.length > 0) {
-			return this.props.task.assignees.map(player => `${player.firstName} ${player.lastName}`).join('; ');
+			return this.props.task.assignees.map(player => `${player.firstName} ${player.lastName}`).join(', ');
 		} else {
 			return "No assignee";
 		}
@@ -26,7 +26,7 @@ const Task = React.createClass({
 			<div className="bTask">
 				<div className="eTask_column">
 					<div className="eTask_playerNames">
-						{this.getPlayerNames()}
+						<b>{this.getPlayerNames()}</b>
 					</div>
 					<div className="eTask_text">
 						{this.props.task.text}

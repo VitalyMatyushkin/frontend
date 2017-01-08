@@ -39,7 +39,7 @@ const FixtureItem = React.createClass({
 		);
 	},
 	onClickChallenge: function (e) {
-		if(typeof this.props.onClick !== "undefined") {
+		if(typeof this.props.onClick === "function") {
 			// if child isn't undefined, then it's parent fixture
 			// and we must add schoolId for fixture item click handler
 			if(typeof this.props.event.child !== "undefined") {
@@ -51,17 +51,44 @@ const FixtureItem = React.createClass({
 		e.stopPropagation();
 	},
 	render: function () {
-		const model = new ChallengeModel(this.props.event, this.props.activeSchoolId),
-			sportIcon = <Sport name={model.sport} className="bIcon_invites"/>,
-			scoreClasses = classNames({eChallenge_results: true, mDone: model.isFinished});
+		const	event			= this.props.event,
+				model			= new ChallengeModel(event, this.props.activeSchoolId),
+				scoreClasses	= classNames({eChallenge_results: true, mDone: model.isFinished}),
+				isCancelled		= event.status === 'CANCELED',
+				isRejected		= event.status === 'REJECTED',
+				isInvitesSent	= event.status === 'INVITES_SENT',
+				isInactive		= isCancelled || isRejected,
+				topClassName	= 'bChallenge ' + (isInactive ? 'mInactive' : ''),
+				iconClassName	= 'bIcon_invites ' + (isInactive ? 'mInactive' : ''),
+				sportIcon		= <Sport name={model.sport} className={iconClassName}/>;
+
+		let eventResult;
+
+		// TODO: I'm not sure it should be here. Models as they are implemented sucks, but they hide that kind of code
+		switch (true) {
+			case isCancelled:
+				eventResult = 'Cancelled';
+				break;
+			case isRejected:
+				eventResult = 'Rejected';
+				break;
+			case isInvitesSent:
+				eventResult = <span>Awaiting<br/>opponent</span>;
+				break;
+			case typeof model.textResult === 'undefined':
+				eventResult = model.score;
+				break;
+			default:
+				eventResult = <span>{model.textResult}<br/>{model.score}</span>
+		}
 
 		return (
-			<div className="bChallenge" onClick={this.onClickChallenge}>
+			<div className={topClassName} onClick={(e) => !isInactive ? this.onClickChallenge(e) : undefined}>
 				<div className="eChallenge_hours">{model.time}</div>
 				<div className="eChallenge_sport">{sportIcon}</div>
 				<div className="eChallenge_event" title={model.name}>{model.name}</div>
 				{this.renderGameTypeColumn(model)}
-				<div className={scoreClasses}>{model.score}</div>
+				<div className={scoreClasses}>{eventResult}</div>
 			</div>
 		);
 	}

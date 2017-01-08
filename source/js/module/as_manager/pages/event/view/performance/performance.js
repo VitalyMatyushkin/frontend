@@ -120,15 +120,17 @@ const Performance = React.createClass({
 			// Is edit mode
 			case this.getDefaultBinding().get('isEditMode'):
 				return (
-					<PerformanceEdit	binding		= {this.getPlayerPerformanceBinding()}
-										onSave		= {this.onSave}
-										onCancel	= {this.onCancel}
+					<PerformanceEdit	binding			= {this.getPlayerPerformanceBinding()}
+										activeSchoolId	= {this.props.activeSchoolId}
+										onSave			= {this.onSave}
+										onCancel		= {this.onCancel}
 					/>
 				);
 			// Is view mode
 			case !this.getDefaultBinding().get('isEditMode'):
 				return (
 					<PerformanceView	binding					= {this.getPlayerPerformanceBinding()}
+										activeSchoolId			= {this.props.activeSchoolId}
 										handleClickChangeMode	= {this.handleClickChangeMode}
 					/>
 				);

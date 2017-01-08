@@ -245,6 +245,14 @@ const Event = React.createClass({
 				value		:'gallery',
 				text		:'Gallery',
 				isActive	:false
+			}, {
+				value		: 'details',
+				text		: 'Details',
+				isActive	: false
+			}, {
+				value		: 'tasks',
+				text		: 'Jobs',
+				isActive	: false
 			}
 		];
 
@@ -266,14 +274,6 @@ const Event = React.createClass({
 
 		self.tabListModel.push(
 			{
-				value		: 'details',
-				text		: 'Details',
-				isActive	: false
-			}, {
-				value		: 'tasks',
-				text		: 'Tasks',
-				isActive	: false
-			}, {
 				value		: 'report',
 				text		: 'Match Report',
 				isActive	: false
@@ -423,13 +423,17 @@ const Event = React.createClass({
 		);
 	},
 	handleClickAddTaskButton: function() {
-		return this.getDefaultBinding().set('tasksTab.viewMode', "ADD");
+		return this.getDefaultBinding().atomically()
+			.set('tasksTab.editingTask',	undefined)
+			.set('tasksTab.viewMode',		"ADD")
+			.commit();
+
 	},
 	/**
 	 * Function return add task button for tasks tab.
 	 */
 	getAddTaskButton: function() {
-		return <Button extraStyleClasses="mAddTask" text="Add task" onClick={this.handleClickAddTaskButton}/>;
+		return <Button extraStyleClasses="mAddTask" text="Add job" onClick={this.handleClickAddTaskButton}/>;
 	},
 	/**
 	 * Function returns the active tab.
