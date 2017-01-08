@@ -1,44 +1,24 @@
 const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
 		CommentList		= require('./comment_list'),
 		NewCommentForm	= require('./new_comment_form');
 
-const InviteComments = React.createClass({
-	mixins:[Morearty.Mixin],
+const Comments = React.createClass({
 	propTypes:{
-		inviteId				: React.PropTypes.string.isRequired,
-		activeSchoolId			: React.PropTypes.string.isRequired
+		// user of this comments module
+		user		: React.PropTypes.object.isRequired,
+		// list of comments
+		comments	: React.PropTypes.array.isRequired,
+		// handler for submit new comment
+		onSubmit	: React.PropTypes.func.isRequired
 	},
-	componentWillMount:function(){
-		this.setLoggedUser();
-		// upload all comments from server
-		this.setComments();
-
-		const binding = this.getDefaultBinding();
-		binding.set('newCommentText', '');
-	},
-	/**
-	 * Function start timer, which send request on server with count comment
-	 * If count don't equal old count, then call function with get comments
-	 */
-	componentDidMount: function() {
-		this.intervalId = setInterval(this.checkComments, 30000);
-	},
-	componentWillUnmount:function(){
-		const binding = this.getDefaultBinding();
-
-		binding.remove('inviteComments');
-		clearInterval(this.intervalId);
-	},
-	getNewCommentText: function() {
-		return this.getDefaultBinding().get('newCommentText');
-	},
-	setNewCommentText: function(text) {
-		return this.getDefaultBinding().set('newCommentText', text);
-	},
-	clearNewCommentText: function() {
-		this.setNewCommentText('');
+	getInitialState: function(){
+		return {
+			// text of new comment
+			newCommentText: '',
+			// author of new comment can reference to other comment
+			// replyComment - is that comment
+			replyComment: undefined
+		};
 	},
 	/**
 	 * Function add name of "reply user" to new comment text and return it.
@@ -47,119 +27,49 @@ const InviteComments = React.createClass({
 	 * @returns {string}
 	 */
 	getNewCommentTextWithReplyText: function(replyUser) {
-		const binding = this.getDefaultBinding();
-
-		return `${replyUser.firstName} ${replyUser.lastName}, ${binding.get('newCommentText')}`;
+		return `${this.getReplyUserName(replyUser)}, ${this.state.newCommentText}`;
 	},
-	checkComments: function() {
-		const binding = this.getDefaultBinding();
-
-		window.Server.schoolInviteCommentsCount.get({
-				schoolId:	this.props.activeSchoolId,
-				inviteId:	this.props.inviteId
-			})
-			.then(res => {
-				const oldCount = binding.get('inviteCommentsCount');
-				if(oldCount && oldCount !== res.count) {
-					this.setComments();
-				}
-				return res;
-			})
-	},
-	setLoggedUser: function() {
-		const	binding = this.getDefaultBinding();
-
-		window.Server.profile.get().then(user => binding.set('loggedUser', Immutable.fromJS(user)))
-	},
-	/**
-	 * Get all comments for invite from server
-	 * @private
-	 */
-	setComments: function() {
-		const binding = this.getDefaultBinding();
-
-		window.Server.schoolInviteComments.get(
-			{
-				schoolId	: this.props.activeSchoolId,
-				inviteId	: this.props.inviteId
-			},
-			{
-				filter: {
-					limit: 100
-				}
-			}
-			)
-			.then(comments => {
-				binding
-					.atomically()
-					.set('inviteComments',		Immutable.fromJS(comments))
-					.set('inviteCommentsCount',	Immutable.fromJS(comments.length))
-					.commit();
-			});
+	getReplyUserName: function(replyUser) {
+		return `${replyUser.firstName} ${replyUser.lastName}`;
 	},
 	onSubmitCommentClick: function(){
-		const binding 	= this.getDefaultBinding();
+		let		newCommentText	= this.state.newCommentText;
+		const	replyComment	= this.state.replyComment;
 
-		const	textComment	= this.getNewCommentText(),
-				inviteId	= this.props.inviteId,
-				replyTo		= binding.get('replyTo'),
-				replyName	= replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
-				postData	= {text: textComment};
-
-		binding.sub('replyTo').clear();
-		this.clearNewCommentText();
-
-		/**if reply and a comment contains the name*/
-		if(replyTo && textComment.indexOf(replyName) >= 0){
-			postData.text = textComment.replace(`${replyName},`, '').trim(); // remove reply name from comment
-			postData.replyToCommentId = replyTo.id; // set reply comment in postData
+		// prepare data
+		if(typeof replyComment !== "undefined") {
+			// remove reply name from comment
+			newCommentText = newCommentText.replace(`${this.getReplyUserName(replyComment.author)},`, '').trim();
 		}
 
-		return window.Server.schoolInviteComments.post(
-			{
-				schoolId: this.props.activeSchoolId,
-				inviteId: inviteId
-			},
-			postData
-		)
-			.then(comment => {
-				const	comments		= binding.toJS('inviteComments'),
-						commentsCount	= binding.toJS('inviteCommentsCount');
+		// clear state
+		this.setState({
+			newCommentText	: '',
+			replyComment	: undefined
+		});
 
-				comments.push(comment);
-
-				binding.atomically()
-					.set('inviteCommentsCount', 	Immutable.fromJS(commentsCount + 1))
-					.set('inviteComments', 			Immutable.fromJS(comments))
-					.commit();
-			});
+		// submit
+		this.props.onSubmit(newCommentText, replyComment);
 	},
-	onReply:function(comments){
-		const binding = this.getDefaultBinding();
-
-		binding
-			.atomically()
-			.set('newCommentText',	this.getNewCommentTextWithReplyText(comments.author))
-			.set('replyTo', 		comments)
-			.commit();
+	onReply: function(replyComment){
+		this.setState({
+			newCommentText	: this.getNewCommentTextWithReplyText(replyComment.author),
+			replyComment	: replyComment
+		});
 	},
 	onChangeNewCommentText: function(text) {
-		this.setNewCommentText(text);
+		this.setState({
+			newCommentText	: text
+		});
 	},
 	render:function() {
-		const	binding		= this.getDefaultBinding();
-
-		const	comments	= binding.toJS('inviteComments'),
-				loggedUser	= binding.toJS('loggedUser'),
-				replyTo		= binding.toJS('replyTo') ? binding.toJS('replyTo') : null;
-
 		return (
 				<div className="bInviteComments">
-					<CommentList	comments	= {comments}
+					<CommentList	comments	= {this.props.comments}
 									onReply		= {this.onReply}
 					/>
-					<NewCommentForm	avatarPic		= {loggedUser && loggedUser.avatar}
-									text			= {this.getNewCommentText()}
+					<NewCommentForm	avatarPic		= {this.props.user.avatar}
+									text			= {this.state.newCommentText}
 									onChangeText	= {this.onChangeNewCommentText}
 									onSubmit		= {this.onSubmitCommentClick}
 					/>
@@ -168,4 +78,4 @@ const InviteComments = React.createClass({
 	}
 });
 
-module.exports = InviteComments;
+module.exports = Comments;
