@@ -53,10 +53,14 @@ const ImportStudentsModule = React.createClass({
 				currentSchool = binding.toJS('currentSchool');
 
 		if (typeof studentData !== 'undefined' && typeof currentSchool !== 'undefined'){
-			const result = StudentImporter.pullFormsAndHouses(studentData, currentSchool),
-					errorsImport = binding.toJS('studentData.errors'),
-					studentsImport = binding.toJS('studentData.students'),
-					errorsFormId = result.errors;
+			const 	result			= StudentImporter.pullFormsAndHouses(studentData, currentSchool);
+
+			binding.set('studentData', Immutable.fromJS(result));
+
+			const
+					errorsImport	= binding.toJS('studentData.errors'),
+					studentsImport	= binding.toJS('studentData.students'),
+					errorsFormId	= result.errors;
 
 			let errorsList = [],
 					numberError = 0;
