@@ -10,15 +10,26 @@ const HomeCalender = React.createClass({
 	mixins:[Morearty.Mixin ],
 
 	componentWillMount: function () {
-		const	binding					= this.getDefaultBinding().sub('events'),
-				activeSchoolId			= this.getMoreartyContext().getBinding().get('activeSchoolId');
+		const	binding			= this.getDefaultBinding().sub('events'),
+				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId');
 
+		binding.set('isSync', false);
 		/** Loading initial data for this month */
-		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
-		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
+		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding)
+			.then(() => {
+				return CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
+			})
+			.then(() => {
+				return CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
+			})
+			.then(() => {
+				return CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
+			})
+			.then(() => {
+				binding.set('isSync', true);
 
-		CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
-		CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
+				return true;
+			})
 	},
 
 	handleClickEvent: function(eventId) {
@@ -44,41 +55,43 @@ const HomeCalender = React.createClass({
 			})
 		}
 
-		return (
-			<div className="eSchoolCalenderContainer">
-				<div className="eSchoolFixtureTab eCalendar_tab">
-					<h1>Calendar</h1>
-					<hr/>
-				</div>
-				<div className="eEvents_container">
-					<div className="eEvents_row">
-						<div className="eEvents_leftSideContainer">
-							<div className="bCalendar">
-								<MonthCalendar
-									monthDate		= {monthDate}
-									todayDate		= {todayDate}
-									selectedDate	= {selectedDate}
-									onMonthClick	= { (data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding) }
-									onDateClick		= { (date) => CalendarActions.setSelectedDate(date, activeSchoolId, binding) }
-									eventsData		= {Immutable.fromJS(eventsData)}
+		if(binding.get('isSync')) {
+			return (
+				<div className="eSchoolCalenderContainer">
+					<div className="eSchoolFixtureTab eCalendar_tab">
+						<h1>Calendar</h1>
+						<hr/>
+					</div>
+					<div className="eEvents_container">
+						<div className="eEvents_row">
+							<div className="eEvents_leftSideContainer">
+								<div className="bCalendar">
+									<MonthCalendar
+										monthDate		= {monthDate}
+										todayDate		= {todayDate}
+										selectedDate	= {selectedDate}
+										onMonthClick	= { (data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding) }
+										onDateClick		= { (date) => CalendarActions.setSelectedDate(date, activeSchoolId, binding) }
+										eventsData		= {Immutable.fromJS(eventsData)}
+									/>
+								</div>
+							</div>
+							<div className="eEvents_rightSideContainer">
+								<Challenges
+									activeSchoolId	= {activeSchoolId}
+									isSync			= {isSelectedDateEventsInSync}
+									isDaySelected	= {true}
+									events			= {selectedDateEvents.toJS()}
+									onClick			= {this.handleClickEvent}
 								/>
 							</div>
 						</div>
-						<div className="eEvents_rightSideContainer">
-							<Challenges
-								activeSchoolId	= {activeSchoolId}
-								isSync			= {isSelectedDateEventsInSync}
-								isDaySelected	= {true}
-								events			= {selectedDateEvents.toJS()}
-								onClick			= {this.handleClickEvent}
-								/>
-
-						</div>
 					</div>
 				</div>
-
-			</div>
-		);
+			);
+		} else {
+			return null;
+		}
 	}
 });
 
