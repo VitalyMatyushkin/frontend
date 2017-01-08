@@ -15,8 +15,16 @@ const Calendar = React.createClass({
 		childIdList: React.PropTypes.array.isRequired
 	},
 	componentWillMount: function () {
+		const binding = this.getDefaultBinding();
+
+		binding.set('isSync', false);
 		/** Loading initial data for this month */
-		CalendarActions.setCurrentMonth(new Date(), this.props.childIdList, this.getDefaultBinding());
+		CalendarActions.setCurrentMonth(new Date(), this.props.childIdList, this.getDefaultBinding())
+			.then(() => {
+				binding.set('isSync', true);
+
+				return true;
+			});
 	},
 	render: function(){
 		const 	self 			= this,
@@ -26,16 +34,20 @@ const Calendar = React.createClass({
 				selectedDate	= binding.get('selectedDate'),
 				eventsData		= binding.get('eventsData');
 
-		return (
-			<MonthCalendar
-				monthDate={monthDate}
-				todayDate={todayDate}
-				selectedDate={selectedDate}
-				onMonthClick={ (date) => CalendarActions.setCurrentMonth(date, self.props.childIdList, binding) }
-				onDateClick={ date => CalendarActions.setSelectedDate(date, self.props.childIdList, binding) }
-				eventsData={eventsData}
-			/>
-		);
+		if(binding.get('isSync')) {
+			return (
+				<MonthCalendar
+					monthDate={monthDate}
+					todayDate={todayDate}
+					selectedDate={selectedDate}
+					onMonthClick={ (date) => CalendarActions.setCurrentMonth(date, self.props.childIdList, binding) }
+					onDateClick={ date => CalendarActions.setSelectedDate(date, self.props.childIdList, binding) }
+					eventsData={eventsData}
+				/>
+			);
+		} else {
+			return null;
+		}
 	}
 });
 
