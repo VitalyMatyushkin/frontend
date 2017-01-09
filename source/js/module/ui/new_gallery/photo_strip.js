@@ -17,8 +17,7 @@ const PhotoStrip = React.createClass({
 		handleClickDeletePhoto:			React.PropTypes.func,
 		handleClickPhoto:				React.PropTypes.func,
 		accessMode:						React.PropTypes.string.isRequired,
-		isUploadingPhoto:				React.PropTypes.bool,
-		isDeletingPhoto:				React.PropTypes.bool
+		isUploadingPhoto:				React.PropTypes.bool
 	},
 	getInitialState: function() {
 		return {
