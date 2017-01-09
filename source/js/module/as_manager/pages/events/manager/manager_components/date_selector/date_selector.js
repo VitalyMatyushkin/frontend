@@ -1,8 +1,6 @@
 const	React				= require('react'),
-
 		DateHelper			= require('./../../../../../../helpers/date_helper'),
 		Dropdown			= require('./dropdown/dropdown'),
-
 		DateSelectorStyle	= require('./../../../../../../../../styles/ui/b_date_selector.scss');
 
 const DateSelector = React.createClass({
@@ -76,6 +74,9 @@ const DateSelector = React.createClass({
 
 
 	render: function() {
+
+		console.log('date is: ' + this.props.date);
+
 		const dateObject = new Date(this.props.date);
 
 		return (
