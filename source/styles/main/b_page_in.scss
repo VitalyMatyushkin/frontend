@@ -8,7 +8,7 @@
 .eSchoolHomePage{
   -webkit-font-smoothing: antialiased;
   position: relative;
-  background-color: #f0f0f0;
+  background-color: #fff;
 }
 
 /*header*/
@@ -56,12 +56,7 @@
   text-align: center;
   margin: 30px auto;
 }
-.eSchoolFixtureTab h1{
-  color: #293e6b;
-}
-.eSchoolFixtureTab hr{
-  border-color: #293e6b;
-}
+
 .bFixtureResult{
   width: 90px;
   min-height: 100px;
@@ -404,9 +399,10 @@
   border: solid 1px #007dbe;
 }
 .eSchoolFixtureTab h1{
+  color: #293e6b;
   max-width: 180px;
   display: block;
-  background: #f0f0f0;
+  background: #fff;
   position: relative;
   margin: auto;
   top: 25px;
