@@ -2,7 +2,7 @@
  * Created by wert on 19.11.15.
  */
 
-const 	sessionSstorage 	= window.sessionStorage;
+const 	sessionStorage 	= window.sessionStorage;
 
 let Helpers = {};
 
