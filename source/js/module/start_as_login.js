@@ -12,7 +12,7 @@ const   ApplicationView     = require('module/as_login/application'),
         ReactDom            = require('react-dom'),
         React               = require('react'),
         Morearty            = require('morearty'),
-		storage				= require('../module/helpers/storage')ж
+		storage				= require('../module/helpers/storage');
 
 function runLoginMode() {
 
