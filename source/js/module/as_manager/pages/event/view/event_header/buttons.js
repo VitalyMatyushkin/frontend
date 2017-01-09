@@ -464,8 +464,8 @@ const Buttons = React.createClass({
 		const eventStatus = this.getDefaultBinding().toJS('model.status');
 
 		if(
-			eventStatus !== EventHelper.EVENT_STATUS.FINISHED ||
-			eventStatus !== EventHelper.EVENT_STATUS.REJECTED ||
+			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
+			eventStatus !== EventHelper.EVENT_STATUS.REJECTED &&
 			eventStatus !== EventHelper.EVENT_STATUS.CANCELED
 		) {
 			return (

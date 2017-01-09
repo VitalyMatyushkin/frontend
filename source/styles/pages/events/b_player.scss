@@ -93,6 +93,10 @@
     background-size: 100% 1px;
 
     padding: 30px 40px;
+
+    &.mLast {
+      background: none;
+    }
   }
 }
 

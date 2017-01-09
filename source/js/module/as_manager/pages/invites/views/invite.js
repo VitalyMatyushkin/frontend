@@ -113,9 +113,9 @@ const InviteView = React.createClass({
 		let status, teamDataName, linkText, confirmDeclineEvent;
 
 		if (toggleLink) {
-			linkText  = 'Hide discussion';
+			linkText  = 'Hide chat';
 		} else {
-			linkText = 'Discussion';
+			linkText = 'Chat with opponent';
 		}
 		if (teamData.length > 0) {
 			for (let i=0; i < teamData.length; i++){
@@ -143,8 +143,6 @@ const InviteView = React.createClass({
 			default:
 				status = '';
 		}
-
-
 
 		return (
 			<div className={inviteClasses}>

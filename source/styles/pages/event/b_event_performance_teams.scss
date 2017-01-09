@@ -2,7 +2,8 @@
 @import "../../bootstrap-custom";
 
 .bEventPerformance {
-
+  min-height: 240px;
+  border-bottom: solid 1px #d2d2d2
 }
 
 .eEventPerformance_header {
@@ -29,4 +30,10 @@
 .eEventPerformance_col {
   @include make-md-column(6);
   @include make-sm-column(6);
+}
+
+.eEventPerformance_team {
+  &.mEmpty {
+    padding: 10px;
+  }
 }
