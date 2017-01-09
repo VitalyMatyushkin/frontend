@@ -11,9 +11,12 @@ const   ApplicationView     = require('module/as_login/application'),
         initTawkTo			= require('module/tawk_to/tawk_to'),
         ReactDom            = require('react-dom'),
         React               = require('react'),
-        Morearty            = require('morearty');
+        Morearty            = require('morearty'),
+		storage				= require('../module/helpers/storage')ж
 
-    function runLoginMode() {
+function runLoginMode() {
+
+	storage.cookie.remove('authorizationInfo');	// hacky hack to drop stucked cookies if there are some
 
 // Create Morearty context
     const MoreartyContext = Morearty.createContext({
