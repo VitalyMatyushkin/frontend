@@ -11,8 +11,7 @@ const   ApplicationView     = require('module/as_login/application'),
         initTawkTo			= require('module/tawk_to/tawk_to'),
         ReactDom            = require('react-dom'),
         React               = require('react'),
-        Morearty            = require('morearty'),
-		storage				= require('../module/helpers/storage');
+        Morearty            = require('morearty');
 
 function runLoginMode() {
 
