@@ -90,7 +90,7 @@ const Player = React.createClass({
 				<div className="eTeam_playerItem mNumber">
 					{this.props.number}
 				</div>
-				<div className={playerNameClass}>
+				<div className={playerNameClass} title={`${player.firstName} ${player.lastName}`}>
 					{`${player.firstName} ${player.lastName}`}
 				</div>
 				<div className={playerFormClass}>

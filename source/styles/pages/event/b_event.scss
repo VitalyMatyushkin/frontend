@@ -253,6 +253,7 @@
 .mIndividualScoreAvailable{
   &.eForm_field{
     @include make-md-column(5);
+    @extend .col-sm-6;
     margin: 10px 0;
 
     &.mLeft {
