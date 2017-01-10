@@ -4,9 +4,7 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
 		Immutable		= require('immutable'),
-
-		CommentBox		= require('./event_blogBox'),
-		NewCommentForm	= require('module/ui/comments/comments');
+		Comments		= require('../../../../ui/comments/comments');
 
 const Blog = React.createClass({
 	mixins:[Morearty.Mixin],
@@ -31,7 +29,7 @@ const Blog = React.createClass({
 	_setComments: function() {
 		const binding = this.getDefaultBinding();
 
-		window.Server.schoolEventComments.get(
+		return window.Server.schoolEventComments.get(
 			{
 				schoolId	: this.props.activeSchoolId,
 				eventId		: this.props.eventId
@@ -48,18 +46,34 @@ const Blog = React.createClass({
 				.set('blogs',		Immutable.fromJS(blogs))
 				.set('blogCount',	Immutable.fromJS(blogs.length))
 				.commit();
+
+			return true;
 		});
 	},
 	componentWillMount:function(){
+		const binding = this.getDefaultBinding();
 
-		this._setLoggedUser();
-		// upload all comments from server
-		this._setComments();
+		binding.set('isSync', false);
+		this._setLoggedUser()
+			.then(() => {
+				// upload all comments from server
+				return this._setComments();
+			})
+			.then(() => {
+				binding.set('isSync', true);
+
+				return true;
+			});
 	},
 	_setLoggedUser: function() {
 		const	binding = this.getDefaultBinding();
 
-		window.Server.profile.get().then(user => binding.set('loggedUser', Immutable.fromJS(user)))
+		return window.Server.profile.get()
+			.then(user => {
+				binding.set('loggedUser', Immutable.fromJS(user));
+
+				return true;
+			});
 	},
 	// TODO HMMMMM???
 	/**
@@ -67,7 +81,7 @@ const Blog = React.createClass({
 	 * If count don't equal old count, then call function with get comments
 	 */
 	componentDidMount: function() {
-		//this._tickerForNewComments();
+		this._tickerForNewComments();
 	},
 	_tickerForNewComments:function(){
 		const binding	= this.getDefaultBinding();
@@ -96,32 +110,27 @@ const Blog = React.createClass({
 		clearInterval(this.intervalId);
 	},
 
-	onSubmitCommentClick: function(textComment){
+	onSubmitCommentClick: function(newCommentText, replyComment){
 		if(this.props.isUserCanWriteComments) {
-			const binding 	= this.getDefaultBinding(),
-				eventId 	= this.props.eventId,
-				replyTo 	= binding.get('replyTo'),
-				replyName 	= replyTo ? `${replyTo.author.lastName} ${replyTo.author.firstName}` : null,
-				postData 	= {text: textComment};
+			const binding 	= this.getDefaultBinding();
 
-			binding.sub('replyTo').clear();
-
-			/**if reply and a comment contains the name*/
-			if(replyTo && textComment.indexOf(replyName) >= 0){
-				postData.text = textComment.replace(`${replyName},`, '').trim(); // remove reply name from comment
-				postData.replyToCommentId = replyTo.id; // set reply comment in postData
+			const postData = {
+				text: newCommentText
+			};
+			if(typeof replyComment !== 'undefined') {
+				postData.replyToCommentId = replyComment.id;
 			}
 
 			return window.Server.schoolEventComments.post(
 				{
-					schoolId: this.props.activeSchoolId,
-					eventId: eventId
+					schoolId	: this.props.activeSchoolId,
+					eventId		: this.props.eventId
 				},
 					postData
 				)
 				.then(comment => {
-					const blogs 	= binding.toJS('blogs'),
-						blogCount 	= binding.toJS('blogCount');
+					const	blogs		= binding.toJS('blogs'),
+							blogCount	= binding.toJS('blogCount');
 
 					blogs.push(comment);
 
@@ -138,24 +147,24 @@ const Blog = React.createClass({
 			);
 		}
 	},
-
-	onReply:function(blog){
-		const binding = this.getDefaultBinding();
-		binding.set('replyTo', blog);
-	},
 	render:function(){
-		const binding 		= this.getDefaultBinding(),
-			dataBlog 		= binding.toJS('blogs'),
-			loggedUser 		= binding.toJS('loggedUser'),
-			replyTo			= binding.toJS('replyTo') ? binding.toJS('replyTo')	: null,
-			commentText 	= replyTo ? replyTo.author.firstName + ' ' + replyTo.author.lastName + ', ': '';
+		const	binding		= this.getDefaultBinding(),
+				dataBlog	= binding.toJS('blogs'),
+				loggedUser	= binding.toJS('loggedUser');
 
-		return(
-			<div className="bBlogMain">
-				<CommentBox onReply={this.onReply} blogData={dataBlog} />
-				<NewCommentForm commentText={commentText} avatarMinValue={45} avatarPic={loggedUser && loggedUser.avatar} onClick={this.onSubmitCommentClick} />
-			</div>
-		)
+		if(binding.get('isSync')) {
+			return(
+				<div className="bBlogMain">
+					<Comments	user		= {loggedUser}
+								comments	= {dataBlog}
+								onSubmit	= {this.onSubmitCommentClick}
+					/>
+				</div>
+			);
+		} else {
+			return null;
+		}
+
 	}
 });
 module.exports = Blog;

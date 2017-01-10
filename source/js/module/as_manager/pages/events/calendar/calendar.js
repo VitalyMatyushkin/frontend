@@ -16,7 +16,6 @@ const Calendar = React.createClass({
 	componentWillMount: function () {
 		const	binding			= this.getDefaultBinding(),
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
-		binding.set('isSync', false);
 		/** Loading initial data for this month */
 		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
 	},
@@ -38,19 +37,15 @@ const Calendar = React.createClass({
 				selectedDate	= binding.get('selectedDate'),
 				eventsData		= binding.get('eventsData');
 
-		if(binding.toJS('isSync')) {
-			return (
-				<MonthCalendar	monthDate		= {monthDate}
-								todayDate		= {todayDate}
-								selectedDate	= {selectedDate}
-								onMonthClick	= {(data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding)}
-								onDateClick		= {this.onSelect }
-								eventsData		= {eventsData}
-				/>
-			);
-		} else {
-			return null;
-		}
+		return (
+			<MonthCalendar	monthDate		= {monthDate}
+							todayDate		= {todayDate}
+							selectedDate	= {selectedDate}
+							onMonthClick	= {(data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding)}
+							onDateClick		= {this.onSelect }
+							eventsData		= {eventsData}
+			/>
+		);
 	}
 });
 
