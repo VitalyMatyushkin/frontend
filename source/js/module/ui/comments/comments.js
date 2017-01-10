@@ -1,49 +1,81 @@
-/**
- * Created by Woland on 26.12.2016.
- */
-const React 	= require('react'),
-	Avatar 		= require('module/ui/avatar/avatar');
+const	React			= require('react'),
+		CommentList		= require('./comment_list'),
+		NewCommentForm	= require('./new_comment_form');
 
-const NewCommentForm = React.createClass({
-	propTypes: {
-		avatarPic: 			React.PropTypes.string,
-		commentText: 		React.PropTypes.string,
-		avatarMinValue:		React.PropTypes.number,
-		onClick:			React.PropTypes.func.isRequired
+const Comments = React.createClass({
+	propTypes:{
+		// user of this comments module
+		user		: React.PropTypes.object.isRequired,
+		// list of comments
+		comments	: React.PropTypes.array.isRequired,
+		// handler for submit new comment
+		onSubmit	: React.PropTypes.func.isRequired
 	},
 	getInitialState: function(){
-	 	return {text : ''}
-	 },
-
-	componentWillReceiveProps: function(nextProps){
-		this.setState({text: nextProps.commentText});
+		return {
+			// text of new comment
+			newCommentText: '',
+			// author of new comment can reference to other comment
+			// replyComment - is that comment
+			replyComment: undefined
+		};
 	},
-
-	onCommentTextChange: function(e){
-		this.setState({text: e.target.value});
-		e.stopPropagation();
+	/**
+	 * Function add name of "reply user" to new comment text and return it.
+	 * Result - "FirstName LastName, newCommentText"
+	 * @param replyUser
+	 * @returns {string}
+	 */
+	getNewCommentTextWithReplyText: function(replyUser) {
+		return `${this.getReplyUserName(replyUser)}, ${this.state.newCommentText}`;
 	},
-
-	handleOnClick: function(){
-		this.props.onClick(this.state.text);
+	getReplyUserName: function(replyUser) {
+		return `${replyUser.firstName} ${replyUser.lastName}`;
 	},
+	onSubmitCommentClick: function(){
+		let		newCommentText	= this.state.newCommentText;
+		const	replyComment	= this.state.replyComment;
 
-	render: function(){
+		// prepare data
+		if(typeof replyComment !== "undefined") {
+			// remove reply name from comment
+			newCommentText = newCommentText.replace(`${this.getReplyUserName(replyComment.author)},`, '').trim();
+		}
+
+		// clear state
+		this.setState({
+			newCommentText	: '',
+			replyComment	: undefined
+		});
+
+		// submit
+		this.props.onSubmit(newCommentText, replyComment);
+	},
+	onReply: function(replyComment){
+		this.setState({
+			newCommentText	: this.getNewCommentTextWithReplyText(replyComment.author),
+			replyComment	: replyComment
+		});
+	},
+	onChangeNewCommentText: function(text) {
+		this.setState({
+			newCommentText	: text
+		});
+	},
+	render:function() {
 		return (
-			<div>
-				<div className="bBlog_box mNewComment">
-					<div className="ePicBox">
-						<Avatar pic={this.props.avatarPic} minValue={this.props.avatarMinValue} />
-					</div>
-					<div className="eEvent_commentBlog">
-						<textarea onChange={this.onCommentTextChange} value={this.state.text} placeholder="Enter your comment" className="eEvent_comment"></textarea>
-					</div>
+				<div className="bInviteComments">
+					<CommentList	comments	= {this.props.comments}
+									onReply		= {this.onReply}
+					/>
+					<NewCommentForm	avatarPic		= {this.props.user.avatar}
+									text			= {this.state.newCommentText}
+									onChangeText	= {this.onChangeNewCommentText}
+									onSubmit		= {this.onSubmitCommentClick}
+					/>
 				</div>
-				<div className="bEventButtons">
-					<div onClick={this.handleOnClick} className="bButton">Send</div>
-				</div>
-			</div>
-		)
+		);
 	}
 });
-module.exports = NewCommentForm;
+
+module.exports = Comments;

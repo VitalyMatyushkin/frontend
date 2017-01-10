@@ -1,0 +1,56 @@
+@import "../../!variables";
+
+.bComment {
+  display: flex;
+  position: relative;
+
+  width: 100%;
+  height: auto;
+
+  border-bottom: 1px solid #d7d7d7;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+}
+
+.eComment_messageBox {
+  font-size: 14px;
+  width: 535px;
+  margin-left: 20px;
+}
+
+.eComment_username {
+  display: block;
+  font-weight: bold;
+  color: $blueColor;
+}
+
+.eComment_message {
+  display: inline-block;
+  padding: 10px 10px 10px 0;
+  line-height: 16px;
+  white-space: pre-line;
+}
+
+.eComment_usernameReply {
+  display: inline-block;
+  padding: 10px 10px 10px 0;
+  line-height: 16px;
+  white-space: pre-line;
+  color: $blueColor;
+}
+
+.eComment_reply {
+  color: #959595;
+  margin-right: 20px;
+  cursor: pointer;
+
+  &:hover {
+    color: $blueColor;
+  }
+}
+
+.eComment_commentDate {
+  color: #959595;
+  margin-right: 20px;
+  cursor: pointer;
+}
