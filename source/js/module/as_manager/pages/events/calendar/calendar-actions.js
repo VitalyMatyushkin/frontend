@@ -56,7 +56,6 @@ function loadMonthDistinctEventDatesToBinding(monthDate, activeSchoolId, eventsB
 		eventsBinding.atomically()
 			.set('eventsData',	Immutable.fromJS(eventsData))
 			.set('monthDate',	monthDate)
-			.set('isSync',		true)
 			.commit();
 	});
 

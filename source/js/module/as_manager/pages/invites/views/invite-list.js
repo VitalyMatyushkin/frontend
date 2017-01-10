@@ -58,11 +58,13 @@ const InviteList = React.createClass({
 
 			const reactKey = inviteBinding.default.toJS().id;
 
-			return <Invite key={reactKey}
-						   type={self.props.type}
-						   binding={inviteBinding}
-						   onDecline={this.onDecline}
-			/>;
+			return (
+				<Invite	key			={reactKey}
+						type		= {self.props.type}
+						binding		= {inviteBinding}
+						onDecline	= {this.onDecline}
+				/>
+			);
 		}).toArray();
 	},
 	onDecline:function (inviteId, commentText) {
