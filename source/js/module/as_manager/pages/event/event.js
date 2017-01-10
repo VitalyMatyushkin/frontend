@@ -5,7 +5,7 @@ const	React						= require('react'),
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
-		EventHeader					= require('./view/event_header/event_header'),
+		EventHeaderWrapper			= require('./view/event_header/event_header_wrapper'),
 		EventRivals					= require('./view/event_rivals'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
 		EditingTeamsButtons 		= require('./view/editing_teams_buttons'),
@@ -484,8 +484,8 @@ const Event = React.createClass({
 				return (
 					<div className="bEventContainer">
 						<div className="bEvent">
-							<EventHeader	binding			= {binding}
-											activeSchoolId	= {this.props.activeSchoolId}
+							<EventHeaderWrapper	binding			= {binding}
+												activeSchoolId	= {this.props.activeSchoolId}
 							/>
 							<EventRivals	binding			= {binding}
 											activeSchoolId	= {this.props.activeSchoolId}

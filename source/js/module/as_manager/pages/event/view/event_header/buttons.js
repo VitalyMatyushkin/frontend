@@ -1,467 +1,28 @@
 const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
 
-		If				= require('module/ui/if/if'),
-		InvitesMixin	= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		Promise			= require('bluebird'),
-		RoleHelper		= require('../../../../../helpers/role_helper'),
-		MoreartyHelper	= require('module/helpers/morearty_helper'),
 		EventHelper		= require('module/helpers/eventHelper'),
-		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+
 		LinkStyles 	    = require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
 /**
- * This component displays the buttons close, save, cancel and contains methods save and close the event.
+ * This component displays the buttons "Close event", "Change score", "Save", "Cancel".
  * */
 const Buttons = React.createClass({
-	mixins: [Morearty.Mixin, InvitesMixin],
-	/** event closing process started after click save button */
-	closeMatch: function () {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
-
-		const event = binding.toJS('model');
-
-		if(!TeamHelper.checkValidationResultBeforeSubmit(event))
-			return;
-
-		if(TeamHelper.isNonTeamSport(event)) {
-			self.closeMatchForIndividualSport();
-		} else {
-			self.closeMatchForTeamsSport();
-		}
-		// match report save
-		self.submitMatchReport(event);
-	},
-	submitScore: function() {
-		const	self		= this,
-				binding		= self.getDefaultBinding();
-
-		const event = binding.toJS('model');
-
-		if(!TeamHelper.checkValidationResultBeforeSubmit(event))
-			return;
-
-		if(TeamHelper.isNonTeamSport(event)) {
-			return self.submitResultsForIndividualSport(event).then(() => self.doActionsAfterCloseEvent());
-		} else {
-			return self.submitResultsForTeamsSport(event).then(() => self.doActionsAfterCloseEvent());
-		}
-	},
-	/** event closing process for team sport */
-	closeMatchForTeamsSport: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const event = binding.toJS('model');
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		window.Server.finishSchoolEvent.post({
-				schoolId:	activeSchoolId,
-				eventId:	event.id
-			})
-			.then(() => self.submitResultsForTeamsSport(event))
-			.then(() => self.doActionsAfterCloseEvent());
-	},
-	/** event closing process for individual sport */
-	closeMatchForIndividualSport: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const event = binding.toJS('model');
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		window.Server.finishSchoolEvent.post({
-				schoolId:	activeSchoolId,
-				eventId:	event.id
-			})
-			.then(() => self.submitResultsForIndividualSport(event))
-			.then(() => self.doActionsAfterCloseEvent());
-	},
-	submitResultsForIndividualSport: function(event) {
-		return this.submitSchoolResults(event)
-			.then(() => this.submitHouseResults(event))
-			.then(() => this.submitIndividualResults(event));
-	},
-	submitResultsForTeamsSport: function(event) {
-		return this.submitSchoolResults(event)
-			.then(() => this.submitHouseResults(event))
-			.then(() => this.submitTeamResults(event))
-			.then(() => this.submitIndividualResults(event));
-	},
-	submitSchoolResults: function(event) {
-		const self = this;
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		const body = event.results.schoolScore;
-
-		switch (true) {
-			case body.length === 1:
-				let newIsWinnerValue;
-				if(TeamHelper.isOneOnOneSport(event)) {
-					newIsWinnerValue = event.results.schoolScore[0].score > event.results.individualScore[0].score ? true : false;
-				} else {
-					newIsWinnerValue = event.results.schoolScore[0].score > event.results.teamScore[0].score ? true : false;
-				}
-				body[0].isWinner = newIsWinnerValue;
-				break;
-			case body.length === 2 && body[0].score > body[1].score:
-				body[0].isWinner = true;
-				body[1].isWinner = false;
-				break;
-			case body.length === 2 && body[0].score < body[1].score:
-				body[0].isWinner = false;
-				body[1].isWinner = true;
-				break;
-			case body.length === 2 && body[0].score === body[1].score:
-				body[0].isWinner = false;
-				body[1].isWinner = false;
-				break;
-		}
-
-		if(body.length !== 0) {
-			const promises = [];
-
-			promises.push(
-				body
-					.filter(scoreData => this.isNewResultItem(scoreData))
-					.map(scoreData => window.Server.schoolEventResultSchoolScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
-			);
-
-			promises.push(
-				body
-					.filter(scoreData => !this.isNewResultItem(scoreData))
-					.map(
-						scoreData => window.Server.schoolEventResultSchoolScore.put(
-							{
-								schoolId	: activeSchoolId,
-								eventId		: event.id,
-								scoreId		: scoreData._id
-							},
-							scoreData
-						)
-					)
-			);
-
-			return Promise.all(promises);
-		} else {
-			return Promise.resolve(true);
-		}
-	},
-	isNewResultItem: function(resultItem) {
-		return typeof resultItem._id === 'undefined';
-	},
-	isResultItemChanged: function(resultItem) {
-		return !this.isNewResultItem(resultItem) && resultItem.isChanged;
-	},
-	isWinnerChanged: function(oldValue, newValue) {
-		return oldValue !== newValue;
-	},
-	submitHouseResults: function(event) {
-		const self = this;
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		const score = event.results.houseScore;
-
-		switch (true) {
-			case score.length === 1:
-				let newIsWinnerValue;
-				if(TeamHelper.isOneOnOneSport(event)) {
-					newIsWinnerValue = event.results.houseScore[0].score > event.results.individualScore[0].score ? true : false;
-				} else {
-					newIsWinnerValue = event.results.houseScore[0].score > event.results.teamScore[0].score ? true : false;
-				}
-				score[0].isWinner = newIsWinnerValue;
-				break;
-			case score.length === 2 && score[0].score > score[1].score:
-				score[0].isWinner = true;
-				score[1].isWinner = false;
-				break;
-			case score.length === 2 && score[0].score < score[1].score:
-				score[0].isWinner = false;
-				score[1].isWinner = true;
-				break;
-			case score.length === 2 && score[0].score === score[1].score:
-				score[0].isWinner = false;
-				score[1].isWinner = false;
-				break;
-		}
-
-		if(score.length !== 0) {
-			const promises = [];
-
-			promises.push(
-				score
-					.filter(scoreData => this.isNewResultItem(scoreData))
-					.map(scoreData => window.Server.schoolEventResultHousesScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
-			);
-
-			promises.push(
-				score
-					.filter(scoreData => !this.isNewResultItem(scoreData))
-					.map(
-						scoreData => window.Server.schoolEventResultHousesScore.put(
-							{
-								schoolId	: activeSchoolId,
-								eventId		: event.id,
-								scoreId		: scoreData._id
-							},
-							scoreData
-						)
-					)
-			);
-
-			return Promise.all(promises);
-		} else {
-			return Promise.resolve(true);
-		}
-	},
-	submitTeamResults: function(event) {
-		const self = this;
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		const score = event.results.teamScore;
-
-		switch (true) {
-			case score.length === 1:
-				const opponentScore = (event.results.schoolScore && event.results.schoolScore.length) ?
-					event.results.schoolScore[0].score :
-					event.results.houseScore[0].score;
-
-				const newIsWinnerValue = opponentScore > event.results.teamScore[0].score;
-				score[0].isWinner = newIsWinnerValue;
-				break;
-			case score.length === 2 && score[0].score > score[1].score:
-				score[0].isWinner = true;
-				score[1].isWinner = false;
-				break;
-			case score.length === 2 && score[0].score < score[1].score:
-				score[0].isWinner = false;
-				score[1].isWinner = true;
-				break;
-			case score.length === 2 && score[0].score === score[1].score:
-				score[0].isWinner = false;
-				score[1].isWinner = false;
-				break;
-		}
-
-		if(score.length !== 0) {
-			const promises = [];
-
-			promises.push(
-				score
-					.filter(scoreData => this.isNewResultItem(scoreData))
-					.map(scoreData => window.Server.schoolEventResultTeamScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
-			);
-
-			promises.push(
-				score
-					.filter(scoreData => !this.isNewResultItem(scoreData))
-					.map(
-						scoreData => window.Server.schoolEventResultTeamScore.put(
-							{
-								schoolId	: activeSchoolId,
-								eventId		: event.id,
-								scoreId		: scoreData._id
-							},
-							scoreData
-						)
-					)
-			);
-
-			return Promise.all(promises);
-		} else {
-			return Promise.resolve(true);
-		}
-	},
-	submitIndividualResults: function(event) {
-		const self = this;
-		const score = event.results.individualScore;
-
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(self);
-
-		if(TeamHelper.isOneOnOneSport(event)) {
-			switch (true) {
-				case score.length === 1 && EventHelper.isInterSchoolsEvent(event):
-					score[0].isWinner = score[0].score > event.results.schoolScore[0].score;
-					score[0].isChanged = true;
-					break;
-				case score.length === 1 && EventHelper.isHousesEvent(event):
-					score[0].isWinner = score[0].score > event.results.houseScore[0].score;
-					score[0].isChanged = true;
-					break;
-				case score.length === 2:
-					score[0].isWinner = score[0].score > score[1].score;
-					score[1].isWinner = score[0].score < score[1].score;
-					score[0].isChanged = true;
-					score[1].isChanged = true;
-					break;
-			}
-		}
-
-		const promises = [];
-
-		promises.push(
-			score
-				.filter(scoreData => typeof scoreData.score !== 'undefined' && this.isNewResultItem(scoreData))
-				.map(scoreData => window.Server.schoolEventResultIndividualsScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
-		);
-
-		promises.push(
-			score
-				.filter(scoreData => typeof scoreData.score !== 'undefined' && this.isResultItemChanged(scoreData))
-				.map(
-					scoreData => window.Server.schoolEventResultIndividualsScore.put(
-						{
-							schoolId	: activeSchoolId,
-							eventId		: event.id,
-							scoreId		: scoreData._id
-						},
-						scoreData
-					)
-				)
-		);
-
-		return Promise.all(promises);
-	},
-	/**Save match report
-	 * @param {object} event
-	 * @returns {Promise} schoolEventReport promise
-	 * */
-	submitMatchReport: function(event){
-		const activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
-
-		return window.Server.schoolEventReport.put({
-				schoolId:	activeSchoolId,
-				eventId:	event.id
-			},
-			{
-				content: event.matchReport
-			}
-		);
+	propTypes: {
+		mode:							React.PropTypes.string.isRequired,
+		eventStatus:					React.PropTypes.string.isRequired,
+		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
+		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
+		handleClickCancelMatch:			React.PropTypes.func.isRequired,
+		handleClickCloseEvent:			React.PropTypes.func.isRequired,
+		onClickCloseCancel:				React.PropTypes.func.isRequired,
+		onClickOk:						React.PropTypes.func.isRequired
 	},
 	/**
-	 * Get updated event from server
-	 * And update result and status
-	 * Also got event editing page to GENERAL mode
+	 * The render button "Cancel" for event
 	 */
-	doActionsAfterCloseEvent: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const	event			= binding.toJS('model'),
-				activeSchoolId	= MoreartyHelper.getActiveSchoolId(self);
-
-		return window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } )
-			.then(event => {
-				binding
-					.atomically()
-					.set('model.result',	Immutable.fromJS(event.result))
-					.set('model.status',	Immutable.fromJS(event.status))
-					.set('mode',			Immutable.fromJS('general'))
-					.commit();
-
-				// yep i'm always true
-				return true;
-			});
-	},
-	handleClickCloseEvent: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
-
-		binding.set('mode', 'closing');
-	},
-	/** The Save button handler */
-	onClickOk: function () {
-		if(this.getDefaultBinding().get('model.status') === "FINISHED") {
-			this.submitScore();
-		} else {
-			this.closeMatch();
-		}
-	},
-	/**
-	 * Return reverted team manager binding
-	 * Use if user doesn't save changes
-	 * @returns {*}
-	 */
-	getRevertedTeamManagerBindings: function() {
-		const	self			= this,
-				binding			= self.getDefaultBinding();
-
-		const	teamManagerBindings	= binding.toJS('eventTeams.editPlayers.teamManagerBindings'),
-				initialTeamPlayers	= binding.toJS('eventTeams.editPlayers.initialPlayers');
-
-		const event = binding.toJS('model');
-
-		if(TeamHelper.isNonTeamSport(event)) {
-			teamManagerBindings[0].teamStudents = initialTeamPlayers;
-		} else {
-			//teamManagerBindings.forEach(teamManagerBinding => {
-			//	teamManagerBinding.teamStudents	= initialTeamPlayers[teamManagerBinding.teamId];
-			//	teamManagerBinding.isSync		= false;
-			//});
-		}
-
-		return teamManagerBindings;
-	},
-	onClickCloseCancel: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding
-			.atomically()
-			.set('mode', 'general')
-			.commit();
-
-		self.revertScore();
-	},
-	onClickEditCancel: function () {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		binding.set('mode', 'general');
-	},
-	/**
-	 * Set init state of score. See to component will mount function of Event React Component.
-	 */
-	revertScore: function() {
-		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		const updEvent = binding.toJS('model');
-		updEvent.results = updEvent.initResults;
-
-		binding.set('model', Immutable.fromJS(updEvent));
-	},
-	onClickCancelMatch: function () {
-		const binding	= this.getDefaultBinding(),
-			schoolId = MoreartyHelper.getActiveSchoolId(this),
-			eventId = binding.toJS('model.id');
-
-		window.confirmAlert(
-			"You are going to cancel the fixture. Are you sure?",
-			"Ok",
-			"Cancel",
-			() => {
-				window.Server.eventCancel.post({
-					schoolId: schoolId,
-					eventId: eventId
-				})
-					.then(function(){
-						document.location.hash = 'events/calendar';
-					});
-			},
-			() => {}
-		);
-	},
 	renderCancelEventButton: function() {
-		const eventStatus = this.getDefaultBinding().toJS('model.status');
+		const eventStatus = this.props.eventStatus;
 
 		if(
 			eventStatus !== EventHelper.EVENT_STATUS.FINISHED &&
@@ -470,7 +31,7 @@ const Buttons = React.createClass({
 		) {
 			return (
 				<div className="eLink_CancelEvent">
-					<a onClick={this.onClickCancelMatch}>
+					<a onClick={this.props.handleClickCancelMatch}>
 						Cancel
 					</a>
 				</div>
@@ -479,11 +40,16 @@ const Buttons = React.createClass({
 			return null;
 		}
 	},
+	/**
+	 * The render buttons "Change score"/"Close event"
+	 */
 	renderScoreEventButton: function() {
-		switch (this.getEventStatus()) {
+		const eventStatus = this.props.eventStatus;
+
+		switch (eventStatus) {
 			case EventHelper.EVENT_STATUS.FINISHED:
 				return (
-					<div	onClick		= {this.handleClickCloseEvent}
+					<div	onClick		= {this.props.handleClickCloseEvent}
 							className	="bButton mFullWidth"
 					>
 						Change score
@@ -491,7 +57,7 @@ const Buttons = React.createClass({
 				);
 			case EventHelper.EVENT_STATUS.ACCEPTED:
 				return (
-					<div	onClick		= {this.handleClickCloseEvent}
+					<div	onClick		= {this.props.handleClickCloseEvent}
 							className	="bButton mFullWidth"
 					>
 						Close event
@@ -499,18 +65,13 @@ const Buttons = React.createClass({
 				);
 		};
 	},
-	getEventStatus: function() {
-		return this.getDefaultBinding().toJS('model.status');
-	},
-	getViewMode: function() {
-		return this.getDefaultBinding().toJS('mode');
-	},
 	/**
-	 * Close event/change score button and cancel event button.
-	 * @returns {XML}
+	 * The render container with buttons "Close event"/"Change score" and button "Cancel" for event
 	 */
 	renderScoreEventButtonsContainer: function() {
-		if(TeamHelper.isShowScoreEventButtonsBlock(this)) {
+		const isShowScoreEventButtonsBlock = this.props.isShowScoreEventButtonsBlock;
+
+		if(isShowScoreEventButtonsBlock) {
 			return (
 				<div className="bEventButtons">
 					<div className="eEventButtons_wrapper">
@@ -524,33 +85,39 @@ const Buttons = React.createClass({
 		}
 	},
 	/**
-	 * Cancel and Save - buttons.
+	 * The render "Cancel" and "Save" buttons after clicking "Change score" button
 	 * Buttons for close event or for change score.
 	 * So, save results or cancel.
-	 * @returns {XML}
 	 */
 	renderChangeScoreEventButtonsContainer: function() {
 		return (
 			<div className="bEventButtons">
 				<div	className	= "bButton mCancel mMarginRight"
-						onClick		= {this.onClickCloseCancel}
+						onClick		= {this.props.onClickCloseCancel}
 				>
 					Cancel
 				</div>
 				<div	className	= "bButton"
-						onClick		= {this.onClickOk}
+						onClick		= {this.props.onClickOk}
 				>
 					Save
 				</div>
 			</div>
 		);
 	},
+	/**
+	 * The render component Buttons
+	 */
 	render: function() {
+		const mode = this.props.mode,
+			isUserSchoolWorker = this.props.isUserSchoolWorker;
+
 		let buttons = null;
 
+
 		// It's general condition for all buttons
-		if(RoleHelper.isUserSchoolWorker(this)) {
-			switch (this.getViewMode()) {
+		if(isUserSchoolWorker) {
+			switch (mode) {
 				case 'general':
 					buttons = this.renderScoreEventButtonsContainer();
 					break;
@@ -560,7 +127,11 @@ const Buttons = React.createClass({
 			};
 		}
 
-		return buttons;
+		return (
+			<div className="bEventHeader_rightSide">
+				{buttons}
+			</div>
+		);
 	}
 });
 
