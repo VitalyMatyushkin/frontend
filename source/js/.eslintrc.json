@@ -9,7 +9,8 @@
           "jsx":              true,
           "blockBindings":    true,
           "templateStrings":  true,
-          "arrowFunctions":   true
+          "arrowFunctions":   true,
+		  "classes":          true
       }
 	},
 	"rules": {

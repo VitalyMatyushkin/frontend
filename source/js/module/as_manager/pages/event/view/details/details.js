@@ -205,6 +205,9 @@ const Details = React.createClass({
 							<If condition={!this.props.isParent}>
 								{this.renderControlButtons()}
 							</If>
+							<If condition={this.props.isParent}>
+								<div className="eDetails_spacing" />
+							</If>
 						<div className="eDetails_infoContainer">
 							<div className="eDetails_header">
 								Coach
