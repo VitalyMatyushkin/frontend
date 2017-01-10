@@ -70,7 +70,13 @@ const TasksWrapper = React.createClass({
 					})
 				})
 				.then(() => window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: this.getEvent().id}))
-				.then(tasks => this.setTasks(tasks));
+				.then(tasks => {
+					this.getDefaultBinding()
+						.atomically()
+						.set('editingTask',	undefined)
+						.set('tasks',		Immutable.fromJS(tasks))
+						.commit();
+				});
 		} else {
 			window.Server.schoolEventTasks
 				.post({
