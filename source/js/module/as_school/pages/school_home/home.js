@@ -31,8 +31,16 @@ const SchoolHomePage = React.createClass({
 					<SchoolAbout binding={binding} />
                 </div>
                 <div className="eSchoolHomeFooter">
-                    <img src = "images/logo.svg"/>
-                    &copy;All Rights Reserved, SquadInTouch.com &trade;
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-md-3 col-md-offset-1 col-sm-3">
+                                <img src="images/logo.svg"/>
+                            </div>
+                            <div className="col-md-7 col-sm-9 eSchoolHomeFooterCopyright">
+                                &copy;All Rights Reserved, SquadInTouch.com &trade;
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <CookiePopupMessage binding={binding}/>
             </div>
