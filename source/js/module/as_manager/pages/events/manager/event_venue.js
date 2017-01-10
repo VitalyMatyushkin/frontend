@@ -233,16 +233,17 @@ const EventVenue = React.createClass({
 	 * @returns {*}
 	 */
 	getPoint: function() {
-		const binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding(),
+		point = binding.toJS('schoolInfo.postcode.point') ? binding.toJS('schoolInfo.postcode.point') : this.DEFAULT_VENUE_POINT;
 
 		const	venueType	= binding.toJS('model.venue.venueType'),
 				venuePoint	= binding.toJS('model.venue.postcode');
 
 		switch (true) {
 			case typeof venuePoint === 'undefined':
-				return this.DEFAULT_VENUE_POINT;
+				return point;
 			case typeof venuePoint !== 'undefined' && venueType === "TBD":
-				return this.DEFAULT_VENUE_POINT;
+				return point;
 			case typeof venuePoint !== 'undefined':
 				return venuePoint.point;
 		};
