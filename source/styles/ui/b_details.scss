@@ -28,7 +28,7 @@
 }
 
 .eDetails_infoContainer {
-  padding: 0px 80px 50px 50px;
+  padding: 0 80px 0 50px;
 }
 
 .eDetails_editButtonWrapper {
@@ -117,4 +117,9 @@
   width: 100%;
 
   border-bottom: solid 1px $greyColor;
+}
+
+.eDetails_spacing {
+  display: block;
+  padding-bottom: $spacing*4;
 }
