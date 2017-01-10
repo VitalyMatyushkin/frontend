@@ -16,6 +16,9 @@ const MonthYearSelector = React.createClass({
 	componentWillMount: function(){
 		this.setState({dateState: this.props.date});
 	},
+	componentWillReceiveProps: function(nextProps) {
+		this.setState({dateState: nextProps.date});
+	},
 
 	getCurrentMonth: function() {
 		return new Date(this.state.dateState).getMonth();
