@@ -1,0 +1,54 @@
+.bNewCommentForm {
+
+}
+
+.eNewCommentForm_body {
+  display: flex;
+}
+
+.eNewCommentForm_textareaWrapper {
+  margin-left: 20px;
+  width: 535px;
+  position: relative;
+}
+
+.eNewCommentForm_textareaWrapper:before, .eNewCommentForm_textareaWrapper:after {
+  content: "";
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 15px;
+  left: 0;
+  border-width: 7px 7px 7px 0;
+  border-style: solid;
+  border-color: transparent #ccc;
+  z-index: 300;
+  margin-left: -7px;
+}
+
+.eNewCommentForm_textareaWrapper:after {
+  border-color: transparent #fff;
+  margin-left: -5px;
+}
+
+.eNewCommentForm_textarea {
+  width: 515px;
+  padding: 10px;
+
+  background: #fff;
+  border: solid 1px #d7d7d7;
+
+  resize: none;
+
+  &:hover {
+    border: solid 1px #d7d7d7;
+  }
+
+  &:focus {
+    border: solid 1px #d7d7d7;
+  }
+}
+
+.eNewCommentForm_footer {
+  padding-left: 66px;
+}

@@ -8,7 +8,7 @@ const	React 				= require('react'),
 		Map 				= require('module/ui/map/map-event-venue'),
 		propz				= require('propz'),
 		Bootstrap 			= require('styles/bootstrap-custom.scss'),
-		InviteComments		= require('../../../../ui/comments/invite-comments'),
+		InviteComments		= require('./invite_comments'),
 		ConfirmDeclinePopup	= require('./confirm-decline-popup'),
 		InviteStyles 		= require('styles/pages/events/b_invite.scss'),
 		If					= require('../../../../ui/if/if');
@@ -21,13 +21,14 @@ const InviteView = React.createClass({
 	 */
 	activeSchoolId: undefined,
 	propTypes: {
-		type: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']),
-		onDecline: React.PropTypes.func
+		type		: React.PropTypes.oneOf(['inbox', 'outbox', 'archive']),
+		onDecline	: React.PropTypes.func
 	},
 
 	componentWillMount: function() {
-		const binding = this.getDefaultBinding().sub('inviteComments');
-		binding.set('expandedComments', Immutable.fromJS(false));
+		const inviteCommentsBinding = this.getDefaultBinding().sub('inviteComments');
+		inviteCommentsBinding.set('expandedComments', Immutable.fromJS(false));
+
 		this.activeSchoolId = MoreartyHelper.getActiveSchoolId(this);
 	},
 
@@ -113,7 +114,7 @@ const InviteView = React.createClass({
 		let status, teamDataName, linkText, confirmDeclineEvent;
 
 		if (toggleLink) {
-			linkText  = 'Hide chat';
+			linkText = 'Hide chat';
 		} else {
 			linkText = 'Chat with opponent';
 		}
