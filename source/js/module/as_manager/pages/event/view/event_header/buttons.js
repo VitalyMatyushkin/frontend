@@ -1,7 +1,5 @@
 const	React			= require('react'),
-
 		EventHelper		= require('module/helpers/eventHelper'),
-
 		LinkStyles 	    = require('styles/pages/event/b_event_eLink_cancel_event.scss');
 
 /**
@@ -19,7 +17,7 @@ const Buttons = React.createClass({
 		onClickOk:						React.PropTypes.func.isRequired
 	},
 	/**
-	 * The render button "Cancel" for event
+	 * The function render's button "Cancel" for event
 	 */
 	renderCancelEventButton: function() {
 		const eventStatus = this.props.eventStatus;
@@ -41,7 +39,7 @@ const Buttons = React.createClass({
 		}
 	},
 	/**
-	 * The render buttons "Change score"/"Close event"
+	 * The function render's buttons "Change score"/"Close event"
 	 */
 	renderScoreEventButton: function() {
 		const eventStatus = this.props.eventStatus;
@@ -66,7 +64,7 @@ const Buttons = React.createClass({
 		};
 	},
 	/**
-	 * The render container with buttons "Close event"/"Change score" and button "Cancel" for event
+	 * The function render's container with buttons "Close event"/"Change score" and button "Cancel" for event
 	 */
 	renderScoreEventButtonsContainer: function() {
 		const isShowScoreEventButtonsBlock = this.props.isShowScoreEventButtonsBlock;
@@ -85,7 +83,7 @@ const Buttons = React.createClass({
 		}
 	},
 	/**
-	 * The render "Cancel" and "Save" buttons after clicking "Change score" button
+	 * The function render's "Cancel" and "Save" buttons after clicking "Change score" button
 	 * Buttons for close event or for change score.
 	 * So, save results or cancel.
 	 */
@@ -105,19 +103,12 @@ const Buttons = React.createClass({
 			</div>
 		);
 	},
-	/**
-	 * The render component Buttons
-	 */
 	render: function() {
-		const mode = this.props.mode,
-			isUserSchoolWorker = this.props.isUserSchoolWorker;
-
 		let buttons = null;
 
-
 		// It's general condition for all buttons
-		if(isUserSchoolWorker) {
-			switch (mode) {
+		if(this.props.isUserSchoolWorker) {
+			switch (this.props.mode) {
 				case 'general':
 					buttons = this.renderScoreEventButtonsContainer();
 					break;
@@ -127,11 +118,7 @@ const Buttons = React.createClass({
 			};
 		}
 
-		return (
-			<div className="bEventHeader_rightSide">
-				{buttons}
-			</div>
-		);
+		return buttons;
 	}
 });
 

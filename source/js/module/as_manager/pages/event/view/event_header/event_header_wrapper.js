@@ -1,20 +1,19 @@
 /**
  * Created by Woland on 10.01.2017.
  */
-const React 		= require('react'),
-	Morearty 		= require('morearty'),
-	MoreartyHelper	= require('module/helpers/morearty_helper'),
-	Immutable		= require('immutable'),
-	Promise			= require('bluebird'),
+const 	React 		= require('react'),
+		Morearty 		= require('morearty'),
+		MoreartyHelper	= require('module/helpers/morearty_helper'),
+		Immutable		= require('immutable'),
+		Promise			= require('bluebird'),
 
-	ChallengeModel	= require('module/ui/challenges/challenge_model'),
+		ChallengeModel	= require('module/ui/challenges/challenge_model'),
 
-	RoleHelper		= require('module/helpers/role_helper'),
-	TeamHelper		= require('module/ui/managers/helpers/team_helper'),
-	EventHelper		= require('module/helpers/eventHelper'),
+		RoleHelper		= require('module/helpers/role_helper'),
+		TeamHelper		= require('module/ui/managers/helpers/team_helper'),
+		EventHelper		= require('module/helpers/eventHelper'),
 
-	EventHeader 	= require('./event_header'),
-	Buttons			= require('./buttons');
+		EventHeader 	= require('./event_header');
 
 const EventHeaderWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -466,20 +465,16 @@ const EventHeaderWrapper = React.createClass({
 	 * @returns {XML}
 	 */
 	render: function() {
-		const binding 						= this.getDefaultBinding(),
-			model 							= new ChallengeModel(binding.toJS('model'), this.props.activeSchoolId),
-			mode 							= binding.toJS('mode'),
-			eventStatus						= binding.toJS('model.status'),
-			isUserSchoolWorker 				= RoleHelper.isUserSchoolWorker(this),
-			isShowScoreEventButtonsBlock 	= TeamHelper.isShowScoreEventButtonsBlock(this);
+		const 	binding 						= this.getDefaultBinding(),
+				event 							= new ChallengeModel(binding.toJS('model'), this.props.activeSchoolId),
+				mode 							= binding.toJS('mode'),
+				eventStatus						= binding.toJS('model.status'),
+				isUserSchoolWorker 				= RoleHelper.isUserSchoolWorker(this),
+				isShowScoreEventButtonsBlock 	= TeamHelper.isShowScoreEventButtonsBlock(this);
 
 		return (
-			<div className="bEventHeader">
-				<div className="bEventHeader_row">
 					<EventHeader
-						model = { model }
-					/>
-					<Buttons
+						event 							= { event }
 						mode 							= { mode }
 						eventStatus 					= { eventStatus }
 						isUserSchoolWorker 				= { isUserSchoolWorker }
@@ -489,8 +484,6 @@ const EventHeaderWrapper = React.createClass({
 						onClickCloseCancel				= { this.onClickCloseCancel }
 						onClickOk						= { this.onClickOk }
 					/>
-				</div>
-			</div>
 		);
 	}
 });
