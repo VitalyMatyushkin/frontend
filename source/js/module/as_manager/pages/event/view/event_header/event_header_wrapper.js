@@ -94,9 +94,6 @@ const EventHeaderWrapper = React.createClass({
 
 		const event = binding.toJS('model');
 
-		if(!TeamHelper.checkValidationResultBeforeSubmit(event))
-			return;
-
 		if(TeamHelper.isNonTeamSport(event)) {
 			return this.submitResultsForIndividualSport(event).then(() => this.doActionsAfterCloseEvent());
 		} else {
@@ -394,9 +391,6 @@ const EventHeaderWrapper = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		const event = binding.toJS('model');
-
-		if(!TeamHelper.checkValidationResultBeforeSubmit(event))
-			return;
 
 		if(TeamHelper.isNonTeamSport(event)) {
 			this.closeMatchForIndividualSport();
