@@ -6,22 +6,24 @@ const 	Immutable 			= require('immutable'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		Promise				= require('bluebird');
 
-function cancelMatch(schoolId, eventId){
+function cancelEvent(schoolId, eventId){
 	window.confirmAlert(
 		"You are going to cancel the fixture. Are you sure?",
 		"Ok",
 		"Cancel",
-		() => {
-			window.Server.eventCancel.post({
-				schoolId: schoolId,
-				eventId: eventId
-			})
-				.then(function(){
-					document.location.hash = 'events/calendar';
-				});
-		},
+		() => { cancelEventOnServer(schoolId, eventId); },
 		() => {}
 	);
+};
+
+function cancelEventOnServer(schoolId, eventId){
+	window.Server.eventCancel.post({
+		schoolId: schoolId,
+		eventId: eventId
+	})
+		.then(function(){
+			document.location.hash = 'events/calendar';
+		});
 };
 
 function setModeClosing(binding) {
@@ -291,10 +293,6 @@ function isResultItemChanged(resultItem) {
 	return !isNewResultItem(resultItem) && resultItem.isChanged;
 };
 
-function isWinnerChanged(oldValue, newValue) {
-	return oldValue !== newValue;
-};
-
 /**
  * Get updated event from server
  * And update result and status
@@ -371,7 +369,7 @@ function submitMatchReport(event, activeSchoolId){
 	);
 };
 
-module.exports.cancelMatch 		= cancelMatch;
+module.exports.cancelEvent 		= cancelEvent;
 module.exports.setModeClosing 	= setModeClosing;
 module.exports.setModeGeneral 	= setModeGeneral;
 module.exports.revertScore 		= revertScore;

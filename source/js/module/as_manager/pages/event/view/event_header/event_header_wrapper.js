@@ -23,11 +23,11 @@ const EventHeaderWrapper = React.createClass({
 	 * The event handler when clicking the button "Cancel"
 	 */
 	handleClickCancelEvent: function () {
-		const binding	= this.getDefaultBinding(),
-			schoolId = MoreartyHelper.getActiveSchoolId(this),
-			eventId = binding.toJS('model.id');
+		const 	binding		= this.getDefaultBinding(),
+				schoolId 	= MoreartyHelper.getActiveSchoolId(this),
+				eventId 	= binding.toJS('model.id');
 
-		EventHeaderActions.cancelMatch(schoolId, eventId);
+		EventHeaderActions.cancelEvent(schoolId, eventId);
 	},
 
 	/**
@@ -73,6 +73,7 @@ const EventHeaderWrapper = React.createClass({
 				event 							= new ChallengeModel(binding.toJS('model'), this.props.activeSchoolId),
 				mode 							= binding.toJS('mode'),
 				eventStatus						= binding.toJS('model.status'),
+				eventAges						= binding.toJS('model.ages'),
 				isUserSchoolWorker 				= RoleHelper.isUserSchoolWorker(this),
 				isShowScoreEventButtonsBlock 	= TeamHelper.isShowScoreEventButtonsBlock(this);
 
@@ -81,6 +82,7 @@ const EventHeaderWrapper = React.createClass({
 						event 							= { event }
 						mode 							= { mode }
 						eventStatus 					= { eventStatus }
+						eventAges						= { eventAges }
 						isUserSchoolWorker 				= { isUserSchoolWorker }
 						isShowScoreEventButtonsBlock 	= { isShowScoreEventButtonsBlock }
 						handleClickCancelEvent			= { this.handleClickCancelEvent }

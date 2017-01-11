@@ -1,4 +1,5 @@
 const	React			= require('react'),
+		Lazy			= require('lazy.js'),
 		DateHelper		= require('module/helpers/date_helper'),
 		Buttons			= require('./buttons');
 
@@ -7,6 +8,7 @@ const EventHeader = React.createClass({
 		event: 							React.PropTypes.object,
 		mode:							React.PropTypes.string.isRequired,
 		eventStatus:					React.PropTypes.string.isRequired,
+		eventAges:						React.PropTypes.array,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
 		handleClickCancelEvent:			React.PropTypes.func.isRequired,
@@ -16,6 +18,7 @@ const EventHeader = React.createClass({
 	},
 	render: function() {
 		const 	event 				= this.props.event,
+				eventAges			= Lazy(this.props.eventAges).sort(),
 				name				= event.name,
 				date				= DateHelper.toLocalWithMonthName(event.dateUTC),
 				time				= event.time,
@@ -27,6 +30,7 @@ const EventHeader = React.createClass({
 					<div className="bEventHeader_leftSide">
 						<div className="eEventHeader_field mEvent">{`${name}`}</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
+						<div className="eEventHeader_field mAges">{`Ages: ${eventAges}`}</div>
 					</div>
 					<div className="bEventHeader_rightSide">
 						<Buttons
