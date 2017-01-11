@@ -26,6 +26,7 @@ const EventGallery = React.createClass({
 		const	binding					= this.getDefaultBinding(),
 				photos					= binding.toJS('photos'),
 				isLoading				= !binding.toJS('isSync'),
+				isUploadingPhoto 		= binding.toJS('isUploading'),
 				isUserCanUploadPhotos	= binding.toJS('isUserCanUploadPhotos'),
 				schoolId				= this.props.activeSchoolId,
 				eventId					= this.props.eventId,
@@ -39,6 +40,7 @@ const EventGallery = React.createClass({
 							handleChangeAccessPreset	= { (photoId, preset) => Actions.changePhotoPreset(userRole, binding, schoolId, eventId, photoId, preset) }
 							photos						= { photos }
 							isLoading					= { isLoading }
+							isUploadingPhoto 			= { isUploadingPhoto }
 							isUserCanUploadPhotos		= { isUserCanUploadPhotos }
 				/>
 			</div>

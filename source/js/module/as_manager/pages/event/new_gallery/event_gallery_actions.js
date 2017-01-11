@@ -43,7 +43,7 @@ function addPhotoToEvent(role, binding, schoolId, eventId, file) {
 function deletePhotoFromEvent(role, binding, schoolId, eventId, photoId) {
 	binding.atomically()
 		.set('isSync',		false)
-		.set('isUploading',	true)
+		.set('isDeleting',	true)
 		.commit();
 
 	let service;
@@ -64,7 +64,7 @@ function deletePhotoFromEvent(role, binding, schoolId, eventId, photoId) {
 			photoId:	photoId
 		}
 	).then(() => {
-		binding.set('isUploading', false);
+		binding.set('isDeleting', false);
 		return getPhotosForEvent(role, binding, schoolId, eventId);	// and reloading all photos
 	});
 }
