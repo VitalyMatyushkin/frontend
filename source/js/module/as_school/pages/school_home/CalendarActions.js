@@ -121,7 +121,7 @@ function setNextSevenDaysEvents(activeSchoolId, eventsBinding) {
 				$lt:	dayEnd
 			},
 			status: {
-				$in: ['ACCEPTED', 'FINISHED']
+				$in: ['ACCEPTED', 'FINISHED', 'INVITES_SENT']
 			}
 		}
 	};
