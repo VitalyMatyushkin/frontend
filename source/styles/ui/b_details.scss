@@ -28,7 +28,11 @@
 }
 
 .eDetails_infoContainer {
-  padding: 0 80px 0 50px;
+  padding: 0 80px 25px 50px;
+
+  .eDetails_textBlock {
+    margin-bottom: 0;
+  }
 }
 
 .eDetails_editButtonWrapper {
