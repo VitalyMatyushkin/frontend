@@ -11,7 +11,7 @@ const Buttons = React.createClass({
 		eventStatus:					React.PropTypes.string.isRequired,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
-		handleClickCancelMatch:			React.PropTypes.func.isRequired,
+		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired
@@ -29,7 +29,7 @@ const Buttons = React.createClass({
 		) {
 			return (
 				<div className="eLink_CancelEvent">
-					<a onClick={this.props.handleClickCancelMatch}>
+					<a onClick={this.props.handleClickCancelEvent}>
 						Cancel
 					</a>
 				</div>

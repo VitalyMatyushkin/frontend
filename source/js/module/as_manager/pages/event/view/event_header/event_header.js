@@ -9,7 +9,7 @@ const EventHeader = React.createClass({
 		eventStatus:					React.PropTypes.string.isRequired,
 		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
 		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
-		handleClickCancelMatch:			React.PropTypes.func.isRequired,
+		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
 		onClickOk:						React.PropTypes.func.isRequired
@@ -34,7 +34,7 @@ const EventHeader = React.createClass({
 							eventStatus 					= { this.props.eventStatus }
 							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
 							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
-							handleClickCancelMatch			= { this.props.handleClickCancelMatch }
+							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
 							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
 							onClickCloseCancel				= { this.props.onClickCloseCancel }
 							onClickOk						= { this.props.onClickOk }
