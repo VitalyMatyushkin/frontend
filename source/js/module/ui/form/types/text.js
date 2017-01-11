@@ -33,6 +33,7 @@ const TypeText =  React.createClass({
 
 		return (
 			<input
+				autoComplete="new-password"
 				id={this.props.id}
 				ref="input"
 				value={value}
