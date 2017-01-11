@@ -18,6 +18,10 @@
     width: 100%;
   }
 
+  &.mAddTask {
+    height: 100px;
+  }
+
   &:hover{
     background: $lightBlue;
     color: #fff;

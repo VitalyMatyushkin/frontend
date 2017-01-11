@@ -276,11 +276,17 @@ const DateHelper = {
 		return this.getDate(this.getTomorrow()) === this.getDate(date);
 	},
 
+	/**
+	 * Return array of dates from this month. Like [1, 2, 3...28] for Feb, 2017
+	 * @param {Number} year as is
+	 * @param {Number} month 0-based as in date
+	 * @returns {Array.<Number>}
+	 */
 	getDaysFromCurrentMonth: function(year, month) {
-		const countMonthDays = new Date(year, month, 0).getDate();
+		const countMonthDays = new Date(year, month + 1, 0).getDate();
 
 		const daysArray = [];
-		for(let i = 1; i < countMonthDays; i++) {
+		for(let i = 1; i <= countMonthDays; i++) {
 			daysArray.push(i);
 		}
 
@@ -294,10 +300,7 @@ const DateHelper = {
 
 		const yearRangeArray = [];
 
-		for(let i = currentYear - 5; i <= currentYear; i++) {
-			yearRangeArray.push(i);
-		}
-		for(let i = currentYear + 1; i <= currentYear + 5; i++) {
+		for(let i = currentYear - 5; i <= currentYear + 5; i++) {
 			yearRangeArray.push(i);
 		}
 

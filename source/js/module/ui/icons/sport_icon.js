@@ -9,6 +9,7 @@ const   React   = require('react'),
 const SportIcon = React.createClass({
     propTypes: {
         name:       React.PropTypes.string.isRequired,
+		title:		React.PropTypes.string,
         className:  React.PropTypes.string
     },
 	/**
@@ -33,7 +34,7 @@ const SportIcon = React.createClass({
         const icon = this.getSportIcon(this.props.name);
 
         if(!!this.props.name) {
-            return <SVG classes={this.props.className} icon={icon} />;
+            return <SVG title={this.props.title} classes={this.props.className} icon={icon} />;
         } else {
             return null;
         }
