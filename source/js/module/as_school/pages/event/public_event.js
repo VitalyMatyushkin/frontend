@@ -43,6 +43,8 @@ const PublicEvent = React.createClass({
 
 		let report;
 
+		binding.set('sync', Immutable.fromJS(false));
+
 		window.Server.publicSchoolEvent.get({
 			schoolId:	this.props.activeSchoolId,
 			eventId:	rootBinding.get('routing.pathParameters.0')

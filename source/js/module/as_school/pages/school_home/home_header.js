@@ -80,12 +80,11 @@ const HomeHeader = React.createClass({
     },
 
     render: function(){
-        const   self                = this,
-                binding             = self.getDefaultBinding(),
-				activeSchool		= this.getMoreartyContext().getBinding().get('activeSchool'),
-                schoolName          = activeSchool.get('name'),
-                schoolMotto         = activeSchool.get('description'),
-                schoolBlazon        = activeSchool.get('pic');
+        const   self            = this,
+                binding         = self.getDefaultBinding(),
+				activeSchool	= this.getMoreartyContext().getBinding().get('activeSchool'),
+                schoolName      = activeSchool.get('name'),
+                schoolBlazon    = {backgroundImage:`url(${activeSchool.get('pic') || 'images/default_blazon.svg'})`};
 
         return(
 
@@ -95,8 +94,7 @@ const HomeHeader = React.createClass({
                 </div>
                 <div className="eSchoolMastHead">
                     <div className="eSchoolMotto">
-                        <div className="eSchoolBlazon">
-                            <img src={schoolBlazon || 'images/default_blazon.svg'}/>
+                        <div className="eSchoolBlazon" style={schoolBlazon}>
                         </div>
                         {schoolName}
                     </div>

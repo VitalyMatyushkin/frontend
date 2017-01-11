@@ -64,7 +64,7 @@ const ChallengeListItem = React.createClass({
 		return (
 			<div key={'event-' + event.id} className={topClassName} onClick={handler}>
 				<div className="eChallenge_sport">
-					<SportIcon name={model.sport} className={iconClassName} />
+					<SportIcon title={model.sport} name={model.sport} className={iconClassName} />
 				</div>
 				<div className="eChallenge_date">
 					{model.time}
