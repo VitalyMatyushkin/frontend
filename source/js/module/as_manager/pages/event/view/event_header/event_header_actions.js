@@ -53,19 +53,19 @@ function submitScore(event, binding, activeSchoolId){
 };
 
 function submitResultsForIndividualSport(event, activeSchoolId) {
-	return this.submitSchoolResults(event, activeSchoolId)
+	return submitSchoolResults(event, activeSchoolId)
 		.then(() => submitHouseResults(event, activeSchoolId))
-		.then(() => this.submitIndividualResults(event, activeSchoolId));
+		.then(() => submitIndividualResults(event, activeSchoolId));
 };
 
 function submitResultsForTeamsSport(event, activeSchoolId){
-	return this.submitSchoolResults(event, activeSchoolId)
+	return submitSchoolResults(event, activeSchoolId)
 		.then(() => submitHouseResults(event, activeSchoolId))
-		.then(() => this.submitTeamResults(event, activeSchoolId))
-		.then(() => this.submitIndividualResults(event, activeSchoolId));
+		.then(() => submitTeamResults(event, activeSchoolId))
+		.then(() => submitIndividualResults(event, activeSchoolId));
 };
 
-function submitSchoolResult(event, activeSchoolId){
+function submitSchoolResults(event, activeSchoolId){
 	const body = event.results.schoolScore;
 
 	switch (true) {
@@ -288,7 +288,7 @@ function isNewResultItem(resultItem) {
 };
 
 function isResultItemChanged(resultItem) {
-	return !this.isNewResultItem(resultItem) && resultItem.isChanged;
+	return !isNewResultItem(resultItem) && resultItem.isChanged;
 };
 
 function isWinnerChanged(oldValue, newValue) {
