@@ -8,8 +8,8 @@ const SchoolAbout = React.createClass({
 	mixins:[Morearty.Mixin],
 
 	render:function(){
-		const activeSchool = this.getMoreartyContext().getBinding().toJS('activeSchool'),
-				stylePic = {backgroundImage:`url(${activeSchool.pic})`};
+		const activeSchool 	= this.getMoreartyContext().getBinding().toJS('activeSchool'),
+			  stylePic		= {backgroundImage: `url(${activeSchool.pic || 'images/default_blazon.svg'})`};
 
 		return (
 			<div className="bSchoolAbout">

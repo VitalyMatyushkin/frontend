@@ -10,13 +10,19 @@ const   React       = require('react');
  */
 function SVG(props) {
 	const 	classes		= props.classes ? 'bIcon ' + props.classes : 'bIcon',
-			iconHref	= '#' + props.icon;
+			iconHref	= '#' + props.icon,
+			title		= typeof props.title !== 'undefined' ? props.title : '';
+
 
 	return (
 		<svg	onClick		= {props.onClick}
 				className	= {classes}
 		>
-			<use xlinkHref={iconHref}/>
+
+			<use xlinkHref={iconHref}>
+				<title>{title}</title>
+			</use>
+
 		</svg>
 	);
 
@@ -25,7 +31,8 @@ function SVG(props) {
 SVG.propTypes = {
 	onClick:	React.PropTypes.func,
 	icon:		React.PropTypes.string.isRequired,
-	classes:	React.PropTypes.string
+	classes:	React.PropTypes.string,
+	title:		React.PropTypes.string
 };
 
 module.exports = SVG;
