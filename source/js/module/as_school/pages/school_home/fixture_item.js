@@ -2,12 +2,13 @@
  * Created by wert on 06.09.16.
  */
 
-const 	React 			 = require('react'),
-		DateTimeMixin	 = require('module/mixins/datetime'),
-		EventHelper		 = require('module/helpers/eventHelper'),
-		SportIcon		 = require('module/ui/icons/sport_icon'),
-		ChallengeModel	 = require('module/ui/challenges/challenge_model'),
-		FixtureItemStyle = require('./../../../../../styles/main/b_school_fixtures.scss');
+const 	React				= require('react'),
+		propz				= require('propz'),
+		DateTimeMixin		= require('module/mixins/datetime'),
+		EventHelper			= require('module/helpers/eventHelper'),
+		SportIcon			= require('module/ui/icons/sport_icon'),
+		ChallengeModel		= require('module/ui/challenges/challenge_model'),
+		FixtureItemStyle	= require('./../../../../../styles/main/b_school_fixtures.scss');
 
 const FixtureItem = React.createClass({
 
@@ -21,10 +22,11 @@ const FixtureItem = React.createClass({
 		document.location.hash = `event/${this.props.event.id}`;
 	},
 	getFixtureInfo: function(event) {
+		const eventName = propz.get(event, ['generatedNames', this.props.activeSchoolId]) || propz.get(event, ['generatedNames', 'official']);
 		return(
 			<div>
 				<div className="bFix_date">{`${this.getDateFromIso(event.startTime)} ${this.getTimeFromIso(event.startTime)}`}</div>
-				<div className="bFix_name">{event.generatedNames.official}</div>
+				<div className="bFix_name">{eventName}</div>
 				<div className="bFix_type">{EventHelper.serverEventTypeToClientEventTypeMapping[event.eventType]}</div>
 			</div>
 		)
@@ -60,10 +62,11 @@ const FixtureItem = React.createClass({
 	},
 
 	render: function() {
-		const 	event 			= this.props.event,
-				sportName		= event.sport.name,
-				activeSchoolId	= this.props.activeSchoolId,
-				challengeModel	= new ChallengeModel(event, activeSchoolId);
+		const 	event 				= this.props.event,
+				sportName			= event.sport.name,
+				activeSchoolId		= this.props.activeSchoolId,
+				challengeModel		= new ChallengeModel(event, activeSchoolId),
+				isAwaitingOpponent	= event.status === 'INVITES_SENT';
 
 		return (
 			<div className="bFixtureContainer">
@@ -81,8 +84,8 @@ const FixtureItem = React.createClass({
 							{this.renderLeftOpponentSide(event, challengeModel)}
 							<div className="eFixture_item mResult">
 								<div>
-									<div className="bFix_scoreText">{'Score'}</div>
-									<div className="bFix_scoreResult">{`${challengeModel.score}`}</div>
+									<div className="bFix_scoreText">{isAwaitingOpponent ? 'Awaiting opponent' : 'Score'}</div>
+									<div className="bFix_scoreResult">{isAwaitingOpponent ? '' : `${challengeModel.score}`}</div>
 								</div>
 							</div>
 							{this.renderRightOpponentSide(event, challengeModel)}

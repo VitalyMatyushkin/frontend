@@ -1,7 +1,7 @@
 const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Morearty	= require('morearty'),
-
+		RoleHelper	= require('../../../../../helpers/role_helper'),
 		Discipline	= require('./discipline');
 
 const DisciplineWrapper = React.createClass({
@@ -159,7 +159,8 @@ const DisciplineWrapper = React.createClass({
 
 		if(this.isDataSync()) {
 			body = (
-				<Discipline	event					= {this.getEvent()}
+				<Discipline	isParent				= {RoleHelper.isParent(this)}
+							event					= {this.getEvent()}
 							players					= {this.getPlayers()}
 							disciplineItems			= {this.disciplineItems()}
 							disciplineValues		= {this.disciplineValues()}
