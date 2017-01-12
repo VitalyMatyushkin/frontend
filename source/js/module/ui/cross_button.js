@@ -2,10 +2,10 @@ const React = require('react');
 
 function CrossButton(props) {
 	return (
-		<div	className	= "bButton mCircle"
+		<div	className	= "bButton mCircle mCross"
 				onClick		= {props.handleClick}
 		>
-			<i className="fa fa-times" aria-hidden="true"/>
+			<i className="eCustomFont eCustomFont-cross"/>
 		</div>
 	);
 }
