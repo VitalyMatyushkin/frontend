@@ -1,5 +1,4 @@
 const	React			= require('react'),
-
 		Score			= require('./../../../../../ui/score/score'),
 		If				= require('../../../../../ui/if/if'),
 		TabHelper		= require('../tab_helper'),
