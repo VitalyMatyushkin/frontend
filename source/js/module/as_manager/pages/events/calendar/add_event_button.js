@@ -11,7 +11,7 @@ const AddEventButton = React.createClass({
 
 	render: function(){
 		return (
-			<div className="bAddEventButtonWrapper">
+			<div className="bAddEventButtonWrapper mNegativeMargin">
 				<Button	text				= {this.BUTTON_TEXT}
 						onClick				= {this.props.handleClick}
 						extraStyleClasses	= {'mAddEvent'}
