@@ -1,11 +1,12 @@
 const	React			= require('react'),
-
+		If				= require('../../../../../ui/if/if'),
 		PencilButton	= require('../../../../../ui/pencil_button'),
 		CrossButton		= require('../../../../../ui/cross_button'),
 		TaskCssStyle	= require('../../../../../../../styles/ui/task.scss');
 
 const Task = React.createClass({
 	propTypes: {
+		isShowEditButtons		: React.PropTypes.bool.isRequired,
 		task					: React.PropTypes.object.isRequired,
 		handleClickChangeTask	: React.PropTypes.func.isRequired,
 		handleClickDeleteTask	: React.PropTypes.func.isRequired
@@ -33,10 +34,12 @@ const Task = React.createClass({
 					</div>
 				</div>
 				<div className="eTask_column mButtons">
-					<div className="eTask_buttonsWrapper">
-						<PencilButton	handleClick	= {this.props.handleClickChangeTask.bind(null, this.props.task)}/>
-						<CrossButton	handleClick	= {this.props.handleClickDeleteTask.bind(null, this.props.task.id)}/>
-					</div>
+					<If condition={!this.props.isShowEditButtons}>
+						<div className="eTask_buttonsWrapper">
+							<PencilButton	handleClick	= {this.props.handleClickChangeTask.bind(null, this.props.task)}/>
+							<CrossButton	handleClick	= {this.props.handleClickDeleteTask.bind(null, this.props.task.id)}/>
+						</div>
+					</If>
 				</div>
 			</div>
 		);

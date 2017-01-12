@@ -7,6 +7,7 @@ const	React				= require('react'),
 		StarRatingBar		= require('./../../../../../ui/star_rating_bar/star_rating_bar'),
 		EventHelper			= require('module/helpers/eventHelper'),
 		TeamHelper			= require('module/ui/managers/helpers/team_helper'),
+		RoleHelper			= require('../../../../../helpers/role_helper'),
 		EventConst			= require('module/helpers/consts/events'),
 		TabHelper			= require('../tab_helper'),
 		classNames			= require('classnames'),
@@ -391,7 +392,7 @@ const PerformanceView = React.createClass({
 
 		return (
 			<div className="bEventPerformance">
-				<If condition={TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, event)}>
+				<If condition={!RoleHelper.isParent(this) && TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, event)}>
 					<div className="eEventPerformance_header">
 						<PencilButton handleClick={this.props.handleClickChangeMode}/>
 					</div>

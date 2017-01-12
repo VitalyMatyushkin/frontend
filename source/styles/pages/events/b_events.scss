@@ -12,16 +12,22 @@
   }
 
   &_row {
-    @include make-row()
+    @include make-row();
+    display: flex;//added flexbox for equal height columns
+    flex-wrap: wrap;
+    align-content:stretch;
   }
 
   &_leftSideContainer {
-    @include make-md-column-offset(1);
-    @include make-md-column(4);
+    @include make-md-column(5);
+    display: flex;
+    flex-direction: column;
   }
 
   &_rightSideContainer {
-    @include make-md-column(6)
+    @include make-md-column(6);
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -30,4 +36,10 @@
   display: flex;
   justify-content: flex-end;
   margin: 30px auto;
+}
+
+@media screen and (max-width:992px) {
+  .eEvents_row {
+    display: block;
+  }
 }

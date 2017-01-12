@@ -1,7 +1,7 @@
 const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Morearty	= require('morearty'),
-
+		RoleHelper	= require('../../../../../helpers/role_helper'),
 		Tasks		= require('./tasks');
 
 const TasksWrapper = React.createClass({
@@ -11,7 +11,7 @@ const TasksWrapper = React.createClass({
 	},
 	componentWillMount: function() {
 		const tasks = this.getDefaultBinding().toJS('tasks');
-		if(tasks.length === 0) {
+		if(tasks.length === 0 && !RoleHelper.isParent(this)) {
 			this.setViewMode("ADD");
 		} else {
 			this.setViewMode("VIEW");
@@ -118,7 +118,8 @@ const TasksWrapper = React.createClass({
 	},
 	render: function() {
 		return (
-			<Tasks	viewMode				= {this.getViewMode()}
+			<Tasks	isShowEditButtons		= {RoleHelper.isParent(this)}
+					viewMode				= {this.getViewMode()}
 					tasks					= {this.getTasks()}
 					editingTask				= {this.getEditingTask()}
 					players					= {this.getPlayers()}

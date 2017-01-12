@@ -1,6 +1,6 @@
 @import "../../!variables";
 
-$month-day-size: 50px; // set calendar cell width, height and vertical padding
+$month-day-size: 50px; // set calendar cell width, height
 $today-background-image: url('/images/today_calendar_day.png') no-repeat center;
 $active-day-background: #b2d7ec;
 
@@ -8,7 +8,6 @@ $active-day-background: #b2d7ec;
   display: flex;
   flex-flow: column wrap;
   justify-content: center;
-  align-self: flex-start;
   background: #fff;
 }
 
@@ -45,8 +44,8 @@ $active-day-background: #b2d7ec;
   display: flex;
   flex-flow: column wrap;
 
-  align-items: center;
-  margin: 0 -15px 20px;
+  align-items: flex-end;
+  margin: 0 -15px;
 }
 
 .eMonth_row {
@@ -63,7 +62,7 @@ $active-day-background: #b2d7ec;
   font-size: 1.3rem;
   height: $month-day-size;
   margin: $spacing / 4;
-  padding-top: $month-day-size / 4;
+  padding-top: 1rem;
   text-align: center;
   transition: border .5s;
   width: $month_day_size;
@@ -113,6 +112,13 @@ $active-day-background: #b2d7ec;
   }
 }
 
+@media screen and (max-width:992px) {
+  .eCalendar_eMonth {
+    align-items: center;
+    margin-bottom: 20px;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .eMonth_container {
     width: 100%;
@@ -122,7 +128,7 @@ $active-day-background: #b2d7ec;
     font-size: 1.5rem;
     margin: 1px;
     padding: 14px 0;
-    flex: 0 0 (100%/7);
+    flex: 0 1 (100%/7);
   }
 
   .eCalendar_eMonth {
