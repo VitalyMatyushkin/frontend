@@ -8,6 +8,7 @@ const Logout = function() {
 	
 	// redirect to login
 	window.location.href = DomainHelper.getLoginUrl();
+	window.location.reload();
 
 	return null;
 };

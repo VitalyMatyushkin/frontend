@@ -25,7 +25,7 @@ const DomainHelper = {
 	 * */
 	getLoginUrl:function(){
 		let subdomains = document.location.host.split('.');
-		subdomains[0] = subdomains[0] !=='admin' ? 'login': subdomains[0];
+		subdomains[0] = subdomains[0] !=='admin' ? 'app': subdomains[0];
 		const domain = subdomains.join(".");
 		return `//${domain}/#login`;
 	},
@@ -33,43 +33,43 @@ const DomainHelper = {
 	/**
 	 * Redirect to start page after login
 	 * */
-	redirectToStartPage: function(roleName) {
-		const roleSubdomain = RoleHelper.roleMapper[roleName.toLowerCase()];
+	redirectToStartPage: function(role) {
+		const	domainName	= this.getDomainNameByRole(role),
+				defaultPage	= this.getDefaultPageByRoleName(role);
 
-		if(roleSubdomain) {
-			let subdomains = document.location.host.split('.'),
-				needReload = true;
-
-			if(subdomains[0] !== roleSubdomain){
-				subdomains[0] = roleSubdomain;
-				needReload = false;
-				/** Save authorizationInfo in cookies */
-				let authorizationInfo = Storage.SessionStorage.get('authorizationInfo');
-				authorizationInfo && Storage.cookie.set('authorizationInfo', authorizationInfo);
-			}
-			const domain = subdomains.join(".");
-			let newUrl = window.location.href;
-			switch (roleName) {
-				case 'PARENT':
-					newUrl = `//${domain}/#events/calendar/all`;
-					break;
-				default:
-					newUrl = `//${domain}/#school_admin/summary`;
-					break;
-			}
-			window.location = newUrl;
-			if(needReload) {
-				window.location.reload();
-			}
-		} else {
-			window.simpleAlert(
-				`unknown role: ${roleName}`,
-				'Ok',
-				() => {}
-			);
+		window.location.href = `//${domainName}/#${defaultPage}`;
+		window.location.reload();
+	},
+	getDefaultPageByRoleName: function(roleName) {
+		switch (roleName.toLowerCase()) {
+			case 'owner':
+				return `school_admin/summary`;
+			case 'admin':
+				return `school_admin/summary`;
+			case 'manager':
+				return `school_admin/summary`;
+			case 'teacher':
+				return `school_admin/summary`;
+			case 'trainer':
+				return `school_admin/summary`;
+			case 'parent':
+				return `events/calendar/all`;
+			case 'no_body':
+				return `settings/general`;
 		}
-	}
+	},
+	getThirdLevelDomainByRole: function(role) {
+		return RoleHelper.roleMapper[role.toLowerCase()];
+	},
+	getDomainNameByRole: function(role) {
+		// parse domains from domain name to array
+		// app.squard.com => ['app', 'squard', 'com']
+		const domains = document.location.host.split('.');
+		// Third level domain is "0" index in array
+		domains[0] = this.getThirdLevelDomainByRole(role);
 
+		return domains.join(".");
+	}
 };
 
 module.exports = DomainHelper;

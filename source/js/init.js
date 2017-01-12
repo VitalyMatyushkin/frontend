@@ -15,7 +15,6 @@ const	Promise		= require('bluebird'),
 const	asAdmin			= require('./module/start_as_admin'),
 		asApp			= require('./module/start_as_app'),
 		asWWW			= require('./module/start_as_www'),
-		asLogin			= require('./module/start_as_login'),
 		asPassword		= require('./module/start_as_password'),
 		asSchool		= require('./module/start_as_school'),
 		asPlayGround	= require('./module/start_as_playground'),
@@ -51,10 +50,9 @@ switch(startModule) {
 	case 'module/start_as_admin':		asAdmin();		break;
 	case 'module/start_as_app':			asApp();		break;
 	case 'module/start_as_www':			asWWW();		break;
-	case 'module/start_as_login':		asLogin();		break;
 	case 'module/start_as_password':	asPassword();	break;
 	case 'module/start_as_school':		asSchool();		break;
 	case 'module/start_as_playground':	asPlayGround();	break;
 	case 'module/start_as_bigscreen':	asBigScreen();	break;
-	default: asLogin();
+	default: asApp();
 }

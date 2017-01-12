@@ -3,9 +3,7 @@ const	React							= require('react'),
 
 		RouterView						= require('module/core/router'),
 		Route							= require('module/core/route'),
-		LoginRoute						= require('module/core/routes/login_route'),
 		LogoutRoute						= require('module/core/routes/logout_route'),
-		RegisterRoute					= require('module/core/routes/register_route'),
 		SettingsRoute					= require('module/core/routes/settings_route'),
 
 		AdminSchoolPageComponent		= require('module/as_manager/pages/school_admin/school_page'),
@@ -30,8 +28,6 @@ const SchoolWorkerRouter = React.createClass({
 			<RouterView	routes	= {binding.sub('routing')}
 						binding	= {binding}
 			>
-				<RegisterRoute	binding	= {binding.sub('form.register')}/>
-				<LoginRoute		binding	= {binding.sub('userData')}/>
 				<LogoutRoute	binding	= {binding.sub('userData')}/>
 				<SettingsRoute	binding	= {binding.sub('userData')} />
 
