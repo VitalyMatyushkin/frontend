@@ -2,24 +2,22 @@
 
 .bButton{
   background: $blueColor;
-  border-radius: 3px;
-  font-size: 18px;
+  border: solid 1px #164170;
+  border-radius: $borderRadius;
   color: #fff;
-  padding: 13px 30px;
   display: inline-block;
+  font-size: 18px;
+  height: 50px;
+  line-height: 50px;
+  padding: 0 30px;
   user-select: none;
   cursor: pointer;
   position: relative;
   text-align: center;
-  border: none;
   font-family: $basicFontFamily;
 
   &.mAddEvent {
     width: 100%;
-  }
-
-  &.mAddTask {
-    height: 100px;
   }
 
   &:hover{
@@ -72,6 +70,7 @@
   &.mCircle {
     width: 50px;
     height: 50px;
+    line-height: normal;
     padding: 12px 15px;
     background: #ffffff;
     border: solid 1px #d2d2d2;
@@ -82,6 +81,11 @@
     font-size: 22px;
     &:hover {
       background: $secondBackgroundColor;
+    }
+
+    &.mCross {
+      font-size: 18px;
+      padding: 15px;
     }
   }
 

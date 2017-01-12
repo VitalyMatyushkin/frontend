@@ -19,7 +19,8 @@
     display: flex;
     justify-content: space-between;
 
-    width: 730px;
+    width: 100%;
+    max-width: 700px;
 
     margin-top: 10px;
   }
@@ -30,7 +31,8 @@
   }
 
   .eEditTaskView_descriptionTextField {
-    width: 690px;
+    width: 100%;
+    max-width: 700px;
     min-height: 200px;
     margin-top: 10px;
 
@@ -52,8 +54,23 @@
   }
 
   .eEditTaskView_multiselectWrapper {
-    width: 560px;
-
+    flex: 1;
     margin-right: 5px;
+
+    .eMultiSelectDropdown_input {
+      min-height: 50px;
+      padding-top: 7px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px){
+  .eEditTaskView_footer {
+    flex-direction: column;
+
+    .bMultiSelectDropdown,
+    .bButton {
+      margin-bottom: 10px;
+    }
   }
 }

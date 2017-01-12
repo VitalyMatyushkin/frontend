@@ -2,6 +2,7 @@ const	React			= require('react'),
 
 		classNames		= require('classnames'),
 
+		SVG				= require('../../../module/ui/svg'),
 		InputItemStyles	= require('../../../../styles/ui/multiselect_dropdown/b_input_item.scss');
 
 const InputItem = React.createClass({
@@ -20,7 +21,7 @@ const InputItem = React.createClass({
 				<div	className	= "eInputItem_cross"
 						onClick		= {this.props.handleClickRemoveItem}
 				>
-					<i className="fa fa-times fa-2x" aria-hidden="true"/>
+					<i className="eCustomFont eCustomFont-cross"/>
 				</div>
 			</div>
 		)

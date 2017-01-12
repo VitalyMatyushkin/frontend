@@ -123,7 +123,7 @@ const EditTaskView = React.createClass({
 							Cancel
 						</div>
 					</If>
-					<div	className	= "bButton mAddTask"
+					<div	className	= "bButton"
 							onClick		= {this.handleClickSave}
 					>
 						Save
