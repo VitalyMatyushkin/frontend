@@ -14,16 +14,15 @@ const PermissionsStep = React.createClass({
 		onSuccess: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		const 	self = this,
-				binding = self.getDefaultBinding();
+		const 	binding = this.getDefaultBinding();
 
-		self.types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'];
-		self.visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];	// how to render values from self.types. HACK!! :)
+		this.types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'];
+		this.visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];	// how to render values from self.types. HACK!! :)
+
+		binding.set('currentFieldArray', 0);
 
 		binding.sub('fields.0.schoolId').addListener(descriptor => {
 			if (descriptor.isValueChanged()) {
-				binding.sub('_houseAutocomplete').clear();
-				binding.sub('_formAutocomplete').clear();
 				binding.sub('formId').clear();
 				binding.sub('formName').clear();
 				binding.sub('houseId').clear();
@@ -42,31 +41,37 @@ const PermissionsStep = React.createClass({
 		}
 		this.forceUpdate();
 	},
+	addFieldArray: function(){
+		const 	binding 			= this.getDefaultBinding();
+		let 	currentFieldArray 	= binding.get('currentFieldArray');
+
+		currentFieldArray++;
+		binding.set('currentFieldArray', currentFieldArray);
+	},
 
 	/** will render list with all available roles to join */
 	renderChooser: function () {
-		const 	self	= this,
-				binding	= self.getDefaultBinding();
+		const 	binding	= this.getDefaultBinding();
 
 		return <div className="eRegistration_chooser">
-			{self.types.map( (type, i) => {
+			{this.types.map( (type, i) => {
 				const itemClasses = classNames({
 					eRegistration_chooserItem: true,
 					mActive: binding.get('type') === type
 				});
 
-				return <div key={type} className={itemClasses} onClick={self._onClickType.bind(null, type)}>
+				return <div key={type} className={itemClasses} onClick={this._onClickType.bind(null, type)}>
 					<div className="eChooserItem_wrap">
 						<div className="eChooserItem_inside"></div>
 					</div>
-					<span className="eRegistration_chooserTitle">{self.visibleTypes[i]}</span>
+					<span className="eRegistration_chooserTitle">{this.visibleTypes[i]}</span>
 				</div>;
 			})}
 		</div>
 	},
 	isFormFilled: function (currentType) {
-		const self = this,
-			binding = self.getDefaultBinding();
+		const 	binding = this.getDefaultBinding();
+
 		return (
 				(
 					currentType === 'admin' || currentType === 'manager' ||
@@ -80,26 +85,93 @@ const PermissionsStep = React.createClass({
 				binding.get('fields.0.lastName')
 			);
 	},
+
+	handlerSelectSchool: function(schoolId, numberField) {
+		const 	binding 			= this.getDefaultBinding();
+
+		binding.set('fields.' + numberField + '.schoolId', schoolId);
+	},
+
+	handlerSelectHouse: function(houseId, houseName, numberField) {
+		const 	binding 			= this.getDefaultBinding(),
+				currentFieldArray	= binding.get('currentFieldArray');
+		binding
+			.atomically()
+			.set('fields.' + numberField + '.houseId', houseId)
+			.set('fields.' + numberField + '.houseName', houseName)
+			.commit();
+	},
+
+	handlerSelectForm: function(formId, formName, numberField) {
+		const 	binding 			= this.getDefaultBinding(),
+				currentFieldArray	= binding.get('currentFieldArray');
+		binding
+			.atomically()
+			.set('fields.' + numberField + '.formId', formId)
+			.set('fields.' + numberField + '.formName', formName)
+			.commit();
+	},
+
+	handlerChangeFirstName: function(firstName, numberField) {
+		const 	binding 			= this.getDefaultBinding(),
+				currentFieldArray	= binding.get('currentFieldArray');
+		binding.set('fields.' + numberField + '.firstName', firstName);
+	},
+
+	handlerChangeLastName: function(lastName, numberField) {
+		const 	binding 			= this.getDefaultBinding(),
+				currentFieldArray	= binding.get('currentFieldArray');
+
+		binding.set('fields.' + numberField + '.lastName', lastName);
+	},
+
+	handlerChangeComment: function(comment) {
+		const 	binding = this.getDefaultBinding();
+
+		binding.set('comment', comment);
+	},
+
+	handlerChangePromo: function(promo) {
+		const 	binding = this.getDefaultBinding();
+
+		binding.set('promo', promo);
+	},
+
 	render: function () {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			currentType = binding.get('type');
+		const 	binding 			= this.getDefaultBinding(),
+				currentType 		= binding.get('type'),
+				currentFieldArray	= binding.get('currentFieldArray'),
+				fieldsAr			= binding.toJS('fields');
 
 		let isShowFinishButton = false;
 
-		if (self.isFormFilled(currentType)) {
+		if (this.isFormFilled(currentType)) {
 			isShowFinishButton = true;
 		}
 
-		return <div className="eRegistration_permissions">
-			<div className="eRegistration_annotation">Join as:</div>
-			{self.renderChooser()}
-			<div className="eRegistration_permissionStep">
-				<RegistrationPermissions binding={binding} isFormFilled={isShowFinishButton}
-											 onSuccess={self.props.onSuccess} showButtons={true}
-											 fieldCounter={multipleFields} onAnother={self.fieldsMultiplier}/>
+		return (
+			<div className="eRegistration_permissions">
+				<div className="eRegistration_annotation">Join as:</div>
+				{this.renderChooser()}
+				<div className="eRegistration_permissionStep">
+					<RegistrationPermissions
+						isFormFilled			= { isShowFinishButton }
+						onSuccess				= { this.props.onSuccess }
+						addFieldArray			= { this.addFieldArray }
+						handlerSelectSchool 	= { this.handlerSelectSchool }
+						handlerSelectHouse		= { this.handlerSelectHouse }
+						handlerSelectForm		= { this.handlerSelectForm }
+						handlerChangeFirstName	= { this.handlerChangeFirstName }
+						handlerChangeLastName	= { this.handlerChangeLastName }
+						handlerChangeComment	= { this.handlerChangeComment }
+						handlerChangePromo		= { this.handlerChangePromo }
+						currentType				= { currentType }
+						fieldsAr				= { fieldsAr }
+						currentFieldArray		= { currentFieldArray }
+					/>
+				</div>
 			</div>
-		</div>
+		)
 	}
 });
 
