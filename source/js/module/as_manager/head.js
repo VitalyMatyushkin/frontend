@@ -137,24 +137,28 @@ const Head = React.createClass({
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
+		if (document.location.hash != '#login') {
+			return (
+				<div className="bTopPanel container">
 
-		return (
-			<div className="bTopPanel container">
+					<div className="row">
+						<div className="col-md-2 col-sm-2">
+							<Logo/>
+						</div>
+						<div className="col-md-10 col-sm-10 bTopNav">
+							<TopMenu
+								binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
+							<If condition={document.location.hash.indexOf('login') === -1}>
+								<UserBlock binding={binding.sub('userData')}/>
+							</If>
+						</div>
+					</div>
 
-				<div className="row">
-					<div className="col-md-2 col-sm-2">
-						<Logo/>
-					</div>
-					<div className="col-md-10 col-sm-10 bTopNav">
-						<TopMenu binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
-						<If condition={document.location.hash.indexOf('login') === -1}>
-							<UserBlock binding={binding.sub('userData')}/>
-						</If>
-					</div>
 				</div>
-
-			</div>
-		)
+			)
+		} else {
+			return (<div></div>)
+		}
 	}
 });
 

@@ -189,3 +189,4 @@ const 	roleSelector	= require('../styles/pages/b_role_selector.scss'),
 
 // font awesome styles
 const	fontAwesome	= require('../styles/font-awesome/font-awesome.scss');
+const	customFont	= require('../styles/custom-font.scss');
