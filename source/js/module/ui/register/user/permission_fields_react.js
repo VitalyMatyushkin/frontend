@@ -9,18 +9,20 @@ const	React 			= require ('react'),
 
 const PermissionFieldsReact = React.createClass({
 	propTypes: {
-		handlerSelectSchool: 		React.PropTypes.func.isRequired,
-		handlerSelectHouse: 		React.PropTypes.func.isRequired,
-		handlerSelectForm: 			React.PropTypes.func.isRequired,
-		handlerChangeFirstName: 	React.PropTypes.func.isRequired,
-		handlerChangeLastName: 		React.PropTypes.func.isRequired,
-		handlerChangeComment: 		React.PropTypes.func.isRequired,
-		handlerChangePromo: 		React.PropTypes.func.isRequired,
+		type:						React.PropTypes.string,
+		handleSchoolSelect: 		React.PropTypes.func.isRequired,
+		handleHouseSelect: 			React.PropTypes.func.isRequired,
+		handleFormSelect: 			React.PropTypes.func.isRequired,
+		handleFirstNameChange: 		React.PropTypes.func.isRequired,
+		handleLastNameChange: 		React.PropTypes.func.isRequired,
+		handleCommentChange: 		React.PropTypes.func.isRequired,
+		handlePromoChange: 			React.PropTypes.func.isRequired,
 		schoolId:					React.PropTypes.string,
 		houseId:					React.PropTypes.string,
 		formId:						React.PropTypes.string,
-		numberField:				React.PropTypes.string
+		fieldNumber:				React.PropTypes.string.isRequired
 	},
+
 	/**
 	 * school filter by schoolName
 	 * @param schoolName
@@ -86,38 +88,38 @@ const PermissionFieldsReact = React.createClass({
 	},
 
 	onSelectSchool: function(schoolId) {
-		this.props.handlerSelectSchool(schoolId, this.props.numberField);
+		this.props.handleSchoolSelect(schoolId, this.props.fieldNumber);
 	},
 
 	onSelectHouse: function(houseId) {
 		window.Server.publicSchoolHouse.get({houseId: houseId, schoolId: this.props.schoolId}).then( house => {
-			this.props.handlerSelectHouse(houseId, house.name, this.props.numberField);
+			this.props.handleHouseSelect(houseId, house.name, this.props.fieldNumber);
 		});
 	},
 
 	onSelectForm: function(formId) {
 		window.Server.publicSchoolForm.get({formId: formId, schoolId: this.props.schoolId}).then(form => {
-			this.props.handlerSelectForm(formId, form.name, this.props.numberField);
+			this.props.handleFormSelect(formId, form.name, this.props.fieldNumber);
 		});
 	},
 
 	onChangeFirstName: function(event) {
-		this.props.handlerChangeFirstName(event.currentTarget.value, this.props.numberField);
+		this.props.handleFirstNameChange(event.currentTarget.value, this.props.fieldNumber);
 	},
 
 	onChangeLastName: function(event) {
-		this.props.handlerChangeLastName(event.currentTarget.value, this.props.numberField);
+		this.props.handleLastNameChange(event.currentTarget.value, this.props.fieldNumber);
 	},
 
 	onChangeComment: function(event) {
-		this.props.handlerChangeComment(event.currentTarget.value);
+		this.props.handleCommentChange(event.currentTarget.value);
 	},
 
 	onChangePromo: function(event) {
-		this.props.handlerChangePromo(event.currentTarget.value);
+		this.props.handlePromoChange(event.currentTarget.value);
 	},
 
-	schoolMessage: function () {
+	getSchoolMessage: function () {
 		return (
 			<div className="eForm_message">
 				<span className="margin-right">Haven’t found your school?</span>
@@ -128,10 +130,14 @@ const PermissionFieldsReact = React.createClass({
 
 	render: function() {
 		const 	currentType		= this.props.type,
-				message			= this.schoolMessage();
+				message			= this.getSchoolMessage();
 		return (
 			<div>
-				<If condition={!!currentType}>
+				{/**
+				 * If select role, show this block
+				 * Block "Select school", availible for all roles
+				 */}
+				<If condition={typeof currentType !== 'undefined'}>
 					<div>
 						<AutoComplete
 							serviceFilter={this.serviceSchoolFilter}
@@ -142,7 +148,11 @@ const PermissionFieldsReact = React.createClass({
 						{message}
 					</div>
 				</If>
-				<If condition={!!this.props.schoolId && currentType === 'parent'}>
+				{/**
+				 * If select school and role equal parent, show this block
+				  * Block "Select house", availible only for parent
+				 */}
+				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'parent'}>
 					<AutoComplete
 						serviceFilter={this.serviceHouseFilter}
 						serverField="name"
@@ -150,7 +160,11 @@ const PermissionFieldsReact = React.createClass({
 						placeholder="house's name"
 					/>
 				</If>
-				<If condition={!!this.props.houseId && currentType === 'parent'}>
+				{/**
+				 * If select school, house and role equal parent, show this block
+				 * Block "Select form", availible only for parent
+				 */}
+				<If condition={typeof this.props.houseId !== 'undefined' && currentType === 'parent'}>
 					<AutoComplete
 						serviceFilter={this.serviceFormFilter}
 						serverField="name"
@@ -158,7 +172,11 @@ const PermissionFieldsReact = React.createClass({
 						placeholder="form's name"
 					/>
 				</If>
-				<If condition={!!this.props.formId && currentType === 'parent'}>
+				{/**
+				 * If select school, house, form and role equal parent, show this block
+				 * Block "First name"/"Last Name" child, availible only for parent
+				 */}
+				<If condition={typeof this.props.formId !== 'undefined' && currentType === 'parent'}>
 					<div>
 						<div className="eRegistration_input">
 							<input ref="firstNameField" placeholder="first name" type={'text'} onChange={this.onChangeFirstName} />
@@ -168,14 +186,22 @@ const PermissionFieldsReact = React.createClass({
 						</div>
 					</div>
 				</If>
-				<If condition={!!this.props.schoolId}>
+				{/**
+				 * If select role, show this block
+				 * Block "Comment", availible for all roles
+				 */}
+				<If condition={typeof this.props.schoolId !== 'undefined'}>
 					<div>
 						<div className="eRegistration_input">
 							<textarea placeholder="Comment" onChange={this.onChangeComment}/>
 						</div>
 					</div>
 				</If>
-				<If condition={!!this.props.schoolId && currentType === 'admin'}>
+				{/**
+				 * If select school and role equal admin, show this block
+				 * Block "Promo", availible only admin
+				 */}
+				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'admin'}>
 					<div>
 						<div className="eRegistration_input">
 							<input ref="promo" placeholder="promo" type={'text'} onChange={this.onChangePromo} />

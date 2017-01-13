@@ -93,52 +93,52 @@ const PermissionsStep = React.createClass({
 			);
 	},
 
-	handlerSelectSchool: function(schoolId, numberField) {
+	handleSchoolSelect: function(schoolId, fieldNumber) {
 		const 	binding 			= this.getDefaultBinding();
 
-		binding.set('fields.' + numberField + '.schoolId', schoolId);
+		binding.set('fields.' + fieldNumber + '.schoolId', schoolId);
 	},
 
-	handlerSelectHouse: function(houseId, houseName, numberField) {
+	handleHouseSelect: function(houseId, houseName, fieldNumber) {
 		const 	binding 			= this.getDefaultBinding(),
 				currentFieldArray	= binding.get('currentFieldArray');
 		binding
 			.atomically()
-			.set('fields.' + numberField + '.houseId', houseId)
-			.set('fields.' + numberField + '.houseName', houseName)
+			.set('fields.' + fieldNumber + '.houseId', houseId)
+			.set('fields.' + fieldNumber + '.houseName', houseName)
 			.commit();
 	},
 
-	handlerSelectForm: function(formId, formName, numberField) {
+	handleFormSelect: function(formId, formName, fieldNumber) {
 		const 	binding 			= this.getDefaultBinding(),
 				currentFieldArray	= binding.get('currentFieldArray');
 		binding
 			.atomically()
-			.set('fields.' + numberField + '.formId', formId)
-			.set('fields.' + numberField + '.formName', formName)
+			.set('fields.' + fieldNumber + '.formId', formId)
+			.set('fields.' + fieldNumber + '.formName', formName)
 			.commit();
 	},
 
-	handlerChangeFirstName: function(firstName, numberField) {
+	handleFirstNameChange: function(firstName, fieldNumber) {
 		const 	binding 			= this.getDefaultBinding(),
 				currentFieldArray	= binding.get('currentFieldArray');
-		binding.set('fields.' + numberField + '.firstName', firstName);
+		binding.set('fields.' + fieldNumber + '.firstName', firstName);
 	},
 
-	handlerChangeLastName: function(lastName, numberField) {
+	handleLastNameChange: function(lastName, fieldNumber) {
 		const 	binding 			= this.getDefaultBinding(),
 				currentFieldArray	= binding.get('currentFieldArray');
 
-		binding.set('fields.' + numberField + '.lastName', lastName);
+		binding.set('fields.' + fieldNumber + '.lastName', lastName);
 	},
 
-	handlerChangeComment: function(comment) {
+	handleCommentChange: function(comment) {
 		const 	binding = this.getDefaultBinding();
 
 		binding.set('comment', comment);
 	},
 
-	handlerChangePromo: function(promo) {
+	handlePromoChange: function(promo) {
 		const 	binding = this.getDefaultBinding();
 
 		binding.set('promo', promo);
@@ -165,13 +165,13 @@ const PermissionsStep = React.createClass({
 						isFormFilled			= { isShowFinishButton }
 						onSuccess				= { this.props.onSuccess }
 						addFieldArray			= { this.addFieldArray }
-						handlerSelectSchool 	= { this.handlerSelectSchool }
-						handlerSelectHouse		= { this.handlerSelectHouse }
-						handlerSelectForm		= { this.handlerSelectForm }
-						handlerChangeFirstName	= { this.handlerChangeFirstName }
-						handlerChangeLastName	= { this.handlerChangeLastName }
-						handlerChangeComment	= { this.handlerChangeComment }
-						handlerChangePromo		= { this.handlerChangePromo }
+						handleSchoolSelect 		= { this.handleSchoolSelect }
+						handleHouseSelect		= { this.handleHouseSelect }
+						handleFormSelect		= { this.handleFormSelect }
+						handleFirstNameChange	= { this.handleFirstNameChange }
+						handleLastNameChange	= { this.handleLastNameChange }
+						handleCommentChange		= { this.handleCommentChange }
+						handlePromoChange		= { this.handlePromoChange }
 						currentType				= { currentType }
 						fieldsAr				= { fieldsAr }
 						currentFieldArray		= { currentFieldArray }

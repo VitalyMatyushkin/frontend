@@ -3,6 +3,7 @@
  */
 const   If                      = require('module/ui/if/if'),
 		PermissionFieldsReact	= require('module/ui/register/user/permission_fields_react'),
+		propz					= require('propz'),
         React                   = require('react');
 /*
  * It is a component for registration permission requests
@@ -13,13 +14,13 @@ const RegistrationPermissions = React.createClass({
         isFormFilled:   			React.PropTypes.bool,
         onSuccess:      			React.PropTypes.func.isRequired,
 		addFieldArray:      		React.PropTypes.func.isRequired,
-		handlerSelectSchool: 		React.PropTypes.func.isRequired,
-		handlerSelectHouse: 		React.PropTypes.func.isRequired,
-		handlerSelectForm: 			React.PropTypes.func.isRequired,
-		handlerChangeFirstName: 	React.PropTypes.func.isRequired,
-		handlerChangeLastName: 		React.PropTypes.func.isRequired,
-		handlerChangeComment: 		React.PropTypes.func.isRequired,
-		handlerChangePromo: 		React.PropTypes.func.isRequired,
+		handleSchoolSelect: 		React.PropTypes.func.isRequired,
+		handleHouseSelect: 			React.PropTypes.func.isRequired,
+		handleFormSelect: 			React.PropTypes.func.isRequired,
+		handleFirstNameChange: 		React.PropTypes.func.isRequired,
+		handleLastNameChange: 		React.PropTypes.func.isRequired,
+		handleCommentChange: 		React.PropTypes.func.isRequired,
+		handlePromoChange: 			React.PropTypes.func.isRequired,
 		currentType:				React.PropTypes.string,
 		fieldsAr:					React.PropTypes.object,
 		currentFieldArray:			React.PropTypes.number
@@ -48,63 +49,68 @@ const RegistrationPermissions = React.createClass({
 
 	render:function(){
 
-		const 	schoolId0 	= this.props.fieldsAr && this.props.fieldsAr[0] && this.props.fieldsAr[0].schoolId  ? this.props.fieldsAr[0].schoolId : '',
-				schoolId1 	= this.props.fieldsAr && this.props.fieldsAr[1] && this.props.fieldsAr[1].schoolId ? this.props.fieldsAr[1].schoolId : '',
-				schoolId2 	= this.props.fieldsAr && this.props.fieldsAr[2] && this.props.fieldsAr[2].schoolId ? this.props.fieldsAr[2].schoolId : '',
-				houseId0 	= this.props.fieldsAr && this.props.fieldsAr[0] && this.props.fieldsAr[0].houseId ? this.props.fieldsAr[0].houseId : '',
-				houseId1 	= this.props.fieldsAr && this.props.fieldsAr[1] && this.props.fieldsAr[1].houseId ? this.props.fieldsAr[1].houseId : '',
-				houseId2 	= this.props.fieldsAr && this.props.fieldsAr[2] && this.props.fieldsAr[2].houseId ? this.props.fieldsAr[2].houseId : '',
-				formId0 	= this.props.fieldsAr && this.props.fieldsAr[0] && this.props.fieldsAr[0].formId ? this.props.fieldsAr[0].formId : '',
-				formId1 	= this.props.fieldsAr && this.props.fieldsAr[1] && this.props.fieldsAr[1].formId ? this.props.fieldsAr[1].formId : '',
-				formId2 	= this.props.fieldsAr && this.props.fieldsAr[2] && this.props.fieldsAr[2].formId ? this.props.fieldsAr[2].formId : '';
 
+		const 	schoolId0 	= propz.get(this.props, ['fieldsAr', 0, 'schoolId']),
+				houseId0 	= propz.get(this.props, ['fieldsAr', 0, 'houseId']),
+				formId0 	= propz.get(this.props, ['fieldsAr', 0, 'formId']),
+				schoolId1 	= propz.get(this.props, ['fieldsAr', 1, 'schoolId']),
+				houseId1 	= propz.get(this.props, ['fieldsAr', 1, 'houseId']),
+				formId1 	= propz.get(this.props, ['fieldsAr', 1, 'formId']),
+				schoolId2 	= propz.get(this.props, ['fieldsAr', 2, 'schoolId']),
+				houseId2 	= propz.get(this.props, ['fieldsAr', 2, 'houseId']),
+				formId2 	= propz.get(this.props, ['fieldsAr', 2, 'formId']);
+
+
+		console.log(schoolId0);
+		console.log(houseId0);
+		console.log(formId0);
 
 		return (
 			<div className="eRegistration_permissionsField">
 				<PermissionFieldsReact
 					type					= { this.props.currentType }
-					handlerSelectSchool 	= { this.props.handlerSelectSchool }
-					handlerSelectHouse		= { this.props.handlerSelectHouse }
-					handlerSelectForm		= { this.props.handlerSelectForm }
-					handlerChangeFirstName	= { this.props.handlerChangeFirstName }
-					handlerChangeLastName	= { this.props.handlerChangeLastName }
-					handlerChangeComment	= { this.props.handlerChangeComment }
-					handlerChangePromo		= { this.props.handlerChangePromo }
+					handleSchoolSelect 		= { this.props.handleSchoolSelect }
+					handleHouseSelect		= { this.props.handleHouseSelect }
+					handleFormSelect		= { this.props.handleFormSelect }
+					handleFirstNameChange	= { this.props.handleFirstNameChange }
+					handleLastNameChange	= { this.props.handleLastNameChange }
+					handleCommentChange		= { this.props.handleCommentChange }
+					handlePromoChange		= { this.props.handlePromoChange }
 					schoolId				= { schoolId0 }
 					houseId					= { houseId0 }
 					formId					= { formId0 }
-					numberField				= { '0' }
+					fieldNumber				= { '0' }
 				/>
-				<If condition={this.props.currentFieldArray >= 1 && this.props.currentType ==='parent'} >
+				<If condition={this.props.currentFieldArray >= 1 && this.props.currentType === 'parent'} >
 					<PermissionFieldsReact
 						type					= { this.props.currentType }
-						handlerSelectSchool 	= { this.props.handlerSelectSchool }
-						handlerSelectHouse		= { this.props.handlerSelectHouse }
-						handlerSelectForm		= { this.props.handlerSelectForm }
-						handlerChangeFirstName	= { this.props.handlerChangeFirstName }
-						handlerChangeLastName	= { this.props.handlerChangeLastName }
-						handlerChangeComment	= { this.props.handlerChangeComment }
-						handlerChangePromo		= { this.props.handlerChangePromo }
+						handleSchoolSelect 		= { this.props.handleSchoolSelect }
+						handleHouseSelect		= { this.props.handleHouseSelect }
+						handleFormSelect		= { this.props.handleFormSelect }
+						handleFirstNameChange	= { this.props.handleFirstNameChange }
+						handleLastNameChange	= { this.props.handleLastNameChange }
+						handleCommentChange		= { this.props.handleCommentChange }
+						handlePromoChange		= { this.props.handlePromoChange }
 						schoolId				= { schoolId1 }
 						houseId					= { houseId1 }
 						formId					= { formId1 }
-						numberField				= { '1' }
+						fieldNumber				= { '1' }
 					/>
 				</If>
-				<If condition={this.props.currentFieldArray >= 2 && this.props.currentType ==='parent'} >
+				<If condition={this.props.currentFieldArray >= 2 && this.props.currentType === 'parent'} >
 					<PermissionFieldsReact
 						type					= { this.props.currentType }
-						handlerSelectSchool 	= { this.props.handlerSelectSchool }
-						handlerSelectHouse		= { this.props.handlerSelectHouse }
-						handlerSelectForm		= { this.props.handlerSelectForm }
-						handlerChangeFirstName	= { this.props.handlerChangeFirstName }
-						handlerChangeLastName	= { this.props.handlerChangeLastName }
-						handlerChangeComment	= { this.props.handlerChangeComment }
-						handlerChangePromo		= { this.props.handlerChangePromo }
+						handleSchoolSelect 		= { this.props.handleSchoolSelect }
+						handleHouseSelect		= { this.props.handleHouseSelect }
+						handleFormSelect		= { this.props.handleFormSelect }
+						handleFirstNameChange	= { this.props.handleFirstNameChange }
+						handleLastNameChange	= { this.props.handleLastNameChange }
+						handleCommentChange		= { this.props.handleCommentChange }
+						handlePromoChange		= { this.props.handlePromoChange }
 						schoolId				= { schoolId2 }
 						houseId					= { houseId2 }
 						formId					= { formId2 }
-						numberField				= { '2' }
+						fieldNumber				= { '2' }
 					/>
 				</If>
 				<div>
@@ -114,7 +120,7 @@ const RegistrationPermissions = React.createClass({
 					<If condition=
 							{
 								this.props.isFormFilled &&
-								this.props.currentType ==='parent' &&
+								this.props.currentType === 'parent' &&
 								this.props.currentFieldArray < 2
 							}
 					>
