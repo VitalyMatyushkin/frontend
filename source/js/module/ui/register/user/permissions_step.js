@@ -1,10 +1,7 @@
-const   RegistrationPermissions 	= require('module/ui/register/user/registration_permissions'),
-        classNames                  = require('classnames'),
-		Morearty            		= require('morearty'),
-        React                       = require('react');
-
-
-let multipleFields;
+const 	RegistrationPermissions		= require('module/ui/register/user/registration_permissions'),
+		classNames					= require('classnames'),
+		Morearty					= require('morearty'),
+		React						= require('react');
 
 /** component which show list of roles to join with and some info on requested role details*/
 const PermissionsStep = React.createClass({
@@ -29,18 +26,28 @@ const PermissionsStep = React.createClass({
 				binding.sub('houseName').clear();
 			}
 		});
-		multipleFields = 1;
+		binding.sub('fields.1.schoolId').addListener(descriptor => {
+			if (descriptor.isValueChanged()) {
+				binding.sub('formId').clear();
+				binding.sub('formName').clear();
+				binding.sub('houseId').clear();
+				binding.sub('houseName').clear();
+			}
+		});
+		binding.sub('fields.2.schoolId').addListener(descriptor => {
+			if (descriptor.isValueChanged()) {
+				binding.sub('formId').clear();
+				binding.sub('formName').clear();
+				binding.sub('houseId').clear();
+				binding.sub('houseName').clear();
+			}
+		});
 	},
-	_onClickType: function (type) {
+	onClickType: function (type) {
 		const binding = this.getDefaultBinding();
 		binding.set('type', type);
 	},
-	fieldsMultiplier: function () {
-		if (multipleFields <= 2) {
-			multipleFields += 1;
-		}
-		this.forceUpdate();
-	},
+
 	addFieldArray: function(){
 		const 	binding 			= this.getDefaultBinding();
 		let 	currentFieldArray 	= binding.get('currentFieldArray');
@@ -60,7 +67,7 @@ const PermissionsStep = React.createClass({
 					mActive: binding.get('type') === type
 				});
 
-				return <div key={type} className={itemClasses} onClick={this._onClickType.bind(null, type)}>
+				return <div key={type} className={itemClasses} onClick={this.onClickType.bind(null, type)}>
 					<div className="eChooserItem_wrap">
 						<div className="eChooserItem_inside"></div>
 					</div>
