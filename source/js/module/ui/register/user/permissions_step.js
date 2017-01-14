@@ -1,18 +1,29 @@
 const 	RegistrationPermissions		= require('module/ui/register/user/registration_permissions'),
 		classNames					= require('classnames'),
 		Morearty					= require('morearty'),
-		React						= require('react');
+		React						= require('react'),
+		Lazy						= require('lazy.js');
+
+const 	types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'],
+		visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];
+
+
 
 /** component which show list of roles to join with and some info on requested role details*/
 const PermissionsStep = React.createClass({
 	mixins: [Morearty.Mixin],
-	displayName: 'PermissionsList',
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
+	/**
+	 * Trigger to be called when role changed
+	 * @param {String} type one of ['parent', 'admin', 'manager', 'teacher', 'coach']
+	 */
 	onClickType: function (type) {
 		const binding = this.getDefaultBinding();
 		binding.set('currentFieldArray', 0);
+
+		/* cleaning all binding fields except schoolId - we will need it anyway */
 		for (let i=0; i<=2; i++) {
 			binding.sub('fields.' + i + '.formId').clear();
 			binding.sub('fields.' + i + '.formName').clear();
@@ -24,6 +35,9 @@ const PermissionsStep = React.createClass({
 		binding.set('type', type);
 	},
 
+	/** For Parent permission request only. It will add items to array to make
+	 * possible having multiple children for parent
+	 */
 	addFieldArray: function(){
 		const 	binding 			= this.getDefaultBinding();
 		let 	currentFieldArray 	= binding.get('currentFieldArray');
@@ -33,10 +47,8 @@ const PermissionsStep = React.createClass({
 	},
 
 	/** will render list with all available roles to join */
-	renderChooser: function () {
-		const 	binding			= this.getDefaultBinding(),
-				types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'],
-				visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];
+	renderChoosers: function () {
+		const 	binding			= this.getDefaultBinding();
 
 		return <div className="eRegistration_chooser">
 			{types.map( (type, i) => {
@@ -45,26 +57,28 @@ const PermissionsStep = React.createClass({
 					mActive: binding.get('type') === type
 				});
 
-				return <div key={type} className={itemClasses} onClick={() => this.onClickType(type)}>
-
-					<div className="eChooserItem_wrap">
-						<div className="eChooserItem_inside"></div>
+				return (
+					<div key={type} className={itemClasses} onClick={() => this.onClickType(type)}>
+						<div className="eChooserItem_wrap">
+							<div className="eChooserItem_inside"></div>
+						</div>
+						<span className="eRegistration_chooserTitle">{visibleTypes[i]}</span>
 					</div>
-					<span className="eRegistration_chooserTitle">{visibleTypes[i]}</span>
-				</div>;
+				);
 			})}
 		</div>
 	},
+	/**
+	 * Check if form filled for provided permission type (currentType)
+	 * @param {String} currentType current selected role
+	 * @returns {boolean}
+	 */
 	isFormFilled: function (currentType) {
-		const 	binding = this.getDefaultBinding();
+		const 	binding						= this.getDefaultBinding(),
+				rolesRequiredSchoolIdOnly	= Lazy(['admin', 'manager', 'teacher', 'coach']),
+				isSchoolPresented			= typeof binding.get('fields.0.schoolId') !== 'undefined';
 
-		return (
-				(
-					currentType === 'admin' || currentType === 'manager' ||
-					currentType === 'teacher' || currentType === 'coach'
-				) && binding.get('fields.0.schoolId')
-			) ||
-			(
+		return (rolesRequiredSchoolIdOnly.contains(currentType) && isSchoolPresented) || (
 				currentType === 'parent' &&
 				binding.get('fields.0.schoolId') && binding.get('fields.0.houseId') &&
 				binding.get('fields.0.formId') && binding.get('fields.0.firstName') &&
@@ -72,6 +86,12 @@ const PermissionsStep = React.createClass({
 			);
 	},
 
+	/**
+	 * Trigger on school selection.
+	 * Clears formId, formName, houseId and houseName if any was set before.
+	 * @param {String} schoolId new selected school
+	 * @param {Number|String} fieldNumber position with permission request in permission request array. For non-parent roles it always 0
+	 */
 	handleSchoolSelect: function(schoolId, fieldNumber) {
 		const 	binding = this.getDefaultBinding();
 
@@ -144,7 +164,7 @@ const PermissionsStep = React.createClass({
 		return (
 			<div className="eRegistration_permissions">
 				<div className="eRegistration_annotation">Join as:</div>
-				{this.renderChooser()}
+				{this.renderChoosers()}
 				<div className="eRegistration_permissionStep">
 					<RegistrationPermissions
 						isFormFilled			= { isShowFinishButton }

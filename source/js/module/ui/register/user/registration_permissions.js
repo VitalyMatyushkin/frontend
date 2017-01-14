@@ -22,7 +22,7 @@ const RegistrationPermissions = React.createClass({
 		handleCommentChange: 		React.PropTypes.func.isRequired,
 		handlePromoChange: 			React.PropTypes.func.isRequired,
 		currentType:				React.PropTypes.string,
-		fieldsAr:					React.PropTypes.object,
+		fieldsAr:					React.PropTypes.object,	// array of fields
 		currentFieldArray:			React.PropTypes.number
 	},
 	onSuccess: function() {
