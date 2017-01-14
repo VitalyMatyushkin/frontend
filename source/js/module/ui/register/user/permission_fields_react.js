@@ -22,6 +22,8 @@ const PermissionFieldsReact = React.createClass({
 		formId:						React.PropTypes.string,
 		firstName:					React.PropTypes.string,
 		lastName:					React.PropTypes.string,
+		houseName:					React.PropTypes.string,
+		formName:					React.PropTypes.string,
 		fieldNumber:				React.PropTypes.string.isRequired
 	},
 
@@ -138,6 +140,8 @@ const PermissionFieldsReact = React.createClass({
 
 	render: function() {
 		const 	currentType		= this.props.type,
+				houseName		= this.props.houseName ? this.props.houseName : '',
+				formName		= this.props.formName ? this.props.formName : '',
 				message			= this.getSchoolMessage();
 		return (
 			<div>
@@ -166,6 +170,7 @@ const PermissionFieldsReact = React.createClass({
 						serverField		= "name"
 						onSelect		= { this.onSelectHouse }
 						placeholder		= "house's name"
+						defaultItem		= {{name: houseName}}
 					/>
 				</If>
 				{/**
@@ -178,6 +183,7 @@ const PermissionFieldsReact = React.createClass({
 						serverField		= "name"
 						onSelect		= { this.onSelectForm }
 						placeholder		= "form's name"
+						defaultItem		= {{name: formName}}
 					/>
 				</If>
 				{/**

@@ -13,6 +13,14 @@ const PermissionsStep = React.createClass({
 	onClickType: function (type) {
 		const binding = this.getDefaultBinding();
 		binding.set('currentFieldArray', 0);
+		for (let i=0; i<=2; i++) {
+			binding.sub('fields.' + i + '.formId').clear();
+			binding.sub('fields.' + i + '.formName').clear();
+			binding.sub('fields.' + i + '.houseId').clear();
+			binding.sub('fields.' + i + '.houseName').clear();
+			binding.sub('fields.' + i + '.firstName').clear();
+			binding.sub('fields.' + i + '.lastName').clear();
+		}
 		binding.set('type', type);
 	},
 
@@ -70,7 +78,6 @@ const PermissionsStep = React.createClass({
 		binding.set('fields.' + fieldNumber + '.schoolId', schoolId);
 		/**
 		 * Clear sub-bindings house/form if change school
-		 * TODO: Autocomplete stay with old value
 		 */
 		binding.sub('fields.' + fieldNumber + '.formId').clear();
 		binding.sub('fields.' + fieldNumber + '.formName').clear();

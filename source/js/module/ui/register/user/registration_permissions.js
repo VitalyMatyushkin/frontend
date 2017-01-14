@@ -49,7 +49,6 @@ const RegistrationPermissions = React.createClass({
 
 	render:function(){
 
-
 		const 	schoolId0 	= propz.get(this.props, ['fieldsAr', 0, 'schoolId']),
 				houseId0 	= propz.get(this.props, ['fieldsAr', 0, 'houseId']),
 				formId0 	= propz.get(this.props, ['fieldsAr', 0, 'formId']),
@@ -64,7 +63,13 @@ const RegistrationPermissions = React.createClass({
 				houseId2 	= propz.get(this.props, ['fieldsAr', 2, 'houseId']),
 				formId2 	= propz.get(this.props, ['fieldsAr', 2, 'formId']),
 				firstName2 	= propz.get(this.props, ['fieldsAr', 2, 'firstName'], ''),
-				lastName2 	= propz.get(this.props, ['fieldsAr', 2, 'lastName'], '');
+				lastName2 	= propz.get(this.props, ['fieldsAr', 2, 'lastName'], ''),
+				houseName0 	= propz.get(this.props, ['fieldsAr', 0, 'houseName']),
+				houseName1 	= propz.get(this.props, ['fieldsAr', 1, 'houseName']),
+				houseName2 	= propz.get(this.props, ['fieldsAr', 2, 'houseName']),
+				formName0 	= propz.get(this.props, ['fieldsAr', 0, 'formName']),
+				formName1 	= propz.get(this.props, ['fieldsAr', 1, 'formName']),
+				formName2 	= propz.get(this.props, ['fieldsAr', 2, 'formName']);
 
 		return (
 			<div className="eRegistration_permissionsField">
@@ -83,6 +88,8 @@ const RegistrationPermissions = React.createClass({
 					firstName 				= { firstName0 }
 					lastName 				= { lastName0 }
 					fieldNumber				= { '0' }
+					houseName				= { houseName0 }
+					formName				= { formName0 }
 				/>
 				<If condition={this.props.currentFieldArray >= 1 && this.props.currentType === 'parent'} >
 					<PermissionFieldsReact
@@ -100,6 +107,8 @@ const RegistrationPermissions = React.createClass({
 						firstName 				= { firstName1 }
 						lastName 				= { lastName1 }
 						fieldNumber				= { '1' }
+						houseName				= { houseName1 }
+						formName				= { formName1 }
 					/>
 				</If>
 				<If condition={this.props.currentFieldArray >= 2 && this.props.currentType === 'parent'} >
@@ -118,6 +127,8 @@ const RegistrationPermissions = React.createClass({
 						firstName 				= { firstName2 }
 						lastName 				= { lastName2 }
 						fieldNumber				= { '2' }
+						houseName				= { houseName2 }
+						formName				= { formName2 }
 					/>
 				</If>
 				<div>

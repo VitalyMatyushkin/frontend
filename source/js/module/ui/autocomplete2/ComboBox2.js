@@ -96,10 +96,10 @@ const ComboBox2 = React.createClass({
      */
     getCurrentText: function(){
         switch (true) {
+			case typeof this.props.defaultItem !== 'undefined':
+				return this.props.getElementTitle(this.props.defaultItem);
             case typeof this.state.currentText !== 'undefined':
                 return this.state.currentText;
-            case typeof this.props.defaultItem !== 'undefined':
-                return this.props.getElementTitle(this.props.defaultItem);
             default:
                 return '';
         }
