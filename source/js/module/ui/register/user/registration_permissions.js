@@ -2,7 +2,7 @@
  * Created by bridark on 15/10/15.
  */
 const	If						= require('module/ui/if/if'),
-		PermissionFieldsReact	= require('module/ui/register/user/permission_fields_react'),
+		PermissionDetails		= require('module/ui/register/user/permission_details'),
 		propz					= require('propz'),
 		React					= require('react');
 /*
@@ -49,31 +49,39 @@ const RegistrationPermissions = React.createClass({
 
 	render:function(){
 
-		const 	schoolId0 	= propz.get(this.props, ['fieldsAr', 0, 'schoolId']),
-				houseId0 	= propz.get(this.props, ['fieldsAr', 0, 'houseId']),
-				formId0 	= propz.get(this.props, ['fieldsAr', 0, 'formId']),
-				firstName0 	= propz.get(this.props, ['fieldsAr', 0, 'firstName'], ''),
-				lastName0 	= propz.get(this.props, ['fieldsAr', 0, 'lastName'], ''),
-				schoolId1 	= propz.get(this.props, ['fieldsAr', 1, 'schoolId']),
-				houseId1 	= propz.get(this.props, ['fieldsAr', 1, 'houseId']),
-				formId1 	= propz.get(this.props, ['fieldsAr', 1, 'formId']),
-				firstName1 	= propz.get(this.props, ['fieldsAr', 1, 'firstName'], ''),
-				lastName1 	= propz.get(this.props, ['fieldsAr', 1, 'lastName'], ''),
-				schoolId2 	= propz.get(this.props, ['fieldsAr', 2, 'schoolId']),
-				houseId2 	= propz.get(this.props, ['fieldsAr', 2, 'houseId']),
-				formId2 	= propz.get(this.props, ['fieldsAr', 2, 'formId']),
-				firstName2 	= propz.get(this.props, ['fieldsAr', 2, 'firstName'], ''),
-				lastName2 	= propz.get(this.props, ['fieldsAr', 2, 'lastName'], ''),
-				houseName0 	= propz.get(this.props, ['fieldsAr', 0, 'houseName']),
-				houseName1 	= propz.get(this.props, ['fieldsAr', 1, 'houseName']),
-				houseName2 	= propz.get(this.props, ['fieldsAr', 2, 'houseName']),
-				formName0 	= propz.get(this.props, ['fieldsAr', 0, 'formName']),
-				formName1 	= propz.get(this.props, ['fieldsAr', 1, 'formName']),
-				formName2 	= propz.get(this.props, ['fieldsAr', 2, 'formName']);
+		const propsArray = [];
+
+		/**
+		 * Create array of props for transfer in components Permission Details
+		 */
+		for (let i=0; i<3; i++) {
+			propsArray.push({
+				schoolId 	: propz.get(this.props, ['fieldsAr', i, 'schoolId']),
+				houseId 	: propz.get(this.props, ['fieldsAr', i, 'houseId']),
+				formId 		: propz.get(this.props, ['fieldsAr', i, 'formId']),
+				/* empty string because input value don't understand undefined */
+				firstName 	: propz.get(this.props, ['fieldsAr', i, 'firstName'], ''),
+				/* empty string because input value don't understand undefined */
+				lastName 	: propz.get(this.props, ['fieldsAr', i, 'lastName'], ''),
+				houseName 	: propz.get(this.props, ['fieldsAr', i, 'houseName']),
+				formName 	: propz.get(this.props, ['fieldsAr', i, 'formName']),
+				/* empty string because textarea value don't understand undefined */
+				comment 	: propz.get(this.props, ['fieldsAr', i, 'comment'], ''),
+				/* empty string because input value don't understand undefined */
+				promo 		: propz.get(this.props, ['fieldsAr', i, 'promo'], '')
+			});
+		}
 
 		return (
 			<div className="eRegistration_permissionsField">
-				<PermissionFieldsReact
+				{/**
+				 * Permission details component
+				 * Availible for all roles
+				 * For parent contains fields for first children
+				 * Max number children for this component - three. This decision not final, I think
+				 *
+				 */}
+				<PermissionDetails
 					type					= { this.props.currentType }
 					handleSchoolSelect 		= { this.props.handleSchoolSelect }
 					handleHouseSelect		= { this.props.handleHouseSelect }
@@ -82,17 +90,24 @@ const RegistrationPermissions = React.createClass({
 					handleLastNameChange	= { this.props.handleLastNameChange }
 					handleCommentChange		= { this.props.handleCommentChange }
 					handlePromoChange		= { this.props.handlePromoChange }
-					schoolId				= { schoolId0 }
-					houseId					= { houseId0 }
-					formId					= { formId0 }
-					firstName 				= { firstName0 }
-					lastName 				= { lastName0 }
+					schoolId				= { propsArray[0].schoolId }
+					houseId					= { propsArray[0].houseId }
+					formId					= { propsArray[0].formId }
+					firstName 				= { propsArray[0].firstName }
+					lastName 				= { propsArray[0].lastName }
+					houseName				= { propsArray[0].houseName }
+					formName				= { propsArray[0].formName }
+					comment					= { propsArray[0].comment }
+					promo					= { propsArray[0].promo }
 					fieldNumber				= { '0' }
-					houseName				= { houseName0 }
-					formName				= { formName0 }
 				/>
+				{/**
+				 * Permission details component
+				 * Availible only for parent
+				 * Contains fields for second children
+				 */}
 				<If condition={this.props.currentFieldArray >= 1 && this.props.currentType === 'parent'} >
-					<PermissionFieldsReact
+					<PermissionDetails
 						type					= { this.props.currentType }
 						handleSchoolSelect 		= { this.props.handleSchoolSelect }
 						handleHouseSelect		= { this.props.handleHouseSelect }
@@ -101,18 +116,25 @@ const RegistrationPermissions = React.createClass({
 						handleLastNameChange	= { this.props.handleLastNameChange }
 						handleCommentChange		= { this.props.handleCommentChange }
 						handlePromoChange		= { this.props.handlePromoChange }
-						schoolId				= { schoolId1 }
-						houseId					= { houseId1 }
-						formId					= { formId1 }
-						firstName 				= { firstName1 }
-						lastName 				= { lastName1 }
+						schoolId				= { propsArray[1].schoolId }
+						houseId					= { propsArray[1].houseId }
+						formId					= { propsArray[1].formId }
+						firstName 				= { propsArray[1].firstName }
+						lastName 				= { propsArray[1].lastName }
+						houseName				= { propsArray[1].houseName }
+						formName				= { propsArray[1].formName }
+						comment					= { propsArray[1].comment }
+						promo					= { propsArray[1].promo }
 						fieldNumber				= { '1' }
-						houseName				= { houseName1 }
-						formName				= { formName1 }
 					/>
 				</If>
+				{/**
+				 * Permission details component
+				 * Availible only for parent
+				 * Contains fields for third children
+				 */}
 				<If condition={this.props.currentFieldArray >= 2 && this.props.currentType === 'parent'} >
-					<PermissionFieldsReact
+					<PermissionDetails
 						type					= { this.props.currentType }
 						handleSchoolSelect 		= { this.props.handleSchoolSelect }
 						handleHouseSelect		= { this.props.handleHouseSelect }
@@ -121,20 +143,25 @@ const RegistrationPermissions = React.createClass({
 						handleLastNameChange	= { this.props.handleLastNameChange }
 						handleCommentChange		= { this.props.handleCommentChange }
 						handlePromoChange		= { this.props.handlePromoChange }
-						schoolId				= { schoolId2 }
-						houseId					= { houseId2 }
-						formId					= { formId2 }
-						firstName 				= { firstName2 }
-						lastName 				= { lastName2 }
+						schoolId				= { propsArray[2].schoolId }
+						houseId					= { propsArray[2].houseId }
+						formId					= { propsArray[2].formId }
+						firstName 				= { propsArray[2].firstName }
+						lastName 				= { propsArray[2].lastName }
+						houseName				= { propsArray[2].houseName }
+						formName				= { propsArray[2].formName }
+						comment					= { propsArray[2].comment }
+						promo					= { propsArray[2].promo }
 						fieldNumber				= { '2' }
-						houseName				= { houseName2 }
-						formName				= { formName2 }
 					/>
 				</If>
 				<div>
 					<If condition={this.props.isFormFilled}>
 						<div className="bButton bButton_reg" onClick={this.onSuccess}>Continue</div>
 					</If>
+					{/**
+					 * Show button "Add child" only for parent, when form with permission details filled and number of child less 3
+					 */}
 					<If condition=
 							{
 								this.props.isFormFilled &&

@@ -7,7 +7,7 @@ const	React 			= require ('react'),
 
 
 
-const PermissionFieldsReact = React.createClass({
+const PermissionDetails = React.createClass({
 	propTypes: {
 		type:						React.PropTypes.string,
 		handleSchoolSelect: 		React.PropTypes.func.isRequired,
@@ -24,6 +24,8 @@ const PermissionFieldsReact = React.createClass({
 		lastName:					React.PropTypes.string,
 		houseName:					React.PropTypes.string,
 		formName:					React.PropTypes.string,
+		promo:						React.PropTypes.string,
+		comment:					React.PropTypes.string,
 		fieldNumber:				React.PropTypes.string.isRequired
 	},
 
@@ -99,18 +101,22 @@ const PermissionFieldsReact = React.createClass({
 	 * It's not good, but autocomplete return only houseId
 	 */
 	onSelectHouse: function(houseId) {
-		window.Server.publicSchoolHouse.get({houseId: houseId, schoolId: this.props.schoolId}).then( house => {
-			this.props.handleHouseSelect(houseId, house.name, this.props.fieldNumber);
-		});
+		if (typeof houseId !== 'undefined') {
+			window.Server.publicSchoolHouse.get({houseId: houseId, schoolId: this.props.schoolId}).then( house => {
+				this.props.handleHouseSelect(houseId, house.name, this.props.fieldNumber);
+			});
+		}
 	},
 	/**
 	 * Get form name after select form in autocomplete component
 	 * It's not good, but autocomplete return only formId
 	 */
 	onSelectForm: function(formId) {
-		window.Server.publicSchoolForm.get({formId: formId, schoolId: this.props.schoolId}).then(form => {
-			this.props.handleFormSelect(formId, form.name, this.props.fieldNumber);
-		});
+		if (typeof formId !== 'undefined') {
+			window.Server.publicSchoolForm.get({formId: formId, schoolId: this.props.schoolId}).then(form => {
+				this.props.handleFormSelect(formId, form.name, this.props.fieldNumber);
+			});
+		}
 	},
 
 	onChangeFirstName: function(event) {
@@ -122,11 +128,11 @@ const PermissionFieldsReact = React.createClass({
 	},
 
 	onChangeComment: function(event) {
-		this.props.handleCommentChange(event.currentTarget.value);
+		this.props.handleCommentChange(event.currentTarget.value, this.props.fieldNumber);
 	},
 
 	onChangePromo: function(event) {
-		this.props.handlePromoChange(event.currentTarget.value);
+		this.props.handlePromoChange(event.currentTarget.value, this.props.fieldNumber);
 	},
 
 	getSchoolMessage: function () {
@@ -219,7 +225,11 @@ const PermissionFieldsReact = React.createClass({
 				<If condition={typeof this.props.schoolId !== 'undefined'}>
 					<div>
 						<div className="eRegistration_input">
-							<textarea placeholder="Comment" onChange={this.onChangeComment}/>
+							<textarea
+								value={ this.props.comment }
+								placeholder="Comment"
+								onChange={this.onChangeComment}
+							/>
 						</div>
 					</div>
 				</If>
@@ -230,7 +240,13 @@ const PermissionFieldsReact = React.createClass({
 				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'admin'}>
 					<div>
 						<div className="eRegistration_input">
-							<input ref="promo" placeholder="promo" type={'text'} onChange={this.onChangePromo} />
+							<input
+								ref				= "promo"
+								placeholder		= "promo"
+								type			= {'text'}
+								onChange		= { this.onChangePromo }
+								value			= { this.props.promo }
+							/>
 						</div>
 					</div>
 				</If>
@@ -239,4 +255,4 @@ const PermissionFieldsReact = React.createClass({
 	}
 });
 
-module.exports = PermissionFieldsReact;
+module.exports = PermissionDetails;

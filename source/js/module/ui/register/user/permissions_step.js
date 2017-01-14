@@ -25,13 +25,21 @@ const PermissionsStep = React.createClass({
 
 		/* cleaning all binding fields except schoolId - we will need it anyway */
 		for (let i=0; i<=2; i++) {
-			binding.sub('fields.' + i + '.formId').clear();
-			binding.sub('fields.' + i + '.formName').clear();
-			binding.sub('fields.' + i + '.houseId').clear();
-			binding.sub('fields.' + i + '.houseName').clear();
-			binding.sub('fields.' + i + '.firstName').clear();
-			binding.sub('fields.' + i + '.lastName').clear();
+			binding.sub('fields.' + i + '.formId').remove();
+			binding.sub('fields.' + i + '.formName').remove();
+			binding.sub('fields.' + i + '.houseId').remove();
+			binding.sub('fields.' + i + '.houseName').remove();
+			binding.sub('fields.' + i + '.firstName').remove();
+			binding.sub('fields.' + i + '.lastName').remove();
+			binding.sub('fields.' + i + '.comment').remove();
+			binding.sub('fields.' + i + '.promo').remove();
 		}
+		/**
+		 * If select role parent and add three child, then change role
+		 * we must clear schoolId[1,2] except schoolId[0], because this field we use for all roles
+		 */
+		binding.sub('fields.1.schoolId').remove();
+		binding.sub('fields.2.schoolId').remove();
 		binding.set('type', type);
 	},
 
@@ -137,16 +145,16 @@ const PermissionsStep = React.createClass({
 		binding.set('fields.' + fieldNumber + '.lastName', lastName);
 	},
 
-	handleCommentChange: function(comment) {
+	handleCommentChange: function(comment, fieldNumber) {
 		const 	binding = this.getDefaultBinding();
 
-		binding.set('comment', comment);
+		binding.set('fields.' + fieldNumber + '.comment', comment);
 	},
 
-	handlePromoChange: function(promo) {
+	handlePromoChange: function(promo, fieldNumber) {
 		const 	binding = this.getDefaultBinding();
 
-		binding.set('promo', promo);
+		binding.set('fields.' + fieldNumber + '.promo', promo);
 	},
 
 	render: function () {
