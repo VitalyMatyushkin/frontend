@@ -20,6 +20,8 @@ const PermissionFieldsReact = React.createClass({
 		schoolId:					React.PropTypes.string,
 		houseId:					React.PropTypes.string,
 		formId:						React.PropTypes.string,
+		firstName:					React.PropTypes.string,
+		lastName:					React.PropTypes.string,
 		fieldNumber:				React.PropTypes.string.isRequired
 	},
 
@@ -90,13 +92,19 @@ const PermissionFieldsReact = React.createClass({
 	onSelectSchool: function(schoolId) {
 		this.props.handleSchoolSelect(schoolId, this.props.fieldNumber);
 	},
-
+	/**
+	 * Get house name after select house in autocomplete component
+	 * It's not good, but autocomplete return only houseId
+	 */
 	onSelectHouse: function(houseId) {
 		window.Server.publicSchoolHouse.get({houseId: houseId, schoolId: this.props.schoolId}).then( house => {
 			this.props.handleHouseSelect(houseId, house.name, this.props.fieldNumber);
 		});
 	},
-
+	/**
+	 * Get form name after select form in autocomplete component
+	 * It's not good, but autocomplete return only formId
+	 */
 	onSelectForm: function(formId) {
 		window.Server.publicSchoolForm.get({formId: formId, schoolId: this.props.schoolId}).then(form => {
 			this.props.handleFormSelect(formId, form.name, this.props.fieldNumber);
@@ -140,10 +148,10 @@ const PermissionFieldsReact = React.createClass({
 				<If condition={typeof currentType !== 'undefined'}>
 					<div>
 						<AutoComplete
-							serviceFilter={this.serviceSchoolFilter}
-							serverField="name"
-							onSelect={this.onSelectSchool}
-							placeholder="school's name"
+							serviceFilter	= { this.serviceSchoolFilter }
+							serverField		= "name"
+							onSelect		= { this.onSelectSchool }
+							placeholder		= "school's name"
 						/>
 						{message}
 					</div>
@@ -154,10 +162,10 @@ const PermissionFieldsReact = React.createClass({
 				 */}
 				<If condition={typeof this.props.schoolId !== 'undefined' && currentType === 'parent'}>
 					<AutoComplete
-						serviceFilter={this.serviceHouseFilter}
-						serverField="name"
-						onSelect={this.onSelectHouse}
-						placeholder="house's name"
+						serviceFilter	= { this.serviceHouseFilter }
+						serverField		= "name"
+						onSelect		= { this.onSelectHouse }
+						placeholder		= "house's name"
 					/>
 				</If>
 				{/**
@@ -166,10 +174,10 @@ const PermissionFieldsReact = React.createClass({
 				 */}
 				<If condition={typeof this.props.houseId !== 'undefined' && currentType === 'parent'}>
 					<AutoComplete
-						serviceFilter={this.serviceFormFilter}
-						serverField="name"
-						onSelect={this.onSelectForm}
-						placeholder="form's name"
+						serviceFilter	= { this.serviceFormFilter }
+						serverField		= "name"
+						onSelect		= { this.onSelectForm }
+						placeholder		= "form's name"
 					/>
 				</If>
 				{/**
@@ -179,10 +187,22 @@ const PermissionFieldsReact = React.createClass({
 				<If condition={typeof this.props.formId !== 'undefined' && currentType === 'parent'}>
 					<div>
 						<div className="eRegistration_input">
-							<input ref="firstNameField" placeholder="first name" type={'text'} onChange={this.onChangeFirstName} />
+							<input
+								ref				= "firstNameField"
+								placeholder		= "first name"
+								type			= { 'text' }
+								value			= { this.props.firstName }
+								onChange		= { this.onChangeFirstName }
+							/>
 						</div>
 						<div className="eRegistration_input">
-							<input ref="lastNameField" placeholder="last name" type={'text'} onChange={this.onChangeLastName} />
+							<input
+								ref				= "lastNameField"
+								placeholder		= "last name"
+								type			= { 'text' }
+								value			= { this.props.lastName }
+								onChange		= { this.onChangeLastName }
+							/>
 						</div>
 					</div>
 				</If>

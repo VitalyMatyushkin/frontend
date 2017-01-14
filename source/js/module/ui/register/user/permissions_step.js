@@ -10,41 +10,9 @@ const PermissionsStep = React.createClass({
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
-	componentWillMount: function () {
-		const 	binding = this.getDefaultBinding();
-
-		this.types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'];
-		this.visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];	// how to render values from self.types. HACK!! :)
-
-		binding.set('currentFieldArray', 0);
-
-		binding.sub('fields.0.schoolId').addListener(descriptor => {
-			if (descriptor.isValueChanged()) {
-				binding.sub('formId').clear();
-				binding.sub('formName').clear();
-				binding.sub('houseId').clear();
-				binding.sub('houseName').clear();
-			}
-		});
-		binding.sub('fields.1.schoolId').addListener(descriptor => {
-			if (descriptor.isValueChanged()) {
-				binding.sub('formId').clear();
-				binding.sub('formName').clear();
-				binding.sub('houseId').clear();
-				binding.sub('houseName').clear();
-			}
-		});
-		binding.sub('fields.2.schoolId').addListener(descriptor => {
-			if (descriptor.isValueChanged()) {
-				binding.sub('formId').clear();
-				binding.sub('formName').clear();
-				binding.sub('houseId').clear();
-				binding.sub('houseName').clear();
-			}
-		});
-	},
 	onClickType: function (type) {
 		const binding = this.getDefaultBinding();
+		binding.set('currentFieldArray', 0);
 		binding.set('type', type);
 	},
 
@@ -58,20 +26,23 @@ const PermissionsStep = React.createClass({
 
 	/** will render list with all available roles to join */
 	renderChooser: function () {
-		const 	binding	= this.getDefaultBinding();
+		const 	binding			= this.getDefaultBinding(),
+				types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'],
+				visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];
 
 		return <div className="eRegistration_chooser">
-			{this.types.map( (type, i) => {
+			{types.map( (type, i) => {
 				const itemClasses = classNames({
 					eRegistration_chooserItem: true,
 					mActive: binding.get('type') === type
 				});
 
-				return <div key={type} className={itemClasses} onClick={this.onClickType.bind(null, type)}>
+				return <div key={type} className={itemClasses} onClick={() => this.onClickType(type)}>
+
 					<div className="eChooserItem_wrap">
 						<div className="eChooserItem_inside"></div>
 					</div>
-					<span className="eRegistration_chooserTitle">{this.visibleTypes[i]}</span>
+					<span className="eRegistration_chooserTitle">{visibleTypes[i]}</span>
 				</div>;
 			})}
 		</div>
@@ -94,14 +65,22 @@ const PermissionsStep = React.createClass({
 	},
 
 	handleSchoolSelect: function(schoolId, fieldNumber) {
-		const 	binding 			= this.getDefaultBinding();
+		const 	binding = this.getDefaultBinding();
 
 		binding.set('fields.' + fieldNumber + '.schoolId', schoolId);
+		/**
+		 * Clear sub-bindings house/form if change school
+		 * TODO: Autocomplete stay with old value
+		 */
+		binding.sub('fields.' + fieldNumber + '.formId').clear();
+		binding.sub('fields.' + fieldNumber + '.formName').clear();
+		binding.sub('fields.' + fieldNumber + '.houseId').clear();
+		binding.sub('fields.' + fieldNumber + '.houseName').clear();
 	},
 
 	handleHouseSelect: function(houseId, houseName, fieldNumber) {
-		const 	binding 			= this.getDefaultBinding(),
-				currentFieldArray	= binding.get('currentFieldArray');
+		const 	binding = this.getDefaultBinding();
+
 		binding
 			.atomically()
 			.set('fields.' + fieldNumber + '.houseId', houseId)
@@ -110,8 +89,8 @@ const PermissionsStep = React.createClass({
 	},
 
 	handleFormSelect: function(formId, formName, fieldNumber) {
-		const 	binding 			= this.getDefaultBinding(),
-				currentFieldArray	= binding.get('currentFieldArray');
+		const 	binding = this.getDefaultBinding();
+
 		binding
 			.atomically()
 			.set('fields.' + fieldNumber + '.formId', formId)
@@ -120,14 +99,13 @@ const PermissionsStep = React.createClass({
 	},
 
 	handleFirstNameChange: function(firstName, fieldNumber) {
-		const 	binding 			= this.getDefaultBinding(),
-				currentFieldArray	= binding.get('currentFieldArray');
+		const 	binding = this.getDefaultBinding();
+
 		binding.set('fields.' + fieldNumber + '.firstName', firstName);
 	},
 
 	handleLastNameChange: function(lastName, fieldNumber) {
-		const 	binding 			= this.getDefaultBinding(),
-				currentFieldArray	= binding.get('currentFieldArray');
+		const 	binding = this.getDefaultBinding();
 
 		binding.set('fields.' + fieldNumber + '.lastName', lastName);
 	},

@@ -1,19 +1,19 @@
 /**
  * Created by bridark on 15/10/15.
  */
-const   If                      = require('module/ui/if/if'),
+const	If						= require('module/ui/if/if'),
 		PermissionFieldsReact	= require('module/ui/register/user/permission_fields_react'),
 		propz					= require('propz'),
-        React                   = require('react');
+		React					= require('react');
 /*
  * It is a component for registration permission requests
  * It generates and sends a requests to the server
  */
 const RegistrationPermissions = React.createClass({
-    propTypes:{
-        isFormFilled:   			React.PropTypes.bool,
-        onSuccess:      			React.PropTypes.func.isRequired,
-		addFieldArray:      		React.PropTypes.func.isRequired,
+	propTypes:{
+		isFormFilled:				React.PropTypes.bool,
+		onSuccess:		 			React.PropTypes.func.isRequired,
+		addFieldArray:				React.PropTypes.func.isRequired,
 		handleSchoolSelect: 		React.PropTypes.func.isRequired,
 		handleHouseSelect: 			React.PropTypes.func.isRequired,
 		handleFormSelect: 			React.PropTypes.func.isRequired,
@@ -24,13 +24,13 @@ const RegistrationPermissions = React.createClass({
 		currentType:				React.PropTypes.string,
 		fieldsAr:					React.PropTypes.object,
 		currentFieldArray:			React.PropTypes.number
-    },
-    onSuccess: function() {
-        const 	currentType = this.props.currentType,
+	},
+	onSuccess: function() {
+		const 	currentType = this.props.currentType,
 				fieldsAr	= this.props.fieldsAr,
-                dataToPost  = {
-                    preset:currentType
-                };
+				dataToPost	= {
+					preset:currentType
+				};
 
 		for(let i in fieldsAr){
 			const fields = fieldsAr[i];
@@ -42,10 +42,10 @@ const RegistrationPermissions = React.createClass({
 					dataToPost.comment += " Student - " + fields.firstName + " " + fields.lastName + "." +
 						" Form - " + fields.formName + ". House - " + fields.houseName + ".";
 				}
-				window.Server.profileRequests.post(dataToPost).then( _ => this.props.onSuccess());
+				window.Server.profileRequests.post(dataToPost).then( () => this.props.onSuccess());
 			}
 		}
-    },
+	},
 
 	render:function(){
 
@@ -53,17 +53,18 @@ const RegistrationPermissions = React.createClass({
 		const 	schoolId0 	= propz.get(this.props, ['fieldsAr', 0, 'schoolId']),
 				houseId0 	= propz.get(this.props, ['fieldsAr', 0, 'houseId']),
 				formId0 	= propz.get(this.props, ['fieldsAr', 0, 'formId']),
+				firstName0 	= propz.get(this.props, ['fieldsAr', 0, 'firstName'], ''),
+				lastName0 	= propz.get(this.props, ['fieldsAr', 0, 'lastName'], ''),
 				schoolId1 	= propz.get(this.props, ['fieldsAr', 1, 'schoolId']),
 				houseId1 	= propz.get(this.props, ['fieldsAr', 1, 'houseId']),
 				formId1 	= propz.get(this.props, ['fieldsAr', 1, 'formId']),
+				firstName1 	= propz.get(this.props, ['fieldsAr', 1, 'firstName'], ''),
+				lastName1 	= propz.get(this.props, ['fieldsAr', 1, 'lastName'], ''),
 				schoolId2 	= propz.get(this.props, ['fieldsAr', 2, 'schoolId']),
 				houseId2 	= propz.get(this.props, ['fieldsAr', 2, 'houseId']),
-				formId2 	= propz.get(this.props, ['fieldsAr', 2, 'formId']);
-
-
-		console.log(schoolId0);
-		console.log(houseId0);
-		console.log(formId0);
+				formId2 	= propz.get(this.props, ['fieldsAr', 2, 'formId']),
+				firstName2 	= propz.get(this.props, ['fieldsAr', 2, 'firstName'], ''),
+				lastName2 	= propz.get(this.props, ['fieldsAr', 2, 'lastName'], '');
 
 		return (
 			<div className="eRegistration_permissionsField">
@@ -79,6 +80,8 @@ const RegistrationPermissions = React.createClass({
 					schoolId				= { schoolId0 }
 					houseId					= { houseId0 }
 					formId					= { formId0 }
+					firstName 				= { firstName0 }
+					lastName 				= { lastName0 }
 					fieldNumber				= { '0' }
 				/>
 				<If condition={this.props.currentFieldArray >= 1 && this.props.currentType === 'parent'} >
@@ -94,6 +97,8 @@ const RegistrationPermissions = React.createClass({
 						schoolId				= { schoolId1 }
 						houseId					= { houseId1 }
 						formId					= { formId1 }
+						firstName 				= { firstName1 }
+						lastName 				= { lastName1 }
 						fieldNumber				= { '1' }
 					/>
 				</If>
@@ -110,6 +115,8 @@ const RegistrationPermissions = React.createClass({
 						schoolId				= { schoolId2 }
 						houseId					= { houseId2 }
 						formId					= { formId2 }
+						firstName 				= { firstName2 }
+						lastName 				= { lastName2 }
 						fieldNumber				= { '2' }
 					/>
 				</If>
