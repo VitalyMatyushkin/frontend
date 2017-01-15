@@ -1,105 +1,178 @@
-const   RegistrationPermissions 	= require('module/ui/register/user/registration_permissions'),
-        classNames                  = require('classnames'),
-		Morearty            		= require('morearty'),
-        React                       = require('react');
-
-
-let multipleFields;
+const 	RegistrationPermissions		= require('module/ui/register/user/registration_permissions'),
+		PermissionRoleSelector		= require('./permission_role_selector'),
+		Morearty					= require('morearty'),
+		React						= require('react'),
+		Lazy						= require('lazy.js');
 
 /** component which show list of roles to join with and some info on requested role details*/
 const PermissionsStep = React.createClass({
 	mixins: [Morearty.Mixin],
-	displayName: 'PermissionsList',
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
-	componentWillMount: function () {
-		const 	self = this,
-				binding = self.getDefaultBinding();
-
-		self.types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'];
-		self.visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];	// how to render values from self.types. HACK!! :)
-
-		binding.sub('fields.0.schoolId').addListener(descriptor => {
-			if (descriptor.isValueChanged()) {
-				binding.sub('_houseAutocomplete').clear();
-				binding.sub('_formAutocomplete').clear();
-				binding.sub('formId').clear();
-				binding.sub('formName').clear();
-				binding.sub('houseId').clear();
-				binding.sub('houseName').clear();
-			}
-		});
-		multipleFields = 1;
-	},
-	_onClickType: function (type) {
+	componentWillMount: function(){
 		const binding = this.getDefaultBinding();
+		binding.clear('type');
+	},
+	/**
+	 * Trigger to be called when role changed
+	 * @param {String} type one of ['parent', 'admin', 'manager', 'teacher', 'coach']
+	 */
+	onClickType: function (type) {
+		const binding = this.getDefaultBinding();
+		binding.set('currentFieldArray', 0);
+
+		/* cleaning all binding fields except schoolId - we will need it anyway */
+		for (let i=0; i<=2; i++) {
+			binding.sub('fields.' + i + '.formId').remove();
+			binding.sub('fields.' + i + '.formName').remove();
+			binding.sub('fields.' + i + '.houseId').remove();
+			binding.sub('fields.' + i + '.houseName').remove();
+			binding.sub('fields.' + i + '.firstName').remove();
+			binding.sub('fields.' + i + '.lastName').remove();
+			binding.sub('fields.' + i + '.comment').remove();
+			binding.sub('fields.' + i + '.promo').remove();
+		}
+		/**
+		 * If select role parent and add three child, then change role
+		 * we must clear schoolId[1,2] except schoolId[0], because this field we use for all roles
+		 */
+		binding.sub('fields.1.schoolId').remove();
+		binding.sub('fields.2.schoolId').remove();
 		binding.set('type', type);
 	},
-	fieldsMultiplier: function () {
-		if (multipleFields <= 2) {
-			multipleFields += 1;
-		}
-		this.forceUpdate();
+
+	/**
+	 * For Parent permission request only. It will add items to array to make
+	 * possible having multiple children for parent
+	 */
+	addFieldArray: function(){
+		const 	binding 			= this.getDefaultBinding();
+		let 	currentFieldArray 	= binding.get('currentFieldArray');
+
+		currentFieldArray++;
+		binding.set('currentFieldArray', currentFieldArray);
 	},
 
-	/** will render list with all available roles to join */
-	renderChooser: function () {
-		const 	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return <div className="eRegistration_chooser">
-			{self.types.map( (type, i) => {
-				const itemClasses = classNames({
-					eRegistration_chooserItem: true,
-					mActive: binding.get('type') === type
-				});
-
-				return <div key={type} className={itemClasses} onClick={self._onClickType.bind(null, type)}>
-					<div className="eChooserItem_wrap">
-						<div className="eChooserItem_inside"></div>
-					</div>
-					<span className="eRegistration_chooserTitle">{self.visibleTypes[i]}</span>
-				</div>;
-			})}
-		</div>
-	},
+	/**
+	 * Check if form filled for provided permission type (currentType)
+	 * @param {String} currentType current selected role
+	 * @returns {boolean}
+	 */
 	isFormFilled: function (currentType) {
-		const self = this,
-			binding = self.getDefaultBinding();
-		return (
-				(
-					currentType === 'admin' || currentType === 'manager' ||
-					currentType === 'teacher' || currentType === 'coach'
-				) && binding.get('fields.0.schoolId')
-			) ||
-			(
+		const 	binding						= this.getDefaultBinding(),
+				rolesRequiredSchoolIdOnly	= Lazy(['admin', 'manager', 'teacher', 'coach']),
+				isSchoolPresented			= typeof binding.get('fields.0.schoolId') !== 'undefined';
+
+		return (rolesRequiredSchoolIdOnly.contains(currentType) && isSchoolPresented) || (
 				currentType === 'parent' &&
 				binding.get('fields.0.schoolId') && binding.get('fields.0.houseId') &&
 				binding.get('fields.0.formId') && binding.get('fields.0.firstName') &&
 				binding.get('fields.0.lastName')
 			);
 	},
+
+	/**
+	 * Trigger on school selection.
+	 * Clears formId, formName, houseId and houseName if any was set before.
+	 * @param {String} schoolId new selected school
+	 * @param {Number|String} fieldNumber position with permission request in permission request array. For non-parent roles it always 0
+	 */
+	handleSchoolSelect: function(schoolId, fieldNumber) {
+		const 	binding = this.getDefaultBinding();
+
+		binding.set('fields.' + fieldNumber + '.schoolId', schoolId);
+		/**
+		 * Clear sub-bindings house/form if change school
+		 */
+		binding.sub('fields.' + fieldNumber + '.formId').clear();
+		binding.sub('fields.' + fieldNumber + '.formName').clear();
+		binding.sub('fields.' + fieldNumber + '.houseId').clear();
+		binding.sub('fields.' + fieldNumber + '.houseName').clear();
+	},
+
+	handleHouseSelect: function(houseId, houseName, fieldNumber) {
+		const 	binding = this.getDefaultBinding();
+
+		binding
+			.atomically()
+			.set('fields.' + fieldNumber + '.houseId', houseId)
+			.set('fields.' + fieldNumber + '.houseName', houseName)
+			.commit();
+	},
+
+	handleFormSelect: function(formId, formName, fieldNumber) {
+		const 	binding = this.getDefaultBinding();
+
+		binding
+			.atomically()
+			.set('fields.' + fieldNumber + '.formId', formId)
+			.set('fields.' + fieldNumber + '.formName', formName)
+			.commit();
+	},
+
+	handleFirstNameChange: function(firstName, fieldNumber) {
+		const 	binding = this.getDefaultBinding();
+
+		binding.set('fields.' + fieldNumber + '.firstName', firstName);
+	},
+
+	handleLastNameChange: function(lastName, fieldNumber) {
+		const 	binding = this.getDefaultBinding();
+
+		binding.set('fields.' + fieldNumber + '.lastName', lastName);
+	},
+
+	handleCommentChange: function(comment, fieldNumber) {
+		const 	binding = this.getDefaultBinding();
+
+		binding.set('fields.' + fieldNumber + '.comment', comment);
+	},
+
+	handlePromoChange: function(promo, fieldNumber) {
+		const 	binding = this.getDefaultBinding();
+
+		binding.set('fields.' + fieldNumber + '.promo', promo);
+	},
+
 	render: function () {
-		const self = this,
-			binding = self.getDefaultBinding(),
-			currentType = binding.get('type');
+		const 	binding 			= this.getDefaultBinding(),
+				currentType 		= binding.get('type'),
+				currentFieldArray	= binding.get('currentFieldArray'),
+				fieldsAr			= binding.toJS('fields');
 
 		let isShowFinishButton = false;
 
-		if (self.isFormFilled(currentType)) {
+		if (this.isFormFilled(currentType)) {
 			isShowFinishButton = true;
 		}
 
-		return <div className="eRegistration_permissions">
-			<div className="eRegistration_annotation">Join as:</div>
-			{self.renderChooser()}
-			<div className="eRegistration_permissionStep">
-				<RegistrationPermissions binding={binding} isFormFilled={isShowFinishButton}
-											 onSuccess={self.props.onSuccess} showButtons={true}
-											 fieldCounter={multipleFields} onAnother={self.fieldsMultiplier}/>
+		return (
+			<div className="eRegistration_permissions">
+				<div className="eRegistration_annotation">Join as:</div>
+				<PermissionRoleSelector
+					currentType = {currentType}
+					onClickType = {this.onClickType}
+				/>
+				<div className="eRegistration_permissionStep">
+					<RegistrationPermissions
+						isFormFilled			= { isShowFinishButton }
+						onSuccess				= { this.props.onSuccess }
+						addFieldArray			= { this.addFieldArray }
+						handleSchoolSelect 		= { this.handleSchoolSelect }
+						handleHouseSelect		= { this.handleHouseSelect }
+						handleFormSelect		= { this.handleFormSelect }
+						handleFirstNameChange	= { this.handleFirstNameChange }
+						handleLastNameChange	= { this.handleLastNameChange }
+						handleCommentChange		= { this.handleCommentChange }
+						handlePromoChange		= { this.handlePromoChange }
+						currentType				= { currentType }
+						fieldsAr				= { fieldsAr }
+						currentFieldArray		= { currentFieldArray }
+					/>
+				</div>
 			</div>
-		</div>
+		)
 	}
 });
 
