@@ -57,6 +57,7 @@ const RegistrationPermissions = React.createClass({
 		for (let i=0; i<3; i++) {
 			propsArray.push({
 				schoolId 	: propz.get(this.props, ['fieldsAr', i, 'schoolId']),
+				schoolName	: propz.get(this.props, ['fieldsAr', i, 'schoolName']),
 				houseId 	: propz.get(this.props, ['fieldsAr', i, 'houseId']),
 				formId 		: propz.get(this.props, ['fieldsAr', i, 'formId']),
 				/* empty string because input value don't understand undefined */
@@ -91,6 +92,7 @@ const RegistrationPermissions = React.createClass({
 					handleCommentChange		= { this.props.handleCommentChange }
 					handlePromoChange		= { this.props.handlePromoChange }
 					schoolId				= { propsArray[0].schoolId }
+					schoolName				= { propsArray[0].schoolName }
 					houseId					= { propsArray[0].houseId }
 					formId					= { propsArray[0].formId }
 					firstName 				= { propsArray[0].firstName }
@@ -117,6 +119,7 @@ const RegistrationPermissions = React.createClass({
 						handleCommentChange		= { this.props.handleCommentChange }
 						handlePromoChange		= { this.props.handlePromoChange }
 						schoolId				= { propsArray[1].schoolId }
+						schoolName				= { propsArray[1].schoolName }
 						houseId					= { propsArray[1].houseId }
 						formId					= { propsArray[1].formId }
 						firstName 				= { propsArray[1].firstName }
@@ -144,6 +147,7 @@ const RegistrationPermissions = React.createClass({
 						handleCommentChange		= { this.props.handleCommentChange }
 						handlePromoChange		= { this.props.handlePromoChange }
 						schoolId				= { propsArray[2].schoolId }
+						schoolName				= { propsArray[2].schoolName }
 						houseId					= { propsArray[2].houseId }
 						formId					= { propsArray[2].formId }
 						firstName 				= { propsArray[2].firstName }
