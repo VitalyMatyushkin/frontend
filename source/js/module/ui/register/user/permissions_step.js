@@ -16,11 +16,16 @@ const PermissionsStep = React.createClass({
 	},
 	/**
 	 * Trigger to be called when role changed
-	 * @param {String} type one of ['parent', 'admin', 'manager', 'teacher', 'coach']
+	 * @param {String} type one of ['parent', 'admin', 'manager', 'teacher', 'coach', 'student']
 	 */
 	onClickType: function (type) {
 		const binding = this.getDefaultBinding();
+
 		binding.set('currentFieldArray', 0);
+
+		if (type === 'student') {
+			this.checkSchoolAvailibleForRegistrationStudent();
+		}
 
 		/* cleaning all binding fields except schoolId - we will need it anyway */
 		for (let i=0; i<=2; i++) {
@@ -35,13 +40,30 @@ const PermissionsStep = React.createClass({
 		}
 		/**
 		 * If select role parent and add three child, then change role
-		 * we must clear schoolId[1,2] except schoolId[0], because this field we use for all roles
+		 * we must clear schoolId[1,2], schoolName[1,2] except schoolId[0], schoolName[0],
+		 * because this field we use for all roles
 		 */
 		binding.sub('fields.1.schoolId').remove();
 		binding.sub('fields.2.schoolId').remove();
+		binding.sub('fields.1.schoolName').remove();
+		binding.sub('fields.2.schoolName').remove();
 		binding.set('type', type);
 	},
+	/**
+	 * If we change role on student from any other role, we must check, that selected school is availible for registration students
+	 * If no, we clear field schoolId, schoolName in binding
+	 */
+	checkSchoolAvailibleForRegistrationStudent: function() {
+		const 	binding = this.getDefaultBinding(),
+				schoolId = binding.get('fields.0.schoolId');
 
+		window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
+			if (school.studentSelfRegistrationEnabled !== true) {
+				binding.sub('fields.0.schoolId').remove();
+				binding.sub('fields.0.schoolName').remove();
+			}
+		});
+	},
 	/**
 	 * For Parent permission request only. It will add items to array to make
 	 * possible having multiple children for parent
@@ -61,7 +83,7 @@ const PermissionsStep = React.createClass({
 	 */
 	isFormFilled: function (currentType) {
 		const 	binding						= this.getDefaultBinding(),
-				rolesRequiredSchoolIdOnly	= Lazy(['admin', 'manager', 'teacher', 'coach']),
+				rolesRequiredSchoolIdOnly	= Lazy(['admin', 'manager', 'teacher', 'coach', 'student']),
 				isSchoolPresented			= typeof binding.get('fields.0.schoolId') !== 'undefined';
 
 		return (rolesRequiredSchoolIdOnly.contains(currentType) && isSchoolPresented) || (
@@ -78,10 +100,13 @@ const PermissionsStep = React.createClass({
 	 * @param {String} schoolId new selected school
 	 * @param {Number|String} fieldNumber position with permission request in permission request array. For non-parent roles it always 0
 	 */
-	handleSchoolSelect: function(schoolId, fieldNumber) {
+	handleSchoolSelect: function(schoolId, schoolName, fieldNumber) {
 		const 	binding = this.getDefaultBinding();
-
-		binding.set('fields.' + fieldNumber + '.schoolId', schoolId);
+		binding
+			.atomically()
+			.set('fields.' + fieldNumber + '.schoolId', schoolId)
+			.set('fields.' + fieldNumber + '.schoolName', schoolName)
+			.commit();
 		/**
 		 * Clear sub-bindings house/form if change school
 		 */
@@ -136,10 +161,10 @@ const PermissionsStep = React.createClass({
 	},
 
 	render: function () {
-		const 	binding 			= this.getDefaultBinding(),
-				currentType 		= binding.get('type'),
-				currentFieldArray	= binding.get('currentFieldArray'),
-				fieldsAr			= binding.toJS('fields');
+		const 	binding 				= this.getDefaultBinding(),
+				currentType 			= binding.get('type'),
+				currentFieldArray		= binding.get('currentFieldArray'),
+				fieldsAr				= binding.toJS('fields');
 
 		let isShowFinishButton = false;
 
@@ -151,8 +176,8 @@ const PermissionsStep = React.createClass({
 			<div className="eRegistration_permissions">
 				<div className="eRegistration_annotation">Join as:</div>
 				<PermissionRoleSelector
-					currentType = {currentType}
-					onClickType = {this.onClickType}
+					currentType 			= { currentType }
+					onClickType 			= { this.onClickType }
 				/>
 				<div className="eRegistration_permissionStep">
 					<RegistrationPermissions

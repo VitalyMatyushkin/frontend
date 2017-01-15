@@ -6,8 +6,8 @@
 const 	React 		= require('react'),
 		classNames 	= require('classnames');
 
-const 	types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'],
-		visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];
+const 	types 			= ['parent', 'admin', 'manager', 'teacher', 'coach', 'student'],
+		visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach', 'Student'];
 
 const PermissionRoleSelector = React.createClass({
 	propTypes: {

@@ -23,6 +23,7 @@ const PermissionDetails = React.createClass({
 		firstName:					React.PropTypes.string,
 		lastName:					React.PropTypes.string,
 		houseName:					React.PropTypes.string,
+		schoolName:					React.PropTypes.string,
 		formName:					React.PropTypes.string,
 		promo:						React.PropTypes.string,
 		comment:					React.PropTypes.string,
@@ -35,22 +36,47 @@ const PermissionDetails = React.createClass({
 	 * @returns {*}
 	 */
 	serviceSchoolFilter: function (schoolName) {
-		return window.Server.publicSchools.get( {
-			filter: {
-				where: {
-					name: {
-						like: schoolName,
-						options: 'i'
+		/**
+		 * For student role we must check, that school is availible for registration students
+		 * For other roles this check don't required
+		 */
+		if (this.props.type === 'student') {
+			return window.Server.publicSchools.get( {
+				filter: {
+					where: {
+						name: {
+							like: schoolName,
+							options: 'i'
+						},
+						/* this param was added later, so it is undefined on some schools. Default value is true.
+						 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
+						 */
+						availableForRegistration: { $ne: false },
+						studentSelfRegistrationEnabled: true
 					},
-					/* this param was added later, so it is undefined on some schools. Default value is true.
-					 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
-					 */
-					availableForRegistration: { $ne: false }
-				},
-				limit: 1000,
-				order: 'name ASC'
-			}
-		});
+					limit: 1000,
+					order: 'name ASC'
+				}
+			});
+		} else {
+			return window.Server.publicSchools.get( {
+				filter: {
+					where: {
+						name: {
+							like: schoolName,
+							options: 'i'
+						},
+						/* this param was added later, so it is undefined on some schools. Default value is true.
+						 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
+						 */
+						availableForRegistration: { $ne: false }
+					},
+					limit: 1000,
+					order: 'name ASC'
+				}
+			});
+		}
+
 	},
 
 	/**
@@ -92,9 +118,16 @@ const PermissionDetails = React.createClass({
 			}
 		});
 	},
-
+	/**
+	 * Get school name after select school in autocomplete component
+	 * It's not good, but autocomplete return only schoolId
+	 */
 	onSelectSchool: function(schoolId) {
-		this.props.handleSchoolSelect(schoolId, this.props.fieldNumber);
+		if (typeof schoolId !== 'undefined') {
+			window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
+				this.props.handleSchoolSelect(schoolId, school.name, this.props.fieldNumber);
+			});
+		}
 	},
 	/**
 	 * Get house name after select house in autocomplete component
@@ -148,6 +181,8 @@ const PermissionDetails = React.createClass({
 		const 	currentType		= this.props.type,
 				houseName		= this.props.houseName ? this.props.houseName : '',
 				formName		= this.props.formName ? this.props.formName : '',
+				schoolName		= this.props.schoolName ? this.props.schoolName : '',
+
 				message			= this.getSchoolMessage();
 		return (
 			<div>
@@ -162,6 +197,7 @@ const PermissionDetails = React.createClass({
 							serverField		= "name"
 							onSelect		= { this.onSelectSchool }
 							placeholder		= "school's name"
+							defaultItem		= {{name: schoolName}}
 						/>
 						{message}
 					</div>
