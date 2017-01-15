@@ -1,13 +1,8 @@
 const 	RegistrationPermissions		= require('module/ui/register/user/registration_permissions'),
-		classNames					= require('classnames'),
+		PermissionRoleSelector		= require('./permission_role_selector'),
 		Morearty					= require('morearty'),
 		React						= require('react'),
 		Lazy						= require('lazy.js');
-
-const 	types 			= ['parent', 'admin', 'manager', 'teacher', 'coach'],
-		visibleTypes 	= ['Parent', 'School Admin', 'School Manager', 'PE Teacher', 'Coach'];
-
-
 
 /** component which show list of roles to join with and some info on requested role details*/
 const PermissionsStep = React.createClass({
@@ -15,6 +10,7 @@ const PermissionsStep = React.createClass({
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
+
 	/**
 	 * Trigger to be called when role changed
 	 * @param {String} type one of ['parent', 'admin', 'manager', 'teacher', 'coach']
@@ -43,7 +39,8 @@ const PermissionsStep = React.createClass({
 		binding.set('type', type);
 	},
 
-	/** For Parent permission request only. It will add items to array to make
+	/**
+	 * For Parent permission request only. It will add items to array to make
 	 * possible having multiple children for parent
 	 */
 	addFieldArray: function(){
@@ -54,28 +51,6 @@ const PermissionsStep = React.createClass({
 		binding.set('currentFieldArray', currentFieldArray);
 	},
 
-	/** will render list with all available roles to join */
-	renderChoosers: function () {
-		const 	binding			= this.getDefaultBinding();
-
-		return <div className="eRegistration_chooser">
-			{types.map( (type, i) => {
-				const itemClasses = classNames({
-					eRegistration_chooserItem: true,
-					mActive: binding.get('type') === type
-				});
-
-				return (
-					<div key={type} className={itemClasses} onClick={() => this.onClickType(type)}>
-						<div className="eChooserItem_wrap">
-							<div className="eChooserItem_inside"></div>
-						</div>
-						<span className="eRegistration_chooserTitle">{visibleTypes[i]}</span>
-					</div>
-				);
-			})}
-		</div>
-	},
 	/**
 	 * Check if form filled for provided permission type (currentType)
 	 * @param {String} currentType current selected role
@@ -172,7 +147,10 @@ const PermissionsStep = React.createClass({
 		return (
 			<div className="eRegistration_permissions">
 				<div className="eRegistration_annotation">Join as:</div>
-				{this.renderChoosers()}
+				<PermissionRoleSelector
+					currentType = {currentType}
+					onClickType = {this.onClickType}
+				/>
 				<div className="eRegistration_permissionStep">
 					<RegistrationPermissions
 						isFormFilled			= { isShowFinishButton }
