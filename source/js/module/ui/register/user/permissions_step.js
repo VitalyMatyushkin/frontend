@@ -10,7 +10,10 @@ const PermissionsStep = React.createClass({
 	propTypes: {
 		onSuccess: React.PropTypes.func
 	},
-
+	componentWillMount: function(){
+		const binding = this.getDefaultBinding();
+		binding.clear('type');
+	},
 	/**
 	 * Trigger to be called when role changed
 	 * @param {String} type one of ['parent', 'admin', 'manager', 'teacher', 'coach']

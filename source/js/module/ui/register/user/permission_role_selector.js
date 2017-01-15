@@ -15,16 +15,17 @@ const PermissionRoleSelector = React.createClass({
 		currentType:	React.PropTypes.string
 	},
 	render: function() {
+		const currentType = typeof this.props.currentType !== 'undefined' ? this.props.currentType : '';
 		return (
 			<div className="eRegistration_chooser">
 				{types.map( (type, i) => {
 					const itemClasses = classNames({
 						eRegistration_chooserItem: 	true,
-						mActive: 					this.props.currentType === type
+						mActive: 					type === currentType
 					});
 
 					return (
-						<div key={type} className={itemClasses} onClick={this.props.onClickType}>
+						<div key={type} className={itemClasses} onClick={() => this.props.onClickType(type)}>
 							<div className="eChooserItem_wrap">
 								<div className="eChooserItem_inside"></div>
 							</div>
