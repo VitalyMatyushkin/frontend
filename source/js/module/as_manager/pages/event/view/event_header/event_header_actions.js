@@ -44,30 +44,30 @@ function revertScore(binding) {
 	binding.set('model', Immutable.fromJS(updEvent));
 };
 
-function submitScore(event, binding, activeSchoolId){
+function submitScore(activeSchoolId, event, binding){
 	if(TeamHelper.isNonTeamSport(event)) {
-		return submitResultsForIndividualSport(event, activeSchoolId)
-			.then(() => doActionsAfterCloseEvent(event, binding, activeSchoolId));
+		return submitResultsForIndividualSport(activeSchoolId, event)
+			.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 	} else {
-		return submitResultsForTeamsSport(event, activeSchoolId)
-			.then(() => doActionsAfterCloseEvent(event, binding, activeSchoolId));
+		return submitResultsForTeamsSport(activeSchoolId, event)
+			.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 	}
 };
 
-function submitResultsForIndividualSport(event, activeSchoolId) {
-	return submitSchoolResults(event, activeSchoolId)
-		.then(() => submitHouseResults(event, activeSchoolId))
-		.then(() => submitIndividualResults(event, activeSchoolId));
+function submitResultsForIndividualSport(activeSchoolId, event) {
+	return submitSchoolResults(activeSchoolId, event)
+		.then(() => submitHouseResults(activeSchoolId, event))
+		.then(() => submitIndividualResults(activeSchoolId, event));
 };
 
-function submitResultsForTeamsSport(event, activeSchoolId){
-	return submitSchoolResults(event, activeSchoolId)
-		.then(() => submitHouseResults(event, activeSchoolId))
-		.then(() => submitTeamResults(event, activeSchoolId))
-		.then(() => submitIndividualResults(event, activeSchoolId));
+function submitResultsForTeamsSport(activeSchoolId, event){
+	return submitSchoolResults(activeSchoolId, event)
+		.then(() => submitHouseResults(activeSchoolId, event))
+		.then(() => submitTeamResults(activeSchoolId, event))
+		.then(() => submitIndividualResults(activeSchoolId, event));
 };
 
-function submitSchoolResults(event, activeSchoolId){
+function submitSchoolResults(activeSchoolId, event){
 	const body = event.results.schoolScore;
 
 	switch (true) {
@@ -124,7 +124,7 @@ function submitSchoolResults(event, activeSchoolId){
 	}
 };
 
-function submitHouseResults(event, activeSchoolId) {
+function submitHouseResults(activeSchoolId, event) {
 	const score = event.results.houseScore;
 
 	switch (true) {
@@ -181,7 +181,7 @@ function submitHouseResults(event, activeSchoolId) {
 	}
 };
 
-function submitTeamResults(event, activeSchoolId) {
+function submitTeamResults(activeSchoolId, event) {
 	const score = event.results.teamScore;
 
 	switch (true) {
@@ -237,7 +237,7 @@ function submitTeamResults(event, activeSchoolId) {
 	}
 };
 
-function submitIndividualResults(event, activeSchoolId) {
+function submitIndividualResults(activeSchoolId, event) {
 	const score = event.results.individualScore;
 
 	if(TeamHelper.isOneOnOneSport(event)) {
@@ -298,14 +298,14 @@ function isResultItemChanged(resultItem) {
  * And update result and status
  * Also got event editing page to GENERAL mode
  */
-function doActionsAfterCloseEvent(event, binding, activeSchoolId){
+function doActionsAfterCloseEvent(activeSchoolId, event, binding){
 
 	return window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } )
-		.then(event => {
+		.then(ev => {
 			binding
 				.atomically()
-				.set('model.result',	Immutable.fromJS(event.result))
-				.set('model.status',	Immutable.fromJS(event.status))
+				.set('model.result',	Immutable.fromJS(ev.result))
+				.set('model.status',	Immutable.fromJS(ev.status))
 				.set('mode',			Immutable.fromJS('general'))
 				.commit();
 
@@ -317,20 +317,20 @@ function doActionsAfterCloseEvent(event, binding, activeSchoolId){
 /**
  * Event closing process started after click save button
  */
-function closeMatch(event, binding, activeSchoolId){
+function closeMatch(activeSchoolId, event, binding){
 	if(TeamHelper.isNonTeamSport(event)) {
-		closeMatchForIndividualSport(event, binding, activeSchoolId);
+		closeMatchForIndividualSport(activeSchoolId, event, binding);
 	} else {
-		closeMatchForTeamsSport(event, binding, activeSchoolId);
+		closeMatchForTeamsSport(activeSchoolId, event, binding);
 	}
 	// match report save
-	submitMatchReport(event, activeSchoolId);
+	submitMatchReport(activeSchoolId, event);
 };
 
 /**
  * Event closing process for individual sport
  */
-function closeMatchForIndividualSport(event, binding, activeSchoolId) {
+function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 
 	window.Server.finishSchoolEvent.post({
 		schoolId:	activeSchoolId,
@@ -343,7 +343,7 @@ function closeMatchForIndividualSport(event, binding, activeSchoolId) {
 /**
  * Event closing process for team sport
  */
-function closeMatchForTeamsSport(event, binding, activeSchoolId) {
+function closeMatchForTeamsSport(activeSchoolId, event, binding) {
 
 	window.Server.finishSchoolEvent.post({
 		schoolId:	activeSchoolId,
@@ -357,7 +357,7 @@ function closeMatchForTeamsSport(event, binding, activeSchoolId) {
  * @param {object} event
  * @returns {Promise} schoolEventReport promise
  * */
-function submitMatchReport(event, activeSchoolId){
+function submitMatchReport(activeSchoolId, event){
 
 	return window.Server.schoolEventReport.put({
 			schoolId:	activeSchoolId,
