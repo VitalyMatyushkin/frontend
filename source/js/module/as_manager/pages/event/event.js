@@ -433,7 +433,7 @@ const Event = React.createClass({
 	 * Function return add task button for tasks tab.
 	 */
 	getAddTaskButton: function() {
-		if(RoleHelper.isParent(this)) {
+		if(RoleHelper.isParent(this) || RoleHelper.isStudent(this)) {
 			return null;
 		} else {
 			return <Button extraStyleClasses="mAddTask" text="Add job" onClick={this.handleClickAddTaskButton}/>;
@@ -475,7 +475,8 @@ const Event = React.createClass({
 				mode			= binding.toJS('mode'),
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
-				isParent		= RoleHelper.isParent(this);
+				isParent		= RoleHelper.isParent(this),
+				isStudent		= RoleHelper.isStudent(this);
 		switch (true) {
 			case !self.isSync():
 				return (
@@ -555,6 +556,7 @@ const Event = React.createClass({
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {this.props.activeSchoolId}
 													isParent	= {isParent}
+													isStudent	= {isStudent}
 									/>
 									<div className="eDetails_border" />
 								</div>
@@ -564,6 +566,7 @@ const Event = React.createClass({
 									<MatchReport	binding		= {binding.sub('matchReport')}
 													eventId		= {self.eventId}
 													isParent	= {isParent}
+													isStudent	= {isStudent}
 									/>
 								</div>
 							</If>

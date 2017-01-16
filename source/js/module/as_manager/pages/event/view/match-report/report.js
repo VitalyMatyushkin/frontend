@@ -19,7 +19,8 @@ const MatchReport = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes:{
 		eventId		: React.PropTypes.string.isRequired,
-		isParent	: React.PropTypes.bool.isRequired
+		isParent	: React.PropTypes.bool.isRequired,
+		isStudent	: React.PropTypes.bool.isRequired
 	},
 	componentWillMount: function(){
 		const binding 		= this.getDefaultBinding();
@@ -32,10 +33,10 @@ const MatchReport = React.createClass({
 		return !this.actions.isEditMode();
 	},
 	isShowEditMode: function() {
-		return !this.props.isParent && this.actions.isEditMode();
+		return (!this.props.isParent || !this.props.isStudent) && this.actions.isEditMode();
 	},
 	isShowEditButton: function() {
-		return !this.props.isParent;
+		return !this.props.isParent || !this.props.isStudent;
 	},
 	render:function(){
 		const 	self 			= this,

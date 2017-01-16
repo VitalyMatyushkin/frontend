@@ -42,6 +42,11 @@ const RoleHelper = {
 		const role = this.getLoggedInUserRole(self);
 
 		return role === this.ALLOWED_PERMISSION_PRESETS.PARENT;
+	},
+	isStudent: function(self) {
+		const role = this.getLoggedInUserRole(self);
+
+		return role === this.ALLOWED_PERMISSION_PRESETS.STUDENT;
 	}
 };
 

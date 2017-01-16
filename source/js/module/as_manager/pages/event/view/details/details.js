@@ -28,6 +28,7 @@ const Details = React.createClass({
 		onSave:				React.PropTypes.func.isRequired,
 		onCancel:			React.PropTypes.func.isRequired,
 		isParent:			React.PropTypes.bool.isRequired,
+		isStudent:			React.PropTypes.bool.isRequired,
 		activeSchoolId:		React.PropTypes.string.isRequired
 	},
 	getInitialState: function() {
@@ -202,10 +203,10 @@ const Details = React.createClass({
 				</div>
 				<div className="eDetails_column">
 					<div className="eDetails_columnContent mGrayBackground  mWithoutPadding">
-							<If condition={!this.props.isParent}>
+							<If condition={!this.props.isParent || !this.props.isStudent}>
 								{this.renderControlButtons()}
 							</If>
-							<If condition={this.props.isParent}>
+							<If condition={this.props.isParent || this.props.isStudent}>
 								<div className="eDetails_spacing" />
 							</If>
 						<div className="eDetails_infoContainer">

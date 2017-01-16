@@ -19,7 +19,8 @@ const DetailsWrapper = React.createClass({
 	propTypes:{
 		schoolId:	React.PropTypes.string.isRequired,
 		eventId:	React.PropTypes.string.isRequired,
-		isParent:	React.PropTypes.bool.isRequired
+		isParent:	React.PropTypes.bool.isRequired,
+		isStudent:	React.PropTypes.bool.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -126,6 +127,7 @@ const DetailsWrapper = React.createClass({
 							staff				= { this.state.eventDetails.staff }
 							handleChange		= { this.handleChange }
 							isParent			= { this.props.isParent }
+							isStudent			= { this.props.isStudent }
 							activeSchoolId		= { this.props.schoolId }
 							onSave				= { this.onSave }
 							onCancel			= { this.onCancel }
