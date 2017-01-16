@@ -220,7 +220,7 @@ const Event = React.createClass({
 		let service;
 
 		switch (role) {
-			case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+			case RoleHelper.USER_ROLES.PARENT:
 				service = window.Server.childEventPhotos;
 				break;
 			default:
