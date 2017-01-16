@@ -51,6 +51,9 @@ const serviceList = {
         serviceList.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
         serviceList.schoolStudentParents = new Service('/i/schools/{schoolId}/students/{studentId}/parents', binding);
         serviceList.schoolStudentEvents = new Service('/i/schools/{schoolId}/students/{studentId}/events', binding);
+        serviceList.schoolEventsCount = new Service('/i/schools/events/count', binding);
+        serviceList.schoolEventsDates = new Service('/i/schools/events/dates/distinct', binding);
+        serviceList.schoolEvents = new Service('/i/schools/{schoolId}/events', binding);
 
         // forms
         serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);

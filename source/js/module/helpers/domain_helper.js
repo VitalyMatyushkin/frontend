@@ -54,6 +54,8 @@ const DomainHelper = {
 				return `school_admin/summary`;
 			case 'parent':
 				return `events/calendar/all`;
+			case 'student':
+				return `events/calendar/all`;
 			case 'no_body':
 				return `settings/general`;
 		}

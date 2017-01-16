@@ -119,7 +119,7 @@ RequestActions.prototype = {
 				prId      = itemId,
 				binding   = self.getDefaultBinding().sub('data'),
 				currentPr = self.getCurrentPermission(prId, binding.toJS()),
-				schoolId  = currentPr.requestedPermission.schoolId,
+				schoolId  = currentPr ? currentPr.requestedPermission.schoolId : '',
 				email     = currentPr.requester.email,
 				phone 	  = currentPr.requester.phone;
 		let confirmMsg;

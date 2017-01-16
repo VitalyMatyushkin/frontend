@@ -90,6 +90,9 @@ const SchoolForm = React.createClass({
 					>
 						Public Site Access Password
 					</FormField>
+					<FormField type="checkbox" field="studentSelfRegistrationEnabled">
+						Student registration
+					</FormField>
 				</FormColumn>
 			</Form>
 		);
