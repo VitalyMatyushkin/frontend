@@ -117,7 +117,7 @@ const  RoleList = React.createClass({
 		const binding     = this.getDefaultBinding(),
 				schoolId    = permission ? permission.schoolId : null,
 				role        = permission ? permission.role : null,
-				roleClient 	= permission ? RoleHelper.SERVER_ROLE_FOR_CLIENT[permission.role] : 'NO ROLE',
+				roleClient 	= permission ? RoleHelper.ROLE_TO_PERMISSION_MAPPING[permission.role] : 'NO ROLE',
 				schools     = binding.toJS('schools'),
 				school      = schools.length && role !== 'PARENT' ? schools.find(s => s.id === schoolId) : null,
 				schoolName  = school ? school.name : null,

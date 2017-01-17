@@ -39,12 +39,12 @@ RequestActions.prototype = {
     getRoleList:function(){
         const roles = [];
 
-        Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS)
+        Object.keys(RoleHelper.USER_PERMISSIONS)
             .filter( key => !(this.viewerRole === 'MANAGER' && key === 'ADMIN')) 		// MANAGER cannot use ADMIN filter
             .forEach(key => {
                 roles.push({
                     key: key,
-                    value: RoleHelper.ALLOWED_PERMISSION_PRESETS[key].toLowerCase()
+                    value: RoleHelper.USER_PERMISSIONS[key].toLowerCase()
                 });
             });
 

@@ -8,7 +8,15 @@ const RoleHelper = {
 		parent:		'app',
 		no_body:	'app'// it's a synthetic role, it isn't exist on server
 	},
-	ALLOWED_PERMISSION_PRESETS: {
+	USER_ROLES: {
+		ADMIN:		'ADMIN',
+		MANAGER:	'MANAGER',
+		TEACHER:	'TEACHER',
+		TRAINER:	'TRAINER',
+		STUDENT:	'STUDENT',
+		PARENT:		'PARENT'
+	},
+	USER_PERMISSIONS: {
 		ADMIN:		'ADMIN',
 		MANAGER:	'MANAGER',
 		TEACHER:	'TEACHER',
@@ -16,7 +24,7 @@ const RoleHelper = {
 		STUDENT:	'STUDENT',
 		PARENT:		'PARENT'
 	},
-	SERVER_ROLE_FOR_CLIENT:{
+	ROLE_TO_PERMISSION_MAPPING:{
 		ADMIN:		'ADMIN',
 		MANAGER:	'MANAGER',
 		TEACHER:	'TEACHER',
@@ -35,13 +43,13 @@ const RoleHelper = {
 	isUserSchoolWorker: function(self) {
 		const role = this.getLoggedInUserRole(self);
 
-		return role === this.ALLOWED_PERMISSION_PRESETS.ADMIN || role === this.ALLOWED_PERMISSION_PRESETS.MANAGER ||
-			role === this.ALLOWED_PERMISSION_PRESETS.TEACHER || role === this.ALLOWED_PERMISSION_PRESETS.COACH;
+		return role === this.USER_ROLES.ADMIN || role === this.USER_ROLES.MANAGER ||
+			role === this.USER_ROLES.TEACHER || role === this.USER_ROLES.TRAINER;
 	},
 	isParent: function(self) {
 		const role = this.getLoggedInUserRole(self);
 
-		return role === this.ALLOWED_PERMISSION_PRESETS.PARENT;
+		return role === this.USER_ROLES.PARENT;
 	}
 };
 

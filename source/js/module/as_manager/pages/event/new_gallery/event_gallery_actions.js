@@ -16,7 +16,7 @@ function addPhotoToEvent(role, binding, schoolId, eventId, file) {
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhotos;
 			break;
 		default:
@@ -49,7 +49,7 @@ function deletePhotoFromEvent(role, binding, schoolId, eventId, photoId) {
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhoto;
 			break;
 		default:
@@ -75,7 +75,7 @@ function getPhotosForEvent(role, binding, schoolId, eventId) {
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhotos;
 			break;
 		default:
@@ -98,7 +98,7 @@ function changePhotoPreset(role, binding, schoolId, eventId, photoId, preset) {
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhoto;
 			break;
 		default:
