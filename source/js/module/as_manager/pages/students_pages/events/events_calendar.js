@@ -41,7 +41,7 @@ const EventsCalendar = React.createClass({
 
 		let challengesList;
 
-		if(binding.get('activeSchooldId') == 'all') {
+		if(binding.get('activeSchoolId') == 'all') {
 			challengesList = (
 				<AllSchoolChallenges	isSync		= {isSelectedDateEventsInSync}
 										school		= {school}

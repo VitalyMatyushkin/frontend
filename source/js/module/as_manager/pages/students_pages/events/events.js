@@ -80,9 +80,10 @@ const EventView = React.createClass({
 			.then(school => {
 				const ids = school.map(sch => sch.id);
 
+
 				binding.atomically()
-					.set('school',Immutable.fromJS(school))
-					.set('schoolIds',Immutable.fromJS(ids))
+					.set('school', Immutable.fromJS(school))
+					.set('schoolIds', Immutable.fromJS(ids))
 					.commit();
 
 				return true;

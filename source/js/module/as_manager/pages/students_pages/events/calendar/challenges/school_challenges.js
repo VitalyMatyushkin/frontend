@@ -13,7 +13,11 @@ const SchoolChallenges = function(props){
 				/**
 				 * TODO What is ascription?
 				 */
-				return !!ev.get('ascription').get('childrenTakePart').find(id => id === school.get('id'));
+				//return !!ev.get('ascription').get('childrenTakePart').find(id => id === school.get('id'));
+				/**
+				 * fake check
+				 */
+				return !!ev.get('invitedSchoolIds').find(id => id === school.get('id'));
 						});
 
 	if(events.count()) {
