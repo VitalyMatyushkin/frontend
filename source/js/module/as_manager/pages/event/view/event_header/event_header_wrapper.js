@@ -58,9 +58,9 @@ const EventHeaderWrapper = React.createClass({
 				activeSchoolId 	= MoreartyHelper.getActiveSchoolId(this);
 
 		if(this.getDefaultBinding().get('model.status') === "FINISHED") {
-			EventHeaderActions.submitScore(event, binding, activeSchoolId);
+			EventHeaderActions.submitScore(activeSchoolId, event, binding);
 		} else {
-			EventHeaderActions.closeMatch(event, binding, activeSchoolId);
+			EventHeaderActions.closeMatch(activeSchoolId, event, binding);
 		}
 	},
 
