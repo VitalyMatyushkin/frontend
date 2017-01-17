@@ -300,12 +300,16 @@ function isResultItemChanged(resultItem) {
  */
 function doActionsAfterCloseEvent(activeSchoolId, event, binding){
 
+	// Get updated event from server, and update some data in binding.
+	// 1) Set new results, it's important, because server results contain id's of each result point and event component
+	// detect's old result points by these features. If result point doesn't have id, then it's new result point.
+	// 2) Set new event status.
 	return window.Server.schoolEvent.get( { schoolId: activeSchoolId, eventId: event.id } )
-		.then(ev => {
+		.then(updEvent => {
 			binding
 				.atomically()
-				.set('model.result',	Immutable.fromJS(ev.result))
-				.set('model.status',	Immutable.fromJS(ev.status))
+				.set('model.results',	Immutable.fromJS(updEvent.results))
+				.set('model.status',	Immutable.fromJS(updEvent.status))
 				.set('mode',			Immutable.fromJS('general'))
 				.commit();
 
@@ -336,8 +340,8 @@ function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 		schoolId:	activeSchoolId,
 		eventId:	event.id
 	})
-		.then(() => submitResultsForIndividualSport(event))
-		.then(() => doActionsAfterCloseEvent(binding));
+	.then(() => submitResultsForIndividualSport(event))
+	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 };
 
 /**
@@ -349,8 +353,8 @@ function closeMatchForTeamsSport(activeSchoolId, event, binding) {
 		schoolId:	activeSchoolId,
 		eventId:	event.id
 	})
-		.then(() => submitResultsForTeamsSport(event))
-		.then(() => doActionsAfterCloseEvent(binding));
+	.then(() => submitResultsForTeamsSport(activeSchoolId, event))
+	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 };
 
 /**Save match report
