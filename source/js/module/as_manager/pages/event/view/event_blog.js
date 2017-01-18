@@ -107,7 +107,7 @@ const Blog = React.createClass({
 				return true;
 			});
 		} else {
-			const user = {"id":"587ca8cf3fc0db2866ecd5ac","updatedAt":"2017-01-16T12:19:01.134Z","createdAt":"2017-01-16T11:04:47.970Z","firstName":"Andreas","lastName":"Inesta","email":"bestia21v@yandex.ru","phone":"+79509521988","gender":"MALE","notification":{"sendPromoOffers":false,"sendInfoUpdates":false,"sendNews":false},"verification":{"status":{"personal":false,"email":true,"sms":true}},"status":"ACTIVE"};
+			const user = {"id":"587ca8cf3fc0db2866ecd5ac","updatedAt":"2017-01-18T06:29:09.567Z","createdAt":"2017-01-16T11:04:47.970Z","firstName":"Elsa","lastName":"Frozen","email":"bestia21v@yandex.ru","phone":"+79509521988#100","gender":"FEMALE","avatar":"//img.stage1.squadintouch.com/images/oqy4pixi3ecvjpyev1g33syb3g52sn6l7is2_1484718933256.png","birthday":"2000-01-01","notification":{"sendPromoOffers":false,"sendInfoUpdates":false,"sendNews":false},"verification":{"status":{"personal":false,"email":true,"sms":true}},"status":"ACTIVE"};
 			binding.set('loggedUser', Immutable.fromJS(user));
 		}
 	},

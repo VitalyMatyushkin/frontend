@@ -392,7 +392,7 @@ const PerformanceView = React.createClass({
 
 		return (
 			<div className="bEventPerformance">
-				<If condition={!RoleHelper.isParent(this) && TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, event)}>
+				<If condition={!RoleHelper.isParent(this) && !RoleHelper.isStudent(this) && TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, event)}>
 					<div className="eEventPerformance_header">
 						<PencilButton handleClick={this.props.handleClickChangeMode}/>
 					</div>

@@ -55,7 +55,7 @@ const RoleHelper = {
 	isStudent: function(self) {
 		const role = this.getLoggedInUserRole(self);
 
-		return role === this.ALLOWED_PERMISSION_PRESETS.STUDENT;
+		return role === this.USER_ROLES.STUDENT;
 	}
 };
 

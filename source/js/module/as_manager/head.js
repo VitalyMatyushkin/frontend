@@ -39,7 +39,7 @@ const Head = React.createClass({
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.PARENT:
 				return this.getMainMenuItemsForParent();
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.STUDENT:
+			case role === RoleHelper.USER_ROLES.STUDENT:
 				return this.getMainMenuItemsForStudent();
 		}
 	},

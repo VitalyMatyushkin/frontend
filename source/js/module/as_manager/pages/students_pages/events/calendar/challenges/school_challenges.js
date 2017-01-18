@@ -23,7 +23,7 @@ const SchoolChallenges = function(props){
 	if(events.count()) {
 		//Iterate over the children present in the bag
 		const	schoolFixtures	= events.map(event => {
-			return <ChallengeItem key={event.get('id')} event={event} onClick={props.onClick.bind(null, school.toJS().schoolId)} />;
+			return <ChallengeItem key={event.get('id')} event={event} onClick={props.onClick.bind(null, school.toJS().id)} />;
 		}).toArray();
 
 		return (

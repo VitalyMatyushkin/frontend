@@ -35,16 +35,18 @@ const MatchReport = React.createClass({
 		 */
 		if (!isStudent) {
 			this.actions.load();
+		} else {
+			binding.set('isLoadActions', false);
 		}
 	},
 	isShowViewMode: function() {
 		return !this.actions.isEditMode();
 	},
 	isShowEditMode: function() {
-		return (!this.props.isParent || !this.props.isStudent) && this.actions.isEditMode();
+		return (!this.props.isParent && !this.props.isStudent) && this.actions.isEditMode();
 	},
 	isShowEditButton: function() {
-		return !this.props.isParent || !this.props.isStudent;
+		return !this.props.isParent && !this.props.isStudent;
 	},
 	render:function(){
 		const 	self 			= this,

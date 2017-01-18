@@ -203,7 +203,7 @@ const Details = React.createClass({
 				</div>
 				<div className="eDetails_column">
 					<div className="eDetails_columnContent mGrayBackground  mWithoutPadding">
-							<If condition={!this.props.isParent || !this.props.isStudent}>
+							<If condition={!this.props.isParent && !this.props.isStudent}>
 								{this.renderControlButtons()}
 							</If>
 							<If condition={this.props.isParent || this.props.isStudent}>

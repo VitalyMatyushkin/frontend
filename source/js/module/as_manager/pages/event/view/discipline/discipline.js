@@ -7,6 +7,7 @@ const	React			= require('react'),
 
 const Discipline = React.createClass({
 	propTypes: {
+		isStudent				: React.PropTypes.bool.isRequired,
 		isParent				: React.PropTypes.bool.isRequired,
 		isEditMode				: React.PropTypes.bool.isRequired,
 		event					: React.PropTypes.object.isRequired,
@@ -24,7 +25,8 @@ const Discipline = React.createClass({
 		return (
 			<div>
 				<If condition={!this.props.isEditMode}>
-					<DisciplineView	isParent				= {this.props.isParent}
+					<DisciplineView	isStudent				= {this.props.isStudent}
+									isParent				= {this.props.isParent}
 									event					= {this.props.event}
 									players					= {this.props.players}
 									disciplineItems			= {this.props.disciplineItems}
