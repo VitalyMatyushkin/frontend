@@ -8,6 +8,10 @@ const Logo = React.createClass({
 	mixins: [Morearty.Mixin],
 
 	render: function () {
+		/**
+		 * TODO Fix it. We must get role from RoleHelper
+		 * @type {string}
+		 */
 		const role = typeof this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role') !== 'undefined'
 			? this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role')
 			: '';

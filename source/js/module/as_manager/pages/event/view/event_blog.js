@@ -28,13 +28,13 @@ const Blog = React.createClass({
 	 * @private
 	 */
 	_setComments: function() {
-		const 	binding = this.getDefaultBinding(),
+		const 	binding 	= this.getDefaultBinding(),
 				rootBinding	= this.getMoreartyContext().getBinding(),
-				isStudent	= RoleHelper.isStudent(this);
+				role		= RoleHelper.getLoggedInUserRole(this);
 		/**
 		 * If role not equal student, do everything as usual
 		 */
-		if (!isStudent) {
+		if (role !== 'STUDENT') {
 		return window.Server.schoolEventComments.get(
 			{
 				schoolId	: this.props.activeSchoolId,
@@ -65,15 +65,15 @@ const Blog = React.createClass({
 		}
 	},
 	componentWillMount:function(){
-		const 	binding = this.getDefaultBinding(),
+		const 	binding 	= this.getDefaultBinding(),
 				rootBinding	= this.getMoreartyContext().getBinding(),
-				isStudent	= RoleHelper.isStudent(this);
+				role		= RoleHelper.getLoggedInUserRole(this);
 
 		binding.set('isSync', false);
 		/**
 		 * If role not equal student, do everything as usual
 		 */
-		if (!isStudent) {
+		if (role !== 'STUDENT') {
 			this._setLoggedUser()
 				.then(() => {
 					// upload all comments from server
@@ -92,14 +92,14 @@ const Blog = React.createClass({
 
 	},
 	_setLoggedUser: function() {
-		const	binding = this.getDefaultBinding(),
+		const	binding 	= this.getDefaultBinding(),
 				rootBinding	= this.getMoreartyContext().getBinding(),
-				isStudent	= RoleHelper.isStudent(this);
+				role		= RoleHelper.getLoggedInUserRole(this);
 
 		/**
 		 * If role not equal student, do everything as usual
 		 */
-		if (!isStudent) {
+		if (role !== 'STUDENT') {
 		return window.Server.profile.get()
 			.then(user => {
 				binding.set('loggedUser', Immutable.fromJS(user));
@@ -118,11 +118,11 @@ const Blog = React.createClass({
 	 */
 	componentDidMount: function() {
 		const 	rootBinding	= this.getMoreartyContext().getBinding(),
-				isStudent	= RoleHelper.isStudent(this);
+				role		= RoleHelper.getLoggedInUserRole(this);
 		/**
 		 * If role not equal student, do everything as usual
 		 */
-		if (!isStudent) {
+		if (role !== 'STUDENT') {
 			this._tickerForNewComments();
 		}
 	},

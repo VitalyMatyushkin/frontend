@@ -19,8 +19,7 @@ const DetailsWrapper = React.createClass({
 	propTypes:{
 		schoolId:	React.PropTypes.string.isRequired,
 		eventId:	React.PropTypes.string.isRequired,
-		isParent:	React.PropTypes.bool.isRequired,
-		isStudent:	React.PropTypes.bool.isRequired
+		role:		React.PropTypes.string.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -34,7 +33,7 @@ const DetailsWrapper = React.createClass({
 		/**
 		 * If role not equal student, do everything as usual
 		 */
-		if (!this.props.isStudent) {
+		if (this.props.role !== 'STUDENT') {
 			Actions.getDetailsByEventId(this.props.schoolId, this.props.eventId)
 				.then(_details => {
 					details = _details;
@@ -145,8 +144,7 @@ const DetailsWrapper = React.createClass({
 							lunchTime			= { this.state.eventDetails.lunchTime }
 							staff				= { this.state.eventDetails.staff }
 							handleChange		= { this.handleChange }
-							isParent			= { this.props.isParent }
-							isStudent			= { this.props.isStudent }
+							role				= { this.props.role }
 							activeSchoolId		= { this.props.schoolId }
 							onSave				= { this.onSave }
 							onCancel			= { this.onCancel }

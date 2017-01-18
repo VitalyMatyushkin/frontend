@@ -9,8 +9,7 @@ const	React			= require('react'),
 
 const DisciplineView = React.createClass({
 	propTypes: {
-		isStudent				: React.PropTypes.bool.isRequired,
-		isParent				: React.PropTypes.bool.isRequired,
+		role					: React.PropTypes.string.isRequired,
 		event					: React.PropTypes.object.isRequired,
 		players					: React.PropTypes.array.isRequired,
 		disciplineItems			: React.PropTypes.array.isRequired,
@@ -323,7 +322,7 @@ const DisciplineView = React.createClass({
 
 		return (
 			<div className="bEventPerformance">
-				<If condition={!this.props.isParent && !this.props.isStudent && TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, this.props.event)}>
+				<If condition={this.props.role !== 'PARENT' && this.props.role !== 'STUDENT' && TabHelper.isShowEditButtonByEvent(this.props.activeSchoolId, this.props.event)}>
 					<div className="eEventPerformance_header">
 						<PencilButton handleClick={this.props.handleClickChangeMode}/>
 					</div>

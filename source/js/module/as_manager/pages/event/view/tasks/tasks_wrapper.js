@@ -11,7 +11,7 @@ const TasksWrapper = React.createClass({
 	},
 	componentWillMount: function() {
 		const tasks = this.getDefaultBinding().toJS('tasks');
-		if(tasks.length === 0 && !RoleHelper.isParent(this) && !RoleHelper.isStudent(this)) {
+		if(tasks.length === 0 && RoleHelper.getLoggedInUserRole(this) !== 'PARENT' && RoleHelper.getLoggedInUserRole(this) !== 'STUDENT') {
 			this.setViewMode("ADD");
 		} else {
 			this.setViewMode("VIEW");

@@ -20,20 +20,18 @@ const MatchReport = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes:{
 		eventId		: React.PropTypes.string.isRequired,
-		isParent	: React.PropTypes.bool.isRequired,
-		isStudent	: React.PropTypes.bool.isRequired
+		role		: React.PropTypes.string.isRequired
 	},
 	componentWillMount: function(){
 		const 	binding 	= this.getDefaultBinding(),
-				rootBinding	= this.getMoreartyContext().getBinding(),
-				isStudent	= RoleHelper.isStudent(this);
+				rootBinding	= this.getMoreartyContext().getBinding();
 
 		binding.set('isLoadActions', true);
 		this.actions = new Actions(this);
 		/**
 		 * If role not equal student, do everything as usual
 		 */
-		if (!isStudent) {
+		if (this.props.role !== 'STUDENT') {
 			this.actions.load();
 		} else {
 			binding.set('isLoadActions', false);
@@ -43,10 +41,10 @@ const MatchReport = React.createClass({
 		return !this.actions.isEditMode();
 	},
 	isShowEditMode: function() {
-		return (!this.props.isParent && !this.props.isStudent) && this.actions.isEditMode();
+		return this.props.role !== 'PARENT' && this.props.role !== 'STUDENT' && this.actions.isEditMode();
 	},
 	isShowEditButton: function() {
-		return !this.props.isParent && !this.props.isStudent;
+		return this.props.role !== 'PARENT' && this.props.role !== 'STUDENT';
 	},
 	render:function(){
 		const 	self 			= this,
