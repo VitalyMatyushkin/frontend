@@ -19,25 +19,25 @@ const Head = React.createClass({
 		switch (true) {
 			case typeof role === "undefined":
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.ADMIN:
+			case role === RoleHelper.USER_ROLES.ADMIN:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.MANAGER:
+			case role === RoleHelper.USER_ROLES.MANAGER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.TEACHER:
+			case role === RoleHelper.USER_ROLES.TEACHER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.COACH:
+			case role === RoleHelper.USER_ROLES.TRAINER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+			case role === RoleHelper.USER_ROLES.PARENT:
 				return this.getMainMenuItemsForParent();
 			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.STUDENT:
 				return this.getMainMenuItemsForStudent();

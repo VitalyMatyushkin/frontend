@@ -48,7 +48,14 @@
   &.mHalfWidth {
     width: 49%;
   }
+  &.mSmall {
+    height: auto;
+    line-height: normal;
+    margin-left: 5px;
+    padding: 5px 5px 3px;
 
+    font-size: 12px;
+  }
   &.mCancel{
     background: #ffffff;
     border: solid 1px #d2d2d2;

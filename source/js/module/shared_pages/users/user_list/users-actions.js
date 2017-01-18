@@ -188,10 +188,10 @@ UsersActions.prototype = {
 	getRoleList:function(){
 		const roles = [];
 
-		Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS).forEach(key => {
+		Object.keys(RoleHelper.USER_PERMISSIONS).forEach(key => {
 			roles.push({
 				key: key,
-				value: RoleHelper.ALLOWED_PERMISSION_PRESETS[key].toLowerCase()
+				value: RoleHelper.USER_PERMISSIONS[key].toLowerCase()
 			});
 		});
 

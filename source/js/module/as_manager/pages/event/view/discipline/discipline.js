@@ -34,14 +34,14 @@ const Discipline = React.createClass({
 					/>
 				</If>
 				<If condition={this.props.isEditMode}>
-					<DisciplineEdit	event					= {this.props.event}
-									players					= {this.props.players}
-									disciplineItems			= {this.props.disciplineItems}
-									disciplineValues		= {this.props.disciplineValues}
-									activeSchoolId			= {this.props.activeSchoolId}
-									handleChange			= {this.props.handleChange}
-									onSave					= {this.props.onSave}
-									onCancel				= {this.props.onCancel}
+					<DisciplineEdit	event				= {this.props.event}
+									players				= {this.props.players}
+									disciplineItems		= {this.props.disciplineItems}
+									disciplineValues	= {this.props.disciplineValues}
+									activeSchoolId		= {this.props.activeSchoolId}
+									handleChange		= {this.props.handleChange}
+									onSave				= {this.props.onSave}
+									onCancel			= {this.props.onCancel}
 					/>
 				</If>
 			</div>

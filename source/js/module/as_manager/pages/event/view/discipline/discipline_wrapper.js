@@ -82,10 +82,11 @@ const DisciplineWrapper = React.createClass({
 		)
 	},
 	updateDisciplineItem: function(event, individualDisciplineItem) {
-		window.Server.schoolEventIndividualDiscipline.put(
+		window.Server.schoolEventIndividualDisciplinePoint.put(
 			{
-				schoolId:	this.props.activeSchoolId,
-				eventId:	event.id
+				schoolId:			this.props.activeSchoolId,
+				eventId:			event.id,
+				disciplinePointId:	individualDisciplineItem._id
 			},
 			{
 				value: individualDisciplineItem.value
