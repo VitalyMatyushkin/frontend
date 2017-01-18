@@ -57,7 +57,8 @@
   }
 
   &.mMembersOfStaff {
-    width: 233px;
+    max-width: 233px;
+    width: 100%;
   }
 
   &.mBigSize {

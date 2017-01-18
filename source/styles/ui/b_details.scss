@@ -72,7 +72,7 @@
 }
 
 .eDetails_textArea {
-  width: 500px;
+  width: 100%;
   height: 100px;
   max-width: 500px;
   max-height: 200px;
@@ -126,4 +126,13 @@
 .eDetails_spacing {
   display: block;
   padding-bottom: $spacing*4;
+}
+
+@media screen and (max-width: 990px){
+  .eDetails_infoContainer {
+    padding: 10px;
+  }
+  .eDetails_editButtonWrapper {
+    padding: 15px 0;
+  }
 }
