@@ -4,7 +4,8 @@
 const	If						= require('module/ui/if/if'),
 		PermissionDetails		= require('module/ui/register/user/permission_details'),
 		propz					= require('propz'),
-		React					= require('react');
+		React					= require('react'),
+		Promise					= require('bluebird');
 /*
  * It is a component for registration permission requests
  * It generates and sends a requests to the server
@@ -27,24 +28,26 @@ const RegistrationPermissions = React.createClass({
 	},
 	onSuccess: function() {
 		const 	currentType = this.props.currentType,
-				fieldsAr	= this.props.fieldsAr,
-				dataToPost	= {
-					preset:currentType
-				};
-
-		for(let i in fieldsAr){
-			const fields = fieldsAr[i];
-			if(fields.schoolId){
-				dataToPost.schoolId = fields.schoolId;
-				dataToPost.promo = fields.promo ? fields.promo : '';
-				dataToPost.comment = fields.comment ? fields.comment : '';
-				if(currentType === 'parent') {
-					dataToPost.comment += " Student - " + fields.firstName + " " + fields.lastName + "." +
-						" Form - " + fields.formName + ". House - " + fields.houseName + ".";
+			fieldsAr	= this.props.fieldsAr,
+			dataToPost	= {
+				preset:currentType
+			};
+		Promise.all(
+			fieldsAr.forEach(
+				(fields) => {
+					if (fields.schoolId) {
+						dataToPost.schoolId = fields.schoolId;
+						dataToPost.promo = fields.promo ? fields.promo : '';
+						dataToPost.comment = fields.comment ? fields.comment : '';
+						if (currentType === 'parent') {
+							dataToPost.comment += " Student - " + fields.firstName + " " + fields.lastName + "." +
+								" Form - " + fields.formName + ". House - " + fields.houseName + ".";
+						}
+						return window.Server.profileRequests.post(dataToPost)
+					}
 				}
-				window.Server.profileRequests.post(dataToPost).then( () => this.props.onSuccess());
-			}
-		}
+			)
+		).then(() => this.props.onSuccess());
 	},
 
 	render:function(){
