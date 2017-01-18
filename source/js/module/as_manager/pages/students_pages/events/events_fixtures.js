@@ -116,6 +116,7 @@ const EventFixtures = React.createClass({
 				<Fixtures	events			= {binding.toJS('models')}
 							sync			= {binding.toJS('sync')}
 							onClick			= {this.onClickChallenge}
+							activeSchoolId	= {activeSchoolId}
 				/>
 		);
 	}

@@ -94,7 +94,6 @@ const EventView = React.createClass({
 	render: function () {
 		const 	binding 		= this.getDefaultBinding(),
 				rootBinging 	= this.getMoreartyContext().getBinding();
-
 		return <div className="bParentsPage">
 			<SubMenu items={this.menuItems}
 					binding={{
