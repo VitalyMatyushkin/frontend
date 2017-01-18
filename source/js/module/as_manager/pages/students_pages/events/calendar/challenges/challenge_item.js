@@ -13,7 +13,6 @@ const ChallengeItem = function(props){
 			eventName	= event.toJS().generatedNames.official,
 			time		= DateHelper.getTime(event.get('startTime')),
 			sport		= event.get('sport').get('name');
-
 	return(
 		<div className={'eChallenge eChallenge_basicMod'} onClick={() => props.onClick && props.onClick(event.get('id'))}>
 			<span className="eChallenge_sport">

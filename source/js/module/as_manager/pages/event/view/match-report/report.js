@@ -8,6 +8,7 @@ const	React				= require('react'),
 		If					= require('module/ui/if/if'),
 		Actions 			= require('./report-actions'),
 		Loader				= require('module/ui/loader'),
+		RoleHelper			= require('module/helpers/role_helper'),
 
 		MatchReportStyle	= require('../../../../../../../styles/pages/event/b_match_report.scss'),
 		ButtonStyle			= require('../../../../../../../styles/ui/b_button.scss'),
@@ -23,11 +24,18 @@ const MatchReport = React.createClass({
 		isStudent	: React.PropTypes.bool.isRequired
 	},
 	componentWillMount: function(){
-		const binding 		= this.getDefaultBinding();
+		const 	binding 	= this.getDefaultBinding(),
+				rootBinding	= this.getMoreartyContext().getBinding(),
+				isStudent	= RoleHelper.isStudent(this);
 
 		binding.set('isLoadActions', true);
 		this.actions = new Actions(this);
-		this.actions.load();
+		/**
+		 * If role not equal student, do everything as usual
+		 */
+		if (!isStudent) {
+			this.actions.load();
+		}
 	},
 	isShowViewMode: function() {
 		return !this.actions.isEditMode();

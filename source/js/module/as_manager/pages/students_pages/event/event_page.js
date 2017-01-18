@@ -9,7 +9,7 @@ const EventPage = React.createClass({
 		this.activeSchoolId = this.getActiveSchoolId();
 	},
 	getActiveSchoolId: function() {
-		return this.getMoreartyContext().getBinding().get('routing.parameters.schoolId');
+		return this.getMoreartyContext().getBinding().get('userRules.activeSchoolId');
 	},
 	render: function() {
 		const	binding	= this.getDefaultBinding();

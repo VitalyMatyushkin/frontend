@@ -33,7 +33,7 @@ const StudentRouter = React.createClass({
 						binding		= {binding.sub('events')}
 						component	= {StudentEventsComponent}
 				/>
-				<Route	path		= "/event /event/:eventId /event/:eventId/:mode"
+				<Route	path		= "/event /event/:eventId"
 						binding		= {binding.sub('events')}
 						component	= {EventComponent}
 				/>

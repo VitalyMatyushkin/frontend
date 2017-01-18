@@ -59,6 +59,7 @@ const EventView = React.createClass({
 
 		school.forEach(sch => {
 			menuItems.push({
+				icon: 'icon_add_school',
 				href: mainMenuItem + '/' + sch.id,
 				name: sch.name,
 				key: sch.id
@@ -66,6 +67,7 @@ const EventView = React.createClass({
 		});
 		if (school.length > 1) {
 			menuItems.push({
+				icon: 'icon_add_school',
 				href: mainMenuItem + '/all',
 				name: 'Show all school',
 				key: 'all'

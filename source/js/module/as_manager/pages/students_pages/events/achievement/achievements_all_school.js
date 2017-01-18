@@ -27,16 +27,25 @@ const AchievementsAllSchool = React.createClass({
 				ids			= school && school.map(sch => sch.id);
 
 		if(ids){
-			window.Server.schoolEventsCount.get({filter:{
-				where:{
-					schoolIdList: ids,
-					winnersSchoolIdList: ids,
-					scoredSchoolIdList: ids,
-					status: EventHelper.EVENT_STATUS.FINISHED
-				}
-			}}).then(data => {
-				binding.set('allAchievements', Immutable.fromJS(data));
-			});
+			/*window.Server.schoolEventsCount.get({filter:{
+			 where:{
+			 schoolIdList: ids,
+			 winnersSchoolIdList: ids,
+			 scoredSchoolIdList: ids,
+			 status: EventHelper.EVENT_STATUS.FINISHED
+			 }
+			 }})
+			 .then(data => {*/
+			/**
+			 * Fake data
+			 */
+			const data = {
+				"schoolEventCount":[2],
+				"schoolWinnerEventCount":[1],
+				"schoolScoredEventCount":[2]
+			};
+			binding.set('allAchievements', Immutable.fromJS(data));
+			/*});*/
 		}
 	},
 	renderAllAchievements:function(){
