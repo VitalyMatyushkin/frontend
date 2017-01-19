@@ -8,17 +8,14 @@ const	React			= require('react'),
 		ChallengeItem	= require('./challenge_item');
 
 const SchoolChallenges = function(props){
+
 	const	school 	= props.school,
-			/**
-			 * I dont know why it check
-			 * Maybe it use when student reguster in two and more schools
-			 */
 			events	= props.events.filter(function(ev){
-				return ev.get('inviterSchoolId') === school.get('id');
+				return Boolean(ev.get('studentSchools').find(id => id === school.get('id')));
 			});
 
 	if(events.count()) {
-		//Iterate over the children present in the bag
+		//Iterate over the schools present in the bag
 		const	schoolFixtures	= events.map(event => {
 			return <ChallengeItem key={event.get('id')} event={event} onClick={props.onClick.bind(null, school.toJS().id)} />;
 		}).toArray();

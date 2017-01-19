@@ -161,7 +161,6 @@ const Event = React.createClass({
 			window.Server.studentSchoolEvent.get({
 				schoolId: this.props.activeSchoolId,
 				eventId: self.eventId
-				//eventId: '5880436b9b7ff006e0d184fa'
 			}).then(event => {
 				event.schoolsData = TeamHelper.getSchoolsData(event);
 					event.teamsData = event.teamsData.sort((t1, t2) => {
@@ -193,10 +192,9 @@ const Event = React.createClass({
 				eventData = event;
 
 				// loading match report
-				return window.Server.studentSchoolEventReport.get({
+				return window.Server.schoolEventReport.get({
 					schoolId: this.props.activeSchoolId,
 					eventId: self.eventId
-					//eventId: '5880436b9b7ff006e0d184fa'
 				});
 			}).then(_report => {
 				report = _report;
@@ -308,7 +306,7 @@ const Event = React.createClass({
 				service = window.Server.childEventPhotos;
 				break;
 			case RoleHelper.USER_ROLES.STUDENT:
-				service = window.Server.studentSchoolEventPhotos;
+				service = window.Server.schoolEventPhotos;
 				break;
 			default:
 				service = window.Server.schoolEventPhotos;

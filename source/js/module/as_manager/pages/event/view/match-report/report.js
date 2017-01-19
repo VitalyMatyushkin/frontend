@@ -28,14 +28,8 @@ const MatchReport = React.createClass({
 
 		binding.set('isLoadActions', true);
 		this.actions = new Actions(this);
-		/**
-		 * If role not equal student, do everything as usual
-		 */
-		if (this.props.role !== 'STUDENT') {
-			this.actions.load();
-		} else {
-			binding.set('isLoadActions', false);
-		}
+
+		this.actions.load();
 	},
 	isShowViewMode: function() {
 		return !this.actions.isEditMode();

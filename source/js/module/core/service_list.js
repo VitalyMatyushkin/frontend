@@ -190,13 +190,6 @@ const serviceList = {
 		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
 		serviceList.studentSchoolEvents = new Service('/i/events', binding);
 		serviceList.studentSchoolEvent = new Service('/i/events/{eventId}', binding);
-		serviceList.studentSchoolEventReport = new Service('/i/events/{eventId}/report', binding);
-		serviceList.studentSchoolEventPhotos = new Service('/i/events/{eventId}/photos', binding);
-
-		/**
-		 * Settings for on/off comment and ability add photo in event
-		 */
-		//serviceList.studentSchoolSettings = new Service('', binding);
 
 		// postcode
 		serviceList.postCodes = new Service('/public/postcodes', binding);

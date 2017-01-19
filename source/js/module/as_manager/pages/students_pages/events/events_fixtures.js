@@ -69,7 +69,7 @@ const EventFixtures = React.createClass({
 				}
 			};
 		}
-		
+
 		binding.set('sync', false);
 		if(schoolIdList.length) {
 			window.Server.studentSchoolEvents.get({ filter: filter })
