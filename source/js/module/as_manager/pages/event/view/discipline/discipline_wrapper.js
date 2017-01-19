@@ -160,7 +160,7 @@ const DisciplineWrapper = React.createClass({
 
 		if(this.isDataSync()) {
 			body = (
-				<Discipline	isParent				= {RoleHelper.isParent(this)}
+				<Discipline	role					= {RoleHelper.getLoggedInUserRole(this)}
 							event					= {this.getEvent()}
 							players					= {this.getPlayers()}
 							disciplineItems			= {this.disciplineItems()}

@@ -52,6 +52,7 @@ const serviceList = {
         serviceList.schoolStudentParents = new Service('/i/schools/{schoolId}/students/{studentId}/parents', binding);
         serviceList.schoolStudentEvents = new Service('/i/schools/{schoolId}/students/{studentId}/events', binding);
 
+
         // forms
         serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);
 		serviceList.schoolForm 	= new Service('/i/schools/{schoolId}/forms/{formId}', binding);
@@ -182,6 +183,13 @@ const serviceList = {
 		serviceList.childEventPhotos = new Service('/i/children/events/{eventId}/photos', binding);
 		serviceList.childEventPhoto = new Service('/i/children/events/{eventId}/photos/{photoId}', binding);
 		serviceList.childParents = new Service('/i/children/{childId}/parents', binding);
+
+
+		// new role student
+		serviceList.studentSchoolEventsCount = new Service('/i/events/count', binding);
+		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
+		serviceList.studentSchoolEvents = new Service('/i/events', binding);
+		serviceList.studentSchoolEvent = new Service('/i/events/{eventId}', binding);
 
 		// postcode
 		serviceList.postCodes = new Service('/public/postcodes', binding);

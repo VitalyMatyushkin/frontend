@@ -11,7 +11,8 @@ const TasksWrapper = React.createClass({
 	},
 	componentWillMount: function() {
 		const tasks = this.getDefaultBinding().toJS('tasks');
-		if(tasks.length === 0 && !RoleHelper.isParent(this)) {
+
+		if(tasks.length === 0 && RoleHelper.getLoggedInUserRole(this) !== 'PARENT' && RoleHelper.getLoggedInUserRole(this) !== 'STUDENT') {
 			this.setViewMode("ADD");
 		} else {
 			this.setViewMode("VIEW");
@@ -117,8 +118,10 @@ const TasksWrapper = React.createClass({
 		this.setEditingTask(undefined);
 	},
 	render: function() {
+		const isShowEditButtons = RoleHelper.getLoggedInUserRole(this) !== 'STUDENT' && RoleHelper.getLoggedInUserRole(this) !== 'PARENT';
+
 		return (
-			<Tasks	isShowEditButtons		= {RoleHelper.isParent(this)}
+			<Tasks	isShowEditButtons		= {isShowEditButtons}
 					viewMode				= {this.getViewMode()}
 					tasks					= {this.getTasks()}
 					editingTask				= {this.getEditingTask()}

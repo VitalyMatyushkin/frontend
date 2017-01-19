@@ -34,7 +34,7 @@ const Task = React.createClass({
 					</div>
 				</div>
 				<div className="eTask_column mButtons">
-					<If condition={!this.props.isShowEditButtons}>
+					<If condition={this.props.isShowEditButtons}>
 						<div className="eTask_buttonsWrapper">
 							<PencilButton	handleClick	= {this.props.handleClickChangeTask.bind(null, this.props.task)}/>
 							<CrossButton	handleClick	= {this.props.handleClickDeleteTask.bind(null, this.props.task.id)}/>
