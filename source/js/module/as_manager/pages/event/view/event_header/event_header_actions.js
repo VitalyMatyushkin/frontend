@@ -340,7 +340,7 @@ function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 		schoolId:	activeSchoolId,
 		eventId:	event.id
 	})
-	.then(() => submitResultsForIndividualSport(event))
+	.then(() => submitResultsForIndividualSport(activeSchoolId, event))
 	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 };
 
