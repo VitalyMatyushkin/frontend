@@ -9,16 +9,13 @@ const	React			= require('react'),
 
 const SchoolChallenges = function(props){
 	const	school 	= props.school,
+			/**
+			 * I dont know why it check
+			 * Maybe it use when student reguster in two and more schools
+			 */
 			events	= props.events.filter(function(ev){
-				/**
-				 * TODO What is ascription?
-				 */
-				//return !!ev.get('ascription').get('childrenTakePart').find(id => id === school.get('id'));
-				/**
-				 * fake check
-				 */
-				return !!ev.get('invitedSchoolIds').find(id => id === school.get('id'));
-						});
+				return ev.get('inviterSchoolId') === school.get('id');
+			});
 
 	if(events.count()) {
 		//Iterate over the children present in the bag

@@ -44,11 +44,9 @@ const FixtureItem = React.createClass({
 			// and we must add schoolId for fixture item click handler
 			if(typeof this.props.event.child !== "undefined") {
 				this.props.onClick(this.props.event.id, this.props.event.child.schoolId);
-			} else if (typeof this.props.event.school !== "undefined") {
-				this.props.onClick(this.props.event.id, this.props.event.school.id);
-			}
-			else {
-				this.props.onClick(this.props.event.id);
+			} else {
+				//we need in activeSchoolId in student access, i dont know how distinguish student and no-student events
+				this.props.onClick(this.props.event.id, this.props.activeSchoolId);
 			}
 		}
 		e.stopPropagation();
