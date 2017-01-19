@@ -59,11 +59,12 @@ const PublicEventTeams = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		return {
-			default:	binding.sub('viewPlayers'),
-			event:		this.getBinding('event'),
-			points:		this.getBinding('points'),
-			mode:		this.getBinding('mode'),
-			isSync:		binding.sub('isSync')
+			default						: binding.sub('viewPlayers'),
+			event						: this.getBinding('event'),
+			points						: this.getBinding('points'),
+			mode						: this.getBinding('mode'),
+			individualScoreAvailable	: this.getBinding('individualScoreAvailable'),
+			isSync						: binding.sub('isSync')
 		};
 	},
 	render: function() {
