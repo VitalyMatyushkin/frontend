@@ -406,18 +406,18 @@ const Event = React.createClass({
 		const binding	= this.getDefaultBinding();
 
 		return {
-			default:					binding.sub('performanceTab'),
-			eventTeams:					binding.sub('eventTeams'),
-			event:						binding.sub('model')
+			default		: binding.sub('performanceTab'),
+			eventTeams	: binding.sub('eventTeams'),
+			event		: binding.sub('model')
 		};
 	},
 	getDisciplineTabBinding: function() {
 		const binding = this.getDefaultBinding();
 
 		return {
-			default:					binding.sub('disciplineTab'),
-			eventTeams:					binding.sub('eventTeams'),
-			event:						binding.sub('model')
+			default		: binding.sub('disciplineTab'),
+			eventTeams	: binding.sub('eventTeams'),
+			event		: binding.sub('model')
 		};
 	},
 	// TODO many player bundles, oh it's soo bad
