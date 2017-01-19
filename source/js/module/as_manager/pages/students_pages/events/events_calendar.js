@@ -23,8 +23,7 @@ const EventsCalendar = React.createClass({
 				selectedDate	= calendar.get('selectedDate'),
 
 				activeSchoolId 	= binding.toJS('activeSchoolId'),
-				//we think that the student is a member of the one school yet
-				schoolIdList 	= binding.toJS('schoolIds.0');
+				schoolIdList 	= activeSchoolId === 'all' ? '' : [activeSchoolId];
 				//schoolIdList 	= activeSchoolId === 'all' ? binding.toJS('schoolIds') : [activeSchoolId];
 
 		CalendarActions.setCurrentMonth(monthDate, schoolIdList, calendar);
@@ -73,10 +72,10 @@ const EventsCalendar = React.createClass({
 	render: function() {
 		const 	binding 		= this.getDefaultBinding(),
 				activeSchoolId 	= binding.get('activeSchoolId'),
-				//we think that the student is a member of the one school yet
-				schoolIdList = binding.toJS('schoolIds.0');
+
+				schoolIdList 	= activeSchoolId === 'all' ? '' : [activeSchoolId];
 				//schoolIdList 	= activeSchoolId === 'all' ? binding.toJS('schoolIds') : [activeSchoolId];
-		console.log('break');
+
 		return (
 			<div className="bEvents">
 				<div className="eEvents_container">

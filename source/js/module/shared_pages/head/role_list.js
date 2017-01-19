@@ -42,15 +42,17 @@ const  RoleList = React.createClass({
 
 				roles.forEach(role => {
 					role.permissions.forEach(permission => {
-						// Always add all permissions besides PARENT permissions.
-						// Add parent permissions only at once.
-						if(permission.preset !== 'PARENT' || permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
+						// Always add all permissions besides PARENT and STUDENT permissions.
+						// Add parent and student permissions only at once.
+						const isNotStudentParent = permission.preset !== 'PARENT' && permission.preset !== 'STUDENT';
+						const isStudentParent = permission.preset === 'PARENT' || permission.preset === 'STUDENT';
+						if(isNotStudentParent || isStudentParent && !isAlreadyHaveParentPermission) {
 							permission.role = role.name;
 							permissions.push(permission);
 						}
 
 						// If permissions array already has PARENT permission, set isAlreadyHaveParentPermission flag to true
-						if(permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
+						if(isStudentParent && !isAlreadyHaveParentPermission) {
 							isAlreadyHaveParentPermission = true;
 						}
 					});
@@ -119,7 +121,7 @@ const  RoleList = React.createClass({
 				role        = permission ? permission.role : null,
 				roleClient 	= permission ? RoleHelper.ROLE_TO_PERMISSION_MAPPING[permission.role] : 'NO ROLE',
 				schools     = binding.toJS('schools'),
-				school      = schools.length && role !== 'PARENT' ? schools.find(s => s.id === schoolId) : null,
+				school      = schools.length && role !== 'PARENT' && role !== 'STUDENT' ? schools.find(s => s.id === schoolId) : null,
 				schoolName  = school ? school.name : null,
 				id          = permission ? permission.id : null;
 
