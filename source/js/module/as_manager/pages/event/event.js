@@ -561,6 +561,7 @@ const Event = React.createClass({
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				role			= RoleHelper.getLoggedInUserRole(this);
+
 		switch (true) {
 			case !self.isSync():
 				return (
