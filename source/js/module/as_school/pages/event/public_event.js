@@ -24,17 +24,26 @@ const PublicEvent = React.createClass({
 			},
 			sync:		false,
 			mode:		'general',
-			activeTab:	'teams'
+			activeTab:	'teams',
+			individualScoreAvailable: [
+				{
+					value: true
+				},
+				{
+					value: true
+				}
+			]
 		});
 	},
 	_getEventTeamsBinding: function() {
 		const binding = this.getDefaultBinding();
 
 		return {
-			default:	binding.sub('eventTeams'),
-			activeTab:	binding.sub('activeTab'),
-			event:		binding.sub('model'),
-			mode:		binding.sub('mode')
+			default						: binding.sub('eventTeams'),
+			activeTab					: binding.sub('activeTab'),
+			event						: binding.sub('model'),
+			mode						: binding.sub('mode'),
+			individualScoreAvailable	: binding.sub('individualScoreAvailable')
 		};
 	},
 	componentWillMount: function() {
@@ -119,8 +128,8 @@ const PublicEvent = React.createClass({
 					<FixtureListItem	event			= { binding.toJS('model') }
 										activeSchoolId	= { this.props.activeSchoolId }
 					/>
-					<PublicEventTeams binding={this._getEventTeamsBinding()}/>
-					<PublicEventGallery binding={binding.sub('gallery')}/>
+					<PublicEventTeams	binding			= {this._getEventTeamsBinding()}/>
+					<PublicEventGallery	binding			= {binding.sub('gallery')}/>
 					{this.renderMatchReport()}
 				</div>
 			);
