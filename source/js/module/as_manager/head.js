@@ -39,6 +39,8 @@ const Head = React.createClass({
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.PARENT:
 				return this.getMainMenuItemsForParent();
+			case role === RoleHelper.USER_ROLES.STUDENT:
+				return this.getMainMenuItemsForStudent();
 		}
 	},
 	/**
@@ -100,6 +102,37 @@ const Head = React.createClass({
 				key: 'Achievements',
 				authorization: true,
 				routes: ['/events/achievement/:userId']
+			}, {
+				href: '/#help',
+				name: 'Help',
+				key: 'Help'
+			}
+		];
+	},
+	/**
+	 * Return main menu items for STUDENT role.
+	 * @returns {*[]}
+	 */
+	getMainMenuItemsForStudent: function() {
+		return [
+			{
+				href: '/#events/calendar/all',
+				name: 'Calendar',
+				key: 'Calendar',
+				authorization: true,
+				routes: ['/events/calendar/:schoolId']
+			}, {
+				href: '/#events/fixtures/all',
+				name: 'Fixtures',
+				key: 'Fixtures',
+				authorization: true,
+				routes: ['/events/fixtures/:schoolId']
+			}, {
+				href: '/#events/achievement/all',
+				name: 'Achievements',
+				key: 'Achievements',
+				authorization: true,
+				routes: ['/events/achievement/:schoolId']
 			}, {
 				href: '/#help',
 				name: 'Help',

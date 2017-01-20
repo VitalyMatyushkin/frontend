@@ -95,15 +95,15 @@ function submitSchoolResults(activeSchoolId, event){
 	}
 
 	if(body.length !== 0) {
-		const promises = [];
+		let promises = [];
 
-		promises.push(
+		promises = promises.concat(
 			body
 				.filter(scoreData => isNewResultItem(scoreData))
 				.map(scoreData => window.Server.schoolEventResultSchoolScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
 		);
 
-		promises.push(
+		promises = promises.concat(
 			body
 				.filter(scoreData => !isNewResultItem(scoreData))
 				.map(
@@ -152,15 +152,15 @@ function submitHouseResults(activeSchoolId, event) {
 	}
 
 	if(score.length !== 0) {
-		const promises = [];
+		let promises = [];
 
-		promises.push(
+		promises = promises.concat(
 			score
 				.filter(scoreData => isNewResultItem(scoreData))
 				.map(scoreData => window.Server.schoolEventResultHousesScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
 		);
 
-		promises.push(
+		promises = promises.concat(
 			score
 				.filter(scoreData => !isNewResultItem(scoreData))
 				.map(
@@ -208,15 +208,15 @@ function submitTeamResults(activeSchoolId, event) {
 	}
 
 	if(score.length !== 0) {
-		const promises = [];
+		let promises = [];
 
-		promises.push(
+		promises = promises.concat(
 			score
 				.filter(scoreData => isNewResultItem(scoreData))
 				.map(scoreData => window.Server.schoolEventResultTeamScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
 		);
 
-		promises.push(
+		promises = promises.concat(
 			score
 				.filter(scoreData => !isNewResultItem(scoreData))
 				.map(
@@ -259,15 +259,15 @@ function submitIndividualResults(activeSchoolId, event) {
 		}
 	}
 
-	const promises = [];
+	let promises = [];
 
-	promises.push(
+	promises = promises.concat(
 		score
 			.filter(scoreData => typeof scoreData.score !== 'undefined' && isNewResultItem(scoreData))
 			.map(scoreData => window.Server.schoolEventResultIndividualsScores.post({ schoolId: activeSchoolId, eventId: event.id }, scoreData))
 	);
 
-	promises.push(
+	promises = promises.concat(
 		score
 			.filter(scoreData => typeof scoreData.score !== 'undefined' && isResultItemChanged(scoreData))
 			.map(
@@ -340,7 +340,7 @@ function closeMatchForIndividualSport(activeSchoolId, event, binding) {
 		schoolId:	activeSchoolId,
 		eventId:	event.id
 	})
-	.then(() => submitResultsForIndividualSport(event))
+	.then(() => submitResultsForIndividualSport(activeSchoolId, event))
 	.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
 };
 

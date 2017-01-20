@@ -19,7 +19,7 @@ const DetailsWrapper = React.createClass({
 	propTypes:{
 		schoolId:	React.PropTypes.string.isRequired,
 		eventId:	React.PropTypes.string.isRequired,
-		isParent:	React.PropTypes.bool.isRequired
+		role:		React.PropTypes.string.isRequired
 	},
 	getInitialState: function(){
 		return {
@@ -30,7 +30,6 @@ const DetailsWrapper = React.createClass({
 	},
 	componentWillMount: function() {
 		let details;
-
 		Actions.getDetailsByEventId(this.props.schoolId, this.props.eventId)
 			.then(_details => {
 				details = _details;
@@ -47,6 +46,7 @@ const DetailsWrapper = React.createClass({
 					venue			: this.getVenueView(event)
 				});
 			});
+
 	},
 	/**
 	 * Copy event details and set it as prop of component - this.backupEventDetails
@@ -125,7 +125,7 @@ const DetailsWrapper = React.createClass({
 							lunchTime			= { this.state.eventDetails.lunchTime }
 							staff				= { this.state.eventDetails.staff }
 							handleChange		= { this.handleChange }
-							isParent			= { this.props.isParent }
+							role				= { this.props.role }
 							activeSchoolId		= { this.props.schoolId }
 							onSave				= { this.onSave }
 							onCancel			= { this.onCancel }

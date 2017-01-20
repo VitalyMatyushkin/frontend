@@ -8,6 +8,7 @@ const	React				= require('react'),
 		If					= require('module/ui/if/if'),
 		Actions 			= require('./report-actions'),
 		Loader				= require('module/ui/loader'),
+		RoleHelper			= require('module/helpers/role_helper'),
 
 		MatchReportStyle	= require('../../../../../../../styles/pages/event/b_match_report.scss'),
 		ButtonStyle			= require('../../../../../../../styles/ui/b_button.scss'),
@@ -19,23 +20,25 @@ const MatchReport = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes:{
 		eventId		: React.PropTypes.string.isRequired,
-		isParent	: React.PropTypes.bool.isRequired
+		role		: React.PropTypes.string.isRequired
 	},
 	componentWillMount: function(){
-		const binding 		= this.getDefaultBinding();
+		const 	binding 	= this.getDefaultBinding(),
+				rootBinding	= this.getMoreartyContext().getBinding();
 
 		binding.set('isLoadActions', true);
 		this.actions = new Actions(this);
+
 		this.actions.load();
 	},
 	isShowViewMode: function() {
 		return !this.actions.isEditMode();
 	},
 	isShowEditMode: function() {
-		return !this.props.isParent && this.actions.isEditMode();
+		return this.props.role !== 'PARENT' && this.props.role !== 'STUDENT' && this.actions.isEditMode();
 	},
 	isShowEditButton: function() {
-		return !this.props.isParent;
+		return this.props.role !== 'PARENT' && this.props.role !== 'STUDENT';
 	},
 	render:function(){
 		const 	self 			= this,

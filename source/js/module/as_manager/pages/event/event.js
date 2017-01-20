@@ -76,85 +76,183 @@ const Event = React.createClass({
 	componentWillMount: function () {
 		const	self		= this,
 				rootBinding	= self.getMoreartyContext().getBinding(),
+				role		= RoleHelper.getLoggedInUserRole(this),
 				binding		= self.getDefaultBinding();
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
 		let eventData, report, photos, settings;
-		window.Server.schoolEvent.get({
-			schoolId: this.props.activeSchoolId,
-			eventId: self.eventId
-		}).then(event => {
-			event.schoolsData = TeamHelper.getSchoolsData(event);
-			event.teamsData = event.teamsData.sort((t1, t2) => {
-				if (!t1 || !t2 || t1.name === t2.name) {
-					return 0;
-				}
-				if (t1.name < t2.name) {
-					return -1;
-				}
-				if (t1.name > t2.name) {
-					return 1;
-				}
-			});
-			event.housesData = event.housesData.sort((h1, h2) => {
-				if (!h1 || !h2 || h1.name === h2.name) {
-					return 0;
-				}
-				if (h1.name < h2.name) {
-					return -1;
-				}
-				if (h1.name > h2.name) {
-					return 1;
-				}
-			});
-			// FUNCTION MODIFY EVENT OBJECT!!
-			EventResultHelper.initializeEventResults(event);
-
-			eventData = event;
-
-			// loading match report
-			return window.Server.schoolEventReport.get({
+		/**
+		 * If role not equal student, do everything as usual
+		 */
+		if (role !== 'STUDENT') {
+			window.Server.schoolEvent.get({
 				schoolId: this.props.activeSchoolId,
 				eventId: self.eventId
+			}).then(event => {
+				event.schoolsData = TeamHelper.getSchoolsData(event);
+				event.teamsData = event.teamsData.sort((t1, t2) => {
+					if (!t1 || !t2 || t1.name === t2.name) {
+						return 0;
+					}
+					if (t1.name < t2.name) {
+						return -1;
+					}
+					if (t1.name > t2.name) {
+						return 1;
+					}
+				});
+				event.housesData = event.housesData.sort((h1, h2) => {
+					if (!h1 || !h2 || h1.name === h2.name) {
+						return 0;
+					}
+					if (h1.name < h2.name) {
+						return -1;
+					}
+					if (h1.name > h2.name) {
+						return 1;
+					}
+				});
+				// FUNCTION MODIFY EVENT OBJECT!!
+				EventResultHelper.initializeEventResults(event);
+
+				eventData = event;
+
+				// loading match report
+				return window.Server.schoolEventReport.get({
+					schoolId: this.props.activeSchoolId,
+					eventId: self.eventId
+				});
+			}).then(_report => {
+				report = _report;
+
+				return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
+			}).then(_photos => {
+				photos = _photos;
+
+				return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
+			}).then(_settings => {
+				settings = _settings;
+
+				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
+			}).then(tasks => {
+				eventData.matchReport = report.content;
+
+				this.setPlayersFromEventToBinding(eventData);
+				binding.atomically()
+					.set('model',							Immutable.fromJS(eventData))
+					.set('gallery.photos',					Immutable.fromJS(photos))
+					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
+					.set('gallery.isSync',					true)
+					.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
+					.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
+					.set('mode',							Immutable.fromJS('general'))
+					.commit();
+
+				self.initTabs();
+
+				binding.set('sync', Immutable.fromJS(true));
+
+				this.addListeners();
+
+				return eventData;
 			});
-		}).then(_report => {
-			report = _report;
+		} else {
+			window.Server.studentSchoolEvent.get({
+				schoolId: this.props.activeSchoolId,
+				eventId: self.eventId
+			}).then(event => {
+				event.schoolsData = TeamHelper.getSchoolsData(event);
+					event.teamsData = event.teamsData.sort((t1, t2) => {
+						if (!t1 || !t2 || t1.name === t2.name) {
+							return 0;
+						}
+						if (t1.name < t2.name) {
+							return -1;
+						}
+						if (t1.name > t2.name) {
+							return 1;
+						}
+					});
+					event.housesData = event.housesData.sort((h1, h2) => {
+						if (!h1 || !h2 || h1.name === h2.name) {
+							return 0;
+						}
+						if (h1.name < h2.name) {
+							return -1;
+						}
+						if (h1.name > h2.name) {
+							return 1;
+						}
+					});
 
-			return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
-		}).then(_photos => {
-			photos = _photos;
+				// FUNCTION MODIFY EVENT OBJECT!!
+				EventResultHelper.initializeEventResults(event);
 
-			return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
-		}).then(_settings => {
-			settings = _settings;
+				eventData = event;
 
-			return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
-		}).then(tasks => {
-			eventData.matchReport = report.content;
+				// loading match report
+				return window.Server.schoolEventReport.get({
+					schoolId: this.props.activeSchoolId,
+					eventId: self.eventId
+				});
+			}).then(_report => {
+				report = _report;
 
-			this.setPlayersFromEventToBinding(eventData);
-			binding.atomically()
-				.set('model',							Immutable.fromJS(eventData))
-				.set('gallery.photos',					Immutable.fromJS(photos))
-				.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
-				.set('gallery.isSync',					true)
-				.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
-				.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
-				.set('mode',							Immutable.fromJS('general'))
-				.commit();
+				return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
+			}).then(_photos => {
+				photos = _photos;
+				/**
+				 * fake data school settings, we turn off comments and add photo
+				 */
+				/*return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
+			}).then(_settings => {
+				settings = _settings;*/
+				settings = {"commentsEnabled":false,"photosEnabled":false};
+				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
+			}).then(tasks => {
 
-			self.initTabs();
+				eventData.matchReport = report.content;
 
-			binding.set('sync', Immutable.fromJS(true));
+				this.setPlayersFromEventToBinding(eventData);
+				binding.atomically()
+					.set('model',							Immutable.fromJS(eventData))
+					.set('gallery.photos',					Immutable.fromJS(photos))
+					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
+					.set('gallery.isSync',					true)
+					.set('tasksTab.tasks',					Immutable.fromJS(tasks.filter(t => t.schoolId === this.props.activeSchoolId)))
+					.set('isUserCanWriteComments',			Immutable.fromJS(settings.commentsEnabled))
+					.set('mode',							Immutable.fromJS('general'))
+					.commit();
 
-			this.addListeners();
+				self.initTabs();
 
-			return eventData;
-		});
+				binding.set('sync', Immutable.fromJS(true));
+
+				this.addListeners();
+
+				return eventData;
+			});
+		}
 	},
 	addListeners: function() {
 		this.addListenerToEventTeams();
+		this.addListenerForIndividualScoreAvailable();
+	},
+	addListenerForIndividualScoreAvailable: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
+			if(!descriptor.getCurrentValue()) {
+				binding.set('model.results.individualScore', Immutable.fromJS([]));
+			}
+		});
+
+		binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
+			if(!descriptor.getCurrentValue()) {
+				binding.set('model.results.individualScore', Immutable.fromJS([]));
+			}
+		});
 	},
 	addListenerToEventTeams: function() {
 		const binding = this.getDefaultBinding();
@@ -222,6 +320,9 @@ const Event = React.createClass({
 		switch (role) {
 			case RoleHelper.USER_ROLES.PARENT:
 				service = window.Server.childEventPhotos;
+				break;
+			case RoleHelper.USER_ROLES.STUDENT:
+				service = window.Server.schoolEventPhotos;
 				break;
 			default:
 				service = window.Server.schoolEventPhotos;
@@ -319,18 +420,18 @@ const Event = React.createClass({
 		const binding	= this.getDefaultBinding();
 
 		return {
-			default:					binding.sub('performanceTab'),
-			eventTeams:					binding.sub('eventTeams'),
-			event:						binding.sub('model')
+			default		: binding.sub('performanceTab'),
+			eventTeams	: binding.sub('eventTeams'),
+			event		: binding.sub('model')
 		};
 	},
 	getDisciplineTabBinding: function() {
 		const binding = this.getDefaultBinding();
 
 		return {
-			default:					binding.sub('disciplineTab'),
-			eventTeams:					binding.sub('eventTeams'),
-			event:						binding.sub('model')
+			default		: binding.sub('disciplineTab'),
+			eventTeams	: binding.sub('eventTeams'),
+			event		: binding.sub('model')
 		};
 	},
 	// TODO many player bundles, oh it's soo bad
@@ -433,7 +534,7 @@ const Event = React.createClass({
 	 * Function return add task button for tasks tab.
 	 */
 	getAddTaskButton: function() {
-		if(RoleHelper.isParent(this)) {
+		if(RoleHelper.getLoggedInUserRole(this) === 'PARENT' || RoleHelper.getLoggedInUserRole(this) === 'STUDENT') {
 			return null;
 		} else {
 			return <Button extraStyleClasses="mAddTask" text="Add job" onClick={this.handleClickAddTaskButton}/>;
@@ -475,7 +576,8 @@ const Event = React.createClass({
 				mode			= binding.toJS('mode'),
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
-				isParent		= RoleHelper.isParent(this);
+				role			= RoleHelper.getLoggedInUserRole(this);
+
 		switch (true) {
 			case !self.isSync():
 				return (
@@ -497,11 +599,13 @@ const Event = React.createClass({
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
-									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-															  isVisible={isaLeftShow}
-															  className="mLeft"/>
-									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-															  isVisible={isaRightShow}/>
+									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
+																isVisible	= {isaLeftShow}
+																className	= "mLeft"
+									/>
+									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.1')}
+																isVisible	= {isaRightShow}
+									/>
 								</div>
 							</div>
 							<EventTeams	binding			= {self.getEventTeamsBinding()}
@@ -554,7 +658,7 @@ const Event = React.createClass({
 								<div className="bEventBottomContainer">
 									<DetailsWrapper	eventId		= {self.eventId}
 													schoolId	= {this.props.activeSchoolId}
-													isParent	= {isParent}
+													role		= {role}
 									/>
 									<div className="eDetails_border" />
 								</div>
@@ -563,7 +667,7 @@ const Event = React.createClass({
 								<div className="bEventBottomContainer">
 									<MatchReport	binding		= {binding.sub('matchReport')}
 													eventId		= {self.eventId}
-													isParent	= {isParent}
+													role		= {role}
 									/>
 								</div>
 							</If>

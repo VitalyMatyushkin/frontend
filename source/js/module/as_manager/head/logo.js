@@ -1,31 +1,26 @@
-const React = require('react'),
-    Morearty = require('morearty'),
-    SVG = require('module/ui/svg');
+const 	React 		= require('react'),
+		Morearty 		= require('morearty'),
+		SVG 			= require('module/ui/svg'),
+		DomainHelper	= require('module/helpers/domain_helper'),
+		RoleHelper		= require('module/helpers/role_helper');
 
 const Logo = React.createClass({
-    mixins: [Morearty.Mixin],
-    returnToHomePage: function () {
-        const subdomains = document.location.host.split('.');
-        let homePage,
-            role = subdomains[0];
-        switch (role) {
-            case 'manager':
-                homePage = 'school_admin/summary';
-                break;
-            case 'parents':
-                homePage = 'events/calendar/all';
-                break;
-        }
-        document.location.hash = homePage;
-    },
-    render: function () {
-        var self = this;
-        return (
-            <div className="bTopLogo" onClick={self.returnToHomePage}>
-                <img src="images/logo.svg"/>
-            </div>
-        )
-    }
+	mixins: [Morearty.Mixin],
+
+	render: function () {
+		/**
+		 * TODO Fix it. We must get role from RoleHelper
+		 * @type {string}
+		 */
+		const role = typeof this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role') !== 'undefined'
+			? this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role')
+			: '';
+		return (
+			<div className="bTopLogo" onClick={() => DomainHelper.redirectToStartPage(role)}>
+				<img src="images/logo.svg"/>
+			</div>
+		)
+	}
 });
 
 module.exports = Logo;

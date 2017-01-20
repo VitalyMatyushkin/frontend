@@ -6,6 +6,7 @@ const RoleHelper = {
 		teacher:	'app',
 		trainer:	'app',
 		parent:		'app',
+		student:	'app',
 		no_body:	'app'// it's a synthetic role, it isn't exist on server
 	},
 	USER_ROLES: {
@@ -50,6 +51,11 @@ const RoleHelper = {
 		const role = this.getLoggedInUserRole(self);
 
 		return role === this.USER_ROLES.PARENT;
+	},
+	isStudent: function(self) {
+		const role = this.getLoggedInUserRole(self);
+
+		return role === this.USER_ROLES.STUDENT;
 	}
 };
 
