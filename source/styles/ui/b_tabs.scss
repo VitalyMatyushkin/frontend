@@ -11,9 +11,11 @@
   background-color: $blueColor;
 
   .eTabs_tab{
-    width: 150px;
+    min-width: 100px;
+    max-width: 150px;
     height: 70px;
 
+    flex: 1;
     margin: 0;
     border-right: 1px solid $lightBlue;
     line-height: 70px;
@@ -41,5 +43,25 @@
     justify-content: flex-end;
 
     padding: 10px 10px 0 0;
+  }
+}
+
+@media screen and (max-width: 768px){
+  .bTabs {
+    flex-direction: column;
+
+    .eTabs_tab{
+      max-width: 100%;
+      height: auto;
+      line-height: normal;
+
+      padding: 15px 0;
+    }
+    .eTabs_customButtonContainer {
+      padding-right: 0;
+    }
+    .bButton.mAddTask {
+      width: 100%;
+    }
   }
 }
