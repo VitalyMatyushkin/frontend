@@ -1,6 +1,7 @@
 const GALLERY_ACCESS_PRESET = {
 	'MANAGER'	: 'MANAGER',
 	'PARENT'	: 'PARENT',
+	'STUDENT'	: 'STUDENT',
 	'PUBLIC'	: 'PUBLIC'
 };
 

@@ -30,6 +30,8 @@ const PreviewPhoto = React.createClass({
 		switch (this.props.accessMode) {
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
 				return null;
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.STUDENT:
+				return null;
 			default:
 				return (
 					<div className='ePreviewPhoto_actions'>

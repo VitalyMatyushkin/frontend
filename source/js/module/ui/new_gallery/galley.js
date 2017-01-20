@@ -34,6 +34,8 @@ const Gallery = React.createClass({
 		switch (this.props.accessMode) {
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER:
 				return true;
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.STUDENT:
+				return false;
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PARENT:
 				return (currentPhoto.author.role === 'PARENT' && currentPhoto.author.userId === this.props.currentUserId);
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
