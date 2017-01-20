@@ -196,7 +196,9 @@ const StudentHelper = {
 
 			return window.Server.studentSchoolEventsCount.get({
 				filter: {
-					schoolId: schoolId
+					where:{
+						schoolId: schoolId
+					}
 				}
 			});
 		}).then(stats => {

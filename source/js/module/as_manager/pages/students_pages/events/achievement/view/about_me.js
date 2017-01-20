@@ -11,7 +11,7 @@ const AboutMeBlock = React.createClass({
 	_getAboutNode: function() {
 		const 	binding 		= this.getDefaultBinding(),
 				studentBirthday = DateHelper.toLocal(binding.get('student.birthday'));
-		console.log( binding.toJS());
+
 		/**
 		 * Arrays holding icon names and data fields, moves away from pushing all of data onto a component array
 		 * that was not being cleared and causing page to render details twice
