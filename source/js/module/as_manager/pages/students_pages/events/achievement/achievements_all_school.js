@@ -27,25 +27,9 @@ const AchievementsAllSchool = React.createClass({
 				ids			= school && school.map(sch => sch.id);
 
 		if(ids){
-			window.Server.studentSchoolEventsCount.get({filter:{
-				where:{
-					schoolIdList: ids,
-					winnersSchoolIdList: ids,
-					scoredSchoolIdList: ids,
-					status: EventHelper.EVENT_STATUS.FINISHED
-				}
-			}})
-				.then(data => {
-					/**
-					 * Fake data
-					 */
-					/*const data = {
-					 "schoolEventCount":[2],
-					 "schoolWinnerEventCount":[1],
-					 "schoolScoredEventCount":[2]
-					 };*/
-					binding.set('allAchievements', Immutable.fromJS(data));
-				});
+			window.Server.studentSchoolEventsCount.get().then(data => {
+				binding.set('allAchievements', Immutable.fromJS(data));
+			});
 		}
 	},
 	renderAllAchievements:function(){
@@ -60,15 +44,15 @@ const AchievementsAllSchool = React.createClass({
 		);
 
 		if(school && school.length && achievements) {
-			result = school.map(function (sch, i) {
-				const schoolName = sch.name,
-					gamesPlayed = achievements.schoolEventCount[i],
-					gamesWon = achievements.schoolWinnerEventCount[i],
-					gamesLost = gamesPlayed - gamesWon,
-					gamesScored = achievements.schoolScoredEventCount[i];
 
-				return (
-					<div key={i} className="eAchievement_row">
+			const schoolName = 'All school',
+				gamesPlayed = achievements.totalEvents,
+				gamesWon = achievements.wonEvents,
+				gamesLost = gamesPlayed - gamesWon,
+				gamesScored = achievements.scoredEvents;
+
+			result = (
+					<div className="eAchievement_row">
 						<div
 							className="eAchievement_common eAchievement_name">{schoolName}</div>
 						<div
@@ -77,8 +61,7 @@ const AchievementsAllSchool = React.createClass({
 						<div className="eAchievement_common eAchievementGamesLost">{gamesLost}</div>
 						<div className="eAchievement_common eAchievementGoalsScored">{gamesScored}</div>
 					</div>
-				)
-			});
+				);
 		}
 
 		return result;
