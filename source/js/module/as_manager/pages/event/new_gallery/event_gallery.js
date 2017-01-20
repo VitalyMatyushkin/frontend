@@ -18,6 +18,8 @@ const EventGallery = React.createClass({
 		switch (userRole) {
 			case "PARENT":
 				return GalleryAccessPresets.GALLERY_ACCESS_PRESET.PARENT;
+			case "STUDENT":
+				return GalleryAccessPresets.GALLERY_ACCESS_PRESET.STUDENT;
 			default:
 				return GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER;
 		}

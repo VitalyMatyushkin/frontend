@@ -56,7 +56,7 @@ const EventsCalendar = React.createClass({
 				challengesList = (
 					<Challenges	isSync	= {isSelectedDateEventsInSync}
 								events	= {selectedDateEvents.toJS()}
-								onClick	= {this.onEventClick.bind(null, sch.schoolId)}
+								onClick	= {this.onEventClick.bind(null, sch.id)}
 					/>
 				);
 			} else {
