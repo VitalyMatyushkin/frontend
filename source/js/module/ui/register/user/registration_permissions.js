@@ -33,7 +33,7 @@ const RegistrationPermissions = React.createClass({
 				preset:currentType
 			};
 		Promise.all(
-			fieldsAr.map(
+			Object.getOwnPropertyNames(fieldsAr).map(
 				(fields) => {
 					if (fields.schoolId) {
 						dataToPost.schoolId = fields.schoolId;
