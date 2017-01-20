@@ -1,12 +1,12 @@
 /**
  * Created by Anatoly on 17.03.2016.
  */
-const	React			= require('react'),
-		Morearty		= require('morearty'),
-		Immutable		= require('immutable'),
+const	React						= require('react'),
+		Morearty					= require('morearty'),
+		Immutable					= require('immutable'),
 
-		StatsView		= require('module/shared_pages/student/statistic-view'),
-		StudentHelper	= require('module/helpers/studentHelper');
+		AchivementStatisticView		= require('./view/achivement-statistic-view'),
+		StudentHelper				= require('module/helpers/studentHelper');
 
 const AchievementOneSchool = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -25,7 +25,7 @@ const AchievementOneSchool = React.createClass({
 		if(!schoolId) {
 			document.location.hash = 'events/calendar/all';
 		} else if(schoolId && schoolId !=='all') {
-			StudentHelper.getStudentDataForPersonalStudentPage(schoolId)
+			StudentHelper.getStudentProfile(schoolId)
 				.then(studentData => {
 					binding.set('achievements', Immutable.fromJS(studentData));
 				});
@@ -36,12 +36,12 @@ const AchievementOneSchool = React.createClass({
 
 		if(this.activeSchoolId !== binding.get('activeSchoolId')){
 			this.reRender = true;
-			this.updateViewOnActiveChildIdChange();
+			this.updateViewOnActiveSchoolIdChange();
 			this.activeSchoolId = binding.get('activeSchoolId');
 		}
 
 		return (
-			<StatsView binding={binding} />
+			<AchivementStatisticView binding={binding} />
 		)
 	}
 });

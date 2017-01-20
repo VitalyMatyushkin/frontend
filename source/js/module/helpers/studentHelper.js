@@ -176,6 +176,67 @@ const StudentHelper = {
 				status: EventHelper.EVENT_STATUS.FINISHED
 			}
 		}});
+	},
+
+	getStudentProfile: function(schoolId){
+		let studentData;
+		const schoolIdAsArray = [schoolId];
+		return window.Server.profile.get().then(student => {
+			studentData = student;
+			studentData.student = {
+				firstName: student.firstName,
+				lastName: student.lastName,
+				medicalInfo: 'Not information', // doesn't exist in server request
+				birthday: student.birthday,
+				age: this._calculateAge(student.birthday)
+			};
+			studentData.classData = ''; // doesn't exist in server request
+			studentData.houseData = ''; // doesn't exist in server request
+			studentData.parents = ''; // doesn't exist in server request
+
+			return window.Server.studentSchoolEventsCount.get({
+				filter: {
+					where:{
+						schoolId: schoolId
+					}
+				}
+			});
+		}).then(stats => {
+				studentData.gamesWon = stats.wonEvents;
+				studentData.gamesScoredIn = stats.scoredEvents;
+				studentData.numOfGamesWon = stats.wonEvent;
+				studentData.numOfGamesScoredIn = stats.scoredEvents;
+
+			return window.Server.publicSchools.get({
+				filter: {
+					where: {
+						id: {$in: schoolIdAsArray}
+					}
+				}
+			});
+			}
+		).then(schoolData => {
+			studentData.schoolData = schoolData;
+
+
+			return window.Server.studentSchoolEvents.get({
+				filter: {
+					where:{
+						status: {
+							$in: ['FINISHED']
+						},
+						schoolId: {
+							$in: schoolIdAsArray
+						}
+					}
+				}
+			})
+		}).then( eventsData => {
+
+			studentData.schoolEvent = this._getPlayedGames(eventsData);
+			studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
+			return studentData;
+		});
 	}
 };
 
