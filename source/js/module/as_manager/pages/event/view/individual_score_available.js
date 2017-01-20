@@ -12,20 +12,23 @@ const EventIndividualScoreAvailable = React.createClass({
 	propTypes:{
 		isVisible: React.PropTypes.bool.isRequired
 	},
-	getDefaultState:function () {
+	getDefaultState: function() {
 		return Immutable.fromJS({
 			value:true
 		});
 	},
-	render:function () {
-		if(this.props.isVisible)
+	render: function() {
+		if(this.props.isVisible) {
 			return (
-				<FormField type="checkbox" binding={this.getDefaultBinding()}
-						   field="individualScoreAvailable"
-						   fieldClassName={classNames("mIndividualScoreAvailable", this.props.className)} >
+				<FormField	binding			= {this.getDefaultBinding()}
+							type			= "checkbox"
+							field			= "individualScoreAvailable"
+							fieldClassName	= {classNames("mIndividualScoreAvailable", this.props.className)}
+				>
 					Individual score available
 				</FormField>
 			);
+		}
 
 		return null;
 	}

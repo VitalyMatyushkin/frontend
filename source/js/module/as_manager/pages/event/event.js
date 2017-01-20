@@ -237,6 +237,22 @@ const Event = React.createClass({
 	},
 	addListeners: function() {
 		this.addListenerToEventTeams();
+		this.addListenerForIndividualScoreAvailable();
+	},
+	addListenerForIndividualScoreAvailable: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
+			if(!descriptor.getCurrentValue()) {
+				binding.set('model.results.individualScore', Immutable.fromJS([]));
+			}
+		});
+
+		binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
+			if(!descriptor.getCurrentValue()) {
+				binding.set('model.results.individualScore', Immutable.fromJS([]));
+			}
+		});
 	},
 	addListenerToEventTeams: function() {
 		const binding = this.getDefaultBinding();
@@ -583,11 +599,13 @@ const Event = React.createClass({
 							<div className="bEventMiddleSideContainer">
 								<div className="bEventMiddleSideContainer_row">
 									<EditingTeamsButtons binding={binding} />
-									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.0')}
-															  isVisible={isaLeftShow}
-															  className="mLeft"/>
-									<IndividualScoreAvailable binding={binding.sub('individualScoreAvailable.1')}
-															  isVisible={isaRightShow}/>
+									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.0')}
+																isVisible	= {isaLeftShow}
+																className	= "mLeft"
+									/>
+									<IndividualScoreAvailable	binding		= {binding.sub('individualScoreAvailable.1')}
+																isVisible	= {isaRightShow}
+									/>
 								</div>
 							</div>
 							<EventTeams	binding			= {self.getEventTeamsBinding()}
