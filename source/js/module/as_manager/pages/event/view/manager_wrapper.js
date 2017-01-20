@@ -353,13 +353,8 @@ const ManagerWrapper = React.createClass({
 		this.getDefaultBinding().set('teamManagerWrapper.default.isSavingChangesModePopupOpen', true);
 	},
 	doAfterCommitActions: function() {
-		const	self	= this,
-			binding	= self.getDefaultBinding();
-
-		binding.atomically()
-			.set('mode', 'general')
-			.set('eventTeams.isSync', Immutable.fromJS(false))
-			.commit();
+		// just go to event page
+		window.location.reload();
 	},
 	submit: function() {
 		const binding = this.getDefaultBinding();
