@@ -4,14 +4,16 @@ const	React				= require('react'),
 		Route				= require('module/core/route'),
 		Immutable			= require('immutable'),
 		SchoolUnionSummary	= require('../school_union_admin/pages/school_union_summary/school_union_summary'),
+		SchoolUnionEdit		= require('../school_union_admin/pages/school_union_edit/school_union_edit'),
 		SubMenu				= require('module/ui/menu/sub_menu');
 
 const SchoolUnionAdmin = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			schoolUnionSummary: {},
-			schoolRouting: {}
+			schoolUnionSummary	: {},
+			schoolUnionEdit		: {},
+			schoolRouting		: {}
 		});
 	},
 	componentWillMount: function() {
@@ -42,8 +44,8 @@ const SchoolUnionAdmin = React.createClass({
 								component	= {SchoolUnionSummary}
 						/>
 						<Route	path		= "/school_union_admin/summary/edit"
-								binding		= {binding.sub('schoolUnionSummary')}
-								component	= {SchoolUnionSummary}
+								binding		= {binding.sub('schoolUnionEdit')}
+								component	= {SchoolUnionEdit}
 						/>
 					</RouterView>
 				</div>

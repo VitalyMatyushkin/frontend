@@ -26,6 +26,9 @@ const SchoolUnionSummaryPanel = React.createClass({
 			expanded: !this.state.expanded
 		});
 	},
+	getSchoolUnionEditPageLink: function() {
+		return `${this.SCHOOL_UNION_SUMMARY_EDIT_LINK}?id=${this.props.activeSchoolUnionId}`;
+	},
 	getCutDescriptionText: function(descriptionText) {
 		return descriptionText.slice(0, this.MAX_DESCRIPTION_SIZE)  + '...' ;
 	},
@@ -33,7 +36,7 @@ const SchoolUnionSummaryPanel = React.createClass({
 		if(this.props.isShowEditButton === true) {
 			return (
 				<div className="eSchoolUnionSummary_editButton">
-					<a href={this.SCHOOL_UNION_SUMMARY_EDIT_LINK}>
+					<a href={this.getSchoolUnionEditPageLink()}>
 						<div	className			= "bButton mCircle bTooltip"
 								data-description	= "Edit"
 						>
