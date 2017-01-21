@@ -1,19 +1,32 @@
-const	React				= require('react'),
-		Morearty			= require('morearty'),
-		RouterView			= require('module/core/router'),
-		Route				= require('module/core/route'),
-		Immutable			= require('immutable'),
-		SchoolUnionSummary	= require('../school_union_admin/pages/school_union_summary/school_union_summary'),
-		SchoolUnionEdit		= require('../school_union_admin/pages/school_union_edit/school_union_edit'),
-		SubMenu				= require('module/ui/menu/sub_menu');
+const	React							= require('react'),
+		Morearty						= require('morearty'),
+		RouterView						= require('module/core/router'),
+		Route							= require('module/core/route'),
+		Immutable						= require('immutable'),
+		SchoolUnionSummary				= require('./pages/school_union_summary/school_union_summary'),
+		SchoolUnionEdit					= require('./pages/school_union_edit/school_union_edit'),
+		SchoolUnionSchoolListWrapper	= require('./pages/school_union_school_list/school_union_school_list_wrapper'),
+		SchoolUnionSchoolViewWrapper	= require('./pages/school_union_school_view/school_union_school_view_wrapper'),
+		SubMenu							= require('module/ui/menu/sub_menu');
 
 const SchoolUnionAdmin = React.createClass({
 	mixins: [Morearty.Mixin],
 	getDefaultState: function () {
 		return Immutable.fromJS({
-			schoolUnionSummary	: {},
-			schoolUnionEdit		: {},
-			schoolRouting		: {}
+			// binding for school union summary page
+			schoolUnionSummary		: {},
+			// binding for school union edit page
+			schoolUnionEdit			: {},
+			// binding for school list from school union
+			schoolUnionSchoolListWrapper : {
+				schoolUnionSchoolList: {},
+				schoolUnionSchoolListRouting: {}
+			},
+			// binding for school view
+			schoolUnionSchoolView: {
+
+			},
+			schoolUnionRouting		: {}
 		});
 	},
 	componentWillMount: function() {
@@ -21,9 +34,13 @@ const SchoolUnionAdmin = React.createClass({
 	},
 	setMenuItems: function() {
 		this.menuItems = [{
-			href	: '/#school_admin/summary',
+			href	: '/#school_union_admin/summary',
 			name	: 'Summary',
 			key		: 'Summary'
+		}, {
+			href	: '/#school_union_admin/schools',
+			name	: 'Schools',
+			key		: 'Schools'
 		}];
 	},
 	render: function() {
@@ -46,6 +63,15 @@ const SchoolUnionAdmin = React.createClass({
 						<Route	path		= "/school_union_admin/summary/edit"
 								binding		= {binding.sub('schoolUnionEdit')}
 								component	= {SchoolUnionEdit}
+						/>
+						<Route	path		= "/school_union_admin/schools /school_union_admin/schools:mode"
+								binding		= {binding.sub('schoolUnionSchoolListWrapper')}
+								component	= {SchoolUnionSchoolListWrapper}
+						/>
+
+						<Route	path		= "/school_union_admin/school /school_union_admin/school/:schoolId"
+								binding		= {binding.sub('schoolUnionSchoolView')}
+								component	= {SchoolUnionSchoolViewWrapper}
 						/>
 					</RouterView>
 				</div>
