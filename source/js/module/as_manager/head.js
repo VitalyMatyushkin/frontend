@@ -20,9 +20,10 @@ const Head = React.createClass({
 			case typeof role === "undefined":
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.ADMIN:
-				menuItems = this.getMainMenuItemsForSchoolWorker();
-				menuItems.push(this.getConsoleMenuItem());
-				menuItems.push(this.getHelpMenuItem());
+				//menuItems = this.getMainMenuItemsForSchoolWorker();
+				//menuItems.push(this.getConsoleMenuItem());
+				//menuItems.push(this.getHelpMenuItem());
+				menuItems = this.getMainMenuItemsForSchoolUnionAdmin();
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.MANAGER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
@@ -42,6 +43,19 @@ const Head = React.createClass({
 			case role === RoleHelper.USER_ROLES.STUDENT:
 				return this.getMainMenuItemsForStudent();
 		}
+	},
+	getMainMenuItemsForSchoolUnionAdmin: function() {
+		return [
+			{
+				href			: '/#school_union_admin/summary',
+				icon			: '',
+				name			: 'School Union',
+				key				: 'SchoolUnion',
+				routes			: ['/school_union_admin/:subPage'],
+				authorization	: true,
+				verified		: true
+			}
+		];
 	},
 	/**
 	 * Return main menu items for school worker roles:
