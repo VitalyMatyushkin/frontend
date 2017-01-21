@@ -177,7 +177,28 @@ const StudentHelper = {
 			}
 		}});
 	},
+	/**
+	 * Functions for student role
+	 */
 
+	getStudentScoredInEvents: function(studentId, events) {
+		const scoredInEvents = events.filter(event => {
+			//only events with score we add in scoredInEvents
+			return 	event.results['houseScore'].length !== 0 ||
+					event.results['individualScore'].length !== 0 ||
+					event.results['schoolScore'].length !== 0 ||
+					event.results['teamScore'].length !== 0;
+		});
+
+		// Just inject student scores to events model
+		// Because on next steps of obtaining data(on user_achievements REACT component)
+		// We need studentId
+		scoredInEvents.forEach(scoredInEvent => {
+			const result = scoredInEvent.results.individualScore.find(r => r.userId === studentId);
+			scoredInEvent.studentScore = result ? result.score : "student's team got some scores";
+		});
+		return scoredInEvents;
+	},
 	getStudentProfile: function(schoolId){
 		let studentData;
 		const schoolIdAsArray = [schoolId];
@@ -203,9 +224,7 @@ const StudentHelper = {
 			});
 		}).then(stats => {
 				studentData.gamesWon = stats.wonEvents;
-				studentData.gamesScoredIn = stats.scoredEvents;
 				studentData.numOfGamesWon = stats.wonEvent;
-				studentData.numOfGamesScoredIn = stats.scoredEvents;
 
 			return window.Server.publicSchools.get({
 				filter: {
@@ -232,7 +251,8 @@ const StudentHelper = {
 				}
 			})
 		}).then( eventsData => {
-
+			studentData.gamesScoredIn = this.getStudentScoredInEvents(studentData.id, eventsData);
+			studentData.numOfGamesScoredIn = studentData.gamesScoredIn.length;
 			studentData.schoolEvent = this._getPlayedGames(eventsData);
 			studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
 			return studentData;

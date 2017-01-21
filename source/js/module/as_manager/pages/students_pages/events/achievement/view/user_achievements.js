@@ -8,9 +8,13 @@ const   React           = require('react'),
 
 const UserAchievements = React.createClass({
     mixins: [Morearty.Mixin],
+	/**
+	 *  I'm not sure, but this function non-used
+	 */
     addZeroToFirst: function (num) {
         return String(num).length === 1 ? '0' + num : num;
     },
+
     onClickChallenge: function (eventId) {
         document.location.hash = 'event/' + eventId;
     },
@@ -40,9 +44,8 @@ const UserAchievements = React.createClass({
 		const   self 		= this,
 			rootBinding = self.getMoreartyContext().getBinding();
 
-		const 	role 		= rootBinding.get('userData.authorizationInfo.role'),
-				isParent 	= role === "PARENT";
-		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
+		const	binding = this.getDefaultBinding(),
+				activeSchoolId = binding.get('schoolData.0.id');
 
 		let eventsByDate;
 
@@ -52,6 +55,7 @@ const UserAchievements = React.createClass({
                     new Date(event.startTime),
                     new Date(date));
             });
+
             return eventsByDate.map(function (event, index) {
                 let comment;
 
@@ -81,14 +85,14 @@ const UserAchievements = React.createClass({
         }
     },
     getDates: function (dataFrom) {
-    	const dataFromArray = [dataFrom];
-        const binding = this.getDefaultBinding();
+
+        const self = this;
 		let dates;
-        if(typeof dataFromArray !== 'undefined' && dataFromArray.gamesScoredIn){
-            dates = dataFromArray.gamesScoredIn.reduce(function(memo,val){
-                var date = Date.parse(val.startTime),
+        if(typeof dataFrom !== 'undefined' && dataFrom.gamesScoredIn){
+            dates = dataFrom.gamesScoredIn.reduce(function(memo,val){
+                let date = Date.parse(val.startTime),
                     any = memo.some(function(d){
-                        return this.sameDay(date,d);
+                        return (self.sameDay(date,d));
                     });
                 if(!any){
                     memo = memo.push(date);
@@ -97,7 +101,7 @@ const UserAchievements = React.createClass({
             }, Immutable.List());
 
             return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
-                var date = new Date(datetime),
+                let date = new Date(datetime),
                     monthNames = [ "January", "February", "March", "April", "May", "June",
                         "July", "August", "September", "October", "November", "December" ];
                 return <div key={dateTimeIndex} className="bAchievementsDate">
@@ -106,7 +110,7 @@ const UserAchievements = React.createClass({
                         monthNames[date.getMonth()] + ' ' +
                         date.getFullYear()}
                     </div>
-                    <div className="eChallengeDate_list">{this.getEvents(datetime,dataFrom)}</div>
+                    <div className="eChallengeDate_list">{self.getEvents(datetime,dataFrom)}</div>
                 </div>;
             }).toArray() : (<div>Student hasn't achieved a goal yet!</div>);
         }
@@ -127,7 +131,7 @@ const UserAchievements = React.createClass({
         const 	binding 	= this.getDefaultBinding(),
             	data 		= binding.toJS(),
             	teamStats 	= this.getDates(data);
-        //console.log(binding);
+
         return (<div>{teamStats}</div>)
     }
 });
