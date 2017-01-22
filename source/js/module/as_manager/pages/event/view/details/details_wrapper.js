@@ -28,7 +28,10 @@ const DetailsWrapper = React.createClass({
 			backupEventDetails	: {}
 		};
 	},
-	componentWillMount: function() {
+	/**
+	 * We don't use componentWillMount, because we can't setState on unmount component
+	 */
+	componentDidMount: function() {
 		let details;
 		Actions.getDetailsByEventId(this.props.schoolId, this.props.eventId)
 			.then(_details => {

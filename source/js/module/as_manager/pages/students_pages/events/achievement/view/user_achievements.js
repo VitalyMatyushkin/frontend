@@ -1,134 +1,121 @@
 /**
  * Created by bridark on 25/04/15.
  */
-const   React           = require('react'),
+const 	React			= require('react'),
 		EventRivals 	= require('./event-rivals'),
-        Morearty        = require('morearty'),
-        Immutable       = require('immutable');
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable');
 
 const UserAchievements = React.createClass({
-    mixins: [Morearty.Mixin],
-    addZeroToFirst: function (num) {
-        return String(num).length === 1 ? '0' + num : num;
-    },
-    onClickChallenge: function (eventId) {
-        document.location.hash = 'event/' + eventId;
-    },
-    sameDay: function (d1, d2) {
-        d1 = d1 instanceof Date ? d1 : new Date(d1);
-        d2 = d2 instanceof Date ? d2 : new Date(d2);
+	mixins: [Morearty.Mixin],
 
-        return d1.getUTCFullYear() === d2.getUTCFullYear() &&
-            d1.getUTCMonth() === d2.getUTCMonth() &&
-            d1.getUTCDate() === d2.getUTCDate();
-    },
-    compareData:function(data1,data2){
-        var tempAr = [];
-        for(var i=0; i<data1.length;i++){
-            for(var x= 0; x < data2.length; x++){
-                if(data1[i].resultId){
-                    if(data1[i].resultId === data2[x].id){
-                        tempAr.push(data1[i]);
-                        data1.splice(i,1);
-                    }
-                }
-            }
-        }
-        return tempAr;
-    },
-    getEvents: function (date, theData) {
-		const   self 		= this,
-			rootBinding = self.getMoreartyContext().getBinding();
+	onClickChallenge: function (eventId) {
+		const	binding 		= this.getDefaultBinding(),
+				activeSchoolId 	= binding.get('schoolData.0.id');
 
-		const 	role 		= rootBinding.get('userData.authorizationInfo.role'),
-				isParent 	= role === "PARENT";
-		const activeSchoolId = isParent ? null : rootBinding.get('userRules.activeSchoolId');
+		document.location.hash = 'event/' + eventId  + '?schoolId=' + activeSchoolId;
+	},
+
+	/**
+	 * Returns true, if dd-mm-yyyy d1 equal dd-mm-yyyy d2, else false
+	 * @returns {Boolean}
+	 */
+	sameDay: function (d1, d2) {
+		d1 = d1 instanceof Date ? d1 : new Date(d1);
+		d2 = d2 instanceof Date ? d2 : new Date(d2);
+
+		return d1.getUTCFullYear() === d2.getUTCFullYear() &&
+			d1.getUTCMonth() === d2.getUTCMonth() &&
+			d1.getUTCDate() === d2.getUTCDate();
+	},
+
+	/**
+	 * Returns list of day events
+	 */
+	getEvents: function (date, theData) {
+		const	binding 		= this.getDefaultBinding(),
+				activeSchoolId 	= binding.get('schoolData.0.id');
 
 		let eventsByDate;
 
-        if (theData && theData.gamesScoredIn) {
-            eventsByDate = theData.gamesScoredIn.filter(function (event) {
-                return self.sameDay(
-                    new Date(event.startTime),
-                    new Date(date));
-            });
-            return eventsByDate.map(function (event, index) {
-                let comment;
+		if (theData && theData.gamesScoredIn) {
+			eventsByDate = theData.gamesScoredIn.filter(event => {
+				return this.sameDay(
+					new Date(event.startTime),
+					new Date(date));
+			});
 
-                if (event.result && event.result.comment){
-                    comment = event.result.comment;
-                } else {
-                    comment = "There are no comments on this fixture";
-                }
+			return eventsByDate.map((event, index) => {
+				let comment;
 
-                return (
-                    <div key={index} className="bAchievement"
-                            onClick={self.onClickChallenge.bind(null, event.id)}
-                            id={'challenge-' + event.id}
-                    >
+				if (event.result && event.result.comment){
+					comment = event.result.comment;
+				} else {
+					comment = "There are no comments on this fixture";
+				}
+
+				return (
+					<div key={index} className="bAchievement"
+						 onClick={() => {this.onClickChallenge(event.id)}}
+						 id={'challenge-' + event.id}
+					>
 						<h4>{event.name}</h4>
 						<h6>{`Scored: ${event.studentScore}`}</h6>
 						<EventRivals event={event} activeSchoolId={activeSchoolId} />
 						{/*<div className="eAchievement_com_container">
-                            <div className="eChallenge_comments">
-                                {comment}
-                            </div>
-                        </div>*/}
+						 <div className="eChallenge_comments">
+						 {comment}
+						 </div>
+						 </div>*/}
 						<br/>
-                    </div>
-                );
-            });
-        }
-    },
-    getDates: function (dataFrom) {
-    	const dataFromArray = [dataFrom];
-        const binding = this.getDefaultBinding();
-		let dates;
-        if(typeof dataFromArray !== 'undefined' && dataFromArray.gamesScoredIn){
-            dates = dataFromArray.gamesScoredIn.reduce(function(memo,val){
-                var date = Date.parse(val.startTime),
-                    any = memo.some(function(d){
-                        return this.sameDay(date,d);
-                    });
-                if(!any){
-                    memo = memo.push(date);
-                }
-                return memo;
-            }, Immutable.List());
+					</div>
+				);
+			});
+		}
+	},
 
-            return dates.count()!==0 ? dates.sort().map(function(datetime, dateTimeIndex){
-                var date = new Date(datetime),
-                    monthNames = [ "January", "February", "March", "April", "May", "June",
-                        "July", "August", "September", "October", "November", "December" ];
-                return <div key={dateTimeIndex} className="bAchievementsDate">
-                    <div className="eAchievementsDate_date">
-                        {date.getDate() + ' ' +
-                        monthNames[date.getMonth()] + ' ' +
-                        date.getFullYear()}
-                    </div>
-                    <div className="eChallengeDate_list">{this.getEvents(datetime,dataFrom)}</div>
-                </div>;
-            }).toArray() : (<div>Student hasn't achieved a goal yet!</div>);
-        }
-    },
-    checkForWinner:function(data1,data2){
-        var tempAr = [];
-        for(var i=0; i<data1.length;i++){
-            for(var x= 0; x < data2.length; x++){
-                if(data1[i].participants[0].id === data2[x].winner || data1[i].participants[1].id === data2[x].winner ){
-                    tempAr.push(data1[i]);
-                    data1.splice(i,1);
-                }
-            }
-        }
-        return tempAr;
-    },
-    render:function(){
-        const 	binding 	= this.getDefaultBinding(),
-            	data 		= binding.toJS(),
-            	teamStats 	= this.getDates(data);
-        //console.log(binding);
-        return (<div>{teamStats}</div>)
-    }
+	/**
+	 * Render a list of event (with score) grouped by date
+	 */
+	getDates: function (dataFrom) {
+
+		let dates;
+
+		if (typeof dataFrom !== 'undefined' && dataFrom.gamesScoredIn){
+			//Get array of uniq dates events
+			dates = dataFrom.gamesScoredIn.reduce((memo,val) => {
+				let date = Date.parse(val.startTime),
+					any = memo.some(d => {
+						return (this.sameDay(date,d));
+					});
+				if(!any){
+					memo = memo.push(date);
+				}
+				return memo;
+			}, Immutable.List());
+
+			return dates.count()!==0 ? dates.sort().map((datetime, dateTimeIndex) => {
+					let date = new Date(datetime),
+						monthNames = [ "January", "February", "March", "April", "May", "June",
+							"July", "August", "September", "October", "November", "December" ];
+					return <div key={dateTimeIndex} className="bAchievementsDate">
+						<div className="eAchievementsDate_date">
+							{date.getDate() + ' ' +
+							monthNames[date.getMonth()] + ' ' +
+							date.getFullYear()}
+						</div>
+						<div className="eChallengeDate_list">{this.getEvents(datetime,dataFrom)}</div>
+					</div>;
+				}).toArray() : (<div>Student hasn't achieved a goal yet!</div>);
+		}
+	},
+
+	render:function(){
+		const 	binding 	= this.getDefaultBinding(),
+				data 		= binding.toJS(),
+				teamStats 	= this.getDates(data);
+
+		return (<div>{teamStats}</div>)
+	}
 });
 module.exports = UserAchievements;

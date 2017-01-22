@@ -132,6 +132,8 @@ RequestActions.prototype = {
 					() => {
 						if (currentPr.requestedPermission.preset === "PARENT") {
 							document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`
+						} else if(currentPr.requestedPermission.preset === "STUDENT") {
+							document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`
 						} else {
 							// This component used on manager side and on admin side.
 							// For manager and for admin we have different service lists, with different routes, but with same route names.

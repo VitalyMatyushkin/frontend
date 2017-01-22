@@ -69,7 +69,7 @@ const EventView = React.createClass({
 			menuItems.push({
 				icon: 'icon_office',
 				href: mainMenuItem + '/all',
-				name: 'Show all school',
+				name: 'Show all schools',
 				key: 'all'
 			});
 		}
