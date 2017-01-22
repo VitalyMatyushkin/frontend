@@ -16,9 +16,9 @@ const AboutMeBlock = React.createClass({
 		 * Arrays holding icon names and data fields, moves away from pushing all of data onto a component array
 		 * that was not being cleared and causing page to render details twice
 		 */
-		const icons = ['icon_office', 'icon_age', 'icon_shot', 'icon_trophy', 'icon_score'],
-			fields = ['schoolData.0.name', 'student.age', 'numOfGamesScoredIn','numOfGamesWon','numberOfGamesPlayed'],
-			titles = ['School', `Age. Birthday - ${studentBirthday}`, 'Count of games scored in','Count of won games','Count of played games'];
+		const icons = ['icon_office', 'icon_home', 'icon_library', 'icon_age', 'icon_shot', 'icon_trophy', 'icon_score'],
+			fields = ['schoolData.0.name', 'houseName', 'formName', 'student.age', 'numOfGamesScoredIn','numOfGamesWon','numberOfGamesPlayed'],
+			titles = ['School', 'House','Form', `Age. Birthday - ${studentBirthday}`, 'Count of games scored in','Count of won games','Count of played games'];
 		return icons.map(function(icon,i){
 			let bindingResult = binding.get(fields[i]);
 			if (bindingResult||bindingResult === 0) {

@@ -229,6 +229,7 @@ const StudentHelper = {
 	getStudentProfile: function(schoolId){
 		let studentData;
 		const schoolIdAsArray = [schoolId];
+
 		return window.Server.profile.get().then(student => {
 			studentData = student;
 			studentData.student = {
@@ -238,18 +239,31 @@ const StudentHelper = {
 				birthday: student.birthday,
 				age: this._calculateAge(student.birthday)
 			};
-			studentData.classData = ''; // doesn't exist in server request
-			studentData.houseData = ''; // doesn't exist in server request
-			studentData.parents = ''; // doesn't exist in server request
 
-			return window.Server.studentSchoolEventsCount.get({
-				filter: {
-					where:{
-						schoolId: schoolId
+			return window.Server.profilePermissions.get();
+		}).then(permisions => {
+			permisions.forEach(permision => {
+				if (permision.schoolId === schoolId) {
+					if (typeof permision.details !== 'undefined') {
+						studentData.classData = typeof permision.details.formId !== 'undefined' ? permision.details.formId : null;
+						studentData.houseData = typeof permision.details.houseId !== 'undefined' ? permision.details.houseId : null;
+					} else {
+						studentData.classData = null;
+						studentData.houseData = null;
 					}
 				}
 			});
-		}).then(stats => {
+
+			if (studentData.classData !== null) {
+				window.Server.publicSchoolForm.get({schoolId: schoolId, formId: studentData.classData}).then(classData => {
+					studentData.formName = classData.name;
+				})
+			}
+			if (studentData.houseData !== null) {
+				window.Server.publicSchoolHouse.get({schoolId: schoolId, houseId: studentData.houseData}).then(houseData => {
+					studentData.houseName = houseData.name;
+				})
+			}
 
 			return window.Server.publicSchools.get({
 				filter: {
