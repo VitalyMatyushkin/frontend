@@ -180,7 +180,34 @@ const StudentHelper = {
 	/**
 	 * Functions for student role
 	 */
+	getStudentWinGames: function(studentId, events) {
 
+		const winEvents = events.filter(event => {
+			let teamIdFromEvent 	= '',
+				isWinner 			= false;
+
+			if (event.results['teamScore'].length !== 0) {
+				//Returns teamId student
+				event.teamsData.forEach(teamData => {
+					teamData.players.forEach(player => {
+						if (player.userId === studentId) {
+							teamIdFromEvent = teamData.id;
+						}
+					});
+				});
+				//Returns result isWinner (true/false) for team student
+				event.results.teamScore.forEach(team => {
+					if (team.teamId === teamIdFromEvent) {
+						isWinner = team.isWinner;
+					}
+				});
+			}
+
+			//only events with teamScore and win we add in winEvents
+			return 	event.results['teamScore'].length !== 0 && isWinner;
+		});
+		return winEvents;
+	},
 	getStudentScoredInEvents: function(studentId, events) {
 		const scoredInEvents = events.filter(event => {
 			//only events with score we add in scoredInEvents
@@ -207,7 +234,7 @@ const StudentHelper = {
 			studentData.student = {
 				firstName: student.firstName,
 				lastName: student.lastName,
-				medicalInfo: 'Not information', // doesn't exist in server request
+				medicalInfo: 'No information', // doesn't exist in server request
 				birthday: student.birthday,
 				age: this._calculateAge(student.birthday)
 			};
@@ -223,8 +250,6 @@ const StudentHelper = {
 				}
 			});
 		}).then(stats => {
-				studentData.gamesWon = stats.wonEvents;
-				studentData.numOfGamesWon = stats.wonEvent;
 
 			return window.Server.publicSchools.get({
 				filter: {
@@ -251,10 +276,12 @@ const StudentHelper = {
 				}
 			})
 		}).then( eventsData => {
-			studentData.gamesScoredIn = this.getStudentScoredInEvents(studentData.id, eventsData);
-			studentData.numOfGamesScoredIn = studentData.gamesScoredIn.length;
-			studentData.schoolEvent = this._getPlayedGames(eventsData);
-			studentData.numberOfGamesPlayed = studentData.schoolEvent.length;
+			studentData.gamesScoredIn 			= this.getStudentScoredInEvents(studentData.id, eventsData);
+			studentData.numOfGamesScoredIn 		= studentData.gamesScoredIn.length;
+			studentData.schoolEvent 			= this._getPlayedGames(eventsData);
+			studentData.numberOfGamesPlayed 	= studentData.schoolEvent.length;
+			studentData.gamesWon 				= this.getStudentWinGames(studentData.id, eventsData);
+			studentData.numOfGamesWon 			= studentData.gamesWon.length;
 			return studentData;
 		});
 	}

@@ -44,6 +44,7 @@ const Event = React.createClass({
 				isUploading: false,
 				isSync: false
 			},
+			tabListModel: [],
 			sync: false,
 			mode: 'general',
 			showingComment: false,
