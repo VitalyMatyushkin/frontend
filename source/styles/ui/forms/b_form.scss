@@ -18,6 +18,10 @@
   &.mWide {
     padding: 0px 70px;
   }
+
+  &.mZeroPadding {
+    padding: 0px;
+  }
 }
 input[type="text"], input[type="password"],
 textarea, select {
