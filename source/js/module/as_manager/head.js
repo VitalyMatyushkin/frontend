@@ -24,6 +24,7 @@ const Head = React.createClass({
 				//menuItems.push(this.getConsoleMenuItem());
 				//menuItems.push(this.getHelpMenuItem());
 				menuItems = this.getMainMenuItemsForSchoolUnionAdmin();
+				menuItems.push(this.getSchoolUnionConsoleMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.MANAGER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();
@@ -153,6 +154,17 @@ const Head = React.createClass({
 				key: 'Help'
 			}
 		];
+	},
+	getSchoolUnionConsoleMenuItem: function() {
+		return {
+			href			: '/#school_union_console/users',
+			icon			: '',
+			name			: 'Console',
+			key				: 'Console',
+			routes			: ['/school_union_console/:subPage', '/school_union_console/:filter', '/school_union_console/:inviteId/:mode'],
+			authorization	: true,
+			verified		: true
+		};
 	},
 	getConsoleMenuItem: function() {
 		return {
