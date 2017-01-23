@@ -1,22 +1,23 @@
 /**
  * Created by bridark on 19/06/15.
  */
-const	React							= require('react'),
-		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
+const	React									= require('react'),
+		Morearty								= require('morearty'),
+		Immutable								= require('immutable'),
 
-		RouterView						= require('module/core/router'),
-		Route							= require('module/core/route'),
-		SubMenu							= require('module/ui/menu/sub_menu'),
+		RouterView								= require('module/core/router'),
+		Route									= require('module/core/route'),
+		SubMenu									= require('module/ui/menu/sub_menu'),
 
-		UsersComponent					= require('module/as_manager/pages/school_console/views/users'),
-		AdminRequestsComponent 			= require('./views/requests'),
-		ImportStudents					= require('module/as_manager/pages/school_console/views/import_students'),
-		RequestArchiveComponent			= require('./views/request_archive'),
-		AdminPermissionAcceptComponent	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
-		ModerationPage					= require('./views/moderation_page/moderation_page'),
+		UsersComponent							= require('module/as_manager/pages/school_console/views/users'),
+		AdminRequestsComponent 					= require('./views/requests'),
+		ImportStudents							= require('module/as_manager/pages/school_console/views/import_students'),
+		RequestArchiveComponent					= require('./views/request_archive'),
+		AdminPermissionAcceptComponent			= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept'),
+		AdminPermissionAcceptStudentComponent 	= require('module/as_admin/pages/admin_schools/admin_views/admin_permission_accept_student'),
+		ModerationPage							= require('./views/moderation_page/moderation_page'),
 
-		MoreartyHelper					= require('module/helpers/morearty_helper');
+		MoreartyHelper							= require('module/helpers/morearty_helper');
 
 const SchoolConsole = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -159,6 +160,7 @@ const SchoolConsole = React.createClass({
 						<Route path='/school_console /school_console/users' binding={binding.sub('users')} component={UsersComponent}/>
 						<Route path='/school_console/requests' binding={binding.sub('requests')} component={AdminRequestsComponent}/>
 						<Route path="/school_console/requests/accept" binding={binding.sub('parentPermission')} component={AdminPermissionAcceptComponent}  afterSubmitPage="/school_console/requests"/>
+						<Route path="/school_console/requests/accept-student" binding={binding.sub('studentPermission')} component={AdminPermissionAcceptStudentComponent}  afterSubmitPage="/school_console/requests"/>
 						<Route path='/school_console/archive' binding={binding.sub('archives')} component={RequestArchiveComponent}/>
 						<Route path='/school_console/import_students' binding={binding.sub('import')} component={ImportStudents}/>
 						<Route path='/school_console/moderation' binding={binding.sub('moderation')} component={ModerationPage}/>
