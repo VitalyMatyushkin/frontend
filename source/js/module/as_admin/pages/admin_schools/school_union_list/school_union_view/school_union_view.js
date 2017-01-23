@@ -1,21 +1,21 @@
 const React = require('react');
 
-const SchoolUnionSchoolViewWrapper = React.createClass({
+const SchoolUnionView = React.createClass({
 	propTypes: {
-		school: React.PropTypes.object.isRequired
+		schoolUnion: React.PropTypes.object.isRequired
 	},
 	render: function() {
 		return (
 			<div className="bForm">
 				<div className="eForm_atCenter">
 					<h2>
-						View school
+						View school union
 					</h2>
 					<div className="eForm_fieldColumn">
 						<div className="eForm_blazonUpload">
 							<div className="eForm_blazonPreview">
 								<div	className	= "eImg"
-										style		= {{'background-image': `url(${this.props.school.pic}?sizing=minvalue&value=170)`}}
+										style		= {{'background-image': `url(${this.props.schoolUnion.pic}?sizing=minvalue&value=170)`}}
 								>
 								</div>
 							</div>
@@ -28,7 +28,7 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 							</div>
 							<div className="eForm_fieldSet">
 								<input	type		= "text"
-										value		= {this.props.school.name}
+										value		= {this.props.schoolUnion.name}
 										disabled	= {true}
 								/>
 							</div>
@@ -39,8 +39,8 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 							</div>
 							<div className="eForm_fieldSet">
 						<textarea	type		= "text"
-									 value		= {this.props.school.description}
-									 disabled	= {true}
+									value		= {this.props.schoolUnion.description}
+									disabled	= {true}
 						/>
 							</div>
 						</div>
@@ -50,8 +50,8 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 							</div>
 							<div className="eForm_fieldSet">
 								<input	type		= "text"
-										  value		= {this.props.school.phone}
-										  disabled	= {true}
+										value		= {this.props.schoolUnion.phone}
+										disabled	= {true}
 								/>
 							</div>
 						</div>
@@ -61,9 +61,9 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 							</div>
 							<div className="eForm_fieldSet">
 								<input	className	= "eManager_field"
-										  type		= "text"
-										  value		= {this.props.school.postcode.postcode}
-										  disabled	= {true}
+										type		= "text"
+										value		= {this.props.schoolUnion.postcode.postcode}
+										disabled	= {true}
 								/>
 							</div>
 						</div>
@@ -73,33 +73,33 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 							</div>
 							<div className="eForm_fieldSet">
 								<input	className	= "eManager_field"
-										  type		= "text"
-										  value		= {this.props.school.address}
-										  disabled	= {true}
+										type		= "text"
+										value		= {this.props.schoolUnion.address}
+										disabled	= {true}
 								/>
 							</div>
 						</div>
 						<div className="eForm_field">
 							<div className="eForm_fieldName">
-								School Official Email
+								School Union Official Email
 							</div>
 							<div className="eForm_fieldSet">
 								<input	className	= "eManager_field"
-										  type		= "text"
-										  value		= {this.props.school.email}
-										  disabled	= {true}
+										type		= "text"
+										value		= {this.props.schoolUnion.email}
+										disabled	= {true}
 								/>
 							</div>
 						</div>
 						<div className="eForm_field">
 							<div className="eForm_fieldName">
-								Sports Department Email
+								Sports Union Department Email
 							</div>
 							<div className="eForm_fieldSet">
 								<input	className	= "eManager_field"
-										  type		= "text"
-										  value		= {this.props.school.sportsDepartmentEmail}
-										  disabled	= {true}
+										type		= "text"
+										value		= {this.props.schoolUnion.sportsDepartmentEmail}
+										disabled	= {true}
 								/>
 							</div>
 						</div>
@@ -110,4 +110,4 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 	}
 });
 
-module.exports = SchoolUnionSchoolViewWrapper;
+module.exports = SchoolUnionView;

@@ -32,7 +32,6 @@ const SchoolUnionSchoolList = React.createClass({
 		this.setIsOpenAddSchoolPopup(true);
 	},
 	handleClickOkButton: function(school) {
-		console.log(school);
 		this.setIsOpenAddSchoolPopup(false);
 	},
 	/**

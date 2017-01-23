@@ -5,8 +5,11 @@ const   RouterView  					= require('module/core/router'),
         Morearty    					= require('morearty'),
         Immutable   					= require('immutable'),
         AdminUserListComponent 			= require('module/as_admin/pages/admin_schools/admin_views/admin_users_list'),
-		UserViewComponent 				= require('module/shared_pages/users/user_view'),
-		AdminListComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin-list'),
+		UserViewComponent   			= require('module/shared_pages/users/user_view'),
+		AdminListComponent  			= require('module/as_admin/pages/admin_schools/admin_views/admin-list'),
+		SchoolUnionListWrapper 			= require('./school_union_list/school_union_list_wrapper'),
+		SchoolUnionViewWrapper 			= require('./school_union_list/school_union_view/school_union_view_wrapper'),
+		SchoolUnionCreate    			= require('./school_union_list/school_union_add/school_union_add'),
 		AdminAddComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_add'),
 		AdminEditComponent 				= require('module/as_admin/pages/admin_schools/admin_views/admin_edit'),
 		AdminRequestsComponent 			= require('module/shared_pages/permission_requests/request-list'),
@@ -44,7 +47,14 @@ const OneSchoolPage = React.createClass({
             schoolRouting: {},
             sports: {},
             userActivity: {},
-            importStudents: {}
+            importStudents: {},
+            schoolUnions: {},
+            schoolUnionView: {},
+            schoolUnionCreate: {
+                form: {
+
+                }
+            }
         });
     },
     createSubMenu: function(){
@@ -73,6 +83,10 @@ const OneSchoolPage = React.createClass({
                     href: '/#admin_schools/admin_views/list',
                     name: 'Schools',
                     key: 'schools'
+                },{
+                    href: '/#admin_schools/school_unions',
+                    name: 'School Unions',
+                    key: 'school_unions'
                 },{
                    href:'/#admin_schools/admin_views/sports',
                     name:'Sports',
@@ -134,6 +148,21 @@ const OneSchoolPage = React.createClass({
                             binding={binding.sub('schools')}
                             component={AdminListComponent}
                             addButton={addButton}
+                        />
+                        <Route
+                            path="/admin_schools/school_unions"
+                            binding={binding.sub('schoolUnions')}
+                            component={SchoolUnionListWrapper}
+                        />
+                        <Route
+                            path="/admin_schools/school_unions/add"
+                            binding={binding.sub('schoolUnionCreate')}
+                            component={SchoolUnionCreate}
+                        />
+                        <Route
+                            path="/admin_schools/school_union /admin_schools/school_union/:schoolId"
+                            binding={binding.sub('schoolUnionView')}
+                            component={SchoolUnionViewWrapper}
                         />
                         <Route
                             path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode"
