@@ -203,13 +203,11 @@ const Event = React.createClass({
 				return this.loadPhotos(RoleHelper.getLoggedInUserRole(this));
 			}).then(_photos => {
 				photos = _photos;
-				/**
-				 * fake data school settings, we turn off comments and add photo
-				 */
-				/*return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
+
+				return window.Server.schoolSettings.get({schoolId: this.props.activeSchoolId});
 			}).then(_settings => {
-				settings = _settings;*/
-				settings = {"commentsEnabled":false,"photosEnabled":false};
+				settings = _settings;
+
 				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
 			}).then(tasks => {
 
