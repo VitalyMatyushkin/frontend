@@ -30,7 +30,7 @@ const EventHeader = React.createClass({
 					<div className="bEventHeader_leftSide">
 						<div className="eEventHeader_field mEvent">{`${name}`}</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
-						<div className="eEventHeader_field mAges">{`Ages: ${eventAges}`}</div>
+						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
 					</div>
 					<div className="bEventHeader_rightSide">
 						<Buttons
