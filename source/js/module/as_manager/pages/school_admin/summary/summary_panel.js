@@ -109,9 +109,10 @@ const SummaryPanel = React.createClass({
 						{this.renderEditButton()}
 						<div>
 							{schoolPic ? <div className="eSchoolMaster_flag"><img src={schoolPic}/></div> : ''}
-							<h1 className="eSchoolMaster_title"> {schoolName}</h1>
 
 							<div className="eSchoolAddress">
+								<h1> {schoolName}</h1>
+
 								<p>{postcode}</p>
 								<p>{address}</p>
 							</div>
