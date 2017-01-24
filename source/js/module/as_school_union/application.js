@@ -1,5 +1,5 @@
-const 	HeadView 	= require('module/as_school/head'),
-		CenterView 	= require('module/as_school/center'),
+const 	HeadView 	= require('./head'),
+		CenterView 	= require('./center'),
 		Morearty    = require('morearty'),
 		React 		= require('react');
 

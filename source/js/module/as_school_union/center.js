@@ -2,8 +2,7 @@ const	Morearty				= require('morearty'),
 		React					= require('react'),
 		RouterView				= require('module/core/router'),
 		Route					= require('module/core/route'),
-		PublicLogin				= require('module/ui/menu/public_login'),
-		HomeComponent			= require("module/as_school/pages/school_home/home"),
+		PublicSchoolUnionPage	= require("./pages/school_home/home"),
 		EventPageComponent		= require("./pages/event/public_event_page"),
 		LoginPublicSchoolPage	= require("./../as_school/pages/school_home/login_public_school_page"),
 		Page404					= require("./../ui/404_page"),
@@ -27,7 +26,7 @@ const Center = React.createClass({
 					<RouterView routes={binding.sub('routing')} binding={binding}>
 						<Route	path		= "/ /home"
 								binding		= {binding.sub('schoolHomePage')}
-								component	= {HomeComponent}
+								component	= {PublicSchoolUnionPage}
 						/>
 
 						<Route	path		= "/event /event/:eventId /event/:eventId/:mode"

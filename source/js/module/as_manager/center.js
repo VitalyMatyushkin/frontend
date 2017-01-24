@@ -25,7 +25,6 @@ const Center = React.createClass({
 	 */
 	getRouterByRole: function(role) {
 		const binding = this.getDefaultBinding();
-
 		switch (true) {
 			case role === "PARENT":
 				return (
@@ -35,15 +34,18 @@ const Center = React.createClass({
 				return (
 					<StudentRouter binding={binding}/>
 				);
-			case typeof role !== "undefined":
-				return (
-					//<SchoolWorkerRouter binding={binding}/>
-					<SchoolUnionsRouter binding={binding}/>
-				);
 			case typeof role === "undefined":
 				return (
 					<NobodyRouter binding={binding}/>
 				);
+			case typeof role !== "undefined":
+				return (
+					<SchoolWorkerRouter binding={binding}/>
+				);
+			//case typeof role !== "undefined" && role.kind === "SchoolUnion":
+			//	return (
+			//		<SchoolUnionsRouter binding={binding}/>
+			//	);
 		}
 	},
 	getRouter: function() {

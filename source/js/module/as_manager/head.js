@@ -20,11 +20,11 @@ const Head = React.createClass({
 			case typeof role === "undefined":
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.ADMIN:
-				//menuItems = this.getMainMenuItemsForSchoolWorker();
-				//menuItems.push(this.getConsoleMenuItem());
-				//menuItems.push(this.getHelpMenuItem());
-				menuItems = this.getMainMenuItemsForSchoolUnionAdmin();
-				menuItems.push(this.getSchoolUnionConsoleMenuItem());
+				menuItems = this.getMainMenuItemsForSchoolWorker();
+				menuItems.push(this.getConsoleMenuItem());
+				menuItems.push(this.getHelpMenuItem());
+				//menuItems = this.getMainMenuItemsForSchoolUnionAdmin();
+				//menuItems.push(this.getSchoolUnionConsoleMenuItem());
 				return menuItems;
 			case role === RoleHelper.USER_ROLES.MANAGER:
 				menuItems = this.getMainMenuItemsForSchoolWorker();

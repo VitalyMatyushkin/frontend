@@ -242,10 +242,10 @@ function runMainMode() {
 			case typeof optSchool === "undefined":
 				init404View();
 				break;
-			case optSchool.kind === "School":
-				initMainSchoolView(optSchool);
-				break;
-			case optSchool.kind === "SchoolUnion":
+			//case optSchool.kind === "School":
+			//	initMainSchoolView(optSchool);
+			//	break;
+			case true://optSchool.kind === "SchoolUnion":
 				initMainSchoolUnionView(optSchool);
 				break;
 		}

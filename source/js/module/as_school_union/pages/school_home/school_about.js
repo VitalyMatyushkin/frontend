@@ -25,7 +25,3 @@ const SchoolAbout = React.createClass({
 });
 
 module.exports = SchoolAbout;
-
-
-
-
