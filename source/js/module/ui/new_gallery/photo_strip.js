@@ -7,7 +7,7 @@ const	React			= require('react'),
 		classNames 		= require('classnames');
 
 const 	PHOTO_WIDTH = 240,
-		LAYOUT_WIDTH = 940;
+		LAYOUT_WIDTH = 1140;
 
 const	LoaderStyles	= require('styles/ui/gallery/b_loader_preview_photo.scss');
 
