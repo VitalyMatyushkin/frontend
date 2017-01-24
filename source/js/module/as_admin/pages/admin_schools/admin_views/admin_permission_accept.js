@@ -93,9 +93,9 @@ const PermissionAcceptPage = React.createClass({
 				binding	= self.getDefaultBinding(),
 				formIdArray = [binding.get('formId')],
 				houseIdArray = [binding.get('houseId')];
-
-		return window.Server.schoolStudents.get(binding.get('schoolId'),{
-			filter: {
+		let filter;
+		if (lastName === '') {
+			filter = {
 				limit: 100,
 				where: {
 					formId: {
@@ -106,6 +106,25 @@ const PermissionAcceptPage = React.createClass({
 					}
 				}
 			}
+		} else {
+			filter = {
+				limit: 100,
+				where: {
+					formId: {
+						$in: formIdArray
+					},
+					houseId: {
+						$in: houseIdArray
+					},
+					lastName: {
+						like: lastName,
+						options: 'i'
+					}
+				}
+			}
+		}
+		return window.Server.schoolStudents.get(binding.get('schoolId'),{
+			filter: filter
 		})
 		.then(
 			students => {
