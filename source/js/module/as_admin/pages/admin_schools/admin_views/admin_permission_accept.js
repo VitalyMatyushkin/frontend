@@ -39,7 +39,7 @@ const PermissionAcceptPage = React.createClass({
 			window.Server.permissionRequest.get({prId:prId, schoolId:schoolId}).then(function (data) {
 				binding
 					.atomically()
-					.set('comment', data.comment)
+					.set('comment', data.requestedPermission.comment)
 					.commit();
 			});
 		}
@@ -90,19 +90,41 @@ const PermissionAcceptPage = React.createClass({
 	},
 	serviceStudentsFilter: function(lastName) {
 		const	self	= this,
-				binding	= self.getDefaultBinding();
-
-		return window.Server.schoolStudents.get(binding.get('schoolId'),{
-			filter: {
+				binding	= self.getDefaultBinding(),
+				formIdArray = [binding.get('formId')],
+				houseIdArray = [binding.get('houseId')];
+		let filter;
+		if (lastName === '') {
+			filter = {
+				limit: 100,
 				where: {
-					formId: binding.get('formId'),
-					houseId: binding.get('houseId'),
-					lastName: {
-						like: lastName,
-						options:'i'
+					formId: {
+						$in: formIdArray
+					},
+					houseId: {
+						$in: houseIdArray
 					}
 				}
 			}
+		} else {
+			filter = {
+				limit: 100,
+				where: {
+					formId: {
+						$in: formIdArray
+					},
+					houseId: {
+						$in: houseIdArray
+					},
+					lastName: {
+						like: lastName,
+						options: 'i'
+					}
+				}
+			}
+		}
+		return window.Server.schoolStudents.get(binding.get('schoolId'),{
+			filter: filter
 		})
 		.then(
 			students => {

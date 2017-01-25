@@ -186,7 +186,7 @@ const serviceList = {
 
 
 		// new role student
-		serviceList.studentSchoolEventsCount = new Service('/i/events/count', binding);
+		serviceList.studentSchoolEventsCount = new Service('/i/events/stats', binding);
 		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
 		serviceList.studentSchoolEvents = new Service('/i/events', binding);
 		serviceList.studentSchoolEvent = new Service('/i/events/{eventId}', binding);

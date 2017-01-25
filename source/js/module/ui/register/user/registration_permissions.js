@@ -28,26 +28,31 @@ const RegistrationPermissions = React.createClass({
 	},
 	onSuccess: function() {
 		const 	currentType = this.props.currentType,
-			fieldsAr	= this.props.fieldsAr,
-			dataToPost	= {
-				preset:currentType
-			};
-		Promise.all(
-			Object.getOwnPropertyNames(fieldsAr).map(
-				(fields) => {
-					if (fields.schoolId) {
-						dataToPost.schoolId = fields.schoolId;
-						dataToPost.promo = fields.promo ? fields.promo : '';
-						dataToPost.comment = fields.comment ? fields.comment : '';
-						if (currentType === 'parent') {
-							dataToPost.comment += " Student - " + fields.firstName + " " + fields.lastName + "." +
-								" Form - " + fields.formName + ". House - " + fields.houseName + ".";
-						}
-						return window.Server.profileRequests.post(dataToPost)
-					}
+				fieldsAr	= this.props.fieldsAr,
+				dataToPost	= {
+					preset:currentType
+				};
+
+		let arrayPromise = [];
+
+		for (let key in fieldsAr) {
+			let fields = fieldsAr[key];
+
+			if (fields.schoolId) {
+				dataToPost.schoolId = fields.schoolId;
+				dataToPost.promo = fields.promo ? fields.promo : '';
+				dataToPost.comment = fields.comment ? fields.comment : '';
+				if (currentType === 'parent') {
+					dataToPost.comment += " Student - " + fields.firstName + " " + fields.lastName + "." +
+						" Form - " + fields.formName + ". House - " + fields.houseName + ".";
 				}
-			)
-		).then(() => this.props.onSuccess());
+				arrayPromise.push(window.Server.profileRequests.post(dataToPost));
+			}
+		}
+
+		Promise.all(arrayPromise).then(
+			() => this.props.onSuccess()
+		);
 	},
 
 	render:function(){
