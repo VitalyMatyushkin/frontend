@@ -16,7 +16,7 @@ const Logo = React.createClass({
 			? this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role')
 			: '';
 		return (
-			<div className="bTopLogo" onClick={() => DomainHelper.redirectToStartPage(role)}>
+			<div className="bTopLogo" onClick={() => DomainHelper.redirectToSettingsPage()}>
 				<img src="images/logo.svg"/>
 			</div>
 		)

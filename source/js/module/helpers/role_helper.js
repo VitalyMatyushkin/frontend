@@ -41,6 +41,9 @@ const RoleHelper = {
 	getLoggedInUserRole: function(self) {
 		return self.getMoreartyContext().getBinding().get('userData.roleList.activePermission.role');
 	},
+	getActiveSchoolKind: function(self) {
+		return self.getMoreartyContext().getBinding().get('userData.roleList.activePermission.school.kind');
+	},
 	isUserSchoolWorker: function(self) {
 		const role = this.getLoggedInUserRole(self);
 

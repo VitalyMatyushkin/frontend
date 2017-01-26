@@ -17,39 +17,38 @@ const Center = React.createClass({
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
-	/**
-	 * It's a rule that connect user role and router.
-	 * So, function return router by user role.
-	 * @param role
-	 * @returns {XML}
-	 */
-	getRouterByRole: function(role) {
+	getRouter: function() {
 		const binding = this.getDefaultBinding();
+
+		const	role		= RoleHelper.getLoggedInUserRole(this),
+				schoolKind	= RoleHelper.getActiveSchoolKind(this);
+
 		switch (true) {
+			// for parents
 			case role === "PARENT":
 				return (
 					<ParentRouter binding={binding}/>
 				);
+			// for students
 			case role === "STUDENT":
 				return (
 					<StudentRouter binding={binding}/>
+				);
+			// for workers of school
+			case typeof role !== "undefined" && schoolKind === "School":
+				return (
+					<SchoolWorkerRouter binding={binding}/>
+				);
+			// for workers of school union
+			case typeof role !== "undefined" && schoolKind === "SchoolUnion":
+				return (
+					<SchoolUnionsRouter binding={binding}/>
 				);
 			case typeof role === "undefined":
 				return (
 					<NobodyRouter binding={binding}/>
 				);
-			case typeof role !== "undefined":
-				return (
-					<SchoolWorkerRouter binding={binding}/>
-				);
-			//case typeof role !== "undefined" && role.kind === "SchoolUnion":
-			//	return (
-			//		<SchoolUnionsRouter binding={binding}/>
-			//	);
 		}
-	},
-	getRouter: function() {
-		return this.getRouterByRole(RoleHelper.getLoggedInUserRole(this));
 	},
 	render: function() {
 		const	self		= this,
