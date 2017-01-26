@@ -63,15 +63,27 @@ const SchoolUnionForm = React.createClass({
 				<FormColumn>
 					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
 
-					<FormField type="text" field="email" validation="email" fieldClassName="mLarge">
-						School Official Email
+					<FormField	type			= "text"
+								field			= "email"
+								validation		= "email"
+								fieldClassName	= "mLarge"
+					>
+						School Union Official Email
 					</FormField>
-					<FormField type="text" field="sportsDepartmentEmail" validation="email" fieldClassName="mLarge">
-						Sports Department Email
+					<FormField	type			= "text"
+								field			= "sportsDepartmentEmail"
+								validation		= "email"
+								fieldClassName	= "mLarge">
+						Sports Union Department Email
 					</FormField>
 				</FormColumn>
 				<FormColumn>
-					<FormField type="text" field="name" validation="required">Name</FormField>
+					<FormField	type		= "text"
+								field		= "name"
+								validation	= "required"
+					>
+						Name
+					</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
 					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
 						School Status
@@ -82,20 +94,17 @@ const SchoolUnionForm = React.createClass({
 					<FormField type="text" field="address" validation="any">Address</FormField>
 					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
 					<FormField	type="dropdown"
-								  field="publicSite.status"
-								  options={ self.getPublicSiteAccessTypes() }
+								field="publicSite.status"
+								options={ self.getPublicSiteAccessTypes() }
 					>
 						Public Site Access
 					</FormField>
 					<FormField	type			= "password"
-								  field			= "publicSite.password"
-								  condition={passActive}
-								  validation="required"
+								field			= "publicSite.password"
+								condition={passActive}
+								validation="required"
 					>
 						Public Site Access Password
-					</FormField>
-					<FormField type="checkbox" field="studentSelfRegistrationEnabled">
-						Student registration
 					</FormField>
 				</FormColumn>
 			</Form>
