@@ -1,4 +1,4 @@
-const 	RegistrationPermissions		= require('module/ui/register/user/registration_permissions'),
+const 	RegistrationPermissions		= require('./registration_permissions'),
 		PermissionRoleSelector		= require('./permission_role_selector'),
 		Morearty					= require('morearty'),
 		React						= require('react'),

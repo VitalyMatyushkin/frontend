@@ -1,11 +1,10 @@
 /**
  * Created by Woland on 12.01.2017.
  */
-const	React 			= require ('react'),
-		If				= require('module/ui/if/if'),
-		AutoComplete	= require('module/ui/autocomplete2/OldAutocompleteWrapper');
-
-
+const	React 					= require ('react'),
+		If						= require('module/ui/if/if'),
+		AutoComplete			= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		PermissionDetailsHelper	= require('./permission_detail_helper');
 
 const PermissionDetails = React.createClass({
 	propTypes: {
@@ -36,47 +35,7 @@ const PermissionDetails = React.createClass({
 	 * @returns {*}
 	 */
 	serviceSchoolFilter: function (schoolName) {
-		/**
-		 * For student role we must check, that school is availible for registration students
-		 * For other roles this check don't required
-		 */
-		if (this.props.type === 'student') {
-			return window.Server.publicSchools.get( {
-				filter: {
-					where: {
-						name: {
-							like: schoolName,
-							options: 'i'
-						},
-						/* this param was added later, so it is undefined on some schools. Default value is true.
-						 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
-						 */
-						availableForRegistration: { $ne: false },
-						studentSelfRegistrationEnabled: true
-					},
-					limit: 1000,
-					order: 'name ASC'
-				}
-			});
-		} else {
-			return window.Server.publicSchools.get( {
-				filter: {
-					where: {
-						name: {
-							like: schoolName,
-							options: 'i'
-						},
-						/* this param was added later, so it is undefined on some schools. Default value is true.
-						 * undefined considered as 'true'. So, just checking if it is not explicitly set to false
-						 */
-						availableForRegistration: { $ne: false }
-					},
-					limit: 1000,
-					order: 'name ASC'
-				}
-			});
-		}
-
+		return window.Server.publicSchools.get(PermissionDetailsHelper.getSchoolServiceFilter(schoolName, this.props.type));
 	},
 
 	/**
@@ -122,7 +81,8 @@ const PermissionDetails = React.createClass({
 	 * Get school name after select school in autocomplete component
 	 * It's not good, but autocomplete return only schoolId
 	 */
-	onSelectSchool: function(schoolId) {
+	onSelectSchool: function(schoolId, school) {
+		console.log(school);
 		if (typeof schoolId !== 'undefined') {
 			window.Server.publicSchool.get({schoolId: schoolId}).then( school => {
 				this.props.handleSchoolSelect(schoolId, school.name, this.props.fieldNumber);
