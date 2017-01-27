@@ -38,6 +38,8 @@ const serviceList = {
 
         // schools
         serviceList.schools = new Service('/i/schools', binding);
+        serviceList.schoolUnionSchools = new Service('/i/schools/{schoolUnionId}/schools', binding);
+        serviceList.schoolUnionSchool = new Service('/i/schools/{schoolUnionId}/schools/{schoolId}', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
         serviceList.schoolSettings = new Service('/i/schools/{schoolId}/settings', binding);
         serviceList.publicSchool = new Service('/public/schools/{schoolId}', binding);

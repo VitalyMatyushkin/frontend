@@ -11,7 +11,8 @@ const Users = React.createClass({
 		grantRole: 				React.PropTypes.func,
 		permissionServiceName: 	React.PropTypes.string,
 		blockService: 			React.PropTypes.object,
-		addButton:				React.PropTypes.func
+		addButton:				React.PropTypes.func,
+		customActionList:		React.PropTypes.array
 	},
 	getDefaultProps: function () {
 		return {

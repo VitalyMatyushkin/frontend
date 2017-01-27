@@ -9,7 +9,8 @@ const AddSchoolPopup = React.createClass({
 	propTypes: {
 		isOpen					: React.PropTypes.bool.isRequired,
 		handleClickOkButton		: React.PropTypes.bool.isRequired,
-		handleClickCancelButton	: React.PropTypes.bool.isRequired
+		handleClickCancelButton	: React.PropTypes.bool.isRequired,
+		blackList				: React.PropTypes.array.isRequired
 	},
 	getInitialState: function() {
 		return {
@@ -47,9 +48,12 @@ const AddSchoolPopup = React.createClass({
 	 * @returns {*}
 	 */
 	searchSchools: function(searchText) {
-		return window.Server.schools.get({
+		return window.Server.publicSchools.get({
 			filter: {
 				where: {
+					_id: {
+						$nin: this.props.blackList
+					},
 					name: {
 						like	: searchText
 					}
