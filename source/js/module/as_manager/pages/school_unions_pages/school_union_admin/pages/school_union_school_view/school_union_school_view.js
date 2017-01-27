@@ -61,9 +61,9 @@ const SchoolUnionSchoolViewWrapper = React.createClass({
 							</div>
 							<div className="eForm_fieldSet">
 								<input	className	= "eManager_field"
-										  type		= "text"
-										  value		= {this.props.school.postcode.postcode}
-										  disabled	= {true}
+										type		= "text"
+										value		= {typeof this.props.school.postcode !== "undefined" ? this.props.school.postcode.postcode : ""}
+										disabled	= {true}
 								/>
 							</div>
 						</div>

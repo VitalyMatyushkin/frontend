@@ -1,9 +1,11 @@
-const	React		= require('react'),
-		SVG			= require('module/ui/svg'),
-		DataLoader	= require('module/ui/grid/data-loader'),
-		GridModel	= require('module/ui/grid/grid-model');
+const	React			= require('react'),
+		MoreartyHelper	= require('../../../../../../helpers/morearty_helper'),
+		SVG				= require('module/ui/svg'),
+		DataLoader		= require('module/ui/grid/data-loader'),
+		GridModel		= require('module/ui/grid/grid-model');
 
 const SchoolUnionSchoolListModel = function(page, handleClickAddButton){
+	this.page = page;
 	this.getDefaultBinding = page.getDefaultBinding;
 	this.getMoreartyContext = page.getMoreartyContext;
 	this.props = page.props;
@@ -25,7 +27,10 @@ const SchoolUnionSchoolListModel = function(page, handleClickAddButton){
 	});
 
 	this.dataLoader = new DataLoader({
-		serviceName	:'schools',
+		serviceName	:'schoolUnionSchools',
+		params		: {
+			schoolUnionId: MoreartyHelper.getActiveSchoolId(page)
+		},
 		grid		: this.grid,
 		onLoad		: this.getDataLoadedHandle()
 	});
@@ -67,22 +72,28 @@ SchoolUnionSchoolListModel.prototype.getViewFunction = function(schoolId){
 };
 
 SchoolUnionSchoolListModel.prototype.getDeleteFunction = function(itemId){
-	const binding = this.getDefaultBinding();
+	const self = this;
+
+	const binding = self.getDefaultBinding();
 
 	window.confirmAlert(
 		"Do you really want to remove this item?",
 		"Ok",
 		"Cancel",
 		() => {
-			//window.Server.school.delete(itemId).then(function(){
-			//		binding.update(function(result) {
-			//			return result.filter(function(res) {
-			//				return res.get('id') !== itemId;
-			//			});
-			//		});
-			//		this.reloadData();
-			//	}
-			//);
+			window.Server.schoolUnionSchool.delete(
+				{
+					schoolUnionId	: MoreartyHelper.getActiveSchoolId(this.page),
+					schoolId		: itemId
+				}
+			).then(() => {
+				binding.sub('data').update(function(result) {
+					return result.filter(function(res) {
+						return res.id !== itemId;
+					});
+				});
+				self.reloadData();
+			});
 		},
 		() => {}
 	);
