@@ -12,6 +12,7 @@ const UserListWrapper = React.createClass({
 			<UserList	binding					= {binding}
 						grantRole				= {GrantRole}
 						permissionServiceName	= "schoolUserPermission"
+						customActionList		= {['View']}
 			/>
 		);
 	}
