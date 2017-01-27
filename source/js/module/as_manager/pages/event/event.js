@@ -441,9 +441,11 @@ const Event = React.createClass({
 	setPlayersToTaskTabBinding: function(players) {
 		const binding = this.getDefaultBinding();
 
-		const _players = Lazy(players).flatten().map(p => {
-			p.id = p.userId + p.permissionId;
-			return p;
+		const _players = Lazy(players).flatten().map(player => {
+			const copyPlayer = Object.assign({}, player);
+			copyPlayer.id = copyPlayer.userId + copyPlayer.permissionId;
+
+			return copyPlayer;
 		}).toArray();
 
 		binding.set('tasksTab.players', Immutable.fromJS(_players));
