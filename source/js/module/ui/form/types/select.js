@@ -1,5 +1,5 @@
 const 	TypeMixin 	= require('module/ui/form/types/type_mixin'),
-		Select 		= require('module/ui/select/select'),
+		Select 		= require('../../select/select'),
 		Morearty	= require('morearty'),
 		React 		= require('react');
 

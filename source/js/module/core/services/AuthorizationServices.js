@@ -43,19 +43,19 @@ const AuthorizationServices ={
 		let authInfo;
 
 		return service.post(roleName).then(authData => {
-            if(authData.key) {
+			if(authData.key) {
 				authInfo = {
-                    id: authData.key,
-                    role:authData.role,
-                    isBecome:true,
-                    userId:authData.userId,
-                    expireAt: authData.expireAt
-                };
-            }
+					id			: authData.key,
+					role		: authData.role,
+					isBecome	: true,
+					userId		: authData.userId,
+					expireAt	: authData.expireAt
+				};
+			}
 
 			/** Server not allow profile request before become */
 			return window.Server.profile.get();
-        }).then(profile => {
+		}).then(profile => {
 			/** save verification status */
 			authInfo.verified = profile.verification && profile.verification.status;
 			binding.set(Immutable.fromJS(authInfo));

@@ -1,10 +1,10 @@
-const 	ComboboxOption 			= require('./option'),
-		React 					= require('react'),
-		Immutable 				= require('immutable'),
-		Morearty				= require('morearty'),
-		Lazy					= require('lazy.js'),
-
-		If						= require('./../if/if');
+const	ComboboxOption	= require('./option'),
+		React			= require('react'),
+		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
+		Lazy			= require('lazy.js'),
+		classNames		= require('classnames'),
+		If				= require('./../if/if');
 
 /** Component which acts like selects and display array of data passed as sourceArray property */
 const Select = React.createClass({
@@ -89,7 +89,7 @@ const Select = React.createClass({
 		return this.props.sourceArray.map(item => {
 			return (
 				<ComboboxOption
-					onClick		= {() => { self.handleSelect(item.id); }}
+					onMouseDown	= {() => { self.handleSelect(item.id); }}
 					isSelected	= { selectedId === item.id }
 					key			= { item.id }
 					value		= { item.id }>
@@ -105,6 +105,9 @@ const Select = React.createClass({
 				this.props.placeHolder
 		);
 	},
+	handleBlur: function() {
+		this.getDefaultBinding().set('showList', false);
+	},
 	render: function () {
 		const 	self 			= this,
 				binding 		= self.getDefaultBinding(),
@@ -118,9 +121,19 @@ const Select = React.createClass({
 		// show button only when component has prop isDisable === false
 		const isShowComboboxButton = !(!!this.props.isDisabled);
 
+		const inputStyle = classNames({
+			mDisabled: !!this.props.isDisabled
+		});
+
 		return (
 			<div className="bCombobox">
-				<input value={this.getText()} onClick={self.toggleList} type="text" readOnly />
+				<input	className	= {inputStyle}
+						value		= {this.getText()}
+						onClick		= {self.toggleList}
+						type		= "text"
+						onBlur		= {this.handleBlur}
+						readOnly
+				/>
 				<If condition={isShowComboboxButton}>
 					<span onClick={self.toggleList} className="eCombobox_button"></span>
 				</If>

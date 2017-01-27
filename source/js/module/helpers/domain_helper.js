@@ -33,31 +33,35 @@ const DomainHelper = {
 	/**
 	 * Redirect to start page after login
 	 * */
-	redirectToStartPage: function(role) {
+	redirectToStartPage: function(role, schoolKind) {
 		const	domainName	= this.getDomainNameByRole(role),
-				defaultPage	= this.getDefaultPageByRoleName(role);
+				defaultPage	= this.getDefaultPageByRoleNameAndSchoolKind(role, schoolKind);
 
 		window.location.href = `//${domainName}/#${defaultPage}`;
 		window.location.reload();
 	},
-	getDefaultPageByRoleName: function(roleName) {
-		switch (roleName.toLowerCase()) {
-			case 'owner':
-				return `school_admin/summary`;
-			case 'admin':
-				return `school_admin/summary`;
-			case 'manager':
-				return `school_admin/summary`;
-			case 'teacher':
-				return `school_admin/summary`;
-			case 'trainer':
-				return `school_admin/summary`;
-			case 'parent':
-				return `events/calendar/all`;
-			case 'student':
-				return `events/calendar/all`;
-			case 'no_body':
+	getDefaultPageByRoleNameAndSchoolKind: function(roleName, schoolKind) {
+		const _roleName = roleName.toLowerCase();
+
+		switch (true) {
+			case _roleName === 'no_body':
 				return `settings/general`;
+			case _roleName === 'owner' && schoolKind === 'School':
+				return `school_admin/summary`;
+			case _roleName === 'admin' && schoolKind === 'School':
+				return `school_admin/summary`;
+			case _roleName === 'manager' && schoolKind === 'School':
+				return `school_admin/summary`;
+			case _roleName === 'teacher' && schoolKind === 'School':
+				return `school_admin/summary`;
+			case _roleName === 'trainer' && schoolKind === 'School':
+				return `school_admin/summary`;
+			case _roleName === 'parent' && schoolKind === 'School':
+				return `events/calendar/all`;
+			case _roleName === 'student' && schoolKind === 'School':
+				return `events/calendar/all`;
+			case _roleName === 'admin' && schoolKind === 'SchoolUnion':
+				return `school_union_admin/summary`;
 		}
 	},
 	getThirdLevelDomainByRole: function(role) {
@@ -71,6 +75,9 @@ const DomainHelper = {
 		domains[0] = this.getThirdLevelDomainByRole(role);
 
 		return domains.join(".");
+	},
+	redirectToSettingsPage: function() {
+		this.redirectToStartPage('no_body', undefined);
 	}
 };
 

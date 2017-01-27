@@ -15,6 +15,7 @@ const FormField = React.createClass({
 		condition:			React.PropTypes.bool, 	//false - field is not included in the form, true or undefined - included
 		isDisabled:			React.PropTypes.bool, 	//false - show field like disabled
 		placeHolder:		React.PropTypes.string,
+		onSelect:			React.PropTypes.func,
 		binding:			React.PropTypes.any
 	},
 	render: function () {

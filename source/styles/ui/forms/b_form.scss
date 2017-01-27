@@ -18,6 +18,10 @@
   &.mWide {
     padding: 0px 70px;
   }
+
+  &.mZeroPadding {
+    padding: 0px;
+  }
 }
 input[type="text"], input[type="password"],
 textarea, select {
@@ -33,8 +37,16 @@ textarea, select {
     border: solid #959595;
     border-width: 0 0 1px;
   }
+  &:hover.mDisabled{
+    border: solid #d7d7d7;
+    border-width: 0 0 1px;
+  }
   &:focus{
     border: solid $blueColor;
+    border-width: 0 0 1px;
+  }
+  &:focus.mDisabled{
+    border: solid #d7d7d7;
     border-width: 0 0 1px;
   }
 }
