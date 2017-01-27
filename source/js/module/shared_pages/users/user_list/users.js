@@ -1,13 +1,9 @@
-/**
- * Created by Anatoly on 25.07.2016.
- */
-
-const   React 		= require('react'),
-		Morearty	= require('morearty'),
-		Actions 	= require('./users-actions'),
-		Grid 		= require('module/ui/grid/grid'),
-		GrantRole   = require('module/as_manager/pages/school_console/grant_role/grant_role'),
-		Popup 		= require('module/ui/popup');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Actions			= require('./users-actions'),
+		Grid			= require('module/ui/grid/grid'),
+		GrantRole		= require('module/as_manager/pages/school_console/grant_role/grant_role'),
+		ConfirmPopup	= require('../../../ui/confirm_popup');
 
 const Users = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -26,25 +22,39 @@ const Users = React.createClass({
 	componentWillMount: function () {
 		this.actions = new Actions(this);
 	},
-	_closePopup: function () {
-		var self = this,
-			binding = self.getDefaultBinding();
+	handleSuccess: function() {
+		this.closePopup();
+		this.actions.reloadData();
+	},
+	closePopup: function () {
+		const binding = this.getDefaultBinding();
+
 		binding.set('popup', false);
-		self.actions.reloadData();
+	},
+
+	renderPopup: function() {
+		const	binding		= this.getDefaultBinding(),
+				GrantRole	= this.props.grantRole;
+
+		if(binding.get('popup')) {
+			return (
+				<ConfirmPopup isShowButtons={false}>
+					<GrantRole	binding				= {binding.sub('grantRole')}
+								userIdsBinding		= {binding.sub('groupIds')}
+								onSuccess			= {this.handleSuccess}
+								handleClickCancel	= {this.closePopup}
+					/>
+				</ConfirmPopup>
+			);
+		} else {
+			return null;
+		}
 	},
 	render: function () {
-		var self = this,
-			binding = self.getDefaultBinding(),
-			GrantRole = self.props.grantRole;
-
 		return (
 			<div className="eTable_view">
 				<Grid model={this.actions.grid}/>
-				<Popup binding={binding} stateProperty={'popup'} onRequestClose={self._closePopup}
-					   otherClass="bPopupGrant">
-					<GrantRole binding={binding.sub('grantRole')} userIdsBinding={binding.sub('groupIds')}
-							   onSuccess={self._closePopup}/>
-				</Popup>
+				{this.renderPopup()}
 			</div>
 		);
 	}

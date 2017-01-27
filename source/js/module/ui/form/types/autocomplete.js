@@ -1,5 +1,5 @@
 const 	TypeMixin 		= require('module/ui/form/types/type_mixin'),
-		Autocomplete2	= require('module/ui/autocomplete2/OldAutocompleteWrapper'),
+		Autocomplete2	= require('../../../ui/autocomplete2/OldAutocompleteWrapper'),
 		Morearty		= require('morearty'),
 		React 			= require('react');
 
@@ -11,7 +11,8 @@ const TypeAutocomplete = React.createClass({
 		serverField: 		React.PropTypes.string,
 		field:				React.PropTypes.string,
 		defaultItem:		React.PropTypes.object,
-		placeholder: 		React.PropTypes.string
+		placeholder: 		React.PropTypes.string,
+		onSelect:			React.PropTypes.function
 	},
 	/** Setting component's value when it choosen */
 	onSelect: function(data, fullValue){
@@ -20,6 +21,10 @@ const TypeAutocomplete = React.createClass({
 
         binding.set('fullValue', fullValue);
         self.setValue(data);
+
+		if(typeof this.props.onSelect !== "undefined") {
+			this.props.onSelect(data, fullValue);
+		}
 	},
 
 	render: function() {

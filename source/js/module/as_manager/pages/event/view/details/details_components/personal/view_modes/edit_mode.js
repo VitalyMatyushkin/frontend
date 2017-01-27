@@ -105,14 +105,14 @@ const EditMode = React.createClass({
 		return (
 			<div className="eDetails_comboboxWrapper">
 				<ComboBox	placeholder			= {this.getPlaceholder()}
-							 searchFunction		= {this.searchUsersWrapper}
-							 onSelect			= {this.handleSelectPersonal}
-							 getElementTitle		= {this.getElementTitle}
-							 getElementTooltip	= {this.getElementTooltip}
-							 onEscapeSelection	= {() => {}}
-							 clearAfterSelect	= {true}
-							 extraCssStyle		= {'mMembersOfStaff'}
-							 isBlocked			= {false}
+							searchFunction		= {this.searchUsersWrapper}
+							onSelect			= {this.handleSelectPersonal}
+							getElementTitle		= {this.getElementTitle}
+							getElementTooltip	= {this.getElementTooltip}
+							onEscapeSelection	= {() => {}}
+							clearAfterSelect	= {true}
+							extraCssStyle		= {'mMembersOfStaff'}
+							isBlocked			= {false}
 				/>
 			</div>
 		);

@@ -17,8 +17,16 @@
 
 .eConfirmPopup_body {
   margin-bottom: 10px;
+
+  &.mZeroMargin {
+    margin: 0px;
+  }
 }
 
 .eConfirmPopup_footer {
   text-align: right;
+
+  &.mHide {
+    display: none;
+  }
 }
