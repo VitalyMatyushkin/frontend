@@ -1,7 +1,7 @@
 const	React								= require('react'),
 		PublicSchoolUnionSchoolItemStyle	= require('../../../../../../styles/ui/b_public_school_union_school_item.scss');
 
-const SchoolList = React.createClass({
+const SchoolItem = React.createClass({
 	propTypes: {
 		school: React.PropTypes.object.isRequired
 	},
@@ -22,4 +22,4 @@ const SchoolList = React.createClass({
 	}
 });
 
-module.exports = SchoolList;
+module.exports = SchoolItem;

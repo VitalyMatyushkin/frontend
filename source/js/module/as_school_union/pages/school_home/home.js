@@ -1,4 +1,5 @@
 const   HomeHeader          = require('./home_header'),
+        Scores              = require('./scores/scores'),
         HomeFixture         = require('./home_fixtures'),
         HomeResults         = require('./home_results'),
         HomeNews            = require('./home_news'),
@@ -19,6 +20,7 @@ const SchoolHomePage = React.createClass({
             <div className="eSchoolHomePage">
                 <HomeHeader binding={binding}/>
                 <div className="eSchoolBodyWrapper">
+                    <Scores         binding = {binding}/>
                     <HomeCalender   binding = {binding}/>
 					<HomeFixture    binding = {binding}/>
 					<HomeResults    binding = {binding}/>
