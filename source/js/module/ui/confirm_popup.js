@@ -18,8 +18,9 @@ const ConfirmPopup = React.createClass({
 			isShowButtons: true
 		};
 	},
-	handleClickOkButton: function() {
+	handleClickOkButton: function(event) {
 		if(!this.props.isOkButtonDisabled) {
+			event.target.disabled = true;
 			this.props.handleClickOkButton();
 		}
 	},
