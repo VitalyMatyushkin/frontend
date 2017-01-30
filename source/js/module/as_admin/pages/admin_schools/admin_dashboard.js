@@ -25,7 +25,7 @@ const	RouterView								= require('module/core/router'),
 const OneSchoolPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	createNewSchool: function() {
-		document.location.hash = 'ad1min_schools/admin_views/add';
+		document.location.hash = 'admin_schools/admin_views/add';
 	},
 	componentWillMount: function() {
 		this.createSubMenu();
