@@ -20,7 +20,7 @@ const	React						= require('react'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
 		DetailsWrapper				= require('./view/details/details_wrapper'),
 		MatchReport					= require('./view/match-report/report'),
-		Map							= require('../../../ui/map/map-event-venue'),
+		Map							= require('../../../ui/map/map2'),
 
 		GalleryActions				= require('./new_gallery/event_gallery_actions'),
 		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
@@ -577,7 +577,8 @@ const Event = React.createClass({
 				mode			= binding.toJS('mode'),
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
-				role			= RoleHelper.getLoggedInUserRole(this);
+				role			= RoleHelper.getLoggedInUserRole(this),
+				point 			= binding.toJS('model.venue.postcodeData.point');
 
 		switch (true) {
 			case !self.isSync():
@@ -616,9 +617,7 @@ const Event = React.createClass({
 								<div className="bEventMap">
 									<div className="bEventMap_row">
 										<div className="bEventMap_col">
-											<Map	binding	= {binding.sub('mapOfEventVenue')}
-													venue	= {binding.toJS('model.venue')}
-											/>
+											<Map point={point} />
 										</div>
 									</div>
 								</div>

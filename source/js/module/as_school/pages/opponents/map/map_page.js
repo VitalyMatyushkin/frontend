@@ -1,5 +1,5 @@
 const 	If 			= require('module/ui/if/if'),
-		Map 		= require('module/ui/map/map'),
+		Map 		= require('module/ui/map/map2'),
 		React 		= require('react'),
 		Morearty    = require('morearty'),
 		Immutable 	= require('immutable');
@@ -26,8 +26,8 @@ const OpponentsMapPage = React.createClass({
 
 		return (
 			<div className="bOpponentsMap" ref="map">
-				<If condition={binding.get('schoolInfo.postcode.point.lat')}>
-					<Map binding={self.getDefaultBinding()} point={{lat: binding.get('schoolInfo.postcode.point.lat'), lng: binding.get('schoolInfo.postcode.point.lng')}} />
+				<If condition={binding.get('schoolInfo.postcode.point')}>
+					<Map point={binding.get('schoolInfo.postcode.point')} />
 				</If>
 			</div>
 		)

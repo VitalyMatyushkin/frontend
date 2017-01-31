@@ -3,7 +3,7 @@
  */
 
 const 	React	= require('react'),
-		Map		= require('module/ui/map/map'),
+		Map		= require('module/ui/map/map2'),
 		SVG		= require('module/ui/svg'),
 		If		= require('module/ui/if/if');
 
@@ -18,8 +18,7 @@ const SummaryPanel = React.createClass({
 		address:		React.PropTypes.string.isRequired,
 		description:	React.PropTypes.string,
 		siteLink:		React.PropTypes.string.isRequired,
-		geoPoint:		React.PropTypes.any,
-		binding:		React.PropTypes.any 		// yes, it will be here for a while. Need to pass it down to map
+		geoPoint:		React.PropTypes.any
 	},
 
 	renderEditButton: function() {
@@ -121,7 +120,7 @@ const SummaryPanel = React.createClass({
 						{ this.renderSiteLink() }
 					</div>
 						<If condition={geoPoint !== undefined}>
-							<Map binding={this.props.binding} point={geoPoint}/>
+							<Map point={geoPoint} />
 						</If>
 				</div>
 			</div>
