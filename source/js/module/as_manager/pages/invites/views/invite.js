@@ -5,7 +5,7 @@ const	React 				= require('react'),
 		DateHelper			= require('./../../../../helpers/date_helper'),
 		MoreartyHelper		= require('module/helpers/morearty_helper'),
 		Button				= require('module/ui/button/button'),
-		Map 				= require('module/ui/map/map-event-venue'),
+		Map 				= require('module/ui/map/map2'),
 		propz				= require('propz'),
 		Bootstrap 			= require('styles/bootstrap-custom.scss'),
 		InviteComments		= require('./invite_comments'),
@@ -102,12 +102,13 @@ const InviteView = React.createClass({
 				hours 			= this.addZeroToFirst(eventDate.getHours()),
 				minutes 		= this.addZeroToFirst(eventDate.getMinutes()),
 				inviteId		= binding.get('id'),
+				point 			= binding.toJS('event.venue.postcodeData.point'),
 				venue 			= binding.toJS('event.venue'),
 				teamData 		= binding.toJS('event.teamsData'),
 				toggleLink		= binding.sub('inviteComments').toJS('expandedComments'),
 				typeBinding		= binding.toJS('isConfirmPopupType') ? binding.toJS('isConfirmPopupType') : '',
 				isConfirmPopup 	= binding.toJS('isConfirmPopup') ? binding.toJS('isConfirmPopup') : false,
-				venueArea 		= venue.postcodeId ? <Map binding={binding} venue={venue} />
+				venueArea 		= venue.postcodeId ? <Map point={point} />
 									: <span className="eInvite_venue">Venue to be defined</span>;
 
 
