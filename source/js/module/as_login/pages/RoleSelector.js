@@ -11,7 +11,7 @@ const RoleSelector = React.createClass({
 		const availableRoles = this.props.availableRoles;
 
 		if(availableRoles.length == 1) {
-			DomainHelper.redirectToStartPage(availableRoles[0], this.getSchoolKindFromRole(availableRoles[0]));
+			DomainHelper.redirectToStartPage(availableRoles[0].name, this.getSchoolKindFromRole(availableRoles[0]));
 		} else if(availableRoles.length === 0) {
 			DomainHelper.redirectToStartPage('no_body', undefined);
 		}
@@ -22,7 +22,7 @@ const RoleSelector = React.createClass({
 		});
 	},
 	/**
-	 * Get first permission from role and get school hind from it.
+	 * Get first permission from role and get school kind from it.
 	 * @param role
 	 */
 	getSchoolKindFromRole: function(role) {
