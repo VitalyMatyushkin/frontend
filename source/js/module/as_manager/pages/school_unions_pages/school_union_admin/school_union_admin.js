@@ -8,7 +8,8 @@ const	React							= require('react'),
 		SchoolUnionSchoolListWrapper	= require('./pages/school_union_school_list/school_union_school_list_wrapper'),
 		SchoolUnionSchoolViewWrapper	= require('./pages/school_union_school_view/school_union_school_view_wrapper'),
 		SchoolUnionNews					= require('./pages/school_union_news/school_union_news'),
-		SubMenu							= require('module/ui/menu/sub_menu');
+		SubMenu							= require('module/ui/menu/sub_menu'),
+		SchoolUnionStyle				= require('styles/ui/b_school_union.scss');
 
 const SchoolUnionAdmin = React.createClass({
 	mixins: [Morearty.Mixin],

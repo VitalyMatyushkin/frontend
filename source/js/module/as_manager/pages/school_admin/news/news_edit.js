@@ -1,7 +1,8 @@
 const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'),
 		React 		= require('react'),
 		Morearty	= require('morearty'),
-		Immutable 	= require('immutable');
+		Immutable 	= require('immutable'),
+		RoleHelper	= require('module/helpers/role_helper');
 
 const NewsTitle = React.createClass({
 	render: function() {
@@ -17,9 +18,8 @@ const NewsTitle = React.createClass({
 const NewsEditPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				globalBinding 	= self.getMoreartyContext().getBinding(),
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding(),
 				routingData 	= globalBinding.sub('routing.parameters').toJS(),
 				newsId 			= routingData.id,
 				schoolId		= globalBinding.get('userRules.activeSchoolId');
@@ -28,30 +28,36 @@ const NewsEditPage = React.createClass({
 
 		if (newsId) {
 			window.Server.schoolNewsItem.get({schoolId:schoolId,newsId:newsId})
-				.then(function (data) {
-				self.isMounted() && binding.set(Immutable.fromJS(data));
-			});
+				.then(data => {
+					binding.set(Immutable.fromJS(data));
+				});
 
-			self.newsId 	= newsId;
-			self.schoolId 	= schoolId;
+			this.newsId 	= newsId;
+			this.schoolId 	= schoolId;
 		}
 	},
 	submitEdit: function(data) {
-		const self = this;
-		window.Server.schoolNewsItem.put({schoolId:self.schoolId,newsId:self.newsId}, data).then(function() {
-			self.isMounted() && (document.location.hash = 'school_admin/news');
+		const	role		= RoleHelper.getLoggedInUserRole(this),
+				schoolKind	= RoleHelper.getActiveSchoolKind(this);
+
+		window.Server.schoolNewsItem.put({schoolId:this.schoolId, newsId:this.newsId}, data).then(() => {
+			//It's so bad, if you see it, fix it, please
+			if (role !== "undefined" && schoolKind === "SchoolUnion"){
+				document.location.hash = 'school_union_admin/news';
+			} else {
+				document.location.hash = 'school_admin/news';
+			}
 		});
 	},
 	render: function() {
-		const 	self 	= this,
-				binding = self.getDefaultBinding();
+		const binding = this.getDefaultBinding();
 
 		return (
-				<div className="bNewsEdit">
-					<NewsTitle />
-					<NewsForm title="Edit news" onFormSubmit={self.submitEdit} binding={binding}/>
-				</div>
-					)
+			<div className="bNewsEdit">
+				<NewsTitle />
+				<NewsForm title="Edit news" onFormSubmit={this.submitEdit} binding={binding}/>
+			</div>
+		)
 	}
 });
 
