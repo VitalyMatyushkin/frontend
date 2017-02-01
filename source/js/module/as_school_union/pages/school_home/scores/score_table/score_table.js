@@ -5,12 +5,15 @@ const	React							= require('react'),
 		Bootstrap						= require('../../../../../../../styles/bootstrap-custom.scss');
 
 const ScoreTable = React.createClass({
+	propTypes: {
+		scores: React.PropTypes.array.isRequired
+	},
 	render: function(){
 		return (
 			<div className="eSchoolUnionSeasonScores_scoreTableWrapper">
 				<table className="table table-striped">
 					<TableHead/>
-					<TableBody/>
+					<TableBody scores={this.props.scores}/>
 				</table>
 			</div>
 		);

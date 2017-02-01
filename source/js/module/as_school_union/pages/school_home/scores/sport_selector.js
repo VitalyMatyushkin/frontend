@@ -4,18 +4,6 @@ const	React		= require('react'),
 
 const Scores = React.createClass({
 	mixins: [Morearty.Mixin],
-	componentWillMount: function() {
-		this.initCurrentSport();
-	},
-	initCurrentSport: function() {
-		const sports = this.getDefaultBinding().toJS('sports');
-
-		if(sports.length === 0) {
-			this.getDefaultBinding().set('currentSport', undefined);
-		} else if(sports.length > 0) {
-			this.getDefaultBinding().set('currentSport', Immutable.fromJS(sports[0]));
-		}
-	},
 	getCurrentSport: function() {
 		return this.getDefaultBinding().toJS('currentSport');
 	},

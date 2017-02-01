@@ -17,15 +17,7 @@ const SchoolList = React.createClass({
 			.set('isShowAllItems', false)
 			.commit();
 
-		window.Server.publicSchools.get(
-			{
-				filter: {
-					where: {
-						limit: 10
-					}
-				}
-			}
-		)
+		window.Server.publicSchoolUnionSchools.get({schoolUnionId: this.getMoreartyContext().getBinding().get('activeSchoolId')})
 		.then(schools => {
 			this.getDefaultBinding()
 				.atomically()

@@ -9,10 +9,10 @@ const TableHead = React.createClass({
 			<tr>
 				<th>#</th>
 				<th>Team</th>
-				<th>P</th>
-				<th>W</th>
-				<th>D</th>
-				<th>L</th>
+				<th>Total</th>
+				<th>Won</th>
+				<th>Lost</th>
+				<th>Drew</th>
 			</tr>
 			</thead>
 		);

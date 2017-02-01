@@ -2,26 +2,38 @@ const	React		= require('react'),
 		Bootstrap  	= require('../../../../../../../styles/bootstrap-custom.scss');
 
 const TableBody = React.createClass({
+	propTypes: {
+		scores: React.PropTypes.array.isRequired
+	},
+	renderRows: function() {
+		const scores = this.props.scores;
 
+		if(typeof scores !== 'undefined') {
+			const xmlScore = [];
+
+			let index = 1;
+			for(let schoolId in scores) {
+				xmlScore.push(
+					<tr>
+						<th scope="row">{index++}</th>
+						<td>{scores[schoolId].schoolName}</td>
+						<td>{scores[schoolId].total}</td>
+						<td>{scores[schoolId].won}</td>
+						<td>{scores[schoolId].lost}</td>
+						<td>{scores[schoolId].drew}</td>
+					</tr>
+				);
+			}
+
+			return xmlScore;
+		} else {
+			return null;
+		}
+	},
 	render: function(){
 		return (
 			<tbody>
-			<tr>
-				<th scope="row">1</th>
-				<td>Great Walstead School</td>
-				<td>20</td>
-				<td>10</td>
-				<td>4</td>
-				<td>6</td>
-			</tr>
-			<tr>
-				<th scope="row">2</th>
-				<td>Handcross Park School</td>
-				<td>16</td>
-				<td>8</td>
-				<td>3</td>
-				<td>9</td>
-			</tr>
+			{this.renderRows()}
 			</tbody>
 		);
 	}
