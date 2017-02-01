@@ -93,7 +93,7 @@ const AddSchoolPopup = React.createClass({
 									School
 								</div>
 								<div className="eForm_fieldSet">
-									<ComboBox	placeholder			= {'Great Walstead School'}
+									<ComboBox	placeholder			= {'Please, select a school'}
 												searchFunction		= {this.searchSchoolWrapper}
 												onSelect			= {this.handleSelectSchool}
 												getElementTitle		= {this.getElementTitle}

@@ -57,18 +57,6 @@ const SchoolUnionView = React.createClass({
 						</div>
 						<div className="eForm_field">
 							<div className="eForm_fieldName">
-								Postcode
-							</div>
-							<div className="eForm_fieldSet">
-								<input	className	= "eManager_field"
-										type		= "text"
-										value		= {this.props.schoolUnion.postcode.postcode}
-										disabled	= {true}
-								/>
-							</div>
-						</div>
-						<div className="eForm_field">
-							<div className="eForm_fieldName">
 								Address
 							</div>
 							<div className="eForm_fieldSet">

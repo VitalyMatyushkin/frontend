@@ -50,8 +50,7 @@ const SchoolUnionForm = React.createClass({
 					{ text: 'Inactive', value: 'INACTIVE' },
 					{ text: 'Suspended', value: 'SUSPENDED' },
 					{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
-				],
-				postcode 	= binding.toJS('postcode');
+				];
 
 		return (
 			<Form	name			= {self.props.title}
@@ -89,8 +88,6 @@ const SchoolUnionForm = React.createClass({
 						School Status
 					</FormField>
 					<FormField type="phone" field="phone" validation="any">Phone</FormField>
-					<FormField type="area" field="postcodeId" defaultItem={postcode}
-							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
 					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
 					<FormField	type="dropdown"
