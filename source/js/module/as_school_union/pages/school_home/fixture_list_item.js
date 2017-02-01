@@ -65,6 +65,7 @@ const FixtureListItem = React.createClass({
 	},
     handleClickGoBack: function() {
         document.location.hash = 'home';
+		document.location.reload();
     },
     render: function() {
         const 	event 			= this.props.event,
