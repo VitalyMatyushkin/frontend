@@ -13,7 +13,7 @@ const AddButton = React.createClass({
 			<div	className	= "bAddButton"
 					onClick		= {this.props.handleClick}
 			>
-				<i className="fa fa-plus fa-2x" aria-hidden="true"/>
+				<i className="eCustomFont eCustomFont-plus"/>
 			</div>
 		)
 	}

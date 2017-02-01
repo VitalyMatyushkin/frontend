@@ -38,6 +38,8 @@ const serviceList = {
 
         // schools
         serviceList.schools = new Service('/i/schools', binding);
+        serviceList.schoolUnionSchools = new Service('/i/schools/{schoolUnionId}/schools', binding);
+        serviceList.schoolUnionSchool = new Service('/i/schools/{schoolUnionId}/schools/{schoolId}', binding);
         serviceList.school = new Service('/i/schools/{schoolId}', binding);
         serviceList.schoolSettings = new Service('/i/schools/{schoolId}/settings', binding);
         serviceList.publicSchool = new Service('/public/schools/{schoolId}', binding);
@@ -51,6 +53,7 @@ const serviceList = {
         serviceList.schoolStudent = new Service('/i/schools/{schoolId}/students/{studentId}', binding);
         serviceList.schoolStudentParents = new Service('/i/schools/{schoolId}/students/{studentId}/parents', binding);
         serviceList.schoolStudentEvents = new Service('/i/schools/{schoolId}/students/{studentId}/events', binding);
+
 
         // forms
         serviceList.schoolForms = new Service('/i/schools/{schoolId}/forms', binding);
@@ -96,6 +99,8 @@ const serviceList = {
 
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
+        serviceList.publicSchoolUnionStats = new Service('/public/schools/{schoolUnionId}/events/stats', binding);
+        serviceList.publicSchoolUnionSchools = new Service('/public/schools/{schoolUnionId}/schools', binding);
 		serviceList.eventCancel = new Service('/i/schools/{schoolId}/events/{eventId}/cancel', binding);
 		serviceList.schoolEventChangeOpponent = new Service('/i/schools/{schoolId}/events/{eventId}/changeOpponent', binding);
 		serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
@@ -115,6 +120,7 @@ const serviceList = {
 		// event individual performance
 		serviceList.schoolEventIndividualPerformance = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/performance', binding);
 		serviceList.schoolEventIndividualDiscipline = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/discipline', binding);
+		serviceList.schoolEventIndividualDisciplinePoint = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/discipline/{disciplinePointId}', binding);
 
 		serviceList.schoolEventResultSchoolScores = new Service('/i/schools/{schoolId}/events/{eventId}/results/schools/score', binding);
 		serviceList.schoolEventResultSchoolScore = new Service('/i/schools/{schoolId}/events/{eventId}/results/schools/score/{scoreId}', binding);
@@ -181,6 +187,13 @@ const serviceList = {
 		serviceList.childEventPhotos = new Service('/i/children/events/{eventId}/photos', binding);
 		serviceList.childEventPhoto = new Service('/i/children/events/{eventId}/photos/{photoId}', binding);
 		serviceList.childParents = new Service('/i/children/{childId}/parents', binding);
+
+
+		// new role student
+		serviceList.studentSchoolEventsCount = new Service('/i/events/stats', binding);
+		serviceList.studentSchoolEventsDates = new Service('/i/events/dates/distinct', binding);
+		serviceList.studentSchoolEvents = new Service('/i/events', binding);
+		serviceList.studentSchoolEvent = new Service('/i/events/{eventId}', binding);
 
 		// postcode
 		serviceList.postCodes = new Service('/public/postcodes', binding);

@@ -110,7 +110,7 @@ const UserDetail= React.createClass({
                         <div className="eStrip"></div>
                     </div>
                     </div>
-                    <div className="bDataList">
+                    <div className="bDataList mCentred">
                         <div className="eDataList_list mTable">
                             <div className="eDataList_listItem mHead">
                                 <div className="eDataList_listItemCell" style={{width:20+'%'}}>School Crest</div>

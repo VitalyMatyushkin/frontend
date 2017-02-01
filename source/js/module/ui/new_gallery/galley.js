@@ -18,7 +18,8 @@ const Gallery = React.createClass({
 		handleClickDeletePhoto:			React.PropTypes.func,
 		accessMode:						React.PropTypes.string.isRequired,
 		isUserCanUploadPhotos:			React.PropTypes.bool.isRequired,
-		isLoading:						React.PropTypes.bool.isRequired
+		isLoading:						React.PropTypes.bool.isRequired,
+		isUploadingPhoto:				React.PropTypes.bool
 	},
 	getInitialState: function() {
 		return {
@@ -33,6 +34,8 @@ const Gallery = React.createClass({
 		switch (this.props.accessMode) {
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.MANAGER:
 				return true;
+			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.STUDENT:
+				return false;
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PARENT:
 				return (currentPhoto.author.role === 'PARENT' && currentPhoto.author.userId === this.props.currentUserId);
 			case GalleryAccessPresets.GALLERY_ACCESS_PRESET.PUBLIC:
@@ -92,6 +95,7 @@ const Gallery = React.createClass({
 						handleClickDeletePhoto={this.props.handleClickDeletePhoto}
 						handleClickPhoto={this.handleClickPhoto}
 						accessMode={this.props.accessMode}
+						isUploadingPhoto={this.props.isUploadingPhoto}
 			/>
 		);
 	},

@@ -366,24 +366,24 @@ const RegisterUserPage = React.createClass({
                 break;
             case 'verification':
                 currentView = (
-                    <VerificationStep   email                           = { this.getEmail() }
-                                        isEmailVerified                 = { this.isEmailVerified() }
-                                        isErrorEmailVerification        = { this.isErrorEmailVerification() }
-                                        phone                           = { this.getPhone() }
-                                        isPhoneVerified                 = { this.isPhoneVerified() }
-                                        isErrorPhoneVerification        = { this.isErrorPhoneVerification() }
-                                        handleClickConfirmEmail         = { this.handleClickConfirmEmail }
-                                        handleClickConfirmPhone         = { this.handleClickConfirmPhone }
-                                        handleSuccessEmailChange        = { this.handleSuccessEmailChange }
-                                        handleSuccessPhoneChange        = { this.handleSuccessPhoneChange }
-                                        canUserResendEmailVerification  = { this.canUserResendEmailVerification() }
-                                        canUserResendPhoneVerification  = { this.canUserResendPhoneVerification() }
-                                        handleClickResendEmail          = { this.handleClickResendEmail }
-                                        handleClickResendPhone          = { this.handleClickResendPhone }
-                                        isResentEmailPopupOpen          = { this.isResentEmailPopupOpen() }
-                                        handleClickEmailPopupClose      = { this.handleClickEmailPopupClose }
-                                        isResentPhonePopupOpen          = { this.isResentPhonePopupOpen() }
-                                        handleClickPhonePopupClose      = { this.handleClickPhonePopupClose }
+                    <VerificationStep   email                          = { this.getEmail() }
+                                        isEmailVerified                = { this.isEmailVerified() }
+                                        isErrorEmailVerification       = { this.isErrorEmailVerification() }
+                                        phone                          = { this.getPhone() }
+                                        isPhoneVerified                = { this.isPhoneVerified() }
+                                        isErrorPhoneVerification       = { this.isErrorPhoneVerification() }
+                                        handleClickConfirmEmail        = { this.handleClickConfirmEmail }
+                                        handleClickConfirmPhone        = { this.handleClickConfirmPhone }
+                                        handleSuccessEmailChange       = { this.handleSuccessEmailChange }
+                                        handleSuccessPhoneChange       = { this.handleSuccessPhoneChange }
+                                        canUserResendEmailVerification = { this.canUserResendEmailVerification() }
+                                        canUserResendPhoneVerification = { this.canUserResendPhoneVerification() }
+                                        handleClickResendEmail         = { this.handleClickResendEmail }
+                                        handleClickResendPhone         = { this.handleClickResendPhone }
+                                        isResentEmailPopupOpen         = { this.isResentEmailPopupOpen() }
+                                        handleClickEmailPopupClose     = { this.handleClickEmailPopupClose }
+                                        isResentPhonePopupOpen         = { this.isResentPhonePopupOpen() }
+                                        handleClickPhonePopupClose     = { this.handleClickPhonePopupClose }
                     />
                 );
                 break;

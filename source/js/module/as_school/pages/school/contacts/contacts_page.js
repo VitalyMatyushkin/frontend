@@ -1,5 +1,5 @@
 const 	SVG 		= require('module/ui/svg'),
-		Map 		= require('module/ui/map/map'),
+		Map 		= require('module/ui/map/map2'),
 		React 		= require('react'),
 		If 			= require('module/ui/if/if'),
 		Morearty    = require('morearty'),
@@ -40,8 +40,8 @@ const ContactsPage = React.createClass({
 		return (
 			<div>
 				<div className="bSchoolContacts">
-					<If condition={binding.get('schoolInfo.postcode.point.lat')}>
-						<Map point={{lat: binding.get('schoolInfo.postcode.point.lat'), lng: binding.get('schoolInfo.postcode.point.lng')}} />
+					<If condition={binding.get('schoolInfo.postcode.point')}>
+						<Map point={binding.get('schoolInfo.postcode.point')} />
 					</If>
 
 					<div className="eSchoolContacts_title">Sport contacts</div>

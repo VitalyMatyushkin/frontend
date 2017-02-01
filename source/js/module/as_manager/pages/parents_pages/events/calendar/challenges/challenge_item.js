@@ -17,7 +17,7 @@ const ChallengeItem = function(props){
 	return(
 		<div className={'eChallenge eChallenge_basicMod'} onClick={() => props.onClick && props.onClick(event.get('id'))}>
 			<span className="eChallenge_sport">
-				<Sport name={sport} className="bIcon_invites" />
+				<Sport name={sport} title={sport} className="bIcon_invites" />
 			</span>
 			<span className="eChallenge_date">{time}</span>
 			<div className="eChallenge_name" title={eventName}>{eventName}</div>

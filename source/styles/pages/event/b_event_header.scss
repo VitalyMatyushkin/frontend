@@ -24,15 +24,17 @@
 .eEventHeader_field {
   text-transform: none;
   text-align: center;
-  font-size: 1.5625rem;
+  font-size: 1.2rem;
 
   margin: 10px 0;
 
   &.mEvent{
+    font-size: 1.5625rem;
     text-align: left;
     text-overflow: ellipsis;
   }
-  &.mDate {
+  &.mDate,
+  &.mAges {
     color: $GrayText;
     text-align: left;
   }

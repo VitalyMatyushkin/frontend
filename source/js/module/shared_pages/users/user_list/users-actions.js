@@ -2,12 +2,10 @@
  * Created by Anatoly on 25.07.2016.
  */
 
-const 	DataLoader 		= require('module/ui/grid/data-loader'),
-		UserModel 		= require('module/data/UserModel'),
-		React 			= require('react'),
-		Morearty		= require('morearty'),
-		GridModel 		= require('module/ui/grid/grid-model'),
-		RoleHelper 		= require('module/helpers/role_helper');
+const	DataLoader		= require('module/ui/grid/data-loader'),
+		UserModel		= require('module/data/UserModel'),
+		GridModel		= require('module/ui/grid/grid-model'),
+		RoleHelper		= require('module/helpers/role_helper');
 
 /**
  * UsersActions
@@ -36,21 +34,29 @@ UsersActions.prototype = {
 	reloadData:function(){
 		this.dataLoader.loadData();
 	},
+	_getActionList: function() {
+		const self = this;
+
+		if(typeof self.props.customActionList !== "undefined") {
+			return self.props.customActionList.slice();
+		} else {
+			return typeof self.props.blockService !== "undefined" ? ['View','Block','Unblock','Add Role','Revoke All Roles']
+				: ['View','Add Role','Revoke All Roles'];
+		}
+	},
 	getActions:function(item){
 		var self 			= this,
 			activeSchoolId 	= self.activeSchoolId,
-			actionList 		= self.props.blockService ? ['View','Block','Unblock','Add Role','Revoke All Roles']
-														: ['View','Add Role','Revoke All Roles'];
+			actionList 		= self._getActionList();
 
-		item.permissions.filter(p=> p.preset != 'STUDENT').forEach(p => {
+		item.permissions.filter(p => p.preset != 'STUDENT').forEach(p => {
 			let action = 'Revoke the role ';
-			if(p.preset === 'PARENT'){
+			if(p.preset === 'PARENT') {
 				action += `of ${p.student.firstName} ${p.student.lastName} parent`;
-			}
-			else{
+			} else {
 				action += p.preset;
 
-				if(!activeSchoolId){
+				if(!activeSchoolId) {
 					action +=' for ' + p.school.name;
 				}
 			}
@@ -62,7 +68,6 @@ UsersActions.prototype = {
 			});
 		});
 		return actionList;
-
 	},
 	_getQuickEditActionsFactory:function(itemId,action){
 		const 	self = this,
@@ -188,10 +193,10 @@ UsersActions.prototype = {
 	getRoleList:function(){
 		const roles = [];
 
-		Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS).forEach(key => {
+		Object.keys(RoleHelper.USER_PERMISSIONS).forEach(key => {
 			roles.push({
 				key: key,
-				value: RoleHelper.ALLOWED_PERMISSION_PRESETS[key].toLowerCase()
+				value: RoleHelper.USER_PERMISSIONS[key].toLowerCase()
 			});
 		});
 

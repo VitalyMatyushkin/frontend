@@ -37,14 +37,13 @@
   text-align: center;
 }
 .eSchoolBlazon {
-  margin: 0 auto;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
 
-  img {
-    height: 100%;
-    max-height: 110px;
-    max-width: 220px;
-    padding-bottom: 20px;
-  }
+  margin: 0 auto 20px;
+  height: 110px;
+  width: 110px;
 }
 
 .eSchoolFixtureTab{//TODO Rename it
@@ -334,16 +333,16 @@
   font-weight:200;
 }
 .eSchoolHomeFooter{
-  height: 100px;
   width: 100%;
-  line-height: 100px;
-  float:left;
+  padding: 20px 0;
+
   position: relative;
-  text-align: center;
   color:#898989;
 }
-.eSchoolHomeFooter img{
-  margin: 0 400px 0 10px;
+
+.eSchoolHomeFooterCopyright {
+  text-align: right;
+  padding: 20px 0;
 }
 .carouselUpScroll{
   //overflow: hidden;
@@ -443,7 +442,7 @@
 }
 
 .bFixtureMessage {
-  width: 1150px;
+  max-width: 1150px;
   margin: 0 auto;
 
   font-size: 16px;

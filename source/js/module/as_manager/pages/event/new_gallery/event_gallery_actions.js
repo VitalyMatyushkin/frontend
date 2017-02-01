@@ -16,7 +16,7 @@ function addPhotoToEvent(role, binding, schoolId, eventId, file) {
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhotos;
 			break;
 		default:
@@ -43,13 +43,13 @@ function addPhotoToEvent(role, binding, schoolId, eventId, file) {
 function deletePhotoFromEvent(role, binding, schoolId, eventId, photoId) {
 	binding.atomically()
 		.set('isSync',		false)
-		.set('isUploading',	true)
+		.set('isDeleting',	true)
 		.commit();
 
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhoto;
 			break;
 		default:
@@ -64,7 +64,7 @@ function deletePhotoFromEvent(role, binding, schoolId, eventId, photoId) {
 			photoId:	photoId
 		}
 	).then(() => {
-		binding.set('isUploading', false);
+		binding.set('isDeleting', false);
 		return getPhotosForEvent(role, binding, schoolId, eventId);	// and reloading all photos
 	});
 }
@@ -75,7 +75,7 @@ function getPhotosForEvent(role, binding, schoolId, eventId) {
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhotos;
 			break;
 		default:
@@ -98,7 +98,7 @@ function changePhotoPreset(role, binding, schoolId, eventId, photoId, preset) {
 	let service;
 
 	switch (role) {
-		case RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+		case RoleHelper.USER_ROLES.PARENT:
 			service = window.Server.childEventPhoto;
 			break;
 		default:

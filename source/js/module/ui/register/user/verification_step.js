@@ -49,12 +49,14 @@ const VerificationStep = React.createClass({
     getEmailCodeCheckButtonClassName: function() {
         return classNames({
             bButton:        !this.props.isEmailVerified,
+            mSmall:        !this.props.isEmailVerified,
             bButton_hide:   this.props.isEmailVerified
         });
     },
     getPhoneCodeCheckButtonClassName: function() {
         return classNames({
             bButton:        !this.props.isPhoneVerified,
+            mSmall:        !this.props.isPhoneVerified,
             bButton_hide:   this.props.isPhoneVerified
         });
     },

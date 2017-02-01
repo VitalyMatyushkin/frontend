@@ -3,7 +3,7 @@ const	React				= require('react'),
 		Immutable			= require('immutable'),
 		If					= require('../../../../ui/if/if'),
 		Promise				= require('bluebird'),
-		Map					= require('module/ui/map/map'),
+		Map					= require('module/ui/map/map2'),
 		Autocomplete		= require('../../../../../../js/module/ui/autocomplete2/OldAutocompleteWrapper'),
 		InputWrapperStyles	= require('./../../../../../../styles/ui/b_input_wrapper.scss'),
 		InputLabelStyles	= require('./../../../../../../styles/ui/b_input_label.scss'),
@@ -233,16 +233,17 @@ const EventVenue = React.createClass({
 	 * @returns {*}
 	 */
 	getPoint: function() {
-		const binding = this.getDefaultBinding();
+		const binding = this.getDefaultBinding(),
+		point = binding.toJS('schoolInfo.postcode.point') ? binding.toJS('schoolInfo.postcode.point') : this.DEFAULT_VENUE_POINT;
 
 		const	venueType	= binding.toJS('model.venue.venueType'),
 				venuePoint	= binding.toJS('model.venue.postcode');
 
 		switch (true) {
 			case typeof venuePoint === 'undefined':
-				return this.DEFAULT_VENUE_POINT;
+				return point;
 			case typeof venuePoint !== 'undefined' && venueType === "TBD":
-				return this.DEFAULT_VENUE_POINT;
+				return point;
 			case typeof venuePoint !== 'undefined':
 				return venuePoint.point;
 		};
@@ -287,8 +288,7 @@ const EventVenue = React.createClass({
 					/>
 				</div>
 				<If condition={this.isShowMap()}>
-					<Map	binding				= {binding}
-							point				= {this.getPoint()}
+					<Map 	point				= {this.getPoint()}
 							customStylingClass	= "eEvents_venue_map"
 					/>
 				</If>

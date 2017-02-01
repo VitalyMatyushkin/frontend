@@ -1,0 +1,79 @@
+@import "../!variables";
+
+.bSchoolUnionSummary {
+  max-width: 1000px;
+
+  margin: 60px auto;
+  padding: 40px 25px 40px 90px;
+  background: #fff;
+  border: solid 1px #c2c2c2;
+}
+
+.eSchoolUnionSummary_header {
+  display: flex;
+}
+
+.eSchoolUnionSummary_nameWrapper {
+  display: flex;
+}
+
+.eSchoolUnionSummary_picture {
+  margin-right: 15px;
+  max-width: 80px;
+  max-height: 80px;
+}
+
+.eSchoolUnionSummary_name {
+  min-width: 200px;
+  margin-right: 15px;
+  color: #535353;
+  text-align: left;
+  font-weight: normal;
+  line-height: 24px;
+  text-transform: capitalize;
+}
+
+.eSchoolUnionSummary_editButton {
+  margin-top: -20px;
+  text-align: right;
+}
+
+.eSchoolUnionSummary_description {
+  color: #333132;
+  margin: 10px 0;
+  line-height: 18px;
+  font-size: 14px;
+}
+
+.eSchoolUnionSummary_showMoreLink {
+  color: $blueColor;
+  margin-left: 10px;
+  text-decoration: underline;
+}
+
+.eSchoolUnionSummary_addressBlock {
+  max-width: 260px;
+  margin: 15px 10px;
+  float: left;
+}
+
+.eSchoolUnionSummary_address {
+  font-size: 14px;
+  color: #b7b7b7;
+  line-height: 18px;
+  margin-bottom: 0;
+}
+
+.eSchoolUnionSummary_postcode {
+  font-size: 14px;
+  color: #b7b7b7;
+  line-height: 18px;
+  margin-bottom: 0;
+}
+
+.eSchoolUnionSummary_footer {
+  font-size: 14px;
+  color: #b7b7b7;
+  line-height: 18px;
+  margin-bottom: 0;
+}

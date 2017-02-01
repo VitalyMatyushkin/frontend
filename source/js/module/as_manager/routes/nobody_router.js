@@ -1,9 +1,9 @@
 const	React			= require('react'),
 		Morearty		= require('morearty'),
-
 		RouterView		= require('module/core/router'),
-		LoginRoute		= require('module/core/routes/login_route'),
+		LoginRoute		= require('module/core/routes/login_route2'),
 		LogoutRoute		= require('module/core/routes/logout_route'),
+		RegisterRoute	= require('module/core/routes/register_route'),
 		SettingsRoute	= require('module/core/routes/settings_route');
 
 /**
@@ -20,7 +20,8 @@ const NobodyRouter = React.createClass({
 			>
 				<LoginRoute		binding	= {binding.sub('userData')}/>
 				<LogoutRoute	binding	= {binding.sub('userData')}/>
-				<SettingsRoute	binding	= {binding.sub('userData')} />
+				<RegisterRoute	binding	= {binding.sub('form.register')}/>
+				<SettingsRoute	binding	= {binding.sub('userData')}/>
 			</RouterView>
 		);
 	}

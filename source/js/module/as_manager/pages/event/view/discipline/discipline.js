@@ -7,6 +7,7 @@ const	React			= require('react'),
 
 const Discipline = React.createClass({
 	propTypes: {
+		role					: React.PropTypes.string.isRequired,
 		isEditMode				: React.PropTypes.bool.isRequired,
 		event					: React.PropTypes.object.isRequired,
 		players					: React.PropTypes.array.isRequired,
@@ -23,7 +24,8 @@ const Discipline = React.createClass({
 		return (
 			<div>
 				<If condition={!this.props.isEditMode}>
-					<DisciplineView	event					= {this.props.event}
+					<DisciplineView	role					= {this.props.role}
+									event					= {this.props.event}
 									players					= {this.props.players}
 									disciplineItems			= {this.props.disciplineItems}
 									disciplineValues		= {this.props.disciplineValues}
@@ -32,14 +34,14 @@ const Discipline = React.createClass({
 					/>
 				</If>
 				<If condition={this.props.isEditMode}>
-					<DisciplineEdit	event					= {this.props.event}
-									players					= {this.props.players}
-									disciplineItems			= {this.props.disciplineItems}
-									disciplineValues		= {this.props.disciplineValues}
-									activeSchoolId			= {this.props.activeSchoolId}
-									handleChange			= {this.props.handleChange}
-									onSave					= {this.props.onSave}
-									onCancel				= {this.props.onCancel}
+					<DisciplineEdit	event				= {this.props.event}
+									players				= {this.props.players}
+									disciplineItems		= {this.props.disciplineItems}
+									disciplineValues	= {this.props.disciplineValues}
+									activeSchoolId		= {this.props.activeSchoolId}
+									handleChange		= {this.props.handleChange}
+									onSave				= {this.props.onSave}
+									onCancel			= {this.props.onCancel}
 					/>
 				</If>
 			</div>

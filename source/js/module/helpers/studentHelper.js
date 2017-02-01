@@ -176,6 +176,128 @@ const StudentHelper = {
 				status: EventHelper.EVENT_STATUS.FINISHED
 			}
 		}});
+	},
+	/**
+	 * Functions for student role
+	 */
+	getStudentWinGames: function(studentId, events) {
+
+		const winEvents = events.filter(event => {
+			let teamIdFromEvent 	= '',
+				isWinner 			= false;
+
+			if (event.results['teamScore'].length !== 0) {
+				//Returns teamId student
+				event.teamsData.forEach(teamData => {
+					teamData.players.forEach(player => {
+						if (player.userId === studentId) {
+							teamIdFromEvent = teamData.id;
+						}
+					});
+				});
+				//Returns result isWinner (true/false) for team student
+				event.results.teamScore.forEach(team => {
+					if (team.teamId === teamIdFromEvent) {
+						isWinner = team.isWinner;
+					}
+				});
+			}
+
+			//only events with teamScore and win we add in winEvents
+			return 	event.results['teamScore'].length !== 0 && isWinner;
+		});
+		return winEvents;
+	},
+	getStudentScoredInEvents: function(studentId, events) {
+		const scoredInEvents = events.filter(event => {
+			//only events with score we add in scoredInEvents
+			return 	event.results['houseScore'].length !== 0 ||
+					event.results['individualScore'].length !== 0 ||
+					event.results['schoolScore'].length !== 0 ||
+					event.results['teamScore'].length !== 0;
+		});
+
+		// Just inject student scores to events model
+		// Because on next steps of obtaining data(on user_achievements REACT component)
+		// We need studentId
+		scoredInEvents.forEach(scoredInEvent => {
+			const result = scoredInEvent.results.individualScore.find(r => r.userId === studentId);
+			scoredInEvent.studentScore = result ? result.score : "student's team got some scores";
+		});
+		return scoredInEvents;
+	},
+	getStudentProfile: function(schoolId){
+		let studentData;
+		const schoolIdAsArray = [schoolId];
+
+		return window.Server.profile.get().then(student => {
+			studentData = student;
+			studentData.student = {
+				firstName: student.firstName,
+				lastName: student.lastName,
+				medicalInfo: 'No information', // doesn't exist in server request
+				birthday: student.birthday,
+				age: this._calculateAge(student.birthday)
+			};
+
+			return window.Server.profilePermissions.get();
+		}).then(permisions => {
+			permisions.forEach(permision => {
+				if (permision.schoolId === schoolId) {
+					if (typeof permision.details !== 'undefined') {
+						studentData.classData = typeof permision.details.formId !== 'undefined' ? permision.details.formId : null;
+						studentData.houseData = typeof permision.details.houseId !== 'undefined' ? permision.details.houseId : null;
+					} else {
+						studentData.classData = null;
+						studentData.houseData = null;
+					}
+				}
+			});
+
+			if (studentData.classData !== null) {
+				window.Server.publicSchoolForm.get({schoolId: schoolId, formId: studentData.classData}).then(classData => {
+					studentData.formName = classData.name;
+				})
+			}
+			if (studentData.houseData !== null) {
+				window.Server.publicSchoolHouse.get({schoolId: schoolId, houseId: studentData.houseData}).then(houseData => {
+					studentData.houseName = houseData.name;
+				})
+			}
+
+			return window.Server.publicSchools.get({
+				filter: {
+					where: {
+						id: {$in: schoolIdAsArray}
+					}
+				}
+			});
+			}
+		).then(schoolData => {
+			studentData.schoolData = schoolData;
+
+
+			return window.Server.studentSchoolEvents.get({
+				filter: {
+					where:{
+						status: {
+							$in: ['FINISHED']
+						},
+						schoolId: {
+							$in: schoolIdAsArray
+						}
+					}
+				}
+			})
+		}).then( eventsData => {
+			studentData.gamesScoredIn 			= this.getStudentScoredInEvents(studentData.id, eventsData);
+			studentData.numOfGamesScoredIn 		= studentData.gamesScoredIn.length;
+			studentData.schoolEvent 			= this._getPlayedGames(eventsData);
+			studentData.numberOfGamesPlayed 	= studentData.schoolEvent.length;
+			studentData.gamesWon 				= this.getStudentWinGames(studentData.id, eventsData);
+			studentData.numOfGamesWon 			= studentData.gamesWon.length;
+			return studentData;
+		});
 	}
 };
 

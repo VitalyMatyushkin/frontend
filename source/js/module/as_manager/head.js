@@ -13,33 +13,58 @@ const Head = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentDidMount:function(){
 		this.createTopMenu();
+		this.getMoreartyContext().getBinding().sub('userData.roleList.activePermission').addListener(() => {
+			this.createTopMenu();
+		});
 	},
-	getMenuItemsByRole: function(role) {
+	getMenuItems: function() {
+		const	role		= RoleHelper.getLoggedInUserRole(this),
+				kindSchool	= RoleHelper.getActiveSchoolKind(this);
+
 		let menuItems = [];
 		switch (true) {
 			case typeof role === "undefined":
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.ADMIN:
+			case role === RoleHelper.USER_ROLES.ADMIN && kindSchool === 'SchoolUnion':
+				menuItems = this.getMainMenuItemsForSchoolUnionAdmin();
+				menuItems.push(this.getSchoolUnionConsoleMenuItem());
+				return menuItems;
+			case role === RoleHelper.USER_ROLES.ADMIN && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.MANAGER:
+			case role === RoleHelper.USER_ROLES.MANAGER && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getConsoleMenuItem());
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.TEACHER:
+			case role === RoleHelper.USER_ROLES.TEACHER && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.COACH:
+			case role === RoleHelper.USER_ROLES.TRAINER && kindSchool === 'School':
 				menuItems = this.getMainMenuItemsForSchoolWorker();
 				menuItems.push(this.getHelpMenuItem());
 				return menuItems;
-			case role === RoleHelper.ALLOWED_PERMISSION_PRESETS.PARENT:
+			case role === RoleHelper.USER_ROLES.PARENT && kindSchool === 'School':
 				return this.getMainMenuItemsForParent();
+			case role === RoleHelper.USER_ROLES.STUDENT && kindSchool === 'School':
+				return this.getMainMenuItemsForStudent();
 		}
+	},
+	getMainMenuItemsForSchoolUnionAdmin: function() {
+		return [
+			{
+				href			: '/#school_union_admin/summary',
+				icon			: '',
+				name			: 'School Union',
+				key				: 'SchoolUnion',
+				routes			: ['/school_union_admin/:subPage'],
+				authorization	: true,
+				verified		: true
+			}
+		];
 	},
 	/**
 	 * Return main menu items for school worker roles:
@@ -107,6 +132,48 @@ const Head = React.createClass({
 			}
 		];
 	},
+	/**
+	 * Return main menu items for STUDENT role.
+	 * @returns {*[]}
+	 */
+	getMainMenuItemsForStudent: function() {
+		return [
+			{
+				href: '/#events/calendar/all',
+				name: 'Calendar',
+				key: 'Calendar',
+				authorization: true,
+				routes: ['/events/calendar/:schoolId']
+			}, {
+				href: '/#events/fixtures/all',
+				name: 'Fixtures',
+				key: 'Fixtures',
+				authorization: true,
+				routes: ['/events/fixtures/:schoolId']
+			}, {
+				href: '/#events/achievement/all',
+				name: 'Achievements',
+				key: 'Achievements',
+				authorization: true,
+				routes: ['/events/achievement/:schoolId']
+			}, {
+				href: '/#help',
+				name: 'Help',
+				key: 'Help'
+			}
+		];
+	},
+	getSchoolUnionConsoleMenuItem: function() {
+		return {
+			href			: '/#school_union_console/users',
+			icon			: '',
+			name			: 'Console',
+			key				: 'Console',
+			routes			: ['/school_union_console/:subPage', '/school_union_console/:filter', '/school_union_console/:inviteId/:mode'],
+			authorization	: true,
+			verified		: true
+		};
+	},
 	getConsoleMenuItem: function() {
 		return {
 			href			: '/#school_console/users',
@@ -126,9 +193,7 @@ const Head = React.createClass({
 		};
 	},
 	createMenuItems: function() {
-		const role = this.getMoreartyContext().getBinding().toJS('userData.authorizationInfo.role');
-
-		return this.getMenuItemsByRole(role);
+		return this.getMenuItems();
 	},
 	createTopMenu: function() {
 		const binding = this.getDefaultBinding();
@@ -137,24 +202,27 @@ const Head = React.createClass({
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
-
-		return (
-			<div className="bTopPanel container">
-
-				<div className="row">
-					<div className="col-md-2 col-sm-2">
-						<Logo/>
+		if (document.location.hash != '#login') {
+			return (
+				<div className="bTopPanel container">
+					<div className="row">
+						<div className="col-md-2 col-sm-2">
+							<Logo/>
+						</div>
+						<div className="col-md-10 col-sm-10 bTopNav">
+							<TopMenu
+								binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
+							<If condition={document.location.hash.indexOf('login') === -1}>
+								<UserBlock binding={binding.sub('userData')}/>
+							</If>
+						</div>
 					</div>
-					<div className="col-md-10 col-sm-10 bTopNav">
-						<TopMenu binding={{default: binding.sub('routing'), itemsBinding: binding.sub('topMenuItems')}}/>
-						<If condition={document.location.hash.indexOf('login') === -1}>
-							<UserBlock binding={binding.sub('userData')}/>
-						</If>
-					</div>
+
 				</div>
-
-			</div>
-		)
+			)
+		} else {
+			return (<div></div>)
+		}
 	}
 });
 

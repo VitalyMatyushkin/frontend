@@ -1,7 +1,7 @@
 const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Morearty	= require('morearty'),
-
+		RoleHelper	= require('../../../../../helpers/role_helper'),
 		Tasks		= require('./tasks');
 
 const TasksWrapper = React.createClass({
@@ -11,7 +11,8 @@ const TasksWrapper = React.createClass({
 	},
 	componentWillMount: function() {
 		const tasks = this.getDefaultBinding().toJS('tasks');
-		if(tasks.length === 0) {
+
+		if(tasks.length === 0 && RoleHelper.getLoggedInUserRole(this) !== 'PARENT' && RoleHelper.getLoggedInUserRole(this) !== 'STUDENT') {
 			this.setViewMode("ADD");
 		} else {
 			this.setViewMode("VIEW");
@@ -70,7 +71,13 @@ const TasksWrapper = React.createClass({
 					})
 				})
 				.then(() => window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: this.getEvent().id}))
-				.then(tasks => this.setTasks(tasks));
+				.then(tasks => {
+					this.getDefaultBinding()
+						.atomically()
+						.set('editingTask',	undefined)
+						.set('tasks',		Immutable.fromJS(tasks))
+						.commit();
+				});
 		} else {
 			window.Server.schoolEventTasks
 				.post({
@@ -111,8 +118,11 @@ const TasksWrapper = React.createClass({
 		this.setEditingTask(undefined);
 	},
 	render: function() {
+		const isShowEditButtons = RoleHelper.getLoggedInUserRole(this) !== 'STUDENT' && RoleHelper.getLoggedInUserRole(this) !== 'PARENT';
+
 		return (
-			<Tasks	viewMode				= {this.getViewMode()}
+			<Tasks	isShowEditButtons		= {isShowEditButtons}
+					viewMode				= {this.getViewMode()}
 					tasks					= {this.getTasks()}
 					editingTask				= {this.getEditingTask()}
 					players					= {this.getPlayers()}

@@ -28,13 +28,6 @@ const AddPhotoButton = React.createClass({
 	handleChange: function(eventDescriptor) {
 		this.props.handleChange(eventDescriptor.target.files[0]);
 	},
-	getButtonText: function() {
-		if(this.props.isLoading) {
-			return 'Uploading...';
-		} else {
-			return 'Add photo';
-		}
-	},
 	renderFileInput: function() {
 		if(this.props.isLoading) {
 			return null;
@@ -55,7 +48,7 @@ const AddPhotoButton = React.createClass({
 			<div	className	= 'bAddPhotoButton'
 					onClick		= { this.handleClick }
 			>
-				{this.getButtonText()}
+				{'Add photo'}
 				{this.renderFileInput()}
 			</div>
 		);

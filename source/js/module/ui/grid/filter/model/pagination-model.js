@@ -50,10 +50,11 @@ PaginationModel.prototype.onScrollTop = function(){
 	window.scrollTo(0, 0);
 };
 PaginationModel.prototype.addListener = function(){
-	window.addEventListener('scroll', this._onScroll.bind(this));
+	this.bindedOnScrollFunction = this._onScroll.bind(this);
+	window.addEventListener('scroll', this.bindedOnScrollFunction);
 };
 PaginationModel.prototype.removeListeners = function(){
-	window.removeEventListener('scroll', this._onScroll.bind(this));
+	window.removeEventListener('scroll', this.bindedOnScrollFunction);
 	this.onShowBtnUp = null;
 };
 

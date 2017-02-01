@@ -40,12 +40,12 @@ RequestActions.prototype = {
 	getRoleList:function(){
 		const roles = [];
 
-		Object.keys(RoleHelper.ALLOWED_PERMISSION_PRESETS)
+		Object.keys(RoleHelper.USER_PERMISSIONS)
 			.filter( key => !(this.viewerRole === 'MANAGER' && key === 'ADMIN')) 		// MANAGER cannot use ADMIN filter
 			.forEach(key => {
 			roles.push({
 				key: key,
-				value: RoleHelper.ALLOWED_PERMISSION_PRESETS[key].toLowerCase()
+				value: RoleHelper.USER_PERMISSIONS[key].toLowerCase()
 			});
 		});
 
@@ -119,7 +119,7 @@ RequestActions.prototype = {
 				prId      = itemId,
 				binding   = self.getDefaultBinding().sub('data'),
 				currentPr = self.getCurrentPermission(prId, binding.toJS()),
-				schoolId  = currentPr.requestedPermission.schoolId,
+				schoolId  = currentPr ? currentPr.requestedPermission.schoolId : '',
 				email     = currentPr.requester.email,
 				phone 	  = currentPr.requester.phone;
 		let confirmMsg;
@@ -132,6 +132,8 @@ RequestActions.prototype = {
 					() => {
 						if (currentPr.requestedPermission.preset === "PARENT") {
 							document.location.hash = `${document.location.hash}/accept?prId=${prId}&schoolId=${schoolId}`
+						} else if(currentPr.requestedPermission.preset === "STUDENT") {
+							document.location.hash = `${document.location.hash}/accept-student?prId=${prId}&schoolId=${schoolId}`
 						} else {
 							// This component used on manager side and on admin side.
 							// For manager and for admin we have different service lists, with different routes, but with same route names.

@@ -4,7 +4,9 @@ const	React				= require('react'),
 		RoleHelper			= require('../helpers/role_helper'),
 
 		ParentRouter		= require('./routes/parent_router'),
+		StudentRouter		= require('./routes/student_router'),
 		SchoolWorkerRouter	= require('./routes/school_worker_router'),
+		SchoolUnionsRouter	= require('./routes/school_unions_router'),
 		NobodyRouter		= require('./routes/nobody_router'),
 
 		NotificationAlert	= require('./../ui/notification_alert/notification_alert'),
@@ -15,32 +17,38 @@ const Center = React.createClass({
 	getMergeStrategy: function () {
 		return Morearty.MergeStrategy.MERGE_REPLACE;
 	},
-	/**
-	 * It's a rule that connect user role and router.
-	 * So, function return router by user role.
-	 * @param role
-	 * @returns {XML}
-	 */
-	getRouterByRole: function(role) {
+	getRouter: function() {
 		const binding = this.getDefaultBinding();
 
+		const	role		= RoleHelper.getLoggedInUserRole(this),
+				schoolKind	= RoleHelper.getActiveSchoolKind(this);
+
 		switch (true) {
+			// for parents
 			case role === "PARENT":
 				return (
 					<ParentRouter binding={binding}/>
 				);
-			case typeof role !== "undefined":
+			// for students
+			case role === "STUDENT":
+				return (
+					<StudentRouter binding={binding}/>
+				);
+			// for workers of school
+			case typeof role !== "undefined" && schoolKind === "School":
 				return (
 					<SchoolWorkerRouter binding={binding}/>
+				);
+			// for workers of school union
+			case typeof role !== "undefined" && schoolKind === "SchoolUnion":
+				return (
+					<SchoolUnionsRouter binding={binding}/>
 				);
 			case typeof role === "undefined":
 				return (
 					<NobodyRouter binding={binding}/>
 				);
 		}
-	},
-	getRouter: function() {
-		return this.getRouterByRole(RoleHelper.getLoggedInUserRole(this));
 	},
 	render: function() {
 		const	self		= this,

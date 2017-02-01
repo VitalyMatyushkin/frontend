@@ -1,16 +1,18 @@
+@import "./../!variables";
+
 .bMonthYearSelector {
   display: flex;
 
-  width: 370px;
+  width: 100%;
+  max-width: 382px;
   height: 40px;
-  margin: 0 auto;
 
   border: 1px solid #d7d7d7;
   border-radius: 8px;
 }
 
 .eMonthYearSelector_smallSizeColumn {
-  width: 43px;
+  width: 10%;
   height: 38px;
 
   border: solid #d7d7d7;
@@ -34,7 +36,7 @@
 }
 
 .eMonthYearSelector_middleSizeColumn {
-  width: 141px;
+  width: 40%;
   height: 38px;
 
   border: solid #d7d7d7;
@@ -48,13 +50,13 @@
 .eMonthYearSelector_arrow {
   padding-top: 11px;
   height: 38px;
-  color: #008ed3;
+
+  color: $blueColor;
+  text-align: center;
 
   &.mLeft {
-    padding-left: 13px;
   }
 
   &.mRight {
-    padding-left: 13px;
   }
 }

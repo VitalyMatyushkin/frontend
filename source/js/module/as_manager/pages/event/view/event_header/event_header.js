@@ -1,25 +1,28 @@
 const	React			= require('react'),
-		Morearty		= require('morearty'),
-
-		DateHelper		= require('./../../../../../helpers/date_helper'),
-
-		Buttons			= require('./buttons'),
-		ChallengeModel	= require('./../../../../../ui/challenges/challenge_model');
+		Lazy			= require('lazy.js'),
+		DateHelper		= require('module/helpers/date_helper'),
+		Buttons			= require('./buttons');
 
 const EventHeader = React.createClass({
-	mixins: [Morearty.Mixin],
 	propTypes: {
-		activeSchoolId: React.PropTypes.string.isRequired
+		event: 							React.PropTypes.object,
+		mode:							React.PropTypes.string.isRequired,
+		eventStatus:					React.PropTypes.string.isRequired,
+		eventAges:						React.PropTypes.array,
+		isUserSchoolWorker:				React.PropTypes.bool.isRequired,
+		isShowScoreEventButtonsBlock:	React.PropTypes.bool.isRequired,
+		handleClickCancelEvent:			React.PropTypes.func.isRequired,
+		handleClickCloseEvent:			React.PropTypes.func.isRequired,
+		onClickCloseCancel:				React.PropTypes.func.isRequired,
+		onClickOk:						React.PropTypes.func.isRequired
 	},
 	render: function() {
-		const	binding	= this.getDefaultBinding();
-
-		const	model	= new ChallengeModel(binding.toJS('model'), this.props.activeSchoolId);
-
-		const	name	= model.name,
-				date	= DateHelper.toLocalWithMonthName(model.dateUTC),
-				time	= model.time,
-				sport	= model.sport;
+		const 	event 				= this.props.event,
+				eventAges			= Lazy(this.props.eventAges).sort(),
+				name				= event.name,
+				date				= DateHelper.toLocalWithMonthName(event.dateUTC),
+				time				= event.time,
+				sport				= event.sport;
 
 		return (
 			<div className="bEventHeader">
@@ -27,9 +30,19 @@ const EventHeader = React.createClass({
 					<div className="bEventHeader_leftSide">
 						<div className="eEventHeader_field mEvent">{`${name}`}</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
+						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
 					</div>
 					<div className="bEventHeader_rightSide">
-						<Buttons binding={binding}/>
+						<Buttons
+							mode 							= { this.props.mode }
+							eventStatus 					= { this.props.eventStatus }
+							isUserSchoolWorker 				= { this.props.isUserSchoolWorker }
+							isShowScoreEventButtonsBlock 	= { this.props.isShowScoreEventButtonsBlock }
+							handleClickCancelEvent			= { this.props.handleClickCancelEvent }
+							handleClickCloseEvent			= { this.props.handleClickCloseEvent }
+							onClickCloseCancel				= { this.props.onClickCloseCancel }
+							onClickOk						= { this.props.onClickOk }
+						/>
 					</div>
 				</div>
 			</div>

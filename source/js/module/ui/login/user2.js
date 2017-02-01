@@ -1,21 +1,20 @@
-const 	LoginForm 		= require('module/ui/login/user/form'),
-		LoginError 		= require('module/ui/login/user/error'),
-		React 			= require('react'),
-		Immutable 		= require('immutable'),
-		Morearty        = require('morearty'),
+const	React			= require('react'),
+		Immutable		= require('immutable'),
+		Morearty		= require('morearty'),
+		LoginForm		= require('../../ui/login/user/form'),
+		LoginError		= require('../../ui/login/user/error'),
 		RoleSelector	= require('../../as_login/pages/RoleSelector'),
-		SVG 		    = require('module/ui/svg');
+		SVG				= require('../../ui/svg');
 
 const LoginUserPage = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount:function(){
-		const 	self	= this,
-				binding = this.getDefaultBinding(),
-				domain	= window.location.host.split('.')[0];
-		this.formName = domain === 'admin' ? 'Administrator Login' : 'default'; //Injects custom headings for login forms
+		const domain = window.location.host.split('.')[0];
 
-		if(this._isAuthorized()) {
-			this._setPermissions();
+		this.formName = domain === 'admin' ? 'Administrator Login' : 'default';
+
+		if(this.isAuthorized()) {
+			this.setPermissions();
 		}
 	},
 	getDefaultState: function () {
@@ -25,16 +24,14 @@ const LoginUserPage = React.createClass({
 	},
 	onSuccess: function(data) {
 		if(data.id) {
-			return this._setPermissions();
+			this.setPermissions();
 		}
-        return null;
 	},
 	showError: function() {
-		if(!this._isAuthorized()) {
+		if(!this.isAuthorized()) {
 			this.getDefaultBinding().set('showError', true);
-		}
-		else{
-			this._setPermissions();
+		} else{
+			this.setPermissions();
 		}
 	},
 	hideError: function() {
@@ -44,38 +41,40 @@ const LoginUserPage = React.createClass({
 		document.location.hash = 'register';
 		this.hideError();
 	},
-	_setPermissions: function() {
+	setPermissions: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		return window.Server.roles.get().then(roleList => {
-			const presetList = roleList.map(r => r.name);
-
-			binding.set('__allPermissions', presetList);
-            return null;
-		});
+		return window.Server.roles.get().then(roleList => binding.set('__allPermissions', roleList));
 	},
-	_isAuthorized: function() {
-		const	self	= this,
-				userId	= self.getDefaultBinding().toJS("authorizationInfo.userId");
-
-		return typeof userId !== 'undefined';
+	isAuthorized: function() {
+		return typeof this.getDefaultBinding().toJS("authorizationInfo.userId") !== 'undefined';
 	},
 	render: function() {
-		const self = this;
 		let currentView;
-		const showError = self.getDefaultBinding().get('showError');
-		const allPermissions = self.getDefaultBinding().get('__allPermissions');
+		
+		const	showError		= this.getDefaultBinding().get('showError'),
+				allPermissions	= this.getDefaultBinding().get('__allPermissions');
 
 		switch (true) {
 			case showError === true:
-				currentView = <LoginError onOk={self.hideError} onSingUp={self.onSingUp} />;
+				currentView = (
+					<LoginError	onOk		= {this.hideError}
+								onSingUp	= {this.onSingUp}
+					/>
+				);
 				break;
 			case showError === false && typeof allPermissions !== 'undefined':
 				currentView = <RoleSelector availableRoles={allPermissions}/>;
 				break;
 			case showError === false:
-				currentView = <LoginForm customName={self.formName} onError={self.showError} onSuccess={self.onSuccess} binding={self.getDefaultBinding()} />
+				currentView = (
+					<LoginForm	customName	= {this.formName}
+								onError		= {this.showError}
+								onSuccess	= {this.onSuccess}
+								binding		= {this.getDefaultBinding()}
+					/>
+				);
 				break;
 		}
 
@@ -87,6 +86,5 @@ const LoginUserPage = React.createClass({
 		)
 	}
 });
-
 
 module.exports = LoginUserPage;

@@ -12,20 +12,19 @@ const 	React 		= require('react'),
  * 
  */
 function RoleSelectorComponent(props) {
-	const 	onRoleSelected		= props.onRoleSelected,
+	const	onRoleSelected		= props.onRoleSelected,
 			availableRoles		= props.availableRoles;
 
 	return (
 		<div className="bRoleSelector">
-			{availableRoles.map( role =>
-				<Button key={role}
-						text={RoleHelper.SERVER_ROLE_FOR_CLIENT[role]}
-						onClick={() => onRoleSelected(role)}
-						id={role} />
+			{availableRoles.map(role =>
+				<Button	key		= {role.name}
+						text	= {RoleHelper.ROLE_TO_PERMISSION_MAPPING[role.name]}
+						onClick	= {() => onRoleSelected(role)}
+				/>
 			)}
 		</div>
 	);
-
 }
 
 RoleSelectorComponent.propTypes = {

@@ -1,7 +1,7 @@
 const	React		= require('react'),
 		Immutable	= require('immutable'),
 		Morearty	= require('morearty'),
-
+		RoleHelper	= require('../../../../../helpers/role_helper'),
 		Discipline	= require('./discipline');
 
 const DisciplineWrapper = React.createClass({
@@ -82,10 +82,11 @@ const DisciplineWrapper = React.createClass({
 		)
 	},
 	updateDisciplineItem: function(event, individualDisciplineItem) {
-		window.Server.schoolEventIndividualDiscipline.put(
+		window.Server.schoolEventIndividualDisciplinePoint.put(
 			{
-				schoolId:	this.props.activeSchoolId,
-				eventId:	event.id
+				schoolId:			this.props.activeSchoolId,
+				eventId:			event.id,
+				disciplinePointId:	individualDisciplineItem._id
 			},
 			{
 				value: individualDisciplineItem.value
@@ -159,7 +160,8 @@ const DisciplineWrapper = React.createClass({
 
 		if(this.isDataSync()) {
 			body = (
-				<Discipline	event					= {this.getEvent()}
+				<Discipline	role					= {RoleHelper.getLoggedInUserRole(this)}
+							event					= {this.getEvent()}
 							players					= {this.getPlayers()}
 							disciplineItems			= {this.disciplineItems()}
 							disciplineValues		= {this.disciplineValues()}

@@ -103,7 +103,8 @@ function runManagerMode() {
 			},
 			albums: {
 				sync: false
-			}
+			},
+			form: {}
 		},
 		options: {
 			requestAnimationFrameEnabled: true
@@ -128,7 +129,7 @@ function runManagerMode() {
 	// Связывания контроллера, отвечающего за контроль за авторизацией с данными
 	authController.initialize({
 		binding: binding,
-		defaultPath: 'school_admin/summary'
+		defaultPath: 'login'
 	});
 
 	window.simpleAlert = SimpleAlertFactory.create(binding.sub('notificationAlertData'));

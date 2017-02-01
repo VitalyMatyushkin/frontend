@@ -2,15 +2,15 @@
  * Created by Anatoly on 30.03.2016.
  */
 
-const	React					= require('react'),
-		Immutable				= require('immutable'),
-		classNames			= require('classnames'),
-		Lazy 						= require('lazy.js'),
-		If							= require('module/ui/if/if'),
-		Morearty				= require('morearty'),
-		DomainHelper 		= require('module/helpers/domain_helper'),
-		RoleHelper 			= require('module/helpers/role_helper'),
-		Auth						= require('module/core/services/AuthorizationServices');
+const	React			= require('react'),
+		Immutable		= require('immutable'),
+		classNames		= require('classnames'),
+		Lazy			= require('lazy.js'),
+		If				= require('module/ui/if/if'),
+		Morearty		= require('morearty'),
+		DomainHelper	= require('module/helpers/domain_helper'),
+		RoleHelper		= require('module/helpers/role_helper'),
+		Auth			= require('module/core/services/AuthorizationServices');
 
 
 const  RoleList = React.createClass({
@@ -22,7 +22,7 @@ const  RoleList = React.createClass({
 		return Immutable.Map({
 			listOpen:			false,
 			permissions:		[],
-			activePermission:	null,
+			activePermission:	undefined,
 			schools:			[]
 		});
 	},
@@ -39,30 +39,40 @@ const  RoleList = React.createClass({
 				const permissions = [];
 
 				let isAlreadyHaveParentPermission = false;
+				let isAlreadyHaveStudentPermission = false;
 
 				roles.forEach(role => {
 					role.permissions.forEach(permission => {
-						// Always add all permissions besides PARENT permissions.
-						// Add parent permissions only at once.
-						if(permission.preset !== 'PARENT' || permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
-							permission.role = role.name;
-							permissions.push(permission);
-						}
-
-						// If permissions array already has PARENT permission, set isAlreadyHaveParentPermission flag to true
-						if(permission.preset === 'PARENT' && !isAlreadyHaveParentPermission) {
-							isAlreadyHaveParentPermission = true;
+						// Always add all permissions besides PARENT and STUDENT permissions.
+						// Add parent and student permissions only at once.
+						switch (true) {
+							case permission.preset === 'PARENT' && !isAlreadyHaveParentPermission:
+								permission.role = role.name;
+								permissions.push(permission);
+								isAlreadyHaveParentPermission = true;
+								break;
+							case permission.preset === 'STUDENT' && !isAlreadyHaveStudentPermission:
+								permission.role = role.name;
+								permissions.push(permission);
+								isAlreadyHaveStudentPermission = true;
+								break;
+							case permission.preset === 'PARENT' && isAlreadyHaveParentPermission:
+								break;
+							case permission.preset === 'STUDENT' && isAlreadyHaveStudentPermission:
+								break;
+							default:
+								permission.role = role.name;
+								permissions.push(permission);
 						}
 					});
 				});
 				binding.set('permissions', Immutable.fromJS(permissions));
-				this.getMySchools();
 				this.setActivePermission();
 			}
 		});
 	},
 	setActivePermission:function(){
-		const binding		= this.getDefaultBinding(),
+		const	binding		= this.getDefaultBinding(),
 				rootBinding	= this.getMoreartyContext().getBinding();
 
 		const	activeRoleName	= rootBinding.toJS('userData.authorizationInfo.role'),
@@ -71,76 +81,61 @@ const  RoleList = React.createClass({
 				arr				= permissions ? permissions.filter(p => p.role === activeRoleName):[];
 
 		let schoolId = activeSchoolId;
-		if(arr.length){
+		if(arr.length) {
 			let activePermission = arr.find(p => p.schoolId === activeSchoolId);
 			if(!activePermission){
 				activePermission = arr[0];
 				schoolId = activePermission.schoolId;
 			}
-			//if(activePermission.preset === 'PARENT') {
-			//	schoolId = null; //TODO: event not open with activeSchoolId = null
-			//}
 			rootBinding.set('userRules.activeSchoolId', schoolId);
 			binding.set('activePermission', Immutable.fromJS(activePermission));
 		}
 	},
-	setRole:function(roleName, schoolId){
-		const	rootBinding		= this.getMoreartyContext().getBinding();
+	setRole:function(roleName, school){
+		const rootBinding = this.getMoreartyContext().getBinding();
 
-		rootBinding.set('userRules.activeSchoolId', schoolId);
-		this.roleBecome(roleName);
+		rootBinding.set('userRules.activeSchoolId', school.id);
+		this.roleBecome(roleName, school.kind);
 	},
-	roleBecome:function(roleName){
+	roleBecome:function(roleName, schoolKind){
 		Auth.become(roleName).then(() => {
-			DomainHelper.redirectToStartPage(roleName);
-		});
-	},
-
-	getMySchools:function(){
-		const binding = this.getDefaultBinding(),
-				permissions = binding.toJS('permissions');
-	
-		const uniqueSchoolIdArray = Lazy(permissions).map(e => e.schoolId).uniq().toArray();
-
-		window.Server.publicSchools.get({filter:{
-			limit:1000,
-			where: {
-				id: {
-					$in: uniqueSchoolIdArray
-				}
-			}
-		}}).then(schools => {
-			binding.set('schools', Immutable.fromJS(schools));
+			DomainHelper.redirectToStartPage(roleName, schoolKind);
 		});
 	},
 	renderRole:function(permission, active){
-		const binding     = this.getDefaultBinding(),
-				schoolId    = permission ? permission.schoolId : null,
-				role        = permission ? permission.role : null,
-				roleClient 	= permission ? RoleHelper.SERVER_ROLE_FOR_CLIENT[permission.role] : 'NO ROLE',
-				schools     = binding.toJS('schools'),
-				school      = schools.length && role !== 'PARENT' ? schools.find(s => s.id === schoolId) : null,
-				schoolName  = school ? school.name : null,
-				id          = permission ? permission.id : null;
+		const	role			= permission.role,
+				roleClientView	= RoleHelper.ROLE_TO_PERMISSION_MAPPING[permission.role],
+				schoolName		= role !== 'PARENT' && role !== 'STUDENT' ? permission.school.name : null;
 
 		return (
-			<div key={id} className="eRole" onClick={active ? this.onSetRole.bind(null, role, schoolId) : null}>
-				<span className="eRole_schoolName" title={schoolName} >{schoolName}</span>
-				<span className="eRole_name">{roleClient}</span>
+			<div	key			={permission.id}
+					className	="eRole"
+					onClick		={active ? this.onSetRole.bind(null, role, permission.school) : null}
+			>
+				<span className="eRole_schoolName" title={schoolName}>{schoolName}</span>
+				<span className="eRole_name">{roleClientView}</span>
 			</div>
 		);
 	},
 	renderActiveRole:function(){
-		const binding             = this.getDefaultBinding(),
-				activePermission    = binding.toJS('activePermission');
+		const	binding				= this.getDefaultBinding(),
+				activePermission	= binding.toJS('activePermission');
 
-		return this.renderRole(activePermission, false);
+		if(typeof activePermission !== "undefined") {
+			return this.renderRole(activePermission, false);
+		} else {
+			return null;
+		}
 	},
 	renderSelectList:function(){
-		const binding = this.getDefaultBinding(),
-				permissions   = binding.toJS('permissions');
+		const	binding		= this.getDefaultBinding(),
+				permissions	= binding.toJS('permissions');
 
-		return permissions && permissions.map(p => this.renderRole(p, true));
+		if(typeof permissions !== "undefined") {
+			return permissions.map(p => this.renderRole(p, true));
+		} else {
+			return null;
+		}
 	},
 	onToggle:function(e){
 		const binding     = this.getDefaultBinding(),
@@ -160,10 +155,10 @@ const  RoleList = React.createClass({
 
 		e.stopPropagation();
 	},
-	onSetRole:function(roleName, schoolId){
+	onSetRole:function(roleName, school){
 		const binding     = this.getDefaultBinding();
 
-		this.setRole(roleName, schoolId);
+		this.setRole(roleName, school);
 		binding.set('listOpen', Immutable.fromJS(false));
 	},
 	logout:function(){
