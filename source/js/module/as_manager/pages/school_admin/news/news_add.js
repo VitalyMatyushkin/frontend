@@ -1,6 +1,7 @@
 const 	NewsForm 	= require('module/as_manager/pages/school_admin/news/news_form'),
 		Morearty	= require('morearty'),
-		React 		= require('react');
+		React 		= require('react'),
+		RoleHelper	= require('module/helpers/role_helper');
 
 const NewsTitle = React.createClass({
 	render: function() {
@@ -23,12 +24,20 @@ const NewsAddPage = React.createClass({
 		self.activeSchoolId = activeSchoolId;
 	},
 	submitAdd: function(data) {
-		const self = this;
+		const 	self = this;
+
+		const	role		= RoleHelper.getLoggedInUserRole(this),
+				schoolKind	= RoleHelper.getActiveSchoolKind(this);
 
 		data.schoolId = self.activeSchoolId;
 
 		self.activeSchoolId && window.Server.schoolNews.post(self.activeSchoolId, data).then( () => {
-			document.location.hash = 'school_admin/news';
+			//It's so bad, if you see me, fix me, please
+			if (role !== "undefined" && schoolKind === "SchoolUnion"){
+				document.location.hash = 'school_union_admin/news';
+			} else {
+				document.location.hash = 'school_admin/news';
+			}
 		});
 	},
 	render: function() {
