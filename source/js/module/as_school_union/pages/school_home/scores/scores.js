@@ -9,28 +9,53 @@ const Scores = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function() {
 		const binding = this.getDefaultBinding();
-		binding.set('isSync', false);
+		binding.atomically()
+			.set('currentSport',	undefined)
+			.set('isSyncSports',	false)
+			.commit();
 
-		window.Server.sports.get().then(sports => {
-			binding.atomically()
-				.set('sports', Immutable.fromJS(sports))
-				.set('isSync', true)
-				.commit();
+		window.Server.sports.get()
+			.then(sports => {
+				binding.atomically()
+					.set('sports',			Immutable.fromJS(sports))
+					.set('currentSport',	Immutable.fromJS(sports[0]))
+					.set('isSyncSports',	true)
+					.commit();
+			});
+
+		this.getDefaultBinding().sub('currentSport').addListener(eventDescriptor => {
+			const activeSchoolId = this.getMoreartyContext().getBinding().get('activeSchoolId');
+
+			window.Server.publicSchoolUnionStats.get({schoolUnionId: activeSchoolId}, {
+				filter: {
+					where: {
+						sportId: eventDescriptor.getCurrentValue().toJS().id
+					}
+				}
+			}).then(scores => {
+				binding.atomically()
+					.set('scores',			Immutable.fromJS(scores))
+					.commit();
+			});
 		});
 	},
-	renderBody: function() {
+	renderSportSelector: function() {
 		const binding = this.getDefaultBinding();
 
-		if(binding.toJS('isSync')) {
+		if(binding.get('isSyncSports')) {
 			return (
-				<div className="eSchoolUnionSeasonScores_body">
-					<SportSelector binding={binding}/>
-					<ScoreTable/>
-				</div>
+				<SportSelector binding={binding}/>
 			);
 		} else {
 			return null;
 		}
+	},
+	renderScoreTable: function() {
+		const binding = this.getDefaultBinding();
+
+		return (
+			<ScoreTable scores={binding.toJS('scores')}/>
+		);
 	},
 	render: function(){
 		return (
@@ -39,7 +64,10 @@ const Scores = React.createClass({
 					<h1>Season Scores</h1><hr/>
 					<span></span>
 				</div>
-				{this.renderBody()}
+				<div className="eSchoolUnionSeasonScores_body">
+					{this.renderSportSelector()}
+					{this.renderScoreTable()}
+				</div>
 			</div>
 		);
 	}

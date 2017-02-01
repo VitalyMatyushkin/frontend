@@ -232,7 +232,10 @@ function runMainMode() {
 
 	const filter = {
 		where: {
-			domain: schoolDomain
+			domain: schoolDomain,
+			kind: {
+				$in: ['School', 'SchoolUnion']
+			}
 		}
 	};
 

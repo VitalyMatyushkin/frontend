@@ -99,6 +99,8 @@ const serviceList = {
 
         //events
         serviceList.events = new Service('/i/schools/{schoolId}/events', binding);
+        serviceList.publicSchoolUnionStats = new Service('/public/schools/{schoolUnionId}/events/stats', binding);
+        serviceList.publicSchoolUnionSchools = new Service('/public/schools/{schoolUnionId}/schools', binding);
 		serviceList.eventCancel = new Service('/i/schools/{schoolId}/events/{eventId}/cancel', binding);
 		serviceList.schoolEventChangeOpponent = new Service('/i/schools/{schoolId}/events/{eventId}/changeOpponent', binding);
 		serviceList.schoolEvent = new Service('/i/schools/{schoolId}/events/{eventId}', binding);
