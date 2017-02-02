@@ -242,16 +242,41 @@ const Event = React.createClass({
 		const binding = this.getDefaultBinding();
 
 		binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
+			const teamId = binding.toJS('model.teamsData.0.id');
+
+			if(descriptor.getCurrentValue()) {
+				this.deleteScoreByScoreNameAndTeamId('schoolScore',		teamId);
+				this.deleteScoreByScoreNameAndTeamId('houseScore',		teamId);
+				this.deleteScoreByScoreNameAndTeamId('teamScore',		teamId);
+				this.deleteScoreByScoreNameAndTeamId('individualScore',	teamId);
+			}
 			if(!descriptor.getCurrentValue()) {
-				binding.set('model.results.individualScore', Immutable.fromJS([]));
+				this.deleteScoreByScoreNameAndTeamId('individualScore',	teamId);
 			}
 		});
 
 		binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
+			const teamId = binding.toJS('model.teamsData.1.id');
+
+			if(descriptor.getCurrentValue()) {
+				this.deleteScoreByScoreNameAndTeamId('schoolScore',		teamId);
+				this.deleteScoreByScoreNameAndTeamId('houseScore',		teamId);
+				this.deleteScoreByScoreNameAndTeamId('teamScore',		teamId);
+				this.deleteScoreByScoreNameAndTeamId('individualScore',	teamId);
+			}
 			if(!descriptor.getCurrentValue()) {
-				binding.set('model.results.individualScore', Immutable.fromJS([]));
+				this.deleteScoreByScoreNameAndTeamId('individualScore',	teamId);
 			}
 		});
+	},
+	deleteScoreByScoreNameAndTeamId: function(scoreName, teamId) {
+		const binding = this.getDefaultBinding();
+
+		const individualScore = binding.toJS(`model.results.${scoreName}`);
+
+		const updScore = individualScore.filter(s => s.teamId !== teamId);
+
+		binding.set(`model.results.${scoreName}`,	Immutable.fromJS(updScore));
 	},
 	addListenerToEventTeams: function() {
 		const binding = this.getDefaultBinding();
