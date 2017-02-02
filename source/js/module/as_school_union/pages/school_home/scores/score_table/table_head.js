@@ -12,7 +12,7 @@ const TableHead = React.createClass({
 				<th>Total</th>
 				<th>Won</th>
 				<th>Lost</th>
-				<th>Drew</th>
+				<th>Draw</th>
 			</tr>
 			</thead>
 		);
