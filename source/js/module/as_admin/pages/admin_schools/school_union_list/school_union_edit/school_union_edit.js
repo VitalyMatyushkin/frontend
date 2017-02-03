@@ -1,8 +1,8 @@
-const	React 					= require('react'),
-		Morearty				= require('morearty'),
-		Immutable 				= require('immutable'),
-		SchoolUnionEditForm		= require('./school_union_edit_form'),
-		SchoolHelper			= require('module/helpers/school_helper');
+const	React			= require('react'),
+		Morearty		= require('morearty'),
+		Immutable		= require('immutable'),
+		SchoolUnionForm	= require('../school_union_form/school_union_form'),
+		SchoolHelper	= require('module/helpers/school_helper');
 
 const SchoolUnionEditWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -49,9 +49,9 @@ const SchoolUnionEditWrapper = React.createClass({
 
 		if(binding.get('isSync')) {
 			return (
-				<SchoolUnionEditForm	binding		= {binding.sub('school')}
-										title		= {"Edit School Union..."}
-										onSubmit	= {this.handleSubmit}
+				<SchoolUnionForm	binding		= {binding.sub('school')}
+									title		= {"Edit School Union..."}
+									onSubmit	= {this.handleSubmit}
 				/>
 			);
 		} else {
