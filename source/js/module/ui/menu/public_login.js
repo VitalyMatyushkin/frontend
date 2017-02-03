@@ -6,9 +6,9 @@ const   React = require('react');
 const PublicLogin = React.createClass({
     handleSignInUpClick:function(){
         let subdomains = document.location.host.split('.');
-        subdomains[0] = "login";
+        subdomains[0] = "app";
         let domain = subdomains.join(".");
-        window.location.href = `//${domain}`;
+        window.location.href = `//${domain}/#login`;
     },
     render:function(){
         return(
