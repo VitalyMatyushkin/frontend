@@ -9,12 +9,10 @@ const	React			= require('react'),
 const SchoolUnionForm = React.createClass({
 	mixins: [Morearty.Mixin],
 	propTypes: {
-		title: 		React.PropTypes.string.isRequired,
-		onSubmit: 	React.PropTypes.func
+		title		: React.PropTypes.string.isRequired,
+		onSubmit	: React.PropTypes.func
 	},
 	componentWillMount: function () {
-		this.getDefaultBinding().clear();
-		// if it need
 		this.setDefaultPublicSiteAccess();
 	},
 	getPublicSiteAccessTypes: function() {
@@ -28,7 +26,6 @@ const SchoolUnionForm = React.createClass({
 		}
 		return result;
 	},
-	// if undefined then set def value
 	setDefaultPublicSiteAccess: function() {
 		const binding = this.getDefaultBinding();
 
@@ -40,46 +37,57 @@ const SchoolUnionForm = React.createClass({
 		}
 	},
 	render: function () {
-		const 	self 		= this,
-			binding 	= self.getDefaultBinding(),
-			rootBinding = this.getMoreartyContext().getBinding(),
-			statusActive = !rootBinding.get('userRules.activeSchoolId'),
-			passActive 	= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
-			statusOptions = [
-				{ text: 'Active', value: 'ACTIVE' },
-				{ text: 'Inactive', value: 'INACTIVE' },
-				{ text: 'Suspended', value: 'SUSPENDED' },
-				{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
-			],
-			postcode 	= binding.toJS('postcode');
+		const	binding			= this.getDefaultBinding(),
+				rootBinding		= this.getMoreartyContext().getBinding(),
+				statusActive	= !rootBinding.get('userRules.activeSchoolId'),
+				passActive		= binding.meta().toJS('publicSite.status.value') === 'PROTECTED',
+				statusOptions	= [
+					{ text: 'Active', value: 'ACTIVE' },
+					{ text: 'Inactive', value: 'INACTIVE' },
+					{ text: 'Suspended', value: 'SUSPENDED' },
+					{ text: 'Email Notifications', value: 'EMAIL_NOTIFICATIONS' }
+				],
+				yesNoOptions	= [
+					{ text: 'Yes',	value: true },
+					{ text: 'No',	value: false }
+				],
+				subscriptionPlanOptions = [
+					{text: 'Full', value: SchoolConsts.SCHOOL_SUBSCRIPTION_PLAN.FULL},
+					{text: 'Lite', value: SchoolConsts.SCHOOL_SUBSCRIPTION_PLAN.LITE}
+				];
 
 		return (
-			<Form name={self.props.title} binding={self.getDefaultBinding()} service="i/schools/domains"
-				  onSubmit={self.props.onSubmit} submitOnEnter={false}>
+			<Form name={this.props.title} binding={this.getDefaultBinding()} service="i/schools/domains"
+				  onSubmit={this.props.onSubmit} submitOnEnter={false}>
 				<FormColumn>
-					<FormField type="imageFile" field="pic" labelText="+" typeOfFile="image"/>
+					<FormField	type		= "imageFile"
+								field		= "pic"
+								labelText	= "+"
+								typeOfFile	= "image"
+					/>
 
 					<FormField type="text" field="email" validation="email" fieldClassName="mLarge">
-						School Union Official Email
+						School Official Email
 					</FormField>
 					<FormField type="text" field="sportsDepartmentEmail" validation="email" fieldClassName="mLarge">
-						Sports Union Department Email
+						Sports Department Email
+					</FormField>
+					<FormField type="text" field="notificationEmail" validation="email" fieldClassName="mLarge">
+						Notification Email
 					</FormField>
 				</FormColumn>
 				<FormColumn>
 					<FormField type="text" field="name" validation="required">Name</FormField>
 					<FormField type="textarea" field="description" validation="any">Description</FormField>
 					<FormField type="dropdown" field="status" options={statusOptions} condition={statusActive}>
-						School Union Status
+						School Status
 					</FormField>
 					<FormField type="phone" field="phone" validation="any">Phone</FormField>
-					<FormField type="area" field="postcodeId" defaultItem={postcode}
-							   validation="any">Postcode</FormField>
 					<FormField type="text" field="address" validation="any">Address</FormField>
 					<FormField type="text" field="domain" validation="domain server">Domain</FormField>
-					<FormField	type="dropdown"
-								  field="publicSite.status"
-								  options={ self.getPublicSiteAccessTypes() }
+					<FormField	type	= "dropdown"
+								field	= "publicSite.status"
+								options	= {this.getPublicSiteAccessTypes()}
 					>
 						Public Site Access
 					</FormField>
@@ -89,6 +97,16 @@ const SchoolUnionForm = React.createClass({
 								  validation="required"
 					>
 						Public Site Access Password
+					</FormField>
+					<FormField	type				= "dropdown"
+								  field				= "availableForRegistration"
+								  options				= {yesNoOptions}
+								  onBeforeValueSet	= { value => value === 'true' /*casting back string to boolean*/}
+					>
+						Available For Reg.
+					</FormField>
+					<FormField type="dropdown" field="subscriptionPlan" options={subscriptionPlanOptions}>
+						Subscription Plan
 					</FormField>
 				</FormColumn>
 			</Form>

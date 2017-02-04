@@ -17,7 +17,9 @@ const Comments = React.createClass({
 			newCommentText: '',
 			// author of new comment can reference to other comment
 			// replyComment - is that comment
-			replyComment: undefined
+			replyComment: undefined,
+			//flag for focus textarea
+			focus : false
 		};
 	},
 	/**
@@ -45,7 +47,8 @@ const Comments = React.createClass({
 		// clear state
 		this.setState({
 			newCommentText	: '',
-			replyComment	: undefined
+			replyComment	: undefined,
+			focus 			: false
 		});
 
 		// submit
@@ -54,7 +57,8 @@ const Comments = React.createClass({
 	onReply: function(replyComment){
 		this.setState({
 			newCommentText	: this.getNewCommentTextWithReplyText(replyComment.author),
-			replyComment	: replyComment
+			replyComment	: replyComment,
+			focus 			: true
 		});
 	},
 	onChangeNewCommentText: function(text) {
@@ -72,6 +76,7 @@ const Comments = React.createClass({
 									text			= {this.state.newCommentText}
 									onChangeText	= {this.onChangeNewCommentText}
 									onSubmit		= {this.onSubmitCommentClick}
+									focus 			= {this.state.focus}
 					/>
 				</div>
 		);

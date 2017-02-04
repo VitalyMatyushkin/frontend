@@ -30,6 +30,7 @@ const	React						= require('react'),
 
 const Event = React.createClass({
 	mixins: [Morearty.Mixin],
+	listeners: [],
 	propTypes: {
 		activeSchoolId: React.PropTypes.string.isRequired
 	},
@@ -66,10 +67,12 @@ const Event = React.createClass({
 			},
 			individualScoreAvailable: [
 				{
-					value: true
+					value					: true,
+					isTeamScoreWasChanged	: false
 				},
 				{
-					value: true
+					value					: true,
+					isTeamScoreWasChanged	: false
 				}
 			]
 		});
@@ -152,6 +155,9 @@ const Event = React.createClass({
 
 				self.initTabs();
 
+				if(TeamHelper.isTeamSport(eventData)) {
+					this.initIsIndividualScoreAvailable();
+				}
 				binding.set('sync', Immutable.fromJS(true));
 
 				this.addListeners();
@@ -234,30 +240,113 @@ const Event = React.createClass({
 			});
 		}
 	},
+	componentWillUnmount: function() {
+		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
+	},
+	initIsIndividualScoreAvailable: function() {
+		this.initIsIndividualScoreAvailableByOrder(0);
+		this.initIsIndividualScoreAvailableByOrder(1);
+	},
+	initIsIndividualScoreAvailableByOrder: function(order) {
+		const binding = this.getDefaultBinding();
+
+		const	activeSchoolId 	= this.props.activeSchoolId,
+				event			= binding.toJS('model');
+
+		let params;
+		switch (order) {
+			case 0:
+				params = TeamHelper.getParametersForLeftContext(activeSchoolId, event);
+				break;
+			case 1:
+				params = TeamHelper.getParametersForRightContext(activeSchoolId, event);
+				break;
+		}
+
+		// id of school, house or team.
+		let id = event[params.bundleName][params.order].id;
+		switch (params.bundleName) {
+			case "schoolsData":
+				binding.set(`individualScoreAvailable.${order}.schoolId`, Immutable.fromJS(id));
+				break;
+			case "housesData":
+				binding.set(`individualScoreAvailable.${order}.houseId`, Immutable.fromJS(id));
+				break;
+			case "teamsData":
+				binding.set(`individualScoreAvailable.${order}.teamId`, Immutable.fromJS(id));
+				break;
+		}
+	},
 	addListeners: function() {
 		this.addListenerToEventTeams();
 		this.addListenerForIndividualScoreAvailable();
+
+		if(TeamHelper.isTeamSport(this.getDefaultBinding().toJS('model'))) {
+			this.addListenerForTeamScore();
+		}
+	},
+	addListenerForTeamScore: function() {
+		const binding = this.getDefaultBinding();
+
+		const	teamScoreBinding	= binding.sub(`model.results.teamScore`),
+				teamScores			= teamScoreBinding.toJS();
+
+		for(let i = 0; i < teamScores.length; i++) {
+			this.listeners.push(teamScoreBinding.sub(i).addListener(() => {
+				const	isIndividualScoreAvailableArray = binding.toJS(`individualScoreAvailable`);
+
+				const	teamId		= teamScores[i].teamId;
+
+				const	foundIndex	= isIndividualScoreAvailableArray.findIndex(item => item.teamId === teamId),
+						foundItem	= isIndividualScoreAvailableArray[foundIndex];
+
+				if(typeof foundItem !== 'undefined' && !foundItem.value && !foundItem.isTeamScoreWasChanged) {
+					binding.set(`individualScoreAvailable.${foundIndex}.isTeamScoreWasChanged`, true);
+					this.clearIndividualScoreByTeamId(teamId);
+				}
+			}));
+		}
 	},
 	addListenerForIndividualScoreAvailable: function() {
 		const binding = this.getDefaultBinding();
 
-		binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
-			if(!descriptor.getCurrentValue()) {
-				binding.set('model.results.individualScore', Immutable.fromJS([]));
-			}
-		});
+		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
+			const teamId = binding.toJS('model.teamsData.0.id');
 
-		binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
-			if(!descriptor.getCurrentValue()) {
-				binding.set('model.results.individualScore', Immutable.fromJS([]));
+			if(binding.toJS('individualScoreAvailable.0.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
+				this.clearTeamScoreByTeamId(teamId);
+				binding.set('individualScoreAvailable.0.isTeamScoreWasChanged', false);
 			}
-		});
+		}));
+
+		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
+			const teamId = binding.toJS('model.teamsData.1.id');
+
+			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
+				this.clearTeamScoreByTeamId('teamScore', teamId);
+				binding.set('individualScoreAvailable.1.isTeamScoreWasChanged', false);
+			}
+		}));
+	},
+	clearIndividualScoreByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const updScore = binding.toJS(`model.results.individualScore`).filter(s => s.teamId !== teamId);
+
+		binding.set(`model.results.individualScore`, Immutable.fromJS(updScore));
+	},
+	clearTeamScoreByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const updScore = binding.toJS(`model.results.teamScore`).filter(s => s.teamId !== teamId);
+
+		binding.set(`model.results.teamScore`, Immutable.fromJS(updScore));
 	},
 	addListenerToEventTeams: function() {
 		const binding = this.getDefaultBinding();
 
 		// reload players from server if isSync is false.
-		binding.sub('eventTeams.isSync').addListener(descriptor => !descriptor.getCurrentValue() && this.loadPlayers());
+		this.listeners.push(binding.sub('eventTeams.isSync').addListener(descriptor => !descriptor.getCurrentValue() && this.loadPlayers()));
 	},
 	/**
 	 * Load team players from server
@@ -580,6 +669,7 @@ const Event = React.createClass({
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point');
 
+		console.log(binding.toJS());
 		switch (true) {
 			case !self.isSync():
 				return (
