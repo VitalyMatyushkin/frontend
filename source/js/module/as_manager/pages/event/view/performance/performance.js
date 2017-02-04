@@ -62,19 +62,16 @@ const Performance = React.createClass({
 		let promises = [];
 
 		// create new performance items
-		promises.push(
-			event.results.individualPerformance
-				.filter(individualPerformanceItem => this.isNewPerformanceItem(individualPerformanceItem))
-				.map(individualPerformanceItem => this.createNewPerformanceItem(event, individualPerformanceItem))
-		);
-		// update performance items
-		promises.push(
-			event.results.individualPerformance
-				.filter(individualPerformanceItem => this.isPerformanceItemChanged(individualPerformanceItem))
-				.map(individualPerformanceItem => this.updatePerformanceItem(event, individualPerformanceItem))
-		);
+		const newItemsArray = event.results.individualPerformance
+			.filter(individualPerformanceItem => this.isNewPerformanceItem(individualPerformanceItem))
+			.map(individualPerformanceItem => this.createNewPerformanceItem(event, individualPerformanceItem));
 
-		return Promise.all(promises);
+		// update performance items
+		const updItemsArray = event.results.individualPerformance
+			.filter(individualPerformanceItem => this.isPerformanceItemChanged(individualPerformanceItem))
+			.map(individualPerformanceItem => this.updatePerformanceItem(event, individualPerformanceItem));
+
+		return Promise.all([].concat(newItemsArray, updItemsArray));
 	},
 	changeViewMode: function() {
 		this.getDefaultBinding().set(
