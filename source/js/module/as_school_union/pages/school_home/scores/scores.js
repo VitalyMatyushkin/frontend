@@ -14,7 +14,13 @@ const Scores = React.createClass({
 			.set('isSyncSports',	false)
 			.commit();
 
-		window.Server.sports.get()
+		const filter = {
+			filter: {
+				limit: 1000 //TODO: holy crap
+			}
+		};
+
+		window.Server.sports.get(filter)
 			.then(sports => {
 				binding.atomically()
 					.set('sports',			Immutable.fromJS(sports))
