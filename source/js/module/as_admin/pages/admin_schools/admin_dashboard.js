@@ -8,7 +8,7 @@ const	RouterView								= require('module/core/router'),
 		UserViewComponent						= require('module/shared_pages/users/user_view'),
 		AdminListComponent						= require('module/as_admin/pages/admin_schools/admin_views/admin-list'),
 		SchoolUnionListWrapper					= require('./school_union_list/school_union_list_wrapper'),
-		SchoolUnionViewWrapper					= require('./school_union_list/school_union_view/school_union_view_wrapper'),
+		SchoolUnionEdit							= require('./school_union_list/school_union_edit/school_union_edit'),
 		SchoolUnionCreate						= require('./school_union_list/school_union_add/school_union_add'),
 		AdminAddComponent						= require('module/as_admin/pages/admin_schools/admin_views/admin_add'),
 		AdminEditComponent						= require('module/as_admin/pages/admin_schools/admin_views/admin_edit'),
@@ -51,6 +51,7 @@ const OneSchoolPage = React.createClass({
 			importStudents: {},
 			schoolUnions: {},
 			schoolUnionView: {},
+			schoolUnionEdit: {},
 			schoolUnionCreate: {form: {}}
 		});
 	},
@@ -158,8 +159,8 @@ const OneSchoolPage = React.createClass({
 						/>
 						<Route
 							path="/admin_schools/school_union /admin_schools/school_union/:schoolId"
-							binding={binding.sub('schoolUnionView')}
-							component={SchoolUnionViewWrapper}
+							binding={binding.sub('schoolUnionEdit')}
+							component={SchoolUnionEdit}
 						/>
 						<Route
 							path="/admin_schools/admin_views/add /admin_schools/admin_views/add:mode"

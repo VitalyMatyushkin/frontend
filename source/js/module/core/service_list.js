@@ -119,6 +119,7 @@ const serviceList = {
 
 		// event individual performance
 		serviceList.schoolEventIndividualPerformance = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/performance', binding);
+		serviceList.schoolEventIndividualPerformancePoint = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/performance/{performancePointId}', binding);
 		serviceList.schoolEventIndividualDiscipline = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/discipline', binding);
 		serviceList.schoolEventIndividualDisciplinePoint = new Service('/i/schools/{schoolId}/events/{eventId}/results/individuals/discipline/{disciplinePointId}', binding);
 

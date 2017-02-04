@@ -47,10 +47,11 @@ const Performance = React.createClass({
 		);
 	},
 	updatePerformanceItem: function (event, individualPerformanceItem) {
-		return window.Server.schoolEventIndividualPerformance.put(
+		return window.Server.schoolEventIndividualPerformancePoint.put(
 			{
-				schoolId:	this.props.activeSchoolId,
-				eventId:	event.id
+				schoolId			: this.props.activeSchoolId,
+				eventId				: event.id,
+				performancePointId	: individualPerformanceItem._id
 			},
 			{
 				value: individualPerformanceItem.value
@@ -60,20 +61,17 @@ const Performance = React.createClass({
 	submitIndividualPerformance: function(event) {
 		let promises = [];
 
-		// create new discipline items
-		promises.push(
-			event.results.individualPerformance
-				.filter(individualPerformanceItem => this.isNewPerformanceItem(individualPerformanceItem))
-				.map(individualPerformanceItem => this.createNewPerformanceItem(event, individualPerformanceItem))
-		);
-		// update discipline items
-		promises.push(
-			event.results.individualPerformance
-				.filter(individualPerformanceItem => this.isPerformanceItemChanged(individualPerformanceItem))
-				.map(individualPerformanceItem => this.updatePerformanceItem(event, individualPerformanceItem))
-		);
+		// create new performance items
+		const newItemsArray = event.results.individualPerformance
+			.filter(individualPerformanceItem => this.isNewPerformanceItem(individualPerformanceItem))
+			.map(individualPerformanceItem => this.createNewPerformanceItem(event, individualPerformanceItem));
 
-		return Promise.all(promises);
+		// update performance items
+		const updItemsArray = event.results.individualPerformance
+			.filter(individualPerformanceItem => this.isPerformanceItemChanged(individualPerformanceItem))
+			.map(individualPerformanceItem => this.updatePerformanceItem(event, individualPerformanceItem));
+
+		return Promise.all([].concat(newItemsArray, updItemsArray));
 	},
 	changeViewMode: function() {
 		this.getDefaultBinding().set(
@@ -102,15 +100,38 @@ const Performance = React.createClass({
 		}
 		this.changeViewMode();
 	},
+	updateEventResultsFromServer: function() {
+		const	eventBinding	= this.getBinding('event'),
+				event			= eventBinding.toJS();
+
+		return window.Server.schoolEvent.get(
+			{
+				schoolId:	this.props.activeSchoolId,
+				eventId:	event.id
+			}
+		).then(_updEvent => {
+			eventBinding.set('results', Immutable.fromJS(_updEvent.results));
+
+			return true;
+		});
+	},
 	onSave: function() {
 		this.clearBackupPerformanceDate();
-		this.submitIndividualPerformance(this.getEvent());
-		this.changeViewMode();
+		this.submitIndividualPerformance(this.getEvent())
+			.then(() => {
+				return this.updateEventResultsFromServer();
+			})
+			.then(() => {
+				this.changeViewMode();
+
+				return true;
+			});
 	},
 	onCancel: function() {
 		this.restorePerformanceData();
-		this.clearBackupPerformanceDate();
-		this.changeViewMode();
+		this.clearBackupPerformanceDate().then(() => {
+			this.changeViewMode();
+		});
 	},
 	render: function() {
 		switch (true) {

@@ -27,4 +27,22 @@
       border: none;
     }
   }
+
+  &.mBigDateSelector{
+    display: block;
+
+    width: 130px;
+    height: 20px;
+
+    margin: 15px auto 0 auto;
+    padding: 0px;
+
+    font-size: 18px;
+
+    border: none;
+
+    &:hover {
+      border: none;
+    }
+  }
 }

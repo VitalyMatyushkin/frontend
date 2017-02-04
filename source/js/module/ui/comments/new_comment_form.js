@@ -17,9 +17,15 @@ const NewCommentForm = React.createClass({
 		// Handler for change text
 		onChangeText	: React.PropTypes.func.isRequired,
 		// Handler for click on submit comment button
-		onSubmit		: React.PropTypes.func.isRequired
+		onSubmit		: React.PropTypes.func.isRequired,
+		//flag for focus textarea
+		focus 			: React.PropTypes.bool.isRequired
 	},
-
+	componentWillReceiveProps:function(nextProps){
+		if(this.props.focus != nextProps.focus) {
+			this.textarea.focus();
+		}
+	},
 	/**
 	 * Function return text of new comment from props.text.
 	 * If props.text is undefined, then function return empty string.
@@ -42,6 +48,7 @@ const NewCommentForm = React.createClass({
 									value		= {this.getText()}
 									placeholder	= "Enter your comment"
 									onChange	= {this.onChangeText}
+									ref			= {textarea => {this.textarea = textarea;}}
 						/>
 					</div>
 				</div>

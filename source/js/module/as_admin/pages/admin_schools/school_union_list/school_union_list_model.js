@@ -44,15 +44,15 @@ SchoolUnionListModel.prototype.setAddButton = function(handleClickAddButton) {
 },
 
 SchoolUnionListModel.prototype.getActions = function(){
-	return ['View', 'Delete'];
+	return ['Edit', 'Delete'];
 };
 
 SchoolUnionListModel.prototype.getQuickEditAction = function(itemId, action){
 	const actionKey = action;
 
 	switch (actionKey){
-		case 'View':
-			this.getViewFunction(itemId);
+		case 'Edit':
+			this.getEditFunction(itemId);
 			break;
 		case 'Delete':
 			this.getDeleteFunction(itemId);
@@ -63,8 +63,8 @@ SchoolUnionListModel.prototype.getQuickEditAction = function(itemId, action){
 
 };
 
-SchoolUnionListModel.prototype.getViewFunction = function(schoolId){
-	document.location.hash = `/admin_schools/school_union/${schoolId}`;
+SchoolUnionListModel.prototype.getEditFunction = function(schoolId){
+	document.location.hash = `admin_schools/school_union/edit?id=${schoolId}`;
 };
 
 SchoolUnionListModel.prototype.getDeleteFunction = function(itemId){
