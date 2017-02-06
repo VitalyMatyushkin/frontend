@@ -74,8 +74,6 @@ const FixtureItem = React.createClass({
 				challengeModel		= new ChallengeModel(event, activeSchoolId),
 				isAwaitingOpponent	= event.status === 'INVITES_SENT';
 
-		console.log('active school id: ' + activeSchoolId);
-
 		return (
 			<div className="bFixtureContainer">
 				<div className="eFixture_row">
