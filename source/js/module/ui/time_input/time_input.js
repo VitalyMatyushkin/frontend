@@ -8,7 +8,7 @@ const TimeInput = React.createClass({
 		type:			React.PropTypes.string.isRequired,
 		handleChange:	React.PropTypes.func.isRequired,
 		value:			React.PropTypes.number.isRequired,
-		focus:			React.PropTypes.bool.isRequired
+		focus:			React.PropTypes.bool
 	},
 	getInitialState: function(){
 		return {
@@ -106,6 +106,8 @@ const TimeInput = React.createClass({
 
 		if(this.state.value !== '') {
 			this.props.handleChange(parseInt(this.state.value, 10));
+		} else {
+            this.props.handleChange(0);
 		}
 	},
 	render: function () {
