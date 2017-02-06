@@ -64,9 +64,17 @@ const FixtureItem = React.createClass({
 	render: function() {
 		const 	event 				= this.props.event,
 				sportName			= event.sport.name,
-				activeSchoolId		= this.props.activeSchoolId,
+				// activeSchoolId		= this.props.activeSchoolId,
+				 /* Important. This fixture_item used for showing union events. So, active school id is union's id.
+				  * But this not fit to ChallengeModel used below. So we just setting activeSchoolId to
+				  * inviterSchoolId which is absolutely correct for showing events on union's site
+				  *
+				  */
+				activeSchoolId		= event.inviterSchoolId,
 				challengeModel		= new ChallengeModel(event, activeSchoolId),
 				isAwaitingOpponent	= event.status === 'INVITES_SENT';
+
+		console.log('active school id: ' + activeSchoolId);
 
 		return (
 			<div className="bFixtureContainer">
