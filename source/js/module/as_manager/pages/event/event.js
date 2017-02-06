@@ -669,7 +669,6 @@ const Event = React.createClass({
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point');
 
-		console.log(binding.toJS());
 		switch (true) {
 			case !self.isSync():
 				return (

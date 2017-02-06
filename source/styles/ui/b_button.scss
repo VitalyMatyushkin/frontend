@@ -72,6 +72,7 @@
 
    &.mDisable {
      background: #fafafa;
+     pointer-events: none;
    }
 
   &.mCircle {
