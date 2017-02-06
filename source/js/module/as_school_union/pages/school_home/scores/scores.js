@@ -70,9 +70,13 @@ const Scores = React.createClass({
 					<h1>Season Scores</h1><hr/>
 					<span></span>
 				</div>
-				<div className="eSchoolUnionSeasonScores_body">
-					{this.renderSportSelector()}
-					{this.renderScoreTable()}
+				<div className="container">
+					<div className="row">
+						<div className="eSchoolUnionSeasonScores_body">
+							{this.renderSportSelector()}
+							{this.renderScoreTable()}
+						</div>
+					</div>
 				</div>
 			</div>
 		);
