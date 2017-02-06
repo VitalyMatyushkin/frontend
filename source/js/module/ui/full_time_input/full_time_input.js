@@ -29,6 +29,7 @@ const FullTimeInput = React.createClass({
 							value			= { this.props.hourValue }
 							handleChange	= { this.handleChangeHourInput }
 							type			= { TimeInputConsts.TIME_INPUT_TYPE.HOUR }
+							focus			= { this.state.focus }
 				/>
 				<div className="eFullTimeInput_delimiter">:</div>
 				<TimeInput	cssClassName	= { 'bSmallTimeInput' }

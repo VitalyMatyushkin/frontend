@@ -13,8 +13,7 @@ const TimeInput = React.createClass({
 	getInitialState: function(){
 		return {
 			value:		'00',
-			isTyping:	false,
-			countCheck:	0
+			isTyping:	false
 		};
 	},
 
@@ -36,17 +35,21 @@ const TimeInput = React.createClass({
 		// It should be number
 		// And it should exact match
 		const matches = value.match(/^[0-9]{1,2}$/);
-		this.setState({countCheck: this.state.countCheck + 1});
 		if(matches !== null) {
 			const intValue = parseInt(value, 10);
 
 			if(intValue >= 0 && intValue <= this.getMaxLimit()) {
 				this.setState({value: value});
-				if (this.props.type === TimeInputConsts.TIME_INPUT_TYPE.HOUR && this.state.countCheck == 1) {
+				const matchTwoNumbers = value.match(/^[0-9]{2}$/);
+				if (matchTwoNumbers !== null && this.props.type === TimeInputConsts.TIME_INPUT_TYPE.HOUR) {
+					this.setState({
+						isTyping: false
+					});
 					this.input.blur();
+					this.props.handleChange(parseInt(value, 10));
 				}
 			}
-		};
+		}
 	},
 	fillZero: function(_value) {
 		const value = String(_value).trim();
@@ -88,12 +91,6 @@ const TimeInput = React.createClass({
 			case '':
 				this.setState({value: ''});
 				break;
-			case '00':
-				this.setState({value: '00'});
-				if (this.props.type === TimeInputConsts.TIME_INPUT_TYPE.HOUR) {
-					this.input.blur();
-				}
-				break;
 			default:
 				this.processNewValue(value);
 				break;
@@ -107,8 +104,7 @@ const TimeInput = React.createClass({
 	},
 	handleBlur: function() {
 		this.setState({
-			isTyping: false,
-			countCheck: 0
+			isTyping: false
 		});
 
 		if(this.state.value !== '') {
@@ -117,15 +113,16 @@ const TimeInput = React.createClass({
 	},
 	render: function () {
 		return (
-			<input className={ this.props.cssClassName }
-				type={ 'text' }
-				onChange={ this.handleChange }
-				value={ this.state.isTyping === false ? this.fillZero(this.state.value) : this.state.value }
-				onFocus={ this.handleFocus }
-				onBlur={ this.handleBlur }
-				ref={input => {
-					this.input = input;
-				}}
+			<input 	className	= { this.props.cssClassName }
+					type		= { 'text' }
+					onChange	= { this.handleChange }
+					value		= { this.state.isTyping ? this.state.value : this.fillZero(this.props.value) }
+					onFocus		= { this.handleFocus }
+					onBlur		= { this.handleBlur }
+
+					ref			= {input => {
+									this.input = input;
+									}}
 			/>
 		);
 	}
