@@ -220,7 +220,7 @@ const EventVenue = React.createClass({
 	handleClickPostcodeInput: function(eventDescriptor) {
 		if(this.isPostcodeInputBlocked()) {
 			window.simpleAlert(
-				'Please, enter opponent school, at first.',
+				'Please, select your opposing school first.',
 				'Ok',
 				() => {}
 			);

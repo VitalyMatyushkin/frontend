@@ -13,7 +13,7 @@ const RegiseterUserDone = React.createClass({
 			binding = self.getDefaultBinding();
 
 		window.simpleAlert(
-			'Welcome to SquadInTouch! You just registered account and requested new role. Approving your account will take some time. We will send you email notification',
+			'Welcome to Squad In Touch!\nThank you for registering your account with us, you will be granted access as soon as your role has been confirmed by the school administrator or the Squad In Touch support team, if you are registering a new school account.\nThank you for joining us!',
 			'Ok',
 			() => {
 			});
