@@ -244,8 +244,8 @@ const Event = React.createClass({
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
 	initIsIndividualScoreAvailable: function() {
-		this.initIsIndividualScoreAvailableByOrder(0);
-		this.initIsIndividualScoreAvailableByOrder(1);
+		//this.initIsIndividualScoreAvailableByOrder(0);
+		//this.initIsIndividualScoreAvailableByOrder(1);
 	},
 	initIsIndividualScoreAvailableByOrder: function(order) {
 		const binding = this.getDefaultBinding();
@@ -669,7 +669,6 @@ const Event = React.createClass({
 				role			= RoleHelper.getLoggedInUserRole(this),
 				point 			= binding.toJS('model.venue.postcodeData.point');
 
-		console.log(binding.toJS());
 		switch (true) {
 			case !self.isSync():
 				return (
