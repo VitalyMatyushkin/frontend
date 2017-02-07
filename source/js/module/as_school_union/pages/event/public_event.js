@@ -111,22 +111,24 @@ const PublicEvent = React.createClass({
 		document.location.hash = 'home';
 	},
 	renderMatchReport: function() {
-		const	binding	= this.getDefaultBinding(),
-				report	= binding.toJS('report');
+		const	binding			= this.getDefaultBinding(),
+				report			= binding.toJS('report');
 
 		const isReporting = report && report.content && report.content.length > 0;
 
 		return isReporting ? <PublicMatchReport report={binding.toJS('report')} activeSchoolId={this.props.activeSchoolId} /> : null;
 	},
 	render: function() {
-		const 	binding	= this.getDefaultBinding(),
-				isSync	= binding.get('sync');
+		const 	binding			= this.getDefaultBinding(),
+				isSync			= binding.get('sync'),
+				eventModel		= binding.toJS('model'),
+				inviterSchoolId	= eventModel.inviterSchoolId;
 
 		if(isSync) {
 			return (
 				<div className="bPublicEvent">
 					<FixtureListItem	event			= { binding.toJS('model') }
-										activeSchoolId	= { this.props.activeSchoolId }
+										activeSchoolId	= { inviterSchoolId }
 					/>
 					<PublicEventTeams	binding			= {this._getEventTeamsBinding()}/>
 					<PublicEventGallery	binding			= {binding.sub('gallery')}/>

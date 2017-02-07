@@ -1,15 +1,18 @@
 const	React 							= require('react'),
 		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
+		Immutable						= require('immutable');
 
-		Manager							= require('./../../../../ui/managers/manager'),
+const	Manager							= require('./../../../../ui/managers/manager'),
 		EventHelper						= require('./../../../../helpers/eventHelper'),
-		TeamHelper						= require('./../../../../ui/managers/helpers/team_helper'),
+		Button							= require('../../../../ui/button/button'),
+		classNames						= require('classnames'),
+		TeamHelper						= require('./../../../../ui/managers/helpers/team_helper');
 
-		Actions							= require('../actions/actions'),
+const	Actions							= require('../actions/actions'),
 		SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
 		SavingPlayerChangesPopupHelper	= require('../../events/saving_player_changes_popup/helper'),
-		SavingEventHelper				= require('../../../../helpers/saving_event_helper');
+		SavingEventHelper				= require('../../../../helpers/saving_event_helper'),
+		ManagerHelper					= require('../../../../ui/managers/helpers/manager_helper');
 
 const ManagerWrapper = React.createClass({
 	mixins: [Morearty.Mixin],
@@ -24,6 +27,8 @@ const ManagerWrapper = React.createClass({
 				teamManagerWrapperBinding	= binding.sub('teamManagerWrapper.default');
 
 		const event = binding.toJS('model');
+
+		binding.set('isTeamManagerInSearchingState', false);
 
 		teamManagerWrapperBinding.atomically()
 			.set('isSubmitProcessing',				false)
@@ -44,6 +49,25 @@ const ManagerWrapper = React.createClass({
 														}
 													]))
 			.commit();
+
+		this.addListeners();
+	},
+	addListeners: function() {
+		this.addListenerForTeamManagerByOrder(0);
+		this.addListenerForTeamManagerByOrder(1);
+	},
+	addListenerForTeamManagerByOrder: function(order) {
+		const binding = this.getDefaultBinding();
+
+		binding
+			.sub(`teamManagerWrapper.default.${ManagerHelper.getPathToManagerIsSearchFlagByOrder(order)}`)
+			.addListener(eventDescriptor => {
+				// Lock submit button if team manager in searching state.
+				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', true);
+
+				// Unlock submit button if team manager in searching state.
+				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', false);
+			});
 	},
 	getRivals: function() {
 		const self = this;
@@ -312,7 +336,11 @@ const ManagerWrapper = React.createClass({
 
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') && TeamHelper.isTeamDataCorrect(event, validationData)) {
+		if(
+			!binding.get('isTeamManagerInSearchingState') &&
+			!binding.toJS('teamManagerWrapper.default.isSubmitProcessing') &&
+			TeamHelper.isTeamDataCorrect(event, validationData)
+		) {
 
 			binding.set('isSubmitProcessing', true);
 			this.submit();
@@ -365,6 +393,11 @@ const ManagerWrapper = React.createClass({
 
 		return Actions.submitAllChanges(this.props.activeSchoolId, binding).then(() => this.doAfterCommitActions());
 	},
+	getSaveButtonStyleClass: function() {
+		return classNames({
+			'mDisable': this.getDefaultBinding().get('isTeamManagerInSearchingState')
+		});
+	},
 	render: function() {
 		const	binding			= this.getDefaultBinding(),
 				managerBinding	= this.getManagerBinding();
@@ -376,16 +409,14 @@ const ManagerWrapper = React.createClass({
 											submit	= {this.handleClickPopupSubmit}
 				/>
 				<div className="bEventButtons">
-					<div	className	= "bButton mCancel mMarginRight"
-							onClick		= {this.handleClickCancelButton}
-					>
-						Cancel
-					</div>
-					<div	className	= "bButton"
-							onClick		= {this.handleClickSubmitButton}
-					>
-						Save
-					</div>
+					<Button	text				= "Cancel"
+							onClick				= {this.handleClickCancelButton}
+							extraStyleClasses	= {"mCancel mMarginRight"}
+					/>
+					<Button	text				= "Save"
+							onClick				= {this.handleClickSubmitButton}
+							extraStyleClasses	= {this.getSaveButtonStyleClass()}
+					/>
 				</div>
 			</div>
 		);

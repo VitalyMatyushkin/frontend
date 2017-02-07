@@ -1,15 +1,19 @@
-const	If								= require('module/ui/if/if'),
-		Manager							= require('module/ui/managers/manager'),
-		React							= require('react'),
-		classNames						= require('classnames'),
-		TeamHelper						= require('./../../../../ui/managers/helpers/team_helper'),
-		Promise							= require('bluebird'),
-		MoreartyHelper					= require('module/helpers/morearty_helper'),
+const	React							= require('react'),
 		Morearty						= require('morearty'),
-		Immutable						= require('immutable'),
+		Immutable						= require('immutable');
 
+const	classNames						= require('classnames'),
+		Promise							= require('bluebird'),
+		Button							= require('../../../../ui/button/button'),
+		If								= require('../../../../ui/if/if');
+
+const	SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
+		Manager							= require('../../../../ui/managers/manager');
+
+const	TeamHelper						= require('../../../../ui/managers/helpers/team_helper'),
+		ManagerHelper					= require('../../../../ui/managers/helpers/manager_helper'),
 		SavingEventHelper				= require('../../../../helpers/saving_event_helper'),
-		SavingPlayerChangesPopup		= require('../../events/saving_player_changes_popup/saving_player_changes_popup'),
+		MoreartyHelper					= require('../../../../helpers/morearty_helper'),
 		SavingPlayerChangesPopupHelper	= require('../../events/saving_player_changes_popup/helper');
 
 const InviteAcceptView = React.createClass({
@@ -55,7 +59,7 @@ const InviteAcceptView = React.createClass({
                 return window.Server.sport.get(event.sportId).then(sport => invite.event.sport = sport);
             });
         })
-        .then(function (res) {
+        .then(() => {
             binding.atomically()
                 .set('invite', Immutable.fromJS(invite))
                 //TODO wtf??
@@ -79,8 +83,27 @@ const InviteAcceptView = React.createClass({
                     }
                 ]))
                 .commit();
+
+			self.addListeners();
         });
     },
+	addListeners: function() {
+		this.addListenerForTeamManagerByOrder(0);
+		this.addListenerForTeamManagerByOrder(1);
+	},
+	addListenerForTeamManagerByOrder: function(order) {
+		const binding = this.getDefaultBinding();
+
+		binding
+			.sub(`${ManagerHelper.getPathToManagerIsSearchFlagByOrder(order)}`)
+			.addListener(eventDescriptor => {
+				// Lock submit button if team manager in searching state.
+				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', true);
+
+				// Unlock submit button if team manager in searching state.
+				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', false);
+			});
+	},
     componentWillUnmount: function () {
         const   self    = this,
                 binding = self.getDefaultBinding();
@@ -94,43 +117,51 @@ const InviteAcceptView = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
+		const	event			= binding.toJS('model'),
+				teamWrappers	= this.getTeamWrappers(),
+				validationData	= [
+					binding.toJS('error.0'),
+					binding.toJS('error.1')
+				];
+
 		// if true - then user click to finish button
 		// so we shouldn't do anything
-		if(!binding.toJS('isSubmitProcessing')) {
-			const	event			= binding.toJS('model'),
-					teamWrappers	= this.getTeamWrappers(),
-					validationData	= [
-						binding.toJS('error.0'),
-						binding.toJS('error.1')
-					];
-
+		if(
+			!binding.toJS('isTeamManagerInSearchingState') &&
+			!binding.toJS('isSubmitProcessing') &&
+			TeamHelper.isTeamDataCorrect(event, validationData)
+		) {
 			switch (true) {
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						TeamHelper.isTeamSport(event) &&
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
+						SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						TeamHelper.isTeamSport(event) &&
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
+						!SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						TeamHelper.isTeamSport(event) &&
+						SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
+						SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					this.showSavingChangesModePopup();
 					break;
 				case (
-						TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isTeamSport(event) &&
-						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) && !SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
+						TeamHelper.isTeamSport(event) &&
+						!SavingPlayerChangesPopupHelper.isAnyTeamChanged(event, teamWrappers) &&
+						!SavingPlayerChangesPopupHelper.isUserCreateNewTeam(event, teamWrappers)
 				):
 					binding.set('isSubmitProcessing', true);
 					this._submit();
 					break;
-				case TeamHelper.isTeamDataCorrect(event, validationData) && TeamHelper.isNonTeamSport(event):
+				case TeamHelper.isNonTeamSport(event):
 					binding.set('isSubmitProcessing', true);
 					this._submit();
 					break;
@@ -203,6 +234,24 @@ const InviteAcceptView = React.createClass({
 
         return !self.getDefaultBinding().toJS('error.0').isError;
     },
+	getAcceptButtonStyleClasses: function() {
+		const binding = this.getDefaultBinding();
+
+		const	event			= binding.toJS('model'),
+				validationData	= [
+					binding.toJS('error.0'),
+					binding.toJS('error.1')
+				];
+
+		return classNames({
+			'mButton_leftSidePosition'	: true,
+			'mDisable'					: (
+				!TeamHelper.isTeamDataCorrect(event, validationData) ||
+				binding.get('isSubmitProcessing') ||
+				binding.get('isTeamManagerInSearchingState')
+			)
+		});
+	},
     render: function() {
         var self = this,
             binding = self.getDefaultBinding(),
@@ -215,30 +264,36 @@ const InviteAcceptView = React.createClass({
             },
             sport = binding.sub('model.sport');
 
-        return (
-            <div className="bInviteAccept">
-                <div className="bManager mTeamManager">
-                    <If condition={!!binding.get('sync')}>
-                        <Manager isInviteMode={true} binding={managerBinding} />
-                    </If>
-                </div>
-                <div className="eInviteAccept_footer">
-                    <div className="eInviteAccept_acceptButtonWrapper">
-                        <div className="eInviteAccept_footerLeftSide">
-                        </div>
-                        <div className="eInviteAccept_footerRightSide">
-                            <span className='bButton mButton_leftSidePosition'
-                                  onClick={self.onClickAccept}>Accept</span>
-                        </div>
-                    </div>
-                </div>
-                <SavingPlayerChangesPopup	binding	= {binding}
-                                             submit	= {() => this._submit()}
-                />
-            </div>
-        );
+		if(!!binding.get('sync')) {
+			return (
+				<div className="bInviteAccept">
+					<div className="bManager mTeamManager">
+						<Manager	isInviteMode	= {true}
+									binding			= {managerBinding}
+						/>
+					</div>
+					<div className="eInviteAccept_footer">
+						<div className="eInviteAccept_acceptButtonWrapper">
+							<div className="eInviteAccept_footerLeftSide">
+							</div>
+							<div className="eInviteAccept_footerRightSide">
+								<Button	text				= "Accept"
+										onClick				= {this.onClickAccept}
+										extraStyleClasses	= {this.getAcceptButtonStyleClasses()}
+								/>
+							</div>
+						</div>
+					</div>
+					<SavingPlayerChangesPopup	binding	= {binding}
+												submit	= {() => this._submit()}
+					/>
+				</div>
+			);
+		} else {
+			return null;
+		}
+
     }
 });
-
 
 module.exports = InviteAcceptView;

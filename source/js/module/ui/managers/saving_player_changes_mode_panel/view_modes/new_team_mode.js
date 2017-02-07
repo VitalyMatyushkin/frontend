@@ -24,7 +24,7 @@ const Header = React.createClass({
 		return (
 			<div>
 				<div className="eSavingPlayerChangesModePanel_text">
-					You create new team. Please select one of the following options:
+					You have created a new team. Please select one of the following options:
 				</div>
 				<div className="eSavingPlayerChangesModePanel_radioButtons">
 					<RadioButton	id			= { "new-team-mode-save-as-new-team-radio-button" }

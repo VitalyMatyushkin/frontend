@@ -75,8 +75,6 @@ const DateSelector = React.createClass({
 
 	render: function() {
 
-		console.log('date is: ' + this.props.date);
-
 		const dateObject = new Date(this.props.date);
 
 		return (

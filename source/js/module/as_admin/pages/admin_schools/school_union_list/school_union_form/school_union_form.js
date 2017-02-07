@@ -56,20 +56,33 @@ const SchoolUnionForm = React.createClass({
 					{text: 'Lite', value: SchoolConsts.SCHOOL_SUBSCRIPTION_PLAN.LITE}
 				];
 
+		console.log(binding.meta().toJS());
+
 		return (
-			<Form name={this.props.title} binding={this.getDefaultBinding()} service="i/schools/domains"
-				  onSubmit={this.props.onSubmit} submitOnEnter={false}>
+			<Form	name			= {this.props.title}
+					binding			= {this.getDefaultBinding()}
+					service			= "i/schools/domains"
+					onSubmit		= {this.props.onSubmit}
+					submitOnEnter	= {false}
+			>
 				<FormColumn>
 					<FormField	type		= "imageFile"
 								field		= "pic"
 								labelText	= "+"
 								typeOfFile	= "image"
 					/>
-
-					<FormField type="text" field="email" validation="email" fieldClassName="mLarge">
+					<FormField	type			= "text"
+								field			= "email"
+								validation		= "email"
+								fieldClassName	= "mLarge"
+					>
 						School Official Email
 					</FormField>
-					<FormField type="text" field="sportsDepartmentEmail" validation="email" fieldClassName="mLarge">
+					<FormField	type			= "text"
+								field			= "sportsDepartmentEmail"
+								validation		= "email"
+								fieldClassName	= "mLarge"
+					>
 						Sports Department Email
 					</FormField>
 					<FormField type="text" field="notificationEmail" validation="email" fieldClassName="mLarge">

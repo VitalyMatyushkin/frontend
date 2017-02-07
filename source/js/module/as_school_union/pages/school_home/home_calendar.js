@@ -14,10 +14,10 @@ const HomeCalender = React.createClass({
 				activeSchoolId	= this.getMoreartyContext().getBinding().get('activeSchoolId');
 
 		/** Loading initial data for this month */
-		CalendarActions.setCurrentMonth(new Date(), activeSchoolId, binding);
-		CalendarActions.setSelectedDate(new Date(), activeSchoolId, binding);
-		CalendarActions.setNextSevenDaysEvents(activeSchoolId, binding);
-		CalendarActions.setPrevSevenDaysFinishedEvents(activeSchoolId, binding);
+		CalendarActions.setCurrentMonthForUnion(new Date(), activeSchoolId, binding);
+		CalendarActions.setSelectedDateForUnion(new Date(), activeSchoolId, binding);
+		CalendarActions.setNextSevenDaysEventsForUnion(activeSchoolId, binding);
+		CalendarActions.setPrevSevenDaysFinishedEventsForUnion(activeSchoolId, binding);
 	},
 
 	handleClickEvent: function(eventId) {
@@ -57,8 +57,8 @@ const HomeCalender = React.createClass({
 									monthDate		= {monthDate}
 									todayDate		= {todayDate}
 									selectedDate	= {selectedDate}
-									onMonthClick	= { (data) => CalendarActions.setCurrentMonth(data, activeSchoolId, binding) }
-									onDateClick		= { (date) => CalendarActions.setSelectedDate(date, activeSchoolId, binding) }
+									onMonthClick	= { (data) => CalendarActions.setCurrentMonthForUnion(data, activeSchoolId, binding) }
+									onDateClick		= { (date) => CalendarActions.setSelectedDateForUnion(date, activeSchoolId, binding) }
 									eventsData		= {Immutable.fromJS(eventsData)}
 								/>
 							</div>

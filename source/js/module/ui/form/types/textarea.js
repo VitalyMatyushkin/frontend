@@ -40,10 +40,18 @@ const TypeTextArea =  React.createClass({
     },
     render: function () {
         var self = this,
-            defaultValue = self.getDefaultBinding().get('defaultValue');
+            defaultValue	= self.getDefaultBinding().get('defaultValue'),
+			value			= self.getDefaultBinding().get('value');
 
         return (
-			<textarea ref="fieldInput" type={self.props.textType || 'textarea'} placeholder={self.props.placeholder} onBlur={self.handeBlur} onChange={self.handleChange}></textarea>
+			<textarea	ref			= "fieldInput"
+						value		= {value}
+						type		= {self.props.textType || 'textarea'}
+						placeholder	= {self.props.placeholder}
+						onBlur		= {self.handeBlur}
+						onChange	= {self.handleChange}
+			>
+			</textarea>
         )
     }
 });

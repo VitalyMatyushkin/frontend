@@ -165,18 +165,17 @@ function isTeamWasDeletedByOrder(order, binding) {
 };
 
 function changeTeamByOrder(order, activeSchoolId, binding) {
+	let team;
+
 	return TeamHelper.createTeam(
 			activeSchoolId,
 			binding.toJS('model'),
 			binding.toJS(`teamManagerWrapper.default.rivals.${order}`),
 			binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}`)
 		)
-		.then(team => TeamHelper.addTeamsToEvent(
-			activeSchoolId,
-			binding.toJS('model'),
-			[team]
-		))
-		.then(() => {
+		.then(_team => {
+			team = _team;
+
 			const prevSelectedTeamId = binding.toJS(`teamManagerWrapper.default.teamModeView.teamWrapper.${order}.prevSelectedTeamId`);
 
 			if(typeof prevSelectedTeamId !== 'undefined') {
@@ -189,6 +188,11 @@ function changeTeamByOrder(order, activeSchoolId, binding) {
 				return Promise.resolve(true);
 			}
 		})
+		.then(() => TeamHelper.addTeamsToEvent(
+			activeSchoolId,
+			binding.toJS('model'),
+			[team]
+		));
 };
 
 function commitTeamPlayerChangesByOrder(order, activeSchoolId, binding) {
