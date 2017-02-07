@@ -121,6 +121,7 @@ ClassListModel.prototype = {
 				) : null
 			},
 			columns:columns,
+			handleClick: this.props.handleClick,
 			filters:{limit:30}
 		});
 	},

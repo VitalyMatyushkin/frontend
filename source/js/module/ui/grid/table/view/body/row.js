@@ -14,7 +14,7 @@ const Row = React.createClass({
 	},
 
 	onClickRow: function(){
-		this.props.handleClick(this.props.dataItem.id);
+		this.props.handleClick(this.props.dataItem.id, this.props.dataItem.name);
 	},
 	
 	render: function() {

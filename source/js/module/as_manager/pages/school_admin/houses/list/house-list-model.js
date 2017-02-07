@@ -133,7 +133,8 @@ HouseListModel.prototype = {
 					</div>
 				) : null
 			},
-			columns:columns
+			columns:columns,
+			handleClick: this.props.handleClick
 		});
 	},
 	// TODO Get WHAT??

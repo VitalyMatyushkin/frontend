@@ -240,6 +240,7 @@ StudentListModel.prototype = {
 						btnAdd: this.btnAdd
 					},
 					columns: this.columns,
+					handleClick: this.props.handleClick,
 					filters: this.filters
 				});
 

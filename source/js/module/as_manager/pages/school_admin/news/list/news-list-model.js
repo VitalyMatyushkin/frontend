@@ -131,7 +131,8 @@ NewsListModel.prototype = {
 					</div>
 				) : null
 			},
-			columns:columns
+			columns:columns,
+			handleClick: this.props.handleClick
 		});
 	},
 	getDataLoadedHandle: function(data){

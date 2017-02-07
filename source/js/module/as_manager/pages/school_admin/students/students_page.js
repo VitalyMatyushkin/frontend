@@ -10,17 +10,37 @@ const 	RouterView 				= require('module/core/router'),
 
 const StudentPage = React.createClass({
 	mixins: [Morearty.Mixin],
+	//The function, which will call when user click on <Row> in Grid
+	handleClick: function(studentId) {
+		document.location.hash = 'school_admin/students/stats?id=' + studentId;
+	},
 	render: function() {
-		const 	self 			= this,
-				binding 		= self.getDefaultBinding(),
-				globalBinding 	= self.getMoreartyContext().getBinding();
+		const 	binding 		= this.getDefaultBinding(),
+				globalBinding 	= this.getMoreartyContext().getBinding();
 
 		return (
 			<RouterView routes={ binding.sub('studentsRouting') } binding={globalBinding}>
-				<Route path="/school_admin/students" binding={binding.sub('studentsList')} component={StudentsListComponent}  />
-				<Route path="/school_admin/students/add"  binding={binding.sub('studentAdd')} component={StudentsAddComponent} />
-				<Route path="/school_admin/students/edit" binding={binding.sub('studentForm')} component={StudentsEditComponent}  />
-				<Route path="/school_admin/students/stats" binding={binding.sub('studentStats')} component={StudentStatsComponent}/>
+				<Route
+					path		="/school_admin/students"
+					binding		={ binding.sub('studentsList') }
+					component	={ StudentsListComponent }
+					handleClick	={ this.handleClick }
+				/>
+				<Route
+					path		="/school_admin/students/add"
+					binding		={ binding.sub('studentAdd') }
+					component	={ StudentsAddComponent }
+				/>
+				<Route
+					path		="/school_admin/students/edit"
+					binding		={ binding.sub('studentForm') }
+					component	={ StudentsEditComponent }
+				/>
+				<Route
+					path		="/school_admin/students/stats"
+					binding		={ binding.sub('studentStats') }
+					component	={ StudentStatsComponent }
+				/>
 			</RouterView>
 		)
 	}

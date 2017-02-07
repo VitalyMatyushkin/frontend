@@ -210,6 +210,7 @@ TeamListModel.prototype = {
 				)
 			},
 			columns:columns,
+			handleClick: this.props.handleClick,
 			filters:{
 				limit: 100,
 				where: {
