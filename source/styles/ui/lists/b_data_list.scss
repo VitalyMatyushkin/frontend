@@ -41,6 +41,12 @@
 
 .eDataList_listItem{
   box-sizing: border-box;
+  &:hover{
+	background-color: $lightBlue;
+	color: #ffffff;
+	cursor: pointer;
+	transition: all 0.3s ease-out;
+  }
 }
 
 .eDataList_listItem.mHead{
