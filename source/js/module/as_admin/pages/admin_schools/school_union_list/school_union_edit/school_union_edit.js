@@ -4,7 +4,7 @@ const	React			= require('react'),
 		SchoolUnionForm	= require('../school_union_form/school_union_form'),
 		SchoolHelper	= require('module/helpers/school_helper');
 
-const SchoolUnionEditWrapper = React.createClass({
+const SchoolUnionEdit = React.createClass({
 	mixins: [Morearty.Mixin],
 	componentWillMount: function () {
 		const	binding		= this.getDefaultBinding(),
@@ -41,6 +41,7 @@ const SchoolUnionEditWrapper = React.createClass({
 		 */
 		SchoolHelper.setServerPublicSiteAccessPasswordValue(schoolData);
 		window.Server.school.put(this.getSchoolIdFromPageUrl(), schoolData).then(() => {
+			this.getDefaultBinding().clear();
 			document.location.hash = 'admin_schools/school_unions';
 		});
 	},
@@ -60,4 +61,4 @@ const SchoolUnionEditWrapper = React.createClass({
 	}
 });
 
-module.exports = SchoolUnionEditWrapper;
+module.exports = SchoolUnionEdit;
