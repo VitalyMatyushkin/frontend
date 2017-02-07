@@ -45,14 +45,16 @@ const GrantRole = React.createClass({
             switch(model.preset) {
                 case 'parent':
                     body = {
-                        preset:     model.preset,
+                    	//without uppercase don't work
+                        preset:     model.preset.toUpperCase(),
                         schoolId:   model.schoolId,
                         studentId:  model.studentId
                     };
                     break;
                 default:
                     body = {
-                        preset:     model.preset,
+						//without uppercase don't work
+                        preset:     model.preset.toUpperCase(),
                         schoolId:   model.schoolId
                     };
                     break;
