@@ -109,9 +109,11 @@
 
 .eSchoolNewsItem {
   display: flex;
+  flex-flow: row wrap;
   height: auto;
   background: #fff;
-  width: 920px;
+  width: 100%;
+  max-width: 920px;
   margin: 20px;
   border: $BORDER;
   color: #333132;
@@ -446,4 +448,17 @@
   margin: 0 auto;
 
   font-size: 16px;
+}
+
+@media screen and (max-width: 992px){
+  .eSchoolNewsItemDescription {
+    margin-left: 20px;
+  }
+}
+@media screen and (max-width: 767px){
+  .eSchoolNewsItemDescription {
+    width: 100%;
+    margin-left: 0px;
+    padding: 0 20px;
+  }
 }
