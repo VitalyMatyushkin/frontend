@@ -7,7 +7,8 @@ const TimeInput = React.createClass({
 		cssClassName:	React.PropTypes.string.isRequired,
 		type:			React.PropTypes.string.isRequired,
 		handleChange:	React.PropTypes.func.isRequired,
-		value:			React.PropTypes.number.isRequired
+		value:			React.PropTypes.number.isRequired,
+		focus:			React.PropTypes.bool
 	},
 	getInitialState: function(){
 		return {
@@ -16,6 +17,15 @@ const TimeInput = React.createClass({
 		};
 	},
 
+	componentWillReceiveProps:function(nextProps){
+		if(this.props.type === TimeInputConsts.TIME_INPUT_TYPE.MINUTES && this.props.focus != nextProps.focus && nextProps.focus != false) {
+			this.setState({
+				value:		'',
+				isTyping:	true
+			});
+			this.input.focus();
+		}
+	},
 	/**
 	 * Parse new value, check new value.
 	 * If all is ok, set it to state.
@@ -30,8 +40,15 @@ const TimeInput = React.createClass({
 
 			if(intValue >= 0 && intValue <= this.getMaxLimit()) {
 				this.setState({value: value});
+				//If user enter two numbers in hour input, we must change focus to minutes input
+				const matchTwoNumbers = value.match(/^[0-9]{2}$/);
+				if (matchTwoNumbers !== null && this.props.type === TimeInputConsts.TIME_INPUT_TYPE.HOUR) {
+					this.setState({isTyping: false});
+					this.input.blur();
+					this.props.handleChange(parseInt(value, 10));
+				}
 			}
-		};
+		}
 	},
 	fillZero: function(_value) {
 		const value = String(_value).trim();
@@ -45,7 +62,6 @@ const TimeInput = React.createClass({
 				return '00';
 			default:
 				const intValue = parseInt(value, 10);
-
 				if(intValue < 10) {
 					return '0' + intValue;
 				} else {
@@ -74,9 +90,6 @@ const TimeInput = React.createClass({
 			case '':
 				this.setState({value: ''});
 				break;
-			case '00':
-				this.setState({value: '00'});
-				break;
 			default:
 				this.processNewValue(value);
 				break;
@@ -89,12 +102,14 @@ const TimeInput = React.createClass({
 		});
 	},
 	handleBlur: function() {
-		this.setState({'isTyping': false});
+		this.setState({isTyping: false});
+
 		if(this.state.value !== '') {
 			this.props.handleChange(parseInt(this.state.value, 10));
+		} else {
+			this.props.handleChange(0);
 		}
 	},
-
 	render: function () {
 		return (
 			<input	className	= { this.props.cssClassName }
@@ -103,6 +118,7 @@ const TimeInput = React.createClass({
 					value		= { this.state.isTyping ? this.state.value : this.fillZero(this.props.value) }
 					onFocus		= { this.handleFocus }
 					onBlur		= { this.handleBlur }
+					ref			= { input => {this.input = input;} }
 			/>
 		);
 	}
