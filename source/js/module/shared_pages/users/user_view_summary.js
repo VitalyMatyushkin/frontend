@@ -29,7 +29,7 @@ const UserViewSummary = React.createClass({
 			return (
 				<div className="eSchoolMaster_summary_wrap">
 					<div className="eSchoolMaster_title">
-			        {avatar ? <span><h3>Photo</h3><img src={avatar}/></span> : ''}
+			        {avatar ? <span><h3>Photo</h3><img src={avatar}/></span> : <span><h3>Photo</h3><img src='/images/empty_pic_uploader_box.png' /></span>}
 		    	</div>
 			    <div className="eSchoolMaster_fields">
 		        <h3>Summary</h3>
