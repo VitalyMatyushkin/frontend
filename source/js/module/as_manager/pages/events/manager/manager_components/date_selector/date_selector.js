@@ -5,7 +5,7 @@ const	React				= require('react'),
 
 const DateSelector = React.createClass({
 
-	DROPDOWN_CSS_STYLE: 'mDateSelector',
+	DROPDOWN_CSS_STYLE: 'mBigDateSelector',
 
 	propTypes: {
 		date:				React.PropTypes.string.isRequired,

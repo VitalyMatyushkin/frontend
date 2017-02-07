@@ -2,7 +2,11 @@
 @import "../../bootstrap-custom";
 
 .bEventContainer {
-  margin: 30px auto 50px;
+  margin: 0 auto;
+
+  &.mTopMargin {
+    margin: 45px auto 0px;
+  }
 }
 
 .bEvent {
