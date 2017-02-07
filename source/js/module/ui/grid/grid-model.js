@@ -89,7 +89,10 @@ const GridModel = function(options){
 		columns:options.columns
 	});
 	this.actionPanel = new ActionPanelModel(options.actionPanel);
+	//If true we add extra class to css
 	this.classStyleAdmin = options.classStyleAdmin;
+	//The function, which will call when user click on <Row> in Grid
+	this.handleClick = options.handleClick;
 	this.actionPanel.onChange = this.render.bind(this);
 	this.onRender = null;
 };

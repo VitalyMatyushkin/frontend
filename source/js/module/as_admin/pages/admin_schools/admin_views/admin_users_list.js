@@ -2,27 +2,39 @@
  * Created by Anatoly on 25.04.2016.
  */
 
-const   React       = require('react'),
-        Morearty    = require('morearty'),
-        UserList    = require('module/shared_pages/users/user_list/users'),
-        GrantRole   = require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
-        SVG			= require('module/ui/svg');
+const 	React 		= require('react'),
+		Morearty 	= require('morearty'),
+		UserList 	= require('module/shared_pages/users/user_list/users'),
+		GrantRole 	= require('module/as_admin/pages/admin_schools/admin_comps/grant_role'),
+		SVG 		= require('module/ui/svg');
 
 const AdminUsersList = React.createClass({
-    mixins:[Morearty.Mixin],
+	mixins:[Morearty.Mixin],
 
-    _adminCreateNewUser:function(){
-        document.location.hash = 'admin_schools/admin_views/create_user';
-    },
-    render:function(){
-        var self = this,
-            binding = self.getDefaultBinding(),
-            addButton = <div className="bButtonAdd" onClick={self._adminCreateNewUser}><SVG icon="icon_add_men" /></div>;
+	adminCreateNewUser: function(){
+		document.location.hash = 'admin_schools/admin_views/create_user';
+	},
+	
+	//The function, which will call when user click on <Row> in Grid
+	getItemViewFunction: function(id){
+		window.location.hash = 'user/view?id=' + id;
+	},
+	
+	render:function(){
+		const 	binding 	= this.getDefaultBinding(),
+				addButton 	= <div className="bButtonAdd" onClick={this.adminCreateNewUser}><SVG icon="icon_add_men" /></div>;
 
-        return (
-            <UserList binding={binding} grantRole={GrantRole} addButton={addButton} permissionServiceName="userPermission" blockService={window.Server.userBlock} />
-        );
+		return (
+			<UserList
+				handleClick				={ this.getItemViewFunction}
+				binding					={ binding }
+				grantRole				={ GrantRole }
+				addButton				={ addButton }
+				blockService			={ window.Server.userBlock }
+				permissionServiceName	="userPermission"
+			/>
+		);
 
-    }
+	}
 });
 module.exports = AdminUsersList;
