@@ -5,6 +5,7 @@ const	React						= require('react'),
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
+		CreateOtherEventPanel		= require('./view/create_other_event_panel/create_other_event_panel'),
 		EventHeaderWrapper			= require('./view/event_header/event_header_wrapper'),
 		EventRivals					= require('./view/event_rivals'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
@@ -17,6 +18,7 @@ const	React						= require('react'),
 		ManagerWrapper				= require('./view/manager_wrapper'),
 		Comments					= require('./view/event_blog'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
+		classNames					= require('classnames'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
 		DetailsWrapper				= require('./view/details/details_wrapper'),
 		MatchReport					= require('./view/match-report/report'),
@@ -39,6 +41,7 @@ const Event = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
+			isNewEvent: false,
 			model: {},
 			gallery: {
 				photos: [],
@@ -84,6 +87,8 @@ const Event = React.createClass({
 				binding		= self.getDefaultBinding();
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
+
+		this.initIsNewEvent();
 
 		let eventData, report, photos, settings;
 		/**
@@ -239,6 +244,13 @@ const Event = React.createClass({
 				return eventData;
 			});
 		}
+	},
+	initIsNewEvent: function() {
+		const rootBinding = this.getMoreartyContext().getBinding();
+
+		const isNewEvent = rootBinding.get('routing.parameters.new');
+
+		this.getDefaultBinding().set('isNewEvent', isNewEvent === 'true');
 	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
@@ -667,19 +679,28 @@ const Event = React.createClass({
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				role			= RoleHelper.getLoggedInUserRole(this),
-				point 			= binding.toJS('model.venue.postcodeData.point');
+				point 			= binding.toJS('model.venue.postcodeData.point'),
+				isNewEvent		= binding.get('isNewEvent');
+
+		const EventContainerStyle = classNames({
+			bEventContainer	: true,
+			mTopMargin		: !isNewEvent
+		});
 
 		switch (true) {
 			case !self.isSync():
 				return (
-					<div className="bEventContainer">
+					<div className="bEventContainer mTopMargin">
 						<span className="eEvent_loading">loading...</span>
 					</div>
 				);
 			// sync and any mode excluding edit_squad
 			case self.isSync() && binding.toJS('mode') !== 'edit_squad':
 				return (
-					<div className="bEventContainer">
+					<div className={EventContainerStyle}>
+						<If condition={isNewEvent}>
+							<CreateOtherEventPanel/>
+						</If>
 						<div className="bEvent">
 							<EventHeaderWrapper	binding			= {binding}
 												activeSchoolId	= {this.props.activeSchoolId}

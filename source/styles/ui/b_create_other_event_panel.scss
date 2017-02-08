@@ -1,0 +1,49 @@
+.bCreateOtherEventPanelWrapper {
+  position: relative;
+
+  width: 1170px;
+  height: 35px;
+
+  margin: 0 auto 10px;
+  overflow: hidden;
+}
+
+.bCreateOtherEventPanel {
+  position: absolute;
+
+  text-align: center;
+  width: 1170px;
+  height: 35px;
+
+  padding: 10px 0px 0px 10px;
+
+  background-color: #007abf;
+  border-radius: 0 0 5px 5px;
+
+  transition-property: top;
+  transition-duration: 1s;
+}
+
+.eCreateOtherEventPanel_left {
+  display: inline-block;
+}
+
+.eCreateOtherEventPanel_right {
+  display: inline-block;
+  top: 8px;
+  right: 10px;
+  position: absolute;
+}
+
+.eCreateOtherEventPanel_link {
+  color: white;
+
+  &:hover {
+    color: white;
+    text-decoration: underline;
+  }
+}
+
+.eCreateOtherEventPanel_cross {
+  color: white;
+}
