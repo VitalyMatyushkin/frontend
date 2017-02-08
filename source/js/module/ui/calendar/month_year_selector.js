@@ -7,7 +7,7 @@ const	React				= require('react'),
 
 const MonthYearSelector = React.createClass({
 
-	DROPDOWN_CSS_STYLE: 'mBigDateSelector',
+	DROPDOWN_CSS_STYLE: 'mDateSelector',
 
 	propTypes: {
 		date: React.PropTypes.object.isRequired,

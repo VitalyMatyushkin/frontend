@@ -386,7 +386,7 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		document.location.hash = 'event/' + event.id + '?tab=gallery';
+		document.location.hash = 'event/' + event.id + '?tab=gallery&new=true';
 		binding.clear();
 		binding.meta().clear();
 
