@@ -22,9 +22,11 @@ const Grid = React.createClass({
 		this.setState({renderStart: new Date()});
 	},
 	render: function() {
-		const model = this.props.model,
-			classStyleAdmin = model.classStyleAdmin ? ' bGrid-wide' : '',
-			mHidden = !model.actionPanel.isFilterActive ? 'mHidden' : null;
+		const 	model 				= this.props.model,
+				classStyleAdmin 	= model.classStyleAdmin ? ' bGrid-wide' : '',
+				//The function, which will call when user click on <Row> in Grid otherwise we display in console log warning
+				handleClick 		= model.handleClick ? model.handleClick : () => {console.log('Warning: Not function in grid for click on row')},
+				mHidden 			= !model.actionPanel.isFilterActive ? 'mHidden' : null;
 
 		return (
 			<div className={"bGrid" + classStyleAdmin}>
@@ -32,7 +34,7 @@ const Grid = React.createClass({
 				<div className={mHidden}>
 					<FilterPanel model={model.filterPanel} />
 				</div>
-				<Table model={model.table} />
+				<Table model={model.table} handleClick={handleClick} />
 				<Pagination model={model.pagination} />
 			</div>
 		);

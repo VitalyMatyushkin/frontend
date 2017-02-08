@@ -40,13 +40,15 @@ TeamListModel.prototype = {
 	reloadData:function(){
 		this.dataLoader.loadData();
 	},
-	onEdit: function(data) {
+	onEdit: function(data, event) {
 		document.location.hash += '/edit?id=' + data.id;
+		event.stopPropagation();
 	},
-	onChildren: function(data) {
+	onChildren: function(data, event) {
 		document.location.hash += `/players?id=${data.id}&name=${data.name}`;
+		event.stopPropagation();
 	},
-	onRemove: function(team) {
+	onRemove: function(team, event) {
 		const self = this;
 
 		window.confirmAlert(
@@ -58,6 +60,7 @@ TeamListModel.prototype = {
 				.then(() => self.reloadData()),
 			() => {}
 		);
+		event.stopPropagation();
 	},
 	_getAges: function(item) {
 		const ages = item.ages;
@@ -210,6 +213,7 @@ TeamListModel.prototype = {
 				)
 			},
 			columns:columns,
+			handleClick: this.props.handleClick,
 			filters:{
 				limit: 100,
 				where: {
