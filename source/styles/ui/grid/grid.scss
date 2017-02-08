@@ -2,6 +2,13 @@
   box-sizing: content-box;
   max-width: 1060px;
   padding: 0 130px;
+  .eDataList_listItem{
+	&:hover{
+	  background-color: #d9edf7;
+	  cursor: pointer;
+	  transition: all 0.3s ease-out;
+	}
+  }
 
   @media (max-width: 992px) {
     font-size: 14px;

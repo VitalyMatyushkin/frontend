@@ -25,26 +25,26 @@ const ClassesPage = React.createClass({
 			<RouterView routes={ binding.sub('classesRouting') } binding={globalBinding}>
 				<Route
 					path			="/school_admin/forms"
-					binding			={ binding.sub('classesList') }
-					formBinding		={ binding.sub('classesForm') }
-					component		={ ClassesListComponent }
-					handleClick		={ this.handleClickForm }
+					binding			= { binding.sub('classesList') }
+					formBinding		= { binding.sub('classesForm') }
+					component		= { ClassesListComponent }
+					handleClick		= { this.handleClickForm }
 				/>
 				<Route
 					path		="/school_admin/forms/add"
-					binding		={ binding.sub('classesAdd') }
-					component	={ ClassAddComponent }
+					binding		= { binding.sub('classesAdd') }
+					component	= { ClassAddComponent }
 				/>
 				<Route
 					path		="/school_admin/forms/edit"
-					binding		={ binding.sub('classesForm') }
-					component	={ ClassEditComponent }
+					binding		= { binding.sub('classesForm') }
+					component	= { ClassEditComponent }
 				/>
 				<Route
 					path		="/school_admin/forms/students"
-					binding		={ binding.sub('classStudents') }
-					component	={ ClassStudentsComponent }
-					handleClick	={ this.handleClickStudent }
+					binding		= { binding.sub('classStudents') }
+					component	= { ClassStudentsComponent }
+					handleClick	= { this.handleClickStudent }
 				/>
 			</RouterView>
 		)
