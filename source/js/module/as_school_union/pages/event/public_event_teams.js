@@ -1,14 +1,13 @@
-const	InvitesMixin			= require('module/as_manager/pages/invites/mixins/invites_mixin'),
-		EventTeamsView			= require('./../../../as_manager/pages/event/view/teams/event_teams_view'),
-		TeamHelper				= require('module/ui/managers/helpers/team_helper'),
+const	React				= require('react'),
+		Morearty			= require('morearty'),
+		Immutable			= require('immutable');
 
-		React					= require('react'),
-		Immutable				= require('immutable'),
-		Morearty				= require('morearty');
+const	SchoolUnionTeamView	= require('./school_union_team_view'),
+		InvitesMixin		= require('module/as_manager/pages/invites/mixins/invites_mixin'),
+		TeamHelper			= require('module/ui/managers/helpers/team_helper');
 
 const PublicEventTeams = React.createClass({
 	mixins: [Morearty.Mixin, InvitesMixin],
-
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			viewPlayers: {
@@ -69,9 +68,7 @@ const PublicEventTeams = React.createClass({
 	},
 	render: function() {
 		return (
-			<EventTeamsView	binding		= { this.getViewPlayersBinding() }
-
-			/>
+			<SchoolUnionTeamView binding={this.getViewPlayersBinding()}/>
 		);
 	}
 });
