@@ -18,7 +18,9 @@ const TeamStats = React.createClass({
         return String(num).length === 1 ? '0' + num : num;
     },
     onClickChallenge: function (eventId) {
-        document.location.hash = 'event/' + eventId;
+		//we must pass schoolId in hash because event-page component use schoolId from routing.parameters  
+		const activeSchoolId = this.getDefaultBinding().toJS().schoolId;
+		document.location.hash = 'event/' + eventId  + '?schoolId=' + activeSchoolId;
     },
     sameDay: function (d1, d2) {
         d1 = d1 instanceof Date ? d1 : new Date(d1);
