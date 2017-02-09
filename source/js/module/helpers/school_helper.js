@@ -2,7 +2,8 @@
  * Created by Anatoly on 12.12.2016.
  */
 
-const Immutable = require('immutable');
+const 	Immutable = require('immutable'),
+		Promise = require('bluebird');
 
 const schoolConsts = require('./consts/schools');
 
