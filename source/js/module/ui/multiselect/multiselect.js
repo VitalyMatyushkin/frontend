@@ -6,7 +6,7 @@ const   MultiSelectItem = require('./multiselect_item'),
 const MultiSelect = React.createClass({
     mixins: [Morearty.Mixin],
     displayName: 'MultiSelect',
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps: function(nextProps) {
         this.getDefaultBinding().set('selections', Immutable.fromJS(nextProps.selections));
     },
     getDefaultProps: function() {
