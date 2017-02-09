@@ -1,6 +1,7 @@
 const	React				= require('react');
 
 const	Lazy				= require('lazy.js'),
+		If					= require('../../../../../ui/if/if'),
 		DateHelper			= require('module/helpers/date_helper'),
 		Buttons				= require('./buttons');
 
@@ -36,15 +37,17 @@ const EventHeader = React.createClass({
 							<div className="eEventHeader_fieldColumn">
 								{`${name}`}
 							</div>
-							<div className="eEventHeader_fieldColumn mRelative">
-								<div className="eEventHeader_editLinkWrapper">
-									<a	className	= "eEventHeader_editLink"
-										  onClick		= {this.props.onClickEditEventButton}
-									>
-										Edit
-									</a>
+							<If condition={this.props.eventStatus !== "FINISHED"}>
+								<div className="eEventHeader_fieldColumn mRelative">
+									<div className="eEventHeader_editLinkWrapper">
+										<a	className	= "eEventHeader_editLink"
+											onClick		= {this.props.onClickEditEventButton}
+										>
+											Edit
+										</a>
+									</div>
 								</div>
-							</div>
+							</If>
 						</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>

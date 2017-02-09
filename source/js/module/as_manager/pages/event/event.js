@@ -23,7 +23,7 @@ const	React						= require('react'),
 		DetailsWrapper				= require('./view/details/details_wrapper'),
 		MatchReport					= require('./view/match-report/report'),
 		Map							= require('../../../ui/map/map2'),
-		EditEventPopup				= require('./view/edit_event_popup'),
+		EditEventPopup				= require('./view/edit_event_popup/edit_event_popup'),
 		GalleryActions				= require('./new_gallery/event_gallery_actions'),
 		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
 		Button						= require('../../../ui/button/button'),
@@ -80,7 +80,7 @@ const Event = React.createClass({
 				}
 			],
 			editEventPopup: {
-
+				eventEditForm: {}
 			}
 		});
 	},
@@ -105,7 +105,9 @@ const Event = React.createClass({
 			}).then(event => {
 				eventData = event;
 
-				return TeamHelper.getSchoolsData(eventData);
+				return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
+					return window.Server.publicSchool.get(school.id);
+				}));
 			}).then(schoolsData => {
 				eventData.schoolsData = schoolsData;
 
@@ -157,7 +159,6 @@ const Event = React.createClass({
 				this.setPlayersFromEventToBinding(eventData);
 				binding.atomically()
 					.set('model',							Immutable.fromJS(eventData))
-					.set('editEventPopup',					Immutable.fromJS(eventData))
 					.set('gallery.photos',					Immutable.fromJS(photos))
 					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
 					.set('gallery.isSync',					true)
@@ -677,14 +678,33 @@ const Event = React.createClass({
 	isShowMap: function() {
 		return this.getDefaultBinding().toJS('model.venue.venueType') !== "TBD";
 	},
+	handleSuccessSubmit: function(updEvent) {
+		const binding = this.getDefaultBinding();
+
+		binding.atomically()
+			.set("model.startTime"		, updEvent.startTime)
+			.set("model.venue"			, updEvent.venue)
+			.commit();
+
+		//TODO I'm going to make event changes without reload.
+		window.location.reload();
+	},
+	handleCloseEditEventPopup: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.set("isEditEventPopupOpen", false);
+	},
 	renderEditEventPopupOpen: function() {
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
 		if(binding.get("isEditEventPopupOpen")) {
 			return (
-				<EditEventPopup	binding			= {binding.sub('editEventPopup')}
-								activeSchoolId	= {this.props.activeSchoolId}
+				<EditEventPopup	binding				= {binding.sub('editEventPopup')}
+								activeSchoolId		= {this.props.activeSchoolId}
+								event				= {binding.toJS('model')}
+								handleSuccessSubmit	= {this.handleSuccessSubmit}
+								handleClosePopup	= {this.handleCloseEditEventPopup}
 				/>
 			)
 		} else {
