@@ -1,7 +1,10 @@
-const	React			= require('react'),
-		Lazy			= require('lazy.js'),
-		DateHelper		= require('module/helpers/date_helper'),
-		Buttons			= require('./buttons');
+const	React				= require('react');
+
+const	Lazy				= require('lazy.js'),
+		DateHelper			= require('module/helpers/date_helper'),
+		Buttons				= require('./buttons');
+
+const	EventHeaderStyle	= require('../../../../../../../styles/pages/event/b_event_header.scss');
 
 const EventHeader = React.createClass({
 	propTypes: {
@@ -14,7 +17,8 @@ const EventHeader = React.createClass({
 		handleClickCancelEvent:			React.PropTypes.func.isRequired,
 		handleClickCloseEvent:			React.PropTypes.func.isRequired,
 		onClickCloseCancel:				React.PropTypes.func.isRequired,
-		onClickOk:						React.PropTypes.func.isRequired
+		onClickOk:						React.PropTypes.func.isRequired,
+		onClickEditEventButton:			React.PropTypes.func.isRequired
 	},
 	render: function() {
 		const 	event 				= this.props.event,
@@ -26,13 +30,26 @@ const EventHeader = React.createClass({
 
 		return (
 			<div className="bEventHeader">
-				<div className="bEventHeader_row">
-					<div className="bEventHeader_leftSide">
-						<div className="eEventHeader_field mEvent">{`${name}`}</div>
+				<div className="eEventHeader_row">
+					<div className="eEventHeader_leftSide">
+						<div className="eEventHeader_field mEvent">
+							<div className="eEventHeader_fieldColumn">
+								{`${name}`}
+							</div>
+							<div className="eEventHeader_fieldColumn mRelative">
+								<div className="eEventHeader_editLinkWrapper">
+									<a	className	= "eEventHeader_editLink"
+										  onClick		= {this.props.onClickEditEventButton}
+									>
+										Edit
+									</a>
+								</div>
+							</div>
+						</div>
 						<div className="eEventHeader_field mDate">{`${time} / ${date} / ${sport}`}</div>
 						<div className="eEventHeader_field mAges">{`Years: ${eventAges}`}</div>
 					</div>
-					<div className="bEventHeader_rightSide">
+					<div className="eEventHeader_rightSide">
 						<Buttons
 							mode 							= { this.props.mode }
 							eventStatus 					= { this.props.eventStatus }

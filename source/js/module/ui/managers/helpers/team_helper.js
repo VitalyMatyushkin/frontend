@@ -989,12 +989,14 @@ function convertPoints(countPoints, pointsType){
 
 /** Return array of all schools taking part in event: `inviterSchool` + all 'invitedSchools' */
 function getSchoolsData(event) {
-	const schoolsData = [];
+	let schoolIds = [];
 
-	schoolsData.push(event.inviterSchool);
-	event.invitedSchools && event.invitedSchools.forEach( s => schoolsData.push(s) );
+	schoolIds.push(event.inviterSchoolId);
+	if(typeof event.invitedSchools === 'undefined') {
+		schoolIds = schoolIds.concat(event.invitedSchoolIds.filter(id => id !== event.inviterSchoolId));
+	}
 
-	return schoolsData;
+	return Promise.all(schoolIds.map(id => window.Server.publicSchool.get(id)));
 }
 
 /** Return bundle with all schools participated in event data, all houses data and all teams data.
@@ -1005,7 +1007,7 @@ function getSchoolsData(event) {
  */
 function getTeamBundles(event) {
 	return {
-		schoolsData:	getSchoolsData(event),
+		schoolsData:	event.schoolsData,
 		housesData:		event.housesData,
 		teamsData:		event.teamsData
 	};

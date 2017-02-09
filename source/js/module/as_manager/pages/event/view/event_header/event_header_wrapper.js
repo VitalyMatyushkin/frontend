@@ -63,7 +63,11 @@ const EventHeaderWrapper = React.createClass({
 			EventHeaderActions.closeMatch(activeSchoolId, event, binding);
 		}
 	},
+	onClickEditEventButton: function() {
+		const binding = this.getDefaultBinding();
 
+		binding.set('isEditEventPopupOpen', true);
+	},
 	/**
 	 * The function render's component EventHeaderWrapper
 	 * @returns {XML}
@@ -89,6 +93,7 @@ const EventHeaderWrapper = React.createClass({
 						handleClickCloseEvent			= { this.handleClickCloseEvent }
 						onClickCloseCancel				= { this.onClickCloseCancel }
 						onClickOk						= { this.onClickOk }
+						onClickEditEventButton			= { this.onClickEditEventButton }
 					/>
 		);
 	}

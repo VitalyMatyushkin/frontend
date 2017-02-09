@@ -23,7 +23,7 @@ const	React						= require('react'),
 		DetailsWrapper				= require('./view/details/details_wrapper'),
 		MatchReport					= require('./view/match-report/report'),
 		Map							= require('../../../ui/map/map2'),
-
+		EditEventPopup				= require('./view/edit_event_popup'),
 		GalleryActions				= require('./new_gallery/event_gallery_actions'),
 		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
 		Button						= require('../../../ui/button/button'),
@@ -42,6 +42,7 @@ const Event = React.createClass({
 	getDefaultState: function () {
 		return Immutable.fromJS({
 			isNewEvent: false,
+			isEditEventPopupOpen: false,
 			model: {},
 			gallery: {
 				photos: [],
@@ -77,7 +78,10 @@ const Event = React.createClass({
 					value					: true,
 					isTeamScoreWasChanged	: false
 				}
-			]
+			],
+			editEventPopup: {
+
+			}
 		});
 	},
 	componentWillMount: function () {
@@ -96,11 +100,16 @@ const Event = React.createClass({
 		 */
 		if (role !== 'STUDENT') {
 			window.Server.schoolEvent.get({
-				schoolId: this.props.activeSchoolId,
-				eventId: self.eventId
+				schoolId	: this.props.activeSchoolId,
+				eventId		: self.eventId
 			}).then(event => {
-				event.schoolsData = TeamHelper.getSchoolsData(event);
-				event.teamsData = event.teamsData.sort((t1, t2) => {
+				eventData = event;
+
+				return TeamHelper.getSchoolsData(eventData);
+			}).then(schoolsData => {
+				eventData.schoolsData = schoolsData;
+
+				eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
 					if (!t1 || !t2 || t1.name === t2.name) {
 						return 0;
 					}
@@ -111,7 +120,7 @@ const Event = React.createClass({
 						return 1;
 					}
 				});
-				event.housesData = event.housesData.sort((h1, h2) => {
+				eventData.housesData = eventData.housesData.sort((h1, h2) => {
 					if (!h1 || !h2 || h1.name === h2.name) {
 						return 0;
 					}
@@ -123,9 +132,7 @@ const Event = React.createClass({
 					}
 				});
 				// FUNCTION MODIFY EVENT OBJECT!!
-				EventResultHelper.initializeEventResults(event);
-
-				eventData = event;
+				EventResultHelper.initializeEventResults(eventData);
 
 				// loading match report
 				return window.Server.schoolEventReport.get({
@@ -150,6 +157,7 @@ const Event = React.createClass({
 				this.setPlayersFromEventToBinding(eventData);
 				binding.atomically()
 					.set('model',							Immutable.fromJS(eventData))
+					.set('editEventPopup',					Immutable.fromJS(eventData))
 					.set('gallery.photos',					Immutable.fromJS(photos))
 					.set('gallery.isUserCanUploadPhotos',	Immutable.fromJS(settings.photosEnabled))
 					.set('gallery.isSync',					true)
@@ -256,6 +264,7 @@ const Event = React.createClass({
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
 	initIsIndividualScoreAvailable: function() {
+		// TODO
 		//this.initIsIndividualScoreAvailableByOrder(0);
 		//this.initIsIndividualScoreAvailableByOrder(1);
 	},
@@ -668,6 +677,20 @@ const Event = React.createClass({
 	isShowMap: function() {
 		return this.getDefaultBinding().toJS('model.venue.venueType') !== "TBD";
 	},
+	renderEditEventPopupOpen: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		if(binding.get("isEditEventPopupOpen")) {
+			return (
+				<EditEventPopup	binding			= {binding.sub('editEventPopup')}
+								activeSchoolId	= {this.props.activeSchoolId}
+				/>
+			)
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
@@ -789,6 +812,7 @@ const Event = React.createClass({
 								/>
 							</div>
 						</div>
+						{this.renderEditEventPopupOpen()}
 					</div>
 				);
 			// sync and edit squad mode
