@@ -35,13 +35,15 @@ StudentListModel.prototype = {
 	reloadData:function(){
 		this.dataLoader.loadData();
 	},
-	onEdit: function(data) {
-		document.location.hash += '/edit?id=' + data.id;
+	onEdit: function(data, event) {
+		document.location.hash = 'school_admin/students/edit?id=' + data.id;
+		event.stopPropagation();
 	},
-	onView: function(student) {
+	onView: function(student, event) {
 		document.location.hash = 'school_admin/students/stats?id='+student.id;
+		event.stopPropagation();
 	},
-	onRemove: function(student) {
+	onRemove: function(student, event) {
 		const	self		= this,
 				rootBinding	= self.getMoreartyContext().getBinding(),
 				schoolId	= rootBinding.get('userRules.activeSchoolId');
@@ -65,6 +67,7 @@ StudentListModel.prototype = {
 				.catch(() => showAlert()),
 			() => {}
 		);
+		event.stopPropagation();
 	},
 	getParents: function(item) {
 		const parents = item.parents;
@@ -240,6 +243,7 @@ StudentListModel.prototype = {
 						btnAdd: this.btnAdd
 					},
 					columns: this.columns,
+					handleClick: this.props.handleClick,
 					filters: this.filters
 				});
 

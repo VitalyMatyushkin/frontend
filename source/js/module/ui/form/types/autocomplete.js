@@ -12,7 +12,7 @@ const TypeAutocomplete = React.createClass({
 		field:				React.PropTypes.string,
 		defaultItem:		React.PropTypes.object,
 		placeholder: 		React.PropTypes.string,
-		onSelect:			React.PropTypes.function
+		onSelect:			React.PropTypes.func
 	},
 	/** Setting component's value when it choosen */
 	onSelect: function(data, fullValue){

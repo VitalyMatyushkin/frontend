@@ -27,6 +27,10 @@ const OneSchoolPage = React.createClass({
 	createNewSchool: function() {
 		document.location.hash = 'admin_schools/admin_views/add';
 	},
+	//The function, which will call when user click on <Row> in Grid
+	getViewFunction: function(itemId){
+		document.location.hash = `school_sandbox/${itemId}/forms`;
+	},
 	componentWillMount: function() {
 		this.createSubMenu();
 	},
@@ -146,6 +150,7 @@ const OneSchoolPage = React.createClass({
 							binding={binding.sub('schools')}
 							component={AdminListComponent}
 							addButton={addButton}
+							handleClick={this.getViewFunction}
 						/>
 						<Route
 							path="/admin_schools/school_unions"

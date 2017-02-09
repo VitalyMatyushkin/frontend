@@ -29,6 +29,7 @@ const SchoolsListModel = function(page){
             btnAdd:this.props.addButton
         },
         columns:this.columns,
+		handleClick: this.props.handleClick,
         filters:{limit: 20}
     });
 
