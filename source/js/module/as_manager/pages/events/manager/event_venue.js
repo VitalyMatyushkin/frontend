@@ -44,8 +44,8 @@ const EventVenue = React.createClass({
 		// just current date in timestamp view
 		return + new Date();
 	},
-	handleChangeGameType: function(changeDescriptor) {
-		const currentGameType = changeDescriptor.getCurrentValue();
+	handleChangeGameType: function() {
+		const currentGameType = this.props.eventType;
 
 		const homePostCode = this.getHomeSchoolPostCode();
 
@@ -114,8 +114,7 @@ const EventVenue = React.createClass({
 		};
 	},
 	getResultForEmptySearchString: function() {
-		const	binding		= this.getDefaultBinding(),
-				gameType	= this.props.eventType;//binding.toJS('model.type');
+		const	gameType	= this.props.eventType;
 
 		const promises = [];
 
@@ -135,8 +134,7 @@ const EventVenue = React.createClass({
 		return Promise.resolve(promises);
 	},
 	getResultForNotEmptySearchString: function(postcode) {
-		const	binding		= this.getDefaultBinding(),
-				gameType	= this.props.eventType;//binding.toJS('model.type');
+		const	gameType	= this.props.eventType;
 
 		const	homePostcode		= this.getHomeSchoolPostCode(),
 				opponentPostcode	= this.getOpponentSchoolPostCode(),
@@ -158,7 +156,7 @@ const EventVenue = React.createClass({
 				const foundAwayPostcodeIndex = postcodes.findIndex(p => p.id === opponentPostcode.id);
 
 				if(foundAwayPostcodeIndex !== -1) {
-					postcodes[foundAwayPostcodeIndex].tooltip = '(opponent school)';
+					postcodes[foundAwayPostcodeIndex].tooltip = ' (opponent school)';
 					// Function modify args!!!
 					postcodes = this.upPostcodeToStart(foundAwayPostcodeIndex, postcodes);
 				}
@@ -168,7 +166,7 @@ const EventVenue = React.createClass({
 			if(typeof homePostcode !== 'undefined') {
 				const homePostcodeIndex = postcodes.findIndex(p => p.id === homePostcode.id);
 				if(homePostcodeIndex !== -1) {
-					postcodes[homePostcodeIndex].tooltip = '(your school)';
+					postcodes[homePostcodeIndex].tooltip = ' (your school)';
 					// Function modify args!!!
 					postcodes = this.upPostcodeToStart(homePostcodeIndex, postcodes);
 				}
@@ -270,7 +268,7 @@ const EventVenue = React.createClass({
 		};
 	},
 	isPostcodeInputBlocked: function() {
-		const	gameType		= this.props.eventType,				// binding.toJS('model.type'),
+		const	gameType		= this.props.eventType,
 				opponentSchool	= this.props.opponentSchoolInfo;	// opponent school for inter-schools event
 
 		return gameType === 'inter-schools' && typeof opponentSchool === 'undefined';
@@ -280,6 +278,23 @@ const EventVenue = React.createClass({
 	 */
 	isShowMap: function() {
 		return this.getVenueType() !== "TBD";
+	},
+	getDefaultPostcode: function() {
+		const	homePostcode	= this.getHomeSchoolPostCode(),
+				awayPostcode	= this.getOpponentSchoolPostCode();
+
+		const defPostcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
+
+		switch(true) {
+			case typeof homePostcode !== "undefined" && homePostcode.id === defPostcode._id:
+				defPostcode.tooltip = ' (your school)';
+				break;
+			case typeof awayPostcode !== "undefined" && awayPostcode.id === defPostcode._id:
+				defPostcode.tooltip = ' (opponent school)';
+				break;
+		};
+
+		return defPostcode;
 	},
 	render: function() {
 		const binding = this.getDefaultBinding();
@@ -298,7 +313,7 @@ const EventVenue = React.createClass({
 					<Autocomplete	key				= {binding.toJS('postcodeInputKey')}
 									serverField		= "postcode"
 									binding			= {binding}
-									defaultItem		= {binding.toJS('model.venue.postcodeData')}
+									defaultItem		= {this.getDefaultPostcode()}
 									serviceFilter	= {this.postcodeService}
 									onSelect		= {this.handleSelectPostcode}
 									placeholder		= {'Select Postcode'}

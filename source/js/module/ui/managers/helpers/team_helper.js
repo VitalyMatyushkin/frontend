@@ -992,11 +992,7 @@ function getSchoolsData(event) {
 	let schools = [];
 
 	schools.push(event.inviterSchool);
-	if(typeof event.invitedSchools === 'undefined') {
-		schools = schools.concat(event.invitedSchools.filter(school => school.id !== event.inviterSchoolId));
-	}
-
-	return schools;
+	return schools.concat(event.invitedSchools.filter(school => school.id !== event.inviterSchoolId));
 }
 
 /** Return bundle with all schools participated in event data, all houses data and all teams data.

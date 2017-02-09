@@ -1,7 +1,9 @@
 /**
  * Created by Woland on 30.01.2017.
  */
-const React = require('react');
+const	React = require('react');
+
+const	VenueStyles = require('../../../../styles/pages/events/b_venue.scss');
 
 const Map = React.createClass({
 	propTypes:{

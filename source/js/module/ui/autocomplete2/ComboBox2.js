@@ -130,7 +130,6 @@ const ComboBox2 = React.createClass({
 				currentAsyncRequest:	searchResult.async,                             // storing promise to be able reject it later
 				dataList:				searchResult.sync,
 				currentText:			searchText,
-				prevText:				searchText,
 				currentIndex:			undefined
 			});
 			searchResult.async.then((data) => {
@@ -194,8 +193,9 @@ const ComboBox2 = React.createClass({
 		const self = this;
 
 		self.setState({
-			currentText:  self.state.prevText,
-			currentIndex: undefined
+			currentText		: self.state.prevText,
+			prevText		: undefined,
+			currentIndex	: undefined
 		});
 	},
 	/**
@@ -240,7 +240,10 @@ const ComboBox2 = React.createClass({
 	 */
 	onInputClick: function() {
 		if(!this.props.isBlocked) {
-			this.search(this.getCurrentText());
+			const currentText = this.getCurrentText();
+
+			this.setState({prevText: currentText});
+			this.search(currentText);
 		}
 	},
 	/**
@@ -267,6 +270,7 @@ const ComboBox2 = React.createClass({
 	onBlur: function(){
 		const self = this;
 
+		this.restorePrevSelectedText();
 		self.closeMenu();
 	},
 	/**
