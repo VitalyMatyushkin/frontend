@@ -286,10 +286,10 @@ const EventVenue = React.createClass({
 		const defPostcode = this.getDefaultBinding().toJS('model.venue.postcodeData');
 
 		switch(true) {
-			case typeof homePostcode !== "undefined" && homePostcode.id === defPostcode._id:
+			case typeof homePostcode !== "undefined" && typeof defPostcode !== "undefined" && homePostcode.id === defPostcode._id:
 				defPostcode.tooltip = ' (your school)';
 				break;
-			case typeof awayPostcode !== "undefined" && awayPostcode.id === defPostcode._id:
+			case typeof awayPostcode !== "undefined" && typeof defPostcode !== "undefined" && awayPostcode.id === defPostcode._id:
 				defPostcode.tooltip = ' (opponent school)';
 				break;
 		};
