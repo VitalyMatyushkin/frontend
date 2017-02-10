@@ -35,7 +35,7 @@ const EventManager = React.createClass({
 			// if true - then user click to finish button
 			// so we must block finish button
 			isSubmitProcessing: false,
-			isTeamManagerInSearchingState: false,
+			isTeamManagerSync: false,
 			model: {
 				name:			'',
 				startTime:		currentDate,
@@ -111,20 +111,19 @@ const EventManager = React.createClass({
 		binding.clear();
 	},
 	addListeners: function() {
-		this.addListenerForTeamManagerByOrder(0);
-		this.addListenerForTeamManagerByOrder(1);
+		this.addListenerForTeamManager();
 	},
-	addListenerForTeamManagerByOrder: function(order) {
+	addListenerForTeamManager: function() {
 		const binding = this.getDefaultBinding();
 
 		binding
-			.sub(`${ManagerHelper.getPathToManagerIsSearchFlagByOrder(order)}`)
+			.sub('isSync')
 			.addListener(eventDescriptor => {
 				// Lock submit button if team manager in searching state.
-				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', true);
+				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', true);
 
 				// Unlock submit button if team manager in searching state.
-				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerInSearchingState', false);
+				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
 			});
 	},
 	onSelectDate: function (newDate) {
@@ -434,7 +433,7 @@ const EventManager = React.createClass({
 
 			const finishButtonClassName = classNames({
 				mFinish:	true,
-				mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || binding.get('isTeamManagerInSearchingState')
+				mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || !binding.get('isTeamManagerSync')
 			});
 
 			return (
