@@ -1,7 +1,9 @@
 /**
  * Created by Woland on 30.01.2017.
  */
-const React = require('react');
+const	React = require('react');
+
+const	VenueStyles = require('../../../../styles/pages/events/b_venue.scss');
 
 const Map = React.createClass({
 	propTypes:{
@@ -15,10 +17,14 @@ const Map = React.createClass({
 		this.setUpMap(this.props.point);
 	},
 	componentWillReceiveProps:function(nextProps){
-		if(this.props.point && nextProps.point &&
-			(this.props.point.lat != nextProps.point.lat
-			|| this.props.point.lng != nextProps.point.lng))
+		if(
+			this.props.point && nextProps.point &&
+			(
+				this.props.point.lat != nextProps.point.lat || this.props.point.lng != nextProps.point.lng
+			)
+		) {
 			this.setUpMap(nextProps.point);
+		}
 	},
 	setUpMap: function(point) {
 		const 	mapNode 	= this.refs.map,

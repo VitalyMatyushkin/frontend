@@ -46,6 +46,12 @@ const Manager = React.createClass({
 			self._initRivalIndex();
 		}
 
+		const	firstTeam	= self.getTeamIdByOrder(0),
+				secondTeam	= self.getTeamIdByOrder(1);
+
+		const	firstTeamName	= self.getTeamNameByOrder(0),
+				secondTeamName	= self.getTeamNameByOrder(1);
+
 		defaultBinding
 			.atomically()
 			.set('teamModeView', Immutable.fromJS(
@@ -54,23 +60,25 @@ const Manager = React.createClass({
 					players: self.getInitPlayers(),
 					teamTable: [
 						{
-							selectedTeamId: self.getTeamIdByOrder(0),
-							exceptionTeamId: self.getTeamIdByOrder(1)
+							selectedTeamId	: firstTeam,
+							isSelectedTeam	: typeof firstTeam !== 'undefined',
+							exceptionTeamId	: secondTeam
 						},
 						{
-							selectedTeamId: self.getTeamIdByOrder(1),
-							exceptionTeamId: self.getTeamIdByOrder(0)
+							selectedTeamId	: secondTeam,
+							isSelectedTeam	: typeof secondTeam !== 'undefined',
+							exceptionTeamId	: firstTeam
 						}
 					],
 					teamWrapper: [
 						{
 							filter: undefined,
-							prevSelectedTeamId: self.getTeamIdByOrder(0),
-							selectedTeamId: self.getTeamIdByOrder(0),
+							prevSelectedTeamId: firstTeam,
+							selectedTeamId: firstTeam,
 							teamsSaveMode: undefined,
 							teamName: {
-								initName: self.getTeamNameByOrder(0),
-								name: self.getTeamNameByOrder(0),
+								initName: firstTeamName,
+								name: firstTeamName,
 								mode: 'show'
 							},
 							___teamManagerBinding: {
@@ -83,12 +91,12 @@ const Manager = React.createClass({
 						},
 						{
 							filter: undefined,
-							prevSelectedTeamId: self.getTeamIdByOrder(1),
-							selectedTeamId: self.getTeamIdByOrder(1),
+							prevSelectedTeamId: secondTeam,
+							selectedTeamId: secondTeam,
 							teamsSaveMode: undefined,
 							teamName: {
-								initName: self.getTeamNameByOrder(1),
-								name: self.getTeamNameByOrder(1),
+								initName: secondTeamName,
+								name: secondTeamName,
 								mode: 'show'
 							},
 							___teamManagerBinding: {

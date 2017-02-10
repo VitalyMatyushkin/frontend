@@ -41,6 +41,7 @@ function revertScore(binding) {
 	const updEvent = binding.toJS('model');
 
 	updEvent.results = updEvent.initResults;
+	updEvent.initResults = undefined;
 	binding.set('model', Immutable.fromJS(updEvent));
 };
 

@@ -372,8 +372,8 @@ const EventManager = React.createClass({
 		body.venue = {
 			venueType: modelVenue.venueType
 		};
-		if(modelVenue.postcode.id !== 'TBD') {
-			body.venue.postcodeId = modelVenue.postcode.id;
+		if(modelVenue.postcodeData.id !== 'TBD') {
+			body.venue.postcodeId = modelVenue.postcodeData.id;
 		}
 	},
 	/**
@@ -474,20 +474,20 @@ const EventManager = React.createClass({
 				binding			= self.getDefaultBinding();
 
 		return (
-				typeof binding.get('model.startTime')			!== 'undefined' &&
-				binding.get('model.startTime') 					!== null &&
-				binding.get('model.startTime') 					!== '' &&
-				typeof binding.toJS('model.sportId')			!== 'undefined' &&
-				binding.toJS('model.sportId')					!== '' &&
-				typeof binding.toJS('model.gender')				!== 'undefined' &&
-				binding.toJS('model.gender')					!== '' &&
-				binding.toJS('model.gender')					!== 'not-selected-gender' &&
-				typeof binding.toJS('model.ages')				!== 'undefined' &&
-				binding.toJS('model.ages').length				!== 0 &&
-				typeof binding.toJS('model.type')				!== 'undefined' &&
-				binding.toJS('model.type')						!== '' &&
-				typeof binding.toJS('model.venue.postcode')		!== 'undefined' &&
-				typeof binding.toJS('model.venue.postcode.id')	!== 'undefined' &&
+				typeof binding.get('model.startTime')				!== 'undefined' &&
+				binding.get('model.startTime') 						!== null &&
+				binding.get('model.startTime') 						!== '' &&
+				typeof binding.toJS('model.sportId')				!== 'undefined' &&
+				binding.toJS('model.sportId')						!== '' &&
+				typeof binding.toJS('model.gender')					!== 'undefined' &&
+				binding.toJS('model.gender')						!== '' &&
+				binding.toJS('model.gender')						!== 'not-selected-gender' &&
+				typeof binding.toJS('model.ages')					!== 'undefined' &&
+				binding.toJS('model.ages').length					!== 0 &&
+				typeof binding.toJS('model.type')					!== 'undefined' &&
+				binding.toJS('model.type')							!== '' &&
+				typeof binding.toJS('model.venue.postcodeData')		!== 'undefined' &&
+				typeof binding.toJS('model.venue.postcodeData.id')	!== 'undefined' &&
 				self.isAllRivalsSelected()
 		);
 	},
