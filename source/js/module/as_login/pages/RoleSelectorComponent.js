@@ -28,8 +28,8 @@ function RoleSelectorComponent(props) {
 }
 
 RoleSelectorComponent.propTypes = {
-	availableRoles: React.PropTypes.oneOfType([				// expecting array of string or Immutable.List with strings
-		React.PropTypes.arrayOf(React.PropTypes.string),
+	availableRoles: React.PropTypes.oneOfType([				// expecting array of object or Immutable.List with strings
+		React.PropTypes.arrayOf(React.PropTypes.object),
 		React.PropTypes.instanceOf(Immutable.List)
 	]).isRequired,
 	onRoleSelected: React.PropTypes.func.isRequired
