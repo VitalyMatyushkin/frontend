@@ -265,9 +265,8 @@ const Event = React.createClass({
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
 	},
 	initIsIndividualScoreAvailable: function() {
-		// TODO
-		//this.initIsIndividualScoreAvailableByOrder(0);
-		//this.initIsIndividualScoreAvailableByOrder(1);
+		this.initIsIndividualScoreAvailableByOrder(0);
+		this.initIsIndividualScoreAvailableByOrder(1);
 	},
 	initIsIndividualScoreAvailableByOrder: function(order) {
 		const binding = this.getDefaultBinding();
