@@ -49,9 +49,6 @@ IntegrationPageModel.prototype.getGrid = function() {
 			cell:{
 				dataField:'name',
 				type:'general'
-			},
-			filter:{
-				type:'string'
 			}
 		}
 	];
@@ -60,12 +57,12 @@ IntegrationPageModel.prototype.getGrid = function() {
 		actionPanel:{
 			title:'Integration',
 			showStrip:true,
-			
+			hideBtnFilter: true,
 			/**Only school admin and manager can add integration. All other users should not see that button.*/
 			btnAdd:changeAllowed ?
 				(
 					<div className="addButton bTooltip" data-description="Add Integration" onClick={() => {console.log('Server request')}}>
-						<SVG icon="icon_add_school" />
+						<SVG icon="icon_cog" />
 					</div>
 				) : null
 		},
