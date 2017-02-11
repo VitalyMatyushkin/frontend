@@ -45,7 +45,7 @@ function revertScore(binding) {
 	binding.set('model', Immutable.fromJS(updEvent));
 };
 
-function submitScore(activeSchoolId, event, binding){
+function submitScore(activeSchoolId, event, binding) {
 	if(TeamHelper.isNonTeamSport(event)) {
 		return submitResultsForIndividualSport(activeSchoolId, event)
 			.then(() => doActionsAfterCloseEvent(activeSchoolId, event, binding));
@@ -241,6 +241,8 @@ function submitTeamResults(activeSchoolId, event) {
 function submitIndividualResults(activeSchoolId, event) {
 	const score = event.results.individualScore;
 
+	let promises = [];
+
 	if(TeamHelper.isOneOnOneSport(event)) {
 		switch (true) {
 			case score.length === 1 && EventHelper.isInterSchoolsEvent(event):
@@ -259,8 +261,6 @@ function submitIndividualResults(activeSchoolId, event) {
 				break;
 		}
 	}
-
-	let promises = [];
 
 	promises = promises.concat(
 		score
@@ -281,6 +281,18 @@ function submitIndividualResults(activeSchoolId, event) {
 					scoreData
 				)
 			)
+	);
+
+	promises = promises.concat(
+		event.individualScoreForRemove.map(
+			scoreData => window.Server.schoolEventResultIndividualsScore.delete(
+				{
+					schoolId	: activeSchoolId,
+					eventId		: event.id,
+					scoreId		: scoreData._id
+				}
+			)
+		)
 	);
 
 	return Promise.all(promises);
