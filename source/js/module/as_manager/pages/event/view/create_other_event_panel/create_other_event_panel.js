@@ -24,13 +24,12 @@ const CreateOtherEventPanel = React.createClass({
 				<If condition={this.state.isVisible}>
 					<div className="bCreateOtherEventPanel">
 						<div className="eCreateOtherEventPanel_left">
-							{"You successfully create an event. "}
+							{"You have successfully created an event. "}
 							<a	className	= "eCreateOtherEventPanel_link"
 								href		= "#events/manager"
 							>
-								Create more
+								Add another event
 							</a>
-							{" on this date?"}
 						</div>
 						<div className="eCreateOtherEventPanel_right">
 							<i	className	= "fa fa-times eCreateOtherEventPanel_cross"
