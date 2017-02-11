@@ -58,34 +58,33 @@ const ViewNewsItem = React.createClass({
 		}
 	},
 	renderNews: function(news) {
-		const	self	= this,
-				binding	= self.getDefaultBinding(),
-				imgSrc = news.picUrl;
+		const 	binding		= this.getDefaultBinding(),
+				imgStyle 	= {backgroundImage: 'url(' + news.picUrl + ')'};
 
 		let	text, linkText;
 		if(binding.toJS('selectedNewsItem') == news.id) {
-			text = self.getFullNewsText(news.body);
+			text = this.getFullNewsText(news.body);
 			linkText = 'Less info'
 		} else {
-			text = self.getNewsExcerpt(news.body);
+			text = this.getNewsExcerpt(news.body);
 			linkText = 'More info'
 		}
 
 		return (
 			<div className="eSchoolNewsItem">
-				<span className="eSchoolNewsImage">
-						<img src={imgSrc}/>
-				</span>
+				<div className="eSchoolNewsImage" style={imgStyle}>
+					
+				</div>
 				<div className="eSchoolNewsItemDescription">
 					<div className="eSchoolNewsItemInfo">
 						<h1 className="inlineBlock newsItemTitle">{news.title}</h1>
 						<div className="eSchoolNewsItemDate">
-							{self.getNewsDate(news)}
+							{this.getNewsDate(news)}
 						</div><hr/>
 						{text}
 					</div>
 					<span	className="eSchoolNewsMoreInfo"
-							onClick={self._newsItemMoreInfo.bind(self, news.id)}
+							onClick={this._newsItemMoreInfo.bind(this, news.id)}
 					>
 						{linkText}
 					</span>
