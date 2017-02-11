@@ -71,7 +71,11 @@
   }
 
    &.mDisable {
-     background: #fafafa;
+     background: #ffffff;
+     border: solid 1px #d2d2d2;
+     color: $darkGrey;
+     cursor: default;
+     pointer-events: none;
    }
 
   &.mCircle {
@@ -118,12 +122,6 @@
     height: 50px;
     width: 120px;
   }
-}
-
-.bButton.mDisable {
-  background: #eee;
-  box-shadow: 0px -2px 0 0 darken(#eee, 10%);
-  color: #555;
 }
 
 .bButton.mRed {

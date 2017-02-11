@@ -5,6 +5,7 @@ const	React						= require('react'),
 
 		If							= require('module/ui/if/if'),
 		Tabs						= require('./../../../ui/tabs/tabs'),
+		CreateOtherEventPanel		= require('./view/create_other_event_panel/create_other_event_panel'),
 		EventHeaderWrapper			= require('./view/event_header/event_header_wrapper'),
 		EventRivals					= require('./view/event_rivals'),
 		IndividualScoreAvailable	= require('./view/individual_score_available'),
@@ -17,11 +18,12 @@ const	React						= require('react'),
 		ManagerWrapper				= require('./view/manager_wrapper'),
 		Comments					= require('./view/event_blog'),
 		TeamHelper					= require('module/ui/managers/helpers/team_helper'),
+		classNames					= require('classnames'),
 		EventResultHelper			= require('./../../../helpers/event_result_helper'),
 		DetailsWrapper				= require('./view/details/details_wrapper'),
 		MatchReport					= require('./view/match-report/report'),
 		Map							= require('../../../ui/map/map2'),
-
+		EditEventPopup				= require('./view/edit_event_popup/edit_event_popup'),
 		GalleryActions				= require('./new_gallery/event_gallery_actions'),
 		AddPhotoButton				= require('../../../ui/new_gallery/add_photo_button'),
 		Button						= require('../../../ui/button/button'),
@@ -39,6 +41,8 @@ const Event = React.createClass({
 	},
 	getDefaultState: function () {
 		return Immutable.fromJS({
+			isNewEvent: false,
+			isEditEventPopupOpen: false,
 			model: {},
 			gallery: {
 				photos: [],
@@ -74,7 +78,10 @@ const Event = React.createClass({
 					value					: true,
 					isTeamScoreWasChanged	: false
 				}
-			]
+			],
+			editEventPopup: {
+				eventEditForm: {}
+			}
 		});
 	},
 	componentWillMount: function () {
@@ -85,17 +92,26 @@ const Event = React.createClass({
 
 		self.eventId = rootBinding.get('routing.pathParameters.0');
 
+		this.initIsNewEvent();
+
 		let eventData, report, photos, settings;
 		/**
 		 * If role not equal student, do everything as usual
 		 */
 		if (role !== 'STUDENT') {
 			window.Server.schoolEvent.get({
-				schoolId: this.props.activeSchoolId,
-				eventId: self.eventId
+				schoolId	: this.props.activeSchoolId,
+				eventId		: self.eventId
 			}).then(event => {
-				event.schoolsData = TeamHelper.getSchoolsData(event);
-				event.teamsData = event.teamsData.sort((t1, t2) => {
+				eventData = event;
+
+				return Promise.all(TeamHelper.getSchoolsData(eventData).map(school => {
+					return window.Server.publicSchool.get(school.id);
+				}));
+			}).then(schoolsData => {
+				eventData.schoolsData = schoolsData;
+
+				eventData.teamsData = eventData.teamsData.sort((t1, t2) => {
 					if (!t1 || !t2 || t1.name === t2.name) {
 						return 0;
 					}
@@ -106,7 +122,7 @@ const Event = React.createClass({
 						return 1;
 					}
 				});
-				event.housesData = event.housesData.sort((h1, h2) => {
+				eventData.housesData = eventData.housesData.sort((h1, h2) => {
 					if (!h1 || !h2 || h1.name === h2.name) {
 						return 0;
 					}
@@ -118,9 +134,7 @@ const Event = React.createClass({
 					}
 				});
 				// FUNCTION MODIFY EVENT OBJECT!!
-				EventResultHelper.initializeEventResults(event);
-
-				eventData = event;
+				EventResultHelper.initializeEventResults(eventData);
 
 				// loading match report
 				return window.Server.schoolEventReport.get({
@@ -141,6 +155,7 @@ const Event = React.createClass({
 				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
 			}).then(tasks => {
 				eventData.matchReport = report.content;
+				eventData.individualScoreForRemove = [];
 
 				this.setPlayersFromEventToBinding(eventData);
 				binding.atomically()
@@ -216,7 +231,6 @@ const Event = React.createClass({
 
 				return window.Server.schoolEventTasks.get({schoolId: this.props.activeSchoolId, eventId: self.eventId});
 			}).then(tasks => {
-
 				eventData.matchReport = report.content;
 
 				this.setPlayersFromEventToBinding(eventData);
@@ -239,6 +253,13 @@ const Event = React.createClass({
 				return eventData;
 			});
 		}
+	},
+	initIsNewEvent: function() {
+		const rootBinding = this.getMoreartyContext().getBinding();
+
+		const isNewEvent = rootBinding.get('routing.parameters.new');
+
+		this.getDefaultBinding().set('isNewEvent', isNewEvent === 'true');
 	},
 	componentWillUnmount: function() {
 		this.listeners.forEach(listener => this.getDefaultBinding().removeListener(listener));
@@ -313,6 +334,9 @@ const Event = React.createClass({
 		this.listeners.push(binding.sub('individualScoreAvailable.0.value').addListener(descriptor => {
 			const teamId = binding.toJS('model.teamsData.0.id');
 
+			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
+			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
+
 			if(binding.toJS('individualScoreAvailable.0.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
 				this.clearTeamScoreByTeamId(teamId);
 				binding.set('individualScoreAvailable.0.isTeamScoreWasChanged', false);
@@ -321,6 +345,9 @@ const Event = React.createClass({
 
 		this.listeners.push(binding.sub('individualScoreAvailable.1.value').addListener(descriptor => {
 			const teamId = binding.toJS('model.teamsData.1.id');
+
+			!descriptor.getCurrentValue() && this.setIndividualScoreForRemoveByTeamId(teamId);
+			descriptor.getCurrentValue() && this.clearIndividualScoreForRemoveByTeamId(teamId)
 
 			if(binding.toJS('individualScoreAvailable.1.isTeamScoreWasChanged') && descriptor.getCurrentValue()) {
 				this.clearTeamScoreByTeamId('teamScore', teamId);
@@ -334,6 +361,29 @@ const Event = React.createClass({
 		const updScore = binding.toJS(`model.results.individualScore`).filter(s => s.teamId !== teamId);
 
 		binding.set(`model.results.individualScore`, Immutable.fromJS(updScore));
+	},
+	/**
+	 * Function copy model.results.individualScore by teamId to model.individualScoreForRemove.
+	 * individualScoreForRemove - it's a array of scores. These scores will be removed after score submit.
+	 * @param teamId
+	 */
+	setIndividualScoreForRemoveByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const	individualScoreForRemove = binding.toJS(`model.individualScoreForRemove`),
+				newIndividualScoreForRemove = binding.toJS(`model.results.individualScore`).filter(s => s.teamId === teamId);
+
+		binding.set(
+			`model.individualScoreForRemove`,
+			Immutable.fromJS(individualScoreForRemove.concat(newIndividualScoreForRemove))
+		);
+	},
+	clearIndividualScoreForRemoveByTeamId: function(teamId) {
+		const binding = this.getDefaultBinding();
+
+		const individualScoreForRemove = binding.toJS(`model.individualScoreForRemove`).filter(s => s.teamId !== teamId);
+
+		binding.set(`model.individualScoreForRemove`, Immutable.fromJS(individualScoreForRemove));
 	},
 	clearTeamScoreByTeamId: function(teamId) {
 		const binding = this.getDefaultBinding();
@@ -656,6 +706,39 @@ const Event = React.createClass({
 	isShowMap: function() {
 		return this.getDefaultBinding().toJS('model.venue.venueType') !== "TBD";
 	},
+	handleSuccessSubmit: function(updEvent) {
+		const binding = this.getDefaultBinding();
+
+		binding.atomically()
+			.set("model.startTime"		, updEvent.startTime)
+			.set("model.venue"			, updEvent.venue)
+			.commit();
+
+		//TODO I'm going to make event changes without reload.
+		window.location.reload();
+	},
+	handleCloseEditEventPopup: function() {
+		const binding = this.getDefaultBinding();
+
+		binding.set("isEditEventPopupOpen", false);
+	},
+	renderEditEventPopupOpen: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		if(binding.get("isEditEventPopupOpen")) {
+			return (
+				<EditEventPopup	binding				= {binding.sub('editEventPopup')}
+								activeSchoolId		= {this.props.activeSchoolId}
+								event				= {binding.toJS('model')}
+								handleSuccessSubmit	= {this.handleSuccessSubmit}
+								handleClosePopup	= {this.handleCloseEditEventPopup}
+				/>
+			)
+		} else {
+			return null;
+		}
+	},
 	render: function() {
 		const	self			= this,
 				binding			= self.getDefaultBinding();
@@ -667,20 +750,28 @@ const Event = React.createClass({
 				isaLeftShow		= this.isaLeftShow(this.props.activeSchoolId, event, mode),
 				isaRightShow	= this.isaRightShow(this.props.activeSchoolId, event, mode),
 				role			= RoleHelper.getLoggedInUserRole(this),
-				point 			= binding.toJS('model.venue.postcodeData.point');
+				point 			= binding.toJS('model.venue.postcodeData.point'),
+				isNewEvent		= binding.get('isNewEvent');
 
-		console.log(binding.toJS());
+		const EventContainerStyle = classNames({
+			bEventContainer	: true,
+			mTopMargin		: !isNewEvent
+		});
+
 		switch (true) {
 			case !self.isSync():
 				return (
-					<div className="bEventContainer">
+					<div className="bEventContainer mTopMargin">
 						<span className="eEvent_loading">loading...</span>
 					</div>
 				);
 			// sync and any mode excluding edit_squad
 			case self.isSync() && binding.toJS('mode') !== 'edit_squad':
 				return (
-					<div className="bEventContainer">
+					<div className={EventContainerStyle}>
+						<If condition={isNewEvent}>
+							<CreateOtherEventPanel/>
+						</If>
 						<div className="bEvent">
 							<EventHeaderWrapper	binding			= {binding}
 												activeSchoolId	= {this.props.activeSchoolId}
@@ -769,6 +860,7 @@ const Event = React.createClass({
 								/>
 							</div>
 						</div>
+						{this.renderEditEventPopupOpen()}
 					</div>
 				);
 			// sync and edit squad mode

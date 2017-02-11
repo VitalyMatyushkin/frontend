@@ -39,13 +39,15 @@ HouseListModel.prototype = {
 	reloadData:function(){
 		this.dataLoader.loadData();
 	},
-	onEdit: function(data) {
+	onEdit: function(data, event) {
 		document.location.hash += '/edit?id=' + data.id;
+		event.stopPropagation();
 	},
-	onChildren: function(data) {
+	onChildren: function(data, event) {
 		document.location.hash += `/students?id=${data.id}&name=${data.name}`;
+		event.stopPropagation();
 	},
-	onRemove:function(data){
+	onRemove:function(data, event){
 		const 	self = this;
 
 		if(typeof data !== 'undefined') {
@@ -69,6 +71,7 @@ HouseListModel.prototype = {
 				() => {}
 			);
 		}
+		event.stopPropagation();
 	},
 	getGrid: function(){
 		const 	role 			= this.rootBinding.get('userData.authorizationInfo.role'),
@@ -133,7 +136,8 @@ HouseListModel.prototype = {
 					</div>
 				) : null
 			},
-			columns:columns
+			columns:columns,
+			handleClick: this.props.handleClick
 		});
 	},
 	// TODO Get WHAT??

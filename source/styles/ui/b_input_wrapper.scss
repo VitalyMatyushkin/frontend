@@ -1,4 +1,8 @@
 .bInputWrapper {
   width: 400px;
   margin: 20px auto;
+
+  &.mZeroHorizontalMargin {
+    margin: 20px 0;
+  }
 }

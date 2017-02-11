@@ -1,0 +1,58 @@
+.bCreateOtherEventPanelWrapper {
+  width: 1170px;
+  height: 35px;
+
+  margin: 0 auto 10px;
+}
+
+.bCreateOtherEventPanel {
+  width: 1170px;
+  height: 35px;
+
+  text-align: center;
+  margin: 0px auto;
+  padding: 10px 0px 0px 10px;
+
+  background-color: #f5f5f5;
+  border-radius: 0 0 5px 5px;
+  border: solid 1px #e6e6e6;
+  border-top: none;
+
+  transition-property: top;
+  transition-duration: 1s;
+
+  cursor: default;
+}
+
+.eCreateOtherEventPanel_left {
+  display: inline-block;
+  width: 1130px;
+  text-align: center;
+
+  color: #8c8c8c;
+}
+
+.eCreateOtherEventPanel_right {
+  display: inline-block;
+  margin-top: -2px;
+}
+
+.eCreateOtherEventPanel_link {
+  text-decoration: underline;
+  color: #8c8c8c;
+
+  &:hover {
+    color: black;
+    text-decoration: underline;
+  }
+}
+
+.eCreateOtherEventPanel_cross {
+  color: #8c8c8c;
+
+  &:hover {
+    color: black;
+  }
+
+  cursor: pointer;
+}

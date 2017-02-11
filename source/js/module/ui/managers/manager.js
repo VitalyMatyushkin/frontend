@@ -46,31 +46,41 @@ const Manager = React.createClass({
 			self._initRivalIndex();
 		}
 
+		const	firstTeam	= self.getTeamIdByOrder(0),
+				secondTeam	= self.getTeamIdByOrder(1);
+
+		const	firstTeamName	= self.getTeamNameByOrder(0),
+				secondTeamName	= self.getTeamNameByOrder(1);
+
 		defaultBinding
 			.atomically()
+			.set('isSync', true)
 			.set('teamModeView', Immutable.fromJS(
 				{
 					selectedRivalIndex: defaultBinding.get('selectedRivalIndex'),
 					players: self.getInitPlayers(),
 					teamTable: [
 						{
-							selectedTeamId: self.getTeamIdByOrder(0),
-							exceptionTeamId: self.getTeamIdByOrder(1)
+							selectedTeamId	: firstTeam,
+							isSelectedTeam	: typeof firstTeam !== 'undefined',
+							exceptionTeamId	: secondTeam
 						},
 						{
-							selectedTeamId: self.getTeamIdByOrder(1),
-							exceptionTeamId: self.getTeamIdByOrder(0)
+							selectedTeamId	: secondTeam,
+							isSelectedTeam	: typeof secondTeam !== 'undefined',
+							exceptionTeamId	: firstTeam
 						}
 					],
 					teamWrapper: [
 						{
+							isLoadingTeam: false,
 							filter: undefined,
-							prevSelectedTeamId: self.getTeamIdByOrder(0),
-							selectedTeamId: self.getTeamIdByOrder(0),
+							prevSelectedTeamId: firstTeam,
+							selectedTeamId: firstTeam,
 							teamsSaveMode: undefined,
 							teamName: {
-								initName: self.getTeamNameByOrder(0),
-								name: self.getTeamNameByOrder(0),
+								initName: firstTeamName,
+								name: firstTeamName,
 								mode: 'show'
 							},
 							___teamManagerBinding: {
@@ -82,13 +92,14 @@ const Manager = React.createClass({
 							isSetTeamLater: false
 						},
 						{
+							isLoadingTeam: false,
 							filter: undefined,
-							prevSelectedTeamId: self.getTeamIdByOrder(1),
-							selectedTeamId: self.getTeamIdByOrder(1),
+							prevSelectedTeamId: secondTeam,
+							selectedTeamId: secondTeam,
 							teamsSaveMode: undefined,
 							teamName: {
-								initName: self.getTeamNameByOrder(1),
-								name: self.getTeamNameByOrder(1),
+								initName: secondTeamName,
+								name: secondTeamName,
 								mode: 'show'
 							},
 							___teamManagerBinding: {
@@ -191,6 +202,48 @@ const Manager = React.createClass({
 		self.listeners.push(binding.sub('teamModeView.teamWrapper.1.isSetTeamLater').addListener(() => {
 			self._validate(1);
 		}));
+
+		this.addSyncListeners();
+	},
+	addSyncListeners: function() {
+		const	self	= this,
+				binding	= self.getDefaultBinding();
+
+		this.addListenerToIsLoadingTeamByIndex(0);
+		this.addListenerToIsLoadingTeamByIndex(1);
+
+		this.addListenerToTeamManagerIsSearchByIndex(0);
+		this.addListenerToTeamManagerIsSearchByIndex(1);
+	},
+	addListenerToIsLoadingTeamByIndex: function(index) {
+		const binding = this.getDefaultBinding();
+
+		binding.sub(`teamModeView.teamWrapper.${index}.isLoadingTeam`).addListener(eventDescriptor => {
+			// team wrapper is loading data
+			if(eventDescriptor.getCurrentValue()) {
+				binding.set('isSync', false);
+			}
+
+			// team wrapper isn't loading data
+			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`)) {
+				binding.set('isSync', true);
+			}
+		});
+	},
+	addListenerToTeamManagerIsSearchByIndex: function(index) {
+		const binding = this.getDefaultBinding();
+
+		binding.sub(`teamModeView.teamWrapper.${index}.___teamManagerBinding.isSearch`).addListener(eventDescriptor => {
+			// player selector is loading data
+			if(eventDescriptor.getCurrentValue()) {
+				binding.set('isSync', false);
+			}
+
+			// player selector isn't loading data
+			if(!eventDescriptor.getCurrentValue() && !binding.get(`teamModeView.teamWrapper.${index}.isLoadingTeam`)) {
+				binding.set('isSync', true);
+			}
+		});
 	},
 	_validate: function(rivalIndex) {
 		const	self			= this,
@@ -379,6 +432,8 @@ const Manager = React.createClass({
 					rivals:		defaultBinding.sub('rivals'),
 					error:		binding.error
 				};
+
+		console.log(defaultBinding.toJS());
 
 			return (
 				<div className="eManager_container">

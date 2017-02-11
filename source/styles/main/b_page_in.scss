@@ -109,25 +109,28 @@
 
 .eSchoolNewsItem {
   display: flex;
+  flex-flow: row wrap;
   height: auto;
   background: #fff;
-  width: 920px;
+  width: 100%;
+  max-width: 920px;
   margin: 20px;
   border: $BORDER;
   color: #333132;
 }
-
-.eSchoolNewsImage img{
-  width: 300px;
-  height: 210px;
-  float: left;
+.eSchoolNewsImage {
+  display: flex;
+  width: 35%;
+  background-size: cover;
+  background-position: center top;
 }
 .eSchoolNewsItemDescription{
   height:auto;
   display: flex;
   flex-direction: column;
-  margin-left: 90px;
-  width: 50%;
+  padding-left: 80px;
+  padding-right: 80px;
+  width: 65%;
 }
 
 .eSchoolNewsItemInfo{
@@ -446,4 +449,17 @@
   margin: 0 auto;
 
   font-size: 16px;
+}
+
+@media screen and (max-width: 992px){
+  .eSchoolNewsItemDescription {
+    margin-left: 20px;
+  }
+}
+@media screen and (max-width: 767px){
+  .eSchoolNewsItemDescription {
+    width: 100%;
+    margin-left: 0px;
+    padding: 0 20px;
+  }
 }

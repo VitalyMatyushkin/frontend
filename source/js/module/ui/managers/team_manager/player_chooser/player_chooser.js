@@ -1,13 +1,13 @@
-const	React			= require('react'),
+const	React				= require('react');
 
-		PlayersList			= require('./players_list'),
+const	PlayersList			= require('./players_list'),
 		PlayerSearchBox		= require('./player_search_box'),
-		AddPlayerTeamButton	= require('./add_player_team_button'),
+		AddPlayerTeamButton	= require('./add_player_team_button');
 
-		If				= require('./../../../if/if'),
-		Loader			= require('./../../../loader');
+const	If					= require('./../../../if/if'),
+		Loader				= require('./../../../loader');
 
-const	PlayerChooser	= React.createClass({
+const PlayerChooser = React.createClass({
 	propTypes: {
 		students:					React.PropTypes.array.isRequired,
 		handleChangeSearchText:		React.PropTypes.func.isRequired,

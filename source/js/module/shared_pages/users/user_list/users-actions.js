@@ -370,6 +370,7 @@ UsersActions.prototype = {
 				btnAdd:this.props.addButton
 			},
 			columns:columns,
+			handleClick: this.props.handleClick,
 			filters:{limit:20}
 		});
 	},

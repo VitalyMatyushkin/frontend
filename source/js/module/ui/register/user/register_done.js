@@ -13,7 +13,7 @@ const RegiseterUserDone = React.createClass({
 			binding = self.getDefaultBinding();
 
 		window.simpleAlert(
-			'Welcome to SquadInTouch! You just registered account and requested new role. Approving your account will take some time. We will send you email notification',
+			'Welcome to Squad In Touch!\nThank you for registering your account with us, you will be granted access as soon as your role has been confirmed by the school administrator or the Squad In Touch support team, if you are registering a new school account.\nThank you for joining us!',
 			'Ok',
 			() => {
 			});
@@ -21,16 +21,16 @@ const RegiseterUserDone = React.createClass({
 		return (
 			<div className="bRegisterMessage">
 				{/*Check the type of account registered for by the user and display information accordingly*/}
-				<If condition={(binding.get('type')==='teacher' || binding.get('type')==='coach' || binding.get('type')=='parent')}>
+				<If condition={(binding.get('type')==='teacher' || binding.get('type')==='coach' || binding.get('type')=='parent' || binding.get('type')=='student')}>
 					<p className="bRegisterFinish">
-						Thank you for joining SquadInTouch. Joining requests are usually confirmed within 1 working day.
+						Thank you for joining Squad In Touch. Joining requests are usually confirmed within 1 working day.
 						Meanwhile you can log in to your account for managing your profile details.<br/>
 						Please be aware that joining requests are confirmed by school administrators and sometimes there can be delays with receiving confirmation.
 					</p>
 				</If>
 				<If condition={(binding.get('type')==='manager' || binding.get('type')=== 'admin')}>
 					<p className="bRegisterFinish">
-						Thank you for joining SquadInTouch. Joining requests are usually confirmed within 1 working day.
+						Thank you for joining Squad In Touch. Joining requests are usually confirmed within 1 working day.
 						Meanwhile you can log in to your account for managing your profile details.
 					</p>
 				</If>

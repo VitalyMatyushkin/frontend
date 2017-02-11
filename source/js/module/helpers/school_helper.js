@@ -2,7 +2,8 @@
  * Created by Anatoly on 12.12.2016.
  */
 
-const Immutable = require('immutable');
+const 	Immutable = require('immutable'),
+		Promise = require('bluebird');
 
 const schoolConsts = require('./consts/schools');
 
@@ -22,9 +23,8 @@ const SchoolHelper = {
 	 * @param self - context(this) of react element that include morearty mixin
 	 */
 	getActiveSchoolInfo: function (self) {
-		const
-			rootBinding = self.getMoreartyContext().getBinding(),
-			activeSchoolInfo = rootBinding.toJS('activeSchool.schoolInfo');
+		const	rootBinding			= self.getMoreartyContext().getBinding(),
+				activeSchoolInfo	= rootBinding.toJS('activeSchool.schoolInfo');
 
 		return activeSchoolInfo;
 	},

@@ -12,7 +12,8 @@ const	EventManagerBase				= require('./manager/base'),
 		Immutable						= require('immutable'),
 		SavingPlayerChangesPopup		= require('./saving_player_changes_popup/saving_player_changes_popup'),
 		SavingPlayerChangesPopupHelper	= require('./saving_player_changes_popup/helper'),
-
+		ManagerHelper					= require('../../../ui/managers/helpers/manager_helper'),
+		Button							= require('../../../ui/button/button'),
 		ManagerStyles					= require('../../../../../styles/pages/events/b_events_manager.scss');
 
 const EventManager = React.createClass({
@@ -34,6 +35,7 @@ const EventManager = React.createClass({
 			// if true - then user click to finish button
 			// so we must block finish button
 			isSubmitProcessing: false,
+			isTeamManagerSync: false,
 			model: {
 				name:			'',
 				startTime:		currentDate,
@@ -98,6 +100,8 @@ const EventManager = React.createClass({
 					.set('availableAges',	Immutable.fromJS(ages))
 					.set('isSync',			Immutable.fromJS(true))
 					.commit();
+
+				this.addListeners();
 			});
 	},
 	componentWillUnmount: function () {
@@ -105,6 +109,22 @@ const EventManager = React.createClass({
 				binding	= self.getDefaultBinding();
 
 		binding.clear();
+	},
+	addListeners: function() {
+		this.addListenerForTeamManager();
+	},
+	addListenerForTeamManager: function() {
+		const binding = this.getDefaultBinding();
+
+		binding
+			.sub('isSync')
+			.addListener(eventDescriptor => {
+				// Lock submit button if team manager in searching state.
+				eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', true);
+
+				// Unlock submit button if team manager in searching state.
+				!eventDescriptor.getCurrentValue() && binding.set('isTeamManagerSync', false);
+			});
 	},
 	onSelectDate: function (newDate) {
 		// TODO Why do we store date in ISO format?
@@ -351,8 +371,8 @@ const EventManager = React.createClass({
 		body.venue = {
 			venueType: modelVenue.venueType
 		};
-		if(modelVenue.postcode.id !== 'TBD') {
-			body.venue.postcodeId = modelVenue.postcode.id;
+		if(modelVenue.postcodeData.id !== 'TBD') {
+			body.venue.postcodeId = modelVenue.postcodeData.id;
 		}
 	},
 	/**
@@ -365,7 +385,7 @@ const EventManager = React.createClass({
 		const	self	= this,
 				binding	= self.getDefaultBinding();
 
-		document.location.hash = 'event/' + event.id + '?tab=gallery';
+		document.location.hash = 'event/' + event.id + '?tab=gallery&new=true';
 		binding.clear();
 		binding.meta().clear();
 
@@ -408,19 +428,19 @@ const EventManager = React.createClass({
 	_renderFinishStepButton: function(step) {
 		const self = this;
 
-		if(step === 2 && self._isStepComplete(2)) {
+		if(step === 2) {
+			const binding = this.getDefaultBinding();
+
 			const finishButtonClassName = classNames({
-				bButton:		true,
-				mFinish:		true,
-				mDisabled:		this.getDefaultBinding().toJS('isSubmitProcessing')
+				mFinish:	true,
+				mDisable:	!self._isStepComplete(2) || binding.get('isSubmitProcessing') || !binding.get('isTeamManagerSync')
 			});
 
 			return (
-				<span	className	= { finishButtonClassName }
-						onClick		= { self.handleClickFinishButton }
-				>
-					Finish
-				</span>
+				<Button	text				= "Finish"
+						onClick				= {this.handleClickFinishButton}
+						extraStyleClasses	= {finishButtonClassName}
+				/>
 			);
 		} else {
 			return null;
@@ -453,20 +473,20 @@ const EventManager = React.createClass({
 				binding			= self.getDefaultBinding();
 
 		return (
-				typeof binding.get('model.startTime')			!== 'undefined' &&
-				binding.get('model.startTime') 					!== null &&
-				binding.get('model.startTime') 					!== '' &&
-				typeof binding.toJS('model.sportId')			!== 'undefined' &&
-				binding.toJS('model.sportId')					!== '' &&
-				typeof binding.toJS('model.gender')				!== 'undefined' &&
-				binding.toJS('model.gender')					!== '' &&
-				binding.toJS('model.gender')					!== 'not-selected-gender' &&
-				typeof binding.toJS('model.ages')				!== 'undefined' &&
-				binding.toJS('model.ages').length				!== 0 &&
-				typeof binding.toJS('model.type')				!== 'undefined' &&
-				binding.toJS('model.type')						!== '' &&
-				typeof binding.toJS('model.venue.postcode')		!== 'undefined' &&
-				typeof binding.toJS('model.venue.postcode.id')	!== 'undefined' &&
+				typeof binding.get('model.startTime')				!== 'undefined' &&
+				binding.get('model.startTime') 						!== null &&
+				binding.get('model.startTime') 						!== '' &&
+				typeof binding.toJS('model.sportId')				!== 'undefined' &&
+				binding.toJS('model.sportId')						!== '' &&
+				typeof binding.toJS('model.gender')					!== 'undefined' &&
+				binding.toJS('model.gender')						!== '' &&
+				binding.toJS('model.gender')						!== 'not-selected-gender' &&
+				typeof binding.toJS('model.ages')					!== 'undefined' &&
+				binding.toJS('model.ages').length					!== 0 &&
+				typeof binding.toJS('model.type')					!== 'undefined' &&
+				binding.toJS('model.type')							!== '' &&
+				typeof binding.toJS('model.venue.postcodeData')		!== 'undefined' &&
+				typeof binding.toJS('model.venue.postcodeData.id')	!== 'undefined' &&
 				self.isAllRivalsSelected()
 		);
 	},
@@ -497,21 +517,21 @@ const EventManager = React.createClass({
 				binding			= self.getDefaultBinding(),
 				step			= binding.get('step'),
 				bManagerClasses	= classNames({
-					bManager:		true,
-					mBase:			step === 1,
-					mTeamManager:	step === 2
+					bManager			: true,
+					mBase				: step === 1,
+					mTeamManager		: step === 2
 				}),
 				commonBinding	= {
-					default: binding,
-					sports: self.getBinding('sports'),
-					calendar: self.getBinding('calendar')
+					default				: binding,
+					sports				: self.getBinding('sports'),
+					calendar			: self.getBinding('calendar')
 				},
 				managerBinding	= {
-					default:            binding,
-					selectedRivalIndex: binding.sub('selectedRivalIndex'),
-					rivals:             binding.sub('rivals'),
-					players:            binding.sub('players'),
-					error:              binding.sub('error')
+					default				: binding,
+					selectedRivalIndex	: binding.sub('selectedRivalIndex'),
+					rivals				: binding.sub('rivals'),
+					players				: binding.sub('players'),
+					error				: binding.sub('error')
 				};
 
 		return (

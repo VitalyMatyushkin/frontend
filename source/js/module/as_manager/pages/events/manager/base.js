@@ -282,7 +282,11 @@ const EventManagerBase = React.createClass({
 						</div>
 					</If>
 				</div>
-				<EventVenue binding={binding}/>
+				<EventVenue	binding				= {binding}
+							eventType			= {binding.toJS('model.type')}
+							activeSchoolInfo	= {binding.toJS('schoolInfo')}
+							opponentSchoolInfo	= {binding.toJS('rivals.1')}
+				/>
 			</div>
 		);
 	}

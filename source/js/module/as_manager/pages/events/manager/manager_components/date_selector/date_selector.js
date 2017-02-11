@@ -5,7 +5,7 @@ const	React				= require('react'),
 
 const DateSelector = React.createClass({
 
-	DROPDOWN_CSS_STYLE: 'mDateSelector',
+	DROPDOWN_CSS_STYLE: 'mBigDateSelector',
 
 	propTypes: {
 		date:				React.PropTypes.string.isRequired,
@@ -74,8 +74,6 @@ const DateSelector = React.createClass({
 
 
 	render: function() {
-
-		console.log('date is: ' + this.props.date);
 
 		const dateObject = new Date(this.props.date);
 

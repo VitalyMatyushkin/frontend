@@ -200,6 +200,8 @@ const TeamWrapper = React.createClass({
 				players,
 				team;
 
+			binding.set('isLoadingTeam', true);
+
 			// TODO refactor
 			window.Server.school.get(self.activeSchoolId)
 				.then( _schoolData => {
@@ -245,6 +247,7 @@ const TeamWrapper = React.createClass({
 						.set('removedPlayers',						Immutable.fromJS([]))
 						.set('___teamManagerBinding.teamStudents',	Immutable.fromJS(updatedPlayers))
 						.set('___teamManagerBinding.isNeedSearch',	true)
+						.set('isLoadingTeam',						false)
 						.commit();
 
 					return team;

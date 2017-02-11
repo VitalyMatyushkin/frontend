@@ -12,7 +12,9 @@ const Users = React.createClass({
 		permissionServiceName: 	React.PropTypes.string,
 		blockService: 			React.PropTypes.object,
 		addButton:				React.PropTypes.func,
-		customActionList:		React.PropTypes.array
+		customActionList:		React.PropTypes.array,
+		//The function, which will call when user click on <Row> in Grid
+		handleClick:			React.PropTypes.func
 	},
 	getDefaultProps: function () {
 		return {
