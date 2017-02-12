@@ -28,13 +28,13 @@ const AddPermissionRequest = React.createClass({
 		this.getDefaultBinding().clear();
 	},
 	continueButtonClick:function(model){
-		const self = this;
+		model.preset = model.preset.toUpperCase();
 		if(model.studentName)
 			model.comment = `Request to be parent of [ ${model.studentName} ] \r\n` + model.comment;
 
 		window.Server.profileRequests.post(model)
-			.then(function(result){
-				return self.props.onSuccess && self.props.onSuccess(result);
+			.then(result => {
+				return this.props.onSuccess && this.props.onSuccess(result);
 			});
 	},
 	isSchoolSelected: function() {
