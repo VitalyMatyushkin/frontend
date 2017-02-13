@@ -76,6 +76,17 @@ const EditMode = React.createClass({
 				},
 				limit	: 20
 			}
+		}).then(users => {
+			return users.filter(u => {
+				const permissions = u.permissions.filter(p => {
+					const	isActiveSchool	= p.schoolId === this.props.activeSchoolId,
+							isHasRole		= roles.filter(r => r === p.preset).length !== 0;
+
+					return isActiveSchool && isHasRole;
+				});
+
+				return permissions.length !== 0;
+			});
 		});
 	},
 	/**

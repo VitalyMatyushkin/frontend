@@ -65,7 +65,7 @@ const Details = React.createClass({
 		);
 
 		//TODO What if user has more then one active roles for current school?
-		return permissions.length !== 0 ? permissions[0] : {};
+		return permissions[0];
 	},
 	/**
 	 * Get array of staff members from staff array
@@ -91,15 +91,17 @@ const Details = React.createClass({
 
 		const permission = this.getCoachPermissionFromUser(user);
 
-		updStaff.push({
-			userId			: user.id,
-			permissionId	: permission.id,
-			staffRole		: Consts.STAFF_ROLES.COACH,
-			firstName		: user.firstName,
-			lastName		: user.lastName
-		});
+		if(typeof permission !== "undefined") {
+			updStaff.push({
+				userId			: user.id,
+				permissionId	: permission.id,
+				staffRole		: Consts.STAFF_ROLES.COACH,
+				firstName		: user.firstName,
+				lastName		: user.lastName
+			});
 
-		this.props.handleChange('staff', updStaff);
+			this.props.handleChange('staff', updStaff);
+		}
 	},
 	/**
 	 * Handler for delete any personal.
