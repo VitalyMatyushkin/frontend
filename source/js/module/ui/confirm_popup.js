@@ -51,21 +51,23 @@ const ConfirmPopup = React.createClass({
 
 		return (
 			<div>
-				<div className={this.getConfirmPopupStyle()}>
-					<div className={bodyStyle}>
-						{this.props.children}
+				<div className="eConfirmPopup_overlay">
+					<div className={this.getConfirmPopupStyle()}>
+						<div className={bodyStyle}>
+							{this.props.children}
+						</div>
+						<div className={footerStyle}>
+							<Button text={this.props.okButtonText}
+									onClick={this.handleClickOkButton}
+									extraStyleClasses={okButtonClassName}
+								/>
+							<Button text={this.props.cancelButtonText}
+									onClick={this.props.handleClickCancelButton}
+								/>
+						</div>
 					</div>
-					<div className={footerStyle}>
-						<Button	text				= {this.props.okButtonText}
-								onClick				= {this.handleClickOkButton}
-								extraStyleClasses	= {okButtonClassName}
-						/>
-						<Button	text	= {this.props.cancelButtonText}
-								onClick	= {this.props.handleClickCancelButton}
-						/>
-					</div>
+					<div className='bPopupBack mAcitve'></div>
 				</div>
-				<div className='bPopupBack mAcitve'></div>
 			</div>
 		);
 	}
